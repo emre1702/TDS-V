@@ -1,4 +1,5 @@
-﻿using TDS_Shared.Data.Models.GTA;
+﻿using TDS_Client.Data.Interfaces.ModAPI.Entity;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Misc
 {
@@ -8,7 +9,10 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Misc
         uint GetHashKey(string hash);
         void IgnoreNextRestart(bool v);
         void SetFadeOutAfterDeath(bool v);
+        void SetWeatherTypeNowPersist(string v);
         void Wait(int v);
-        void GetModelDimensions(object model, Position3D a, Position3D b);
+        void GetModelDimensions(IEntity model, Position3D a, Position3D b);
+        void SetWind(int v);
+        float GetDistanceBetweenCoords(Position3D playerpos, Position3D pos, bool v);
     }
 }

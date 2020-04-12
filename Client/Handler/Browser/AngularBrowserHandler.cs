@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Browser;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
-using TDS_Client.Manager.Utility;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Browser
@@ -34,6 +31,7 @@ namespace TDS_Client.Handler.Browser
             Browser.MarkAsChat();
 
             eventsHandler.InFightStatusChanged += ToggleRoundStats;
+            eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
         }
 
         public override void SetReady(params object[] args)
@@ -320,6 +318,11 @@ namespace TDS_Client.Handler.Browser
         public void SyncUsernameChange(string name)
         {
             Execute(ToBrowserEvent.SyncUsernameChange, name);
+        }
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        {
+            ResetMapVoting();
         }
     }
 

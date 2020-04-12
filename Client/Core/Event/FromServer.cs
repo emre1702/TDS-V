@@ -139,7 +139,7 @@ namespace TDS_Client.Manager.Event
             SyncedLobbySettingsDto settings = Serializer.FromServer<SyncedLobbySettingsDto>((string)args[0]);
             Settings.LoadSyncedLobbySettings(settings);
             Players.Load(ClientUtils.GetTriggeredPlayersList((string)args[1]));
-            Team.LobbyTeams = Serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
+            TeamsHandler.LobbyTeams = Serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
             Lobby.Lobby.Joined(oldSettings, settings);
             DiscordManager.Update();
             MainBrowser.HidRoundEndReason();
@@ -416,14 +416,14 @@ namespace TDS_Client.Manager.Event
 
         private void OnClearTeamPlayersMethod(object[] args)
         {
-            Team.ClearSameTeam();
+            TeamsHandler.ClearSameTeam();
         }
 
         private void OnPlayerJoinedTeamMethod(object[] args)
         {
             ushort handleValue = Convert.ToUInt16(args[0]);
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
-            Team.AddSameTeam(player);
+            TeamsHandler.AddSameTeam(player);
         }
 
         private void OnPlayerLeftTeamMethod(object[] args)
@@ -435,7 +435,7 @@ namespace TDS_Client.Manager.Event
             }
             ushort handleValue = Convert.ToUInt16(args[0]);
             Player player = ClientUtils.GetPlayerByHandleValue(handleValue);
-            Team.RemoveSameTeam(player);
+            TeamsHandler.RemoveSameTeam(player);
         }
 
         private void OnPlayerRespawnedMethod(object[] args)
@@ -446,7 +446,7 @@ namespace TDS_Client.Manager.Event
 
         private void OnPlayerTeamChangeMethod(object[] args)
         {
-            Team.CurrentTeamName = (string)args[0];
+            TeamsHandler.CurrentTeamName = (string)args[0];
             DiscordManager.Update();
         }
 
@@ -462,7 +462,7 @@ namespace TDS_Client.Manager.Event
         private void OnAmountInFightSyncMethod(object[] args)
         {
             SyncedTeamPlayerAmountDto[] list = Serializer.FromServer<SyncedTeamPlayerAmountDto[]>((string)args[0]);
-            foreach (var team in Team.LobbyTeams)
+            foreach (var team in TeamsHandler.LobbyTeams)
             {
                 if (!team.IsSpectator)
                     team.AmountPlayers = list[team.Index - 1];
@@ -595,7 +595,7 @@ namespace TDS_Client.Manager.Event
             BindManager.Add(Control.MultiplayerInfo, Scoreboard.ReleasedScoreboardKey, EKeyPressState.Up);
             Settings.Load();
             VoiceManager.Init();
-            Team.Init();
+            TeamsHandler.Init();
             CrouchingHandler.Init();
             AFKCheckManager.Init();
 
@@ -685,13 +685,13 @@ namespace TDS_Client.Manager.Event
 
         private void OnSyncTeamPlayersMethod(object[] args)
         {
-            Team.ClearSameTeam();
+            TeamsHandler.ClearSameTeam();
             IEnumerable<int> listOfPlayerHandles = Serializer.FromServer<IEnumerable<int>>(args[0].ToString());
             foreach (var handle in listOfPlayerHandles)
             {
                 Player player = Entities.Players.GetAtHandle(handle);
                 if (player != null)
-                    Team.AddSameTeam(player);
+                    TeamsHandler.AddSameTeam(player);
             }
         }
 

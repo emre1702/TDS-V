@@ -17,11 +17,14 @@ namespace TDS_Client.Handler.Draw.Dx
         //private readonly bool _relative;
         //private bool is3D;
         private readonly CamerasHandler _camerasHandler;
+        private readonly UtilsHandler _utilsHandler;
 
-        public DxLine(DxHandler dxHandler, IModAPI modAPI, CamerasHandler camerasHandler, float startX, float startY, float? startZ, float endX, float endY, float? endZ, Color color, bool relative = true, int frontPriority = 0) 
+        public DxLine(DxHandler dxHandler, IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, float startX, float startY, float? startZ, float endX, float endY, float? endZ, 
+            Color color, bool relative = true, int frontPriority = 0) 
             : base(dxHandler, modAPI, frontPriority: frontPriority)
         {
             _camerasHandler = camerasHandler;
+            _utilsHandler = utilsHandler;
 
             if (startZ.HasValue && endZ.HasValue)
             {
@@ -34,12 +37,12 @@ namespace TDS_Client.Handler.Draw.Dx
             }
             else
             {
-                var worldStart = modAPI.Utils.GetWorldCoordFromScreenCoord(GetRelativeX(startX, relative), GetRelativeY(startY, relative), _camerasHandler.ActiveCamera);
+                var worldStart = _utilsHandler.GetWorldCoordFromScreenCoord(GetRelativeX(startX, relative), GetRelativeY(startY, relative), _camerasHandler.ActiveCamera);
                 this._startX = worldStart.X;
                 this._startY = worldStart.Y;
                 this._startZ = worldStart.Z;
 
-                var worldEnd = modAPI.Utils.GetWorldCoordFromScreenCoord(GetRelativeX(endX, relative), GetRelativeY(endY, relative), _camerasHandler.ActiveCamera);
+                var worldEnd = _utilsHandler.GetWorldCoordFromScreenCoord(GetRelativeX(endX, relative), GetRelativeY(endY, relative), _camerasHandler.ActiveCamera);
                 this._endX = worldEnd.X;
                 this._endY = worldEnd.Y;
                 this._endZ = worldEnd.Z;

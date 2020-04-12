@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Ped;
+﻿using TDS_Client.Data.Interfaces.ModAPI.Blip;
+using TDS_Client.Data.Interfaces.ModAPI.Ped;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Player
@@ -22,6 +23,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
         void TaskPlayAnim(string v1, string animName, float v2, int v3, int v4, int v5, int v6, bool v7, bool v8, bool v9);
         bool IsPlayingAnim(string v1, string animName, int v2);
         bool HasAnimEventFired(object p);
+        void SetCanAttackFriendly(bool v1, bool v2);
         void SetVisible(bool v1, bool v2);
         float GetAnimCurrentTime(string v, string animName);
         WeaponHash GetSelectedWeapon();
@@ -37,6 +39,10 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
         void ResetMovementClipset(float clipSetSwitchTime);
         void ResetStrafeClipset();
         void DisablePlayerFiring(bool v);
+        IBlip AddBlipFor();
+        IBlip GetBlipFrom();
+        void ResetAlpha();
+        bool IsDeadOrDying(bool v);
         // RAGE.Game.Player.SetPlayerMaxArmour(Constants.MaxPossibleArmor);
     }
 }

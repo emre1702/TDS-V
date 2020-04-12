@@ -8,6 +8,8 @@ using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Entities;
+using TDS_Client.Handler.Events;
+using TDS_Client.Handler.Lobby;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -26,12 +28,14 @@ namespace TDS_Client.Handler.MapCreator
         private readonly IModAPI _modAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly LobbyHandler _lobbyHandler;
+        private readonly EventsHandler _eventsHandler;
 
-        public MapCreatorObjectsHandler(IModAPI modAPI, CamerasHandler camerasHandler, LobbyHandler lobbyHandler)
+        public MapCreatorObjectsHandler(IModAPI modAPI, CamerasHandler camerasHandler, LobbyHandler lobbyHandler, EventsHandler eventsHandler)
         {
             _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _lobbyHandler = lobbyHandler;
+            _eventsHandler = eventsHandler;
 
             _entityStreamInEventMethod = new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn);
         }
@@ -50,7 +54,7 @@ namespace TDS_Client.Handler.MapCreator
                 entry.Value.Delete(false);
             }
             _cacheMapEditorObjects.Clear();
-            MapCreatorObjectPlacingHandler.CheckObjectDeleted();
+            _eventsHandler.OnMapCreatorObjectDeleted();
             IdCounter = 0;
 
             MapLimitDisplay?.Stop();
@@ -132,7 +136,7 @@ namespace TDS_Client.Handler.MapCreator
                 }
             }
 
-            var obj = new MapCreatorObject(_modAPI, this, entity, type.Value, _modAPI.LocalPlayer.RemoteId);
+            var obj = new MapCreatorObject(_modAPI, this, _eventsHandler, entity, type.Value, _modAPI.LocalPlayer.RemoteId);
             _cacheMapEditorObjects[entity] = obj;
             return obj;
         }
@@ -144,7 +148,7 @@ namespace TDS_Client.Handler.MapCreator
                 pedHashIndex -= Constants.TeamSpawnPedHash.Length;
             var obj = _modAPI.Ped.Create(Constants.TeamSpawnPedHash[pedHashIndex], _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation, dimension: _modAPI.LocalPlayer.Dimension);
             obj.SetInvincible(true);
-            var mapCreatorObj = new MapCreatorObject(_modAPI, this, obj, MapCreatorPositionType.TeamSpawn, playerRemoteId, editingTeamIndex, id: id);
+            var mapCreatorObj = new MapCreatorObject(_modAPI, this, _eventsHandler, obj, MapCreatorPositionType.TeamSpawn, playerRemoteId, editingTeamIndex, id: id);
             _cacheMapEditorObjects[obj] = mapCreatorObj;
             return mapCreatorObj;
         }
@@ -178,7 +182,7 @@ namespace TDS_Client.Handler.MapCreator
         public MapCreatorObject GetVehicle(uint hash, ushort playerRemoteId, string vehName = null, int id = -1)
         {
             var vehicle = _modAPI.Vehicle.Create(hash, _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation, "Map", locked: true, dimension: _modAPI.LocalPlayer.Dimension);
-            var mapCreatorObj = new MapCreatorObject(_modAPI, this, vehicle, MapCreatorPositionType.Vehicle, playerRemoteId, objectName: vehName, id: id);
+            var mapCreatorObj = new MapCreatorObject(_modAPI, this, _eventsHandler, vehicle, MapCreatorPositionType.Vehicle, playerRemoteId, objectName: vehName, id: id);
             _cacheMapEditorObjects[vehicle] = mapCreatorObj;
             return mapCreatorObj;
         }
@@ -187,7 +191,7 @@ namespace TDS_Client.Handler.MapCreator
         {
             uint hash = _modAPI.Misc.GetHashKey(hashName);
             var obj = _modAPI.MapObject.Create(hash, _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation, dimension: _modAPI.LocalPlayer.Dimension);
-            var mapCreatorObj = new MapCreatorObject(_modAPI, this, obj, type, playerRemoteId, objectName: objName, id: id);
+            var mapCreatorObj = new MapCreatorObject(_modAPI, this, _eventsHandler, obj, type, playerRemoteId, objectName: objName, id: id);
             _cacheMapEditorObjects[obj] = mapCreatorObj;
             return mapCreatorObj;
         }
@@ -199,7 +203,7 @@ namespace TDS_Client.Handler.MapCreator
             {
                 Delete(entry.Value);
             }
-            MapCreatorObjectPlacingHandler.CheckObjectDeleted();
+            _eventsHandler.OnMapCreatorObjectDeleted();
         }
 
         public void Delete(int posId)
@@ -216,7 +220,7 @@ namespace TDS_Client.Handler.MapCreator
                 return;
             _cacheMapEditorObjects.Remove(obj.Entity);
             obj.Delete(true);
-            MapCreatorObjectPlacingHandler.CheckObjectDeleted();
+            _eventsHandler.OnMapCreatorObjectDeleted();
             if (obj.Type == MapCreatorPositionType.MapLimit)
             {
                 RefreshMapLimitDisplay();

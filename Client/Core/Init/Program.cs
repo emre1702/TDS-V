@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TDS_Client.Data.Interfaces.ModAPI;
+﻿using TDS_Client.Data.Interfaces.ModAPI;
 
 namespace TDS_Client.Core.Init
 {
@@ -9,7 +6,21 @@ namespace TDS_Client.Core.Init
     {
         public Program(IModAPI modAPI)
         {
+            Init(modAPI);
             Services.Initialize(modAPI);
+        }
+
+        private void Init(IModAPI modAPI)
+        {
+
+            modAPI.Misc.SetWeatherTypeNowPersist("CLEAR");
+            modAPI.Misc.SetWind(0);
+            modAPI.Streaming.RequestAnimDict("MP_SUICIDE");
+            modAPI.Audio.SetAudioFlag("LoadMPData", true);
+            modAPI.Player.SetPlayerHealthRechargeMultiplier(0);
+
+            // CLEAR_GPS_CUSTOM_ROUTE
+            modAPI.Native.Invoke(TDS_Shared.Data.Enums.NativeHash.CLEAR_GPS_CUSTOM_ROUTE);
         }
     }
 }

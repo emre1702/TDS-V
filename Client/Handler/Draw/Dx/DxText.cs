@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Manager.Utility;
+using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.Handler.Draw.Dx
@@ -29,10 +29,14 @@ namespace TDS_Client.Handler.Draw.Dx
         private ulong _endScaleStartTick;
         private ulong _endScaleEndTick;
 
-        public DxText(string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
+        private readonly TimerHandler _timerHandler;
+
+        public DxText(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
             AlignmentX alignmentX = AlignmentX.Left, AlignmentY alignmentY = AlignmentY.Top, bool relative = true,
-            bool dropShadow = false, bool outline = false, int wordWrap = 999, int amountLines = 0, int frontPriority = 0) : base(frontPriority: frontPriority)
+            bool dropShadow = false, bool outline = false, int wordWrap = 999, int amountLines = 0, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority: frontPriority)
         {
+            _timerHandler = timerHandler;
+
             Text = text;
             _xPos = GetAbsoluteX(x, relative);
             _y = GetAbsoluteY(y, relative);
@@ -75,14 +79,14 @@ namespace TDS_Client.Handler.Draw.Dx
         public void BlendAlpha(int endAlpha, ulong msToEnd)
         {
             this._endAlpha = endAlpha;
-            _endAlphaStartTick = TimerManager.ElapsedTicks;
+            _endAlphaStartTick = _timerHandler.ElapsedMs;
             _endAlphaEndTick = _endAlphaStartTick + msToEnd;
         }
 
         public void BlendScale(float endScale, ulong msToEnd)
         {
             this._endScale = endScale;
-            _endScaleStartTick = TimerManager.ElapsedTicks;
+            _endScaleStartTick = _timerHandler.ElapsedMs;
             _endScaleEndTick = _endScaleStartTick + msToEnd;
         }
 
@@ -114,9 +118,9 @@ namespace TDS_Client.Handler.Draw.Dx
 
         private int GetLineCount()
         {
-            Invoker.Invoke(NativeHash._BEGIN_TEXT_COMMAND_LINE_COUNT, "STRING");
-            Invoker.Invoke(NativeHash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Text);
-            return Invoker.Invoke<int>(NativeHash._GET_TEXT_SCREEN_LINE_COUNT, _xPos, _y);
+            ModAPI.Native.Invoke(NativeHash._BEGIN_TEXT_COMMAND_LINE_COUNT, "STRING");
+            ModAPI.Native.Invoke(NativeHash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Text);
+            return ModAPI.Native.Invoke<int>(NativeHash._GET_TEXT_SCREEN_LINE_COUNT, _xPos, _y);
         }
 
         public void SetScale(float scale)
@@ -127,7 +131,7 @@ namespace TDS_Client.Handler.Draw.Dx
 
         public override void Draw()
         {
-            ulong elapsedticks = TimerManager.ElapsedTicks;
+            ulong elapsedticks = _timerHandler.ElapsedMs;
 
             Color theColor = _color;
             if (_endAlpha.HasValue)
@@ -146,7 +150,7 @@ namespace TDS_Client.Handler.Draw.Dx
                     scale = GetBlendValue(elapsedticks, this._scale, _endScale.Value, _endScaleStartTick, _endScaleEndTick);
             }
 
-            UIResText.Draw(Text, _xPos, _y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);
+            ModAPI.Graphics.DrawText(Text, _xPos, _y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);
         }
 
         public override DxType GetDxType()

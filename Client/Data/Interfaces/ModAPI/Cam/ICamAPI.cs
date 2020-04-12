@@ -15,5 +15,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
         void Render(bool v, bool ease, int easeTime);
         float GetGameplayCamFov();
         void SetCamFov(object handle, float v);
+        void ShakeGameplayCam(string lARGE_EXPLOSION_SHAKE, float v);
+        void StopGameplayCamShaking(bool v);
     }
 }

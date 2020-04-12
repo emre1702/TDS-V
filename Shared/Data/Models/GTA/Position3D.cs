@@ -223,6 +223,9 @@ namespace TDS_Shared.Data.Models.GTA
             return (float)Math.Sqrt(DistanceToSquared2D(right));
         }
 
+        public Position3D AddToZ(float z) 
+            => new Position3D(X, Y, Z + z);
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))

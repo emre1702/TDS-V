@@ -18,15 +18,13 @@ namespace TDS_Client.Handler.Sync
 
         private readonly IModAPI _modAPI;
         private readonly BrowserHandler _browserHandler;
-        private readonly LobbyHandler _lobbyHandler;
         private readonly Serializer _serializer;
         private readonly EventsHandler _eventsHandler;
 
-        public DataSyncHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler angularHandler, LobbyHandler lobbyHandler, Serializer serializer)
+        public DataSyncHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler angularHandler, Serializer serializer)
         {
             _modAPI = modAPI;
             _browserHandler = angularHandler;
-            _lobbyHandler = lobbyHandler;
             _serializer = serializer;
             _eventsHandler = eventsHandler;
 
@@ -119,9 +117,6 @@ namespace TDS_Client.Handler.Sync
                     break;
                 case PlayerDataKey.AdminLevel:
                     _browserHandler.Angular.RefreshAdminLevel(Convert.ToInt32(obj));
-                    break;
-                case PlayerDataKey.IsLobbyOwner:
-                    _lobbyHandler.IsLobbyOwner = (bool)obj;
                     break;
                 case PlayerDataKey.Name:
                     if (!_nameSyncedWithAngular)

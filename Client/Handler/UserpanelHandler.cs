@@ -1,4 +1,6 @@
-﻿using TDS_Client.Data.Enums;
+﻿using TDS_Client.Data.Defaults;
+using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 
 namespace TDS_Client.Handler
@@ -11,11 +13,13 @@ namespace TDS_Client.Handler
         private readonly CursorHandler _cursorHandler;
         private readonly SettingsHandler _settingsHandler;
 
-        public UserpanelHandler(BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler)
+        public UserpanelHandler(IModAPI modAPI, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler)
         {
             _browserHandler = browserHandler;
             _cursorHandler = cursorHandler;
             _settingsHandler = settingsHandler;
+
+            modAPI.Event.Add(FromBrowserEvent.CloseUserpanel, _ => Close());
         }
 
         public void Toggle(Key key)

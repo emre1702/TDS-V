@@ -17,71 +17,61 @@ using TDS_Shared.Core;
 using static RAGE.Events;
 using Player = RAGE.Elements.Player;
 using Script = RAGE.Events.Script;
+using TDS_Client.Data.Defaults;
 
 namespace TDS_Client.Manager.Event
 {
     partial class EventsHandler : Script
     {
-        private void AddFromBrowserEvents()
+        private void AdFromBrowserEvents()
         {
             Add(ToServerEvent.AcceptInvitation, OnAcceptInvitationMethod);
-            Add(DFromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
-            Add(DFromBrowserEvent.ChooseArenaToJoin, OnChooseArenaToJoinMethod);
-            Add(DFromBrowserEvent.ChooseMapCreatorToJoin, OnChooseMapCreatorToJoinMethod);
-            Add(ToServerEvent.ChooseTeam, OnChooseTeamMethod);
-            Add(DFromBrowserEvent.CloseMapVotingMenu, OnCloseMapVotingMenuMethod);
-            Add(DFromBrowserEvent.CloseUserpanel, OnCloseUserpanelMethod);
-            Add(DFromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
-            Add(DFromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
+            Add(FromBrowserEvent.AddMapVote, OnAddMapVoteMethod);
+
+            
+            Add(FromBrowserEvent.CreateCustomLobby, OnCreateCustomLobbyMethod);
+            Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
             Add(ToServerEvent.GetSupportRequestData, OnGetSupportRequestDataBrowserMethod);
-            Add(DFromBrowserEvent.GetVehicle, OnGetVehicleMethod);
-            Add(DFromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
-            Add(DFromBrowserEvent.InputStarted, OnInputStartedMethod);
-            Add(DFromBrowserEvent.InputStopped, OnInputStoppedMethod);
-            Add(DFromBrowserEvent.JoinCustomLobby, OnJoinCustomLobbyMethod);
-            Add(DFromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
-            Add(DFromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
-            Add(ToServerEvent.LeaveLobby, OnLeaveLobbyMethod);
-            Add(DFromBrowserEvent.LeftCustomLobbiesMenu, OnLeftCustomLobbiesMenuMethod);
+            Add(FromBrowserEvent.GetVehicle, OnGetVehicleMethod);
+           
+            Add(FromBrowserEvent.JoinCustomLobby, OnJoinCustomLobbyMethod);
+            Add(FromBrowserEvent.JoinCustomLobbyWithPassword, OnJoinCustomLobbyWithPasswordMethod);
+            Add(FromBrowserEvent.JoinedCustomLobbiesMenu, OnJoinedCustomLobbiesMenuMethod);
+            Add(FromBrowserEvent.LeftCustomLobbiesMenu, OnLeftCustomLobbiesMenuMethod);
             Add(ToServerEvent.LeftSupportRequest, OnLeftSupportRequestMethod);
             Add(ToServerEvent.LeftSupportRequestsList, OnLeftSupportRequestsListMethod);
             Add(ToServerEvent.LoadApplicationDataForAdmin, LoadApplicationDataForAdminBrowserMethod);
             Add(ToServerEvent.LoadMapNamesToLoadForMapCreator, OnLoadMapNamesToLoadForMapCreatorMethod);
             Add(ToServerEvent.LoadMapForMapCreator, OnLoadMyMapForMapCreatorMethod);
             Add(ToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
-            Add(DFromBrowserEvent.MapCreatorHighlightPos, OnMapCreatorHighlightPosMethod);
-            Add(DFromBrowserEvent.MapCreatorShowObject, OnMapCreatorShowObjectMethod);
-            Add(DFromBrowserEvent.MapCreatorShowVehicle, OnMapCreatorShowVehicleMethod);
-            Add(DFromBrowserEvent.MapCreatorStartNew, OnMapCreatorStartNewBrowserMethod);
-            Add(DFromBrowserEvent.MapCreatorStartObjectChoice, OnMapCreatorStartObjectChoiceMethod);
-            Add(DFromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
-            Add(DFromBrowserEvent.MapCreatorStartVehicleChoice, OnMapCreatorStartVehicleChoiceMethod);
-            Add(DFromBrowserEvent.MapCreatorStopVehiclePreview, OnMapCreatorStopVehiclePreviewMethod);
-            Add(DFromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
-            Add(DFromBrowserEvent.TryLogin, OnTryLoginMethod);
-            Add(DFromBrowserEvent.TryRegister, OnTryRegisterMethod);
-            Add(DFromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+            Add(FromBrowserEvent.MapCreatorShowVehicle, OnMapCreatorShowVehicleMethod);
+            Add(FromBrowserEvent.MapCreatorStopObjectPreview, OnMapCreatorStopObjectPreviewMethod);
+            
+            Add(FromBrowserEvent.MapCreatorStopVehiclePreview, OnMapCreatorStopVehiclePreviewMethod);
+            Add(FromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
+            Add(FromBrowserEvent.TryLogin, OnTryLoginMethod);
+            Add(FromBrowserEvent.TryRegister, OnTryRegisterMethod);
+            Add(FromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
             Add(ToServerEvent.RejectInvitation, OnRejectInvitationMethod);
             Add(ToServerEvent.RemoveMap, OnRemoveMapMethod);
-            Add(DFromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
-            Add(DFromBrowserEvent.RemoveMapCreatorTeamNumber, OnRemoveMapCreatorTeamNumberMethod);
-            Add(DFromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
+            Add(FromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
+            Add(FromBrowserEvent.RemoveMapCreatorTeamNumber, OnRemoveMapCreatorTeamNumberMethod);
+            Add(FromBrowserEvent.SaveMapCreatorData, OnSaveMapCreatorDataMethod);
             Add(ToServerEvent.SaveSettings, OnSaveSettingsMethod);
             Add(ToServerEvent.SendApplication, OnSendApplicationMethod);
-            Add(DFromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
-            Add(DFromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
+            Add(FromBrowserEvent.SendMapCreatorData, OnSendMapCreatorDataMethod);
+            Add(FromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             Add(ToServerEvent.SetSupportRequestClosed, OnSetSupportRequestClosedBrowserMethod);
             Add(ToServerEvent.SendSupportRequest, OnSendSupportRequestMethod);
             Add(ToServerEvent.SendSupportRequestMessage, OnSendSupportRequestMessageMethod);
-            Add(DFromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
-            Add(DFromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
-            Add(DFromBrowserEvent.TeleportToXY, OnTeleportToXYMethod);
-            Add(DFromBrowserEvent.TeleportToPositionRotation, OnTeleportToPositionRotationMethod);
-            Add(DFromBrowserEvent.ToggleMapFavorite, OnToggleMapFavoriteMethod);
+            Add(FromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
+            Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, OnSyncRegisterLoginLanguageTextsMethod);
+            Add(FromBrowserEvent.TeleportToXY, OnTeleportToXYMethod);
+            Add(FromBrowserEvent.TeleportToPositionRotation, OnTeleportToPositionRotationMethod);
+            Add(FromBrowserEvent.ToggleMapFavorite, OnToggleMapFavoriteMethod);
 
-            Add(DFromBrowserEvent.ChatUsed, OnChatUsedMethod);
-            Add(DFromBrowserEvent.CommandUsed, OnCommandUsedMethod);
-            Add(DFromBrowserEvent.CloseChat, OnCloseChatMethod);
+            Add(FromBrowserEvent.ChatUsed, OnChatUsedMethod);
+            Add(FromBrowserEvent.CommandUsed, OnCommandUsedMethod);
 
             Add(ToServerEvent.FromBrowserEvent, OnFromBrowserEventMethod);
         }
@@ -98,40 +88,11 @@ namespace TDS_Client.Manager.Event
             EventsSender.Send(ToServerEvent.MapVote, mapId);
         }
 
-        private void OnChooseArenaToJoinMethod(object[] args)
-        {
-            Choice.JoinArena();
-        }
-
-        private void OnChooseMapCreatorToJoinMethod(object[] args)
-        {
-            Choice.JoinMapCreator();
-        }
-
-        private void OnChooseTeamMethod(object[] args)
-        {
-            Browser.Angular.Main.ToggleTeamChoiceMenu(false);
-            CursorManager.Visible = false;
-            Scoreboard.ReleasedScoreboardKey();
-            int index = Convert.ToInt32(args[0]);
-            EventsSender.Send(ToServerEvent.ChooseTeam, index);
-        }
-
         private void OnBrowserSendMapRatingMethod(object[] args)
         {
             int mapId = Convert.ToInt32(args[0]);
             int rating = Convert.ToInt32(args[1]);
             EventsSender.Send(ToServerEvent.SendMapRating, mapId, rating);
-        }
-
-        private void OnCloseMapVotingMenuMethod(object[] args)
-        {
-            MapManager.CloseMenu(false);
-        }
-
-        private void OnCloseUserpanelMethod(object[] args)
-        {
-            Userpanel.Close();
         }
 
         private void OnCreateCustomLobbyMethod(object[] args)
@@ -153,22 +114,7 @@ namespace TDS_Client.Manager.Event
             EventsSender.Send(ToServerEvent.GetVehicle, (int)vehType);
         }
 
-        private void OnHoldMapCreatorObjectMethod(object[] args)
-        {
-            int objID = (int)args[0];
-            ObjectPlacing.HoldObjectWithID(objID);
-        }
-
-        private void OnInputStartedMethod(object[] args)
-        {
-            Browser.Angular.Shared.InInput = true;
-        }
-
-        private void OnInputStoppedMethod(object[] args)
-        {
-            Browser.Angular.Shared.InInput = false;
-        }
-
+       
         private void OnJoinCustomLobbyMethod(object[] args)
         {
             int lobbyId = (int)args[0];
@@ -185,13 +131,6 @@ namespace TDS_Client.Manager.Event
         private void OnJoinedCustomLobbiesMenuMethod(object[] args)
         {
             EventsSender.Send(ToServerEvent.JoinedCustomLobbiesMenu);
-        }
-
-        private void OnLeaveLobbyMethod(object[] args)
-        {
-            Browser.Angular.Main.ToggleTeamChoiceMenu(false);
-            Scoreboard.ReleasedScoreboardKey();
-            EventsSender.Send(ToServerEvent.LeaveLobby);
         }
 
         private void OnLeftCustomLobbiesMenuMethod(object[] args)
@@ -242,50 +181,6 @@ namespace TDS_Client.Manager.Event
             Settings.RevertTempSettings();
         }
 
-        private void OnMapCreatorHighlightPosMethod(object[] args)
-        {
-            ObjectPlacing.HighlightObjectWithId((int)args[0]);
-        }
-
-        private void OnMapCreatorShowObjectMethod(object[] args)
-        {
-            string objName = (string)args[0];
-            ObjectPreview.ShowObject(objName);
-        }
-
-        private void OnMapCreatorShowVehicleMethod(object[] args)
-        {
-            string vehicleName = (string)args[0];
-            VehiclePreview.ShowVehicle(vehicleName);
-        }
-
-        private void OnMapCreatorStartNewBrowserMethod(object[] args)
-        {
-            Sync.SyncStartNewMap();
-        }
-
-        private void OnMapCreatorStartObjectChoiceMethod(object[] args)
-        {
-            Browser.Angular.MapCreatorObjectChoice.Start();
-        }
-
-        private void OnMapCreatorStopObjectPreviewMethod(object[] args)
-        {
-            ObjectPreview.Stop();
-            Browser.Angular.MapCreatorObjectChoice.Stop();
-        }
-
-        private void OnMapCreatorStartVehicleChoiceMethod(object[] args)
-        {
-            Browser.Angular.MapCreatorVehicleChoice.Start();
-        }
-
-        private void OnMapCreatorStopVehiclePreviewMethod(object[] args)
-        {
-            VehiclePreview.Stop();
-            Browser.Angular.MapCreatorVehicleChoice.Stop();
-        }
-
         private void OnColorSettingChangeMethod(object[] args)
         {
             string color = (string)args[0];
@@ -315,58 +210,8 @@ namespace TDS_Client.Manager.Event
             
         }
 
-        private void OnTryLoginMethod(object[] args)
-        {
-            string username = (string)args[0];
-            string password = (string)args[1];
-            RegisterLoginHandler.TryLogin(username, password);
-        }
 
-        private void OnTryRegisterMethod(object[] args)
-        {
-            string username = (string)args[0];
-            string password = (string)args[1];
-            string email = (string)args[2];
-            RegisterLoginHandler.TryRegister(username, password, email);
-        }
-
-        private void OnCommandUsedMethod(object[] args)
-        {
-            ChatHandler.CloseChatInput();
-            string msg = (string)args[0];
-            if (msg == "checkshoot")
-            {
-                if (Bomb.BombOnHand || !Round.InFight)
-                    Chat.Output("Shooting is blocked. Reason: " + (Round.InFight ? "bomb" : (!Bomb.BombOnHand ? "round" : "both")));
-                else
-                    Chat.Output("Shooting is not blocked.");
-                return;
-            } 
-
-            EventsSender.Send(ToServerEvent.CommandUsed, msg);
-        }
-
-        private void OnChatUsedMethod(object[] args)
-        {
-            ChatHandler.CloseChatInput();
-            string msg = (string)args[0];
-            int chatTypeNumber = (int)(args[1]);
-            EventsSender.Send(ToServerEvent.LobbyChatMessage, msg, chatTypeNumber);
-        }
-
-        private void OnCloseChatMethod(object[] args)
-        {
-            ChatHandler.CloseChatInput();
-        }
-
-        private void OnLanguageChangeMethod(object[] args)
-        {
-            var languageID = Convert.ToInt32(args[0]);
-            if (!System.Enum.IsDefined(typeof(Language), languageID))
-                return;
-
-            Settings.LanguageEnum = (Language)languageID;
-        }
+        
 
         private void OnRejectInvitationMethod(object[] args)
         {

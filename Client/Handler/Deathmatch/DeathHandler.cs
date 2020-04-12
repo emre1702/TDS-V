@@ -5,6 +5,8 @@ using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Draw;
+using TDS_Client.Handler.Events;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.Handler.Deathmatch
 {
@@ -14,13 +16,15 @@ namespace TDS_Client.Handler.Deathmatch
         private readonly SettingsHandler _settingsHandler;
         private readonly ScaleformMessageHandler _scaleformMessageHandler;
 
-        public DeathHandler(IModAPI modAPI, SettingsHandler settingsHandler, ScaleformMessageHandler scaleformMessageHandler)
+        public DeathHandler(IModAPI modAPI, SettingsHandler settingsHandler, ScaleformMessageHandler scaleformMessageHandler, EventsHandler eventsHandler)
         {
             _modAPI = modAPI;
             _settingsHandler = settingsHandler;
             _scaleformMessageHandler = scaleformMessageHandler;
 
             modAPI.Event.Death.Add(new EventMethodData<DeathDelegate>(PlayerDeath));
+
+            eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
         }
 
         public void PlayerSpawn()
@@ -42,6 +46,15 @@ namespace TDS_Client.Handler.Deathmatch
             _modAPI.Graphics.StartScreenEffect(EffectName.DEATHFAILMPIN, 0, true);
 
             _scaleformMessageHandler.ShowWastedMessage();
+        }
+
+        private void EventsHandler_LobbyJoined(TDS_Shared.Data.Models.SyncedLobbySettingsDto settings)
+        {
+            if (settings.Type == LobbyType.MainMenu)
+            {
+                PlayerSpawn();
+            }
+           
         }
     }
 }

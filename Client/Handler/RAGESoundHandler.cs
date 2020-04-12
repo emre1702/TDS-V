@@ -1,12 +1,12 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Enum;
 using static RAGE.Events;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS_Client.Handler
 {
-    class RAGESoundManager //: Script
+    class RAGESoundHandler //: Script
     {
         private static int _currentIndex;
         private static readonly List<(int id, string soundName, string soundSetName)> _sounds = new[] {
@@ -388,7 +388,7 @@ namespace TDS_Client.Manager.Utility
             (id: 376, soundName: "Zoom_Right", soundSetName: "DLC_HEIST_PLANNING_BOARD_SOUNDS")
         }.ToList();
 
-        public RAGESoundManager()
+        public RAGESoundHandler()
         {
             RAGE.Game.Audio.SetAudioFlag("LoadMPData", true);
             BindManager.Add(EKey.J, (key =>
@@ -420,3 +420,4 @@ namespace TDS_Client.Manager.Utility
         }
     }
 }
+*/

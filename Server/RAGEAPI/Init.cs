@@ -1,8 +1,5 @@
 ﻿using GTANetworkAPI;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using System;
-using TDS_Server.Core.Init;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.RAGEAPI.Player;

@@ -1,7 +1,9 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
+﻿using TDS_Client.Data.Defaults;
+using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.MapObject;
 using TDS_Client.Data.Models;
+using TDS_Client.Handler.Browser;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.MapCreator
@@ -17,15 +19,21 @@ namespace TDS_Client.Handler.MapCreator
         private readonly ObjectsLoadingHelper _objectLoadingHelper;
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
+        private readonly BrowserHandler _browserHandler;
 
-        public MapCreatorObjectsPreviewHandler(IModAPI modAPI, ObjectsLoadingHelper objectLoadingHelper, CamerasHandler camerasHandler, UtilsHandler utilsHandler)
+        public MapCreatorObjectsPreviewHandler(IModAPI modAPI, ObjectsLoadingHelper objectLoadingHelper, CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
         {
             _modAPI = modAPI;
             _objectLoadingHelper = objectLoadingHelper;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
+            _browserHandler = browserHandler;
 
             _tickEventMethod = new EventMethodData<TickDelegate>(RenderObjectInFrontOfCam);
+
+            modAPI.Event.Add(FromBrowserEvent.MapCreatorStartObjectChoice, Start);
+            modAPI.Event.Add(FromBrowserEvent.MapCreatorShowObject, args => ShowObject((string)args[0]));
+            modAPI.Event.Add(FromBrowserEvent.MapCreatorStopObjectPreview, _ => Stop());
         }
 
         public void ShowObject(string objectName)
@@ -45,6 +53,12 @@ namespace TDS_Client.Handler.MapCreator
             _object.SetInvincible(true);
         }
 
+        private void Start(object[] args)
+        {
+            _browserHandler.MapCreatorObjectChoice.CreateBrowser();
+            _browserHandler.MapCreatorObjectChoice.SetReady();
+        }
+
         public void Stop()
         {
             if (_object != null)
@@ -54,6 +68,7 @@ namespace TDS_Client.Handler.MapCreator
                 _objectRotation = null;
                 _modAPI.Event.Tick.Remove(_tickEventMethod);
             }
+            _browserHandler.MapCreatorObjectChoice.Stop();
         }
 
         private void RenderObjectInFrontOfCam(ulong currentMs)
@@ -63,7 +78,7 @@ namespace TDS_Client.Handler.MapCreator
 
             Position3D a = new Position3D();
             Position3D b = new Position3D();
-            _modAPI.Misc.GetModelDimensions(_object.Model, a, b);
+            _modAPI.Misc.GetModelDimensions(_object, a, b);
             var objSize = b - a;
             var position = camPos + camDirection * (3 + objSize.Length());
             _object.Position = position;

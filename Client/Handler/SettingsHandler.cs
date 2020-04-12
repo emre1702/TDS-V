@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Handler.Entities.Languages;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -37,8 +39,6 @@ namespace TDS_Client.Handler
                 bool beforeLogin = PlayerSettings == null;
                 _eventsHandler?.OnLanguageChanged(Language, beforeLogin);
 
-                _scoreboardHandler.LoadLanguage();
-                CustomEventManager.SetNewLanguage(Language);
                 if (!beforeLogin)
                 {
                     PlayerSettings.Language = value;
@@ -104,6 +104,8 @@ namespace TDS_Client.Handler
 
             Language = _languagesDict[LanguageEnum];
 
+            modAPI.Event.Add(FromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+
             modAPI.Nametags.Enabled = false;
 
             modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Flying), 100, false);
@@ -115,6 +117,8 @@ namespace TDS_Client.Handler
             modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Wheelie), 100, false);
 
             modAPI.LocalPlayer.SetMaxArmor(Constants.MaxPossibleArmor);
+            LoadLanguageFromRAGE();
+
         }
 
         public void LoadSyncedSettings(SyncedServerSettingsDto loadedSyncedSettings)
@@ -181,7 +185,7 @@ namespace TDS_Client.Handler
             }
         }
 
-        public void LoadLanguageFromRAGE()
+        private void LoadLanguageFromRAGE()
         {
             int lang = _modAPI.Locale.GetCurrentLanguageId();
             switch (lang)
@@ -191,6 +195,15 @@ namespace TDS_Client.Handler
                     _languageManuallyChanged = false;
                     break;
             }
+        }
+
+        private void OnLanguageChangeMethod(object[] args)
+        {
+            var languageID = Convert.ToInt32(args[0]);
+            if (!Enum.IsDefined(typeof(Language), languageID))
+                return;
+
+            LanguageEnum = (Language)languageID;
         }
 
         /*function loadSettings() {

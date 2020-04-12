@@ -8,6 +8,7 @@ using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Client.Handler.Deathmatch
 {
@@ -60,6 +61,7 @@ namespace TDS_Client.Handler.Deathmatch
             _floatingDamageInfoHandler = floatingDamageInfoHandler;
 
             _eventsHandler.WeaponChanged += WeaponChanged;
+            _eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
 
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => InFight));
         }
@@ -163,6 +165,11 @@ namespace TDS_Client.Handler.Deathmatch
                 return;
 
             _currentWeapon = newWeaponHash;
+        }
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        {
+            InFight = false;
         }
     }
 }

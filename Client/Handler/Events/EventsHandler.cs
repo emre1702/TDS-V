@@ -4,7 +4,9 @@ using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
+using TDS_Client.Handler.MapCreator;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Client.Handler.Events
 {
@@ -14,9 +16,14 @@ namespace TDS_Client.Handler.Events
         public delegate void BoolDelegate(bool boolean);
         public event BoolDelegate CursorToggled;
         public event BoolDelegate InFightStatusChanged;
+        public event BoolDelegate FreecamToggled;
 
         public delegate void EmptyDelegate();
         public event EmptyDelegate SettingsLoaded;
+        public event EmptyDelegate MapCleared;
+        public event EmptyDelegate MapCreatorObjectDeleted;
+        public event EmptyDelegate MapCreatorSyncLatestObjectID;
+        public event EmptyDelegate LobbyJoinSelectedTeam;
 
         public delegate void LanguageChangedDelegate(ILanguage lang, bool beforeLogin);
         public event LanguageChangedDelegate LanguageChanged;
@@ -26,6 +33,13 @@ namespace TDS_Client.Handler.Events
 
         public delegate void DataChangedDelegate(IPlayer player, PlayerDataKey key, object data);
         public event DataChangedDelegate DataChanged;
+
+        public delegate void LobbyLeftJoinedDelegate(SyncedLobbySettingsDto settings);
+        public event LobbyLeftJoinedDelegate LobbyJoined;
+        public event LobbyLeftJoinedDelegate LobbyLeft;
+
+        public delegate void MapCreatorObjectDelegate(MapCreatorObject mapCreatorObject);
+        public event MapCreatorObjectDelegate MapCreatorSyncObjectDeleted;
 
         private WeaponHash _lastWeaponHash;
 
@@ -62,8 +76,41 @@ namespace TDS_Client.Handler.Events
         {
             DataChanged?.Invoke(player, key, data);
         }
-        
 
+        public void OnLobbyJoined(SyncedLobbySettingsDto newSettings)
+        {
+            LobbyJoined?.Invoke(newSettings);
+        }
+
+        internal void OnMapCreatorSyncLatestObjectID()
+        {
+            MapCreatorSyncLatestObjectID?.Invoke();
+        }
+
+        public void OnLobbyLeft(SyncedLobbySettingsDto oldSettings)
+        {
+            LobbyLeft?.Invoke(oldSettings);
+        }
+
+        internal void OnMapCreatorObjectDeleted()
+        {
+            MapCreatorObjectDeleted?.Invoke();
+        }
+
+        internal void OnMapCreatorSyncObjectDeleted(MapCreatorObject mapCreatorObject)
+        {
+            MapCreatorSyncObjectDeleted?.Invoke(mapCreatorObject);
+        }
+
+        internal void OnFreecamToggled(bool toggle)
+        {
+            FreecamToggled?.Invoke(toggle);
+        }
+
+        internal void OnLobbyJoinSelectedTeam()
+        {
+            LobbyJoinSelectedTeam?.Invoke();
+        }
 
         private void OnTick(ulong _)
         {
@@ -79,5 +126,7 @@ namespace TDS_Client.Handler.Events
                 _lastWeaponHash = currentWeapon;
             }
         }
+
+        
     }
 }

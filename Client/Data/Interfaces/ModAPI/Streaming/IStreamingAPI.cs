@@ -11,5 +11,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Streaming
         bool IsModelValid(uint hash);
         void RequestModel(uint hash);
         bool HasModelLoaded(uint hash);
+        void RequestAnimDict(string v);
     }
 }

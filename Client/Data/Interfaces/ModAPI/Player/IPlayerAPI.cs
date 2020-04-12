@@ -8,5 +8,6 @@
         void SetPlayerInvincible(bool v);
         void SetPlayerTeam(int team);
         bool GetEntityPlayerIsFreeAimingAt(ref int targetEntity);
+        void SetPlayerHealthRechargeMultiplier(int v);
     }
 }

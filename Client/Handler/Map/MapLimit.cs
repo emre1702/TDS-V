@@ -7,7 +7,7 @@ using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
-using TDS_Client.Handler.Entities.Draw.Dx;
+using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -44,14 +44,18 @@ namespace TDS_Client.Handler.Entities
         private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
+        private readonly DxHandler _dxHandler;
+        private readonly TimerHandler _timerHandler;
 
         public MapLimit(List<Position3D> edges, MapLimitType type, int maxOutsideCounter, Color mapBorderColor, IModAPI modAPI, RemoteEventsSender remoteEventsSender,
-            SettingsHandler settingsHandler)
+            SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler)
         {
             _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
             _tickEventMethod = new EventMethodData<TickDelegate>(Draw);
             _settingsHandler = settingsHandler;
+            _dxHandler = dxHandler;
+            _timerHandler = timerHandler;
 
             _type = type;
             _maxOutsideCounter = maxOutsideCounter;
@@ -200,8 +204,8 @@ namespace TDS_Client.Handler.Entities
         private void RefreshInfoKillAfterTime()
         {
             if (_info == null)
-                _info = new DxText(string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f, Color.White,
-                    alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
+                _info = new DxText(_dxHandler, _modAPI, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f, 
+                    Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
             else
                 _info.Text = string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString());
         }
@@ -209,8 +213,8 @@ namespace TDS_Client.Handler.Entities
         private void RefreshInfoTeleportAfterTime()
         {
             if (_info == null)
-                _info = new DxText(string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f, Color.White,
-                    alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
+                _info = new DxText(_dxHandler, _modAPI, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f, 
+                    Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
             else
                 _info.Text = string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString());
         }

@@ -1,77 +1,77 @@
-﻿using RAGE.Game;
-using RAGE.NUI;
-using System.Drawing;
-using TDS_Client.Enum;
+﻿using System.Drawing;
+using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI;
 
 namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxRectangle : DxBase
     {
-        private float xpos,
-            ypos,
-            sizex,
-            sizey;
+        private float _xPos,
+            _yPos,
+            _sizeX,
+            _sizeY;
 
-        private readonly Color color;
-        private UIResText.Alignment alignmentX;
+        private readonly Color _color;
+        private AlignmentX _alignmentX;
 
-        public DxRectangle(float x, float y, float width, float height, Color color, UIResText.Alignment alignmentX = UIResText.Alignment.Left, ToServerEvent ToServerEvent = ToServerEvent.Top, 
-            bool relativePos = true, int frontPriority = 0) : base(frontPriority: frontPriority)
+        public DxRectangle(DxHandler dxHandler, IModAPI modAPI, float x, float y, float width, float height, Color color,
+            AlignmentX alignmentX = AlignmentX.Left, AlignmentY alignmentY = AlignmentY.Top,
+            bool relativePos = true, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority: frontPriority)
         {
-            xpos = GetRelativeX(x, relativePos);
-            ypos = GetRelativeY(y, relativePos);
-            sizex = GetRelativeX(width, relativePos);
-            sizey = GetRelativeY(height, relativePos);
+            _xPos = GetRelativeX(x, relativePos);
+            _yPos = GetRelativeY(y, relativePos);
+            _sizeX = GetRelativeX(width, relativePos);
+            _sizeY = GetRelativeY(height, relativePos);
 
-            this.color = color;
-            this.alignmentX = alignmentX;
+            this._color = color;
+            this._alignmentX = alignmentX;
 
-            if (alignmentX == UIResText.Alignment.Left)
-                xpos += sizex / 2;
-            else if (alignmentX == UIResText.Alignment.Right)
-                xpos -= sizex / 2;
+            if (alignmentX == AlignmentX.Left)
+                _xPos += _sizeX / 2;
+            else if (alignmentX == AlignmentX.Right)
+                _xPos -= _sizeX / 2;
 
-            if (ToServerEvent == ToServerEvent.Top)
-                ypos += sizey / 2;
-            else if (ToServerEvent == ToServerEvent.Bottom)
-                ypos -= sizey / 2;
+            if (alignmentY == AlignmentY.Top)
+                _yPos += _sizeY / 2;
+            else if (alignmentY == AlignmentY.Bottom)
+                _yPos -= _sizeY / 2;
         }
 
-        public void SetAlignment(UIResText.Alignment newalignmentX)
+        public void SetAlignment(AlignmentX newalignmentX)
         {
             // convert old back
-            if (alignmentX == UIResText.Alignment.Left)
-                xpos -= sizex / 2;
-            else if (alignmentX == UIResText.Alignment.Right)
-                xpos += sizex / 2;
+            if (_alignmentX == AlignmentX.Left)
+                _xPos -= _sizeX / 2;
+            else if (_alignmentX == AlignmentX.Right)
+                _xPos += _sizeX / 2;
 
             // align new
-            if (newalignmentX == UIResText.Alignment.Left)
-                xpos += sizex / 2;
-            else if (newalignmentX == UIResText.Alignment.Right)
-                xpos -= sizex / 2;
+            if (newalignmentX == AlignmentX.Left)
+                _xPos += _sizeX / 2;
+            else if (newalignmentX == AlignmentX.Right)
+                _xPos -= _sizeX / 2;
 
-            alignmentX = newalignmentX;
+            _alignmentX = newalignmentX;
         }
 
         public void SetWidth(float width, bool relativePos)
         {
-            UIResText.Alignment currentalignment = alignmentX;
-            SetAlignment(UIResText.Alignment.Centered);
-            sizex = GetRelativeX(width, relativePos);
+            AlignmentX currentalignment = _alignmentX;
+            SetAlignment(AlignmentX.Center);
+            _sizeX = GetRelativeX(width, relativePos);
             SetAlignment(currentalignment);
         }
 
         public void SetHeight(float height)
         {
-            ypos -= sizey / 2;
-            sizey = height;
-            ypos += height / 2;
+            _yPos -= _sizeY / 2;
+            _sizeY = height;
+            _yPos += height / 2;
         }
 
         public override void Draw()
         {
-            Graphics.DrawRect(xpos, ypos, sizex, sizey, color.R, color.G, color.B, color.A, 0);
+            ModAPI.Graphics.DrawRect(_xPos, _yPos, _sizeX, _sizeY, _color.R, _color.G, _color.B, _color.A, 0);
         }
     }
 }

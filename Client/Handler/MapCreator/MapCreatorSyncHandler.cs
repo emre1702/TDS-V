@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using TDS_Client.Data.Defaults;
+using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -15,11 +17,16 @@ namespace TDS_Client.Handler.MapCreator
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly Serializer _serializer;
 
-        public MapCreatorSyncHandler(MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer)
+        public MapCreatorSyncHandler(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler)
         {
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
             _remoteEventsSender = remoteEventsSender;
             _serializer = serializer;
+
+            eventsHandler.MapCreatorSyncLatestObjectID += SyncLatestIdToServer;
+            eventsHandler.MapCreatorSyncObjectDeleted += SyncObjectRemoveToLobby;
+
+            modAPI.Event.Add(FromBrowserEvent.MapCreatorStartNew, SyncStartNewMap);
         }
 
         #region Id
@@ -121,7 +128,7 @@ namespace TDS_Client.Handler.MapCreator
         #endregion All objects
 
         #region Change map 
-        public void SyncStartNewMap()
+        public void SyncStartNewMap(params object[] args)
         {
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorStartNewMap);
         }

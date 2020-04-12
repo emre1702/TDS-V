@@ -6,6 +6,7 @@ using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Entities;
+using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.MapCreator
@@ -23,28 +24,28 @@ namespace TDS_Client.Handler.MapCreator
         private readonly IModAPI _modAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
-        private readonly SpectatingHandler _spectatingHandler;
-        private readonly MapCreatorBindsHandler _mapCreatorBindsHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
-        private readonly SettingsHandler _settingsHandler;
         private readonly CursorHandler _cursorHandler;
         private readonly BrowserHandler _browserHandler;
         private readonly MapCreatorFootHandler _mapCreatorFootHandler;
+        private readonly MapCreatorMarkerHandler _mapCreatorMarkerHandler;
+        private readonly MapCreatorObjectPlacingHandler _mapCreatorObjectPlacingHandler;
+        private readonly EventsHandler _eventsHandler;
 
-        public MapCreatorFreecamHandler(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SpectatingHandler spectatingHandler,
-            MapCreatorBindsHandler mapCreatorBindsHandler, InstructionalButtonHandler instructionalButtonHandler, SettingsHandler settingsHandler,
-            CursorHandler cursorHandler, BrowserHandler browserHandler, MapCreatorFootHandler mapCreatorFootHandler)
+        public MapCreatorFreecamHandler(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, InstructionalButtonHandler instructionalButtonHandler, 
+            CursorHandler cursorHandler, BrowserHandler browserHandler, MapCreatorFootHandler mapCreatorFootHandler, MapCreatorMarkerHandler mapCreatorMarkerHandler,
+            MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, EventsHandler eventsHandler)
         {
             _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
-            _spectatingHandler = spectatingHandler;
-            _mapCreatorBindsHandler = mapCreatorBindsHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
-            _settingsHandler = settingsHandler;
             _cursorHandler = cursorHandler;
             _browserHandler = browserHandler;
             _mapCreatorFootHandler = mapCreatorFootHandler;
+            _mapCreatorMarkerHandler = mapCreatorMarkerHandler;
+            _mapCreatorObjectPlacingHandler = mapCreatorObjectPlacingHandler;
+            _eventsHandler = eventsHandler;
 
             _tickEventMethod = new EventMethodData<TickDelegate>(OnTick);
         }
@@ -55,7 +56,7 @@ namespace TDS_Client.Handler.MapCreator
             _modAPI.Event.Tick.Add(_tickEventMethod);
 
             if (_camerasHandler.FreeCam is null)
-                _camerasHandler.FreeCam = new TDSCamera(_modAPI, _camerasHandler, _utilsHandler, _spectatingHandler);
+                _camerasHandler.FreeCam = new TDSCamera(_modAPI, _camerasHandler, _utilsHandler);
 
 
             var cam = _camerasHandler.FreeCam;
@@ -65,10 +66,6 @@ namespace TDS_Client.Handler.MapCreator
 
             cam.Activate();
             cam.Render();
-
-            _mapCreatorBindsHandler.SetForInFreecam();
-
-            _instructionalButtonHandler.Add(_settingsHandler.Language.ON_FOOT, "M");
         }
 
         public void Stop()
@@ -78,9 +75,6 @@ namespace TDS_Client.Handler.MapCreator
 
             _camerasHandler.FreeCam?.Deactivate();
             _camerasHandler.FreeCam = null;
-
-
-            _mapCreatorBindsHandler.RemoveForInFreeCam();
         }
 
         private void OnTick(ulong _)
@@ -90,8 +84,9 @@ namespace TDS_Client.Handler.MapCreator
             if (!_cursorHandler.Visible)
                 MoveCam();
 
-            MapCreatorMarkerHandler.OnTick();
-            MapCreatorObjectPlacingHandler.OnTick();
+
+            _mapCreatorMarkerHandler.OnTick();
+            _mapCreatorObjectPlacingHandler.OnTick();
         }
 
         private void MoveCam()
@@ -180,7 +175,6 @@ namespace TDS_Client.Handler.MapCreator
                 return;
 
             _instructionalButtonHandler.Reset();
-            _mapCreatorBindsHandler.SetGeneral();
             if (IsActive)
             {
                 Stop();
@@ -191,6 +185,7 @@ namespace TDS_Client.Handler.MapCreator
                 _mapCreatorFootHandler.Stop();
                 Start();
             }
+            _eventsHandler.OnFreecamToggled(!IsActive);
         }
     }
 }

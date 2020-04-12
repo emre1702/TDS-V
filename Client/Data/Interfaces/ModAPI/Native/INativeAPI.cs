@@ -5,5 +5,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Native
     public interface INativeAPI
     {
         void Invoke(NativeHash native, params object[] args);
+        T Invoke<T>(NativeHash native, params object[] args);
     }
 }

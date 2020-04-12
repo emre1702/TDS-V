@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
+using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
+using TDS_Client.Handler.Lobby;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
@@ -47,11 +50,17 @@ namespace TDS_Client.Handler.MapCreator
         private readonly CamerasHandler _camerasHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
         private readonly UtilsHandler _utilsHandler;
+        private readonly MapCreatorObjectsPreviewHandler _mapCreatorObjectsPreviewHandler;
+        private readonly MapCreatorVehiclesPreviewHandler _mapCreatorVehiclesPreviewHandler;
+        private readonly MapCreatorSyncHandler _mapCreatorSyncHandler;
+        private readonly DxHandler _dxHandler;
+        private readonly TimerHandler _timerHandler;
 
         public MapCreatorObjectPlacingHandler(IModAPI modAPI, MapCreatorMarkerHandler mapCreatorMarkerHandler, MapCreatorDrawHandler mapCreatorDrawHandler,
             MapCreatorObjectsHandler mapCreatorObjectsHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler,
             SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, CamerasHandler camerasHandler, InstructionalButtonHandler instructionalButtonHandler,
-            UtilsHandler utilsHandler)
+            UtilsHandler utilsHandler, MapCreatorObjectsPreviewHandler mapCreatorObjectsPreviewHandler, MapCreatorVehiclesPreviewHandler mapCreatorVehiclesPreviewHandler,
+            MapCreatorSyncHandler mapCreatorSyncHandler, EventsHandler eventsHandler, DxHandler dxHandler, TimerHandler timerHandler)
         {
             _modAPI = modAPI;
             _mapCreatorMarkerHandler = mapCreatorMarkerHandler;
@@ -65,6 +74,16 @@ namespace TDS_Client.Handler.MapCreator
             _camerasHandler = camerasHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
             _utilsHandler = utilsHandler;
+            _mapCreatorObjectsPreviewHandler = mapCreatorObjectsPreviewHandler;
+            _mapCreatorVehiclesPreviewHandler = mapCreatorVehiclesPreviewHandler;
+            _mapCreatorSyncHandler = mapCreatorSyncHandler;
+            _dxHandler = dxHandler;
+            _timerHandler = timerHandler;
+
+            eventsHandler.MapCreatorObjectDeleted += CheckObjectDeleted;
+
+            modAPI.Event.Add(FromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
+            modAPI.Event.Add(FromBrowserEvent.MapCreatorHighlightPos, args => HighlightObjectWithId((int)args[0]));
         }
 
         public void OnTick()
@@ -87,9 +106,9 @@ namespace TDS_Client.Handler.MapCreator
             if (obj == null)
                 return;
             if (type == MapCreatorPositionType.Object)
-                _objectPreviewHandler.Stop();
+                _mapCreatorObjectsPreviewHandler.Stop();
             else if (type == MapCreatorPositionType.Vehicle)
-                _vehiclePreviewHandler.Stop();
+                _mapCreatorVehiclesPreviewHandler.Stop();
 
             if (HoldingObject != null)
                 ReleaseObject();
@@ -208,17 +227,17 @@ namespace TDS_Client.Handler.MapCreator
             {
                 if (_mapCreatorObjectsHandler.MapLimitDisplay == null)
                 {
-                    _mapCreatorObjectsHandler.MapLimitDisplay = new MapLimit(new List<Position3D>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor, 
-                        _modAPI, _remoteEventsSender, _settingsHandler);
+                    _mapCreatorObjectsHandler.MapLimitDisplay = new MapLimit(new List<Position3D>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor,
+                        _modAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
                     _mapCreatorObjectsHandler.MapLimitDisplay.Start();
                 }
                 _mapCreatorObjectsHandler.RefreshMapLimitDisplay();
             }
 
             if (!obj.IsSynced)
-                MapCreatorSyncHandler.SyncNewObjectToLobby(obj);
+                _mapCreatorSyncHandler.SyncNewObjectToLobby(obj);
             else
-                MapCreatorSyncHandler.SyncObjectPositionToLobby(obj);
+                _mapCreatorSyncHandler.SyncObjectPositionToLobby(obj);
         }
 
         private void MoveHoldingObject()
@@ -381,6 +400,12 @@ namespace TDS_Client.Handler.MapCreator
                     obj.MovingPosition = new Position3D(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + 1f);
                     break;
             }
+        }
+
+        private void OnHoldMapCreatorObjectMethod(object[] args)
+        {
+            int objID = (int)args[0];
+            HoldObjectWithID(objID);
         }
     }
 }

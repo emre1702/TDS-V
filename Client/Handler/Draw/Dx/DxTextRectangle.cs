@@ -1,7 +1,6 @@
-﻿using RAGE.Game;
-using RAGE.NUI;
-using System.Drawing;
-using TDS_Client.Enum;
+﻿using System.Drawing;
+using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI;
 
 namespace TDS_Client.Handler.Draw.Dx
 {
@@ -16,18 +15,18 @@ namespace TDS_Client.Handler.Draw.Dx
         private readonly float _height;
         private readonly bool _relativePos;
 
-        private readonly UIResText.Alignment _alignmentX;
-        private readonly ToServerEvent _ToServerEvent;
+        private readonly AlignmentX _alignmentX;
+        private readonly AlignmentY _alignmentY;
 
-        public DxTextRectangle(string text, float x, float y, float width, float height,
+        public DxTextRectangle(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, float x, float y, float width, float height,
             Color textColor, Color rectColor, float textScale = 1.0f, Font textFont = Font.ChaletLondon,
-            int textOffsetAbsoluteX = 0, 
-            UIResText.Alignment alignmentX = UIResText.Alignment.Left, ToServerEvent ToServerEvent = ToServerEvent.Top,
-            UIResText.Alignment textAlignmentX = UIResText.Alignment.Centered, ToServerEvent textToServerEvent = ToServerEvent.Center,
+            int textOffsetAbsoluteX = 0,
+            AlignmentX alignmentX = AlignmentX.Left, AlignmentY alignmentY = AlignmentY.Top,
+            AlignmentX textAlignmentX = AlignmentX.Center, AlignmentY textAlignmentY = AlignmentY.Center,
             bool relativePos = true,
-            int amountLines = 0, bool activated = true, int frontPriority = 0) : base(frontPriority, activated)
+            int amountLines = 0, bool activated = true, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority, activated)
         {
-            _rect = new DxRectangle(x, y, width, height, rectColor, alignmentX, ToServerEvent, relativePos)
+            _rect = new DxRectangle(dxHandler, modAPI, x, y, width, height, rectColor, alignmentX, alignmentY, relativePos)
             {
                 Activated = false
             };
@@ -39,11 +38,11 @@ namespace TDS_Client.Handler.Draw.Dx
             this._relativePos = relativePos;
 
             this._alignmentX = alignmentX;
-            this._ToServerEvent = ToServerEvent;
+            this._alignmentY = alignmentY;
 
             float textX = relativePos ? GetTextRelativePosX(textOffsetAbsoluteX, textAlignmentX) : GetTextAbsolutePosX(textOffsetAbsoluteX, textAlignmentX);
-            float textY = relativePos ? GetTextRelativePosY(textToServerEvent) : GetTextAbsolutePosY(textToServerEvent);
-            this._text = new DxText(text, textX, textY, textScale, textColor, textFont, textAlignmentX, textToServerEvent, relativePos, amountLines: amountLines)
+            float textY = relativePos ? GetTextRelativePosY(textAlignmentY) : GetTextAbsolutePosY(textAlignmentY);
+            this._text = new DxText(dxHandler, modAPI, timerHandler, text, textX, textY, textScale, textColor, textFont, textAlignmentX, textAlignmentY, relativePos, amountLines: amountLines)
             {
                 Activated = false
             };
@@ -52,7 +51,7 @@ namespace TDS_Client.Handler.Draw.Dx
             Children.Add(_rect);
         }
 
-        private float GetTextRelativePosX(float offsetX, UIResText.Alignment alignX)
+        private float GetTextRelativePosX(float offsetX, AlignmentX alignX)
         {
             if (_relativePos)
                 offsetX = GetRelativeX(offsetX, false);
@@ -60,27 +59,27 @@ namespace TDS_Client.Handler.Draw.Dx
 
             switch (alignX)
             {
-                case UIResText.Alignment.Centered:
+                case AlignmentX.Center:
                     return GetRelativeX(rectLeftX + _width / 2, _relativePos);
-                case UIResText.Alignment.Left:
+                case AlignmentX.Left:
                     return GetRelativeX(rectLeftX + offsetX, _relativePos);
-                case UIResText.Alignment.Right:
+                case AlignmentX.Right:
                     return GetRelativeX(rectLeftX + _width - offsetX, _relativePos);
             }
             return _x;
         }
 
-        private float GetTextRelativePosY(ToServerEvent alignY)
+        private float GetTextRelativePosY(AlignmentY alignY)
         {
             float rectTopY = GetRectangleTopY();
 
             switch (alignY)
             {
-                case ToServerEvent.Center:
+                case AlignmentY.Center:
                     return GetRelativeX(rectTopY + _height / 2, _relativePos);
-                case ToServerEvent.Top:
+                case AlignmentY.Top:
                     return GetRelativeX(rectTopY, _relativePos);
-                case ToServerEvent.Bottom:
+                case AlignmentY.Bottom:
                     return GetRelativeX(rectTopY + _height, _relativePos);
             }
 
@@ -91,33 +90,33 @@ namespace TDS_Client.Handler.Draw.Dx
             //return _y + _height / 2 - GetRelativeY(5, false);
         }
 
-        private float GetTextAbsolutePosX(float offsetX, UIResText.Alignment alignX)
+        private float GetTextAbsolutePosX(float offsetX, AlignmentX alignX)
         {
             float rectLeftX = GetRectangleLeftX();
 
             switch (alignX)
             {
-                case UIResText.Alignment.Centered:
+                case AlignmentX.Center:
                     return GetAbsoluteX(rectLeftX + _width / 2, _relativePos);
-                case UIResText.Alignment.Left:
+                case AlignmentX.Left:
                     return GetAbsoluteX(rectLeftX, _relativePos) + offsetX;
-                case UIResText.Alignment.Right:
+                case AlignmentX.Right:
                     return GetAbsoluteX(rectLeftX + _width, _relativePos) - offsetX;
             }
             return _x;
         }
 
-        private float GetTextAbsolutePosY(ToServerEvent alignY)
+        private float GetTextAbsolutePosY(AlignmentY alignY)
         {
             float rectTopY = GetRectangleTopY();
 
             switch (alignY)
             {
-                case ToServerEvent.Center:
+                case AlignmentY.Center:
                     return GetAbsoluteY(rectTopY + _height / 2, _relativePos);
-                case ToServerEvent.Top:
+                case AlignmentY.Top:
                     return GetAbsoluteY(rectTopY, _relativePos);
-                case ToServerEvent.Bottom:
+                case AlignmentY.Bottom:
                     return GetAbsoluteY(rectTopY + _height, _relativePos);
             }
 
@@ -132,11 +131,11 @@ namespace TDS_Client.Handler.Draw.Dx
         {
             switch (_alignmentX)
             {
-                case UIResText.Alignment.Centered:
+                case AlignmentX.Center:
                     return _x - _width / 2;
-                case UIResText.Alignment.Left:
+                case AlignmentX.Left:
                     return _x;
-                case UIResText.Alignment.Right:
+                case AlignmentX.Right:
                     return _x - _width;
             }
             return _x;
@@ -144,13 +143,13 @@ namespace TDS_Client.Handler.Draw.Dx
 
         private float GetRectangleTopY()
         {
-            switch (_ToServerEvent)
+            switch (_alignmentY)
             {
-                case ToServerEvent.Center:
+                case AlignmentY.Center:
                     return _y - _height / 2;
-                case ToServerEvent.Top:
+                case AlignmentY.Top:
                     return _y;
-                case ToServerEvent.Bottom:
+                case AlignmentY.Bottom:
                     return _y - _height;
             }
             return _y;

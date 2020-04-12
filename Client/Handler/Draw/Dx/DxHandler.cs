@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
 
 namespace TDS_Client.Handler.Draw.Dx
@@ -18,10 +19,11 @@ namespace TDS_Client.Handler.Draw.Dx
         {
             _modAPI = modAPI;
 
-            modAPI.Event.Tick.Add(new EventMethodData<Action>(RenderAll));
+            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(RenderAll));
+            RefreshResolution();
         }
 
-        public void RenderAll()
+        public void RenderAll(ulong currentMs)
         {
             foreach (var draw in _dxDraws)
             {

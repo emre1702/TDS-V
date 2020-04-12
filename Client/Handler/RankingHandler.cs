@@ -5,6 +5,8 @@ using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Draw;
+using TDS_Client.Handler.Events;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler
@@ -27,7 +29,7 @@ namespace TDS_Client.Handler
         private readonly DeathHandler _deathHandler;
 
         public RankingHandler(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler,
-            BrowserHandler browserHandler, NametagsHandler nametagsHandler, DeathHandler deathHandler)
+            BrowserHandler browserHandler, NametagsHandler nametagsHandler, DeathHandler deathHandler, EventsHandler eventsHandler)
         {
             _tickEventMethod = new EventMethodData<TickDelegate>(OnRender);
 
@@ -39,6 +41,8 @@ namespace TDS_Client.Handler
             _browserHandler = browserHandler;
             _nametagsHandler = nametagsHandler;
             _deathHandler = deathHandler;
+
+            eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
         }
 
         public void Start(string rankingsJson, ushort winnerHandle, ushort secondHandle, ushort thirdHandle)
@@ -104,6 +108,11 @@ namespace TDS_Client.Handler
         {
             _modAPI.Graphics.UseParticleFxAssetNextCall("scr_xs_celebration");
             return _modAPI.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
+        }
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        {
+            Stop();
         }
     }
 }

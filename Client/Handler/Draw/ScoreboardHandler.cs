@@ -10,6 +10,7 @@ using TDS_Client.Data.Models;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Draw.Dx.Grid;
 using TDS_Client.Handler.Events;
+using TDS_Client.Handler.Lobby;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
@@ -38,23 +39,17 @@ namespace TDS_Client.Handler.Draw
         private bool _isManualToggleDisabled;
 
         private readonly DxGridColumn[] _columns = new DxGridColumn[6];
-        private DxGridCell _nameTitleCell;
-        private DxGridCell _playTimeTitleCell;
-        private DxGridCell _killsTitleCell;
-        private DxGridCell _assistsTitleCell;
-        private DxGridCell _deathsTitleCell;
-        private DxGridCell _teamTitleCell;
 
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
         private readonly DxHandler _dxHandler;
         private readonly IModAPI _modAPI;
         private readonly SettingsHandler _settingsHandler;
-        private readonly TeamsHandler _teamsHandler;
+        private readonly LobbyHandler _lobbyHandler;
         private readonly TimerHandler _timerHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
 
-        public ScoreboardHandler(DxHandler dxHandler, IModAPI modAPI, SettingsHandler settingsHandler, TeamsHandler teamsHandler, TimerHandler timerHandler, RemoteEventsSender remoteEventsSender,
+        public ScoreboardHandler(DxHandler dxHandler, IModAPI modAPI, SettingsHandler settingsHandler, LobbyHandler lobbyHandler, TimerHandler timerHandler, RemoteEventsSender remoteEventsSender,
             EventsHandler eventsHandler)
         {
             _tickEventMethod = new EventMethodData<TickDelegate>(OnTick);
@@ -62,11 +57,13 @@ namespace TDS_Client.Handler.Draw
             _dxHandler = dxHandler;
             _modAPI = modAPI;
             _settingsHandler = settingsHandler;
-            _teamsHandler = teamsHandler;
+            _lobbyHandler = lobbyHandler;
             _timerHandler = timerHandler;
             _remoteEventsSender = remoteEventsSender;
 
-            eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
+            eventsHandler.LanguageChanged += (lang, _) => LoadLanguage(lang);
+            eventsHandler.LobbyLeft += _ => ReleasedScoreboardKey();
+            eventsHandler.LobbyJoinSelectedTeam += () => ReleasedScoreboardKey();
 
             _grid = new DxGrid(dxHandler, modAPI, 0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15);
             CreateColumns();
@@ -99,7 +96,7 @@ namespace TDS_Client.Handler.Draw
             playerlist.Sort((a, b) => a.TeamIndex.CompareTo(b.TeamIndex));
             foreach (var playerdata in playerlist)
             {
-                var team = _teamsHandler.LobbyTeams[playerdata.TeamIndex];
+                var team = _lobbyHandler.Teams.LobbyTeams[playerdata.TeamIndex];
                 DxGridRow row = new DxGridRow(_dxHandler, _modAPI, _grid, null, Color.FromArgb(team.Color.A, team.Color.R, team.Color.G, team.Color.B), textAlignment: AlignmentX.Center, scale: 0.3f);
                 new DxGridCell(_dxHandler, _modAPI, playerdata.Name, row, _columns[0]);
 
@@ -115,16 +112,17 @@ namespace TDS_Client.Handler.Draw
                 _grid.Header.Activated = true;
         }
 
-        public void LoadLanguage()
+        private void LoadLanguage(ILanguage lang)
         {
             if (_grid is null || _grid.Header == null)
                 return;
-            _grid.Header.Cells[0].SetText(_settingsHandler.Language.SCOREBOARD_NAME);
-            _grid.Header.Cells[1].SetText(_settingsHandler.Language.SCOREBOARD_PLAYTIME);
-            _grid.Header.Cells[2].SetText(_settingsHandler.Language.SCOREBOARD_KILLS);
-            _grid.Header.Cells[3].SetText(_settingsHandler.Language.SCOREBOARD_ASSISTS);
-            _grid.Header.Cells[4].SetText(_settingsHandler.Language.SCOREBOARD_DEATHS);
-            _grid.Header.Cells[5].SetText(_settingsHandler.Language.SCOREBOARD_TEAM);
+
+            _grid.Header.Cells[0].SetText(lang.SCOREBOARD_NAME);
+            _grid.Header.Cells[1].SetText(lang.SCOREBOARD_PLAYTIME);
+            _grid.Header.Cells[2].SetText(lang.SCOREBOARD_KILLS);
+            _grid.Header.Cells[3].SetText(lang.SCOREBOARD_ASSISTS);
+            _grid.Header.Cells[4].SetText(lang.SCOREBOARD_DEATHS);
+            _grid.Header.Cells[5].SetText(lang.SCOREBOARD_TEAM);
         }
 
         public void PressedScoreboardKey(Control control = Control.Aim)
@@ -187,12 +185,12 @@ namespace TDS_Client.Handler.Draw
         private void CreateTitle()
         {
             DxGridRow header = new DxGridRow(_dxHandler, _modAPI, _grid, 0.035f, Color.FromArgb(187, 20, 20, 20), textAlignment: AlignmentX.Center, isHeader: true);
-            _nameTitleCell = new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_NAME, header, _columns[0]);
-            _playTimeTitleCell = new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_PLAYTIME, header, _columns[1]);
-            _killsTitleCell = new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_KILLS, header, _columns[2]);
-            _assistsTitleCell = new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_ASSISTS, header, _columns[3]);
-            _deathsTitleCell = new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_DEATHS, header, _columns[4]);
-            _teamTitleCell = new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_TEAM, header, _columns[5]);
+            new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_NAME, header, _columns[0]);
+            new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_PLAYTIME, header, _columns[1]);
+            new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_KILLS, header, _columns[2]);
+            new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_ASSISTS, header, _columns[3]);
+            new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_DEATHS, header, _columns[4]);
+            new DxGridCell(_dxHandler, _modAPI, _settingsHandler.Language.SCOREBOARD_TEAM, header, _columns[5]);
         }
 
         private void CreateBody()
@@ -201,16 +199,6 @@ namespace TDS_Client.Handler.Draw
 
         private void CreateFooter()
         {
-        }
-
-        private void EventsHandler_LanguageChanged(ILanguage lang, bool beforeLogin)
-        {
-            _nameTitleCell?.SetText(lang.SCOREBOARD_NAME);
-            _playTimeTitleCell?.SetText(lang.SCOREBOARD_PLAYTIME);
-            _killsTitleCell?.SetText(lang.SCOREBOARD_KILLS);
-            _assistsTitleCell?.SetText(lang.SCOREBOARD_ASSISTS);
-            _deathsTitleCell?.SetText(lang.SCOREBOARD_DEATHS);
-            _teamTitleCell?.SetText(lang.SCOREBOARD_TEAM);
         }
     }
 }

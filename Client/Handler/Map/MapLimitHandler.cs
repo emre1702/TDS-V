@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
-using TDS_Client.Instance.Lobby;
-using TDS_Client.Manager.Utility;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.Map
@@ -16,7 +15,7 @@ namespace TDS_Client.Handler.Map
         private readonly RemoteEventsSender _remoteEventsSender;
 
         public MapLimitHandler(SettingsHandler settingsHandler, IModAPI modAPI, RemoteEventsSender remoteEventsSender, EventsHandler eventsHander)
-        { 
+        {
             _settingsHandler = settingsHandler;
             _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
@@ -44,7 +43,7 @@ namespace TDS_Client.Handler.Map
         {
             if (inFight)
                 Start();
-            else 
+            else
                 Stop();
         }
     }

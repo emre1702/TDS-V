@@ -1,5 +1,7 @@
 ﻿using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Entities;
+using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler
@@ -14,19 +16,20 @@ namespace TDS_Client.Handler
 
         public Position3D FocusAtPos { get; set; }
 
-        private readonly IModAPI _modAPI;
-        private readonly SpectatingHandler _spectatingHandler;
+        public SpectatingHandler Spectating { get; }
 
-        public CamerasHandler(IModAPI modAPI, UtilsHandler utilsHandler, SpectatingHandler spectatingHandler)
+        private readonly IModAPI _modAPI;
+
+        public CamerasHandler(IModAPI modAPI, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler, DeathHandler deathHandler)
         {
             _modAPI = modAPI;
-            _spectatingHandler = spectatingHandler;
+            Spectating = new SpectatingHandler(remoteEventsSender, bindsHandler, this, deathHandler);
 
             modAPI.Cam.RenderScriptCams(false, false, 0, true, false, 0);
             modAPI.Cam.DestroyAllCams();
 
-            BetweenRoundsCam = new TDSCamera(modAPI, this, utilsHandler, spectatingHandler);
-            SpectateCam = new TDSCamera(modAPI, this, utilsHandler, spectatingHandler);
+            BetweenRoundsCam = new TDSCamera(modAPI, this, utilsHandler, Spectating);
+            SpectateCam = new TDSCamera(modAPI, this, utilsHandler, Spectating);
         }
 
         public Position3D GetCurrentCamPos()
@@ -41,7 +44,7 @@ namespace TDS_Client.Handler
 
         public void RenderBack(bool ease = false, int easeTime = 0)
         {
-            var spectatingEntity = _spectatingHandler.SpectatingEntity;
+            var spectatingEntity = Spectating.SpectatingEntity;
             ActiveCamera?.Deactivate();
             if (spectatingEntity != null)
             {

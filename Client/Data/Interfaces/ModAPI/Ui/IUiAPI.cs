@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI.Blip;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Ui
 {
@@ -22,5 +23,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ui
         void SetTextFont(int v);
         void SetTextDropShadow();
         void EndTextCommandDisplayText(float v1, float v2, int v3);
+        void SetBlipAsFriendly(IBlip blip, bool v);
+        bool DoesBlipExist(IBlip prevBlipHandle);
+        void RemoveBlip(IBlip prevBlipHandle);
     }
 }

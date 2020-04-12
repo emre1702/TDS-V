@@ -9,6 +9,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Entities.Draw.Scaleform;
 using TDS_Client.Handler.Events;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Client.Handler.Draw
 {
@@ -65,6 +66,8 @@ namespace TDS_Client.Handler.Draw
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => IsActive));
 
             eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
+            eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
+            eventsHandler.LobbyLeft += _ => Reset();
         }
 
         private void OnTick(ulong currentMs)
@@ -186,5 +189,12 @@ namespace TDS_Client.Handler.Draw
         {
 
         }
+
+        private void EventsHandler_LobbyJoined(SyncedLobbySettingsDto settings)
+        {
+            if (settings.InLobbyWithMaps)
+                _instructionalButtonHandler.Add("Map-Voting", "F3");
+        }
+
     }
 }

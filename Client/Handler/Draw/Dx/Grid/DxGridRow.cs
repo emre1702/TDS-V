@@ -63,13 +63,13 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         private void DrawText()
         {
             if (TextAlignment == AlignmentX.Left)
-                ModAPI.Ui.DrawText(Text, GetAbsoluteX(Grid.X - Grid.Width / 2, true, true),
+                ModAPI.Graphics.DrawText(Text, GetAbsoluteX(Grid.X - Grid.Width / 2, true, true),
                     GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(ModAPI.Ui.GetTextScaleHeight(Scale, Font) / 2, true, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
             else if (TextAlignment == AlignmentX.Center)
-                ModAPI.Ui.DrawText(Text, GetAbsoluteX(Grid.X, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(ModAPI.Ui.GetTextScaleHeight(Scale, Font) / 2, true, true) - 5,
+                ModAPI.Graphics.DrawText(Text, GetAbsoluteX(Grid.X, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(ModAPI.Ui.GetTextScaleHeight(Scale, Font) / 2, true, true) - 5,
                     Font, Scale, TextColor, TextAlignment, false, false, 999);
             else if (TextAlignment == AlignmentX.Right)
-                ModAPI.Ui.DrawText(Text, GetAbsoluteX(Grid.X + Grid.Width / 2, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(ModAPI.Ui.GetTextScaleHeight(Scale, Font) / 2,
+                ModAPI.Graphics.DrawText(Text, GetAbsoluteX(Grid.X + Grid.Width / 2, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(ModAPI.Ui.GetTextScaleHeight(Scale, Font) / 2,
                     true, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
         }
 

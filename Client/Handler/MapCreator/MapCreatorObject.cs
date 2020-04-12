@@ -2,6 +2,7 @@
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Blip;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
+using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -48,11 +49,13 @@ namespace TDS_Client.Handler.MapCreator
         private Position3D _movingRotation;
 
         private readonly IModAPI _modAPI;
+        private readonly EventsHandler _eventsHandler;
 
-        public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, IEntity entity, MapCreatorPositionType type, 
+        public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntity entity, MapCreatorPositionType type, 
             ushort ownerRemoteId, int? teamNumber = null, string objectName = null, int id = -1)
         {
             _modAPI = modAPI;
+            _eventsHandler = eventsHandler;
 
             Entity = entity;
             Type = type;
@@ -70,14 +73,14 @@ namespace TDS_Client.Handler.MapCreator
             if (id == -1)
             {
                 ID = ++mapCreatorObjectsHandler.IdCounter;
-                MapCreatorSyncHandler.SyncLatestIdToServer();
+                _eventsHandler.OnMapCreatorSyncLatestObjectID();
             }
             else
             {
                 mapCreatorObjectsHandler.IdCounter = Math.Max(mapCreatorObjectsHandler.IdCounter, id);
                 ID = id;
             }
-            MapCreatorSyncHandler.SyncLatestIdToServer();
+            _eventsHandler.OnMapCreatorSyncLatestObjectID();
 
             Blip = CreateBlip();
 
@@ -137,7 +140,7 @@ namespace TDS_Client.Handler.MapCreator
             Deleted = true;
             if (syncToServer)
             {
-                MapCreatorSyncHandler.SyncObjectRemoveToLobby(this);
+                _eventsHandler.OnMapCreatorSyncObjectDeleted(this);
             }
         }
 

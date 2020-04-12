@@ -1,11 +1,8 @@
-﻿using System;
-using TDS_Client.Data.Interfaces;
-using TDS_Client.Data.Interfaces.ModAPI;
+﻿using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Cam;
+using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Ped;
 using TDS_Client.Data.Models;
-using TDS_Client.Handler;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
@@ -14,7 +11,7 @@ namespace TDS_Client.Handler.Entities
     public class TDSCamera
     {
         public ICam Cam { get; set; }
-        public IPedBase SpectatingPed { get; set; }
+        public IEntity SpectatingEntity { get; set; }
         public bool IsActive => this == _camerasHandler.ActiveCamera;
 
         public Position3D Position
@@ -32,17 +29,15 @@ namespace TDS_Client.Handler.Entities
         private readonly IModAPI _modAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
-        private readonly SpectatingHandler _spectatingHandler;
 
-        public TDSCamera(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SpectatingHandler spectatingHandler)
+        public TDSCamera(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler)
         {
             _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
-            _spectatingHandler = spectatingHandler;
 
             Cam = modAPI.Cam.Create();
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnUpdate, () => SpectatingPed != null));
+            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnUpdate, () => SpectatingEntity != null));
         }
 
         ~TDSCamera()
@@ -57,8 +52,8 @@ namespace TDS_Client.Handler.Entities
 
         public void OnUpdate(ulong currentMs)
         {
-            if (!(SpectatingPed is null))
-                Rotation = SpectatingPed.Rotation;
+            if (!(SpectatingEntity is null))
+                Rotation = SpectatingEntity.Rotation;
         }
 
         public void SetPosition(Position3D position, bool instantly = false)
@@ -70,14 +65,14 @@ namespace TDS_Client.Handler.Entities
             }
         }
 
-        public void Spectate(IPedBase ped)
+        public void Spectate(IEntity ped)
         {
-            if (SpectatingPed != null)
+            if (SpectatingEntity != null)
             {
                 Cam.Detach();
             }
 
-            SpectatingPed = ped;
+            SpectatingEntity = ped;
             Cam.AttachTo(ped, PedBone.SKEL_Head, 0, -2f, 0.3f, true);
 
             _modAPI.Streaming.SetFocusEntity(ped);
@@ -105,7 +100,7 @@ namespace TDS_Client.Handler.Entities
         public void Detach()
         {
             Cam.Detach();
-            SpectatingPed = null;
+            SpectatingEntity = null;
         }
 
         public void Activate(bool instantly = false)
@@ -121,7 +116,7 @@ namespace TDS_Client.Handler.Entities
 
         public void Deactivate(bool instantly = false)
         {
-            if (SpectatingPed != null)
+            if (SpectatingEntity != null)
                 Cam.Detach();
             Cam.SetActive(false);
             _camerasHandler.ActiveCamera = null;
