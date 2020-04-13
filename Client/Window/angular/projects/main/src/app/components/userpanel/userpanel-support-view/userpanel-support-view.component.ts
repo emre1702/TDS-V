@@ -6,6 +6,7 @@ import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
+import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 
 @Component({
     selector: 'app-userpanel-support-view',
@@ -66,13 +67,13 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
             this.changeDetector.detectChanges();
         }
 
-        this.rageConnector.listen(DFromClientEvent.SyncNewSupportRequestMessage, this.syncNewSupportRequestMessage.bind(this));
+        this.rageConnector.listen(DFromServerEvent.SyncNewSupportRequestMessage, this.syncNewSupportRequestMessage.bind(this));
     }
 
     ngOnDestroy() {
         this.rageConnector.callServer(DToServerEvent.LeftSupportRequest, this.currentRequest[0]);
 
-        this.rageConnector.remove(DFromClientEvent.SyncNewSupportRequestMessage, this.syncNewSupportRequestMessage.bind(this));
+        this.rageConnector.remove(DFromServerEvent.SyncNewSupportRequestMessage, this.syncNewSupportRequestMessage.bind(this));
     }
 
     ngAfterViewInit() {

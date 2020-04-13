@@ -18,6 +18,7 @@ import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 import { MapCreatorPosition } from './models/mapCreatorPosition';
 import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
+import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
 
 enum MapCreatorNav {
     Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, Vehicles, BombPlaces, Target
@@ -66,14 +67,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.rageConnector.listen(DFromClientEvent.MapCreatorSyncData, this.onSyncData.bind(this));
+        this.rageConnector.listen(DFromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
         this.rageConnector.listen(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromClientEvent.MapCreatorSyncData, this.onSyncData.bind(this));
+        this.rageConnector.remove(DFromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
         this.rageConnector.remove(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.detectChanges.bind(this));
