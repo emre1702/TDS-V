@@ -20,16 +20,17 @@ namespace TDS_Client.Handler
 
         private readonly IModAPI _modAPI;
 
-        public CamerasHandler(IModAPI modAPI, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler, DeathHandler deathHandler)
+        public CamerasHandler(IModAPI modAPI, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler, DeathHandler deathHandler,
+            EventsHandler eventsHandler)
         {
             _modAPI = modAPI;
-            Spectating = new SpectatingHandler(remoteEventsSender, bindsHandler, this, deathHandler);
+            Spectating = new SpectatingHandler(modAPI, remoteEventsSender, bindsHandler, this, deathHandler, eventsHandler, utilsHandler);
 
-            modAPI.Cam.RenderScriptCams(false, false, 0, true, false, 0);
+            modAPI.Cam.Render(false, false, 0);
             modAPI.Cam.DestroyAllCams();
 
-            BetweenRoundsCam = new TDSCamera(modAPI, this, utilsHandler, Spectating);
-            SpectateCam = new TDSCamera(modAPI, this, utilsHandler, Spectating);
+            BetweenRoundsCam = new TDSCamera(modAPI, this, utilsHandler);
+            SpectateCam = new TDSCamera(modAPI, this, utilsHandler);
         }
 
         public Position3D GetCurrentCamPos()

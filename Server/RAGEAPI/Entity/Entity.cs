@@ -43,9 +43,9 @@ namespace TDS_Server.RAGEAPI.Entity
         }
 
 
-        public void Detach(bool resetCollision = true)
+        public void Detach()
         {
-            Init.WorkaroundsHandler.DetachEntity(_instance, resetCollision);
+            Init.WorkaroundsHandler.DetachEntity(_instance);
         }
 
         public void Freeze(bool toggle, ILobby lobby)

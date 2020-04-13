@@ -3,19 +3,19 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
+using TDS_Server.Data;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
-using TDS_Server.Data.Utility;
+using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Account
 {
@@ -42,12 +42,12 @@ namespace TDS_Server.Handler.Account
             ILoggingHandler loggingHandler,
             ServerStartHandler serverStartHandler)
         {
-            _databasePlayerHandler = databasePlayerHandler; 
-            _langHelper = langHelper; 
+            _databasePlayerHandler = databasePlayerHandler;
+            _langHelper = langHelper;
             _eventsHandler = eventsHandler;
-            _serializer = serializer; 
+            _serializer = serializer;
             _settingsHandler = settingsHandler;
-            _serviceProvider = serviceProvider; 
+            _serviceProvider = serviceProvider;
             _dataSyncHandler = dataSyncHandler;
             _loggingHandler = loggingHandler;
             _serverStartHandler = serverStartHandler;
@@ -78,7 +78,7 @@ namespace TDS_Server.Handler.Account
                 return;
             if (player.ModPlayer is null)
                 return;
-            
+
 
             bool worked = await player.ExecuteForDBAsync(async (dbContext) =>
             {
@@ -121,7 +121,7 @@ namespace TDS_Server.Handler.Account
 
             var angularConstantsData = ActivatorUtilities.CreateInstance<AngularConstantsDataDto>(_serviceProvider, player);
 
-            player.SendEvent(ToClientEvent.RegisterLoginSuccessful,
+            player.SendEvent(ToClientEvent.LoginSuccessful,
                 _serializer.ToClient(_settingsHandler.SyncedSettings),
                 _serializer.ToClient(player.Entity.PlayerSettings),
                 _serializer.ToBrowser(angularConstantsData)
@@ -137,9 +137,9 @@ namespace TDS_Server.Handler.Account
             _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
         }
 
-        private async void EventsHandler_PlayerRegistered(ITDSPlayer player)
+        private async void EventsHandler_PlayerRegistered(ITDSPlayer player, Players dbPlayer)
         {
-            await LoginPlayer(player, player.Id, null);
+            await LoginPlayer(player, dbPlayer.Id, null);
         }
     }
 }

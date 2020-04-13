@@ -8,14 +8,25 @@ namespace TDS_Client.Handler
 {
     public class TimerHandler
     {
-        public ulong ElapsedMs => TDSTimer.ElapsedMs;
+        public int ElapsedMs;
+
+        private readonly IModAPI _modAPI;
 
         public TimerHandler(IModAPI modAPI, DxHandler dxHandler)
         {
-            TDSTimer.Init(modAPI.Chat.Output);
+            _modAPI = modAPI;
+            ElapsedMs = _modAPI.Misc.GetGameTimer();
+
+            TDSTimer.Init(modAPI.Chat.Output, () => _modAPI.Misc.GetGameTimer());
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(_ => TDSTimer.OnUpdateFunc()));
+            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(_ => RefreshElapsedMs()));
 
             new TDSTimer(dxHandler.RefreshResolution, 10000, 0);
+        }
+
+        private void RefreshElapsedMs()
+        {
+            ElapsedMs = _modAPI.Misc.GetGameTimer();
         }
     }
 }

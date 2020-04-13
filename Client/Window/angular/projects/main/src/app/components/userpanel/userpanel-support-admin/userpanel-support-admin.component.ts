@@ -6,6 +6,7 @@ import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 
 @Component({
     selector: 'app-userpanel-support-admin',
@@ -50,7 +51,7 @@ export class UserpanelSupportAdminComponent implements OnInit, OnDestroy {
         private rageConnector: RageConnectorService) { }
 
     ngOnInit() {
-        this.rageConnector.listen(DFromClientEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
+        this.rageConnector.listen(DFromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
 
         this.requestGroup = new FormGroup({
             message: new FormControl('', [Validators.required, Validators.minLength(this.messageMinLength), Validators.maxLength(this.messageMaxLength)]),
@@ -59,14 +60,14 @@ export class UserpanelSupportAdminComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromClientEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
+        this.rageConnector.remove(DFromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
     }
 
     openRequest(id: number) {
         this.inRequest = id;
         this.requestGroup.get("type").disable();
 
-        this.rageConnector.callCallback(DToServerEvent.GetSupportRequestData, [id], (json: string) => {
+        this.rageConnector.callCallbackServer(DToServerEvent.GetSupportRequestData, [id], (json: string) => {
             this.currentRequest = JSON.parse(json);
             this.changeDetector.detectChanges();
         });

@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
+﻿using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Client.RAGEAPI.Player;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Client.RAGEAPI.Event
 {

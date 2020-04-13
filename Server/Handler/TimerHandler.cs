@@ -1,5 +1,5 @@
 ﻿using System;
-using TDS_Server.Data.Utility;
+using TDS_Server.Data;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 
@@ -16,11 +16,11 @@ namespace TDS_Server.Core.Manager.Timer
         {
             _eventsHandler = eventsHandler;
 
-            TDSTimer.Init(Console.WriteLine);
+            TDSTimer.Init(Console.WriteLine, () => Environment.TickCount);
 
             _eventsHandler.Update += TDSTimer.OnUpdateFunc;
 
-            _hourTimer = new TDSTimer(OnHour, 60 * 1000, 1);   
+            _hourTimer = new TDSTimer(OnHour, 60 * 1000, 1);
             _minuteTimer = new TDSTimer(OnMinute, Utils.GetMsToNextMinute(), 1);
             _secondTimer = new TDSTimer(OnSecond, Utils.GetMsToNextSecond(), 1);
 

@@ -1,15 +1,16 @@
 ﻿using System;
+using TDS_Shared.Data.Models;
 using System.Drawing;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Entities.Draw.Dx;
+using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 
@@ -26,26 +27,33 @@ namespace TDS_Client.Handler
         private DxTextRectangle _draw;
 
         private readonly EventMethodData<TickDelegate> _onTickEventMethod;
+        private readonly EventMethodData<WeaponShotDelegate> _weaponShotMethod;
 
         private readonly IModAPI _modAPI;
         private readonly SettingsHandler _settingsHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly PlayerFightHandler _playerFightHandler;
+        private readonly TimerHandler _timerHandler;
+        private readonly DxHandler _dxHandler;
 
-        public AFKCheckHandler(EventsHandler eventsHandler, IModAPI modAPI, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, PlayerFightHandler playerFightHandler)
+        public AFKCheckHandler(EventsHandler eventsHandler, IModAPI modAPI, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, PlayerFightHandler playerFightHandler,
+            TimerHandler timerHandler, DxHandler dxHandler)
         {
             _onTickEventMethod = new EventMethodData<TickDelegate>(OnTick);
+            _weaponShotMethod = new EventMethodData<WeaponShotDelegate>(Event_WeaponShot);
 
             _modAPI = modAPI;
             _settingsHandler = settingsHandler;
             _remoteEventsSender = remoteEventsSender;
             _playerFightHandler = playerFightHandler;
+            _timerHandler = timerHandler;
+            _dxHandler = dxHandler;
 
-            eventsHandler.LobbyJoin += OnLobbyJoin;
-            eventsHandler.LobbyLeave += OnLobbyLeave;
-            eventsHandler.Death += OnDeath;
-            eventsHandler.RoundStart += OnRoundStart;
-            eventsHandler.RoundEnd += OnRoundEnd;
+            eventsHandler.LobbyJoined += OnLobbyJoin;
+            eventsHandler.LobbyLeft += OnLobbyLeave;
+            eventsHandler.LocalPlayerDied += OnDeath;
+            eventsHandler.RoundStarted += OnRoundStart;
+            eventsHandler.RoundEnded += OnRoundEnd;
         }
 
         private void Check()
@@ -75,7 +83,7 @@ namespace TDS_Client.Handler
             }
         }
 
-        private void OnTick(ulong currentTick)
+        private void OnTick(int currentTick)
         {
             if (!IsStillAFK())
             {
@@ -88,7 +96,7 @@ namespace TDS_Client.Handler
 
             if (_draw is null)
             {
-                _draw = new DxTextRectangle(GetWarning().ToString(), 0, 0, 1, 1, Color.FromArgb(255, 255, 255), Color.FromArgb(40, 200, 0, 0), 1.2f,
+                _draw = new DxTextRectangle(_dxHandler, _modAPI, _timerHandler, GetWarning().ToString(), 0, 0, 1, 1, Color.FromArgb(255, 255, 255), Color.FromArgb(40, 200, 0, 0), 1.2f,
                     frontPriority: 1, relativePos: true);
             }
             else
@@ -123,10 +131,14 @@ namespace TDS_Client.Handler
         {
             if (!_inAFKCheckLobby)
                 return;
+            if (!_settingsHandler.PlayerSettings.CheckAFK)
+                return;
             if (isSpectator)
                 return;
             _lastPos = _modAPI.LocalPlayer.Position;
             _checkTimer = new TDSTimer(Check, 5 * 1000, 0);
+            if (!_modAPI.Event.WeaponShot.Contains(_weaponShotMethod))
+                _modAPI.Event.WeaponShot.Add(_weaponShotMethod);
         }
 
         public void OnRoundEnd()
@@ -136,14 +148,14 @@ namespace TDS_Client.Handler
             StopCheck();
         }
 
-        private void OnLobbyJoin(SyncedLobbySettingsDto settings)
+        private void OnLobbyJoin(SyncedLobbySettings settings)
         {
             _inAFKCheckLobby = IsAFKCheckLobby(settings);
             _lastPos = null;
 
         }
 
-        private void OnLobbyLeave(SyncedLobbySettingsDto settings)
+        private void OnLobbyLeave(SyncedLobbySettings settings)
         {
             if (!IsAFKCheckLobby(settings))
                 return;
@@ -182,6 +194,7 @@ namespace TDS_Client.Handler
             _checkTimer?.Kill();
             _checkTimer = null;
             StopAFK();
+            _modAPI.Event.WeaponShot.Remove(_weaponShotMethod);
         }
 
         private void StopAFK()
@@ -195,7 +208,7 @@ namespace TDS_Client.Handler
             _draw = null;
         }
 
-        private bool IsAFKCheckLobby(SyncedLobbySettingsDto settings)
+        private bool IsAFKCheckLobby(SyncedLobbySettings settings)
         {
             return settings?.Type == LobbyType.Arena && settings?.IsOfficial == true;
         }
@@ -204,6 +217,11 @@ namespace TDS_Client.Handler
         {
             int secsLeft = (int)Math.Ceiling((double)(_kickTimer.RemainingMsToExecute / 1000));
             return string.Format(_settingsHandler.Language.AFK_KICK_WARNING, secsLeft);
+        }
+
+        private void Event_WeaponShot(Position3D targetPos, IPlayer target, CancelEventArgs cancel)
+        {
+            OnShoot();
         }
     }
 }

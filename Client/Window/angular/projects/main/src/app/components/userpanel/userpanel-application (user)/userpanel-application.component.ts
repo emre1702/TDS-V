@@ -38,12 +38,12 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
     }
 
     acceptInvitation(id: number) {
-        this.rageConnector.call(DToServerEvent.AcceptInvitation, id);
+        this.rageConnector.callServer(DToServerEvent.AcceptTDSTeamInvitation, id);
         this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
     }
 
     rejectInvitation(id: number) {
-        this.rageConnector.call(DToServerEvent.RejectInvitation, id);
+        this.rageConnector.callServer(DToServerEvent.RejectTDSTeamInvitation, id);
     }
 
     stepperAnimationDone() {
@@ -74,7 +74,7 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
                     }
                     const answersJson = JSON.stringify(this.answersToAdminQuestions);
 
-                    this.rageConnector.call(DToServerEvent.SendApplication, answersJson);
+                    this.rageConnector.callServer(DToServerEvent.SendApplication, answersJson);
                     this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
                 });
         }

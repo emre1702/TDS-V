@@ -20,6 +20,7 @@ import { DataForCustomLobbyCreation } from '../models/data-for-custom-lobby-crea
 import { CustomLobbyWeaponData } from '../models/custom-lobby-weapon-data';
 import { WeaponHash } from '../enums/weapon-hash.enum';
 import { isNumber } from 'util';
+import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -192,16 +193,16 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.rageConnector.listen(DFromClientEvent.AddCustomLobby, this.addCustomLobby.bind(this));
-        this.rageConnector.listen(DFromClientEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
-        this.rageConnector.listen(DFromClientEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
+        this.rageConnector.listen(DFromServerEvent.AddCustomLobby, this.addCustomLobby.bind(this));
+        this.rageConnector.listen(DFromServerEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
+        this.rageConnector.listen(DFromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanged.bind(this));
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromClientEvent.AddCustomLobby, this.addCustomLobby.bind(this));
-        this.rageConnector.remove(DFromClientEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
-        this.rageConnector.remove(DFromClientEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
+        this.rageConnector.remove(DFromServerEvent.AddCustomLobby, this.addCustomLobby.bind(this));
+        this.rageConnector.remove(DFromServerEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
+        this.rageConnector.remove(DFromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanged.bind(this));
     }
 
@@ -262,7 +263,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.rageConnector.callCallback(DToClientEvent.CreateCustomLobby, [JSON.stringify(data)], (error: string) => {
+        this.rageConnector.callCallbackServer(DToClientEvent.CreateCustomLobby, [JSON.stringify(data)], (error: string) => {
             if (!error || error == "")
                 return;
             this.snackBar.open(error, "OK", {
@@ -291,10 +292,10 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                     this.snackBar.open(this.settings.Lang.PasswordIncorrect, "OK", { duration: 7000, panelClass: "mat-app-background" });
                     return;
                 }
-                this.rageConnector.call(DToClientEvent.JoinCustomLobbyWithPassword, clickedLobbyData[0], inputedPassword);
+                this.rageConnector.callServer(DToServerEvent.JoinLobbyWithPassword, clickedLobbyData[0], inputedPassword);
             });
         } else {
-            this.rageConnector.call(DToClientEvent.JoinCustomLobby, clickedLobbyData[0]);
+            this.rageConnector.callServer(DToServerEvent.JoinLobby, clickedLobbyData[0]);
         }
     }
 
@@ -332,7 +333,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
 
     goBack() {
         this.settings.InUserLobbiesMenu = false;
-        this.rageConnector.call(DToClientEvent.LeftCustomLobbiesMenu);
+        this.rageConnector.callServer(DToServerEvent.LeftCustomLobbiesMenu);
         this.changeDetector.detectChanges();
     }
 

@@ -183,21 +183,20 @@ namespace TDS_Server.Handler
             return lobby;
         }
 
-        public async Task CreateCustomLobby(ITDSPlayer player, string dataJson)
+        public async Task<object?> CreateCustomLobby(ITDSPlayer player, object[] args)
         {
             try
             {
+                string dataJson = (string) args[0];
                 var data = _serializer.FromBrowser<CustomLobbyData>(dataJson);
                 if (!IsCustomLobbyNameAllowed(data.Name))
                 {
-                    player.SendEvent(ToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR);
-                    return;
+                    return player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR;
                 }
                 bool nameAlreadyInUse = Lobbies.Any(lobby => lobby.Name.Equals(data.Name, StringComparison.CurrentCultureIgnoreCase));
                 if (nameAlreadyInUse)
                 {
-                    player.SendEvent(ToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR);
-                    return;
+                    return player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;
                 }
 
                 Lobbies entity = new Lobbies
@@ -265,10 +264,11 @@ namespace TDS_Server.Handler
                 _eventsHandler.OnCustomLobbyCreated(arena);
 
                 await arena.AddPlayer(player, null);
+                return null;
             }
             catch
             {
-                player.SendEvent(ToClientEvent.CreateCustomLobbyResponse, player.Language.CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR);
+                return player.Language.CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR;
             }
         }
 
@@ -298,6 +298,59 @@ namespace TDS_Server.Handler
             }
 
             return _customLobbyDatas;
+        }
+
+        public async Task<object?> OnJoinLobby(ITDSPlayer player, object[] args)
+        {
+
+            int index = (int)args[0];
+
+            if (LobbiesByIndex.ContainsKey(index))
+            {
+                Lobby lobby = LobbiesByIndex[index];
+                if (lobby is MapCreateLobby)
+                {
+                    if (await lobby.IsPlayerBaned(player))
+                        return null;
+                    ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
+                }
+                else
+                {
+                    await lobby.AddPlayer(player, null);
+                }
+                return null;
+            }
+            else
+            {
+                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
+                //todo Remove lobby at client view and check, why he saw this lobby
+                return null;
+            }
+        }
+
+        public async Task<object?> OnJoinLobbyWithPassword(ITDSPlayer player, object[] args)
+        {
+            int index = (int)args[0];
+            string? password = args.Length > 1 ? (string)args[1] : null;
+
+            if (LobbiesByIndex.ContainsKey(index))
+            {
+                Lobby lobby = LobbiesByIndex[index];
+                if (password != null && lobby.Entity.Password != password)
+                {
+                    player.SendMessage(player.Language.WRONG_PASSWORD);
+                    return null;
+                }
+
+                await lobby.AddPlayer(player, null);
+                return null;
+            }
+            else
+            {
+                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
+                //todo Remove lobby at client view and check, why he saw this lobby
+                return null;
+            }
         }
 
         private bool IsCustomLobbyNameAllowed(string name)

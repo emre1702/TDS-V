@@ -1,9 +1,6 @@
-﻿using RAGE.Elements;
-using System.ComponentModel;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
+﻿using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.RAGEAPI.Entity;
-using TDS_Client.RAGEAPI.Player;
 
 namespace TDS_Client.RAGEAPI.Event
 {
@@ -11,7 +8,7 @@ namespace TDS_Client.RAGEAPI.Event
     {
         private readonly EntityConvertingHandler _entityConvertingHandler;
 
-        public EntityStreamInEventHandler(EntityConvertingHandler entityConvertingHandler) 
+        public EntityStreamInEventHandler(EntityConvertingHandler entityConvertingHandler)
             : base()
         {
             _entityConvertingHandler = entityConvertingHandler;
@@ -21,6 +18,9 @@ namespace TDS_Client.RAGEAPI.Event
 
         private void EntityStreamIn(RAGE.Elements.Entity modEntity)
         {
+            if (Actions.Count == 0)
+                return;
+
             IEntity entity = _entityConvertingHandler.GetEntity(modEntity);
 
             foreach (var action in Actions)

@@ -16,6 +16,7 @@ import { UserpanelSettingSpecialDataDto } from '../interfaces/userpanelSettingSp
 import { LanguageEnum } from '../../../enums/language.enum';
 import { TimezoneEnum } from '../enums/timezone.enum';
 import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
+import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 
 @Injectable({
     providedIn: 'root'
@@ -140,7 +141,7 @@ export class UserpanelService {
     private myStatsLoadCooldown: NodeJS.Timeout;
 
     constructor(private rageConnector: RageConnectorService, private settings: SettingsService) {
-        rageConnector.listen(DToServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
+        rageConnector.listen(DFromServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
         settings.LanguageChanged.on(null, this.languageChanged.bind(this));
     }
 

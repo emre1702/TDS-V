@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Player;
-using TDS_Shared.Default;
 using TDS_Shared.Core;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -25,9 +25,9 @@ namespace TDS_Server.Handler.Userpanel
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler) 
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
-            => (_userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler) 
+            => (_userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler)
             = (userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);
 
         public async Task<string?> GetData(ITDSPlayer player)
@@ -66,22 +66,24 @@ namespace TDS_Server.Handler.Userpanel
 
         }
 
-        public async Task SendApplicationData(ITDSPlayer player, int applicationId)
+        public async Task<object?> SendApplicationData(ITDSPlayer player, object[] args)
         {
-            if (player.AdminLevel.Level == (short)AdminLevel.User)
-                return;
+            int applicationId = (int)args[0];
 
-            int creatorId = await ExecuteForDBAsync(async dbContext 
-                => await  dbContext.Applications
+            if (player.AdminLevel.Level == (short)AdminLevel.User)
+                return null;
+
+            int creatorId = await ExecuteForDBAsync(async dbContext
+                => await dbContext.Applications
                     .Where(a => a.Id == applicationId)
                     .Select(a => a.PlayerId)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false));
 
             if (creatorId == default)
-                return;
+                return null;
 
-            var answers = await ExecuteForDBAsync(async dbContext 
+            var answers = await ExecuteForDBAsync(async dbContext
                 => await dbContext.ApplicationAnswers
                     .Where(a => a.ApplicationId == applicationId)
                     .ToDictionaryAsync(a => a.QuestionId, a => a.Answer)
@@ -103,8 +105,8 @@ namespace TDS_Server.Handler.Userpanel
                 Stats = stats,
                 AlreadyInvited = alreadyInvited
             });
-            player.SendEvent(ToClientEvent.LoadApplicationDataForAdmin, json);
 
+            return json;
         }
 
         public async Task<object?> SendInvitation(ITDSPlayer player, object[] args)
@@ -135,7 +137,7 @@ namespace TDS_Server.Handler.Userpanel
 
                 return await dbContext.Applications.Where(a => a.Id == applicationId).Select(a => a.PlayerId).FirstOrDefaultAsync();
             });
-           
+
             if (playerId == default)
                 return null;
 

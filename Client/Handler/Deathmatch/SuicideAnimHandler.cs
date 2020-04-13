@@ -18,13 +18,17 @@ namespace TDS_Client.Handler.Deathmatch
 
         private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly UtilsHandler _utilsHandler;
 
-        public SuicideAnimHandler(IModAPI modAPI, RemoteEventsSender remoteEventsSender)
+        public SuicideAnimHandler(IModAPI modAPI, RemoteEventsSender remoteEventsSender, UtilsHandler utilsHandler)
         {
             _tickEventMethod = new EventMethodData<TickDelegate>(OnRender);
 
             _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
+            _utilsHandler = utilsHandler;
+
+            modAPI.Event.Add(ToClientEvent.ApplySuicideAnimation, OnApplySuicideAnimationMethod);
         }
 
         public void ApplyAnimation(IPlayer player, string animName, float animTime)
@@ -40,9 +44,9 @@ namespace TDS_Client.Handler.Deathmatch
             _modAPI.Event.Tick.Add(_tickEventMethod);
         }
 
-        private void OnRender(ulong _)
+        private void OnRender(int _)
         {
-            if (!_modAPI.LocalPlayer.IsPlayingAnim("MP_SUICIDE", _animName, 3))
+            if (!_modAPI.LocalPlayer.IsPlayingAnim("MP_SUICIDE", _animName))
             {
                 _modAPI.Event.Tick.Remove(_tickEventMethod);
                 return;
@@ -59,6 +63,19 @@ namespace TDS_Client.Handler.Deathmatch
                 _modAPI.Event.Tick.Remove(_tickEventMethod);
                 _remoteEventsSender.Send(ToServerEvent.SuicideKill);
             }
+        }
+
+        private void OnApplySuicideAnimationMethod(object[] args)
+        {
+            ushort playerHandle = Convert.ToUInt16(args[0]);
+            string animName = (string)args[1];
+            float animTime = Convert.ToSingle(args[2]);
+
+            IPlayer player = _utilsHandler.GetPlayerByHandleValue(playerHandle);
+            if (player == null)
+                return;
+
+            ApplyAnimation(player, animName, animTime);
         }
     }
 }

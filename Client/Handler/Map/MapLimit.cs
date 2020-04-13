@@ -129,7 +129,7 @@ namespace TDS_Client.Handler.Entities
             foreach (var edge in edges)
             {
                 float edgeZ = 0;
-                if (_modAPI.Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ, false))
+                if (_modAPI.Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ))
                     edge.Z = edgeZ;
             }
 
@@ -272,7 +272,7 @@ namespace TDS_Client.Handler.Entities
             _createdGpsRoutes = false;
         }
 
-        private void Draw(ulong _)
+        private void Draw(int _)
         {
             float totalMaxTop = -1;
             for (int i = 0; i < _edges.Count; ++i)
@@ -281,8 +281,8 @@ namespace TDS_Client.Handler.Entities
                 var edgeTarget = i == _edges.Count - 1 ? _edges[0] : _edges[i + 1];
                 float edgeStartZ = 0;
                 float edgeTargetZ = 0;
-                _modAPI.Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, _modAPI.LocalPlayer.Position.Z, ref edgeStartZ, false);
-                _modAPI.Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, _modAPI.LocalPlayer.Position.Z, ref edgeTargetZ, false);
+                _modAPI.Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, _modAPI.LocalPlayer.Position.Z, ref edgeStartZ);
+                _modAPI.Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, _modAPI.LocalPlayer.Position.Z, ref edgeTargetZ);
 
                 //var textureRes = Graphics.GetTextureResolution("commonmenu", "gradient_bgd");
                 //Graphics.Draw  .DrawSprite("commonmenu", "gradient_bgd", )

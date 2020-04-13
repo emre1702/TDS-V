@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
+using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Entities.Draw;
 using TDS_Client.Handler.Events;
 
@@ -15,12 +17,14 @@ namespace TDS_Client.Handler.Draw
         private readonly IModAPI _modAPI;
         private readonly TimerHandler _timerHandler;
         private readonly SettingsHandler _settingsHandler;
+        private readonly DxHandler _dxHandler;
 
-        public FloatingDamageInfoHandler(IModAPI modAPI, TimerHandler timerHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
+        public FloatingDamageInfoHandler(IModAPI modAPI, TimerHandler timerHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler, DxHandler dxHandler)
         {
             _modAPI = modAPI;
             _timerHandler = timerHandler;
             _settingsHandler = settingsHandler;
+            _dxHandler = dxHandler;
 
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(UpdateAllPositions, () => _damageInfos.Count > 0));
 
@@ -29,7 +33,7 @@ namespace TDS_Client.Handler.Draw
 
         public void Add(IPlayer target, float damage)
         {
-            var info = new FloatingDamageInfo(target, damage, _timerHandler.ElapsedMs, _modAPI, _settingsHandler);
+            var info = new FloatingDamageInfo(target, damage, _timerHandler.ElapsedMs, _modAPI, _settingsHandler, _dxHandler, _timerHandler);
             _damageInfos.Add(info);
         }
 
@@ -42,7 +46,7 @@ namespace TDS_Client.Handler.Draw
             _damageInfos.Clear();
         }
 
-        private void UpdateAllPositions(ulong currentMs)
+        private void UpdateAllPositions(int currentMs)
         {
             _damageInfos.RemoveAll(x => x.RemoveAtHandler);
             foreach (var damageInfo in _damageInfos)

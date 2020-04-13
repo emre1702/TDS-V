@@ -10,6 +10,11 @@ namespace TDS_Client.RAGEAPI.Browser
         internal Browser(HtmlWindow instance) 
             => _instance = instance;
 
+        public void Call(string eventName, params object[] args)
+        {
+            _instance.Call(eventName, args);
+        }
+
         public void Destroy()
         {
             _instance.Destroy();
@@ -18,6 +23,11 @@ namespace TDS_Client.RAGEAPI.Browser
         public void ExecuteJs(string js)
         {
             _instance.ExecuteJs(js);
+        }
+
+        public void MarkAsChat()
+        {
+            _instance.MarkAsChat();
         }
     }
 }

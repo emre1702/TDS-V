@@ -59,11 +59,6 @@ namespace TDS_Server.Handler.Events
             _registerHandler.TryRegister(player, username, password, email);
         }
 
-        public void ToggleMapFavouriteState(ITDSPlayer tdsPlayer, int mapId, bool isFavorite)
-        {
-            _mapFavouritesHandler.ToggleMapFavouriteState(tdsPlayer, mapId, isFavorite);
-        }
-
         public void UseCommand(ITDSPlayer tdsPlayer, string msg)
         {
             _commandsHandler.UseCommand(tdsPlayer, msg);
@@ -80,65 +75,6 @@ namespace TDS_Server.Handler.Events
         }
 
         #region Lobby
-
-        public async void OnJoinLobby(ITDSPlayer player, int index)
-        {
-
-            if (_lobbiesHandler.LobbiesByIndex.ContainsKey(index))
-            {
-                Lobby lobby = _lobbiesHandler.LobbiesByIndex[index];
-                if (lobby is MapCreateLobby)
-                {
-                    if (await lobby.IsPlayerBaned(player))
-                        return;
-                    ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
-                }
-                else
-                {
-                    await lobby.AddPlayer(player, null);
-                }
-            }
-            else
-            {
-                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
-                //todo Remove lobby at client view and check, why he saw this lobby
-            }
-        }
-
-        public async void OnJoinLobbyWithPassword(ITDSPlayer player, int index, string? password = null)
-        {
-            if (_lobbiesHandler.LobbiesByIndex.ContainsKey(index))
-            {
-                Lobby lobby = _lobbiesHandler.LobbiesByIndex[index];
-                if (password != null && lobby.Entity.Password != password)
-                {
-                    player.SendMessage(player.Language.WRONG_PASSWORD);
-                    return;
-                }
-
-                await lobby.AddPlayer(player, null);
-            }
-            else
-            {
-                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
-                //todo Remove lobby at client view and check, why he saw this lobby
-            }
-        }
-
-        public async void OnCreateCustomLobby(ITDSPlayer player, string dataJson)
-        {
-            await _lobbiesHandler.CreateCustomLobby(player, dataJson);
-        }
-
-        public void OnJoinedCustomLobbiesMenu(ITDSPlayer player)
-        {
-            _customLobbyMenuSyncHandler.AddPlayer(player);
-        }
-
-        public void OnLeftCustomLobbiesMenu(ITDSPlayer player)
-        {
-            _customLobbyMenuSyncHandler.RemovePlayer(player);
-        }
 
         public void OnChooseTeam(ITDSPlayer player, int index)
         {
@@ -274,14 +210,6 @@ namespace TDS_Server.Handler.Events
             arena.SendMapsForVoting(player);
         }
 
-        public void OnMapVote(ITDSPlayer player, int mapId)
-        {
-            if (!(player.Lobby is Arena arena))
-                return;
-
-            arena.MapVote(player, mapId);
-        }
-
         #endregion MapVote
 
         #region Map Rating
@@ -294,41 +222,10 @@ namespace TDS_Server.Handler.Events
         #endregion Map Rating
 
         #region MapCreator
-        public async void OnSendMapCreatorData(ITDSPlayer player, string json)
-        {
-            MapCreateError err = await _mapCreatorHandler.Create(player, json, false);
-            player.SendEvent(ToClientEvent.SendMapCreatorReturn, (int)err);
-        }
-
-        public async void OnSaveMapCreatorData(ITDSPlayer player, string json)
-        {
-            MapCreateError err = await _mapCreatorHandler.Create(player, json, true);
-            player.SendEvent(ToClientEvent.SaveMapCreatorReturn, (int)err);
-        }
-
-        public void OnLoadMapNamesToLoadForMapCreator(ITDSPlayer player)
-        {
-            _mapCreatorHandler.SendPlayerMapNamesForMapCreator(player);
-        }
-
-        public void OnLoadMapForMapCreator(ITDSPlayer player, int mapId)
-        {
-            if (!(player.Lobby is MapCreateLobby))
-                return;
-            _mapCreatorHandler.SendPlayerMapForMapCreator(player, mapId);
-        }
 
         public void OnRemoveMap(ITDSPlayer player, int mapId)
         {
             _mapCreatorHandler.RemoveMap(player, mapId);
-        }
-
-        public void OnGetVehicle(ITDSPlayer player, int vehTypeNumber)
-        {
-            if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
-                return;
-            FreeroamVehicleType vehType = (FreeroamVehicleType)vehTypeNumber;
-            lobby.GiveVehicle(player, vehType);
         }
 
         public void OnMapCreatorSyncLastId(ITDSPlayer player, int id)
@@ -381,25 +278,6 @@ namespace TDS_Server.Handler.Events
             _userpanelHandler.PlayerLoadData(player, type);
         }
 
-        public void OnSendApplication(ITDSPlayer player, string json)
-        {
-            _userpanelHandler.ApplicationUserHandler.CreateApplication(player, json);
-        }
-
-        public void OnAcceptInvitation(ITDSPlayer player, int id)
-        {
-            _userpanelHandler.ApplicationUserHandler.AcceptInvitation(player, id);
-        }
-
-        public void OnRejectInvitation(ITDSPlayer player, int id)
-        {
-            _userpanelHandler.ApplicationUserHandler.RejectInvitation(player, id);
-        }
-
-        public async void OnLoadApplicationDataForAdmin(ITDSPlayer player, int applicationId)
-        {
-            await _userpanelHandler.ApplicationsAdminHandler.SendApplicationData(player, applicationId);
-        }
         #endregion
     }
 }

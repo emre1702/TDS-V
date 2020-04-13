@@ -39,7 +39,6 @@ namespace TDS_Client.Handler.MapCreator
         private bool _placeOnGround = true;
 
         private readonly IModAPI _modAPI;
-        private readonly MapCreatorMarkerHandler _mapCreatorMarkerHandler;
         private readonly MapCreatorDrawHandler _mapCreatorDrawHandler;
         private readonly MapCreatorObjectsHandler _mapCreatorObjectsHandler;
         private readonly CursorHandler _cursorHandler;
@@ -55,15 +54,15 @@ namespace TDS_Client.Handler.MapCreator
         private readonly MapCreatorSyncHandler _mapCreatorSyncHandler;
         private readonly DxHandler _dxHandler;
         private readonly TimerHandler _timerHandler;
+        private readonly ClickedMarkerStorer _clickedMarkerStorer;
 
-        public MapCreatorObjectPlacingHandler(IModAPI modAPI, MapCreatorMarkerHandler mapCreatorMarkerHandler, MapCreatorDrawHandler mapCreatorDrawHandler,
+        public MapCreatorObjectPlacingHandler(IModAPI modAPI, MapCreatorDrawHandler mapCreatorDrawHandler,
             MapCreatorObjectsHandler mapCreatorObjectsHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler,
             SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, CamerasHandler camerasHandler, InstructionalButtonHandler instructionalButtonHandler,
             UtilsHandler utilsHandler, MapCreatorObjectsPreviewHandler mapCreatorObjectsPreviewHandler, MapCreatorVehiclesPreviewHandler mapCreatorVehiclesPreviewHandler,
-            MapCreatorSyncHandler mapCreatorSyncHandler, EventsHandler eventsHandler, DxHandler dxHandler, TimerHandler timerHandler)
+            MapCreatorSyncHandler mapCreatorSyncHandler, EventsHandler eventsHandler, DxHandler dxHandler, TimerHandler timerHandler, ClickedMarkerStorer clickedMarkerStorer)
         {
             _modAPI = modAPI;
-            _mapCreatorMarkerHandler = mapCreatorMarkerHandler;
             _mapCreatorDrawHandler = mapCreatorDrawHandler;
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
             _cursorHandler = cursorHandler;
@@ -79,16 +78,18 @@ namespace TDS_Client.Handler.MapCreator
             _mapCreatorSyncHandler = mapCreatorSyncHandler;
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
+            _clickedMarkerStorer = clickedMarkerStorer;
 
             eventsHandler.MapCreatorObjectDeleted += CheckObjectDeleted;
 
             modAPI.Event.Add(FromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
             modAPI.Event.Add(FromBrowserEvent.MapCreatorHighlightPos, args => HighlightObjectWithId((int)args[0]));
+            modAPI.Event.Add(FromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
         }
 
         public void OnTick()
         {
-            if (_mapCreatorMarkerHandler.ClickedMarker != null)
+            if (_clickedMarkerStorer.ClickedMarker != null)
                 return;
 
             if (HoldingObject == null && _cursorHandler.Visible)
@@ -153,7 +154,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void LeftMouseClick(Control _)
         {
-            if (_mapCreatorMarkerHandler.ClickedMarker != null)
+            if (_clickedMarkerStorer.ClickedMarker != null)
                 return;
 
             if (HoldingObject == null && HighlightedObject != null)
@@ -393,7 +394,7 @@ namespace TDS_Client.Handler.MapCreator
                     _modAPI.MapObject.PlaceObjectOnGroundProperly(obj.Entity.Handle);
                     break;
                 case EntityType.Vehicle:
-                    _modAPI.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle, 0);
+                    _modAPI.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle);
                     break;
                 case EntityType.Ped:
                     float heightAboveGround = _modAPI.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
@@ -406,6 +407,13 @@ namespace TDS_Client.Handler.MapCreator
         {
             int objID = (int)args[0];
             HoldObjectWithID(objID);
+        }
+
+        private void OnStartMapCreatorPosPlacingMethod(object[] args)
+        {
+            MapCreatorPositionType type = (MapCreatorPositionType)(int)args[0];
+            object editingTeamIndexOrObjectName = args[1];
+            StartNewPlacing(type, editingTeamIndexOrObjectName);
         }
     }
 }

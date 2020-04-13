@@ -8,10 +8,12 @@ using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Map;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Models.Map;
 using TDS_Shared.Data.Models.Map.Creator;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Lobby
 {
@@ -20,24 +22,33 @@ namespace TDS_Client.Handler.Lobby
         public ClientSyncedDataDto MapDatas { get; set; }
 
         private DxText _mapInfo;
-        private readonly List<IEntity> _objects = new List<IEntity>();
+        private readonly List<IEntityBase> _objects = new List<IEntityBase>();
 
         private readonly IModAPI _modAPI;
         private readonly DxHandler _dxHandler;
         private readonly TimerHandler _timerHandler;
         private readonly LobbyCamHandler _lobbyCamHandler;
         private readonly MapLimitHandler _mapLimitHandler;
+        private readonly Serializer _serializer;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly EventsHandler _eventsHandler;
 
-        public LobbyMapDatasHandler(IModAPI modAPI, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler, LobbyCamHandler lobbyCamHandler, MapLimitHandler mapLimitHandler)
+        public LobbyMapDatasHandler(IModAPI modAPI, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler, LobbyCamHandler lobbyCamHandler, 
+            MapLimitHandler mapLimitHandler, Serializer serializer, SettingsHandler settingsHandler)
         {
             _modAPI = modAPI;
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
             _lobbyCamHandler = lobbyCamHandler;
             _mapLimitHandler = mapLimitHandler;
+            _serializer = serializer;
+            _settingsHandler = settingsHandler;
+            _eventsHandler = eventsHandler;
 
-            eventsHandler.MapCleared += CustomEventManager_OnMapClear;
             eventsHandler.LobbyLeft += CustomEventManager_OnLobbyLeave;
+
+            modAPI.Event.Add(ToClientEvent.MapChange, OnMapChangeMethod);
+            modAPI.Event.Add(ToClientEvent.MapClear, OnMapClearMethod);
         }
 
         public void SetMapData(ClientSyncedDataDto mapData)
@@ -60,20 +71,11 @@ namespace TDS_Client.Handler.Lobby
                 _mapLimitHandler.Load(mapData.MapEdges);
         }
 
-        private void CustomEventManager_OnLobbyLeave(SyncedLobbySettingsDto settings)
+        private void CustomEventManager_OnLobbyLeave(SyncedLobbySettings settings)
         {
-            CustomEventManager_OnMapClear();
+            OnMapClearMethod(Array.Empty<object>());
             MapDatas = null;
             RemoveMapInfo();
-        }
-
-        private void CustomEventManager_OnMapClear()
-        {
-            foreach (var obj in _objects)
-            {
-                obj.Destroy();
-            }
-            _objects.Clear();
         }
 
         public void RemoveMapInfo()
@@ -84,7 +86,7 @@ namespace TDS_Client.Handler.Lobby
 
         private void LoadMap(ClientSyncedDataDto map)
         {
-            CustomEventManager_OnMapClear();
+            OnMapClearMethod(Array.Empty<object>());
 
             if (map.Target != null)
             {
@@ -126,7 +128,7 @@ namespace TDS_Client.Handler.Lobby
                 {
                     string vehName = Convert.ToString(data.Info);
                     uint vehHash = _modAPI.Misc.GetHashKey(vehName);
-                    var veh = _modAPI.Vehicle.Create(vehHash, GetPos(data), GetRot(data), map.Name, true, _modAPI.LocalPlayer.Dimension);
+                    var veh = _modAPI.Vehicle.Create(vehHash, GetPos(data), GetRot(data), map.Name, locked: true, dimension: _modAPI.LocalPlayer.Dimension);
                     veh.FreezePosition(true);
                     veh.SetInvincible(true);
                     _objects.Add(veh);
@@ -142,6 +144,32 @@ namespace TDS_Client.Handler.Lobby
         private Position3D GetRot(MapCreatorPosition pos)
         {
             return new Position3D(pos.RotX, pos.RotY, pos.RotZ);
+        }
+
+        private void OnMapClearMethod(object[] args)
+        {
+            foreach (var obj in _objects)
+            {
+                obj.Destroy();
+            }
+            _objects.Clear();
+
+            _eventsHandler.OnMapCleared();
+        }
+
+        private void OnMapChangeMethod(object[] args)
+        {
+            if (args.Length > 0)
+            {
+                var mapData = _serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
+                SetMapData(mapData);
+            }
+            
+            _modAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
+            _modAPI.Cam.SetCamEffect(0);
+            _modAPI.Cam.DoScreenFadeIn(_settingsHandler.MapChooseTime);
+
+            _eventsHandler.OnMapChanged();
         }
     }
 }

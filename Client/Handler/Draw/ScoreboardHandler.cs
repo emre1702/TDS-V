@@ -11,6 +11,7 @@ using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Draw.Dx.Grid;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
@@ -35,7 +36,7 @@ namespace TDS_Client.Handler.Draw
 
         private DxGrid _grid;
         private bool _isActivated;
-        private ulong _lastLoadedTick;
+        private int _lastLoadedTick;
         private bool _isManualToggleDisabled;
 
         private readonly DxGridColumn[] _columns = new DxGridColumn[6];
@@ -48,9 +49,11 @@ namespace TDS_Client.Handler.Draw
         private readonly LobbyHandler _lobbyHandler;
         private readonly TimerHandler _timerHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly BindsHandler _bindsHandler;
+        private readonly Serializer _serializer;
 
-        public ScoreboardHandler(DxHandler dxHandler, IModAPI modAPI, SettingsHandler settingsHandler, LobbyHandler lobbyHandler, TimerHandler timerHandler, RemoteEventsSender remoteEventsSender,
-            EventsHandler eventsHandler)
+        public ScoreboardHandler(DxHandler dxHandler, IModAPI modAPI, SettingsHandler settingsHandler, LobbyHandler lobbyHandler, TimerHandler timerHandler, 
+            RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, BindsHandler bindsHandler, Serializer serializer)
         {
             _tickEventMethod = new EventMethodData<TickDelegate>(OnTick);
 
@@ -60,16 +63,22 @@ namespace TDS_Client.Handler.Draw
             _lobbyHandler = lobbyHandler;
             _timerHandler = timerHandler;
             _remoteEventsSender = remoteEventsSender;
+            _bindsHandler = bindsHandler;
+            _serializer = serializer;
 
+            eventsHandler.LoggedIn += EventsHandler_LoggedIn;
             eventsHandler.LanguageChanged += (lang, _) => LoadLanguage(lang);
             eventsHandler.LobbyLeft += _ => ReleasedScoreboardKey();
-            eventsHandler.LobbyJoinSelectedTeam += () => ReleasedScoreboardKey();
+            eventsHandler.ShowScoreboard += () => PressedScoreboardKey();
+            eventsHandler.HideScoreboard += () => ReleasedScoreboardKey();
 
             _grid = new DxGrid(dxHandler, modAPI, 0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15);
             CreateColumns();
             CreateTitle();
             CreateBody();
             CreateFooter();
+
+            modAPI.Event.Add(ToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
         }
 
         public void AddMainmenuData(List<SyncedScoreboardMainmenuLobbyDataDto> list)
@@ -136,8 +145,8 @@ namespace TDS_Client.Handler.Draw
                 _isManualToggleDisabled = true;
 
             _grid.ScrollIndex = 0;
-            ulong tick = _timerHandler.ElapsedMs;
-            if (tick - _lastLoadedTick >= (ulong)Constants.ScoreboardLoadCooldown || control == Control.Aim)
+            int tick = _timerHandler.ElapsedMs;
+            if (tick - _lastLoadedTick >= Constants.ScoreboardLoadCooldown || control == Control.Aim)
             {
                 _lastLoadedTick = tick;
                 if (control == Control.Aim)
@@ -166,7 +175,7 @@ namespace TDS_Client.Handler.Draw
             _grid.ClearRows();
         }
 
-        private void OnTick(ulong _)
+        private void OnTick(int _)
         {
             _modAPI.Control.DisableControlAction(InputGroup.MOVE, Control.SelectNextWeapon, true);
             _modAPI.Control.DisableControlAction(InputGroup.MOVE, Control.SelectPrevWeapon, true);
@@ -200,6 +209,31 @@ namespace TDS_Client.Handler.Draw
         private void CreateFooter()
         {
         }
+
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Control.MultiplayerInfo, PressedScoreboardKey, KeyPressState.Down);
+            _bindsHandler.Add(Control.MultiplayerInfo, ReleasedScoreboardKey, KeyPressState.Up);
+        }
+
+        private void OnSyncScoreboardDataMethod(object[] args)
+        {
+            bool inmainmenu = args.Length == 1;
+            if (inmainmenu)
+            {
+                var list = _serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[0]);
+                ClearRows();
+                AddMainmenuData(list);
+            }
+            else
+            {
+                var playerlist = _serializer.FromServer<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
+                var lobbylist = _serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
+                ClearRows();
+                AddLobbyData(playerlist, lobbylist);
+            }
+        }
+
     }
 }
 #pragma warning restore IDE0067 // Dispose objects before losing scope

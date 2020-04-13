@@ -7,6 +7,7 @@ import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
+import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 
 @Component({
     selector: 'app-userpanel-support-user',
@@ -56,7 +57,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
-        this.rageConnector.listen(DFromClientEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
+        this.rageConnector.listen(DFromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
 
         this.requestGroup = new FormGroup({
             title: new FormControl('', [Validators.required, Validators.minLength(this.titleMinLength), Validators.maxLength(this.titleMaxLength)]),
@@ -68,8 +69,8 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.userpanelService.supportRequests = undefined;
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
-        this.rageConnector.remove(DFromClientEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
-        this.rageConnector.call(DToServerEvent.LeftSupportRequestsList);
+        this.rageConnector.remove(DFromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
+        this.rageConnector.callServer(DToServerEvent.LeftSupportRequestsList);
     }
 
     openCreateRequest() {
@@ -87,7 +88,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         this.inRequest = id;
         this.requestGroup.get("type").disable();
 
-        this.rageConnector.callCallback(DToServerEvent.GetSupportRequestData, [id], (json: string) => {
+        this.rageConnector.callCallbackServer(DToServerEvent.GetSupportRequestData, [id], (json: string) => {
             this.currentRequest = JSON.parse(json);
             this.changeDetector.detectChanges();
         });
@@ -102,7 +103,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         this.currentRequest[2] = [[ "", this.requestGroup.get("message").value, ""]];
         this.currentRequest[3] = this.requestGroup.get("type").value;
 
-        this.rageConnector.call(DToServerEvent.SendSupportRequest, JSON.stringify(this.currentRequest));
+        this.rageConnector.callServer(DToServerEvent.SendSupportRequest, JSON.stringify(this.currentRequest));
 
         this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
         this.changeDetector.detectChanges();

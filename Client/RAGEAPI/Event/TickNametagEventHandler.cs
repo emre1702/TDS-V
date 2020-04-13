@@ -18,15 +18,27 @@ namespace TDS_Client.RAGEAPI.Event
 
         private void OnTick(List<RAGE.Events.TickNametagData> nametags)
         {
+            if (Actions.Count == 0)
+                return;
+
             var newNametags = new List<TickNametagData>();
-            foreach (var nametag in nametags)
-                newNametags.Add(new TickNametagData 
-                { 
-                    Player = _playerConvertingHandler.GetPlayer(nametag.Player),
-                    ScreenX = nametag.ScreenX,
-                    ScreenY = nametag.ScreenY,
-                    Distance = nametag.Distance
-                });
+            if (nametags != null)
+            {
+                foreach (var nametag in nametags)
+                {
+                    if (nametag.Player is null)
+                        continue;
+                    newNametags.Add(new TickNametagData
+                    {
+                        Player = _playerConvertingHandler.GetPlayer(nametag.Player),
+                        ScreenX = nametag.ScreenX,
+                        ScreenY = nametag.ScreenY,
+                        Distance = nametag.Distance
+                    });
+                }
+                    
+            }
+           
 
             foreach (var a in Actions)
                 if (a.Requirement is null || a.Requirement())

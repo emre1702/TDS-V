@@ -1,7 +1,6 @@
 ﻿using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Handler;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 
@@ -13,24 +12,29 @@ namespace TDS_Client.Handler
         private readonly BrowserHandler _browserHandler;
         private readonly IModAPI _modAPI;
         private readonly UtilsHandler _utilsHandler;
+        private readonly BindsHandler _bindsHandler;
 
         public VoiceHandler(BindsHandler bindsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler, IModAPI modAPI, UtilsHandler utilsHandler, EventsHandler eventsHandler)
         {
+            if (!modAPI.Voice.Allowed)
+                return;
+
             _settingsHandler = settingsHandler;
             _browserHandler = browserHandler;
             _modAPI = modAPI;
             _utilsHandler = utilsHandler;
+            _bindsHandler = bindsHandler;
 
-            //if (!Voice.Allowed)
-            //    return;
-            bindsHandler.Add(Control.PushToTalk, Start, KeyPressState.Down);
-            bindsHandler.Add(Control.PushToTalk, Stop, KeyPressState.Up);
-
+            eventsHandler.LoggedIn += EventsHandler_LoggedIn;
             eventsHandler.SettingsLoaded += EventsHandler_SettingsLoaded;
+            eventsHandler.PlayerJoinedSameLobby += SetForPlayer;
         }
 
-        public void SetForPlayer(IPlayer player)
+        private void SetForPlayer(IPlayer player)
         {
+            if (!_modAPI.Voice.Allowed)
+                return;
+
             player.AutoVolume = _settingsHandler.PlayerSettings.VoiceAutoVolume;
             if (!_settingsHandler.PlayerSettings.VoiceAutoVolume)
                 player.VoiceVolume = _settingsHandler.PlayerSettings.VoiceVolume;
@@ -39,6 +43,9 @@ namespace TDS_Client.Handler
 
         private void Start(Control _)
         {
+            if (!_modAPI.Voice.Allowed)
+                return;
+
             if (_browserHandler.InInput)
                 return;
 
@@ -50,6 +57,12 @@ namespace TDS_Client.Handler
         {
             _modAPI.Voice.Muted = true;
             _browserHandler.PlainMain.StopPlayerTalking(_utilsHandler.GetDisplayName(_modAPI.LocalPlayer));
+        }
+
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Control.PushToTalk, Start, KeyPressState.Down);
+            _bindsHandler.Add(Control.PushToTalk, Stop, KeyPressState.Up);
         }
 
         private void EventsHandler_SettingsLoaded()

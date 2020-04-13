@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { MapVoteDto } from '../models/mapVoteDto';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
-import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { EventEmitter } from 'events';
 import { OrderByPipe } from '../../../pipes/orderby.pipe';
+import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class MapVotingService {
 
   public voteForMapId(id: number) {
     this.votedForMapId = id;
-    this.rageConnector.call(DToClientEvent.AddMapVote, id);
+    this.rageConnector.callServer(DToServerEvent.AddMapVote, id);
   }
 
   private addMapToVoting(mapVoteJson: string) {
@@ -53,9 +54,10 @@ export class MapVotingService {
 
   constructor(private rageConnector: RageConnectorService, private orderByPipe: OrderByPipe) {
     console.log("Map voting listener started.");
-    rageConnector.listen(DFromClientEvent.LoadMapVoting, this.loadMapVoting.bind(this));
+    rageConnector.listen(DFromServerEvent.LoadMapVoting, this.loadMapVoting.bind(this));
     rageConnector.listen(DFromClientEvent.ResetMapVoting, this.resetMapVoting.bind(this));
-    rageConnector.listen(DFromClientEvent.AddMapToVoting, this.addMapToVoting.bind(this));
-    rageConnector.listen(DFromClientEvent.SetMapVotes, this.setMapVotes.bind(this));
+    rageConnector.listen(DFromServerEvent.StopMapVoting, this.resetMapVoting.bind(this));
+    rageConnector.listen(DFromServerEvent.AddMapToVoting, this.addMapToVoting.bind(this));
+    rageConnector.listen(DFromServerEvent.SetMapVotes, this.setMapVotes.bind(this));
   }
 }

@@ -29,7 +29,7 @@ namespace TDS_Client.Handler.MapCreator
                 player.Rotation = cam.Rotation;
             }
             player.FreezePosition(false);
-            player.SetVisible(true, false);
+            player.SetVisible(true);
             player.SetCollision(true, true);
 
             _camerasHandler.RenderBack();
@@ -42,7 +42,7 @@ namespace TDS_Client.Handler.MapCreator
         {
             var player = _modAPI.LocalPlayer;
             player.FreezePosition(true);
-            player.SetVisible(false, false);
+            player.SetVisible(false);
             player.SetCollision(false, false);
         }
     }

@@ -1,18 +1,17 @@
 ﻿using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Manager.Utility;
 using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.Handler.Browser
 {
     public class RegisterLoginBrowserHandler : BrowserHandlerBase
     {
-        public RegisterLoginBrowserHandler(IModAPI modAPI, Serializer serializer)
+        public RegisterLoginBrowserHandler(IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler)
             : base(modAPI, serializer, Constants.RegisterLoginBrowserPath)
-        {    }
+        {
+            modAPI.Event.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, _ => SyncLanguage(settingsHandler.Language));
+        }
 
         public void SendDataToBrowser(string name, bool isRegistered, ILanguage lang)
         {

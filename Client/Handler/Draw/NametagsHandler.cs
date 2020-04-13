@@ -41,7 +41,7 @@ namespace TDS_Client.Handler.Draw
             if (!_modAPI.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
                 return;
 
-            if (_modAPI.Entity.GetEntityType(targetEntity) != 1)
+            if (_modAPI.Entity.GetEntityType(targetEntity) != EntityType.Ped)
                 return;
 
             var myPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.LocalPlayer.Position;
@@ -85,7 +85,7 @@ namespace TDS_Client.Handler.Draw
             float textheight = _modAPI.Ui.GetTextScaleHeight(scale, Font.ChaletLondon);
             screenY -= textheight;
 
-            _modAPI.Ui.DrawText(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
+            _modAPI.Graphics.DrawText(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
                 AlignmentX.Center, true, true, 0);
         }
 

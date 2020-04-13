@@ -50,7 +50,7 @@ namespace TDS_Server.Handler.Server
             Environment.Exit(0);
         }
 
-        public void CheckHourForResourceRestart(ulong _)
+        public void CheckHourForResourceRestart(int _)
         {
             if (_isFirstResourceStopCheck)
             {

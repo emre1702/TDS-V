@@ -4,7 +4,7 @@ using TDS_Shared.Core;
 
 namespace TDS_Shared.Data.Models
 {
-    public class SyncedLobbySettingsDto
+    public class SyncedLobbySettings
     {
         [JsonProperty("0")]
         public int Id;
@@ -43,9 +43,9 @@ namespace TDS_Shared.Data.Models
         [JsonIgnore]
         public bool IsFightLobby => Type == LobbyType.Arena || Type == LobbyType.FightLobby;
 
-        public SyncedLobbySettingsDto(int Id, string Name, LobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
+        public SyncedLobbySettings(int Id, string Name, LobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
             int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? MapLimitTime, bool InLobbyWithMaps, MapLimitType? MapLimitType,
-            int StartHealth, int StartArmor, Serializer serializer)
+            int StartHealth, int StartArmor)
         {
             this.Id = Id;
             this.Name = Name;
@@ -63,7 +63,7 @@ namespace TDS_Shared.Data.Models
             this.StartHealth = StartHealth;
             this.StartArmor = StartArmor;
 
-            this.Json = serializer.ToClient(this);
+            this.Json = new Serializer().ToClient(this);
         }
     }
 }

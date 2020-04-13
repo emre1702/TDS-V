@@ -14,7 +14,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
         Position3D Rotation { get; set; }
 
         void Render(bool render, bool ease, int easeTime);
-        void AttachTo(IEntity ped, PedBone bone, int x, float y, float z, bool heading);
+        void AttachTo(IEntityBase ped, PedBone bone, int x, float y, float z, bool heading);
 
         void Detach();
 
@@ -22,6 +22,5 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
         void PointAtCoord(Position3D pos);
         void SetActive(bool active);
         void SetFov(float fov);
-        //_modAPI.Cam.SetCamFov(cam.Handle, _modAPI.Cam.GetGameplayCamFov());
     }
 }

@@ -8,6 +8,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Entities;
+using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -22,14 +23,20 @@ namespace TDS_Client.Handler
         private readonly Serializer _serializer;
         private readonly DataSyncHandler _dataSyncHandler;
 
-        public UtilsHandler(IModAPI modAPI, Serializer serializer, DataSyncHandler dataSyncHandler)
+        public UtilsHandler(IModAPI modAPI, Serializer serializer, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
         {
             _modAPI = modAPI;
             _serializer = serializer;
             _dataSyncHandler = dataSyncHandler;
 
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableAttack, () => Bomb.BombOnHand || !Round.InFight));
+            eventsHandler.LoggedIn += EventsHandler_LoggedIn;
+
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableControlActions));
+        }
+
+        private void EventsHandler_LoggedIn()
+        {
+            _modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(HideHudOriginalComponents));
         }
 
         public List<IPlayer> GetTriggeredPlayersList(string objStr)
@@ -43,18 +50,7 @@ namespace TDS_Client.Handler
             return _modAPI.Pool.Players.GetAtRemote(handleValue);
         }
 
-        private void DisableAttack(ulong _)
-        {
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack2);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackLight);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackHeavy);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackAlternate);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack1);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack2);
-        }
-
-        private void DisableControlActions(ulong _)
+        private void DisableControlActions(int _)
         {
             _modAPI.Control.DisableControlAction(InputGroup.WHEEL, Control.EnterCheatCode);
         }
@@ -63,7 +59,7 @@ namespace TDS_Client.Handler
         {
             _modAPI.Ui.SetNotificationTextEntry("STRING");
             _modAPI.Ui.AddTextComponentSubstringPlayerName(msg);
-            _modAPI.Ui.DrawNotification(false, false);
+            _modAPI.Ui.DrawNotification(false);
         }
 
         public Position3D GetWorldCoordFromScreenCoord(float x, float y, TDSCamera tdsCamera = null)
@@ -432,9 +428,8 @@ namespace TDS_Client.Handler
             return name;
         }
 
-        public void HideHUDOriginalComponents()
+        private void HideHudOriginalComponents(int _)
         {
-
             _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_CASH);
             _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL_STATS);
             _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_ICON);

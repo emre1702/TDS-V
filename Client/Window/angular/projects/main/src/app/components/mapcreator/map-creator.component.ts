@@ -67,12 +67,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.rageConnector.listen(DFromClientEvent.MapCreatorSyncData, this.onSyncData.bind(this));
+        this.rageConnector.listen(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
         this.rageConnector.remove(DFromClientEvent.MapCreatorSyncData, this.onSyncData.bind(this));
+        this.rageConnector.remove(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.detectChanges.bind(this));
     }
@@ -311,7 +313,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     sendDataToClient() {
         this.fixData();
         this.changeDetector.detectChanges();
-        this.rageConnector.callCallback(DToClientEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
+        this.rageConnector.callCallbackServer(DToServerEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
             this.snackBar.open(this.settings.Lang[errName], "OK", {
                 duration: undefined,
@@ -347,7 +349,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     saveData() {
         this.fixData();
-        this.rageConnector.callCallback(DToClientEvent.SaveMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
+        this.rageConnector.callCallbackServer(DToServerEvent.SaveMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
             this.snackBar.open(this.settings.Lang[errName], "OK", {
                 duration: undefined,
@@ -357,7 +359,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     loadPossibleMaps() {
-        this.rageConnector.callCallback(DToServerEvent.LoadMapNamesToLoadForMapCreator, null, (possibleMapsJson: string) => {
+        this.rageConnector.callCallbackServer(DToServerEvent.LoadMapNamesToLoadForMapCreator, null, (possibleMapsJson: string) => {
             const possibleMaps = JSON.parse(possibleMapsJson) as LoadMapDialogGroupDto[];
             const dialogRef = this.dialog.open(LoadMapDialog, { data: possibleMaps, panelClass: "mat-app-background" });
 
@@ -365,19 +367,21 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 if (loadMapId === undefined)
                     return;
 
-                this.rageConnector.callCallback(DToServerEvent.LoadMapForMapCreator, [loadMapId], (json: string) => {
-                    this.data = JSON.parse(json);
-                    this.fixData();
-                    this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
-                        duration: 5000,
-                        panelClass: "mat-app-background"
-                    });
-                    this.changeDetector.detectChanges();
-                });
+                this.rageConnector.callServer(DToServerEvent.LoadMapForMapCreator, loadMapId);
             });
 
             this.changeDetector.detectChanges();
         });
+    }
+
+    private onLoadMap(json: string) {
+        this.data = JSON.parse(json);
+        this.fixData();
+        this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
+            duration: 5000,
+            panelClass: "mat-app-background"
+        });
+        this.changeDetector.detectChanges();
     }
 
     private fixData() {

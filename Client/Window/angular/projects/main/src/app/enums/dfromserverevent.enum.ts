@@ -1,10 +1,22 @@
 export enum DFromServerEvent {
+    AddCustomLobby = "sb20",
+    AddMapToVoting = "sb10",
     AddInvitation = "sb1",
+    LeaveCustomLobbyMenu = "sb11",
+    LoadMapFavourites = "sb12",
+    LoadMapVoting = "sb15",
+    LoadUserpanelData = "sb13",
+    MapCreatorSyncData = "sb14",
+    RemoveCustomLobby = "sb16",
     RemoveInvitation = "sb2",
     SetAssistsForRoundStats = "sb3",
     SetDamageForRoundStats = "sb4",
     SetKillsForRoundStats = "sb5",
-
+    SetMapVotes = "sb17",
+    SetSupportRequestClosed = "sb8",
+    StopMapVoting = "sb18",
+    SyncAllCustomLobbies = "sb19",
     SyncChallengeCurrentAmountChange = "sb6",
-    SyncChallenges = "sb7"
+    SyncChallenges = "sb7",
+    SyncNewSupportRequestMessage = "sb9"
 }

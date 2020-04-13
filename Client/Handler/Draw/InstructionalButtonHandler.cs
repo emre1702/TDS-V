@@ -70,7 +70,7 @@ namespace TDS_Client.Handler.Draw
             eventsHandler.LobbyLeft += _ => Reset();
         }
 
-        private void OnTick(ulong currentMs)
+        private void OnTick(int currentMs)
         {
             _scaleform.RenderFullscreen();
         }
@@ -190,10 +190,10 @@ namespace TDS_Client.Handler.Draw
 
         }
 
-        private void EventsHandler_LobbyJoined(SyncedLobbySettingsDto settings)
+        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
             if (settings.InLobbyWithMaps)
-                _instructionalButtonHandler.Add("Map-Voting", "F3");
+                Add("Map-Voting", "F3");
         }
 
     }

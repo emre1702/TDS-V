@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Models;
 using TDS_Shared.Default;
@@ -59,7 +60,7 @@ namespace TDS_Client.Handler.Events
                 return true;
             }
 
-            ulong currentTicks = _timerHandler.ElapsedTicks;
+            int currentTicks = _timerHandler.ElapsedMs;
             if (entry.LastExecMs != 0 && currentTicks - entry.LastExecMs < entry.CooldownMs)
             {
                 return false;
@@ -84,7 +85,7 @@ namespace TDS_Client.Handler.Events
                 return true;
             }
 
-            ulong currentTicks = _timerHandler.ElapsedTicks;
+            int currentTicks = _timerHandler.ElapsedMs;
             entry.LastExecMs = currentTicks;
             _modAPI.Sync.SendEvent(eventName, args);
             return true;
@@ -99,7 +100,7 @@ namespace TDS_Client.Handler.Events
                 return true;
             }
 
-            ulong currentTicks = _timerHandler.ElapsedTicks;
+            int currentTicks = _timerHandler.ElapsedMs;
             if (entry.LastExecMs != 0 && currentTicks - entry.LastExecMs < entry.CooldownMs)
             {
                 return false;

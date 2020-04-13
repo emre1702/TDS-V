@@ -2,35 +2,26 @@
 {
     public static class ToBrowserEvent
     {
-        public const string AddCustomLobby = "cb1";
-        public const string AddMapToVoting = "cb2";
         public const string AddNameForChat = "cb38";
         public const string AddPositionToMapCreatorBrowser = "cb3";
         public const string CloseMapMenu = "cb4";
         public const string HideRankings = "cb5";
         public const string InitLoadAngular = "cb6";
-        public const string LeaveCustomLobbyMenu = "cb7";
         public const string LoadFavoriteMaps = "cb8";
         public const string LoadLanguage = "cb9";
-        public const string LoadMapVoting = "cb10";
+        public const string LoadMapForMapCreator = "cb43";
         public const string LoadNamesForChat = "cb39";
-        public const string MapCreatorSyncData = "cb11";
         public const string OpenMapMenu = "cb12";
         public const string RefreshAdminLevel = "cb13";
-        public const string RemoveCustomLobby = "cb14";  
         public const string RemoveNameForChat = "cb40";
         public const string RemovePositionInMapCreatorBrowser = "cb15";
         public const string ResetMapVoting = "cb16";
-        public const string SetMapVotes = "cb17";
-        public const string SetSupportRequestClosed = "cb34";
         public const string ShowCooldown = "cb18";
         public const string ShowRankings = "cb19";
-        public const string SyncAllCustomLobbies = "cb20";
         public const string SyncHudDataChange = "cb21";
         public const string SyncIsLobbyOwner = "cb22";
         public const string SyncMapPriceData = "cb23";
         public const string SyncMoney = "cb24";
-        public const string SyncNewSupportRequestMessage = "cb35";
         public const string SyncTeamChoiceMenuData = "cb36";
         public const string SyncUsernameChange = "cb42";
         public const string ToggleChatInput = "cb41";

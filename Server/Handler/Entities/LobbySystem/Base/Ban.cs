@@ -2,10 +2,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.Player;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -81,7 +80,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             else
             {
                 if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                    LangHelper.SendAllChatMessage(lang => lang.PERMABAN_LOBBY_INFO.Formatted(target.Name, Entity.Name, admin.DisplayName, reason));
+                    LangHelper.SendAllChatMessage(lang => string.Format(lang.PERMABAN_LOBBY_INFO, target.Name, Entity.Name, admin.DisplayName, reason));
                 else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
                     SendAllPlayerLangMessage(lang => string.Format(lang.PERMABAN_INFO, target.Name, admin.DisplayName, reason));
                 else

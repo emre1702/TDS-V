@@ -22,12 +22,12 @@ namespace TDS_Client.Handler.Lobby
 
         public void JoinArena(object[] args)
         {
-            _remoteEventsSender.Send(ToServerEvent.JoinLobby, _settingsHandler.ArenaLobbyId);
+            _remoteEventsSender.SendFromBrowser(ToServerEvent.JoinLobby, _settingsHandler.ArenaLobbyId);
         }
 
         public void JoinMapCreator(object[] args)
         {
-            _remoteEventsSender.Send(ToServerEvent.JoinLobby, _settingsHandler.MapCreatorLobbyId);
+            _remoteEventsSender.SendFromBrowser(ToServerEvent.JoinLobby, _settingsHandler.MapCreatorLobbyId);
         }
     }
 }

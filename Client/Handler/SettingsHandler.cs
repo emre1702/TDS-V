@@ -50,7 +50,7 @@ namespace TDS_Client.Handler
         public ILanguage Language { get; private set; }
 
         private SyncedServerSettingsDto _syncedServerSettings;
-        private SyncedLobbySettingsDto _syncedLobbySettings;
+        private SyncedLobbySettings _syncedLobbySettings;
 
         public SyncedPlayerSettingsDto PlayerSettings;
 
@@ -104,17 +104,20 @@ namespace TDS_Client.Handler
 
             Language = _languagesDict[LanguageEnum];
 
+            eventsHandler.LobbyJoined += LoadSyncedLobbySettings;
             modAPI.Event.Add(FromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+            modAPI.Event.Add(FromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
+
 
             modAPI.Nametags.Enabled = false;
 
-            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Flying), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Lung), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Shooting), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Stamina), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Stealth), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Strength), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Utils.GetHashKey(PedStat.Wheelie), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Flying), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Lung), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Shooting), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Stamina), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Stealth), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Strength), 100, false);
+            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Wheelie), 100, false);
 
             modAPI.LocalPlayer.SetMaxArmor(Constants.MaxPossibleArmor);
             LoadLanguageFromRAGE();
@@ -154,12 +157,12 @@ namespace TDS_Client.Handler
             _eventsHandler.OnSettingsLoaded();
         }
 
-        public SyncedLobbySettingsDto GetSyncedLobbySettings()
+        public SyncedLobbySettings GetSyncedLobbySettings()
         {
             return _syncedLobbySettings;
         }
 
-        public void LoadSyncedLobbySettings(SyncedLobbySettingsDto loadedSyncedLobbySettings)
+        public void LoadSyncedLobbySettings(SyncedLobbySettings loadedSyncedLobbySettings)
         {
             _syncedLobbySettings = loadedSyncedLobbySettings;
 
@@ -187,10 +190,10 @@ namespace TDS_Client.Handler
 
         private void LoadLanguageFromRAGE()
         {
-            int lang = _modAPI.Locale.GetCurrentLanguageId();
+            var lang = _modAPI.Locale.GetCurrentLanguageId();
             switch (lang)
             {
-                case 2: // German
+                case LanguageID.German:
                     LanguageEnum = TDS_Shared.Data.Enums.Language.German;
                     _languageManuallyChanged = false;
                     break;
@@ -204,6 +207,35 @@ namespace TDS_Client.Handler
                 return;
 
             LanguageEnum = (Language)languageID;
+        }
+
+        private void OnColorSettingChangeMethod(object[] args)
+        {
+            string color = (string)args[0];
+            UserpanelSettingKey dataSetting = (UserpanelSettingKey)(Convert.ToInt32(args[1]));
+
+            switch (dataSetting)
+            {
+                case UserpanelSettingKey.MapBorderColor:
+                    MapBorderColor = SharedUtils.GetColorFromHtmlRgba(color) ?? MapBorderColor;
+                    break;
+                case UserpanelSettingKey.NametagDeadColor:
+                    NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(color);
+                    break;
+                case UserpanelSettingKey.NametagHealthEmptyColor:
+                    NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagHealthEmptyColor;
+                    break;
+                case UserpanelSettingKey.NametagHealthFullColor:
+                    NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagHealthFullColor;
+                    break;
+                case UserpanelSettingKey.NametagArmorEmptyColor:
+                    NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(color);
+                    break;
+                case UserpanelSettingKey.NametagArmorFullColor:
+                    NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagArmorFullColor;
+                    break;
+            }
+
         }
 
         /*function loadSettings() {

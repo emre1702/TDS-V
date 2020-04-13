@@ -1,9 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.Utility;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Handler.Events
 {
@@ -16,11 +17,13 @@ namespace TDS_Server.Handler.Events
         public delegate void PlayerDelegate(ITDSPlayer player);
         public event PlayerDelegate? PlayerConnected;
         public event PlayerDelegate? PlayerLoggedIn;
-
-        public event PlayerDelegate? PlayerRegistered;
+       
         public event PlayerDelegate? PlayerLoggedOut;
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
         public event PlayerDelegate? PlayerLeftCustomMenuLobby;
+
+        public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
+        public event TDSDbPlayerDelegate? PlayerRegistered;
 
         public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
         public event IncomingConnectionDelegate? IncomingConnection;
@@ -38,7 +41,7 @@ namespace TDS_Server.Handler.Events
         public event LobbyDelegate? CustomLobbyCreated;
         public event LobbyDelegate? CustomLobbyRemoved;
 
-        public delegate void CounterDelegate(ulong counter);
+        public delegate void CounterDelegate(int counter);
         public event CounterDelegate? Second;
         public event CounterDelegate? Minute;
         public event CounterDelegate? Hour;
@@ -95,9 +98,9 @@ namespace TDS_Server.Handler.Events
             PlayerLoggedOut?.Invoke(tdsPlayer);
         }
 
-        public void OnPlayerRegister(ITDSPlayer tdsPlayer)
+        public void OnPlayerRegister(ITDSPlayer player, Players dbPlayer)
         {
-            PlayerRegistered?.Invoke(tdsPlayer);
+            PlayerRegistered?.Invoke(player, dbPlayer);
         }
 
         public void OnMapsLoaded()
@@ -143,7 +146,7 @@ namespace TDS_Server.Handler.Events
 
 
         #region Timer
-        private ulong _hourCounter;
+        private int _hourCounter;
         internal void OnHour()
         {
             try
@@ -156,7 +159,7 @@ namespace TDS_Server.Handler.Events
             }
         }
 
-        private ulong _minuteCounter;
+        private int _minuteCounter;
         internal void OnMinute()
         {
             try
@@ -169,7 +172,7 @@ namespace TDS_Server.Handler.Events
             }
         }
 
-        private ulong _secondCounter;
+        private int _secondCounter;
         internal void OnSecond()
         {
             try

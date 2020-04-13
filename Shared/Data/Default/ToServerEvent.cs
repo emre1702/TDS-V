@@ -3,6 +3,7 @@
     public static class ToServerEvent
     {
         public const string AcceptInvitation = "c1";
+        public const string AcceptTDSTeamInvitation = "c67";
         public const string AddRatingToMap = "c2";
         public const string AnswerToOfflineMessage = "c3";
 
@@ -50,6 +51,7 @@
         public const string OutsideMapLimit = "c37";
 
         public const string RejectInvitation = "c38";
+        public const string RejectTDSTeamInvitation = "c68";
         public const string RemoveMap = "c39";
         public const string RequestPlayersForScoreboard = "c40";
 

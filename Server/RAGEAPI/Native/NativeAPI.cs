@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
+﻿using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Native;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.RAGEAPI.Native
 {

@@ -10,6 +10,7 @@ using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
 using TDS_Shared.Core;
+using System.Threading.Tasks;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -26,8 +27,9 @@ namespace TDS_Server.Handler.Userpanel
             : base(dbContext, loggingHandler)
             => (_serializer, _bonusBotConnectorClient, _tdsPlayerHandler) = (serializer, bonusBotConnectorClient, tdsPlayerHandler);
 
-        public async void SaveSettings(ITDSPlayer player, string json)
+        public async Task<object?> SaveSettings(ITDSPlayer player, object[] args)
         {
+            string json = (string)args[0];
             var obj = _serializer.FromBrowser<PlayerSettings>(json);
 
             var newDiscordUserId = obj.DiscordUserId;
@@ -53,6 +55,7 @@ namespace TDS_Server.Handler.Userpanel
                     player.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_SAVE_FAILED, reply.ErrorMessage));
                 });
             }
+            return null;
         }
 
         public string ConfirmDiscordUserId(ulong discordUserId)

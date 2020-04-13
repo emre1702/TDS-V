@@ -17,7 +17,7 @@ namespace TDS_Client.Handler.MapCreator
         public string ObjOrVehName { get; }
         public int? TeamNumber { get; }
         public bool Deleted { get; private set; }
-        public IEntity Entity { get; }
+        public IEntityBase Entity { get; }
         public IBlip Blip { get; }
         public Position3D Size { get; }
         public Position3D MovingPosition
@@ -51,7 +51,7 @@ namespace TDS_Client.Handler.MapCreator
         private readonly IModAPI _modAPI;
         private readonly EventsHandler _eventsHandler;
 
-        public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntity entity, MapCreatorPositionType type, 
+        public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntityBase entity, MapCreatorPositionType type, 
             ushort ownerRemoteId, int? teamNumber = null, string objectName = null, int id = -1)
         {
             _modAPI = modAPI;
@@ -65,7 +65,7 @@ namespace TDS_Client.Handler.MapCreator
 
             Position3D a = new Position3D();
             Position3D b = new Position3D();
-            Entity.GetModelDimension(a, b);
+            Entity.GetModelDimensions(a, b);
             Size = b - a;
 
             Position = entity.Position;

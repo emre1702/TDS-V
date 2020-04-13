@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Maps;
+using TDS_Server.Handler.Sync;
 using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -27,12 +27,15 @@ namespace TDS_Server.Handler.Events
 
         private readonly UserpanelHandler _userpanelHandler;
         private readonly ILoggingHandler _loggingHandler;
+        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
 
         public RemoteBrowserEventsHandler(UserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
-            ILoggingHandler loggingHandler)
+            ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
+            MapFavouritesHandler mapFavouritesHandler)
         {
             _userpanelHandler = userpanelHandler;
             _loggingHandler = loggingHandler;
+            _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
 
             _asyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
             {
@@ -40,7 +43,21 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.AnswerToOfflineMessage] = userpanelHandler.OfflineMessagesHandler.Answer,
                 [ToServerEvent.SendOfflineMessage] = userpanelHandler.OfflineMessagesHandler.Send,
                 [ToServerEvent.DeleteOfflineMessage] = userpanelHandler.OfflineMessagesHandler.Delete,
-                [ToServerEvent.SaveSpecialSettingsChange] = userpanelHandler.SettingsSpecialHandler.SetData
+                [ToServerEvent.SaveSpecialSettingsChange] = userpanelHandler.SettingsSpecialHandler.SetData,
+                [ToServerEvent.AcceptTDSTeamInvitation] = userpanelHandler.ApplicationUserHandler.AcceptInvitation,
+                [ToServerEvent.RejectTDSTeamInvitation] = userpanelHandler.ApplicationUserHandler.RejectInvitation,
+                [ToServerEvent.CreateCustomLobby] = lobbiesHandler.CreateCustomLobby,
+                [ToServerEvent.GetSupportRequestData] = userpanelHandler.SupportRequestHandler.GetSupportRequestData,
+                [ToServerEvent.JoinLobby] = lobbiesHandler.OnJoinLobby,
+                [ToServerEvent.JoinLobbyWithPassword] = lobbiesHandler.OnJoinLobbyWithPassword,
+                [ToServerEvent.LoadApplicationDataForAdmin] = userpanelHandler.ApplicationsAdminHandler.SendApplicationData,
+                [ToServerEvent.SaveMapCreatorData] = _mapCreatorHandler.Create,
+                [ToServerEvent.SaveSettings] = userpanelHandler.SettingsNormalHandler.SaveSettings,
+                [ToServerEvent.SendApplication] = userpanelHandler.ApplicationUserHandler.CreateApplication,
+                [ToServerEvent.SetSupportRequestClosed] = userpanelHandler.SupportRequestHandler.SetSupportRequestClosed,
+                [ToServerEvent.SendSupportRequest] = userpanelHandler.SupportRequestHandler.SendRequest,
+                [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendMessage,
+                [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
             };
 
             _maybeAsyncMethods = new Dictionary<string, FromBrowserMaybeAsyncMethodDelegate>
@@ -55,6 +72,15 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.AcceptInvitation] = invitationsHandler.AcceptInvitation,
                 [ToServerEvent.RejectInvitation] = invitationsHandler.RejectInvitation,
                 [ToServerEvent.LoadAllMapsForCustomLobby] = mapsLoadingHandler.GetAllMapsForCustomLobby,
+                [ToServerEvent.MapVote] = MapVote,
+                [ToServerEvent.GetVehicle] = GiveVehicle,
+                [ToServerEvent.JoinedCustomLobbiesMenu] = JoinedCustomLobbiesMenu,
+                [ToServerEvent.LeftCustomLobbiesMenu] = LeftCustomLobbiesMenu,
+                [ToServerEvent.LeftSupportRequest] = userpanelHandler.SupportRequestHandler.LeftSupportRequest,
+                [ToServerEvent.LeftSupportRequestsList] = userpanelHandler.SupportRequestHandler.LeftSupportRequestsList,
+                [ToServerEvent.LoadMapNamesToLoadForMapCreator] = mapCreatorHandler.SendPlayerMapNamesForMapCreator,
+                [ToServerEvent.LoadMapForMapCreator] = mapCreatorHandler.SendPlayerMapForMapCreator,
+
             };
         }
 
@@ -80,7 +106,7 @@ namespace TDS_Server.Handler.Events
 
                 if (ret != null)
                 {
-                    player.SendEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret); 
+                    player.SendEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret);
                 }
             }
             catch (Exception ex)
@@ -89,49 +115,6 @@ namespace TDS_Server.Handler.Events
                     + String.Join('\n', args.Select(a => Convert.ToString(a)?.Substring(0, Math.Min(Convert.ToString(a)?.Length ?? 0, 20)) ?? "-")),
                     ex.StackTrace ?? Environment.StackTrace, player);
             }
-        }
-
-
-        public void OnSaveSettings(ITDSPlayer player, string json)
-        {
-            try
-            {
-                _userpanelHandler.SettingsNormalHandler.SaveSettings(player, json);
-            }
-            catch (Exception ex)
-            {
-                _loggingHandler.LogError("Error in PlayerSaveSettings: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, player);
-            }
-        }
-
-        public async void OnGetSupportRequestData(ITDSPlayer player, int requestId)
-        {
-            await _userpanelHandler.SupportRequestHandler.GetSupportRequestData(player, requestId);
-        }
-
-        public async void OnSetSupportRequestClosed(ITDSPlayer player, int requestId, bool closed)
-        {
-            await _userpanelHandler.SupportRequestHandler.SetSupportRequestClosed(player, requestId, closed);
-        }
-
-        public void OnLeftSupportRequestsList(ITDSPlayer player)
-        {
-            _userpanelHandler.SupportRequestHandler.LeftSupportRequestsList(player);
-        }
-
-        public void OnLeftSupportRequest(ITDSPlayer player, int requestId)
-        {
-            _userpanelHandler.SupportRequestHandler.LeftSupportRequest(player, requestId);
-        }
-
-        public async void OnSendSupportRequest(ITDSPlayer player, string json)
-        {
-            await _userpanelHandler.SupportRequestHandler.SendRequest(player, json);
-        }
-
-        public async void OnSendSupportRequestMessage(ITDSPlayer player, int requestId, string message)
-        {
-            await _userpanelHandler.SupportRequestHandler.SendMessage(player, requestId, message);
         }
 
         private object? BuyMap(ITDSPlayer player, object[] args)
@@ -158,6 +141,49 @@ namespace TDS_Server.Handler.Events
             var data = args[1];
 
             lobby.SyncMapInfoChange(infoType, data);
+            return null;
+        }
+
+        private object? MapVote(ITDSPlayer player, object[] args)
+        {
+            if (!(player.Lobby is Arena arena))
+                return null;
+
+            if (args.Length == 0)
+                return null;
+
+            int? mapId;
+            if ((mapId = Utils.GetInt(args[0])) == null)
+                return null;
+
+            arena.MapVote(player, mapId.Value);
+            return null;
+        }
+
+        private object? GiveVehicle(ITDSPlayer player, object[] args)
+        {
+            if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
+                return null;
+
+            if (args.Length == 0)
+                return null;
+
+            if (!Enum.TryParse(args[0].ToString(), out FreeroamVehicleType vehType))
+                return null;
+
+            lobby.GiveVehicle(player, vehType);
+            return null;
+        }
+
+        private object? JoinedCustomLobbiesMenu(ITDSPlayer player, object[] args)
+        {
+            _customLobbyMenuSyncHandler.AddPlayer(player);
+            return null;
+        }
+
+        private object? LeftCustomLobbiesMenu(ITDSPlayer player, object[] args)
+        {
+            _customLobbyMenuSyncHandler.RemovePlayer(player);
             return null;
         }
     }

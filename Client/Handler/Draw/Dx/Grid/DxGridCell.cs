@@ -72,7 +72,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         public void DrawBackground()
         {
             Color backcolor = BackColor;
-            ModAPI.Graphics.DrawRect(_column.X, Row.Y, _column.Width, Row.Height, backcolor.R, backcolor.G, backcolor.B, backcolor.A, 0);
+            ModAPI.Graphics.DrawRect(_column.X, Row.Y, _column.Width, Row.Height, backcolor.R, backcolor.G, backcolor.B, backcolor.A);
         }
 
         public void SetText(string text)

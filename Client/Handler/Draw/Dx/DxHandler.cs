@@ -23,7 +23,7 @@ namespace TDS_Client.Handler.Draw.Dx
             RefreshResolution();
         }
 
-        public void RenderAll(ulong currentMs)
+        public void RenderAll(int currentMs)
         {
             foreach (var draw in _dxDraws)
             {

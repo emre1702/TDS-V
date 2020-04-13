@@ -43,14 +43,14 @@ namespace TDS_Server.Handler
 
         }
 
-        private async void Save(ulong counter)
+        private async void Save(int counter)
         {
             await SaveTask(counter);
         }
 
-        public async Task SaveTask(ulong? counter = null)
+        public async Task SaveTask(int? counter = null)
         {
-            if (counter is null || counter % (ulong)_settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
+            if (counter is null || counter % _settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
                 await _dbContext.SaveChangesAsync();
         }
 

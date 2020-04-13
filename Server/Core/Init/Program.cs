@@ -58,7 +58,7 @@ namespace TDS_Server.Core.Init
 
                 var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
                 var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
-                bansHandler.RefreshServerBansCache((ulong)settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
+                bansHandler.RefreshServerBansCache(settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
 
                 var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
                 gangsHandler.LoadAll();

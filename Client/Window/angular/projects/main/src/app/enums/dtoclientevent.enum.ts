@@ -1,5 +1,5 @@
 export enum DToClientEvent {
-    AddMapVote = "b1",
+    LoadMapForMapCreator = "b1",
     ChatUsed = "b3",
     ChooseArenaToJoin = "b4",
     ChooseMapCreatorToJoin = "b5",
@@ -9,15 +9,10 @@ export enum DToClientEvent {
     CommandUsed = "b9",
     CreateCustomLobby = "b10",
     GetHashedPassword = "b11",
-    GetVehicle = "b12",
     HoldMapCreatorObject = "b13",
     InputStarted = "b14",
     InputStopped = "b15",
-    JoinCustomLobby = "b16",
-    JoinCustomLobbyWithPassword = "b17",
-    JoinedCustomLobbiesMenu = "b18",
     LanguageChange = "b19",
-    LeftCustomLobbiesMenu = "b20",
     // RemoveMapVote = "RemoveMapVote_Browser",
     MapCreatorHighlightPos = "b21",
     MapCreatorStartNew = "b24",
@@ -29,9 +24,6 @@ export enum DToClientEvent {
     RemoveMapCreatorPosition = "b30",
     RemoveMapCreatorTeamNumber = "b31",
     TeleportToPositionRotation = "b38",
-    ToggleMapFavorite = "b39",
-    SaveMapCreatorData = "b32",
-    SendMapCreatorData = "b33",
     StartMapCreatorPosPlacing = "b35",
 
 }

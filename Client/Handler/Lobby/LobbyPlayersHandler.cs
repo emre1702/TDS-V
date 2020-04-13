@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Events;
 
 namespace TDS_Client.Handler.Lobby
 {
@@ -10,9 +11,12 @@ namespace TDS_Client.Handler.Lobby
 
         private readonly BrowserHandler _browserHandler;
 
-        public LobbyPlayersHandler(BrowserHandler browserHandler)
+        public LobbyPlayersHandler(BrowserHandler browserHandler, EventsHandler eventsHandler)
         {
             _browserHandler = browserHandler;
+
+            eventsHandler.PlayerJoinedSameLobby += Load;
+            eventsHandler.PlayerLeftSameLobby += Remove;
         }
 
         public void Load(List<IPlayer> players)

@@ -2,8 +2,6 @@
 {
     public static class FromBrowserEvent
     {
-        public const string AddMapVote = "b1";
-
         public const string ChatUsed = "b3";
         public const string ChooseArenaToJoin = "b4";
         public const string ChooseMapCreatorToJoin = "b5";
@@ -11,7 +9,6 @@
         public const string CloseMapVotingMenu = "b7";
         public const string CloseUserpanel = "b8";
         public const string CommandUsed = "b9";
-        public const string CreateCustomLobby = "b10";
 
         public const string GetHashedPassword = "b11";
         public const string GetVehicle = "b12";
@@ -25,7 +22,7 @@
         public const string JoinedCustomLobbiesMenu = "b18";
 
         public const string LanguageChange = "b19";
-        public const string LeftCustomLobbiesMenu = "b20";
+        public const string LoadMapForMapCreator = "b1";
 
         public const string MapCreatorHighlightPos = "b21";
         public const string MapCreatorShowObject = "b22";
@@ -41,8 +38,6 @@
         public const string RemoveMapCreatorPosition = "b30";
         public const string RemoveMapCreatorTeamNumber = "b31";
 
-        public const string SaveMapCreatorData = "b32";
-        public const string SendMapCreatorData = "b33";
         public const string SendMapRating = "b34";
         public const string StartMapCreatorPosPlacing = "b35";
         public const string SyncRegisterLoginLanguageTexts = "b36";

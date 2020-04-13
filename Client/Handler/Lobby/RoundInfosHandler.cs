@@ -3,10 +3,13 @@ using System.Drawing;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Lobby
 {
@@ -27,7 +30,7 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        private ulong _startedMs;
+        private int _startedMs;
         private bool _refreshOnTick;
         private DxTextRectangle _timeDisplay;
         private DxTextRectangle[] _teamDisplays;
@@ -39,21 +42,29 @@ namespace TDS_Client.Handler.Lobby
         private readonly TimerHandler _timerHandler;
         private readonly DxHandler _dxHandler;
         private readonly SettingsHandler _settingsHandler;
+        private readonly Serializer _serializer;
 
-        public RoundInfosHandler(IModAPI modAPI, TeamsHandler teamsHandler, TimerHandler timerHandler, DxHandler dxHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
+        public RoundInfosHandler(IModAPI modAPI, TeamsHandler teamsHandler, TimerHandler timerHandler, DxHandler dxHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler,
+            Serializer serializer)
         {
             _modAPI = modAPI;
             _teamsHandler = teamsHandler;
             _timerHandler = timerHandler;
             _dxHandler = dxHandler;
             _settingsHandler = settingsHandler;
+            _serializer = serializer;
 
             _tickEventMethod = new EventMethodData<TickDelegate>(RefreshTime);
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+            eventsHandler.PlayerDied += EventsHandler_PlayerDied;
+            eventsHandler.RoundEnded += Stop;
+
+            modAPI.Event.Add(ToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
+            modAPI.Event.Add(ToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
         }
 
-        public void Start(ulong elapsedMsSinceRoundStart)
+        public void Start(int elapsedMsSinceRoundStart)
         {
             _startedMs = _timerHandler.ElapsedMs - elapsedMsSinceRoundStart;
 
@@ -116,12 +127,12 @@ namespace TDS_Client.Handler.Lobby
             // stop damage, assists and kills display here
         }
 
-        public void RefreshTime(ulong currentMs)
+        public void RefreshTime(int currentMs)
         {
-            var elapsedMs = (int)(currentMs - _startedMs);
+            var elapsedMs = (currentMs - _startedMs);
             double timems = 0;
             if (_settingsHandler.RoundTime * 1000 > elapsedMs)
-                timems = (ulong)_settingsHandler.RoundTime * 1000 - (_timerHandler.ElapsedMs - _startedMs);
+                timems = _settingsHandler.RoundTime * 1000 - (_timerHandler.ElapsedMs - _startedMs);
             _timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
         }
 
@@ -145,7 +156,7 @@ namespace TDS_Client.Handler.Lobby
 
         public void SetRoundTimeLeft(int lefttimems)
         {
-            _startedMs = _timerHandler.ElapsedMs - ((ulong)_settingsHandler.RoundTime * 1000 - (ulong)lefttimems);
+            _startedMs = _timerHandler.ElapsedMs - (_settingsHandler.RoundTime * 1000 - lefttimems);
         }
 
         public void OnePlayerDied(int teamindex)
@@ -159,9 +170,30 @@ namespace TDS_Client.Handler.Lobby
             // show info of kills, damage, assists if not already showing
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             Stop();
+        }
+
+        private void OnAmountInFightSyncMethod(object[] args)
+        {
+            SyncedTeamPlayerAmountDto[] list = _serializer.FromServer<SyncedTeamPlayerAmountDto[]>((string)args[0]);
+            foreach (var team in _teamsHandler.LobbyTeams)
+            {
+                if (!team.IsSpectator)
+                    team.AmountPlayers = list[team.Index - 1];
+            }
+            RefreshAllTeamTexts();
+        }
+
+        private void EventsHandler_PlayerDied(IPlayer player, int teamIndex, bool willRespawn)
+        {
+            OnePlayerDied(teamIndex);
+        }
+
+        private void OnStopRoundStatsMethod(object[] args)
+        {
+            StopDeathmatchInfo();
         }
 
         /*

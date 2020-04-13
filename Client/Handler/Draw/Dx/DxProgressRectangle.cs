@@ -21,8 +21,8 @@ namespace TDS_Client.Handler.Draw.Dx
         private readonly bool _filling;
         private float _progress;
         private readonly bool _relativePos;
-        private ulong? _msToEnd;
-        private ulong _startTime;
+        private int? _msToEnd;
+        private int _startTime;
 
         private readonly DxRectangle _backRect;
         private readonly DxRectangle _frontRect;
@@ -61,7 +61,7 @@ namespace TDS_Client.Handler.Draw.Dx
             Children.Add(_text);
         }
 
-        public void SetAutomatic(ulong msToEnd, bool restart = true)
+        public void SetAutomatic(int msToEnd, bool restart = true)
         {
             if (restart)
                 Progress = 0;
@@ -69,7 +69,7 @@ namespace TDS_Client.Handler.Draw.Dx
             _msToEnd = msToEnd;
             if (!restart)
             {
-                uint progressMs = (uint)(msToEnd / Progress);
+                int progressMs = (int)(msToEnd / Progress);
                 _startTime -= progressMs;
             }
 

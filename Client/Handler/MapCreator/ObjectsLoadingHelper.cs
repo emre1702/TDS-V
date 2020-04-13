@@ -36,17 +36,17 @@ namespace TDS_Client.Handler.MapCreator
             _modAPI.Streaming.RequestModel(hash);
             while (!_modAPI.Streaming.HasModelLoaded(hash))
             {
-                _modAPI.Misc.Wait(0);
+                _modAPI.Utils.Wait(0);
                 _modAPI.Ui.HideHudAndRadarThisFrame();
                 _modAPI.Ui.BeginTextCommandDisplayText("STRING");
                 _modAPI.Ui.AddTextComponentSubstringPlayerName("Loading...");
-                _modAPI.Ui.SetTextScale(1.0f, 0.45f);
+                _modAPI.Ui.SetTextScale(0.45f);
                 _modAPI.Ui.SetTextColour(255, 255, 255, 255);
                 _modAPI.Ui.SetTextCentre(true);
                 _modAPI.Ui.SetTextJustification(0);
                 _modAPI.Ui.SetTextFont(0);
                 _modAPI.Ui.SetTextDropShadow();
-                _modAPI.Ui.EndTextCommandDisplayText(0.5f, 0.9f, 0);
+                _modAPI.Ui.EndTextCommandDisplayText(0.5f, 0.9f);
                 if (_modAPI.Utils.Timera() > 1000)
                     return false;
             }

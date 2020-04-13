@@ -221,7 +221,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         }
 
         const json = JSON.stringify(this.userpanelService.allSettingsNormal);
-        this.rageConnector.call(DToServerEvent.SaveSettings, json);
+        this.rageConnector.callServer(DToServerEvent.SaveSettings, json);
 
         this.userpanelService.myStatsLoadingCooldownEnded();
     }

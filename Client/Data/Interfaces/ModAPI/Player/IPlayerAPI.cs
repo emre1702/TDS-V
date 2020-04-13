@@ -2,12 +2,12 @@
 {
     public interface IPlayerAPI
     {
-        void SetPlayerTargetingMode(int v);
-        void SetPlayerLockon(bool v);
+        void SetPlayerTargetingMode(int targetingMode);
+        void SetPlayerLockon(bool toggle);
         bool GetPlayerInvincible();
-        void SetPlayerInvincible(bool v);
+        void SetPlayerInvincible(bool toggle);
         void SetPlayerTeam(int team);
         bool GetEntityPlayerIsFreeAimingAt(ref int targetEntity);
-        void SetPlayerHealthRechargeMultiplier(int v);
+        void SetPlayerHealthRechargeMultiplier(float regenRate);
     }
 }

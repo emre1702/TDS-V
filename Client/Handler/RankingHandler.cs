@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
+﻿using System;
+using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
@@ -8,6 +9,7 @@ using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
@@ -43,6 +45,9 @@ namespace TDS_Client.Handler
             _deathHandler = deathHandler;
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+            eventsHandler.CountdownStarted += Stop;
+
+            modAPI.Event.Add(ToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
         }
 
         public void Start(string rankingsJson, ushort winnerHandle, ushort secondHandle, ushort thirdHandle)
@@ -79,7 +84,7 @@ namespace TDS_Client.Handler
             _cursorHandler.Visible = false;
         }
 
-        private void OnRender(ulong currentMs)
+        private void OnRender(int currentMs)
         {
             //StartParticleFx("scr_xs_money_rain", -425.48f, 1123.55f, 325.85f, 1f);
             //StartParticleFx("scr_xs_money_rain_celeb", 427.03f, 1123.21f, 325.85f, 1f);
@@ -110,9 +115,14 @@ namespace TDS_Client.Handler
             return _modAPI.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             Stop();
+        }
+
+        private void OnStartRankingShowAfterRoundMethod(object[] args)
+        {
+            Start((string)args[0], Convert.ToUInt16(args[1]), Convert.ToUInt16(args[2]), Convert.ToUInt16(args[3]));
         }
     }
 }

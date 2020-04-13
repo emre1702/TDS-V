@@ -5,11 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Utility;
+using TDS_Server.Data;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
@@ -143,7 +142,7 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        public async void DeleteOldMessages(ulong _)
+        public async void DeleteOldMessages(int _)
         {
             var deleteAfterDays = _settingsHandler.ServerSettings.DeleteOfflineMessagesAfterDays;
             await ExecuteForDBAsync(async dbContext => 

@@ -53,11 +53,11 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         private void DrawBackground()
         {
             if (Grid.Alignment == AlignmentX.Left)
-                ModAPI.Graphics.DrawRect(Grid.X - Grid.Width / 2, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
+                ModAPI.Graphics.DrawRect(Grid.X - Grid.Width / 2, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A);
             else if (Grid.Alignment == AlignmentX.Center)
-                ModAPI.Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
+                ModAPI.Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A);
             else
-                ModAPI.Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
+                ModAPI.Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A);
         }
 
         private void DrawText()

@@ -8,6 +8,7 @@ using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Sync
 {
@@ -29,6 +30,10 @@ namespace TDS_Client.Handler.Sync
             _eventsHandler = eventsHandler;
 
             eventsHandler.DataChanged += OnLocalPlayerDataChange;
+
+            modAPI.Event.Add(ToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
+            modAPI.Event.Add(ToClientEvent.RemoveSyncedPlayerDatas, OnRemoveSyncedPlayerDatasMethod);
+            modAPI.Event.Add(ToClientEvent.SyncPlayerData, OnSyncPlayerDataMethod);
         }
 
         public T GetData<T>(IPlayer player, PlayerDataKey key, T returnOnEmpty = default)
@@ -127,6 +132,22 @@ namespace TDS_Client.Handler.Sync
                     _browserHandler.Angular.SyncUsernameChange((string)obj);
                     break;
             }
+        }
+
+        private void OnSetPlayerDataMethod(object[] args)
+        {
+            HandleDataFromServer(args);
+        }
+
+        private void OnRemoveSyncedPlayerDatasMethod(object[] args)
+        {
+            ushort playerHandle = Convert.ToUInt16(args[0]);
+            RemovePlayerData(playerHandle);
+        }
+
+        private void OnSyncPlayerDataMethod(object[] args)
+        {
+            AppendDictionaryFromServer((string)args[0]);
         }
     }
 }

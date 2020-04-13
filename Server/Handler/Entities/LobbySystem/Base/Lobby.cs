@@ -36,7 +36,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         protected Position3D SpawnPoint { get; }
         public bool IsGangActionLobby { get; set; }
 
-        protected SyncedLobbySettingsDto SyncedLobbySettings;
+        protected SyncedLobbySettings SyncedLobbySettings;
         protected readonly Serializer Serializer;
         protected readonly IModAPI ModAPI;
         protected readonly LobbiesHandler LobbiesHandler;
@@ -88,7 +88,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 Teams.Add(team);
             }
 
-            SyncedLobbySettings = new SyncedLobbySettingsDto
+            SyncedLobbySettings = new SyncedLobbySettings
             (
                 Id: entity.Id,
                 Name: entity.Name,
@@ -104,8 +104,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 MapLimitTime: entity.LobbyMapSettings?.MapLimitTime,
                 MapLimitType: entity.LobbyMapSettings?.MapLimitType,
                 StartHealth: entity.FightSettings?.StartHealth ?? 100,
-                StartArmor: entity.FightSettings?.StartArmor ?? 100,
-                serializer: serializer
+                StartArmor: entity.FightSettings?.StartArmor ?? 100
             );
 
             LobbiesHandler.AddLobby(this);
@@ -161,7 +160,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     .LoadAsync();
 
                 // Reload again because Entity could have changed (default values in DB)
-                SyncedLobbySettings = new SyncedLobbySettingsDto
+                SyncedLobbySettings = new SyncedLobbySettings
                 (
                     Id: Entity.Id,
                     Name: Entity.Name,
@@ -177,8 +176,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     MapLimitTime: Entity.LobbyMapSettings?.MapLimitTime,
                     MapLimitType: Entity.LobbyMapSettings?.MapLimitType,
                     StartHealth: Entity.FightSettings?.StartHealth ?? 100,
-                    StartArmor: Entity.FightSettings?.StartArmor ?? 100,
-                    serializer: Serializer
+                    StartArmor: Entity.FightSettings?.StartArmor ?? 100
                 );
             });
 

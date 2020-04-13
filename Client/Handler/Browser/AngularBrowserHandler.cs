@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
@@ -8,7 +9,9 @@ using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Browser
@@ -32,6 +35,14 @@ namespace TDS_Client.Handler.Browser
 
             eventsHandler.InFightStatusChanged += ToggleRoundStats;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+            eventsHandler.AngularCooldown += ShowCooldown;
+            eventsHandler.RoundEnded += ResetMapVoting;
+
+            modAPI.Event.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
+            modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
+            modAPI.Event.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
+            modAPI.Event.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
+
         }
 
         public override void SetReady(params object[] args)
@@ -64,21 +75,7 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.CloseMapMenu);
         }
 
-        public void AddMapToVoting(string mapVoteJson)
-        {
-            Execute(ToBrowserEvent.AddMapToVoting, mapVoteJson);
-        }
-
-        public void SetMapVotes(int mapId, int amountVotes)
-        {
-            Execute(ToBrowserEvent.SetMapVotes, mapId, amountVotes);
-        }
-
-        public void LoadMapVoting(string mapVotesJson)
-        {
-            Execute(ToBrowserEvent.LoadMapVoting, mapVotesJson);
-        }
-
+      
         public void ResetMapVoting()
         {
             Execute(ToBrowserEvent.ResetMapVoting);
@@ -125,54 +122,14 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.ToggleLobbyChoice, activated);
         }
 
-        public void SendMapCreatorReturn(int err)
-        {
-            Execute(FromBrowserEvent.SendMapCreatorData, err);
-        }
-
-        public void SaveMapCreatorReturn(int err)
-        {
-            Execute(FromBrowserEvent.SaveMapCreatorData, err);
-        }
-
-        public void LoadMapNamesForMapCreator(string json)
-        {
-            Execute(ToServerEvent.LoadMapNamesToLoadForMapCreator, json);
-        }
-
         public void LoadMapForMapCreator(string json)
         {
-            Execute(ToServerEvent.LoadMapForMapCreator, json);
+            Execute(ToBrowserEvent.LoadMapForMapCreator, json);
         }
 
         public void SyncInFightLobby(bool b)
         {
             Execute(ToBrowserEvent.ToggleInFightLobby, b);
-        }
-
-        public void CreateCustomLobbyReturn(string errorOrEmpty)
-        {
-            Execute(FromBrowserEvent.CreateCustomLobby, errorOrEmpty);
-        }
-
-        public void AddCustomLobby(string json)
-        {
-            Execute(ToBrowserEvent.AddCustomLobby, json);
-        }
-
-        public void RemoveCustomLobby(int lobbyId)
-        {
-            Execute(ToBrowserEvent.RemoveCustomLobby, lobbyId);
-        }
-
-        public void SyncAllCustomLobbies(string json)
-        {
-            Execute(ToBrowserEvent.SyncAllCustomLobbies, json);
-        }
-
-        public void LeaveCustomLobbyMenu()
-        {
-            Execute(ToBrowserEvent.LeaveCustomLobbyMenu);
         }
 
         public void SyncTeamChoiceMenuData(string teamsJson, bool isRandomTeams)
@@ -193,7 +150,7 @@ namespace TDS_Client.Handler.Browser
 
         public void LoadUserpanelData(int type, string json)
         {
-            Execute(ToServerEvent.LoadUserpanelData, type, json);
+            Execute("sb13", type, json);
         }
 
         public void ShowCooldown()
@@ -227,26 +184,6 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.RefreshAdminLevel, adminLevel);
         }
 
-        public void LoadApplicationDataForAdmin(string json)
-        {
-            Execute(ToServerEvent.LoadApplicationDataForAdmin, json);
-        }
-
-        public void GetSupportRequestData(string json)
-        {
-            Execute(ToServerEvent.GetSupportRequestData, json);
-        }
-
-        public void SetSupportRequestClosed(int requestId, bool closed)
-        {
-            Execute(ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
-        }
-
-        public void SyncNewSupportRequestMessage(int requestId, string messageJson)
-        {
-            Execute(ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
-        }
-
         public void SyncMoney(int money)
         {
             Execute(ToBrowserEvent.SyncMoney, money);
@@ -260,11 +197,6 @@ namespace TDS_Client.Handler.Browser
         public void SyncIsLobbyOwner(bool obj)
         {
             Execute(ToBrowserEvent.SyncIsLobbyOwner, obj);
-        }
-
-        public void MapCreatorSyncData(int mapInfoType, object data)
-        {
-            Execute(ToBrowserEvent.MapCreatorSyncData, mapInfoType, data);
         }
 
         public void GetHashedPasswordReturn(string hashedPassword)
@@ -320,9 +252,36 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.SyncUsernameChange, name);
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             ResetMapVoting();
+        }
+
+        private void OnGetHashedPassword(object[] args)
+        {
+            string pw = Convert.ToString(args[0]);
+            GetHashedPasswordReturn(SharedUtils.HashPWClient(pw));
+        }
+
+        private void OnSyncSettingsMethod(object[] args)
+        {
+            string json = (string)args[0];
+            var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
+            _settingsHandler.LoadUserSettings(settings);
+            LoadUserpanelData((int)UserpanelLoadDataType.SettingsRest, json);
+        }
+
+        private void OnToBrowserEventMethod(object[] args)
+        {
+            string eventName = (string)args[0];
+            FromServerToBrowser(eventName, args.Skip(1).ToArray());
+        }
+
+        private void OnFromBrowserEventReturnMethod(object[] args)
+        {
+            string eventName = (string)args[0];
+            object ret = args[1];
+            FromBrowserEventReturn(eventName, ret);
         }
     }
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
@@ -10,6 +9,7 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Server;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Handler.Account
 {
@@ -128,7 +128,7 @@ namespace TDS_Server.Handler.Account
             return ban;
         }
 
-        private async void RemoveExpiredBans(ulong _)
+        private async void RemoveExpiredBans(int _)
         {
             await ExecuteForDBAsync(async (dbContext) =>
             {
@@ -141,9 +141,9 @@ namespace TDS_Server.Handler.Account
         }
 
 
-        public async void RefreshServerBansCache(ulong counter)
+        public async void RefreshServerBansCache(int counter)
         {
-            if (counter % (ulong)_settingsHandler.ServerSettings.ReloadServerBansEveryMinutes != 0)
+            if (counter % _settingsHandler.ServerSettings.ReloadServerBansEveryMinutes != 0)
                 return;
 
             int lobbyId = _lobbiesHandler.MainMenu.Id;

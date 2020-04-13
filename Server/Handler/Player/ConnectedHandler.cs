@@ -11,7 +11,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Player
 {
-    class ConnectedHandler
+    public class ConnectedHandler
     {
         private readonly BansHandler _bansHandler;
         private readonly EventsHandler _eventsHandler;

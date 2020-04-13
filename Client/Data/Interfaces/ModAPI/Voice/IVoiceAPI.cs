@@ -3,5 +3,6 @@
     public interface IVoiceAPI
     {
         bool Muted { get; set; }
+        bool Allowed { get; }
     }
 }

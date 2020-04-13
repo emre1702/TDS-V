@@ -11,6 +11,7 @@ using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Core;
+using TDS_Server.Database.Entity.Player;
 
 namespace TDS_Server.Handler
 {
@@ -42,15 +43,15 @@ namespace TDS_Server.Handler
             if (!DoesCacheExist())
                 InitCache();
 
-            eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
+            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
 
-        private void EventsHandler_PlayerRegistered(ITDSPlayer player)
+        private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             if (player.Entity is null)
                 return;
-
-            player.Entity.PlayerClothes = new Database.Entity.Player.PlayerClothes { IsMale = SharedUtils.GetRandom(true, false) };
+            if (player.Entity.PlayerClothes is null)
+                player.Entity.PlayerClothes = new PlayerClothes { IsMale = SharedUtils.GetRandom(true, false) };
         }
 
         private void ProcessItems(Item[] items, List<GenderOutfits> listToAddTo)

@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Data\TDS_Client.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-
 </Project>

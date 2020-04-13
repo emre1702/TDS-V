@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Entities;
@@ -40,7 +41,7 @@ namespace TDS_Client.Handler.MapCreator
             UtilsHandler utilsHandler,
             DxHandler dxHandler,
             CamerasHandler camerasHandler,
-            int type,
+            MarkerType type,
             Color color,
             AxisEnum axis,
             Func<MapCreatorObject, Position3D> positionGetter = null,
@@ -118,7 +119,7 @@ namespace TDS_Client.Handler.MapCreator
                 float dist = Marker.Position.DistanceTo(camPos);
                 if (IsPositionMarker)
                     _modAPI.Graphics.DrawSprite("commonmenu", "common_medal", v.X, v.Y, Marker.Scale.X * 4 / dist * (_dxHandler.ResY / _dxHandler.ResX), Marker.Scale.X * 4 / dist, 0, 
-                        Marker.Color.R, Marker.Color.G, Marker.Color.B, Marker.Color.A, 0);
+                        Marker.Color.R, Marker.Color.G, Marker.Color.B, Marker.Color.A);
             }
         }
 

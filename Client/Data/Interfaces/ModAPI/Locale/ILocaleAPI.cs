@@ -1,7 +1,9 @@
-﻿namespace TDS_Client.Data.Interfaces.ModAPI.Locale
+﻿using TDS_Client.Data.Enums;
+
+namespace TDS_Client.Data.Interfaces.ModAPI.Locale
 {
     public interface ILocaleAPI
     {
-        int GetCurrentLanguageId();
+        LanguageID GetCurrentLanguageId();
     }
 }

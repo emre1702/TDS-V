@@ -1,4 +1,6 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
+﻿using System;
+using TDS_Client.Data.Defaults;
+using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Draw.Dx;
@@ -7,6 +9,8 @@ using TDS_Client.Handler.Lobby;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Data.Models.GTA;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.MapCreator
 {
@@ -27,30 +31,40 @@ namespace TDS_Client.Handler.MapCreator
         private readonly IModAPI _modAPI;
         private readonly BrowserHandler _browserHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
+        private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly CamerasHandler _camerasHandler;
 
         public MapCreatorHandler(IModAPI modAPI, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler,
             CamerasHandler camerasHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, DxHandler dxHandler,
-            RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, LobbyHandler lobbyHandler)
+            RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, LobbyHandler lobbyHandler, TimerHandler timerHandler)
         {
             _modAPI = modAPI;
             _browserHandler = browserHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
+            _remoteEventsSender = remoteEventsSender;
+            _camerasHandler = camerasHandler;
 
             Draw = new MapCreatorDrawHandler(modAPI, utilsHandler);
             Foot = new MapCreatorFootHandler(modAPI, camerasHandler, instructionalButtonHandler, settingsHandler);
-            Marker = new MapCreatorMarkerHandler(modAPI, utilsHandler, dxHandler, camerasHandler, browserHandler, Draw);
-            Objects = new MapCreatorObjectsHandler(modAPI, camerasHandler, lobbyHandler, eventsHandler);
-            Sync = new MapCreatorSyncHandler(modAPI, Objects, remoteEventsSender, serializer, eventsHandler);
+            
+            var clickedMarkerStorer = new ClickedMarkerStorer();
+
+            Objects = new MapCreatorObjectsHandler(modAPI, camerasHandler, lobbyHandler, eventsHandler, browserHandler, serializer);
+            Sync = new MapCreatorSyncHandler(modAPI, Objects, remoteEventsSender, serializer, eventsHandler, browserHandler);
             ObjectsLoading = new ObjectsLoadingHelper(modAPI, utilsHandler, settingsHandler);
-            ObjectsPreview = new MapCreatorObjectsPreviewHandler(modAPI, ObjectsLoading, camerasHandler, utilsHandler);
-            VehiclePreview = new MapCreatorVehiclesPreviewHandler(modAPI, camerasHandler, utilsHandler);
-            ObjectPlacing = new MapCreatorObjectPlacingHandler(modAPI, Marker, Draw, Objects, cursorHandler, browserHandler, lobbyHandler, settingsHandler, remoteEventsSender, camerasHandler,
-               instructionalButtonHandler, utilsHandler, ObjectsPreview, VehiclePreview, Sync, eventsHandler);
+            ObjectsPreview = new MapCreatorObjectsPreviewHandler(modAPI, ObjectsLoading, camerasHandler, utilsHandler, browserHandler);
+            VehiclePreview = new MapCreatorVehiclesPreviewHandler(modAPI, camerasHandler, utilsHandler, browserHandler);
+            ObjectPlacing = new MapCreatorObjectPlacingHandler(modAPI, Draw, Objects, cursorHandler, browserHandler, lobbyHandler, settingsHandler, remoteEventsSender, camerasHandler,
+               instructionalButtonHandler, utilsHandler, ObjectsPreview, VehiclePreview, Sync, eventsHandler, dxHandler, timerHandler, clickedMarkerStorer);
+            Marker = new MapCreatorMarkerHandler(modAPI, utilsHandler, dxHandler, camerasHandler, browserHandler, Draw, ObjectPlacing, clickedMarkerStorer);
             Freecam = new MapCreatorFreecamHandler(modAPI, camerasHandler, utilsHandler, instructionalButtonHandler, cursorHandler, browserHandler, Foot, Marker, ObjectPlacing, eventsHandler);
             Binds = new MapCreatorBindsHandler(bindsHandler, instructionalButtonHandler, settingsHandler, Freecam, ObjectPlacing, eventsHandler);
             
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+
+            _modAPI.Event.Add(ToServerEvent.RemoveMap, OnRemoveMapMethod);
+            _modAPI.Event.Add(ToClientEvent.MapCreatorStartNewMap, _ => StartNewMap());
         }
 
         public void Start()
@@ -83,7 +97,7 @@ namespace TDS_Client.Handler.MapCreator
             Objects.Start();
         }
 
-        private void EventsHandler_LobbyJoined(SyncedLobbySettingsDto settings)
+        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
             if (settings.Type != LobbyType.MapCreateLobby)
                 return;
@@ -91,12 +105,49 @@ namespace TDS_Client.Handler.MapCreator
             Start();
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             if (settings.Type != LobbyType.MapCreateLobby)
                 return;
 
             Stop();
+        }
+
+        private void OnRemoveMapMethod(object[] args)
+        {
+            int mapId = Convert.ToInt32(args[0]);
+            if (mapId == 0 || _remoteEventsSender.Send(ToServerEvent.RemoveMap, mapId))
+            {
+                Objects.Stop();
+                Objects.Start();
+            }
+            else
+                _browserHandler.Angular.ShowCooldown();
+
+        }
+
+        private void OnTeleportToXYMethod(object[] args)
+        {
+            float x = Convert.ToSingle(args[0]);
+            float y = Convert.ToSingle(args[1]);
+            float z = 0;
+            _modAPI.Misc.GetGroundZFor3dCoord(x, y, 9000, ref z);
+            _modAPI.LocalPlayer.Position = new Position3D(x, y, z + 0.3f);
+        }
+
+        private void OnTeleportToPositionRotationMethod(object[] args)
+        {
+            float x = Convert.ToSingle(args[0]);
+            float y = Convert.ToSingle(args[1]);
+            float z = Convert.ToSingle(args[2]);
+            float rot = Convert.ToSingle(args[3]);
+            if (_camerasHandler.ActiveCamera != null)
+            {
+                _camerasHandler.ActiveCamera.Position = new Position3D(x, y, z);
+                _camerasHandler.ActiveCamera.Rotation = new Position3D(0, 0, rot);
+            }
+            _modAPI.LocalPlayer.Position = new Position3D(x, y, z);
+            _modAPI.LocalPlayer.Heading = rot;
         }
     }
 }

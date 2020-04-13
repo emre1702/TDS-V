@@ -115,7 +115,7 @@ namespace TDS_Server.Handler.Player
             _tdsPlayerRemoteIdCache.Remove(player.RemoteId);
         }
 
-        private void UpdatePlayers(ulong _)
+        private void UpdatePlayers(int _)
         {
             foreach (var player in LoggedInPlayers)
             {

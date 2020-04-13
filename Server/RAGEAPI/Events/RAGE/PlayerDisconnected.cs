@@ -6,7 +6,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
     partial class BaseRAGEEvents
     {
         [ServerEvent(Event.PlayerDisconnected)]
-        public async void PlayerDisconnected(GTANetworkAPI.Player player)
+        public async void PlayerDisconnected(GTANetworkAPI.Player player, DisconnectionType disconnectionType, string reason)
         {
             (Init.BaseAPI.Player as PlayerAPI)?.PlayerDisconnected(player);
 

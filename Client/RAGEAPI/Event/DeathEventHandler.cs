@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using TDS_Shared.Data.Models;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.RAGEAPI.Player;
 
@@ -17,6 +17,9 @@ namespace TDS_Client.RAGEAPI.Event
 
         private void PlayerDeath(RAGE.Elements.Player modPlayer, uint reason, RAGE.Elements.Player modKiller, RAGE.Events.CancelEventArgs modCancel)
         {
+            if (Actions.Count == 0)
+                return;
+
             var player = _playerConvertingHandler.GetPlayer(modPlayer);
             var killer = _playerConvertingHandler.GetPlayer(modKiller);
             var cancel = new CancelEventArgs();

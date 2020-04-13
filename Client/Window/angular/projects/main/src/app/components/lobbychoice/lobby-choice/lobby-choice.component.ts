@@ -9,6 +9,8 @@ import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { LanguagePipe } from '../../../pipes/language.pipe';
 import { ChallengeFrequency } from '../enums/challenge-frequency.enum';
 import { ChallengeType } from '../enums/challenge-type.enum';
+import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 
 @Component({
     selector: 'app-lobby-choice',
@@ -53,12 +55,12 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.refreshTimeToWeeklyChallengesRestart();
-        this.rageConnector.listen(DFromClientEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
+        this.rageConnector.listen(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromClientEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
+        this.rageConnector.remove(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
 
         // Clear it so it doesn't use fill our RAM without a reason
@@ -97,7 +99,7 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
 
     showUserLobbies() {
         this.settings.InUserLobbiesMenu = true;
-        this.rageConnector.call(DToClientEvent.JoinedCustomLobbiesMenu);
+        this.rageConnector.callServer(DToServerEvent.JoinedCustomLobbiesMenu);
         this.changeDetector.detectChanges();
     }
 

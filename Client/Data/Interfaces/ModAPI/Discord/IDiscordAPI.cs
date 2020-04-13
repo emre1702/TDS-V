@@ -2,6 +2,6 @@
 {
     public interface IDiscordAPI
     {
-        void Update(string v, string teamName);
+        void Update(string details, string state);
     }
 }

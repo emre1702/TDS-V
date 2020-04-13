@@ -69,7 +69,6 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.AdminLevelChanged.on(null, this.detectChanges.bind(this));
         this.userpanelService.applicationsLoaded.on(null, this.applicationsLoadedFunc.bind(this));
-        this.rageConnector.listen(DFromClientEvent.LoadApplicationDataForAdmin, this.applicationDataLoadedFunc.bind(this));
     }
 
     ngOnDestroy() {
@@ -77,11 +76,10 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         this.settings.AdminLevelChanged.off(null, this.detectChanges.bind(this));
         this.userpanelService.applicationsLoaded.off(null, this.applicationsLoadedFunc.bind(this));
         this.userpanelService.applications = undefined;
-        this.rageConnector.remove(DFromClientEvent.LoadApplicationDataForAdmin, this.applicationDataLoadedFunc.bind(this));
     }
 
     requestApplicationData(applicationID: number) {
-        this.rageConnector.callCallback(DToServerEvent.LoadApplicationDataForAdmin, [applicationID], this.applicationDataLoadedFunc.bind(this));
+        this.rageConnector.callCallbackServer(DToServerEvent.LoadApplicationDataForAdmin, [applicationID], this.applicationDataLoadedFunc.bind(this));
         this.changeDetector.detectChanges();
     }
 

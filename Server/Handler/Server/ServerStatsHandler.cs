@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Server;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Entities;
@@ -108,13 +109,13 @@ namespace TDS_Server.Handler.Server
             }
         }
 
-        private async void PlayerRegistered(ITDSPlayer _)
+        private async void PlayerRegistered(ITDSPlayer _, Players dbPlayer)
         {
             await CheckNewDay();
             ++DailyStats.AmountRegistrations;
         }
 
-        public async void Save(ulong _)
+        public async void Save(int _)
         {
             await SaveTask();
         }

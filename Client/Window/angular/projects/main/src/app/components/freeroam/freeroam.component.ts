@@ -4,6 +4,7 @@ import { Vehicle } from './enums/vehicle.enum';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 import { MatButton } from '@angular/material';
+import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 
 @Component({
   selector: 'app-freeroam',
@@ -40,7 +41,7 @@ export class FreeroamComponent implements OnInit, OnDestroy {
 
   getVehicle(veh: Vehicle, btn: MatButton) {
     btn._elementRef.nativeElement.blur();
-    this.rageConnector.call(DToClientEvent.GetVehicle, veh);
+    this.rageConnector.callServer(DToServerEvent.GetVehicle, veh);
   }
 
 }

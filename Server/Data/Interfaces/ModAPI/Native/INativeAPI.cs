@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TDS_Server.Data.Enums;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Data.Interfaces.ModAPI.Native
 {

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Shared.Data.Enums;
@@ -22,12 +23,12 @@ namespace TDS_Client.Handler.Draw.Dx
         private readonly int _amountLines;
 
         private int? _endAlpha;
-        private ulong _endAlphaStartTick;
-        private ulong _endAlphaEndTick;
+        private int _endAlphaStartTick;
+        private int _endAlphaEndTick;
 
         private float? _endScale;
-        private ulong _endScaleStartTick;
-        private ulong _endScaleEndTick;
+        private int _endScaleStartTick;
+        private int _endScaleEndTick;
 
         private readonly TimerHandler _timerHandler;
 
@@ -76,17 +77,17 @@ namespace TDS_Client.Handler.Draw.Dx
             ApplyTextToServerEvent();
         }
 
-        public void BlendAlpha(int endAlpha, ulong msToEnd)
+        public void BlendAlpha(int endAlpha, int msToEnd)
         {
             this._endAlpha = endAlpha;
             _endAlphaStartTick = _timerHandler.ElapsedMs;
             _endAlphaEndTick = _endAlphaStartTick + msToEnd;
         }
 
-        public void BlendScale(float endScale, ulong msToEnd)
+        public void BlendScale(float endScale, int msToEnd)
         {
             this._endScale = endScale;
-            _endScaleStartTick = _timerHandler.ElapsedMs;
+            _endScaleStartTick = _timerHandler.ElapsedMs ;
             _endScaleEndTick = _endScaleStartTick + msToEnd;
         }
 
@@ -131,23 +132,23 @@ namespace TDS_Client.Handler.Draw.Dx
 
         public override void Draw()
         {
-            ulong elapsedticks = _timerHandler.ElapsedMs;
+            int elapsedMs = _timerHandler.ElapsedMs;
 
             Color theColor = _color;
             if (_endAlpha.HasValue)
-                theColor = Color.FromArgb(GetBlendValue(elapsedticks, _color.A, _endAlpha.Value, _endAlphaStartTick, _endAlphaEndTick), _color);
+                theColor = Color.FromArgb(GetBlendValue(elapsedMs, _color.A, _endAlpha.Value, _endAlphaStartTick, _endAlphaEndTick), _color);
 
             float scale = this._scale;
             if (_endScale.HasValue)
             {
-                if (elapsedticks >= _endScaleEndTick)
+                if (elapsedMs >= _endScaleEndTick)
                 {
                     this._scale = _endScale.Value;
                     scale = this._scale;
                     _endScale = null;
                 }
                 else
-                    scale = GetBlendValue(elapsedticks, this._scale, _endScale.Value, _endScaleStartTick, _endScaleEndTick);
+                    scale = GetBlendValue(elapsedMs, this._scale, _endScale.Value, _endScaleStartTick, _endScaleEndTick);
             }
 
             ModAPI.Graphics.DrawText(Text, _xPos, _y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);

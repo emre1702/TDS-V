@@ -27,6 +27,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{9BBD6AEC-65B3-487B-A601-033600378583}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{CA8EEB00-F61C-4E60-BC8E-1C031008A505}"
+	ProjectSection(SolutionItems) = preProject
+		Server\conf.json = Server\conf.json
+		Server\meta.xml = Server\meta.xml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{FA035891-A7AB-4B85-A8B2-7139631E3997}"
 EndProject
@@ -54,7 +58,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.RAGEAPI", "Clien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Handler", "Client\Handler\TDS_Client.Handler.csproj", "{AF00FF1E-655B-46A7-B131-7E026057CED8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS_Client.Window", "Client\Window\TDS_Client.Window.csproj", "{2E99C0B5-AF90-47BC-AF49-8971502D263B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Window", "Client\Window\TDS_Client.Window.csproj", "{2E99C0B5-AF90-47BC-AF49-8971502D263B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution files", "{1DF5C58C-C800-4C70-92F1-D51E119186BC}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		TDS\DeadCode.ruleset = TDS\DeadCode.ruleset
+		LocalServerSync.sh = LocalServerSync.sh
+		ServerSync.sh = ServerSync.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

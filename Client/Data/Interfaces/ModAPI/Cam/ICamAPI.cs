@@ -1,4 +1,5 @@
-﻿using TDS_Shared.Data.Models.GTA;
+﻿using TDS_Client.Data.Enums;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Cam
 {
@@ -6,16 +7,18 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
     {
         ICam Create();
         void DestroyAllCams();
-        void RenderScriptCams(bool v1, bool v2, int v3, bool v4, bool v5, int v6);
         Position3D GetGameplayCamRot(/* 0 */);
         Position3D GetGameplayCamCoord();
-        void DoScreenFadeIn(int v);
-        void SetCamEffect(int v);
-        void DoScreenFadeOut(object screenFadeOutTimeAfterSpawn);
-        void Render(bool v, bool ease, int easeTime);
+        void DoScreenFadeIn(int duration);
+        void SetCamEffect(CamEffect camEffect);
+        void DoScreenFadeOut(int duration);
+        void Render(bool render, bool ease, int easeTime);
         float GetGameplayCamFov();
-        void SetCamFov(object handle, float v);
-        void ShakeGameplayCam(string lARGE_EXPLOSION_SHAKE, float v);
-        void StopGameplayCamShaking(bool v);
+        /**
+         * <summary>Min: 1.0f Max: 130.0f</summary>
+         * */
+        void SetCamFov(int handle, float fov);
+        void ShakeGameplayCam(string shakeName, float intensity);
+        void StopGameplayCamShaking();
     }
 }

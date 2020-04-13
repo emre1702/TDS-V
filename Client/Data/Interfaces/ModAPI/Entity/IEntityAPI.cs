@@ -5,25 +5,36 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 {
     public interface IEntityAPI
     {
-        void AttachEntityToEntity(int entityValue, int targetValue, int bone, float positionOffsetX, float positionOffsetY, float positionOffsetZ, float rotationOffsetX, float rotationOffsetY, float rotationOffsetZ, bool v1, bool v2, bool v3, bool v4, int v5, bool v6);
-        void DetachEntity(int entity, bool v, bool resetCollision);
-        void SetEntityCollision(int entityValue, bool v1, bool v2);
-        void SetEntityInvincible(object value, bool toggle);
-        /*
-         *         None = 0,
-                    Ped = 1,
-                    Vehicle = 2,
-                    Object = 3
+        /**
+         * <summary>
+         * Attaches entity1 to bone(boneIndex) of entity2.boneIndex - this is different
+         * to boneID, use GET_PED_BONE_INDEX to get the index from the ID.
+         * use the index for attaching to specific bones. 
+         * entity1 will be attached to entity2s centre if bone index given doesnt correspond to bone indexes for that entity type.
+         * useSoftPinning - if set to false attached entity will not detach when fixed 
+         * collision - controls collision between the two entities(FALSE disables collision).
+         * isPed - pitch doesnt work when false and roll will only work on negative numbers(only peds)
+         * vertexIndex - position of vertex 
+         * fixedRot - if false it ignores entity vector
+         * </summary>
+         */
+        void AttachEntityToEntity(int sourceEntity, int targetEntity, int boneIndex, float xPos, float yPos, float zPos, float xRot, float yRot, float zRot,
+            bool p9, bool useSoftPinning, bool collision, bool isPed, int vertexIndex, bool fixedRot);
+        void DetachEntity(int entity);
+        void SetEntityCollision(int entity, bool toggle, bool keepPhysics);
+        void SetEntityInvincible(int entity, bool toggle);
 
-            to EntityType
+        /**
+         * <summary>
+         * Only works for Objects, Vehicles and Peds (and Players?)
+         * </summary>
+         */
+        EntityType GetEntityType(int entity);
 
-         * */
-        EntityType GetEntityType(int targetEntity);
-
-        Position3D GetEntityCoords(int targetEntity, bool v);
-        int GetEntityHealth(int handle);
-        void SetEntityCoordsNoOffset(int handle, float x, float y, float z, bool v1, bool v2, bool v3);
-        Position3D GetOffsetFromEntityInWorldCoords(int handle, float v1, float v2, float v3);
-        float GetEntityHeightAboveGround(int handle);
+        Position3D GetEntityCoords(int entity, bool alive);
+        int GetEntityHealth(int entity);
+        void SetEntityCoordsNoOffset(int entity, float xPos, float yPos, float zPos, bool xAxis, bool yAxis, bool zAxis);
+        Position3D GetOffsetFromEntityInWorldCoords(int entity, float offsetX, float offsetY, float offsetZ);
+        float GetEntityHeightAboveGround(int entity);
     }
 }

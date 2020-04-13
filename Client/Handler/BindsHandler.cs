@@ -76,7 +76,7 @@ namespace TDS_Client.Handler
                 _bindedControls.Remove(controlEntry);
         }
 
-        private void OnTick(ulong currentMs)
+        private void OnTick(int currentMs)
         {
             for (int i = _bindedKeys.Count - 1; i >= 0; --i)
             {

@@ -11,7 +11,7 @@ namespace TDS_Client.Handler.Entities
     public class TDSCamera
     {
         public ICam Cam { get; set; }
-        public IEntity SpectatingEntity { get; set; }
+        public IEntityBase SpectatingEntity { get; set; }
         public bool IsActive => this == _camerasHandler.ActiveCamera;
 
         public Position3D Position
@@ -50,7 +50,7 @@ namespace TDS_Client.Handler.Entities
             Cam.SetFov(fov);
         }
 
-        public void OnUpdate(ulong currentMs)
+        public void OnUpdate(int currentMs)
         {
             if (!(SpectatingEntity is null))
                 Rotation = SpectatingEntity.Rotation;
@@ -65,7 +65,7 @@ namespace TDS_Client.Handler.Entities
             }
         }
 
-        public void Spectate(IEntity ped)
+        public void Spectate(IEntityBase ped)
         {
             if (SpectatingEntity != null)
             {

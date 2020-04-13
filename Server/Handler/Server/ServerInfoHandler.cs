@@ -33,12 +33,12 @@ namespace TDS_Server.Handler.Server
 
         }
 
-        private void EventsHandler_Second(ulong counter)
+        private void EventsHandler_Second(int counter)
         {
             if (_bonusBotSettings is null)
                 return;
 
-            if (counter % (ulong)_bonusBotSettings.RefreshServerStatsFrequencySec == 0)
+            if (counter % _bonusBotSettings.RefreshServerStatsFrequencySec == 0)
             {
                 var request = new RAGEServerStatsRequest
                 {

@@ -71,7 +71,7 @@ namespace TDS_Client.Handler.Draw.Dx
 
         public override void Draw()
         {
-            ModAPI.Graphics.DrawRect(_xPos, _yPos, _sizeX, _sizeY, _color.R, _color.G, _color.B, _color.A, 0);
+            ModAPI.Graphics.DrawRect(_xPos, _yPos, _sizeX, _sizeY, _color.R, _color.G, _color.B, _color.A);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using TDS_Client.Data.Interfaces.ModAPI.Cam;
+using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Ped;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Enums;
@@ -48,6 +49,21 @@ namespace TDS_Client.RAGEAPI.Cam
         public void SetActive(bool active)
         {
             RAGE.Game.Cam.SetCamActive(_handle, active);
+        }
+
+        public void Render(bool render, bool ease, int easeTime)
+        {
+            RAGE.Game.Cam.RenderScriptCams(render, ease, easeTime, true, false, 0);
+        }
+
+        public void AttachTo(IEntityBase ped, PedBone bone, int x, float y, float z, bool heading)
+        {
+            RAGE.Game.Cam.AttachCamToPedBone(_handle, ped.Handle, (int)bone, x, y, z, heading);
+        }
+
+        public void SetFov(float fov)
+        {
+            RAGE.Game.Cam.SetCamFov(_handle, fov);
         }
     }
 }

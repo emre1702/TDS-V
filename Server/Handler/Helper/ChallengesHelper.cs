@@ -62,11 +62,11 @@ namespace TDS_Server.Handler.Helper
             player.SendBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));
         }
 
-        private async void EventsHandler_PlayerRegister(ITDSPlayer player)
+        private async void EventsHandler_PlayerRegister(ITDSPlayer player, Players dbPlayer)
         {
             try 
             {
-                await AddForeverChallenges(player);
+                await AddForeverChallenges(dbPlayer);
             } 
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace TDS_Server.Handler.Helper
             
         }
 
-        public async Task AddForeverChallenges(ITDSPlayer player)
+        public async Task AddForeverChallenges(Players dbPlayer)
         {
             await ExecuteForDBAsync(async dbContext =>
             {
@@ -122,7 +122,7 @@ namespace TDS_Server.Handler.Helper
                     INSERT INTO 
                         {playerChallengesTable}
                     SELECT 
-                        {player.Id},
+                        {dbPlayer.Id},
                         type,
                         frequency,
                         max_number

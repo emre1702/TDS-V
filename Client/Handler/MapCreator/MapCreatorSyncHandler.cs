@@ -2,6 +2,7 @@
 using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -16,17 +17,26 @@ namespace TDS_Client.Handler.MapCreator
         private readonly MapCreatorObjectsHandler _mapCreatorObjectsHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly Serializer _serializer;
+        private readonly BrowserHandler _browserHandler;
 
-        public MapCreatorSyncHandler(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler)
+        public MapCreatorSyncHandler(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, 
+            EventsHandler eventsHandler, BrowserHandler browserHandler)
         {
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
             _remoteEventsSender = remoteEventsSender;
             _serializer = serializer;
+            _browserHandler = browserHandler;
 
             eventsHandler.MapCreatorSyncLatestObjectID += SyncLatestIdToServer;
             eventsHandler.MapCreatorSyncObjectDeleted += SyncObjectRemoveToLobby;
 
             modAPI.Event.Add(FromBrowserEvent.MapCreatorStartNew, SyncStartNewMap);
+            modAPI.Event.Add(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, OnMapCreatorRequestAllObjectsForPlayerMethod);
+            modAPI.Event.Add(ToClientEvent.MapCreatorSyncAllObjects, OnMapCreatorSyncAllObjectsMethod);
+            modAPI.Event.Add(ToClientEvent.MapCreatorSyncFixLastId, OnMapCreatorSyncFixLastIdMethod);
+            modAPI.Event.Add(ToClientEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObjectMethod);
+            modAPI.Event.Add(ToClientEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPositionMethod);
+            modAPI.Event.Add(ToClientEvent.MapCreatorSyncObjectRemove, MapCreatorSyncObjectRemoveMethod);
         }
 
         #region Id
@@ -133,5 +143,46 @@ namespace TDS_Client.Handler.MapCreator
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorStartNewMap);
         }
         #endregion Change map
+
+        private void OnMapCreatorRequestAllObjectsForPlayerMethod(object[] args)
+        {
+            int tdsPlayerId = Convert.ToInt32(args[0]);
+            SyncAllObjectsToPlayer(tdsPlayerId);
+        }
+
+        private void OnMapCreatorSyncAllObjectsMethod(object[] args)
+        {
+            string json = Convert.ToString(args[0]);
+            var data = _serializer.FromServer<MapCreateDataDto>(json);
+            SyncAllObjectsFromLobbyOwner(data);
+            _browserHandler.Angular.LoadMapForMapCreator(json);
+        }
+
+        private void OnMapCreatorSyncFixLastIdMethod(object[] args)
+        {
+            int oldId = Convert.ToInt32(args[0]);
+            int newId = Convert.ToInt32(args[1]);
+            SyncLatestIdFromServer(oldId, newId);
+        }
+
+        private void OnMapCreatorSyncNewObjectMethod(object[] args)
+        {
+            string json = Convert.ToString(args[0]);
+            var dto = _serializer.FromServer<MapCreatorPosition>(json);
+            SyncNewObjectFromLobby(dto);
+        }
+
+        private void OnMapCreatorSyncObjectPositionMethod(object[] args)
+        {
+            string json = Convert.ToString(args[0]);
+            var dto = _serializer.FromServer<MapCreatorPosData>(json);
+            SyncObjectPositionFromLobby(dto);
+        }
+
+        private void MapCreatorSyncObjectRemoveMethod(object[] args)
+        {
+            int objId = Convert.ToInt32(args[0]);
+            SyncObjectRemoveFromLobby(objId);
+        }
     }
 }

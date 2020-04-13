@@ -7,6 +7,7 @@ using TDS_Client.Handler;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
@@ -25,11 +26,11 @@ namespace TDS_Client.Handler.Lobby
                 {
                     if (_LobbyTeams.Count == 1)
                     {
-                        _modAPI.LocalPlayer.SetCanAttackFriendly(true, true);
+                        _modAPI.LocalPlayer.SetCanAttackFriendly(true);
                     }
                     else
                     {
-                        _modAPI.LocalPlayer.SetCanAttackFriendly(false, false);
+                        _modAPI.LocalPlayer.SetCanAttackFriendly(false);
                     }
 
                 }
@@ -48,9 +49,12 @@ namespace TDS_Client.Handler.Lobby
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly CursorHandler _cursorHandler;
         private readonly EventsHandler _eventsHandler;
+        private readonly UtilsHandler _utilsHandler;
+        private readonly BindsHandler _bindsHandler;
+        private readonly Serializer _serializer;
 
         public TeamsHandler(IModAPI modAPI, BrowserHandler browserHandler, BindsHandler bindsHandler, LobbyHandler lobbyHandler, RemoteEventsSender remoteEventsSender, 
-            CursorHandler cursorHandler, EventsHandler eventsHandler)
+            CursorHandler cursorHandler, EventsHandler eventsHandler, UtilsHandler utilsHandler, Serializer serializer)
         {
             _modAPI = modAPI;
             _browserHandler = browserHandler;
@@ -58,16 +62,20 @@ namespace TDS_Client.Handler.Lobby
             _remoteEventsSender = remoteEventsSender;
             _cursorHandler = cursorHandler;
             _eventsHandler = eventsHandler;
+            _utilsHandler = utilsHandler;
+            _bindsHandler = bindsHandler;
+            _serializer = serializer;
 
-            bindsHandler.Add(Key.NumPad0, ToggleOrderMode);
-            int i = 0;
-            foreach (var orderobj in System.Enum.GetValues(typeof(TeamOrder)))
-            {
-                bindsHandler.Add(Key.NumPad1 + i, GiveOrder);
-                ++i;
-            }
+            eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
             modAPI.Event.Add(ToServerEvent.ChooseTeam, ChooseTeam);
+            modAPI.Event.Add(ToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
+            modAPI.Event.Add(ToClientEvent.PlayerJoinedTeam, OnPlayerJoinedTeamMethod);
+            modAPI.Event.Add(ToClientEvent.PlayerLeftTeam, OnPlayerLeftTeamMethod);
+            modAPI.Event.Add(ToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
+            modAPI.Event.Add(ToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
+            modAPI.Event.Add(ToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
+            modAPI.Event.Add(ToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
         }
 
         public void AddSameTeam(IPlayer player)
@@ -76,7 +84,7 @@ namespace TDS_Client.Handler.Lobby
             // Then try removing the blip on death
             _sameTeamPlayers.Add(player);
             var prevBlipHandle = player.GetBlipFrom();
-            if (prevBlipHandle != null)
+            if (prevBlipHandle != 0)
             {
                 var blip = player.AddBlipFor();
                 _modAPI.Ui.SetBlipAsFriendly(blip, true);
@@ -87,8 +95,8 @@ namespace TDS_Client.Handler.Lobby
         {
             _sameTeamPlayers.Remove(player);
             var prevBlipHandle = player.GetBlipFrom();
-            if (prevBlipHandle != null && _modAPI.Ui.DoesBlipExist(prevBlipHandle))
-                _modAPI.Ui.RemoveBlip(prevBlipHandle);
+            if (_modAPI.Ui.DoesBlipExist(prevBlipHandle))
+                _modAPI.Ui.RemoveBlip(ref prevBlipHandle);
         }
 
         public void ClearSameTeam()
@@ -96,8 +104,8 @@ namespace TDS_Client.Handler.Lobby
             foreach (var player in _sameTeamPlayers)
             {
                 var blip = player.GetBlipFrom();
-                if (blip != null && _modAPI.Ui.DoesBlipExist(blip))
-                    _modAPI.Ui.RemoveBlip(blip);
+                if (_modAPI.Ui.DoesBlipExist(blip))
+                    _modAPI.Ui.RemoveBlip(ref blip);
             }
             _sameTeamPlayers.Clear();
         }
@@ -138,10 +146,78 @@ namespace TDS_Client.Handler.Lobby
         {
             _browserHandler.Angular.ToggleTeamChoiceMenu(false);
             _cursorHandler.Visible = false;
-            _eventsHandler.OnLobbyJoinSelectedTeam();
+            _eventsHandler.OnHideScoreboard();
 
             int index = Convert.ToInt32(args[0]);
             _remoteEventsSender.Send(ToServerEvent.ChooseTeam, index);
+        }
+
+        private void OnClearTeamPlayersMethod(object[] args)
+        {
+            ClearSameTeam();
+        }
+
+        private void OnPlayerJoinedTeamMethod(object[] args)
+        {
+            ushort handleValue = Convert.ToUInt16(args[0]);
+            IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
+            AddSameTeam(player);
+        }
+
+        private void OnPlayerLeftTeamMethod(object[] args)
+        {
+            ushort handleValue = Convert.ToUInt16(args[0]);
+            IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
+            RemoveSameTeam(player);
+        }
+
+        private void OnPlayerTeamChangeMethod(object[] args)
+        {
+            CurrentTeamName = (string)args[0];
+            _eventsHandler.OnTeamChanged(CurrentTeamName);
+        }
+
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Key.NumPad0, ToggleOrderMode);
+            int i = 0;
+            foreach (var orderobj in Enum.GetValues(typeof(TeamOrder)))
+            {
+                _bindsHandler.Add(Key.NumPad1 + i, GiveOrder);
+                ++i;
+            }
+        }
+
+        private void OnSyncTeamChoiceMenuDataMethod(object[] args)
+        {
+            string teamsJson = (string)args[0];
+            bool mixTeamsAfterRound = Convert.ToBoolean(args[1]);
+            _browserHandler.Angular.SyncTeamChoiceMenuData(teamsJson, mixTeamsAfterRound);
+            _eventsHandler.OnShowScoreboard();
+            _cursorHandler.Visible = true;
+        }
+
+        private void OnSyncTeamPlayersMethod(object[] args)
+        {
+            ClearSameTeam();
+            IEnumerable<int> listOfPlayerHandles = _serializer.FromServer<IEnumerable<int>>(args[0].ToString());
+            foreach (var handle in listOfPlayerHandles)
+            {
+                IPlayer player = _modAPI.Pool.Players.GetAtHandle(handle);
+                if (player != null)
+                    AddSameTeam(player);
+            }
+        }
+
+        private void OnToggleTeamChoiceMenuMethod(object[] args)
+        {
+            bool boolean = Convert.ToBoolean(args[0]);
+            _cursorHandler.Visible = boolean;
+            if (boolean)
+                _eventsHandler.OnShowScoreboard();
+            else
+                _eventsHandler.OnHideScoreboard();
+            _browserHandler.Angular.ToggleTeamChoiceMenu(boolean);
         }
     }
 }

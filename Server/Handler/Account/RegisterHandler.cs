@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Server;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
@@ -19,8 +17,8 @@ namespace TDS_Server.Core.Manager.PlayerManager
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly ServerStartHandler _serverStartHandler;
 
-        public RegisterHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler, DatabasePlayerHelper databasePlayerHelper, 
-            ServerStartHandler serverStartHandler) 
+        public RegisterHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler, DatabasePlayerHelper databasePlayerHelper,
+            ServerStartHandler serverStartHandler)
             : base(dbContext, loggingHandler)
             => (_eventsHandler, _databasePlayerHelper, _serverStartHandler) = (eventsHandler, databasePlayerHelper, serverStartHandler);
 
@@ -70,13 +68,13 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
             LoggingHandler.LogRest(LogType.Register, player, true);
 
-            _eventsHandler.OnPlayerRegister(player);
+            _eventsHandler.OnPlayerRegister(player, dbPlayer);
 
             //Todo: Implement that
             // _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
         }
 
-        
+
         public async void TryRegister(ITDSPlayer player, string username, string password, string email)
         {
             if (!_serverStartHandler.IsReadyForLogin)
@@ -84,7 +82,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 player.SendNotification(player.Language.TRY_AGAIN_LATER);
                 return;
             }
-                
+
             if (player.ModPlayer is null)
                 return;
             if (username.Length < 3 || username.Length > 20)

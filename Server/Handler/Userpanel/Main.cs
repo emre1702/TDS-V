@@ -1,6 +1,7 @@
 ﻿using BonusBotConnector_Server;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
@@ -105,7 +106,7 @@ namespace TDS_Server.Handler.Userpanel
             if (json == null)
                 return;
 
-            player.SendEvent(ToClientEvent.LoadUserpanelData, (int)dataType, json);
+            player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json);
         }
     }
 }

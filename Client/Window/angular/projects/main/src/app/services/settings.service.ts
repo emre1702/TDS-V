@@ -17,6 +17,7 @@ import { MapType } from '../enums/maptype.enum';
 import { Challenge } from '../components/lobbychoice/models/challenge';
 import { DomSanitizer } from '@angular/platform-browser';
 import { LanguagePipe } from '../pipes/language.pipe';
+import { DToServerEvent } from '../enums/dtoserverevent.enum';
 
 // tslint:disable: member-ordering
 
@@ -68,10 +69,10 @@ export class SettingsService {
         const index = this.FavoriteMapIDs.indexOf(id);
         if (index >= 0) {
             this.FavoriteMapIDs[index] = undefined;
-            this.rageConnector.call(DToClientEvent.ToggleMapFavorite, id, false);
+            this.rageConnector.callServer(DToServerEvent.ToggleMapFavouriteState, id, false);
         } else {
             this.FavoriteMapIDs.push(id);
-            this.rageConnector.call(DToClientEvent.ToggleMapFavorite, id, true);
+            this.rageConnector.callServer(DToServerEvent.ToggleMapFavouriteState, id, true);
         }
     }
 
@@ -213,7 +214,7 @@ export class SettingsService {
         private sanitizer: DomSanitizer) {
         console.log("Settings listener started.");
         rageConnector.listen(DFromClientEvent.LoadLanguage, this.loadLanguage.bind(this));
-        rageConnector.listen(DFromClientEvent.LoadFavoriteMaps, this.loadFavoriteMapIds.bind(this));
+        rageConnector.listen(DFromServerEvent.LoadMapFavourites, this.loadFavoriteMapIds.bind(this));
         rageConnector.listen(DFromClientEvent.ToggleInFightLobby, this.toggleInFightLobby.bind(this));
         rageConnector.listen(DFromClientEvent.ToggleTeamOrderModus, this.toggleInTeamOrderModus.bind(this));
         rageConnector.listen(DFromClientEvent.ToggleChatOpened, this.setChatOpened.bind(this));

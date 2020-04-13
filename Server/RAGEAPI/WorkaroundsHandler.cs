@@ -97,7 +97,7 @@ namespace TDS_Server.RAGEAPI
                 }
             }
 
-            public void DetachEntity(GTANetworkAPI.Entity entity, bool resetCollision = true)
+            public void DetachEntity(GTANetworkAPI.Entity entity)
             {
                 if (!_attachedEntitiesInfos.ContainsKey(entity))
                     return;
@@ -107,10 +107,10 @@ namespace TDS_Server.RAGEAPI
                     ILobby? lobby = _lobbiesHandler.GetLobby(info.LobbyId.Value);
                     if (lobby is null)
                         return;
-                    _modAPI.Sync.SendEvent(ToClientEvent.DetachEntityWorkaround, entity.Value, resetCollision);
+                    _modAPI.Sync.SendEvent(ToClientEvent.DetachEntityWorkaround, entity.Value);
                 }
                 else
-                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.DetachEntityWorkaround, entity.Value, resetCollision);
+                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.DetachEntityWorkaround, entity.Value);
 
                 _attachedEntitiesInfos.Remove(entity);
             }

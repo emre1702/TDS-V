@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Defaults;
+﻿using System;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
@@ -8,8 +9,8 @@ namespace TDS_Client.Handler.Draw
 {
     public class ScaleformMessageHandler
     {
-        private ulong _initTimeMs;
-        private ulong _msgDurationMs;
+        private int _initTimeMs;
+        private int _msgDurationMs;
         private bool _animatedOut;
         private BasicScaleform _scaleform;
 
@@ -36,38 +37,38 @@ namespace TDS_Client.Handler.Draw
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(Render));
         }
 
-        public void ShowWeaponPurchasedMessage(string title, string weaponName, int weaponHash, ulong time = 5000)
+        public void ShowWeaponPurchasedMessage(string title, string weaponName, int weaponHash, int time = 5000)
         {
             Scaleform.Call(ScaleformFunction.SHOW_WEAPON_PURCHASED, title, weaponName, weaponHash);
             InitCommonSettings(time);
         }
 
-        public void ShowPlaneMessage(string title, string planeName, string planeHash, ulong time = 5000)
+        public void ShowPlaneMessage(string title, string planeName, string planeHash, int time = 5000)
         {
             Scaleform.Call(ScaleformFunction.SHOW_PLANE_MESSAGE, title, planeName, planeHash);
             InitCommonSettings(time);
         }
 
-        public void ShowShardMessage(string title, string message, string titleColor, int bgColor, ulong time = 5000)
+        public void ShowShardMessage(string title, string message, string titleColor, int bgColor, int time = 5000)
         {
             Scaleform.Call(ScaleformFunction.SHOW_SHARD_CENTERED_MP_MESSAGE, title, message, titleColor, bgColor);
             InitCommonSettings(time);
         }
 
-        public void ShowWastedMessage(ulong time = 5000)
+        public void ShowWastedMessage(int time = 5000)
         {
             Scaleform.Call(ScaleformFunction.SHOW_SHARD_WASTED_MP_MESSAGE, "~r~Wasted", _settingsHandler.Language.YOU_DIED, 5, true, true);
             InitCommonSettings(time);
         }
 
-        private void InitCommonSettings(ulong time)
+        private void InitCommonSettings(int time)
         {
             _initTimeMs = _timerHandler.ElapsedMs;
             _msgDurationMs = time;
             _animatedOut = false;
         }
 
-        public void Render(ulong currentMs)
+        public void Render(int currentMs)
         {
             if (_scaleform == null)
                 return;

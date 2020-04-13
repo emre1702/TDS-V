@@ -70,14 +70,14 @@ namespace TDS_Client.Handler.MapCreator
             _browserHandler.MapCreatorVehicleChoice.Stop();
         }
 
-        private void RenderVehicleInFrontOfCam(ulong currentMs)
+        private void RenderVehicleInFrontOfCam(int currentMs)
         {
             var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
             var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(_modAPI.Cam.GetGameplayCamRot());
 
             Position3D a = new Position3D();
             Position3D b = new Position3D();
-            _modAPI.Misc.GetModelDimensions(_vehicle, a, b);
+            _vehicle.GetModelDimensions(a, b);
             var objSize = b - a;
             var position = camPos + camDirection * (3 + objSize.Length());
             _vehicle.Position = position;

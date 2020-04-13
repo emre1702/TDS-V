@@ -9,6 +9,7 @@ using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Deathmatch
 {
@@ -35,9 +36,9 @@ namespace TDS_Client.Handler.Deathmatch
         public int CurrentHp;
 
         private bool _inFight;
-        private ulong _lastBloodscreenUpdateTick;
-        private ulong _lastHudHealthUpdateTick;
-        private ulong _lastHudAmmoUpdateMs;
+        private int _lastBloodscreenUpdateTick;
+        private int _lastHudHealthUpdateTick;
+        private int _lastHudAmmoUpdateMs;
 
         private int _lastHudUpdateArmor;
         private int _lastHudUpdateHp;
@@ -51,22 +52,35 @@ namespace TDS_Client.Handler.Deathmatch
         private readonly SettingsHandler _settingsHandler;
         private readonly BrowserHandler _browserHandler;
         private readonly FloatingDamageInfoHandler _floatingDamageInfoHandler;
+        private readonly UtilsHandler _utilsHandler;
+        private readonly CamerasHandler _camerasHandler;
 
-        public PlayerFightHandler(IModAPI modAPI, EventsHandler eventsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler, FloatingDamageInfoHandler floatingDamageInfoHandler)
+        public PlayerFightHandler(IModAPI modAPI, EventsHandler eventsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler, FloatingDamageInfoHandler floatingDamageInfoHandler,
+            UtilsHandler utilsHandler, CamerasHandler camerasHandler)
         {
             _modAPI = modAPI;
             _eventsHandler = eventsHandler;
             _settingsHandler = settingsHandler;
             _browserHandler = browserHandler;
             _floatingDamageInfoHandler = floatingDamageInfoHandler;
+            _utilsHandler = utilsHandler;
+            _camerasHandler = camerasHandler;
 
-            _eventsHandler.WeaponChanged += WeaponChanged;
-            _eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+            eventsHandler.WeaponChanged += WeaponChanged;
+            eventsHandler.LobbyLeft += _ => SetNotInFight();
+            eventsHandler.LocalPlayerDied += SetNotInFight;
+            eventsHandler.MapChanged += SetNotInFight;
+            eventsHandler.MapCleared += SetNotInFight;
+            eventsHandler.RoundStarted += EventsHandler_RoundStarted;
+            eventsHandler.RoundEnded += SetNotInFight;
+
+            modAPI.Event.Add(ToClientEvent.HitOpponent, OnHitOpponentMethod);
+            modAPI.Event.Add(ToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
 
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => InFight));
         }
 
-        public void OnTick(ulong currentMs)
+        public void OnTick(int currentMs)
         {
             int previousArmor = CurrentArmor;
             int previousHp = CurrentHp;
@@ -167,9 +181,31 @@ namespace TDS_Client.Handler.Deathmatch
             _currentWeapon = newWeaponHash;
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        private void SetNotInFight()
         {
             InFight = false;
+            Reset();
+        }
+
+        private void OnHitOpponentMethod(object[] args)
+        {
+            ushort targetHandle = Convert.ToUInt16(args[0]);
+            int damage = (int)args[1];
+            IPlayer target = _utilsHandler.GetPlayerByHandleValue(targetHandle);
+
+            HittedOpponent(target, damage);
+        }
+
+        private void OnPlayerRespawnedMethod(object[] args)
+        {
+            if (!_camerasHandler.Spectating.IsSpectator)
+                InFight = true;
+            _eventsHandler.OnRespawned(InFight);
+        }
+
+        private void EventsHandler_RoundStarted(bool isSpectator)
+        {
+            InFight = !isSpectator;
         }
     }
 }

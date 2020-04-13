@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -80,7 +81,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
         {
-            ModAPI.Sync.SendEvent(this, ToClientEvent.MapCreatorSyncData, infoType, data);
+            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, infoType, data);
 
             switch (infoType)
             {

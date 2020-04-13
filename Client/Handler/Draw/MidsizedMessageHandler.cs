@@ -1,14 +1,14 @@
-﻿using TDS_Client.Data.Defaults;
+﻿using System;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Instance.Draw.Scaleform;
-using TDS_Client.Manager.Utility;
+using TDS_Client.Handler.Entities.Draw.Scaleform;
 
 namespace TDS_Client.Handler.Draw
 {
     public class MidsizedMessageHandler
     {
-        private ulong _initTimeMs;
-        private ulong _msgDurationMs;
+        private int _initTimeMs;
+        private int _msgDurationMs;
         private bool _animatedOut;
         private int _msgBgColor;
         private BasicScaleform _midsizedScaleform;
@@ -32,20 +32,20 @@ namespace TDS_Client.Handler.Draw
             _timerHandler = timerHandler;
         }
 
-        public void ShowMidsizedMessage(string title, string message, ulong time = 5000)
+        public void ShowMidsizedMessage(string title, string message, int time = 5000)
         {
             MidsizedScaleform.Call(ScaleformFunction.SHOW_MIDSIZED_MESSAGE, title, message);
             InitCommonSettings(time);
         }
 
-        public void ShowMidsizedShardMessage(string title, string message, int bgColor, bool useDarkerShard, bool condensed, ulong time = 5000)
+        public void ShowMidsizedShardMessage(string title, string message, int bgColor, bool useDarkerShard, bool condensed, int time = 5000)
         {
             MidsizedScaleform.Call(ScaleformFunction.SHOW_SHARD_MIDSIZED_MESSAGE, title, message, bgColor, useDarkerShard, condensed);
             InitCommonSettings(time);
             _msgBgColor = bgColor;
         }
 
-        private void InitCommonSettings(ulong time)
+        private void InitCommonSettings(int time)
         {
             _initTimeMs = _timerHandler.ElapsedMs;
             _msgDurationMs = time;

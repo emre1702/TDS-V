@@ -2,7 +2,7 @@
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Vehicle
 {
-    public interface IVehicle : IEntity
+    public interface IVehicle : IEntityBase
     {
     }
 }

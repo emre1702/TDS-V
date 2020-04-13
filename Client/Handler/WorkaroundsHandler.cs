@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Core;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Handler;
+using TDS_Shared.Core;
+using TDS_Shared.Data.Models;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
@@ -19,6 +18,15 @@ namespace TDS_Client.Handler
             _serializer = serializer;
             _modAPI = modAPI;
             _utilsHandler = utilsHandler;
+
+            modAPI.Event.Add(ToClientEvent.AttachEntityToEntityWorkaround, AttachEntityToEntityWorkaroundMethod);
+            modAPI.Event.Add(ToClientEvent.DetachEntityWorkaround, DetachEntityWorkaroundMethod);
+            modAPI.Event.Add(ToClientEvent.FreezeEntityWorkaround, FreezeEntityWorkaroundMethod);
+            modAPI.Event.Add(ToClientEvent.FreezePlayerWorkaround, FreezePlayerWorkaroundMethod);
+            modAPI.Event.Add(ToClientEvent.SetEntityCollisionlessWorkaround, SetEntityCollisionlessWorkaroundMethod);
+            modAPI.Event.Add(ToClientEvent.SetEntityInvincible, SetEntityInvincibleMethod);
+            modAPI.Event.Add(ToClientEvent.SetPlayerInvincible, SetPlayerInvincibleMethod);
+            modAPI.Event.Add(ToClientEvent.SetPlayerTeamWorkaround, SetPlayerTeamWorkaroundMethod);
         }
 
         public void AttachEntityToEntityWorkaroundMethod(object[] args)
@@ -36,8 +44,7 @@ namespace TDS_Client.Handler
         {
             int entity = (int)args[0];
             entity = _modAPI.Pool.Objects.GetAtRemote((ushort)entity).Handle;
-            bool resetCollision = Convert.ToBoolean(args[1]);
-            _modAPI.Entity.DetachEntity(entity, true, resetCollision);
+            _modAPI.Entity.DetachEntity(entity);
         }
 
         public void FreezeEntityWorkaroundMethod(object[] args)
@@ -60,7 +67,7 @@ namespace TDS_Client.Handler
         public void SetEntityCollisionlessWorkaroundMethod(object[] args)
         {
             EntityCollisionlessInfoDto info = _serializer.FromServer<EntityCollisionlessInfoDto>(args[0].ToString());
-            IEntity entity = _modAPI.Pool.Objects.GetAtRemote((ushort)info.EntityValue);
+            IEntityBase entity = _modAPI.Pool.Objects.GetAtRemote((ushort)info.EntityValue);
             if (entity == null)
             {
                 entity = _utilsHandler.GetPlayerByHandleValue((ushort)info.EntityValue);

@@ -77,7 +77,7 @@ namespace TDS_Client.Handler.MapCreator
             _camerasHandler.FreeCam = null;
         }
 
-        private void OnTick(ulong _)
+        private void OnTick(int _)
         {
             _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL);
 

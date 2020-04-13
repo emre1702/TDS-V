@@ -8,6 +8,7 @@ using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Lobby
 {
@@ -24,16 +25,26 @@ namespace TDS_Client.Handler.Lobby
         private readonly IModAPI _modAPI;
         private readonly TimerHandler _timerHandler;
         private readonly BrowserHandler _browserHandler;
+        private readonly EventsHandler _eventsHandler;
+        private readonly LobbyCamHandler _lobbyCamHandler;
 
-        public CountdownHandler(SettingsHandler settingsHandler, DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, BrowserHandler browserHandler, EventsHandler eventsHandler)
+        public CountdownHandler(SettingsHandler settingsHandler, DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, BrowserHandler browserHandler, EventsHandler eventsHandler,
+            LobbyCamHandler lobbyCamHandler)
         {
             _settingsHandler = settingsHandler;
             _dxHandler = dxHandler;
             _modAPI = modAPI;
             _timerHandler = timerHandler;
             _browserHandler = browserHandler;
+            _eventsHandler = eventsHandler;
+            _lobbyCamHandler = lobbyCamHandler;
 
-            eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+            eventsHandler.LobbyLeft += _ => Stop();
+            eventsHandler.MapCleared += Stop;
+            eventsHandler.RoundStarted += _ => Stop();
+            eventsHandler.RoundEnded += Stop;
+
+            modAPI.Event.Add(ToClientEvent.CountdownStart, OnCountdownStartMethod);
         }
 
         public void Start()
@@ -63,10 +74,10 @@ namespace TDS_Client.Handler.Lobby
             Refresh();
         }
 
-        public void End(bool showGo = true)
+        public void End()
         {
             _currentCountdownTime = 0;
-            if (showGo)
+            if (_countdownTimer != null)
             {
                 _countdownTimer?.Kill();
                 if (_text == null)
@@ -119,9 +130,26 @@ namespace TDS_Client.Handler.Lobby
                 _browserHandler.PlainMain.PlaySound(_countdownSounds[_currentCountdownTime]);
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        private void OnCountdownStartMethod(object[] args)
         {
-            Stop();
+            _eventsHandler.OnCountdownStarted();
+
+            int mstimetoplayer = (int)Math.Ceiling(_settingsHandler.CountdownTime * 1000 * 0.9);
+            if (args == null)
+            {
+                Start();
+                _lobbyCamHandler.SetGoTowardsPlayer(mstimetoplayer);
+            }
+            else
+            {
+                int remainingms = (int)args[0];
+                StartAfterwards(remainingms);
+                int timeofcountdowncameraisatplayer = _settingsHandler.CountdownTime * 1000 - mstimetoplayer;
+                if (remainingms < timeofcountdowncameraisatplayer)
+                    _lobbyCamHandler.SetGoTowardsPlayer(remainingms);
+                else
+                    _lobbyCamHandler.SetGoTowardsPlayer(remainingms - timeofcountdowncameraisatplayer);
+            }
         }
     }
 }

@@ -9,5 +9,10 @@ namespace TDS_Client.RAGEAPI.Native
         {
             RAGE.Game.Invoker.Invoke((RAGE.Game.Natives)native, args);
         }
+
+        public T Invoke<T>(NativeHash native, params object[] args)
+        {
+            return RAGE.Game.Invoker.Invoke<T>((RAGE.Game.Natives)native, args);
+        }
     }
 }

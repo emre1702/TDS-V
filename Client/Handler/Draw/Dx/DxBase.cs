@@ -45,7 +45,7 @@ namespace TDS_Client.Handler.Draw.Dx
             return DxType.None;
         }
 
-        protected static int GetBlendValue(ulong currenttick, int start, int end, ulong starttick, ulong endtick)
+        protected static int GetBlendValue(int currenttick, int start, int end, int starttick, int endtick)
         {
             float progress = (currenttick - starttick) / (endtick - starttick);
             if (progress > 1)
@@ -53,7 +53,7 @@ namespace TDS_Client.Handler.Draw.Dx
             return (int)Math.Floor(start + progress * (end - start));
         }
 
-        protected static float GetBlendValue(ulong currenttick, float start, float end, ulong starttick, ulong endtick)
+        protected static float GetBlendValue(int currenttick, float start, float end, int starttick, int endtick)
         {
             float progress = (currenttick - starttick) / (endtick - starttick);
             if (progress > 1)

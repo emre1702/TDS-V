@@ -19,7 +19,7 @@ namespace TDS_Client.Handler
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick));
         }
 
-        public void OnTick(ulong currentMs)
+        public void OnTick(int currentMs)
         {
             _modAPI.Player.SetPlayerTargetingMode(0);
             _modAPI.Player.SetPlayerLockon(false);

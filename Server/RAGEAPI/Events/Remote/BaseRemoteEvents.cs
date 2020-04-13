@@ -37,16 +37,6 @@ namespace TDS_Server.RAGEAPI.Events.Remote
             Init.TDSCore.RemoteEventsHandler.TryRegister(tdsPlayer, username, password, email);
         }
 
-        [RemoteEvent(ToServerEvent.ToggleMapFavouriteState)]
-        public void ToggleMapFavouriteState(GTANetworkAPI.Player player, int mapId, bool isFavorite)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.ToggleMapFavouriteState(tdsPlayer, mapId, isFavorite);
-        }
-
         [RemoteEvent(ToServerEvent.CommandUsed)]
         public void UseCommand(GTANetworkAPI.Player player, string msg)
         {
@@ -81,56 +71,6 @@ namespace TDS_Server.RAGEAPI.Events.Remote
         }
 
         #region Lobby
-
-        [RemoteEvent(ToServerEvent.JoinLobby)]
-        public void OnJoinLobby(GTANetworkAPI.Player player, int index)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnJoinLobby(tdsPlayer, index);
-        }
-
-        [RemoteEvent(ToServerEvent.JoinLobbyWithPassword)]
-        public void OnJoinLobbyWithPassword(GTANetworkAPI.Player player, int index, string? password = null)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnJoinLobbyWithPassword(tdsPlayer, index, password);
-        }
-
-        [RemoteEvent(ToServerEvent.CreateCustomLobby)]
-        public void OnCreateCustomLobby(GTANetworkAPI.Player player, string dataJson)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnCreateCustomLobby(tdsPlayer, dataJson);
-        }
-
-        [RemoteEvent(ToServerEvent.JoinedCustomLobbiesMenu)]
-        public void OnJoinedCustomLobbiesMenu(GTANetworkAPI.Player player)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnJoinedCustomLobbiesMenu(tdsPlayer);
-        }
-
-        [RemoteEvent(ToServerEvent.LeftCustomLobbiesMenu)]
-        public void OnLeftCustomLobbiesMenu(GTANetworkAPI.Player player)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnLeftCustomLobbiesMenu(tdsPlayer);
-        }
 
         [RemoteEvent(ToServerEvent.ChooseTeam)]
         public void OnChooseTeam(GTANetworkAPI.Player player, int index)
@@ -299,16 +239,6 @@ namespace TDS_Server.RAGEAPI.Events.Remote
             Init.TDSCore.RemoteEventsHandler.OnMapsListRequest(tdsPlayer);
         }
 
-        [RemoteEvent(ToServerEvent.MapVote)]
-        public void OnMapVote(GTANetworkAPI.Player player, int mapId)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnMapVote(tdsPlayer, mapId);
-        }
-
         #endregion MapVote
 
         #region Map Rating
@@ -326,45 +256,6 @@ namespace TDS_Server.RAGEAPI.Events.Remote
         #endregion Map Rating
 
         #region MapCreator
-        [RemoteEvent(ToServerEvent.SendMapCreatorData)]
-        public void OnSendMapCreatorData(GTANetworkAPI.Player player, string json)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnSendMapCreatorData(tdsPlayer, json);
-        }
-
-        [RemoteEvent(ToServerEvent.SaveMapCreatorData)]
-        public void OnSaveMapCreatorData(GTANetworkAPI.Player player, string json)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnSaveMapCreatorData(tdsPlayer, json);
-        }
-
-        [RemoteEvent(ToServerEvent.LoadMapNamesToLoadForMapCreator)]
-        public void OnLoadMapNamesToLoadForMapCreator(GTANetworkAPI.Player player)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnLoadMapNamesToLoadForMapCreator(tdsPlayer);
-        }
-
-        [RemoteEvent(ToServerEvent.LoadMapForMapCreator)]
-        public void OnLoadMapForMapCreator(GTANetworkAPI.Player player, int mapId)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnLoadMapForMapCreator(tdsPlayer, mapId);
-        }
 
         [RemoteEvent(ToServerEvent.RemoveMap)]
         public void OnRemoveMap(GTANetworkAPI.Player player, int mapId)
@@ -374,16 +265,6 @@ namespace TDS_Server.RAGEAPI.Events.Remote
                 return;
 
             Init.TDSCore.RemoteEventsHandler.OnRemoveMap(tdsPlayer, mapId);
-        }
-
-        [RemoteEvent(ToServerEvent.GetVehicle)]
-        public void OnGetVehicle(GTANetworkAPI.Player player, int vehTypeNumber)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnGetVehicle(tdsPlayer, vehTypeNumber);
         }
 
         [RemoteEvent(ToServerEvent.MapCreatorSyncLastId)]
@@ -456,46 +337,6 @@ namespace TDS_Server.RAGEAPI.Events.Remote
                 return;
 
             Init.TDSCore.RemoteEventsHandler.OnLoadUserpanelData(tdsPlayer, dataType);
-        }
-
-        [RemoteEvent(ToServerEvent.SendApplication)]
-        public void OnSendApplication(GTANetworkAPI.Player player, string json)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnSendApplication(tdsPlayer, json);
-        }
-
-        [RemoteEvent(ToServerEvent.AcceptInvitation)]
-        public void OnAcceptInvitation(GTANetworkAPI.Player player, int id)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnAcceptInvitation(tdsPlayer, id);
-        }
-
-        [RemoteEvent(ToServerEvent.RejectInvitation)]
-        public void OnRejectInvitation(GTANetworkAPI.Player player, int id)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnRejectInvitation(tdsPlayer, id);
-        }
-
-        [RemoteEvent(ToServerEvent.LoadApplicationDataForAdmin)]
-        public void OnLoadApplicationDataForAdmin(GTANetworkAPI.Player player, int applicationId)
-        {
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-
-            Init.TDSCore.RemoteEventsHandler.OnLoadApplicationDataForAdmin(tdsPlayer, applicationId);
         }
         #endregion
     }

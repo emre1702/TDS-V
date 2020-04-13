@@ -6,20 +6,18 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using TDS_Server.Data;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;
-using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Helper;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
-using TDS_Shared.Default;
-using TDS_Shared.Core;
 using DB = TDS_Server.Database.Entity;
 
 namespace TDS_Server.Handler.Maps
@@ -36,8 +34,11 @@ namespace TDS_Server.Handler.Maps
             : base(dbContext, loggingHandler)
             => (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
 
-        public async Task<MapCreateError> Create(ITDSPlayer creator, string mapJson, bool onlySave)
+        public async Task<object?> Create(ITDSPlayer creator, object[] args)
         {
+            string mapJson = (string)args[0];
+            bool onlySave = (bool)args[1];
+
             if (creator.Entity is null)
                 return MapCreateError.Unknown;
             var serializer = new XmlSerializer(typeof(MapDto));
@@ -93,7 +94,7 @@ namespace TDS_Server.Handler.Maps
                         await dbContext.Maps.AddAsync(dbMap);
                         await dbContext.SaveChangesAsync();
                     });
-                    
+
 
                     mapDto.BrowserSyncedData.Id = dbMap.Id;
                     mapDto.RatingAverage = 5;
@@ -116,10 +117,12 @@ namespace TDS_Server.Handler.Maps
             }
         }
 
-        public void SendPlayerMapForMapCreator(ITDSPlayer player, int mapId)
+        public object? SendPlayerMapForMapCreator(ITDSPlayer player, object[] args)
         {
             if (player.Entity is null)
-                return;
+                return null;
+
+            int mapId = (int)args[0];
 
             MapDto? map = _mapsLoadingHandler.GetMapById(mapId);
 
@@ -131,7 +134,7 @@ namespace TDS_Server.Handler.Maps
                 map = _mapsLoadingHandler.NeedCheckMaps.FirstOrDefault(m => mapId == m.BrowserSyncedData.Id);
 
             if (map is null)
-                return;
+                return null;
 
             int posId = 0;
 
@@ -161,12 +164,13 @@ namespace TDS_Server.Handler.Maps
             };
 
             ((MapCreateLobby)player.Lobby!).SetMap(mapCreatorData);
+            return null;
         }
 
-        public void SendPlayerMapNamesForMapCreator(ITDSPlayer player)
+        public object? SendPlayerMapNamesForMapCreator(ITDSPlayer player, object[] args)
         {
             if (player.Entity is null)
-                return;
+                return null;
 
             bool canLoadMapsFromOthers = _settingsHandler.CanLoadMapsFromOthers(player);
             var data = new List<LoadMapDialogGroupDto>
@@ -219,8 +223,7 @@ namespace TDS_Server.Handler.Maps
                 });
             }
 
-            string json = _serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
-            player.SendEvent(ToClientEvent.LoadMapNamesToLoadForMapCreator, json);
+            return _serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
         }
 
         public async void RemoveMap(ITDSPlayer player, int mapId)

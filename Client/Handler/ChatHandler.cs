@@ -38,16 +38,16 @@ namespace TDS_Client.Handler
         private readonly BrowserHandler _browserHandler;
         private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly BombHandler _bombHandler;
+        private readonly LobbyHandler _lobbyHandler;
         private readonly PlayerFightHandler _playerFightHandler;
 
         public ChatHandler(BrowserHandler browserHandler, IModAPI modAPI, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender,
-            BombHandler bombHandler, PlayerFightHandler playerFightHandler)
+            LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler)
         {
             _browserHandler = browserHandler;
             _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
-            _bombHandler = bombHandler;
+            _lobbyHandler = lobbyHandler;
             _playerFightHandler = playerFightHandler;
 
             _tickEventMethod = new EventMethodData<TickDelegate>(OnUpdate);
@@ -70,7 +70,7 @@ namespace TDS_Client.Handler
             _browserHandler.Angular.ToggleChatInput(false);
         }
 
-        private void OnUpdate(ulong _)
+        private void OnUpdate(int _)
         {
             _modAPI.Control.DisableAllControlActions(InputGroup.LOOK);
             _modAPI.Control.DisableAllControlActions(InputGroup.MOVE);
@@ -129,8 +129,8 @@ namespace TDS_Client.Handler
             string msg = (string)args[0];
             if (msg == "checkshoot")
             {
-                if (_bombHandler.BombOnHand || !_playerFightHandler.InFight)
-                    _modAPI.Chat.Output("Shooting is blocked. Reason: " + (_playerFightHandler.InFight ? "bomb" : (!_bombHandler.BombOnHand ? "round" : "both")));
+                if (_lobbyHandler.Bomb.BombOnHand || !_playerFightHandler.InFight)
+                    _modAPI.Chat.Output("Shooting is blocked. Reason: " + (_playerFightHandler.InFight ? "bomb" : (!_lobbyHandler.Bomb.BombOnHand ? "round" : "both")));
                 else
                     _modAPI.Chat.Output("Shooting is not blocked.");
                 return;

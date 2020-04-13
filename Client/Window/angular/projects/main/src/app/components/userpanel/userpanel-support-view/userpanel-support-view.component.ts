@@ -70,7 +70,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
     }
 
     ngOnDestroy() {
-        this.rageConnector.call(DToServerEvent.LeftSupportRequest, this.currentRequest[0]);
+        this.rageConnector.callServer(DToServerEvent.LeftSupportRequest, this.currentRequest[0]);
 
         this.rageConnector.remove(DFromClientEvent.SyncNewSupportRequestMessage, this.syncNewSupportRequestMessage.bind(this));
     }
@@ -82,7 +82,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
 
     sendMessage() {
         const message = this.requestGroup.get("message").value;
-        this.rageConnector.call(DToServerEvent.SendSupportRequestMessage, this.currentRequest[0], message);
+        this.rageConnector.callServer(DToServerEvent.SendSupportRequestMessage, this.currentRequest[0], message);
         this.requestGroup.get("message").setValue("");
 
         this.changeDetector.detectChanges();
@@ -100,7 +100,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
 
         this.changeDetector.detectChanges();
 
-        this.rageConnector.call(DToServerEvent.SetSupportRequestClosed, this.currentRequest[0], this.currentRequest[5]);
+        this.rageConnector.callServer(DToServerEvent.SetSupportRequestClosed, this.currentRequest[0], this.currentRequest[5]);
     }
 
     goBack() {

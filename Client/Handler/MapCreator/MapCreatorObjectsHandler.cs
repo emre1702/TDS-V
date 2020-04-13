@@ -7,6 +7,7 @@ using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
+using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
@@ -14,12 +15,13 @@ using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Models.Map.Creator;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorObjectsHandler
     {
-        private readonly Dictionary<IEntity, MapCreatorObject> _cacheMapEditorObjects = new Dictionary<IEntity, MapCreatorObject>();
+        private readonly Dictionary<IEntityBase, MapCreatorObject> _cacheMapEditorObjects = new Dictionary<IEntityBase, MapCreatorObject>();
         public MapLimit MapLimitDisplay;
         public int IdCounter = 0;
 
@@ -29,15 +31,24 @@ namespace TDS_Client.Handler.MapCreator
         private readonly CamerasHandler _camerasHandler;
         private readonly LobbyHandler _lobbyHandler;
         private readonly EventsHandler _eventsHandler;
+        private readonly BrowserHandler _browserHandler;
+        private readonly Serializer _serializer;
 
-        public MapCreatorObjectsHandler(IModAPI modAPI, CamerasHandler camerasHandler, LobbyHandler lobbyHandler, EventsHandler eventsHandler)
+        public MapCreatorObjectsHandler(IModAPI modAPI, CamerasHandler camerasHandler, LobbyHandler lobbyHandler, EventsHandler eventsHandler, BrowserHandler browserHandler, 
+            Serializer serializer)
         {
             _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _lobbyHandler = lobbyHandler;
             _eventsHandler = eventsHandler;
+            _browserHandler = browserHandler;
+            _serializer = serializer;
 
             _entityStreamInEventMethod = new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn);
+
+            modAPI.Event.Add(FromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
+            modAPI.Event.Add(FromBrowserEvent.RemoveMapCreatorTeamNumber, OnRemoveMapCreatorTeamNumberMethod);
+            modAPI.Event.Add(ToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
         }
 
         public void Start()
@@ -102,7 +113,7 @@ namespace TDS_Client.Handler.MapCreator
                 return alreadyCached;
             var entityType = _modAPI.Entity.GetEntityType(handle);
 
-            IEntity entity;
+            IEntityBase entity;
             switch (entityType)
             {
                 case EntityType.Ped:
@@ -348,6 +359,27 @@ namespace TDS_Client.Handler.MapCreator
                 return;
 
             obj.MovingRotation = obj.Rotation;
+        }
+
+        private void OnRemoveMapCreatorPositionMethod(object[] args)
+        {
+            int posId = Convert.ToInt32(args[0]);
+            Delete(posId);
+        }
+
+        private void OnRemoveMapCreatorTeamNumberMethod(object[] args)
+        {
+            int teamNumber = Convert.ToInt32(args[0]);
+            DeleteTeamObjects(teamNumber);
+        }
+
+        private void OnLoadMapForMapCreatorServerMethod(object[] args)
+        {
+            string json = (string)args[0];
+            _browserHandler.Angular.LoadMapForMapCreator(json);
+
+            var mapCreatorData = _serializer.FromServer<MapCreateDataDto>(json);
+            LoadMap(mapCreatorData);
         }
     }
 }

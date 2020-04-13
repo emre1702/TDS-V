@@ -2,8 +2,8 @@
 
 namespace TDS_Client.Data.Interfaces.ModAPI.MapObject
 {
-    public interface IMapObject : IEntity
+    public interface IMapObject : IEntityBase
     {
-        object Model { get; }
+        uint Model { get; set; }
     }
 }

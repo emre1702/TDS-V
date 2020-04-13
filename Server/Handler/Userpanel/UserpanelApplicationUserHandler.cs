@@ -14,6 +14,7 @@ using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Core;
+using TDS_Server.Data;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -113,8 +114,9 @@ namespace TDS_Server.Handler.Userpanel
             return _serializer.ToBrowser(new ApplicationUserData { CreateTime = player.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
         }
 
-        public async void CreateApplication(ITDSPlayer player, string answersJson)
+        public async Task<object?> CreateApplication(ITDSPlayer player, object[] args)
         {
+            string answersJson = (string)args[0];
             var answers = _serializer.FromBrowser<Dictionary<int, string>>(answersJson);
 
             var application = new Applications
@@ -142,12 +144,19 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
             
-
             _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application);
+            return null;
         }
 
-        public async void AcceptInvitation(ITDSPlayer player, int invitationId)
+        public async Task<object?> AcceptInvitation(ITDSPlayer player, object[] args)
         {
+            if (args.Length == 0)
+                return null;
+
+            int? invitationId;
+            if ((invitationId = Utils.GetInt(args[0])) == null)
+                return null;
+
             var invitation = await ExecuteForDBAsync(async dbContext
                 => await dbContext.ApplicationInvitations
                 .Include(i => i.Admin)
@@ -157,7 +166,7 @@ namespace TDS_Server.Handler.Userpanel
             if (invitation == null)
             {
                 player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
-                return;
+                return null;
             }
 
             var application = await ExecuteForDBAsync(async dbContext => 
@@ -165,7 +174,7 @@ namespace TDS_Server.Handler.Userpanel
             if (application.PlayerId != player.Entity!.Id)
             {
                 LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.", Environment.StackTrace, player);
-                return;
+                return null;
             }
 
             await ExecuteForDBAsync(async dbContext =>
@@ -191,10 +200,17 @@ namespace TDS_Server.Handler.Userpanel
             {
                 _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I've accepted your team application.");
             }
+            return null;
         }
 
-        public async void RejectInvitation(ITDSPlayer player, int invitationId)
+        public async Task<object?> RejectInvitation(ITDSPlayer player, object[] args)
         {
+            if (args.Length == 0)
+                return null;
+
+            int? invitationId;
+            if ((invitationId = Utils.GetInt(args[0])) == null)
+                return null;
 
             var invitation = await ExecuteForDBAsync(async dbContext => 
                 await dbContext.ApplicationInvitations
@@ -205,7 +221,7 @@ namespace TDS_Server.Handler.Userpanel
             if (invitation == null)
             {
                 player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
-                return;
+                return null;
             }
 
             var application = await ExecuteForDBAsync(async dbContext => 
@@ -217,7 +233,7 @@ namespace TDS_Server.Handler.Userpanel
             if (application.PlayerId != player.Entity!.Id)
             {
                 LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, player);
-                return;
+                return null;
             }
 
             await ExecuteForDBAsync(async dbContext =>
@@ -238,9 +254,11 @@ namespace TDS_Server.Handler.Userpanel
             {
                 _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I rejected your team application.");
             }
+
+            return null;
         }
 
-        public async void DeleteTooLongClosedApplications(ulong _)
+        public async void DeleteTooLongClosedApplications(int _)
         {
             await ExecuteForDB(async dbContext =>
             {

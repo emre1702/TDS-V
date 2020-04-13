@@ -1,7 +1,14 @@
-﻿using TDS_Client.Data.Defaults;
+﻿using System;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Models;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Browser
 {
@@ -9,13 +16,26 @@ namespace TDS_Client.Handler.Browser
     {
         private bool _roundEndReasonShowing;
 
-        public PlainMainBrowserHandler(IModAPI modAPI, Serializer serializer) 
+        private readonly RemoteEventsSender _remoteEventsSender;
+
+        public PlainMainBrowserHandler(IModAPI modAPI, Serializer serializer, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler) 
             : base(modAPI, serializer, Constants.MainBrowserPath)
         {
+            _remoteEventsSender = remoteEventsSender;
+
             CreateBrowser();
             //SetReady(); Only for Angular
-        }
 
+            eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+            eventsHandler.MapChanged += HideRoundEndReason;
+
+            modAPI.Event.Add(FromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
+            modAPI.Event.Add(ToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
+            modAPI.Event.Add(ToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
+
+            modAPI.Event.PlayerStartTalking.Add(new EventMethodData<PlayerDelegate>(EventHandler_PlayerStartTalking));
+            modAPI.Event.PlayerStopTalking.Add(new EventMethodData<PlayerDelegate>(EventHandler_PlayerStopTalking));
+        }
 
         public void OnLoadOwnMapRatings(string datajson)
         {
@@ -53,7 +73,7 @@ namespace TDS_Client.Handler.Browser
             ExecuteStr($"showRoundEndReason(`{reason}`, {mapId});");
         }
 
-        public void HidRoundEndReason()
+        public void HideRoundEndReason()
         {
             if (!_roundEndReasonShowing)
                 return;
@@ -79,6 +99,40 @@ namespace TDS_Client.Handler.Browser
         public void StopPlayerTalking(string name)
         {
             ExecuteFast("f", name);
+        }
+
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
+        {
+            HideRoundEndReason();
+        }
+        private void OnBrowserSendMapRatingMethod(object[] args)
+        {
+            int mapId = Convert.ToInt32(args[0]);
+            int rating = Convert.ToInt32(args[1]);
+            _remoteEventsSender.Send(ToServerEvent.SendMapRating, mapId, rating);
+        }
+
+        private void OnLoadOwnMapRatingsMethod(object[] args)
+        {
+            string datajson = (string)args[0];
+            OnLoadOwnMapRatings(datajson);
+        }
+
+        private void OnPlayCustomSoundMethod(object[] args)
+        {
+            string soundName = (string)args[0];
+            PlaySound(soundName);
+        }
+
+        private void EventHandler_PlayerStartTalking(IPlayer player)
+        {
+            StartPlayerTalking(player.Name);
+        }
+
+        private void EventHandler_PlayerStopTalking(IPlayer player)
+        {
+            StopPlayerTalking(player.Name);
         }
     }
 }

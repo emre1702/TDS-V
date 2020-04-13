@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
+using TDS_Shared.Data.Models;
 using System.Linq;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
@@ -131,8 +132,6 @@ namespace TDS_Client.Handler.Deathmatch
             _eventsHandler.LanguageChanged += CustomEventManager_OnLanguageChanged;
 
             _instructionalButton = _instructionalButtonHandler.Add(_settingsHandler.Language.FIRING_MODE, "F6", true);
-
-            _modAPI.Audio.SetAudioFlag("LoadMPData", true);
         }
 
         public void Stop()
@@ -175,12 +174,12 @@ namespace TDS_Client.Handler.Deathmatch
                 CurrentFiringMode = newFiringMode;
                 _currentBurstShots = 0;
 
-                _modAPI.Audio.PlaySoundFrontend(-1, "Faster_Click", "RESPAWN_ONLINE_SOUNDSET", true);
+                _modAPI.Audio.PlaySoundFrontend(-1, AudioName.FASTER_CLICK, AudioRef.RESPAWN_ONLINE_SOUNDSET);
                 _lastFiringModeByWeapon[_currentWeapon] = _currentFiringMode;
             }
         }
 
-        private void OnTick(ulong currentMs)
+        private void OnTick(int currentMs)
         {
             if (_ignoreCurrentWeapon)
                 return;

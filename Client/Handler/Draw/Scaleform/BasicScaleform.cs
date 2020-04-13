@@ -49,14 +49,14 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                _modAPI.Graphics.DrawScaleformMovieFullscreen(_handle, 255, 255, 255, 255, 0);
+                _modAPI.Graphics.DrawScaleformMovieFullscreen(_handle, 255, 255, 255, 255);
         }
 
         public void Render2D(float x, float y, float width, float height)
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                _modAPI.Graphics.DrawScaleformMovie(_handle, x, y, width, height, 255, 255, 255, 255, 0);
+                _modAPI.Graphics.DrawScaleformMovie(_handle, x, y, width, height, 255, 255, 255, 255);
         }
 
         public void Render3D(Position3D position, Position3D rotation, Position3D scale)

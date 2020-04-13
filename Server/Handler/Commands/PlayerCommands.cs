@@ -29,7 +29,7 @@ namespace TDS_Server.Handler.Commands
                 if (_customLobbyMenuSyncHandler.IsPlayerInCustomLobbyMenu(player))
                 {
                     _customLobbyMenuSyncHandler.RemovePlayer(player);
-                    player.SendEvent(ToClientEvent.LeaveCustomLobbyMenu);
+                    player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LeaveCustomLobbyMenu);
                 }
                 return;
             }

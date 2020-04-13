@@ -8,6 +8,8 @@ using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Default;
 using TDS_Shared.Core;
+using System.Threading.Tasks;
+using TDS_Server.Data.Defaults;
 
 namespace TDS_Server.Handler.Maps
 {
@@ -32,11 +34,13 @@ namespace TDS_Server.Handler.Maps
                     .Where(m => m.PlayerId == player.Entity.Id)
                     .Select(m => m.MapId)
                     .ToListAsync());
-            player.SendEvent(ToClientEvent.LoadMapFavourites, _serializer.ToBrowser(mapIDs));
+            player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, _serializer.ToBrowser(mapIDs));
         }
 
-        public async void ToggleMapFavouriteState(ITDSPlayer player, int mapId, bool isFavorite)
+        public async Task<object?> ToggleMapFavouriteState(ITDSPlayer player, object[] args)
         {
+            int mapId = (int)args[0];
+            bool isFavorite = (bool)args[1];
 
             await ExecuteForDBAsync(async dbContext =>
             {
@@ -64,6 +68,7 @@ namespace TDS_Server.Handler.Maps
                 }
                 #endregion
             });
+            return null;
 
         }
     }

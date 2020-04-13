@@ -24,9 +24,10 @@ namespace TDS_Client.Handler.Lobby
         private readonly CursorHandler _cursorHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly DataSyncHandler _dataSyncHandler;
+        private readonly BindsHandler _bindsHandler;
 
         public MapManagerHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler browserHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler,
-            RemoteEventsSender remoteEventsSender, DataSyncHandler dataSyncHandler)
+            RemoteEventsSender remoteEventsSender, DataSyncHandler dataSyncHandler, BindsHandler bindsHandler)
         {
             _modAPI = modAPI;
             _browserHandler = browserHandler;
@@ -34,11 +35,14 @@ namespace TDS_Client.Handler.Lobby
             _cursorHandler = cursorHandler;
             _remoteEventsSender = remoteEventsSender;
             _dataSyncHandler = dataSyncHandler;
+            _bindsHandler = bindsHandler;
 
             eventsHandler.DataChanged += OnMapsBoughtCounterChanged;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+            eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
             modAPI.Event.Add(FromBrowserEvent.CloseMapVotingMenu, _ => CloseMenu(false));
+            modAPI.Event.Add(ToClientEvent.MapsListRequest, OnMapListRequestMethod);
         }
 
         public void ToggleMenu(Key _)
@@ -103,9 +107,19 @@ namespace TDS_Client.Handler.Lobby
             _browserHandler.Angular.SyncMapPriceData((int)data);
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettingsDto settings)
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Key.F3, ToggleMenu);
+        }
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             CloseMenu();
+        }
+
+        private void OnMapListRequestMethod(object[] args)
+        {
+            LoadMapList((string)args[0]);
         }
     }
 }

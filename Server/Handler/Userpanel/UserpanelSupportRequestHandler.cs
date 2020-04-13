@@ -12,6 +12,8 @@ using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
 using TDS_Shared.Core;
+using TDS_Server.Data;
+using TDS_Server.Data.Defaults;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -79,98 +81,113 @@ namespace TDS_Server.Handler.Userpanel
             return _serializer.ToBrowser(data);
         }
 
-        public async Task GetSupportRequestData(ITDSPlayer player, int requestId)
-        {
-            var data = await ExecuteForDBAsync(async dbContext
-                => await dbContext.SupportRequests
-                    .Include(r => r.Messages)
-                    .ThenInclude(m => m.Author)
-                    .Where(r => r.Id == requestId)
-                    .Select(r => new SupportRequestData
-                    {
-                        ID = r.Id,
-                        Title = r.Title,
-                        Messages = r.Messages.Select(m => new SupportRequestMessageData
-                        {
-                            Author = m.Author.Name,
-                            Message = m.Text,
-                            CreateTimeDate = m.CreateTime
-                        }),
-                        Type = r.Type,
-                        AtleastAdminLevel = r.AtleastAdminLevel,
-                        Closed = r.CloseTime != null,
-
-                        AuthorId = r.AuthorId
-
-                    })
-                    .FirstOrDefaultAsync());
-
-            if (data is null)
-                return;
-            if (data.AuthorId != player.Entity!.Id && player.AdminLevel.Level == 0)
-                return;
-
-            foreach (var entry in data.Messages)
-            {
-                entry.CreateTime = player.GetLocalDateTimeString(entry.CreateTimeDate);
-            }
-
-            if (!_inSupportRequest.ContainsKey(data.ID))
-                _inSupportRequest[data.ID] = new HashSet<ITDSPlayer>();
-            _inSupportRequest[data.ID].Add(player);
-
-            player.SendEvent(ToClientEvent.GetSupportRequestData, _serializer.ToBrowser(data));
-        }
-
-        public async Task SendRequest(ITDSPlayer player, string json)
+        public async Task<object?> GetSupportRequestData(ITDSPlayer player, object[] args)
         {
             try
             {
-                var request = _serializer.FromBrowser<SupportRequestData>(json);
-                if (request is null)
-                    return;
-
-                var requestEntity = new SupportRequests
-                {
-                    AuthorId = player.Entity!.Id,
-                    AtleastAdminLevel = request.AtleastAdminLevel,
-                    Messages = new List<SupportRequestMessages>
-                    {
-                        new SupportRequestMessages
+                if (args.Length == 0)
+                    return null;
+                int? requestId;
+                if ((requestId = Utils.GetInt(args[0])) == null)
+                    return null;
+  
+                var data = await ExecuteForDBAsync(async dbContext
+                    => await dbContext.SupportRequests
+                        .Include(r => r.Messages)
+                        .ThenInclude(m => m.Author)
+                        .Where(r => r.Id == requestId)
+                        .Select(r => new SupportRequestData
                         {
-                            AuthorId = player.Entity!.Id,
-                            MessageIndex = 0,
-                            Text = request.Messages.First().Message
-                        }
-                    },
-                    Title = request.Title,
-                    Type = request.Type
-                };
+                            ID = r.Id,
+                            Title = r.Title,
+                            Messages = r.Messages.Select(m => new SupportRequestMessageData
+                            {
+                                Author = m.Author.Name,
+                                Message = m.Text,
+                                CreateTimeDate = m.CreateTime
+                            }),
+                            Type = r.Type,
+                            AtleastAdminLevel = r.AtleastAdminLevel,
+                            Closed = r.CloseTime != null,
 
-                await ExecuteForDBAsync(async dbContext => 
+                            AuthorId = r.AuthorId
+
+                        })
+                        .FirstOrDefaultAsync());
+
+                if (data is null)
+                    return null;
+                if (data.AuthorId != player.Entity!.Id && player.AdminLevel.Level == 0)
+                    return null;
+
+                foreach (var entry in data.Messages)
                 {
-                    dbContext.SupportRequests.Add(requestEntity);
+                    entry.CreateTime = player.GetLocalDateTimeString(entry.CreateTimeDate);
+                }
 
-                    await dbContext.SaveChangesAsync();
-                });
-                
-                player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED);
+                if (!_inSupportRequest.ContainsKey(data.ID))
+                    _inSupportRequest[data.ID] = new HashSet<ITDSPlayer>();
+                _inSupportRequest[data.ID].Add(player);
+
+                return _serializer.ToBrowser(data);
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError("SendRequest failed: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, player);
+                LoggingHandler.LogError(ex, player);
+                return null;
             }
         }
 
-        public async Task SendMessage(ITDSPlayer player, int requestId, string message)
+        public async Task<object?> SendRequest(ITDSPlayer player, object[] args)
         {
+            string json = (string)args[0];
+
+            var request = _serializer.FromBrowser<SupportRequestData>(json);
+            if (request is null)
+                return null;
+
+            var requestEntity = new SupportRequests
+            {
+                AuthorId = player.Entity!.Id,
+                AtleastAdminLevel = request.AtleastAdminLevel,
+                Messages = new List<SupportRequestMessages>
+                {
+                    new SupportRequestMessages
+                    {
+                        AuthorId = player.Entity!.Id,
+                        MessageIndex = 0,
+                        Text = request.Messages.First().Message
+                    }
+                },
+                Title = request.Title,
+                Type = request.Type
+            };
+
+            await ExecuteForDBAsync(async dbContext => 
+            {
+                dbContext.SupportRequests.Add(requestEntity);
+
+                await dbContext.SaveChangesAsync();
+            });
+                
+            player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED);
+            return null;
+        }
+
+        public async Task<object?> SendMessage(ITDSPlayer player, object[] args)
+        {
+            int? requestId = Utils.GetInt(args[0]);
+            if (requestId is null)
+                return null;
+
+            string message = (string)args[1];
 
             var request = await ExecuteForDBAsync(async dbContext
                 => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
             if (request is null)
-                return;
+                return null;
             if (request.AuthorId != player.Entity!.Id && player.AdminLevel.Level == 0)
-                return;
+                return null;
 
             var maxMessageIndex = await ExecuteForDBAsync(async dbContext 
                 => await dbContext.SupportRequestMessages.Where(m => m.RequestId == requestId).MaxAsync(m => m.MessageIndex) + 1);
@@ -179,7 +196,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 AuthorId = player.Entity.Id,
                 MessageIndex = maxMessageIndex,
-                RequestId = requestId,
+                RequestId = requestId.Value,
                 Text = message
             };
 
@@ -189,8 +206,8 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
           
-            if (!_inSupportRequest.ContainsKey(requestId))
-                return;
+            if (!_inSupportRequest.ContainsKey(requestId.Value))
+                return null;
 
             string messageJson = _serializer.ToBrowser(new SupportRequestMessage
             {
@@ -199,23 +216,28 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = player.GetLocalDateTimeString(messageEntity.CreateTime)
             });
 
-            foreach (var target in _inSupportRequest[requestId])
+            foreach (var target in _inSupportRequest[requestId.Value])
             {
-                target.SendEvent(ToClientEvent.SyncNewSupportRequestMessage, requestId, messageJson);
+                target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
             }
+            return null;
         }
 
-        public async Task SetSupportRequestClosed(ITDSPlayer player, int requestId, bool closed)
+        public async Task<object?> SetSupportRequestClosed(ITDSPlayer player, object[] args)
         {
+            int? requestId = Utils.GetInt(args[0]);
+            if (requestId == null)
+                return null;
+            bool closed = (bool)args[1];
 
             var request = await ExecuteForDBAsync(async dbContext 
                 => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
             if (request is null)
-                return;
+                return null;
             if (request.AuthorId != player.Entity!.Id && player.AdminLevel.Level == 0)
-                return;
+                return null;
             if (request.CloseTime is { } && closed || request.CloseTime is null && !closed)
-                return;
+                return null;
 
             if (closed)
                 request.CloseTime = DateTime.UtcNow;
@@ -226,27 +248,32 @@ namespace TDS_Server.Handler.Userpanel
 
             foreach (var target in _inSupportRequestsList)
             {
-                target.SendEvent(ToClientEvent.SetSupportRequestClosed, requestId, closed);
+                target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
             }
+            return null;
         }
 
-        public void LeftSupportRequestsList(ITDSPlayer player)
+        public object? LeftSupportRequestsList(ITDSPlayer player, object[] args)
         {
             _inSupportRequestsList.Remove(player);
+            return null;
         }
 
-        public void LeftSupportRequest(ITDSPlayer player, int requestId)
+        public object? LeftSupportRequest(ITDSPlayer player, object[] args)
         {
+            int requestId = (int)args[0];
+
             if (!_inSupportRequest.ContainsKey(requestId))
-                return;
+                return null;
 
             if (_inSupportRequest[requestId].Remove(player) && _inSupportRequest[requestId].Count == 0)
             {
                 _inSupportRequest.Remove(requestId);
             }
+            return null;
         }
 
-        public async void DeleteTooLongClosedRequests(ulong _)
+        public async void DeleteTooLongClosedRequests(int _)
         {
 
             var deleteAfterDays = _settingsHandler.ServerSettings.DeleteRequestsDaysAfterClose;

@@ -1,7 +1,12 @@
-﻿using TDS_Client.Data.Defaults;
+﻿using System;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Events;
+using TDS_Shared.Core;
+using TDS_Shared.Data.Enums.Userpanel;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
@@ -12,14 +17,24 @@ namespace TDS_Client.Handler
         private readonly BrowserHandler _browserHandler;
         private readonly CursorHandler _cursorHandler;
         private readonly SettingsHandler _settingsHandler;
+        private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly Serializer _serializer;
+        private readonly BindsHandler _bindsHandler;
 
-        public UserpanelHandler(IModAPI modAPI, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler)
+        public UserpanelHandler(IModAPI modAPI, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender,
+            Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler)
         {
             _browserHandler = browserHandler;
             _cursorHandler = cursorHandler;
             _settingsHandler = settingsHandler;
+            _remoteEventsSender = remoteEventsSender;
+            _serializer = serializer;
+            _bindsHandler = bindsHandler;
+
+            eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
             modAPI.Event.Add(FromBrowserEvent.CloseUserpanel, _ => Close());
+            modAPI.Event.Add(ToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
         }
 
         public void Toggle(Key key)
@@ -43,6 +58,27 @@ namespace TDS_Client.Handler
         public void Close()
         {
             Toggle(Key.NoName);
+        }
+
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Key.U, Toggle);
+        }
+
+        private void OnLoadUserpanelDataBrowserMethod(object[] args)
+        {
+            UserpanelLoadDataType type = (UserpanelLoadDataType)Convert.ToInt32(args[0]);
+            switch (type)
+            {
+                case UserpanelLoadDataType.SettingsRest:
+                    _browserHandler.Angular.LoadUserpanelData((int)type, _serializer.ToBrowser(_settingsHandler.PlayerSettings));
+                    break;
+                default:
+                    _remoteEventsSender.Send(ToServerEvent.LoadUserpanelData, (int)type);
+                    break;
+            }
+
+            _settingsHandler.RevertTempSettings();
         }
     }
 }

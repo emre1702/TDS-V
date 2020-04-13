@@ -2,9 +2,9 @@
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Pool
 {
-    public interface IPoolEntityAPI<T> where T : IEntity
+    public interface IPoolEntityAPI<T> where T : IEntityBase
     {
         T GetAtRemote(ushort handleValue);
-        T GetAtHandle(int targetEntity);
+        T GetAtHandle(int handle);
     }
 }

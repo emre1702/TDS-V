@@ -8,6 +8,7 @@ using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 using TDS_Shared.Core;
+using TDS_Server.Data.Defaults;
 
 namespace TDS_Server.Handler.Sync
 {
@@ -44,7 +45,7 @@ namespace TDS_Server.Handler.Sync
                     _playersInCustomLobbyMenu.RemoveAt(i);
                     continue;
                 }
-                player.SendEvent(ToClientEvent.SyncNewCustomLobby, json);
+                player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddCustomLobby, json);
             }
         }
 
@@ -60,7 +61,7 @@ namespace TDS_Server.Handler.Sync
                         _playersInCustomLobbyMenu.RemoveAt(i);
                         continue;
                     }
-                    player.SendEvent(ToClientEvent.RemoveCustomLobby, lobby.Id);
+                    player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.RemoveCustomLobby, lobby.Id);
                 }
             }
         }
@@ -72,7 +73,7 @@ namespace TDS_Server.Handler.Sync
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
 
-            player.SendEvent(ToClientEvent.SyncAllCustomLobbies, _serializer.ToBrowser(lobbyDatas));
+            player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, _serializer.ToBrowser(lobbyDatas));
         }
 
         public void RemovePlayer(ITDSPlayer player)

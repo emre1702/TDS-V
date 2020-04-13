@@ -74,6 +74,7 @@ namespace TDS_Server.Core.Init
                .AddSingleton<MapsRatingsHandler>()
 
                // Player
+               .AddSingleton<ConnectedHandler>()
                .AddSingleton<TDSPlayerHandler>()
 
                // Server
@@ -144,6 +145,7 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<MapsLoadingHandler>();
             serviceProvider.GetRequiredService<MapsRatingsHandler>();
 
+            serviceProvider.GetRequiredService<ConnectedHandler>();
             serviceProvider.GetRequiredService<TDSPlayerHandler>();
 
             serviceProvider.GetRequiredService<ServerInfoHandler>();
