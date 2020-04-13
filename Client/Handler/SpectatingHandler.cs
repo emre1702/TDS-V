@@ -82,9 +82,9 @@ namespace TDS_Client.Handler
             _deathHandler.PlayerSpawn();
             _camerasHandler.SpectateCam.Activate();
 
-            _bindsHandler.Add(Key.RightArrow, Next);
+            _bindsHandler.Add(Key.Right, Next);
             _bindsHandler.Add(Key.D, Next);
-            _bindsHandler.Add(Key.LeftArrow, Previous);
+            _bindsHandler.Add(Key.Left, Previous);
             _bindsHandler.Add(Key.A, Previous);
         }
 
@@ -97,9 +97,9 @@ namespace TDS_Client.Handler
 
             _camerasHandler.SpectateCam.Deactivate();
 
-            _bindsHandler.Remove(Key.RightArrow, Next);
+            _bindsHandler.Remove(Key.Right, Next);
             _bindsHandler.Remove(Key.D, Next);
-            _bindsHandler.Remove(Key.LeftArrow, Previous);
+            _bindsHandler.Remove(Key.Left, Previous);
             _bindsHandler.Remove(Key.A, Previous);
 
             IsSpectator = false;

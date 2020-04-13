@@ -134,12 +134,12 @@ namespace TDS_Client.Handler.Lobby
 
             TeamOrder order = GetTeamOrderByKey(key);
             _remoteEventsSender.Send(ToServerEvent.SendTeamOrder, (int)order);
-            ToggleOrderMode(Key.NoName);
+            ToggleOrderMode(Key.Noname);
         }
 
         private TeamOrder GetTeamOrderByKey(Key key)
         {
-            return (TeamOrder)(key - Key.NumPad1);
+            return (TeamOrder)(key - Key.Numpad1);
         }
 
         private void ChooseTeam(object[] args)
@@ -179,11 +179,11 @@ namespace TDS_Client.Handler.Lobby
 
         private void EventsHandler_LoggedIn()
         {
-            _bindsHandler.Add(Key.NumPad0, ToggleOrderMode);
+            _bindsHandler.Add(Key.Numpad0, ToggleOrderMode);
             int i = 0;
             foreach (var orderobj in Enum.GetValues(typeof(TeamOrder)))
             {
-                _bindsHandler.Add(Key.NumPad1 + i, GiveOrder);
+                _bindsHandler.Add(Key.Numpad1 + (ushort)i, GiveOrder);
                 ++i;
             }
         }

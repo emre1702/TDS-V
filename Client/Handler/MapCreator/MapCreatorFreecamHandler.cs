@@ -169,7 +169,7 @@ namespace TDS_Client.Handler.MapCreator
             }
         }
 
-        public void ToggleFreecam(Key _ = Key.NoName)
+        public void ToggleFreecam(Key _ = Key.Noname)
         {
             if (_browserHandler.InInput)
                 return;

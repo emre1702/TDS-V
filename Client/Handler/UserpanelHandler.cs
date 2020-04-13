@@ -39,7 +39,7 @@ namespace TDS_Client.Handler
 
         public void Toggle(Key key)
         {
-            if (key != Key.NoName)
+            if (key != Key.Noname)
             {
                 if (_browserHandler.InInput)
                     return;
@@ -57,7 +57,7 @@ namespace TDS_Client.Handler
 
         public void Close()
         {
-            Toggle(Key.NoName);
+            Toggle(Key.Noname);
         }
 
         private void EventsHandler_LoggedIn()

@@ -53,8 +53,10 @@ namespace TDS_Client.Handler
             _tickEventMethod = new EventMethodData<TickDelegate>(OnUpdate);
 
             modAPI.Chat.Show(false);
+
             bindsHandler.Add(Control.MpTextChatAll, OpenLobbyChatInput);
             bindsHandler.Add(Control.MpTextChatTeam, OpenTeamChatInput);
+            
             bindsHandler.Add(Key.Escape, (_) => CloseChatInput());
 
             modAPI.Event.Add(FromBrowserEvent.CloseChat, _ => CloseChatInput());
