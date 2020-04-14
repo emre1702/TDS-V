@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Server
                     PlayerAmountInGangLobby = _lobbiesHandler.Lobbies.Where(p => p is GangLobby || (p is Arena arena && arena.IsGangActionLobby)).Sum(l => l.Players.Count),
                     PlayerAmountInMainMenu = _tdsPlayerHandler.LoggedInPlayers.Where(p => p.Lobby is null || p.Lobby.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu).Count(),
                     PlayerAmountOnline = _tdsPlayerHandler.AmountLoggedInPlayers,
-                    ServerPort = _modAPI.Server.GetPort(),
+                    ServerPort = 22006,    // Didn't work correctly, wrong port _modAPI.Server.GetPort(),
                     Version = "1.0.0",   // Todo: Save Version somewhere else
                     ServerName = _modAPI.Server.GetName(),
                     RefreshFrequencySec = _bonusBotSettings.RefreshServerStatsFrequencySec
