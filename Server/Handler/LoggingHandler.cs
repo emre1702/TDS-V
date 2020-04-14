@@ -39,6 +39,7 @@ namespace TDS_Server.Handler
             if (_bonusBotConnectorClient.ServerInfos is { })
             {
                 _bonusBotConnectorClient.ServerInfos.Error += LogErrorFromBonusBot;
+                _bonusBotConnectorClient.ServerInfos.ErrorString += LogErrorFromBonusBot;
             }
 
         }
