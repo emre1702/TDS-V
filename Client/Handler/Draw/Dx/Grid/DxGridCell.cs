@@ -13,9 +13,9 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         private Color? _textColor;
         private float? _scale;
         private Font? _font;
-        private AlignmentX? _alignmentX;
+        private readonly AlignmentX _alignmentX;
 
-        private float? _textHeight;
+        private DxText _dxText;
 
         public Color BackColor
         {
@@ -29,7 +29,8 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             }
         }
 
-        public DxGridCell(DxHandler dxHandler, IModAPI modAPI, string text, DxGridRow row, DxGridColumn column, Color? backColor = null, Color? textColor = null, float? scale = null, Font? font = null,
+        public DxGridCell(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, DxGridRow row, DxGridColumn column, Color? backColor = null,
+            Color? textColor = null, float? scale = null, Font? font = null,
             AlignmentX? alignment = null, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority, false)
         {
             this._text = text;
@@ -39,34 +40,30 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             this._textColor = textColor;
             this._scale = scale;
             this._font = font;
-            this._alignmentX = alignment;
+            _alignmentX = alignment ?? row.TextAlignment;
 
-            if (scale.HasValue && font.HasValue)
-                _textHeight = modAPI.Ui.GetTextScaleHeight(scale.Value, font.Value);
+            _dxText = new DxText(dxHandler, modAPI, timerHandler, text, column.X, Row.Y, scale ?? Row.Scale, textColor ?? Row.TextColor, font ?? Row.Font,
+                alignment ?? Row.TextAlignment, AlignmentY.Center, _column.RelativePos, false, true, amountLines: 1, frontPriority: 99)
+            {
+                Activated = false
+            };
 
             row.AddCell(this);
         }
 
         public override void Draw()
         {
-            int y = GetAbsoluteY(GetRelativeY(Row.Y, Row.RelativePos), true, true) - 5;
-            y -= (int)(_textHeight ?? Row.TextHeight) / 2;
-            AlignmentX align = _alignmentX ?? Row.TextAlignment;
-            if (align == AlignmentX.Left)
-            {
-                int x = GetAbsoluteX(_column.X, _column.RelativePos, true);
-                ModAPI.Graphics.DrawText(_text, x, y, _font ?? Row.Font, _scale ?? Row.Scale, _textColor ?? Row.TextColor, align, false, false, 0);
-            }
-            else if (align == AlignmentX.Center)
-            {
-                int x = GetAbsoluteX(_column.X + _column.Width / 2, _column.RelativePos, true);
-                ModAPI.Graphics.DrawText(_text, x, y, _font ?? Row.Font, _scale ?? Row.Scale, _textColor ?? Row.TextColor, align, false, false, 0);
-            }
+            var x = GetXPos();
+            if (_column.RelativePos)
+                _dxText.SetRelativeX(x);
             else
-            {
-                int x = GetAbsoluteX(_column.X + _column.Width, _column.RelativePos, true);
-                ModAPI.Graphics.DrawText(_text, x, y, _font ?? Row.Font, _scale ?? Row.Scale, _textColor ?? Row.TextColor, align, false, false, 0);
-            }
+                _dxText.SetAbsoluteX((int)x);
+
+            if (Row.RelativePos) 
+                _dxText.SetRelativeY(Row.Y);
+            else 
+                _dxText.SetAbsoluteY((int)Row.Y);
+            _dxText.Draw();
         }
 
         public void DrawBackground()
@@ -80,9 +77,32 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             this._text = text;
         }
 
+        public override void Remove()
+        {
+            base.Remove();
+            _dxText.Remove();
+            _dxText = null;
+        }
+
         public override DxType GetDxType()
         {
             return DxType.GridCell;
+        }
+
+        private float GetXPos()
+        {
+            switch (_alignmentX)
+            {
+                case AlignmentX.Left:
+                    return _column.X;
+
+                case AlignmentX.Center:
+                    return _column.X + _column.Width / 2;
+
+                case AlignmentX.Right:
+                    return _column.X + _column.Width;
+            }
+            return 0;
         }
     }
 }

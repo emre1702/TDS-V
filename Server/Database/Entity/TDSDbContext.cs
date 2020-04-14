@@ -463,6 +463,7 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.SpawnAgainAfterDeathMs).HasDefaultValue(400);
                 entity.Property(e => e.StartArmor).HasDefaultValue(100);
                 entity.Property(e => e.StartHealth).HasDefaultValue(100);
+                entity.Property(e => e.AmountLifes).HasDefaultValue(1);
 
                 entity.HasOne(d => d.Lobby)
                    .WithOne(p => p.FightSettings)

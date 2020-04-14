@@ -20,7 +20,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Lobby
 {
-    public class LobbyHandler
+    public class LobbyHandler : ServiceBase
     {
         public bool IsLobbyOwner
         {
@@ -63,7 +63,6 @@ namespace TDS_Client.Handler.Lobby
         public RoundInfosHandler RoundInfos { get; }
         public TeamsHandler Teams { get; }
 
-        private readonly IModAPI _modAPI;
         private readonly BrowserHandler _browserHandler;
         private readonly PlayerFightHandler _playerFightHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
@@ -73,12 +72,13 @@ namespace TDS_Client.Handler.Lobby
         private readonly Serializer _serializer;
         private readonly UtilsHandler _utilsHandler;
 
-        public LobbyHandler(IModAPI modAPI, BrowserHandler browserHandler, PlayerFightHandler playerFightHandler, InstructionalButtonHandler instructionalButtonHandler,
+        public LobbyHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, PlayerFightHandler playerFightHandler, 
+            InstructionalButtonHandler instructionalButtonHandler,
             EventsHandler eventsHandler, SettingsHandler settingsHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender, DxHandler dxHandler,
             TimerHandler timerHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, DataSyncHandler dataSyncHandler,
             MapLimitHandler mapLimitHandler, Serializer serializer)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _browserHandler = browserHandler;
             _playerFightHandler = playerFightHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
@@ -88,100 +88,143 @@ namespace TDS_Client.Handler.Lobby
             _serializer = serializer;
             _utilsHandler = utilsHandler;
 
-            Camera = new LobbyCamHandler(camerasHandler, settingsHandler, eventsHandler);
-            Countdown = new CountdownHandler(settingsHandler, dxHandler, modAPI, timerHandler, browserHandler, eventsHandler, Camera);
+            Camera = new LobbyCamHandler(modAPI, loggingHandler, camerasHandler, settingsHandler, eventsHandler);
+            Countdown = new CountdownHandler(modAPI, loggingHandler, settingsHandler, dxHandler, timerHandler, browserHandler, eventsHandler, Camera);
             Choice = new LobbyChoiceHandler(modAPI, remoteEventsSender, settingsHandler);
-            MapDatas = new LobbyMapDatasHandler(modAPI, dxHandler, timerHandler, eventsHandler, Camera, mapLimitHandler, serializer, settingsHandler);
+            MapDatas = new LobbyMapDatasHandler(modAPI, loggingHandler, dxHandler, timerHandler, eventsHandler, Camera, mapLimitHandler, serializer, settingsHandler);
             MapManager = new MapManagerHandler(eventsHandler, modAPI, browserHandler, settingsHandler, cursorHandler, remoteEventsSender, dataSyncHandler, bindsHandler);
             MainMenu = new MainMenuHandler(eventsHandler, browserHandler);
             Players = new LobbyPlayersHandler(browserHandler, eventsHandler);
-            Round = new RoundHandler(modAPI, eventsHandler, RoundInfos, settingsHandler, browserHandler);
-            Teams = new TeamsHandler(modAPI, browserHandler, bindsHandler, this, remoteEventsSender, cursorHandler, eventsHandler, utilsHandler, serializer);
-            RoundInfos = new RoundInfosHandler(modAPI, Teams, timerHandler, dxHandler, settingsHandler, eventsHandler, serializer);
-            Bomb = new BombHandler(modAPI, browserHandler, RoundInfos, settingsHandler, utilsHandler, remoteEventsSender, dxHandler, timerHandler, eventsHandler, MapDatas, serializer);
+            Teams = new TeamsHandler(modAPI, loggingHandler, browserHandler, bindsHandler, this, remoteEventsSender, cursorHandler, eventsHandler, utilsHandler);
+            RoundInfos = new RoundInfosHandler(modAPI, loggingHandler, Teams, timerHandler, dxHandler, settingsHandler, eventsHandler, serializer);
+            Round = new RoundHandler(modAPI, loggingHandler, eventsHandler, RoundInfos, settingsHandler, browserHandler);
+            Bomb = new BombHandler(modAPI, loggingHandler, browserHandler, RoundInfos, settingsHandler, utilsHandler, remoteEventsSender, dxHandler, timerHandler, eventsHandler, 
+                MapDatas, serializer);
 
             eventsHandler.DataChanged += EventsHandler_DataChanged;
 
-            _modAPI.Event.Add(ToClientEvent.JoinLobby, Join);
-            _modAPI.Event.Add(ToServerEvent.LeaveLobby, Leave);
-            _modAPI.Event.Add(ToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
-            _modAPI.Event.Add(ToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
-            _modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableAttack, () => Bomb.BombOnHand || !playerFightHandler.InFight));
+            ModAPI.Event.Add(ToClientEvent.JoinLobby, Join);
+            ModAPI.Event.Add(ToServerEvent.LeaveLobby, Leave);
+            ModAPI.Event.Add(ToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
+            ModAPI.Event.Add(ToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
+            ModAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableAttack, () => Bomb.BombOnHand || !playerFightHandler.InFight));
         }
 
         public void Joined(SyncedLobbySettings oldSettings, SyncedLobbySettings settings)
         {
-            _modAPI.LocalPlayer.ResetAlpha();
-
-            if (oldSettings != null)
-                _eventsHandler.OnLobbyLeft(oldSettings);
-
-            switch (settings.Type)
+            try
             {
-                case LobbyType.Arena:
-                case LobbyType.FightLobby:
-                    InFightLobby = true;
-                    break;
+                ModAPI.LocalPlayer.ResetAlpha();
 
-                default:
-                    InFightLobby = false;
-                    break;
+                if (oldSettings != null)
+                    _eventsHandler.OnLobbyLeft(oldSettings);
+
+                switch (settings.Type)
+                {
+                    case LobbyType.Arena:
+                    case LobbyType.FightLobby:
+                        InFightLobby = true;
+                        break;
+
+                    default:
+                        InFightLobby = false;
+                        break;
+                }
+                _eventsHandler.OnLobbyJoined(settings);
+
+                _inLobbyType = settings.Type;
             }
-            _eventsHandler.OnLobbyJoined(settings);
-
-            _inLobbyType = settings.Type;
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         public void Join(object[] args)
         {
-            var oldSettings = _settingsHandler.GetSyncedLobbySettings();
-            SyncedLobbySettings settings = _serializer.FromServer<SyncedLobbySettings>((string)args[0]);
+            try
+            { 
+                var oldSettings = _settingsHandler.GetSyncedLobbySettings();
+                SyncedLobbySettings settings = _serializer.FromServer<SyncedLobbySettings>((string)args[0]);
 
-            Players.Load(_utilsHandler.GetTriggeredPlayersList((string)args[1]));
-            Teams.LobbyTeams = _serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
-            Joined(oldSettings, settings);
+                Players.Load(_utilsHandler.GetTriggeredPlayersList((string)args[1]));
+                Teams.LobbyTeams = _serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
+                Joined(oldSettings, settings);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void Leave(object[] args)
         {
-            _browserHandler.Angular.ToggleTeamChoiceMenu(false);
-            // If we were in team choice
-            _remoteEventsSender.Send(ToServerEvent.LeaveLobby);
+            try
+            { 
+                _browserHandler.Angular.ToggleTeamChoiceMenu(false);
+                // If we were in team choice
+                _remoteEventsSender.Send(ToServerEvent.LeaveLobby);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void OnJoinSameLobbyMethod(object[] args)
         {
-            ushort handleValue = Convert.ToUInt16(args[0]);
-            IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
-            _eventsHandler.OnPlayerJoinedSameLobby(player);
+            try
+            {
+                ushort handleValue = Convert.ToUInt16(args[0]);
+                IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
+                _eventsHandler.OnPlayerJoinedSameLobby(player);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void OnLeaveSameLobbyMethod(object[] args)
         {
-            ushort handleValue = Convert.ToUInt16(args[0]);
-            IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
-            string name = (string)args[1];
-            _eventsHandler.OnPlayerLeftSameLobby(player, name);
+            try
+            { 
+                ushort handleValue = Convert.ToUInt16(args[0]);
+                IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
+                string name = (string)args[1];
+                _eventsHandler.OnPlayerLeftSameLobby(player, name);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void EventsHandler_DataChanged(IPlayer player, PlayerDataKey key, object data)
         {
-            if (key != PlayerDataKey.IsLobbyOwner)
-                return;
-            if (player != _modAPI.LocalPlayer)
-                return;
-            IsLobbyOwner = (bool)data;
+            try
+            {
+                if (key != PlayerDataKey.IsLobbyOwner)
+                    return;
+                if (player != ModAPI.LocalPlayer)
+                    return;
+                IsLobbyOwner = (bool)data;
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void DisableAttack(int _)
         {
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack2);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackLight);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackHeavy);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackAlternate);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack1);
-            _modAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack2);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack2);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackLight);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackHeavy);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackAlternate);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack1);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack2);
         }
     }
 }

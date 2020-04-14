@@ -9,7 +9,7 @@ using TDS_Shared.Core;
 
 namespace TDS_Client.Handler.Browser
 {
-    public class BrowserHandlerBase
+    public class BrowserHandlerBase : ServiceBase
     {
         public IBrowser Browser { get; private set; }
 
@@ -17,12 +17,11 @@ namespace TDS_Client.Handler.Browser
         private readonly string _url;
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
-        protected readonly IModAPI ModAPI;
         protected readonly Serializer Serializer;
 
-        protected BrowserHandlerBase(IModAPI modAPI, Serializer serializer, string url)
+        protected BrowserHandlerBase(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, string url)
+            : base(modAPI, loggingHandler)
         {
-            ModAPI = modAPI;
             Serializer = serializer;
             _url = url;
         }

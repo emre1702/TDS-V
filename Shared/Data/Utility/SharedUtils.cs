@@ -1,5 +1,6 @@
 ﻿using NeoSmart.Hashing.XXHash;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -31,6 +32,12 @@ namespace TDS_Shared.Data.Utility
         }
 
         public static T GetRandom<T>(HashSet<T> collection)
+        {
+            var rndIndex = Rnd.Next(collection.Count);
+            return collection.ElementAt(rndIndex);
+        }
+
+        public static T GetRandom<T>(ICollection<T> collection)
         {
             var rndIndex = Rnd.Next(collection.Count);
             return collection.ElementAt(rndIndex);

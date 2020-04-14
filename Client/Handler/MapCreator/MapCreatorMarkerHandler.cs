@@ -11,12 +11,11 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.MapCreator
 {
-    public class MapCreatorMarkerHandler
+    public class MapCreatorMarkerHandler : ServiceBase
     {
         private AxisMarker[] _rotateMarker;
         private AxisMarker _highlightedMarker;
 
-        private readonly IModAPI _modAPI;
         private readonly UtilsHandler _utilsHandler;
         private readonly DxHandler _dxHandler;
         private readonly CamerasHandler _camerasHandler;
@@ -25,10 +24,11 @@ namespace TDS_Client.Handler.MapCreator
         private readonly MapCreatorObjectPlacingHandler _mapCreatorObjectPlacingHandler;
         private readonly ClickedMarkerStorer _clickedMarkerStorer;
 
-        public MapCreatorMarkerHandler(IModAPI modAPI, UtilsHandler utilsHandler, DxHandler dxHandler, CamerasHandler camerasHandler, BrowserHandler browserHandler,
+        public MapCreatorMarkerHandler(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, DxHandler dxHandler, 
+            CamerasHandler camerasHandler, BrowserHandler browserHandler,
             MapCreatorDrawHandler mapCreatorDrawHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, ClickedMarkerStorer clickedMarkerStorer)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _utilsHandler = utilsHandler;
             _dxHandler = dxHandler;
             _camerasHandler = camerasHandler;
@@ -42,29 +42,29 @@ namespace TDS_Client.Handler.MapCreator
         {
             _rotateMarker = new AxisMarker[]
             {
-                new AxisMarker(_modAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(255, 0, 0), AxisMarker.AxisEnum.X,
+                new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(255, 0, 0), AxisMarker.AxisEnum.X,
                     rotationGetter: obj => new Position3D(-obj.MovingRotation.Z + 90f, 90, 0),
                     objectRotationGetter: (obj, angle) => new Position3D(obj.Rotation.X, obj.Rotation.Y + angle, obj.Rotation.Z)),     // Marker_X_Rotate
 
-                new AxisMarker(_modAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(0, 255, 0), AxisMarker.AxisEnum.Y,
+                new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(0, 255, 0), AxisMarker.AxisEnum.Y,
                     rotationGetter: obj => new Position3D(-obj.MovingRotation.Z, 90, 0),
                     objectRotationGetter: (obj, angle) => new Position3D(obj.Rotation.X - angle, obj.Rotation.Y, obj.Rotation.Z)),     // Marker_Y_Rotate
 
-                new AxisMarker(_modAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(0, 0, 255), AxisMarker.AxisEnum.Z,
+                new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(0, 0, 255), AxisMarker.AxisEnum.Z,
                     rotationGetter: obj => new Position3D(),
                     objectRotationGetter: (obj, angle) => new Position3D(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z - angle)),     // Marker_Z_Rotate
 
-                new AxisMarker(_modAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(255, 0, 0), AxisMarker.AxisEnum.X,
+                new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(255, 0, 0), AxisMarker.AxisEnum.X,
                     positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(obj.Size.X / 2f + (obj.Size.X / 4f), 0f, 0f),
                     objectPositionFromGetter: obj => obj.Entity.GetOffsetInWorldCoords(-1000f, 0f, 0f),
                     objectPositionToGetter: obj => obj.Entity.GetOffsetInWorldCoords(1000f, 0f, 0f)),    // Marker_X_Move
 
-                new AxisMarker(_modAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(0, 255, 0),AxisMarker.AxisEnum.Y,
+                new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(0, 255, 0),AxisMarker.AxisEnum.Y,
                     positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, obj.Size.Y / 2f + (obj.Size.Y / 4f), 0f),
                     objectPositionFromGetter: obj => obj.Entity.GetOffsetInWorldCoords(0, -1000f, 0f),
                     objectPositionToGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 1000f, 0f)),    // Marker_Y_Move
 
-                new AxisMarker(_modAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(0, 0, 255),AxisMarker.AxisEnum.Z,
+                new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(0, 0, 255),AxisMarker.AxisEnum.Z,
                     positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 0f, obj.Size.Z + (obj.Size.Z / 4f)),
                     objectPositionFromGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 0f, -1000f),
                     objectPositionToGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 0f, 1000f)),    // Marker_Z_Move
@@ -92,7 +92,7 @@ namespace TDS_Client.Handler.MapCreator
 
             if (_clickedMarkerStorer.ClickedMarker != null)
             {
-                if (_modAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
+                if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
                 {
                     _clickedMarkerStorer.ClickedMarker = null;
                     _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z,
@@ -107,7 +107,6 @@ namespace TDS_Client.Handler.MapCreator
             }
             else
             {
-
                 float closestDistToMarker = float.MaxValue;
                 AxisMarker closestMarker = null;
                 Position3D hitPointClosestMarker = null;
@@ -151,7 +150,7 @@ namespace TDS_Client.Handler.MapCreator
                         marker.Draw();
             }
 
-            if (_modAPI.Control.IsDisabledControlJustPressed(InputGroup.MOVE, Control.Attack))
+            if (ModAPI.Control.IsDisabledControlJustPressed(InputGroup.MOVE, Control.Attack))
             {
                 _clickedMarkerStorer.ClickedMarker = _highlightedMarker;
                 _mapCreatorDrawHandler.HighlightColor_Edge = Color.FromArgb(255, 255, 255, 0);

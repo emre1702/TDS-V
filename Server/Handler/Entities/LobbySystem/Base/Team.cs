@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         protected void MixTeams()
         {
-            var oldPlayersList = Players.ToList();
+            var oldPlayersList = Players.Values.ToList();
             ClearTeamPlayersLists();
             foreach (TDSPlayer player in oldPlayersList)
             {

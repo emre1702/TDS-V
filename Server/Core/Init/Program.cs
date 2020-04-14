@@ -44,6 +44,9 @@ namespace TDS_Server.Core.Init
                 _modAPI = modAPI;
                 _serviceProvider = Services.InitServiceCollection(modAPI);
 
+                var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
+                mapsLoadingHandler.LoadAllMaps();
+
                 Services.InitializeSingletons(_serviceProvider);
 
                 var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(_serviceProvider);
@@ -69,9 +72,6 @@ namespace TDS_Server.Core.Init
                 _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
                 _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
-
-                var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
-                mapsLoadingHandler.LoadAllMaps();
 
                 Task.Run(ReadInput);
             }

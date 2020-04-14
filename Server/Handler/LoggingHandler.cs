@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Enums;
 
@@ -16,6 +15,7 @@ namespace TDS_Server.Handler
         private readonly TDSDbContext _dbContext;
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly object lockObj = new object();
 
         public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler, ISettingsHandler settingsHandler)
         {
@@ -52,6 +52,7 @@ namespace TDS_Server.Handler
         {
             if (counter is null || counter % _settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
                 await _dbContext.SaveChangesAsync();
+            
         }
 
         #region Error
@@ -66,7 +67,10 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
-            _dbContext.LogErrors.Add(log);
+            lock (lockObj)
+            {
+                _dbContext.LogErrors.Add(log);
+            }
 
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -83,7 +87,10 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
-            _dbContext.LogErrors.Add(log);
+            lock (lockObj)
+            {
+                _dbContext.LogErrors.Add(log);
+            }
 
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -100,7 +107,10 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
-            _dbContext.LogErrors.Add(log);
+            lock (lockObj)
+            {
+                _dbContext.LogErrors.Add(log);
+            }
 
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -117,7 +127,10 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(info + "\n" + stacktrace);
 
-            _dbContext.LogErrors.Add(log);
+            lock (lockObj)
+            {
+                _dbContext.LogErrors.Add(log);
+            }
 
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -170,7 +183,10 @@ namespace TDS_Server.Handler
                 Timestamp = DateTime.UtcNow
             };
 
-            _dbContext.LogChats.Add(log);
+            lock (lockObj)
+            {
+                _dbContext.LogChats.Add(log);
+            }
         }
         #endregion Chat
 
@@ -189,7 +205,11 @@ namespace TDS_Server.Handler
                 Timestamp = DateTime.UtcNow,
                 LengthOrEndTime = lengthOrEndTime
             };
-            _dbContext.LogAdmins.Add(log);
+
+            lock (lockObj)
+            {
+                _dbContext.LogAdmins.Add(log);
+            }
         }
 
         public void LogAdmin(LogType cmd, ITDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
@@ -206,7 +226,11 @@ namespace TDS_Server.Handler
                 Timestamp = DateTime.UtcNow,
                 LengthOrEndTime = lengthOrEndTime
             };
-            _dbContext.LogAdmins.Add(log);
+
+            lock (lockObj)
+            {
+                _dbContext.LogAdmins.Add(log);
+            }
         }
         #endregion Admin
 
@@ -219,7 +243,11 @@ namespace TDS_Server.Handler
                 DeadId = player.Id,
                 WeaponId = weapon
             };
-            _dbContext.LogKills.Add(log);
+
+            lock (lockObj)
+            {
+                _dbContext.LogKills.Add(log);
+            }
         }
         #endregion Kill
 
@@ -236,7 +264,11 @@ namespace TDS_Server.Handler
                 Lobby = savelobby ? source?.Lobby?.Id : null,
                 Timestamp = DateTime.UtcNow
             };
-            _dbContext.LogRests.Add(log);
+
+            lock (lockObj)
+            {
+                _dbContext.LogRests.Add(log);
+            }
         }
         #endregion
     }

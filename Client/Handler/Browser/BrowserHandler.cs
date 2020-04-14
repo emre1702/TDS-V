@@ -6,7 +6,7 @@ using TDS_Shared.Core;
 
 namespace TDS_Client.Handler.Browser
 {
-    public class BrowserHandler
+    public class BrowserHandler : ServiceBase
     {
         public bool InInput { get; private set; }
 
@@ -16,14 +16,15 @@ namespace TDS_Client.Handler.Browser
         public MapCreatorVehicleChoiceBrowserHandler MapCreatorVehicleChoice { get; }
         public PlainMainBrowserHandler PlainMain { get; }
 
-        public BrowserHandler(IModAPI modAPI, SettingsHandler settingsHandler, CursorHandler cursorHandler, EventsHandler eventsHandler, Serializer serializer,
-            RemoteEventsSender remoteEventsSender)
+        public BrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler, EventsHandler eventsHandler, 
+            Serializer serializer, RemoteEventsSender remoteEventsSender)
+            : base(modAPI, loggingHandler)
         {
-            Angular = new AngularBrowserHandler(modAPI, settingsHandler, cursorHandler, serializer, eventsHandler);
-            RegisterLogin = new RegisterLoginBrowserHandler(modAPI, serializer, settingsHandler);
-            MapCreatorObjectChoice = new MapCreatorObjectChoiceBrowserHandler(modAPI, serializer);
-            MapCreatorVehicleChoice = new MapCreatorVehicleChoiceBrowserHandler(modAPI, serializer);
-            PlainMain = new PlainMainBrowserHandler(modAPI, serializer, remoteEventsSender, eventsHandler);
+            Angular = new AngularBrowserHandler(modAPI, loggingHandler, settingsHandler, cursorHandler, serializer, eventsHandler);
+            RegisterLogin = new RegisterLoginBrowserHandler(modAPI, loggingHandler, serializer, settingsHandler);
+            MapCreatorObjectChoice = new MapCreatorObjectChoiceBrowserHandler(modAPI, loggingHandler, serializer);
+            MapCreatorVehicleChoice = new MapCreatorVehicleChoiceBrowserHandler(modAPI, loggingHandler, serializer);
+            PlainMain = new PlainMainBrowserHandler(modAPI, loggingHandler, serializer, remoteEventsSender, eventsHandler);
 
             eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
 

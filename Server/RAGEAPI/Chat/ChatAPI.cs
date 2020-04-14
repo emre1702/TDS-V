@@ -22,7 +22,7 @@ namespace TDS_Server.RAGEAPI.Chat
 
         public void SendMessage(ILobby lobby, string message, ICollection<int>? ignorePlayersWithId = null)
         {
-            foreach (var player in lobby.Players)
+            foreach (var player in lobby.Players.Values)
             {
                 if ((ignorePlayersWithId is null || !ignorePlayersWithId.Contains(player.Id)) && player.ModPlayer is Player.Player modPlayer)
                     modPlayer._instance.SendChatMessage(message);

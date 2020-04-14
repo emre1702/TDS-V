@@ -6,17 +6,17 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Lobby
 {
-    public class RoundHandler
+    public class RoundHandler : ServiceBase
     {
-        private readonly IModAPI _modAPI;
         private readonly EventsHandler _eventsHandler;
         private readonly RoundInfosHandler _roundInfosHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly BrowserHandler _browserHandler;
 
-        public RoundHandler(IModAPI modAPI, EventsHandler eventsHandler, RoundInfosHandler roundInfosHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler)
+        public RoundHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, RoundInfosHandler roundInfosHandler, 
+            SettingsHandler settingsHandler, BrowserHandler browserHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _eventsHandler = eventsHandler;
             _roundInfosHandler = roundInfosHandler;
             _settingsHandler = settingsHandler;
@@ -28,18 +28,25 @@ namespace TDS_Client.Handler.Lobby
 
         private void OnRoundStartMethod(object[] args)
         {
-            bool isSpectator = Convert.ToBoolean(args[0]);
-            _eventsHandler.OnRoundStarted(isSpectator);
+            try
+            {
+                bool isSpectator = Convert.ToBoolean(args[0]);
+                _eventsHandler.OnRoundStarted(isSpectator);
 
-            _modAPI.Cam.DoScreenFadeIn(50);
-            _roundInfosHandler.Start(args.Length >= 2 ? Convert.ToInt32(args[1]) : 0);
+                ModAPI.Cam.DoScreenFadeIn(50);
+                _roundInfosHandler.Start(args.Length >= 2 ? Convert.ToInt32(args[1]) : 0);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void OnRoundEndMethod(object[] args)
         {
             _eventsHandler.OnRoundEnded();
 
-            _modAPI.Cam.DoScreenFadeOut(_settingsHandler.RoundEndTime / 2);
+            ModAPI.Cam.DoScreenFadeOut(_settingsHandler.RoundEndTime / 2);
 
             string reason = (string)args[0];
             int mapId = (int)args[1];

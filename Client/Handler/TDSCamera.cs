@@ -27,12 +27,14 @@ namespace TDS_Client.Handler.Entities
         public Position3D Direction => _utilsHandler.GetDirectionByRotation(Rotation);
 
         private readonly IModAPI _modAPI;
+        private readonly LoggingHandler _loggingHandler;
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
 
-        public TDSCamera(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler)
+        public TDSCamera(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler)
         {
             _modAPI = modAPI;
+            _loggingHandler = loggingHandler;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
 
@@ -58,11 +60,14 @@ namespace TDS_Client.Handler.Entities
 
         public void SetPosition(Position3D position, bool instantly = false)
         {
-            Position = position;
+            _loggingHandler.LogInfo("", "TDSCamera.SetPosition");
+            Cam.Position = position;
+
             if (instantly)
             {
                 Cam.Render(true, false, 0);
             }
+            _loggingHandler.LogInfo("", "TDSCamera.SetPosition", true);
         }
 
         public void Spectate(IEntityBase ped)
@@ -88,8 +93,10 @@ namespace TDS_Client.Handler.Entities
 
         public void RenderToPosition(Position3D pos, bool ease = false, int easeTime = 0)
         {
+            _loggingHandler.LogInfo("", "TDSCamera.RenderToPosition");
             SetPosition(pos);
             Render(ease, easeTime);
+            _loggingHandler.LogInfo("", "TDSCamera.RenderToPosition", true);
         }
 
         public void Render(bool ease = false, int easeTime = 0)

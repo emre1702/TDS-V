@@ -13,7 +13,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
-    public class RankingHandler
+    public class RankingHandler : ServiceBase
     {
         private IPlayer _winner = null;
         private IPlayer _second = null;
@@ -21,7 +21,6 @@ namespace TDS_Client.Handler
 
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        private readonly IModAPI _modAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
         private readonly SettingsHandler _settingsHandler;
@@ -30,12 +29,12 @@ namespace TDS_Client.Handler
         private readonly NametagsHandler _nametagsHandler;
         private readonly DeathHandler _deathHandler;
 
-        public RankingHandler(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler,
-            BrowserHandler browserHandler, NametagsHandler nametagsHandler, DeathHandler deathHandler, EventsHandler eventsHandler)
+        public RankingHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler, 
+            CursorHandler cursorHandler, BrowserHandler browserHandler, NametagsHandler nametagsHandler, DeathHandler deathHandler, EventsHandler eventsHandler)
+            : base(modAPI, loggingHandler)
         {
             _tickEventMethod = new EventMethodData<TickDelegate>(OnRender);
 
-            _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
             _settingsHandler = settingsHandler;
@@ -64,10 +63,10 @@ namespace TDS_Client.Handler
             //Z: 326.8
             //Rot: 160
 
-            _modAPI.Cam.DoScreenFadeIn(200);
+            ModAPI.Cam.DoScreenFadeIn(200);
 
             if (_settingsHandler.PlayerSettings.ShowConfettiAtRanking)
-                _modAPI.Event.Tick.Add(_tickEventMethod);
+                ModAPI.Event.Tick.Add(_tickEventMethod);
 
             _winner = _utilsHandler.GetPlayerByHandleValue(winnerHandle);
             _second = secondHandle != 0 ? _utilsHandler.GetPlayerByHandleValue(secondHandle) : null;
@@ -79,7 +78,7 @@ namespace TDS_Client.Handler
 
         public void Stop()
         {
-            _modAPI.Event.Tick.Remove(_tickEventMethod);
+            ModAPI.Event.Tick.Remove(_tickEventMethod);
             _browserHandler.Angular.HideRankings();
             _cursorHandler.Visible = false;
         }
@@ -111,8 +110,8 @@ namespace TDS_Client.Handler
 
         private int StartParticleFx(string effectName, float x, float y, float z, float scale)
         {
-            _modAPI.Graphics.UseParticleFxAssetNextCall("scr_xs_celebration");
-            return _modAPI.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
+            ModAPI.Graphics.UseParticleFxAssetNextCall("scr_xs_celebration");
+            return ModAPI.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
         }
 
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)

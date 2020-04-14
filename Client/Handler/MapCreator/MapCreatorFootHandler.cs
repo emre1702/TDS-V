@@ -5,14 +5,14 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorFootHandler
     {
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
         private readonly SettingsHandler _settingsHandler;
 
         public MapCreatorFootHandler(IModAPI modAPI, CamerasHandler camerasHandler, InstructionalButtonHandler instructionalButtonHandler, SettingsHandler settingsHandler)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _camerasHandler = camerasHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
             _settingsHandler = settingsHandler;
@@ -20,7 +20,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void Start(bool addInstructionalButtom = true)
         {
-            var player = _modAPI.LocalPlayer;
+            var player = ModAPI.LocalPlayer;
 
             if (!(_camerasHandler.FreeCam is null))
             {
@@ -40,7 +40,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void Stop()
         {
-            var player = _modAPI.LocalPlayer;
+            var player = ModAPI.LocalPlayer;
             player.FreezePosition(true);
             player.SetVisible(false);
             player.SetCollision(false, false);

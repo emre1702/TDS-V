@@ -13,7 +13,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
-    public class ChatHandler
+    public class ChatHandler : ServiceBase
     {
         public bool IsOpen
         {
@@ -25,9 +25,9 @@ namespace TDS_Client.Handler
                 _isOpen = value;
                 _browserHandler.Angular.ToggleChatOpened(value);
                 if (value)
-                    _modAPI.Event.Tick.Add(_tickEventMethod);
+                    ModAPI.Event.Tick.Add(_tickEventMethod);
                 else
-                    _modAPI.Event.Tick.Remove(_tickEventMethod);
+                    ModAPI.Event.Tick.Remove(_tickEventMethod);
             }
         }
 
@@ -36,16 +36,15 @@ namespace TDS_Client.Handler
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
         private readonly BrowserHandler _browserHandler;
-        private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly LobbyHandler _lobbyHandler;
         private readonly PlayerFightHandler _playerFightHandler;
 
-        public ChatHandler(BrowserHandler browserHandler, IModAPI modAPI, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender,
+        public ChatHandler(IModAPI modAPI, LoggingHandler loggingHandler,  BrowserHandler browserHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender,
             LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler)
+            : base(modAPI, loggingHandler)
         {
             _browserHandler = browserHandler;
-            _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
             _lobbyHandler = lobbyHandler;
             _playerFightHandler = playerFightHandler;
@@ -74,9 +73,9 @@ namespace TDS_Client.Handler
 
         private void OnUpdate(int _)
         {
-            _modAPI.Control.DisableAllControlActions(InputGroup.LOOK);
-            _modAPI.Control.DisableAllControlActions(InputGroup.MOVE);
-            _modAPI.Control.DisableAllControlActions(InputGroup.SUB);
+            ModAPI.Control.DisableAllControlActions(InputGroup.LOOK);
+            ModAPI.Control.DisableAllControlActions(InputGroup.MOVE);
+            ModAPI.Control.DisableAllControlActions(InputGroup.SUB);
         }
 
         private void OpenLobbyChatInput(Control _)
@@ -132,9 +131,9 @@ namespace TDS_Client.Handler
             if (msg == "checkshoot")
             {
                 if (_lobbyHandler.Bomb.BombOnHand || !_playerFightHandler.InFight)
-                    _modAPI.Chat.Output("Shooting is blocked. Reason: " + (_playerFightHandler.InFight ? "bomb" : (!_lobbyHandler.Bomb.BombOnHand ? "round" : "both")));
+                    ModAPI.Chat.Output("Shooting is blocked. Reason: " + (_playerFightHandler.InFight ? "bomb" : (!_lobbyHandler.Bomb.BombOnHand ? "round" : "both")));
                 else
-                    _modAPI.Chat.Output("Shooting is not blocked.");
+                    ModAPI.Chat.Output("Shooting is not blocked.");
                 return;
             }
 

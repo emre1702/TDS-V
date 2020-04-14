@@ -1,5 +1,6 @@
 ﻿using BonusBotConnector.Client;
 using System;
+using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -71,7 +72,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             base.Start();
         }
 
-        protected override void Remove()
+        protected override async Task Remove()
         {
             _nextRoundStatusTimer?.Kill();
             _nextRoundStatusTimer = null;
@@ -87,7 +88,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 GangwarArea = null;
             }
 
-            base.Remove();
+            await base.Remove();
 
         }
     }

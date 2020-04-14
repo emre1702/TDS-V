@@ -37,16 +37,16 @@ namespace TDS_Client.RAGEAPI.Ped
             _instance.ExplodeHead((uint)weaponHash);
         }
 
-        public void GetAmmoInClip(WeaponHash weaponHash, ref int ammoInClip)
+        public int GetAmmoInClip(WeaponHash weaponHash)
         {
+            int ammoInClip = 0;
             _instance.GetAmmoInClip((uint)weaponHash, ref ammoInClip);
+            return ammoInClip;
         }
 
-        public int GetAmmoInWeapon(WeaponHash currentWeapon)
+        public int GetAmmoInWeapon(WeaponHash weaponHash)
         {
-            int ammo = 0;
-            _instance.GetAmmoInClip((uint)currentWeapon, ref ammo);
-            return ammo;
+            return _instance.GetAmmoInWeapon((uint)weaponHash);
         }
 
         public WeaponHash GetSelectedWeapon()

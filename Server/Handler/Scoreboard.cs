@@ -47,7 +47,7 @@ namespace TDS_Server.Handler
                 int playerscount = lobby.Players.Count;
                 string playersstr = string.Empty;
                 if (playerscount > 0)
-                    playersstr = string.Join(", ", lobby.Players.Select(p => p.DisplayName).OrderBy(n => n));
+                    playersstr = string.Join(", ", lobby.Players.Values.Select(p => p.DisplayName).OrderBy(n => n));
 
                 SyncedScoreboardMainmenuLobbyDataDto entry = new SyncedScoreboardMainmenuLobbyDataDto
                 (
@@ -70,7 +70,7 @@ namespace TDS_Server.Handler
                 return null;
 
             var list = new List<SyncedScoreboardLobbyDataDto>();
-            foreach (var player in lobby.Players)
+            foreach (var player in lobby.Players.Values)
             {
                 SyncedScoreboardLobbyDataDto entry = new SyncedScoreboardLobbyDataDto
                 (

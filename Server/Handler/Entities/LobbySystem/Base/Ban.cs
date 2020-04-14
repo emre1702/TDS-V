@@ -10,15 +10,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        public void BanPlayer(ITDSPlayer admin, ITDSPlayer target, DateTime? endTime, string reason)
+        public async Task BanPlayer(ITDSPlayer admin, ITDSPlayer target, DateTime? endTime, string reason)
         {
             if (target.ModPlayer is null)
                 return;
-            if (Players.Contains(target))
-                RemovePlayer(target);
+            if (Players.ContainsKey(target.Id))
+                await RemovePlayer(target);
             if (target.Entity is null)
                 return;
-            BanPlayer(admin, target.Entity, endTime, reason, target.ModPlayer.Serial);
+            await BanPlayer(admin, target.Entity, endTime, reason, target.ModPlayer.Serial);
             if (endTime.HasValue)
             {
                 if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
@@ -35,7 +35,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public async void BanPlayer(ITDSPlayer admin, Players target, DateTime? endTime, string reason, string? serial = null)
+        public async Task BanPlayer(ITDSPlayer admin, Players target, DateTime? endTime, string reason, string? serial = null)
         {
             if (serial is null)
                 serial = await ExecuteForDBAsync(async (dbContext) => await dbContext.LogRests.Where(l => l.Source == target.Id).Select(l => l.Serial).LastOrDefaultAsync());

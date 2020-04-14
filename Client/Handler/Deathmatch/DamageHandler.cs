@@ -15,14 +15,14 @@ namespace TDS_Client.Handler.Deathmatch
 {
     public class DamageHandler
     {
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly BrowserHandler _browserHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly PlayerFightHandler _playerFightHandler;
 
         public DamageHandler(IModAPI modAPI, BrowserHandler browserHandler, RemoteEventsSender remoteEventsSender, PlayerFightHandler playerFightHandler)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _browserHandler = browserHandler;
             _remoteEventsSender = remoteEventsSender;
             _playerFightHandler = playerFightHandler;
@@ -33,7 +33,7 @@ namespace TDS_Client.Handler.Deathmatch
 
         private void OnIncomingDamageMethod(IPlayer sourcePlayer, IEntity sourceEntity, IEntity targetEntity, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
         {
-            _modAPI.Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
+            ModAPI.Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
 
             _browserHandler.PlainMain.ShowBloodscreen();
 
@@ -48,7 +48,7 @@ namespace TDS_Client.Handler.Deathmatch
 
         private void OnOutgoingDamageMethod(IEntity sourceEntity, IEntity targetEntity, IPlayer sourcePlayer, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
         {
-            _modAPI.Console.Log(ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type.ToString()}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
+            ModAPI.Console.Log(ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type.ToString()}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
 
             _playerFightHandler.HittedOpponent();
         }

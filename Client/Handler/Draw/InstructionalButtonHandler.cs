@@ -13,7 +13,7 @@ using TDS_Shared.Data.Models;
 
 namespace TDS_Client.Handler.Draw
 {
-    public class InstructionalButtonHandler
+    public class InstructionalButtonHandler : ServiceBase
     {
         public bool IsActive
         {
@@ -54,7 +54,8 @@ namespace TDS_Client.Handler.Draw
 
         private readonly SettingsHandler _settingsHandler;
 
-        public InstructionalButtonHandler(IModAPI modAPI, EventsHandler eventsHandler, SettingsHandler settingsHandler)
+        public InstructionalButtonHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler)
+            : base(modAPI, loggingHandler)
         {
             _settingsHandler = settingsHandler;
 
@@ -68,6 +69,8 @@ namespace TDS_Client.Handler.Draw
             eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += _ => Reset();
+
+            Reset();
         }
 
         private void OnTick(int currentMs)

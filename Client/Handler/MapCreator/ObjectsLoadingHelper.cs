@@ -4,20 +4,20 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class ObjectsLoadingHelper
     {
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly UtilsHandler _utilsHandler;
         private readonly SettingsHandler _settingsHandler;
 
         public ObjectsLoadingHelper(IModAPI modAPI, UtilsHandler utilsHandler, SettingsHandler settingsHandler)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _utilsHandler = utilsHandler;
             _settingsHandler = settingsHandler;
         }
 
         public bool LoadObjectHash(uint hash)
         {
-            if (!_modAPI.Streaming.IsModelInCdimage(hash) || !_modAPI.Streaming.IsModelValid(hash))
+            if (!ModAPI.Streaming.IsModelInCdimage(hash) || !ModAPI.Streaming.IsModelValid(hash))
             {
                 _utilsHandler.Notify(_settingsHandler.Language.OBJECT_MODEL_INVALID);
                 return false;
@@ -32,22 +32,22 @@ namespace TDS_Client.Handler.MapCreator
 
         private bool LoadObjectModel(uint hash)
         {
-            _modAPI.Utils.Settimera(0);
-            _modAPI.Streaming.RequestModel(hash);
-            while (!_modAPI.Streaming.HasModelLoaded(hash))
+            ModAPI.Utils.Settimera(0);
+            ModAPI.Streaming.RequestModel(hash);
+            while (!ModAPI.Streaming.HasModelLoaded(hash))
             {
-                _modAPI.Utils.Wait(0);
-                _modAPI.Ui.HideHudAndRadarThisFrame();
-                _modAPI.Ui.BeginTextCommandDisplayText("STRING");
-                _modAPI.Ui.AddTextComponentSubstringPlayerName("Loading...");
-                _modAPI.Ui.SetTextScale(0.45f);
-                _modAPI.Ui.SetTextColour(255, 255, 255, 255);
-                _modAPI.Ui.SetTextCentre(true);
-                _modAPI.Ui.SetTextJustification(0);
-                _modAPI.Ui.SetTextFont(0);
-                _modAPI.Ui.SetTextDropShadow();
-                _modAPI.Ui.EndTextCommandDisplayText(0.5f, 0.9f);
-                if (_modAPI.Utils.Timera() > 1000)
+                ModAPI.Utils.Wait(0);
+                ModAPI.Ui.HideHudAndRadarThisFrame();
+                ModAPI.Ui.BeginTextCommandDisplayText("STRING");
+                ModAPI.Ui.AddTextComponentSubstringPlayerName("Loading...");
+                ModAPI.Ui.SetTextScale(0.45f);
+                ModAPI.Ui.SetTextColour(255, 255, 255, 255);
+                ModAPI.Ui.SetTextCentre(true);
+                ModAPI.Ui.SetTextJustification(0);
+                ModAPI.Ui.SetTextFont(0);
+                ModAPI.Ui.SetTextDropShadow();
+                ModAPI.Ui.EndTextCommandDisplayText(0.5f, 0.9f);
+                if (ModAPI.Utils.Timera() > 1000)
                     return false;
             }
             return true;

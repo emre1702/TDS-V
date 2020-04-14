@@ -8,6 +8,7 @@
       <OutputType>Library</OutputType>
       <StartupObject />
       <RunPostBuildEvent>Always</RunPostBuildEvent>
+      <DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

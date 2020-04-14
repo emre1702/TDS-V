@@ -7,8 +7,8 @@ namespace TDS_Client.Handler.Browser
 {
     public class RegisterLoginBrowserHandler : BrowserHandlerBase
     {
-        public RegisterLoginBrowserHandler(IModAPI modAPI, Serializer serializer, SettingsHandler settingsHandler)
-            : base(modAPI, serializer, Constants.RegisterLoginBrowserPath)
+        public RegisterLoginBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, SettingsHandler settingsHandler)
+            : base(modAPI, loggingHandler, serializer, Constants.RegisterLoginBrowserPath)
         {
             modAPI.Event.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, _ => SyncLanguage(settingsHandler.Language));
         }

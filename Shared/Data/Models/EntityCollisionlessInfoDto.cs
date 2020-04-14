@@ -13,12 +13,10 @@ namespace TDS_Shared.Data.Models
         [JsonIgnore]
         public string Json;
 
-        public EntityCollisionlessInfoDto(int EntityValue, bool Collisionless, Serializer serializer)
+        public EntityCollisionlessInfoDto(int entityValue, bool collisionless)
         {
-            this.EntityValue = EntityValue;
-            this.Collisionless = Collisionless;
-
-            this.Json = serializer.ToClient(this);
+            EntityValue = entityValue;
+            Collisionless = collisionless;
         }
     }
 }

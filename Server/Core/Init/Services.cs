@@ -186,8 +186,8 @@ namespace TDS_Server.Core.Init
             if (loggerFactory is { })
                 options.UseLoggerFactory(loggerFactory);
 
-            options.UseNpgsql(appConfigHandler.ConnectionString, options =>
-                    options.EnableRetryOnFailure());
+            options.UseNpgsql(appConfigHandler.ConnectionString /*, options =>
+                    options.EnableRetryOnFailure()*/);
             // .EnableSensitiveDataLogging()
         }
 

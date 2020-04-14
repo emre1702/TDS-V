@@ -17,15 +17,14 @@ using TDS_Shared.Data.Utility;
 
 namespace TDS_Client.Handler
 {
-    public class UtilsHandler
+    public class UtilsHandler : ServiceBase
     {
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly DataSyncHandler _dataSyncHandler;
 
-        public UtilsHandler(IModAPI modAPI, Serializer serializer, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
+        public UtilsHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _dataSyncHandler = dataSyncHandler;
 
@@ -36,36 +35,46 @@ namespace TDS_Client.Handler
 
         private void EventsHandler_LoggedIn()
         {
-            _modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(HideHudOriginalComponents));
+            ModAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(HideHudOriginalComponents));
         }
 
         public List<IPlayer> GetTriggeredPlayersList(string objStr)
         {
             var list = _serializer.FromServer<List<ushort>>(objStr);
-            return list.Select(s => GetPlayerByHandleValue(s)).ToList();
+            var newList = new List<IPlayer>();
+
+            foreach (var handleValue in list)
+            {
+                var p = GetPlayerByHandleValue(handleValue);
+                if (p is null)
+                    continue;
+                newList.Add(p);
+            }
+
+            return newList;
         }
 
         public IPlayer GetPlayerByHandleValue(ushort handleValue)
         {
-            return _modAPI.Pool.Players.GetAtRemote(handleValue);
+            return ModAPI.Pool.Players.GetAtRemote(handleValue);
         }
 
         private void DisableControlActions(int _)
         {
-            _modAPI.Control.DisableControlAction(InputGroup.WHEEL, Control.EnterCheatCode);
+            ModAPI.Control.DisableControlAction(InputGroup.WHEEL, Control.EnterCheatCode);
         }
 
         public void Notify(string msg)
         {
-            _modAPI.Ui.SetNotificationTextEntry("STRING");
-            _modAPI.Ui.AddTextComponentSubstringPlayerName(msg);
-            _modAPI.Ui.DrawNotification(false);
+            ModAPI.Ui.SetNotificationTextEntry("STRING");
+            ModAPI.Ui.AddTextComponentSubstringPlayerName(msg);
+            ModAPI.Ui.DrawNotification(false);
         }
 
         public Position3D GetWorldCoordFromScreenCoord(float x, float y, TDSCamera tdsCamera = null)
         {
-            Position3D camPos = tdsCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
-            Position3D camRot = tdsCamera?.Rotation ?? _modAPI.Cam.GetGameplayCamRot();
+            Position3D camPos = tdsCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
+            Position3D camRot = tdsCamera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
             var camForward = RotationToDirection(camRot);
             var rotUp = camRot + new Position3D(1, 0, 0);
             var rotDown = camRot + new Position3D(-1, 0, 0);
@@ -82,7 +91,7 @@ namespace TDS_Client.Handler
 
             var point3D = camPos + camForward * 1.0f + camRightRoll + camUpRoll;
             float point2DX = 0, point2DY = 0;
-            if (!_modAPI.Graphics.GetScreenCoordFromWorldCoord(point3D.X, point3D.Y, point3D.Z, ref point2DX, ref point2DY))
+            if (!ModAPI.Graphics.GetScreenCoordFromWorldCoord(point3D.X, point3D.Y, point3D.Z, ref point2DX, ref point2DY))
             {
                 //forwardDirection = camForward;
                 return camPos + camForward * 1.0f;
@@ -90,7 +99,7 @@ namespace TDS_Client.Handler
 
             var point3DZero = camPos + camForward * 1.0f;
             float point2DZeroX = 0, point2DZeroY = 0;
-            if (!_modAPI.Graphics.GetScreenCoordFromWorldCoord(point3DZero.X, point3DZero.Y, point3DZero.Z, ref point2DZeroX, ref point2DZeroY))
+            if (!ModAPI.Graphics.GetScreenCoordFromWorldCoord(point3DZero.X, point3DZero.Y, point3DZero.Z, ref point2DZeroX, ref point2DZeroY))
             {
                 //forwardDirection = camForward;
                 return camPos + camForward * 1.0f;
@@ -113,7 +122,7 @@ namespace TDS_Client.Handler
         {
             float x = 0;
             float y = 0;
-            if (_modAPI.Graphics.GetScreenCoordFromWorldCoord(vec.X, vec.Y, vec.Z, ref x, ref y))
+            if (ModAPI.Graphics.GetScreenCoordFromWorldCoord(vec.X, vec.Y, vec.Z, ref x, ref y))
                 return new Position3D(x, y, 0f);
             else
                 return null;
@@ -411,12 +420,12 @@ namespace TDS_Client.Handler
 
         public float GetCursorX()
         {
-            return _modAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.CursorX);
+            return ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.CursorX);
         }
 
         public float GetCursorY()
         {
-            return _modAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.CursorY);
+            return ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.CursorY);
         }
 
         public string GetDisplayName(IPlayer player)
@@ -430,17 +439,17 @@ namespace TDS_Client.Handler
 
         private void HideHudOriginalComponents(int _)
         {
-            _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_CASH);
-            _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL_STATS);
-            _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_ICON);
+            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_CASH);
+            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL_STATS);
+            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_ICON);
         }
 
         public RaycastHit RaycastFromTo(Position3D from, Position3D to, int ignoreEntity, int flags)
         {
-            int ray = _modAPI.Shapetest.StartShapeTestRay(from.X, from.Y, from.Z, to.X, to.Y, to.Z, flags, ignoreEntity, 0);
+            int ray = ModAPI.Shapetest.StartShapeTestRay(from.X, from.Y, from.Z, to.X, to.Y, to.Z, flags, ignoreEntity, 0);
             RaycastHit cast = new RaycastHit();
             int curtemp = 0;
-            cast.ShapeResult = _modAPI.Shapetest.GetShapeTestResultEx(ray, ref curtemp, cast.EndCoords, cast.SurfaceNormal, ref cast.MaterialHash, ref cast.EntityHit);
+            cast.ShapeResult = ModAPI.Shapetest.GetShapeTestResultEx(ray, ref curtemp, cast.EndCoords, cast.SurfaceNormal, ref cast.MaterialHash, ref cast.EntityHit);
             cast.Hit = Convert.ToBoolean(curtemp);
             return cast;
         }

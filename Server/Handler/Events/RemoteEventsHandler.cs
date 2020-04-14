@@ -88,7 +88,7 @@ namespace TDS_Server.Handler.Events
             if (player.Lobby is null)
                 return;
 
-            player.Lobby.RemovePlayer(player);
+            await player.Lobby.RemovePlayer(player);
             await _lobbiesHandler.MainMenu.AddPlayer(player, 0);
         }
         #endregion Lobby

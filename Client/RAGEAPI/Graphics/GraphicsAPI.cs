@@ -17,6 +17,9 @@ namespace TDS_Client.RAGEAPI.Graphics
             RAGE.Game.Graphics.DrawLine(startPos.X, startPos.Y, startPos.Z, endPos.X, endPos.Y, endPos.Z, color.R, color.G, color.B, color.A);
         }
 
+        /**
+         * <summary>Doesn't work, use JS method instead</summary>
+         */
         public void DrawMarker(MarkerType type, float posX, float posY, float posZ, float dirX, float dirY, float dirZ, float rotX, float rotY, float rotZ, 
             float scaleX, float scaleY, float scaleZ, byte r, byte g, byte b, byte a,
             bool bobUpAndDown, bool faceCamera, bool rotate, string textureDict, string textureName, bool drawOnEnts)

@@ -7,7 +7,7 @@
         Rules,
         FAQs,
         SettingsSpecial,
-        SettingsRest,
+        SettingsNormal,
         ApplicationUser,
         ApplicationsAdmin,
         SupportUser,

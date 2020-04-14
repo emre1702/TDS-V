@@ -7,17 +7,17 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
 {
     internal class BasicScaleform : IDisposable
     {
-        private bool IsLoaded => _modAPI.Graphics.HasScaleformMovieLoaded(_handle);
+        private bool IsLoaded => ModAPI.Graphics.HasScaleformMovieLoaded(_handle);
         private bool IsValid => _handle != 0;
 
         private Queue<(string, object[])> _functionQueue = new Queue<(string, object[])>();
         private int _handle;
 
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
 
         public BasicScaleform(string scaleformName, IModAPI modAPI)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
 
             _handle = modAPI.Graphics.RequestScaleformMovie(scaleformName);
         }
@@ -29,19 +29,19 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
                 _functionQueue.Enqueue((functionName, args));
                 return;
             }
-            _modAPI.Graphics.PushScaleformMovieFunction(_handle, functionName);
+            ModAPI.Graphics.PushScaleformMovieFunction(_handle, functionName);
             foreach (object arg in args)
             {
                 if (arg is string)
-                    _modAPI.Graphics.PushScaleformMovieFunctionParameterString((string)arg);
+                    ModAPI.Graphics.PushScaleformMovieFunctionParameterString((string)arg);
                 else if (arg is bool)
-                    _modAPI.Graphics.PushScaleformMovieFunctionParameterBool((bool)arg);
+                    ModAPI.Graphics.PushScaleformMovieFunctionParameterBool((bool)arg);
                 else if (arg is int)
-                    _modAPI.Graphics.PushScaleformMovieFunctionParameterInt((int)arg);
+                    ModAPI.Graphics.PushScaleformMovieFunctionParameterInt((int)arg);
                 else if (arg is float)
-                    _modAPI.Graphics.PushScaleformMovieFunctionParameterFloat((float)arg);
+                    ModAPI.Graphics.PushScaleformMovieFunctionParameterFloat((float)arg);
             }
-            _modAPI.Graphics.PopScaleformMovieFunctionVoid();
+            ModAPI.Graphics.PopScaleformMovieFunctionVoid();
         }
 
 
@@ -49,28 +49,28 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                _modAPI.Graphics.DrawScaleformMovieFullscreen(_handle, 255, 255, 255, 255);
+                ModAPI.Graphics.DrawScaleformMovieFullscreen(_handle, 255, 255, 255, 255);
         }
 
         public void Render2D(float x, float y, float width, float height)
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                _modAPI.Graphics.DrawScaleformMovie(_handle, x, y, width, height, 255, 255, 255, 255);
+                ModAPI.Graphics.DrawScaleformMovie(_handle, x, y, width, height, 255, 255, 255, 255);
         }
 
         public void Render3D(Position3D position, Position3D rotation, Position3D scale)
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                _modAPI.Graphics.DrawScaleformMovie3dNonAdditive(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
+                ModAPI.Graphics.DrawScaleformMovie3dNonAdditive(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
         }
 
         public void Render3DAdditive(Position3D position, Position3D rotation, Position3D scale)
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                _modAPI.Graphics.DrawScaleformMovie3d(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
+                ModAPI.Graphics.DrawScaleformMovie3d(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
         }
 
         private void OnUpdate()
@@ -93,7 +93,7 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             {
                 if (disposing)
                 {
-                    _modAPI.Graphics.SetScaleformMovieAsNoLongerNeeded(ref _handle);
+                    ModAPI.Graphics.SetScaleformMovieAsNoLongerNeeded(ref _handle);
                     _functionQueue = null;
                 }
 

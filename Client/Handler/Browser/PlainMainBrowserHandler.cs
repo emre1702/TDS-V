@@ -18,8 +18,8 @@ namespace TDS_Client.Handler.Browser
 
         private readonly RemoteEventsSender _remoteEventsSender;
 
-        public PlainMainBrowserHandler(IModAPI modAPI, Serializer serializer, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler) 
-            : base(modAPI, serializer, Constants.MainBrowserPath)
+        public PlainMainBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler) 
+            : base(modAPI, loggingHandler, serializer, Constants.MainBrowserPath)
         {
             _remoteEventsSender = remoteEventsSender;
 
@@ -28,6 +28,8 @@ namespace TDS_Client.Handler.Browser
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.MapChanged += HideRoundEndReason;
+            eventsHandler.RoundStarted += _ => HideRoundEndReason();
+            eventsHandler.CountdownStarted += HideRoundEndReason;
 
             modAPI.Event.Add(FromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             modAPI.Event.Add(ToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
@@ -75,10 +77,17 @@ namespace TDS_Client.Handler.Browser
 
         public void HideRoundEndReason()
         {
-            if (!_roundEndReasonShowing)
-                return;
-            ExecuteStr("hidRoundEndReason();");
-            _roundEndReasonShowing = false;
+            try
+            {
+                if (!_roundEndReasonShowing)
+                    return;
+                ExecuteStr("hideRoundEndReason();");
+                _roundEndReasonShowing = false;
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         public void StartBombTick(int msToDetonate, int startAtMs)

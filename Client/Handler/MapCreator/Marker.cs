@@ -30,10 +30,14 @@ namespace TDS_Client.Handler.MapCreator
 
         public void Draw()
         {
-            _modAPI.Graphics.DrawMarker(Type, Position.X, Position.Y, Position.Z,
+            /*_modAPI.Graphics.DrawMarker(Type, Position.X, Position.Y, Position.Z,
                 Direction.X, Direction.Y, Direction.Z, Rotation.X, Rotation.Y, Rotation.Z, Scale.X, Scale.Y, Scale.Z,
                 Color.R, Color.G, Color.B, Color.A,
-                false, false, false, "", "", false);
+                false, false, false, "", "", false);*/
+            _modAPI.Event.CallLocal("drawMarker", Type, Position.X, Position.Y, Position.Z,
+                Direction.X, Direction.Y, Direction.Z, Rotation.X, Rotation.Y, Rotation.Z, Scale.X, Scale.Y, Scale.Z,
+                Color.R, Color.G, Color.B, Color.A,
+                false, false, 2, false, "", "", false);
         }
     }
 }

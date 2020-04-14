@@ -8,9 +8,9 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
     partial class Bomb
     {
-        public override void OnPlayerEnterColShape(IColShape shape, ITDSPlayer character)
+        public override void OnPlayerEnterColshape(IColShape shape, ITDSPlayer character)
         {
-            base.OnPlayerEnterColShape(shape, character);
+            base.OnPlayerEnterColshape(shape, character);
             if (_lobbyBombTakeCol.ContainsKey(Lobby))
             {
                 if (character.Lifes > 0 && character.Team == _terroristTeam)

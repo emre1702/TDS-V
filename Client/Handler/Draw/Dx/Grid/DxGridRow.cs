@@ -35,7 +35,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             this.Grid = grid;
             this._height = height;
             BackColor = backColor;
-            TextColor = textColor ?? backColor.GetContrast();
+            TextColor = textColor ?? Color.White;
             this.Text = text;
             Scale = scale;
             Font = font;

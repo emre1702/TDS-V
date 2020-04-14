@@ -10,18 +10,18 @@ using TDS_Client.Handler.Events;
 
 namespace TDS_Client.Handler.Draw
 {
-    public class FloatingDamageInfoHandler
+    public class FloatingDamageInfoHandler : ServiceBase
     {
         private List<FloatingDamageInfo> _damageInfos = new List<FloatingDamageInfo>();
 
-        private readonly IModAPI _modAPI;
         private readonly TimerHandler _timerHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly DxHandler _dxHandler;
 
-        public FloatingDamageInfoHandler(IModAPI modAPI, TimerHandler timerHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler, DxHandler dxHandler)
+        public FloatingDamageInfoHandler(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler, SettingsHandler settingsHandler, 
+            EventsHandler eventsHandler, DxHandler dxHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _timerHandler = timerHandler;
             _settingsHandler = settingsHandler;
             _dxHandler = dxHandler;
@@ -33,7 +33,7 @@ namespace TDS_Client.Handler.Draw
 
         public void Add(IPlayer target, float damage)
         {
-            var info = new FloatingDamageInfo(target, damage, _timerHandler.ElapsedMs, _modAPI, _settingsHandler, _dxHandler, _timerHandler);
+            var info = new FloatingDamageInfo(target, damage, _timerHandler.ElapsedMs, ModAPI, _settingsHandler, _dxHandler, _timerHandler);
             _damageInfos.Add(info);
         }
 

@@ -40,7 +40,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
 
             player.Lobby = this;
-            Players.Add(player);
+            Players.TryAdd(player.Id, player);
 
             if (Entity.Type == LobbyType.MainMenu
                 || Entity.Type == LobbyType.MapCreateLobby
@@ -59,12 +59,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             ModAPI.Sync.SendEvent(ToClientEvent.JoinSameLobby, player.RemoteId);
 
-            player.SendEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Serializer.ToClient(Players.Select(p => p.RemoteId).ToList()),
+            player.SendEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Serializer.ToClient(Players.Values.Select(p => p.RemoteId).ToList()),
                                                                                  Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
 
             if (Entity.Type != LobbyType.MainMenu)
             {
-                LoggingHandler.LogRest(LogType.Lobby_Join, player, false, Entity.IsOfficial);
+                LoggingHandler?.LogRest(LogType.Lobby_Join, player, false, Entity.IsOfficial);
                 player.SendNotification(string.Format(player.Language.JOINED_LOBBY_MESSAGE, Entity.Name, PlayerCommand.LobbyLeave));
             }
 
@@ -72,16 +72,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return true;
         }
 
-        public virtual async void RemovePlayer(ITDSPlayer player)
+        public virtual async Task RemovePlayer(ITDSPlayer player)
         {
-            Players.Remove(player);
+            if (!Players.TryRemove(player.Id, out _))
+                return;
 
             player.Lobby = null;
             player.PreviousLobby = this;
-            await player.ExecuteForDB((dbContext) =>
-            {
-                player.LobbyStats = null;
-            }).ConfigureAwait(false);
+            await player.SetPlayerLobbyStats(null);
             player.Lifes = 0;
             player.Team?.SyncRemovedPlayer(player);
             player.Team = null;
@@ -101,12 +99,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (IsEmpty())
             {
                 if (Entity.IsTemporary)
-                    Remove();
+                    await Remove();
             }
 
             ModAPI.Sync.SendEvent(ToClientEvent.LeaveSameLobby,  player.RemoteId, player.DisplayName);
             if (Entity.Type != LobbyType.MainMenu)
-                LoggingHandler.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
+                LoggingHandler?.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
 
             EventsHandler.OnLobbyLeave(player, this);
         }
@@ -116,17 +114,18 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (player.Entity is null)
                 return;
 
+            PlayerLobbyStats? stats = null;
             await player.ExecuteForDBAsync(async (dbContext) =>
             {
-                PlayerLobbyStats? stats = await dbContext.PlayerLobbyStats.FindAsync(player.Entity.Id, Entity.Id);
+                stats = await dbContext.PlayerLobbyStats.FindAsync(player.Entity.Id, Entity.Id);
                 if (stats is null)
                 {
                     stats = new PlayerLobbyStats { LobbyId = Entity.Id };
                     player.Entity.PlayerLobbyStats.Add(stats);
                     await dbContext.SaveChangesAsync();
                 }
-                player.LobbyStats = stats;
             }).ConfigureAwait(false);
+            await player.SetPlayerLobbyStats(stats);
         }
 
         public virtual void SetPlayerTeam(ITDSPlayer player, ITeam team)
@@ -153,12 +152,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public ITDSPlayer? GetOwner()
         {
-            return GetPlayerById(Entity.OwnerId);
+            Players.TryGetValue(Entity.OwnerId, out ITDSPlayer? owner);
+            return owner;
         }
 
         public ITDSPlayer? GetPlayerById(int id)
         {
-            return Players.FirstOrDefault(p => p.Entity!.Id == id);
+            return Players    .Values.FirstOrDefault(p => p.Entity!.Id == id);
         }
     }
 }

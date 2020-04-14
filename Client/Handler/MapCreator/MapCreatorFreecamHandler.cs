@@ -11,7 +11,7 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.MapCreator
 {
-    public class MapCreatorFreecamHandler
+    public class MapCreatorFreecamHandler : ServiceBase
     {
         public bool IsActive;
 
@@ -21,7 +21,6 @@ namespace TDS_Client.Handler.MapCreator
 
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        private readonly IModAPI _modAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
@@ -32,11 +31,11 @@ namespace TDS_Client.Handler.MapCreator
         private readonly MapCreatorObjectPlacingHandler _mapCreatorObjectPlacingHandler;
         private readonly EventsHandler _eventsHandler;
 
-        public MapCreatorFreecamHandler(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, InstructionalButtonHandler instructionalButtonHandler, 
-            CursorHandler cursorHandler, BrowserHandler browserHandler, MapCreatorFootHandler mapCreatorFootHandler, MapCreatorMarkerHandler mapCreatorMarkerHandler,
-            MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, EventsHandler eventsHandler)
+        public MapCreatorFreecamHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, 
+            InstructionalButtonHandler instructionalButtonHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, MapCreatorFootHandler mapCreatorFootHandler, 
+            MapCreatorMarkerHandler mapCreatorMarkerHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, EventsHandler eventsHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
@@ -53,16 +52,15 @@ namespace TDS_Client.Handler.MapCreator
         public void Start()
         {
             IsActive = true;
-            _modAPI.Event.Tick.Add(_tickEventMethod);
+            ModAPI.Event.Tick.Add(_tickEventMethod);
 
             if (_camerasHandler.FreeCam is null)
-                _camerasHandler.FreeCam = new TDSCamera(_modAPI, _camerasHandler, _utilsHandler);
-
+                _camerasHandler.FreeCam = new TDSCamera(ModAPI, Logging, _camerasHandler, _utilsHandler);
 
             var cam = _camerasHandler.FreeCam;
-            cam.Position = _modAPI.Cam.GetGameplayCamCoord();
-            cam.Rotation = _modAPI.Cam.GetGameplayCamRot();
-            cam.SetFov(_modAPI.Cam.GetGameplayCamFov());
+            cam.Position = ModAPI.Cam.GetGameplayCamCoord();
+            cam.Rotation = ModAPI.Cam.GetGameplayCamRot();
+            cam.SetFov(ModAPI.Cam.GetGameplayCamFov());
 
             cam.Activate();
             cam.Render();
@@ -71,7 +69,7 @@ namespace TDS_Client.Handler.MapCreator
         public void Stop()
         {
             IsActive = false;
-            _modAPI.Event.Tick.Remove(_tickEventMethod);
+            ModAPI.Event.Tick.Remove(_tickEventMethod);
 
             _camerasHandler.FreeCam?.Deactivate();
             _camerasHandler.FreeCam = null;
@@ -79,7 +77,7 @@ namespace TDS_Client.Handler.MapCreator
 
         private void OnTick(int _)
         {
-            _modAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL);
+            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL);
 
             if (!_cursorHandler.Visible)
                 MoveCam();
@@ -97,18 +95,18 @@ namespace TDS_Client.Handler.MapCreator
             Position3D dir = cam.Direction;
             Position3D rot = cam.Rotation;
 
-            float rightAxisX = _modAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisX) * 2f; //behave weird, fix
-            float rightAxisY = _modAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisY) * 2f;
+            float rightAxisX = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisX) * 2f; //behave weird, fix
+            float rightAxisY = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisY) * 2f;
 
-            float leftAxisX = _modAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptLeftAxisX);
-            float leftAxisY = _modAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptLeftAxisY);
+            float leftAxisX = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptLeftAxisX);
+            float leftAxisY = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptLeftAxisY);
 
-            float slowMult = _modAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Duck) ? 0.5f : 1f;
-            float fastMult = _modAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Sprint) ? 3f : 1f;
+            float slowMult = ModAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Duck) ? 0.5f : 1f;
+            float fastMult = ModAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Sprint) ? 3f : 1f;
 
-            if (_modAPI.Control.IsControlJustReleased(InputGroup.MOVE, Control.CursorScrollUp))
+            if (ModAPI.Control.IsControlJustReleased(InputGroup.MOVE, Control.CursorScrollUp))
                 _currentScrollSpeed *= 2f;
-            else if (_modAPI.Control.IsControlJustReleased(InputGroup.MOVE, Control.CursorScrollDown))
+            else if (ModAPI.Control.IsControlJustReleased(InputGroup.MOVE, Control.CursorScrollDown))
                 _currentScrollSpeed /= 2f;
 
             Position3D vector = new Position3D
@@ -129,13 +127,13 @@ namespace TDS_Client.Handler.MapCreator
 
             Position3D newPos = new Position3D(pos.X - vector.X + rightVector.X, pos.Y - vector.Y + rightVector.Y, pos.Z - vector.Z + rightVector.Z + goUp - goDown);
             cam.SetPosition(newPos);
-            _modAPI.LocalPlayer.Position = newPos;
-            if (_modAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Aim))
+            ModAPI.LocalPlayer.Position = newPos;
+            if (ModAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Aim))
             {
                 float rotX = Math.Max(Math.Min(rot.X + rightAxisY * -5f, 89), -89);
                 var newRot = new Position3D(rotX, 0.0f, rot.Z + rightAxisX * -5f);
                 cam.Rotation = newRot;
-                _modAPI.LocalPlayer.Rotation = newRot;
+                ModAPI.LocalPlayer.Rotation = newRot;
             }
 
         }
@@ -185,7 +183,7 @@ namespace TDS_Client.Handler.MapCreator
                 _mapCreatorFootHandler.Stop();
                 Start();
             }
-            _eventsHandler.OnFreecamToggled(!IsActive);
+            _eventsHandler.OnFreecamToggled(IsActive);
         }
     }
 }

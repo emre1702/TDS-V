@@ -114,13 +114,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
         }
 
-        protected async virtual void Remove()
+        protected async virtual Task Remove()
         {
             LobbiesHandler.RemoveLobby(this);
 
-            foreach (TDSPlayer player in Players.ToArray())
+            foreach (TDSPlayer player in Players.Values.ToArray())
             {
-                RemovePlayer(player);
+                await RemovePlayer(player);
             }
 
             await ExecuteForDBAsync(async (dbContext) =>

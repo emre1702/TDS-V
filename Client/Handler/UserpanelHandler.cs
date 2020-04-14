@@ -10,7 +10,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
-    public class UserpanelHandler
+    public class UserpanelHandler : ServiceBase
     {
         private bool _open;
 
@@ -21,8 +21,9 @@ namespace TDS_Client.Handler
         private readonly Serializer _serializer;
         private readonly BindsHandler _bindsHandler;
 
-        public UserpanelHandler(IModAPI modAPI, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender,
-            Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler)
+        public UserpanelHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler, 
+            RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler)
+            : base(modAPI, loggingHandler)
         {
             _browserHandler = browserHandler;
             _cursorHandler = cursorHandler;
@@ -70,7 +71,7 @@ namespace TDS_Client.Handler
             UserpanelLoadDataType type = (UserpanelLoadDataType)Convert.ToInt32(args[0]);
             switch (type)
             {
-                case UserpanelLoadDataType.SettingsRest:
+                case UserpanelLoadDataType.SettingsNormal:
                     _browserHandler.Angular.LoadUserpanelData((int)type, _serializer.ToBrowser(_settingsHandler.PlayerSettings));
                     break;
                 default:

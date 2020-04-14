@@ -18,7 +18,7 @@ export class MapVotingService {
 
   public voteForMapId(id: number) {
     this.votedForMapId = id;
-    this.rageConnector.callServer(DToServerEvent.AddMapVote, id);
+    this.rageConnector.callServer(DToServerEvent.MapVote, id);
   }
 
   private addMapToVoting(mapVoteJson: string) {

@@ -10,15 +10,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         protected Dictionary<ITDSPlayer, TDSTimer> DeathSpawnTimer { get; } = new Dictionary<ITDSPlayer, TDSTimer>();
 
-        public virtual void OnPlayerSpawn(TDSPlayer character)
+        public virtual void OnPlayerSpawn(ITDSPlayer character)
         {
             character.Health = Entity.FightSettings?.StartHealth ?? 100;
             character.Armor = Entity.FightSettings?.StartArmor ?? 100;
         }
 
-        public void OnPlayerDisconnected(TDSPlayer character)
+        public async void OnPlayerLoggedOut(ITDSPlayer character)
         {
-            RemovePlayer(character);
+            await RemovePlayer(character);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public virtual void OnPlayerEnterColShape(IColShape shape, ITDSPlayer character)
+        public virtual void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player)
         {
         }
     }

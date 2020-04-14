@@ -14,7 +14,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
-    public class SettingsHandler
+    public class SettingsHandler : ServiceBase
     {
         public readonly int ScreenFadeInTimeAfterSpawn = 2000;
         public readonly int ScreenFadeOutTimeAfterSpawn = 2000;
@@ -92,13 +92,12 @@ namespace TDS_Client.Handler
         // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
         public Color? NotTempMapBorderColor;
 
-        private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly EventsHandler _eventsHandler;
 
-        public SettingsHandler(IModAPI modAPI, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
+        public SettingsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
+            : base (modAPI, loggingHandler) 
         {
-            _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
             _eventsHandler = eventsHandler;
 
@@ -190,7 +189,7 @@ namespace TDS_Client.Handler
 
         private void LoadLanguageFromRAGE()
         {
-            var lang = _modAPI.Locale.GetCurrentLanguageId();
+            var lang = ModAPI.Locale.GetCurrentLanguageId();
             switch (lang)
             {
                 case LanguageID.German:

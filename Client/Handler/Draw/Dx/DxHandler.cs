@@ -6,35 +6,38 @@ using TDS_Client.Data.Models;
 
 namespace TDS_Client.Handler.Draw.Dx
 {
-    public class DxHandler
+    public class DxHandler : ServiceBase
     {
         public int ResX;
         public int ResY;
 
         private readonly List<DxBase> _dxDraws = new List<DxBase>();
 
-        private readonly IModAPI _modAPI;
-
-        public DxHandler(IModAPI modAPI)
+        public DxHandler(IModAPI modAPI, LoggingHandler loggingHandler) : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
-
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(RenderAll));
             RefreshResolution();
         }
 
         public void RenderAll(int currentMs)
         {
-            foreach (var draw in _dxDraws)
+            try
             {
-                if (draw.Activated)
-                    draw.Draw();
+                foreach (var draw in _dxDraws)
+                {
+                    if (draw.Activated)
+                        draw.Draw();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
             }
         }
 
         public void RefreshResolution()
         {
-            _modAPI.Graphics.GetScreenResolution(ref ResX, ref ResY);
+            ModAPI.Graphics.GetScreenResolution(ref ResX, ref ResY);
         }
 
         public void Add(DxBase dx)

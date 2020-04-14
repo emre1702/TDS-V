@@ -8,7 +8,7 @@ using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Database.Migrations
 {
-    public partial class DbUpdate : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -841,7 +841,7 @@ namespace TDS_Server.Database.Migrations
                     lobby_id = table.Column<int>(nullable: false),
                     start_health = table.Column<short>(nullable: false, defaultValue: (short)100),
                     start_armor = table.Column<short>(nullable: false, defaultValue: (short)100),
-                    amount_lifes = table.Column<short>(nullable: false),
+                    amount_lifes = table.Column<short>(nullable: false, defaultValue: (short)1),
                     spawn_again_after_death_ms = table.Column<int>(nullable: false, defaultValue: 400)
                 },
                 constraints: table =>
@@ -1879,8 +1879,8 @@ namespace TDS_Server.Database.Migrations
 
             migrationBuilder.InsertData(
                 table: "lobby_fight_settings",
-                columns: new[] { "lobby_id", "amount_lifes" },
-                values: new object[] { -1, (short)0 });
+                column: "lobby_id",
+                value: -1);
 
             migrationBuilder.InsertData(
                 table: "lobby_map_settings",

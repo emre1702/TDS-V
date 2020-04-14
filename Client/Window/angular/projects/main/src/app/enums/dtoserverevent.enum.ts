@@ -1,7 +1,6 @@
 export enum DToServerEvent {
     AcceptInvitation = "c1",
     AcceptTDSTeamInvitation = "c67",
-    AddMapVote = "c69",
     AnswerToOfflineMessage = "c3",
     BuyMap = "c4",
     ChooseTeam = "c6",
@@ -22,6 +21,7 @@ export enum DToServerEvent {
     LoadMapForMapCreator = "c25",
     LoadUserpanelData = "c27",
     MapCreatorSyncData = "c30",
+    MapVote = "c36",
     RejectInvitation = "c38",
     RejectTDSTeamInvitation = "c68",
     RemoveMap = "c39",

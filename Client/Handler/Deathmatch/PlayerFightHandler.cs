@@ -8,12 +8,11 @@ using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Deathmatch
 {
-    public class PlayerFightHandler
+    public class PlayerFightHandler : ServiceBase
     {
         public bool InFight
         {
@@ -47,7 +46,6 @@ namespace TDS_Client.Handler.Deathmatch
 
         private WeaponHash _currentWeapon;
 
-        private readonly IModAPI _modAPI;
         private readonly EventsHandler _eventsHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly BrowserHandler _browserHandler;
@@ -55,10 +53,11 @@ namespace TDS_Client.Handler.Deathmatch
         private readonly UtilsHandler _utilsHandler;
         private readonly CamerasHandler _camerasHandler;
 
-        public PlayerFightHandler(IModAPI modAPI, EventsHandler eventsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler, FloatingDamageInfoHandler floatingDamageInfoHandler,
+        public PlayerFightHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler,
+            FloatingDamageInfoHandler floatingDamageInfoHandler,
             UtilsHandler utilsHandler, CamerasHandler camerasHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _eventsHandler = eventsHandler;
             _settingsHandler = settingsHandler;
             _browserHandler = browserHandler;
@@ -84,8 +83,8 @@ namespace TDS_Client.Handler.Deathmatch
         {
             int previousArmor = CurrentArmor;
             int previousHp = CurrentHp;
-            CurrentArmor = _modAPI.LocalPlayer.Armor;
-            CurrentHp = Math.Max(_modAPI.LocalPlayer.Health - 100, 0);
+            CurrentArmor = ModAPI.LocalPlayer.Armor;
+            CurrentHp = Math.Max(ModAPI.LocalPlayer.Health - 100, 0);
 
             int healthLost = previousArmor + previousHp - CurrentArmor - CurrentHp;
             //Damagesys.CheckDamage(healthLost);
@@ -117,16 +116,15 @@ namespace TDS_Client.Handler.Deathmatch
 
             if ((int)(currentMs - _lastHudAmmoUpdateMs) >= _settingsHandler.PlayerSettings.HudAmmoUpdateCooldownMs)
             {
-
-                int ammoInClip = 0;
-                _modAPI.LocalPlayer.GetAmmoInClip(_currentWeapon, ref ammoInClip);
+                
+                int ammoInClip = ModAPI.LocalPlayer.GetAmmoInClip(_currentWeapon);
                 if (ammoInClip != _lastHudUpdateAmmoInClip)
                 {
                     _browserHandler.Angular.SyncHudDataChange(HudDataType.AmmoInClip, ammoInClip);
                     _lastHudUpdateAmmoInClip = ammoInClip;
                 }
 
-                int totalAmmo = _modAPI.LocalPlayer.GetAmmoInWeapon(_currentWeapon) - ammoInClip;
+                int totalAmmo = ModAPI.LocalPlayer.GetAmmoInWeapon(_currentWeapon) - ammoInClip;
                 if (totalAmmo != _lastHudUpdateTotalAmmo)
                 {
                     _browserHandler.Angular.SyncHudDataChange(HudDataType.AmmoTotal, totalAmmo);
@@ -161,16 +159,16 @@ namespace TDS_Client.Handler.Deathmatch
             _lastHudHealthUpdateTick = default;
             _lastHudAmmoUpdateMs = default;
 
-            CurrentArmor = _modAPI.LocalPlayer.Armor;
-            CurrentHp = Math.Max(_modAPI.LocalPlayer.Health - 100, 0);
+            CurrentArmor = ModAPI.LocalPlayer.Armor;
+            CurrentHp = Math.Max(ModAPI.LocalPlayer.Health - 100, 0);
             _browserHandler.Angular.SyncHudDataChange(HudDataType.Armor, CurrentArmor);
             _browserHandler.Angular.SyncHudDataChange(HudDataType.HP, CurrentHp);
 
-            _modAPI.LocalPlayer.ClearLastDamageBone();
-            _modAPI.LocalPlayer.ClearLastDamageEntity();
-            _modAPI.LocalPlayer.ClearLastWeaponDamage();
-            _modAPI.LocalPlayer.ResetVisibleDamage();
-            _modAPI.LocalPlayer.ClearBloodDamage();
+            ModAPI.LocalPlayer.ClearLastDamageBone();
+            ModAPI.LocalPlayer.ClearLastDamageEntity();
+            ModAPI.LocalPlayer.ClearLastWeaponDamage();
+            ModAPI.LocalPlayer.ResetVisibleDamage();
+            ModAPI.LocalPlayer.ClearBloodDamage();
         }
 
         private void WeaponChanged(WeaponHash _, WeaponHash newWeaponHash)

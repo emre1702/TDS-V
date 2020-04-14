@@ -4,24 +4,20 @@ using TDS_Shared.Data.Models;
 
 namespace TDS_Client.Handler
 {
-    public class DiscordHandler
+    public class DiscordHandler : ServiceBase
     {
         private string _lastLobbyName = "Login/Register";
         private string _lastTeamName = "Spectator";
 
-        private readonly IModAPI _modAPI;
-
-        public DiscordHandler(IModAPI modAPI, EventsHandler eventsHandler)
+        public DiscordHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler) : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
-
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.TeamChanged += EventsHandler_TeamChanged;
         }
 
         private void Update(string lobbyName, string teamName)
         {
-            _modAPI.Discord.Update($"TDS-V - {lobbyName}", teamName);
+            ModAPI.Discord.Update($"TDS-V - {lobbyName}", teamName);
         }
 
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)

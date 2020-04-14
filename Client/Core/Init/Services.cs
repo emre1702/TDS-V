@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
+﻿using System;
+using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
@@ -18,60 +19,71 @@ namespace TDS_Client.Core.Init
     {
         internal static void Initialize(IModAPI modAPI)
         {
-            var serializer = new Serializer();
+            var loggingHandler = new LoggingHandler(modAPI);
+            var serializer = new Serializer(str => loggingHandler.LogInfo(str, "Serializer"), ex => loggingHandler.LogError(ex));
 
-            var dxHandler = new DxHandler(modAPI);
-            var timerHandler = new TimerHandler(modAPI, dxHandler);
-            var remoteEventsSender = new RemoteEventsSender(modAPI, timerHandler);
+            try
+            {
+                loggingHandler.LogInfo("Initializing services ...", "Services.Initialize");
 
-            var eventsHandler = new EventsHandler(modAPI, remoteEventsSender);
-            var bindsHandler = new BindsHandler(modAPI);
-            var discordHandler = new DiscordHandler(modAPI, eventsHandler);
+                var dxHandler = new DxHandler(modAPI, loggingHandler);
+                var timerHandler = new TimerHandler(modAPI, loggingHandler, dxHandler);
+                var remoteEventsSender = new RemoteEventsSender(modAPI, loggingHandler, timerHandler);
 
-            var cursorHandler = new CursorHandler(modAPI, eventsHandler, bindsHandler);
-            var settingsHandler = new SettingsHandler(modAPI, remoteEventsSender, eventsHandler);
-            
-            var browserHandler = new BrowserHandler(modAPI, settingsHandler, cursorHandler, eventsHandler, serializer, remoteEventsSender);
-            var dataSyncHandler = new DataSyncHandler(eventsHandler, modAPI, browserHandler, serializer);
-            var utilsHandler = new UtilsHandler(modAPI, serializer, dataSyncHandler, eventsHandler);
+                var eventsHandler = new EventsHandler(modAPI, loggingHandler, remoteEventsSender);
+                var bindsHandler = new BindsHandler(modAPI, loggingHandler);
+                var discordHandler = new DiscordHandler(modAPI, loggingHandler, eventsHandler);
 
+                var cursorHandler = new CursorHandler(modAPI, loggingHandler, eventsHandler, bindsHandler);
+                var settingsHandler = new SettingsHandler(modAPI, loggingHandler, remoteEventsSender, eventsHandler);
 
-            new SuicideAnimHandler(modAPI, remoteEventsSender, utilsHandler);
-
-            var soundsHandler = new SoundsHandler(modAPI, settingsHandler);
-
-            var scaleformMessageHandler = new ScaleformMessageHandler(modAPI, settingsHandler, timerHandler);
-            var deathHandler = new DeathHandler(modAPI, settingsHandler, scaleformMessageHandler, eventsHandler, utilsHandler, browserHandler);
-            var camerasHandler = new CamerasHandler(modAPI, utilsHandler, remoteEventsSender, bindsHandler, deathHandler, eventsHandler);
-            new UserpanelHandler(modAPI, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler);
-
-            var registerLoginHandler = new RegisterLoginHandler(modAPI, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, serializer, eventsHandler);
-            var voiceHandler = new VoiceHandler(bindsHandler, settingsHandler, browserHandler, modAPI, utilsHandler, eventsHandler);
-            var forceStayAtPosHandler = new ForceStayAtPosHandler(modAPI, remoteEventsSender, settingsHandler, dxHandler, timerHandler, serializer);
-            new CrouchingHandler(modAPI, eventsHandler, dataSyncHandler, remoteEventsSender);
-            var instructionalButtonHandler = new InstructionalButtonHandler(modAPI, eventsHandler, settingsHandler);
-            new MidsizedMessageHandler(modAPI, timerHandler);
-
-            var floatingDamageInfoHandler = new FloatingDamageInfoHandler(modAPI, timerHandler, settingsHandler, eventsHandler, dxHandler);
-            var playerFightHandler = new PlayerFightHandler(modAPI, eventsHandler, settingsHandler, browserHandler, floatingDamageInfoHandler, utilsHandler, camerasHandler);
-            new AntiCheatHandler(modAPI, playerFightHandler);
-            var mapLimitHandler = new MapLimitHandler(settingsHandler, modAPI, remoteEventsSender, eventsHandler, dxHandler, timerHandler);
-
-            var lobbyHandler = new LobbyHandler(modAPI, browserHandler, playerFightHandler, instructionalButtonHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
-                timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler, serializer);
-            var scoreboardHandler = new ScoreboardHandler(dxHandler, modAPI, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler, serializer);
-            var chatHandler = new ChatHandler(browserHandler, modAPI, bindsHandler, remoteEventsSender, lobbyHandler, playerFightHandler);
+                var browserHandler = new BrowserHandler(modAPI, loggingHandler, settingsHandler, cursorHandler, eventsHandler, serializer, remoteEventsSender);
+                var dataSyncHandler = new DataSyncHandler(modAPI, loggingHandler, eventsHandler, browserHandler, serializer);
+                var utilsHandler = new UtilsHandler(modAPI, loggingHandler, serializer, dataSyncHandler, eventsHandler);
 
 
-            var workaroundsHandler = new WorkaroundsHandler(serializer, modAPI, utilsHandler);
-            new AFKCheckHandler(eventsHandler, modAPI, settingsHandler, remoteEventsSender, playerFightHandler, timerHandler, dxHandler);
+                new SuicideAnimHandler(modAPI, loggingHandler, remoteEventsSender, utilsHandler);
 
-            var nametagsHandler = new NametagsHandler(modAPI, camerasHandler, settingsHandler, utilsHandler);
+                var soundsHandler = new SoundsHandler(modAPI, loggingHandler, settingsHandler);
 
-            new RankingHandler(modAPI, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler);
-            new MapCreatorHandler(modAPI, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler, browserHandler, dxHandler,
-                remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler);
+                var scaleformMessageHandler = new ScaleformMessageHandler(modAPI, loggingHandler, settingsHandler, timerHandler);
+                var deathHandler = new DeathHandler(modAPI, loggingHandler, settingsHandler, scaleformMessageHandler, eventsHandler, utilsHandler, browserHandler);
+                var camerasHandler = new CamerasHandler(modAPI, loggingHandler, utilsHandler, remoteEventsSender, bindsHandler, deathHandler, eventsHandler);
+                new UserpanelHandler(modAPI, loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler);
 
+                var registerLoginHandler = new RegisterLoginHandler(modAPI, loggingHandler, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, serializer, eventsHandler);
+                var voiceHandler = new VoiceHandler(modAPI, loggingHandler, bindsHandler, settingsHandler, browserHandler, utilsHandler, eventsHandler);
+                var forceStayAtPosHandler = new ForceStayAtPosHandler(modAPI, loggingHandler, remoteEventsSender, settingsHandler, dxHandler, timerHandler, serializer);
+                new CrouchingHandler(modAPI, loggingHandler, eventsHandler, dataSyncHandler, remoteEventsSender);
+                var instructionalButtonHandler = new InstructionalButtonHandler(modAPI, loggingHandler, eventsHandler, settingsHandler);
+                new MidsizedMessageHandler(modAPI, loggingHandler, timerHandler);
+
+                var floatingDamageInfoHandler = new FloatingDamageInfoHandler(modAPI, loggingHandler, timerHandler, settingsHandler, eventsHandler, dxHandler);
+                var playerFightHandler = new PlayerFightHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, browserHandler, floatingDamageInfoHandler, utilsHandler, camerasHandler);
+                new AntiCheatHandler(modAPI, loggingHandler, playerFightHandler);
+                var mapLimitHandler = new MapLimitHandler(modAPI, loggingHandler, settingsHandler, remoteEventsSender, eventsHandler, dxHandler, timerHandler);
+
+                var lobbyHandler = new LobbyHandler(modAPI, loggingHandler, browserHandler, playerFightHandler, instructionalButtonHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
+                    timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler, serializer);
+                var scoreboardHandler = new ScoreboardHandler(modAPI, loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler, serializer);
+                var chatHandler = new ChatHandler(modAPI, loggingHandler, browserHandler, bindsHandler, remoteEventsSender, lobbyHandler, playerFightHandler);
+
+
+                var workaroundsHandler = new WorkaroundsHandler(modAPI, loggingHandler, serializer, utilsHandler);
+                new AFKCheckHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, remoteEventsSender, playerFightHandler, timerHandler, dxHandler);
+
+                var nametagsHandler = new NametagsHandler(modAPI, loggingHandler, camerasHandler, settingsHandler, utilsHandler);
+
+                new RankingHandler(modAPI, loggingHandler, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler);
+                new MapCreatorHandler(modAPI, loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler, browserHandler, dxHandler,
+                    remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler);
+
+                loggingHandler.LogInfo("Services successfully initialized", "Services.Initialize", true);
+            }
+            catch (Exception ex)
+            {
+                loggingHandler.LogError(ex);
+            }
 
         }
     }

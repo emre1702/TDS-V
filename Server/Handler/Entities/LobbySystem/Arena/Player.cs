@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public override void RemovePlayer(ITDSPlayer player)
+        public override async Task RemovePlayer(ITDSPlayer player)
         {
             if (player.Lifes > 0)
             {
@@ -65,7 +65,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 RemoveAsSpectator(player);
             }
             CurrentGameMode?.RemovePlayer(player);
-            base.RemovePlayer(player);
+            await base.RemovePlayer(player);
 
             switch (CurrentRoundStatus)
             {
@@ -200,7 +200,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     break;
 
                 case RoundStatus.Round:
-                    player.SendEvent(ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
+                    player.SendEvent(ToClientEvent.RoundStart, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
                     break;
             }
         }

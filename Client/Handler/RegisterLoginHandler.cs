@@ -10,7 +10,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
-    public class RegisterLoginHandler
+    public class RegisterLoginHandler : ServiceBase
     {
         private readonly CursorHandler _cursorHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
@@ -19,8 +19,9 @@ namespace TDS_Client.Handler
         private readonly Serializer _serializer;
         private readonly EventsHandler _eventsHandler;
 
-        public RegisterLoginHandler(IModAPI modAPI, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, BrowserHandler browserHandler, 
-            SettingsHandler settingsHandler, Serializer serializer, EventsHandler eventsHandler)
+        public RegisterLoginHandler(IModAPI modAPI, LoggingHandler loggingHandler, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, 
+            BrowserHandler browserHandler, SettingsHandler settingsHandler, Serializer serializer, EventsHandler eventsHandler)
+            : base(modAPI, loggingHandler)
         {
             _cursorHandler = cursorHandler;
             _remoteEventsSender = remoteEventsSender;

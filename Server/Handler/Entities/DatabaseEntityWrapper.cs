@@ -30,7 +30,7 @@ namespace TDS_Server.Handler.Entities
 
         public async Task ExecuteForDBAsync(Func<TDSDbContext, Task> action)
         {
-            await _dbContextSemaphore.WaitAsync(2000);
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite);
 
             try
             {
@@ -48,7 +48,7 @@ namespace TDS_Server.Handler.Entities
 
         public async Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action)
         {
-            await _dbContextSemaphore.WaitAsync(2000);
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite);
 
             try
             {
@@ -67,7 +67,7 @@ namespace TDS_Server.Handler.Entities
 
         public async Task ExecuteForDB(Action<TDSDbContext> action)
         {
-            await _dbContextSemaphore.WaitAsync(2000);
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite);
 
             try
             {
@@ -85,7 +85,7 @@ namespace TDS_Server.Handler.Entities
 
         public async Task<T> ExecuteForDB<T>(Func<TDSDbContext, T> action)
         {
-            await _dbContextSemaphore.WaitAsync(2000);
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite);
 
             try
             {

@@ -6,7 +6,7 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler
 {
-    public class CamerasHandler
+    public class CamerasHandler : ServiceBase
     {
         public TDSCamera BetweenRoundsCam { get; set; }
         public TDSCamera FreeCam { get; set; }
@@ -18,29 +18,27 @@ namespace TDS_Client.Handler
 
         public SpectatingHandler Spectating { get; }
 
-        private readonly IModAPI _modAPI;
-
-        public CamerasHandler(IModAPI modAPI, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler, DeathHandler deathHandler,
-            EventsHandler eventsHandler)
+        public CamerasHandler(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler, 
+            DeathHandler deathHandler, EventsHandler eventsHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             Spectating = new SpectatingHandler(modAPI, remoteEventsSender, bindsHandler, this, deathHandler, eventsHandler, utilsHandler);
 
             modAPI.Cam.Render(false, false, 0);
             modAPI.Cam.DestroyAllCams();
 
-            BetweenRoundsCam = new TDSCamera(modAPI, this, utilsHandler);
-            SpectateCam = new TDSCamera(modAPI, this, utilsHandler);
+            BetweenRoundsCam = new TDSCamera(modAPI, loggingHandler, this, utilsHandler);
+            SpectateCam = new TDSCamera(modAPI, loggingHandler, this, utilsHandler);
         }
 
         public Position3D GetCurrentCamPos()
         {
-            return ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+            return ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
         }
 
         public Position3D GetCurrentCamRot()
         {
-            return ActiveCamera?.Rotation ?? _modAPI.Cam.GetGameplayCamRot();
+            return ActiveCamera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
         }
 
         public void RenderBack(bool ease = false, int easeTime = 0)
@@ -49,21 +47,21 @@ namespace TDS_Client.Handler
             ActiveCamera?.Deactivate();
             if (spectatingEntity != null)
             {
-                _modAPI.Streaming.SetFocusEntity(spectatingEntity);
+                ModAPI.Streaming.SetFocusEntity(spectatingEntity);
                 SpectateCam.Activate();
-                _modAPI.Cam.Render(true, ease, easeTime);
+                ModAPI.Cam.Render(true, ease, easeTime);
             }
             else
             {
                 RemoveFocusArea();
-                _modAPI.Cam.Render(false, ease, easeTime);
+                ModAPI.Cam.Render(false, ease, easeTime);
                 ActiveCamera = null;
             }
         }
 
         public void RemoveFocusArea()
         {
-            _modAPI.Streaming.SetFocusEntity(_modAPI.LocalPlayer);
+            ModAPI.Streaming.SetFocusEntity(ModAPI.LocalPlayer);
             FocusAtPos = null;
         }
 
@@ -71,7 +69,7 @@ namespace TDS_Client.Handler
         {
             if (FocusAtPos is null || FocusAtPos.DistanceTo(pos) >= 50)
             {
-                _modAPI.Streaming.SetFocusArea(pos, 0, 0, 0);
+                ModAPI.Streaming.SetFocusArea(pos, 0, 0, 0);
                 FocusAtPos = pos;
             }
         }

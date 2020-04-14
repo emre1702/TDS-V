@@ -8,7 +8,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Deathmatch
 {
-    public class SuicideAnimHandler
+    public class SuicideAnimHandler : ServiceBase
     {
         private bool _shotFired;
         private string _animName;
@@ -16,15 +16,14 @@ namespace TDS_Client.Handler.Deathmatch
 
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly UtilsHandler _utilsHandler;
 
-        public SuicideAnimHandler(IModAPI modAPI, RemoteEventsSender remoteEventsSender, UtilsHandler utilsHandler)
+        public SuicideAnimHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, UtilsHandler utilsHandler)
+            : base(modAPI, loggingHandler)
         {
             _tickEventMethod = new EventMethodData<TickDelegate>(OnRender);
 
-            _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
             _utilsHandler = utilsHandler;
 
@@ -35,32 +34,32 @@ namespace TDS_Client.Handler.Deathmatch
         {
             player.TaskPlayAnim("MP_SUICIDE", animName, 8f, 0, -1, 0, 0, false, false, false);
 
-            if (player != _modAPI.LocalPlayer)
+            if (player != ModAPI.LocalPlayer)
                 return;
 
             _animName = animName;
             _animTime = animTime;
             _shotFired = false;
-            _modAPI.Event.Tick.Add(_tickEventMethod);
+            ModAPI.Event.Tick.Add(_tickEventMethod);
         }
 
         private void OnRender(int _)
         {
-            if (!_modAPI.LocalPlayer.IsPlayingAnim("MP_SUICIDE", _animName))
+            if (!ModAPI.LocalPlayer.IsPlayingAnim("MP_SUICIDE", _animName))
             {
-                _modAPI.Event.Tick.Remove(_tickEventMethod);
+                ModAPI.Event.Tick.Remove(_tickEventMethod);
                 return;
             }
 
-            if (_animName == "PISTOL" && !_shotFired && _modAPI.LocalPlayer.HasAnimEventFired(_modAPI.Misc.GetHashKey("Fire")))
+            if (_animName == "PISTOL" && !_shotFired && ModAPI.LocalPlayer.HasAnimEventFired(ModAPI.Misc.GetHashKey("Fire")))
             {
                 _shotFired = true;
                 _remoteEventsSender.Send(ToServerEvent.SuicideShoot);
             }
 
-            if (_modAPI.LocalPlayer.GetAnimCurrentTime("MP_SUICIDE", _animName) >= _animTime)
+            if (ModAPI.LocalPlayer.GetAnimCurrentTime("MP_SUICIDE", _animName) >= _animTime)
             {
-                _modAPI.Event.Tick.Remove(_tickEventMethod);
+                ModAPI.Event.Tick.Remove(_tickEventMethod);
                 _remoteEventsSender.Send(ToServerEvent.SuicideKill);
             }
         }

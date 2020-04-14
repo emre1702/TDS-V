@@ -5,7 +5,7 @@ using TDS_Client.Handler.Entities.Draw.Scaleform;
 
 namespace TDS_Client.Handler.Draw
 {
-    public class MidsizedMessageHandler
+    public class MidsizedMessageHandler : ServiceBase
     {
         private int _initTimeMs;
         private int _msgDurationMs;
@@ -18,17 +18,16 @@ namespace TDS_Client.Handler.Draw
             get
             {
                 if (_midsizedScaleform == null)
-                    _midsizedScaleform = new BasicScaleform(ScaleformName.MIDSIZED_MESSAGE, _modAPI);
+                    _midsizedScaleform = new BasicScaleform(ScaleformName.MIDSIZED_MESSAGE, ModAPI);
                 return _midsizedScaleform;
             }
         }
 
-        private readonly IModAPI _modAPI;
         private readonly TimerHandler _timerHandler;
 
-        public MidsizedMessageHandler(IModAPI modAPI, TimerHandler timerHandler)
+        public MidsizedMessageHandler(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _timerHandler = timerHandler;
         }
 

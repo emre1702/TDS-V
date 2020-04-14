@@ -8,19 +8,15 @@ using TDS_Client.Data.Models;
 
 namespace TDS_Client.Handler
 {
-    public class BindsHandler
+    public class BindsHandler : ServiceBase
     {
         private readonly List<(Key, List<KeyBindDto>)> _bindedKeys = new List<(Key, List<KeyBindDto>)>();
         private readonly List<(Control, List<ControlBindDto>)> _bindedControls = new List<(Control, List<ControlBindDto>)>();
         private readonly Dictionary<Key, bool> _lastKeyDownState = new Dictionary<Key, bool>();
         private readonly Dictionary<Control, bool> _lastControlPressedState = new Dictionary<Control, bool>();
 
-        private readonly IModAPI _modAPI;
-
-        public BindsHandler(IModAPI modAPI)
+        public BindsHandler(IModAPI modAPI, LoggingHandler loggingHandler) : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
-
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick));
         }
 
@@ -78,44 +74,51 @@ namespace TDS_Client.Handler
 
         private void OnTick(int currentMs)
         {
-            for (int i = _bindedKeys.Count - 1; i >= 0; --i)
+            try
             {
-                var keyEntry = _bindedKeys[i];
-                bool isDown = _modAPI.Input.IsDown(keyEntry.Item1);
-                if (_lastKeyDownState.ContainsKey(keyEntry.Item1))
-                    if (_lastKeyDownState[keyEntry.Item1] == isDown)
-                        continue;
-                _lastKeyDownState[keyEntry.Item1] = isDown;
-
-                for (int j = keyEntry.Item2.Count - 1; j >= 0; --j)
+                for (int i = _bindedKeys.Count - 1; i >= 0; --i)
                 {
-                    var bind = keyEntry.Item2[j];
-                    if (isDown && bind.OnDown || !isDown && bind.OnUp)
-                        bind.Method(keyEntry.Item1);
+                    var keyEntry = _bindedKeys[i];
+                    bool isDown = ModAPI.Input.IsDown(keyEntry.Item1);
+                    if (_lastKeyDownState.ContainsKey(keyEntry.Item1))
+                        if (_lastKeyDownState[keyEntry.Item1] == isDown)
+                            continue;
+                    _lastKeyDownState[keyEntry.Item1] = isDown;
+
+                    for (int j = keyEntry.Item2.Count - 1; j >= 0; --j)
+                    {
+                        var bind = keyEntry.Item2[j];
+                        if (isDown && bind.OnDown || !isDown && bind.OnUp)
+                            bind.Method(keyEntry.Item1);
+                    }
+
                 }
 
-            }
-
-            for (int i = _bindedControls.Count - 1; i >= 0; --i)
-            {
-                var controlEntry = _bindedControls[i];
-                bool isDownEnabled = _modAPI.Control.IsControlPressed(InputGroup.MOVE, controlEntry.Item1);
-                bool isDownDisabled = _modAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, controlEntry.Item1);
-
-                if (_lastControlPressedState.ContainsKey(controlEntry.Item1))
-                    if (_lastControlPressedState[controlEntry.Item1] == (isDownEnabled || isDownDisabled))
-                        continue;
-                _lastControlPressedState[controlEntry.Item1] = (isDownEnabled || isDownDisabled);
-
-                for (int j = controlEntry.Item2.Count - 1; j >= 0; --j)
+                for (int i = _bindedControls.Count - 1; i >= 0; --i)
                 {
-                    var bind = controlEntry.Item2[j];
-                    if (bind.OnDown && (isDownEnabled && bind.OnEnabled || isDownDisabled && bind.OnDisabled)
-                        || bind.OnUp && (!isDownEnabled && bind.OnEnabled || !isDownDisabled && bind.OnDisabled))
-                        bind.Method(controlEntry.Item1);
+                    var controlEntry = _bindedControls[i];
+                    bool isDownEnabled = ModAPI.Control.IsControlPressed(InputGroup.MOVE, controlEntry.Item1);
+                    bool isDownDisabled = ModAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, controlEntry.Item1);
+
+                    if (_lastControlPressedState.ContainsKey(controlEntry.Item1))
+                        if (_lastControlPressedState[controlEntry.Item1] == (isDownEnabled || isDownDisabled))
+                            continue;
+                    _lastControlPressedState[controlEntry.Item1] = (isDownEnabled || isDownDisabled);
+
+                    for (int j = controlEntry.Item2.Count - 1; j >= 0; --j)
+                    {
+                        var bind = controlEntry.Item2[j];
+                        if (bind.OnDown && (isDownEnabled && bind.OnEnabled || isDownDisabled && bind.OnDisabled)
+                            || bind.OnUp && (!isDownEnabled && bind.OnEnabled || !isDownDisabled && bind.OnDisabled))
+                            bind.Method(controlEntry.Item1);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
 
-        }
+}
     }
 }

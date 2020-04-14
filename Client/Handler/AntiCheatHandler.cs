@@ -6,14 +6,13 @@ using TDS_Client.Handler.Deathmatch;
 
 namespace TDS_Client.Handler
 {
-    public class AntiCheatHandler
+    public class AntiCheatHandler : ServiceBase
     {
-        private readonly IModAPI _modAPI;
         private readonly PlayerFightHandler _playerFightHandler;
 
-        public AntiCheatHandler(IModAPI modAPI, PlayerFightHandler playerFightHandler)
+        public AntiCheatHandler(IModAPI modAPI, LoggingHandler loggingHandler, PlayerFightHandler playerFightHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _playerFightHandler = playerFightHandler;
 
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick));
@@ -21,15 +20,15 @@ namespace TDS_Client.Handler
 
         public void OnTick(int currentMs)
         {
-            _modAPI.Player.SetPlayerTargetingMode(0);
-            _modAPI.Player.SetPlayerLockon(false);
+            ModAPI.Player.SetPlayerTargetingMode(0);
+            ModAPI.Player.SetPlayerLockon(false);
 
             if (_playerFightHandler.InFight)
             {
-                if (_modAPI.Player.GetPlayerInvincible())
+                if (ModAPI.Player.GetPlayerInvincible())
                 {
                     //Todo: Log to server
-                    _modAPI.Player.SetPlayerInvincible(false);
+                    ModAPI.Player.SetPlayerInvincible(false);
                 }
             }
         }

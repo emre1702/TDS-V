@@ -9,7 +9,7 @@ namespace TDS_Client.Handler.Draw.Dx
     internal class DxText : DxBase
     {
         public string Text;
-        private readonly int _xPos;
+        private int _x;
         private int _y;
         private float _scale;
         private readonly Color _color;
@@ -39,7 +39,7 @@ namespace TDS_Client.Handler.Draw.Dx
             _timerHandler = timerHandler;
 
             Text = text;
-            _xPos = GetAbsoluteX(x, relative);
+            _x = GetAbsoluteX(x, relative);
             _y = GetAbsoluteY(y, relative);
             _scale = scale;
             _color = color;
@@ -52,7 +52,7 @@ namespace TDS_Client.Handler.Draw.Dx
             _wordWrap = wordWrap;
             _amountLines = amountLines;
 
-            ApplyTextToServerEvent();
+            ApplyTextAlignmentY();
         }
 
         private int GetAbsoluteX(float x, bool relative)
@@ -65,16 +65,26 @@ namespace TDS_Client.Handler.Draw.Dx
             return GetAbsoluteY(y, relative, true);
         }
 
+        public void SetAbsoluteX(int x)
+        {
+            _x = x;
+        }
+
+        public void SetRelativeX(float x)
+        {
+            _x = GetAbsoluteX(x, true);
+        }
+
         public void SetAbsoluteY(int y)
         {
             _y = y;
-            ApplyTextToServerEvent();
+            ApplyTextAlignmentY();
         }
 
         public void SetRelativeY(float y)
         {
-            _y = GetAbsoluteY(y, _relative);
-            ApplyTextToServerEvent();
+            _y = GetAbsoluteY(y, true);
+            ApplyTextAlignmentY();
         }
 
         public void BlendAlpha(int endAlpha, int msToEnd)
@@ -104,7 +114,7 @@ namespace TDS_Client.Handler.Draw.Dx
             return (int) Ui.EndTextCommandGetWidth(1);
         }*/
 
-        private void ApplyTextToServerEvent()
+        private void ApplyTextAlignmentY()
         {
             int textHeight = GetTextAbsoluteHeight(_amountLines != 0 ? _amountLines : GetLineCount(), _scale, _font, _relative);
 
@@ -121,7 +131,7 @@ namespace TDS_Client.Handler.Draw.Dx
         {
             ModAPI.Native.Invoke(NativeHash._BEGIN_TEXT_COMMAND_LINE_COUNT, "STRING");
             ModAPI.Native.Invoke(NativeHash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Text);
-            return ModAPI.Native.Invoke<int>(NativeHash._GET_TEXT_SCREEN_LINE_COUNT, _xPos, _y);
+            return ModAPI.Native.Invoke<int>(NativeHash._GET_TEXT_SCREEN_LINE_COUNT, _x, _y);
         }
 
         public void SetScale(float scale)
@@ -151,7 +161,7 @@ namespace TDS_Client.Handler.Draw.Dx
                     scale = GetBlendValue(elapsedMs, this._scale, _endScale.Value, _endScaleStartTick, _endScaleEndTick);
             }
 
-            ModAPI.Graphics.DrawText(Text, _xPos, _y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);
+            ModAPI.Graphics.DrawText(Text, _x, _y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);
         }
 
         public override DxType GetDxType()

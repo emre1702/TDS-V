@@ -12,7 +12,7 @@ namespace TDS_Client.Core.Init
 
         private void Init(IModAPI modAPI)
         {
-
+            modAPI.Streaming.RequestNamedPtfxAsset("scr_xs_celebration");
             modAPI.Misc.SetWeatherTypeNowPersist("CLEAR");
             modAPI.Misc.SetWind(0);
             modAPI.Streaming.RequestAnimDict("MP_SUICIDE");

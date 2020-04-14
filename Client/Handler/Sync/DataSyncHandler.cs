@@ -12,19 +12,18 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Sync
 {
-    public class DataSyncHandler
+    public class DataSyncHandler : ServiceBase
     {
         private static readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas
             = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
 
-        private readonly IModAPI _modAPI;
         private readonly BrowserHandler _browserHandler;
         private readonly Serializer _serializer;
         private readonly EventsHandler _eventsHandler;
 
-        public DataSyncHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler angularHandler, Serializer serializer)
+        public DataSyncHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, BrowserHandler angularHandler, Serializer serializer)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _browserHandler = angularHandler;
             _serializer = serializer;
             _eventsHandler = eventsHandler;
@@ -58,12 +57,12 @@ namespace TDS_Client.Handler.Sync
 
         public T GetData<T>(PlayerDataKey key, T returnOnEmpty = default)
         {
-            return GetData<T>(_modAPI.LocalPlayer, key, returnOnEmpty);
+            return GetData<T>(ModAPI.LocalPlayer, key, returnOnEmpty);
         }
 
         public object GetData(PlayerDataKey key)
         {
-            return GetData(_modAPI.LocalPlayer, key);
+            return GetData(ModAPI.LocalPlayer, key);
         }
 
         public void HandleDataFromServer(object[] args)
@@ -76,7 +75,7 @@ namespace TDS_Client.Handler.Sync
                 _playerRemoteIdDatas[playerRemoteId] = new Dictionary<PlayerDataKey, object>();
             _playerRemoteIdDatas[playerRemoteId][key] = value;
 
-            var player = _modAPI.Pool.Players.GetAtRemote(playerRemoteId);
+            var player = ModAPI.Pool.Players.GetAtRemote(playerRemoteId);
             if (player != null)
             {
                 _eventsHandler.OnDataChanged(player, key, value);
@@ -88,7 +87,7 @@ namespace TDS_Client.Handler.Sync
             var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
             foreach (var entry in dict)
             {
-                var player = _modAPI.Pool.Players.GetAtRemote(entry.Key);
+                var player = ModAPI.Pool.Players.GetAtRemote(entry.Key);
                 if (!_playerRemoteIdDatas.ContainsKey(entry.Key))
                     _playerRemoteIdDatas[entry.Key] = new Dictionary<PlayerDataKey, object>();
                 foreach (var dataEntry in entry.Value)
@@ -111,7 +110,7 @@ namespace TDS_Client.Handler.Sync
         private bool _nameSyncedWithAngular;
         private void OnLocalPlayerDataChange(IPlayer player, PlayerDataKey key, object obj)
         {
-            if (player != _modAPI.LocalPlayer)
+            if (player != ModAPI.LocalPlayer)
                 return;
             switch (key)
             {

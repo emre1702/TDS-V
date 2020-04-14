@@ -6,18 +6,16 @@ using TDS_Shared.Core;
 
 namespace TDS_Client.Handler
 {
-    public class TimerHandler
+    public class TimerHandler : ServiceBase
     {
         public int ElapsedMs;
 
-        private readonly IModAPI _modAPI;
-
-        public TimerHandler(IModAPI modAPI, DxHandler dxHandler)
+        public TimerHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
-            ElapsedMs = _modAPI.Misc.GetGameTimer();
+            ElapsedMs = ModAPI.Misc.GetGameTimer();
 
-            TDSTimer.Init(modAPI.Chat.Output, () => _modAPI.Misc.GetGameTimer());
+            TDSTimer.Init(modAPI.Chat.Output, () => ModAPI.Misc.GetGameTimer());
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(_ => TDSTimer.OnUpdateFunc()));
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(_ => RefreshElapsedMs()));
 
@@ -26,7 +24,7 @@ namespace TDS_Client.Handler
 
         private void RefreshElapsedMs()
         {
-            ElapsedMs = _modAPI.Misc.GetGameTimer();
+            ElapsedMs = ModAPI.Misc.GetGameTimer();
         }
     }
 }

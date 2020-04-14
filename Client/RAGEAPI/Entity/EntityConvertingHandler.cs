@@ -20,6 +20,9 @@ namespace TDS_Client.RAGEAPI.Entity
 
         public IBlip GetEntity(RAGE.Elements.Blip modBlip)
         {
+            if (modBlip is null)
+                return null;
+
             if (!_entitiesCache.TryGetValue(modBlip, out IEntity entity))
             {
                 entity = new Blip.Blip(modBlip);
@@ -31,6 +34,9 @@ namespace TDS_Client.RAGEAPI.Entity
 
         public IMapObject GetEntity(RAGE.Elements.MapObject mapObject)
         {
+            if (mapObject is null)
+                return null;
+
             if (!_entitiesCache.TryGetValue(mapObject, out IEntity entity))
             {
                 entity = new MapObject.MapObject(mapObject);
@@ -42,6 +48,9 @@ namespace TDS_Client.RAGEAPI.Entity
 
         public IPed GetEntity(RAGE.Elements.Ped ped)
         {
+            if (ped is null)
+                return null;
+
             if (!_entitiesCache.TryGetValue(ped, out IEntity entity))
             {
                 entity = new Ped.Ped(ped);
@@ -53,6 +62,9 @@ namespace TDS_Client.RAGEAPI.Entity
 
         public IVehicle GetEntity(RAGE.Elements.Vehicle veh)
         {
+            if (veh is null)
+                return null;
+
             if (!_entitiesCache.TryGetValue(veh, out IEntity entity))
             {
                 entity = new Vehicle.Vehicle(veh);
@@ -63,10 +75,13 @@ namespace TDS_Client.RAGEAPI.Entity
         }
 
         public IPlayer GetEntity(RAGE.Elements.Player modPlayer)
-            => _playerConvertingHandler.GetPlayer(modPlayer);
+            => modPlayer != null ? _playerConvertingHandler.GetPlayer(modPlayer) : null;
 
         public IEntity GetEntity(RAGE.Elements.GameEntity en)
         {
+            if (en is null)
+                return null;
+
             if (!_entitiesCache.TryGetValue(en, out IEntity entity))
             {
                 entity = new Entity(en);
@@ -78,6 +93,24 @@ namespace TDS_Client.RAGEAPI.Entity
 
         public IEntity GetEntity(RAGE.Elements.Entity en)
         {
+            if (en is null)
+                return null;
+
+            if (en is RAGE.Elements.Player player)
+                return GetEntity(player);
+
+            if (en is RAGE.Elements.Vehicle vehicle)
+                return GetEntity(vehicle);
+
+            if (en is RAGE.Elements.MapObject mapObject)
+                return GetEntity(mapObject);
+
+            if (en is RAGE.Elements.Ped ped)
+                return GetEntity(ped);
+
+            if (en is RAGE.Elements.Blip blip)
+                return GetEntity(blip);
+
             return null;
         }
     }

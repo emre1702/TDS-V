@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Entities.TeamSystem;
@@ -8,11 +9,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        public HashSet<ITDSPlayer> Players { get; } = new HashSet<ITDSPlayer>();
+        public ConcurrentDictionary<int, ITDSPlayer> Players { get; } = new ConcurrentDictionary<int, ITDSPlayer>();
 
         public void FuncIterateAllPlayers(Action<ITDSPlayer, ITeam?> func)
         {
-            foreach (var player in Players)
+            foreach (var player in Players.Values)
             {
                 func(player, player.Team);
             }

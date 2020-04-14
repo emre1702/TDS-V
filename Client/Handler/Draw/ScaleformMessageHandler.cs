@@ -7,7 +7,7 @@ using TDS_Client.Handler.Entities.Draw.Scaleform;
 
 namespace TDS_Client.Handler.Draw
 {
-    public class ScaleformMessageHandler
+    public class ScaleformMessageHandler : ServiceBase
     {
         private int _initTimeMs;
         private int _msgDurationMs;
@@ -19,18 +19,17 @@ namespace TDS_Client.Handler.Draw
             get
             {
                 if (_scaleform == null)
-                    _scaleform = new BasicScaleform(ScaleformName.MP_BIG_MESSAGE_FREEMODE, _modAPI);
+                    _scaleform = new BasicScaleform(ScaleformName.MP_BIG_MESSAGE_FREEMODE, ModAPI);
                 return _scaleform;
             }
         }
 
-        private readonly IModAPI _modAPI;
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
 
-        public ScaleformMessageHandler(IModAPI modAPI, SettingsHandler settingsHandler, TimerHandler timerHandler)
+        public ScaleformMessageHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, TimerHandler timerHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _settingsHandler = settingsHandler;
             _timerHandler = timerHandler;
 

@@ -36,7 +36,7 @@ namespace TDS_Server.Database.Migrations
                 .HasAnnotation("Npgsql:Enum:weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
                 .HasAnnotation("Npgsql:PostgresExtension:tsm_system_rows", ",,")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.2")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("Relational:Sequence:.EntityFrameworkHiLoSequence", "'EntityFrameworkHiLoSequence', '', '1', '10', '', '', 'Int64', 'False'");
 
@@ -1849,8 +1849,10 @@ namespace TDS_Server.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<short>("AmountLifes")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("amount_lifes")
-                        .HasColumnType("smallint");
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)1);
 
                     b.Property<int>("SpawnAgainAfterDeathMs")
                         .ValueGeneratedOnAdd()

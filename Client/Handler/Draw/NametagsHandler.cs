@@ -10,16 +10,15 @@ using TDS_Client.Handler;
 
 namespace TDS_Client.Handler.Draw
 {
-    public class NametagsHandler
+    public class NametagsHandler : ServiceBase
     {
-        private readonly IModAPI _modAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly UtilsHandler _utilsHandler;
 
-        public NametagsHandler(IModAPI modAPI, CamerasHandler camerasHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler)
+        public NametagsHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _settingsHandler = settingsHandler;
             _utilsHandler = utilsHandler;
@@ -38,21 +37,21 @@ namespace TDS_Client.Handler.Draw
         private void DrawAtAim()
         {
             int targetEntity = 0;
-            if (!_modAPI.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
+            if (!ModAPI.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
                 return;
 
-            if (_modAPI.Entity.GetEntityType(targetEntity) != EntityType.Ped)
+            if (ModAPI.Entity.GetEntityType(targetEntity) != EntityType.Ped)
                 return;
 
-            var myPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.LocalPlayer.Position;
-            var hisPos = _modAPI.Entity.GetEntityCoords(targetEntity, true);
+            var myPos = _camerasHandler.ActiveCamera?.Position ?? ModAPI.LocalPlayer.Position;
+            var hisPos = ModAPI.Entity.GetEntityCoords(targetEntity, true);
             var distance = myPos.DistanceTo(hisPos);
 
             if (distance > _settingsHandler.NametagMaxDistance)
                 return;
 
             string name = "Ped";
-            var player = _modAPI.Pool.Players.GetAtHandle(targetEntity);
+            var player = ModAPI.Pool.Players.GetAtHandle(targetEntity);
             if (!(player is null))
                 name = _utilsHandler.GetDisplayName(player);
 
@@ -75,25 +74,25 @@ namespace TDS_Client.Handler.Draw
         public void DrawNametag(int handle, string name, float distance)
         {
             float scale = Math.Max(distance / _settingsHandler.NametagMaxDistance, 0.5f);
-            var position = _modAPI.Entity.GetEntityCoords(handle, true);
+            var position = ModAPI.Entity.GetEntityCoords(handle, true);
             position.Z += 0.9f + distance / _settingsHandler.NametagMaxDistance;
 
             float screenX = 0;
             float screenY = 0;
-            _modAPI.Graphics.GetScreenCoordFromWorldCoord(position.X, position.Y, position.Z, ref screenX, ref screenY);
+            ModAPI.Graphics.GetScreenCoordFromWorldCoord(position.X, position.Y, position.Z, ref screenX, ref screenY);
 
-            float textheight = _modAPI.Ui.GetTextScaleHeight(scale, Font.ChaletLondon);
+            float textheight = ModAPI.Ui.GetTextScaleHeight(scale, Font.ChaletLondon);
             screenY -= textheight;
 
-            _modAPI.Graphics.DrawText(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
+            ModAPI.Graphics.DrawText(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
                 AlignmentX.Center, true, true, 0);
         }
 
 
         private Color GetHealthColor(int handle)
         {
-            var hp = Math.Max(_modAPI.Entity.GetEntityHealth(handle) - 100, 0);
-            var armor = _modAPI.Ped.GetPedArmor(handle);
+            var hp = Math.Max(ModAPI.Entity.GetEntityHealth(handle) - 100, 0);
+            var armor = ModAPI.Ped.GetPedArmor(handle);
 
             //RAGE.Chat.Output($"HP: {hp} - Armor: {armor} - HP orig: {Entity.GetEntityHealth(handle)}");
             return GetHealthColor(hp, armor);

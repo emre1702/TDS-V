@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.Utility;
@@ -17,7 +18,7 @@ namespace TDS_Server.Handler.Events
         public delegate void PlayerDelegate(ITDSPlayer player);
         public event PlayerDelegate? PlayerConnected;
         public event PlayerDelegate? PlayerLoggedIn;
-       
+
         public event PlayerDelegate? PlayerLoggedOut;
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
         public event PlayerDelegate? PlayerLeftCustomMenuLobby;
@@ -81,6 +82,21 @@ namespace TDS_Server.Handler.Events
         {
             ResourceStop?.Invoke();
         }
+
+        public void OnPlayerSpawn(ITDSPlayer player)
+        {
+            player.Lobby?.OnPlayerSpawn(player);
+        }
+
+        public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint reason)
+        {
+            player.Lobby?.OnPlayerDeath(player, killer, reason);
+        }
+
+        public void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player)
+        {
+            player.Lobby?.OnPlayerEnterColshape(colshape, player);
+        }
         #endregion
 
 
@@ -96,6 +112,7 @@ namespace TDS_Server.Handler.Events
             if (task.HasValue)
                 await task.Value;
             PlayerLoggedOut?.Invoke(tdsPlayer);
+            tdsPlayer.Lobby?.OnPlayerLoggedOut(tdsPlayer);
         }
 
         public void OnPlayerRegister(ITDSPlayer player, Players dbPlayer)

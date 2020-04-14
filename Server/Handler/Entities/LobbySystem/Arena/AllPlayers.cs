@@ -59,7 +59,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (IsEmpty())
                 return null;
 
-            var list = Players
+            var list = Players.Values
                 .Where(p => p.CurrentRoundStats != null && p.Team is { } && !p.Team.IsSpectator)
                 .Select(p => new RoundPlayerRankingStat(p))
                 .ToList();

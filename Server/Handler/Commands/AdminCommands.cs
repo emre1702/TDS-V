@@ -62,7 +62,7 @@ namespace TDS_Server.Handler.Commands
                 }
                 target.Lobby.SendAllPlayerLangMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
             }
-            target.Lobby.RemovePlayer(target);
+            await target.Lobby.RemovePlayer(target);
             await _lobbiesHandler.MainMenu.AddPlayer(target, 0).ConfigureAwait(false);
         }
 
@@ -109,28 +109,28 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Ban, 1)]
-        public void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
+        public async void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == DateTime.MinValue)
                 _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason);
             else if (length == DateTime.MaxValue)
-                _lobbiesHandler.MainMenu.BanPlayer(player, target, null, reason);
+                await _lobbiesHandler.MainMenu.BanPlayer(player, target, null, reason);
             else
-                _lobbiesHandler.MainMenu.BanPlayer(player, target, length, reason);
+                await _lobbiesHandler.MainMenu.BanPlayer(player, target, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
         [TDSCommand(AdminCommand.Ban, 0)]
-        public void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
+        public async void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, DateTime length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == DateTime.MinValue)
                 _lobbiesHandler.MainMenu.UnbanPlayer(player, dbTarget, reason);
             else if (length == DateTime.MaxValue)
-                _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, null, reason);
+                await _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, null, reason);
             else
-                _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, length, reason);
+                await _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);

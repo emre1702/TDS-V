@@ -3,7 +3,6 @@ using System;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.RAGEAPI.Player;
-using TDS_Server.RAGEAPI.TDS_Server.Core.Manager.Utility;
 
 namespace TDS_Server.RAGEAPI
 {
@@ -13,6 +12,7 @@ namespace TDS_Server.RAGEAPI
         public static BaseAPI BaseAPI;
         public static Core.Init.Program TDSCore;
         public static WorkaroundsHandler WorkaroundsHandler;
+#nullable restore warnings
 
         public Init()
         {
@@ -35,6 +35,9 @@ namespace TDS_Server.RAGEAPI
 
         internal static ITDSPlayer? GetTDSPlayerIfLoggedIn(GTANetworkAPI.Player player)
         {
+            if (player is null)
+                return null;
+
             var modPlayer = GetModPlayer(player);
             if (modPlayer is null)
                 return null;

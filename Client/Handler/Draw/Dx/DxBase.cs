@@ -111,6 +111,7 @@ namespace TDS_Client.Handler.Draw.Dx
                 foreach (var child in Children)
                     if (!child._disposed)
                         child.Remove();
+                Children.Clear();
             }
         }
 

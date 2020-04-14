@@ -60,7 +60,7 @@ namespace TDS_Server.Data.Interfaces
         bool IsVoiceMuted { get; }
         int TeamIndex { get; }
         ITDSPlayer? LastHitter { get; set; }
-        PlayerLobbyStats? LobbyStats { get; set; }
+        PlayerLobbyStats? LobbyStats { get; }
         bool IsLobbyOwner { get; }
         int Money { get; set; }
         ILobby? PreviousLobby { get; set; }
@@ -95,5 +95,6 @@ namespace TDS_Server.Data.Interfaces
         void ClosePrivateChat(bool v);
         void ChangeVoiceMuteTime(ITDSPlayer player, int minutes, string reason);
         void ChangeMuteTime(ITDSPlayer target, int minutes, string reason);
+        Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats);
     }
 }

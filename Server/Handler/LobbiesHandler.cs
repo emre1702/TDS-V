@@ -312,12 +312,9 @@ namespace TDS_Server.Handler
                 {
                     if (await lobby.IsPlayerBaned(player))
                         return null;
-                    ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
+                    lobby = ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
                 }
-                else
-                {
-                    await lobby.AddPlayer(player, null);
-                }
+                await lobby.AddPlayer(player, null);
                 return null;
             }
             else

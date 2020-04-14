@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
+using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Player;
 
 namespace TDS_Client.RAGEAPI.Event
 {
     public class TickNametagEventHandler : BaseEventHandler<TickNametagDelegate>
     {
+        private readonly LoggingHandler _loggingHandler;
         private readonly PlayerConvertingHandler _playerConvertingHandler;
 
-        public TickNametagEventHandler(PlayerConvertingHandler playerConvertingHandler)
+        public TickNametagEventHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler)
         {
+            _loggingHandler = loggingHandler;
             _playerConvertingHandler = playerConvertingHandler;
 
             RAGE.Events.Tick += OnTick;
@@ -21,28 +25,37 @@ namespace TDS_Client.RAGEAPI.Event
             if (Actions.Count == 0)
                 return;
 
-            var newNametags = new List<TickNametagData>();
-            if (nametags != null)
+            try
             {
-                foreach (var nametag in nametags)
+                var newNametags = new List<TickNametagData>();
+                if (nametags != null)
                 {
-                    if (nametag.Player is null)
-                        continue;
-                    newNametags.Add(new TickNametagData
+                    foreach (var nametag in nametags)
                     {
-                        Player = _playerConvertingHandler.GetPlayer(nametag.Player),
-                        ScreenX = nametag.ScreenX,
-                        ScreenY = nametag.ScreenY,
-                        Distance = nametag.Distance
-                    });
-                }
+                        if (nametag.Player is null)
+                            continue;
+                        newNametags.Add(new TickNametagData
+                        {
+                            Player = _playerConvertingHandler.GetPlayer(nametag.Player),
+                            ScreenX = nametag.ScreenX,
+                            ScreenY = nametag.ScreenY,
+                            Distance = nametag.Distance
+                        });
+                    }
                     
-            }
-           
+                }
 
-            foreach (var a in Actions)
-                if (a.Requirement is null || a.Requirement())
-                    a.Method(newNametags);
+                for (int i = Actions.Count - 1; i >= 0; --i)
+                {
+                    var action = Actions[i];
+                    if (action.Requirement is null || action.Requirement())
+                        action.Method(newNametags);
+                }
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
     }
 }

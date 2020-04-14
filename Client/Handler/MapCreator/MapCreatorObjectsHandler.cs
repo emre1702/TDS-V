@@ -27,7 +27,7 @@ namespace TDS_Client.Handler.MapCreator
 
         private readonly EventMethodData<EntityStreamInDelegate> _entityStreamInEventMethod;
 
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly LobbyHandler _lobbyHandler;
         private readonly EventsHandler _eventsHandler;
@@ -37,7 +37,7 @@ namespace TDS_Client.Handler.MapCreator
         public MapCreatorObjectsHandler(IModAPI modAPI, CamerasHandler camerasHandler, LobbyHandler lobbyHandler, EventsHandler eventsHandler, BrowserHandler browserHandler, 
             Serializer serializer)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _camerasHandler = camerasHandler;
             _lobbyHandler = lobbyHandler;
             _eventsHandler = eventsHandler;
@@ -53,12 +53,12 @@ namespace TDS_Client.Handler.MapCreator
 
         public void Start()
         {
-            _modAPI.Event.EntityStreamIn.Add(_entityStreamInEventMethod);
+            ModAPI.Event.EntityStreamIn.Add(_entityStreamInEventMethod);
         }
 
         public void Stop()
         {
-            _modAPI.Event.EntityStreamIn.Remove(_entityStreamInEventMethod);
+            ModAPI.Event.EntityStreamIn.Remove(_entityStreamInEventMethod);
 
             foreach (var entry in _cacheMapEditorObjects)
             {
@@ -87,7 +87,7 @@ namespace TDS_Client.Handler.MapCreator
             switch (type)
             {
                 case MapCreatorPositionType.TeamSpawn:
-                    return GetTeamSpawn((int)editingTeamIndexOrObjVehName, playerRemoteId);
+                    return GetTeamSpawn((int)editingTeamIndexOrObjVehName, playerRemoteId, ModAPI.LocalPlayer.Position, ModAPI.LocalPlayer.Rotation);
                 case MapCreatorPositionType.MapCenter:
                     return GetMapCenter(playerRemoteId);
                 case MapCreatorPositionType.BombPlantPlace:
@@ -111,19 +111,19 @@ namespace TDS_Client.Handler.MapCreator
             var alreadyCached = GetByHandle(handle);
             if (alreadyCached != null)
                 return alreadyCached;
-            var entityType = _modAPI.Entity.GetEntityType(handle);
+            var entityType = ModAPI.Entity.GetEntityType(handle);
 
             IEntityBase entity;
             switch (entityType)
             {
                 case EntityType.Ped:
-                    entity = _modAPI.Pool.Peds.GetAtHandle(handle);
+                    entity = ModAPI.Pool.Peds.GetAtHandle(handle);
                     break;
                 case EntityType.Vehicle:
-                    entity = _modAPI.Pool.Vehicles.GetAtHandle(handle);
+                    entity = ModAPI.Pool.Vehicles.GetAtHandle(handle);
                     break;
                 case EntityType.Object:
-                    entity = _modAPI.Pool.Objects.GetAtHandle(handle);
+                    entity = ModAPI.Pool.Objects.GetAtHandle(handle);
                     break;
                 default:
                     return null;
@@ -131,7 +131,7 @@ namespace TDS_Client.Handler.MapCreator
 
             if (!type.HasValue)
             {
-                switch (_modAPI.Entity.GetEntityType(handle))
+                switch (ModAPI.Entity.GetEntityType(handle))
                 {
                     case EntityType.Ped:
                         type = MapCreatorPositionType.TeamSpawn;
@@ -147,19 +147,19 @@ namespace TDS_Client.Handler.MapCreator
                 }
             }
 
-            var obj = new MapCreatorObject(_modAPI, this, _eventsHandler, entity, type.Value, _modAPI.LocalPlayer.RemoteId);
+            var obj = new MapCreatorObject(ModAPI, this, _eventsHandler, entity, type.Value, ModAPI.LocalPlayer.RemoteId);
             _cacheMapEditorObjects[entity] = obj;
             return obj;
         }
 
-        public MapCreatorObject GetTeamSpawn(int editingTeamIndex, ushort playerRemoteId, int id = -1)
+        public MapCreatorObject GetTeamSpawn(int editingTeamIndex, ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
         {
             int pedHashIndex = editingTeamIndex;
             while (pedHashIndex >= Constants.TeamSpawnPedHash.Length)
                 pedHashIndex -= Constants.TeamSpawnPedHash.Length;
-            var obj = _modAPI.Ped.Create(Constants.TeamSpawnPedHash[pedHashIndex], _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation, dimension: _modAPI.LocalPlayer.Dimension);
+            var obj = ModAPI.Ped.Create(Constants.TeamSpawnPedHash[pedHashIndex], pos, rot, dimension: ModAPI.LocalPlayer.Dimension);
             obj.SetInvincible(true);
-            var mapCreatorObj = new MapCreatorObject(_modAPI, this, _eventsHandler, obj, MapCreatorPositionType.TeamSpawn, playerRemoteId, editingTeamIndex, id: id);
+            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, obj, MapCreatorPositionType.TeamSpawn, playerRemoteId, editingTeamIndex, id: id);
             _cacheMapEditorObjects[obj] = mapCreatorObj;
             return mapCreatorObj;
         }
@@ -192,17 +192,17 @@ namespace TDS_Client.Handler.MapCreator
 
         public MapCreatorObject GetVehicle(uint hash, ushort playerRemoteId, string vehName = null, int id = -1)
         {
-            var vehicle = _modAPI.Vehicle.Create(hash, _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation, "Map", locked: true, dimension: _modAPI.LocalPlayer.Dimension);
-            var mapCreatorObj = new MapCreatorObject(_modAPI, this, _eventsHandler, vehicle, MapCreatorPositionType.Vehicle, playerRemoteId, objectName: vehName, id: id);
+            var vehicle = ModAPI.Vehicle.Create(hash, ModAPI.LocalPlayer.Position, ModAPI.LocalPlayer.Rotation, "Map", locked: true, dimension: ModAPI.LocalPlayer.Dimension);
+            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, vehicle, MapCreatorPositionType.Vehicle, playerRemoteId, objectName: vehName, id: id);
             _cacheMapEditorObjects[vehicle] = mapCreatorObj;
             return mapCreatorObj;
         }
 
         public MapCreatorObject GetObject(string hashName, MapCreatorPositionType type, ushort playerRemoteId, string objName = null, int id = -1)
         {
-            uint hash = _modAPI.Misc.GetHashKey(hashName);
-            var obj = _modAPI.MapObject.Create(hash, _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation, dimension: _modAPI.LocalPlayer.Dimension);
-            var mapCreatorObj = new MapCreatorObject(_modAPI, this, _eventsHandler, obj, type, playerRemoteId, objectName: objName, id: id);
+            uint hash = ModAPI.Misc.GetHashKey(hashName);
+            var obj = ModAPI.MapObject.Create(hash, ModAPI.LocalPlayer.Position, ModAPI.LocalPlayer.Rotation, dimension: ModAPI.LocalPlayer.Dimension);
+            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, obj, type, playerRemoteId, objectName: objName, id: id);
             _cacheMapEditorObjects[obj] = mapCreatorObj;
             return mapCreatorObj;
         }
@@ -258,7 +258,7 @@ namespace TDS_Client.Handler.MapCreator
                 if (_camerasHandler.ActiveCamera != null)
                     _camerasHandler.ActiveCamera.Position = new Position3D(map.MapCenter);
                 else
-                    _modAPI.LocalPlayer.Position = new Position3D(map.MapCenter);
+                    ModAPI.LocalPlayer.Position = new Position3D(map.MapCenter);
             }
 
             if (map.Target != null)
@@ -268,7 +268,7 @@ namespace TDS_Client.Handler.MapCreator
                 if (_camerasHandler.ActiveCamera != null)
                     _camerasHandler.ActiveCamera.Position = new Position3D(map.Target);
                 else
-                    _modAPI.LocalPlayer.Position = new Position3D(map.Target);
+                    ModAPI.LocalPlayer.Position = new Position3D(map.Target);
             }
 
             if (map.BombPlaces != null)
@@ -304,7 +304,7 @@ namespace TDS_Client.Handler.MapCreator
                 foreach (var vehPos in map.Vehicles)
                 {
                     string vehName = Convert.ToString(vehPos.Info);
-                    var obj = GetVehicle(_modAPI.Misc.GetHashKey(vehName), vehPos.OwnerRemoteId, vehName, vehPos.Id);
+                    var obj = GetVehicle(ModAPI.Misc.GetHashKey(vehName), vehPos.OwnerRemoteId, vehName, vehPos.Id);
                     obj.Freeze(true);
                     obj.LoadPos(vehPos);
                 }
@@ -317,13 +317,9 @@ namespace TDS_Client.Handler.MapCreator
                 {
                     foreach (var spawnPos in teamSpawns)
                     {
-                        var obj = GetTeamSpawn(Convert.ToInt32(spawnPos.Info), spawnPos.OwnerRemoteId, spawnPos.Id);
+                        var obj = GetTeamSpawn(Convert.ToInt32(spawnPos.Info), spawnPos.OwnerRemoteId, new Position3D(spawnPos), 
+                            new Position3D(spawnPos.RotX, spawnPos.RotY, spawnPos.RotZ), spawnPos.Id);
                         obj.Freeze(true);
-                        new TDSTimer(() =>
-                        {
-                            obj.Freeze(true);
-                            obj.LoadPos(spawnPos);
-                        }, 1000);
                     }
                 }
             }
@@ -341,7 +337,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public bool CanEditObject(MapCreatorObject obj)
         {
-            return obj.OwnerRemoteId == _modAPI.LocalPlayer.RemoteId || _lobbyHandler.IsLobbyOwner;
+            return obj.OwnerRemoteId == ModAPI.LocalPlayer.RemoteId || _lobbyHandler.IsLobbyOwner;
         }
 
         public IEnumerable<MapCreatorObject> GetAll()

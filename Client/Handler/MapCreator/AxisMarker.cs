@@ -31,7 +31,7 @@ namespace TDS_Client.Handler.MapCreator
 
         private readonly Color _originalColor;
 
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly UtilsHandler _utilsHandler;
         private readonly DxHandler _dxHandler;
         private readonly CamerasHandler _camerasHandler;
@@ -50,7 +50,7 @@ namespace TDS_Client.Handler.MapCreator
             Func<MapCreatorObject, Position3D> rotationGetter = null,
             Func<MapCreatorObject, float, Position3D> objectRotationGetter = null)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _utilsHandler = utilsHandler;
             _dxHandler = dxHandler;
             _camerasHandler = camerasHandler;
@@ -78,7 +78,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public bool IsRaycasted(ref Position3D hitPoint, ref Position3D norm, TDSCamera cam = null, float threshold = 0.1f, bool ignoreDistance = false)
         {
-            Position3D test1 = cam?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+            Position3D test1 = cam?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
             Position3D test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), cam);
             Position3D test3 = test2 - test1;
             Position3D from = test1 + test3 * 0.05f;
@@ -100,7 +100,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public bool IsSphereCasted(TDSCamera cam = null)
         {
-            Position3D test1 = cam?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+            Position3D test1 = cam?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
             Position3D test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), cam);
             Position3D test3 = test2 - test1;
             Position3D from = test1 + test3 * 0.05f;
@@ -115,10 +115,10 @@ namespace TDS_Client.Handler.MapCreator
             Position3D v = _utilsHandler.GetScreenCoordFromWorldCoord(Marker.Position);
             if (v != null)
             {
-                var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+                var camPos = _camerasHandler.ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
                 float dist = Marker.Position.DistanceTo(camPos);
                 if (IsPositionMarker)
-                    _modAPI.Graphics.DrawSprite("commonmenu", "common_medal", v.X, v.Y, Marker.Scale.X * 4 / dist * (_dxHandler.ResY / _dxHandler.ResX), Marker.Scale.X * 4 / dist, 0, 
+                    ModAPI.Graphics.DrawSprite("commonmenu", "common_medal", v.X, v.Y, Marker.Scale.X * 4 / dist * (_dxHandler.ResY / _dxHandler.ResX), Marker.Scale.X * 4 / dist, 0, 
                         Marker.Color.R, Marker.Color.G, Marker.Color.B, Marker.Color.A);
             }
         }
@@ -139,7 +139,7 @@ namespace TDS_Client.Handler.MapCreator
             }
             else
             {
-                Position3D test1 = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+                Position3D test1 = _camerasHandler.ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
                 Position3D test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), _camerasHandler.ActiveCamera);
                 Position3D test3 = test2 - test1;
                 Position3D from = test1 + test3 * 0.05f;
@@ -147,8 +147,8 @@ namespace TDS_Client.Handler.MapCreator
 
                 Position3D from1 = _objectPositionFromGetter(obj);
                 Position3D to1 = _objectPositionToGetter(obj);
-                _modAPI.Graphics.DrawLine(from1.X, from1.Y, from1.Z, to1.X, to1.Y, to1.Z, 255, 0, 0, 255);
-                _modAPI.Graphics.DrawLine(from.X, from.Y, from.Z, to.X, to.Y, to.Z, 255, 0, 0, 255);
+                ModAPI.Graphics.DrawLine(from1.X, from1.Y, from1.Z, to1.X, to1.Y, to1.Z, 255, 0, 0, 255);
+                ModAPI.Graphics.DrawLine(from.X, from.Y, from.Z, to.X, to.Y, to.Z, 255, 0, 0, 255);
                 Tuple<Position3D, Position3D> drawMe = _utilsHandler.ClosestDistanceBetweenLines(from, to, from1, to1);
                 obj.MovingPosition = drawMe.Item2 - (Marker.Position - obj.MovingPosition);
             }
@@ -181,7 +181,7 @@ namespace TDS_Client.Handler.MapCreator
             Position3D norm = new Position3D();
             if (IsRaycasted(ref hitPoint, ref norm, _camerasHandler.ActiveCamera))
             {
-                float dist = hitPoint.DistanceTo(_camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord());
+                float dist = hitPoint.DistanceTo(_camerasHandler.ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord());
                 if (dist < closestDist)
                 {
                     closestDist = dist;
@@ -195,7 +195,7 @@ namespace TDS_Client.Handler.MapCreator
         {
             if (IsSphereCasted(_camerasHandler.ActiveCamera))
             {
-                float dist = Marker.Position.DistanceTo(_camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord());
+                float dist = Marker.Position.DistanceTo(_camerasHandler.ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord());
                 if (dist < closestDist || closestMarker?.IsRotationMarker == true)
                 {
                     closestDist = dist;

@@ -9,12 +9,12 @@ namespace TDS_Client.Handler.MapCreator
         public Color HighlightColor_Edge = Color.FromArgb(255, 255, 255, 255);
         public Color HighlightColor_Full = Color.FromArgb(35, 255, 255, 255);
 
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly UtilsHandler _utilsHandler;
 
         public MapCreatorDrawHandler(IModAPI modAPI, UtilsHandler utilsHandler)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _utilsHandler = utilsHandler;
         }
 
@@ -78,38 +78,38 @@ namespace TDS_Client.Handler.MapCreator
             p8 = _utilsHandler.RotateZ(p8, rot.Z);
             p8 += pos;
 
-            _modAPI.Graphics.DrawLine(p1, p2, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p2, p3, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p3, p4, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p4, p1, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p1, p2, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p2, p3, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p3, p4, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p4, p1, HighlightColor_Edge);
 
-            _modAPI.Graphics.DrawPoly(p3, p4, p1, HighlightColor_Full);
-            _modAPI.Graphics.DrawPoly(p2, p3, p1, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p3, p4, p1, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p2, p3, p1, HighlightColor_Full);
 
-            _modAPI.Graphics.DrawLine(p5, p6, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p6, p7, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p7, p8, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p8, p5, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p5, p6, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p6, p7, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p7, p8, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p8, p5, HighlightColor_Edge);
 
-            _modAPI.Graphics.DrawPoly(p8, p7, p5, HighlightColor_Full);
-            _modAPI.Graphics.DrawPoly(p7, p6, p5, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p8, p7, p5, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p7, p6, p5, HighlightColor_Full);
 
-            _modAPI.Graphics.DrawLine(p1, p5, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p2, p6, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p3, p7, HighlightColor_Edge);
-            _modAPI.Graphics.DrawLine(p4, p8, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p1, p5, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p2, p6, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p3, p7, HighlightColor_Edge);
+            ModAPI.Graphics.DrawLine(p4, p8, HighlightColor_Edge);
 
-            _modAPI.Graphics.DrawPoly(p1, p4, p5, HighlightColor_Full);
-            _modAPI.Graphics.DrawPoly(p5, p4, p8, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p1, p4, p5, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p5, p4, p8, HighlightColor_Full);
 
-            _modAPI.Graphics.DrawPoly(p2, p5, p6, HighlightColor_Full);
-            _modAPI.Graphics.DrawPoly(p2, p1, p5, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p2, p5, p6, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p2, p1, p5, HighlightColor_Full);
 
-            _modAPI.Graphics.DrawPoly(p3, p2, p6, HighlightColor_Full);
-            _modAPI.Graphics.DrawPoly(p3, p6, p7, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p3, p2, p6, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p3, p6, p7, HighlightColor_Full);
 
-            _modAPI.Graphics.DrawPoly(p3, p7, p8, HighlightColor_Full);
-            _modAPI.Graphics.DrawPoly(p8, p4, p3, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p3, p7, p8, HighlightColor_Full);
+            ModAPI.Graphics.DrawPoly(p8, p4, p3, HighlightColor_Full);
         }
     }
 }

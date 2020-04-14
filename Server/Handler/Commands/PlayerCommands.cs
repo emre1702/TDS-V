@@ -34,7 +34,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             }
 
-            player.Lobby.RemovePlayer(player);
+            await player.Lobby.RemovePlayer(player);
             await _lobbiesHandler.MainMenu.AddPlayer(player, 0);
         }
 

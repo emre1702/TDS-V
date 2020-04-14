@@ -15,7 +15,7 @@ namespace TDS_Client.RAGEAPI.Entity
         public int Handle => _instance.Handle;
         public ushort RemoteId => _instance.RemoteId;
 
-        public Position3D Position
+        public virtual Position3D Position
         {
             get => _instance.Position.ToPosition3D();
             set => _instance.Position = value.ToVector3();

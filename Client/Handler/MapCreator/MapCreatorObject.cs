@@ -48,13 +48,13 @@ namespace TDS_Client.Handler.MapCreator
         private Position3D _movingPosition;
         private Position3D _movingRotation;
 
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly EventsHandler _eventsHandler;
 
         public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntityBase entity, MapCreatorPositionType type, 
             ushort ownerRemoteId, int? teamNumber = null, string objectName = null, int id = -1)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _eventsHandler = eventsHandler;
 
             Entity = entity;
@@ -182,25 +182,25 @@ namespace TDS_Client.Handler.MapCreator
             switch (Type)
             {
                 case MapCreatorPositionType.TeamSpawn:
-                    return _modAPI.Blip.Create(SharedConstants.TeamSpawnBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return ModAPI.Blip.Create(SharedConstants.TeamSpawnBlipSprite, Position, name: ID.ToString(), dimension: ModAPI.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.MapLimit:
-                    return _modAPI.Blip.Create(SharedConstants.MapLimitBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return ModAPI.Blip.Create(SharedConstants.MapLimitBlipSprite, Position, name: ID.ToString(), dimension: ModAPI.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.BombPlantPlace:
-                    return _modAPI.Blip.Create(SharedConstants.BombPlantPlaceBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return ModAPI.Blip.Create(SharedConstants.BombPlantPlaceBlipSprite, Position, name: ID.ToString(), dimension: ModAPI.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.MapCenter:
-                    return _modAPI.Blip.Create(SharedConstants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return ModAPI.Blip.Create(SharedConstants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: ModAPI.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.Target:
-                    return _modAPI.Blip.Create(SharedConstants.TargetBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return ModAPI.Blip.Create(SharedConstants.TargetBlipSprite, Position, name: ID.ToString(), dimension: ModAPI.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.Object:
-                    return _modAPI.Blip.Create(SharedConstants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return ModAPI.Blip.Create(SharedConstants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: ModAPI.LocalPlayer.Dimension);
 
                 case MapCreatorPositionType.Vehicle:
-                    return _modAPI.Blip.Create(SharedConstants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return ModAPI.Blip.Create(SharedConstants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: ModAPI.LocalPlayer.Dimension);
             }
 
             return null;

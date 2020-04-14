@@ -33,7 +33,7 @@ namespace TDS_Shared.Data.Models
         public EntityAttachInfoDto(int EntityValue, int TargetValue, int Bone,
             float PositionOffsetX, float PositionOffsetY, float PositionOffsetZ,
             float RotationOffsetX, float RotationOffsetY, float RotationOffsetZ,
-            int? LobbyId, Serializer serializer)
+            int? LobbyId)
         {
             this.EntityValue = EntityValue;
             this.TargetValue = TargetValue;
@@ -45,8 +45,6 @@ namespace TDS_Shared.Data.Models
             this.RotationOffsetY = RotationOffsetY;
             this.RotationOffsetZ = RotationOffsetZ;
             this.LobbyId = LobbyId;
-
-            this.Json = serializer.ToClient(this);
         }
     }
 }

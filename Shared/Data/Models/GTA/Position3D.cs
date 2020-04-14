@@ -246,7 +246,7 @@ namespace TDS_Shared.Data.Models.GTA
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return HashCode.Combine(this);
         }
     }
 }

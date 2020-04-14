@@ -6,6 +6,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
+using TDS_Client.Data.Enums;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Event
 {
@@ -35,5 +36,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Event
         ICollection<EventMethodData<WeaponShotDelegate>> WeaponShot { get; }
 
         void Add(string eventName, ObjectArgsDelegate method);
+        void CallLocal(string eventName, params object[] args);
     }
 }

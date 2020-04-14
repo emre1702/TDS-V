@@ -95,7 +95,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     LoggingHandler.LogError($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
                     SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
                     if (!IsOfficial)
-                        ModAPI.Thread.RunInMainThread(Remove);
+                        ModAPI.Thread.RunInMainThread(async () => await Remove());
                 }
             }
             else if (CurrentRoundStatus != RoundStatus.RoundEnd)
@@ -152,7 +152,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             bool isEmpty = IsEmpty();
             if (!_dontRemove && (Entity.IsTemporary && isEmpty || RemoveAfterOneRound))
             {
-                Remove();
+                await Remove();
                 return;
             }
 

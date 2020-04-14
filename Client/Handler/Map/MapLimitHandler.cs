@@ -7,20 +7,20 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.Map
 {
-    public class MapLimitHandler
+    public class MapLimitHandler : ServiceBase
     {
         private MapLimit _currentMapLimit;
 
         private readonly SettingsHandler _settingsHandler;
-        private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly DxHandler _dxHandler;
         private readonly TimerHandler _timerHandler;
 
-        public MapLimitHandler(SettingsHandler settingsHandler, IModAPI modAPI, RemoteEventsSender remoteEventsSender, EventsHandler eventsHander, DxHandler dxHandler, TimerHandler timerHandler)
+        public MapLimitHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHander, 
+            DxHandler dxHandler, TimerHandler timerHandler)
+            : base(modAPI, loggingHandler)
         {
             _settingsHandler = settingsHandler;
-            _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
@@ -31,7 +31,7 @@ namespace TDS_Client.Handler.Map
         public void Load(List<Position3D> edges)
         {
             _currentMapLimit?.Stop();
-            _currentMapLimit = new MapLimit(edges, _settingsHandler.MapLimitType, _settingsHandler.MapLimitTime, _settingsHandler.MapBorderColor, _modAPI, _remoteEventsSender, _settingsHandler, 
+            _currentMapLimit = new MapLimit(edges, _settingsHandler.MapLimitType, _settingsHandler.MapLimitTime, _settingsHandler.MapBorderColor, ModAPI, _remoteEventsSender, _settingsHandler, 
                 _dxHandler, _timerHandler);
         }
 

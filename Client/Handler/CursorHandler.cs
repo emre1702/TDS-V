@@ -4,24 +4,24 @@ using TDS_Client.Handler.Events;
 
 namespace TDS_Client.Handler
 {
-    public class CursorHandler
+    public class CursorHandler : ServiceBase
     {
         public bool Visible
         {
-            get => _modAPI.Cursor.Visible;
+            get => ModAPI.Cursor.Visible;
             set
             {
                 if (value)
                 {
                     if (++_cursorOpenedCounter == 1)
                     {
-                        _modAPI.Cursor.Visible = true;
+                        ModAPI.Cursor.Visible = true;
                         _eventsHandler.OnCursorToggled(true);
                     }
                 }
                 else if (--_cursorOpenedCounter <= 0)
                 {
-                    _modAPI.Cursor.Visible = false;
+                    ModAPI.Cursor.Visible = false;
                     _cursorOpenedCounter = 0;
                     _eventsHandler.OnCursorToggled(false);
                 }
@@ -30,12 +30,11 @@ namespace TDS_Client.Handler
 
         private int _cursorOpenedCounter;
 
-        private readonly IModAPI _modAPI;
         private readonly EventsHandler _eventsHandler;
 
-        public CursorHandler(IModAPI modAPI, EventsHandler eventsHandler, BindsHandler bindsHandler)
+        public CursorHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, BindsHandler bindsHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _eventsHandler = eventsHandler;
 
             bindsHandler.Add(Key.End, ManuallyToggleCursor);
@@ -43,9 +42,9 @@ namespace TDS_Client.Handler
 
         public void ManuallyToggleCursor(Key _)
         {
-            bool isVisible = _modAPI.Cursor.Visible;
+            bool isVisible = ModAPI.Cursor.Visible;
             _cursorOpenedCounter = isVisible ? 0 : 1;
-            _modAPI.Cursor.Visible = !isVisible;
+            ModAPI.Cursor.Visible = !isVisible;
             _eventsHandler.OnCursorToggled(!isVisible);
         }
     }

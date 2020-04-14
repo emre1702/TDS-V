@@ -1,12 +1,17 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Event;
+﻿using System;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Handler;
 using TDS_Shared.Data.Models;
 
 namespace TDS_Client.RAGEAPI.Event
 {
     class PlayerSpawnEventHandler : BaseEventHandler<SpawnDelegate>
     {
-        public PlayerSpawnEventHandler() : base()
+        private readonly LoggingHandler _loggingHandler;
+
+        public PlayerSpawnEventHandler(LoggingHandler loggingHandler) : base()
         {
+            _loggingHandler = loggingHandler;
             RAGE.Events.OnPlayerSpawn += PlayerSpawn;
         }
 
@@ -15,13 +20,23 @@ namespace TDS_Client.RAGEAPI.Event
             if (Actions.Count == 0)
                 return;
 
-            var cancel = new CancelEventArgs();
+            try
+            {
+                var cancel = new CancelEventArgs();
 
-            foreach (var action in Actions)
-                if (action.Requirement is null || action.Requirement())
-                    action.Method(cancel);
+                for (int i = Actions.Count - 1; i >= 0; --i)
+                {
+                    var action = Actions[i];
+                    if (action.Requirement is null || action.Requirement())
+                        action.Method(cancel);
+                }     
 
-            cancelMod.Cancel = cancel.Cancel;
-        }
+                cancelMod.Cancel = cancel.Cancel;
+            } 
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
+}
     }
 }

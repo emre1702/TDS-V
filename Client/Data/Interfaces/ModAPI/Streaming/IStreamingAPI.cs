@@ -12,5 +12,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Streaming
         void RequestModel(uint model);
         bool HasModelLoaded(uint model);
         void RequestAnimDict(string animDict);
+        void RequestNamedPtfxAsset(string fxName);
     }
 }

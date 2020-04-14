@@ -7,10 +7,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
-        public override void OnPlayerEnterColShape(IColShape shape, ITDSPlayer player)
+        public override void OnPlayerEnterColshape(IColShape shape, ITDSPlayer player)
         {
-            base.OnPlayerEnterColShape(shape, player);
-            CurrentGameMode?.OnPlayerEnterColShape(shape, player);
+            base.OnPlayerEnterColshape(shape, player);
+            CurrentGameMode?.OnPlayerEnterColshape(shape, player);
         }
 
         public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true)

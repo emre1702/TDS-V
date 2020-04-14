@@ -6,22 +6,22 @@ using TDS_Client.Handler.Events;
 
 namespace TDS_Client.Handler
 {
-    public class VoiceHandler
+    public class VoiceHandler : ServiceBase
     {
         private readonly SettingsHandler _settingsHandler;
         private readonly BrowserHandler _browserHandler;
-        private readonly IModAPI _modAPI;
         private readonly UtilsHandler _utilsHandler;
         private readonly BindsHandler _bindsHandler;
 
-        public VoiceHandler(BindsHandler bindsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler, IModAPI modAPI, UtilsHandler utilsHandler, EventsHandler eventsHandler)
+        public VoiceHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler, 
+            UtilsHandler utilsHandler, EventsHandler eventsHandler)
+            : base(modAPI, loggingHandler)
         {
             if (!modAPI.Voice.Allowed)
                 return;
 
             _settingsHandler = settingsHandler;
             _browserHandler = browserHandler;
-            _modAPI = modAPI;
             _utilsHandler = utilsHandler;
             _bindsHandler = bindsHandler;
 
@@ -32,7 +32,7 @@ namespace TDS_Client.Handler
 
         private void SetForPlayer(IPlayer player)
         {
-            if (!_modAPI.Voice.Allowed)
+            if (!ModAPI.Voice.Allowed)
                 return;
 
             player.AutoVolume = _settingsHandler.PlayerSettings.VoiceAutoVolume;
@@ -43,20 +43,20 @@ namespace TDS_Client.Handler
 
         private void Start(Control _)
         {
-            if (!_modAPI.Voice.Allowed)
+            if (!ModAPI.Voice.Allowed)
                 return;
 
             if (_browserHandler.InInput)
                 return;
 
-            _modAPI.Voice.Muted = false;
-            _browserHandler.PlainMain.StartPlayerTalking(_utilsHandler.GetDisplayName(_modAPI.LocalPlayer));
+            ModAPI.Voice.Muted = false;
+            _browserHandler.PlainMain.StartPlayerTalking(_utilsHandler.GetDisplayName(ModAPI.LocalPlayer));
         }
 
         private void Stop(Control _)
         {
-            _modAPI.Voice.Muted = true;
-            _browserHandler.PlainMain.StopPlayerTalking(_utilsHandler.GetDisplayName(_modAPI.LocalPlayer));
+            ModAPI.Voice.Muted = true;
+            _browserHandler.PlainMain.StopPlayerTalking(_utilsHandler.GetDisplayName(ModAPI.LocalPlayer));
         }
 
         private void EventsHandler_LoggedIn()
@@ -67,7 +67,7 @@ namespace TDS_Client.Handler
 
         private void EventsHandler_SettingsLoaded()
         {
-            foreach (var player in _modAPI.Pool.Players.All)
+            foreach (var player in ModAPI.Pool.Players.All)
             {
                 SetForPlayer(player);
             }

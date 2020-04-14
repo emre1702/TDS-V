@@ -8,8 +8,8 @@ namespace TDS_Client.Handler.Browser
 {
     public class MapCreatorVehicleChoiceBrowserHandler : BrowserHandlerBase
     {
-        public MapCreatorVehicleChoiceBrowserHandler(IModAPI modAPI, Serializer serializer)
-            : base(modAPI, serializer, Constants.AngularMapCreatorVehicleChoiceBrowserPath)
+        public MapCreatorVehicleChoiceBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer)
+            : base(modAPI, loggingHandler, serializer, Constants.AngularMapCreatorVehicleChoiceBrowserPath)
         {
 
         }

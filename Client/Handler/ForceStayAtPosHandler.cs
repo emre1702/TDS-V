@@ -12,21 +12,20 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
-    public class ForceStayAtPosHandler
+    public class ForceStayAtPosHandler : ServiceBase
     {
         private MapLimit _mapLimit;
 
-        private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
         private readonly DxHandler _dxHandler;
         private readonly TimerHandler _timerHandler;
         private readonly Serializer _serializer;
 
-        public ForceStayAtPosHandler(IModAPI modAPI, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
+        public ForceStayAtPosHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
             Serializer serializer)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
             _settingsHandler = settingsHandler;
             _dxHandler = dxHandler;
@@ -52,7 +51,7 @@ namespace TDS_Client.Handler
                 new Position3D { X = pos.X, Y = pos.Y + radius, Z = pos.Z },  // bottom 
                 new Position3D { X = pos.X - radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // bottom left  
             };
-            _mapLimit = new MapLimit(edges, type, allowedTimeOut, Color.FromArgb(30, 255, 255, 255), _modAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
+            _mapLimit = new MapLimit(edges, type, allowedTimeOut, Color.FromArgb(30, 255, 255, 255), ModAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
             _mapLimit.Start();
         }
 

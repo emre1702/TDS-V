@@ -15,9 +15,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return true;
         }
 
-        public override void RemovePlayer(ITDSPlayer player)
+        public override async Task RemovePlayer(ITDSPlayer player)
         {
-            base.RemovePlayer(player);
+            await base.RemovePlayer(player);
 
             player.Team?.SpectateablePlayers?.Remove(player);
             player.LastKillAt = null;

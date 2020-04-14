@@ -41,7 +41,7 @@ namespace TDS_Client.Handler.Entities
 
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
         private readonly DxHandler _dxHandler;
@@ -50,7 +50,7 @@ namespace TDS_Client.Handler.Entities
         public MapLimit(List<Position3D> edges, MapLimitType type, int maxOutsideCounter, Color mapBorderColor, IModAPI modAPI, RemoteEventsSender remoteEventsSender,
             SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
             _tickEventMethod = new EventMethodData<TickDelegate>(Draw);
             _settingsHandler = settingsHandler;
@@ -81,7 +81,7 @@ namespace TDS_Client.Handler.Entities
                     _checkTimer = new TDSTimer(Check, 1000, 0);
 
             }
-            _modAPI.Event.Tick.Add(_tickEventMethod);
+            ModAPI.Event.Tick.Add(_tickEventMethod);
             DrawGpsRoutes();
             _started = true;
         }
@@ -97,7 +97,7 @@ namespace TDS_Client.Handler.Entities
             _info?.Remove();
             _info = null;
             _outsideCounter = _maxOutsideCounter;
-            _modAPI.Event.Tick.Remove(_tickEventMethod);
+            ModAPI.Event.Tick.Remove(_tickEventMethod);
             ClearGpsRoutes();
             _started = false;
         }
@@ -106,8 +106,8 @@ namespace TDS_Client.Handler.Entities
         {
             if (SavePosition)
             {
-                _lastPosInMap = _modAPI.LocalPlayer.Position;
-                _lastRotInMap = _modAPI.LocalPlayer.Heading;
+                _lastPosInMap = ModAPI.LocalPlayer.Position;
+                _lastRotInMap = ModAPI.LocalPlayer.Heading;
             }
             if (_outsideCounter == _maxOutsideCounter)
                 return;
@@ -129,7 +129,7 @@ namespace TDS_Client.Handler.Entities
             foreach (var edge in edges)
             {
                 float edgeZ = 0;
-                if (_modAPI.Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ))
+                if (ModAPI.Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ))
                     edge.Z = edgeZ;
             }
 
@@ -190,21 +190,21 @@ namespace TDS_Client.Handler.Entities
                 RefreshInfoTeleportAfterTime();
             else
             {
-                _modAPI.LocalPlayer.Position = _lastPosInMap;
+                ModAPI.LocalPlayer.Position = _lastPosInMap;
                 Reset();
             }
         }
 
         private void IsOutsideBlock()
         {
-            _modAPI.LocalPlayer.Position = _lastPosInMap;
-            _modAPI.LocalPlayer.Heading = (_lastRotInMap + 180) % 360;
+            ModAPI.LocalPlayer.Position = _lastPosInMap;
+            ModAPI.LocalPlayer.Heading = (_lastRotInMap + 180) % 360;
         }
 
         private void RefreshInfoKillAfterTime()
         {
             if (_info == null)
-                _info = new DxText(_dxHandler, _modAPI, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f, 
+                _info = new DxText(_dxHandler, ModAPI, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f, 
                     Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
             else
                 _info.Text = string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString());
@@ -213,13 +213,13 @@ namespace TDS_Client.Handler.Entities
         private void RefreshInfoTeleportAfterTime()
         {
             if (_info == null)
-                _info = new DxText(_dxHandler, _modAPI, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f, 
+                _info = new DxText(_dxHandler, ModAPI, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f, 
                     Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
             else
                 _info.Text = string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString());
         }
 
-        private bool IsWithin() => IsWithin(_modAPI.LocalPlayer.Position);
+        private bool IsWithin() => IsWithin(ModAPI.LocalPlayer.Position);
 
         private bool IsWithin(Position3D point)
         {
@@ -267,7 +267,7 @@ namespace TDS_Client.Handler.Entities
             if (!_createdGpsRoutes)
                 return;
 
-            _modAPI.Native.Invoke(NativeHash.CLEAR_GPS_CUSTOM_ROUTE);
+            ModAPI.Native.Invoke(NativeHash.CLEAR_GPS_CUSTOM_ROUTE);
 
             _createdGpsRoutes = false;
         }
@@ -281,8 +281,8 @@ namespace TDS_Client.Handler.Entities
                 var edgeTarget = i == _edges.Count - 1 ? _edges[0] : _edges[i + 1];
                 float edgeStartZ = 0;
                 float edgeTargetZ = 0;
-                _modAPI.Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, _modAPI.LocalPlayer.Position.Z, ref edgeStartZ);
-                _modAPI.Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, _modAPI.LocalPlayer.Position.Z, ref edgeTargetZ);
+                ModAPI.Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, ModAPI.LocalPlayer.Position.Z, ref edgeStartZ);
+                ModAPI.Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, ModAPI.LocalPlayer.Position.Z, ref edgeTargetZ);
 
                 //var textureRes = Graphics.GetTextureResolution("commonmenu", "gradient_bgd");
                 //Graphics.Draw  .DrawSprite("commonmenu", "gradient_bgd", )
@@ -292,11 +292,11 @@ namespace TDS_Client.Handler.Entities
                 totalMaxTop = Math.Max(totalMaxTop, maxTop);
                 if (_edgesMaxTop != -1)
                     maxTop = _edgesMaxTop;
-                _modAPI.Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, maxTop, edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeStart.X, edgeStart.Y, edgeStartZ, color.R, color.G, color.B, color.A);
-                _modAPI.Graphics.DrawPoly(edgeStart.X, edgeStart.Y, edgeStartZ, edgeStart.X, edgeStart.Y, maxTop, edgeTarget.X, edgeTarget.Y, maxTop, color.R, color.G, color.B, color.A);
+                ModAPI.Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, maxTop, edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeStart.X, edgeStart.Y, edgeStartZ, color.R, color.G, color.B, color.A);
+                ModAPI.Graphics.DrawPoly(edgeStart.X, edgeStart.Y, edgeStartZ, edgeStart.X, edgeStart.Y, maxTop, edgeTarget.X, edgeTarget.Y, maxTop, color.R, color.G, color.B, color.A);
 
-                _modAPI.Graphics.DrawPoly(edgeStart.X, edgeStart.Y, maxTop, edgeStart.X, edgeStart.Y, edgeStartZ, edgeTarget.X, edgeTarget.Y, edgeTargetZ, color.R, color.G, color.B, color.A);
-                _modAPI.Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeTarget.X, edgeTarget.Y, maxTop, edgeStart.X, edgeStart.Y, maxTop, color.R, color.G, color.B, color.A);
+                ModAPI.Graphics.DrawPoly(edgeStart.X, edgeStart.Y, maxTop, edgeStart.X, edgeStart.Y, edgeStartZ, edgeTarget.X, edgeTarget.Y, edgeTargetZ, color.R, color.G, color.B, color.A);
+                ModAPI.Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeTarget.X, edgeTarget.Y, maxTop, edgeStart.X, edgeStart.Y, maxTop, color.R, color.G, color.B, color.A);
 
 
                 /*Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ - 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ - 0.5f, 150, 0, 0, 255);

@@ -45,7 +45,7 @@ namespace TDS_Client.RAGEAPI
 
             RAGE.Game.Weapon.CreateWeaponObject(weaponHash, -1, pos.X, pos.Y + 5, pos.Z, true, 1f, 0, 0, 180);
             RAGE.Game.Weapon.CreateWeaponObject(weaponHash, -1, pos.X, pos.Y + 7, pos.Z, true, 1f, 0, 180, 1);
-        }*/
+        }
 
         private void TestWeapon2()
         {
@@ -66,6 +66,6 @@ namespace TDS_Client.RAGEAPI
             var weapon4 = RAGE.Game.Weapon.CreateWeaponObject(weaponHash, -1, pos.X, pos.Y + 1, pos.Z, true, 1f, 0, 0, 1);
             RAGE.Game.Invoker.Invoke(RAGE.Game.Natives.SetEntityHeading, weapon4, 250);
 
-        }
+        }*/
     }
 }

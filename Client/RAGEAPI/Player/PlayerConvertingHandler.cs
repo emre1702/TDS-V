@@ -11,6 +11,9 @@ namespace TDS_Client.RAGEAPI.Player
 
         public IPlayer GetPlayer(RAGE.Elements.Player modPlayer)
         {
+            if (modPlayer is null)
+                return null;
+
             if (!_playersCache.TryGetValue(modPlayer, out IPlayer player))
             {
                 player = new Player(modPlayer);

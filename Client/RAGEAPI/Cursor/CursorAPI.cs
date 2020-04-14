@@ -9,7 +9,7 @@ namespace TDS_Client.RAGEAPI.Cursor
         public bool Visible 
         { 
             get => RAGE.Ui.Cursor.Visible; 
-            set => RAGE.Ui.Cursor.Visible = true; 
+            set => RAGE.Ui.Cursor.Visible = value; 
         }
 
         public Position2D Position

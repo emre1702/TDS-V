@@ -29,6 +29,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Utils;
 using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Client.Data.Interfaces.ModAPI.Voice;
 using TDS_Client.Data.Interfaces.ModAPI.Weapon;
+using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Audio;
 using TDS_Client.RAGEAPI.Blip;
 using TDS_Client.RAGEAPI.Browser;
@@ -102,17 +103,19 @@ namespace TDS_Client.RAGEAPI
             var playerConvertingHandler = new PlayerConvertingHandler();
             var entityConvertingHandler = new EntityConvertingHandler(playerConvertingHandler);
 
+            Console = new ConsoleAPI();
+            var loggingHandler = new LoggingHandler(this);
+
             Audio = new AudioAPI();
             Browser = new BrowserAPI();
             Blip = new BlipAPI(entityConvertingHandler);
             Cam = new CamAPI();
             Chat = new ChatAPI();
-            Console = new ConsoleAPI();
             Control = new ControlAPI();
             Cursor = new CursorAPI();
             Discord = new DiscordAPI();
             Entity = new EntityAPI();
-            Event = new EventAPI(playerConvertingHandler, entityConvertingHandler);
+            Event = new EventAPI(playerConvertingHandler, entityConvertingHandler, loggingHandler);
             Graphics = new GraphicsAPI();
             Input = new InputAPI();
             Locale = new LocaleAPI();

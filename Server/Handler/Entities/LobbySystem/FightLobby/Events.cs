@@ -31,8 +31,19 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         player.SendEvent(ToClientEvent.PlayerSpectateMode);
                     }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
                 }
+                --player.Lifes;
             }
-            --player.Lifes;
+            // Bug occured, he had 0 life and died
+            // Spawn him again so the camera effects for wasted (and blackscreen) disappears
+            else
+            {
+                DeathSpawnTimer[player] = new TDSTimer(() =>
+                {
+                    SpectateOtherSameTeam(player);
+                    player.SendEvent(ToClientEvent.PlayerSpectateMode);
+                }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
+            }
+            
         }
 
         public virtual void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)

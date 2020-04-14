@@ -4,16 +4,20 @@ using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.RAGEAPI.Entity;
 using TDS_Shared.Data.Enums;
+using TDS_Client.Handler;
+using System;
 
 namespace TDS_Client.RAGEAPI.Event
 {
     public class IncomingDamageEventHandler : BaseEventHandler<IncomingDamageDelegate>
     {
+        private readonly LoggingHandler _loggingHandler;
         private readonly EntityConvertingHandler _entityConvertingHandler;
 
-        public IncomingDamageEventHandler(EntityConvertingHandler entityConvertingHandler)
+        public IncomingDamageEventHandler(LoggingHandler loggingHandler, EntityConvertingHandler entityConvertingHandler)
             : base()
         {
+            _loggingHandler = loggingHandler;
             _entityConvertingHandler = entityConvertingHandler;
 
             RAGE.Events.OnIncomingDamage += IncomingDamage;
@@ -25,17 +29,28 @@ namespace TDS_Client.RAGEAPI.Event
             if (Actions.Count == 0)
                 return;
 
-            IPlayer sourcePlayer = _entityConvertingHandler.GetEntity(sourcePlayerMod);
-            IEntity sourceEntity = _entityConvertingHandler.GetEntity(sourceEntityMod);
-            IEntity targetEntity = _entityConvertingHandler.GetEntity(targetEntityMod);
-            var weaponHash = (WeaponHash)weaponHashMod;
-            var cancel = new CancelEventArgs();
+            try
+            {
+                IPlayer sourcePlayer = _entityConvertingHandler.GetEntity(sourcePlayerMod);
+                IEntity sourceEntity = _entityConvertingHandler.GetEntity(sourceEntityMod);
+                IEntity targetEntity = _entityConvertingHandler.GetEntity(targetEntityMod);
+                var weaponHash = (WeaponHash)weaponHashMod;
+                var cancel = new CancelEventArgs();
 
-            foreach (var action in Actions)
-                if (action.Requirement is null || action.Requirement())
-                    action.Method(sourcePlayer, sourceEntity, targetEntity, weaponHash, boneIdx, damage, cancel);
 
-            cancelMod.Cancel = cancel.Cancel;
+                for (int i = Actions.Count - 1; i >= 0; --i)
+                {
+                    var action = Actions[i];
+                    if (action.Requirement is null || action.Requirement())
+                        action.Method(sourcePlayer, sourceEntity, targetEntity, weaponHash, boneIdx, damage, cancel);
+                }
+
+                cancelMod.Cancel = cancel.Cancel;
+            } 
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
     }

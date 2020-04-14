@@ -12,7 +12,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         void ClearLastDamageBone();
         void ClearLastWeaponDamage();
         void ExplodeHead(WeaponHash weaponHash);
-        void GetAmmoInClip(WeaponHash weaponHash, ref int ammoInClip);
+        int GetAmmoInClip(WeaponHash weaponHash);
         int GetAmmoInWeapon(WeaponHash weaponHash);
         WeaponHash GetSelectedWeapon();
         bool IsDeadOrDying();

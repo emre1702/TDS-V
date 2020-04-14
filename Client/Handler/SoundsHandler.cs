@@ -5,14 +5,13 @@ using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.Manager.Utility
 {
-    public class SoundsHandler
+    public class SoundsHandler : ServiceBase
     {
-        private readonly IModAPI _modAPI;
         private readonly SettingsHandler _settingsHandler;
 
-        public SoundsHandler(IModAPI modAPI, SettingsHandler settingsHandler)
+        public SoundsHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _settingsHandler = settingsHandler;
         }
 
@@ -20,7 +19,7 @@ namespace TDS_Client.Manager.Utility
         {
             if (!Constants.SoundPaths.TryGetValue(sound, out string path))
             {
-                _modAPI.Chat.Output(string.Format(_settingsHandler.Language.ERROR, "PlaySound: " + sound.ToString()));
+                ModAPI.Chat.Output(string.Format(_settingsHandler.Language.ERROR, "PlaySound: " + sound.ToString()));
                 return;
             }
 

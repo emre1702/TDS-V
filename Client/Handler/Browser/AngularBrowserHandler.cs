@@ -21,8 +21,9 @@ namespace TDS_Client.Handler.Browser
         private readonly SettingsHandler _settingsHandler;
         private readonly CursorHandler _cursorHandler;
 
-        public AngularBrowserHandler(IModAPI modAPI, SettingsHandler settingsHandler, CursorHandler cursorHandler, Serializer serializer, EventsHandler eventsHandler)
-            : base(modAPI, serializer, Constants.AngularMainBrowserPath)
+        public AngularBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler, Serializer serializer, 
+            EventsHandler eventsHandler)
+            : base(modAPI, loggingHandler, serializer, Constants.AngularMainBrowserPath)
         {
             _settingsHandler = settingsHandler;
             _cursorHandler = cursorHandler;
@@ -268,7 +269,7 @@ namespace TDS_Client.Handler.Browser
             string json = (string)args[0];
             var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
             _settingsHandler.LoadUserSettings(settings);
-            LoadUserpanelData((int)UserpanelLoadDataType.SettingsRest, json);
+            LoadUserpanelData((int)UserpanelLoadDataType.SettingsNormal, json);
         }
 
         private void OnToBrowserEventMethod(object[] args)

@@ -53,7 +53,7 @@ namespace TDS_Client.Handler.Deathmatch
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly EventMethodData<WeaponShotDelegate> _weaponShotEventMethod;
 
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly BrowserHandler _browserHandler;
         private readonly BindsHandler _bindsHandler;
         private readonly EventsHandler _eventsHandler;
@@ -110,7 +110,7 @@ namespace TDS_Client.Handler.Deathmatch
             _tickEventMethod = new EventMethodData<TickDelegate>(OnTick);
             _weaponShotEventMethod = new EventMethodData<WeaponShotDelegate>(OnWeaponShot);
 
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _browserHandler = browserHandler;
             _bindsHandler = bindsHandler;
             _eventsHandler = eventsHandler;
@@ -126,8 +126,8 @@ namespace TDS_Client.Handler.Deathmatch
                 return;
             _isActive = true;
             _bindsHandler.Add(Key.F6, ToggleFireMode);
-            _modAPI.Event.Tick.Add(_tickEventMethod);
-            _modAPI.Event.WeaponShot.Add(_weaponShotEventMethod);
+            ModAPI.Event.Tick.Add(_tickEventMethod);
+            ModAPI.Event.WeaponShot.Add(_weaponShotEventMethod);
             _eventsHandler.WeaponChanged += CustomEventManager_OnWeaponChange;
             _eventsHandler.LanguageChanged += CustomEventManager_OnLanguageChanged;
 
@@ -140,8 +140,8 @@ namespace TDS_Client.Handler.Deathmatch
                 return;
             _isActive = false;
             _bindsHandler.Remove(Key.F6, ToggleFireMode);
-            _modAPI.Event.Tick.Remove(_tickEventMethod);
-            _modAPI.Event.WeaponShot.Remove(_weaponShotEventMethod);
+            ModAPI.Event.Tick.Remove(_tickEventMethod);
+            ModAPI.Event.WeaponShot.Remove(_weaponShotEventMethod);
             _eventsHandler.WeaponChanged -= CustomEventManager_OnWeaponChange;
             if (_instructionalButton != null)
             {
@@ -174,7 +174,7 @@ namespace TDS_Client.Handler.Deathmatch
                 CurrentFiringMode = newFiringMode;
                 _currentBurstShots = 0;
 
-                _modAPI.Audio.PlaySoundFrontend(-1, AudioName.FASTER_CLICK, AudioRef.RESPAWN_ONLINE_SOUNDSET);
+                ModAPI.Audio.PlaySoundFrontend(-1, AudioName.FASTER_CLICK, AudioRef.RESPAWN_ONLINE_SOUNDSET);
                 _lastFiringModeByWeapon[_currentWeapon] = _currentFiringMode;
             }
         }
@@ -190,17 +190,17 @@ namespace TDS_Client.Handler.Deathmatch
                     break;
                 case FiringMode.Burst:
                     if (_currentBurstShots > 0 && _currentBurstShots < 3)
-                        _modAPI.Control.SetControlNormal(InputGroup.MOVE, Control.Attack, 1f);
+                        ModAPI.Control.SetControlNormal(InputGroup.MOVE, Control.Attack, 1f);
                     else if (_currentBurstShots == 3)
                     {
-                        _modAPI.LocalPlayer.DisablePlayerFiring(false);
-                        if (_modAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
+                        ModAPI.LocalPlayer.DisablePlayerFiring(false);
+                        if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
                             _currentBurstShots = 0;
                     }
                     break;
                 case FiringMode.Single:
-                    if (_modAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, Control.Attack))
-                        _modAPI.LocalPlayer.DisablePlayerFiring(false);
+                    if (ModAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, Control.Attack))
+                        ModAPI.LocalPlayer.DisablePlayerFiring(false);
                     break;
                     /* case FiringMode.Safe:
                          Player.DisablePlayerFiring(false);
@@ -254,13 +254,13 @@ namespace TDS_Client.Handler.Deathmatch
 
         private bool IsWeaponIgnored(WeaponHash weaponHash)
         {
-            uint group = _modAPI.Weapon.GetWeapontypeGroup(weaponHash);
+            uint group = ModAPI.Weapon.GetWeapontypeGroup(weaponHash);
             return _ignoredWeaponGroups.Contains(group);
         }
 
         private bool CanWeaponUseBurstFire(WeaponHash weaponHash)
         {
-            return _burstFireAllowedGroups.Contains(_modAPI.Weapon.GetWeapontypeGroup(weaponHash)) || _burstFireAllowedWeapons.Contains(weaponHash);
+            return _burstFireAllowedGroups.Contains(ModAPI.Weapon.GetWeapontypeGroup(weaponHash)) || _burstFireAllowedWeapons.Contains(weaponHash);
         }
 
         private bool CanWeaponUseSingleFire(WeaponHash weaponHash)

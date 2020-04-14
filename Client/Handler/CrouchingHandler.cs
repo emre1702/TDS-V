@@ -11,7 +11,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
-    public class CrouchingHandler
+    public class CrouchingHandler : ServiceBase
     {
         private const string _movementClipSet = "move_ped_crouched";
         private const string _strafeClipSet = "move_ped_crouched_strafing";
@@ -20,7 +20,8 @@ namespace TDS_Client.Handler
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
 
-        public CrouchingHandler(IModAPI modAPI, EventsHandler eventsHandler, DataSyncHandler dataSyncHandler, RemoteEventsSender remoteEventsSender)
+        public CrouchingHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, DataSyncHandler dataSyncHandler, RemoteEventsSender remoteEventsSender)
+            : base(modAPI, loggingHandler)
         {
             _dataSyncHandler = dataSyncHandler;
             _remoteEventsSender = remoteEventsSender;

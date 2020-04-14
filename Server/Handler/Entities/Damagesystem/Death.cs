@@ -36,10 +36,12 @@ namespace TDS_Server.Core.Damagesystem
                 }
 
                 KillingSpreeKill(killer);
+
+                // Assist //
+                CheckForAssist(player, killer);
             }
 
-            // Assist //
-            CheckForAssist(player, killer);
+            
 
             if (player.Lobby?.SavePlayerLobbyStats == true && player.Lobby?.IsOfficial == true)
             {

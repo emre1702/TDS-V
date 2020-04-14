@@ -19,13 +19,9 @@ namespace TDS_Client.RAGEAPI.Ped
         }
 
         public int GetPedArmor(int handle)
-        {
-            throw new System.NotImplementedException();
-        }
+            => RAGE.Game.Ped.GetPedArmour(handle);
 
-        public int GetPedBoneIndex(int targetValue, int bone)
-        {
-            throw new System.NotImplementedException();
-        }
+        public int GetPedBoneIndex(int ped, int boneId)
+            => RAGE.Game.Ped.GetPedBoneIndex(ped, boneId);
     }
 }

@@ -17,14 +17,13 @@ using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Lobby
 {
-    public class LobbyMapDatasHandler
+    public class LobbyMapDatasHandler : ServiceBase
     {
         public ClientSyncedDataDto MapDatas { get; set; }
 
         private DxText _mapInfo;
         private readonly List<IEntityBase> _objects = new List<IEntityBase>();
 
-        private readonly IModAPI _modAPI;
         private readonly DxHandler _dxHandler;
         private readonly TimerHandler _timerHandler;
         private readonly LobbyCamHandler _lobbyCamHandler;
@@ -33,10 +32,10 @@ namespace TDS_Client.Handler.Lobby
         private readonly SettingsHandler _settingsHandler;
         private readonly EventsHandler _eventsHandler;
 
-        public LobbyMapDatasHandler(IModAPI modAPI, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler, LobbyCamHandler lobbyCamHandler, 
-            MapLimitHandler mapLimitHandler, Serializer serializer, SettingsHandler settingsHandler)
+        public LobbyMapDatasHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler, 
+            LobbyCamHandler lobbyCamHandler, MapLimitHandler mapLimitHandler, Serializer serializer, SettingsHandler settingsHandler)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
             _lobbyCamHandler = lobbyCamHandler;
@@ -53,22 +52,29 @@ namespace TDS_Client.Handler.Lobby
 
         public void SetMapData(ClientSyncedDataDto mapData)
         {
-            MapDatas = mapData;
+            try
+            {
+                MapDatas = mapData;
 
-            if (_mapInfo == null)
-                _mapInfo = new DxText(_dxHandler, _modAPI, _timerHandler, MapDatas.Name, 0.01f, 0.995f, 0.2f, Color.White, alignmentX: AlignmentX.Left, alignmentY: AlignmentY.Bottom);
-            else
-                _mapInfo.Text = MapDatas.Name;
+                if (_mapInfo == null)
+                    _mapInfo = new DxText(_dxHandler, ModAPI, _timerHandler, MapDatas.Name, 0.01f, 0.995f, 0.2f, Color.White, alignmentX: AlignmentX.Left, alignmentY: AlignmentY.Bottom);
+                else
+                    _mapInfo.Text = MapDatas.Name;
 
-            LoadMap(mapData);
+                LoadMap(mapData);
 
-            if (mapData.Target != null)
-                _lobbyCamHandler.SetToMapCenter(mapData.Target);
-            else if (mapData.Center != null)
-                _lobbyCamHandler.SetToMapCenter(mapData.Center);
+                if (mapData.Target != null)
+                    _lobbyCamHandler.SetToMapCenter(mapData.Target);
+                else if (mapData.Center != null)
+                    _lobbyCamHandler.SetToMapCenter(mapData.Center);
 
-            if (mapData.MapEdges != null && mapData.MapEdges.Count > 0)
-                _mapLimitHandler.Load(mapData.MapEdges);
+                if (mapData.MapEdges != null && mapData.MapEdges.Count > 0)
+                    _mapLimitHandler.Load(mapData.MapEdges);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void CustomEventManager_OnLobbyLeave(SyncedLobbySettings settings)
@@ -86,53 +92,60 @@ namespace TDS_Client.Handler.Lobby
 
         private void LoadMap(ClientSyncedDataDto map)
         {
-            OnMapClearMethod(Array.Empty<object>());
-
-            if (map.Target != null)
+            try
             {
-                var obj = _modAPI.MapObject.Create(_modAPI.Misc.GetHashKey(Constants.TargetHashName), map.Target, new Position3D(), dimension: _modAPI.LocalPlayer.Dimension);
-                obj.FreezePosition(true);
-                obj.SetCollision(false, true);
-                obj.SetInvincible(true);
-                _objects.Add(obj);
-            }
+                OnMapClearMethod(Array.Empty<object>());
 
-            if (map.Objects != null)
-            {
-                foreach (var data in map.Objects)
+                if (map.Target != null)
                 {
-                    string objName = Convert.ToString(data.Info);
-                    uint objectHash = _modAPI.Misc.GetHashKey(objName);
-                    var obj = _modAPI.MapObject.Create(objectHash, GetPos(data), GetRot(data), dimension: _modAPI.LocalPlayer.Dimension);
+                    var obj = ModAPI.MapObject.Create(ModAPI.Misc.GetHashKey(Constants.TargetHashName), map.Target, new Position3D(), dimension: ModAPI.LocalPlayer.Dimension);
                     obj.FreezePosition(true);
+                    obj.SetCollision(false, true);
                     obj.SetInvincible(true);
                     _objects.Add(obj);
                 }
-            }
 
-            if (map.BombPlaces != null)
-            {
-                foreach (var data in map.BombPlaces)
+                if (map.Objects != null)
                 {
-                    var bombPlantHash = _modAPI.Misc.GetHashKey(Constants.BombPlantPlaceHashName);
-                    var obj = _modAPI.MapObject.Create(bombPlantHash, data, new Position3D(), dimension: _modAPI.LocalPlayer.Dimension);
-                    obj.FreezePosition(true);
-                    obj.SetInvincible(true);
-                    _objects.Add(obj);
+                    foreach (var data in map.Objects)
+                    {
+                        string objName = Convert.ToString(data.Info);
+                        uint objectHash = ModAPI.Misc.GetHashKey(objName);
+                        var obj = ModAPI.MapObject.Create(objectHash, GetPos(data), GetRot(data), dimension: ModAPI.LocalPlayer.Dimension);
+                        obj.FreezePosition(true);
+                        obj.SetInvincible(true);
+                        _objects.Add(obj);
+                    }
+                }
+
+                if (map.BombPlaces != null)
+                {
+                    foreach (var data in map.BombPlaces)
+                    {
+                        var bombPlantHash = ModAPI.Misc.GetHashKey(Constants.BombPlantPlaceHashName);
+                        var obj = ModAPI.MapObject.Create(bombPlantHash, data, new Position3D(), dimension: ModAPI.LocalPlayer.Dimension);
+                        obj.FreezePosition(true);
+                        obj.SetInvincible(true);
+                        _objects.Add(obj);
+                    }
+                }
+
+                if (map.Vehicles != null)
+                {
+                    foreach (var data in map.Vehicles)
+                    {
+                        string vehName = Convert.ToString(data.Info);
+                        uint vehHash = ModAPI.Misc.GetHashKey(vehName);
+                        var veh = ModAPI.Vehicle.Create(vehHash, GetPos(data), GetRot(data), map.Name, locked: true, dimension: ModAPI.LocalPlayer.Dimension);
+                        veh.FreezePosition(true);
+                        veh.SetInvincible(true);
+                        _objects.Add(veh);
+                    }
                 }
             }
-
-            if (map.Vehicles != null)
+            catch (Exception ex)
             {
-                foreach (var data in map.Vehicles)
-                {
-                    string vehName = Convert.ToString(data.Info);
-                    uint vehHash = _modAPI.Misc.GetHashKey(vehName);
-                    var veh = _modAPI.Vehicle.Create(vehHash, GetPos(data), GetRot(data), map.Name, locked: true, dimension: _modAPI.LocalPlayer.Dimension);
-                    veh.FreezePosition(true);
-                    veh.SetInvincible(true);
-                    _objects.Add(veh);
-                }
+                Logging.LogError(ex);
             }
         }
 
@@ -148,28 +161,42 @@ namespace TDS_Client.Handler.Lobby
 
         private void OnMapClearMethod(object[] args)
         {
-            foreach (var obj in _objects)
+            try
             {
-                obj.Destroy();
-            }
-            _objects.Clear();
+                foreach (var obj in _objects)
+                {
+                    obj.Destroy();
+                }
+                _objects.Clear();
 
-            _eventsHandler.OnMapCleared();
+                _eventsHandler.OnMapCleared();
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void OnMapChangeMethod(object[] args)
         {
-            if (args.Length > 0)
+            try
             {
-                var mapData = _serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
-                SetMapData(mapData);
-            }
+                if (args.Length > 0)
+                {
+                    var mapData = _serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
+                    SetMapData(mapData);
+                }
             
-            _modAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
-            _modAPI.Cam.SetCamEffect(0);
-            _modAPI.Cam.DoScreenFadeIn(_settingsHandler.MapChooseTime);
+                ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
+                ModAPI.Cam.SetCamEffect(0);
+                ModAPI.Cam.DoScreenFadeIn(_settingsHandler.MapChooseTime);
 
-            _eventsHandler.OnMapChanged();
-        }
+                _eventsHandler.OnMapChanged();
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+}
     }
 }

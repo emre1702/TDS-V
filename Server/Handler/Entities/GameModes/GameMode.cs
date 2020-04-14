@@ -57,7 +57,7 @@ namespace TDS_Server.Handler.Entities.GameModes
 
         public virtual bool IsWeaponAllowed(WeaponHash weaponHash) => true;
 
-        public virtual void OnPlayerEnterColShape(IColShape shape, ITDSPlayer player) { }
+        public virtual void OnPlayerEnterColshape(IColShape shape, ITDSPlayer player) { }
         public virtual void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer) { }
         public virtual void OnPlayerWeaponSwitch(ITDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon) { }
 

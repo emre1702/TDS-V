@@ -1,6 +1,6 @@
 ﻿using TDS_Client.Data.Interfaces.ModAPI.Player;
 
-namespace TDS_Client.RAGEAPI
+namespace TDS_Client.RAGEAPI.Player
 {
     internal class PlayerAPI : IPlayerAPI
     {

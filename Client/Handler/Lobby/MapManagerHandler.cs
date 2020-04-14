@@ -18,7 +18,7 @@ namespace TDS_Client.Handler.Lobby
         private string _lastMapsJson;
         private bool _mapBuyDataSynced;
 
-        private readonly IModAPI _modAPI;
+        private readonly IModAPI ModAPI;
         private readonly BrowserHandler _browserHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly CursorHandler _cursorHandler;
@@ -29,7 +29,7 @@ namespace TDS_Client.Handler.Lobby
         public MapManagerHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler browserHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler,
             RemoteEventsSender remoteEventsSender, DataSyncHandler dataSyncHandler, BindsHandler bindsHandler)
         {
-            _modAPI = modAPI;
+            ModAPI = modAPI;
             _browserHandler = browserHandler;
             _settingsHandler = settingsHandler;
             _cursorHandler = cursorHandler;
@@ -92,14 +92,14 @@ namespace TDS_Client.Handler.Lobby
             _lobbyIdAtLastLoad = _settingsHandler.LobbyId;
             if (!_mapBuyDataSynced)
             {
-                OnMapsBoughtCounterChanged(_modAPI.LocalPlayer, PlayerDataKey.MapsBoughtCounter, _dataSyncHandler.GetData(PlayerDataKey.MapsBoughtCounter, 1));
+                OnMapsBoughtCounterChanged(ModAPI.LocalPlayer, PlayerDataKey.MapsBoughtCounter, _dataSyncHandler.GetData(PlayerDataKey.MapsBoughtCounter, 1));
             }
             _browserHandler.Angular.OpenMapMenu(mapjson);
         }
 
         private void OnMapsBoughtCounterChanged(IPlayer player, PlayerDataKey key, object data)
         {
-            if (player != _modAPI.LocalPlayer)
+            if (player != ModAPI.LocalPlayer)
                 return;
             if (key != PlayerDataKey.MapsBoughtCounter)
                 return;

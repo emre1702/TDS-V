@@ -29,13 +29,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return true;
         }
 
-        public override void RemovePlayer(ITDSPlayer player)
+        public override async Task RemovePlayer(ITDSPlayer player)
         {
-            base.RemovePlayer(player);
+            await base.RemovePlayer(player);
 
             if (player.Entity?.Id == Entity.OwnerId && Players.Count >= 1)
             {
-                var newOwner = SharedUtils.GetRandom(Players);
+                var newOwner = SharedUtils.GetRandom(Players.Values);
                 Entity.OwnerId = newOwner.Entity!.Id;
                 DataSyncHandler.SetData(newOwner, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, true);
             }
