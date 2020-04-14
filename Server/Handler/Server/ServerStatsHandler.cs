@@ -59,6 +59,8 @@ namespace TDS_Server.Handler.Server
 
             await ExecuteForDBAsync(async dbContext =>
             {
+                if (DailyStats.Date.Date == DateTime.Today)
+                    return;
                 dbContext.Entry(DailyStats).State = EntityState.Detached;
                 DailyStats = new ServerDailyStats { Date = DateTime.Today };
                 dbContext.ServerDailyStats.Add(DailyStats);
