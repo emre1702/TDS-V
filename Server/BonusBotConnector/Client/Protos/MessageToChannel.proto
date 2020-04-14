@@ -31,4 +31,5 @@ message EmbedToChannelRequest {
 
 message MessageToChannelRequestReply {
     string errorMessage = 1;
+    string errorStackTrace = 2;
 }

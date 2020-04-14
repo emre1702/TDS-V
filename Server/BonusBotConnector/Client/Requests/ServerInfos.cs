@@ -11,6 +11,7 @@ namespace BonusBotConnector.Client.Requests
     public class ServerInfos
     {
         public event ErrorLogDelegate? Error;
+        public event ErrorStringLogDelegate? ErrorString;
 
         private readonly RAGEServerStatsClient _client;
         private readonly BonusbotSettings _settings;
@@ -33,6 +34,9 @@ namespace BonusBotConnector.Client.Requests
                 request.ServerAddress = _ipAddress;
                 var result = await _client.SendAsync(request);
 
+                if (string.IsNullOrEmpty(result.ErrorMessage))
+                    return;
+                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, true);
             }
             catch (Exception ex)
             {

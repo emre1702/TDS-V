@@ -26,4 +26,5 @@ message RAGEServerStatsRequest {
 // The response message containing the greetings.
 message RAGEServerStatsRequestReply {
     string errorMessage = 1;
+    string errorStackTrace = 2;
 }
