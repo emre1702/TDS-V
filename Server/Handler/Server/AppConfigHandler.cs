@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS_Server.Data.Models;
@@ -13,7 +15,7 @@ namespace TDS_Server.Handler.Server
 
         public AppConfigHandler()
         {
-            string path = "C:\\RAGEMP\\server-files\\TDS_Server.config";
+            string path = Path.Join(AssemblyDirectory, "TDS_Server.config");
             using var fileStream = new FileStream(path, FileMode.Open);
             using var reader = XmlReader.Create(fileStream);
             var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));
@@ -24,8 +26,20 @@ namespace TDS_Server.Handler.Server
 
             if (!Z.EntityFramework.Extensions.LicenseManager.ValidateLicense(out string licenseErrorMessage))
             {
-                System.Console.WriteLine(licenseErrorMessage);
+                Console.WriteLine(licenseErrorMessage);
             }
+        }
+
+        private string AssemblyDirectory
+        {
+            get
+            {
+                string? codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase ?? "TDS_Server.RAGEAPI.dll");
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path) ?? ".";
+            }
+            
         }
     }
 }
