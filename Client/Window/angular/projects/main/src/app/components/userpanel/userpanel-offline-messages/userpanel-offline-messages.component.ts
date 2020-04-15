@@ -54,8 +54,8 @@ export class UserpanelOfflineMessagesComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-    selectRow(row: { ID: number }) {
-        this.clickedOfflineMessage = row.ID;
+    selectRow(row: [ number ]) {
+        this.clickedOfflineMessage = row[0];
         this.changeDetector.detectChanges();
     }
 
