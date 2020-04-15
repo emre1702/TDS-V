@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
@@ -16,8 +18,8 @@ namespace TDS_Server.Handler.Entities.GameModes
     {
         private readonly GangwarArea? _gangwarArea;
 
-        public Gangwar(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler,
-            GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
+        public Gangwar(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, IServiceProvider serviceProvider,
+            GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, ILoggingHandler loggingHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
             : base(lobby, map, modAPI, serializer, settingsHandler, langHelper, invitationsHandler)
         {
             var gangwarArea = gangwarAreasHandler.GetById(map.BrowserSyncedData.Id);
@@ -26,11 +28,11 @@ namespace TDS_Server.Handler.Entities.GameModes
                 /*lobby.SetRoundStatus(Enums.RoundStatus.RoundEnd, Enums.RoundEndReason.Error);
                 return;*/
                 // Create dummy gangwar area
-                gangwarArea = new GangwarArea(map, settingsHandler, gangsHandler, dbContext, loggingHandler);
+                gangwarArea = new GangwarArea(map, settingsHandler, gangsHandler, serviceProvider.GetRequiredService<TDSDbContext>(), loggingHandler);
             }
             else if (!lobby.IsGangActionLobby)
             {
-                gangwarArea = new GangwarArea(gangwarArea, settingsHandler, gangsHandler, dbContext, loggingHandler);
+                gangwarArea = new GangwarArea(gangwarArea, settingsHandler, gangsHandler, serviceProvider.GetRequiredService<TDSDbContext>(), loggingHandler);
             }
             _gangwarArea = gangwarArea;
         }
