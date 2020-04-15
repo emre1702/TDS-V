@@ -27,7 +27,7 @@ namespace TDS_Server.Data.Interfaces
         bool IsVip { get; }
         ILanguage Language { get; }
         ILobby? Lobby { get; set; }
-        IPlayer? ModPlayer { get; }
+        IPlayer? ModPlayer { get; set; }
         ushort RemoteId { get; }
         ITeam? Team { set; get; }
         bool IsPermamuted { get; }

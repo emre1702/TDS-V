@@ -12,7 +12,7 @@ using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Core;
-using static System.Collections.Generic.Dictionary<ulong, TDS_Server.Data.Interfaces.ITDSPlayer>;
+using static System.Collections.Generic.Dictionary<TDS_Server.Data.Interfaces.ModAPI.Player.IPlayer, TDS_Server.Data.Interfaces.ITDSPlayer>;
 
 namespace TDS_Server.Handler.Player
 {
@@ -21,7 +21,7 @@ namespace TDS_Server.Handler.Player
         public ValueCollection LoggedInPlayers => _tdsPlayerCache.Values;
         public int AmountLoggedInPlayers => LoggedInPlayers.Count;
 
-        private readonly Dictionary<ulong, ITDSPlayer> _tdsPlayerCache = new Dictionary<ulong, ITDSPlayer>();
+        private readonly Dictionary<IPlayer, ITDSPlayer> _tdsPlayerCache = new Dictionary<IPlayer, ITDSPlayer>();
         private readonly Dictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new Dictionary<ushort, ITDSPlayer>();
         private readonly NameCheckHelper _nameCheckHelper;
         private readonly IServiceProvider _serviceProvider;
@@ -45,26 +45,22 @@ namespace TDS_Server.Handler.Player
 
         public ITDSPlayer Get(IPlayer modPlayer)
         {
-            var playerId = modPlayer.SocialClubId;
-
-            if (!_tdsPlayerCache.ContainsKey(playerId))
+            if (!_tdsPlayerCache.TryGetValue(modPlayer, out ITDSPlayer? tdsPlayer))
             {
-                var tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
+                tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
                 tdsPlayer.ModPlayer = modPlayer;
-                _tdsPlayerCache[playerId] = tdsPlayer;
+                _tdsPlayerCache[modPlayer] = tdsPlayer;
             }
 
-            return _tdsPlayerCache[playerId];
+            return tdsPlayer;
         }
 
         public ITDSPlayer? GetIfLoggedIn(IPlayer modPlayer)
         {
-            var playerId = modPlayer.SocialClubId;
-
-            if (!_tdsPlayerCache.ContainsKey(playerId))
+            if (!_tdsPlayerCache.ContainsKey(modPlayer))
                 return null;
 
-            var player = _tdsPlayerCache[playerId];
+            var player = _tdsPlayerCache[modPlayer];
             if (!player.LoggedIn)
                 return null;
 
@@ -111,7 +107,8 @@ namespace TDS_Server.Handler.Player
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
-            _tdsPlayerCache.Remove(player.SocialClubId);
+            if (player.ModPlayer is { })
+                _tdsPlayerCache.Remove(player.ModPlayer);
             _tdsPlayerRemoteIdCache.Remove(player.RemoteId);
         }
 

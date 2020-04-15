@@ -13,6 +13,7 @@ using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Player;
+using TDS_Server.Handler.Server;
 
 namespace TDS_Server.Core.Init
 {
@@ -22,7 +23,7 @@ namespace TDS_Server.Core.Init
         public readonly RemoteEventsHandler RemoteEventsHandler;
         public readonly RemoteBrowserEventsHandler RemoteBrowserEventsHandler;
         public readonly LobbiesHandler LobbiesHandler;
-        public Dictionary<ulong, ITDSPlayer>.ValueCollection LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
+        public Dictionary<IPlayer, ITDSPlayer>.ValueCollection LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
 
         private TDSPlayer? _consolePlayerCache;
 
@@ -55,6 +56,7 @@ namespace TDS_Server.Core.Init
                 }
 
                 EventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
+                _serviceProvider.GetRequiredService<ServerStartHandler>();
 
                 LobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
                 LobbiesHandler.LoadLobbies();
