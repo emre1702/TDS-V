@@ -47,8 +47,6 @@ namespace TDS_Server.Core.Init
                 var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
                 mapsLoadingHandler.LoadAllMaps();
 
-                Services.InitializeSingletons(_serviceProvider);
-
                 var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(_serviceProvider);
                 if (codeChecker.CheckHasErrors())
                 {
@@ -56,22 +54,26 @@ namespace TDS_Server.Core.Init
                     Environment.Exit(1);
                 }
 
+                EventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
+
                 LobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
                 LobbiesHandler.LoadLobbies();
 
                 var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
                 var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
-                bansHandler.RefreshServerBansCache(settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
+                bansHandler.RefreshServerBansCache(settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);                
 
                 var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
                 gangsHandler.LoadAll();
 
-                EventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
+                
                 RemoteEventsHandler = _serviceProvider.GetRequiredService<RemoteEventsHandler>();
                 RemoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
                 _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
                 _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
+
+                Services.InitializeSingletons(_serviceProvider);
 
                 Task.Run(ReadInput);
             }
