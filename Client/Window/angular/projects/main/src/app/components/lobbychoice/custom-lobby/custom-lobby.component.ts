@@ -263,7 +263,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.rageConnector.callCallbackServer(DToClientEvent.CreateCustomLobby, [JSON.stringify(data)], (error: string) => {
+        this.rageConnector.callCallbackServer(DToServerEvent.CreateCustomLobby, [JSON.stringify(data)], (error: string) => {
             if (!error || error == "")
                 return;
             this.snackBar.open(error, "OK", {

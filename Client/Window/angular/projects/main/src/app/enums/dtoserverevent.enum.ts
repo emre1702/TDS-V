@@ -4,6 +4,7 @@ export enum DToServerEvent {
     AnswerToOfflineMessage = "c3",
     BuyMap = "c4",
     ChooseTeam = "c6",
+    CreateCustomLobby = "c8",
     DeleteOfflineMessage = "c9",
     GetSupportRequestData = "c10",
     GetVehicle = "c11",

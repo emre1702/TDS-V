@@ -7,7 +7,6 @@ export enum DToClientEvent {
     CloseMapVotingMenu = "b7",
     CloseUserpanel = "b8",
     CommandUsed = "b9",
-    CreateCustomLobby = "b10",
     GetHashedPassword = "b11",
     HoldMapCreatorObject = "b13",
     InputStarted = "b14",
