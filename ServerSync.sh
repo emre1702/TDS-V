@@ -1,4 +1,4 @@
-echo -e "${SEPERATOR}"
+﻿echo -e "${SEPERATOR}"
 NOCOLOR='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -21,7 +21,7 @@ cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/RAGEAPI/bin/Debu
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS_Client.*" --exclude="TDS_Server.RAGEAPI.*" --include="*/" --include='TDS_*.dll' --include='TDS_*.pdb' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS_Client.*" --exclude="TDS_Server.RAGEAPI.*" --include="*/" --include='TDS_*.dll' --include='TDS_*.pdb' --include='BonusBotConnector*' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
 
 echo -e "${SEPERATOR}"
 echo -e "Add ${LIGHTBLUE}missing ${NOCOLOR}runtimes ..."
