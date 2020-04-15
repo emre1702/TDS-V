@@ -11,6 +11,7 @@ using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.GameModes;
 using TDS_Server.Handler.Entities.GameModes.Bomb;
 using TDS_Server.Handler.Entities.GameModes.Normal;
@@ -19,15 +20,14 @@ using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
-using TDS_Shared.Default;
-using TDS_Shared.Core;
 using MapType = TDS_Server.Data.Enums.MapType;
 
 namespace TDS_Server.Handler
 {
-    public class LobbiesHandler
+    public class LobbiesHandler : DatabaseEntityWrapper
     {
         public List<Lobby> Lobbies { get; } = new List<Lobby>();
 
@@ -51,9 +51,7 @@ namespace TDS_Server.Handler
         private string? _customLobbyDatas;
 
         private readonly Serializer _serializer;
-        private readonly TDSDbContext _dbContext;
         private readonly MapsLoadingHandler _mapsHandler;
-        private readonly ILoggingHandler _loggingHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly EventsHandler _eventsHandler;
         private readonly ISettingsHandler _settingsHandler;
@@ -65,13 +63,11 @@ namespace TDS_Server.Handler
             MapsLoadingHandler mapsHandler,
             ILoggingHandler loggingHandler,
             IServiceProvider serviceProvider,
-            EventsHandler eventsHandler)
+            EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
-            _dbContext = dbContext;
             _serializer = serializer;
             _mapsHandler = mapsHandler;
             _serviceProvider = serviceProvider;
-            _loggingHandler = loggingHandler;
             _eventsHandler = eventsHandler;
             _settingsHandler = settingsHandler;
 
@@ -80,23 +76,27 @@ namespace TDS_Server.Handler
 
         public void LoadLobbies()
         {
-            var temporaryLobbies = _dbContext.Lobbies.Where(l => l.IsTemporary).ToList();
-            _dbContext.Lobbies.RemoveRange(temporaryLobbies);
-            _dbContext.SaveChanges();
-            //Todo: Add QueryTrackingBehavior NoTracking to every constructor and TrackAll at the end
-            _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            var lobbies = ExecuteForDB(dbContext =>
+            {
+                var temporaryLobbies = dbContext.Lobbies.Where(l => l.IsTemporary).ToList();
+                dbContext.Lobbies.RemoveRange(temporaryLobbies);
+                dbContext.SaveChanges();
+                //Todo: Add QueryTrackingBehavior NoTracking to every constructor and TrackAll at the end
+                dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-            List<Lobbies> lobbies = _dbContext.Lobbies
-                .Include(l => l.LobbyRewards)
-                .Include(l => l.LobbyRoundSettings)
-                .Include(l => l.LobbyMapSettings)
-                .Include(l => l.Teams)
-                .Include(l => l.LobbyWeapons)
-                .Include(l => l.LobbyMaps)
-                .ThenInclude((LobbyMaps map) => map.Map)
-                .Include(l => l.Owner)
-                .Include(l => l.FightSettings)
-                .ToList();
+                return dbContext.Lobbies
+                    .Include(l => l.LobbyRewards)
+                    .Include(l => l.LobbyRoundSettings)
+                    .Include(l => l.LobbyMapSettings)
+                    .Include(l => l.Teams)
+                    .Include(l => l.LobbyWeapons)
+                    .Include(l => l.LobbyMaps)
+                    .ThenInclude((LobbyMaps map) => map.Map)
+                    .Include(l => l.Owner)
+                    .Include(l => l.FightSettings)
+                    .ToList();
+            }).Result;
+            
             foreach (Lobbies lobbysetting in lobbies)
             {
                 LobbyType type = lobbysetting.Type;
@@ -123,10 +123,13 @@ namespace TDS_Server.Handler
             _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
             _settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Id;
 
-            Normal.Init(_dbContext);
-            Gangwar.Init(_dbContext);
-            Bomb.Init(_dbContext);
-            Sniper.Init(_dbContext);
+            ExecuteForDB(dbContext =>
+            {
+                Normal.Init(dbContext);
+                Gangwar.Init(dbContext);
+                Bomb.Init(dbContext);
+                Sniper.Init(dbContext);
+            }).Wait();
         }
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
@@ -187,7 +190,7 @@ namespace TDS_Server.Handler
         {
             try
             {
-                string dataJson = (string) args[0];
+                string dataJson = (string)args[0];
                 var data = _serializer.FromBrowser<CustomLobbyData>(dataJson);
                 if (!IsCustomLobbyNameAllowed(data.Name))
                 {
@@ -197,6 +200,11 @@ namespace TDS_Server.Handler
                 if (nameAlreadyInUse)
                 {
                     return player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;
+                }
+
+                if (data.Weapons is null)
+                {
+
                 }
 
                 Lobbies entity = new Lobbies
@@ -228,13 +236,20 @@ namespace TDS_Server.Handler
                         MapLimitType = data.MapLimitType
                     },
                     LobbyMaps = data.Maps.Select(m => new LobbyMaps { MapId = m }).ToHashSet(),
-                    LobbyWeapons = data.Weapons.Select(w => new LobbyWeapons
+                    LobbyWeapons = data.Weapons is { } ? data.Weapons.Select(w => new LobbyWeapons
                     {
                         Hash = w.WeaponHash,
                         Ammo = w.Ammo,
                         Damage = w.Damage,
                         HeadMultiplicator = w.HeadshotMultiplicator
-                    }).ToHashSet(),      // GetAllPossibleLobbyWeapons(EMapType.Normal),
+                    }).ToHashSet()
+                    : Arena.Entity.LobbyWeapons.Select(w => new LobbyWeapons
+                    {
+                        Hash = w.Hash,
+                        Ammo = w.Ammo,
+                        Damage = w.Damage,
+                        HeadMultiplicator = w.HeadMultiplicator
+                    }).ToHashSet(),
                     Password = data.Password,
                     Teams = data.Teams.Select((t, index) =>
                     {
@@ -255,7 +270,7 @@ namespace TDS_Server.Handler
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
 
-                Arena arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity);
+                Arena arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
                 await arena.AddToDB();
 
                 AddMapsToArena(arena, entity);
@@ -278,13 +293,17 @@ namespace TDS_Server.Handler
             {
                 var model = new DataForCustomLobbyCreation
                 {
-                    WeaponDatas = await _dbContext.Weapons.Select(w => new CustomLobbyWeaponData
+                    WeaponDatas = await ExecuteForDBAsync(async dbContext =>
                     {
-                        WeaponHash = w.Hash,
-                        Ammo = 9999,
-                        Damage = w.Damage,
-                        HeadshotMultiplicator = w.HeadShotDamageModifier
-                    }).ToListAsync(),
+                        return await dbContext.Weapons.Select(w => new CustomLobbyWeaponData
+                        {
+                            WeaponHash = w.Hash,
+                            Ammo = 9999,
+                            Damage = w.Damage,
+                            HeadshotMultiplicator = w.HeadShotDamageModifier
+                        }).ToListAsync();
+                    }),
+
 
                     ArenaWeaponDatas = Arena.Entity.LobbyWeapons.Select(w => new CustomLobbyWeaponData
                     {
@@ -294,6 +313,7 @@ namespace TDS_Server.Handler
                         HeadshotMultiplicator = w.HeadMultiplicator
                     }).ToList()
                 };
+
                 _customLobbyDatas = _serializer.ToBrowser(model);
             }
 
@@ -399,7 +419,7 @@ namespace TDS_Server.Handler
                 }
                 catch (Exception ex)
                 {
-                    _loggingHandler.LogError(ex);
+                    LoggingHandler.LogError(ex);
                 }
             }
         }
