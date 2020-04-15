@@ -5,23 +5,26 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
+using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler
 {
-    public class LoggingHandler : ILoggingHandler
+    public class LoggingHandler : DatabaseEntityWrapper, ILoggingHandler
     {
-        private readonly TDSDbContext _dbContext;
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly object lockObj = new object();
 
-        public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler, ISettingsHandler settingsHandler)
+        public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler, 
+            ISettingsHandler settingsHandler)
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+            : base(dbContext, null)
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         {
-            _dbContext = dbContext;
             _bonusBotConnectorClient = bonusBotConnectorClient;
             _settingsHandler = settingsHandler;
+            LoggingHandler = this;
 
             eventsHandler.Minute += Save;
             eventsHandler.Error += LogError;
@@ -52,12 +55,13 @@ namespace TDS_Server.Handler
         public async Task SaveTask(int? counter = null)
         {
             if (counter is null || counter % _settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
-                await _dbContext.SaveChangesAsync();
+                await ExecuteForDBAsync(async dbContext 
+                    => await dbContext.SaveChangesAsync());
             
         }
 
         #region Error
-        public void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true)
+        public async void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
@@ -68,16 +72,14 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
-            lock (lockObj)
-            {
-                _dbContext.LogErrors.Add(log);
-            }
+            await ExecuteForDB(dbContext => 
+                dbContext.LogErrors.Add(log));
 
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
-        public void LogError(string info, string? stackTrace = null, ITDSPlayer? source = null, bool logToBonusBot = true)
+        public async void LogError(string info, string? stackTrace = null, ITDSPlayer? source = null, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
@@ -88,16 +90,14 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
-            lock (lockObj)
-            {
-                _dbContext.LogErrors.Add(log);
-            }
+            await ExecuteForDB(dbContext =>
+                dbContext.LogErrors.Add(log));
 
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
-        public void LogErrorFromBonusBot(Exception ex, bool logToBonusBot = true)
+        public async void LogErrorFromBonusBot(Exception ex, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
@@ -108,16 +108,14 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
-            lock (lockObj)
-            {
-                _dbContext.LogErrors.Add(log);
-            }
+            await ExecuteForDB(dbContext =>
+                dbContext.LogErrors.Add(log));
 
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
-        public void LogErrorFromBonusBot(string info, string stacktrace, bool logToBonusBot = true)
+        public async void LogErrorFromBonusBot(string info, string stacktrace, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
@@ -128,10 +126,9 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(info + "\n" + stacktrace);
 
-            lock (lockObj)
-            {
-                _dbContext.LogErrors.Add(log);
-            }
+            await ExecuteForDB(dbContext =>
+                dbContext.LogErrors.Add(log));
+
 
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -171,7 +168,7 @@ namespace TDS_Server.Handler
         #endregion Error
 
         #region Chat
-        public void LogChat(string chat, ITDSPlayer source, ITDSPlayer? target = null, bool isGlobal = false, bool isAdminChat = false, bool isTeamChat = false)
+        public async void LogChat(string chat, ITDSPlayer source, ITDSPlayer? target = null, bool isGlobal = false, bool isAdminChat = false, bool isTeamChat = false)
         {
             var log = new LogChats
             {
@@ -184,15 +181,13 @@ namespace TDS_Server.Handler
                 Timestamp = DateTime.UtcNow
             };
 
-            lock (lockObj)
-            {
-                _dbContext.LogChats.Add(log);
-            }
+            await ExecuteForDB(dbContext =>
+                dbContext.LogChats.Add(log));
         }
         #endregion Chat
 
         #region Admin
-        public void LogAdmin(LogType cmd, ITDSPlayer? source, ITDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
+        public async void LogAdmin(LogType cmd, ITDSPlayer? source, ITDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
         {
             var log = new LogAdmins
             {
@@ -207,13 +202,11 @@ namespace TDS_Server.Handler
                 LengthOrEndTime = lengthOrEndTime
             };
 
-            lock (lockObj)
-            {
-                _dbContext.LogAdmins.Add(log);
-            }
+            await ExecuteForDB(dbContext =>
+                dbContext.LogAdmins.Add(log));
         }
 
-        public void LogAdmin(LogType cmd, ITDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
+        public async void LogAdmin(LogType cmd, ITDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
         {
             var log = new LogAdmins
             {
@@ -228,15 +221,13 @@ namespace TDS_Server.Handler
                 LengthOrEndTime = lengthOrEndTime
             };
 
-            lock (lockObj)
-            {
-                _dbContext.LogAdmins.Add(log);
-            }
+            await ExecuteForDB(dbContext =>
+                dbContext.LogAdmins.Add(log));
         }
         #endregion Admin
 
         #region Kill
-        public void LogKill(ITDSPlayer player, ITDSPlayer killer, uint weapon)
+        public async void LogKill(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
             var log = new LogKills
             {
@@ -245,15 +236,13 @@ namespace TDS_Server.Handler
                 WeaponId = weapon
             };
 
-            lock (lockObj)
-            {
-                _dbContext.LogKills.Add(log);
-            }
+            await ExecuteForDB(dbContext =>
+                dbContext.LogKills.Add(log));
         }
         #endregion Kill
 
         #region Rest
-        public void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false)
+        public async void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false)
         {
             bool ipAddressParseWorked = IPAddress.TryParse(source?.ModPlayer?.IPAddress ?? "-", out IPAddress address);
             var log = new LogRests
@@ -266,10 +255,8 @@ namespace TDS_Server.Handler
                 Timestamp = DateTime.UtcNow
             };
 
-            lock (lockObj)
-            {
-                _dbContext.LogRests.Add(log);
-            }
+            await ExecuteForDB(dbContext =>
+                dbContext.LogRests.Add(log));
         }
         #endregion
     }

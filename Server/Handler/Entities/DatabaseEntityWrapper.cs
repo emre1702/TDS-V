@@ -9,10 +9,10 @@ namespace TDS_Server.Handler.Entities
 {
     public abstract class DatabaseEntityWrapper
     {
-        private TDSDbContext _dbContext;
+        private readonly TDSDbContext _dbContext;
 
         private ITDSPlayer? _player;
-        protected readonly ILoggingHandler LoggingHandler;
+        protected ILoggingHandler LoggingHandler;
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
 
         protected DatabaseEntityWrapper(TDSDbContext dbContext, ILoggingHandler loggingHandler)
