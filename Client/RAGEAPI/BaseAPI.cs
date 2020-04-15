@@ -29,6 +29,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Utils;
 using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Client.Data.Interfaces.ModAPI.Voice;
 using TDS_Client.Data.Interfaces.ModAPI.Weapon;
+using TDS_Client.Data.Interfaces.ModAPI.Windows;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Audio;
 using TDS_Client.RAGEAPI.Blip;
@@ -60,6 +61,7 @@ using TDS_Client.RAGEAPI.Utils;
 using TDS_Client.RAGEAPI.Vehicle;
 using TDS_Client.RAGEAPI.Voice;
 using TDS_Client.RAGEAPI.Weapon;
+using TDS_Client.RAGEAPI.Windows;
 
 namespace TDS_Client.RAGEAPI
 {
@@ -95,6 +97,7 @@ namespace TDS_Client.RAGEAPI
         public IVehicleAPI Vehicle { get; }
         public IVoiceAPI Voice { get; }
         public IWeaponAPI Weapon { get; }
+        public IWindowsAPI Windows { get; }
 
         public IPlayer LocalPlayer { get; }
 
@@ -135,6 +138,7 @@ namespace TDS_Client.RAGEAPI
             Vehicle = new VehicleAPI(entityConvertingHandler);
             Voice = new VoiceAPI();
             Weapon = new WeaponAPI();
+            Windows = new WindowsAPI();
 
             LocalPlayer = playerConvertingHandler.GetPlayer(RAGE.Elements.Player.LocalPlayer);
         }

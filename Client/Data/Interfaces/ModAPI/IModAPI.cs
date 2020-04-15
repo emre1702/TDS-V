@@ -28,6 +28,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Utils;
 using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Client.Data.Interfaces.ModAPI.Voice;
 using TDS_Client.Data.Interfaces.ModAPI.Weapon;
+using TDS_Client.Data.Interfaces.ModAPI.Windows;
 
 namespace TDS_Client.Data.Interfaces.ModAPI
 {
@@ -63,8 +64,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI
         IVehicleAPI Vehicle { get; }
         IVoiceAPI Voice { get; }
         IWeaponAPI Weapon { get; }
+        IWindowsAPI Windows { get; }
 
         IPlayer LocalPlayer { get; }
-        
     }
 }

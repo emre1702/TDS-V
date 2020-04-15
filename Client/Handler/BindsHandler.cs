@@ -17,7 +17,7 @@ namespace TDS_Client.Handler
 
         public BindsHandler(IModAPI modAPI, LoggingHandler loggingHandler) : base(modAPI, loggingHandler)
         {
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick));
+            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => ModAPI.Windows.Focused));
         }
 
         public void Add(Key key, Action<Key> method, KeyPressState pressState = KeyPressState.Down)
@@ -119,6 +119,6 @@ namespace TDS_Client.Handler
                 Logging.LogError(ex);
             }
 
-}
+        }
     }
 }
