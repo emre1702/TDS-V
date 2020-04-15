@@ -29,7 +29,7 @@ namespace TDS_Client.Handler.Browser
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.MapChanged += HideRoundEndReason;
             eventsHandler.RoundStarted += _ => HideRoundEndReason();
-            eventsHandler.CountdownStarted += HideRoundEndReason;
+            eventsHandler.CountdownStarted += _ => HideRoundEndReason();
 
             modAPI.Event.Add(FromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             modAPI.Event.Add(ToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);

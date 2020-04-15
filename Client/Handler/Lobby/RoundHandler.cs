@@ -44,12 +44,13 @@ namespace TDS_Client.Handler.Lobby
 
         private void OnRoundEndMethod(object[] args)
         {
-            _eventsHandler.OnRoundEnded();
+            bool isSpectator = (bool)args[0];
+            _eventsHandler.OnRoundEnded(isSpectator);
 
             ModAPI.Cam.DoScreenFadeOut(_settingsHandler.RoundEndTime / 2);
 
-            string reason = (string)args[0];
-            int mapId = (int)args[1];
+            string reason = (string)args[1];
+            int mapId = (int)args[2];
             _browserHandler.PlainMain.ShowRoundEndReason(reason, mapId);
         }
     }

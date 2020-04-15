@@ -52,6 +52,10 @@ namespace TDS_Client.Handler.Entities.Languages
         public override string AFK_KICK_WARNING => "Du bist AFK und wirst\nin {0} Sekunden gekickt!\nÄndere deine Position oder schieße!";
         public override string FIRING_MODE => "Feuermodus";
         public override string YOU_DIED => "Du bist gestorben.";
+        public override string ROUND_INFOS => "Runden Infos";
+        public override string ROUND_STARTED_NOTIFICATION => "Runde gestartet";
+        public override string ROUND_ENDED_NOTIFICATION => "Runde zuende";
+        public override string COUNTDOWN_STARTED_NOTIFICATION => "Countdown gestartet";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 

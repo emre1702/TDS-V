@@ -57,11 +57,40 @@ namespace TDS_Client.Handler.Lobby
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.PlayerDied += EventsHandler_PlayerDied;
-            eventsHandler.RoundEnded += Stop;
+
+            eventsHandler.CountdownStarted += EventsHandler_CountdownStarted;
+            eventsHandler.RoundStarted += EventsHandler_RoundStarted;
+            eventsHandler.RoundEnded += EventsHandler_RoundEnded;
+            
 
             modAPI.Event.Add(ToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
             modAPI.Event.Add(ToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
         }
+
+        private void EventsHandler_CountdownStarted(bool isSpectator)
+        {
+            if (isSpectator)
+                return;
+            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.COUNTDOWN_STARTED_NOTIFICATION, "TDS-V", 4000);
+        }
+
+        private void EventsHandler_RoundStarted(bool isSpectator)
+        {
+            if (isSpectator)
+                return;
+            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.ROUND_STARTED_NOTIFICATION, "TDS-V", 4000);
+        }
+
+        private void EventsHandler_RoundEnded(bool isSpectator)
+        {
+            Stop();
+
+            if (isSpectator)
+                return;
+            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.ROUND_ENDED_NOTIFICATION, "TDS-V", 4000);
+        }
+
+        
 
         public void Start(int elapsedMsSinceRoundStart)
         {

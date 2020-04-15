@@ -22,11 +22,9 @@ namespace TDS_Client.Handler.Events
         public event EmptyDelegate ShowScoreboard;
         public event EmptyDelegate HideScoreboard;
         public event EmptyDelegate AngularCooldown;
-        public event EmptyDelegate CountdownStarted;
         public event EmptyDelegate LocalPlayerDied;
         public event EmptyDelegate MapChanged;
         public event EmptyDelegate LoggedIn;
-        public event EmptyDelegate RoundEnded;
 
         public delegate void BoolDelegate(bool boolean);
         public event BoolDelegate CursorToggled;
@@ -65,7 +63,9 @@ namespace TDS_Client.Handler.Events
         public event TeamChangedDelegate TeamChanged;
 
         public delegate void RoundStartedDelegate(bool isSpectator);
+        public event RoundStartedDelegate CountdownStarted;
         public event RoundStartedDelegate RoundStarted;
+        public event RoundStartedDelegate RoundEnded;
 
         private WeaponHash _lastWeaponHash;
 
@@ -298,12 +298,12 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnCountdownStarted()
+        internal void OnCountdownStarted(bool isSpectator)
         {
             try
             {
                 Logging.LogInfo("", "EventsHandler.OnCountdownStarted");
-                CountdownStarted?.Invoke();
+                CountdownStarted?.Invoke(isSpectator);
                 Logging.LogInfo("", "EventsHandler.OnCountdownStarted", true);
             }
             catch (Exception ex)
@@ -424,12 +424,12 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnRoundEnded()
+        internal void OnRoundEnded(bool isSpectator)
         {
             try
             {
                 Logging.LogInfo("", "EventsHandler.OnRoundEnded");
-                RoundEnded?.Invoke();
+                RoundEnded?.Invoke(isSpectator);
                 Logging.LogInfo("", "EventsHandler.OnRoundEnded", true);
             }
             catch (Exception ex)

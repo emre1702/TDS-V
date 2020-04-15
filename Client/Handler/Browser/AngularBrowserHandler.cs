@@ -37,7 +37,7 @@ namespace TDS_Client.Handler.Browser
             eventsHandler.InFightStatusChanged += ToggleRoundStats;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.AngularCooldown += ShowCooldown;
-            eventsHandler.RoundEnded += ResetMapVoting;
+            eventsHandler.RoundEnded += _ => ResetMapVoting();
 
             modAPI.Event.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
             modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);

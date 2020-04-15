@@ -39,7 +39,7 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.LobbyLeft += _ => Stop();
             eventsHandler.MapCleared += Stop;
             eventsHandler.RoundStarted += _ => End();
-            eventsHandler.RoundEnded += Stop;
+            eventsHandler.RoundEnded += _ => Stop();
 
             modAPI.Event.Add(ToClientEvent.CountdownStart, OnCountdownStartMethod);
         }
@@ -184,17 +184,17 @@ namespace TDS_Client.Handler.Lobby
             try
             {
                 Logging.LogInfo("", "CountdownHandler.OnCountdownStartMethod");
-                _eventsHandler.OnCountdownStarted();
+                _eventsHandler.OnCountdownStarted((bool)args[0]);
 
                 int mstimetoplayer = (int)Math.Ceiling(_settingsHandler.CountdownTime * 1000 * 0.9);
-                if (args == null)
+                if (args.Length <= 1)
                 {
                     Start();
                     _lobbyCamHandler.SetGoTowardsPlayer(mstimetoplayer);
                 }
                 else
                 {
-                    int remainingms = (int)args[0];
+                    int remainingms = (int)args[1];
                     StartAfterwards(remainingms);
                     int timeofcountdowncameraisatplayer = _settingsHandler.CountdownTime * 1000 - mstimetoplayer;
                     if (remainingms < timeofcountdowncameraisatplayer)

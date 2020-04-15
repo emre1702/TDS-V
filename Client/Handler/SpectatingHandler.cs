@@ -105,9 +105,9 @@ namespace TDS_Client.Handler
             IsSpectator = false;
         }
 
-        private void EventsHandler_CountdownStarted()
+        private void EventsHandler_CountdownStarted(bool isSpectator)
         {
-            if (IsSpectator)
+            if (isSpectator)
                 Start();
         }
 

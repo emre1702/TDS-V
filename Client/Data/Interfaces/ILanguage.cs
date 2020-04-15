@@ -41,8 +41,13 @@ namespace TDS_Client.Data.Interfaces
         string AFK_KICK_WARNING { get; }
         string FIRING_MODE { get; }
         string YOU_DIED { get; }
+        string ROUND_INFOS { get; }
+        string ROUND_STARTED_NOTIFICATION { get; }
+        string ROUND_ENDED_NOTIFICATION { get; }
+        string COUNTDOWN_STARTED_NOTIFICATION { get; }
+
 
         Language Enum { get; }
-
+        
     }
 }

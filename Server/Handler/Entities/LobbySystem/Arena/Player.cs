@@ -6,6 +6,7 @@ using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map.Creator;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
@@ -196,11 +197,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             switch (CurrentRoundStatus)
             {
                 case RoundStatus.Countdown:
-                    player.SendEvent(ToClientEvent.CountdownStart, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
+                    player.SendEvent(ToClientEvent.CountdownStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
                     break;
 
                 case RoundStatus.Round:
-                    player.SendEvent(ToClientEvent.RoundStart, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
+                    player.SendEvent(ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
                     break;
             }
         }

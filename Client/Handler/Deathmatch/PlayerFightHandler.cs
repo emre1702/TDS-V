@@ -71,7 +71,7 @@ namespace TDS_Client.Handler.Deathmatch
             eventsHandler.MapChanged += SetNotInFight;
             eventsHandler.MapCleared += SetNotInFight;
             eventsHandler.RoundStarted += EventsHandler_RoundStarted;
-            eventsHandler.RoundEnded += SetNotInFight;
+            eventsHandler.RoundEnded += _ => SetNotInFight();
 
             modAPI.Event.Add(ToClientEvent.HitOpponent, OnHitOpponentMethod);
             modAPI.Event.Add(ToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);

@@ -74,7 +74,7 @@ namespace TDS_Client.Handler.Lobby
             _tickEventMethod = new EventMethodData<TickDelegate>(CheckPlantDefuse, () => CheckPlantDefuseOnTick);
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
-            eventsHandler.RoundEnded += Stop;
+            eventsHandler.RoundEnded += _ => Stop();
 
             modAPI.Event.Add(ToClientEvent.PlayerGotBomb, OnPlayerGotBombMethod);
             modAPI.Event.Add(ToClientEvent.PlayerPlantedBomb, OnPlayerPlantedBombMethod);

@@ -52,7 +52,7 @@ namespace TDS_Client.Handler
             eventsHandler.LobbyLeft += OnLobbyLeave;
             eventsHandler.LocalPlayerDied += OnDeath;
             eventsHandler.RoundStarted += OnRoundStart;
-            eventsHandler.RoundEnded += OnRoundEnd;
+            eventsHandler.RoundEnded += OnRoundEnded;
         }
 
         private void Check()
@@ -140,7 +140,7 @@ namespace TDS_Client.Handler
                 ModAPI.Event.WeaponShot.Add(_weaponShotMethod);
         }
 
-        public void OnRoundEnd()
+        public void OnRoundEnded(bool _)
         {
             if (_checkTimer is null)
                 return;

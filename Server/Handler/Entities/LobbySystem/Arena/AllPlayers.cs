@@ -94,7 +94,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     team.SpectateablePlayers?.Add(player);
                 }
                 SetPlayerReadyForRound(player);
-                player.SendEvent(ToClientEvent.CountdownStart);
+                player.SendEvent(ToClientEvent.CountdownStart, team is null || team.IsSpectator);
             });
         }
 

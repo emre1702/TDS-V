@@ -163,7 +163,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 FuncIterateAllPlayers((character, team) =>
                 {
-                    character.SendEvent(ToClientEvent.RoundEnd, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
+                    character.SendEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
                     if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
                         character.ModPlayer?.Kill();
                     character.Lifes = 0;

@@ -44,7 +44,7 @@ namespace TDS_Client.Handler
             _deathHandler = deathHandler;
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
-            eventsHandler.CountdownStarted += Stop;
+            eventsHandler.CountdownStarted += _ => Stop();
 
             modAPI.Event.Add(ToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
         }

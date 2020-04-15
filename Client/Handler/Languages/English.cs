@@ -53,6 +53,10 @@ namespace TDS_Client.Handler.Entities.Languages
         public virtual string AFK_KICK_WARNING => "You are AFK and will\nbe kicked in {0} seconds!\nChange your position or shoot!";
         public virtual string FIRING_MODE => "Firing mode";
         public virtual string YOU_DIED => "You died.";
+        public virtual string ROUND_INFOS => "Round infos";
+        public virtual string ROUND_STARTED_NOTIFICATION => "Round started";
+        public virtual string ROUND_ENDED_NOTIFICATION => "Round ended";
+        public virtual string COUNTDOWN_STARTED_NOTIFICATION => "Countdown started";
 
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 

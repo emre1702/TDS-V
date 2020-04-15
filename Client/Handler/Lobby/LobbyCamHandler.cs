@@ -21,9 +21,9 @@ namespace TDS_Client.Handler.Lobby
             _settingsHandler = settingsHandler;
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
-            eventsHandler.CountdownStarted += Stop;
+            eventsHandler.CountdownStarted += _ => Stop();
             eventsHandler.RoundStarted += _ => StopCountdown();
-            eventsHandler.RoundEnded += StopCountdown;
+            eventsHandler.RoundEnded += _ => StopCountdown();
         }
 
         public void SetToMapCenter(Position3D mapcenter)
