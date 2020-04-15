@@ -17,7 +17,13 @@ namespace TDS_Server.Data
 
         public static string GetTimestamp()
         {
-            return DateTime.Now.ToString("s");
+            return DateTime.UtcNow.ToString("s");
+        }
+
+        public static string GetUniversalDateTimeString(DateTime dateTime)
+        {
+            var enUsCulture = CultureInfo.CreateSpecificCulture("en-US");
+            return new DateTimeOffset(dateTime).ToString("f", enUsCulture) + " +00:00";
         }
 
         public static string HashPWServer(string pw)

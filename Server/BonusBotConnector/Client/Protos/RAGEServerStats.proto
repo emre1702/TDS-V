@@ -20,7 +20,8 @@ message RAGEServerStatsRequest {
   string serverName = 10;
   int32 refreshFrequencySec = 11;
   string serverAddress = 12;
-
+  int32 playerPeakToday = 13;
+  string onlineSince = 14;
 }
 
 // The response message containing the greetings.
