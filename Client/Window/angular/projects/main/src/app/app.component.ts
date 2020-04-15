@@ -108,7 +108,7 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ShowCooldown, () => {
-            snackBar.open("Cooldown", undefined, { duration: 3000 });
+            snackBar.open("Cooldown", undefined, { duration: 3000, panelClass: "mat-app-background" });
         });
 
         rageConnector.listen(DFromClientEvent.SyncUsernameChange, (newName: string) => {
