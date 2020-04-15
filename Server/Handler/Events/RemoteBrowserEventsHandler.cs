@@ -95,7 +95,7 @@ namespace TDS_Server.Handler.Events
                 {
                     ret = await _asyncMethods[eventName](player, args.Skip(1).ToArray());
                 }
-                else if (_asyncMethods.ContainsKey(eventName))
+                else if (_maybeAsyncMethods.ContainsKey(eventName))
                 {
                     ret = await _maybeAsyncMethods[eventName](player, args.Skip(1).ToArray());
                 }
