@@ -34,6 +34,8 @@ namespace TDS_Client.Handler
         {
             if (!ModAPI.Voice.Allowed)
                 return;
+            if (_settingsHandler.PlayerSettings is null)
+                return;
 
             player.AutoVolume = _settingsHandler.PlayerSettings.VoiceAutoVolume;
             if (!_settingsHandler.PlayerSettings.VoiceAutoVolume)
