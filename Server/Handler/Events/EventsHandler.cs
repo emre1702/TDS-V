@@ -4,7 +4,9 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Utility;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Handler.Events
@@ -96,6 +98,14 @@ namespace TDS_Server.Handler.Events
         public void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player)
         {
             player.Lobby?.OnPlayerEnterColshape(colshape, player);
+        }
+
+        public void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash previousWeapon, WeaponHash newWeapon)
+        {
+            if (!(player.Lobby is FightLobby fightLobby))
+                return;
+
+            fightLobby.OnPlayerWeaponSwitch(player, previousWeapon, newWeapon);
         }
         #endregion
 
