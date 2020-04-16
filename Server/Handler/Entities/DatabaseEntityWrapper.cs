@@ -7,7 +7,7 @@ using TDS_Server.Database.Entity;
 
 namespace TDS_Server.Handler.Entities
 {
-    public abstract class DatabaseEntityWrapper
+    public abstract class DatabaseEntityWrapper : IDatabaseEntityWrapper
     {
         private readonly TDSDbContext _dbContext;
 

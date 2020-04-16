@@ -29,9 +29,9 @@ namespace TDS_Server.Handler
 {
     public class LobbiesHandler : DatabaseEntityWrapper
     {
-        public List<Lobby> Lobbies { get; } = new List<Lobby>();
+        public List<ILobby> Lobbies { get; } = new List<ILobby>();
 
-        public Lobby MainMenu => _mainMenu ?? (_mainMenu =
+        public ILobby MainMenu => _mainMenu ?? (_mainMenu =
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MainMenu).First());
         public Arena Arena => _arena ?? (_arena =
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.Arena && !l.IsGangActionLobby).Cast<Arena>().First());
@@ -40,10 +40,10 @@ namespace TDS_Server.Handler
         public GangLobby GangLobby => _gangLobby ?? (_gangLobby =
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.GangLobby).Cast<GangLobby>().First());
 
-        public readonly Dictionary<int, Lobby> LobbiesByIndex = new Dictionary<int, Lobby>();
+        public readonly Dictionary<int, ILobby> LobbiesByIndex = new Dictionary<int, ILobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
 
-        private Lobby? _mainMenu;
+        private ILobby? _mainMenu;
         private Arena? _arena;
         private MapCreateLobby? _mapCreateLobby;
         private GangLobby? _gangLobby;
@@ -72,6 +72,7 @@ namespace TDS_Server.Handler
             _settingsHandler = settingsHandler;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+            eventsHandler.LobbyCreated += AddLobby;
         }
 
         public void LoadLobbies()
@@ -118,6 +119,7 @@ namespace TDS_Server.Handler
                 {
                     AddMapsToArena(arena, lobbysetting);
                 }
+                _eventsHandler.OnLobbyCreated(lobby);
             }
 
             _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
@@ -180,9 +182,9 @@ namespace TDS_Server.Handler
             arena.SetMapList(lobbyMapsList);
         }
 
-        public Lobby? GetLobby(int id)
+        public ILobby? GetLobby(int id)
         {
-            LobbiesByIndex.TryGetValue(id, out Lobby? lobby);
+            LobbiesByIndex.TryGetValue(id, out ILobby? lobby);
             return lobby;
         }
 
@@ -200,11 +202,6 @@ namespace TDS_Server.Handler
                 if (nameAlreadyInUse)
                 {
                     return player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;
-                }
-
-                if (data.Weapons is null)
-                {
-
                 }
 
                 Lobbies entity = new Lobbies
@@ -272,6 +269,7 @@ namespace TDS_Server.Handler
 
                 Arena arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
                 await arena.AddToDB();
+                _eventsHandler.OnLobbyCreated(arena);
 
                 AddMapsToArena(arena, entity);
 
@@ -327,7 +325,7 @@ namespace TDS_Server.Handler
 
             if (LobbiesByIndex.ContainsKey(index))
             {
-                Lobby lobby = LobbiesByIndex[index];
+                ILobby lobby = LobbiesByIndex[index];
                 if (lobby is MapCreateLobby)
                 {
                     if (await lobby.IsPlayerBaned(player))
@@ -352,7 +350,7 @@ namespace TDS_Server.Handler
 
             if (LobbiesByIndex.ContainsKey(index))
             {
-                Lobby lobby = LobbiesByIndex[index];
+                ILobby lobby = LobbiesByIndex[index];
                 if (password != null && lobby.Entity.Password != password)
                 {
                     player.SendMessage(player.Language.WRONG_PASSWORD);
@@ -381,7 +379,7 @@ namespace TDS_Server.Handler
             return true;
         }
 
-        public void AddLobby(Lobby lobby)
+        public void AddLobby(ILobby lobby)
         {
             Lobbies.Add(lobby);
             LobbiesByIndex[lobby.Id] = lobby;

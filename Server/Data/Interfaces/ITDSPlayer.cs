@@ -16,7 +16,7 @@ namespace TDS_Server.Data.Interfaces
 {
 #nullable enable
 
-    public interface ITDSPlayer : ITDSEntity, IEquatable<ITDSPlayer>
+    public interface ITDSPlayer : ITDSEntity, IDatabaseEntityWrapper, IEquatable<ITDSPlayer>
     {
         ITDSPlayer? InPrivateChatWith { get; set; }
         AdminLevelDto AdminLevel { get; }
@@ -85,10 +85,7 @@ namespace TDS_Server.Data.Interfaces
         bool HasRelationTo(ITDSPlayer target, PlayerRelation block);
         void SetVoiceTo(ITDSPlayer target, bool v);
         void Spawn(Position3D position, float rotation);
-        Task ExecuteForDB(Action<TDSDbContext> p);
         void SetEntityInvincible(IVehicle vehicle, bool invincible);
-        Task ExecuteForDBAsync(Func<TDSDbContext, Task> p);
-        Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action);
         void CheckSaveData();
         void CheckReduceMapBoughtCounter();
         ValueTask SaveData(bool force = false);

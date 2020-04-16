@@ -106,8 +106,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 StartHealth: entity.FightSettings?.StartHealth ?? 100,
                 StartArmor: entity.FightSettings?.StartArmor ?? 100
             );
-
-            LobbiesHandler.AddLobby(this);
         }
 
         public virtual void Start()
@@ -142,9 +140,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         /// <summary>
         /// Call this on lobby create.
         /// </summary>
-        public Task AddToDB()
+        public async Task AddToDB()
         {
-            return ExecuteForDBAsync(async (dbContext) =>
+            await ExecuteForDBAsync(async (dbContext) =>
             {
                 dbContext.Add(Entity);
                 await dbContext.SaveChangesAsync();

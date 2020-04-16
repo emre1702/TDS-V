@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Database.Entity.LobbyEntities;
@@ -9,7 +10,7 @@ using TDS_Shared.Data.Enums;
 namespace TDS_Server.Data.Interfaces
 {
 #nullable enable
-    public interface ILobby : IEquatable<ILobby>
+    public interface ILobby : IDatabaseEntityWrapper, IEquatable<ILobby>
     {
         int Id { get; }
         uint Dimension { get; }
@@ -20,6 +21,9 @@ namespace TDS_Server.Data.Interfaces
         LobbyType Type { get; }
         Lobbies Entity { get; }
         string OwnerName { get; }
+        bool IsGangActionLobby { get; }
+        string Name { get; }
+        List<ITeam> Teams { get; set; }
 
         bool IsPlayerLobbyOwner(ITDSPlayer player);
         Task RemovePlayer(ITDSPlayer player);
@@ -34,5 +38,6 @@ namespace TDS_Server.Data.Interfaces
         void OnPlayerSpawn(ITDSPlayer player);
         void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true);
         void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player);
+        Task<bool> IsPlayerBaned(ITDSPlayer player);
     }
 }

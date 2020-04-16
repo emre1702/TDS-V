@@ -37,12 +37,15 @@ namespace TDS_Server.Handler.Events
         public AsyncValueTaskEvent<ITDSPlayer>? PlayerLoggedOutBefore;
 
         public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
+
+
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
         public event PlayerLobbyDelegate? PlayerLeftLobby;
 
         public delegate void LobbyDelegate(ILobby lobby);
         public event LobbyDelegate? CustomLobbyCreated;
         public event LobbyDelegate? CustomLobbyRemoved;
+        public event LobbyDelegate? LobbyCreated;
 
         public delegate void CounterDelegate(int counter);
         public event CounterDelegate? Second;
@@ -168,6 +171,11 @@ namespace TDS_Server.Handler.Events
         internal void OnLoadedServerBans()
         {
             LoadedServerBans?.Invoke();
+        }
+
+        internal void OnLobbyCreated(ILobby lobby)
+        {
+            LobbyCreated?.Invoke(lobby);
         }
         #endregion
 

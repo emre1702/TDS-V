@@ -65,7 +65,7 @@ namespace TDS_Server.Handler
 
         private List<SyncedScoreboardLobbyDataDto>? GetDataForLobby(int lobbyId)
         {
-            Lobby? lobby = _lobbiesHandler.Lobbies.Where(l => l.Id == lobbyId).FirstOrDefault();
+            ILobby? lobby = _lobbiesHandler.Lobbies.Where(l => l.Id == lobbyId).FirstOrDefault();
             if (lobby is null)
                 return null;
 
