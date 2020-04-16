@@ -305,18 +305,42 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     private addNameForChat(name: string) {
         this.playerNames.push(name);
-        this.mentionConfig.items = [...this.playerNames];
+        this.mentionConfig.items.push(name);
+
+        this.mentionConfig = {
+            items: this.mentionConfig.items,
+            triggerChar: "@",
+            mentionSelect: this.getMentionText
+        };
+
         this.changeDetector.detectChanges();
     }
 
     private loadNamesForChat(namesJson: string) {
         this.playerNames = [...this.playerNames, ...JSON.parse(namesJson)];
+
+        this.mentionConfig = {
+            items: this.playerNames,
+            triggerChar: "@",
+            mentionSelect: this.getMentionText
+        };
     }
 
     private removeNameForChat(name: string) {
         const index = this.playerNames.indexOf(name);
         if (index >= 0) {
             this.playerNames.splice(index, 1);
+        }
+
+        const mentionIndex = this.mentionConfig.items.indexOf(name);
+        if (mentionIndex > 0) {
+            this.mentionConfig.items.splice(mentionIndex, 1);
+
+            this.mentionConfig = {
+                items: this.mentionConfig.items,
+                triggerChar: "@",
+                mentionSelect: this.getMentionText
+            };
         }
     }
 
@@ -326,7 +350,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             event.preventDefault();
             let msg = this.input.value;
             if (!this.isNullOrWhitespace(msg) && msg !== this.commandPrefix) {
-                msg = msg.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
+                // msg = msg.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
                 if (msg.startsWith(this.commandPrefix)) {
                     msg = msg.substr(this.commandPrefix.length);
                     this.rageConnector.call(DToClientEvent.CommandUsed, msg);
