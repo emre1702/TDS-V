@@ -23,25 +23,29 @@ namespace TDS_Server.RAGEAPI.Pool
 
         public void RemoveAll()
         {
-            List<GTANetworkAPI.Blip> blips = NAPI.Pools.GetAllBlips();
-            foreach (GTANetworkAPI.Blip blip in blips)
-                NAPI.Entity.DeleteEntity(blip);
+            NAPI.Task.Run(() =>
+            {
+                List<GTANetworkAPI.Blip> blips = NAPI.Pools.GetAllBlips();
+                foreach (GTANetworkAPI.Blip blip in blips)
+                    NAPI.Entity.DeleteEntity(blip);
 
-            List<GTANetworkAPI.Marker> markers = NAPI.Pools.GetAllMarkers();
-            foreach (GTANetworkAPI.Marker marker in markers)
-                NAPI.Entity.DeleteEntity(marker);
+                List<GTANetworkAPI.Marker> markers = NAPI.Pools.GetAllMarkers();
+                foreach (GTANetworkAPI.Marker marker in markers)
+                    NAPI.Entity.DeleteEntity(marker);
 
-            List<GTANetworkAPI.Pickup> pickups = NAPI.Pools.GetAllPickups();
-            foreach (GTANetworkAPI.Pickup pickup in pickups)
-                NAPI.Entity.DeleteEntity(pickup);
+                List<GTANetworkAPI.Pickup> pickups = NAPI.Pools.GetAllPickups();
+                foreach (GTANetworkAPI.Pickup pickup in pickups)
+                    NAPI.Entity.DeleteEntity(pickup);
 
-            List<GTANetworkAPI.Vehicle> vehicles = NAPI.Pools.GetAllVehicles();
-            foreach (GTANetworkAPI.Vehicle vehicle in vehicles)
-                NAPI.Entity.DeleteEntity(vehicle);
+                List<GTANetworkAPI.Vehicle> vehicles = NAPI.Pools.GetAllVehicles();
+                foreach (GTANetworkAPI.Vehicle vehicle in vehicles)
+                    NAPI.Entity.DeleteEntity(vehicle);
 
-            List<GTANetworkAPI.Object> objects = NAPI.Pools.GetAllObjects();
-            foreach (GTANetworkAPI.Object obj in objects)
-                NAPI.Entity.DeleteEntity(obj);
+                List<GTANetworkAPI.Object> objects = NAPI.Pools.GetAllObjects();
+                foreach (GTANetworkAPI.Object obj in objects)
+                    NAPI.Entity.DeleteEntity(obj);
+            });
+            
         }
     }
 }

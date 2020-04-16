@@ -8,8 +8,6 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
         [ServerEvent(Event.PlayerDisconnected)]
         public async void PlayerDisconnected(GTANetworkAPI.Player player, DisconnectionType disconnectionType, string reason)
         {
-            (Init.BaseAPI.Player as PlayerAPI)?.PlayerDisconnected(player);
-
             var modPlayer = Init.GetModPlayer(player);
             if (modPlayer is null)
                 return;
@@ -21,6 +19,8 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
             }
 
             Init.TDSCore.EventsHandler.OnPlayerDisconnected(modPlayer);
+
+            (Init.BaseAPI.Player as PlayerAPI)?.PlayerDisconnected(player);
         }
     }
 }
