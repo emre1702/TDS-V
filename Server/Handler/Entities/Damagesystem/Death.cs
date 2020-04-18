@@ -7,6 +7,12 @@ namespace TDS_Server.Core.Damagesystem
     {
         private readonly Dictionary<ITDSPlayer, ITDSPlayer> _deadTimer = new Dictionary<ITDSPlayer, ITDSPlayer>();
 
+        /// <summary>
+        /// Gets called BEFORE decrementing the life of the player.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="killer"></param>
+        /// <param name="weapon"></param>
         public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
             if (player.ModPlayer is null)
@@ -43,13 +49,10 @@ namespace TDS_Server.Core.Damagesystem
                 CheckForAssist(player, killer);
             }
 
-            
-
             if (player.Lobby?.SavePlayerLobbyStats == true && player.Lobby?.IsOfficial == true)
             {
                 _loggingHandler.LogKill(player, killer, weapon);
             }
-
         }
 
         public ITDSPlayer GetKiller(ITDSPlayer player, ITDSPlayer? possiblekiller)
