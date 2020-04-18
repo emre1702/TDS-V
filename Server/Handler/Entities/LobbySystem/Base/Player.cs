@@ -55,7 +55,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.ModPlayer.Freeze(true);
 
             if (teamindex != null)
-                player.Team = Teams[(int)teamindex.Value];
+                SetPlayerTeam(player, Teams[(int)teamindex.Value]);
 
             DataSyncHandler.SetData(player, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, IsPlayerLobbyOwner(player));
 
@@ -82,7 +82,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             await player.SetPlayerLobbyStats(null);
             player.Lifes = 0;
             player.Team?.SyncRemovedPlayer(player);
-            player.Team = null;
+            SetPlayerTeam(player, null);
             player.Spectates = null;
             if (player.ModPlayer is { })
             {
@@ -128,7 +128,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             await player.SetPlayerLobbyStats(stats);
         }
 
-        public virtual void SetPlayerTeam(ITDSPlayer player, ITeam team)
+        public virtual void SetPlayerTeam(ITDSPlayer player, ITeam? team)
         {
             if (player.Team is { })
             {
@@ -140,7 +140,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
 
             player.Team = team;
-            team.SyncAddedPlayer(player);
+            team?.SyncAddedPlayer(player);
         }
 
         public bool IsPlayerLobbyOwner(ITDSPlayer player)

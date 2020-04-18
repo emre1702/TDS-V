@@ -61,7 +61,7 @@ namespace TDS_Server.Handler
             string changedmessage = (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message;
             if (isDirty)
                 changedmessage = "!$160|50|0$[DIRTY] " + changedmessage + "$Dirty$";
-            _modAPI.Chat.SendMessage(player.Lobby, changedmessage, player.BlockingPlayerIds);
+            _modAPI.Chat.SendMessage(player.Lobby, changedmessage, player);
 
             if (player.Lobby?.IsOfficial == true && !isDirty)
                 _loggingHandler.LogChat(message, player);
@@ -74,10 +74,9 @@ namespace TDS_Server.Handler
         public void SendGlobalMessage(ITDSPlayer player, string message)
         {
             string changedmessage = "[GLOBAL] " + (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message + "$Global$";
-            var blockingIds = player.BlockingPlayerIds;
             foreach (var target in _tdsPlayerHandler.LoggedInPlayers)
             {
-                if (blockingIds.Contains(target.Entity?.Id ?? 0))
+                if (target.HasRelationTo(player, TDS_Shared.Data.Enums.PlayerRelation.Block))
                     continue;
                 target.SendMessage(changedmessage);
             }
@@ -103,7 +102,7 @@ namespace TDS_Server.Handler
             if (player.Team is null)
                 return;
             string changedMessage = "[TEAM] " + player.Team.ChatColor + player.DisplayName + ": !$220|220|220$" + message + "$Team$";
-            _modAPI.Chat.SendMessage(player.Team, changedMessage, player.BlockingPlayerIds); 
+            _modAPI.Chat.SendMessage(player.Team, changedMessage, player); 
             _loggingHandler.LogChat(message, player, isTeamChat: true);
         }
 

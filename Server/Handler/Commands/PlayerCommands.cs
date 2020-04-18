@@ -92,7 +92,7 @@ namespace TDS_Server.Handler.Commands
             if (player.ModPlayer is null || target.ModPlayer is null)
                 return;
             // Am I blocked?
-            if (player.BlockingPlayerIds.Contains(target.Entity?.Id ?? 0))
+            if (target.HasRelationTo(player, PlayerRelation.Block))
             {
                 player.SendMessage(string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName));
                 return;
@@ -174,7 +174,7 @@ namespace TDS_Server.Handler.Commands
         {
             if (player == target)
                 return;
-            if (player.BlockingPlayerIds.Contains(target.Entity?.Id ?? 0))
+            if (target.HasRelationTo(player, PlayerRelation.Block))
             {
                 player.SendMessage(string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName));
                 return;
@@ -235,21 +235,15 @@ namespace TDS_Server.Handler.Commands
                 if (relation != null && relation.Relation == PlayerRelation.Friend)
                 {
                     msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.DisplayName);
-                    var playerRelation = player.PlayerRelationsPlayer.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
-                    if (playerRelation != null)
-                        playerRelation.Relation = PlayerRelation.Block;
-                    var targetRelation = target.PlayerRelationsTarget.Find(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
-                    if (targetRelation != null)
-                        targetRelation.Relation = PlayerRelation.Block;
+                    
                 }
                 else
                 {
                     relation = new PlayerRelations { PlayerId = player.Entity.Id, TargetId = target.Entity.Id };
                     dbContext.PlayerRelations.Add(relation);
                     msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.DisplayName);
-                    player.PlayerRelationsPlayer.Add(relation);
-                    target.PlayerRelationsTarget.Add(relation);
                 }
+                player.SetRelation(target, PlayerRelation.Block);
                 relation.Relation = PlayerRelation.Block;
                 await dbContext.SaveChangesAsync();
                 player.SendMessage(msg);
@@ -291,8 +285,7 @@ namespace TDS_Server.Handler.Commands
             if (target.Team == player.Team)
                 target.SetVoiceTo(player, true);
 
-            player.PlayerRelationsPlayer.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
-            target.PlayerRelationsTarget.RemoveAll(r => r.PlayerId == player.Entity?.Id && r.TargetId == target.Entity?.Id);
+            player.SetRelation(target, PlayerRelation.None);
             player.SendMessage(string.Format(player.Language.YOU_UNBLOCKED, target.DisplayName));
             target.SendMessage(string.Format(target.Language.YOU_GOT_UNBLOCKED_BY, player.DisplayName));
         }

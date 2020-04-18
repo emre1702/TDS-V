@@ -31,11 +31,6 @@ namespace TDS_Server.Handler.Entities.Player
         public IVehicle? FreeroamVehicle { get; set; }
         public int VehicleSeat => ModPlayer?.VehicleSeat ?? -1;
 
-
-        public List<PlayerRelations> PlayerRelationsTarget { get; private set; } = new List<PlayerRelations>();
-        public List<PlayerRelations> PlayerRelationsPlayer { get; private set; } = new List<PlayerRelations>();
-
-        public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == PlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
         public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel 
             ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : ModPlayer.Name) : (Entity is { } ? Entity.Name : ModPlayer.Name));
@@ -82,11 +77,6 @@ namespace TDS_Server.Handler.Entities.Player
             _chatHandler = chatHandler;
 
             Language = _langHelper.GetLang(TDS_Shared.Data.Enums.Language.English);
-        }
-
-        public bool HasRelationTo(ITDSPlayer target, PlayerRelation relation)
-        {
-            return Entity?.PlayerRelationsPlayer.Any(p => p.TargetId == target.Entity?.Id && p.Relation == relation) == true;
         }
 
         public void Logout()

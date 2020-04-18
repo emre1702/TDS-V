@@ -81,11 +81,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public override void SetPlayerTeam(ITDSPlayer player, ITeam team)
+        public override void SetPlayerTeam(ITDSPlayer player, ITeam? team)
         {
             base.SetPlayerTeam(player, team);
 
-            if (CurrentRoundStatus == RoundStatus.Countdown || CurrentGameMode?.CanJoinDuringRound(player, team) == true)
+            if (team is { } && (CurrentRoundStatus == RoundStatus.Countdown || CurrentGameMode?.CanJoinDuringRound(player, team) == true))
             {
                 SetPlayerReadyForRound(player);
             }

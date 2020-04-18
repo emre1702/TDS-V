@@ -36,7 +36,6 @@ namespace TDS_Server.Data.Interfaces
 
         void LoadTimezone();
 
-        HashSet<int> BlockingPlayerIds { get; }
         string AdminLevelName { get; }
         bool LoggedIn { get; }
         ulong SocialClubId { get; }
@@ -70,8 +69,6 @@ namespace TDS_Server.Data.Interfaces
         int? VoiceMuteTime { get; set; }
         Language LanguageEnum { get; set; }
         bool IsConsole { get; set; }
-        List<PlayerRelations> PlayerRelationsPlayer { get; }
-        List<PlayerRelations> PlayerRelationsTarget { get; }
         bool IsCrouched { get; set; }
         bool TryingToLoginRegister { get; set; }
 
@@ -83,6 +80,7 @@ namespace TDS_Server.Data.Interfaces
         void GiveMoney(int money);
         void AddToChallenge(ChallengeType challengeType, int amount = 1, bool setTheValue = false);
         void Damage(ref int damage);
+        PlayerRelation GetRelationTo(ITDSPlayer target);
         bool HasRelationTo(ITDSPlayer target, PlayerRelation block);
         void SetVoiceTo(ITDSPlayer target, bool v);
         void Spawn(Position3D position, float rotation);
@@ -94,5 +92,6 @@ namespace TDS_Server.Data.Interfaces
         void ChangeVoiceMuteTime(ITDSPlayer player, int minutes, string reason);
         void ChangeMuteTime(ITDSPlayer target, int minutes, string reason);
         Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats);
+        void SetRelation(ITDSPlayer target, PlayerRelation relation);
     }
 }
