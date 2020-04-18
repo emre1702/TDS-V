@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
@@ -107,6 +108,18 @@ namespace TDS_Client.Handler.Lobby
             Logging.LogInfo("", "TeamsHandler.RemoveSameTeam", true);
         }
 
+        public void RemoveSameTeam(ushort remoteId)
+        {
+            Logging.LogInfo(remoteId.ToString(), "TeamsHandler.RemoveSameTeam");
+
+            var player = _sameTeamPlayers.FirstOrDefault(p => p.RemoteId == remoteId);
+            if (player is null)
+                return;
+            RemoveSameTeam(player);
+
+            Logging.LogInfo(remoteId.ToString(), "TeamsHandler.RemoveSameTeam", true);
+        }
+
         public void ClearSameTeam()
         {
             try
@@ -206,7 +219,10 @@ namespace TDS_Client.Handler.Lobby
                 Logging.LogInfo("", "TeamsHandler.OnPlayerLeftTeamMethod");
                 ushort handleValue = Convert.ToUInt16(args[0]);
                 IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
-                RemoveSameTeam(player);
+                if (player is null)
+                    RemoveSameTeam(handleValue);
+                else 
+                    RemoveSameTeam(player);
                 Logging.LogInfo("", "TeamsHandler.OnPlayerLeftTeamMethod", true);
             }
             catch (Exception ex)
