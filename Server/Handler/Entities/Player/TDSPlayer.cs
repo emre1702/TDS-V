@@ -38,7 +38,7 @@ namespace TDS_Server.Handler.Entities.Player
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == PlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
         public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel 
-            ? SharedConstants.ServerTeamSuffix + ModPlayer.Name : ModPlayer.Name);
+            ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : ModPlayer.Name) : (Entity is { } ? Entity.Name : ModPlayer.Name));
         public bool IsVip => Entity?.IsVip ?? false;
 
         public bool IsCrouched { get; set; }
