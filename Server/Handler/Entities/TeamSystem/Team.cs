@@ -110,7 +110,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
         public void SyncAddedPlayer(ITDSPlayer player)
         {
-            string json = _serializer.ToClient(Players.Select(p => p.RemoteId));
+            string json = _serializer.ToClient(Players.Select(p => p.RemoteId).ToList());
             player.SendEvent(ToClientEvent.SyncTeamPlayers, json);
             foreach (var target in Players)
             {
@@ -138,7 +138,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
         public void SyncAllPlayers()
         {
-            string json = _serializer.ToClient(Players.Select(p => p.RemoteId));
+            string json = _serializer.ToClient(Players.Select(p => p.RemoteId).ToList());
             foreach (var player in Players)
             {
                 player.SendEvent(ToClientEvent.SyncTeamPlayers, json);
