@@ -39,8 +39,8 @@ namespace TDS_Client.Handler.Events
             [ToServerEvent.SendSupportRequestMessage] = new CooldownEventDto(300),
             [ToServerEvent.SendTeamOrder] = new CooldownEventDto(2000),
             [ToServerEvent.ToggleMapFavouriteState] = new CooldownEventDto(500),
-            [ToServerEvent.TryLogin] = new CooldownEventDto(1000),
-            [ToServerEvent.TryRegister] = new CooldownEventDto(1000),
+            [ToServerEvent.TryLogin] = new CooldownEventDto(4000),
+            [ToServerEvent.TryRegister] = new CooldownEventDto(4000),
         };
 
         private readonly TimerHandler _timerHandler;
