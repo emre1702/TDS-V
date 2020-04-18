@@ -51,11 +51,15 @@ namespace TDS_Server.Handler.Events
 
         public void TryLogin(ITDSPlayer player, string username, string password)
         {
+            if (player.TryingToLoginRegister)
+                return;
             _loginHandler.TryLogin(player, username, password);
         }
 
         public void TryRegister(ITDSPlayer player, string username, string password, string email)
         {
+            if (player.TryingToLoginRegister)
+                return;
             _registerHandler.TryRegister(player, username, password, email);
         }
 

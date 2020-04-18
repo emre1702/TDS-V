@@ -65,7 +65,7 @@ namespace TDS_Server.RAGEAPI
             return TDSCore.GetTDSPlayer(player);
         }
 
-        internal static ITDSPlayer? GetNewTDSPlayer(GTANetworkAPI.Player player)
+        internal static ITDSPlayer? GetNotLoggedInTDSPlayer(GTANetworkAPI.Player player)
         {
             var modPlayer = GetModPlayer(player);
             if (modPlayer is null)
@@ -76,7 +76,7 @@ namespace TDS_Server.RAGEAPI
 
         internal static ITDSPlayer GetNewTDSPlayer(IPlayer player)
         {
-            return TDSCore.GetNewTDSPlayer(player);
+            return TDSCore.GetNotLoggedInTDSPlayer(player);
         }
 
         internal static IPlayer? GetModPlayer(GTANetworkAPI.Player player)

@@ -77,30 +77,38 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async void TryRegister(ITDSPlayer player, string username, string password, string email)
         {
-            if (!_serverStartHandler.IsReadyForLogin)
+            player.TryingToLoginRegister = true;
+            try
             {
-                player.SendNotification(player.Language.TRY_AGAIN_LATER);
-                return;
-            }
+                if (!_serverStartHandler.IsReadyForLogin)
+                {
+                    player.SendNotification(player.Language.TRY_AGAIN_LATER);
+                    return;
+                }
 
-            if (player.ModPlayer is null)
-                return;
-            if (username.Length < 3 || username.Length > 20)
-                return;
-            if (await _databasePlayerHelper.DoesPlayerWithScnameExist(player.ModPlayer.SocialClubName))
-                return;
-            if (await _databasePlayerHelper.DoesPlayerWithNameExist(username))
-            {
-                player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS);
-                return;
+                if (player.ModPlayer is null)
+                    return;
+                if (username.Length < 3 || username.Length > 20)
+                    return;
+                if (await _databasePlayerHelper.DoesPlayerWithScnameExist(player.ModPlayer.SocialClubName))
+                    return;
+                if (await _databasePlayerHelper.DoesPlayerWithNameExist(username))
+                {
+                    player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS);
+                    return;
+                }
+                char? invalidChar = Utils.CheckNameValid(username);
+                if (invalidChar.HasValue)
+                {
+                    player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value));
+                    return;
+                }
+                RegisterPlayer(player, username, password, email.Length != 0 ? email : null);
             }
-            char? invalidChar = Utils.CheckNameValid(username);
-            if (invalidChar.HasValue)
+            finally
             {
-                player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value));
-                return;
+                player.TryingToLoginRegister = false;
             }
-            RegisterPlayer(player, username, password, email.Length != 0 ? email : null);
         }
     }
 }

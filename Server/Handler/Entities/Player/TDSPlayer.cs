@@ -43,6 +43,7 @@ namespace TDS_Server.Handler.Entities.Player
 
         public bool IsCrouched { get; set; }
         public bool IsConsole { get; set; }
+        public bool TryingToLoginRegister { get; set; }
 
         private readonly AdminsHandler _adminsHandler;
         private readonly ChallengesHelper _challengesHandler;

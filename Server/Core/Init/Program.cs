@@ -34,6 +34,7 @@ namespace TDS_Server.Core.Init
         private readonly CommandsHandler _commandsHandler;
 
 
+
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         public Program(IModAPI modAPI)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
@@ -99,8 +100,8 @@ namespace TDS_Server.Core.Init
         public ITDSPlayer GetTDSPlayer(IPlayer player)
             => _tdsPlayerHandler.Get(player);
 
-        public ITDSPlayer GetNewTDSPlayer(IPlayer player)
-            => _tdsPlayerHandler.GetNew(player);
+        public ITDSPlayer GetNotLoggedInTDSPlayer(IPlayer player)
+            => _tdsPlayerHandler.GetNotLoggedIn(player);
 
         public void HandleProgramException(Exception ex, string msgBefore = "")
         {

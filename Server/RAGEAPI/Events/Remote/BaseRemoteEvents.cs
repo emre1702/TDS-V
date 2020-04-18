@@ -20,7 +20,7 @@ namespace TDS_Server.RAGEAPI.Events.Remote
         [RemoteEvent(ToServerEvent.TryLogin)]
         public void TryLogin(GTANetworkAPI.Player player, string username, string password)
         {
-            var tdsPlayer = Init.GetTDSPlayer(player);
+            var tdsPlayer = Init.GetNotLoggedInTDSPlayer(player);
             if (tdsPlayer is null)
                 return;
 
@@ -30,7 +30,7 @@ namespace TDS_Server.RAGEAPI.Events.Remote
         [RemoteEvent(ToServerEvent.TryRegister)]
         public void TryRegister(GTANetworkAPI.Player player, string username, string password, string email)
         {
-            var tdsPlayer = Init.GetNewTDSPlayer(player);
+            var tdsPlayer = Init.GetNotLoggedInTDSPlayer(player);
             if (tdsPlayer is null)
                 return;
 

@@ -57,19 +57,28 @@ namespace TDS_Server.Handler.Account
 
         public async void TryLogin(ITDSPlayer player, string username, string password)
         {
-            if (!_serverStartHandler.IsReadyForLogin)
+            player.TryingToLoginRegister = true;
+            try
             {
-                player.SendNotification(player.Language.TRY_AGAIN_LATER);
-                return;
-            }
+                if (!_serverStartHandler.IsReadyForLogin)
+                {
+                    player.SendNotification(player.Language.TRY_AGAIN_LATER);
+                    return;
+                }
 
-            int id = await _databasePlayerHandler.GetPlayerIDByName(username);
-            if (id != 0)
-            {
-                await LoginPlayer(player, id, password);
+                int id = await _databasePlayerHandler.GetPlayerIDByName(username);
+                if (id != 0)
+                {
+                    await LoginPlayer(player, id, password);
+                }
+                else
+                    player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST);
             }
-            else
-                player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST);
+            finally
+            {
+                player.TryingToLoginRegister = false;
+            }
+            
         }
 
         public async Task LoginPlayer(ITDSPlayer iplayer, int id, string? password)
