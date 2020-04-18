@@ -97,14 +97,12 @@ namespace TDS_Server.Handler.Account
                 if (player.Entity is null)
                 {
                     player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST);
-                    dbContext.Dispose();
                     return false;
                 }
 
                 if (password is { } && Utils.HashPWServer(password) != player.Entity.Password)
                 {
                     player.SendNotification(player.Language.WRONG_PASSWORD);
-                    dbContext.Dispose();
                     return false;
                 }
 

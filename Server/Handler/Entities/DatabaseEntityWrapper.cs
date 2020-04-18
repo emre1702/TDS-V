@@ -18,11 +18,6 @@ namespace TDS_Server.Handler.Entities
         protected DatabaseEntityWrapper(TDSDbContext dbContext, ILoggingHandler loggingHandler)
             => (_dbContext, LoggingHandler, _player) = (dbContext, loggingHandler, this as ITDSPlayer);
 
-        ~DatabaseEntityWrapper()
-        {
-            _dbContextSemaphore?.Dispose();
-        }
-
         /*public void InitDbContext()
         {
             _dbContext = new TDSDbContext();

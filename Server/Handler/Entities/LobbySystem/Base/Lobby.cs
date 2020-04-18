@@ -125,10 +125,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 dbContext.Remove(Entity);
                 await dbContext.SaveChangesAsync();
-                dbContext.Dispose();
             });
-
-
         }
 
         protected bool IsEmpty()
