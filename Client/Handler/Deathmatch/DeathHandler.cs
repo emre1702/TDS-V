@@ -43,6 +43,7 @@ namespace TDS_Client.Handler.Deathmatch
 
         public void PlayerSpawn()
         {
+            Logging.LogWarning("", "DeathHandler.PlayerSpawn");
             ModAPI.Cam.DoScreenFadeIn(_settingsHandler.ScreenFadeInTimeAfterSpawn);
             ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
             ModAPI.Cam.SetCamEffect(0);
@@ -52,6 +53,7 @@ namespace TDS_Client.Handler.Deathmatch
         {
             if (player != ModAPI.LocalPlayer)
                 return;
+            Logging.LogWarning("", "DeathHandler.PlayerDeath");
             ModAPI.Cam.DoScreenFadeOut(_settingsHandler.ScreenFadeOutTimeAfterSpawn);
             ModAPI.Misc.IgnoreNextRestart(true);
             ModAPI.Misc.SetFadeOutAfterDeath(false);

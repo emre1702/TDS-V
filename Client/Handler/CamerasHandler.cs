@@ -22,7 +22,7 @@ namespace TDS_Client.Handler
             DeathHandler deathHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
-            Spectating = new SpectatingHandler(modAPI, remoteEventsSender, bindsHandler, this, deathHandler, eventsHandler, utilsHandler);
+            Spectating = new SpectatingHandler(modAPI, loggingHandler, remoteEventsSender, bindsHandler, this, deathHandler, eventsHandler, utilsHandler);
 
             modAPI.Cam.Render(false, false, 0);
             modAPI.Cam.DestroyAllCams();

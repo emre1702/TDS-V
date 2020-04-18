@@ -6,12 +6,11 @@ using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
-    public class SpectatingHandler
+    public class SpectatingHandler : ServiceBase
     {
         public bool IsSpectator { get; set; }
 
@@ -42,8 +41,9 @@ namespace TDS_Client.Handler
         private readonly DeathHandler _deathHandler;
         private readonly UtilsHandler _utilsHandler;
 
-        public SpectatingHandler(IModAPI modAPI, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler, CamerasHandler camerasHandler, DeathHandler deathHandler, 
-            EventsHandler eventsHandler, UtilsHandler utilsHandler)
+        public SpectatingHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
+            CamerasHandler camerasHandler, DeathHandler deathHandler,
+            EventsHandler eventsHandler, UtilsHandler utilsHandler) : base(modAPI, loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
             _bindsHandler = bindsHandler;
@@ -75,6 +75,7 @@ namespace TDS_Client.Handler
 
         public void Start()
         {
+            Logging.LogWarning("Already binded: " + _binded.ToString(), "SpectatingHandler.Start");
             if (_binded)
                 return;
             _binded = true;
@@ -90,6 +91,7 @@ namespace TDS_Client.Handler
 
         public void Stop()
         {
+            Logging.LogWarning("Is binded: " + _binded.ToString(), "SpectatingHandler.Stop");
             _spectatingEntity = null;
             if (!_binded)
                 return;
