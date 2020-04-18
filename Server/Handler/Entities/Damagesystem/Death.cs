@@ -5,13 +5,13 @@ namespace TDS_Server.Core.Damagesystem
 {
     partial class Damagesys
     {
-        private static readonly Dictionary<ITDSPlayer, ITDSPlayer> sDeadTimer = new Dictionary<ITDSPlayer, ITDSPlayer>();
+        private readonly Dictionary<ITDSPlayer, ITDSPlayer> _deadTimer = new Dictionary<ITDSPlayer, ITDSPlayer>();
 
         public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
             if (player.ModPlayer is null)
                 return;
-            if (sDeadTimer.ContainsKey(player))
+            if (_deadTimer.ContainsKey(player))
                 return;
             player.ModPlayer.Freeze(true);
 
@@ -19,6 +19,8 @@ namespace TDS_Server.Core.Damagesystem
 
             if (player.Lifes <= 0)
                 return;
+
+            killer = GetKiller(player, killer);
 
             // Death //
             if (player.LobbyStats != null && player.Lobby?.SavePlayerLobbyStats == true)
