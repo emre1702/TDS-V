@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Extensions;
 using TDS_Client.Data.Interfaces.ModAPI;
@@ -54,6 +55,9 @@ namespace TDS_Client.Handler.Draw
             var player = ModAPI.Pool.Players.GetAtHandle(targetEntity);
             if (!(player is null))
                 name = _utilsHandler.GetDisplayName(player);
+            
+            if (player is null)
+                Logging.LogWarning("GetAtHandle did not work. TargetEntity: " + targetEntity + " | Linq: " + (ModAPI.Pool.Players.All.Any(p => p.Handle == targetEntity)), "NametagsHandler.DrawAtAim");
 
             DrawNametag(targetEntity, name, distance);
         }
