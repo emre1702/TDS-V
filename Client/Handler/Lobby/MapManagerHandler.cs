@@ -88,6 +88,9 @@ namespace TDS_Client.Handler.Lobby
 
         public void LoadMapList(string mapjson)
         {
+            if (_settingsHandler is null || !_settingsHandler.InLobbyWithMaps)
+                return;
+
             _lastMapsJson = mapjson;
             _lobbyIdAtLastLoad = _settingsHandler.LobbyId;
             if (!_mapBuyDataSynced)
