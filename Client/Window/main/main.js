@@ -155,9 +155,13 @@ function toggleOrders(bool) {
 }
 
 mp.events.add("e", (name) => {
-	let id = "voice-chat-" + name.replace(/\W/g,'_');
+    let id = "voice-chat-" + name.replace(/\W/g, '_');
+    let previousChild = voiceChatPlayerNamesBox.find("#" + id);
+    if (previousChild.length)
+        return;
+
 	let img = "<img src='../pic/speaker.png'/>";
-	let child = $("<div id='" + id + "'>" + img + "<span>" + name + "</span></div>");
+	child = $("<div id='" + id + "'>" + img + "<span>" + name + "</span></div>");
     voiceChatPlayerNamesBox.append(child);
 });
 
