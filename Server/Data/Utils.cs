@@ -13,8 +13,6 @@ namespace TDS_Server.Data
 {
     public static class Utils
     {
-        private static readonly StringBuilder _strbuilder = new StringBuilder();
-
         public static string GetTimestamp()
         {
             return DateTime.UtcNow.ToString("s");
@@ -28,16 +26,16 @@ namespace TDS_Server.Data
 
         public static string HashPWServer(string pw)
         {
+            var stringBuilder = new StringBuilder();
             using var sha512 = SHA512.Create();
             byte[] hashbytes = sha512.ComputeHash(Encoding.Default.GetBytes(pw));
             using var sha384 = SHA384.Create();
             hashbytes = sha384.ComputeHash(hashbytes);
             for (int i = 0; hashbytes != null && i < hashbytes.Length; i++)
             {
-                _strbuilder.AppendFormat("{0:x2}", hashbytes[i]);
+                stringBuilder.AppendFormat("{0:x2}", hashbytes[i]);
             }
-            string result = _strbuilder.ToString();
-            _strbuilder.Clear();
+            string result = stringBuilder.ToString();
             return result;
         }
 
@@ -48,15 +46,15 @@ namespace TDS_Server.Data
 
         public static string GetReplaced(string str, params object[] args)
         {
+            var stringBuilder = new StringBuilder();
             if (args.Length > 0)
             {
-                _strbuilder.Append(str);
+                stringBuilder.Append(str);
                 for (int i = 0; i < args.Length; ++i)
                 {
-                    _strbuilder.Replace("{" + i + "}", args[i] is null ? "?" : args[i].ToString());
+                    stringBuilder.Replace("{" + i + "}", args[i] is null ? "?" : args[i].ToString());
                 }
-                string result = _strbuilder.ToString();
-                _strbuilder.Clear();
+                string result = stringBuilder.ToString();
                 return result;
             }
             return str;
