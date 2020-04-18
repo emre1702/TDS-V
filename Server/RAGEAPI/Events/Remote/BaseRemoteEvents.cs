@@ -30,7 +30,7 @@ namespace TDS_Server.RAGEAPI.Events.Remote
         [RemoteEvent(ToServerEvent.TryRegister)]
         public void TryRegister(GTANetworkAPI.Player player, string username, string password, string email)
         {
-            var tdsPlayer = Init.GetTDSPlayer(player);
+            var tdsPlayer = Init.GetNewTDSPlayer(player);
             if (tdsPlayer is null)
                 return;
 

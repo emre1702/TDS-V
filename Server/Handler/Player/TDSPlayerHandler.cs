@@ -55,6 +55,15 @@ namespace TDS_Server.Handler.Player
             return tdsPlayer;
         }
 
+        public ITDSPlayer GetNew(IPlayer modPlayer)
+        {
+            ITDSPlayer tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
+            tdsPlayer.ModPlayer = modPlayer;
+            _tdsPlayerCache[modPlayer] = tdsPlayer;
+
+            return tdsPlayer;
+        }
+
         public ITDSPlayer? GetIfLoggedIn(IPlayer modPlayer)
         {
             if (!_tdsPlayerCache.ContainsKey(modPlayer))

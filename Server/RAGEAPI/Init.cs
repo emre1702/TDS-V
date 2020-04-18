@@ -60,9 +60,23 @@ namespace TDS_Server.RAGEAPI
             return GetTDSPlayer(modPlayer);
         }
 
-        internal static ITDSPlayer? GetTDSPlayer(IPlayer player)
+        internal static ITDSPlayer GetTDSPlayer(IPlayer player)
         {
             return TDSCore.GetTDSPlayer(player);
+        }
+
+        internal static ITDSPlayer? GetNewTDSPlayer(GTANetworkAPI.Player player)
+        {
+            var modPlayer = GetModPlayer(player);
+            if (modPlayer is null)
+                return null;
+
+            return GetNewTDSPlayer(modPlayer);
+        }
+
+        internal static ITDSPlayer GetNewTDSPlayer(IPlayer player)
+        {
+            return TDSCore.GetNewTDSPlayer(player);
         }
 
         internal static IPlayer? GetModPlayer(GTANetworkAPI.Player player)

@@ -96,8 +96,11 @@ namespace TDS_Server.Core.Init
         public ITDSPlayer? GetTDSPlayerIfLoggedIn(ushort remoteId)
             => _tdsPlayerHandler.GetIfLoggedIn(remoteId);
 
-        public ITDSPlayer? GetTDSPlayer(IPlayer player)
+        public ITDSPlayer GetTDSPlayer(IPlayer player)
             => _tdsPlayerHandler.Get(player);
+
+        public ITDSPlayer GetNewTDSPlayer(IPlayer player)
+            => _tdsPlayerHandler.GetNew(player);
 
         public void HandleProgramException(Exception ex, string msgBefore = "")
         {
