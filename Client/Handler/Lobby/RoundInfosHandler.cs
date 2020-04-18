@@ -246,6 +246,8 @@ namespace TDS_Client.Handler.Lobby
 
         private void EventsHandler_PlayerDied(IPlayer player, int teamIndex, bool willRespawn)
         {
+            if (willRespawn)
+                return;
             OnePlayerDied(teamIndex);
         }
 
