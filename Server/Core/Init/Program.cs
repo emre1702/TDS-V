@@ -23,7 +23,7 @@ namespace TDS_Server.Core.Init
         public readonly RemoteEventsHandler RemoteEventsHandler;
         public readonly RemoteBrowserEventsHandler RemoteBrowserEventsHandler;
         public readonly LobbiesHandler LobbiesHandler;
-        public Dictionary<IPlayer, ITDSPlayer>.ValueCollection LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
+        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
 
         private TDSPlayer? _consolePlayerCache;
 

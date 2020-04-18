@@ -12,17 +12,17 @@ using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Core;
-using static System.Collections.Generic.Dictionary<TDS_Server.Data.Interfaces.ModAPI.Player.IPlayer, TDS_Server.Data.Interfaces.ITDSPlayer>;
+using System.Collections.Concurrent;
 
 namespace TDS_Server.Handler.Player
 {
     public class TDSPlayerHandler
     {
-        public ValueCollection LoggedInPlayers => _tdsPlayerCache.Values;
+        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerCache.Values;
         public int AmountLoggedInPlayers => LoggedInPlayers.Count;
 
-        private readonly Dictionary<IPlayer, ITDSPlayer> _tdsPlayerCache = new Dictionary<IPlayer, ITDSPlayer>();
-        private readonly Dictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new Dictionary<ushort, ITDSPlayer>();
+        private readonly ConcurrentDictionary<IPlayer, ITDSPlayer> _tdsPlayerCache = new ConcurrentDictionary<IPlayer, ITDSPlayer>();
+        private readonly ConcurrentDictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new ConcurrentDictionary<ushort, ITDSPlayer>();
         private readonly NameCheckHelper _nameCheckHelper;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILoggingHandler _loggingHandler;
@@ -117,8 +117,8 @@ namespace TDS_Server.Handler.Player
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
             if (player.ModPlayer is { })
-                _tdsPlayerCache.Remove(player.ModPlayer);
-            _tdsPlayerRemoteIdCache.Remove(player.RemoteId);
+                _tdsPlayerCache.TryRemove(player.ModPlayer, out _);
+            _tdsPlayerRemoteIdCache.TryRemove(player.RemoteId, out _);
         }
 
         private void UpdatePlayers(int _)
