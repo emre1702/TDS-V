@@ -1,4 +1,8 @@
 ﻿#round_end_reason_container {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
     display: none;
     text-align: center;
 }
@@ -13,6 +17,7 @@
     font-size: 5em;
     color: floralwhite;
     z-index: 1000;
+    user-select: none; 
 }
 
 .rating {
