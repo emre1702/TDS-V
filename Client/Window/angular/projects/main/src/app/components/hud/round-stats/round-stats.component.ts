@@ -44,7 +44,7 @@ export class RoundStatsComponent implements OnInit, OnDestroy {
 Kills: ${this.kills}
 Assists: ${this.assists}
 Damage: ${this.damage}`;
-        this.clipboardService.copyFromContent(text);
+        this.clipboardService.copy(text);
     }
 
     private setKills(kills: number) {

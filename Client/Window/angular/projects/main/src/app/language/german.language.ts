@@ -244,6 +244,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     HeavyWeapons = "Schwere Waffen";
     Throwables = "Wurfkörper";
     Miscellaneous = "Sonstiges";
+    Copied = "Kopiert";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

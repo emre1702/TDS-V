@@ -219,6 +219,7 @@ export interface Language {
     HeavyWeapons: string;
     Throwables: string;
     Miscellaneous: string;
+    Copied: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

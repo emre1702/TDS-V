@@ -249,6 +249,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     HeavyWeapons = "Heavy weapons";
     Throwables = "Throwables";
     Miscellaneous = "Miscellaneous";
+    Copied = "Copied";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";
