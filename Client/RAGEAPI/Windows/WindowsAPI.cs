@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Windows;
+﻿using System;
+using TDS_Client.Data.Interfaces.ModAPI.Windows;
 
 namespace TDS_Client.RAGEAPI.Windows
 {
@@ -9,6 +10,9 @@ namespace TDS_Client.RAGEAPI.Windows
         public bool Fullscreen => RAGE.Ui.Windows.Fullscreen;
 
         public void Notify(string title, string text = "", string attribute = "", int duration = 0, bool silent = false)
-            => RAGE.Ui.Windows.Notify(title, text, attribute, duration, silent);
+        {
+            if (!Focused) 
+                RAGE.Ui.Windows.Notify(title, text, attribute, duration, silent);
+        }
     }
 }
