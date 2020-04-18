@@ -38,10 +38,10 @@ namespace TDS_Server.Handler.Server
 
             ExecuteForDB(dbContext =>
             {
-                DailyStats = dbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.Today);
+                DailyStats = dbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.UtcNow.Date);
                 if (DailyStats is null)
                 {
-                    DailyStats = new ServerDailyStats { Date = DateTime.Today };
+                    DailyStats = new ServerDailyStats { Date = DateTime.UtcNow.Date };
                     dbContext.ServerDailyStats.Add(DailyStats);
                     dbContext.SaveChanges();
                 }
@@ -54,15 +54,15 @@ namespace TDS_Server.Handler.Server
 
         private async ValueTask CheckNewDay()
         {
-            if (DailyStats.Date.Date == DateTime.Today)
+            if (DailyStats.Date.Date == DateTime.UtcNow.Date)
                 return;
 
             await ExecuteForDBAsync(async dbContext =>
             {
-                if (DailyStats.Date.Date == DateTime.Today)
+                if (DailyStats.Date.Date == DateTime.UtcNow.Date)
                     return;
                 dbContext.Entry(DailyStats).State = EntityState.Detached;
-                DailyStats = new ServerDailyStats { Date = DateTime.Today };
+                DailyStats = new ServerDailyStats { Date = DateTime.UtcNow.Date };
                 dbContext.ServerDailyStats.Add(DailyStats);
                 await dbContext.SaveChangesAsync();
             });
