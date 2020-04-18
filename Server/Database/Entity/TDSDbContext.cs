@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -66,6 +65,8 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Commands> Commands { get; set; }
         public virtual DbSet<FAQs> FAQs { get; set; }
         public virtual DbSet<FreeroamDefaultVehicle> FreeroamDefaultVehicle { get; set; }
+        public virtual DbSet<GangHouses> GangHouses { get; set; }
+        public virtual DbSet<GangLevelSettings> GangLevelSettings { get; set; }
         public virtual DbSet<GangMembers> GangMembers { get; set; }
         public virtual DbSet<GangRankPermissions> GangRankPermissions { get; set; }
         public virtual DbSet<GangRanks> GangRanks { get; set; }
@@ -315,6 +316,37 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.Note).HasColumnType("character varying");
             });
 
+            modelBuilder.Entity<GangHouses>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.LastBought)
+                    .HasConversion(v => v, v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v);
+
+                entity.Property(e => e.Created)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+                    .HasDefaultValueSql("timezone('utc', now())");
+
+                entity.HasOne(e => e.Creator)
+                    .WithMany(p => p.CreatedHouses)
+                    .HasForeignKey(e => e.CreatorId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<GangLevelSettings>(entity =>
+            {
+                entity.HasKey(e => e.Level);
+
+                entity.Property(e => e.UpgradePrice).IsRequired().HasDefaultValue(int.MaxValue);
+                entity.Property(e => e.HousePrice).IsRequired().HasDefaultValue(int.MaxValue);
+                entity.Property(e => e.NeededExperience).IsRequired().HasDefaultValue(int.MaxValue);
+
+                entity.Property(e => e.PlayerSlots).IsRequired().HasDefaultValue(byte.MaxValue);
+                entity.Property(e => e.RankSlots).IsRequired().HasDefaultValue(byte.MaxValue);
+                entity.Property(e => e.VehicleSlots).IsRequired().HasDefaultValue(byte.MaxValue);
+                entity.Property(e => e.GangAreaSlots).IsRequired().HasDefaultValue(byte.MaxValue);
+            });
+
             modelBuilder.Entity<GangMembers>(entity =>
             {
                 entity.HasKey(e => e.PlayerId);
@@ -369,12 +401,15 @@ namespace TDS_Server.Database.Entity
                     .IsRequired()
                     .HasMaxLength(5);
 
+                // Not required so we can set Owner to null when Owner gets deleted
                 entity.Property(e => e.OwnerId)
                     .IsRequired(false);
 
                 entity.Property(e => e.CreateTime)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
+
+                entity.Property(e => e.BlipColor).IsRequired(true).HasDefaultValue(1);
 
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.Gangs)
@@ -385,6 +420,31 @@ namespace TDS_Server.Database.Entity
                     .WithOne(o => o.OwnedGang)
                     .HasForeignKey<Gangs>(o => o.OwnerId)
                     .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(e => e.House)
+                   .WithOne(g => g.OwnerGang)
+                   .HasForeignKey<Gangs>(e => e.HouseId)
+                   .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            modelBuilder.Entity<GangStats>(entity =>
+            {
+                entity.HasKey(e => e.GangId);
+
+                entity.Property(e => e.Money).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.Experience).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.AmountAttacks).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.AmountDefends).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.AmountAttacksWon).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.AmountDefendsWon).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.AmountMembersSoFar).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.PeakGangwarAreasOwned).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.TotalMoneySoFar).IsRequired(true).HasDefaultValue(0);
+
+                entity.HasOne(e => e.Gang)
+                    .WithOne(g => g.Stats)
+                    .HasForeignKey<GangStats>(e => e.GangId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<GangwarAreas>(entity =>
@@ -392,6 +452,7 @@ namespace TDS_Server.Database.Entity
                 entity.HasKey(e => e.MapId);
 
                 entity.Property(e => e.LastAttacked)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("'2019-1-1'::timestamp");
 
                 entity.Property(e => e.AttackCount)
