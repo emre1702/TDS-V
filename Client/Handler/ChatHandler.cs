@@ -23,7 +23,7 @@ namespace TDS_Client.Handler
                 if (_isOpen == value)
                     return;
                 _isOpen = value;
-                _browserHandler.Angular.ToggleChatOpened(value);
+                _eventsHandler.OnChatInputToggled(value);
                 if (value)
                     ModAPI.Event.Tick.Add(_tickEventMethod);
                 else
@@ -39,15 +39,17 @@ namespace TDS_Client.Handler
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly LobbyHandler _lobbyHandler;
         private readonly PlayerFightHandler _playerFightHandler;
+        private readonly EventsHandler _eventsHandler;
 
         public ChatHandler(IModAPI modAPI, LoggingHandler loggingHandler,  BrowserHandler browserHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender,
-            LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler)
+            LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
             _browserHandler = browserHandler;
             _remoteEventsSender = remoteEventsSender;
             _lobbyHandler = lobbyHandler;
             _playerFightHandler = playerFightHandler;
+            _eventsHandler = eventsHandler;
 
             _tickEventMethod = new EventMethodData<TickDelegate>(OnUpdate);
 

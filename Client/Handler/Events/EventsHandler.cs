@@ -30,6 +30,7 @@ namespace TDS_Client.Handler.Events
         public event BoolDelegate CursorToggled;
         public event BoolDelegate InFightStatusChanged;
         public event BoolDelegate FreecamToggled;
+        public event BoolDelegate ChatInputToggled;
 
         public delegate void LanguageChangedDelegate(ILanguage lang, bool beforeLogin);
         public event LanguageChangedDelegate LanguageChanged;
@@ -431,6 +432,20 @@ namespace TDS_Client.Handler.Events
                 Logging.LogInfo("", "EventsHandler.OnRoundEnded");
                 RoundEnded?.Invoke(isSpectator);
                 Logging.LogInfo("", "EventsHandler.OnRoundEnded", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnChatInputToggled(bool value)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnChatInputToggled");
+                ChatInputToggled?.Invoke(value);
+                Logging.LogInfo("", "EventsHandler.OnChatInputToggled", true);
             }
             catch (Exception ex)
             {

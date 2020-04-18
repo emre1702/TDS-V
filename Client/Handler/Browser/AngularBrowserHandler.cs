@@ -38,6 +38,7 @@ namespace TDS_Client.Handler.Browser
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.AngularCooldown += ShowCooldown;
             eventsHandler.RoundEnded += _ => ResetMapVoting();
+            eventsHandler.ChatInputToggled += ToggleChatOpened;
 
             modAPI.Event.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
             modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);

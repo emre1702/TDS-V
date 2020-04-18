@@ -37,6 +37,8 @@ namespace TDS_Client.Handler
         {
             _eventsHandler = eventsHandler;
 
+            eventsHandler.ChatInputToggled += EventsHandler_ChatInputToggled;
+
             bindsHandler.Add(Key.End, ManuallyToggleCursor);
         }
 
@@ -46,6 +48,11 @@ namespace TDS_Client.Handler
             _cursorOpenedCounter = isVisible ? 0 : 1;
             ModAPI.Cursor.Visible = !isVisible;
             _eventsHandler.OnCursorToggled(!isVisible);
+        }
+
+        private void EventsHandler_ChatInputToggled(bool boolean)
+        {
+            Visible = boolean;
         }
     }
 }
