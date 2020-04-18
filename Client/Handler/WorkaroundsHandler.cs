@@ -65,10 +65,7 @@ namespace TDS_Client.Handler
 
         public void SetEntityCollisionlessWorkaroundMethod(object[] args)
         {
-            Logging.LogWarning((string)args[0], args.Length.ToString());
-
             EntityCollisionlessInfoDto info = _serializer.FromServer<EntityCollisionlessInfoDto>(args[0].ToString());
-            Logging.LogWarning(info is null ? "null" : "not null", (info?.EntityValue.ToString() ?? "?") + " - " + ((ushort?)info.EntityValue)?.ToString() ?? "?");
             IEntityBase entity = ModAPI.Pool.Objects.GetAtRemote((ushort)info.EntityValue);
             if (entity == null)
             {
