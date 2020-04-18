@@ -336,6 +336,7 @@ export interface Language {
     money: string;
 
     TDSPlayer: string;
+    ITDSPlayer: string;
     Players: string;
     Int32: string;
     UInt32: string;

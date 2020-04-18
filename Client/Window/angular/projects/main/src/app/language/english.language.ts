@@ -360,6 +360,7 @@ Here you can see all the invitations sent to you:`;
     money = "money";
 
     TDSPlayer = "online player";
+    ITDSPlayer = "online player";
     Players = "player";
     Int32 = "integer";
     UInt32 = "positive integer";

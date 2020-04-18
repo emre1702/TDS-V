@@ -355,6 +355,7 @@ Hier siehst du alle bisherigen Einladungen an dich:`;
     money = "Geld";
 
     TDSPlayer = "Online Spieler";
+    ITDSPlayer = "online player";
     Players = "Spieler";
     Int32 = "Ganzzahl";
     UInt32 = "positive Ganzzahl";
