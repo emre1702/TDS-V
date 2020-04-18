@@ -19,6 +19,7 @@ import { MapCreatorPosition } from './models/mapCreatorPosition';
 import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
 import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
+import { isNumber } from 'util';
 
 enum MapCreatorNav {
     Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, Vehicles, BombPlaces, Target
@@ -168,6 +169,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     removeLastTeam() {
+        if (this.data[6].length == 1) {
+            this.data[6] = [];
+            return;
+        }
+
         this.data[6].pop();
         this.editingTeamNumber = this.data[6].length - 1;
         this.rageConnector.call(DToClientEvent.RemoveMapCreatorTeamNumber, this.data[6].length);
@@ -175,7 +181,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     startNewPosPlacing(type: MapCreatorPositionType) {
-        this.rageConnector.call(DToClientEvent.StartMapCreatorPosPlacing, type, this.editingTeamNumber);
+        if (isNaN(Number(this.editingTeamNumber)))
+            return;
+        this.rageConnector.call(DToClientEvent.StartMapCreatorPosPlacing, type, Number(this.editingTeamNumber));
     }
 
     removeSelectedPos(removeFunc: () => void) {
