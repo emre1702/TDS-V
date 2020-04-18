@@ -56,6 +56,7 @@ namespace TDS_Client.Handler.Entities.Languages
         public override string ROUND_STARTED_NOTIFICATION => "Runde gestartet";
         public override string ROUND_ENDED_NOTIFICATION => "Runde zuende";
         public override string COUNTDOWN_STARTED_NOTIFICATION => "Countdown gestartet";
+        public override string GANG_LOBBY_FREE_HOUSE_DESCRIPTION => "Level {0} Haus";
 
         public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
 

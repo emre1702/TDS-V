@@ -13,6 +13,7 @@
         public const string ClearTeamPlayers = "s8";
         public const string CountdownStart = "s9";
         public const string CreateCustomLobbyResponse = "s10";
+        public const string CreateFreeGangHousesForLevel = "s88";
 
         public const string Death = "s11";
 

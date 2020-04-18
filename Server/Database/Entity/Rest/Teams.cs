@@ -18,7 +18,7 @@ namespace TDS_Server.Database.Entity.Rest
         public short ColorR { get; set; }
         public short ColorG { get; set; }
         public short ColorB { get; set; }
-        public short BlipColor { get; set; }
+        public byte BlipColor { get; set; }
         public int SkinHash { get; set; }
 
         public virtual Lobbies LobbyNavigation { get; set; }

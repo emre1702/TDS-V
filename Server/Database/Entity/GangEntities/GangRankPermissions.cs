@@ -5,13 +5,13 @@
         public int GangId { get; set; }
 
         // Administration //
-        public short ManagePermissions { get; set; }
-        public short InviteMembers { get; set; }
-        public short KickMembers { get; set; }
-        public short ManageRanks { get; set; }
+        public ushort ManagePermissions { get; set; }
+        public ushort InviteMembers { get; set; }
+        public ushort KickMembers { get; set; }
+        public ushort ManageRanks { get; set; }
 
         // Action //
-        public short StartGangwar { get; set; }
+        public ushort StartGangwar { get; set; }
 
         public virtual Gangs Gang { get; set; }
     }

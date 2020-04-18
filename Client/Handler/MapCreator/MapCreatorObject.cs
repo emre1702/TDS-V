@@ -3,7 +3,7 @@ using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Blip;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
+using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -51,7 +51,7 @@ namespace TDS_Client.Handler.MapCreator
         private readonly IModAPI ModAPI;
         private readonly EventsHandler _eventsHandler;
 
-        public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntityBase entity, MapCreatorPositionType type, 
+        public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntityBase entity, MapCreatorPositionType type,
             ushort ownerRemoteId, int? teamNumber = null, string objectName = null, int id = -1)
         {
             ModAPI = modAPI;

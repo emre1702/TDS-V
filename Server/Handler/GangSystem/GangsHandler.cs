@@ -7,8 +7,7 @@ using System.Linq;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.GangTeam;
-using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Events;
 
 namespace TDS_Server.Handler.GangSystem

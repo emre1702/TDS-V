@@ -25,5 +25,6 @@ namespace TDS_Client.Data.Defaults
         };
         public static int MaxPossibleArmor => 16959;
         public static float NeededDistanceToBeNotAFK = 1f;
+        public static uint GangHouseFreeBlipModel = 374;
     }
 }

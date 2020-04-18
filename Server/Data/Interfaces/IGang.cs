@@ -11,6 +11,7 @@ namespace TDS_Server.Data.Interfaces
         Gangs Entity { get; set; }
         bool InAction { get; set; }
         List<ITDSPlayer> PlayersOnline { get; }
+        ITeam GangLobbyTeam { get; set; }
 
         void SendNotification(Func<ILanguage, string> langGetter);
         void SendMessage(Func<ILanguage, string> langGetter);

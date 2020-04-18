@@ -16,7 +16,7 @@ using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
-    public partial class GangLobby : FightLobby
+    public partial class GangLobby : Lobby
     {
         private readonly GangwarAreasHandler _gangwarAreasHandler;
         private readonly GangsHandler _gangsHandler;
@@ -25,26 +25,21 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler,
             GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, WeaponDatasLoadingHandler weaponDatasLoadingHandler, BonusBotConnectorClient bonusBotConnectorClient)
-            : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, weaponDatasLoadingHandler,
+            : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
                   bonusBotConnectorClient)
         {
             _gangwarAreasHandler = gangwarAreasHandler;
             _gangsHandler = gangsHandler;
             _serviceProvider = serviceProvider;
 
-            foreach (var team in Teams)
-            {
-                var teamId = team.Entity.Id;
-                var gang = gangsHandler.GetByTeamId(teamId);
-                if (gang != null)
-                {
-                    gang.GangLobbyTeam = team;
-                }
-            }
+            /*LoadTeams();
+            LoadGangLevels();
+            LoadHouses();*/
         }
 
         public IEnumerable<GangLobby> GetAllDerivedLobbies()
         {
+            //Todo: Use GangActionLobby instead of GangLobby
             return LobbiesHandler.Lobbies.Where(l => l is GangLobby && l.Type != LobbyType.GangLobby).Cast<GangLobby>();
         }
     }

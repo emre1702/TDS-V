@@ -6,7 +6,7 @@ using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 
-namespace TDS_Server.Handler.Entities.GangTeam
+namespace TDS_Server.Handler.Entities.GangSystem
 {
     public class Gang : DatabaseEntityWrapper, IGang
     {

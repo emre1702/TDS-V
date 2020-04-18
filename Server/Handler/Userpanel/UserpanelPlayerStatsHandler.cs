@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Default;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -18,7 +18,7 @@ namespace TDS_Server.Handler.Userpanel
         private readonly Serializer _serializer;
         private readonly LobbiesHandler _lobbiesHandler;
 
-        public UserpanelPlayerStatsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler) 
+        public UserpanelPlayerStatsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler)
             => (_serializer, _lobbiesHandler) = (serializer, lobbiesHandler);
 
         public async Task<string?> GetData(ITDSPlayer player)
@@ -39,7 +39,7 @@ namespace TDS_Server.Handler.Userpanel
 
         public async Task<PlayerUserpanelStatsDataDto?> GetPlayerStats(int playerId, bool loadLobbyStats = false, ITDSPlayer? forPlayer = null)
         {
-            var data = await ExecuteForDBAsync(async dbContext 
+            var data = await ExecuteForDBAsync(async dbContext
                 => await dbContext.Players
                 .Include(p => p.GangMemberNavigation)
                     .ThenInclude(g => g.Gang)
@@ -54,6 +54,7 @@ namespace TDS_Server.Handler.Userpanel
                 .Include(p => p.PlayerLobbyStats)
                     .ThenInclude(s => s.Lobby)
                 .Where(p => p.Id == playerId)
+                .AsNoTracking()
                 .Select(p => new PlayerUserpanelStatsDataDto
                 {
                     Id = p.Id,
@@ -63,7 +64,7 @@ namespace TDS_Server.Handler.Userpanel
                     Name = p.Name,
                     RegisterDateTime = p.RegisterTimestamp,
                     SCName = p.SCName,
-                    Gang = p.GangMemberNavigation != null ? p.GangMemberNavigation.Gang.Team.Name : "-",
+                    Gang = p.GangMemberNavigation != null ? p.GangMemberNavigation.Gang.Name : "-",
                     AmountMapsCreated = p.Maps.Count,
                     CreatedMapsAverageRating = p.Maps.Average(map => map.PlayerMapRatings.Average(rating => rating.Rating)),
                     BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name).ToList(),

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
@@ -11,6 +10,7 @@ using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Sync;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Utility;

@@ -1,10 +1,9 @@
 ﻿using System.Drawing;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.TextLabel;
-using TDS_Shared.Core;
+using TDS_Shared.Data.Default;
 
 namespace TDS_Server.Handler.Entities.GameModes
 {
@@ -21,9 +20,7 @@ namespace TDS_Server.Handler.Entities.GameModes
             if (Map.Target is null)
                 return;
 
-            _targetBlip = ModAPI.Blip.Create(Map.Target, Lobby.Dimension);
-            _targetBlip.Sprite = SharedConstants.TargetBlipSprite;
-            _targetBlip.Name = "Target";
+            _targetBlip = ModAPI.Blip.Create(SharedConstants.TargetBlipSprite, Map.Target, name: "Target", dimension: Lobby.Dimension);
         }
 
         private void CreateTargetObject()

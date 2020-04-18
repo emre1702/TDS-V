@@ -2,6 +2,20 @@
 {
     partial class GangLobby
     {
+        private void LoadTeams()
+        {
+            foreach (var team in Teams)
+            {
+                var teamId = team.Entity.Id;
+                var gang = _gangsHandler.GetByTeamId(teamId);
+                if (gang != null)
+                {
+                    gang.GangLobbyTeam = team;
+                }
+            }
+        }
+
+
         /*private Dictionary<Gang, int> gangTeamID = new Dictionary<Gang, int> ();
 
         public void SetPlayerTeam ( Character character, Gang gang ) {

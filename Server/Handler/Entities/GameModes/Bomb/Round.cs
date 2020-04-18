@@ -1,7 +1,7 @@
 ﻿using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Models;
+using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
@@ -40,11 +40,9 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                 var pos = new Position3D(bombplace.X, bombplace.Y, bombplace.Z);
                 BombPlantPlaceDto dto = new BombPlantPlaceDto(
                     obj: ModAPI.MapObject.Create(-51423166, pos, null, 255, Lobby),
-                    blip: ModAPI.Blip.Create(pos, Lobby.Dimension),
+                    blip: ModAPI.Blip.Create(SharedConstants.BombPlantPlaceBlipSprite, pos, name: "Bomb-Plant", dimension: Lobby.Dimension),
                     pos: pos
                 );
-                dto.Blip.Sprite = SharedConstants.BombPlantPlaceBlipSprite;
-                dto.Blip.Name = "Bomb-Plant";
                 _bombPlantPlaces.Add(dto);
             }
 

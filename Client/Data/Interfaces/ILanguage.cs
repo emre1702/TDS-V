@@ -45,7 +45,7 @@ namespace TDS_Client.Data.Interfaces
         string ROUND_STARTED_NOTIFICATION { get; }
         string ROUND_ENDED_NOTIFICATION { get; }
         string COUNTDOWN_STARTED_NOTIFICATION { get; }
-
+        string GANG_LOBBY_FREE_HOUSE_DESCRIPTION { get; }
 
         Language Enum { get; }
         

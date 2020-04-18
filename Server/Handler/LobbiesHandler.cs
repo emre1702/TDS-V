@@ -254,7 +254,7 @@ namespace TDS_Server.Handler
                         return new Teams
                         {
                             Name = t.Name,
-                            BlipColor = (short)t.BlipColor,
+                            BlipColor = (byte)t.BlipColor,
                             ColorR = color.R,
                             ColorG = color.G,
                             ColorB = color.B,

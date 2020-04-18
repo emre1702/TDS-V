@@ -10,8 +10,11 @@ namespace TDS_Server.Database.Entity.GangEntities
 
         public int Id { get; set; }
         public int TeamId { get; set; }
+        public string Name { get; set; }
         public string Short { get; set; }
+        public byte BlipColor { get; set; }
         public int? OwnerId { get; set; }
+        public int? HouseId { get; set; }
         public DateTime CreateTime { get; set; }
 
         public virtual ICollection<GangwarAreas> GangwarAreas { get; set; }
@@ -20,5 +23,7 @@ namespace TDS_Server.Database.Entity.GangEntities
         public virtual GangRankPermissions RankPermissions { get; set; }
         public virtual ICollection<GangRanks> Ranks { get; set; }
         public virtual Teams Team { get; set; }
+        public virtual GangHouses House { get; set; }
+        public virtual GangStats Stats { get; set; }
     }
 }

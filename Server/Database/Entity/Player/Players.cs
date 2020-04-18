@@ -65,6 +65,7 @@ namespace TDS_Server.Database.Entity.Player
         public virtual ICollection<PlayerRelations> PlayerRelationsTarget { get; set; }
         public virtual SupportRequests SupportRequests { get; set; }
         public virtual ICollection<SupportRequestMessages> SupportRequestMessages { get; set; }
+        public virtual ICollection<GangHouses> CreatedHouses { get; set; }
 
         public string GetDiscriminator()
         {

@@ -57,6 +57,7 @@ namespace TDS_Client.Handler.Entities.Languages
         public virtual string ROUND_STARTED_NOTIFICATION => "Round started";
         public virtual string ROUND_ENDED_NOTIFICATION => "Round ended";
         public virtual string COUNTDOWN_STARTED_NOTIFICATION => "Countdown started";
+        public virtual string GANG_LOBBY_FREE_HOUSE_DESCRIPTION => "Level {0} house";
 
         public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 

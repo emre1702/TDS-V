@@ -13,6 +13,7 @@ using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Default;
 
 namespace TDS_Server.Handler.Entities.Player
 {
@@ -36,7 +37,8 @@ namespace TDS_Server.Handler.Entities.Player
 
         public HashSet<int> BlockingPlayerIds => PlayerRelationsTarget.Where(r => r.Relation == PlayerRelation.Block).Select(r => r.PlayerId).ToHashSet();
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
-        public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel ? SharedConstants.ServerTeamSuffix + ModPlayer.Name : ModPlayer.Name);
+        public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel 
+            ? SharedConstants.ServerTeamSuffix + ModPlayer.Name : ModPlayer.Name);
         public bool IsVip => Entity?.IsVip ?? false;
 
         public bool IsCrouched { get; set; }

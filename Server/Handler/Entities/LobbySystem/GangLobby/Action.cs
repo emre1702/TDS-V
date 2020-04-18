@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -40,7 +41,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             gangwarArea.SetInPreparation(attacker.Gang);
 
-            var lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, CreateEntity(gangwarArea), gangwarArea);
+            var lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, CreateEntity(gangwarArea), gangwarArea, true);
 
             await lobby.AddToDB();
             EventsHandler.OnLobbyCreated(lobby);
@@ -69,7 +70,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity!.MapId } },
                 LobbyMapSettings = new LobbyMapSettings
                 {
-                    MapLimitType = MapLimitType.Display
+                    MapLimitType = MapLimitType.Display,
                 },
                 LobbyRoundSettings = new LobbyRoundSettings
                 {
@@ -77,7 +78,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     RoundTime = (int)SettingsHandler.ServerSettings.GangwarActionTime,
                     ShowRanking = true
                 },
-                LobbyWeapons = LobbiesHandler.GetAllPossibleLobbyWeapons(MapType.Normal),
+                LobbyWeapons = LobbiesHandler.Arena.Entity.LobbyWeapons.Select(w => new LobbyWeapons 
+                {
+                    Ammo = w.Ammo,
+                    Damage = w.Damage,
+                    Hash = w.Hash,
+                    HeadMultiplicator = w.HeadMultiplicator
+                }).ToHashSet(),    //LobbiesHandler.GetAllPossibleLobbyWeapons(MapType.Normal),
                 LobbyRewards = new LobbyRewards
                 {
                     MoneyPerAssist = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerAssist,

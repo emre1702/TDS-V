@@ -40,8 +40,8 @@ namespace TDS_Client.Core.Init
                 var browserHandler = new BrowserHandler(modAPI, loggingHandler, settingsHandler, cursorHandler, eventsHandler, serializer, remoteEventsSender);
                 var dataSyncHandler = new DataSyncHandler(modAPI, loggingHandler, eventsHandler, browserHandler, serializer);
                 var utilsHandler = new UtilsHandler(modAPI, loggingHandler, serializer, dataSyncHandler, eventsHandler);
-
-
+                new GangHousesHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, serializer);
+                
                 new SuicideAnimHandler(modAPI, loggingHandler, remoteEventsSender, utilsHandler);
 
                 var soundsHandler = new SoundsHandler(modAPI, loggingHandler, settingsHandler);
@@ -62,6 +62,7 @@ namespace TDS_Client.Core.Init
                 var playerFightHandler = new PlayerFightHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, browserHandler, floatingDamageInfoHandler, utilsHandler, camerasHandler);
                 new AntiCheatHandler(modAPI, loggingHandler, playerFightHandler);
                 var mapLimitHandler = new MapLimitHandler(modAPI, loggingHandler, settingsHandler, remoteEventsSender, eventsHandler, dxHandler, timerHandler);
+                new DamageHandler(modAPI, browserHandler, remoteEventsSender, playerFightHandler);
 
                 var lobbyHandler = new LobbyHandler(modAPI, loggingHandler, browserHandler, playerFightHandler, instructionalButtonHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
                     timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler, serializer);

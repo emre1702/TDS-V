@@ -5,11 +5,10 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Models.Map.Creator;
-using TDS_Server.Handler.Entities.TeamSystem;
-using TDS_Server.Handler.Entities.Utility;
+using TDS_Shared.Core;
+using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Utility;
-using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -87,11 +86,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         continue;
                     regions.Add(position);
 
-                    IBlip blip = ModAPI.Blip.Create(position, Dimension);
-                    blip.Sprite = SharedConstants.TeamSpawnBlipSprite;
                     ITeam team = Teams[(int)teamsSpawnList.TeamID];
-                    blip.Color = team.Entity.BlipColor;
-                    blip.Name = "Spawn " + team.Entity.Name;
+                    IBlip blip = ModAPI.Blip.Create(SharedConstants.TeamSpawnBlipSprite, position, color: team.Entity.BlipColor,
+                        name: "Spawn " + team.Entity.Name, dimension: Dimension);
+
                     _mapBlips.Add(blip);
                 }
             }
@@ -104,9 +102,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             int i = 0;
             foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
-                IBlip blip = ModAPI.Blip.Create(edge, Dimension);
-                blip.Sprite = SharedConstants.MapLimitBlipSprite;
-                blip.Name = "Limit " + ++i;
+                IBlip blip = ModAPI.Blip.Create(SharedConstants.MapLimitBlipSprite, edge, name: "Limit " + ++i, dimension: Dimension);
                 _mapBlips.Add(blip);
             }
         }

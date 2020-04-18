@@ -1,6 +1,6 @@
-﻿namespace TDS_Shared.Core
+﻿namespace TDS_Shared.Data.Default
 {
-    public static partial class SharedConstants
+    public static class SharedConstants
     {
         public const int TeamSpawnBlipSprite = 491;
         public const int MapLimitBlipSprite = 441;
@@ -13,5 +13,6 @@
         public const string DateTimeOffsetFormat = "dddd, MMM dd yyyy HH:mm:ss zzz";
         public const int ServerTeamSuffixMinAdminLevel = 1;
         public const string ServerTeamSuffix = "[TDS] ";
+        public static uint GangHouseOccupiedBlipModel = 492;
     }
 }
