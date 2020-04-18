@@ -5,8 +5,8 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Blip
 {
     public interface IBlipAPI
     {
-        IBlip Create(uint sprite, Position3DDto position, float scale = 1f, byte color = 0, string name = "", byte alpha = 255, float drawDistance = 0, bool shortRange = false, short rotation = 0, uint dimension = uint.MaxValue)
-            => Create(sprite, position, scale, color, name, alpha, drawDistance, shortRange, rotation, dimension);
-        IBlip Create(uint sprite, Position3D position, float scale = 1f, byte color = 0, string name = "", byte alpha = 255, float drawDistance = 0, bool shortRange = false, short rotation = 0, uint dimension = uint.MaxValue);
+        IBlip Create(uint sprite, Position3DDto position, float scale = 1f, byte color = 1, string name = "", byte alpha = 255, float drawDistance = 0, bool shortRange = false, short rotation = 0, uint dimension = uint.MaxValue)
+            => Create(sprite, new Position3D(position.X, position.Y, position.Z), scale, color, name, alpha, drawDistance, shortRange, rotation, dimension);
+        IBlip Create(uint sprite, Position3D position, float scale = 1f, byte color = 1, string name = "", byte alpha = 255, float drawDistance = 0, bool shortRange = false, short rotation = 0, uint dimension = uint.MaxValue);
     }
 }
