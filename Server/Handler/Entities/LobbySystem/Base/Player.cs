@@ -39,6 +39,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 await AddPlayerLobbyStats(player).ConfigureAwait(true);
             }
 
+            ModAPI.Sync.SendEvent(this, ToClientEvent.JoinSameLobby, player.RemoteId);
+
             player.Lobby = this;
             Players.TryAdd(player.Id, player);
 
@@ -56,8 +58,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 player.Team = Teams[(int)teamindex.Value];
 
             DataSyncHandler.SetData(player, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, IsPlayerLobbyOwner(player));
-
-            ModAPI.Sync.SendEvent(ToClientEvent.JoinSameLobby, player.RemoteId);
 
             player.SendEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Serializer.ToClient(Players.Values.Select(p => p.RemoteId).ToList()),
                                                                                  Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
