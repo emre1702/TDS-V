@@ -3,6 +3,7 @@ import { UserpanelCommandDataDto } from '../interfaces/userpanelCommandDataDto';
 import { LanguagePipe } from '../../../pipes/language.pipe';
 import { SettingsService } from '../../../services/settings.service';
 import { UserpanelService } from '../services/userpanel.service';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
   selector: 'app-userpanel-commands',
@@ -48,11 +49,16 @@ export class UserpanelCommandsComponent implements OnInit, OnDestroy {
   @Input() currentCommand: UserpanelCommandDataDto;
   @Input() currentNav: string;
 
-  constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, public userpanelService: UserpanelService) { }
+  constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, public userpanelService: UserpanelService,
+    private clipboardService: ClipboardService) { }
 
   gotoCommand(command: UserpanelCommandDataDto) {
     this.currentCommand = command;
     this.changeDetector.detectChanges();
+  }
+
+  copyCommand(command: UserpanelCommandDataDto) {
+    this.clipboardService.copy("/" + command[0] + " ");
   }
 
   ngOnInit() {

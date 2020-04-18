@@ -14,7 +14,13 @@
     <div>
         <div *ngIf="currentCommand[5].length <= 1">{{ 'Usage' | language: settings.Lang }}:</div>
         <div *ngIf="currentCommand[5].length > 1">{{ 'Usages' | language: settings.Lang }}:</div>
-        <div *ngFor="let syntax of currentCommand[5]">
+        <div *ngFor="let syntax of currentCommand[5]"
+        (click)="copyCommand(currentCommand); tooltip1.disabled = false; tooltip1.show();"
+        (contextmenu)="copyCommand(currentCommand); tooltip1.disabled = false; tooltip1.show();"
+        #tooltip1="matTooltip"
+        matTooltip="'Copied' | language: settings.Lang"
+        matTooltipHideDelay="1000"
+        (mouseenter)="tooltip1.disabled = true">
             /{{ currentCommand[0] }}
             <span *ngFor="let parameter of syntax[0]"
                 [matTooltip]="langPipe.transform(parameter[1], settings.Lang)">
