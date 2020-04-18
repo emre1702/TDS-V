@@ -1,5 +1,7 @@
 ﻿using BonusBotConnector.Client;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
@@ -16,7 +18,7 @@ namespace TDS_Server.Handler
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly ISettingsHandler _settingsHandler;
 
-        public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler, 
+        public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler,
             ISettingsHandler settingsHandler)
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             : base(dbContext, null)
@@ -55,9 +57,18 @@ namespace TDS_Server.Handler
         public async Task SaveTask(int? counter = null)
         {
             if (counter is null || counter % _settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
-                await ExecuteForDBAsync(async dbContext 
-                    => await dbContext.SaveChangesAsync());
-            
+                await ExecuteForDBAsync(async dbContext =>
+                {
+                    await dbContext.SaveChangesAsync();
+
+                    var changedEntriesCopy = dbContext.ChangeTracker.Entries()
+                        .Where(e => e.State == EntityState.Added ||
+                                    e.State == EntityState.Modified ||
+                                    e.State == EntityState.Deleted);
+                    foreach (var entry in changedEntriesCopy)
+                        entry.State = EntityState.Detached;
+                });
+
         }
 
         #region Error
@@ -72,7 +83,7 @@ namespace TDS_Server.Handler
             };
             Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
 
-            await ExecuteForDB(dbContext => 
+            await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
 
             if (logToBonusBot)
