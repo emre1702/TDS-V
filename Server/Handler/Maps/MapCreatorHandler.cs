@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -36,11 +37,61 @@ namespace TDS_Server.Handler.Maps
 
         public async Task<object?> Create(ITDSPlayer creator, object[] args)
         {
-            string mapJson = (string)args[0];
-            bool onlySave = (bool)args[1];
+            try
+            {
+                var result = await SaveOrCreate(creator, (string)args[0], Constants.NewMapsPath);
+                if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
+                    return result;
 
-            if (creator.Entity is null)
+                result.Item1.BrowserSyncedData.Id = _mapsLoadingHandler.SavedMaps.Min(m => m.BrowserSyncedData.Id) - 1;
+                result.Item1.RatingAverage = 5;
+
+                _mapsLoadingHandler.SavedMaps.Add(result.Item1);
+
+                _mapsLoadingHandler.NewCreatedMaps.Add(result.Item1);
+                return MapCreateError.MapCreatedSuccessfully;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex, creator);
                 return MapCreateError.Unknown;
+            }
+        }
+
+        public async Task<object?> Save(ITDSPlayer creator, object[] args)
+        {
+            try
+            {
+                var result = await SaveOrCreate(creator, (string)args[0], Constants.SavedMapsPath);
+                if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
+                    return result;
+
+                var dbMap = new DB.Rest.Maps { CreatorId = creator.Entity!.Id, Name = result.Item1.Info.Name };
+
+                await ExecuteForDBAsync(async dbContext =>
+                {
+                    await dbContext.Maps.AddAsync(dbMap);
+                    await dbContext.SaveChangesAsync();
+                });
+
+                result.Item1.BrowserSyncedData.Id = dbMap.Id;
+                result.Item1.RatingAverage = 5;
+
+                _mapsLoadingHandler.NewCreatedMaps.Add(result.Item1);
+                return MapCreateError.MapCreatedSuccessfully;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex, creator);
+                return MapCreateError.Unknown;
+            }
+           
+        }
+
+        private async Task<(MapDto?, MapCreateError)> SaveOrCreate(ITDSPlayer creator, string mapJson, string mapBasePath)
+        {
+            if (creator.Entity is null)
+                return (null, MapCreateError.Unknown);
             var serializer = new XmlSerializer(typeof(MapDto));
             try
             {
@@ -49,15 +100,15 @@ namespace TDS_Server.Handler.Maps
                 {
                     mapCreateData = _serializer.FromBrowser<MapCreateDataDto>(mapJson);
                     if (mapCreateData is null)
-                        return MapCreateError.CouldNotDeserialize;
+                        return (null, MapCreateError.CouldNotDeserialize);
                 }
                 catch
                 {
-                    return MapCreateError.CouldNotDeserialize;
+                    return (null, MapCreateError.CouldNotDeserialize);
                 }
 
                 if (_mapsLoadingHandler.GetMapByName(mapCreateData.Name) is { } || _mapsLoadingHandler.GetMapByName(mapCreateData.Name) is { })
-                    return MapCreateError.NameAlreadyExists;
+                    return (null, MapCreateError.NameAlreadyExists);
 
                 //foreach (var bombPlace in mapCreateData.BombPlaces) 
                 //    bombPlace.PosZ -= 1;
@@ -70,7 +121,7 @@ namespace TDS_Server.Handler.Maps
                 //mapDto.SyncedData.CreatorName = creator.Player.Name;
 
                 string mapFileName = mapDto.Info.Name + "_" + (mapDto.BrowserSyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
-                string mapPath = (onlySave ? Constants.SavedMapsPath : Constants.NewMapsPath) + Utils.MakeValidFileName(mapFileName);
+                string mapPath = mapBasePath + Utils.MakeValidFileName(mapFileName);
                 mapDto.Info.FilePath = mapPath;
 
                 MemoryStream memStrm = new MemoryStream();
@@ -84,36 +135,12 @@ namespace TDS_Server.Handler.Maps
                 string prettyMapXml = await _xmlHelper.GetPrettyAsync(mapXml).ConfigureAwait(true);
                 await File.WriteAllTextAsync(mapPath, prettyMapXml).ConfigureAwait(true);
 
-                if (!onlySave)
-                {
-
-                    var dbMap = new DB.Rest.Maps { CreatorId = creator.Entity.Id, Name = mapDto.Info.Name };
-
-                    await ExecuteForDBAsync(async dbContext =>
-                    {
-                        await dbContext.Maps.AddAsync(dbMap);
-                        await dbContext.SaveChangesAsync();
-                    });
-
-
-                    mapDto.BrowserSyncedData.Id = dbMap.Id;
-                    mapDto.RatingAverage = 5;
-
-                    _mapsLoadingHandler.NewCreatedMaps.Add(mapDto);
-                }
-                else
-                {
-                    mapDto.BrowserSyncedData.Id = _mapsLoadingHandler.SavedMaps.Min(m => m.BrowserSyncedData.Id) - 1;
-                    mapDto.RatingAverage = 5;
-
-                    _mapsLoadingHandler.SavedMaps.Add(mapDto);
-                }
-
-                return MapCreateError.MapCreatedSuccessfully;
+                return (mapDto, MapCreateError.MapCreatedSuccessfully);
             }
-            catch
+            catch (Exception ex)
             {
-                return MapCreateError.Unknown;
+                LoggingHandler.LogError(ex, creator);
+                return (null, MapCreateError.Unknown);
             }
         }
 
