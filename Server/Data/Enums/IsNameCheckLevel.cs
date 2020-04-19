@@ -2,7 +2,9 @@
 {
     public enum IsNameCheckLevel
     {
-        Equals,
-        Contains
+        EqualsName,
+        EqualsScName,
+        ContainsName,
+        ContainsScName
     }
 }

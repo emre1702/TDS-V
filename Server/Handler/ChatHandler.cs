@@ -106,7 +106,7 @@ namespace TDS_Server.Handler
             _loggingHandler.LogChat(message, player, isTeamChat: true);
         }
 
-        public void SendPrivateMessage(ITDSPlayer player, TDSPlayer target, string message)
+        public void SendPrivateMessage(ITDSPlayer player, ITDSPlayer target, string message)
         {
             string changedMessage = "[PM] !$253|132|85$" + player.DisplayName + ": !$220|220|220$" + message;
             target.SendMessage(changedMessage);

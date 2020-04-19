@@ -20,7 +20,7 @@ namespace TDS_Server.Handler.Commands
     {
 
         [TDSCommand(PlayerCommand.LobbyLeave)]
-        public async void OnLobbyLeave(TDSPlayer player)
+        public async void OnLobbyLeave(ITDSPlayer player)
         {
             if (player.Lobby is null)
                 return;
@@ -39,7 +39,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.Suicide)]
-        public void Suicide(TDSPlayer player)
+        public void Suicide(ITDSPlayer player)
         {
             if (player.ModPlayer is null)
                 return;
@@ -75,19 +75,19 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.GlobalChat)]
-        public void GlobalChat(TDSPlayer player, [TDSRemainingText] string message)
+        public void GlobalChat(ITDSPlayer player, [TDSRemainingText] string message)
         {
             _chatHandler.SendGlobalMessage(player, message);
         }
 
         [TDSCommand(PlayerCommand.TeamChat)]
-        public void TeamChat(TDSPlayer player, [TDSRemainingText] string message)
+        public void TeamChat(ITDSPlayer player, [TDSRemainingText] string message)
         {
             _chatHandler.SendTeamChat(player, message);
         }
 
         [TDSCommand(PlayerCommand.OpenPrivateChat)]
-        public void OpenPrivateChat(TDSPlayer player, TDSPlayer target)
+        public void OpenPrivateChat(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.ModPlayer is null || target.ModPlayer is null)
                 return;
@@ -143,7 +143,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.ClosePrivateChat)]
-        public void ClosePrivateChat(TDSPlayer player)
+        public void ClosePrivateChat(ITDSPlayer player)
         {
             if (player.ModPlayer is null)
                 return;
@@ -156,7 +156,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.PrivateChat)]
-        public void PrivateChat(TDSPlayer player, [TDSRemainingText] string message)
+        public void PrivateChat(ITDSPlayer player, [TDSRemainingText] string message)
         {
             if (player.ModPlayer is null)
                 return;
@@ -170,7 +170,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.PrivateMessage)]
-        public void PrivateMessage(TDSPlayer player, TDSPlayer target, [TDSRemainingText] string message)
+        public void PrivateMessage(ITDSPlayer player, ITDSPlayer target, [TDSRemainingText] string message)
         {
             if (player == target)
                 return;
@@ -184,7 +184,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.Position)]
-        public void OutputCurrentPosition(TDSPlayer player)
+        public void OutputCurrentPosition(ITDSPlayer player)
         {
             if (player.ModPlayer is null)
                 return;
@@ -207,7 +207,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.UserId)]
-        public void OutputUserId(TDSPlayer player)
+        public void OutputUserId(ITDSPlayer player)
         {
             player.SendMessage("User id: " + (player.Entity?.Id.ToString() ?? "?"));
         }
@@ -321,11 +321,9 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.LobbyInvitePlayer)]
-        public void LobbyInvitePlayer(TDSPlayer player, TDSPlayer target)
+        public void LobbyInvitePlayer(TDSPlayer player, ITDSPlayer target)
         {
             if (player.Lobby is null)
-                return;
-            if (!player.IsLobbyOwner)
                 return;
 
             switch (player.Lobby.Type)
@@ -336,17 +334,21 @@ namespace TDS_Server.Handler.Commands
                         sender: player,
                         serializer: _serializer,
                         invitationsHandler: _invitationsHandler,
-                        onAccept: async (sender, target, invitation) =>
+                        onAccept: async (target, sender, invitation) =>
                         {
-                            await sender.Lobby!.AddPlayer(target!, null);
-                            target?.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
-                            sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target?.DisplayName ?? "?"), false);
+                            if (sender is null)
+                                return;
+                            if (sender.Lobby is null)
+                                return;
+                            await sender.Lobby.AddPlayer(target!, null);
+                            target.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
+                            sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target.DisplayName), false);
                         },
 
-                        onReject: (sender, target, invitation) =>
+                        onReject: (target, sender, invitation) =>
                         {
-                            target?.SendNotification(string.Format(target.Language.YOU_REJECTED_INVITATION, sender.DisplayName), false);
-                            sender.SendNotification(string.Format(sender.Language.TARGET_REJECTED_INVITATION, target?.DisplayName ?? "?"), false);
+                            target.SendNotification(string.Format(target.Language.YOU_REJECTED_INVITATION, sender?.DisplayName ?? "?"), false);
+                            sender?.SendNotification(string.Format(sender.Language.TARGET_REJECTED_INVITATION, target.DisplayName), false);
                         },
 
                         type: InvitationType.Lobby

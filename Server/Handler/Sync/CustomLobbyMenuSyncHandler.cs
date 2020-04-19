@@ -81,7 +81,7 @@ namespace TDS_Server.Handler.Sync
             _playersInCustomLobbyMenu.Remove(player);
         }
 
-        public bool IsPlayerInCustomLobbyMenu(TDSPlayer player)
+        public bool IsPlayerInCustomLobbyMenu(ITDSPlayer player)
         {
             return _playersInCustomLobbyMenu.Contains(player);
         }

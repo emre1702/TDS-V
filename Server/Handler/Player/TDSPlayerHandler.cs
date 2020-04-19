@@ -1,18 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
+using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Core;
-using System.Collections.Concurrent;
 
 namespace TDS_Server.Handler.Player
 {
@@ -28,8 +27,8 @@ namespace TDS_Server.Handler.Player
         private readonly ILoggingHandler _loggingHandler;
 
         public TDSPlayerHandler(
-            NameCheckHelper nameCheckHelper, 
-            IServiceProvider serviceProvider, 
+            NameCheckHelper nameCheckHelper,
+            IServiceProvider serviceProvider,
             EventsHandler eventsHandler,
             ILoggingHandler loggingHandler)
         {
@@ -92,15 +91,32 @@ namespace TDS_Server.Handler.Player
 
         internal ITDSPlayer? FindTDSPlayer(string name)
         {
+            var suffix = SharedConstants.ServerTeamSuffix.Trim();
+            if (name.StartsWith(suffix))
+                name = name.Substring(suffix.Length);
+            name = name.Trim();
+
             foreach (var player in _tdsPlayerCache.Values)
             {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.Equals))
+                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
                     return player;
             }
 
             foreach (var player in _tdsPlayerCache.Values)
             {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.Contains))
+                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
+                    return player;
+            }
+
+            foreach (var player in _tdsPlayerCache.Values)
+            {
+                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
+                    return player;
+            }
+
+            foreach (var player in _tdsPlayerCache.Values)
+            {
+                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
                     return player;
             }
 

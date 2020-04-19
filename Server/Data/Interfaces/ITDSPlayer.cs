@@ -71,6 +71,7 @@ namespace TDS_Server.Data.Interfaces
         bool IsConsole { get; set; }
         bool IsCrouched { get; set; }
         bool TryingToLoginRegister { get; set; }
+        ITDSPlayer? SentPrivateChatRequestTo { get; set; }
 
         void SendBrowserEvent(string eventName, params object[] args);
         void SendEvent(string eventName, params object[] args);
