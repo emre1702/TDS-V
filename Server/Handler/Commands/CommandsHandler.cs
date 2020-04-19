@@ -235,7 +235,7 @@ namespace TDS_Server.Handler.Commands
         private async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex, 
             int amountmethodsavailable, List<object> args)
         {
-            if (args is null)
+            if (args.Count == 0)
                 return new HandleArgumentsResult { Worked = true };
 
             try
