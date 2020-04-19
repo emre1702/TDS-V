@@ -19,16 +19,16 @@ namespace TDS_Client.Handler.Deathmatch
         private readonly BrowserHandler _browserHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly PlayerFightHandler _playerFightHandler;
-        private readonly TeamsHandler _teamsHandler;
+        private readonly LobbyHandler _lobbyHandler;
 
         public DamageHandler(IModAPI modAPI, BrowserHandler browserHandler, RemoteEventsSender remoteEventsSender, PlayerFightHandler playerFightHandler,
-            TeamsHandler teamsHandler)
+            LobbyHandler lobbyHandler)
         {
             _modAPI = modAPI;
             _browserHandler = browserHandler;
             _remoteEventsSender = remoteEventsSender;
             _playerFightHandler = playerFightHandler;
-            _teamsHandler = teamsHandler;
+            _lobbyHandler = lobbyHandler;
 
             modAPI.Event.IncomingDamage.Add(new EventMethodData<IncomingDamageDelegate>(OnIncomingDamageMethod, () => playerFightHandler.InFight));
             modAPI.Event.OutgoingDamage.Add(new EventMethodData<OutgoingDamageDelegate>(OnOutgoingDamageMethod, () => playerFightHandler.InFight));
@@ -38,7 +38,7 @@ namespace TDS_Client.Handler.Deathmatch
         {
             _modAPI.Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
 
-            if (_teamsHandler.IsInSameTeam(sourcePlayer))
+            if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer))
             {
                 cancel.Cancel = true;
                 return;
@@ -59,7 +59,7 @@ namespace TDS_Client.Handler.Deathmatch
         {
             _modAPI.Console.Log(ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
 
-            if (_teamsHandler.IsInSameTeam(sourcePlayer))
+            if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer))
             {
                 cancel.Cancel = true;
                 return;
