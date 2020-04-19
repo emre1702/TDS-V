@@ -1,7 +1,7 @@
 <div id="round-stats-1" class="mat-elevation-z8" *ngIf="settings.ShownRoundStatsType == 1"
 (contextmenu)="copyToClipboard(); tooltip1.disabled = false; tooltip1.show();"
 #tooltip1="matTooltip"
-matTooltip="'Copied' | language: settings.Lang"
+[matTooltip]="'Copied' | language: settings.Lang"
 matTooltipHideDelay="1000"
 (mouseenter)="tooltip1.disabled = true"
 cdkDrag>
