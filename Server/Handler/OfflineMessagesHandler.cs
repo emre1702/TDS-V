@@ -66,10 +66,11 @@ namespace TDS_Server.Core.Manager.Utility
             (int amountNewEntries, int amountEntries) = await ExecuteForDBAsync(async dbContext =>
             {
                 int amountNewEntries = await dbContext.Offlinemessages
-                   .Where(msg => player.Entity != null && msg.SourceId == player.Entity.Id && !msg.Seen)
+                   .Where(msg => player.Entity != null && msg.TargetId == player.Entity.Id && !msg.Seen)
                    .AsNoTracking()
                    .CountAsync();
                 int amountEntries = await dbContext.Offlinemessages
+                    .Where(msg => player.Entity != null && msg.TargetId == player.Entity.Id)
                     .AsNoTracking()
                     .CountAsync();
                 return (amountNewEntries, amountEntries);
@@ -78,7 +79,7 @@ namespace TDS_Server.Core.Manager.Utility
 
             if (amountNewEntries > 0)
             {
-                player.SendMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountEntries, amountNewEntries));
+                player.SendMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries));
             }
         }
     }
