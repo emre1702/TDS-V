@@ -87,7 +87,7 @@ namespace TDS_Client.Handler.MapCreator
             switch (type)
             {
                 case MapCreatorPositionType.TeamSpawn:
-                    return GetTeamSpawn((int)editingTeamIndexOrObjVehName, playerRemoteId, ModAPI.LocalPlayer.Position, ModAPI.LocalPlayer.Rotation);
+                    return GetTeamSpawn(Convert.ToInt32(editingTeamIndexOrObjVehName), playerRemoteId, ModAPI.LocalPlayer.Position, ModAPI.LocalPlayer.Rotation);
                 case MapCreatorPositionType.MapCenter:
                     return GetMapCenter(playerRemoteId);
                 case MapCreatorPositionType.BombPlantPlace:
