@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Server.Database.Entity;
@@ -13,9 +14,10 @@ using TDS_Shared.Data.Enums.Userpanel;
 namespace TDS_Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200419165015_PlayerSettings_ChatSettings_WindowsNotification")]
+    partial class PlayerSettings_ChatSettings_WindowsNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3377,8 +3379,10 @@ namespace TDS_Server.Database.Migrations
                         .HasDefaultValue(30f);
 
                     b.Property<bool>("CheckAFK")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("check_afk")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("DateTimeFormat")
                         .ValueGeneratedOnAdd()
@@ -3397,8 +3401,10 @@ namespace TDS_Server.Database.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HideDirtyChat")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("hide_dirty_chat")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("Hitsound")
                         .HasColumnName("hitsound")
@@ -3477,12 +3483,16 @@ namespace TDS_Server.Database.Migrations
                         .HasDefaultValue("UTC");
 
                     b.Property<bool>("Voice3D")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("voice3d")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("VoiceAutoVolume")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("voice_auto_volume")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<float>("VoiceVolume")
                         .ValueGeneratedOnAdd()
@@ -3491,8 +3501,10 @@ namespace TDS_Server.Database.Migrations
                         .HasDefaultValue(6f);
 
                     b.Property<bool>("WindowsNotifications")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("windows_notifications")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.HasKey("PlayerId")
                         .HasName("pk_player_settings");
@@ -5481,12 +5493,16 @@ namespace TDS_Server.Database.Migrations
                         .HasDefaultValue(60);
 
                     b.Property<bool>("GangwarAttackerCanBeMore")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("gangwar_attacker_can_be_more")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("GangwarOwnerCanBeMore")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("gangwar_owner_can_be_more")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<long>("GangwarPreparationTime")
                         .ValueGeneratedOnAdd()
@@ -5648,7 +5664,7 @@ namespace TDS_Server.Database.Migrations
                             GamemodeName = "tdm",
                             GangwarActionTime = 0L,
                             GangwarAreaAttackCooldownMinutes = 0,
-                            GangwarAttackerCanBeMore = true,
+                            GangwarAttackerCanBeMore = false,
                             GangwarOwnerCanBeMore = false,
                             GangwarPreparationTime = 0L,
                             GangwarTargetRadius = 0.0,

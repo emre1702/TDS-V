@@ -5,6 +5,7 @@ export enum UserpanelSettingKey {
     Timezone = 4,
     DateTimeFormat = 13,
     DiscordUserId = 5,
+    WindowsNotifications = 26,
 
     Bloodscreen = 7,
     Hitsound = 6,
@@ -27,5 +28,11 @@ export enum UserpanelSettingKey {
     HudHealthUpdateCooldownMs = 16,
     AFKKickAfterSeconds = 17,
     AFKKickShowWarningLastSeconds = 18,
-    ShowFloatingDamageInfoDurationMs = 19
+    ShowFloatingDamageInfoDurationMs = 19,
+
+    ChatWidth = 27,
+    ChatMaxHeight = 28,
+    ChatFontSize = 29,
+    HideDirtyChat = 30,
+    ShowCursorOnChatOpen = 31,
 }

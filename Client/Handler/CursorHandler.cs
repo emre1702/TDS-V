@@ -31,8 +31,9 @@ namespace TDS_Client.Handler
         private int _cursorOpenedCounter;
 
         private readonly EventsHandler _eventsHandler;
+        private readonly SettingsHandler _settingsHandler;
 
-        public CursorHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, BindsHandler bindsHandler)
+        public CursorHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, BindsHandler bindsHandler, SettingsHandler settingsHandler)
             : base(modAPI, loggingHandler)
         {
             _eventsHandler = eventsHandler;
@@ -52,7 +53,8 @@ namespace TDS_Client.Handler
 
         private void EventsHandler_ChatInputToggled(bool boolean)
         {
-            Visible = boolean;
+            if (_settingsHandler.PlayerSettings.ShowCursorOnChatOpen)
+                Visible = boolean;
         }
     }
 }

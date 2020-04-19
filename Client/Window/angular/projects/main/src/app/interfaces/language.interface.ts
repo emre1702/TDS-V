@@ -220,6 +220,12 @@ export interface Language {
     Throwables: string;
     Miscellaneous: string;
     Copied: string;
+    WindowsNotificationsInfo: string;
+    ChatWidthSettingInfo: string;
+    ChatHeightSettingInfo: string;
+    ChatFontSizeSettingInfo: string;
+    HideDirtyChatInfo: string;
+    ShowCursorOnChatOpenInfo: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

@@ -7,6 +7,7 @@
         public const string CloseMapMenu = "cb4";
         public const string HideRankings = "cb5";
         public const string InitLoadAngular = "cb6";
+        public const string LoadChatSettings = "cb1";
         public const string LoadFavoriteMaps = "cb8";
         public const string LoadLanguage = "cb9";
         public const string LoadMapForMapCreator = "cb43";

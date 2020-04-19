@@ -250,6 +250,12 @@ The user interface is always being worked on, so don't be surprised if you disco
     Throwables = "Throwables";
     Miscellaneous = "Miscellaneous";
     Copied = "Copied";
+    WindowsNotificationsInfo = "Show notifications in Windows";
+    ChatWidthSettingInfo = "Width of the chat (% of the resolution)";
+    ChatHeightSettingInfo = "Height of the chat (% of the resolution)";
+    ChatFontSizeSettingInfo = "Font size in the chat";
+    HideDirtyChatInfo = "Hide the dirty chat";
+    ShowCursorOnChatOpenInfo = "Show the cursor when chat input is opened";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

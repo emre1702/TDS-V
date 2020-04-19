@@ -4,6 +4,7 @@ export enum DFromClientEvent {
     CloseMapMenu = "cb4",
     HideRankings = "cb5",
     InitLoadAngular = "cb6",
+    LoadChatSettings = "cb1",
     LoadLanguage = "cb9",
     LoadMapForMapCreator = "cb43",
     LoadNamesForChat = "cb39",

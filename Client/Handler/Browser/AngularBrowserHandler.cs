@@ -155,6 +155,11 @@ namespace TDS_Client.Handler.Browser
             Execute("sb13", type, json);
         }
 
+        public void LoadChatSettings(float width, float maxHeight, float fontSize, bool hideDirtyChat)
+        {
+            Execute(ToBrowserEvent.LoadChatSettings, width, maxHeight, fontSize, hideDirtyChat);
+        }
+
         public void ShowCooldown()
         {
             Execute(ToBrowserEvent.ShowCooldown);
@@ -271,6 +276,7 @@ namespace TDS_Client.Handler.Browser
             var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
             _settingsHandler.LoadUserSettings(settings);
             LoadUserpanelData((int)UserpanelLoadDataType.SettingsNormal, json);
+            LoadChatSettings(settings.ChatWidth, settings.ChatMaxHeight, settings.ChatFontSize, settings.HideDirtyChat);
         }
 
         private void OnToBrowserEventMethod(object[] args)

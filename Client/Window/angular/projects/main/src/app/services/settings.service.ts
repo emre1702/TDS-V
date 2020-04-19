@@ -110,6 +110,12 @@ export class SettingsService {
     public IsLobbyOwner = false;
     public IsLobbyOwnerChanged = new EventEmitter();
 
+    public ChatWidth = "30vw";
+    public ChatMaxHeight = "35vh";
+    public ChatFontSize = "1.4em";
+    public ChatHideDirtyChat = false;
+    public ChatSettingsChanged = new EventEmitter();
+
     public Constants: ConstantsData;
     public ChallengeGroups: ChallengeGroup[] /* = [
         [ChallengeFrequency.Weekly, [
@@ -197,6 +203,18 @@ export class SettingsService {
         }
     }
 
+    public triggerChatSettingsChanged() {
+        this.ChatSettingsChanged.emit(null);
+    }
+
+    private loadChatSettings(width: number, maxHeight: number, fontSize: number, hideDirtyChat: boolean) {
+        this.ChatWidth = width + "vw";
+        this.ChatMaxHeight = maxHeight + "vh";
+        this.ChatFontSize = fontSize + "em";
+        this.ChatHideDirtyChat = hideDirtyChat;
+        this.triggerChatSettingsChanged();
+    }
+
     private getChallengeInfo(challenge: Challenge) {
         return this.sanitizer.bypassSecurityTrustHtml(
             this.langPipe.transform('Challenge_' + ChallengeType[challenge[0]], this.Lang, this.getColorText(challenge[1], "orange"))
@@ -223,6 +241,7 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.SyncMapPriceData, this.syncMapPriceData.bind(this));
         rageConnector.listen(DFromClientEvent.SyncMoney, this.onMoneySync.bind(this));
         rageConnector.listen(DFromClientEvent.SyncIsLobbyOwner, this.onSyncIsLobbyOwner.bind(this));
+        rageConnector.listen(DFromClientEvent.LoadChatSettings, this.loadChatSettings.bind(this));
 
         this.LanguageChanged.setMaxListeners(9999);
     }

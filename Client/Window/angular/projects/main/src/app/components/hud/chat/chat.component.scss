@@ -11,7 +11,6 @@
 ::ng-deep #chat_container {
     float: left;
     position: absolute;
-    width: 30vw;
     height: auto;
     outline: none;
 
@@ -20,7 +19,6 @@
         flex-direction: column;
         position: relative;
         width: 100%;
-        max-height: 35vh;
         font-family: Roboto, Arial;
         user-select: none;
 
@@ -28,7 +26,6 @@
             flex-grow: 1;
             overflow-y: scroll;
             padding-left: 10px;
-            font-size: 1.4em;
             color: white;
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
             white-space: pre-line;

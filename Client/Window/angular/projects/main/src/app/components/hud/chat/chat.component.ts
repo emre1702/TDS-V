@@ -85,6 +85,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromClientEvent.LoadNamesForChat, this.loadNamesForChat.bind(this));
         this.rageConnector.listen(DFromClientEvent.RemoveNameForChat, this.removeNameForChat.bind(this));
         this.rageConnector.listen(DFromClientEvent.ToggleChatInput, this.toggleChatInput.bind(this));
+
+        this.settings.ChatSettingsChanged.on(null, this.chatSettingsChanged.bind(this));
     }
 
     ngOnDestroy() {
@@ -99,6 +101,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.rageConnector.remove(DFromClientEvent.LoadNamesForChat, this.loadNamesForChat.bind(this));
         this.rageConnector.remove(DFromClientEvent.RemoveNameForChat, this.removeNameForChat.bind(this));
         this.rageConnector.remove(DFromClientEvent.ToggleChatInput, this.toggleChatInput.bind(this));
+
+        this.settings.ChatSettingsChanged.off(null, this.chatSettingsChanged.bind(this));
     }
 
     removeInputFocus() {
@@ -342,6 +346,14 @@ export class ChatComponent implements OnInit, OnDestroy {
                 mentionSelect: this.getMentionText
             };
         }
+    }
+
+    private chatSettingsChanged() {
+        if (this.chatBodies[this.selectedChatBody].name === "Dirty" && this.settings.ChatHideDirtyChat) {
+            this.selectChatBody(0);
+        }
+
+        this.changeDetector.detectChanges();
     }
 
     @HostListener('window:keydown', ['$event'])

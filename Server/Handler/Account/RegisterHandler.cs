@@ -48,7 +48,13 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 Hitsound = true,
                 Bloodscreen = true,
                 FloatingDamageInfo = true,
-                ShowConfettiAtRanking = true
+                ShowConfettiAtRanking = true,
+                CheckAFK = true,
+                WindowsNotifications = false,
+                HideDirtyChat = false,
+                ShowCursorOnChatOpen = true,
+                Voice3D = false,
+                VoiceAutoVolume = false
             };
             dbPlayer.PlayerStats = new PlayerStats
             {

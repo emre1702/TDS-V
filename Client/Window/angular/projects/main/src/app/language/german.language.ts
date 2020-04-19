@@ -245,6 +245,12 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Throwables = "Wurfkörper";
     Miscellaneous = "Sonstiges";
     Copied = "Kopiert";
+    WindowsNotificationsInfo = "Zeige Benachrichtigungen in Windows";
+    ChatWidthSettingInfo = "Breite des Chats (% von der Auflösung)";
+    ChatHeightSettingInfo = "Height of the chat (% von der Auflösung)";
+    ChatFontSizeSettingInfo = "Schriftgröße im Chat";
+    HideDirtyChatInfo = "Verstecke den 'dirty chat'";
+    ShowCursorOnChatOpenInfo = "Zeige den Cursor beim Öffnen der Chat-Eingabe";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

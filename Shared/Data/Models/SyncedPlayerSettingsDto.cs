@@ -20,6 +20,10 @@ namespace TDS_Shared.Data.Models
         public string DateTimeFormat { get; set; }
         [JsonProperty("5")]
         public ulong DiscordUserId { get; set; }
+        [JsonProperty("25")]
+        public bool CheckAFK { get; set; }
+        [JsonProperty("26")]
+        public bool WindowsNotifications { get; set; }
         #endregion
 
         #region Fight
@@ -29,8 +33,7 @@ namespace TDS_Shared.Data.Models
         public bool Bloodscreen { get; set; }
         [JsonProperty("8")]
         public bool FloatingDamageInfo { get; set; }
-        [JsonProperty("25")]
-        public bool CheckAFK { get; set; }
+        
         #endregion
 
         #region Voice
@@ -71,5 +74,18 @@ namespace TDS_Shared.Data.Models
         [JsonProperty("19")]
         public int ShowFloatingDamageInfoDurationMs { get; set; }
         #endregion
+
+        #region Chat 
+        [JsonProperty("27")]
+        public float ChatWidth { get; set; }
+        [JsonProperty("28")]
+        public float ChatMaxHeight { get; set; }
+        [JsonProperty("29")]
+        public float ChatFontSize { get; set; }
+        [JsonProperty("30")]
+        public bool HideDirtyChat { get; set; }
+        [JsonProperty("31")]
+        public bool ShowCursorOnChatOpen { get; set; }
+        #endregion Chat
     }
 }

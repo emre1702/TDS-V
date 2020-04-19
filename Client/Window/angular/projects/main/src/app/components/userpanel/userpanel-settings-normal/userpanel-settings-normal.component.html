@@ -39,7 +39,7 @@
                             <mat-slider color="primary" thumbLabel tickInterval="1" step="0.05"
                                 [formControl]="setting.formControl" [min]="setting.min" [max]="setting.max"
                                 (blur)="changeDetector.detectChanges()"
-                                (change)="setting.onValueChanged && setting.onValueChanged()"
+                                (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)"
                                 [matTooltipDisabled]="!setting.tooltipLangKey"
                                 [matTooltip]="setting.tooltipLangKey | language: settings.Lang"></mat-slider>
                         </div>
@@ -96,14 +96,14 @@
                                 [matTooltipDisabled]="!setting.tooltipLangKey"
                                 [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
                                 (blur)="changeDetector.detectChanges()"
-                                (change)="setting.onValueChanged && setting.onValueChanged()">
+                                (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)">
                                 {{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}
                             </mat-slide-toggle>
                         </div>
                     </ng-container>
 
                     <ng-container *ngSwitchCase="userpanelSettingType.color">
-                        <div class="setting-row" *ngIf="!setting.nullable">
+                        <div class="setting-row">
                             <input matInput [(colorPicker)]="setting.formControl.value"
                                 [value]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
                                 [style.background]="setting.formControl.value" [cpFallbackColor]="setting.defaultValue"
@@ -111,16 +111,9 @@
                                 cpAlphaChannel="always" readonly="true" cpUseRootViewContainer="true"
                                 [matTooltipDisabled]="!setting.tooltipLangKey"
                                 [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
-                        </div>
-                        <div class="setting-row" *ngIf="setting.nullable">
-                            <input matInput [(colorPicker)]="setting.formControl.value"
-                                [value]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
-                                [style.background]="setting.formControl.value" [cpFallbackColor]="setting.defaultValue"
-                                (colorPickerChange)="onColorChange(setting)" cpOutputFormat="rgba"
-                                cpAlphaChannel="always" readonly="true" cpUseRootViewContainer="true"
-                                [matTooltipDisabled]="!setting.tooltipLangKey"
-                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
-                            <button mat-icon-button (click)="setting.formControl.value = undefined"><mat-icon>delete_outline</mat-icon></button>
+                            <button *ngIf="setting.nullable" mat-icon-button (click)="setting.formControl.value = undefined">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
                         </div>
                     </ng-container>
                 </ng-container>

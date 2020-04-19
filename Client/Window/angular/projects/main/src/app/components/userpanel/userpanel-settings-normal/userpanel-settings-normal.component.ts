@@ -61,7 +61,17 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.DiscordUserId, defaultValue: 0,
                     formControl: new FormControl(0), nullable: false,
                     tooltipLangKey: "DiscordUserIdSettingInfo"
-                }
+                },
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.CheckAFK, defaultValue: true,
+                    formControl: new FormControl(true), nullable: false,
+                    tooltipLangKey: "CheckAFKSettingInfo"
+                },
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.WindowsNotifications, defaultValue: true,
+                    formControl: new FormControl(true), nullable: false,
+                    tooltipLangKey: "WindowsNotificationsInfo"
+                },
             ]
         },
 
@@ -79,11 +89,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.FloatingDamageInfo, defaultValue: true,
                     formControl: new FormControl(true), nullable: false,
                 },
-                {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.CheckAFK, defaultValue: true,
-                    formControl: new FormControl(true), nullable: false,
-                    tooltipLangKey: "CheckAFKSettingInfo"
-                }
+
             ],
         },
 
@@ -174,6 +180,39 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     onlyInt: true, tooltipLangKey: "ShowFloatingDamageInfoDurationMsSettingInfo", nullable: false,
                 }
             ]
+        },
+
+        {
+            title: "Chat", rows: [
+                {
+                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatWidth, defaultValue: 30,
+                    min: 0, max: 100, nullable: false,
+                    formControl: new FormControl(30), onValueChanged: this.onChatSettingsChanged.bind(this),
+                    tooltipLangKey: "ChatWidthSettingInfo"
+                },
+                {
+                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatMaxHeight, defaultValue: 35,
+                    min: 0, max: 100, nullable: false,
+                    formControl: new FormControl(35), onValueChanged: this.onChatSettingsChanged.bind(this),
+                    tooltipLangKey: "ChatHeightSettingInfo"
+                },
+                {
+                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatFontSize, defaultValue: 1.4,
+                    min: 0, max: 5, nullable: false,
+                    formControl: new FormControl(1.4), onValueChanged: this.onChatSettingsChanged.bind(this),
+                    tooltipLangKey: "ChatFontSizeSettingInfo"
+                },
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.HideDirtyChat, defaultValue: false,
+                    nullable: false, formControl: new FormControl(false),
+                    tooltipLangKey: "HideDirtyChatInfo", onValueChanged: this.onChatSettingsChanged.bind(this),
+                },
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowCursorOnChatOpen, defaultValue: true,
+                    nullable: false, formControl: new FormControl(true),
+                    tooltipLangKey: "ShowCursorOnChatOpenInfo"
+                },
+            ]
         }
     ];
 
@@ -197,7 +236,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         this.userpanelService.settingsNormalLoaded.off(null, this.loadSettings.bind(this));
     }
 
-    private voiceVolumeSettingChanged() {
+    private voiceVolumeSettingChanged(key: UserpanelSettingKey) {
         const autoVolumeControl = this.getFormControl("Voice", UserpanelSettingKey.VoiceAutoVolume);
         const volumeControl = this.getFormControl("Voice", UserpanelSettingKey.VoiceVolume);
 
@@ -272,5 +311,23 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
 
         this.rageConnector.call(DToClientEvent.OnColorSettingChange, setting.formControl.value, setting.dataSettingIndex);
+    }
+
+    onChatSettingsChanged(key: UserpanelSettingKey) {
+        switch (key) {
+            case UserpanelSettingKey.ChatWidth:
+                this.settings.ChatWidth = this.getFormControl("Chat", key).value + "vw";
+                break;
+            case UserpanelSettingKey.ChatMaxHeight:
+                this.settings.ChatMaxHeight = this.getFormControl("Chat", key).value + "vh";
+                break;
+            case UserpanelSettingKey.ChatFontSize:
+                this.settings.ChatFontSize = this.getFormControl("Chat", key).value + "em";
+                break;
+            case UserpanelSettingKey.HideDirtyChat:
+                this.settings.ChatHideDirtyChat = this.getFormControl("Chat", key).value;
+                break;
+        }
+        this.settings.triggerChatSettingsChanged();
     }
 }

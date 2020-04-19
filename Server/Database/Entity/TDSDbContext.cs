@@ -861,8 +861,6 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.FloatingDamageInfo);
                 entity.Property(e => e.Hitsound);
                 entity.Property(e => e.Language).HasDefaultValue(Language.English);
-                entity.Property(e => e.Voice3D).HasDefaultValue(false);
-                entity.Property(e => e.VoiceAutoVolume).HasDefaultValue(false);
                 entity.Property(e => e.VoiceVolume).HasDefaultValue(6.0);
                 entity.Property(e => e.MapBorderColor).HasDefaultValue("rgba(150,0,0,0.35)");
                 entity.Property(e => e.ShowConfettiAtRanking);
@@ -894,8 +892,9 @@ namespace TDS_Server.Database.Entity
                     .IsRequired(false);
                 entity.Property(e => e.NametagArmorFullColor)
                     .HasDefaultValue("rgba(255, 255, 255, 1)");
-                entity.Property(e => e.CheckAFK)
-                    .HasDefaultValue(true);
+                entity.Property(e => e.ChatWidth).HasDefaultValue(30);
+                entity.Property(e => e.ChatMaxHeight).HasDefaultValue(35);
+                entity.Property(e => e.ChatFontSize).HasDefaultValue(1.4);
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)
@@ -1102,14 +1101,6 @@ namespace TDS_Server.Database.Entity
                     .IsRequired()
                     .HasDefaultValue(3);
 
-                entity.Property(e => e.GangwarAttackerCanBeMore)
-                    .IsRequired()
-                    .HasDefaultValue(true);
-
-                entity.Property(e => e.GangwarOwnerCanBeMore)
-                    .IsRequired()
-                    .HasDefaultValue(false);
-
                 entity.Property(e => e.GangwarTargetRadius)
                     .IsRequired()
                     .HasDefaultValue(5d);
@@ -1259,7 +1250,9 @@ namespace TDS_Server.Database.Entity
                     ShowNametagOnlyOnAiming = true,
                     MultiplierRankingKills = 75f,
                     MultiplierRankingAssists = 25f,
-                    MultiplierRankingDamage = 1f
+                    MultiplierRankingDamage = 1f,
+                    GangwarAttackerCanBeMore = true,
+                    GangwarOwnerCanBeMore = false
                 }
             );
 
