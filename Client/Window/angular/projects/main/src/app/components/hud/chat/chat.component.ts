@@ -13,6 +13,7 @@ declare const mp: {
     }
 
     trigger(eventName: string, ...args: any): void;
+    invoke(eventName: string, ...args: any): void;
 };
 
 @Component({

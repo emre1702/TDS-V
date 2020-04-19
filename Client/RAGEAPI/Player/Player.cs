@@ -29,6 +29,7 @@ namespace TDS_Client.RAGEAPI.Player
             get => _instance.Voice3d; 
             set => _instance.Voice3d = value; 
         }
+        public bool IsTypingInTextChat => _instance.IsTypingInTextChat;
 
         /** <summary>Only works for localplayer</summary> */
         public bool IsPlaying => RAGE.Game.Player.IsPlayerPlaying();
