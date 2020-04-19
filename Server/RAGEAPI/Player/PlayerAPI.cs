@@ -6,39 +6,10 @@ namespace TDS_Server.RAGEAPI.Player
 {
     class PlayerAPI : IPlayerAPI
     {
-        internal Dictionary<GTANetworkAPI.Player, IPlayer> PlayerCache { get; } = new Dictionary<GTANetworkAPI.Player, IPlayer>();
+        private readonly EntityConvertingHandler _entityConvertingHandler;
 
-        internal void PlayerConnected(GTANetworkAPI.Player modPlayer)
-        {
-            var player = new Player(modPlayer);
-            PlayerCache[modPlayer] = player;
-        }
-
-        internal void PlayerDisconnected(GTANetworkAPI.Player modPlayer)
-        {
-            PlayerCache.Remove(modPlayer);
-        }
-
-        internal IPlayer? GetIPlayer(GTANetworkAPI.Player player)
-        {
-            PlayerCache.TryGetValue(player, out IPlayer? value);
-            return value;
-        }
-
-
-        public IPlayer? GetPlayerByName(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                return null;
-
-            foreach (var entry in PlayerCache.Keys)
-            {
-                if (entry.Name.Equals(name, System.StringComparison.CurrentCultureIgnoreCase))
-                    return PlayerCache[entry];
-            }
-
-            return null;
-        }
+        internal PlayerAPI(EntityConvertingHandler entityConvertingHandler) 
+            => _entityConvertingHandler = entityConvertingHandler;
 
         public void SetHealth(IPlayer player, int health)
         {

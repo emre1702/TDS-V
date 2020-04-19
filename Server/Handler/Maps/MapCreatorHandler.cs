@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -283,7 +284,12 @@ namespace TDS_Server.Handler.Maps
                 else
                     _mapsLoadingHandler.NeedCheckMaps.Remove(map);
 
-                await ExecuteForDBAsync(async dbContext => await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).DeleteFromQueryAsync());
+                await ExecuteForDBAsync(async dbContext =>
+                { 
+                    var maps = await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).ToListAsync();
+                    dbContext.RemoveRange(maps);
+                    await dbContext.SaveChangesAsync();
+                });
             }
 
             File.Delete(map.Info.FilePath);

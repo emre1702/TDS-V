@@ -8,7 +8,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
         [ServerEvent(Event.PlayerConnected)]
         public void PlayerConnected(GTANetworkAPI.Player player)
         {
-            (Init.BaseAPI.Player as PlayerAPI)?.PlayerConnected(player);
+            Init.BaseAPI.EntityConvertingHandler.PlayerConnected(player);
 
             var tdsPlayer = Init.GetTDSPlayer(player);
             if (tdsPlayer is null)

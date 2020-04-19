@@ -46,23 +46,26 @@ namespace TDS_Server.RAGEAPI
         public IThreadAPI Thread { get; }
         public IVehicleAPI Vehicle { get; }
 
+        internal EntityConvertingHandler EntityConvertingHandler { get; }
 
         internal BaseAPI()
         {
+            EntityConvertingHandler = new EntityConvertingHandler();
+
             Blip = new BlipAPI();
             Chat = new ChatAPI();
             ColShape = new ColShapeAPI();
             MapObject = new MapObjectAPI();
             Marker = new MarkerAPI();
             Native = new NativeAPI();
-            Player = new PlayerAPI();
+            Player = new PlayerAPI(EntityConvertingHandler);
             Pool = new PoolAPI();
             Resource = new ResourceAPI();
             Server = new ServerAPI();
             Sync = new SyncAPI();
             TextLabel = new TextLabelAPI();
             Thread = new ThreadAPI();
-            Vehicle = new VehicleAPI();
+            Vehicle = new VehicleAPI(EntityConvertingHandler);
         }
 
 

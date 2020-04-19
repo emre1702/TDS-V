@@ -18,13 +18,18 @@
     </PackageReference>
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="TimeZoneConverter" Version="3.2.0" />
-    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="3.0.62" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
     <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
     <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -277,10 +277,14 @@ namespace TDS_Server.Handler.Userpanel
         {
 
             var deleteAfterDays = _settingsHandler.ServerSettings.DeleteRequestsDaysAfterClose;
-            await ExecuteForDBAsync(async dbContext 
-                => await dbContext.SupportRequests
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                var requests = await dbContext.SupportRequests
                     .Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow)
-                    .DeleteFromQueryAsync());
+                    .ToListAsync();
+                dbContext.SupportRequests.RemoveRange(requests);
+                await dbContext.SaveChangesAsync();
+            });
         }
     }
 

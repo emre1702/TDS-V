@@ -20,7 +20,15 @@ namespace TDS_Server.Core.Manager.PlayerManager
             _chatHandler = chatHandler;
 
             ExecuteForDB(dbContext =>
-                dbContext.PlayerStats.Where(p => p.LoggedIn).UpdateFromQuery(p => new PlayerStats { LoggedIn = false })).Wait();
+            { 
+                var playerStats = dbContext.PlayerStats.Where(p => p.LoggedIn).ToList();
+                foreach (var stat in playerStats)
+                {
+                    stat.LoggedIn = false;
+                }
+                dbContext.SaveChanges();                
+            }).Wait();
+                
         }
 
         public async Task<bool> DoesPlayerWithScnameExist(string scname)

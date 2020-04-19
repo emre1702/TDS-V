@@ -20,7 +20,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
 
             Init.TDSCore.EventsHandler.OnPlayerDisconnected(modPlayer);
 
-            (Init.BaseAPI.Player as PlayerAPI)?.PlayerDisconnected(player);
+            Init.BaseAPI.EntityConvertingHandler.PlayerDisconnected(player);
         }
     }
 }

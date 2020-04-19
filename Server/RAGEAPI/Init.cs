@@ -81,7 +81,7 @@ namespace TDS_Server.RAGEAPI
 
         internal static IPlayer? GetModPlayer(GTANetworkAPI.Player player)
         {
-            return (BaseAPI.Player as PlayerAPI)?.GetIPlayer(player);
+            return BaseAPI.EntityConvertingHandler.GetEntity(player);
         }
 
     }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Utility;
@@ -18,6 +19,7 @@ namespace TDS_Server.Handler.Events
         }
 
         public delegate void PlayerDelegate(ITDSPlayer player);
+
         public event PlayerDelegate? PlayerConnected;
         public event PlayerDelegate? PlayerLoggedIn;
 
@@ -109,6 +111,11 @@ namespace TDS_Server.Handler.Events
                 return;
 
             fightLobby.OnPlayerWeaponSwitch(player, previousWeapon, newWeapon);
+        }
+
+        public void OnPlayerExitVehicle(ITDSPlayer tdsPlayer, IVehicle modVehicle)
+        {
+            
         }
         #endregion
 

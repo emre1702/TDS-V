@@ -145,8 +145,13 @@ namespace TDS_Server.Handler.Userpanel
         public async void DeleteOldMessages(int _)
         {
             var deleteAfterDays = _settingsHandler.ServerSettings.DeleteOfflineMessagesAfterDays;
-            await ExecuteForDBAsync(async dbContext => 
-                await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).DeleteFromQueryAsync());
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                var msgs = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
+                dbContext.Offlinemessages.RemoveRange(msgs);
+                await dbContext.SaveChangesAsync();
+            });
+                
         }
     }
 

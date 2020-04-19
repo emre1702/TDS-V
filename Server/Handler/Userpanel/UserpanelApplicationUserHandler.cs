@@ -266,7 +266,8 @@ namespace TDS_Server.Handler.Userpanel
             {
                 await dbContext.Applications
                    .Where(a => a.CreateTime.AddDays(_settingsHandler.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
-                   .DeleteFromQueryAsync();
+                   .ForEachAsync(a => dbContext.Applications.Remove(a));
+                await dbContext.SaveChangesAsync();
             });
            
         }

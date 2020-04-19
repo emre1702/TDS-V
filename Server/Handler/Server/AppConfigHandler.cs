@@ -21,13 +21,6 @@ namespace TDS_Server.Handler.Server
             var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));
 
             _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
-
-            Z.EntityFramework.Extensions.LicenseManager.AddLicense(_localSettings.EFExtensions.Name, _localSettings.EFExtensions.Key);
-
-            if (!Z.EntityFramework.Extensions.LicenseManager.ValidateLicense(out string licenseErrorMessage))
-            {
-                Console.WriteLine(licenseErrorMessage);
-            }
         }
 
         private string AssemblyDirectory
