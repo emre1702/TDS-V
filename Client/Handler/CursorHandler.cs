@@ -37,6 +37,7 @@ namespace TDS_Client.Handler
             : base(modAPI, loggingHandler)
         {
             _eventsHandler = eventsHandler;
+            _settingsHandler = settingsHandler;
 
             eventsHandler.ChatInputToggled += EventsHandler_ChatInputToggled;
 
