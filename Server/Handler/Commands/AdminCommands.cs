@@ -245,7 +245,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Test)]
-        public void Test(ITDSPlayer player, string type, string arg1, string arg2, string arg3)
+        public void Test(ITDSPlayer player, string type, string? arg1 = null, string? arg2 = null, string? arg3 = null)
         {
             switch (type)
             {

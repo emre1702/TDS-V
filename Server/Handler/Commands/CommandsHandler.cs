@@ -105,15 +105,17 @@ namespace TDS_Server.Handler.Commands
                 }
 
                 var parameters = method.GetParameters().Skip(methoddata.AmountDefaultParams).ToList();
-                Type[] parametertypes = parameters.Select(p => p.ParameterType).ToArray();
 
                 for (int i = 0; i < parameters.Count; ++i)
                 {
                     var parameter = parameters[i];
 
-                    #region Save parameter types
-                    parametertypes[parameter.Position - methoddata.AmountDefaultParams] = parameter.ParameterType;
-                    #endregion Save parameter types
+                    #region Save parameters start index with default value
+                    if (methoddata.ParametersWithDefaultValueStartIndex is null && parameter.HasDefaultValue)
+                    {
+                        methoddata.ParametersWithDefaultValueStartIndex = i;
+                    }
+                    #endregion Save parameters start index with default value
 
                     #region TDSRemainingText attribute
                     if (!methoddata.ToOneStringAfterParameterCount.HasValue)
@@ -130,7 +132,7 @@ namespace TDS_Server.Handler.Commands
 
                     #endregion TDSRemainingText attribute
                 }
-                methoddata.ParameterTypes = parametertypes;
+                methoddata.ParameterInfos = parameters;
 
                 /*if (!UseImplicitTypes)
                 {
@@ -158,7 +160,7 @@ namespace TDS_Server.Handler.Commands
 
             try
             {
-                object[]? args = GetArgs(msg, out string cmd);
+                List<object> args = GetArgs(msg, out string cmd);
                 TDSCommandInfos cmdinfos = new TDSCommandInfos(command: cmd);
                 if (_commandByAlias.ContainsKey(cmd))
                     cmd = _commandByAlias[cmd];
@@ -181,6 +183,7 @@ namespace TDS_Server.Handler.Commands
                 {
                     var methoddata = commanddata.MethodDatas[methodindex];
 
+                    args = HandleDefaultValues(methoddata, args);
                     args = HandleRemaingText(methoddata, args, out string remainingText);
 
                     #region Check if remaining text is correct (length)
@@ -208,8 +211,8 @@ namespace TDS_Server.Handler.Commands
 
                     //if (UseImplicitTypes)
                     //{
-                    object[] finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
-                    methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs);
+                    var finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
+                    methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray());
                     /*}
                     else
                     {
@@ -229,20 +232,21 @@ namespace TDS_Server.Handler.Commands
             }
         }
 
-        private async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex, int amountmethodsavailable, object[]? args)
+        private async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex, 
+            int amountmethodsavailable, List<object> args)
         {
             if (args is null)
                 return new HandleArgumentsResult { Worked = true };
 
             try
             {
-                for (int i = 0; i < Math.Min((args?.Length ?? 0), methoddata.ParameterTypes.Length); ++i)
+                for (int i = 0; i < Math.Min(args.Count, methoddata.ParameterInfos.Count); ++i)
                 {
                     if (args is null || args[i] is null)
                         continue;
 
-                    var parameterType = methoddata.ParameterTypes[i];
-                    object? arg = await GetConvertedArg(args[i], parameterType);
+                    var parameterInfo = methoddata.ParameterInfos[i];
+                    object? arg = await GetConvertedArg(args[i], parameterInfo.ParameterType);
 
                     #region Check for null
 
@@ -250,7 +254,9 @@ namespace TDS_Server.Handler.Commands
                     {
                         #region Check if player exists
 
-                        if (parameterType == typeof(TDSPlayer) || parameterType == typeof(ITDSPlayer) || parameterType == typeof(Players))
+                        if (parameterInfo.ParameterType == typeof(TDSPlayer) 
+                            || parameterInfo.ParameterType == typeof(ITDSPlayer) 
+                            || parameterInfo.ParameterType == typeof(Players))
                         {
                             // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Player)
                             if (methodindex + 1 == amountmethodsavailable)
@@ -281,30 +287,42 @@ namespace TDS_Server.Handler.Commands
 
         }
 
-        private object[]? HandleRemaingText(CommandMethodDataDto methodData, object[]? args, out string remainingText)
+        private List<object> HandleDefaultValues(CommandMethodDataDto methodData, List<object> args)
         {
-            if (args != null && methodData.ToOneStringAfterParameterCount.HasValue)
+            if (methodData.ParametersWithDefaultValueStartIndex.HasValue)
+                for (int i = methodData.ParametersWithDefaultValueStartIndex.Value; i < methodData.ParameterInfos.Count; ++i)
+                    if (args.Count < methodData.AmountDefaultParams + i)
+                        args.Add(methodData.ParameterInfos[i].DefaultValue!);
+            return args;
+        }
+
+        private List<object> HandleRemaingText(CommandMethodDataDto methodData, List<object> args, out string remainingText)
+        {
+            if (args.Count > 0 && methodData.ToOneStringAfterParameterCount.HasValue)
             {
                 int index = methodData.ToOneStringAfterParameterCount.Value - methodData.AmountDefaultParams;
-                remainingText = string.Join(' ', args.Skip(index));
+                remainingText = string.Join(' ', args.Skip(index)).Trim();
                 args[index] = remainingText;
-                return args.Take(index + 1).ToArray();
+                return args.Take(index + 1).ToList();
             }
             remainingText = string.Empty;
             return args;
         }
 
-        private bool IsInvalidArgsCount(ITDSPlayer player, CommandDataDto commanddata, object[]? args)
+        private bool IsInvalidArgsCount(ITDSPlayer player, CommandDataDto commanddata, List<object> args)
         {
-            if ((args?.Length ?? 0) < commanddata.MethodDatas[0].ParameterTypes.Length)
+            foreach (var methodData in commanddata.MethodDatas)
             {
-                player.SendMessage(player.Language.COMMAND_TOO_LESS_ARGUMENTS);
-                return true;
+                var requiredLength = methodData.ParametersWithDefaultValueStartIndex ?? methodData.ParameterInfos.Count;
+                if (args.Count <= requiredLength)
+                    return false;
             }
-            return false;
+
+            player.SendMessage(player.Language.COMMAND_TOO_LESS_ARGUMENTS);
+            return true;
         }
 
-        private bool CheckCommandExists(ITDSPlayer player, string cmd, object[]? args)
+        private bool CheckCommandExists(ITDSPlayer player, string cmd, List<object>? args)
         {
             if (!_commandDataByCommand.ContainsKey(cmd))
             {
@@ -386,27 +404,24 @@ namespace TDS_Server.Handler.Commands
             return canuse;
         }
 
-        private object[]? GetArgs(string msg, out string cmd)
+        private List<object> GetArgs(string msg, out string cmd)
         {
             int cmdendindex = msg.IndexOf(' ');
             if (cmdendindex == -1)
             {
                 cmd = msg.ToLower();
-                return null;
+                return new List<object>();
             }
             cmd = msg.Substring(0, cmdendindex).ToLower();
-            return msg.Substring(cmdendindex + 1).Split(' ').Cast<object>().ToArray();
+            return msg.Substring(cmdendindex + 1).Split(' ').Cast<object>().ToList();
         }
 
-        private object[] GetFinalInvokeArgs(CommandMethodDataDto methodData, ITDSPlayer cmdUser, TDSCommandInfos cmdInfos, object[]? args)
+        private List<object> GetFinalInvokeArgs(CommandMethodDataDto methodData, ITDSPlayer cmdUser, TDSCommandInfos cmdInfos, List<object> args)
         {
-            object[] newargs = new object[(args?.Length ?? 0) + methodData.AmountDefaultParams];
-            newargs[0] = cmdUser;
+            args.Insert(0, cmdUser);
             if (methodData.HasCommandInfos)
-                newargs[1] = cmdInfos;
-            if (args != null)
-                args.CopyTo(newargs, methodData.AmountDefaultParams);
-            return newargs;
+                args.Insert(1, cmdInfos);
+            return args;
         }
 
         private async Task<object?> GetConvertedArg(object notConvertedArg, Type theType)
