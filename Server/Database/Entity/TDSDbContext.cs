@@ -1348,7 +1348,7 @@ namespace TDS_Server.Database.Entity
                 new Commands { Id = 22, Command = "LoadMapOfOthers", NeededAdminLevel = 1, VipCanUse = true },    // not a command
                 new Commands { Id = 23, Command = "VoiceMute", NeededAdminLevel = 1, VipCanUse = true },
                 new Commands { Id = 24, Command = "GiveMoney" },
-                new Commands { Id = 25, Command = "LobbyInvitePlayer" },
+                new Commands { Id = 25, Command = "LobbyInvitePlayer", LobbyOwnerCanUse = true },
                 new Commands { Id = 26, Command = "Test", NeededAdminLevel = 3 }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
