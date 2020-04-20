@@ -55,7 +55,7 @@ namespace TDS_Client.Handler.MapCreator
             VehiclePreview = new MapCreatorVehiclesPreviewHandler(modAPI, camerasHandler, utilsHandler, browserHandler);
             ObjectPlacing = new MapCreatorObjectPlacingHandler(modAPI, Draw, Objects, cursorHandler, browserHandler, lobbyHandler, settingsHandler, remoteEventsSender, camerasHandler,
                instructionalButtonHandler, utilsHandler, ObjectsPreview, VehiclePreview, Sync, eventsHandler, dxHandler, timerHandler, clickedMarkerStorer);
-            Marker = new MapCreatorMarkerHandler(modAPI, loggingHandler, utilsHandler, dxHandler, camerasHandler, browserHandler, Draw, ObjectPlacing, clickedMarkerStorer);
+            Marker = new MapCreatorMarkerHandler(modAPI, loggingHandler, utilsHandler, dxHandler, camerasHandler, browserHandler, Draw, ObjectPlacing, Sync, clickedMarkerStorer);
             Freecam = new MapCreatorFreecamHandler(modAPI, loggingHandler, camerasHandler, utilsHandler, instructionalButtonHandler, cursorHandler, browserHandler, 
                 Foot, Marker, ObjectPlacing, eventsHandler);
             Binds = new MapCreatorBindsHandler(bindsHandler, instructionalButtonHandler, settingsHandler, Freecam, ObjectPlacing, eventsHandler);

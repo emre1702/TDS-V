@@ -22,11 +22,13 @@ namespace TDS_Client.Handler.MapCreator
         private readonly BrowserHandler _browserHandler;
         private readonly MapCreatorDrawHandler _mapCreatorDrawHandler;
         private readonly MapCreatorObjectPlacingHandler _mapCreatorObjectPlacingHandler;
+        private readonly MapCreatorSyncHandler _mapCreatorSyncHandler;
         private readonly ClickedMarkerStorer _clickedMarkerStorer;
 
         public MapCreatorMarkerHandler(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, DxHandler dxHandler, 
             CamerasHandler camerasHandler, BrowserHandler browserHandler,
-            MapCreatorDrawHandler mapCreatorDrawHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, ClickedMarkerStorer clickedMarkerStorer)
+            MapCreatorDrawHandler mapCreatorDrawHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, 
+            MapCreatorSyncHandler mapCreatorSyncHandler, ClickedMarkerStorer clickedMarkerStorer)
             : base(modAPI, loggingHandler)
         {
             _utilsHandler = utilsHandler;
@@ -35,6 +37,7 @@ namespace TDS_Client.Handler.MapCreator
             _browserHandler = browserHandler;
             _mapCreatorDrawHandler = mapCreatorDrawHandler;
             _mapCreatorObjectPlacingHandler = mapCreatorObjectPlacingHandler;
+            _mapCreatorSyncHandler = mapCreatorSyncHandler;
             _clickedMarkerStorer = clickedMarkerStorer;
         }
 
@@ -95,8 +98,13 @@ namespace TDS_Client.Handler.MapCreator
                 if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
                 {
                     _clickedMarkerStorer.ClickedMarker = null;
-                    _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z,
-                        obj.MovingRotation.X, obj.MovingRotation.Y, obj.MovingRotation.Z, obj.ObjOrVehName, obj.OwnerRemoteId);
+                    obj.Position = obj.MovingPosition;
+                    obj.Rotation = obj.MovingRotation;
+                    _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
+                        obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, obj.ObjOrVehName, obj.OwnerRemoteId);
+                    _mapCreatorSyncHandler.SyncObjectPositionToLobby(obj);
+
+
                 }
                 else
                 {
