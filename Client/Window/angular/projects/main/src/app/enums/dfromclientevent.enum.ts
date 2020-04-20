@@ -12,6 +12,7 @@ export enum DFromClientEvent {
     RefreshAdminLevel = "cb13",
     RemoveNameForChat = "cb40",
     RemovePositionInMapCreatorBrowser = "cb15",
+    RemoveTeamPositionsInMapCreatorBrowser = "cb2",
     ResetMapVoting = "cb16",
     ShowCooldown = "cb18",
     ShowRankings = "cb19",

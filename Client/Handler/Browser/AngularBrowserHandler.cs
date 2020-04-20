@@ -176,6 +176,11 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.RemovePositionInMapCreatorBrowser, id, (int)type);
         }
 
+        public void RemoveTeamPositionInMapCreatorBrowser(int teamNumber)
+        {
+            Execute(ToBrowserEvent.RemoveTeamPositionsInMapCreatorBrowser, teamNumber);
+        }
+
         public void ShowRankings(string rankingsJson)
         {
             Execute(ToBrowserEvent.ShowRankings, rankingsJson);

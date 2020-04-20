@@ -16,6 +16,7 @@
         public const string RefreshAdminLevel = "cb13";
         public const string RemoveNameForChat = "cb40";
         public const string RemovePositionInMapCreatorBrowser = "cb15";
+        public const string RemoveTeamPositionsInMapCreatorBrowser = "cb2";
         public const string ResetMapVoting = "cb16";
         public const string ShowCooldown = "cb18";
         public const string ShowRankings = "cb19";

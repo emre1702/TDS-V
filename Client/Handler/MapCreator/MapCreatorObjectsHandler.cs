@@ -207,14 +207,16 @@ namespace TDS_Client.Handler.MapCreator
             return mapCreatorObj;
         }
 
-        public void DeleteTeamObjects(int teamNumber)
+        public void DeleteTeamObjects(int teamNumber, bool syncToServer = true)
         {
-            var teamObjects = _cacheMapEditorObjects.Where(entry => entry.Value.TeamNumber == teamNumber && CanEditObject(entry.Value)).ToList();
+            var teamObjects = _cacheMapEditorObjects.Where(entry => entry.Value.TeamNumber == teamNumber && (!syncToServer || CanEditObject(entry.Value))).ToList();
             foreach (var entry in teamObjects)
             {
-                Delete(entry.Value);
+                Delete(entry.Value, false);
             }
             _eventsHandler.OnMapCreatorObjectDeleted();
+            if (syncToServer)
+                _eventsHandler.OnMapCreatorSyncTeamObjectsDeleted(teamNumber);
         }
 
         public void Delete(int posId)

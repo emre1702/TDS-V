@@ -79,6 +79,21 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
         }
 
+        public void SyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
+        {
+            ModAPI.Sync.SendEvent(this, ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
+
+            foreach (var entry in _posById)
+            {
+                if (entry.Value.Type != MapCreatorPositionType.TeamSpawn)
+                    continue;
+                if (entry.Value.Info.ToString() != teamNumber.ToString())
+                    continue;
+
+                GetListInCurrentMapForMapType(entry.Value.Type, entry.Value.Info)?.Remove(entry.Value);
+            }
+        }
+
         public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
         {
             ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);

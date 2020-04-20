@@ -29,6 +29,7 @@ namespace TDS_Client.Handler.MapCreator
 
             eventsHandler.MapCreatorSyncLatestObjectID += SyncLatestIdToServer;
             eventsHandler.MapCreatorSyncObjectDeleted += SyncObjectRemoveToLobby;
+            eventsHandler.MapCreatorSyncTeamObjectsDeleted += SyncTeamObjectsRemoveToLobby;
 
             modAPI.Event.Add(FromBrowserEvent.MapCreatorStartNew, SyncStartNewMap);
             modAPI.Event.Add(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, OnMapCreatorRequestAllObjectsForPlayerMethod);
@@ -37,6 +38,7 @@ namespace TDS_Client.Handler.MapCreator
             modAPI.Event.Add(ToClientEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObjectMethod);
             modAPI.Event.Add(ToClientEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPositionMethod);
             modAPI.Event.Add(ToClientEvent.MapCreatorSyncObjectRemove, MapCreatorSyncObjectRemoveMethod);
+            modAPI.Event.Add(ToClientEvent.MapCreatorSyncTeamObjectsRemove, MapCreatorSyncTeamObjectsRemoveMethod);
         }
 
         #region Id
@@ -106,6 +108,13 @@ namespace TDS_Client.Handler.MapCreator
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveObject, obj.ID);
         }
 
+        public void SyncTeamObjectsRemoveToLobby(int teamNumber)
+        {
+            if (!HasToSync)
+                return;
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveTeamObjects, teamNumber);
+        }
+
         public void SyncObjectRemoveFromLobby(int id)
         {
             var obj = _mapCreatorObjectsHandler.GetByID(id);
@@ -114,6 +123,12 @@ namespace TDS_Client.Handler.MapCreator
 
             _browserHandler.Angular.RemovePositionInMapCreatorBrowser(obj.ID, obj.Type);
             _mapCreatorObjectsHandler.Delete(obj, false);
+        }
+
+        public void SyncTeamObjectsRemoveFromLobby(int teamNumber)
+        {
+            _mapCreatorObjectsHandler.DeleteTeamObjects(teamNumber);
+            _browserHandler.Angular.RemoveTeamPositionInMapCreatorBrowser(teamNumber);
         }
         #endregion Remove object
 
@@ -188,6 +203,12 @@ namespace TDS_Client.Handler.MapCreator
         {
             int objId = Convert.ToInt32(args[0]);
             SyncObjectRemoveFromLobby(objId);
+        }
+
+        private void MapCreatorSyncTeamObjectsRemoveMethod(object[] args)
+        {
+            int teamNumber = Convert.ToInt32(args[0]);
+            SyncTeamObjectsRemoveFromLobby(teamNumber);
         }
     }
 }

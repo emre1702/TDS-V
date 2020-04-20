@@ -68,6 +68,9 @@ namespace TDS_Client.Handler.Events
         public event RoundStartedDelegate RoundStarted;
         public event RoundStartedDelegate RoundEnded;
 
+        public delegate void MapCreatorSyncTeamObjectsDeletedDelegate(int teamNumber);
+        public event MapCreatorSyncTeamObjectsDeletedDelegate MapCreatorSyncTeamObjectsDeleted;
+
         private WeaponHash _lastWeaponHash;
 
         private readonly RemoteEventsSender _remoteEventsSender;
@@ -242,6 +245,21 @@ namespace TDS_Client.Handler.Events
                 Logging.LogError(ex);
             }
         }
+
+        internal void OnMapCreatorSyncTeamObjectsDeleted(int teamNumber)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncTeamObjectsDeleted");
+                MapCreatorSyncTeamObjectsDeleted?.Invoke(teamNumber);
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncTeamObjectsDeleted", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
 
         internal void OnMapCreatorSyncObjectDeleted(MapCreatorObject mapCreatorObject)
         {

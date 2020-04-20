@@ -68,6 +68,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         private snackBar: MatSnackBar) {
         this.rageConnector.listen(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
         this.rageConnector.listen(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.RemovePositionInMapCreatorBrowser.bind(this));
+        this.rageConnector.listen(DFromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
     }
 
     ngOnInit() {
@@ -167,6 +168,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    private removeTeamPositionsInMapCreatorBrowser(teamNumber: number) {
+        this.data[6].pop();
+        if (this.editingTeamNumber == this.data[6].length) {
+            this.editingTeamNumber--;
+        }
+        this.changeDetector.detectChanges();
+    }
+
     private isLobbyOwnerChanged() {
         if (this.settings.IsLobbyOwner) {
             this.nameControl.enable();
@@ -185,7 +194,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     removeLastTeam() {
         if (this.data[6].length == 1) {
-            this.data[6] = [];
+            this.data[6][0] = [];
             return;
         }
 

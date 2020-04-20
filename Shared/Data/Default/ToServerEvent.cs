@@ -45,6 +45,7 @@
         public const string MapCreatorSyncNewObject = "c32";
         public const string MapCreatorSyncObjectPosition = "c33";
         public const string MapCreatorSyncRemoveObject = "c34";
+        public const string MapCreatorSyncRemoveTeamObjects = "c5";
         public const string MapsListRequest = "c35";
         public const string MapVote = "c36";
 

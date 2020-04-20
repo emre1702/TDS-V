@@ -307,6 +307,16 @@ namespace TDS_Server.RAGEAPI.Events.Remote
             Init.TDSCore.RemoteEventsHandler.OnMapCreatorSyncRemoveObject(tdsPlayer, id);
         }
 
+        [RemoteEvent(ToServerEvent.MapCreatorSyncRemoveTeamObjects)]
+        public void OnMapCreatorSyncRemoveTeamObjects(GTANetworkAPI.Player player, int teamNumber)
+        {
+            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
+            if (tdsPlayer is null)
+                return;
+
+            Init.TDSCore.RemoteEventsHandler.OnMapCreatorSyncRemoveTeamObjects(tdsPlayer, teamNumber);
+        }
+
         [RemoteEvent(ToServerEvent.MapCreatorSyncAllObjects)]
         public void OnMapCreatorSyncAllObjects(GTANetworkAPI.Player player, int tdsPlayerId, string json)
         {
