@@ -5,12 +5,12 @@ export enum UserpanelSettingKey {
     Timezone = 4,
     DateTimeFormat = 13,
     DiscordUserId = 5,
+    CheckAFK = 25,
     WindowsNotifications = 26,
 
     Bloodscreen = 7,
     Hitsound = 6,
     FloatingDamageInfo = 8,
-    CheckAFK = 25,
 
     Voice3D = 9,
     VoiceAutoVolume = 10,
