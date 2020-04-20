@@ -54,6 +54,9 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         Validators.minLength(Constants.MIN_MAP_CREATE_NAME_LENGTH),
         Validators.maxLength(Constants.MAX_MAP_CREATE_NAME_LENGTH)
     ]);
+    mapTypeControl = new FormControl(MapType.Normal, [
+        Validators.required
+    ]);
 
     @ViewChild("descriptionTextArea", { static: false }) descriptionTextArea: ElementRef;
 
@@ -71,14 +74,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
         this.rageConnector.listen(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
-        this.settings.IsLobbyOwnerChanged.on(null, this.detectChanges.bind(this));
+        this.settings.IsLobbyOwnerChanged.on(null, this.isLobbyOwnerChanged.bind(this));
     }
 
     ngOnDestroy() {
         this.rageConnector.remove(DFromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
         this.rageConnector.remove(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
-        this.settings.IsLobbyOwnerChanged.off(null, this.detectChanges.bind(this));
+        this.settings.IsLobbyOwnerChanged.off(null, this.isLobbyOwnerChanged.bind(this));
     }
 
     private addPositionToMapCreatorBrowser(id: number, type: MapCreatorPositionType, posX: number, posY: number, posZ: number,
@@ -161,6 +164,18 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 break;
         }
         this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, -1);
+        this.changeDetector.detectChanges();
+    }
+
+    private isLobbyOwnerChanged() {
+        if (this.settings.IsLobbyOwner) {
+            this.nameControl.enable();
+            this.mapTypeControl.enable();
+        } else {
+            this.nameControl.disable();
+            this.mapTypeControl.disable();
+        }
+
         this.changeDetector.detectChanges();
     }
 
@@ -337,6 +352,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
             .subscribe((bool: boolean) => {
                 const map = this.data;
                 this.data = new MapCreateDataDto();
+                this.nameControl.setValue(this.data[1]);
+                this.mapTypeControl.setValue(this.data[2]);
                 this.changeDetector.detectChanges();
 
                 this.rageConnector.call(DToServerEvent.RemoveMap, map[0]);
@@ -351,6 +368,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 if (!bool)
                     return;
                 this.data = new MapCreateDataDto();
+                this.nameControl.setValue(this.data[1]);
+                this.mapTypeControl.setValue(this.data[2]);
                 this.changeDetector.detectChanges();
                 this.rageConnector.call(DToClientEvent.MapCreatorStartNew);
             });
@@ -385,6 +404,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     private onLoadMap(json: string) {
         this.data = JSON.parse(json);
+        this.nameControl.setValue(this.data[1]);
+        this.mapTypeControl.setValue(this.data[2]);
         this.fixData();
         this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
             duration: 5000,
@@ -394,9 +415,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     private fixData() {
+        this.data[1] = this.nameControl.value;
         if (!this.data[1])
             this.data[1] = "";
 
+        this.data[2] = this.mapTypeControl.value;
         if (!this.data[2])
             this.data[2] = 0;
 
@@ -448,10 +471,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     onMapTypeChange(event: MatSelectChange) {
-        if (this.data[2] == MapType.Bomb && event.value != MapType.Bomb) {
+        if (this.mapTypeControl.value == MapType.Bomb && event.value != MapType.Bomb) {
             this.data[8] = [];
         }
-        this.data[2] = event.value;
+        this.mapTypeControl.setValue(event.value);
         this.changeDetector.detectChanges();
         this.rageConnector.callServer(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Type, event.value);
     }
@@ -481,10 +504,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     onSyncData(infoType: MapCreatorInfoType, data: any) {
         switch (infoType) {
             case MapCreatorInfoType.Name:
-                this.data[1] = data;
+                this.nameControl.setValue(data);
                 break;
             case MapCreatorInfoType.Type:
-                this.data[2] = data;
+                this.mapTypeControl.setValue(data);
                 break;
             case MapCreatorInfoType.DescriptionEnglish:
                 this.data[4][LanguageEnum.English] = data;
@@ -617,7 +640,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         if (this.data[6].length == 0)
             return false;
 
-        if (this.data[2] == MapType.Gangwar || this.data[2] == MapType.Bomb) {
+        if (this.mapTypeControl.value == MapType.Gangwar || this.mapTypeControl.value == MapType.Bomb) {
             if (this.data[6].length != 2) {
                 return false;
             }
@@ -631,15 +654,15 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     isMapLimitValid(): boolean {
-        return (this.data[2] != MapType.Gangwar && !this.data[7].length) || this.data[7].length >= 3;
+        return (this.mapTypeControl.value != MapType.Gangwar && !this.data[7].length) || this.data[7].length >= 3;
     }
 
     isBombPlacesValid(): boolean {
-        return this.data[2] != MapType.Bomb || this.data[8].length > 0;
+        return this.mapTypeControl.value != MapType.Bomb || this.data[8].length > 0;
     }
 
     isTargetValid(): boolean {
-        return this.data[2] != MapType.Gangwar || this.data[10] != undefined;
+        return this.mapTypeControl.value != MapType.Gangwar || this.data[10] != undefined;
     }
 
     getMinNameLength() {

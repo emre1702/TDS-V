@@ -12,14 +12,14 @@
                 hintLabel="{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}"
                 class="mat-form-field-with-hint">
                 <input name="name" #nameInput matInput placeholder="{{ 'Name' | language: settings.Lang }}"
-                    [formControl]="nameControl" type="text" [(ngModel)]="data[1]" [disabled]="!settings.IsLobbyOwner" />
+                    [formControl]="nameControl" type="text" />
                 <mat-error *ngIf="nameControl.invalid">{{ getMinNameLength() }}-{{ getMaxNameLength() }}
                     {{ 'Chars' | language: settings.Lang }}</mat-error>
                 <mat-hint align="end">{{ nameInput.value?.length || 0 }}/{{getMaxNameLength()}}</mat-hint>
             </mat-form-field>
             <div class="two-per-row-container" color="accent">
                 <mat-select name="mapType" class="two-per-row-div mat-select-without-field mat-raised-button" required
-                    [(ngModel)]="data[2]" (selectionChange)="onMapTypeChange($event)"
+                    [formControl]="mapTypeControl" (selectionChange)="onMapTypeChange($event)"
                     [disabled]="!settings.IsLobbyOwner">
                     <mat-option *ngFor="let type of getMapTypes()" [value]="getMapTypeValue(type)">
                         {{ type | language: settings.Lang }}
@@ -107,57 +107,59 @@
         </div>
 
         <div class="positions-div" *ngIf="currentNav == mapCreatorNav.TeamSpawns">
-            <div id="team-spawns-top-row">
-                <mat-form-field color="accent">
-                    <mat-label>{{ 'Team' | language: settings.Lang }}</mat-label>
-                    <mat-select name="editingTeamNumber" [(ngModel)]="editingTeamNumber"
-                        (selectionChange)="onEditingTeamNumberChange($event)">
-                        <mat-option *ngFor="let spawns of data[6]; let i = index" [value]="i">
-                            {{ 'Team ' + (i+1) }}
-                        </mat-option>
-                        <mat-option value="+">
-                            +
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <button mat-raised-button type="button" [disabled]="!settings.IsLobbyOwner" (click)="removeLastTeam()">
-                    {{ 'Remove' | language: settings.Lang }}
-                </button>
-            </div>
-            <div class="mat-table-container mat-elevation-z8">
-                <mat-table [dataSource]="data[6][editingTeamNumber]" matSort>
+            <div id="team-spawns-top">
+                <div id="team-spawns-top-row">
+                    <mat-form-field color="accent">
+                        <mat-label>{{ 'Team' | language: settings.Lang }}</mat-label>
+                        <mat-select name="editingTeamNumber" [(ngModel)]="editingTeamNumber"
+                            (selectionChange)="onEditingTeamNumberChange($event)">
+                            <mat-option *ngFor="let spawns of data[6]; let i = index" [value]="i">
+                                {{ 'Team ' + (i+1) }}
+                            </mat-option>
+                            <mat-option value="+">
+                                +
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-raised-button type="button" [disabled]="!settings.IsLobbyOwner" (click)="removeLastTeam()">
+                        {{ 'Remove' | language: settings.Lang }}
+                    </button>
+                </div>
+                <div class="mat-table-container mat-elevation-z8">
+                    <mat-table [dataSource]="data[6][editingTeamNumber]" matSort>
 
-                    <ng-container matColumnDef="id">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}
-                        </mat-header-cell>
-                        <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
-                    </ng-container>
+                        <ng-container matColumnDef="id">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
+                        </ng-container>
 
-                    <ng-container matColumnDef="x">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element[3] }}</mat-cell>
-                    </ng-container>
+                        <ng-container matColumnDef="x">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element[3] }}</mat-cell>
+                        </ng-container>
 
-                    <ng-container matColumnDef="y">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element[4] }}</mat-cell>
-                    </ng-container>
+                        <ng-container matColumnDef="y">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element[4] }}</mat-cell>
+                        </ng-container>
 
-                    <ng-container matColumnDef="z">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element[5] }}</mat-cell>
-                    </ng-container>
+                        <ng-container matColumnDef="z">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element[5] }}</mat-cell>
+                        </ng-container>
 
-                    <ng-container matColumnDef="rot">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ element[8] }}</mat-cell>
-                    </ng-container>
+                        <ng-container matColumnDef="rot">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element[8] }}</mat-cell>
+                        </ng-container>
 
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns" (click)="onSelectedPositionChanged(row)"
-                        [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns" (click)="onSelectedPositionChanged(row)"
+                            [ngClass]="{'background-color-primary': selectedPosition == row}"></mat-row>
 
-                </mat-table>
+                    </mat-table>
+                </div>
             </div>
 
             <div class="positions-bottom-row">
