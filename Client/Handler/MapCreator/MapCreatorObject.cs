@@ -90,19 +90,19 @@ namespace TDS_Client.Handler.MapCreator
         public void LoadPos(MapCreatorPosition pos)
         {
             MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-            Position = MovingPosition;
+            Position = new Position3D(MovingPosition);
 
             MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
-            Rotation = MovingRotation;
+            Rotation = new Position3D(MovingRotation);
         }
 
         public void LoadPos(MapCreatorPosData pos)
         {
             MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-            Position = MovingPosition;
+            Position = new Position3D(MovingPosition);
 
             MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
-            Rotation = MovingRotation;
+            Rotation = new Position3D(MovingRotation);
         }
 
         public void LoadEntityData()

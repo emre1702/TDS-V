@@ -202,8 +202,8 @@ namespace TDS_Client.Handler.MapCreator
 
         private void ReleaseObject()
         {
-            HoldingObject.Position = HoldingObject.MovingPosition;
-            HoldingObject.Rotation = HoldingObject.MovingRotation;
+            HoldingObject.Position = new Position3D(HoldingObject.MovingPosition);
+            HoldingObject.Rotation = new Position3D(HoldingObject.MovingRotation);
             var obj = HoldingObject;
             HoldingObject = null;
             object info = null;

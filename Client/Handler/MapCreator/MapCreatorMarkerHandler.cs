@@ -98,8 +98,8 @@ namespace TDS_Client.Handler.MapCreator
                 if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
                 {
                     _clickedMarkerStorer.ClickedMarker = null;
-                    obj.Position = obj.MovingPosition;
-                    obj.Rotation = obj.MovingRotation;
+                    obj.Position = new Position3D(obj.MovingPosition);
+                    obj.Rotation = new Position3D(obj.MovingRotation);
                     _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
                         obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, obj.ObjOrVehName, obj.OwnerRemoteId);
                     _mapCreatorSyncHandler.SyncObjectPositionToLobby(obj);

@@ -20,6 +20,9 @@ namespace TDS_Shared.Data.Models.GTA
 
         public Position3D() { }
 
+        public Position3D(Position3D pos) 
+            => (X, Y, Z) = (pos.X, pos.Y, pos.Z);
+
         public Position3D(MapCreatorPosition pos) 
             => (X, Y, Z) = (pos.PosX, pos.PosY, pos.PosZ);
 

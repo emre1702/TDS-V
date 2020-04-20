@@ -354,7 +354,7 @@ namespace TDS_Client.Handler.MapCreator
             if (obj.Rotation is null)
                 return;
 
-            obj.MovingRotation = obj.Rotation;
+            obj.MovingRotation = new Position3D(obj.Rotation);
         }
 
         private void OnRemoveMapCreatorPositionMethod(object[] args)
