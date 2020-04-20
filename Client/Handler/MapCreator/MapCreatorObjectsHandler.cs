@@ -225,12 +225,12 @@ namespace TDS_Client.Handler.MapCreator
             Delete(obj);
         }
 
-        public void Delete(MapCreatorObject obj)
+        public void Delete(MapCreatorObject obj, bool syncToServer = true)
         {
             if (!CanEditObject(obj))
                 return;
             _cacheMapEditorObjects.Remove(obj.Entity);
-            obj.Delete(true);
+            obj.Delete(syncToServer);
             _eventsHandler.OnMapCreatorObjectDeleted();
             if (obj.Type == MapCreatorPositionType.MapLimit)
             {

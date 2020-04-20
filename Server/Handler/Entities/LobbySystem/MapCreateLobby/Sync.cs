@@ -67,7 +67,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncRemoveObject(ITDSPlayer player, int objId)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player).ToList(), ToClientEvent.MapCreatorSyncObjectRemove, objId);
+            ModAPI.Sync.SendEvent(this, ToClientEvent.MapCreatorSyncObjectRemove, objId);
 
             if (!_posById.ContainsKey(objId))
                 return;

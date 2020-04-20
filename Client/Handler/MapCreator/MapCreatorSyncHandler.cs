@@ -109,10 +109,11 @@ namespace TDS_Client.Handler.MapCreator
         public void SyncObjectRemoveFromLobby(int id)
         {
             var obj = _mapCreatorObjectsHandler.GetByID(id);
-            if (obj != null)
-            {
-                obj.Delete(false);
-            }
+            if (obj is null)
+                return;
+
+            _browserHandler.Angular.RemovePositionInMapCreatorBrowser(obj.ID, obj.Type);
+            _mapCreatorObjectsHandler.Delete(obj, false);
         }
         #endregion Remove object
 
