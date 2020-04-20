@@ -240,7 +240,7 @@ namespace TDS_Server.Handler.Commands
 
             try
             {
-                for (int i = 0; i < Math.Min(args.Count, methoddata.ParameterInfos.Count); ++i)
+                for (int i = 0; i < Math.Min(args!.Count, methoddata.ParameterInfos.Count); ++i)
                 {
                     if (args is null || args[i] is null)
                         continue;
