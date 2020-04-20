@@ -155,7 +155,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void SyncAllObjectsFromLobbyOwner(MapCreateDataDto data)
         {
-            foreach (var dto in data.GetAllPositions)
+            foreach (var dto in data.AllPositions)
             {
                 var newObj = _mapCreatorObjectsHandler.FromDto(dto);
                 _mapCreatorObjectsHandler.IdCounter = Math.Max(_mapCreatorObjectsHandler.IdCounter, newObj.ID);

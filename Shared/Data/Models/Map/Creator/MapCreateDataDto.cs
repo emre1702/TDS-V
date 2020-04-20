@@ -33,19 +33,24 @@ namespace TDS_Shared.Data.Models.Map.Creator
         public List<MapCreatorPosition> Vehicles { get; set; }
 
         [JsonIgnore]
-        public List<MapCreatorPosition> GetAllPositions 
+        public List<MapCreatorPosition> AllPositions 
         {    
             get 
             {
-                var list = Objects
-                    .Concat((TeamSpawns?.SelectMany(s => s) ?? new List<MapCreatorPosition>()).ToList())
-                    .Concat(MapEdges ?? new List<MapCreatorPosition>())
-                    .Concat(BombPlaces ?? new List<MapCreatorPosition>())
-                    .Concat(Vehicles ?? new List<MapCreatorPosition>())
-                    .ToList();
-                if (MapCenter != null)
+                var list = new List<MapCreatorPosition>();
+                if (!(Objects is null))
+                    list.AddRange(Objects);
+                if (!(TeamSpawns is null))
+                    list.AddRange(TeamSpawns.SelectMany(s => s));
+                if (!(MapEdges is null))
+                    list.AddRange(MapEdges);
+                if (!(BombPlaces is null))
+                    list.AddRange(BombPlaces);
+                if (!(Vehicles is null))
+                    list.AddRange(Vehicles);
+                if (!(MapCenter is null))
                     list.Add(MapCenter);
-                if (Target != null)
+                if (!(Target is null))
                     list.Add(Target);
 
                 return list;
