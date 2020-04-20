@@ -50,7 +50,7 @@ namespace TDS_Client.Handler.MapCreator
 
             Objects = new MapCreatorObjectsHandler(modAPI, camerasHandler, lobbyHandler, eventsHandler, browserHandler, serializer);
             Sync = new MapCreatorSyncHandler(modAPI, Objects, remoteEventsSender, serializer, eventsHandler, browserHandler);
-            ObjectsLoading = new ObjectsLoadingHelper(modAPI, utilsHandler, settingsHandler);
+            ObjectsLoading = new ObjectsLoadingHelper(modAPI, loggingHandler, utilsHandler, settingsHandler);
             ObjectsPreview = new MapCreatorObjectsPreviewHandler(modAPI, ObjectsLoading, camerasHandler, utilsHandler, browserHandler);
             VehiclePreview = new MapCreatorVehiclesPreviewHandler(modAPI, camerasHandler, utilsHandler, browserHandler);
             ObjectPlacing = new MapCreatorObjectPlacingHandler(modAPI, Draw, Objects, cursorHandler, browserHandler, lobbyHandler, settingsHandler, remoteEventsSender, camerasHandler,

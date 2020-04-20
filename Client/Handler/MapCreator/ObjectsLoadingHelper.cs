@@ -2,15 +2,14 @@
 
 namespace TDS_Client.Handler.MapCreator
 {
-    public class ObjectsLoadingHelper
+    public class ObjectsLoadingHelper : ServiceBase
     {
-        private readonly IModAPI ModAPI;
         private readonly UtilsHandler _utilsHandler;
         private readonly SettingsHandler _settingsHandler;
 
-        public ObjectsLoadingHelper(IModAPI modAPI, UtilsHandler utilsHandler, SettingsHandler settingsHandler)
+        public ObjectsLoadingHelper(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler)
+            : base(modAPI, loggingHandler)
         {
-            ModAPI = modAPI;
             _utilsHandler = utilsHandler;
             _settingsHandler = settingsHandler;
         }
@@ -32,9 +31,9 @@ namespace TDS_Client.Handler.MapCreator
 
         private bool LoadObjectModel(uint hash)
         {
-            ModAPI.Utils.Settimera(0);
+            //ModAPI.Utils.Settimera(0);
             ModAPI.Streaming.RequestModel(hash);
-            while (!ModAPI.Streaming.HasModelLoaded(hash))
+            /*while (!ModAPI.Streaming.HasModelLoaded(hash))
             {
                 ModAPI.Utils.Wait(0);
                 ModAPI.Ui.HideHudAndRadarThisFrame();
@@ -49,7 +48,7 @@ namespace TDS_Client.Handler.MapCreator
                 ModAPI.Ui.EndTextCommandDisplayText(0.5f, 0.9f);
                 if (ModAPI.Utils.Timera() > 1000)
                     return false;
-            }
+            }*/
             return true;
         }
     }
