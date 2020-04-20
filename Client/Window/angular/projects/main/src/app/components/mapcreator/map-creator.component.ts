@@ -453,7 +453,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         }
         this.data[2] = event.value;
         this.changeDetector.detectChanges();
-        this.rageConnector.call(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Type, event.value);
+        this.rageConnector.callServer(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Type, event.value);
     }
 
     onEditingTeamNumberChange(event: MatSelectChange) {

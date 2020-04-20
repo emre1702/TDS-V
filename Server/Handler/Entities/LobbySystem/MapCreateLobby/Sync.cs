@@ -81,7 +81,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
         {
-            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, infoType, data);
+            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);
 
             switch (infoType)
             {
