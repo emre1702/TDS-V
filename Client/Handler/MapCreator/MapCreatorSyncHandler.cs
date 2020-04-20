@@ -72,6 +72,10 @@ namespace TDS_Client.Handler.MapCreator
         {
             var obj = _mapCreatorObjectsHandler.FromDto(dto);
             obj.IsSynced = true;
+
+            _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
+                obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, dto.Info, obj.OwnerRemoteId);
+
         }
         #endregion New object
 
