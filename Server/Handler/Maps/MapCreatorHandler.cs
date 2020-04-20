@@ -195,7 +195,7 @@ namespace TDS_Server.Handler.Maps
             return null;
         }
 
-        public object? SendPlayerMapNamesForMapCreator(ITDSPlayer player, object[] args)
+        public object? SendPlayerMapNamesForMapCreator(ITDSPlayer player, object[] _)
         {
             if (player.Entity is null)
                 return null;

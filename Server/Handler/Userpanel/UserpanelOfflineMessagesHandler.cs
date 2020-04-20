@@ -123,7 +123,7 @@ namespace TDS_Server.Handler.Userpanel
             return true;
         }
 
-        public async Task<object?> Delete(ITDSPlayer player, object[] args)
+        public async Task<object?> Delete(ITDSPlayer _, object[] args)
         {
             int? offlineMessageId;
             if ((offlineMessageId = Utils.GetInt(args[0])) is null)

@@ -253,7 +253,7 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        public object? LeftSupportRequestsList(ITDSPlayer player, object[] args)
+        public object? LeftSupportRequestsList(ITDSPlayer player, object[] _)
         {
             _inSupportRequestsList.Remove(player);
             return null;

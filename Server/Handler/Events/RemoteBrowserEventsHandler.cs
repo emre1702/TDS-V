@@ -25,7 +25,6 @@ namespace TDS_Server.Handler.Events
         private readonly Dictionary<string, FromBrowserMaybeAsyncMethodDelegate> _maybeAsyncMethods;
         private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
 
-        private readonly UserpanelHandler _userpanelHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
 
@@ -33,7 +32,6 @@ namespace TDS_Server.Handler.Events
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
             MapFavouritesHandler mapFavouritesHandler)
         {
-            _userpanelHandler = userpanelHandler;
             _loggingHandler = loggingHandler;
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
 

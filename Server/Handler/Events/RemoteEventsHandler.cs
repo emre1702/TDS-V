@@ -21,13 +21,10 @@ namespace TDS_Server.Handler.Events
     {
         private readonly ChatHandler _chatHandler;
         private readonly LoginHandler _loginHandler;
-        private readonly MapFavouritesHandler _mapFavouritesHandler;
         private readonly CommandsHandler _commandsHandler;
         private readonly RegisterHandler _registerHandler;
         private readonly ScoreboardHandler _scoreboardHandler;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
         private readonly DataSyncHandler _dataSyncHandler;
@@ -35,13 +32,13 @@ namespace TDS_Server.Handler.Events
         private readonly MapCreatorHandler _mapCreatorHandler;
         private readonly UserpanelHandler _userpanelHandler;
 
-        public RemoteEventsHandler(ChatHandler chatHandler, LoginHandler loginHandler, MapFavouritesHandler mapFavouritesHandler, CommandsHandler commandsHandler,
-            RegisterHandler registerHandler, ScoreboardHandler scoreboardHandler, LobbiesHandler lobbiesHandler, IServiceProvider serviceProvider,
-            CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, ILoggingHandler loggingHandler, IModAPI modAPI, DataSyncHandler dataSyncHandler,
+        public RemoteEventsHandler(ChatHandler chatHandler, LoginHandler loginHandler, CommandsHandler commandsHandler,
+            RegisterHandler registerHandler, ScoreboardHandler scoreboardHandler, LobbiesHandler lobbiesHandler,
+            ILoggingHandler loggingHandler, IModAPI modAPI, DataSyncHandler dataSyncHandler,
             MapsRatingsHandler mapsRatingsHandler, MapCreatorHandler mapCreatorHandler, UserpanelHandler userpanelHandler)
-            => (_chatHandler, _loginHandler, _mapFavouritesHandler, _commandsHandler, _registerHandler, _scoreboardHandler, _lobbiesHandler, _serviceProvider, _customLobbyMenuSyncHandler,
+            => (_chatHandler, _loginHandler, _commandsHandler, _registerHandler, _scoreboardHandler, _lobbiesHandler,
             _loggingHandler, _modAPI, _dataSyncHandler, _mapsRatingsHandler, _mapCreatorHandler, _userpanelHandler) 
-            = (chatHandler, loginHandler, mapFavouritesHandler, commandsHandler, registerHandler, scoreboardHandler, lobbiesHandler, serviceProvider, customLobbyMenuSyncHandler,
+            = (chatHandler, loginHandler, commandsHandler, registerHandler, scoreboardHandler, lobbiesHandler,
             loggingHandler, modAPI, dataSyncHandler, mapsRatingsHandler, mapCreatorHandler, userpanelHandler);
 
         public void LobbyChatMessage(ITDSPlayer player, string message, int chatTypeNumber)

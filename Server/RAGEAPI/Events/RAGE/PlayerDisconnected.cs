@@ -1,5 +1,4 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.RAGEAPI.Player;
 
 namespace TDS_Server.RAGEAPI.Events.RAGE
 {

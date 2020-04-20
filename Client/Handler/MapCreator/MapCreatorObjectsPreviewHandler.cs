@@ -15,7 +15,7 @@ namespace TDS_Client.Handler.MapCreator
 
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        private readonly IModAPI ModAPI;
+        private readonly IModAPI _modAPI;
         private readonly ObjectsLoadingHelper _objectLoadingHelper;
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
@@ -23,7 +23,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public MapCreatorObjectsPreviewHandler(IModAPI modAPI, ObjectsLoadingHelper objectLoadingHelper, CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
         {
-            ModAPI = modAPI;
+            _modAPI = modAPI;
             _objectLoadingHelper = objectLoadingHelper;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
@@ -38,17 +38,17 @@ namespace TDS_Client.Handler.MapCreator
 
         public void ShowObject(string objectName)
         {
-            var hash = ModAPI.Misc.GetHashKey(objectName);
+            var hash = _modAPI.Misc.GetHashKey(objectName);
             if (!_objectLoadingHelper.LoadObjectHash(hash))
                 return;
 
             if (_object == null)
-                ModAPI.Event.Tick.Add(_tickEventMethod);
+                _modAPI.Event.Tick.Add(_tickEventMethod);
             else
                 _object.Destroy();
 
             _objectRotation = new Position3D();
-            _object = ModAPI.MapObject.Create(hash, ModAPI.LocalPlayer.Position, _objectRotation, dimension: ModAPI.LocalPlayer.Dimension);
+            _object = _modAPI.MapObject.Create(hash, _modAPI.LocalPlayer.Position, _objectRotation, dimension: _modAPI.LocalPlayer.Dimension);
             _object.SetCollision(false, false);
             _object.SetInvincible(true);
         }
@@ -66,15 +66,15 @@ namespace TDS_Client.Handler.MapCreator
                 _object.Destroy();
                 _object = null;
                 _objectRotation = null;
-                ModAPI.Event.Tick.Remove(_tickEventMethod);
+                _modAPI.Event.Tick.Remove(_tickEventMethod);
             }
             _browserHandler.MapCreatorObjectChoice.Stop();
         }
 
         private void RenderObjectInFrontOfCam(int currentMs)
         {
-            var camPos = _camerasHandler.ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
-            var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(ModAPI.Cam.GetGameplayCamRot());
+            var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+            var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(_modAPI.Cam.GetGameplayCamRot());
 
             Position3D a = new Position3D();
             Position3D b = new Position3D();
