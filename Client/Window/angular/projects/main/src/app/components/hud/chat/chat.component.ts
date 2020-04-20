@@ -174,6 +174,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (!this.chatActive || !this.chatInputActive)
             return;
 
+        mp.invoke("setTypingInChatState", toggle);
         this.settings.setChatInputOpen(toggle);
         this.input.value = cmd;
         this.scrollChatToBottom();
