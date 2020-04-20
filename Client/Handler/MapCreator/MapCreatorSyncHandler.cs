@@ -5,6 +5,7 @@ using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Default;
 
@@ -74,6 +75,11 @@ namespace TDS_Client.Handler.MapCreator
         {
             var obj = _mapCreatorObjectsHandler.FromDto(dto);
             obj.IsSynced = true;
+
+            if (obj.Type == MapCreatorPositionType.MapLimit)
+            {
+                _mapCreatorObjectsHandler.RefreshMapLimitDisplay();
+            }
 
             _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
                 obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, dto.Info, obj.OwnerRemoteId);
