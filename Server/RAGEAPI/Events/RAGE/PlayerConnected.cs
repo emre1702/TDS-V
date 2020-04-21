@@ -10,11 +10,11 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
         {
             Init.BaseAPI.EntityConvertingHandler.PlayerConnected(player);
 
-            var tdsPlayer = Init.GetTDSPlayer(player);
-            if (tdsPlayer is null)
+            var modPlayer = Init.BaseAPI.EntityConvertingHandler.GetEntity(player);
+            if (modPlayer is null)
                 return;
 
-            Init.TDSCore.EventsHandler.OnPlayerConnected(tdsPlayer);
+            Init.TDSCore.EventsHandler.OnPlayerConnected(modPlayer);
         }
     }
 }

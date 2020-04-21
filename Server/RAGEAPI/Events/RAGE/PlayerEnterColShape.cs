@@ -8,7 +8,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
         [ServerEvent(Event.PlayerEnterColshape)]
         public void OnPlayerEnterColshape(GTANetworkAPI.ColShape colShape, GTANetworkAPI.Player player)
         {
-            var tdsPlayer = Init.GetTDSPlayer(player);
+            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
             if (tdsPlayer is null)
                 return;
 

@@ -8,7 +8,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
         [ServerEvent(Event.PlayerWeaponSwitch)]
         public void OnPlayerWeaponSwitch(GTANetworkAPI.Player player, GTANetworkAPI.WeaponHash oldWeaponHash, GTANetworkAPI.WeaponHash newWeaponHash)
         {
-            var tdsPlayer = Init.GetTDSPlayer(player);
+            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
             if (tdsPlayer is null)
                 return;
 
