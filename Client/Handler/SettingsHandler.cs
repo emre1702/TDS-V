@@ -5,9 +5,12 @@ using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Entities.Languages;
 using TDS_Client.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
@@ -94,19 +97,25 @@ namespace TDS_Client.Handler
 
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly EventsHandler _eventsHandler;
+        private readonly BrowserHandler _browserHandler;
+        private readonly Serializer _serializer;
 
-        public SettingsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
+        public SettingsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, 
+            BrowserHandler browserHandler, Serializer serializer)
             : base (modAPI, loggingHandler) 
         {
             _remoteEventsSender = remoteEventsSender;
             _eventsHandler = eventsHandler;
+            _browserHandler = browserHandler;
+            _serializer = serializer;
 
             Language = _languagesDict[LanguageEnum];
 
             eventsHandler.LobbyJoined += LoadSyncedLobbySettings;
             modAPI.Event.Add(FromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
             modAPI.Event.Add(FromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
-
+            modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
+            modAPI.Event.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, SyncRegisterLoginLanguageTexts);
 
             modAPI.Nametags.Enabled = false;
 
@@ -152,6 +161,9 @@ namespace TDS_Client.Handler
             NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
 
             NotTempMapBorderColor = null;
+
+            _browserHandler.Angular.LoadChatSettings(loadedSyncedSettings.ChatWidth, loadedSyncedSettings.ChatMaxHeight,
+                loadedSyncedSettings.ChatFontSize, loadedSyncedSettings.HideDirtyChat);
 
             _eventsHandler.OnSettingsLoaded();
         }
@@ -235,6 +247,19 @@ namespace TDS_Client.Handler
                     break;
             }
 
+        }
+
+        private void OnSyncSettingsMethod(object[] args)
+        {
+            string json = (string)args[0];
+            var settings = _serializer.FromServer<SyncedPlayerSettingsDto>(json);
+            LoadUserSettings(settings);
+            _browserHandler.Angular.LoadUserpanelData((int)UserpanelLoadDataType.SettingsNormal, json);
+        }
+
+        private void SyncRegisterLoginLanguageTexts(object[] args)
+        {
+            _browserHandler.RegisterLogin.SyncLanguage(Language);
         }
 
         /*function loadSettings() {

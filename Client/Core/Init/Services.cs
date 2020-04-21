@@ -34,10 +34,10 @@ namespace TDS_Client.Core.Init
                 var bindsHandler = new BindsHandler(modAPI, loggingHandler);
                 var discordHandler = new DiscordHandler(modAPI, loggingHandler, eventsHandler);
 
-                var settingsHandler = new SettingsHandler(modAPI, loggingHandler, remoteEventsSender, eventsHandler);
+                var browserHandler = new BrowserHandler(modAPI, loggingHandler, eventsHandler, serializer, remoteEventsSender);
+                var settingsHandler = new SettingsHandler(modAPI, loggingHandler, remoteEventsSender, eventsHandler, browserHandler, serializer);
                 var cursorHandler = new CursorHandler(modAPI, loggingHandler, eventsHandler, bindsHandler, settingsHandler);
-
-                var browserHandler = new BrowserHandler(modAPI, loggingHandler, settingsHandler, cursorHandler, eventsHandler, serializer, remoteEventsSender);
+                
                 var dataSyncHandler = new DataSyncHandler(modAPI, loggingHandler, eventsHandler, browserHandler, serializer);
                 var utilsHandler = new UtilsHandler(modAPI, loggingHandler, serializer, dataSyncHandler, eventsHandler);
                 new GangHousesHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, serializer);

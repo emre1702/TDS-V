@@ -28,6 +28,7 @@ namespace TDS_Client.Handler.Events
 
         public delegate void BoolDelegate(bool boolean);
         public event BoolDelegate CursorToggled;
+        public event BoolDelegate CursorToggleRequested;
         public event BoolDelegate InFightStatusChanged;
         public event BoolDelegate FreecamToggled;
         public event BoolDelegate ChatInputToggled;
@@ -464,6 +465,20 @@ namespace TDS_Client.Handler.Events
                 Logging.LogInfo("", "EventsHandler.OnChatInputToggled");
                 ChatInputToggled?.Invoke(value);
                 Logging.LogInfo("", "EventsHandler.OnChatInputToggled", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnCursorToggleRequested(bool value)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnChatInputToggleRequested");
+                CursorToggleRequested?.Invoke(value);
+                Logging.LogInfo("", "EventsHandler.OnChatInputToggleRequested", true);
             }
             catch (Exception ex)
             {

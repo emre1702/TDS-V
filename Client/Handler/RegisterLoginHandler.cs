@@ -82,7 +82,16 @@ namespace TDS_Client.Handler
 
             _browserHandler.Angular.SetReady((string)args[2]);
 
-            _eventsHandler.OnLoggedIn();  
+            _eventsHandler.OnLoggedIn();
+
+            SendWelcomeMessage();
+        }
+
+        private void SendWelcomeMessage()
+        {
+            ModAPI.Chat.Output("#o#__________________________________________");
+            ModAPI.Chat.Output(string.Join("#n#", _settingsHandler.Language.WELCOME_MESSAGE));
+            ModAPI.Chat.Output("#o#__________________________________________");
         }
     }
 }

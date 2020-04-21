@@ -40,6 +40,7 @@ namespace TDS_Client.Handler
             _settingsHandler = settingsHandler;
 
             eventsHandler.ChatInputToggled += EventsHandler_ChatInputToggled;
+            eventsHandler.CursorToggleRequested += b => Visible = b;
 
             bindsHandler.Add(Key.End, ManuallyToggleCursor);
         }

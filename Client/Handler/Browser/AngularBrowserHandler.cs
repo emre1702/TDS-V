@@ -18,15 +18,13 @@ namespace TDS_Client.Handler.Browser
 {
     public class AngularBrowserHandler : BrowserHandlerBase
     {
-        private readonly SettingsHandler _settingsHandler;
-        private readonly CursorHandler _cursorHandler;
+        private readonly EventsHandler _eventsHandler;
 
-        public AngularBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler, Serializer serializer, 
+        public AngularBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, 
             EventsHandler eventsHandler)
             : base(modAPI, loggingHandler, serializer, Constants.AngularMainBrowserPath)
         {
-            _settingsHandler = settingsHandler;
-            _cursorHandler = cursorHandler;
+            _eventsHandler = eventsHandler;
 
             modAPI.Chat.SafeMode = false;
             modAPI.Chat.Show(false);
@@ -41,7 +39,6 @@ namespace TDS_Client.Handler.Browser
             eventsHandler.ChatInputToggled += ToggleChatOpened;
 
             modAPI.Event.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
-            modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
             modAPI.Event.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
             modAPI.Event.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
 
@@ -50,16 +47,6 @@ namespace TDS_Client.Handler.Browser
         public override void SetReady(params object[] args)
         {
             base.SetReady(args);
-
-            SendWelcomeMessage();
-        }
-
-
-        private void SendWelcomeMessage()
-        {
-            ModAPI.Chat.Output("#o#__________________________________________");
-            ModAPI.Chat.Output(string.Join("#n#", _settingsHandler.Language.WELCOME_MESSAGE));
-            ModAPI.Chat.Output("#o#__________________________________________");
         }
 
         public void LoadLanguage(ILanguage language)
@@ -120,7 +107,7 @@ namespace TDS_Client.Handler.Browser
 
         public void ToggleLobbyChoiceMenu(bool activated)
         {
-            _cursorHandler.Visible = activated;
+            _eventsHandler.OnCursorToggleRequested(activated);
             Execute(ToBrowserEvent.ToggleLobbyChoice, activated);
         }
 
@@ -273,15 +260,6 @@ namespace TDS_Client.Handler.Browser
         {
             string pw = Convert.ToString(args[0]);
             GetHashedPasswordReturn(SharedUtils.HashPWClient(pw));
-        }
-
-        private void OnSyncSettingsMethod(object[] args)
-        {
-            string json = (string)args[0];
-            var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
-            _settingsHandler.LoadUserSettings(settings);
-            LoadUserpanelData((int)UserpanelLoadDataType.SettingsNormal, json);
-            LoadChatSettings(settings.ChatWidth, settings.ChatMaxHeight, settings.ChatFontSize, settings.HideDirtyChat);
         }
 
         private void OnToBrowserEventMethod(object[] args)

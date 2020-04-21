@@ -16,12 +16,12 @@ namespace TDS_Client.Handler.Browser
         public MapCreatorVehicleChoiceBrowserHandler MapCreatorVehicleChoice { get; }
         public PlainMainBrowserHandler PlainMain { get; }
 
-        public BrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler, EventsHandler eventsHandler, 
+        public BrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, 
             Serializer serializer, RemoteEventsSender remoteEventsSender)
             : base(modAPI, loggingHandler)
         {
-            Angular = new AngularBrowserHandler(modAPI, loggingHandler, settingsHandler, cursorHandler, serializer, eventsHandler);
-            RegisterLogin = new RegisterLoginBrowserHandler(modAPI, loggingHandler, serializer, settingsHandler);
+            Angular = new AngularBrowserHandler(modAPI, loggingHandler, serializer, eventsHandler);
+            RegisterLogin = new RegisterLoginBrowserHandler(modAPI, loggingHandler, serializer);
             MapCreatorObjectChoice = new MapCreatorObjectChoiceBrowserHandler(modAPI, loggingHandler, serializer);
             MapCreatorVehicleChoice = new MapCreatorVehicleChoiceBrowserHandler(modAPI, loggingHandler, serializer);
             PlainMain = new PlainMainBrowserHandler(modAPI, loggingHandler, serializer, remoteEventsSender, eventsHandler);
