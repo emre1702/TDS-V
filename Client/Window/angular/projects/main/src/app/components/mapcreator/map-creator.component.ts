@@ -76,6 +76,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.isLobbyOwnerChanged.bind(this));
+
+        this.isLobbyOwnerChanged();
     }
 
     ngOnDestroy() {
@@ -181,11 +183,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     private isLobbyOwnerChanged() {
         if (this.settings.IsLobbyOwner) {
-            this.nameControl.enable();
-            this.mapTypeControl.enable();
+            this.nameControl.enable({ onlySelf: false });
+            this.mapTypeControl.enable({ onlySelf: false });
         } else {
-            this.nameControl.disable();
-            this.mapTypeControl.disable();
+            this.nameControl.disable({ onlySelf: false });
+            this.mapTypeControl.disable({ onlySelf: false });
         }
 
         this.changeDetector.detectChanges();
