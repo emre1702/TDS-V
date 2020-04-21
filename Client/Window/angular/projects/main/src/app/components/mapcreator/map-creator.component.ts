@@ -120,11 +120,14 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     private RemovePositionInMapCreatorBrowser(id: number, type: MapCreatorPositionType) {
         switch (type) {
             case MapCreatorPositionType.TeamSpawn:
-                for (const list of this.data[6]) {
-                    const teamSpawnPos = list.find(p => p[0] === id);
+                for (let i = 0; i < this.data[6].length; ++i) {
+                    const teamSpawnPos = this.data[6][i].find(p => p[0] === id);
                     if (teamSpawnPos) {
+                        const prevEditingTeam = this.editingTeamNumber;
+                        this.editingTeamNumber = i;
                         this.selectedPosition = teamSpawnPos;
                         this.removePosFromTeamSpawns();
+                        this.editingTeamNumber = prevEditingTeam;
                         break;
                     }
                 }

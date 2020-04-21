@@ -148,18 +148,9 @@ namespace TDS_Client.Handler.MapCreator
             }
             var dtoList = objects.Select(o => o.GetDto()).ToList();
             string json = _serializer.ToServer(dtoList);
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncAllObjects, tdsPlayerId, json);
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncAllObjects, tdsPlayerId, json, _mapCreatorObjectsHandler.IdCounter);
 
             // Todo: Add P2P here as alternative (if activated, else with server)
-        }
-
-        public void SyncAllObjectsFromLobbyOwner(MapCreateDataDto data)
-        {
-            foreach (var dto in data.AllPositions)
-            {
-                var newObj = _mapCreatorObjectsHandler.FromDto(dto);
-                _mapCreatorObjectsHandler.IdCounter = Math.Max(_mapCreatorObjectsHandler.IdCounter, newObj.ID);
-            }
         }
         #endregion All objects
 
@@ -180,7 +171,7 @@ namespace TDS_Client.Handler.MapCreator
         {
             string json = Convert.ToString(args[0]);
             var data = _serializer.FromServer<MapCreateDataDto>(json);
-            SyncAllObjectsFromLobbyOwner(data);
+            _mapCreatorObjectsHandler.LoadMap(data, (int)args[1]);
             _browserHandler.Angular.LoadMapForMapCreator(json);
         }
 

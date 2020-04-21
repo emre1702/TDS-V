@@ -249,9 +249,11 @@ namespace TDS_Client.Handler.MapCreator
             return obj;
         }
 
-        public void LoadMap(MapCreateDataDto map)
+        public void LoadMap(MapCreateDataDto map, int lastId)
         {
             Stop();
+
+            IdCounter = lastId;
 
             if (map.MapCenter != null)
             {
@@ -376,8 +378,9 @@ namespace TDS_Client.Handler.MapCreator
             string json = (string)args[0];
             _browserHandler.Angular.LoadMapForMapCreator(json);
 
+            int lastId = (int)args[0];
             var mapCreatorData = _serializer.FromServer<MapCreateDataDto>(json);
-            LoadMap(mapCreatorData);
+            LoadMap(mapCreatorData, lastId);
         }
     }
 }

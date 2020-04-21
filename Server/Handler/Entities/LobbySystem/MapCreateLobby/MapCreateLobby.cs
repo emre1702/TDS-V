@@ -95,7 +95,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _lastId = _posById.Keys.Max();
 
             string json = Serializer.ToBrowser(dto);
-            ModAPI.Sync.SendEvent(this, ToClientEvent.LoadMapForMapCreator, json);
+            ModAPI.Sync.SendEvent(this, ToClientEvent.LoadMapForMapCreator, json, _lastId);
         }
     }
 }

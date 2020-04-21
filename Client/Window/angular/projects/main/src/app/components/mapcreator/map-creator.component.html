@@ -42,8 +42,8 @@
                     (click)="switchToMapLimitEdit()">
                     {{ 'MapLimit' | language: settings.Lang }} *
                 </button>
-                <button class="two-per-row-div" mat-raised-button *ngIf="data[2] != mapType.Gangwar"
-                    (click)="switchToMapCenterEdit()">
+                <button class="two-per-row-div" mat-raised-button *ngIf="mapTypeControl.value != mapType.Gangwar"
+                    (click)="switchToMapCenterEdit()" [disabled]="!settings.IsLobbyOwner">
                     {{ 'MapCenter' | language: settings.Lang }}
                 </button>
                 <button class="two-per-row-div" mat-raised-button (click)="switchToObjects()">
@@ -52,11 +52,12 @@
                 <button class="two-per-row-div" mat-raised-button (click)="switchToVehicles()">
                     {{ 'Vehicles' | language: settings.Lang }}
                 </button>
-                <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == mapType.Bomb"
+                <button class="two-per-row-div" mat-raised-button *ngIf="mapTypeControl.value == mapType.Bomb"
                     [color]="isBombPlacesValid() ? 'primary' : 'warn'" (click)="switchToBombPlacesEdit()">
                     {{ 'BombPlaces' | language: settings.Lang }} *
                 </button>
-                <button class="two-per-row-div" mat-raised-button *ngIf="data[2] == mapType.Gangwar"
+                <button class="two-per-row-div" mat-raised-button *ngIf="mapTypeControl.value == mapType.Gangwar"
+                    [disabled]="!settings.IsLobbyOwner"
                     [color]="isTargetValid() ? 'primary' : 'warn'" (click)="switchToTargetEdit()">
                     {{ 'Target' | language: settings.Lang }} *
                 </button>

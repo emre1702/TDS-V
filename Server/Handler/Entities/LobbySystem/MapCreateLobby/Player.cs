@@ -23,7 +23,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (Players.Count > 1)
             {
-                player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap));
+                player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
             }
 
             return true;
