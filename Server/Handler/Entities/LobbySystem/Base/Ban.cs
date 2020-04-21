@@ -46,7 +46,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 ban = await dbContext.PlayerBans.FindAsync(target.Id, Entity.Id);
                 if (ban != null)
                 {
-                    ban.AdminId = admin.Entity?.Id ?? 0;
+                    ban.AdminId = admin.Entity?.Id ?? -1;
                     ban.Serial = serial;
                     ban.StartTimestamp = DateTime.UtcNow;
                     ban.EndTimestamp = endTime;
@@ -59,7 +59,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         PlayerId = target.Id,
                         LobbyId = Entity.Id,
                         Serial = serial,
-                        AdminId = admin.Entity?.Id ?? 0,
+                        AdminId = admin.Entity?.Id ?? -1,
                         EndTimestamp = endTime,
                         Reason = reason
                     };
