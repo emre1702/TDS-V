@@ -240,9 +240,9 @@ namespace TDS_Server.Handler.Commands
 
             try
             {
-                for (int i = 0; i < Math.Min(args!.Count, methoddata.ParameterInfos.Count); ++i)
+                for (int i = 0; i < Math.Min(args.Count, methoddata.ParameterInfos.Count); ++i)
                 {
-                    if (args is null || args[i] is null)
+                    if (args[i] is null)
                         continue;
 
                     var parameterInfo = methoddata.ParameterInfos[i];
@@ -314,6 +314,9 @@ namespace TDS_Server.Handler.Commands
             foreach (var methodData in commanddata.MethodDatas)
             {
                 var requiredLength = methodData.ParametersWithDefaultValueStartIndex ?? methodData.ParameterInfos.Count;
+                if (methodData.ToOneStringAfterParameterCount is { } && args.Count >= methodData.ToOneStringAfterParameterCount)
+                    return false;
+
                 if (args.Count == requiredLength)
                     return false;
             }
