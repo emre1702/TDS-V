@@ -120,8 +120,8 @@ namespace TDS_Server.Handler.Account
                                 || (ip is null || b.IP == ip)
                                 || (serial is null || b.Serial == serial)
                                 || (socialClubName is null || b.SCName == socialClubName)
-                                || (socialClubId is null || b.SCId == socialClubId)
-                                || (preventConnection is null || b.PreventConnection == preventConnection)))
+                                || (socialClubId is null || b.SCId == socialClubId))
+                                && (preventConnection is null || b.PreventConnection == preventConnection))
                             .FirstOrDefault()
             };
 
@@ -147,7 +147,8 @@ namespace TDS_Server.Handler.Account
                 return;
 
             int lobbyId = _lobbiesHandler.MainMenu.Id;
-            _cachedBans = await ExecuteForDBAsync(async dbContext => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).ToListAsync());
+            _cachedBans = await ExecuteForDBAsync(async dbContext 
+                => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
 
             _eventsHandler.OnLoadedServerBans();
         }
