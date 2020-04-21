@@ -1,6 +1,6 @@
-﻿#define loadWeaponDatas
-#define reloadArenaWeaponDamages
-#define reloadArenaWeaponHeadshots
+﻿//#define loadWeaponDatas
+//#define reloadArenaWeaponDamages
+//#define reloadArenaWeaponHeadshots
 
 using Microsoft.EntityFrameworkCore;
 using System;
