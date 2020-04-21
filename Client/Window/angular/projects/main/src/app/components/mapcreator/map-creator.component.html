@@ -12,7 +12,7 @@
                 hintLabel="{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}"
                 class="mat-form-field-with-hint">
                 <input name="name" #nameInput matInput placeholder="{{ 'Name' | language: settings.Lang }}"
-                    [formControl]="nameControl" type="text" />
+                    [formControl]="nameControl" type="text" (change)="onMapNameChange()" />
                 <mat-error *ngIf="nameControl.invalid">{{ getMinNameLength() }}-{{ getMaxNameLength() }}
                     {{ 'Chars' | language: settings.Lang }}</mat-error>
                 <mat-hint align="end">{{ nameInput.value?.length || 0 }}/{{getMaxNameLength()}}</mat-hint>

@@ -482,11 +482,18 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         return LanguageEnum[this.editingDescriptionLang];
     }
 
+    onMapNameChange() {
+        this.changeDetector.detectChanges();
+        const value = this.nameControl.value;
+        this.rageConnector.callServer(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Name, value);
+        this.data[1] = value;
+    }
+
     onMapTypeChange(event: MatSelectChange) {
         if (this.mapTypeControl.value == MapType.Bomb && event.value != MapType.Bomb) {
             this.data[8] = [];
         }
-        this.mapTypeControl.setValue(event.value);
+        this.data[2] = event.value;
         this.changeDetector.detectChanges();
         this.rageConnector.callServer(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Type, event.value);
     }
