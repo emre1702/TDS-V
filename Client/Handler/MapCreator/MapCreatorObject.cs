@@ -144,6 +144,9 @@ namespace TDS_Client.Handler.MapCreator
             }
         }
 
+        public bool IsMine() 
+            => _modAPI.LocalPlayer.RemoteId == OwnerRemoteId;
+
         public MapCreatorPosition GetDto()
         {
             return new MapCreatorPosition

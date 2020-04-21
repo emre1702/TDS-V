@@ -131,6 +131,8 @@ namespace TDS_Client.Handler.MapCreator
                 var obj = _mapCreatorObjectsHandler.GetByID(id);
                 if (obj == null || obj.Entity.IsNull)
                     return;
+                if (!obj.IsMine() && !_lobbyHandler.IsLobbyOwner)
+                    return;
 
                 HighlightObject(obj);
             }
@@ -141,7 +143,7 @@ namespace TDS_Client.Handler.MapCreator
             var obj = _mapCreatorObjectsHandler.GetByID(id);
             if (obj == null || obj.Entity.IsNull)
                 return;
-            if (obj.OwnerRemoteId != _modAPI.LocalPlayer.RemoteId && !_lobbyHandler.IsLobbyOwner)
+            if (!obj.IsMine() && !_lobbyHandler.IsLobbyOwner)
                 return;
 
             if (HoldingObject != null)
@@ -298,6 +300,9 @@ namespace TDS_Client.Handler.MapCreator
         private void HighlightObject()
         {
             var newHighlightedObject = GetHighlightingObject();
+            if (!newHighlightedObject.IsMine() && !_lobbyHandler.IsLobbyOwner)
+                return;
+
             HighlightObject(newHighlightedObject);
         }
 
