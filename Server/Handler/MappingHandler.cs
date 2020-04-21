@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Threading.Tasks;
+using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity.Player;
@@ -13,7 +14,7 @@ namespace TDS_Server.Handler
     {
         public IMapper Mapper { get; set; }
 
-        public MappingHandler(TDSPlayerHandler tdsPlayerHandler)
+        public MappingHandler(TDSPlayerHandler tdsPlayerHandler, DatabasePlayerHelper databasePlayerHelper)
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -26,9 +27,10 @@ namespace TDS_Server.Handler
                         str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1" || str.Equals("yes", StringComparison.CurrentCultureIgnoreCase));
 
                 cfg.CreateMap<string, DateTime?>().ConvertUsing<StringToDateTimeConverter>();
+                cfg.CreateMap<string, TimeSpan?>().ConvertUsing<StringToTimeSpanConverter>();
 
                 cfg.CreateMap<string, ITDSPlayer?>().ConvertUsing(new StringNameToPlayerConverter(tdsPlayerHandler));
-                cfg.CreateMap<string, Task<Players?>>().ConvertUsing<StringNameToDBPlayerConverter>();
+                cfg.CreateMap<string, Task<Players?>>().ConvertUsing(new StringNameToDBPlayerConverter(databasePlayerHelper));
 
                 cfg.CreateMap<IPlayer, ITDSPlayer?>().ConvertUsing(new IPlayerToITDSPlayerConverter(tdsPlayerHandler));
             });
@@ -38,12 +40,12 @@ namespace TDS_Server.Handler
         }
 
         public Type GetCorrectDestType(Type sourceType)
-        {
-            if (sourceType == typeof(Players))
-                return typeof(Task<Players?>);
-            if (sourceType == typeof(DateTime))
-                return typeof(DateTime?);
-            return sourceType;
-        }
+            => sourceType switch
+            {
+                Type player when player == typeof(Players) => typeof(Task<Players?>),
+                Type dateTime when dateTime == typeof(DateTime) => typeof(DateTime?),
+                Type dateTime when dateTime == typeof(TimeSpan) => typeof(TimeSpan?),
+                _ => sourceType
+            };
     }
 }
