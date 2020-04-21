@@ -22,7 +22,6 @@ textarea {
 }
 
 .positions-div {
-  height: 65vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -40,14 +39,7 @@ textarea {
     flex-direction: column;
     overflow: auto;
     height: auto !important;
-  }
-
- .mat-table-container {
-    max-height: 65%;
-  }
-
-  #team-spawns-top-row + .mat-table-container {
-    max-height: 55%;
+    max-height: 70vh;
   }
 
   .mat-table {
