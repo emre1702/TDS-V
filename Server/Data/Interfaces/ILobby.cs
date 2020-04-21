@@ -29,9 +29,9 @@ namespace TDS_Server.Data.Interfaces
         Task RemovePlayer(ITDSPlayer player);
         void UnbanPlayer(ITDSPlayer player, ITDSPlayer target, string reason);
         void SendAllPlayerLangMessage(Func<ILanguage, string> langGetter, ITeam? targetTeam = null);
-        Task BanPlayer(ITDSPlayer player, ITDSPlayer target, DateTime? length, string reason);
+        Task<PlayerBans?> BanPlayer(ITDSPlayer player, ITDSPlayer target, TimeSpan? length, string reason);
         void UnbanPlayer(ITDSPlayer player, Players dbTarget, string reason);
-        Task BanPlayer(ITDSPlayer player, Players dbTarget, DateTime? length, string reason, string? serial = null);
+        Task<PlayerBans?> BanPlayer(ITDSPlayer player, Players dbTarget, TimeSpan? length, string reason, string? serial = null);
         Task<bool> AddPlayer(ITDSPlayer iTDSPlayer, uint? teamIndex);
         void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder);
         void OnPlayerLoggedOut(ITDSPlayer tdsPlayer);

@@ -31,6 +31,11 @@ namespace TDS_Server.RAGEAPI.Entity
             get => _instance.Dimension;
             set => _instance.Dimension = value;
         }
+        public bool Exists
+             => _instance.Exists;
+
+        public bool IsNull 
+            => _instance.IsNull;
 
         public void AttachTo(ITDSPlayer player, PedBone bone, Position3D? positionOffset, Position3D? rotationOffset)
         {

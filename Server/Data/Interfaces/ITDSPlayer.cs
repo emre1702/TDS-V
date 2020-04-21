@@ -43,8 +43,6 @@ namespace TDS_Server.Data.Interfaces
         IGang Gang { get; set; }
         ITDSPlayer? Spectates { get; set; }
 
-        bool HandleBan(PlayerBans? ban);
-
         sbyte Lifes { get; set; }
         HashSet<ITDSPlayer> Spectators { get; }
         int Health { get; set; }

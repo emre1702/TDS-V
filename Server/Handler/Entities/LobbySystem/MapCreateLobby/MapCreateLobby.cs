@@ -13,6 +13,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Default;
 using TDS_Shared.Core;
+using TDS_Server.Handler.Account;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -22,15 +23,19 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
 
         public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
-            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, BonusBotConnectorClient bonusBotConnectorClient) 
-            : this(CreateEntity(player), dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, bonusBotConnectorClient) 
+            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, 
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler) 
+            : this(CreateEntity(player), dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, 
+                  eventsHandler, bonusBotConnectorClient, bansHandler) 
             { 
             
             }
 
         public MapCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
-            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, BonusBotConnectorClient bonusBotConnectorClient)
-            : base(entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, bonusBotConnectorClient)
+            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, 
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
+            : base(entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler, 
+                  bonusBotConnectorClient, bansHandler)
         {
 
         }

@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
@@ -29,9 +30,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public Arena(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler, BonusBotConnectorClient bonusBotConnectorClient)
+            IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler, 
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
             : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
-                  weaponDatasLoadingHandler, bonusBotConnectorClient)
+                  weaponDatasLoadingHandler, bonusBotConnectorClient, bansHandler)
         {
             _serviceProvider = serviceProvider;
             _mapsLoadingHandler = mapsLoadingHandler;
@@ -56,9 +58,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI,
             LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler,
             EventsHandler eventsHandler, IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler,
-            BonusBotConnectorClient bonusBotConnectorClient)
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
             : this(entity, true, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, mapsLoadingHandler, eventsHandler,
-                  serviceProvider, serverStatsHandler, weaponDatasLoadingHandler, bonusBotConnectorClient)
+                  serviceProvider, serverStatsHandler, weaponDatasLoadingHandler, bonusBotConnectorClient, bansHandler)
         {
             IsGangActionLobby = true;
             RemoveAfterOneRound = removeAfterOneRound;

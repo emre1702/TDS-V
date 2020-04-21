@@ -6,13 +6,16 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
+using TDS_Server.Database.Entity.Player;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Data
 {
     public static class Utils
     {
+#nullable enable
         public static string GetTimestamp()
         {
             return DateTime.UtcNow.ToString("s");
@@ -102,6 +105,48 @@ namespace TDS_Server.Data
             return int.TryParse(Convert.ToString(obj), out id);
         }
 
+        public static IEnumerable<string> SplitByLength(string str, int length)
+            => Enumerable
+                    .Range(0, str.Length / length)
+                    .Select(i => str.Substring(i * length, length));
+
+        public static List<string> SplitPartsByLength(string str, int length, string partLimiter = "\n")
+        {
+            var list = new List<string>();
+            var splitted = str.Split(partLimiter, StringSplitOptions.RemoveEmptyEntries);
+
+            string currentStr = string.Empty;
+            for (int i = 0; i < splitted.Length; ++i)
+            {
+                var part = splitted[i];
+                if (currentStr.Length + part.Length + partLimiter.Length <= length)
+                {
+                    if (currentStr.Length > 0)
+                        currentStr += partLimiter;
+                    currentStr += part;
+                }
+                else if (currentStr.Length == 0)
+                {
+                    var strList = SplitByLength(currentStr, length);
+                    for (int j = 0; j < strList.Count() - 1; ++j)
+                    {
+                        list.Add(strList.ElementAt(j));
+                    }
+                    currentStr = strList.Last();
+                }
+                else
+                {
+                    list.Add(currentStr);
+                    currentStr = part;
+                }
+            }
+            if (currentStr.Length > 0)
+                list.Add(currentStr);
+
+            return list;
+
+        }
+
 
         public static uint GetMsToNextHour()
         {
@@ -127,6 +172,29 @@ namespace TDS_Server.Data
             return (uint)(nextFullSecond - timeOfDay).TotalMilliseconds + 1;
         }
 
+        public static bool HandleBan(IPlayer modPlayer, PlayerBans? ban)
+        {
+            if (ban is null)
+                return true;
+
+            string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
+            string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
+            //todo Test line break and display
+
+            var splittedReason = Utils.SplitPartsByLength($"Banned!\nName: {ban.Player?.Name ?? modPlayer.Name}\nAdmin: {ban.Admin.Name}\nReason: {ban.Reason}\nEnd: {endstr} UTC\nStart: {startstr} UTC", 90);
+            foreach (var split in splittedReason)
+                modPlayer.SendNotification(split, true);
+
+            _ = new TDSTimer(() =>
+            {
+                if (!modPlayer.IsNull)
+                    modPlayer.Kick("Ban");
+            }, 3000, 1);
+
+
+            return false;
+        }
+
         /// <summary>
         /// Check if the name is valid
         /// </summary>
@@ -150,6 +218,7 @@ namespace TDS_Server.Data
             }
             return null;
         }
+
 
         private enum CharASCII : byte
         {

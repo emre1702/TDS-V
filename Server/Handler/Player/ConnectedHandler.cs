@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using TDS_Server.Core.Manager.PlayerManager;
+using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 
@@ -32,31 +37,31 @@ namespace TDS_Server.Handler.Player
             _eventsHandler.PlayerConnected += PlayerConnected;
         }
 
-        private async void PlayerConnected(ITDSPlayer player)
+        private async void PlayerConnected(IPlayer modPlayer)
         {
-            if (player.ModPlayer is null)
+            if (modPlayer is null)
                 return;
 
-            player.ModPlayer.Position = new Position3D(0, 0, 1000).Around(10);
-            player.ModPlayer.Freeze(true);
+            modPlayer.Position = new Position3D(0, 0, 1000).Around(10);
+            modPlayer.Freeze(true);
 
-            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, player.ModPlayer.IPAddress, player.ModPlayer.Serial, player.ModPlayer.SocialClubName,
-                player.ModPlayer.SocialClubId, false);
-            if (!player.HandleBan(ban))
+            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, modPlayer.IPAddress, modPlayer.Serial, modPlayer.SocialClubName,
+                modPlayer.SocialClubId, false);
+            if (!Utils.HandleBan(modPlayer, ban))
                 return;
 
-            var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player);
+            var playerIdName = await _databasePlayerHelper.GetPlayerIdName(modPlayer);
             if (playerIdName is null)
             {
-                player.SendEvent(ToClientEvent.StartRegisterLogin, player.ModPlayer.SocialClubName, false);
+                modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, modPlayer.SocialClubName, false);
                 return;
             }
 
             ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, playerIdName.Id);
-            if (!player.HandleBan(ban))
+            if (!Utils.HandleBan(modPlayer, ban))
                 return;
 
-            player.SendEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true);
+            modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true);
         }
     }
 }

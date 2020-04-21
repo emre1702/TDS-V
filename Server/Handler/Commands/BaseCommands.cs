@@ -2,6 +2,7 @@
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Sync;
@@ -21,10 +22,11 @@ namespace TDS_Server.Handler.Commands
         private readonly ILoggingHandler _loggingHandler;
         private readonly LangHelper _langHelper;
         private readonly DatabasePlayerHelper _databasePlayerHelper;
+        private readonly BansHandler _bansHandler;
 
         public BaseCommands(CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler, IModAPI modAPI, ChatHandler chatHandler,
             ISettingsHandler settingsHandler, Serializer serializer, InvitationsHandler invitationsHandler, ILoggingHandler loggingHandler, LangHelper langHelper,
-            DatabasePlayerHelper databasePlayerHelper)
+            DatabasePlayerHelper databasePlayerHelper, BansHandler bansHandler)
         {
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
             _lobbiesHandler = lobbiesHandler;
@@ -36,6 +38,7 @@ namespace TDS_Server.Handler.Commands
             _loggingHandler = loggingHandler;
             _langHelper = langHelper;
             _databasePlayerHelper = databasePlayerHelper;
+            _bansHandler = bansHandler;
         }
     }
 }

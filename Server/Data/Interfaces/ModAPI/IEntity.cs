@@ -11,6 +11,8 @@ namespace TDS_Server.Data.Interfaces.ModAPI
         Position3D Position { get; set; }
         Position3D Rotation { get; set; }
         uint Dimension { get; set; }
+        bool IsNull { get; }
+        bool Exists { get; }
 
         void Freeze(bool toggle, ILobby lobby);
         void SetCollisionsless(bool toggle, ILobby lobby);

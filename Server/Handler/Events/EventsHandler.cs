@@ -20,7 +20,6 @@ namespace TDS_Server.Handler.Events
 
         public delegate void PlayerDelegate(ITDSPlayer player);
 
-        public event PlayerDelegate? PlayerConnected;
         public event PlayerDelegate? PlayerLoggedIn;
 
         public event PlayerDelegate? PlayerLoggedOut;
@@ -35,6 +34,7 @@ namespace TDS_Server.Handler.Events
 
         public delegate void ModPlayerDelegate(IPlayer player);
         public event ModPlayerDelegate? PlayerDisconnected;
+        public event ModPlayerDelegate? PlayerConnected;
 
         public AsyncValueTaskEvent<ITDSPlayer>? PlayerLoggedOutBefore;
 
@@ -70,9 +70,9 @@ namespace TDS_Server.Handler.Events
             Update?.Invoke();
         }
 
-        public void OnPlayerConnected(ITDSPlayer tdsPlayer)
+        public void OnPlayerConnected(IPlayer modPlayer)
         {
-            PlayerConnected?.Invoke(tdsPlayer);
+            PlayerConnected?.Invoke(modPlayer);
         }
 
         public void OnPlayerDisconnected(IPlayer modPlayer)

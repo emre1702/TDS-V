@@ -13,6 +13,7 @@ using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Core;
+using TDS_Server.Handler.Account;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -24,9 +25,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler,
-            GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, WeaponDatasLoadingHandler weaponDatasLoadingHandler, BonusBotConnectorClient bonusBotConnectorClient)
+            GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, WeaponDatasLoadingHandler weaponDatasLoadingHandler, 
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
             : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
-                  bonusBotConnectorClient)
+                  bonusBotConnectorClient, bansHandler)
         {
             _gangwarAreasHandler = gangwarAreasHandler;
             _gangsHandler = gangsHandler;

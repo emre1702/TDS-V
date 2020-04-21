@@ -43,7 +43,7 @@ namespace TDS_Server.Handler.Account
                 ({ }, null, null, null, null, _)
                     => await ExecuteForDBAsync(async (dbContext) =>
                         {
-                            return await dbContext.PlayerBans.FindAsync(playerId, lobbyId);
+                            return await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.PlayerId == playerId && b.LobbyId == lobbyId);
                         }),
 
                 (_, _, _, _, _, true)
@@ -126,6 +126,18 @@ namespace TDS_Server.Handler.Account
             };
 
             return ban;
+        }
+
+        public void AddServerBan(PlayerBans ban)
+        {
+            _cachedBans.Add(ban);
+        }
+
+        public void RemoveServerBanByPlayerId(PlayerBans ban)
+        {
+            var banToRemove = _cachedBans.FirstOrDefault(b => b.LobbyId == ban.LobbyId && b.PlayerId == ban.PlayerId);
+            if (banToRemove is { })
+                _cachedBans.Remove(banToRemove);
         }
 
         private async void RemoveExpiredBans(int _)

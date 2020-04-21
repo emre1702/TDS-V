@@ -17,6 +17,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Core;
+using TDS_Server.Handler.Account;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -45,6 +46,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         protected readonly DataSyncHandler DataSyncHandler;
         protected readonly EventsHandler EventsHandler;
         protected readonly BonusBotConnectorClient BonusBotConnectorClient;
+        protected readonly BansHandler BansHandler;
 
         public Lobby(
             Lobbies entity,
@@ -59,7 +61,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             LangHelper langHelper,
             DataSyncHandler dataSyncHandler,
             EventsHandler eventsHandler,
-            BonusBotConnectorClient bonusBotConnectorClient) : base(dbContext, loggingHandler)
+            BonusBotConnectorClient bonusBotConnectorClient,
+            BansHandler bansHandler) : base(dbContext, loggingHandler)
         {
             Serializer = serializer;
             ModAPI = modAPI;
@@ -69,6 +72,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             DataSyncHandler = dataSyncHandler;
             EventsHandler = eventsHandler;
             BonusBotConnectorClient = bonusBotConnectorClient;
+            BansHandler = bansHandler;
 
             Entity = entity;
 
