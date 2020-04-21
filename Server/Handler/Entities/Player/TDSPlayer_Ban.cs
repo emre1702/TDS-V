@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+﻿using System.Globalization;
 using TDS_Server.Database.Entity.Player;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.Player
 {
@@ -16,7 +14,13 @@ namespace TDS_Server.Handler.Entities.Player
             string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
             //todo Test line break and display
-            ModPlayer?.Kick($"Banned!\nName: {ban.Player?.Name ?? DisplayName}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
+
+            ModPlayer?.SendNotification($"Banned!\nName: {ban.Player?.Name ?? DisplayName}\nAdmin: {ban.Admin.Name}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}", true);
+            new TDSTimer(() =>
+            {
+                ModPlayer?.Kick("Ban");
+            }, 2000, 1);
+
 
             return false;
         }
