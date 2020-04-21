@@ -378,7 +378,7 @@ namespace TDS_Client.Handler.MapCreator
             string json = (string)args[0];
             _browserHandler.Angular.LoadMapForMapCreator(json);
 
-            int lastId = (int)args[0];
+            int lastId = (int)args[1];
             var mapCreatorData = _serializer.FromServer<MapCreateDataDto>(json);
             LoadMap(mapCreatorData, lastId);
         }

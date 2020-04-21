@@ -15,14 +15,14 @@ namespace TDS_Client.Handler.MapCreator
 
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        private readonly IModAPI ModAPI;
+        private readonly IModAPI _modAPI;
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
         private readonly BrowserHandler _browserHandler;
 
         public MapCreatorVehiclesPreviewHandler(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
         {
-            ModAPI = modAPI;
+            _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
             _browserHandler = browserHandler;
@@ -36,17 +36,18 @@ namespace TDS_Client.Handler.MapCreator
 
         public void ShowVehicle(string vehicleName)
         {
-            var hash = ModAPI.Misc.GetHashKey(vehicleName);
+            var hash = _modAPI.Misc.GetHashKey(vehicleName);
             if (hash == default)
                 return;
 
+             _vehicleRotation = new Position3D();
             if (_vehicle == null)
-                ModAPI.Event.Tick.Add(_tickEventMethod);
+                _modAPI.Event.Tick.Add(_tickEventMethod);
             else
                 _vehicle.Destroy();
 
-            _vehicleRotation = new Position3D();
-            _vehicle = ModAPI.Vehicle.Create(hash, ModAPI.LocalPlayer.Position, _vehicleRotation, dimension: ModAPI.LocalPlayer.Dimension);
+           
+            _vehicle = _modAPI.Vehicle.Create(hash, _modAPI.LocalPlayer.Position, _vehicleRotation, dimension: _modAPI.LocalPlayer.Dimension);
             _vehicle.SetCollision(false, false);
             _vehicle.SetInvincible(true);
             _vehicle.Rotation = _vehicleRotation;
@@ -65,15 +66,17 @@ namespace TDS_Client.Handler.MapCreator
                 _vehicle.Destroy();
                 _vehicle = null;
                 _vehicleRotation = null;
-                ModAPI.Event.Tick.Remove(_tickEventMethod);
+                _modAPI.Event.Tick.Remove(_tickEventMethod);
             }
             _browserHandler.MapCreatorVehicleChoice.Stop();
         }
 
         private void RenderVehicleInFrontOfCam(int currentMs)
         {
-            var camPos = _camerasHandler.ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
-            var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(ModAPI.Cam.GetGameplayCamRot());
+            if (_vehicle is null)
+                return;
+            var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+            var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(_modAPI.Cam.GetGameplayCamRot());
 
             Position3D a = new Position3D();
             Position3D b = new Position3D();
