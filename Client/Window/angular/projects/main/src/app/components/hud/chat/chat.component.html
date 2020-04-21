@@ -5,7 +5,7 @@
         </div>
         <div id="chat_choice">
             <ng-container *ngFor="let body of chatBodies; let i = index">
-                <div *ngIf="body.name != 'Dirty' || settings.ChatHideDirtyChat"
+                <div *ngIf="body.name != 'Dirty' || !settings.ChatHideDirtyChat"
                 (click)="selectChatBody(i)"
                 [style.background-color]="selectedChatBody == i ? '#04074e' : '#A9A9A9'">
                     {{ body.name | language: settings.Lang }}
