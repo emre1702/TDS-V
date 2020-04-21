@@ -41,6 +41,8 @@ namespace TDS_Server.Handler
         {
             if (sourceType == typeof(Players))
                 return typeof(Task<Players?>);
+            if (sourceType == typeof(DateTime))
+                return typeof(DateTime?);
             return sourceType;
         }
     }
