@@ -314,7 +314,7 @@ namespace TDS_Server.Handler.Commands
             foreach (var methodData in commanddata.MethodDatas)
             {
                 var requiredLength = methodData.ParametersWithDefaultValueStartIndex ?? methodData.ParameterInfos.Count;
-                if (args.Count <= requiredLength)
+                if (args.Count == requiredLength)
                     return false;
             }
 
