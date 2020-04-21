@@ -251,6 +251,12 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     ChatFontSizeSettingInfo = "Schriftgröße im Chat";
     HideDirtyChatInfo = "Verstecke den 'dirty chat'";
     ShowCursorOnChatOpenInfo = "Zeige den Cursor beim Öffnen der Chat-Eingabe";
+    ChatWidth = "Chat Breite (%)";
+    ChatMaxHeight = "Chat Länge (%)";
+    ChatFontSize = "Chat Schriftgröße";
+    HideDirtyChat = "Verstecke den Dirty Chat";
+    ShowCursorOnChatOpen = "Zeige Cursor bei Chat";
+    WindowsNotifications = "Windows Benachrichtigungen";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

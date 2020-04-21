@@ -226,6 +226,12 @@ export interface Language {
     ChatFontSizeSettingInfo: string;
     HideDirtyChatInfo: string;
     ShowCursorOnChatOpenInfo: string;
+    ChatWidth: string;
+    ChatMaxHeight: string;
+    ChatFontSize: string;
+    HideDirtyChat: string;
+    ShowCursorOnChatOpen: string;
+    WindowsNotifications: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

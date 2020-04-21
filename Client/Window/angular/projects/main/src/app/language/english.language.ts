@@ -256,6 +256,12 @@ The user interface is always being worked on, so don't be surprised if you disco
     ChatFontSizeSettingInfo = "Font size in the chat";
     HideDirtyChatInfo = "Hide the dirty chat";
     ShowCursorOnChatOpenInfo = "Show the cursor when chat input is opened";
+    ChatWidth = "Chat width (%)";
+    ChatMaxHeight = "Chat height (%)";
+    ChatFontSize = "Chat font size";
+    HideDirtyChat = "Hide dirty chat";
+    ShowCursorOnChatOpen = "Show cursor on chat";
+    WindowsNotifications = "Windows notifications";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";
