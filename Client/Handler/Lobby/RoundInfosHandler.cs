@@ -69,6 +69,8 @@ namespace TDS_Client.Handler.Lobby
 
         private void EventsHandler_CountdownStarted(bool isSpectator)
         {
+            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
+                return;
             if (isSpectator)
                 return;
             ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.COUNTDOWN_STARTED_NOTIFICATION, "TDS-V", 4000);
@@ -76,6 +78,8 @@ namespace TDS_Client.Handler.Lobby
 
         private void EventsHandler_RoundStarted(bool isSpectator)
         {
+            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
+                return;
             if (isSpectator)
                 return;
             ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.ROUND_STARTED_NOTIFICATION, "TDS-V", 4000);
@@ -84,7 +88,8 @@ namespace TDS_Client.Handler.Lobby
         private void EventsHandler_RoundEnded(bool isSpectator)
         {
             Stop();
-
+            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
+                return;
             if (isSpectator)
                 return;
             ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.ROUND_ENDED_NOTIFICATION, "TDS-V", 4000);
