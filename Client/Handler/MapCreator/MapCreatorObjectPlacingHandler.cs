@@ -331,7 +331,7 @@ namespace TDS_Client.Handler.MapCreator
 
         private MapCreatorObject GetHighlightingObject()
         {
-            var hit = GetCursorHit(300, _modAPI.LocalPlayer.Handle, 8 | 16).Item1;
+            var hit = GetCursorHit(300, _modAPI.LocalPlayer.Handle, 2 | 8 | 16).Item1;
             if (!hit.Hit)
                 return null;
             if (hit.EntityHit == 0)
