@@ -216,6 +216,11 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         }
     ];
 
+    private originalChatWidth: string;
+    private originalChatHeight: string;
+    private originalChatFontSize: string;
+    private originalHideDirtyChat: boolean;
+
     constructor(
         public settings: SettingsService,
         private userpanelService: UserpanelService,
@@ -234,6 +239,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.userpanelService.settingsNormalLoaded.off(null, this.loadSettings.bind(this));
+
+        this.overrideLoadedSettingsWithCurrentSettings();
     }
 
     private voiceVolumeSettingChanged(key: UserpanelSettingKey) {
@@ -259,6 +266,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             }
         }
 
+        this.overrideLoadedSettingsWithCurrentSettings();
+
         const json = JSON.stringify(this.userpanelService.allSettingsNormal);
         this.rageConnector.callServer(DToServerEvent.SaveSettings, json);
 
@@ -266,6 +275,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
     }
 
     revertAll() {
+        this.overrideLoadedSettingsWithCurrentSettings();
+
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
                 this.userpanelService.allSettingsNormal[row.dataSettingIndex] = row.initialValue;
@@ -282,10 +293,16 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 row.formControl.setValue(row.defaultValue, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
             }
         }
+        this.onChatSettingsChanged(UserpanelSettingKey.ChatWidth);
+        this.onChatSettingsChanged(UserpanelSettingKey.ChatMaxHeight);
+        this.onChatSettingsChanged(UserpanelSettingKey.ChatFontSize);
+        this.onChatSettingsChanged(UserpanelSettingKey.HideDirtyChat);
         this.changeDetector.detectChanges();
     }
 
     private loadSettings() {
+        this.overrideCurrentSettingsWithLoadedSettings();
+
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
                 const value = this.userpanelService.allSettingsNormal[row.dataSettingIndex];
@@ -329,5 +346,19 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 break;
         }
         this.settings.triggerChatSettingsChanged();
+    }
+
+    private overrideLoadedSettingsWithCurrentSettings() {
+        this.settings.ChatWidth = this.originalChatWidth;
+        this.settings.ChatMaxHeight = this.originalChatHeight;
+        this.settings.ChatFontSize = this.originalChatFontSize;
+        this.settings.ChatHideDirtyChat = this.originalHideDirtyChat;
+    }
+
+    private overrideCurrentSettingsWithLoadedSettings() {
+        this.originalChatWidth = this.settings.ChatWidth;
+        this.originalChatHeight = this.settings.ChatMaxHeight;
+        this.originalChatFontSize = this.settings.ChatFontSize;
+        this.originalHideDirtyChat = this.settings.ChatHideDirtyChat;
     }
 }
