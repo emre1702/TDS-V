@@ -353,6 +353,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         this.settings.ChatMaxHeight = this.originalChatHeight;
         this.settings.ChatFontSize = this.originalChatFontSize;
         this.settings.ChatHideDirtyChat = this.originalHideDirtyChat;
+
+        this.settings.triggerChatSettingsChanged();
     }
 
     private overrideCurrentSettingsWithLoadedSettings() {
