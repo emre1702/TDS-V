@@ -101,7 +101,7 @@ namespace TDS_Client.Handler.MapCreator
                     return GetObject(objName, MapCreatorPositionType.Object, playerRemoteId, objName);
                 case MapCreatorPositionType.Vehicle:
                     string vehName = (string)editingTeamIndexOrObjVehName;
-                    return GetObject(vehName, MapCreatorPositionType.Vehicle, playerRemoteId, vehName);
+                    return GetVehicle(vehName, playerRemoteId, null, vehName: vehName);
             }
             return null;
         }
@@ -190,9 +190,12 @@ namespace TDS_Client.Handler.MapCreator
             return GetObject(Constants.TargetHashName, MapCreatorPositionType.Target, playerRemoteId, id: id);
         }
 
-        public MapCreatorObject GetVehicle(uint hash, ushort playerRemoteId, string vehName = null, int id = -1)
+        public MapCreatorObject GetVehicle(string hashName, ushort playerRemoteId, Position3D pos = null, Position3D rot = null, string vehName = null, int id = -1)
         {
-            var vehicle = _modAPI.Vehicle.Create(hash, _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation, "Map", locked: true, dimension: _modAPI.LocalPlayer.Dimension);
+            uint hash = _modAPI.Misc.GetHashKey(hashName);
+            var vehicle = _modAPI.Vehicle.Create(hash, pos ?? _modAPI.LocalPlayer.Position, rot ?? _modAPI.LocalPlayer.Rotation, "Map", 
+                locked: true, dimension: _modAPI.LocalPlayer.Dimension);
+            vehicle.FreezePosition(true);
             var mapCreatorObj = new MapCreatorObject(_modAPI, this, _eventsHandler, vehicle, MapCreatorPositionType.Vehicle, playerRemoteId, objectName: vehName, id: id);
             _cacheMapEditorObjects[vehicle] = mapCreatorObj;
             return mapCreatorObj;
@@ -308,9 +311,9 @@ namespace TDS_Client.Handler.MapCreator
                 foreach (var vehPos in map.Vehicles)
                 {
                     string vehName = Convert.ToString(vehPos.Info);
-                    var obj = GetVehicle(_modAPI.Misc.GetHashKey(vehName), vehPos.OwnerRemoteId, vehName, vehPos.Id);
-                    obj.Freeze(true);
-                    obj.LoadPos(vehPos);
+                    GetVehicle(vehName, vehPos.OwnerRemoteId, new Position3D(vehPos), 
+                        new Position3D(vehPos.RotX, vehPos.RotY, vehPos.RotZ), vehName, vehPos.Id);
+                    //obj.Freeze(true); already done in GetVehicle
                 }
             }
 
