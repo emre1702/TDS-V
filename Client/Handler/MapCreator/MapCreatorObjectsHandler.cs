@@ -196,6 +196,7 @@ namespace TDS_Client.Handler.MapCreator
             var vehicle = _modAPI.Vehicle.Create(hash, pos ?? _modAPI.LocalPlayer.Position, rot ?? _modAPI.LocalPlayer.Rotation, "Map", 
                 locked: true, dimension: _modAPI.LocalPlayer.Dimension);
             vehicle.FreezePosition(true);
+            vehicle.SetCollision(false, true);
             var mapCreatorObj = new MapCreatorObject(_modAPI, this, _eventsHandler, vehicle, MapCreatorPositionType.Vehicle, playerRemoteId, objectName: vehName, id: id);
             _cacheMapEditorObjects[vehicle] = mapCreatorObj;
             return mapCreatorObj;
