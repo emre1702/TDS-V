@@ -146,7 +146,8 @@ textarea {
 .positions-bottom-row {
   position: relative;
   vertical-align: bottom;
-  width: 90%;
+  margin-top: 10px;
+  width: 100%;
   overflow-x: hidden;
   flex-wrap: wrap;
   text-align: center;
