@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef, HostListener } from '@angular/core';
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
@@ -34,11 +34,11 @@ import { DToClientEvent } from './enums/DToClientEvent.enum';
     ],
 })
 export class AppComponent {
-    started = false;
+    started = true;
 
-    showMapCreator = false;
+    showMapCreator = true;
     showFreeroam = false;
-    showLobbyChoice = true;
+    showLobbyChoice = false;
     showTeamChoice = false;
     showRankings = false;
     showHUD = false;
@@ -116,5 +116,12 @@ export class AppComponent {
         });
 
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
+    }
+
+    @HostListener("window:keydown", ["$event"])
+    keyboardInput(event: KeyboardEvent) {
+        if (event.ctrlKey && event.key === "KeyA") {
+            event.preventDefault();
+        }
     }
 }

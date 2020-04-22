@@ -19,10 +19,10 @@
     </div>-->
 
     <div class="container mat-elevation-z8 mat-app-background challenges" cdkDrag>
-        <mat-toolbar color="primary" cdkDragHandle>
+        <mat-toolbar color="primary" cdkDragHandle [closeOnDoubleClick]="content">
             {{ 'Challenges' | language: settings.Lang }}
         </mat-toolbar>
-        <div class="challenges-content">
+        <div #content class="challenges-content">
             <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
                 <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">{{ timeToNextWeeklyChallengesRestartInfo }}:</div>
                 <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Forever">{{ 'NoTimeLimit' | language: settings.Lang }}:</div>

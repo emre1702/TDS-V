@@ -1,8 +1,8 @@
 <form class="container mat-elevation-z24 mat-app-background" cdkDrag>
-  <mat-toolbar color="primary" cdkDragHandle>
+  <mat-toolbar color="primary" cdkDragHandle [closeOnDoubleClick]="content">
     <h1>{{ currentTitle | language: settings.Lang }}</h1>
   </mat-toolbar>
-  <div id="container-content">
+  <div id="container-content" #content>
 
     <div id="teleport-container">
       <div id="teleport-position-container">

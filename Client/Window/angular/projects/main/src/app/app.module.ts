@@ -85,6 +85,7 @@ import { CustomLobbyMapsMenuComponent } from './components/lobbychoice/custom-lo
 import { ChatComponent } from './components/hud/chat/chat.component';
 import { MentionModule } from 'angular-mentions';
 import { CustomLobbyWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-weapons-menu/custom-lobby-weapons-menu.component';
+import { ToolbarDirective } from './extensions/toolbarDirective';
 
 @NgModule({
   declarations: [
@@ -117,6 +118,7 @@ import { CustomLobbyWeaponsMenuComponent } from './components/lobbychoice/custom
 
     InputTypeDirective,
     TextareaTypeDirective,
+    ToolbarDirective,
     RankingComponent,
     CustomLobbyTeamsMenuComponent,
     UserpanelApplicationsComponent,

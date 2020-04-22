@@ -1,12 +1,12 @@
 <form class="container mat-elevation-z8 mat-app-background" cdkDrag>
-    <mat-toolbar color="primary" cdkDragHandle>
+    <mat-toolbar color="primary" cdkDragHandle [closeOnDoubleClick]="content">
         <mat-icon id="go-back-nav" (click)="currentTitle='MapCreator'; goBackNav()" *ngIf="isBackableNav()">arrow_back
         </mat-icon>
         <h1>{{ currentTitle | language: settings.Lang }}</h1>
         <mat-icon id="save-nav" (click)="currentTitle='MapCreator'; saveNav()" *ngIf="isSaveableNav()">save</mat-icon>
     </mat-toolbar>
 
-    <div id="container-content">
+    <div #content id="container-content">
         <div id="main-content" *ngIf="currentNav == mapCreatorNav.Main">
             <mat-form-field color="accent"
                 hintLabel="{{ getMinNameLength() }}-{{ getMaxNameLength() }} {{ 'Chars' | language: settings.Lang }}"
@@ -19,8 +19,7 @@
             </mat-form-field>
             <div class="two-per-row-container" color="accent">
                 <mat-select name="mapType" class="two-per-row-div mat-select-without-field mat-raised-button" required
-                    [formControl]="mapTypeControl" (selectionChange)="onMapTypeChange($event)"
-                    [disabled]="!settings.IsLobbyOwner">
+                    [formControl]="mapTypeControl" (selectionChange)="onMapTypeChange($event)">
                     <mat-option *ngFor="let type of getMapTypes()" [value]="getMapTypeValue(type)">
                         {{ type | language: settings.Lang }}
                     </mat-option>

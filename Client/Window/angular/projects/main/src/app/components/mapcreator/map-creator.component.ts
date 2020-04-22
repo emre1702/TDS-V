@@ -67,7 +67,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private snackBar: MatSnackBar) {
         this.rageConnector.listen(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
-        this.rageConnector.listen(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.RemovePositionInMapCreatorBrowser.bind(this));
+        this.rageConnector.listen(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.removePositionInMapCreatorBrowser.bind(this));
         this.rageConnector.listen(DFromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
     }
 
@@ -119,7 +119,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-    private RemovePositionInMapCreatorBrowser(id: number, type: MapCreatorPositionType) {
+    private removePositionInMapCreatorBrowser(id: number, type: MapCreatorPositionType) {
         switch (type) {
             case MapCreatorPositionType.TeamSpawn:
                 for (let i = 0; i < this.data[6].length; ++i) {
