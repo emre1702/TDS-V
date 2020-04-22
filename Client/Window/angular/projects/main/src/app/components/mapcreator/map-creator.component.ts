@@ -501,12 +501,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     onEditingTeamNumberChange(event: MatSelectChange) {
-        if (event.value == "+" && !this.data[6][this.data[6].length - 1].length) {
+        if (event.value == "+" && (this.data[6].length == 0 || this.data[6][this.data[6].length - 1].length) && this.settings.IsLobbyOwner) {
+            this.data[6] = [...this.data[6], []];
             this.editingTeamNumber = this.data[6].length - 1;
         } else if (event.value == "+") {
-            if (!this.settings.IsLobbyOwner)
-                return;
-            this.data[6] = [...this.data[6], []];
             this.editingTeamNumber = this.data[6].length - 1;
         } else
             this.editingTeamNumber = event.value;
