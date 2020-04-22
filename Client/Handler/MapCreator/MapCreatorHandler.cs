@@ -79,6 +79,7 @@ namespace TDS_Client.Handler.MapCreator
             Freecam.ToggleFreecam();
             Objects.Start();
             Marker.Start();
+            Sync.Start();
         }
 
         public void Stop()
@@ -91,6 +92,7 @@ namespace TDS_Client.Handler.MapCreator
             _browserHandler.Angular.ToggleFreeroam(false);
             Objects.Stop();
             Marker.Stop();
+            Sync.Stop();
             ObjectsPreview.Stop();
             VehiclePreview.Stop();
         }
