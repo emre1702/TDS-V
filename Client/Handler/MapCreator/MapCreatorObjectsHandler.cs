@@ -233,7 +233,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void Delete(MapCreatorObject obj, bool syncToServer = true)
         {
-            if (!CanEditObject(obj))
+            if (!CanEditObject(obj) && syncToServer)
                 return;
             _cacheMapEditorObjects.Remove(obj.Entity);
             obj.Delete(syncToServer);
