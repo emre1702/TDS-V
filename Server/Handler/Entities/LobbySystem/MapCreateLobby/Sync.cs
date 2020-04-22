@@ -50,7 +50,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncObjectPosition(ITDSPlayer player, string json)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player).ToList(),
+            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player),
                 ToClientEvent.MapCreatorSyncObjectPosition, json);
 
             var pos = Serializer.FromClient<MapCreatorPosData>(json);

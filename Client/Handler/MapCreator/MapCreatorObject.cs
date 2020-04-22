@@ -133,6 +133,11 @@ namespace TDS_Client.Handler.MapCreator
             Entity.FreezePosition(toggle);
         }
 
+        public void SetCollision(bool toggle, bool keepPhysics)
+        {
+            Entity.SetCollision(toggle, keepPhysics);
+        }
+
         public void Delete(bool syncToServer)
         {
             Entity.Destroy();

@@ -332,6 +332,19 @@ namespace TDS_Client.Handler.MapCreator
                 }
             }
 
+            foreach (var obj in GetAll())
+                obj.IsSynced = true;
+
+            new TDSTimer(() =>
+            {
+                foreach (var obj in GetAll())
+                {
+                    obj.Freeze(true);
+                    obj.SetCollision(false, true);
+                }
+                    
+            }, 3000);
+
             Start();
         }
 

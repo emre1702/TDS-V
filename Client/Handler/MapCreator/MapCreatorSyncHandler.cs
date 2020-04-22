@@ -104,9 +104,9 @@ namespace TDS_Client.Handler.MapCreator
         #region New object
         public void SyncNewObjectToLobby(MapCreatorObject obj)
         {
-            obj.IsSynced = true;
             if (!HasToSync)
                 return;
+            obj.IsSynced = true;
             var dto = obj.GetDto();
             var json = _serializer.ToServer(dto);
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncNewObject, json);

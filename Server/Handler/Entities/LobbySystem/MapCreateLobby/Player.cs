@@ -21,8 +21,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.ModPlayer?.SetInvincible(true);
             player.ModPlayer?.Freeze(false);
 
-            if (Players.Count > 1)
+            if (Players.Count == 2)
             {
+                player.SendEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Id);
+            } 
+            else if (Players.Count > 2) 
+            { 
                 player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
             }
 
