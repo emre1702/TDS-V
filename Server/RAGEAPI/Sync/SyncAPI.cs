@@ -26,7 +26,7 @@ namespace TDS_Server.RAGEAPI.Sync
             NAPI.ClientEvent.TriggerClientEventInDimension(lobby.Dimension, eventName, args);
         }
 
-        public void SendEvent(ICollection<ITDSPlayer> players, string eventName, params object[] args)
+        public void SendEvent(IEnumerable<ITDSPlayer> players, string eventName, params object[] args)
         {
             NAPI.ClientEvent.TriggerClientEventToPlayers(players.Select(p => p.ModPlayer).OfType<Player.Player>().Select(p => p._instance).ToArray(), eventName, args);
         }

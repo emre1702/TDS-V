@@ -68,7 +68,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncRemoveObject(ITDSPlayer player, int objId)
         {
-            ModAPI.Sync.SendEvent(this, ToClientEvent.MapCreatorSyncObjectRemove, objId);
+            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player), ToClientEvent.MapCreatorSyncObjectRemove, objId);
 
             if (!_posById.ContainsKey(objId))
                 return;
@@ -83,7 +83,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
         {
-            ModAPI.Sync.SendEvent(this, ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
+            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player), ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
 
             foreach (var entry in _posById)
             {

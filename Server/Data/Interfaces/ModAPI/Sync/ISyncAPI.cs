@@ -33,7 +33,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Sync
         /// <param name="players"></param>
         /// <param name="eventName"></param>
         /// <param name="args"></param>
-        void SendEvent(ICollection<ITDSPlayer> players, string eventName, params object[] args);
+        void SendEvent(IEnumerable<ITDSPlayer> players, string eventName, params object[] args);
 
         /// <summary>
         /// Sends an event to every player in a team.
