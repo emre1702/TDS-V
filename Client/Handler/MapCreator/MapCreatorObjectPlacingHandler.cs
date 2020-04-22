@@ -300,7 +300,7 @@ namespace TDS_Client.Handler.MapCreator
         private void HighlightObject()
         {
             var newHighlightedObject = GetHighlightingObject();
-            if (!newHighlightedObject.IsMine() && !_lobbyHandler.IsLobbyOwner)
+            if (newHighlightedObject != null && !newHighlightedObject.IsMine() && !_lobbyHandler.IsLobbyOwner)
                 return;
 
             HighlightObject(newHighlightedObject);

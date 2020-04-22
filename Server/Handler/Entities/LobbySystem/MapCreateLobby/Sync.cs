@@ -78,6 +78,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             else if (data.Type == MapCreatorPositionType.Target)
                 _currentMap.Target = null;
             GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
+            _posById.Remove(objId);
         }
 
         public void SyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
@@ -88,7 +89,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 if (entry.Value.Type != MapCreatorPositionType.TeamSpawn)
                     continue;
-                if (entry.Value.Info.ToString() != teamNumber.ToString())
+                if ((int)entry.Value.Info != teamNumber)
                     continue;
 
                 GetListInCurrentMapForMapType(entry.Value.Type, entry.Value.Info)?.Remove(entry.Value);

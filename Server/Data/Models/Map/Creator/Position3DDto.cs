@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Xml.Serialization;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Models.Map.Creator;
 
@@ -35,14 +36,18 @@ namespace TDS_Server.Data.Models.Map.Creator
             Z = pos.Z;
         }
 
-        public MapCreatorPosition ToMapCreatorPosition(int id)
+        #nullable enable
+        public MapCreatorPosition ToMapCreatorPosition(int id, MapCreatorPositionType type, object? info = null, ushort ownerRemoteId = 0)
         {
             return new MapCreatorPosition
             {
                 Id = id,
+                Type = type,
+                Info = info,
                 PosX = X,
                 PosY = Y,
-                PosZ = Z
+                PosZ = Z,
+                OwnerRemoteId = ownerRemoteId
             };
         }
     }

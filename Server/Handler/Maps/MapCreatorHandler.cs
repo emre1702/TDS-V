@@ -171,18 +171,18 @@ namespace TDS_Server.Handler.Maps
                 Id = map.BrowserSyncedData.Id,
                 Name = map.BrowserSyncedData.Name,
                 Type = (MapType)(int)map.Info.Type,
-                BombPlaces = map.BombInfo?.PlantPositions?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToList(),
-                MapCenter = map.LimitInfo.Center?.ToMapCreatorPosition(posId++),
-                MapEdges = map.LimitInfo.Edges?.Select(pos => pos.ToMapCreatorPosition(posId++)).ToList(),
+                BombPlaces = map.BombInfo?.PlantPositions?.Select(pos => pos.ToMapCreatorPosition(posId++, MapCreatorPositionType.BombPlantPlace)).ToList(),
+                MapCenter = map.LimitInfo.Center?.ToMapCreatorPosition(posId++, MapCreatorPositionType.MapCenter),
+                MapEdges = map.LimitInfo.Edges?.Select(pos => pos.ToMapCreatorPosition(posId++, MapCreatorPositionType.MapLimit)).ToList(),
                 Settings = new MapCreateSettings
                 {
                     MinPlayers = map.Info.MinPlayers,
                     MaxPlayers = map.Info.MaxPlayers,
                 },
                 TeamSpawns = map.TeamSpawnsList.TeamSpawns.Select((t, teamNumber) => t.Spawns.Select(pos => pos.ToMapCreatorPosition(posId++, teamNumber)).ToList()).ToList(),
-                Objects = map.Objects?.Entries?.Select(o => o.ToMapCreatorPosition(posId++)).ToList(),
-                Vehicles = map.Vehicles?.Entries?.Select(o => o.ToMapCreatorPosition(posId++)).ToList(),
-                Target = map.Target?.ToMapCreatorPosition(posId++),
+                Objects = map.Objects?.Entries?.Select(o => o.ToMapCreatorPosition(posId++, MapCreatorPositionType.Object)).ToList(),
+                Vehicles = map.Vehicles?.Entries?.Select(o => o.ToMapCreatorPosition(posId++, MapCreatorPositionType.Vehicle)).ToList(),
+                Target = map.Target?.ToMapCreatorPosition(posId++, MapCreatorPositionType.Target),
                 Description = new Dictionary<int, string>
                 {
                     [(int)Language.English] = map.Descriptions != null ? Regex.Replace(map.Descriptions.English ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty,

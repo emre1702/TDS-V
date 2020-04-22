@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map
@@ -41,12 +42,13 @@ namespace TDS_Server.Data.Models.Map
             RotZ = pos.RotZ;
         }
 
-        public MapCreatorPosition ToMapCreatorPosition(int id)
+        public MapCreatorPosition ToMapCreatorPosition(int id, MapCreatorPositionType type)
         {
             return new MapCreatorPosition
             {
                 Id = id,
                 Info = Name,
+                Type = type,
                 PosX = X,
                 PosY = Y,
                 PosZ = Z,

@@ -129,9 +129,9 @@ namespace TDS_Server.Data.Models.Map
                 Name = Info.Name,
                 BombPlaces = BombInfo?.PlantPositions?.Select(e => e.SwitchNamespace()).ToList(),
                 MapEdges = LimitInfo?.Edges?.Select(e => e.SwitchNamespace()).ToList(),
-                Objects = Objects?.Entries?.Select(e => e.ToMapCreatorPosition(0)).ToList(),
+                Objects = Objects?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Object)).ToList(),
                 Target = Target?.SwitchNamespace(),
-                Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0)).ToList(),
+                Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Vehicle)).ToList(),
                 Center = Target is null ? LimitInfo?.Center?.SwitchNamespace() : null
             };
             ClientSyncedDataJson = _serializer.ToClient(clientSyncedDataDto);

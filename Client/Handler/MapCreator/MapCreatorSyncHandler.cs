@@ -133,7 +133,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void SyncTeamObjectsRemoveFromLobby(int teamNumber)
         {
-            _mapCreatorObjectsHandler.DeleteTeamObjects(teamNumber);
+            _mapCreatorObjectsHandler.DeleteTeamObjects(teamNumber, false);
             _browserHandler.Angular.RemoveTeamPositionInMapCreatorBrowser(teamNumber);
         }
         #endregion Remove object
