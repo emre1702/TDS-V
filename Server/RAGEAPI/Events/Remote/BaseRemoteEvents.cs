@@ -336,6 +336,16 @@ namespace TDS_Server.RAGEAPI.Events.Remote
 
             Init.TDSCore.RemoteEventsHandler.OnMapCreatorStartNewMap(tdsPlayer);
         }
+
+        [RemoteEvent(ToServerEvent.SetInFreecam)]
+        public void OnSetInFreecam(GTANetworkAPI.Player player, bool inFreeCam)
+        {
+            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
+            if (tdsPlayer is null)
+                return;
+
+            Init.TDSCore.RemoteEventsHandler.OnMapCreatorSetInFreeCam(tdsPlayer, inFreeCam);
+        }
         #endregion MapCreator
 
         #region Userpanel

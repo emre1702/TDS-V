@@ -8,6 +8,7 @@ using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models.GTA;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.MapCreator
 {
@@ -57,6 +58,11 @@ namespace TDS_Client.Handler.MapCreator
             if (_camerasHandler.FreeCam is null)
                 _camerasHandler.FreeCam = new TDSCamera(ModAPI, Logging, _camerasHandler, _utilsHandler);
 
+            var player = ModAPI.LocalPlayer;
+            player.FreezePosition(true);
+            player.SetVisible(false);
+            player.SetCollision(false, false);
+
             var cam = _camerasHandler.FreeCam;
             cam.Position = ModAPI.Cam.GetGameplayCamCoord();
             cam.Rotation = ModAPI.Cam.GetGameplayCamRot();
@@ -64,6 +70,8 @@ namespace TDS_Client.Handler.MapCreator
 
             cam.Activate();
             cam.Render();
+
+            ModAPI.Sync.SendEvent(ToServerEvent.SetInFreecam, true);
         }
 
         public void Stop()
@@ -73,6 +81,8 @@ namespace TDS_Client.Handler.MapCreator
 
             _camerasHandler.FreeCam?.Deactivate();
             _camerasHandler.FreeCam = null;
+
+            ModAPI.Sync.SendEvent(ToServerEvent.SetInFreecam, false);
         }
 
         private void OnTick(int _)

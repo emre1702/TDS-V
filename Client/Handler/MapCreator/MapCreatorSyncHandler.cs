@@ -2,8 +2,12 @@
 using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
+using TDS_Client.Handler.Lobby;
+using TDS_Client.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -15,18 +19,28 @@ namespace TDS_Client.Handler.MapCreator
     {
         public bool HasToSync => true;    // => Team.AmountPlayersSameTeam > 1;
 
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+
         private readonly MapCreatorObjectsHandler _mapCreatorObjectsHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly Serializer _serializer;
         private readonly BrowserHandler _browserHandler;
+        private readonly LobbyHandler _lobbyHandler;
+        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly IModAPI _modAPI;
 
         public MapCreatorSyncHandler(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, 
-            EventsHandler eventsHandler, BrowserHandler browserHandler)
+            EventsHandler eventsHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler, DataSyncHandler dataSyncHandler)
         {
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
             _remoteEventsSender = remoteEventsSender;
             _serializer = serializer;
             _browserHandler = browserHandler;
+            _lobbyHandler = lobbyHandler;
+            _dataSyncHandler = dataSyncHandler;
+            _modAPI = modAPI;
+
+            _tickEventMethod = new EventMethodData<TickDelegate>(SyncOtherPlayers);
 
             eventsHandler.MapCreatorSyncLatestObjectID += SyncLatestIdToServer;
             eventsHandler.MapCreatorSyncObjectDeleted += SyncObjectRemoveToLobby;
@@ -40,6 +54,33 @@ namespace TDS_Client.Handler.MapCreator
             modAPI.Event.Add(ToClientEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPositionMethod);
             modAPI.Event.Add(ToClientEvent.MapCreatorSyncObjectRemove, MapCreatorSyncObjectRemoveMethod);
             modAPI.Event.Add(ToClientEvent.MapCreatorSyncTeamObjectsRemove, MapCreatorSyncTeamObjectsRemoveMethod);
+        }
+
+        public void Start()
+        {
+            _modAPI.Event.Tick.Add(_tickEventMethod);
+        }
+
+        public void Stop()
+        {
+            _modAPI.Event.Tick.Remove(_tickEventMethod);
+        }
+
+        private void SyncOtherPlayers(int currentMs)
+        {
+            foreach (var player in _lobbyHandler.Teams.SameTeamPlayers)
+            {
+                if (_dataSyncHandler.GetData(PlayerDataKey.InFreeCam, false))
+                {
+                    player.FreezePosition(true);
+                    player.SetCollision(false, false);
+                }
+                else
+                {
+                    player.FreezePosition(true);
+                    player.SetCollision(true, true);
+                }
+            }
         }
 
         #region Id

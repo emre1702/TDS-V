@@ -40,10 +40,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void Stop()
         {
-            var player = ModAPI.LocalPlayer;
-            player.FreezePosition(true);
-            player.SetVisible(false);
-            player.SetCollision(false, false);
+            
         }
     }
 }

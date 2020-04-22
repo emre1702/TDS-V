@@ -37,9 +37,9 @@ namespace TDS_Client.Handler.Lobby
                 }
             }
         }
-        private readonly HashSet<IPlayer> _sameTeamPlayers = new HashSet<IPlayer>();
+        public readonly HashSet<IPlayer> SameTeamPlayers = new HashSet<IPlayer>();
         public string CurrentTeamName { get; set; } = "Login/Register";
-        public int AmountPlayersSameTeam => _sameTeamPlayers.Count;
+        public int AmountPlayersSameTeam => SameTeamPlayers.Count;
 
         private bool _activated;
         private List<SyncedTeamDataDto> _LobbyTeams;
@@ -83,7 +83,7 @@ namespace TDS_Client.Handler.Lobby
                 Logging.LogInfo("", "TeamsHandler.AddSameTeam");
                 //Todo: If the server crashes after a teammate dies, it could be because of the blip.
                 // Then try removing the blip on death
-                _sameTeamPlayers.Add(player);
+                SameTeamPlayers.Add(player);
                 var prevBlipHandle = player.GetBlipFrom();
                 if (prevBlipHandle != 0)
                 {
@@ -101,7 +101,7 @@ namespace TDS_Client.Handler.Lobby
         public void RemoveSameTeam(IPlayer player)
         {
             Logging.LogInfo("", "TeamsHandler.RemoveSameTeam");
-            _sameTeamPlayers.Remove(player);
+            SameTeamPlayers.Remove(player);
             var prevBlipHandle = player.GetBlipFrom();
             if (ModAPI.Ui.DoesBlipExist(prevBlipHandle))
                 ModAPI.Ui.RemoveBlip(ref prevBlipHandle);
@@ -112,7 +112,7 @@ namespace TDS_Client.Handler.Lobby
         {
             Logging.LogInfo(remoteId.ToString(), "TeamsHandler.RemoveSameTeam");
 
-            var player = _sameTeamPlayers.FirstOrDefault(p => p.RemoteId == remoteId);
+            var player = SameTeamPlayers.FirstOrDefault(p => p.RemoteId == remoteId);
             if (player is null)
                 return;
             RemoveSameTeam(player);
@@ -125,13 +125,13 @@ namespace TDS_Client.Handler.Lobby
             try
             {
                 Logging.LogInfo("", "TeamsHandler.ClearSameTeam");
-                foreach (var player in _sameTeamPlayers)
+                foreach (var player in SameTeamPlayers)
                 {
                     var blip = player.GetBlipFrom();
                     if (ModAPI.Ui.DoesBlipExist(blip))
                         ModAPI.Ui.RemoveBlip(ref blip);
                 }
-                _sameTeamPlayers.Clear();
+                SameTeamPlayers.Clear();
                 Logging.LogInfo("", "TeamsHandler.ClearSameTeam", true);
             }
             catch (Exception ex)
@@ -142,7 +142,7 @@ namespace TDS_Client.Handler.Lobby
 
         public bool IsInSameTeam(IPlayer player)
         {
-            return _sameTeamPlayers.Contains(player);
+            return SameTeamPlayers.Contains(player);
         }
 
         public void ToggleOrderMode(Key _)

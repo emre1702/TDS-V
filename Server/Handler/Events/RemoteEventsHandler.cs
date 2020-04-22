@@ -277,6 +277,11 @@ namespace TDS_Server.Handler.Events
                 return;
             lobby.StartNewMap();
         }
+
+        public void OnMapCreatorSetInFreeCam(ITDSPlayer tdsPlayer, bool inFreeCam)
+        {
+            _dataSyncHandler.SetData(tdsPlayer, PlayerDataKey.InFreeCam, PlayerDataSyncMode.Lobby, inFreeCam);
+        }
         #endregion MapCreator
 
         #region Userpanel
@@ -285,7 +290,6 @@ namespace TDS_Server.Handler.Events
             UserpanelLoadDataType type = (UserpanelLoadDataType)dataType;
             _userpanelHandler.PlayerLoadData(player, type);
         }
-
         #endregion
     }
 }

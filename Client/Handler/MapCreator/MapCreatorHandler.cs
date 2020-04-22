@@ -6,6 +6,7 @@ using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
+using TDS_Client.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -35,7 +36,8 @@ namespace TDS_Client.Handler.MapCreator
 
         public MapCreatorHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler, 
             SettingsHandler settingsHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, 
-            DxHandler dxHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, LobbyHandler lobbyHandler, TimerHandler timerHandler)
+            DxHandler dxHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, LobbyHandler lobbyHandler, 
+            TimerHandler timerHandler, DataSyncHandler dataSyncHandler)
             : base(modAPI, loggingHandler)
         {
             _browserHandler = browserHandler;
@@ -49,7 +51,7 @@ namespace TDS_Client.Handler.MapCreator
             var clickedMarkerStorer = new ClickedMarkerStorer();
 
             Objects = new MapCreatorObjectsHandler(modAPI, camerasHandler, lobbyHandler, eventsHandler, browserHandler, serializer);
-            Sync = new MapCreatorSyncHandler(modAPI, Objects, remoteEventsSender, serializer, eventsHandler, browserHandler);
+            Sync = new MapCreatorSyncHandler(modAPI, Objects, remoteEventsSender, serializer, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
             ObjectsLoading = new ObjectsLoadingHelper(modAPI, loggingHandler, utilsHandler, settingsHandler);
             ObjectsPreview = new MapCreatorObjectsPreviewHandler(modAPI, ObjectsLoading, camerasHandler, utilsHandler, browserHandler);
             VehiclePreview = new MapCreatorVehiclesPreviewHandler(modAPI, camerasHandler, utilsHandler, browserHandler);

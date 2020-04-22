@@ -78,7 +78,7 @@ namespace TDS_Client.Core.Init
 
                 new RankingHandler(modAPI, loggingHandler, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler);
                 new MapCreatorHandler(modAPI, loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler, browserHandler, dxHandler,
-                    remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler);
+                    remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler);
 
                 loggingHandler.LogInfo("Services successfully initialized", "Services.Initialize", true);
             }
