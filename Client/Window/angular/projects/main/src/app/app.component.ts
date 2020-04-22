@@ -34,11 +34,11 @@ import { DToClientEvent } from './enums/DToClientEvent.enum';
     ],
 })
 export class AppComponent {
-    started = true;
+    started = false;
 
-    showMapCreator = true;
+    showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = false;
+    showLobbyChoice = true;
     showTeamChoice = false;
     showRankings = false;
     showHUD = false;
