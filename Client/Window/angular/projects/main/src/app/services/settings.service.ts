@@ -136,6 +136,8 @@ export class SettingsService {
             [ ChallengeType.ReviewMaps, 30, 10 ],
         ]],
     ]*/;
+    public ChallengesLoaded = new EventEmitter();
+
     public ShownRoundStatsType = 1;
     public ShownHudType = 1;
     public AllMapsForCustomLobby: MapDataDto[] = [];
@@ -172,6 +174,7 @@ export class SettingsService {
 
     private onChallengeCurrentAmountChange(frequency: ChallengeFrequency, type: ChallengeType, currentAmount: number) {
         this.ChallengeGroups.find(g => g[0] == frequency)[1].find(c => c[0] == type)[2] = currentAmount;
+        this.ChallengesLoaded.emit(null);
     }
 
     private syncMapPriceData(mapsBoughtCounter: number) {
@@ -201,6 +204,8 @@ export class SettingsService {
                 }
             }
         }
+
+        this.ChallengesLoaded.emit(null);
     }
 
     public triggerChatSettingsChanged() {
