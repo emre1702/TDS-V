@@ -14,7 +14,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         /// <returns>Amount teams still in round.</returns>
         private int GetTeamAmountStillInRound(int minalive = 1)
         {
-            return Teams.Count(team => team.AlivePlayers != null && team.AlivePlayers.Count >= minalive);
+            // all vs all
+            // 2 because [0] => spectator
+            if (Teams.Count == 2)
+                return Teams[1].AlivePlayers?.Count ?? 0;
+            // normal lobby
+            else 
+                return Teams.Count(team => team.AlivePlayers is { } && team.AlivePlayers.Count >= minalive);
         }
 
         private int GetTeamAmount(bool onlyCheckPlayerAmount)
