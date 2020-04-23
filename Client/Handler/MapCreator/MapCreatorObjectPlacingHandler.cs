@@ -401,6 +401,7 @@ namespace TDS_Client.Handler.MapCreator
                     break;
                 case EntityType.Vehicle:
                     _modAPI.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle);
+                    obj.MovingPosition = obj.Entity.Position;
                     break;
                 case EntityType.Ped:
                     float heightAboveGround = _modAPI.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
