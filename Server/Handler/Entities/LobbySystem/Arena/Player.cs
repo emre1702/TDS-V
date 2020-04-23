@@ -92,15 +92,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             else
             {
                 SpectateOtherSameTeam(player);
-                int teamsinround = GetTeamAmountStillInRound();
-                if (teamsinround < 2)
+                if (team is { } && !team.IsSpectator && GetTeamAmountStillInRound() < 2)
                 {
                     CurrentRoundEndBecauseOfPlayer = player;
                     if (CurrentRoundStatus != RoundStatus.None && CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
                         SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.NewPlayer);
                     else
                         SetRoundStatus(RoundStatus.NewMapChoose);
-                }
+                }                
                 else
                 {
                     player.SendEvent(ToClientEvent.PlayerSpectateMode);
@@ -125,19 +124,20 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
                     player.Team.SpectateablePlayers?.Add(player);
+
+                player.ModPlayer.Freeze(FreezePlayerOnCountdown);
+                GivePlayerWeapons(player);
             }
             else
             {
                 if (SpawnPlayer)
                     player.Spawn(SpawnPoint, Entity.DefaultSpawnRotation);
+
+                player.ModPlayer.Freeze(true);
+                player.ModPlayer.RemoveAllWeapons();
             }
 
-
             RemoveAsSpectator(player);
-
-            if (FreezePlayerOnCountdown)
-                player.ModPlayer.Freeze(true);
-            GivePlayerWeapons(player);
 
             if (_removeSpectatorsTimer.ContainsKey(player))
                 _removeSpectatorsTimer.Remove(player);
