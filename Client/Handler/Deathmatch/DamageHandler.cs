@@ -37,20 +37,17 @@ namespace TDS_Client.Handler.Deathmatch
         private void OnIncomingDamageMethod(IPlayer sourcePlayer, IEntity sourceEntity, IEntity targetEntity, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
         {
             _modAPI.Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
-
-            if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer))
-            {
-                cancel.Cancel = true;
-                return;
-            }
-
-            _browserHandler.PlainMain.ShowBloodscreen();
-
+            
             if (sourcePlayer != null)
             {
                 cancel.Cancel = true;
+                if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer))
+                    return;
+
                 _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.GotHit, (int)sourcePlayer.RemoteId, weaponHash.ToString(), boneIdx.ToString());
             }
+            else
+                _browserHandler.PlainMain.ShowBloodscreen();
 
         }
 
@@ -58,6 +55,9 @@ namespace TDS_Client.Handler.Deathmatch
         private void OnOutgoingDamageMethod(IEntity sourceEntity, IEntity targetEntity, IPlayer sourcePlayer, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
         {
             _modAPI.Console.Log(ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
+
+            if (sourcePlayer is null)
+                return;
 
             if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer))
             {
