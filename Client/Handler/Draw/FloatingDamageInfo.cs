@@ -45,10 +45,10 @@ namespace TDS_Client.Handler.Entities.Draw
             }
             float screenX = 0;
             float screenY = 0;
-            ModAPI.Graphics.GetScreenCoordFromWorldCoord(_targetPosition.X, _targetPosition.Y, _targetPosition.Z + 1, ref screenX, ref screenY);
+            ModAPI.Graphics.GetScreenCoordFromWorldCoord(_targetPosition.X, _targetPosition.Y, _targetPosition.Z, ref screenX, ref screenY);
 
-            float percentage = elapsedTicks / _settingsHandler.PlayerSettings.ShowFloatingDamageInfoDurationMs;
-            screenY -= 0.3f * percentage;
+            float percentage = (float)elapsedTicks / _settingsHandler.PlayerSettings.ShowFloatingDamageInfoDurationMs;
+            screenY -= 0.2f * percentage;
 
             float scale = 0.4f - (0.3f * percentage);
             var color = Color.FromArgb(255 - (int)(255 * percentage), 220, 220, 220);
