@@ -295,6 +295,19 @@ namespace TDS_Server.Handler.Maps
             File.Delete(map.Info.FilePath);
         }
 
+        public object? SyncCurrentMapToClient(ITDSPlayer player, object[] args)
+        {
+            if (!(player.Lobby is MapCreateLobby lobby))
+                return null;
+
+            string json = (string)args[0];
+            int tdsPlayerId = Convert.ToInt32(args[1]);
+            int idCounter = Convert.ToInt32(args[2]);
+
+            lobby.SyncCurrentMapToPlayer(json, tdsPlayerId, idCounter);
+            return null;
+        }
+
         public void AddedMapRating(MapDto map)
         {
             if (map.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck)

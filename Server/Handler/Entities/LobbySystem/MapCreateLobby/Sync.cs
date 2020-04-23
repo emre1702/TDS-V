@@ -26,13 +26,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         }
 
-        public void SyncAllObjectsToPlayer(int tdsPlayerId, string json, int lastId)
+        public void SyncCurrentMapToPlayer(string json, int tdsPlayerId, int lastId)
         {
             _lastId = lastId;
             Players.TryGetValue(tdsPlayerId, out ITDSPlayer? player);
             if (player is null)
                 return;
             player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, json, lastId);
+
+            _currentMap = Serializer.FromBrowser<MapCreateDataDto>(json);
+            _lastId = lastId;
+
         }
 
         public void SyncNewObject(ITDSPlayer player, string json)

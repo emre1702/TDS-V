@@ -187,9 +187,8 @@ namespace TDS_Client.Handler.MapCreator
             {
                 obj.IsSynced = true;
             }
-            var dtoList = objects.Select(o => o.GetDto()).ToList();
-            string json = _serializer.ToServer(dtoList);
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncAllObjects, tdsPlayerId, json, _mapCreatorObjectsHandler.IdCounter);
+
+            _browserHandler.Angular.MapCreatorSyncCurrentMapToServer(tdsPlayerId, _mapCreatorObjectsHandler.IdCounter);
 
             // Todo: Add P2P here as alternative (if activated, else with server)
         }

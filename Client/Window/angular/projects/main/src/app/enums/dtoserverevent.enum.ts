@@ -21,6 +21,7 @@ export enum DToServerEvent {
     LoadMapNamesToLoadForMapCreator = "c26",
     LoadMapForMapCreator = "c25",
     LoadUserpanelData = "c27",
+    MapCreatorSyncCurrentMapToServer = "c17",
     MapCreatorSyncData = "c30",
     MapVote = "c36",
     RejectInvitation = "c38",

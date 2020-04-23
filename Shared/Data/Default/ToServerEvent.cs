@@ -39,7 +39,7 @@
         public const string LoadUserpanelData = "c27";
 
         public const string MapCreatorStartNewMap = "c28";
-        public const string MapCreatorSyncAllObjects = "c29";
+        public const string MapCreatorSyncCurrentMapToServer = "c17";
         public const string MapCreatorSyncData = "c30";
         public const string MapCreatorSyncLastId = "c31";
         public const string MapCreatorSyncNewObject = "c32";

@@ -235,6 +235,11 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.AddNameForChat, name);
         }
 
+        internal void MapCreatorSyncCurrentMapToServer(int tdsPlayerId, int idCounter)
+        {
+            Execute(ToBrowserEvent.MapCreatorSyncCurrentMapToServer, tdsPlayerId, idCounter);
+        }
+
         public void LoadNamesForChat(List<IPlayer> players)
         {
             IEnumerable<string> names = players.Select(p => p.Name);

@@ -69,6 +69,7 @@ namespace TDS_Client.Handler.MapCreator
             Size = b - a;
 
             Position = entity.Position;
+            Rotation = entity.Rotation;
 
             if (id == -1)
             {

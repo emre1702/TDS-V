@@ -23,7 +23,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (Players.Count == 2)
             {
-                player.SendEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Id);
+                Players.Values.First(p => p != player).SendEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Id);
             } 
             else if (Players.Count > 2) 
             { 

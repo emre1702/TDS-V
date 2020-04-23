@@ -264,13 +264,6 @@ namespace TDS_Server.Handler.Events
             lobby.SyncRemoveTeamObjects(player, teamNumber);
         }
 
-        public void OnMapCreatorSyncAllObjects(ITDSPlayer player, int tdsPlayerId, string json, int lastId)
-        {
-            if (!(player.Lobby is MapCreateLobby lobby))
-                return;
-            lobby.SyncAllObjectsToPlayer(tdsPlayerId, json, lastId);
-        }
-
         public void OnMapCreatorStartNewMap(ITDSPlayer player)
         {
             if (!(player.Lobby is MapCreateLobby lobby))

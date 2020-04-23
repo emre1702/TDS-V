@@ -12,6 +12,7 @@
         public const string LoadLanguage = "cb9";
         public const string LoadMapForMapCreator = "cb43";
         public const string LoadNamesForChat = "cb39";
+        public const string MapCreatorSyncCurrentMapToServer = "cb50";
         public const string OpenMapMenu = "cb12";
         public const string RefreshAdminLevel = "cb13";
         public const string RemoveNameForChat = "cb40";

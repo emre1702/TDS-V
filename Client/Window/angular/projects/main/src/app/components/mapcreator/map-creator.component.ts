@@ -66,14 +66,16 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         public dialog: MatDialog,
         private snackBar: MatSnackBar) {
-        this.rageConnector.listen(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
-        this.rageConnector.listen(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.removePositionInMapCreatorBrowser.bind(this));
-        this.rageConnector.listen(DFromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
+
     }
 
     ngOnInit() {
+        this.rageConnector.listen(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
+        this.rageConnector.listen(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.removePositionInMapCreatorBrowser.bind(this));
+        this.rageConnector.listen(DFromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
         this.rageConnector.listen(DFromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
         this.rageConnector.listen(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
+        this.rageConnector.listen(DFromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.isLobbyOwnerChanged.bind(this));
 
@@ -81,8 +83,12 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.rageConnector.remove(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
+        this.rageConnector.remove(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.removePositionInMapCreatorBrowser.bind(this));
+        this.rageConnector.remove(DFromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
         this.rageConnector.remove(DFromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
         this.rageConnector.remove(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
+        this.rageConnector.remove(DFromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.isLobbyOwnerChanged.bind(this));
     }
@@ -426,6 +432,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
             panelClass: "mat-app-background"
         });
         this.changeDetector.detectChanges();
+    }
+
+    private syncCurrentMapToServer(tdsPlayerId: number, idCounter: number) {
+        this.fixData();
+        this.rageConnector.callServer(DToServerEvent.MapCreatorSyncCurrentMapToServer, JSON.stringify(this.data), tdsPlayerId, idCounter);
     }
 
     private fixData() {
