@@ -70,6 +70,8 @@ namespace TDS_Client.Handler.MapCreator
         {
             foreach (var player in _lobbyHandler.Teams.SameTeamPlayers)
             {
+                if (player == _modAPI.LocalPlayer)
+                    continue;
                 if (_dataSyncHandler.GetData(PlayerDataKey.InFreeCam, false))
                 {
                     player.FreezePosition(true);
@@ -77,7 +79,7 @@ namespace TDS_Client.Handler.MapCreator
                 }
                 else
                 {
-                    player.FreezePosition(true);
+                    player.FreezePosition(false);
                     player.SetCollision(true, true);
                 }
             }
