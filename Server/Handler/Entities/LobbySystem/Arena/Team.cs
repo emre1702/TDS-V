@@ -23,14 +23,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return Teams.Count(team => team.AlivePlayers is { } && team.AlivePlayers.Count >= minalive);
         }
 
-        private int GetTeamAmount(bool onlyCheckPlayerAmount)
-        {
-            if (!onlyCheckPlayerAmount)
-                return Teams.Count - 1;
-            else
-                return Teams.Skip(1).Count(team => team.Players.Count > 0);
-        }
-
         private ITeam? GetTeamStillInRound(int minalive = 1)
         {
             foreach (var team in Teams)

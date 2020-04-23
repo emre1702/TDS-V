@@ -240,10 +240,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private void RoundCheckForEnoughAlive()
         {
             int teamsInRound = GetTeamAmountStillInRound();
-            int teamsWithPlayers = GetTeamAmount(true);
-            // if there is only 1 team playing, it should continue to play
-            // if there are 2+ teams playing and there is only 1 team alive, end the round
-            if ((teamsWithPlayers <= 1 ? (teamsInRound < 1) : teamsInRound < 2) && CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
+            if (teamsInRound <= 1 && CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
             {
                 SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.Death);
             }
