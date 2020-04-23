@@ -85,14 +85,18 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             base.SetPlayerTeam(player, team);
 
-            if (team is { } && (CurrentRoundStatus == RoundStatus.Countdown || CurrentGameMode?.CanJoinDuringRound(player, team) == true))
+            // That means the player left the lobby
+            if (team is null)
+                return;
+
+            if (CurrentRoundStatus == RoundStatus.Countdown || CurrentGameMode?.CanJoinDuringRound(player, team) == true)
             {
                 SetPlayerReadyForRound(player);
             }
             else
             {
                 SpectateOtherSameTeam(player);
-                if (team is { } && !team.IsSpectator && GetTeamAmountStillInRound() < 2)
+                if (!team.IsSpectator && GetTeamAmountStillInRound() < 2)
                 {
                     CurrentRoundEndBecauseOfPlayer = player;
                     if (CurrentRoundStatus != RoundStatus.None && CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
