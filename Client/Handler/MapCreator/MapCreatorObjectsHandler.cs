@@ -65,7 +65,6 @@ namespace TDS_Client.Handler.MapCreator
                 entry.Value.Delete(false);
             }
             _cacheMapEditorObjects.Clear();
-            _eventsHandler.OnMapCreatorObjectDeleted();
             IdCounter = 0;
 
             MapLimitDisplay?.Stop();
@@ -218,7 +217,6 @@ namespace TDS_Client.Handler.MapCreator
             {
                 Delete(entry.Value, false);
             }
-            _eventsHandler.OnMapCreatorObjectDeleted();
             if (syncToServer)
                 _eventsHandler.OnMapCreatorSyncTeamObjectsDeleted(teamNumber);
         }
@@ -237,7 +235,6 @@ namespace TDS_Client.Handler.MapCreator
                 return;
             _cacheMapEditorObjects.Remove(obj.Entity);
             obj.Delete(syncToServer);
-            _eventsHandler.OnMapCreatorObjectDeleted();
             if (obj.Type == MapCreatorPositionType.MapLimit)
             {
                 RefreshMapLimitDisplay();

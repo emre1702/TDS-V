@@ -144,6 +144,7 @@ namespace TDS_Client.Handler.MapCreator
             Entity.Destroy();
             Blip.Destroy();
             Deleted = true;
+            _eventsHandler.OnMapCreatorObjectDeleted();
             if (syncToServer)
             {
                 _eventsHandler.OnMapCreatorSyncObjectDeleted(this);
