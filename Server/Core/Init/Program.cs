@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
@@ -46,6 +49,14 @@ namespace TDS_Server.Core.Init
                 _modAPI = modAPI;
                 _serviceProvider = Services.InitServiceCollection(modAPI);
 
+                using (var dbContext = _serviceProvider.GetRequiredService<TDSDbContext>())
+                {
+                    dbContext.Database.Migrate();
+                    var connection = (NpgsqlConnection)dbContext.Database.GetDbConnection();
+                    connection.Open();
+                    connection.ReloadTypes();
+                }
+                
                 var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
                 mapsLoadingHandler.LoadAllMaps();
 

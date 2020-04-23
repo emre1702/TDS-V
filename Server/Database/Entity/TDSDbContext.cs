@@ -21,15 +21,10 @@ namespace TDS_Server.Database.Entity
 {
     public partial class TDSDbContext : DbContext
     {
-        public static bool IsConfigured { get; private set; }
-
         public TDSDbContext(DbContextOptions<TDSDbContext> options)
             : base(options)
         {
-            Database.Migrate();
-            var connection = (NpgsqlConnection)Database.GetDbConnection();
-            connection.Open();
-            connection.ReloadTypes();
+
         }
 
         static TDSDbContext()
@@ -1980,8 +1975,6 @@ namespace TDS_Server.Database.Entity
 
             modelBuilder.HasSequence<int>("maps_ID_seq");*/
             #endregion
-
-            IsConfigured = true;
         }
     }
 }
