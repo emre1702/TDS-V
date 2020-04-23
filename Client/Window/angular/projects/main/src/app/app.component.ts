@@ -120,7 +120,7 @@ export class AppComponent {
 
     @HostListener("window:keydown", ["$event"])
     keyboardInput(event: KeyboardEvent) {
-        if (event.ctrlKey && event.key === "KeyA") {
+        if (event.ctrlKey && event.key === "a") {
             event.preventDefault();
         }
     }
