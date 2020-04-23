@@ -29,7 +29,7 @@ namespace TDS_Server.Data.Interfaces
         ILobby? Lobby { get; set; }
         IPlayer? ModPlayer { get; set; }
         ushort RemoteId { get; }
-        ITeam? Team { set; get; }
+        ITeam? Team { get; }
         bool IsPermamuted { get; }
         bool IsMuted { get; }
         int? MuteTime { get; set; }
@@ -49,12 +49,18 @@ namespace TDS_Server.Data.Interfaces
         int Armor { get; set; }
         WeaponHash LastWeaponOnHand { get; set; }
         DateTime? LastKillAt { get; set; }
+
+        void ResetVoiceToAndFrom();
+
         short KillingSpree { get; set; }
 
         string GetLocalDateTimeString(DateTime createTime);
 
         PedHash FreemodeSkin { get; }
         bool IsVoiceMuted { get; }
+
+        void SetTeam(ITeam? team, bool forceIsNew);
+
         int TeamIndex { get; }
         ITDSPlayer? LastHitter { get; set; }
         PlayerLobbyStats? LobbyStats { get; }

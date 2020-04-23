@@ -81,7 +81,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.PreviousLobby = this;
             await player.SetPlayerLobbyStats(null);
             player.Lifes = 0;
-            player.Team?.SyncRemovedPlayer(player);
             SetPlayerTeam(player, null);
             player.Spectates = null;
             if (player.ModPlayer is { })
@@ -134,12 +133,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 if (player.Team == team)
                     return;
-                var oldTeam = player.Team;
-                player.Team = null;
-                oldTeam.SyncRemovedPlayer(player);
+                player.Team.SyncRemovedPlayer(player);
             }
 
-            player.Team = team;
+            player.SetTeam(team, true);
             team?.SyncAddedPlayer(player);
         }
 

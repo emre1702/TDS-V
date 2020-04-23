@@ -46,14 +46,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             var oldPlayersList = Players.Values.ToList();
             ClearTeamPlayersLists();
-            foreach (TDSPlayer player in oldPlayersList)
+            foreach (ITDSPlayer player in oldPlayersList)
             {
+                player.ResetVoiceToAndFrom();
                 if (player.Team is null) // propably not (yet) in the lobby
                     continue;
                 if (!player.Team.IsSpectator)
                 {
-                    player.Team = null;
-                    player.Team = GetTeamWithFewestPlayer();
+                    player.SetTeam(GetTeamWithFewestPlayer(), true);
                 }
                 else
                     player.Team.Players.Add(player);
@@ -61,8 +61,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             foreach (var team in Teams)
             {
-                if (!team.IsSpectator)
-                    team.SyncAllPlayers();
+                team.SyncAllPlayers();
             }
         }
 

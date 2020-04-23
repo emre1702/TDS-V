@@ -80,7 +80,6 @@ namespace TDS_Server.Handler.Entities.TeamSystem
         public void RemovePlayer(ITDSPlayer player)
         {
             Players.Remove(player);
-            player.SendEvent(ToClientEvent.ClearTeamPlayers);
         }
 
         public void RemoveAlivePlayer(ITDSPlayer player)
@@ -90,22 +89,6 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
              AlivePlayers.Remove(player);
              SyncedTeamData.AmountPlayers.AmountAlive = (uint)AlivePlayers.Count;
-        }
-
-        public void ClearPlayers()
-        {
-            FuncIterate((player, team) =>
-            {
-                player.SendEvent(ToClientEvent.ClearTeamPlayers);
-                foreach (var target in Players)
-                {
-                    if (target == player)
-                        continue;
-                    player.SetVoiceTo(target, false);
-                    target.SetVoiceTo(player, false);
-                }
-            });
-            Players.Clear();
         }
 
         public void SyncAddedPlayer(ITDSPlayer player)
@@ -126,14 +109,9 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
         public void SyncRemovedPlayer(ITDSPlayer player)
         {
-            foreach (var target in Players)
-            {
-                if (target == player)
-                    continue;
-                target.SendEvent(ToClientEvent.PlayerLeftTeam, player.RemoteId);
-                target.SetVoiceTo(player, false);
-                player.SetVoiceTo(target, false);
-            }
+            player.ResetVoiceToAndFrom();
+            _modAPI.Sync.SendEvent(Players.Where(p => p != player), ToClientEvent.PlayerLeftTeam, player.RemoteId);
+            player.SendEvent(ToClientEvent.ClearTeamPlayers);
         }
 
         public void SyncAllPlayers()

@@ -256,7 +256,7 @@ namespace TDS_Server.Handler.Commands
 
             if (player.InPrivateChatWith == target)
                 player.ClosePrivateChat(false);
-            target.ModPlayer.SetVoiceTo(player, false);
+            target.SetVoiceTo(player, false);
 
             target.SendMessage(string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
         }
