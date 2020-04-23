@@ -229,6 +229,12 @@ namespace TDS_Shared.Data.Models.GTA
         public Position3D AddToZ(float z) 
             => new Position3D(X, Y, Z + z);
 
+        public static Position3D GetPos(MapCreatorPosition pos)
+            => new Position3D(pos.PosX, pos.PosY, pos.PosZ);
+
+        public static Position3D GetRot(MapCreatorPosition pos)
+            => new Position3D(pos.RotX, pos.RotY, pos.RotZ);
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))

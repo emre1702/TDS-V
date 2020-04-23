@@ -103,7 +103,8 @@ namespace TDS_Client.Handler.MapCreator
 
         public void StartNewPlacing(MapCreatorPositionType type, object editingTeamIndexOrObjectName)
         {
-            MapCreatorObject obj = _mapCreatorObjectsHandler.CreateMapCreatorObject(type, editingTeamIndexOrObjectName, _modAPI.LocalPlayer.RemoteId);
+            MapCreatorObject obj = _mapCreatorObjectsHandler.CreateMapCreatorObject(type, editingTeamIndexOrObjectName, 
+                _modAPI.LocalPlayer.RemoteId, _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation);
             if (obj == null)
                 return;
             if (type == MapCreatorPositionType.Object)
