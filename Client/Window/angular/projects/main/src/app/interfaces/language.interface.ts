@@ -151,6 +151,7 @@ export interface Language {
     Open: string;
     Create: string;
     Answer: string;
+    Answers: string;
     ToAnswer: string;
     Buy: string;
     SettingsSpecial: string;
@@ -357,4 +358,5 @@ export interface Language {
     Double: string;
     String: string;
     DateTime: string;
+    TimeSpan: string;
 }

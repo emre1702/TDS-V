@@ -164,6 +164,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     Open = "Open";
     Create = "Create";
     Answer = "Answer";
+    Answers = "Answers";
     ToAnswer = "Answer";
     Buy = "Buy";
     SettingsSpecial = "Settings Special";
@@ -381,4 +382,5 @@ Here you can see all the invitations sent to you:`;
     Double = "decimal";
     String = "string";
     DateTime = "time";
+    TimeSpan = "timespan";
 }

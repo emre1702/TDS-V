@@ -174,6 +174,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Open = "Öffnen";
     Create = "Erstellen";
     Answer = "Antwort";
+    Answers = "Antworten";
     ToAnswer = "Antworten";
     Buy = "Kaufen";
     SettingsSpecial = "Einstellungen Spezial";
@@ -376,4 +377,5 @@ Hier siehst du alle bisherigen Einladungen an dich:`;
     Double = "Kommazahl";
     String = "Zeichenkette";
     DateTime = "Zeit";
+    TimeSpan = "Zeitspanne";
 }
