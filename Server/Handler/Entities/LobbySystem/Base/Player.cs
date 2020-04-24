@@ -101,7 +101,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     await Remove();
             }
 
-            ModAPI.Sync.SendEvent(ToClientEvent.LeaveSameLobby,  player.RemoteId, player.DisplayName);
+            ModAPI.Sync.SendEvent(ToClientEvent.LeaveSameLobby,  player.RemoteId, player.Entity?.Name ?? player.DisplayName);
             if (Entity.Type != LobbyType.MainMenu)
                 LoggingHandler?.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
 
