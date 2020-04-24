@@ -83,9 +83,12 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { HudComponent } from './components/hud/hud.component';
 import { CustomLobbyMapsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-maps-menu/custom-lobby-maps-menu.component';
 import { ChatComponent } from './components/hud/chat/chat.component';
-import { MentionModule } from 'angular-mentions';
 import { CustomLobbyWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-weapons-menu/custom-lobby-weapons-menu.component';
 import { ToolbarDirective } from './extensions/toolbarDirective';
+import { MentionDirective } from './extensions/mention/mentionDirective';
+import { MentionListComponent } from './extensions/mention/mentionListComponent';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -119,6 +122,8 @@ import { ToolbarDirective } from './extensions/toolbarDirective';
     InputTypeDirective,
     TextareaTypeDirective,
     ToolbarDirective,
+    MentionDirective,
+    MentionListComponent,
     RankingComponent,
     CustomLobbyTeamsMenuComponent,
     UserpanelApplicationsComponent,
@@ -172,9 +177,10 @@ import { ToolbarDirective } from './extensions/toolbarDirective';
     MatProgressSpinnerModule,
     MatCardModule,
     ClipboardModule,
-    MentionModule
+    OverlayModule,
+    CommonModule
   ],
-  entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog],
+  entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent],
   providers: [
     OrderByPipe,
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }

@@ -16,7 +16,6 @@
     <mat-form-field [style.display]="settings.ChatInputOpen ? 'block' : 'none'">
         <input matInput floatLabel="never" id="main-input"
         autofocus (blur)="removeInputFocus()"
-        [mention]="mentionConfig.items"
-        [mentionConfig]="mentionConfig"/>
+        [mention]="mentionConfig" (mentionShowingChanged)="onMentionShowingChanged($event)" />
     </mat-form-field>
 </div>

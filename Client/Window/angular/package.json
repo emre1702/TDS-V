@@ -26,7 +26,6 @@
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/platform-server": "^8.2.14",
     "@angular/router": "^8.2.14",
-    "angular-mentions": "^1.1.3",
     "core-js": "^3.6.3",
     "hammerjs": "^2.0.8",
     "ngx-clipboard": "^12.3.0",

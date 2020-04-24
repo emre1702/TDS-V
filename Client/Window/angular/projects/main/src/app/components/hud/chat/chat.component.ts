@@ -5,6 +5,8 @@ import { MatInput, FloatLabelType } from '@angular/material';
 import { SettingsService } from '../../../services/settings.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
+import { MentionConfig } from '../../../extensions/mention/mentionConfig';
+import { MentionDirective } from '../../../extensions/mention/mentionDirective';
 
 declare const mp: {
     events: {
@@ -38,17 +40,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     selectedChatBody = 0;
     private scrollToBottomTimer: NodeJS.Timeout;
     isNearBottom = true;
+    mentionShowing = false;
 
     private commandPrefix = "/";
     private maxMessagesInBody = 40;
 
     @ViewChild(MatInput, { static: true }) input: MatInput;
     @ViewChild("chatBody", { static: true }) chatBody: ElementRef;
+    @ViewChild(MentionDirective, { static: true }) mentionDirective: MentionDirective;
 
-    mentionConfig = {
-        items: [],
+    mentionConfig: MentionConfig = {
+        items: this.playerNames,
         triggerChar: "@",
-        mentionSelect: this.getMentionText
+        mentionSelect: this.getMentionText,
+        seachStringEndChar: ":",
+        maxItems: 10
     };
 
     private colorStrReplace = {
@@ -107,6 +113,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     removeInputFocus() {
+        if (this.mentionShowing)
+            return;
+
         this.toggleChatInput(false);
         this.rageConnector.call(DToClientEvent.CloseChat);
     }
@@ -121,8 +130,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.scrollToBottomTimer = setTimeout(this.scrollChatToBottom.bind(this), 500);
     }
 
-    getMentionText(name: {label: string}): string {
-        return "@" + name.label + ": ";
+    getMentionText(name: string): string {
+        return "@" + name + ": ";
     }
 
     private addMessage(msg: string) {
@@ -174,7 +183,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (!this.chatActive || !this.chatInputActive)
             return;
 
-        mp.invoke("setTypingInChatState", toggle);
+        if (typeof(mp) !== "undefined") {
+            mp.invoke("setTypingInChatState", toggle);
+        }
         this.settings.setChatInputOpen(toggle);
         this.input.value = cmd;
         this.scrollChatToBottom();
@@ -183,6 +194,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (toggle) {
             this.input.focus();
             this.changeDetector.detectChanges();
+        } else {
+            this.mentionDirective.closeSearchList();
         }
     }
 
@@ -310,44 +323,32 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     private addNameForChat(name: string) {
+        console.log("addNameForChat 1 | name: " + name + " | playerNames: " + this.playerNames);
         this.playerNames.push(name);
-        this.mentionConfig.items.push(name);
-
-        this.mentionConfig = {
-            items: this.mentionConfig.items,
-            triggerChar: "@",
-            mentionSelect: this.getMentionText
-        };
-
+        this.mentionDirective.refreshItems(this.mentionConfig.items);
+        console.log("addNameForChat 2");
         this.changeDetector.detectChanges();
     }
 
     private loadNamesForChat(namesJson: string) {
-        this.playerNames = [...this.playerNames, ...JSON.parse(namesJson)];
+        console.log("loadNamesForChat 1 | playerNames: " + this.playerNames);
+        this.playerNames = JSON.parse(namesJson);
+        this.mentionConfig.items = this.playerNames;
+        this.mentionDirective.refreshItems(this.mentionConfig.items);
 
-        this.mentionConfig = {
-            items: this.playerNames,
-            triggerChar: "@",
-            mentionSelect: this.getMentionText
-        };
+        console.log("loadNamesForChat 2 | playerNames: " + this.playerNames);
+        this.changeDetector.detectChanges();
     }
 
     private removeNameForChat(name: string) {
+        console.log("removeNameForChat 1 | name: " + name + " | playerNames: " + this.playerNames);
         const index = this.playerNames.indexOf(name);
         if (index >= 0) {
             this.playerNames.splice(index, 1);
         }
-
-        const mentionIndex = this.mentionConfig.items.indexOf(name);
-        if (mentionIndex > 0) {
-            this.mentionConfig.items.splice(mentionIndex, 1);
-
-            this.mentionConfig = {
-                items: this.mentionConfig.items,
-                triggerChar: "@",
-                mentionSelect: this.getMentionText
-            };
-        }
+        this.mentionDirective.refreshItems(this.mentionConfig.items);
+        console.log("removeNameForChat 2 | playerNames: " + this.playerNames);
+        this.changeDetector.detectChanges();
     }
 
     private chatSettingsChanged() {
@@ -358,9 +359,14 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    onMentionShowingChanged(showing: boolean) {
+        this.mentionShowing = showing;
+        this.changeDetector.detectChanges();
+    }
+
     @HostListener('window:keydown', ['$event'])
     keyEvent(event: KeyboardEvent) {
-        if (event.key === "Enter" && this.settings.ChatInputOpen  /* && !this.autocompleteOn */) {
+        if (event.key === "Enter" && this.settings.ChatInputOpen && !this.mentionShowing) {
             event.preventDefault();
             let msg = this.input.value;
             if (!this.isNullOrWhitespace(msg) && msg !== this.commandPrefix) {
@@ -374,6 +380,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             } else {
                 this.rageConnector.call(DToClientEvent.CloseChat);
             }
+            this.mentionDirective.closeSearchList();
         } else if (event.key === " " && !this.settings.ChatInputOpen && (event.target as HTMLDivElement).id == "chat_container") {
             event.preventDefault();
         }
