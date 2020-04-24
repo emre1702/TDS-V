@@ -180,10 +180,18 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     private removeTeamPositionsInMapCreatorBrowser(teamNumber: number) {
-        this.data[6].pop();
-        if (this.editingTeamNumber == this.data[6].length) {
-            this.editingTeamNumber--;
+        while (this.data[6].length > teamNumber) {
+            if (this.data[6].length == 1) {
+                this.data[6][0] = [];
+                this.editingTeamNumber = 0;
+                return;
+            }
+            this.data[6].pop();
+            if (this.editingTeamNumber >= this.data[6].length) {
+                this.editingTeamNumber = this.data[6].length - 1;
+            }
         }
+
         this.changeDetector.detectChanges();
     }
 
@@ -206,11 +214,12 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     removeLastTeam() {
         if (this.data[6].length == 1) {
             this.data[6][0] = [];
-            return;
+            this.editingTeamNumber = 0;
+        } else {
+            this.data[6].pop();
+            this.editingTeamNumber = this.data[6].length - 1;
         }
 
-        this.data[6].pop();
-        this.editingTeamNumber = this.data[6].length - 1;
         this.rageConnector.call(DToClientEvent.RemoveMapCreatorTeamNumber, this.data[6].length);
         this.changeDetector.detectChanges();
     }
@@ -512,13 +521,24 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     onEditingTeamNumberChange(event: MatSelectChange) {
+        console.log("onEditingTeamNumberChange: " + event.value + " | Lobby-owner: " + this.settings.IsLobbyOwner
+            + " | data[6].length: " + this.data[6].length );
         if (event.value == "+" && (this.data[6].length == 0 || this.data[6][this.data[6].length - 1].length) && this.settings.IsLobbyOwner) {
+            console.log("onEditingTeamNumberChange 1.1 | this.data[6][lastTeam].length: "
+                + (this.data[6].length > 0 ? this.data[6][this.data[6].length - 1] : "no team"));
             this.data[6] = [...this.data[6], []];
+            console.log("onEditingTeamNumberChange 1.2 | this.data[6].length: " + this.data[6].length);
             this.editingTeamNumber = this.data[6].length - 1;
+            console.log("onEditingTeamNumberChange 1.3 | editingTeamNumber: " + this.editingTeamNumber);
         } else if (event.value == "+") {
+            console.log("onEditingTeamNumberChange 2.1");
             this.editingTeamNumber = this.data[6].length - 1;
-        } else
+            console.log("onEditingTeamNumberChange 2.2 | editingTeamNumber: " + this.editingTeamNumber);
+        } else {
+            console.log("onEditingTeamNumberChange 3.1");
             this.editingTeamNumber = event.value;
+            console.log("onEditingTeamNumberChange 3.2 | editingTeamNumber: " + this.editingTeamNumber);
+        }
         this.changeDetector.detectChanges();
     }
 
