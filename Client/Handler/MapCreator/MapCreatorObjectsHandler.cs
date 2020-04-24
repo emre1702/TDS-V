@@ -335,8 +335,7 @@ namespace TDS_Client.Handler.MapCreator
                 foreach (var vehPos in map.Vehicles)
                 {
                     string vehName = Convert.ToString(vehPos.Info);
-                    GetVehicle(vehName, vehPos.OwnerRemoteId, new Position3D(vehPos), 
-                        new Position3D(vehPos.RotX, vehPos.RotY, vehPos.RotZ), vehName, vehPos.Id);
+                    GetVehicle(vehName, vehPos.OwnerRemoteId, Position3D.GetPos(vehPos), Position3D.GetRot(vehPos), vehName, vehPos.Id);
                 }
             }
 
@@ -354,7 +353,10 @@ namespace TDS_Client.Handler.MapCreator
             }
 
             foreach (var obj in GetAll())
+            {
                 obj.IsSynced = true;
+            }
+                
 
             new TDSTimer(() =>
             {
@@ -362,6 +364,7 @@ namespace TDS_Client.Handler.MapCreator
                 {
                     obj.Freeze(true);
                     obj.SetCollision(false, true);
+                    obj.Entity.Rotation = obj.Rotation;
                 }
                     
             }, 3000);
