@@ -199,7 +199,8 @@ textarea {
 }
 
 #target-div {
-    height: 27vh;
+    height: auto;
+    min-height: 27vh;
 
     .info {
         float: left;
