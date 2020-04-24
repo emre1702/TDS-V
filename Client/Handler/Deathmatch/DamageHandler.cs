@@ -45,6 +45,7 @@ namespace TDS_Client.Handler.Deathmatch
                     return;
 
                 _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.GotHit, (int)sourcePlayer.RemoteId, weaponHash.ToString(), boneIdx.ToString());
+                _browserHandler.PlainMain.ShowBloodscreen();
             }
             else
                 _browserHandler.PlainMain.ShowBloodscreen();
