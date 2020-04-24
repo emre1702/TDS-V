@@ -6,6 +6,14 @@
     height: 40vh;
     overflow-y: hidden;
 
+    #menu-navigation {
+
+
+        .mat-icon {
+            margin-right: 10px;
+        }
+    }
+
     .mat-toolbar {
         height: 10%;
         display: flex;
@@ -30,4 +38,12 @@
     }
 }
 
+.glowing-button {
+    animation: glowing 1500ms infinite;
+}
 
+@keyframes glowing {
+    0% { box-shadow: 0 0 2px white; }
+    50% { box-shadow: 0 0 20px white; }
+    100% { box-shadow: 0 0 2px white; }
+  }
