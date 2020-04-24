@@ -200,7 +200,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private void ShowRoundRanking()
         {
-            if (_ranking is null)
+            if (_ranking is null || _ranking.Count == 0)
                 return;
 
             try
