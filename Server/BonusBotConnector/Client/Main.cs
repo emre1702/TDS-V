@@ -26,6 +26,8 @@ namespace BonusBotConnector.Client
 
             var settings = dbContext.BonusbotSettings.FirstOrDefault();
 
+            if (settings is null)
+                return;
             if (settings.GuildId is null)
                 return;
 

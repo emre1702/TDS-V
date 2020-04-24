@@ -24,17 +24,19 @@ namespace BonusBotConnector.Client.Requests
             _settings = settings;
         }
 
-        public void SendAdminApplication(Applications application)
+        public void SendAdminApplication(Applications application, ITDSPlayer player)
         {
+            if (player.Entity is null)
+                return;
             var request = new EmbedToChannelRequest
             {
-                Author = $"{application.Player.Name} ({application.Player.SCName})",
+                Author = $"{player.Entity.Name} ({player.Entity.SCName})",
                 Title = "A new application was sent.",
                 ColorR = 0,
                 ColorG = 0,
                 ColorB = 120
             };
-            request.Fields.Add(new EmbedField { Name = "Play hours:", Value = (application.Player.PlayerStats.PlayTime / 60f).ToString() });
+            request.Fields.Add(new EmbedField { Name = "Play hours:", Value = (player.Entity.PlayerStats.PlayTime / 60f).ToString() });
             request.Fields.Add(new EmbedField { Name = "Created:", Value = application.CreateTime.ToString() });
             SendRequest(request, _settings.AdminApplicationsChannelId);
         }

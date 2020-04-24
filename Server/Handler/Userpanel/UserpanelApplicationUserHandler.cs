@@ -146,7 +146,7 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.Entry(application).Reference(a => a.Player).LoadAsync();
             });
             
-            _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application);
+            _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application, player);
             return null;
         }
 
