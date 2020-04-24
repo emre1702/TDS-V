@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Entities;
@@ -26,6 +27,7 @@ namespace TDS_Client.Handler.Map
             _timerHandler = timerHandler;
 
             eventsHander.InFightStatusChanged += EventsHander_InFightStatusChanged;
+            eventsHander.MapBorderColorChanged += EventsHander_MapBorderColorChanged;
         }
 
         public void Load(List<Position3D> edges)
@@ -51,6 +53,11 @@ namespace TDS_Client.Handler.Map
                 Start();
             else
                 Stop();
+        }
+
+        private void EventsHander_MapBorderColorChanged(Color color)
+        {
+            _currentMapLimit.MapBorderColor = color;
         }
     }
 }

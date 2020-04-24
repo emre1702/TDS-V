@@ -162,6 +162,8 @@ namespace TDS_Client.Handler
 
             NotTempMapBorderColor = null;
 
+            _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
+
             _browserHandler.Angular.LoadChatSettings(loadedSyncedSettings.ChatWidth, loadedSyncedSettings.ChatMaxHeight,
                 loadedSyncedSettings.ChatFontSize, loadedSyncedSettings.HideDirtyChat);
 
@@ -196,6 +198,7 @@ namespace TDS_Client.Handler
             {
                 MapBorderColor = NotTempMapBorderColor.Value;
                 NotTempMapBorderColor = null;
+                _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
             }
         }
 
@@ -229,6 +232,7 @@ namespace TDS_Client.Handler
             {
                 case UserpanelSettingKey.MapBorderColor:
                     MapBorderColor = SharedUtils.GetColorFromHtmlRgba(color) ?? MapBorderColor;
+                    _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
                     break;
                 case UserpanelSettingKey.NametagDeadColor:
                     NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(color);

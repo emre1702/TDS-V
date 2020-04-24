@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
@@ -71,6 +72,9 @@ namespace TDS_Client.Handler.Events
 
         public delegate void MapCreatorSyncTeamObjectsDeletedDelegate(int teamNumber);
         public event MapCreatorSyncTeamObjectsDeletedDelegate MapCreatorSyncTeamObjectsDeleted;
+
+        public delegate void ColorDelegate(Color color);
+        public event ColorDelegate MapBorderColorChanged;
 
         private WeaponHash _lastWeaponHash;
 
@@ -261,6 +265,19 @@ namespace TDS_Client.Handler.Events
             }
         }
 
+        internal void OnMapBorderColorChanged(Color color)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnMapBorderColorChanged");
+                MapBorderColorChanged?.Invoke(color);
+                Logging.LogInfo("", "EventsHandler.OnMapBorderColorChanged", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
 
         internal void OnMapCreatorSyncObjectDeleted(MapCreatorObject mapCreatorObject)
         {

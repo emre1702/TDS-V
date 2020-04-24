@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
@@ -45,6 +46,8 @@ namespace TDS_Client.Handler.MapCreator
             _serializer = serializer;
 
             _entityStreamInEventMethod = new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn);
+
+            eventsHandler.MapBorderColorChanged += EventsHandler_MapBorderColorChanged;
 
             modAPI.Event.Add(FromBrowserEvent.RemoveMapCreatorPosition, OnRemoveMapCreatorPositionMethod);
             modAPI.Event.Add(FromBrowserEvent.RemoveMapCreatorTeamNumber, OnRemoveMapCreatorTeamNumberMethod);
@@ -422,6 +425,12 @@ namespace TDS_Client.Handler.MapCreator
             int lastId = (int)args[1];
             var mapCreatorData = _serializer.FromServer<MapCreateDataDto>(json);
             LoadMap(mapCreatorData, lastId);
+        }
+
+        private void EventsHandler_MapBorderColorChanged(Color color)
+        {
+            if (!(MapLimitDisplay is null))
+                MapLimitDisplay.MapBorderColor = color;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace TDS_Client.Handler.Entities
         private float _lastRotInMap;
         private bool _createdGpsRoutes;
         private bool _started;
-        private readonly Color _mapBorderColor;
+        public Color MapBorderColor;
 
         private readonly MapLimitType _type;
         private readonly Dictionary<MapLimitType, Action> _mapLimitTypeMethod = new Dictionary<MapLimitType, Action> { };
@@ -59,7 +59,7 @@ namespace TDS_Client.Handler.Entities
 
             _type = type;
             _maxOutsideCounter = maxOutsideCounter;
-            _mapBorderColor = mapBorderColor;
+            MapBorderColor = mapBorderColor;
 
             SetEdges(edges);
 
@@ -287,7 +287,7 @@ namespace TDS_Client.Handler.Entities
                 //var textureRes = Graphics.GetTextureResolution("commonmenu", "gradient_bgd");
                 //Graphics.Draw  .DrawSprite("commonmenu", "gradient_bgd", )
 
-                Color color = _mapBorderColor;
+                Color color = MapBorderColor;
                 float maxTop = Math.Max(edgeStartZ + 50, edgeTargetZ + 50);
                 totalMaxTop = Math.Max(totalMaxTop, maxTop);
                 if (_edgesMaxTop != -1)
