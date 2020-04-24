@@ -57,7 +57,8 @@ namespace TDS_Client.Handler.Map
 
         private void EventsHander_MapBorderColorChanged(Color color)
         {
-            _currentMapLimit.MapBorderColor = color;
+            if (!(_currentMapLimit is null))
+                _currentMapLimit.MapBorderColor = color;
         }
     }
 }
