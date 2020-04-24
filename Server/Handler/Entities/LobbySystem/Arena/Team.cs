@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 int teamhealth = 0;
                 foreach (var player in team.AlivePlayers)
                 {
-                    teamhealth += player.Health + player.Armor;
+                    teamhealth += player.Health + player.Armor + ((player.Lifes - 1) * StartTotalHP);
                 }
                 if (teamhealth > highesthealth)
                 {

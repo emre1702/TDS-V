@@ -248,7 +248,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private ITeam? GetRoundWinnerTeam()
         {
-            if (CurrentGameMode?.WinnerTeam != null)
+            if (CurrentGameMode?.WinnerTeam is { })
                 return CurrentGameMode.WinnerTeam;
             return CurrentRoundEndReason switch
             {
