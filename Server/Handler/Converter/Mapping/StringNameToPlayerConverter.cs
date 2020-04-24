@@ -13,8 +13,9 @@ namespace TDS_Server.Handler.Converter.Mapping
 
         public ITDSPlayer? Convert(string name, ITDSPlayer? destination, ResolutionContext _)
         {
-            if (name[0] == '@')
-                name = name.Substring(1);
+            if (name.Length >= 2 && name[0] == '@' && name[^1] == ':')
+                name = name[1..^1];
+
             return _tdsPlayerHandler.FindTDSPlayer(name);
         }
     }
