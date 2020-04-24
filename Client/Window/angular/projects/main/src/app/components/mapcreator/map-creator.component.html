@@ -111,7 +111,7 @@
                 <div id="team-spawns-top-row">
                     <mat-form-field color="accent">
                         <mat-label>{{ 'Team' | language: settings.Lang }}</mat-label>
-                        <mat-select [(ngModel)]="editingTeamNumber"
+                        <mat-select name="editTeamNumber" [(ngModel)]="editingTeamNumber"
                             (selectionChange)="onEditingTeamNumberChange($event)">
                             <mat-option *ngFor="let spawns of data[6]; let i = index" [value]="i">
                                 {{ 'Team ' + (i+1) }}
