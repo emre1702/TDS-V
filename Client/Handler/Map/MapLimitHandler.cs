@@ -28,6 +28,13 @@ namespace TDS_Client.Handler.Map
 
             eventsHander.InFightStatusChanged += EventsHander_InFightStatusChanged;
             eventsHander.MapBorderColorChanged += EventsHander_MapBorderColorChanged;
+            eventsHander.LobbyLeft += _ => Stop();
+            eventsHander.LocalPlayerDied += Stop;
+            eventsHander.MapCleared += Stop;
+            eventsHander.Respawned += EventsHander_Respawned;
+            eventsHander.RoundEnded += _ => Stop();
+            eventsHander.RoundStarted += _ => Start();
+
         }
 
         public void Load(List<Position3D> edges)
@@ -50,15 +57,22 @@ namespace TDS_Client.Handler.Map
         private void EventsHander_InFightStatusChanged(bool inFight)
         {
             if (inFight)
-                Start();
+                _currentMapLimit.SetType(_settingsHandler.MapLimitType, false);
             else
-                Stop();
+                _currentMapLimit.SetType(TDS_Shared.Data.Enums.MapLimitType.Display, false);
+
         }
 
         private void EventsHander_MapBorderColorChanged(Color color)
         {
             if (!(_currentMapLimit is null))
                 _currentMapLimit.MapBorderColor = color;
+        }
+
+        private void EventsHander_Respawned(bool inFightAgain)
+        {
+            if (inFightAgain)
+                Start();
         }
     }
 }

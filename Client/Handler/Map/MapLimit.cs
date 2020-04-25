@@ -33,7 +33,7 @@ namespace TDS_Client.Handler.Entities
         private bool _started;
         public Color MapBorderColor;
 
-        private readonly MapLimitType _type;
+        private MapLimitType _type;
         private readonly Dictionary<MapLimitType, Action> _mapLimitTypeMethod = new Dictionary<MapLimitType, Action> { };
         private readonly HashSet<MapLimitType> _typeToCheckFaster = new HashSet<MapLimitType> { MapLimitType.Block };
 
@@ -73,14 +73,7 @@ namespace TDS_Client.Handler.Entities
             if (_started)
                 Stop();
             Reset();
-            if (_type != MapLimitType.Display)
-            {
-                if (_typeToCheckFaster.Contains(_type))
-                    _checkTimerFaster = new TDSTimer(CheckFaster, Constants.MapLimitFasterCheckTimeMs, 0);
-                else
-                    _checkTimer = new TDSTimer(Check, 1000, 0);
-
-            }
+            SetType(_type, true);
             ModAPI.Event.Tick.Add(_tickEventMethod);
             DrawGpsRoutes();
             _started = true;
@@ -139,6 +132,30 @@ namespace TDS_Client.Handler.Entities
             {
                 ClearGpsRoutes();
                 DrawGpsRoutes();
+            }
+        }
+
+        public void SetType(MapLimitType type, bool ignoreEqual = false)
+        {
+            if (_type == type && !ignoreEqual)
+                return;
+            _type = type;
+            _checkTimerFaster?.Kill();
+            _checkTimerFaster = null;
+            _checkTimer?.Kill();
+            _checkTimer = null;
+
+            if (_type != MapLimitType.Display)
+            {
+                _minX = _edges.Count > 0 ? _edges.Min(v => v.X) : 0;
+                _minY = _edges.Count > 0 ? _edges.Min(v => v.Y) : 0;
+                _maxX = _edges.Count > 0 ? _edges.Max(v => v.X) : 0;
+                _maxY = _edges.Count > 0 ? _edges.Max(v => v.Y) : 0;
+
+                if (_typeToCheckFaster.Contains(_type))
+                    _checkTimerFaster = new TDSTimer(CheckFaster, Constants.MapLimitFasterCheckTimeMs, 0);
+                else
+                    _checkTimer = new TDSTimer(Check, 1000, 0);
             }
         }
 
