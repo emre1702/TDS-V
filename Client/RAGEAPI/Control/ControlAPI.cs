@@ -47,7 +47,7 @@ namespace TDS_Client.RAGEAPI.Control
 
         public bool IsDisabledControlPressed(InputGroup inputGroup, Data.Enums.Control control)
         {
-            return RAGE.Game.Pad.IsDisabledControlJustReleased((int)inputGroup, (int)control);
+            return RAGE.Game.Pad.IsDisabledControlPressed((int)inputGroup, (int)control);
         }
 
         public bool SetControlNormal(InputGroup inputGroup, Data.Enums.Control control, float amount)

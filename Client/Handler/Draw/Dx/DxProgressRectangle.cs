@@ -23,6 +23,7 @@ namespace TDS_Client.Handler.Draw.Dx
         private readonly bool _relativePos;
         private int? _msToEnd;
         private int _startTime;
+        private int _frontRectOffsetAbsoluteX;
 
         private readonly DxRectangle _backRect;
         private readonly DxRectangle _frontRect;
@@ -41,6 +42,7 @@ namespace TDS_Client.Handler.Draw.Dx
             this._width = width;
             this._filling = filling;
             this._relativePos = relativePos;
+            _frontRectOffsetAbsoluteX = frontRectOffsetAbsoluteX;
 
             float textX = GetTextX(x, width, alignmentX);
             float textY = GetTextY(y, height, alignmentY);
@@ -83,10 +85,11 @@ namespace TDS_Client.Handler.Draw.Dx
                 Progress = msWasted / _msToEnd.Value;
             }
 
+            float width = _width - _frontRectOffsetAbsoluteX * 2;
             if (_filling)
-                _frontRect.SetWidth(_progress * _width, _relativePos);
+                _frontRect.SetWidth(_progress * width, _relativePos);
             else
-                _frontRect.SetWidth(_width - _width * _progress, _relativePos);
+                _frontRect.SetWidth(_width - _width * _progress , _relativePos);
         }
 
         private float GetFrontRectX(float x, float width, AlignmentX alignment, bool relativePos)

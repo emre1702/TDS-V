@@ -142,7 +142,7 @@ namespace TDS_Client.Handler.Lobby
 
         private void CheckPlantDefuseStart()
         {
-            if (!ModAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, Control.Attack))
+            if (ShouldPlantDefuseStop())
                 return;
             if (_gotBomb)
                 CheckPlantStart();
@@ -166,9 +166,11 @@ namespace TDS_Client.Handler.Lobby
 
         public void StopRequestByServer()
         {
+            Logging.LogInfo("", "BombHandler.StopRequestByServer");
             _playerStatus = PlantDefuseStatus.None;
             _progressRect?.Remove();
             _progressRect = null;
+            Logging.LogInfo("", "BombHandler.StopRequestByServer", true);
         }
 
         private bool ShouldPlantDefuseStop()
@@ -185,15 +187,17 @@ namespace TDS_Client.Handler.Lobby
 
         private void CheckPlantStart()
         {
+            Logging.LogInfo("", "BombHandler.CheckPlantStart");
             if (!IsOnPlantSpot())
                 return;
             //_plantDefuseStartTick = TimerManager.ElapsedTicks;
             _playerStatus = PlantDefuseStatus.Planting;
-            _progressRect = new DxProgressRectangle(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.PLANTING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen,
+            _progressRect = new DxProgressRectangle(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.PLANTING, 0.5f, 0.71f, 0.2f, 0.08f, Color.White, Color.Black, Color.ForestGreen,
                 textScale: 0.7f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Center, frontPriority: 900);
             int plantTime = _settingsHandler.GetPlantOrDefuseTime(_playerStatus);
             _progressRect.SetAutomatic(plantTime);
             _remoteEventsSender.Send(ToServerEvent.StartPlanting);
+            Logging.LogInfo("", "BombHandler.CheckPlantStart", true);
         }
 
         private void CheckDefuseStart()
