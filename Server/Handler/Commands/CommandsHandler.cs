@@ -321,7 +321,7 @@ namespace TDS_Server.Handler.Commands
                 if (methodData.ToOneStringAfterParameterCount is { } && args.Count >= methodData.ToOneStringAfterParameterCount)
                     return false;
 
-                if (args.Count == requiredLength)
+                if (args.Count == requiredLength || args.Count > requiredLength && args.Count <= methodData.ParameterInfos.Count)
                     return false;
             }
 
