@@ -104,7 +104,6 @@ export class MentionDirective {
             if (spaceIndex < 0 || spaceIndex > cursorPos) {
                 this._element.nativeElement.value = currentValue.substring(0, startIndex) + str + currentValue.substring(cursorPos);
             }
-            console.log(this._element);
         }
 
         this.closeSearchList();
