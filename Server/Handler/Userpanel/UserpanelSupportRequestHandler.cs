@@ -323,11 +323,11 @@ namespace TDS_Server.Handler.Userpanel
         [JsonProperty("0")]
         public int ID { get; set; }
         [JsonProperty("1")]
-        public SupportType Type { get; set; }
-        [JsonProperty("2")]
         public string Title { get; set; } = string.Empty;
-        [JsonProperty("3")]
+        [JsonProperty("2")]
         public IEnumerable<SupportRequestMessageData> Messages { get; set; } = new List<SupportRequestMessageData>();
+        [JsonProperty("3")]
+        public SupportType Type { get; set; }
         [JsonProperty("4")]
         public int AtleastAdminLevel { get; set; }
         [JsonProperty("5")]

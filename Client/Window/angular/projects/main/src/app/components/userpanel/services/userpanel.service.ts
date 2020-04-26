@@ -17,6 +17,8 @@ import { LanguageEnum } from '../../../enums/language.enum';
 import { TimezoneEnum } from '../enums/timezone.enum';
 import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
+import { UserpanelSupportRequestListData } from '../interfaces/userpanelSupportRequestListData';
 
 @Injectable({
     providedIn: 'root'
@@ -98,20 +100,7 @@ export class UserpanelService {
         /** PlayerName */
         string
     ][];
-    supportRequests: [
-        /** ID */
-        number,
-        /** PlayerName */
-        string,
-        /** CreateTime */
-        string,
-        /** Title */
-        string,
-        /** Type */
-        UserpanelSupportType,
-        /** Closed */
-        boolean
-    ][];
+    supportRequests: UserpanelSupportRequestListData[];
     offlineMessages: [
         /** ID */
         number,

@@ -7,6 +7,7 @@ import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 
 @Component({
     selector: 'app-userpanel-support-view',
@@ -19,27 +20,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
     requestGroup: FormGroup;
     userpanelSupportType = UserpanelSupportType;
 
-    @Input() currentRequest: [
-        /** ID */
-        number,
-        /** Title */
-        string,
-        /** Messages */
-        [
-            /** Author */
-            string,
-            /** Message */
-            string,
-            /** CreateTime */
-            string
-        ][],
-        /** Type */
-        UserpanelSupportType,
-        /** AtleastAdminLevel */
-        number,
-        /** Closed */
-        boolean
-    ];
+    @Input() currentRequest: UserpanelSupportRequestData;
 
     readonly titleMinLength = 10;
     readonly titleMaxLength = 80;
@@ -57,9 +38,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
 
     ngOnInit() {
         this.requestGroup = new FormGroup({
-            title: new FormControl('', [Validators.required, Validators.minLength(this.titleMinLength), Validators.maxLength(this.titleMaxLength)]),
-            message: new FormControl('', [Validators.required, Validators.minLength(this.messageMinLength), Validators.maxLength(this.messageMaxLength)]),
-            type: new FormControl(UserpanelSupportType.Question, [Validators.required]),
+            message: new FormControl('', [Validators.required, Validators.minLength(this.messageMinLength), Validators.maxLength(this.messageMaxLength)])
         });
 
         if (this.currentRequest[5]) {

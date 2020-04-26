@@ -8,6 +8,7 @@ import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 
 @Component({
     selector: 'app-userpanel-support-user',
@@ -20,27 +21,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     creatingRequest = false;
     inRequest: number = undefined;
 
-    currentRequest: [
-        /** ID */
-        number,
-        /** Title */
-        string,
-        /** Messages */
-        [
-            /** Author */
-            string,
-            /** Message */
-            string,
-            /** CreateTime */
-            string
-        ][],
-        /** Type */
-        UserpanelSupportType,
-        /** AtleastAdminLevel */
-        number,
-        /** Closed */
-        boolean
-    ];
+    currentRequest: UserpanelSupportRequestData;
 
     requestGroup: FormGroup;
 
@@ -58,6 +39,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.rageConnector.listen(DFromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
+        this.userpanelService.supportRequestsLoaded.on(null, this.detectChanges.bind(this));
 
         this.requestGroup = new FormGroup({
             title: new FormControl('', [Validators.required, Validators.minLength(this.titleMinLength), Validators.maxLength(this.titleMaxLength)]),
@@ -69,6 +51,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.userpanelService.supportRequests = undefined;
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+        this.userpanelService.supportRequestsLoaded.off(null, this.detectChanges.bind(this));
         this.rageConnector.remove(DFromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
         this.rageConnector.callServer(DToServerEvent.LeftSupportRequestsList);
     }
@@ -77,7 +60,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         for (const control of Object.values(this.requestGroup.controls)) {
             control.reset();
         }
-        this.currentRequest = [0, "", [], UserpanelSupportType.Question, 1, false];
+        this.currentRequest = { 0: 0, 1: "", 2: [], 3: UserpanelSupportType.Question, 4: 1, 5: false };
         this.requestGroup.get("type").enable();
 
         this.creatingRequest = true;
@@ -100,7 +83,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
 
     submitRequest() {
         this.currentRequest[1] = this.requestGroup.get("title").value;
-        this.currentRequest[2] = [[ "", this.requestGroup.get("message").value, ""]];
+        this.currentRequest[2] = [{ 0: "", 1: this.requestGroup.get("message").value as string, 2: "" }];
         this.currentRequest[3] = this.requestGroup.get("type").value;
 
         this.rageConnector.callServer(DToServerEvent.SendSupportRequest, JSON.stringify(this.currentRequest));
