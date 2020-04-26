@@ -35,6 +35,7 @@
 
         public const string OnColorSettingChange = "b29";
 
+        public const string ReloadPlayerSettings = "b2";
         public const string RemoveMapCreatorPosition = "b30";
         public const string RemoveMapCreatorTeamNumber = "b31";
 

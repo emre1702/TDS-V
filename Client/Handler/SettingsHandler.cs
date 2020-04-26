@@ -116,6 +116,7 @@ namespace TDS_Client.Handler
             modAPI.Event.Add(FromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
             modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
             modAPI.Event.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, SyncRegisterLoginLanguageTexts);
+            modAPI.Event.Add(FromBrowserEvent.ReloadPlayerSettings, ReloadTempChangedPlayerSettings);
 
             modAPI.Nametags.Enabled = false;
 
@@ -264,6 +265,21 @@ namespace TDS_Client.Handler
         private void SyncRegisterLoginLanguageTexts(object[] args)
         {
             _browserHandler.RegisterLogin.SyncLanguage(Language);
+        }
+
+        private void ReloadTempChangedPlayerSettings(object[] args)
+        {
+            var oldMapColor = MapBorderColor;
+            MapBorderColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.MapBorderColor) ?? MapBorderColor;
+
+            if (oldMapColor != MapBorderColor) 
+                _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
+
+            NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagDeadColor);
+            NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagHealthEmptyColor) ?? NametagHealthEmptyColor;
+            NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagHealthFullColor) ?? NametagHealthFullColor;
+            NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagArmorEmptyColor);
+            NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
         }
 
         /*function loadSettings() {

@@ -20,6 +20,7 @@ export enum DToClientEvent {
     MapCreatorStartVehicleChoice = "b27",
     MapCreatorStopVehiclePreview = "b28",
     OnColorSettingChange = "b29",
+    ReloadPlayerSettings = "b2",
     RemoveMapCreatorPosition = "b30",
     RemoveMapCreatorTeamNumber = "b31",
     TeleportToPositionRotation = "b38",

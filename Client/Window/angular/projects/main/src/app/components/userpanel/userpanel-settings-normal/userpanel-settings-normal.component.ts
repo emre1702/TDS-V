@@ -241,6 +241,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         this.userpanelService.settingsNormalLoaded.off(null, this.loadSettings.bind(this));
 
         this.overrideLoadedSettingsWithCurrentSettings();
+        this.rageConnector.call(DToClientEvent.ReloadPlayerSettings);
     }
 
     private voiceVolumeSettingChanged(key: UserpanelSettingKey) {
