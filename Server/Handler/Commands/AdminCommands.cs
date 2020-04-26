@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
@@ -150,7 +151,15 @@ namespace TDS_Server.Handler.Commands
         public void KickPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_INFO, target.DisplayName, player.DisplayName, reason));
-            target.ModPlayer?.Kick(string.Format(target.Language.KICK_YOU_INFO, player.DisplayName, reason));
+            target.SendNotification(string.Format(target.Language.KICK_YOU_INFO, player.DisplayName, reason));
+            target.SendMessage(string.Format(target.Language.KICK_YOU_INFO, player.DisplayName, reason));
+
+            var _ = new TDSTimer(() =>
+            {
+                if (target.ModPlayer is { } && !target.ModPlayer.IsNull)
+                    target.ModPlayer?.Kick("Kick");
+            }, 2000);
+            
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
