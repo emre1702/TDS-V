@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Sync;
@@ -25,13 +26,15 @@ namespace TDS_Server.Handler.Events
         private readonly Dictionary<string, FromBrowserMaybeAsyncMethodDelegate> _maybeAsyncMethods;
         private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
 
+        private readonly IModAPI _modAPI;
         private readonly ILoggingHandler _loggingHandler;
         private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
 
         public RemoteBrowserEventsHandler(UserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler)
+            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI)
         {
+            _modAPI = modAPI;
             _loggingHandler = loggingHandler;
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
 
@@ -99,15 +102,20 @@ namespace TDS_Server.Handler.Events
                 {
                     ret = await _maybeAsyncMethods[eventName](player, args.Skip(1).ToArray());
                 }
-                else if (_methods.ContainsKey(eventName))
-                {
-                    ret = _methods[eventName](player, args.Skip(1).ToArray());
-                }
 
-                if (ret != null)
+                _modAPI.Thread.RunInMainThread(() =>
                 {
-                    player.SendEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret);
-                }
+                    if (_methods.ContainsKey(eventName))
+                    {
+                        ret = _methods[eventName](player, args.Skip(1).ToArray());
+                    }
+
+                    if (ret != null)
+                    {
+                        player.SendEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret);
+                    }
+                });
+                
             }
             catch (Exception ex)
             {

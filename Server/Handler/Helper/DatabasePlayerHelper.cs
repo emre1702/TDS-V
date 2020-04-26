@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
@@ -14,10 +15,13 @@ namespace TDS_Server.Core.Manager.PlayerManager
 {
     public class DatabasePlayerHelper : DatabaseEntityWrapper
     {
+        private readonly IModAPI _modAPI;
         private readonly ChatHandler _chatHandler;
 
-        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler, ChatHandler chatHandler) : base(dbContext, loggingHandler)
+        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler, ChatHandler chatHandler, IModAPI modAPI) 
+            : base(dbContext, loggingHandler)
         {
+            _modAPI = modAPI;
             _chatHandler = chatHandler;
 
             ExecuteForDB(dbContext =>
@@ -93,7 +97,10 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async Task ChangePlayerMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            _chatHandler.OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                _chatHandler.OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
+            });
 
             target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
 
@@ -108,7 +115,10 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            _chatHandler.OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                _chatHandler.OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
+            });
 
             target.PlayerStats.VoiceMuteTime = minutes == -1 ? (int?)null : minutes;
 

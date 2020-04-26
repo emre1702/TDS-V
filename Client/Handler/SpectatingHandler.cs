@@ -19,15 +19,24 @@ namespace TDS_Client.Handler
             get => _spectatingEntity;
             set
             {
+                Logging.LogInfo("", "SpectatingHandler.SpectatingEntity");
                 if (value == _spectatingEntity)
                     return;
-
+                
                 _spectatingEntity = value;
 
                 if (value != null)
+                {
+                    Logging.LogWarning(((IPlayer)value).Name, "SpectatingHandler.SpectatingEntity");
                     _camerasHandler.SpectateCam.Spectate(value);
-
+                }
+                else
+                {
+                    _camerasHandler.SpectateCam.Detach();
+                }
+                    
                 _camerasHandler.SpectateCam.Render(true, Constants.DefaultSpectatePlayerChangeEaseTime);
+                Logging.LogInfo("", "SpectatingHandler.SpectatingEntity", true);
             }
         }
 
@@ -52,7 +61,6 @@ namespace TDS_Client.Handler
             _utilsHandler = utilsHandler;
 
             eventsHandler.LobbyLeft += _ => Stop();
-            eventsHandler.MapCleared += Stop;
             eventsHandler.CountdownStarted += EventsHandler_CountdownStarted;
             eventsHandler.RoundStarted += EventsHandler_RoundStarted;
 
@@ -82,6 +90,7 @@ namespace TDS_Client.Handler
 
             _deathHandler.PlayerSpawn();
             _camerasHandler.SpectateCam.Activate();
+            _camerasHandler.SpectateCam.Render(true, Constants.DefaultSpectatePlayerChangeEaseTime);
 
             _bindsHandler.Add(Key.Right, Next);
             _bindsHandler.Add(Key.D, Next);
@@ -128,7 +137,10 @@ namespace TDS_Client.Handler
         {
             IPlayer target = _utilsHandler.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
             if (target != null)
+            {
                 SpectatingEntity = target;
+            }
+                
         }
 
         private void OnSpectatorReattachCamMethod(object[] args)

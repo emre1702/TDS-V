@@ -22,13 +22,11 @@ namespace TDS_Server.Handler
             if (inSpectator)
             {
                 player.ModPlayer.Transparency = 0;
-                player.ModPlayer.Freeze(true);
                 player.ModPlayer.SetCollisionsless(true, player.Lobby);
             }
             else
             {
                 player.ModPlayer.Transparency = 255;
-                player.ModPlayer.Freeze(false);
                 player.ModPlayer.SetCollisionsless(false, player.Lobby);
 
                 _modAPI.Sync.SendEvent(player, ToClientEvent.StopSpectator);
@@ -55,6 +53,7 @@ namespace TDS_Server.Handler
             if (targetPlayer?.ModPlayer is { } modTarget)
             {
                 targetPlayer.Spectators.Add(player);
+                // player.ModPlayer.Position = targetPlayer.ModPlayer.Position.AddToZ(10);
                 _modAPI.Sync.SendEvent(player, ToClientEvent.SetPlayerToSpectatePlayer, targetPlayer.RemoteId);
             }
             else 

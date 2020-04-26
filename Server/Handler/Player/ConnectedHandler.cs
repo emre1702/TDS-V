@@ -18,6 +18,7 @@ namespace TDS_Server.Handler.Player
 {
     public class ConnectedHandler
     {
+        private readonly IModAPI _modAPI;
         private readonly BansHandler _bansHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
@@ -27,8 +28,10 @@ namespace TDS_Server.Handler.Player
             BansHandler bansHandler,
             EventsHandler eventsHandler,
             LobbiesHandler lobbiesHandler,
-            DatabasePlayerHelper databasePlayerHelper)
+            DatabasePlayerHelper databasePlayerHelper,
+            IModAPI modAPI)
         {
+            _modAPI = modAPI;
             _bansHandler = bansHandler;
             _eventsHandler = eventsHandler;
             _lobbiesHandler = lobbiesHandler;
@@ -47,21 +50,32 @@ namespace TDS_Server.Handler.Player
 
             var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, modPlayer.IPAddress, modPlayer.Serial, modPlayer.SocialClubName,
                 modPlayer.SocialClubId, false);
-            if (!Utils.HandleBan(modPlayer, ban))
+
+            if (ban is { })
+            {
+                _modAPI.Thread.RunInMainThread(()
+                    => Utils.HandleBan(modPlayer, ban));
                 return;
+            }
 
             var playerIdName = await _databasePlayerHelper.GetPlayerIdName(modPlayer);
             if (playerIdName is null)
             {
-                modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, modPlayer.SocialClubName, false);
+                _modAPI.Thread.RunInMainThread(() 
+                    => modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, modPlayer.SocialClubName, false));
                 return;
             }
 
             ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, playerIdName.Id);
-            if (!Utils.HandleBan(modPlayer, ban))
+            if (ban is { })
+            {
+                _modAPI.Thread.RunInMainThread(()
+                    => Utils.HandleBan(modPlayer, ban));
                 return;
-
-            modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true);
+            }
+                
+            _modAPI.Thread.RunInMainThread(()
+                => modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
         }
     }
 }

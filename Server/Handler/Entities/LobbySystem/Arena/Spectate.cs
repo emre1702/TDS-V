@@ -36,5 +36,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
             }
         }
+
+        private void MakeSurePlayerSpectatesAnyone(ITDSPlayer player)
+        {
+            if (player.Spectates is { })
+                return;
+
+            SpectateNext(player, true);
+        }
     }
 }

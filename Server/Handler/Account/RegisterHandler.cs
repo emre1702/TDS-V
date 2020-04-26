@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
@@ -13,14 +14,15 @@ namespace TDS_Server.Core.Manager.PlayerManager
 {
     public class RegisterHandler : DatabaseEntityWrapper
     {
+        private readonly IModAPI _modAPI;
         private readonly EventsHandler _eventsHandler;
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly ServerStartHandler _serverStartHandler;
 
-        public RegisterHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler, DatabasePlayerHelper databasePlayerHelper,
-            ServerStartHandler serverStartHandler)
+        public RegisterHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler, 
+            DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler)
             : base(dbContext, loggingHandler)
-            => (_eventsHandler, _databasePlayerHelper, _serverStartHandler) = (eventsHandler, databasePlayerHelper, serverStartHandler);
+            => (_modAPI, _eventsHandler, _databasePlayerHelper, _serverStartHandler) = (modAPI, eventsHandler, databasePlayerHelper, serverStartHandler);
 
         public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email)
         {
@@ -31,15 +33,21 @@ namespace TDS_Server.Core.Manager.PlayerManager
             if (int.TryParse(username, out int result))
                 return;
 
-            Players dbPlayer = new Players
+            Players? dbPlayer = null;
+            _modAPI.Thread.RunInMainThread(() =>
             {
-                Name = username,
-                SCName = player.ModPlayer.SocialClubName,
-                Password = Utils.HashPWServer(password),
-                Email = email,
-                IsVip = false,
-                AdminLvl = SharedUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
-            };
+                dbPlayer = new Players
+                {
+                    Name = username,
+                    SCName = player.ModPlayer.SocialClubName,
+                    Password = Utils.HashPWServer(password),
+                    Email = email,
+                    IsVip = false,
+                    AdminLvl = SharedUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
+                };
+            });
+            if (dbPlayer is null)
+                return;
 
             dbPlayer.PlayerSettings = new PlayerSettings
             {
@@ -72,9 +80,12 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 await dbContext.SaveChangesAsync();
             });
 
-            LoggingHandler.LogRest(LogType.Register, player, true);
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                LoggingHandler.LogRest(LogType.Register, player, true);
 
-            _eventsHandler.OnPlayerRegister(player, dbPlayer);
+                _eventsHandler.OnPlayerRegister(player, dbPlayer);
+            });
 
             //Todo: Implement that
             // _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
@@ -88,7 +99,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             {
                 if (!_serverStartHandler.IsReadyForLogin)
                 {
-                    player.SendNotification(player.Language.TRY_AGAIN_LATER);
+                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
                     return;
                 }
 
@@ -96,17 +107,20 @@ namespace TDS_Server.Core.Manager.PlayerManager
                     return;
                 if (username.Length < 3 || username.Length > 20)
                     return;
-                if (await _databasePlayerHelper.DoesPlayerWithScnameExist(player.ModPlayer.SocialClubName))
+                string? scName = null;
+                _modAPI.Thread.RunInMainThread(() => scName = player.ModPlayer.SocialClubName);
+                if (await _databasePlayerHelper.DoesPlayerWithScnameExist(scName!))
                     return;
                 if (await _databasePlayerHelper.DoesPlayerWithNameExist(username))
                 {
-                    player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS);
+                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
                     return;
                 }
                 char? invalidChar = Utils.CheckNameValid(username);
                 if (invalidChar.HasValue)
                 {
-                    player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value));
+                    _modAPI.Thread.RunInMainThread(() 
+                        => player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value)));
                     return;
                 }
                 RegisterPlayer(player, username, password, email.Length != 0 ? email : null);

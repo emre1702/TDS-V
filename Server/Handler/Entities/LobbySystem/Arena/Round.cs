@@ -16,6 +16,7 @@ using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 using TDS_Shared.Core;
+using TDS_Server.Data.Extensions;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -95,7 +96,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     LoggingHandler.LogError($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
                     SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
                     if (!IsOfficial)
-                        ModAPI.Thread.RunInMainThread(async () => await Remove());
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Remove();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
             else if (CurrentRoundStatus != RoundStatus.RoundEnd)
@@ -131,6 +134,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 MixTeams();
             ModAPI.Sync.SendEvent(this, ToClientEvent.MapChange, nextMap.ClientSyncedDataJson);
             _currentMap = nextMap;
+            _currentMapSpectatorPosition = _currentMap.LimitInfo.Center.SwitchNamespace().AddToZ(10);
             RoundEndReasonText = null;
         }
 
@@ -156,40 +160,44 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return;
             }
 
-            if (!isEmpty)
+            ModAPI.Thread.RunInMainThread(() =>
             {
-                _currentRoundEndWinnerTeam = GetRoundWinnerTeam();
-                RoundEndReasonText = GetRoundEndReasonText(_currentRoundEndWinnerTeam);
-
-                FuncIterateAllPlayers((character, team) =>
+                if (!isEmpty)
                 {
-                    character.SendEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
-                    if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
-                        character.ModPlayer?.Kill();
-                    character.Lifes = 0;
-                });
-            }
+                    _currentRoundEndWinnerTeam = GetRoundWinnerTeam();
+                    RoundEndReasonText = GetRoundEndReasonText(_currentRoundEndWinnerTeam);
+
+                    FuncIterateAllPlayers((character, team) =>
+                    {
+                        character.SendEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
+                        if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
+                            character.ModPlayer?.Kill();
+                        character.Lifes = 0;
+                    });
+                }
 
 
-            foreach (var team in Teams)
-            {
-                team.AlivePlayers?.Clear();
-            }
+                foreach (var team in Teams)
+                {
+                    team.AlivePlayers?.Clear();
+                }
 
-            DmgSys.Clear();
+                DmgSys.Clear();
 
-            CurrentGameMode?.StopRound();
+                CurrentGameMode?.StopRound();
 
-            if (!isEmpty)
-            {
-                RewardAllPlayer();
-                _ranking = GetOrderedRoundRanking();
-                SaveAllPlayerRoundStats();
-            }
-            else
-            {
-                _ranking = null;
-            }
+                if (!isEmpty)
+                {
+                    RewardAllPlayer();
+                    _ranking = GetOrderedRoundRanking();
+                    SaveAllPlayerRoundStats();
+                }
+                else
+                {
+                    _ranking = null;
+                }
+            });
+            
             await ExecuteForDBAsync(async (dbContext) =>
             {
                 await dbContext.SaveChangesAsync();
@@ -227,6 +235,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     third.ModPlayer!.Freeze(true);
                     third.ModPlayer.Dimension = Dimension;
                 }
+
+                var othersPos = new Position3D(-425.48, 1123.55, 335.85);
+                foreach (var player in Players.Values)
+                {
+                    if (player != winner && player != second && player != third && player.ModPlayer is { }) 
+                        player.ModPlayer.Position = othersPos;
+                } 
 
                 string json = Serializer.ToBrowser(_ranking);
                 ModAPI.Sync.SendEvent(this, ToClientEvent.StartRankingShowAfterRound, json, winner.RemoteId, second?.RemoteId ?? 0, third?.RemoteId ?? 0);

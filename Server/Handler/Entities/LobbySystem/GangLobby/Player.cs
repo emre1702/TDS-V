@@ -12,13 +12,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             
             if (!await base.AddPlayer(player, null))
                 return false;
-            team.AddPlayer(player);
+            ModAPI.Thread.RunInMainThread(() =>
+            {
+                team.AddPlayer(player);
 
-            player.ModPlayer?.Freeze(false);
-            player.ModPlayer?.SetInvincible(true);
-
-
-
+                player.ModPlayer?.Freeze(false);
+                player.ModPlayer?.SetInvincible(true);
+            });
+            
             return true;
         }
     }

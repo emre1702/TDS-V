@@ -88,14 +88,27 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             FuncIterateAllPlayers((player, team) =>
             {
-                if (team != null && !team.IsSpectator)
+                if (team?.IsSpectator == false)
                 {
                     RemoveAsSpectator(player);
                     team.SpectateablePlayers?.Add(player);
                 }
+                else
+                {
+                    MakeSurePlayerSpectatesAnyone(player);
+                }
                 SetPlayerReadyForRound(player);
                 player.SendEvent(ToClientEvent.CountdownStart, team is null || team.IsSpectator);
             });
+
+            /*FuncIterateAllPlayers((player, team) =>
+            {
+                if (team is null || team.IsSpectator)
+                {
+                    if (player.Spectates is { } && player.ModPlayer is { } && player.Spectates.ModPlayer is { })
+                        player.ModPlayer.Position = player.Spectates.ModPlayer.Position.AddToZ(10);
+                }
+            });*/
         }
 
         private void StartRoundForAllPlayer()

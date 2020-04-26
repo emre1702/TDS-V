@@ -9,16 +9,19 @@ using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
 using TDS_Shared.Core;
+using TDS_Server.Data.Interfaces.ModAPI;
 
 namespace TDS_Server.Handler.Maps
 {
     public class MapsRatingsHandler : DatabaseEntityWrapper
     {
+        private readonly IModAPI _modAPI;
         private Serializer _serializer;
         private MapsLoadingHandler _mapsLoadingHandler;
         private MapCreatorHandler _mapsCreatingHandler;
 
         public MapsRatingsHandler(
+            IModAPI modAPI,
             EventsHandler eventsHandler, 
             Serializer serializer, 
             MapsLoadingHandler mapsLoadingHandler,
@@ -27,6 +30,7 @@ namespace TDS_Server.Handler.Maps
             ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
+            _modAPI = modAPI;
             _serializer = serializer;
             _mapsLoadingHandler = mapsLoadingHandler;
             _mapsCreatingHandler = mapsCreatorHandler;
@@ -58,7 +62,7 @@ namespace TDS_Server.Handler.Maps
             map.RatingAverage = map.Ratings.Average(r => r.Rating);
 
             if (map.Info.IsNewMap)
-                _mapsCreatingHandler.AddedMapRating(map);
+                _modAPI.Thread.RunInMainThread(() => _mapsCreatingHandler.AddedMapRating(map));
         }
 
         public void SendPlayerHisRatings(ITDSPlayer player)
@@ -69,7 +73,7 @@ namespace TDS_Server.Handler.Maps
                 return;
 
             var ratingsDict = player.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
-            player.SendEvent(ToClientEvent.LoadOwnMapRatings, _serializer.ToBrowser(ratingsDict));
+            _modAPI.Thread.RunInMainThread(() => player.SendEvent(ToClientEvent.LoadOwnMapRatings, _serializer.ToBrowser(ratingsDict)));
         }
     }
 }

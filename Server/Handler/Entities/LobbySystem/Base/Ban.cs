@@ -22,21 +22,24 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (ban is null)
                 return null;
 
-            if (length.HasValue)
+            ModAPI.Thread.RunInMainThread(() =>
             {
-                double hours = length.Value.TotalMinutes / 60;
-                if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                    target.SendMessage(string.Format(target.Language.TIMEBAN_LOBBY_YOU_INFO, hours, Entity.Name, admin.DisplayName, reason));
+                if (length.HasValue)
+                {
+                    double hours = length.Value.TotalMinutes / 60;
+                    if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                        target.SendMessage(string.Format(target.Language.TIMEBAN_LOBBY_YOU_INFO, hours, Entity.Name, admin.DisplayName, reason));
+                    else
+                        target.SendMessage(string.Format(target.Language.TIMEBAN_YOU_INFO, hours, admin.DisplayName, reason));
+                }
                 else
-                    target.SendMessage(string.Format(target.Language.TIMEBAN_YOU_INFO, hours, admin.DisplayName, reason));
-            }
-            else
-            {
-                if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                    target.SendMessage(string.Format(target.Language.PERMABAN_LOBBY_YOU_INFO, Entity.Name, admin.DisplayName, reason));
-                else
-                    target.SendMessage(string.Format(target.Language.PERMABAN_YOU_INFO, admin.DisplayName, reason));
-            }
+                {
+                    if (Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                        target.SendMessage(string.Format(target.Language.PERMABAN_LOBBY_YOU_INFO, Entity.Name, admin.DisplayName, reason));
+                    else
+                        target.SendMessage(string.Format(target.Language.PERMABAN_YOU_INFO, admin.DisplayName, reason));
+                }
+            });
             return ban;
         }
 
@@ -74,37 +77,41 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 await dbContext.SaveChangesAsync();
             });
 
-            if (length.HasValue)
+            ModAPI.Thread.RunInMainThread(() =>
             {
-                if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                    LangHelper.SendAllChatMessage(lang => string.Format(lang.TIMEBAN_LOBBY_INFO, target.Name, length.Value.TotalMinutes / 60, Entity.Name, admin.DisplayName, reason));
-                else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                    SendAllPlayerLangMessage(lang => string.Format(lang.TIMEBAN_INFO, target.Name, length.Value.TotalMinutes / 60, admin.DisplayName, reason));
-                else
-                    SendAllPlayerLangMessage(lang => string.Format(lang.TIMEBAN_LOBBY_INFO, target.Name, length.Value.TotalMinutes / 60, Entity.Name, admin.DisplayName, reason));
-            }
-            else
-            {
-                if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                    LangHelper.SendAllChatMessage(lang => string.Format(lang.PERMABAN_LOBBY_INFO, target.Name, Entity.Name, admin.DisplayName, reason));
-                else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                    SendAllPlayerLangMessage(lang => string.Format(lang.PERMABAN_INFO, target.Name, admin.DisplayName, reason));
-                else
-                    SendAllPlayerLangMessage(lang => string.Format(lang.PERMABAN_LOBBY_INFO, target.Name, Entity.Name, admin.DisplayName, reason));
-            }
-
-            if (IsOfficial && ban is { })
-            {
-                if (ban.LobbyId == LobbiesHandler.MainMenu.Id)
-                    BansHandler.AddServerBan(ban);
-                var embedFields = BonusBotConnectorClient.Helper?.GetBanEmbedFields(ban);
-                if (embedFields is { })
+                if (length.HasValue)
                 {
-                    BonusBotConnectorClient.ChannelChat?.SendBanInfo(ban, embedFields);
-                    BonusBotConnectorClient.PrivateChat?.SendBanMessage(target.PlayerSettings.DiscordUserId, ban, embedFields);
+                    if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                        LangHelper.SendAllChatMessage(lang => string.Format(lang.TIMEBAN_LOBBY_INFO, target.Name, length.Value.TotalMinutes / 60, Entity.Name, admin.DisplayName, reason));
+                    else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                        SendAllPlayerLangMessage(lang => string.Format(lang.TIMEBAN_INFO, target.Name, length.Value.TotalMinutes / 60, admin.DisplayName, reason));
+                    else
+                        SendAllPlayerLangMessage(lang => string.Format(lang.TIMEBAN_LOBBY_INFO, target.Name, length.Value.TotalMinutes / 60, Entity.Name, admin.DisplayName, reason));
                 }
-            }
+                else
+                {
+                    if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                        LangHelper.SendAllChatMessage(lang => string.Format(lang.PERMABAN_LOBBY_INFO, target.Name, Entity.Name, admin.DisplayName, reason));
+                    else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                        SendAllPlayerLangMessage(lang => string.Format(lang.PERMABAN_INFO, target.Name, admin.DisplayName, reason));
+                    else
+                        SendAllPlayerLangMessage(lang => string.Format(lang.PERMABAN_LOBBY_INFO, target.Name, Entity.Name, admin.DisplayName, reason));
+                }
 
+                if (IsOfficial && ban is { })
+                {
+                    if (ban.LobbyId == LobbiesHandler.MainMenu.Id)
+                        BansHandler.AddServerBan(ban);
+                    var embedFields = BonusBotConnectorClient.Helper?.GetBanEmbedFields(ban);
+                    if (embedFields is { })
+                    {
+                        BonusBotConnectorClient.ChannelChat?.SendBanInfo(ban, embedFields);
+                        BonusBotConnectorClient.PrivateChat?.SendBanMessage(target.PlayerSettings.DiscordUserId, ban, embedFields);
+                    }
+                }
+
+            });
+            
             return ban;
         }
 
@@ -124,22 +131,25 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 PlayerBans? ban = await dbContext.PlayerBans.FindAsync(target.Id, Entity.Id);
                 if (ban is null)
                 {
-                    admin.SendMessage(admin.Language.PLAYER_ISNT_BANED);
+                    ModAPI.Thread.RunInMainThread(() => admin.SendMessage(admin.Language.PLAYER_ISNT_BANED));
                     return;
                 }
                 dbContext.PlayerBans.Remove(ban);
                 await dbContext.SaveChangesAsync();
 
                 if (ban.LobbyId == LobbiesHandler.MainMenu.Id)
-                    BansHandler.RemoveServerBanByPlayerId(ban);
+                    ModAPI.Thread.RunInMainThread(() => BansHandler.RemoveServerBanByPlayerId(ban));
             });
 
-            if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, target.Name, Entity.Name, admin.AdminLevelName, reason));
-            else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
-                LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_INFO, target.Name, admin.AdminLevelName, reason));
-            else
-                SendAllPlayerLangMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, target.Name, Entity.Name, admin.AdminLevelName, reason));
+            ModAPI.Thread.RunInMainThread(() =>
+            {
+                if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                    LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, target.Name, Entity.Name, admin.AdminLevelName, reason));
+                else if (Entity.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu)
+                    LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_INFO, target.Name, admin.AdminLevelName, reason));
+                else
+                    SendAllPlayerLangMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, target.Name, Entity.Name, admin.AdminLevelName, reason));
+            });
         }
 
         public async Task<bool> IsPlayerBaned(ITDSPlayer character)
@@ -158,7 +168,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 {
                     duration = DateTime.UtcNow.DurationTo(ban.EndTimestamp.Value);
                 }
-                character.SendMessage(string.Format(character.Language.GOT_LOBBY_BAN, duration, ban.Reason));
+                ModAPI.Thread.RunInMainThread(() => character.SendMessage(string.Format(character.Language.GOT_LOBBY_BAN, duration, ban.Reason)));
                 return true;
             }
             else if (ban.EndTimestamp.HasValue)

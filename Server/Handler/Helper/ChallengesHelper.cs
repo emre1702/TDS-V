@@ -58,8 +58,12 @@ namespace TDS_Server.Handler.Helper
                     await dbContext.Entry(player.Entity).Collection(p => p.Challenges).LoadAsync();
                 });
             }
-            player.InitChallengesDict();
-            player.SendBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                player.InitChallengesDict();
+                player.SendBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));
+            });
+           
         }
 
         private async void EventsHandler_PlayerRegister(ITDSPlayer player, Players dbPlayer)

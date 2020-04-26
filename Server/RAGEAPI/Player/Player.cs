@@ -11,14 +11,19 @@ namespace TDS_Server.RAGEAPI.Player
     {
         internal readonly GTANetworkAPI.Player _instance;
 
+        private string _name;
+
         internal Player(GTANetworkAPI.Player instance) : base(instance)
         {
             _instance = instance;
+
+            _name = _instance.Name;
+            SocialClubId = _instance.SocialClubId;
+            SocialClubName = _instance.SocialClubName;
         }
 
-        public string Name => _instance.Name;
-        public ulong SocialClubId => _instance.SocialClubId;
-        public string SocialClubName => _instance.SocialClubName;
+        public ulong SocialClubId { get; }
+        public string SocialClubName { get; }
 
         public ushort RemoteId => _instance.Handle.Value;
         public int Transparency
@@ -28,8 +33,12 @@ namespace TDS_Server.RAGEAPI.Player
         }
         string IPlayer.Name
         {
-            get => _instance.Name;
-            set => _instance.Name = value;
+            get => _name;
+            set 
+            {
+                _instance.Name = value;
+                _name = value;
+            }
         }
         public int VehicleSeat => _instance.VehicleSeat;
 

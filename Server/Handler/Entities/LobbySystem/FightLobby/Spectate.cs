@@ -16,7 +16,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 SpectateOtherSameTeam(player, forward);
         }
 
-        protected static void RemoveAsSpectator(ITDSPlayer character)
+        protected void RemoveAsSpectator(ITDSPlayer character)
         {
             if (character.Spectates is null)
                 return;
@@ -53,13 +53,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 nextPlayer = GetNextSpectatePlayerInAllTeams(currentlySpectating);
             else
                 nextPlayer = GetPreviousSpectatePlayerInAllTeams(currentlySpectating);
-            nextPlayer ??= player;
+            nextPlayer ??= currentlySpectating;
 
             player.Spectates = nextPlayer;
-            if (nextPlayer != null)
-            {
-                player.Spectates = nextPlayer;
-            }
         }
 
         private ITDSPlayer? GetNextSpectatePlayerInSameTeam(ITDSPlayer start)

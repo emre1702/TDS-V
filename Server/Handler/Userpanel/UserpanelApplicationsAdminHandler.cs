@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
@@ -18,6 +19,7 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper
     {
+        private readonly IModAPI _modAPI;
         private readonly UserpanelPlayerStatsHandler _userpanelPlayerStatsHandler;
         private readonly ISettingsHandler _settingsHandler;
         private readonly Serializer _serializer;
@@ -25,10 +27,11 @@ namespace TDS_Server.Handler.Userpanel
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler,
+            IModAPI modAPI)
             : base(dbContext, loggingHandler)
-            => (_userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler)
-            = (userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);
+            => (_modAPI, _userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler)
+            = (modAPI, userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);
 
         public async Task<string?> GetData(ITDSPlayer player)
         {
@@ -141,16 +144,20 @@ namespace TDS_Server.Handler.Userpanel
             if (playerId == default)
                 return null;
 
-            var target = _tdsPlayerHandler.GetIfExists(playerId);
-            if (target is { })
+            _modAPI.Thread.RunInMainThread(() =>
             {
-                target.SendMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));
-                player.SendMessage(string.Format(player.Language.SENT_APPLICATION_TO, target.DisplayName));
-            }
-            else
-            {
-                player.SendMessage(player.Language.SENT_APPLICATION);
-            }
+                var target = _tdsPlayerHandler.GetIfExists(playerId);
+                if (target is { })
+                {
+                    target.SendMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));
+                    player.SendMessage(string.Format(player.Language.SENT_APPLICATION_TO, target.DisplayName));
+                }
+                else
+                {
+                    player.SendMessage(player.Language.SENT_APPLICATION);
+                }
+            });
+            
 
             return null;
         }

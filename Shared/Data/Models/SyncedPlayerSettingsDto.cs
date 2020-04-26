@@ -87,5 +87,14 @@ namespace TDS_Shared.Data.Models
         [JsonProperty("31")]
         public bool ShowCursorOnChatOpen { get; set; }
         #endregion Chat
+
+        #region Scoreboard
+        [JsonProperty("32")]
+        public Enums.ScoreboardPlayerSorting ScoreboardPlayerSorting { get; set; }
+        [JsonProperty("33")]
+        public bool ScoreboardPlayerSortingDesc { get; set; }
+        [JsonProperty("34")]
+        public Enums.TimeSpanUnitsOfTime ScoreboardPlaytimeUnit { get; set; }
+        #endregion
     }
 }

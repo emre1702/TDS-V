@@ -15,6 +15,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     partial class Arena
     {
         private MapDto? _currentMap;
+        private Position3D? _currentMapSpectatorPosition;
         private List<MapDto> _maps = new List<MapDto>();
         private readonly List<IBlip> _mapBlips = new List<IBlip>();
         private string _mapsJson = string.Empty;

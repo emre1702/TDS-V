@@ -28,11 +28,11 @@ namespace TDS_Server.Handler.Entities.GameModes
                 /*lobby.SetRoundStatus(Enums.RoundStatus.RoundEnd, Enums.RoundEndReason.Error);
                 return;*/
                 // Create dummy gangwar area
-                gangwarArea = new GangwarArea(map, settingsHandler, gangsHandler, serviceProvider.GetRequiredService<TDSDbContext>(), loggingHandler);
+                gangwarArea = new GangwarArea(map, modAPI, settingsHandler, gangsHandler, serviceProvider.GetRequiredService<TDSDbContext>(), loggingHandler);
             }
             else if (!lobby.IsGangActionLobby)
             {
-                gangwarArea = new GangwarArea(gangwarArea, settingsHandler, gangsHandler, serviceProvider.GetRequiredService<TDSDbContext>(), loggingHandler);
+                gangwarArea = new GangwarArea(gangwarArea, modAPI, settingsHandler, gangsHandler, serviceProvider.GetRequiredService<TDSDbContext>(), loggingHandler);
             }
             _gangwarArea = gangwarArea;
         }

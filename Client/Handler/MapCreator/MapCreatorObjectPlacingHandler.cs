@@ -15,7 +15,7 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.MapCreator
 {
-    public class MapCreatorObjectPlacingHandler
+    public class MapCreatorObjectPlacingHandler : ServiceBase
     {
 #pragma warning disable IDE1006 // Naming Styles
         private const bool ONLY_HOLD_OWN_OBJECTS = true;
@@ -38,7 +38,6 @@ namespace TDS_Client.Handler.MapCreator
         private float _clampDistance = 50f;
         private bool _placeOnGround = true;
 
-        private readonly IModAPI _modAPI;
         private readonly MapCreatorDrawHandler _mapCreatorDrawHandler;
         private readonly MapCreatorObjectsHandler _mapCreatorObjectsHandler;
         private readonly CursorHandler _cursorHandler;
@@ -56,13 +55,13 @@ namespace TDS_Client.Handler.MapCreator
         private readonly TimerHandler _timerHandler;
         private readonly ClickedMarkerStorer _clickedMarkerStorer;
 
-        public MapCreatorObjectPlacingHandler(IModAPI modAPI, MapCreatorDrawHandler mapCreatorDrawHandler,
+        public MapCreatorObjectPlacingHandler(IModAPI modAPI, LoggingHandler loggingHandler, MapCreatorDrawHandler mapCreatorDrawHandler,
             MapCreatorObjectsHandler mapCreatorObjectsHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler,
             SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, CamerasHandler camerasHandler, InstructionalButtonHandler instructionalButtonHandler,
             UtilsHandler utilsHandler, MapCreatorObjectsPreviewHandler mapCreatorObjectsPreviewHandler, MapCreatorVehiclesPreviewHandler mapCreatorVehiclesPreviewHandler,
             MapCreatorSyncHandler mapCreatorSyncHandler, EventsHandler eventsHandler, DxHandler dxHandler, TimerHandler timerHandler, ClickedMarkerStorer clickedMarkerStorer)
+            : base(modAPI, loggingHandler)
         {
-            _modAPI = modAPI;
             _mapCreatorDrawHandler = mapCreatorDrawHandler;
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
             _cursorHandler = cursorHandler;
@@ -104,7 +103,7 @@ namespace TDS_Client.Handler.MapCreator
         public void StartNewPlacing(MapCreatorPositionType type, object editingTeamIndexOrObjectName)
         {
             MapCreatorObject obj = _mapCreatorObjectsHandler.CreateMapCreatorObject(type, editingTeamIndexOrObjectName, 
-                _modAPI.LocalPlayer.RemoteId, _modAPI.LocalPlayer.Position, _modAPI.LocalPlayer.Rotation);
+                ModAPI.LocalPlayer.RemoteId, ModAPI.LocalPlayer.Position, ModAPI.LocalPlayer.Rotation);
             if (obj == null)
                 return;
             if (type == MapCreatorPositionType.Object)
@@ -232,7 +231,7 @@ namespace TDS_Client.Handler.MapCreator
                 if (_mapCreatorObjectsHandler.MapLimitDisplay == null)
                 {
                     _mapCreatorObjectsHandler.MapLimitDisplay = new MapLimit(new List<Position3D>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor,
-                        _modAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
+                        ModAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
                     _mapCreatorObjectsHandler.MapLimitDisplay.Start();
                 }
                 _mapCreatorObjectsHandler.RefreshMapLimitDisplay();
@@ -258,13 +257,13 @@ namespace TDS_Client.Handler.MapCreator
 
         private void MoveHoldingObjectWithCursor()
         {
-            if (_modAPI.Control.IsDisabledControlJustPressed(InputGroup.MOVE, Control.CursorScrollUp))
+            if (ModAPI.Control.IsDisabledControlJustPressed(InputGroup.MOVE, Control.CursorScrollUp))
             {
                 _clampDistance += 5f;
                 if (_clampDistance > 500f)
                     _clampDistance = 500f;
             }
-            else if (_modAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.CursorScrollDown))
+            else if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.CursorScrollDown))
             {
                 _clampDistance -= 5f;
                 if (_clampDistance < 5f)
@@ -301,9 +300,14 @@ namespace TDS_Client.Handler.MapCreator
         private void HighlightObject()
         {
             var newHighlightedObject = GetHighlightingObject();
+            if (newHighlightedObject != null)
+            {
+                Logging.LogWarning($"Is mine: {newHighlightedObject.IsMine()} | is lobby owner: {_lobbyHandler.IsLobbyOwner}");
+            }
             if (newHighlightedObject != null && !newHighlightedObject.IsMine() && !_lobbyHandler.IsLobbyOwner)
                 return;
 
+            Logging.LogWarning($"Highlight new object");
             HighlightObject(newHighlightedObject);
         }
 
@@ -337,7 +341,7 @@ namespace TDS_Client.Handler.MapCreator
 
         private MapCreatorObject GetHighlightingObject()
         {
-            var hit = GetCursorHit(300, _modAPI.LocalPlayer.Handle, 2 | 8 | 16).Item1;
+            var hit = GetCursorHit(300, ModAPI.LocalPlayer.Handle, 2 | 8 | 16).Item1;
             if (!hit.Hit)
                 return null;
             if (hit.EntityHit == 0)
@@ -397,14 +401,14 @@ namespace TDS_Client.Handler.MapCreator
             switch (obj.Entity.Type)
             {
                 case EntityType.Object:
-                    _modAPI.MapObject.PlaceObjectOnGroundProperly(obj.Entity.Handle);
+                    ModAPI.MapObject.PlaceObjectOnGroundProperly(obj.Entity.Handle);
                     break;
                 case EntityType.Vehicle:
-                    _modAPI.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle);
+                    ModAPI.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle);
                     obj.MovingPosition = obj.Entity.Position;
                     break;
                 case EntityType.Ped:
-                    float heightAboveGround = _modAPI.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
+                    float heightAboveGround = ModAPI.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
                     obj.MovingPosition = new Position3D(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + 1f);
                     break;
             }

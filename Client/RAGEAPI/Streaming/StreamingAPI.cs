@@ -41,6 +41,9 @@ namespace TDS_Client.RAGEAPI.Streaming
             RAGE.Game.Streaming.SetFocusEntity(entity.Handle);
         }
 
+        public void ClearFocus() 
+            => RAGE.Game.Streaming.ClearFocus();
+
         public void RequestNamedPtfxAsset(string fxName)
             => RAGE.Game.Streaming.RequestNamedPtfxAsset(fxName);
     }

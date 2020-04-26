@@ -56,7 +56,7 @@ namespace TDS_Client.Handler.MapCreator
             ModAPI.Event.Tick.Add(_tickEventMethod);
 
             if (_camerasHandler.FreeCam is null)
-                _camerasHandler.FreeCam = new TDSCamera(ModAPI, Logging, _camerasHandler, _utilsHandler);
+                _camerasHandler.FreeCam = new TDSCamera("FreeCam", ModAPI, Logging, _camerasHandler, _utilsHandler);
 
             var player = ModAPI.LocalPlayer;
             player.FreezePosition(true);

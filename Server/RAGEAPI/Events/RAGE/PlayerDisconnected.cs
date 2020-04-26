@@ -17,9 +17,13 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
                 await Init.TDSCore.EventsHandler.OnPlayerLoggedOut(tdsPlayer);
             }
 
-            Init.TDSCore.EventsHandler.OnPlayerDisconnected(modPlayer);
+            NAPI.Task.Run(() =>
+            {
+                Init.TDSCore.EventsHandler.OnPlayerDisconnected(modPlayer);
 
-            Init.BaseAPI.EntityConvertingHandler.PlayerDisconnected(player);
+                Init.BaseAPI.EntityConvertingHandler.PlayerDisconnected(player);
+            });
+            
         }
     }
 }

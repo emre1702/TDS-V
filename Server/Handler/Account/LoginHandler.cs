@@ -6,6 +6,7 @@ using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.Player;
@@ -21,6 +22,7 @@ namespace TDS_Server.Handler.Account
 {
     public class LoginHandler
     {
+        private readonly IModAPI _modAPI;
         private readonly DatabasePlayerHelper _databasePlayerHandler;
         private readonly LangHelper _langHelper;
         private readonly EventsHandler _eventsHandler;
@@ -32,6 +34,7 @@ namespace TDS_Server.Handler.Account
         private readonly ServerStartHandler _serverStartHandler;
 
         public LoginHandler(
+            IModAPI modAPI, 
             DatabasePlayerHelper databasePlayerHandler,
             LangHelper langHelper,
             EventsHandler eventsHandler,
@@ -42,6 +45,7 @@ namespace TDS_Server.Handler.Account
             ILoggingHandler loggingHandler,
             ServerStartHandler serverStartHandler)
         {
+            _modAPI = modAPI;
             _databasePlayerHandler = databasePlayerHandler;
             _langHelper = langHelper;
             _eventsHandler = eventsHandler;
@@ -62,7 +66,7 @@ namespace TDS_Server.Handler.Account
             {
                 if (!_serverStartHandler.IsReadyForLogin)
                 {
-                    player.SendNotification(player.Language.TRY_AGAIN_LATER);
+                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
                     return;
                 }
 
@@ -72,7 +76,7 @@ namespace TDS_Server.Handler.Account
                     await LoginPlayer(player, id, password);
                 }
                 else
-                    player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST);
+                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
             }
             finally
             {
@@ -91,7 +95,7 @@ namespace TDS_Server.Handler.Account
 
             bool worked = await player.ExecuteForDBAsync(async (dbContext) =>
             {
-                player.Entity = await dbContext.Players
+                Players? entity = await dbContext.Players
                    .Include(p => p.PlayerStats)
                    .Include(p => p.PlayerTotalStats)
                    .Include(p => p.PlayerSettings)
@@ -103,22 +107,29 @@ namespace TDS_Server.Handler.Account
                    .Include(p => p.Challenges)
                    .FirstOrDefaultAsync(p => p.Id == id);
 
-                if (player.Entity is null)
+                _modAPI.Thread.RunInMainThread(() => player.Entity = entity);
+
+                if (entity is null)
                 {
-                    player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST);
+                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
                     return false;
                 }
 
-                if (password is { } && Utils.HashPWServer(password) != player.Entity.Password)
+                if (password is { } && Utils.HashPWServer(password) != entity.Password)
                 {
-                    player.SendNotification(player.Language.WRONG_PASSWORD);
+                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.WRONG_PASSWORD));
                     return false;
                 }
 
-                player.ModPlayer.Name = player.Entity.Name;
-                //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
-                player.Entity.PlayerStats.LoggedIn = true;
-                player.Entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
+                _modAPI.Thread.RunInMainThread(() =>
+                {
+                    player.ModPlayer.Name = entity.Name;
+                    //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
+                    entity.PlayerStats.LoggedIn = true;
+                    entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
+                });
+               
+
                 await dbContext.SaveChangesAsync();
                 return true;
             });
@@ -128,20 +139,24 @@ namespace TDS_Server.Handler.Account
 
             var angularConstantsData = ActivatorUtilities.CreateInstance<AngularConstantsDataDto>(_serviceProvider, player);
 
-            player.SendEvent(ToClientEvent.LoginSuccessful,
-                _serializer.ToClient(_settingsHandler.SyncedSettings),
-                _serializer.ToClient(player.Entity.PlayerSettings),
-                _serializer.ToBrowser(angularConstantsData)
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                player.SendEvent(ToClientEvent.LoginSuccessful,
+                    _serializer.ToClient(_settingsHandler.SyncedSettings),
+                    _serializer.ToClient(player.Entity.PlayerSettings),
+                    _serializer.ToBrowser(angularConstantsData)
                 );
 
-            _dataSyncHandler.SetData(player, PlayerDataKey.MapsBoughtCounter, PlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
-            _dataSyncHandler.SetData(player, PlayerDataKey.Name, PlayerDataSyncMode.Player, player.Entity.Name);
+                _dataSyncHandler.SetData(player, PlayerDataKey.MapsBoughtCounter, PlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
+                _dataSyncHandler.SetData(player, PlayerDataKey.Name, PlayerDataSyncMode.Player, player.Entity.Name);
 
-            _eventsHandler.OnPlayerLogin(player);
+                _eventsHandler.OnPlayerLogin(player);
 
-            _loggingHandler.LogRest(LogType.Login, player, true);
+                _loggingHandler.LogRest(LogType.Login, player, true);
 
-            _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
+                _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
+            });
+            
         }
 
         private async void EventsHandler_PlayerRegistered(ITDSPlayer player, Players dbPlayer)

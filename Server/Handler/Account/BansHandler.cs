@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
@@ -18,13 +19,16 @@ namespace TDS_Server.Handler.Account
         //Todo: Add new server bans in this list
         private List<PlayerBans> _cachedBans = new List<PlayerBans>();
 
+        private readonly IModAPI _modAPI;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ISettingsHandler _settingsHandler;
         private readonly EventsHandler _eventsHandler;
 
-        public BansHandler(TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler, ISettingsHandler settingsHandler) 
+        public BansHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler, 
+            ISettingsHandler settingsHandler) 
             : base(dbContext, logger) 
         {
+            _modAPI = modAPI;
             _lobbiesHandler = lobbiesHandler;
             _settingsHandler = settingsHandler;
             _eventsHandler = eventsHandler;
@@ -162,7 +166,7 @@ namespace TDS_Server.Handler.Account
             _cachedBans = await ExecuteForDBAsync(async dbContext 
                 => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
 
-            _eventsHandler.OnLoadedServerBans();
+            _modAPI.Thread.RunInMainThread(() => _eventsHandler.OnLoadedServerBans());
         }
 
         private void CheckBanOnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)

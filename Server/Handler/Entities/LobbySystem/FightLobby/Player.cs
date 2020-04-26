@@ -10,7 +10,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (!await base.AddPlayer(player, teamindex))
                 return false;
-            player.ModPlayer?.SetInvincible(false);
+            ModAPI.Thread.RunInMainThread(() => player.ModPlayer?.SetInvincible(false));
 
             return true;
         }
@@ -19,9 +19,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             await base.RemovePlayer(player);
 
-            player.Team?.SpectateablePlayers?.Remove(player);
-            player.LastKillAt = null;
-            player.KillingSpree = 0;
+            ModAPI.Thread.RunInMainThread(() =>
+            {
+                player.Team?.SpectateablePlayers?.Remove(player);
+                player.LastKillAt = null;
+                player.KillingSpree = 0;
+            });
+            
         }
 
         public static void KillPlayer(ITDSPlayer player, string reason)

@@ -54,6 +54,7 @@ namespace TDS_Client.Handler.Lobby
         {
             try
             {
+                Logging.LogInfo("", "LobbyMapDatasHandler.SetMapData");
                 MapDatas = mapData;
 
                 if (_mapInfo == null)
@@ -70,6 +71,7 @@ namespace TDS_Client.Handler.Lobby
 
                 if (mapData.MapEdges != null && mapData.MapEdges.Count > 0)
                     _mapLimitHandler.Load(mapData.MapEdges);
+                Logging.LogInfo("", "LobbyMapDatasHandler.SetMapData", true);
             }
             catch (Exception ex)
             {

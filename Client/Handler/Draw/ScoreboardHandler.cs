@@ -12,6 +12,7 @@ using TDS_Client.Handler.Draw.Dx.Grid;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
@@ -102,14 +103,15 @@ namespace TDS_Client.Handler.Draw
 
         public void AddLobbyData(List<SyncedScoreboardLobbyDataDto> playerlist, List<SyncedScoreboardMainmenuLobbyDataDto> lobbylist)
         {
-            playerlist.Sort((a, b) => a.TeamIndex.CompareTo(b.TeamIndex));
+            playerlist.Sort((a, b) => ScoreboardLobbySortComparer(a, b) * (_settingsHandler.PlayerSettings.ScoreboardPlayerSortingDesc ? -1 : 1));
+            
             foreach (var playerdata in playerlist)
             {
                 var team = _lobbyHandler.Teams.LobbyTeams[playerdata.TeamIndex];
                 DxGridRow row = new DxGridRow(_dxHandler, ModAPI, _grid, null, Color.FromArgb(team.Color.A, team.Color.R, team.Color.G, team.Color.B), textAlignment: AlignmentX.Center, scale: 0.3f);
                 new DxGridCell(_dxHandler, ModAPI, _timerHandler, playerdata.Name, row, _columns[0]);
 
-                new DxGridCell(_dxHandler, ModAPI, _timerHandler, TimeSpan.FromMinutes(playerdata.PlaytimeMinutes).ToString(@"%h\:mm"), row, _columns[1]);
+                new DxGridCell(_dxHandler, ModAPI, _timerHandler, GetPlaytimeString(playerdata.PlaytimeMinutes), row, _columns[1]);
                 new DxGridCell(_dxHandler, ModAPI, _timerHandler, playerdata.Kills.ToString(), row, _columns[2]);
                 new DxGridCell(_dxHandler, ModAPI, _timerHandler, playerdata.Assists.ToString(), row, _columns[3]);
                 new DxGridCell(_dxHandler, ModAPI, _timerHandler, playerdata.Deaths.ToString(), row, _columns[4]);
@@ -208,6 +210,61 @@ namespace TDS_Client.Handler.Draw
 
         private void CreateFooter()
         {
+        }
+
+        private int ScoreboardLobbySortComparer(SyncedScoreboardLobbyDataDto a, SyncedScoreboardLobbyDataDto b)
+        {
+            if (a.TeamIndex == b.TeamIndex)
+            {
+                switch (_settingsHandler.PlayerSettings.ScoreboardPlayerSorting)
+                {
+                    case ScoreboardPlayerSorting.Name:
+                        return a.Name.CompareTo(b.Name);
+                    case ScoreboardPlayerSorting.PlayTime:
+                        return a.PlaytimeMinutes.CompareTo(b.PlaytimeMinutes);
+                    case ScoreboardPlayerSorting.Kills:
+                        return a.Kills.CompareTo(b.Kills);
+                    case ScoreboardPlayerSorting.Assists:
+                        return a.Assists.CompareTo(b.Assists);
+                    case ScoreboardPlayerSorting.Deaths:
+                        return a.Deaths.CompareTo(b.Deaths);
+
+                    case ScoreboardPlayerSorting.KillsDeathsRatio:
+                        return a.KillsDeathsRatio.CompareTo(b.KillsDeathsRatio);
+                    case ScoreboardPlayerSorting.KillsDeathsAssistsRatio:
+                        return a.KillsDeathsAssistsRatio.CompareTo(b.KillsDeathsAssistsRatio);
+
+                    default:
+                        return a.Name.CompareTo(b.Name);
+                }
+            }
+            else if (a.TeamIndex == 0)
+                return -1;
+            else if (b.TeamIndex == 0)
+                return 1;
+            else 
+                return a.TeamIndex.CompareTo(b.TeamIndex);
+        }
+
+        private string GetPlaytimeString(int playtimeMinutes)
+        {
+            var timeSpan = TimeSpan.FromMinutes(playtimeMinutes);
+            switch (_settingsHandler.PlayerSettings.ScoreboardPlaytimeUnit)
+            {
+                case TimeSpanUnitsOfTime.Second:
+                    return timeSpan.TotalSeconds.ToString();
+                case TimeSpanUnitsOfTime.Minute:
+                    return timeSpan.TotalMinutes.ToString();
+                case TimeSpanUnitsOfTime.HourMinute:
+                    return timeSpan.ToString(@"%h\:mm");
+                case TimeSpanUnitsOfTime.Hour:
+                    return timeSpan.TotalHours.ToString();
+                case TimeSpanUnitsOfTime.Day:
+                    return timeSpan.TotalDays.ToString();
+                case TimeSpanUnitsOfTime.Week:
+                    return (timeSpan.TotalDays / 7).ToString();
+            }
+            return timeSpan.ToString(@"%h\:mm");
         }
 
         private void EventsHandler_LoggedIn()

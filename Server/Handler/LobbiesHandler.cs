@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
@@ -50,6 +51,7 @@ namespace TDS_Server.Handler
 
         private string? _customLobbyDatas;
 
+        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly MapsLoadingHandler _mapsHandler;
         private readonly IServiceProvider _serviceProvider;
@@ -57,6 +59,7 @@ namespace TDS_Server.Handler
         private readonly ISettingsHandler _settingsHandler;
 
         public LobbiesHandler(
+            IModAPI modAPI,
             TDSDbContext dbContext,
             ISettingsHandler settingsHandler,
             Serializer serializer,
@@ -65,6 +68,7 @@ namespace TDS_Server.Handler
             IServiceProvider serviceProvider,
             EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
+            _modAPI = modAPI;
             _serializer = serializer;
             _mapsHandler = mapsHandler;
             _serviceProvider = serviceProvider;
@@ -266,15 +270,21 @@ namespace TDS_Server.Handler
                 };
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
+                Arena? arena = null;
+                _modAPI.Thread.RunInMainThread(() =>
+                {
+                    arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
+                });
+                await arena!.AddToDB();
+                _modAPI.Thread.RunInMainThread(() =>
+                {
+                    _eventsHandler.OnLobbyCreated(arena);
 
-                Arena arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
-                await arena.AddToDB();
-                _eventsHandler.OnLobbyCreated(arena);
+                    AddMapsToArena(arena, entity);
 
-                AddMapsToArena(arena, entity);
-
-                _eventsHandler.OnCustomLobbyMenuLeave(player);
-                _eventsHandler.OnCustomLobbyCreated(arena);
+                    _eventsHandler.OnCustomLobbyMenuLeave(player);
+                    _eventsHandler.OnCustomLobbyCreated(arena);
+                });
 
                 await arena.AddPlayer(player, null);
                 return null;
@@ -330,15 +340,18 @@ namespace TDS_Server.Handler
                 {
                     if (await lobby.IsPlayerBaned(player))
                         return null;
-                    lobby = ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
-                    _eventsHandler.OnLobbyCreated(lobby);
+                    _modAPI.Thread.RunInMainThread(() =>
+                    {
+                        lobby = ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
+                        _eventsHandler.OnLobbyCreated(lobby);
+                    });
                 }
                 await lobby.AddPlayer(player, null);
                 return null;
             }
             else
             {
-                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
+                _modAPI.Thread.RunInMainThread(() => player.SendMessage(player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }
@@ -354,7 +367,7 @@ namespace TDS_Server.Handler
                 ILobby lobby = LobbiesByIndex[index];
                 if (password != null && lobby.Entity.Password != password)
                 {
-                    player.SendMessage(player.Language.WRONG_PASSWORD);
+                    _modAPI.Thread.RunInMainThread(() => player.SendMessage(player.Language.WRONG_PASSWORD));
                     return null;
                 }
 
@@ -363,7 +376,7 @@ namespace TDS_Server.Handler
             }
             else
             {
-                player.SendMessage(player.Language.LOBBY_DOESNT_EXIST);
+                _modAPI.Thread.RunInMainThread(() => player.SendMessage(player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }

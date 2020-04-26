@@ -26,11 +26,14 @@ namespace TDS_Server.Handler.Commands
                 return;
             if (player.Lobby.Entity.Type == LobbyType.MainMenu)
             {
-                if (_customLobbyMenuSyncHandler.IsPlayerInCustomLobbyMenu(player))
-                {
-                    _customLobbyMenuSyncHandler.RemovePlayer(player);
-                    player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LeaveCustomLobbyMenu);
-                }
+                _modAPI.Thread.RunInMainThread(() =>
+                { 
+                    if (_customLobbyMenuSyncHandler.IsPlayerInCustomLobbyMenu(player))
+                    {
+                        _customLobbyMenuSyncHandler.RemovePlayer(player);
+                        player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LeaveCustomLobbyMenu);
+                    }
+                });
                 return;
             }
 
@@ -246,7 +249,7 @@ namespace TDS_Server.Handler.Commands
                 player.SetRelation(target, PlayerRelation.Block);
                 relation.Relation = PlayerRelation.Block;
                 await dbContext.SaveChangesAsync();
-                player.SendMessage(msg);
+                _modAPI.Thread.RunInMainThread(() => player.SendMessage(msg));
 
                 return true;
             });
@@ -254,11 +257,14 @@ namespace TDS_Server.Handler.Commands
             if (!continuue)
                 return;
 
-            if (player.InPrivateChatWith == target)
-                player.ClosePrivateChat(false);
-            target.SetVoiceTo(player, false);
+            _modAPI.Thread.RunInMainThread(() =>
+            { 
+                if (player.InPrivateChatWith == target)
+                    player.ClosePrivateChat(false);
+                target.SetVoiceTo(player, false);
 
-            target.SendMessage(string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
+                target.SendMessage(string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
+            });
         }
 
         [TDSCommand(PlayerCommand.UnblockUser)]
@@ -274,7 +280,7 @@ namespace TDS_Server.Handler.Commands
                 var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
                 if (relation is null || relation.Relation != PlayerRelation.Block)
                 {
-                    player.SendMessage(string.Format(player.Language.TARGET_NOT_BLOCKED, target.DisplayName));
+                    _modAPI.Thread.RunInMainThread(() => player.SendMessage(string.Format(player.Language.TARGET_NOT_BLOCKED, target.DisplayName)));
                     return;
                 }
 
@@ -282,12 +288,15 @@ namespace TDS_Server.Handler.Commands
                 await dbContext.SaveChangesAsync();
             });
 
-            if (target.Team == player.Team)
-                target.SetVoiceTo(player, true);
+            _modAPI.Thread.RunInMainThread(() =>
+            { 
+                if (target.Team == player.Team)
+                    target.SetVoiceTo(player, true);
 
-            player.SetRelation(target, PlayerRelation.None);
-            player.SendMessage(string.Format(player.Language.YOU_UNBLOCKED, target.DisplayName));
-            target.SendMessage(string.Format(target.Language.YOU_GOT_UNBLOCKED_BY, player.DisplayName));
+                player.SetRelation(target, PlayerRelation.None);
+                player.SendMessage(string.Format(player.Language.YOU_UNBLOCKED, target.DisplayName));
+                target.SendMessage(string.Format(target.Language.YOU_GOT_UNBLOCKED_BY, player.DisplayName));
+            });
         }
 
         [TDSCommand(PlayerCommand.GiveMoney)]
@@ -341,8 +350,11 @@ namespace TDS_Server.Handler.Commands
                             if (sender.Lobby is null)
                                 return;
                             await sender.Lobby.AddPlayer(target!, null);
-                            target.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
-                            sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target.DisplayName), false);
+                            _modAPI.Thread.RunInMainThread(() =>
+                            { 
+                                target.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
+                                sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target.DisplayName), false);
+                            });
                         },
 
                         onReject: (target, sender, invitation) =>

@@ -17,6 +17,12 @@ namespace TDS_Shared.Data.Models
         [JsonProperty("5")]
         public int TeamIndex;
 
+        [JsonIgnore]
+        public float KillsDeathsRatio => (float)Kills / (float)Deaths;
+
+        [JsonIgnore]
+        public float KillsDeathsAssistsRatio => ((float)Kills + (float)Assists / 3) / (float)Deaths;
+
         public SyncedScoreboardLobbyDataDto(string name, int playtimeMinutes, int kills, int assists, int deaths, int teamIndex)
         {
             Name = name;

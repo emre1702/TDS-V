@@ -172,17 +172,18 @@ namespace TDS_Server.Data
             return (uint)(nextFullSecond - timeOfDay).TotalMilliseconds + 1;
         }
 
-        public static bool HandleBan(IPlayer modPlayer, PlayerBans? ban)
+        public static void HandleBan(IPlayer modPlayer, PlayerBans? ban)
         {
             if (ban is null)
-                return true;
+                return;
 
             string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
             //todo Test line break and display
 
             var splittedReason = Utils.SplitPartsByLength($"Banned!\nName: {ban.Player?.Name ?? modPlayer.Name}\nAdmin: {ban.Admin.Name}\nReason: {ban.Reason}\nEnd: {endstr} UTC\nStart: {startstr} UTC", 90);
-            foreach (var split in splittedReason)
+
+            foreach (var split in splittedReason) 
                 modPlayer.SendNotification(split, true);
 
             _ = new TDSTimer(() =>
@@ -190,9 +191,6 @@ namespace TDS_Server.Data
                 if (!modPlayer.IsNull)
                     modPlayer.Kick("Ban");
             }, 3000, 1);
-
-
-            return false;
         }
 
         /// <summary>

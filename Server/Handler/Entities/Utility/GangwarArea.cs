@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
@@ -41,25 +42,29 @@ namespace TDS_Server.Handler.Entities.Utility
 
         private TDSTimer? _checkAtTarget;
         private int _playerNotAtTargetCounter;
+
+        private readonly IModAPI _modAPI;
         private readonly ISettingsHandler _settingsHandler;
         private readonly GangsHandler _gangsHandler;
 
-        public GangwarArea(GangwarArea copyFrom, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext, loggingHandler)
+        public GangwarArea(GangwarArea copyFrom, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+            : this(copyFrom.Map, modAPI, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = null;
         }
 
-        public GangwarArea(MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+        public GangwarArea(MapDto map, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
             Map = map;
+            _modAPI = modAPI;
             _settingsHandler = settingsHandler;
             _gangsHandler = gangsHandler;
         }
 
-        public GangwarArea(GangwarAreas entity, MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            : this(map, settingsHandler, gangsHandler, dbContext, loggingHandler)
+        public GangwarArea(GangwarAreas entity, MapDto map, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler, 
+            TDSDbContext dbContext, ILoggingHandler loggingHandler)
+            : this(map, modAPI, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = entity;
 
@@ -94,10 +99,14 @@ namespace TDS_Server.Handler.Entities.Utility
                     ++Entity.AttackCount;
                     HasCooldown = true;
 
-                    if (conquered)
-                        SetConquered(dbContext, true);
-                    else
-                        SetDefended(dbContext);
+                    _modAPI.Thread.RunInMainThread(() =>
+                    {
+                        if (conquered)
+                            SetConquered(dbContext, true);
+                        else
+                            SetDefended(dbContext);
+                    });
+                    
 
                     await dbContext.SaveChangesAsync();
                 });
@@ -118,7 +127,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
                     HasCooldown = true;
 
-                    SetConquered(dbContext, false);
+                    _modAPI.Thread.RunInMainThread(() => SetConquered(dbContext, false));
 
                     await dbContext.SaveChangesAsync();
                 });

@@ -10,8 +10,9 @@ namespace TDS_Client.Handler.Entities
 {
     public class TDSCamera
     {
+        public string Name { get; set; }
         public ICam Cam { get; set; }
-        public IEntityBase SpectatingEntity { get; set; }
+        public IEntityBase SpectatingEntity { get; private set; }
         public bool IsActive => this == _camerasHandler.ActiveCamera;
 
         public Position3D Position
@@ -31,13 +32,14 @@ namespace TDS_Client.Handler.Entities
         private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
 
-        public TDSCamera(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler)
+        public TDSCamera(string name, IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler)
         {
             _modAPI = modAPI;
             _loggingHandler = loggingHandler;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
 
+            Name = name;
             Cam = modAPI.Cam.Create();
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnUpdate, () => SpectatingEntity != null));
         }
@@ -112,6 +114,10 @@ namespace TDS_Client.Handler.Entities
 
         public void Activate(bool instantly = false)
         {
+            if (_camerasHandler.ActiveCamera == this)
+                return;
+            if (!(_camerasHandler.ActiveCamera is null))
+                _camerasHandler.ActiveCamera.Deactivate();
             Cam.SetActive(true);
             _camerasHandler.ActiveCamera = this;
             if (instantly)

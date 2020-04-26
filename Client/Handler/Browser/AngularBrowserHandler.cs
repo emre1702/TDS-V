@@ -205,6 +205,7 @@ namespace TDS_Client.Handler.Browser
 
         public void ToggleRoundStats(bool toggle)
         {
+            Logging.LogWarning(toggle.ToString(), "AngularBrowserHandler.ToggleRoundStats");
             Execute(ToBrowserEvent.ToggleRoundStats, toggle);
         }
 

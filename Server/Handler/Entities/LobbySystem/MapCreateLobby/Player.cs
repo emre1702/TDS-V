@@ -63,10 +63,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (vehHash == default)
                 return;
 
-            var pos = player.ModPlayer!.Position;
-
             ModAPI.Thread.RunInMainThread(() =>
             {
+                var pos = player.ModPlayer!.Position;
                 if (player.FreeroamVehicle is { })
                 {
                     if (player.ModPlayer.IsInVehicle)

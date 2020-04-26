@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map.Creator;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
@@ -22,19 +22,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (CurrentGameMode?.CanJoinLobby(player, teamindex) == false)
                 return false;
 
-            if (!await base.AddPlayer(player, 0).ConfigureAwait(true))
+            if (!await base.AddPlayer(player, 0))
                 return false;
-            SpectateOtherAllTeams(player);
-            SendPlayerRoundInfoOnJoin(player);
+            ModAPI.Thread.RunInMainThread(() =>
+            {
+                SpectateOtherAllTeams(player);
+                SendPlayerRoundInfoOnJoin(player);
 
-            var teams = Teams.Select(t =>
-                    new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)
-                )
-                .ToList();
+                var teams = Teams.Select(t =>
+                        new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)
+                    )
+                    .ToList();
 
-            player.SendEvent(ToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
+                player.SendEvent(ToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
 
-            CurrentGameMode?.AddPlayer(player, teamindex);
+                CurrentGameMode?.AddPlayer(player, teamindex);
+            });
+            
 
             return true;
         }
@@ -52,33 +56,41 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public override async Task RemovePlayer(ITDSPlayer player)
         {
-            if (player.Lifes > 0)
+            ModAPI.Thread.RunInMainThread(() =>
             {
-                RemovePlayerFromAlive(player);
-                PlayerCantBeSpectatedAnymore(player);
-                DmgSys.CheckLastHitter(player, out ITDSPlayer? killercharacter);
+                if (player.Lifes > 0)
+                {
+                    RemovePlayerFromAlive(player);
+                    PlayerCantBeSpectatedAnymore(player);
+                    DmgSys.CheckLastHitter(player, out ITDSPlayer? killercharacter);
 
-                DeathInfoSync(player, killercharacter, (uint)WeaponHash.Unarmed);
-            }
-            else
-            {
-                SavePlayerRoundStats(player);
-                RemoveAsSpectator(player);
-            }
-            CurrentGameMode?.RemovePlayer(player);
+                    DeathInfoSync(player, killercharacter, (uint)WeaponHash.Unarmed);
+                }
+                else
+                {
+                    SavePlayerRoundStats(player);
+                    RemoveAsSpectator(player);
+                }
+                CurrentGameMode?.RemovePlayer(player);
+            });
+            
             await base.RemovePlayer(player);
 
-            switch (CurrentRoundStatus)
+            ModAPI.Thread.RunInMainThread(() =>
             {
-                case RoundStatus.NewMapChoose:
-                case RoundStatus.Countdown:
-                    if (Entity.LobbyRoundSettings.MixTeamsAfterRound)
-                        BalanceCurrentTeams();
-                    break;
-                case RoundStatus.Round:
-                    RoundCheckForEnoughAlive();
-                    break;
-            }
+                switch (CurrentRoundStatus)
+                {
+                    case RoundStatus.NewMapChoose:
+                    case RoundStatus.Countdown:
+                        if (Entity.LobbyRoundSettings.MixTeamsAfterRound)
+                            BalanceCurrentTeams();
+                        break;
+                    case RoundStatus.Round:
+                        RoundCheckForEnoughAlive();
+                        break;
+                }
+            });
+            
         }
 
         public override void SetPlayerTeam(ITDSPlayer player, ITeam? team)
@@ -131,17 +143,16 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 player.ModPlayer.Freeze(FreezePlayerOnCountdown);
                 GivePlayerWeapons(player);
+                RemoveAsSpectator(player);
             }
             else
             {
                 if (SpawnPlayer)
-                    player.Spawn(SpawnPoint, Entity.DefaultSpawnRotation);
+                    player.Spawn(_currentMapSpectatorPosition ?? SpawnPoint, 0);
 
                 player.ModPlayer.Freeze(true);
                 player.ModPlayer.RemoveAllWeapons();
             }
-
-            RemoveAsSpectator(player);
 
             if (_removeSpectatorsTimer.ContainsKey(player))
                 _removeSpectatorsTimer.Remove(player);
@@ -170,7 +181,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (player.ModPlayer is null)
                 return;
             player.SendEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
-            if (player.Team != null && !player.Team.IsSpectator)
+            if (player.Team?.IsSpectator == false)
             {
                 SetPlayerAlive(player);
                 player.ModPlayer.Freeze(false);

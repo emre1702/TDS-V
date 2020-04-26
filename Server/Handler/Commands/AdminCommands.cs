@@ -50,17 +50,23 @@ namespace TDS_Server.Handler.Commands
                 return;
             if (!cmdinfos.AsLobbyOwner)
             {
-                _loggingHandler.LogAdmin(LogType.Lobby_Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
-                _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                _modAPI.Thread.RunInMainThread(() => 
+                {
+                    _loggingHandler.LogAdmin(LogType.Lobby_Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
+                    _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                });
             }
             else
             {
-                if (player.Lobby != target.Lobby)
-                {
-                    player.SendMessage(player.Language.TARGET_NOT_IN_SAME_LOBBY);
-                    return;
-                }
-                target.Lobby.SendAllPlayerLangMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                _modAPI.Thread.RunInMainThread(() =>
+                { 
+                    if (player.Lobby != target.Lobby)
+                    {
+                        player.SendMessage(player.Language.TARGET_NOT_IN_SAME_LOBBY);
+                        return;
+                    }
+                    target.Lobby.SendAllPlayerLangMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                });
             }
             await target.Lobby.RemovePlayer(target);
             await _lobbiesHandler.MainMenu.AddPlayer(target, 0).ConfigureAwait(false);
@@ -113,17 +119,17 @@ namespace TDS_Server.Handler.Commands
         {
             PlayerBans? ban = null;
             if (length == TimeSpan.MinValue)
-                _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason);
+                _modAPI.Thread.RunInMainThread(() => _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason));
             else if (length == TimeSpan.MaxValue)
                 ban = await _lobbiesHandler.MainMenu.BanPlayer(player, target, null, reason);
             else
                 ban = await _lobbiesHandler.MainMenu.BanPlayer(player, target, length, reason);
 
             if (ban is { } && target.ModPlayer is { })
-                Utils.HandleBan(target.ModPlayer, ban);
+                _modAPI.Thread.RunInMainThread(() => Utils.HandleBan(target.ModPlayer, ban));
 
             if (!cmdinfos.AsLobbyOwner)
-                _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
+                _modAPI.Thread.RunInMainThread(() => _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.Ban, 0)]
@@ -137,7 +143,7 @@ namespace TDS_Server.Handler.Commands
                 await _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
+                _modAPI.Thread.RunInMainThread(() => _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.Kick)]
@@ -171,7 +177,7 @@ namespace TDS_Server.Handler.Commands
             await _databasePlayerHelper.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
+                _modAPI.Thread.RunInMainThread(() => _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 0)]
@@ -183,7 +189,7 @@ namespace TDS_Server.Handler.Commands
             await _databasePlayerHelper.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
+                _modAPI.Thread.RunInMainThread(() => _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 1)]

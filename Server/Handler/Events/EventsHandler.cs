@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
@@ -14,8 +15,11 @@ namespace TDS_Server.Handler.Events
 {
     public class EventsHandler
     {
-        public EventsHandler()
+        private readonly IModAPI _modAPI;
+
+        public EventsHandler(IModAPI modAPI)
         {
+            _modAPI = modAPI;
         }
 
         public delegate void PlayerDelegate(ITDSPlayer player);
@@ -131,8 +135,11 @@ namespace TDS_Server.Handler.Events
             var task = PlayerLoggedOutBefore?.InvokeAsync(tdsPlayer);
             if (task.HasValue)
                 await task.Value;
-            PlayerLoggedOut?.Invoke(tdsPlayer);
-            tdsPlayer.Lobby?.OnPlayerLoggedOut(tdsPlayer);
+            _modAPI.Thread.RunInMainThread(() => 
+            {
+                PlayerLoggedOut?.Invoke(tdsPlayer);
+                tdsPlayer.Lobby?.OnPlayerLoggedOut(tdsPlayer);
+            });
         }
 
         public void OnPlayerRegister(ITDSPlayer player, Players dbPlayer)

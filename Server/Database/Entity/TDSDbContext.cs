@@ -44,6 +44,8 @@ namespace TDS_Server.Database.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<SupportType>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ChallengeType>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ChallengeFrequency>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ScoreboardPlayerSorting>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<TimeSpanUnitsOfTime>();
         }
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
@@ -124,6 +126,8 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasPostgresEnum<SupportType>();
             modelBuilder.HasPostgresEnum<ChallengeType>();
             modelBuilder.HasPostgresEnum<ChallengeFrequency>();
+            modelBuilder.HasPostgresEnum<ScoreboardPlayerSorting>();
+            modelBuilder.HasPostgresEnum<TimeSpanUnitsOfTime>();
             #endregion
 
             #region Tables
@@ -890,6 +894,7 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.ChatWidth).HasDefaultValue(30);
                 entity.Property(e => e.ChatMaxHeight).HasDefaultValue(35);
                 entity.Property(e => e.ChatFontSize).HasDefaultValue(1.4);
+                entity.Property(e => e.ScoreboardPlaytimeUnit).HasDefaultValue(TimeSpanUnitsOfTime.HourMinute);
 
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)

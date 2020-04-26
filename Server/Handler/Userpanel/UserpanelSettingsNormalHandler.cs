@@ -11,6 +11,7 @@ using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
 using TDS_Shared.Core;
 using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.ModAPI;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -18,14 +19,16 @@ namespace TDS_Server.Handler.Userpanel
     {
         private Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 
+        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         public UserpanelSettingsNormalHandler(Serializer serializer, BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext, 
-            ILoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler)
+            ILoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
             : base(dbContext, loggingHandler)
-            => (_serializer, _bonusBotConnectorClient, _tdsPlayerHandler) = (serializer, bonusBotConnectorClient, tdsPlayerHandler);
+            => (_modAPI, _serializer, _bonusBotConnectorClient, _tdsPlayerHandler) 
+            = (modAPI, serializer, bonusBotConnectorClient, tdsPlayerHandler);
 
         public async Task<object?> SaveSettings(ITDSPlayer player, object[] args)
         {
@@ -40,21 +43,25 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
 
-            player.LoadTimezone();
-            player.AddToChallenge(ChallengeType.ChangeSettings);
-
-            player.SendEvent(ToClientEvent.SyncSettings, json);
-
-            if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId)
+            _modAPI.Thread.RunInMainThread(() =>
             {
-                _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId, (reply) =>
-                {
-                    if (string.IsNullOrEmpty(reply.ErrorMessage))
-                        return;
+                player.LoadTimezone();
+                player.AddToChallenge(ChallengeType.ChangeSettings);
 
-                    player.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_SAVE_FAILED, reply.ErrorMessage));
-                });
-            }
+                player.SendEvent(ToClientEvent.SyncSettings, json);
+
+                if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId)
+                {
+                    _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId, (reply) =>
+                    {
+                        if (string.IsNullOrEmpty(reply.ErrorMessage))
+                            return;
+
+                        player.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_SAVE_FAILED, reply.ErrorMessage));
+                    });
+                }
+            });
+            
             return null;
         }
 

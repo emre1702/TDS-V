@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Command;
@@ -47,10 +48,12 @@ namespace TDS_Server.Handler.Commands
         private readonly ISettingsHandler _settingsHandler;
         private readonly ChatHandler _chatHandler;
         private readonly BaseCommands _baseCommands;
+        private readonly IModAPI _modAPI;
 
-        public CommandsHandler(TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler, 
+        public CommandsHandler(IModAPI modAPI, TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler, 
             ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands)
         {
+            _modAPI = modAPI;
             _mappingHandler = mappingHandler;
             _settingsHandler = settingsHandler;
             _chatHandler = chatHandler;
@@ -212,7 +215,8 @@ namespace TDS_Server.Handler.Commands
                     //if (UseImplicitTypes)
                     //{
                     var finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
-                    methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray());
+                    _modAPI.Thread.RunInMainThread(() =>
+                        methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray()));
                     /*}
                     else
                     {

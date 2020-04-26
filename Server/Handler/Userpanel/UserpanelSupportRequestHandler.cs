@@ -14,6 +14,7 @@ using TDS_Shared.Default;
 using TDS_Shared.Core;
 using TDS_Server.Data;
 using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Interfaces.ModAPI;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -22,12 +23,15 @@ namespace TDS_Server.Handler.Userpanel
         private readonly HashSet<ITDSPlayer> _inSupportRequestsList = new HashSet<ITDSPlayer>();
         private readonly Dictionary<int, HashSet<ITDSPlayer>> _inSupportRequest = new Dictionary<int, HashSet<ITDSPlayer>>();
 
+        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
 
-        public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, ISettingsHandler settingsHandler)
+        public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, 
+            ISettingsHandler settingsHandler, IModAPI modAPI)
             : base(dbContext, loggingHandler)
         {
+            _modAPI = modAPI;
             _serializer = serializer;
             _settingsHandler = settingsHandler;
 
@@ -169,8 +173,8 @@ namespace TDS_Server.Handler.Userpanel
 
                 await dbContext.SaveChangesAsync();
             });
-                
-            player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED);
+
+            _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
             return null;
         }
 
@@ -216,10 +220,14 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = player.GetLocalDateTimeString(messageEntity.CreateTime)
             });
 
-            foreach (var target in _inSupportRequest[requestId.Value])
+            _modAPI.Thread.RunInMainThread(() =>
             {
-                target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
-            }
+                foreach (var target in _inSupportRequest[requestId.Value])
+                {
+                    target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
+                }
+            });
+            
             return null;
         }
 
@@ -246,10 +254,13 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            foreach (var target in _inSupportRequestsList)
+            _modAPI.Thread.RunInMainThread(() =>
             {
-                target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
-            }
+                foreach (var target in _inSupportRequestsList)
+                {
+                    target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
+                }
+            });
             return null;
         }
 

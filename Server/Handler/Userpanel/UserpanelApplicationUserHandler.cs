@@ -15,6 +15,7 @@ using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Core;
 using TDS_Server.Data;
+using TDS_Server.Data.Interfaces.ModAPI;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -22,16 +23,18 @@ namespace TDS_Server.Handler.Userpanel
     {
         public string AdminQuestions { get; set; } = string.Empty;
 
+        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private readonly BonusBotConnectorClient _bonusbotConnectorClient;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
 
-        public UserpanelApplicationUserHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, 
+        public UserpanelApplicationUserHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, 
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, TDSPlayerHandler tdsPlayerHandler,
             OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
+            _modAPI = modAPI;
             _serializer = serializer;
             _settingsHandler = settingsHandler;
             _bonusbotConnectorClient = bonusbotConnectorClient;
@@ -167,7 +170,7 @@ namespace TDS_Server.Handler.Userpanel
                 .FirstOrDefaultAsync());
             if (invitation == null)
             {
-                player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
+                _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -191,17 +194,21 @@ namespace TDS_Server.Handler.Userpanel
             player.Entity.AdminLvl = 1;
             await player.SaveData();
 
-            player.SendMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                player.SendMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
 
-            ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
-            if (admin != null)
-            {
-                admin.SendMessage(string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
-            }
-            else
-            {
-                _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I've accepted your team application.");
-            }
+                ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
+                if (admin != null)
+                {
+                    admin.SendMessage(string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
+                }
+                else
+                {
+                    _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I've accepted your team application.");
+                }
+            });
+            
             return null;
         }
 
@@ -222,7 +229,7 @@ namespace TDS_Server.Handler.Userpanel
                     .FirstOrDefaultAsync());
             if (invitation == null)
             {
-                player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
+                _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -243,19 +250,22 @@ namespace TDS_Server.Handler.Userpanel
                 dbContext.Remove(invitation);
                 await dbContext.SaveChangesAsync();
             });
+
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                player.SendMessage(string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
+
+                ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
+                if (admin != null)
+                {
+                    admin.SendMessage(string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.DisplayName));
+                }
+                else
+                {
+                    _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I rejected your team application.");
+                }
+            });
             
-
-            player.SendMessage(string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
-
-            ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
-            if (admin != null)
-            {
-                admin.SendMessage(string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.DisplayName));
-            }
-            else
-            {
-                _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I rejected your team application.");
-            }
 
             return null;
         }

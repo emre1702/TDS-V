@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
@@ -27,8 +28,13 @@ namespace TDS_Server.Handler.Userpanel
         public readonly UserpanelSettingsSpecialHandler SettingsSpecialHandler;
         public readonly UserpanelOfflineMessagesHandler OfflineMessagesHandler;
 
-        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer, UserpanelCommandsHandler userpanelCommandsHandler)
+        private readonly IModAPI _modAPI;
+
+        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer, 
+            UserpanelCommandsHandler userpanelCommandsHandler, IModAPI modAPI)
         {
+            _modAPI = modAPI;
+
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
 
             _playerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerStatsHandler>(serviceProvider);
@@ -106,7 +112,7 @@ namespace TDS_Server.Handler.Userpanel
             if (json == null)
                 return;
 
-            player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json);
+            _modAPI.Thread.RunInMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
         }
     }
 }
