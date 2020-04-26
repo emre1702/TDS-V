@@ -291,6 +291,16 @@ namespace TDS_Server.Handler.Commands
                     player.ModPlayer.SetClothes(slot, drawable, texture);
                     break;
 
+                case "admin":
+                    if (!short.TryParse(arg1, out short adminLvl))
+                    {
+                        player.SendNotification(player.Language.COMMAND_DOESNT_EXIST, true);
+                        return;
+                    }
+                    player.Entity!.AdminLvl = adminLvl;
+                    _dataSyncHandler.SetData(player, PlayerDataKey.AdminLevel, PlayerDataSyncMode.All, adminLvl);
+                    break;
+
                 default:
                     player.SendNotification(player.Language.COMMAND_DOESNT_EXIST, true);
                     break;
