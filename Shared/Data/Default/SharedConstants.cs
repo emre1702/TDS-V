@@ -12,7 +12,7 @@
         public const string TargetHashName = "v_ret_ta_skull";
         public const string DateTimeOffsetFormat = "dddd, MMM dd yyyy HH:mm:ss zzz";
         public const int ServerTeamSuffixMinAdminLevel = 1;
-        public const string ServerTeamSuffix = "[TDS] ";
+        public const string ServerTeamSuffix = "[TDS]";
         public static uint GangHouseOccupiedBlipModel = 492;
     }
 }
