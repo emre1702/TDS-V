@@ -258,6 +258,21 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     HideDirtyChat = "Verstecke den Dirty Chat";
     ShowCursorOnChatOpen = "Zeige Cursor bei Chat";
     WindowsNotifications = "Windows Benachrichtigungen";
+    Scoreboard = "Scoreboard";
+    ScoreboardPlayerSorting = "Spieler Sortierung";
+    ScoreboardPlayerSortingDesc = "Sortiere absteigend";
+    ScoreboardPlaytimeUnit = "Spielzeit Zeiteinheit";
+    Second = "Sekunde";
+    Minute = "Minute";
+    HourMinute = "Stunde:Minute";
+    Hour = "Stunde";
+    Day = "Tag";
+    Week = "Woche";
+    ScoreboardPlayerSortingInfo = "Wonach sollten die Spieler im Scoreboard in Lobbies (NICHT im Hauptmenü) sortiert werden??";
+    ScoreboardPlayerSortingDescInfo = "Sollten die Spieler absteigend sortiert werden? Wenn nicht, werden sie aufsteigend sortiert.";
+    ScoreboardPlaytimeUnitInfo = "In welcher Zeiteinheit sollen die Spielzeiten im Scoreboard angezeigt werden?";
+    KillsDeathsRatio = "KD Verhältnis";
+    KillsDeathsAssistsRatio = "KDA Verhältnis";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

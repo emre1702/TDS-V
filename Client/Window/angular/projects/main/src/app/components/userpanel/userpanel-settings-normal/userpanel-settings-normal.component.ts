@@ -12,6 +12,8 @@ import { UserpanelSettingRow } from '../interfaces/userpanelSettingRow';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { TimezoneEnum } from '../enums/timezone.enum';
 import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
+import { TimeSpanUnitsOfTime } from '../enums/timespan-units-of-time.enum';
+import { ScoreboardPlayerSorting } from '../enums/scoreboard-player-sorting';
 
 @Component({
     selector: 'app-userpanel-settings-normal',
@@ -211,6 +213,28 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowCursorOnChatOpen, defaultValue: true,
                     nullable: false, formControl: new FormControl(true),
                     tooltipLangKey: "ShowCursorOnChatOpenInfo"
+                },
+            ]
+        },
+
+        {
+            title: "Scoreboard", rows: [
+                {
+                    type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.ScoreboardPlayerSorting,
+                    defaultValue: ScoreboardPlayerSorting.Name, enum: ScoreboardPlayerSorting, nullable: false,
+                    formControl: new FormControl(ScoreboardPlayerSorting.Name),
+                    tooltipLangKey: "ScoreboardPlayerSortingInfo"
+                },
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ScoreboardPlayerSortingDesc,
+                    defaultValue: false, nullable: false, formControl: new FormControl(false),
+                    tooltipLangKey: "ScoreboardPlayerSortingDescInfo"
+                },
+                {
+                    type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.ScoreboardPlaytimeUnit,
+                    defaultValue: TimeSpanUnitsOfTime.HourMinute, enum: TimeSpanUnitsOfTime, nullable: false,
+                    formControl: new FormControl(TimeSpanUnitsOfTime.HourMinute),
+                    tooltipLangKey: "ScoreboardPlaytimeUnitInfo"
                 },
             ]
         }

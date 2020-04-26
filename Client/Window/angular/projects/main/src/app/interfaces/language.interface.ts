@@ -233,6 +233,22 @@ export interface Language {
     HideDirtyChat: string;
     ShowCursorOnChatOpen: string;
     WindowsNotifications: string;
+    Scoreboard: string;
+    ScoreboardPlayerSorting: string;
+    ScoreboardPlayerSortingDesc: string;
+    ScoreboardPlaytimeUnit: string;
+    Second: string;
+    Minute: string;
+    HourMinute: string;
+    Hour: string;
+    Day: string;
+    Week: string;
+    ScoreboardPlayerSortingInfo: string;
+    ScoreboardPlayerSortingDescInfo: string;
+    ScoreboardPlaytimeUnitInfo: string;
+    KillsDeathsRatio: string;
+    KillsDeathsAssistsRatio: string;
+
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;
