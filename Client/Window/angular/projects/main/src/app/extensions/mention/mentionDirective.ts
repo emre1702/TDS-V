@@ -40,8 +40,19 @@ export class MentionDirective {
         }
     }
 
+    @HostListener("keydown", ["$event"])
+    keyDownHandler(event: any, nativeElement: HTMLInputElement = this._element.nativeElement) {
+        if (event.key === this.mention.triggerChar
+            || this.mention.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey) {
+            if (!this.searchList || this.searchList.hidden) {
+                this.openSearchList(nativeElement);
+            }
+            this.updateSearchList();
+        }
+    }
+
     @HostListener("keyup", ["$event"])
-    keyUpHandler(event: any, nativeElement: HTMLInputElement = this._element.nativeElement) {
+    keyUpHandler(event: any) {
         if (this.searchString !== undefined) {
             if (event.key === "Enter") {
                 this.selectFromSearchList();
@@ -50,17 +61,7 @@ export class MentionDirective {
             } else if (event.key === "Backspace" || event.key === "Delete") {
                 this.reloadSearchString();
             }
-        } else {
-            if (event.key === this.mention.triggerChar
-                || this.mention.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey) {
-                if (!this.searchList || this.searchList.hidden) {
-                    this.openSearchList(nativeElement);
-                }
-
-                this.updateSearchList();
-            }
         }
-
     }
 
     private openSearchList(nativeElement: HTMLInputElement) {
@@ -72,7 +73,7 @@ export class MentionDirective {
             componentRef.instance.itemClick.subscribe(() => {
                 nativeElement.focus();
                 const fakeKeydown = { key: "Enter", wasClick: true };
-                this.keyUpHandler(fakeKeydown, nativeElement);
+                this.keyUpHandler(fakeKeydown);
             });
         }
         // this.searchList.dropUp = this.mention.dropUp;
@@ -92,14 +93,18 @@ export class MentionDirective {
 
         if (!this.searchString.length || this.searchString[this.searchString.length - 1] !== this.mention.seachStringEndChar) {
             const str = this.mention.mentionSelect(this.searchList.activeItem);
-            const cursorPos = this.doGetCaretPosition(this._element.nativeElement);
+            let cursorPos = this.doGetCaretPosition(this._element.nativeElement);
             const currentValue = this._element.nativeElement.value as string;
+            if (cursorPos === 0) {
+                cursorPos = currentValue.length;
+            }
             const startIndex = currentValue.lastIndexOf(this.mention.triggerChar, cursorPos);
             const spaceIndex = currentValue.indexOf(" ", startIndex);
             // Don't allow spaces in @mention
             if (spaceIndex < 0 || spaceIndex > cursorPos) {
                 this._element.nativeElement.value = currentValue.substring(0, startIndex) + str + currentValue.substring(cursorPos);
             }
+            console.log(this._element);
         }
 
         this.closeSearchList();
