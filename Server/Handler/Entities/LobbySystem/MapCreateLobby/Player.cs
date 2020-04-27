@@ -18,18 +18,21 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            player.ModPlayer?.SetInvincible(true);
-            player.ModPlayer?.Freeze(false);
-
-            if (Players.Count == 2)
+            ModAPI.Thread.RunInMainThread(() =>
             {
-                Players.Values.First(p => p != player).SendEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Id);
-            } 
-            else if (Players.Count > 2) 
-            { 
-                player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
-            }
+                player.ModPlayer?.SetInvincible(true);
+                player.ModPlayer?.Freeze(false);
 
+                if (Players.Count == 2)
+                {
+                    Players.Values.First(p => p != player).SendEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Id);
+                }
+                else if (Players.Count > 2)
+                {
+                    player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
+                }
+            });
+            
             return true;
         }
 
