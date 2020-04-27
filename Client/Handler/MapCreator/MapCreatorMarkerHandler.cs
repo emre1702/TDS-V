@@ -160,9 +160,16 @@ namespace TDS_Client.Handler.MapCreator
 
             if (ModAPI.Control.IsDisabledControlJustPressed(InputGroup.MOVE, Control.Attack))
             {
-                _clickedMarkerStorer.ClickedMarker = _highlightedMarker;
-                _mapCreatorDrawHandler.HighlightColor_Edge = Color.FromArgb(255, 255, 255, 0);
-                _mapCreatorDrawHandler.HighlightColor_Full = Color.FromArgb(35, 255, 255, 0);
+                if (_highlightedMarker is null)
+                {
+                    _mapCreatorObjectPlacingHandler.LastHighlightedObject = null;
+                } 
+                else
+                {
+                    _clickedMarkerStorer.ClickedMarker = _highlightedMarker;
+                    _mapCreatorDrawHandler.HighlightColor_Edge = Color.FromArgb(255, 255, 255, 0);
+                    _mapCreatorDrawHandler.HighlightColor_Full = Color.FromArgb(35, 255, 255, 0);
+                }
             }
             else if (_mapCreatorObjectPlacingHandler.HighlightedObject == null)
             {
