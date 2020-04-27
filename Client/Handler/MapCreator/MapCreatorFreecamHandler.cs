@@ -92,7 +92,6 @@ namespace TDS_Client.Handler.MapCreator
             if (!_cursorHandler.Visible)
                 MoveCam();
 
-
             _mapCreatorMarkerHandler.OnTick();
             _mapCreatorObjectPlacingHandler.OnTick();
         }
@@ -136,8 +135,11 @@ namespace TDS_Client.Handler.MapCreator
             float goDown = _isDownPressed ? 0.5f : 0f;
 
             Position3D newPos = new Position3D(pos.X - vector.X + rightVector.X, pos.Y - vector.Y + rightVector.Y, pos.Z - vector.Z + rightVector.Z + goUp - goDown);
-            cam.SetPosition(newPos);
-            ModAPI.LocalPlayer.Position = newPos;
+            if (cam.Position != newPos)
+            {
+                cam.SetPosition(newPos);
+                ModAPI.LocalPlayer.Position = newPos;
+            }
             if (ModAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Aim))
             {
                 float rotX = Math.Max(Math.Min(rot.X + rightAxisY * -5f, 89), -89);

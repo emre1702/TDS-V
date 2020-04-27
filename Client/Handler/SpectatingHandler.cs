@@ -27,7 +27,6 @@ namespace TDS_Client.Handler
 
                 if (value != null)
                 {
-                    Logging.LogWarning(((IPlayer)value).Name, "SpectatingHandler.SpectatingEntity");
                     _camerasHandler.SpectateCam.Spectate(value);
                 }
                 else
@@ -83,7 +82,6 @@ namespace TDS_Client.Handler
 
         public void Start()
         {
-            Logging.LogWarning("Already binded: " + _binded.ToString(), "SpectatingHandler.Start");
             if (_binded)
                 return;
             _binded = true;
@@ -100,7 +98,6 @@ namespace TDS_Client.Handler
 
         public void Stop()
         {
-            Logging.LogWarning("Is binded: " + _binded.ToString(), "SpectatingHandler.Stop");
             _spectatingEntity = null;
             if (!_binded)
                 return;

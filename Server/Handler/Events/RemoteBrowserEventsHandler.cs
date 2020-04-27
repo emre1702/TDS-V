@@ -94,7 +94,7 @@ namespace TDS_Server.Handler.Events
                 object? ret = null;
 
                 var eventName = (string)args[0];
-                var argsWithoutEventName = new ArraySegment<object>(args, 1, args.Length);
+                var argsWithoutEventName = new ArraySegment<object>(args, 1, args.Length - 1);
 
                 if (_asyncMethods.ContainsKey(eventName))
                 {

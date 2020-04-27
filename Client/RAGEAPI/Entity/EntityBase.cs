@@ -73,6 +73,11 @@ namespace TDS_Client.RAGEAPI.Entity
             return RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(_instance.Handle, offsetX, offsetY, offsetZ).ToPosition3D();
         }
 
+        /// <summary>
+        /// Disabling the collision also disables raycasting.
+        /// </summary>
+        /// <param name="toggle"></param>
+        /// <param name="keepPhysics"></param>
         public void SetCollision(bool toggle, bool keepPhysics)
         {
             RAGE.Game.Entity.SetEntityCollision(_instance.Handle, toggle, keepPhysics);

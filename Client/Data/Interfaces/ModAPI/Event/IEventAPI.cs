@@ -12,6 +12,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Event
 {
     public delegate void DeathDelegate(IPlayer player, uint reason, IPlayer killer, CancelEventArgs cancel);
     public delegate void EntityStreamInDelegate(IEntity entity);
+    public delegate void EntityStreamOutDelegate(IEntity entity);
     public delegate void IncomingDamageDelegate(IPlayer sourcePlayer, IEntity sourceEntity, IEntity targetEntity, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel);
     public delegate void OutgoingDamageDelegate(IEntity sourceEntity, IEntity targetEntity, IPlayer sourcePlayer, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel);
     public delegate void PlayerDelegate(IPlayer player);
@@ -26,6 +27,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Event
     {
         ICollection<EventMethodData<DeathDelegate>> Death { get; }
         ICollection<EventMethodData<EntityStreamInDelegate>> EntityStreamIn { get; }
+        ICollection<EventMethodData<EntityStreamOutDelegate>> EntityStreamOut { get; }
         ICollection<EventMethodData<IncomingDamageDelegate>> IncomingDamage { get; }
         ICollection<EventMethodData<OutgoingDamageDelegate>> OutgoingDamage { get; }
         ICollection<EventMethodData<SpawnDelegate>> Spawn { get; }

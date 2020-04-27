@@ -50,7 +50,7 @@ namespace TDS_Client.Handler.MapCreator
             
             var clickedMarkerStorer = new ClickedMarkerStorer();
 
-            Objects = new MapCreatorObjectsHandler(modAPI, camerasHandler, lobbyHandler, eventsHandler, browserHandler, serializer);
+            Objects = new MapCreatorObjectsHandler(modAPI, loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler, serializer);
             Sync = new MapCreatorSyncHandler(modAPI, Objects, remoteEventsSender, serializer, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
             ObjectsLoading = new ObjectsLoadingHelper(modAPI, loggingHandler, utilsHandler, settingsHandler);
             ObjectsPreview = new MapCreatorObjectsPreviewHandler(modAPI, ObjectsLoading, camerasHandler, utilsHandler, browserHandler);

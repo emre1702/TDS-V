@@ -102,7 +102,7 @@ namespace TDS_Client.Handler.Lobby
                 {
                     var obj = ModAPI.MapObject.Create(ModAPI.Misc.GetHashKey(Constants.TargetHashName), map.Target, new Position3D(), dimension: ModAPI.LocalPlayer.Dimension);
                     obj.FreezePosition(true);
-                    obj.SetCollision(false, true);
+                    //obj.SetCollision(false, true);
                     obj.SetInvincible(true);
                     _objects.Add(obj);
                 }

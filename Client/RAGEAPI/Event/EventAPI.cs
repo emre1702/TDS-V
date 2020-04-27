@@ -11,6 +11,7 @@ namespace TDS_Client.RAGEAPI.Event
     {
         public ICollection<EventMethodData<DeathDelegate>> Death { get; }
         public ICollection<EventMethodData<EntityStreamInDelegate>> EntityStreamIn { get; }
+        public ICollection<EventMethodData<EntityStreamOutDelegate>> EntityStreamOut { get; }
         public ICollection<EventMethodData<TickDelegate>> Tick { get; }
         public ICollection<EventMethodData<TickNametagDelegate>> TickNametag { get; }
         public ICollection<EventMethodData<WeaponShotDelegate>> WeaponShot { get; }
@@ -29,6 +30,7 @@ namespace TDS_Client.RAGEAPI.Event
         {
             Death = new DeathEventHandler(loggingHandler, playerConvertingHandler);
             EntityStreamIn = new EntityStreamInEventHandler(loggingHandler, entityConvertingHandler);
+            EntityStreamOut = new EntityStreamOutEventHandler(loggingHandler, entityConvertingHandler);
             IncomingDamage = new IncomingDamageEventHandler(loggingHandler, entityConvertingHandler);
             OutgoingDamage = new OutgoingDamageEventHandler(loggingHandler, entityConvertingHandler);
             Spawn = new PlayerSpawnEventHandler(loggingHandler);

@@ -52,7 +52,7 @@ namespace TDS_Client.Handler.MapCreator
         private readonly EventsHandler _eventsHandler;
 
         public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntityBase entity, MapCreatorPositionType type,
-            ushort ownerRemoteId, int? teamNumber = null, string objectName = null, int id = -1)
+            ushort ownerRemoteId, Position3D pos, Position3D rot, int? teamNumber = null, string objectName = null, int id = -1)
         {
             _modAPI = modAPI;
             _eventsHandler = eventsHandler;
@@ -68,8 +68,8 @@ namespace TDS_Client.Handler.MapCreator
             Entity.GetModelDimensions(a, b);
             Size = b - a;
 
-            Position = entity.Position;
-            Rotation = entity.Rotation;
+            Position = pos;
+            Rotation = rot;
 
             if (id == -1)
             {

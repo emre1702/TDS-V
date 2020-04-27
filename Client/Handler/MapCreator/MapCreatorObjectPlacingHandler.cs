@@ -300,14 +300,9 @@ namespace TDS_Client.Handler.MapCreator
         private void HighlightObject()
         {
             var newHighlightedObject = GetHighlightingObject();
-            if (newHighlightedObject != null)
-            {
-                Logging.LogWarning($"Is mine: {newHighlightedObject.IsMine()} | is lobby owner: {_lobbyHandler.IsLobbyOwner}");
-            }
             if (newHighlightedObject != null && !newHighlightedObject.IsMine() && !_lobbyHandler.IsLobbyOwner)
                 return;
 
-            Logging.LogWarning($"Highlight new object");
             HighlightObject(newHighlightedObject);
         }
 

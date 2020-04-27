@@ -449,7 +449,7 @@ namespace TDS_Client.Handler
             int ray = ModAPI.Shapetest.StartShapeTestRay(from.X, from.Y, from.Z, to.X, to.Y, to.Z, flags, ignoreEntity, 0);
             RaycastHit cast = new RaycastHit();
             int curtemp = 0;
-            cast.ShapeResult = ModAPI.Shapetest.GetShapeTestResultEx(ray, ref curtemp, cast.EndCoords, cast.SurfaceNormal, ref cast.MaterialHash, ref cast.EntityHit);
+            cast.ShapeResult = ModAPI.Shapetest.GetShapeTestResult(ray, ref curtemp, cast.EndCoords, cast.SurfaceNormal, ref cast.EntityHit);
             cast.Hit = Convert.ToBoolean(curtemp);
             return cast;
         }
