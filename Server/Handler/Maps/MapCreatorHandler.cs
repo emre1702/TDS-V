@@ -36,7 +36,7 @@ namespace TDS_Server.Handler.Maps
             : base(dbContext, loggingHandler)
             => (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
 
-        public async Task<object?> Create(ITDSPlayer creator, object[] args)
+        public async Task<object?> Create(ITDSPlayer creator, ArraySegment<object> args)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace TDS_Server.Handler.Maps
             }
         }
 
-        public async Task<object?> Save(ITDSPlayer creator, object[] args)
+        public async Task<object?> Save(ITDSPlayer creator, ArraySegment<object> args)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace TDS_Server.Handler.Maps
             }
         }
 
-        public object? SendPlayerMapForMapCreator(ITDSPlayer player, object[] args)
+        public object? SendPlayerMapForMapCreator(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (player.Entity is null)
                 return null;
@@ -195,7 +195,7 @@ namespace TDS_Server.Handler.Maps
             return null;
         }
 
-        public object? SendPlayerMapNamesForMapCreator(ITDSPlayer player, object[] _)
+        public object? SendPlayerMapNamesForMapCreator(ITDSPlayer player, ref ArraySegment<object> _)
         {
             if (player.Entity is null)
                 return null;
@@ -295,7 +295,7 @@ namespace TDS_Server.Handler.Maps
             File.Delete(map.Info.FilePath);
         }
 
-        public object? SyncCurrentMapToClient(ITDSPlayer player, object[] args)
+        public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (!(player.Lobby is MapCreateLobby lobby))
                 return null;

@@ -10,6 +10,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
+using System.Collections.Generic;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -67,7 +68,7 @@ namespace TDS_Server.Handler.Userpanel
             return json;
         }
 
-        public async Task<object?> Answer(ITDSPlayer player, object[] args)
+        public async Task<object?> Answer(ITDSPlayer player, ArraySegment<object> args)
         {
             int? offlineMessageID;
             if ((offlineMessageID = Utils.GetInt(args[0])) is null)
@@ -90,7 +91,7 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        public async Task<object?> Send(ITDSPlayer player, object[] args)
+        public async Task<object?> Send(ITDSPlayer player, ArraySegment<object> args)
         {
             string? playerName = Convert.ToString(args[0]);
             if (playerName is null)
@@ -123,7 +124,7 @@ namespace TDS_Server.Handler.Userpanel
             return true;
         }
 
-        public async Task<object?> Delete(ITDSPlayer _, object[] args)
+        public async Task<object?> Delete(ITDSPlayer _, ArraySegment<object> args)
         {
             int? offlineMessageId;
             if ((offlineMessageId = Utils.GetInt(args[0])) is null)

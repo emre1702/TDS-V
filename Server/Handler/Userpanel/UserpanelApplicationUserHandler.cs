@@ -117,7 +117,7 @@ namespace TDS_Server.Handler.Userpanel
             return _serializer.ToBrowser(new ApplicationUserData { CreateTime = player.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
         }
 
-        public async Task<object?> CreateApplication(ITDSPlayer player, object[] args)
+        public async Task<object?> CreateApplication(ITDSPlayer player, ArraySegment<object> args)
         {
             string answersJson = (string)args[0];
             var answers = _serializer.FromBrowser<Dictionary<int, string>>(answersJson);
@@ -153,9 +153,9 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        public async Task<object?> AcceptInvitation(ITDSPlayer player, object[] args)
+        public async Task<object?> AcceptInvitation(ITDSPlayer player, ArraySegment<object> args)
         {
-            if (args.Length == 0)
+            if (args.Count == 0)
                 return null;
 
             int? invitationId;
@@ -212,9 +212,9 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        public async Task<object?> RejectInvitation(ITDSPlayer player, object[] args)
+        public async Task<object?> RejectInvitation(ITDSPlayer player, ArraySegment<object> args)
         {
-            if (args.Length == 0)
+            if (args.Count == 0)
                 return null;
 
             int? invitationId;

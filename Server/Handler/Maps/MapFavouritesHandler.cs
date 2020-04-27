@@ -11,6 +11,7 @@ using TDS_Shared.Core;
 using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces.ModAPI;
+using System;
 
 namespace TDS_Server.Handler.Maps
 {
@@ -41,7 +42,7 @@ namespace TDS_Server.Handler.Maps
             _modAPI.Thread.RunInMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, _serializer.ToBrowser(mapIDs)));
         }
 
-        public async Task<object?> ToggleMapFavouriteState(ITDSPlayer player, object[] args)
+        public async Task<object?> ToggleMapFavouriteState(ITDSPlayer player, ArraySegment<object> args)
         {
             int mapId = (int)args[0];
             bool isFavorite = (bool)args[1];

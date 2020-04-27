@@ -9,6 +9,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Core;
 using TDS_Server.Data.Interfaces.ModAPI;
+using System.Collections.Generic;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -41,7 +42,7 @@ namespace TDS_Server.Handler.Userpanel
             return _serializer.ToBrowser(data);
         }
 
-        public async Task<object?> SetData(ITDSPlayer player, object[] args)
+        public async Task<object?> SetData(ITDSPlayer player, ArraySegment<object> args)
         {
             if (player.Entity is null)
                 return "Unknown error";

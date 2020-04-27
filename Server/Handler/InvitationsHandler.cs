@@ -32,7 +32,7 @@ namespace TDS_Server.Core.Manager.Utility
             }
         }
 
-        public object? AcceptInvitation(ITDSPlayer player, object[] args)
+        public object? AcceptInvitation(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (!ulong.TryParse(Convert.ToString(args[0]), out ulong id))
                 return null;
@@ -49,7 +49,7 @@ namespace TDS_Server.Core.Manager.Utility
             return null;
         }
 
-        public object? RejectInvitation(ITDSPlayer player, object[] args)
+        public object? RejectInvitation(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (!ulong.TryParse(Convert.ToString(args[0]), out ulong id))
                 return null;

@@ -85,11 +85,11 @@ namespace TDS_Server.Handler.Userpanel
             return _serializer.ToBrowser(data);
         }
 
-        public async Task<object?> GetSupportRequestData(ITDSPlayer player, object[] args)
+        public async Task<object?> GetSupportRequestData(ITDSPlayer player, ArraySegment<object> args)
         {
             try
             {
-                if (args.Length == 0)
+                if (args.Count == 0)
                     return null;
                 int? requestId;
                 if ((requestId = Utils.GetInt(args[0])) == null)
@@ -142,7 +142,7 @@ namespace TDS_Server.Handler.Userpanel
             }
         }
 
-        public async Task<object?> SendRequest(ITDSPlayer player, object[] args)
+        public async Task<object?> SendRequest(ITDSPlayer player, ArraySegment<object> args)
         {
             string json = (string)args[0];
 
@@ -178,7 +178,7 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        public async Task<object?> SendMessage(ITDSPlayer player, object[] args)
+        public async Task<object?> SendMessage(ITDSPlayer player, ArraySegment<object> args)
         {
             int? requestId = Utils.GetInt(args[0]);
             if (requestId is null)
@@ -231,7 +231,7 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        public async Task<object?> SetSupportRequestClosed(ITDSPlayer player, object[] args)
+        public async Task<object?> SetSupportRequestClosed(ITDSPlayer player, ArraySegment<object> args)
         {
             int? requestId = Utils.GetInt(args[0]);
             if (requestId == null)
@@ -264,13 +264,13 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        public object? LeftSupportRequestsList(ITDSPlayer player, object[] _)
+        public object? LeftSupportRequestsList(ITDSPlayer player, ref ArraySegment<object> _)
         {
             _inSupportRequestsList.Remove(player);
             return null;
         }
 
-        public object? LeftSupportRequest(ITDSPlayer player, object[] args)
+        public object? LeftSupportRequest(ITDSPlayer player, ref ArraySegment<object> args)
         {
             int requestId = (int)args[0];
 

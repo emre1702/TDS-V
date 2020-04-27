@@ -30,7 +30,7 @@ namespace TDS_Server.Handler.Userpanel
             => (_modAPI, _serializer, _bonusBotConnectorClient, _tdsPlayerHandler) 
             = (modAPI, serializer, bonusBotConnectorClient, tdsPlayerHandler);
 
-        public async Task<object?> SaveSettings(ITDSPlayer player, object[] args)
+        public async Task<object?> SaveSettings(ITDSPlayer player, ArraySegment<object> args)
         {
             string json = (string)args[0];
             var obj = _serializer.FromBrowser<PlayerSettings>(json);

@@ -69,7 +69,7 @@ namespace TDS_Server.Handler.Userpanel
 
         }
 
-        public async Task<object?> SendApplicationData(ITDSPlayer player, object[] args)
+        public async Task<object?> SendApplicationData(ITDSPlayer player, ArraySegment<object> args)
         {
             int applicationId = (int)args[0];
 
@@ -112,12 +112,12 @@ namespace TDS_Server.Handler.Userpanel
             return json;
         }
 
-        public async Task<object?> SendInvitation(ITDSPlayer player, object[] args)
+        public async Task<object?> SendInvitation(ITDSPlayer player, ArraySegment<object> args)
         {
             if (player.AdminLevel.Level != (short)AdminLevel.Administrator)
                 return null;
 
-            if (args.Length < 2)
+            if (args.Count < 2)
                 return null;
             int? applicationId;
             if ((applicationId = Utils.GetInt(args[0])) == null)

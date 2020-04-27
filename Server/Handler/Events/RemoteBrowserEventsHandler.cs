@@ -18,9 +18,9 @@ namespace TDS_Server.Handler.Events
     public class RemoteBrowserEventsHandler
     {
 
-        public delegate Task<object?> FromBrowserAsyncMethodDelegate(ITDSPlayer player, object[] args);
-        public delegate ValueTask<object?> FromBrowserMaybeAsyncMethodDelegate(ITDSPlayer player, object[] args);
-        public delegate object? FromBrowserMethodDelegate(ITDSPlayer player, object[] args);
+        public delegate Task<object?> FromBrowserAsyncMethodDelegate(ITDSPlayer player, ArraySegment<object> args);
+        public delegate ValueTask<object?> FromBrowserMaybeAsyncMethodDelegate(ITDSPlayer player, ArraySegment<object> args);
+        public delegate object? FromBrowserMethodDelegate(ITDSPlayer player, ref ArraySegment<object> args);
 
         private readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _asyncMethods;
         private readonly Dictionary<string, FromBrowserMaybeAsyncMethodDelegate> _maybeAsyncMethods;
@@ -93,21 +93,23 @@ namespace TDS_Server.Handler.Events
             {
                 object? ret = null;
 
-                string eventName = (string)args[0];
+                var eventName = (string)args[0];
+                var argsWithoutEventName = new ArraySegment<object>(args, 1, args.Length);
+
                 if (_asyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _asyncMethods[eventName](player, args.Skip(1).ToArray());
+                    ret = await _asyncMethods[eventName](player, argsWithoutEventName);
                 }
                 else if (_maybeAsyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _maybeAsyncMethods[eventName](player, args.Skip(1).ToArray());
+                    ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName);
                 }
 
                 _modAPI.Thread.RunInMainThread(() =>
                 {
                     if (_methods.ContainsKey(eventName))
                     {
-                        ret = _methods[eventName](player, args.Skip(1).ToArray());
+                        ret = _methods[eventName](player, ref argsWithoutEventName);
                     }
 
                     if (ret != null)
@@ -125,7 +127,7 @@ namespace TDS_Server.Handler.Events
             }
         }
 
-        private object? BuyMap(ITDSPlayer player, object[] args)
+        private object? BuyMap(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (player.Lobby is null)
                 return null;
@@ -139,7 +141,7 @@ namespace TDS_Server.Handler.Events
             return null;
         }
 
-        private object? MapCreatorSyncData(ITDSPlayer player, object[] args)
+        private object? MapCreatorSyncData(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (player.Lobby is null)
                 return null;
@@ -152,12 +154,12 @@ namespace TDS_Server.Handler.Events
             return null;
         }
 
-        private object? MapVote(ITDSPlayer player, object[] args)
+        private object? MapVote(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (!(player.Lobby is Arena arena))
                 return null;
 
-            if (args.Length == 0)
+            if (args.Count == 0)
                 return null;
 
             int? mapId;
@@ -168,12 +170,12 @@ namespace TDS_Server.Handler.Events
             return null;
         }
 
-        private object? GiveVehicle(ITDSPlayer player, object[] args)
+        private object? GiveVehicle(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
                 return null;
 
-            if (args.Length == 0)
+            if (args.Count == 0)
                 return null;
 
             if (!Enum.TryParse(args[0].ToString(), out FreeroamVehicleType vehType))
@@ -183,13 +185,13 @@ namespace TDS_Server.Handler.Events
             return null;
         }
 
-        private object? JoinedCustomLobbiesMenu(ITDSPlayer player, object[] args)
+        private object? JoinedCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
         {
             _customLobbyMenuSyncHandler.AddPlayer(player);
             return null;
         }
 
-        private object? LeftCustomLobbiesMenu(ITDSPlayer player, object[] args)
+        private object? LeftCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
         {
             _customLobbyMenuSyncHandler.RemovePlayer(player);
             return null;

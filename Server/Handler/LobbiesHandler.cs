@@ -192,7 +192,7 @@ namespace TDS_Server.Handler
             return lobby;
         }
 
-        public async Task<object?> CreateCustomLobby(ITDSPlayer player, object[] args)
+        public async Task<object?> CreateCustomLobby(ITDSPlayer player, ArraySegment<object> args)
         {
             try
             {
@@ -295,7 +295,7 @@ namespace TDS_Server.Handler
             }
         }
 
-        public async ValueTask<object?> LoadDatas(ITDSPlayer player, object[] args)
+        public async ValueTask<object?> LoadDatas(ITDSPlayer player, ArraySegment<object> args)
         {
             if (_customLobbyDatas is null)
             {
@@ -328,7 +328,7 @@ namespace TDS_Server.Handler
             return _customLobbyDatas;
         }
 
-        public async Task<object?> OnJoinLobby(ITDSPlayer player, object[] args)
+        public async Task<object?> OnJoinLobby(ITDSPlayer player, ArraySegment<object> args)
         {
 
             int index = (int)args[0];
@@ -340,11 +340,9 @@ namespace TDS_Server.Handler
                 {
                     if (await lobby.IsPlayerBaned(player))
                         return null;
-                    _modAPI.Thread.RunInMainThread(() =>
-                    {
-                        lobby = ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
-                        _eventsHandler.OnLobbyCreated(lobby);
-                    });
+
+                    lobby = ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
+                    _eventsHandler.OnLobbyCreated(lobby);
                 }
                 await lobby.AddPlayer(player, null);
                 return null;
@@ -357,10 +355,10 @@ namespace TDS_Server.Handler
             }
         }
 
-        public async Task<object?> OnJoinLobbyWithPassword(ITDSPlayer player, object[] args)
+        public async Task<object?> OnJoinLobbyWithPassword(ITDSPlayer player, ArraySegment<object> args)
         {
             int index = (int)args[0];
-            string? password = args.Length > 1 ? (string)args[1] : null;
+            string? password = args.Count > 1 ? (string)args[1] : null;
 
             if (LobbiesByIndex.ContainsKey(index))
             {
