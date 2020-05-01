@@ -2,6 +2,7 @@
 using System;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.RAGEAPI.Player;
 
 namespace TDS_Server.RAGEAPI
@@ -45,8 +46,8 @@ namespace TDS_Server.RAGEAPI
             return GetTDSPlayerIfLoggedIn(modPlayer);
         }
 
-        internal static ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer player)
-            => TDSCore.GetTDSPlayerIfLoggedIn(player);
+        internal static ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer? player)
+            => player is { } ? TDSCore.GetTDSPlayerIfLoggedIn(player) : null;
 
         internal static ITDSPlayer? GetTDSPlayerIfLoggedIn(ushort remoteId)
             => TDSCore.GetTDSPlayerIfLoggedIn(remoteId);
@@ -64,6 +65,9 @@ namespace TDS_Server.RAGEAPI
         {
             return TDSCore.GetTDSPlayer(player);
         }
+
+        internal static ITDSVehicle? GetTDSVehicle(IVehicle? vehicle) 
+            => vehicle is null ? null : TDSCore.GetTDSVehicle(vehicle);
 
         internal static ITDSPlayer? GetNotLoggedInTDSPlayer(GTANetworkAPI.Player player)
         {

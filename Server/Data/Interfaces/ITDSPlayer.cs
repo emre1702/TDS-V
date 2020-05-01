@@ -16,7 +16,7 @@ namespace TDS_Server.Data.Interfaces
 {
 #nullable enable
 
-    public interface ITDSPlayer : ITDSEntity, IDatabaseEntityWrapper, IEquatable<ITDSPlayer>
+    public interface ITDSPlayer : ITDSPedBase, IDatabaseEntityWrapper, IEquatable<ITDSPlayer>
     {
         ITDSPlayer? InPrivateChatWith { get; set; }
         AdminLevelDto AdminLevel { get; }
@@ -68,7 +68,7 @@ namespace TDS_Server.Data.Interfaces
         int Money { get; set; }
         ILobby? PreviousLobby { get; set; }
         short ShortTimeKillingSpree { get; }
-        IVehicle? FreeroamVehicle { get; set; }
+        ITDSVehicle? FreeroamVehicle { get; set; }
         int PlayMinutes { get; set; }
         int? VoiceMuteTime { get; set; }
         Language LanguageEnum { get; set; }
@@ -89,7 +89,7 @@ namespace TDS_Server.Data.Interfaces
         bool HasRelationTo(ITDSPlayer target, PlayerRelation block);
         void SetVoiceTo(ITDSPlayer target, bool v);
         void Spawn(Position3D position, float rotation);
-        void SetEntityInvincible(IVehicle vehicle, bool invincible);
+        void SetEntityInvincible(ITDSVehicle vehicle, bool invincible);
         void CheckSaveData();
         void CheckReduceMapBoughtCounter();
         ValueTask SaveData(bool force = false);

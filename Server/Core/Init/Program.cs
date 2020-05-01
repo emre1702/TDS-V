@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
@@ -32,6 +33,7 @@ namespace TDS_Server.Core.Init
 
         private readonly IServiceProvider _serviceProvider;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly TDSVehicleHandler _tdsVehicleHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
         private readonly CommandsHandler _commandsHandler;
@@ -84,6 +86,7 @@ namespace TDS_Server.Core.Init
                 RemoteEventsHandler = _serviceProvider.GetRequiredService<RemoteEventsHandler>();
                 RemoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
                 _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
+                _tdsVehicleHandler = _serviceProvider.GetRequiredService<TDSVehicleHandler>();
                 _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
 
@@ -110,6 +113,9 @@ namespace TDS_Server.Core.Init
 
         public ITDSPlayer GetTDSPlayer(IPlayer player)
             => _tdsPlayerHandler.Get(player);
+
+        public ITDSVehicle GetTDSVehicle(IVehicle vehicle) 
+            => _tdsVehicleHandler.Get(vehicle); 
 
         public ITDSPlayer GetNotLoggedInTDSPlayer(IPlayer player)
             => _tdsPlayerHandler.GetNotLoggedIn(player);

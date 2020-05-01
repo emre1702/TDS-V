@@ -13,8 +13,12 @@ namespace TDS_Server.RAGEAPI.Player
 
         private string _name;
 
-        internal Player(GTANetworkAPI.Player instance) : base(instance)
+        private readonly EntityConvertingHandler _entityConvertingHandler;
+
+        internal Player(GTANetworkAPI.Player instance, EntityConvertingHandler entityConvertingHandler) : base(instance)
         {
+            _entityConvertingHandler = entityConvertingHandler;
+
             _instance = instance;
 
             _name = _instance.Name;
@@ -67,7 +71,7 @@ namespace TDS_Server.RAGEAPI.Player
 
         public bool IsInVehicle => _instance.IsInVehicle;
 
-        public IVehicle Vehicle => new Vehicle.Vehicle(_instance.Vehicle);
+        public ITDSVehicle? Vehicle => Init.GetTDSVehicle(_entityConvertingHandler.GetEntity(_instance.Vehicle));
 
         public bool IsDead => _instance.Dead;
 
@@ -167,7 +171,7 @@ namespace TDS_Server.RAGEAPI.Player
             _instance.WarpOutOfVehicle();
         }
 
-        public void SetIntoVehicle(IVehicle vehicle, int seat)
+        public void SetIntoVehicle(ITDSVehicle vehicle, int seat)
         {
             if (!(vehicle is Vehicle.Vehicle veh))
                 return;

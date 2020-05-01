@@ -10,7 +10,7 @@ namespace TDS_Server.RAGEAPI.TextLabel
     {
         public ITextLabel Create(string text, Position3D position, double range, float fontSize, int font, System.Drawing.Color color, bool entitySeethrough, ILobby lobby)
         {
-            var instance = NAPI.TextLabel.CreateTextLabel(text, position.ToVector3(), (float)range, fontSize, font, color.ToColor(), entitySeethrough, lobby.Dimension);
+            var instance = NAPI.TextLabel.CreateTextLabel(text, position.ToVector3(), (float)range, fontSize, font, color.ToMod(), entitySeethrough, lobby.Dimension);
 
             var textLabel = new TextLabel(instance);
             return textLabel;

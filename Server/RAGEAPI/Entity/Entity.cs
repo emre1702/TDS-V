@@ -12,7 +12,7 @@ namespace TDS_Server.RAGEAPI.Entity
     {
         private GTANetworkAPI.Entity _instance;
 
-        protected Entity(GTANetworkAPI.Entity instance)
+        public Entity(GTANetworkAPI.Entity instance)
             => _instance = instance;
 
         public ushort Id => _instance.Id;

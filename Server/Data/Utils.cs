@@ -6,6 +6,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI.Ped;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity.Player;
@@ -74,10 +76,13 @@ namespace TDS_Server.Data
             return $"{(int)(span.TotalMinutes / 60)}:{(int)Math.Ceiling(span.TotalMinutes % 60)}";
         }
 
-        public static uint? GetVehicleFreeSeat(IVehicle veh)
+        public static uint? GetVehicleFreeSeat(ITDSVehicle veh)
         {
-            HashSet<int> occupiedSeats = veh.Occupants.Select(o => o.VehicleSeat).ToHashSet();
-            for (int i = veh.MaxOccupants - 1; i >= 0; --i)
+            if (veh.Vehicle is null)
+                return null;
+
+            HashSet<int> occupiedSeats = veh.Vehicle.Occupants.OfType<IPedBase>().Select(o => o.VehicleSeat).ToHashSet();
+            for (int i = veh.Vehicle.MaxOccupants - 1; i >= 0; --i)
             {
                 if (!occupiedSeats.Contains(i))
                     return (uint?)i;

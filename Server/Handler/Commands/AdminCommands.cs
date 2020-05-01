@@ -222,15 +222,15 @@ namespace TDS_Server.Handler.Commands
             var targetPos = target.ModPlayer.Position;
 
             #region Admin is in vehicle
-            if (player.ModPlayer.IsInVehicle)
+            if (player.ModPlayer.IsInVehicle && player.ModPlayer.Vehicle is { } && player.ModPlayer.Vehicle.Vehicle is { })
             {
-                player.ModPlayer.Vehicle.Position = targetPos.Around(2f, false);
+                player.ModPlayer.Vehicle.Vehicle.Position = targetPos.Around(2f, false);
                 return;
             }
             #endregion Admin is in vehicle
 
             #region Target is in vehicle and we want to sit in it
-            if (target.ModPlayer.IsInVehicle)
+            if (target.ModPlayer.IsInVehicle && target.ModPlayer.Vehicle is { } && target.ModPlayer.Vehicle.Vehicle is { })
             {
                 uint? freeSeat = Utils.GetVehicleFreeSeat(target.ModPlayer.Vehicle);
                 if (freeSeat.HasValue)

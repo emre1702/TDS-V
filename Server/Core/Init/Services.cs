@@ -108,6 +108,7 @@ namespace TDS_Server.Core.Init
                .AddSingleton<TimerHandler>()
                .AddSingleton<WeaponDatasLoadingHandler>()
                .AddSingleton<ScoreboardHandler>()
+               .AddSingleton<TDSVehicleHandler>()
 
 
                .AddSingleton<Serializer>()

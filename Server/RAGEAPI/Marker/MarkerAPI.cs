@@ -14,7 +14,7 @@ namespace TDS_Server.RAGEAPI.Marker
             var dir = direction is null ? new GTANetworkAPI.Vector3() : direction.ToVector3();
             var rot = rotation is null ? new GTANetworkAPI.Vector3() : rotation.ToVector3();
             var marker = GTANetworkAPI.NAPI.Marker.CreateMarker((GTANetworkAPI.MarkerType)type, position.ToVector3(), dir, rot, scale, 
-                color.ToColor(), bobUpAndDown, lobby.Dimension);
+                color.ToMod(), bobUpAndDown, lobby.Dimension);
 
             return new Marker(marker);
         }

@@ -12,7 +12,9 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
             if (tdsPlayer is null)
                 return;
 
-            var modVehicle = Init.BaseAPI.EntityConvertingHandler.GetEntity(vehicle); 
+            var modVehicle = Init.BaseAPI.EntityConvertingHandler.GetEntity(vehicle);
+            if (modVehicle is null)
+                return;
 
             Init.TDSCore.EventsHandler.OnPlayerExitVehicle(tdsPlayer, modVehicle);
         }

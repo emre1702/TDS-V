@@ -191,13 +191,13 @@ namespace TDS_Server.Handler.Commands
         {
             if (player.ModPlayer is null)
                 return;
-            if (player.ModPlayer.IsInVehicle)
+            if (player.ModPlayer.IsInVehicle && player.ModPlayer.Vehicle is { } && player.ModPlayer.Vehicle.Vehicle is { })
             {
-                var pos = player.ModPlayer.Vehicle.Position;
+                var pos = player.ModPlayer.Vehicle.Vehicle.Position;
                 player.SendMessage("Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
-                var rot = player.ModPlayer.Vehicle.Rotation;
+                var rot = player.ModPlayer.Vehicle.Vehicle.Rotation;
                 player.SendMessage("Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
-                player.SendMessage($"Vehicle dimension: {player.ModPlayer.Vehicle.Dimension} | Your dimension: {player.ModPlayer.Dimension}");
+                player.SendMessage($"Vehicle dimension: {player.ModPlayer.Vehicle.Vehicle.Dimension} | Your dimension: {player.ModPlayer.Dimension}");
             }
             else
             {

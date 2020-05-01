@@ -77,7 +77,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     player.FreeroamVehicle = null;
                 }
 
-                IVehicle? vehicle = ModAPI.Vehicle.Create(vehHash, pos, player.ModPlayer.Rotation.Z, 0, 0, player.ModPlayer.Name, dimension: Dimension);
+                ITDSVehicle? vehicle = ModAPI.Vehicle.Create(vehHash, pos, player.ModPlayer.Rotation.Z, 0, 0, player.ModPlayer.Name, dimension: Dimension);
                 if (vehicle is null)
                     return;
                 player.FreeroamVehicle = vehicle;

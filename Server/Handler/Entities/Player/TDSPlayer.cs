@@ -1,19 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TDS_Server.Data.Enums;
+﻿using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Core;
 using TDS_Shared.Data.Default;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Handler.Entities.Player
 {
@@ -28,11 +23,11 @@ namespace TDS_Server.Handler.Entities.Player
 
         public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
 
-        public IVehicle? FreeroamVehicle { get; set; }
+        public ITDSVehicle? FreeroamVehicle { get; set; }
         public int VehicleSeat => ModPlayer?.VehicleSeat ?? -1;
 
         public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
-        public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel 
+        public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel
             ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : ModPlayer.Name) : (Entity is { } ? Entity.Name : ModPlayer.Name));
         public bool IsVip => Entity?.IsVip ?? false;
 

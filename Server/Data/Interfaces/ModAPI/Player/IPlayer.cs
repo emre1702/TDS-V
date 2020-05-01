@@ -1,12 +1,14 @@
 ﻿using System;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces.ModAPI.Ped;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Interfaces.ModAPI.Player
 {
-    public interface IPlayer : IEntity
+    #nullable enable
+    public interface IPlayer : IPedBase
     {
         bool Dead { get; }
         string IPAddress { get; }
@@ -18,8 +20,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
         string Serial { get; }
         ulong SocialClubId { get; }
         string SocialClubName { get; }
-        int Transparency { get; set; }
-        int VehicleSeat { get; }
+        int Transparency { get; set; }   
 
         void RemoveAllWeapons();
 
@@ -28,7 +29,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
         int Armor { get; set; }
         int Health { get; set; }
         bool IsInVehicle { get; }
-        IVehicle Vehicle { get; }
+        ITDSVehicle? Vehicle { get; }
         bool IsDead { get; }
 
         void Kick(string reason);
@@ -46,7 +47,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
         void SendMessage(string msg);
         void SendNotification(string msg, bool flashing = false);
         void WarpOutOfVehicle();
-        void SetIntoVehicle(IVehicle vehicle, int seat);
+        void SetIntoVehicle(ITDSVehicle vehicle, int seat);
         void SetClothes(int slot, int drawable, int texture);
     }
 }
