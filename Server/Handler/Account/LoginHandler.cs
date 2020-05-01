@@ -147,8 +147,8 @@ namespace TDS_Server.Handler.Account
                     _serializer.ToBrowser(angularConstantsData)
                 );
 
-                _dataSyncHandler.SetData(player, PlayerDataKey.MapsBoughtCounter, PlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
-                _dataSyncHandler.SetData(player, PlayerDataKey.Name, PlayerDataSyncMode.Player, player.Entity.Name);
+                _dataSyncHandler.SetData(player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
+                _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, player.Entity.Name);
 
                 _eventsHandler.OnPlayerLogin(player);
 

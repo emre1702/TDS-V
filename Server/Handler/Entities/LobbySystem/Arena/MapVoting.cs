@@ -150,7 +150,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 if (player.LobbyStats is { })
                     ++player.LobbyStats.TotalMapsBought;
                 player.AddToChallenge(ChallengeType.BuyMaps);
-                DataSyncHandler.SetData(player, PlayerDataKey.MapsBoughtCounter, PlayerDataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
+                DataSyncHandler.SetData(player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
             }
 
             _boughtMap = map;

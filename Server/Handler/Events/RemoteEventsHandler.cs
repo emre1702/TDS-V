@@ -145,7 +145,7 @@ namespace TDS_Server.Handler.Events
         public void OnToggleCrouch(ITDSPlayer player)
         {
             player.IsCrouched = !player.IsCrouched;
-            _dataSyncHandler.SetData(player, PlayerDataKey.Crouched, PlayerDataSyncMode.Lobby, player.IsCrouched);
+            _dataSyncHandler.SetData(player, PlayerDataKey.Crouched, DataSyncMode.Lobby, player.IsCrouched);
         }
 
         #region Bomb
@@ -273,7 +273,7 @@ namespace TDS_Server.Handler.Events
 
         public void OnMapCreatorSetInFreeCam(ITDSPlayer tdsPlayer, bool inFreeCam)
         {
-            _dataSyncHandler.SetData(tdsPlayer, PlayerDataKey.InFreeCam, PlayerDataSyncMode.Lobby, inFreeCam);
+            _dataSyncHandler.SetData(tdsPlayer, PlayerDataKey.InFreeCam, DataSyncMode.Lobby, inFreeCam);
         }
         #endregion MapCreator
 

@@ -117,10 +117,15 @@ namespace TDS_Server.Handler.Events
             fightLobby.OnPlayerWeaponSwitch(player, previousWeapon, newWeapon);
         }
 
-        public void OnPlayerExitVehicle(ITDSPlayer tdsPlayer, IVehicle modVehicle)
+        /*public void OnPlayerEnterVehicle(ITDSPlayer tdsPlayer, ITDSVehicle vehicle, sbyte seatId)
         {
-            
+            tdsPlayer.Lobby?.OnPlayerEnterVehicle(tdsPlayer, vehicle, seatId);
         }
+
+        public void OnPlayerExitVehicle(ITDSPlayer tdsPlayer, ITDSVehicle vehicle)
+        {
+            tdsPlayer.Lobby?.OnPlayerExitVehicle(tdsPlayer, vehicle);
+        }*/
         #endregion
 
 

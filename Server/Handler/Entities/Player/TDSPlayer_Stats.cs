@@ -18,7 +18,7 @@ namespace TDS_Server.Handler.Entities.Player
                 if (Entity is null)
                     return;
                 Entity.PlayerStats.Money = value;
-                _dataSyncHandler.SetData(this, PlayerDataKey.Money, PlayerDataSyncMode.Player, value);
+                _dataSyncHandler.SetData(this, PlayerDataKey.Money, DataSyncMode.Player, value);
             }
         }
 
@@ -69,7 +69,7 @@ namespace TDS_Server.Handler.Entities.Player
             {
                 Entity.PlayerStats.LastMapsBoughtCounterReduce = DateTime.UtcNow;
                 --Entity.PlayerStats.MapsBoughtCounter;
-                _dataSyncHandler.SetData(this, PlayerDataKey.MapsBoughtCounter, PlayerDataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
+                _dataSyncHandler.SetData(this, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
             }
         }
     }

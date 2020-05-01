@@ -21,6 +21,15 @@ namespace TDS_Server.Handler.Sync
         private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerHandleDatasPlayer
             = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
 
+        private readonly Dictionary<ushort, Dictionary<EntityDataKey, object>> _entityHandleDatasAll
+            = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
+
+        private readonly Dictionary<int, Dictionary<ushort, Dictionary<EntityDataKey, object>>> _entityHandleDatasLobby
+            = new Dictionary<int, Dictionary<ushort, Dictionary<EntityDataKey, object>>>();
+
+        private readonly Dictionary<ushort, Dictionary<ushort, Dictionary<EntityDataKey, object>>> _entityHandleDatasPlayer
+            = new Dictionary<ushort, Dictionary<ushort, Dictionary<EntityDataKey, object>>>();
+
         private readonly Serializer _serializer;
         private readonly IModAPI _modAPI;
 
@@ -43,12 +52,12 @@ namespace TDS_Server.Handler.Sync
         /// <param name="key"></param>
         /// <param name="syncMode"></param>
         /// <param name="value"></param>
-        public void SetData(ITDSPlayer player, PlayerDataKey key, PlayerDataSyncMode syncMode, object value)
+        public void SetData(ITDSPlayer player, PlayerDataKey key, DataSyncMode syncMode, object value)
         {
 
             switch (syncMode)
             {
-                case PlayerDataSyncMode.All:
+                case DataSyncMode.All:
                     if (!_playerHandleDatasAll.ContainsKey(player.RemoteId))
                         _playerHandleDatasAll[player.RemoteId] = new Dictionary<PlayerDataKey, object>();
                     _playerHandleDatasAll[player.RemoteId][key] = value;
@@ -56,7 +65,7 @@ namespace TDS_Server.Handler.Sync
                     _modAPI.Sync.SendEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
                     break;
 
-                case PlayerDataSyncMode.Lobby:
+                case DataSyncMode.Lobby:
                     if (player.Lobby is null)
                         return;
 
@@ -69,7 +78,7 @@ namespace TDS_Server.Handler.Sync
                     _modAPI.Sync.SendEvent(player.Lobby, ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
                     break;
 
-                case PlayerDataSyncMode.Player:
+                case DataSyncMode.Player:
                     if (!_playerHandleDatasPlayer.ContainsKey(player.RemoteId))
                         _playerHandleDatasPlayer[player.RemoteId] = new Dictionary<PlayerDataKey, object>();
                     _playerHandleDatasPlayer[player.RemoteId][key] = value;
@@ -79,9 +88,59 @@ namespace TDS_Server.Handler.Sync
             }
         }
 
+        /// <summary>
+        /// Only works for default types like int, string etc.!
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="key"></param>
+        /// <param name="syncMode"></param>
+        /// <param name="value"></param>
+        public void SetData(IEntity entity, EntityDataKey key, DataSyncMode syncMode, object value, ITDSPlayer? toPlayer = null, ILobby? toLobby = null)
+        {
+
+            switch (syncMode)
+            {
+                case DataSyncMode.All:
+                    if (!_entityHandleDatasAll.ContainsKey(entity.Id))
+                        _entityHandleDatasAll[entity.Id] = new Dictionary<EntityDataKey, object>();
+                    _entityHandleDatasAll[entity.Id][key] = value;
+
+                    _modAPI.Sync.SendEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    break;
+
+                case DataSyncMode.Lobby:
+                    if (toLobby is null)
+                        return;
+
+                    if (!_entityHandleDatasLobby.ContainsKey(toLobby.Id))
+                        _entityHandleDatasLobby[toLobby.Id] = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
+                    if (!_entityHandleDatasLobby[toLobby.Id].ContainsKey(entity.Id))
+                        _entityHandleDatasLobby[toLobby.Id][entity.Id] = new Dictionary<EntityDataKey, object>();
+                    _entityHandleDatasLobby[toLobby.Id][entity.Id][key] = value;
+
+                    _modAPI.Sync.SendEvent(toLobby, ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    break;
+
+                case DataSyncMode.Player:
+                    if (toPlayer is null)
+                        return;
+
+                    if (!_entityHandleDatasPlayer.ContainsKey(toPlayer.RemoteId))
+                        _entityHandleDatasPlayer[toPlayer.RemoteId] = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
+                    if (!_entityHandleDatasPlayer[toPlayer.RemoteId].ContainsKey(entity.Id))
+                        _entityHandleDatasPlayer[toPlayer.RemoteId][entity.Id] = new Dictionary<EntityDataKey, object>();
+
+                    _entityHandleDatasPlayer[toPlayer.RemoteId][entity.Id][key] = value;
+
+                    toPlayer.SendEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    break;
+            }
+        }
+
         private void SyncPlayerAllData(ITDSPlayer player)
         {
             player.SendEvent(ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasAll));
+            player.SendEvent(ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasAll));
         }
 
         private void SyncPlayerLobbyData(ITDSPlayer player, ILobby lobby)
@@ -89,6 +148,7 @@ namespace TDS_Server.Handler.Sync
             if (!_playerHandleDatasLobby.ContainsKey(lobby.Id))
                 return;
             _modAPI.Sync.SendEvent(player, ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
+            _modAPI.Sync.SendEvent(player, ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
         }
 
         private void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
@@ -109,6 +169,7 @@ namespace TDS_Server.Handler.Sync
             if (_playerHandleDatasPlayer.ContainsKey(player.RemoteId))
                 _playerHandleDatasPlayer.Remove(player.RemoteId);
 
+            //Todo: Das hier auch für Entity nutzen (bei z.B. Delete?)
             _modAPI.Sync.SendEvent(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId);
         }
     }

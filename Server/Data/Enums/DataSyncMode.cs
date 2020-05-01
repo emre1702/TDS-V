@@ -1,6 +1,6 @@
 ﻿namespace TDS_Server.Data.Enums
 {
-    public enum PlayerDataSyncMode
+    public enum DataSyncMode
     {
         Player, Lobby, All
     }

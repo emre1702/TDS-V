@@ -56,12 +56,14 @@
         public const string RemoveForceStayAtPosition = "s84";
         public const string RequestNewMapsList = "s48";
 
+        public const string RemoveSyncedEntityDatas = "s17";
         public const string RemoveSyncedPlayerDatas = "s49";
         public const string RoundStart = "s50";
         public const string RoundEnd = "s51";
 
         public const string SetEntityInvincible = "s54";
         public const string SetForceStayAtPosition = "s83";
+        public const string SetEntityData = "s12";
         public const string SetPlayerData = "s56";
         public const string SetPlayerInvincible = "s57";
         public const string SpectatorReattachCam = "s59";
@@ -70,6 +72,7 @@
         public const string StopBombPlantDefuse = "s62";
         public const string StopRoundStats = "s64";
         public const string StopSpectator = "s65";
+        public const string SyncEntityData = "s19";
         public const string SyncPlayerData = "s69";
         public const string SyncSettings = "s70";
         public const string SyncScoreboardData = "s71";

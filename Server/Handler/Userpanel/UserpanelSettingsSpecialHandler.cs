@@ -128,7 +128,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 case UserpanelSettingsSpecialType.Username:
                     player.ModPlayer!.Name = value;
-                    _modAPI.Thread.RunInMainThread(() => _dataSyncHandler.SetData(player, PlayerDataKey.Name, PlayerDataSyncMode.Player, value));
+                    _modAPI.Thread.RunInMainThread(() => _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, value));
                     break;
             }
 

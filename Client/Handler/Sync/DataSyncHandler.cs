@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
@@ -14,8 +15,10 @@ namespace TDS_Client.Handler.Sync
 {
     public class DataSyncHandler : ServiceBase
     {
-        private static readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas
+        private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas
             = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
+        private readonly Dictionary<ushort, Dictionary<EntityDataKey, object>> _entityRemoteIdDatas
+            = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
 
         private readonly BrowserHandler _browserHandler;
         private readonly Serializer _serializer;
@@ -33,6 +36,10 @@ namespace TDS_Client.Handler.Sync
             modAPI.Event.Add(ToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
             modAPI.Event.Add(ToClientEvent.RemoveSyncedPlayerDatas, OnRemoveSyncedPlayerDatasMethod);
             modAPI.Event.Add(ToClientEvent.SyncPlayerData, OnSyncPlayerDataMethod);
+
+            modAPI.Event.Add(ToClientEvent.SetEntityData, OnSetEntityDataMethod);
+            modAPI.Event.Add(ToClientEvent.RemoveSyncedEntityDatas, OnRemoveSyncedEntityDatasMethod);
+            modAPI.Event.Add(ToClientEvent.SyncEntityData, OnSyncEntityDataMethod);
         }
 
         public T GetData<T>(IPlayer player, PlayerDataKey key, T returnOnEmpty = default)
@@ -45,6 +52,16 @@ namespace TDS_Client.Handler.Sync
             return (T)_playerRemoteIdDatas[player.RemoteId][key];
         }
 
+        public T GetData<T>(IEntity entity, EntityDataKey key, T returnOnEmpty = default)
+        {
+            if (!_entityRemoteIdDatas.ContainsKey(entity.RemoteId))
+                return returnOnEmpty;
+            if (!_entityRemoteIdDatas[entity.RemoteId].ContainsKey(key))
+                return returnOnEmpty;
+
+            return (T)_entityRemoteIdDatas[entity.RemoteId][key];
+        }
+
         public object GetData(IPlayer player, PlayerDataKey key)
         {
             if (!_playerRemoteIdDatas.ContainsKey(player.RemoteId))
@@ -53,6 +70,16 @@ namespace TDS_Client.Handler.Sync
                 return null;
 
             return _playerRemoteIdDatas[player.RemoteId][key];
+        }
+
+        public object GetData(IEntity entity, EntityDataKey key)
+        {
+            if (!_entityRemoteIdDatas.ContainsKey(entity.RemoteId))
+                return null;
+            if (!_entityRemoteIdDatas[entity.RemoteId].ContainsKey(key))
+                return null;
+
+            return _entityRemoteIdDatas[entity.RemoteId][key];
         }
 
         public T GetData<T>(PlayerDataKey key, T returnOnEmpty = default)
@@ -65,7 +92,7 @@ namespace TDS_Client.Handler.Sync
             return GetData(ModAPI.LocalPlayer, key);
         }
 
-        public void HandleDataFromServer(object[] args)
+        private void OnSetPlayerDataMethod(object[] args)
         {
             ushort playerRemoteId = Convert.ToUInt16(args[0]);
             PlayerDataKey key = (PlayerDataKey)Convert.ToInt32(args[1]);
@@ -82,8 +109,20 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
-        public void AppendDictionaryFromServer(string dictJson)
+        private void OnSetEntityDataMethod(object[] args)
         {
+            ushort entityRemoteId = Convert.ToUInt16(args[0]);
+            EntityDataKey key = (EntityDataKey)Convert.ToInt32(args[1]);
+            object value = args[2];
+
+            if (!_entityRemoteIdDatas.ContainsKey(entityRemoteId))
+                _entityRemoteIdDatas[entityRemoteId] = new Dictionary<EntityDataKey, object>();
+            _entityRemoteIdDatas[entityRemoteId][key] = value;
+        }
+
+        private void OnSyncPlayerDataMethod(object[] args)
+        {
+            string dictJson = (string)args[0];
             var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
             foreach (var entry in dict)
             {
@@ -101,11 +140,32 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
-        public void RemovePlayerData(ushort playerRemoteId)
+        private void OnSyncEntityDataMethod(object[] args)
         {
+            string dictJson = (string)args[0];
+            var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<EntityDataKey, object>>>(dictJson);
+            foreach (var entry in dict)
+            {
+                if (!_entityRemoteIdDatas.ContainsKey(entry.Key))
+                    _entityRemoteIdDatas[entry.Key] = new Dictionary<EntityDataKey, object>();
+                foreach (var dataEntry in entry.Value)
+                {
+                    _entityRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
+                }
+            }
+        }
+
+        private void OnRemoveSyncedPlayerDatasMethod(object[] args)
+        {
+            ushort playerRemoteId = Convert.ToUInt16(args[0]);
             _playerRemoteIdDatas.Remove(playerRemoteId);
         }
 
+        private void OnRemoveSyncedEntityDatasMethod(object[] args)
+        {
+            ushort entityRemoteId = Convert.ToUInt16(args[0]);
+            _entityRemoteIdDatas.Remove(entityRemoteId);
+        }
 
         private bool _nameSyncedWithAngular;
         private void OnLocalPlayerDataChange(IPlayer player, PlayerDataKey key, object obj)
@@ -131,22 +191,6 @@ namespace TDS_Client.Handler.Sync
                     _browserHandler.Angular.SyncUsernameChange((string)obj);
                     break;
             }
-        }
-
-        private void OnSetPlayerDataMethod(object[] args)
-        {
-            HandleDataFromServer(args);
-        }
-
-        private void OnRemoveSyncedPlayerDatasMethod(object[] args)
-        {
-            ushort playerHandle = Convert.ToUInt16(args[0]);
-            RemovePlayerData(playerHandle);
-        }
-
-        private void OnSyncPlayerDataMethod(object[] args)
-        {
-            AppendDictionaryFromServer((string)args[0]);
         }
     }
 }

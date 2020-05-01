@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 var newOwner = SharedUtils.GetRandom(Players.Values);
                 Entity.OwnerId = newOwner.Entity!.Id;
-                DataSyncHandler.SetData(newOwner, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, true);
+                DataSyncHandler.SetData(newOwner, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, true);
             }
         }
 

@@ -25,8 +25,8 @@ namespace TDS_Server.Handler.Entities.Player
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
                 Language = _langHelper.GetLang(_entity.PlayerSettings.Language);
                 LoadRelations();
-                _dataSyncHandler.SetData(this, PlayerDataKey.Money, PlayerDataSyncMode.Player, _entity.PlayerStats.Money);
-                _dataSyncHandler.SetData(this, PlayerDataKey.AdminLevel, PlayerDataSyncMode.All, _entity.AdminLvl);
+                _dataSyncHandler.SetData(this, PlayerDataKey.Money, DataSyncMode.Player, _entity.PlayerStats.Money);
+                _dataSyncHandler.SetData(this, PlayerDataKey.AdminLevel, DataSyncMode.All, _entity.AdminLvl);
                 LoadTimezone();
             }
         }
