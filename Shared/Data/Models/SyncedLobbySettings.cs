@@ -36,6 +36,8 @@ namespace TDS_Shared.Data.Models
         public int StartHealth;
         [JsonProperty("14")]
         public int StartArmor;
+        [JsonProperty("15")]
+        public bool IsGangActionLobby;
 
         [JsonIgnore]
         public string Json;
@@ -45,7 +47,7 @@ namespace TDS_Shared.Data.Models
 
         public SyncedLobbySettings(int Id, string Name, LobbyType Type, bool IsOfficial, int? SpawnAgainAfterDeathMs, int? BombDefuseTimeMs, int? BombPlantTimeMs,
             int? CountdownTime, int? RoundTime, int? BombDetonateTimeMs, int? MapLimitTime, bool InLobbyWithMaps, MapLimitType? MapLimitType,
-            int StartHealth, int StartArmor)
+            int StartHealth, int StartArmor, bool IsGangActionLobby)
         {
             this.Id = Id;
             this.Name = Name;
@@ -62,6 +64,7 @@ namespace TDS_Shared.Data.Models
             this.MapLimitType = MapLimitType;
             this.StartHealth = StartHealth;
             this.StartArmor = StartArmor;
+            this.IsGangActionLobby = IsGangActionLobby;
 
             this.Json = new Serializer().ToClient(this);
         }

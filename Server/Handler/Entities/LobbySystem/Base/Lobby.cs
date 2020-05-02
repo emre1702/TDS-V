@@ -108,7 +108,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 MapLimitTime: entity.LobbyMapSettings?.MapLimitTime,
                 MapLimitType: entity.LobbyMapSettings?.MapLimitType,
                 StartHealth: entity.FightSettings?.StartHealth ?? 100,
-                StartArmor: entity.FightSettings?.StartArmor ?? 100
+                StartArmor: entity.FightSettings?.StartArmor ?? 100,
+                IsGangActionLobby: IsGangActionLobby
             );
         }
 
@@ -175,7 +176,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     MapLimitTime: Entity.LobbyMapSettings?.MapLimitTime,
                     MapLimitType: Entity.LobbyMapSettings?.MapLimitType,
                     StartHealth: Entity.FightSettings?.StartHealth ?? 100,
-                    StartArmor: Entity.FightSettings?.StartArmor ?? 100
+                    StartArmor: Entity.FightSettings?.StartArmor ?? 100,
+                    IsGangActionLobby: IsGangActionLobby
                 );
             });
 
