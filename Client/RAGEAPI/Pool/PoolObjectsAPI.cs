@@ -7,16 +7,31 @@ namespace TDS_Client.RAGEAPI.Pool
 {
     class PoolObjectsAPI : IPoolObjectsAPI
     {
-        public IEnumerable<IMapObject> All
+        private readonly List<IMapObject> _all = new List<IMapObject>();
+        public List<IMapObject> All
         {
             get
             {
-                var list = new List<IMapObject>();
+                _all.Clear();
                 foreach (var obj in RAGE.Elements.Entities.Objects.All)
                 {
-                    list.Add(_entityConvertingHandler.GetEntity(obj));
+                    _all.Add(_entityConvertingHandler.GetEntity(obj));
                 }
-                return list;
+                return _all;
+            }
+        }
+
+        private readonly List<IMapObject> _streamed = new List<IMapObject>();
+        public List<IMapObject> Streamed
+        {
+            get
+            {
+                _streamed.Clear();
+                foreach (var obj in RAGE.Elements.Entities.Objects.Streamed)
+                {
+                    _streamed.Add(_entityConvertingHandler.GetEntity(obj));
+                }
+                return _streamed;
             }
         }
 

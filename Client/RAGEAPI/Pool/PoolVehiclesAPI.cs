@@ -7,16 +7,31 @@ namespace TDS_Client.RAGEAPI.Pool
 {
     class PoolVehiclesAPI : IPoolVehiclesAPI
     {
-        public IEnumerable<IVehicle> All
+        private readonly List<IVehicle> _all = new List<IVehicle>();
+        public List<IVehicle> All
         {
             get
             {
-                var list = new List<IVehicle>();
+                _all.Clear();
                 foreach (var obj in RAGE.Elements.Entities.Vehicles.All)
                 {
-                    list.Add(_entityConvertingHandler.GetEntity(obj));
+                    _all.Add(_entityConvertingHandler.GetEntity(obj));
                 }
-                return list;
+                return _all;
+            }
+        }
+
+        private readonly List<IVehicle> _streamed = new List<IVehicle>();
+        public List<IVehicle> Streamed
+        {
+            get
+            {
+                _streamed.Clear();
+                foreach (var obj in RAGE.Elements.Entities.Vehicles.Streamed)
+                {
+                    _streamed.Add(_entityConvertingHandler.GetEntity(obj));
+                }
+                return _streamed;
             }
         }
 

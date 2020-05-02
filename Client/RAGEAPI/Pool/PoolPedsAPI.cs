@@ -9,16 +9,31 @@ namespace TDS_Client.RAGEAPI.Pool
 {
     class PoolPedsAPI : IPoolPedsAPI
     {
-        public IEnumerable<IPed> All
+        private readonly List<IPed> _all = new List<IPed>();
+        public List<IPed> All
         {
             get
             {
-                var list = new List<IPed>();
+                _all.Clear();
                 foreach (var obj in RAGE.Elements.Entities.Peds.All)
                 {
-                    list.Add(_entityConvertingHandler.GetEntity(obj));
+                    _all.Add(_entityConvertingHandler.GetEntity(obj));
                 }
-                return list;
+                return _all;
+            }
+        }
+
+        private readonly List<IPed> _streamed = new List<IPed>();
+        public List<IPed> Streamed
+        {
+            get
+            {
+                _streamed.Clear();
+                foreach (var obj in RAGE.Elements.Entities.Peds.Streamed)
+                {
+                    _streamed.Add(_entityConvertingHandler.GetEntity(obj));
+                }
+                return _streamed;
             }
         }
 

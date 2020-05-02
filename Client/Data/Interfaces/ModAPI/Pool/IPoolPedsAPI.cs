@@ -5,7 +5,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Pool
 {
     public interface IPoolPedsAPI : IPoolEntityAPI<IPed>
     {
-        IEnumerable<IPed> All { get; }
+
 
     }
 }

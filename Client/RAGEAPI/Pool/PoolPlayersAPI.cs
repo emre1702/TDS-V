@@ -9,16 +9,31 @@ namespace TDS_Client.RAGEAPI.Pool
 {
     class PoolPlayersAPI : IPoolPlayersAPI
     {
-        public IEnumerable<IPlayer> All
+        private readonly List<IPlayer> _all = new List<IPlayer>();
+        public List<IPlayer> All
         {
             get
             {
-                var list = new List<IPlayer>();
+                _all.Clear();
                 foreach (var obj in RAGE.Elements.Entities.Players.All)
                 {
-                    list.Add(_entityConvertingHandler.GetEntity(obj));
+                    _all.Add(_entityConvertingHandler.GetEntity(obj));
                 }
-                return list;
+                return _all;
+            }
+        }
+
+        private readonly List<IPlayer> _streamed = new List<IPlayer>();
+        public List<IPlayer> Streamed
+        {
+            get
+            {
+                _streamed.Clear();
+                foreach (var obj in RAGE.Elements.Entities.Players.Streamed)
+                {
+                    _streamed.Add(_entityConvertingHandler.GetEntity(obj));
+                }
+                return _streamed;
             }
         }
 

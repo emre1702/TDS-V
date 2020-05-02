@@ -5,6 +5,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Pool
 {
     public interface IPoolObjectsAPI : IPoolEntityAPI<IMapObject>
     {
-        IEnumerable<IMapObject> All { get; }
+
     }
 }

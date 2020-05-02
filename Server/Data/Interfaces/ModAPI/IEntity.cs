@@ -17,6 +17,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI
         void Freeze(bool toggle, ILobby lobby);
         void SetCollisionsless(bool toggle, ILobby lobby);
         void SetInvincible(bool toggle, ITDSPlayer forPlayer);
+        void SetInvincible(bool toggle, ILobby forLobby);
         void AttachTo(ITDSPlayer player, PedBone bone, Position3D? positionOffset, Position3D? rotationOffset);
         void Delete();
         void Detach();
