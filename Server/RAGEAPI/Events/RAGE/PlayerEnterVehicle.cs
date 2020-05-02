@@ -5,8 +5,8 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
 {
     partial class BaseRAGEEvents
     {
-        [ServerEvent(Event.PlayerExitVehicle)]
-        public void PlayerExitVehicle(GTANetworkAPI.Player player, GTANetworkAPI.Vehicle vehicle)
+        [ServerEvent(Event.PlayerEnterVehicle)]
+        public void PlayerEnterVehicle(GTANetworkAPI.Player player, GTANetworkAPI.Vehicle vehicle, sbyte seatId)
         {
             /*var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
             if (tdsPlayer is null)
@@ -20,7 +20,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
             if (tdsVehicle is null)
                 return;
 
-            Init.TDSCore.EventsHandler.OnPlayerExitVehicle(tdsPlayer, tdsVehicle);*/
+            Init.TDSCore.EventsHandler.OnPlayerEnterVehicle(tdsPlayer, tdsVehicle, seatId);*/
         }
     }
 }

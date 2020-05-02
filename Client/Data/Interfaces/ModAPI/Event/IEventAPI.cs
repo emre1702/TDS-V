@@ -7,6 +7,7 @@ using TDS_Client.Data.Models;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Event
 {
@@ -16,6 +17,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Event
     public delegate void IncomingDamageDelegate(IPlayer sourcePlayer, IEntity sourceEntity, IEntity targetEntity, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel);
     public delegate void OutgoingDamageDelegate(IEntity sourceEntity, IEntity targetEntity, IPlayer sourcePlayer, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel);
     public delegate void PlayerDelegate(IPlayer player);
+    public delegate void PlayerStartEnterVehicleDelegate(IVehicle vehicle, VehicleSeat seat, CancelEventArgs cancel);
     public delegate void SpawnDelegate(CancelEventArgs cancel);
     public delegate void TickDelegate(int currentMs);
     public delegate void TickNametagDelegate(List<TickNametagData> nametagDatas);
@@ -31,6 +33,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Event
         ICollection<EventMethodData<IncomingDamageDelegate>> IncomingDamage { get; }
         ICollection<EventMethodData<OutgoingDamageDelegate>> OutgoingDamage { get; }
         ICollection<EventMethodData<SpawnDelegate>> Spawn { get; }
+        ICollection<EventMethodData<PlayerStartEnterVehicleDelegate>> PlayerStartEnterVehicle { get; }
         ICollection<EventMethodData<PlayerDelegate>> PlayerStartTalking { get; }
         ICollection<EventMethodData<PlayerDelegate>> PlayerStopTalking { get; }
         ICollection<EventMethodData<TickDelegate>> Tick { get; }

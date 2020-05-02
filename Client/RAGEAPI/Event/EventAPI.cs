@@ -21,6 +21,7 @@ namespace TDS_Client.RAGEAPI.Event
         public ICollection<EventMethodData<OutgoingDamageDelegate>> OutgoingDamage { get; }
 
         public ICollection<EventMethodData<SpawnDelegate>> Spawn { get; }
+        public ICollection<EventMethodData<PlayerStartEnterVehicleDelegate>> PlayerStartEnterVehicle { get; }
 
         public ICollection<EventMethodData<PlayerDelegate>> PlayerStartTalking { get; }
 
@@ -34,6 +35,7 @@ namespace TDS_Client.RAGEAPI.Event
             IncomingDamage = new IncomingDamageEventHandler(loggingHandler, entityConvertingHandler);
             OutgoingDamage = new OutgoingDamageEventHandler(loggingHandler, entityConvertingHandler);
             Spawn = new PlayerSpawnEventHandler(loggingHandler);
+            PlayerStartEnterVehicle = new PlayerStartEnterVehicleEventHandler(loggingHandler, entityConvertingHandler);
             PlayerStartTalking = new PlayerStartTalkingEventHandler(loggingHandler, playerConvertingHandler);
             PlayerStopTalking = new PlayerStopTalkingEventHandler(loggingHandler, playerConvertingHandler);
             Tick = new TickEventHandler(loggingHandler);

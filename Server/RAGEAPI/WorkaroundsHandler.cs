@@ -145,13 +145,13 @@ namespace TDS_Server.RAGEAPI
             NAPI.ClientEvent.TriggerClientEvent(invincibleAtClient, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
         }
 
-        public void SetEntityInvincible(ILobby invisibleAtLobby, GTANetworkAPI.Entity entity, bool invincible)
+        public void SetEntityInvincible(ILobby atLobby, GTANetworkAPI.Entity entity, bool invincible)
         {
-            NAPI.ClientEvent.TriggerClientEventInDimension(invisibleAtLobby.Dimension, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
+            NAPI.ClientEvent.TriggerClientEventInDimension(atLobby.Dimension, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
 
-            if (!_invincibleEntityPerLobby.ContainsKey(invisibleAtLobby))
-                _invincibleEntityPerLobby[invisibleAtLobby] = new List<GTANetworkAPI.Entity>();
-            _invincibleEntityPerLobby[invisibleAtLobby].Add(entity);
+            if (!_invincibleEntityPerLobby.ContainsKey(atLobby))
+                _invincibleEntityPerLobby[atLobby] = new List<GTANetworkAPI.Entity>();
+            _invincibleEntityPerLobby[atLobby].Add(entity);
         }
 
 
