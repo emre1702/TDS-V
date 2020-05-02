@@ -128,7 +128,7 @@ namespace TDS_Client.Handler
             modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Strength), 100, false);
             modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Wheelie), 100, false);
 
-            modAPI.LocalPlayer.SetMaxArmor(Constants.MaxPossibleArmor);
+            modAPI.LocalPlayer.SetMaxArmour(Constants.MaxPossibleArmor);
             LoadLanguageFromRAGE();
 
         }

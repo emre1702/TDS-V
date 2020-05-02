@@ -109,9 +109,9 @@ namespace TDS_Client.Handler
         {
             return _playerFightHandler.InFight
                 && _settingsHandler.PlayerSettings.CheckAFK
-                && ModAPI.LocalPlayer.IsPlaying
-                && !ModAPI.LocalPlayer.IsClimbing
-                && !ModAPI.LocalPlayer.IsFreeAiming;
+                && ModAPI.LocalPlayer.IsPlaying()
+                && !ModAPI.LocalPlayer.IsClimbing()
+                && !ModAPI.LocalPlayer.IsFreeAiming();
         }
 
         private bool IsStillAFK()

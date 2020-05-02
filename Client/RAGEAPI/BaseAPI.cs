@@ -99,7 +99,7 @@ namespace TDS_Client.RAGEAPI
         public IWeaponAPI Weapon { get; }
         public IWindowsAPI Windows { get; }
 
-        public IPlayer LocalPlayer { get; }
+        public ILocalPlayer LocalPlayer { get; }
 
         public BaseAPI()
         {

@@ -66,6 +66,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI
         IWeaponAPI Weapon { get; }
         IWindowsAPI Windows { get; }
 
-        IPlayer LocalPlayer { get; }
+        ILocalPlayer LocalPlayer { get; }
     }
 }

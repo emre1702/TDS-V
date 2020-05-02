@@ -193,14 +193,14 @@ namespace TDS_Client.Handler.Deathmatch
                         ModAPI.Control.SetControlNormal(InputGroup.MOVE, Control.Attack, 1f);
                     else if (_currentBurstShots == 3)
                     {
-                        ModAPI.LocalPlayer.DisablePlayerFiring(false);
+                        ModAPI.LocalPlayer.DisableFiring(false);
                         if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
                             _currentBurstShots = 0;
                     }
                     break;
                 case FiringMode.Single:
                     if (ModAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, Control.Attack))
-                        ModAPI.LocalPlayer.DisablePlayerFiring(false);
+                        ModAPI.LocalPlayer.DisableFiring(false);
                     break;
                     /* case FiringMode.Safe:
                          Player.DisablePlayerFiring(false);
