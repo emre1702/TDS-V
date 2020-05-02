@@ -26,6 +26,18 @@ namespace TDS_Client.RAGEAPI.Extensions
             return new Position2D(pos.X, pos.Y);
         }
 
+        public static void CopyValuesFrom(this Position3D pos, Vector3 otherPos)
+        {
+            pos.X = otherPos.X;
+            pos.Y = otherPos.Y;
+            pos.Z = otherPos.Z;
+        }
 
+        public static void CopyValuesTo(this Position3D pos, Vector3 otherPos)
+        {
+            otherPos.X = pos.X;
+            otherPos.Y = pos.Y;
+            otherPos.Z = pos.Z;
+        }
     }
 }
