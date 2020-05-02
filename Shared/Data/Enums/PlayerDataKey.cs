@@ -2,6 +2,6 @@
 {
     public enum PlayerDataKey
     {
-        AdminLevel, Money, Crouched, MapsBoughtCounter, IsLobbyOwner, Name, InFreeCam
+        AdminLevel, Money, Crouched, MapsBoughtCounter, IsLobbyOwner, Name, InFreeCam, GangId 
     }
 }

@@ -14,7 +14,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     partial class Lobby
     {
         public bool SavePlayerLobbyStats { get; set; } = true;
-        public bool SetPositionOnPlayerAdd => !IsGangActionLobby;
+        public bool SetPositionOnPlayerAdd => !IsGangActionLobby && !(this is GangLobby);
         public bool SpawnPlayer => SetPositionOnPlayerAdd;
         public bool FreezePlayerOnCountdown => !SetPositionOnPlayerAdd;
 
@@ -60,7 +60,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 if (teamindex != null)
                     SetPlayerTeam(player, Teams[(int)teamindex.Value]);
 
-                DataSyncHandler.SetData(player, PlayerDataKey.IsLobbyOwner, PlayerDataSyncMode.Player, IsPlayerLobbyOwner(player));
+                DataSyncHandler.SetData(player, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, IsPlayerLobbyOwner(player));
 
                 player.SendEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Serializer.ToClient(Players.Values.Select(p => p.RemoteId).ToList()),
                                                                                      Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
