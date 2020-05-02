@@ -24,11 +24,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             foreach (var houseEntity in houseEntities)
             {
-                // GangHouses entity, int cost, ILobby lobby, 
                 int cost = _levels.TryGetValue(houseEntity.NeededGangLevel, out GangLevelSettings? level) ? level.HousePrice : int.MaxValue;
                 var house = ActivatorUtilities.CreateInstance<GangHouse>(_serviceProvider, houseEntity, this, cost);
 
-                if (house.Entity.OwnerGang is { })
+                if (house.Entity.OwnerGang is null)
                 {
                     if (!_levelFreeHouses.TryGetValue(house.Entity.NeededGangLevel, out List<GangHouse>? list))
                     {
@@ -41,6 +40,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 else
                 {
                     _occupiedHouses.Add(house);
+                    var gang = _gangsHandler.GetById(houseEntity.OwnerGang.Id);
+                    gang.House = house;
                 }
                
             }
