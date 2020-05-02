@@ -176,7 +176,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
         void SetMaxHealth(int value);
         void SetMaxSpeed(float speed);
         void SetMotionBlur(bool toggle);
-        void SetNoCollisionEntity(int entity2, bool unknown);
+        void SetNoCollisionEntity(int entity2);
         void SetOnlyDamagedByPlayer(bool toggle);
         void SetOnlyDamagedByRelationshipGroup(bool p1, int p2);
         void SetProofs(bool bulletProof, bool fireProof, bool explosionProof, bool collisionProof, bool meleeProof, bool p6, bool p7, bool drownProof);

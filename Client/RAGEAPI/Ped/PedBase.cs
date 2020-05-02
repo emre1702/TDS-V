@@ -27,7 +27,7 @@ namespace TDS_Client.RAGEAPI.Ped
             _instance.ClearLastDamageBone();
         }
 
-        public void ClearLastWeaponDamage()
+        public new void ClearLastWeaponDamage()
         {
             _instance.ClearLastWeaponDamage();
         }

@@ -103,8 +103,11 @@ namespace TDS_Client.RAGEAPI
 
         public BaseAPI()
         {
-            var playerConvertingHandler = new PlayerConvertingHandler();
-            var entityConvertingHandler = new EntityConvertingHandler(playerConvertingHandler);
+            var entityConvertingHandler = new EntityConvertingHandler();
+            var playerConvertingHandler = new PlayerConvertingHandler(RAGE.Elements.Player.LocalPlayer, entityConvertingHandler);
+            entityConvertingHandler.SetPlayerConvertingHandler(playerConvertingHandler);
+
+            LocalPlayer = playerConvertingHandler.GetLocalPlayer();
 
             Console = new ConsoleAPI();
             var loggingHandler = new LoggingHandler(this);
@@ -139,8 +142,6 @@ namespace TDS_Client.RAGEAPI
             Voice = new VoiceAPI();
             Weapon = new WeaponAPI();
             Windows = new WindowsAPI();
-
-            LocalPlayer = playerConvertingHandler.GetPlayer(RAGE.Elements.Player.LocalPlayer);
         }
     }
 }

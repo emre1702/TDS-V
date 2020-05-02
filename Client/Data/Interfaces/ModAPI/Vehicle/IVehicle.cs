@@ -1,5 +1,6 @@
 ﻿using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Vehicle
@@ -146,7 +147,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Vehicle
         bool IsRadioLoud();
         int IsRocketBoostActive();
         bool IsSearchlightOn();
-        bool IsSeatFree(int seatIndex, int p2);
+        bool IsSeatFree(VehicleSeat seat);
         bool IsShopResprayAllowed();
         bool IsSirenOn();
         bool IsSirenSoundOn();

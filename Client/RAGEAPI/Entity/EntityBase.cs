@@ -589,8 +589,8 @@ namespace TDS_Client.RAGEAPI.Entity
         public void SetMotionBlur(bool toggle)
             => _instance.SetMotionBlur(toggle);
 
-        public void SetNoCollisionEntity(int entity2, bool unknown)
-            => _instance.SetNoCollisionEntity(entity2, unknown);
+        public void SetNoCollisionEntity(int entity2)
+            => _instance.SetNoCollisionEntity(entity2, true);
 
         public void SetOnlyDamagedByPlayer(bool toggle)
             => _instance.SetOnlyDamagedByPlayer(toggle);

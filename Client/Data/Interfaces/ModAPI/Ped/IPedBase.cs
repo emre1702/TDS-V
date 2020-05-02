@@ -10,7 +10,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         int Armor { get; set; }
         void ClearBloodDamage();
         void ClearLastDamageBone();
-        void ClearLastWeaponDamage();
+        new void ClearLastWeaponDamage();
         void ExplodeHead(WeaponHash weaponHash);
         int GetAmmoInClip(WeaponHash weaponHash);
         int GetAmmoInWeapon(WeaponHash weaponHash);

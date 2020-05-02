@@ -13,10 +13,7 @@ namespace TDS_Client.RAGEAPI.Entity
     {
         private readonly Dictionary<RAGE.Elements.Entity, IEntity> _entitiesCache = new Dictionary<RAGE.Elements.Entity, IEntity>();
 
-        private readonly PlayerConvertingHandler _playerConvertingHandler;
-
-        public EntityConvertingHandler(PlayerConvertingHandler playerConvertingHandler)
-            => _playerConvertingHandler = playerConvertingHandler;
+        private PlayerConvertingHandler _playerConvertingHandler;
 
         public IBlip GetEntity(RAGE.Elements.Blip modBlip)
         {
@@ -67,7 +64,7 @@ namespace TDS_Client.RAGEAPI.Entity
 
             if (!_entitiesCache.TryGetValue(veh, out IEntity entity))
             {
-                entity = new Vehicle.Vehicle(veh);
+                entity = new Vehicle.Vehicle(veh, this);
                 _entitiesCache.Add(veh, entity);
             }
 
@@ -113,5 +110,8 @@ namespace TDS_Client.RAGEAPI.Entity
 
             return null;
         }
+
+        public void SetPlayerConvertingHandler(PlayerConvertingHandler playerConvertingHandler)
+            => _playerConvertingHandler = playerConvertingHandler;
     }
 }

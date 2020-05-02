@@ -1,5 +1,6 @@
 ﻿using TDS_Client.Data.Interfaces.ModAPI.Blip;
 using TDS_Client.Data.Interfaces.ModAPI.Ped;
+using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Player
@@ -10,12 +11,14 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
         bool AutoVolume { get; set; }
         float VoiceVolume { get; set; }
         bool Voice3d { get; set; }
-        bool IsPlaying { get; }
-        bool IsFreeAiming { get; }
 
-        void SetMaxArmor(int maxArmor);
+        IVehicle Vehicle { get; }
+        bool IsTypingInTextChat { get; }
+        bool IsTalking { get; }
 
-        void DisablePlayerFiring(bool toggle);
-        // RAGE.Game.Player.SetPlayerMaxArmour(Constants.MaxPossibleArmor);
-    }
+        float GetVoiceAttribute(int attribute);
+        void SetVoiceAttribute(int attribute, float value);
+
+
+    }   
 }

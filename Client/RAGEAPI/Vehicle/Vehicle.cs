@@ -2,6 +2,7 @@
 using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Client.RAGEAPI.Entity;
 using TDS_Client.RAGEAPI.Extensions;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Vehicle
@@ -431,8 +432,8 @@ namespace TDS_Client.RAGEAPI.Vehicle
         public bool IsSearchlightOn()
             => _instance.IsSearchlightOn();
 
-        public bool IsSeatFree(int seatIndex, int p2)
-            => _instance.IsSeatFree(seatIndex, p2);
+        public bool IsSeatFree(VehicleSeat seat)
+            => _instance.IsSeatFree((int)seat - 1, 1);
 
         public bool IsShopResprayAllowed()
             => _instance.IsShopResprayAllowed();

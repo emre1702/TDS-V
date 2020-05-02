@@ -1,7 +1,7 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Blip;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+﻿using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
+using TDS_Client.RAGEAPI.Entity;
 using TDS_Client.RAGEAPI.Ped;
-using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.RAGEAPI.Player
 {
@@ -9,43 +9,39 @@ namespace TDS_Client.RAGEAPI.Player
     {
         private readonly RAGE.Elements.Player _instance;
 
-        public Player(RAGE.Elements.Player instance) : base(instance)
-            => _instance = instance;
+        private readonly EntityConvertingHandler _entityConvertingHandler;
+
+        public Player(RAGE.Elements.Player instance, EntityConvertingHandler entityConvertingHandler) : base(instance)
+            => (_instance, _entityConvertingHandler) = (instance, entityConvertingHandler);
 
         public string Name => _instance.Name;
 
-        public bool AutoVolume 
-        { 
-            get => _instance.AutoVolume; 
-            set => _instance.AutoVolume = value; 
+        public bool AutoVolume
+        {
+            get => _instance.AutoVolume;
+            set => _instance.AutoVolume = value;
         }
-        public float VoiceVolume 
-        { 
-            get => _instance.VoiceVolume; 
-            set => _instance.VoiceVolume = value; 
+        public float VoiceVolume
+        {
+            get => _instance.VoiceVolume;
+            set => _instance.VoiceVolume = value;
         }
-        public bool Voice3d 
-        { 
-            get => _instance.Voice3d; 
-            set => _instance.Voice3d = value; 
+        public bool Voice3d
+        {
+            get => _instance.Voice3d;
+            set => _instance.Voice3d = value;
         }
         public bool IsTypingInTextChat => _instance.IsTypingInTextChat;
 
-        /** <summary>Only works for localplayer</summary> */
-        public bool IsPlaying => RAGE.Game.Player.IsPlayerPlaying();
 
-        /** <summary>Only works for localplayer</summary> */
-        public bool IsFreeAiming => RAGE.Game.Player.IsPlayerFreeAiming();
+        public IVehicle Vehicle => _instance.Vehicle is null ? null : _entityConvertingHandler.GetEntity(_instance.Vehicle);
 
+        public bool IsTalking => _instance.IsTalking;
 
-        public void DisablePlayerFiring(bool toggle)
-        {
-            RAGE.Game.Player.DisablePlayerFiring(toggle);
-        }
+        public float GetVoiceAttribute(int attribute)
+            => _instance.GetVoiceAttribute(attribute);
 
-        public void SetMaxArmor(int maxArmor)
-        {
-            RAGE.Game.Player.SetPlayerMaxArmour(maxArmor);
-        }
+        public void SetVoiceAttribute(int attribute, float value)
+            => _instance.SetVoiceAttribute(attribute, value);
     }
 }
