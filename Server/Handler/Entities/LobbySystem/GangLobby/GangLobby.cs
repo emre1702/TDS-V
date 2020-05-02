@@ -22,20 +22,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private readonly GangwarAreasHandler _gangwarAreasHandler;
         private readonly GangsHandler _gangsHandler;
         private readonly IServiceProvider _serviceProvider;
+        private readonly GangHousesHandler _gangHousesHandler;
+        private readonly GangLevelsHandler _gangLevelsHandler;
 
         public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler,
-            GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, WeaponDatasLoadingHandler weaponDatasLoadingHandler, 
-            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
+            GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, GangLevelsHandler gangLevelsHandler,
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler, GangHousesHandler gangHousesHandler)
             : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
                   bonusBotConnectorClient, bansHandler)
         {
             _gangwarAreasHandler = gangwarAreasHandler;
             _gangsHandler = gangsHandler;
             _serviceProvider = serviceProvider;
+            _gangHousesHandler = gangHousesHandler;
+            _gangLevelsHandler = gangLevelsHandler;
 
             LoadTeams();
-            LoadGangLevels();
             LoadHouses();
         }
 

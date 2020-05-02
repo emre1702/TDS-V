@@ -1,50 +1,56 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TDS_Server.Database.Entity.GangEntities;
+﻿using System.Drawing;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Entities.GangSystem;
+using TDS_Shared.Data.Default;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
-
-        private readonly List<GangHouse> _occupiedHouses = new List<GangHouse>();
-        private readonly Dictionary<int, List<GangHouse>> _levelFreeHouses = new Dictionary<int, List<GangHouse>>();
-
         private void LoadHouses()
         {
-            
-            List<GangHouses> houseEntities = ExecuteForDB(dbContext =>
+            foreach (var house in _gangHousesHandler.Houses)
             {
-                return dbContext.GangHouses.Include(gh => gh.OwnerGang).ToList();
-            }).Result;
+                house.TextLabel = ModAPI.TextLabel.Create(house.GetTextLabelText(), house.Position, 10d, 7f, 0, Color.FromArgb(220, 220, 220), true, this);
 
-            foreach (var houseEntity in houseEntities)
-            {
-                int cost = _levels.TryGetValue(houseEntity.NeededGangLevel, out GangLevelSettings? level) ? level.HousePrice : int.MaxValue;
-                var house = ActivatorUtilities.CreateInstance<GangHouse>(_serviceProvider, houseEntity, this, cost);
-
-                if (house.Entity.OwnerGang is null)
+                if (house.Entity.OwnerGang is { })
                 {
-                    if (!_levelFreeHouses.TryGetValue(house.Entity.NeededGangLevel, out List<GangHouse>? list))
+                    house.Blip = ModAPI.Blip.Create(
+                        SharedConstants.GangHouseOccupiedBlipModel,
+                        house.Position, dimension: Dimension, color: house.Entity.OwnerGang is null ? (byte)1 : house.Entity.OwnerGang.BlipColor,
+                        shortRange: true, alpha: house.Entity.OwnerGang is null ? (byte)180 : (byte)255,
+                        name: $"[{house.Entity.NeededGangLevel}] " + (house.Entity.OwnerGang is null ? "-" : house.Entity.OwnerGang.Name));
+                }
+                /*else
+                {
+                    BlipData = new GangHouseClientsideData
                     {
-                        list = new List<GangHouse>();
-                        _levelFreeHouses.Add(house.Entity.NeededGangLevel, list);
-                    }
+                        Position = Position,
+                        OwnerName = entity.OwnerGang.Name,
+                        Level = entity.NeededGangLevel
+                    };
+                }*/
 
-                    list.Add(house);
-                }
-                else
-                {
-                    _occupiedHouses.Add(house);
-                    var gang = _gangsHandler.GetById(houseEntity.OwnerGang.Id);
-                    gang.House = house;
-                }
-               
             }
+        }
+
+        private void SetHouseOwner(GangHouse house, IGang? owner)
+        {
+            if (owner is null)
+            {
+                house.Blip?.Delete();
+                house.Blip = null;
+            }
+            else
+            {
+                house.Blip = ModAPI.Blip.Create(
+                    SharedConstants.GangHouseOccupiedBlipModel,
+                    house.Position, dimension: Dimension, color: house.Entity.OwnerGang is null ? (byte)1 : house.Entity.OwnerGang.BlipColor,
+                    shortRange: true, alpha: house.Entity.OwnerGang is null ? (byte)180 : (byte)255,
+                    name: $"[{house.Entity.NeededGangLevel}] " + (house.Entity.OwnerGang is null ? "-" : house.Entity.OwnerGang.Name));
+            }
+            if (house.TextLabel is { })
+                house.TextLabel.Text = house.GetTextLabelText();
         }
     }
 }

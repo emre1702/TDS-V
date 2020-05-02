@@ -60,6 +60,12 @@ namespace TDS_Server.Core.Init
                .AddSingleton<RemoteEventsHandler>()
                .AddSingleton<RemoteBrowserEventsHandler>()
 
+               // GangSystem
+               .AddSingleton<GangHousesHandler>()
+               .AddSingleton<GangLevelsHandler>()
+               .AddSingleton<GangsHandler>()
+               .AddSingleton<GangwarAreasHandler>()
+
                // Helper
                .AddSingleton<ChallengesHelper>()
                .AddSingleton<DatabasePlayerHelper>()
@@ -94,8 +100,6 @@ namespace TDS_Server.Core.Init
                .AddSingleton<AppConfigHandler>()
                .AddSingleton<ChatHandler>()
                .AddSingleton<ClothesHandler>()
-               .AddSingleton<GangsHandler>()
-               .AddSingleton<GangwarAreasHandler>()
                .AddSingleton<InvitationsHandler>()
                .AddSingleton<LobbiesHandler>()
                .AddSingleton<ILoggingHandler, LoggingHandler>()
@@ -135,6 +139,13 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<RemoteEventsHandler>();
             serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
 
+            // GangSystem
+            serviceProvider.GetRequiredService<GangHousesHandler>();
+            serviceProvider.GetRequiredService<GangLevelsHandler>();
+            serviceProvider.GetRequiredService<GangsHandler>();
+            serviceProvider.GetRequiredService<GangwarAreasHandler>();
+
+            // Helper
             serviceProvider.GetRequiredService<ChallengesHelper>();
             serviceProvider.GetRequiredService<DatabasePlayerHelper>();
             serviceProvider.GetRequiredService<LangHelper>();
@@ -162,8 +173,6 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<AppConfigHandler>();
             serviceProvider.GetRequiredService<ChatHandler>();
             serviceProvider.GetRequiredService<ClothesHandler>();
-            serviceProvider.GetRequiredService<GangsHandler>();
-            serviceProvider.GetRequiredService<GangwarAreasHandler>();
             serviceProvider.GetRequiredService<InvitationsHandler>();
             serviceProvider.GetRequiredService<LobbiesHandler>();
             serviceProvider.GetRequiredService<ILoggingHandler>();
