@@ -21,6 +21,10 @@ namespace TDS_Server.Handler.Entities.GangSystem
 #nullable restore
 
         public bool InAction { get; set; }
+        //Todo: Don't forget to use this when buying, selling or losing the house
+        public IGangHouse? House { get; set; }
+        public bool Initialized { get; set; }
+
 
         private readonly LangHelper _langHelper;
 
