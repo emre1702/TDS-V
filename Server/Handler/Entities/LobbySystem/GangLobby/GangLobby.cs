@@ -34,9 +34,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _gangsHandler = gangsHandler;
             _serviceProvider = serviceProvider;
 
-            /*LoadTeams();
+            LoadTeams();
             LoadGangLevels();
-            LoadHouses();*/
+            LoadHouses();
         }
 
         public IEnumerable<GangLobby> GetAllDerivedLobbies()
