@@ -6,6 +6,7 @@ using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
+using TDS_Client.Handler.GangSystem;
 using TDS_Client.Handler.Lobby;
 using TDS_Client.Handler.Map;
 using TDS_Client.Handler.MapCreator;
@@ -41,7 +42,10 @@ namespace TDS_Client.Core.Init
                 var dataSyncHandler = new DataSyncHandler(modAPI, loggingHandler, eventsHandler, browserHandler, serializer);
                 var utilsHandler = new UtilsHandler(modAPI, loggingHandler, serializer, dataSyncHandler, eventsHandler);
                 new GangHousesHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, serializer);
-                
+                new GangVehiclesHandler(modAPI, loggingHandler, dataSyncHandler, eventsHandler);
+                new GhostModeHandler(modAPI, loggingHandler, eventsHandler);
+
+
                 new SuicideAnimHandler(modAPI, loggingHandler, remoteEventsSender, utilsHandler);
 
                 var soundsHandler = new SoundsHandler(modAPI, loggingHandler, settingsHandler);
