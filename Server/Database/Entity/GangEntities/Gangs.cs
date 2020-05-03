@@ -25,5 +25,6 @@ namespace TDS_Server.Database.Entity.GangEntities
         public virtual Teams Team { get; set; }
         public virtual GangHouses House { get; set; }
         public virtual GangStats Stats { get; set; }
+        public virtual ICollection<GangVehicles> Vehicles { get; set; }
     }
 }

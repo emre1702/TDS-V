@@ -16,6 +16,7 @@ namespace TDS_Server.Database.Entity.GangEntities
         public byte VehicleSlots { get; set; }
         public byte GangAreaSlots { get; set; }
         public bool CanChangeBlipColor { get; set; }
+        public float HouseAreaRadius { get; set; }
 
     }
 }
