@@ -189,3 +189,7 @@ button:not([disabled]):hover {
 .mat-expansion-panel {
     background: transparent;
 }
+
+.mat-slider-thumb-label-text {
+    font-weight: 100 !important;
+}
