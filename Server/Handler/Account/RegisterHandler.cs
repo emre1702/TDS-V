@@ -4,6 +4,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Entity.Player.Char;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Server;
@@ -33,19 +34,15 @@ namespace TDS_Server.Core.Manager.PlayerManager
             if (int.TryParse(username, out int result))
                 return;
 
-            Players? dbPlayer = null;
-            _modAPI.Thread.RunInMainThread(() =>
+            Players dbPlayer = new Players
             {
-                dbPlayer = new Players
-                {
-                    Name = username,
-                    SCName = player.ModPlayer.SocialClubName,
-                    Password = Utils.HashPWServer(password),
-                    Email = email,
-                    IsVip = false,
-                    AdminLvl = SharedUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
-                };
-            });
+                Name = username,
+                SCName = player.ModPlayer.SocialClubName,
+                Password = Utils.HashPasswordServer(password),
+                Email = email,
+                IsVip = false,
+                AdminLvl = SharedUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
+            };
             if (dbPlayer is null)
                 return;
 
@@ -69,10 +66,8 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 LoggedIn = false
             };
             dbPlayer.PlayerTotalStats = new PlayerTotalStats();
-            dbPlayer.PlayerClothes = new PlayerClothes
-            {
-                IsMale = SharedUtils.GetRandom(true, false)
-            };
+            dbPlayer.PlayerClothes = new PlayerClothes();
+
 
             await ExecuteForDBAsync(async dbContext =>
             {
@@ -80,12 +75,9 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 await dbContext.SaveChangesAsync();
             });
 
-            _modAPI.Thread.RunInMainThread(() =>
-            {
-                LoggingHandler.LogRest(LogType.Register, player, true);
+            LoggingHandler.LogRest(LogType.Register, player, true);
 
-                _eventsHandler.OnPlayerRegister(player, dbPlayer);
-            });
+            _eventsHandler.OnPlayerRegister(player, dbPlayer);
 
             //Todo: Implement that
             // _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));

@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.Ped;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Core;
 
@@ -29,19 +28,40 @@ namespace TDS_Server.Data
             return new DateTimeOffset(dateTime).ToString("f", enUsCulture) + " +00:00";
         }
 
-        public static string HashPWServer(string pw)
+        public static string HashPasswordServer(string password)
         {
-            var stringBuilder = new StringBuilder();
-            using var sha512 = SHA512.Create();
-            byte[] hashbytes = sha512.ComputeHash(Encoding.Default.GetBytes(pw));
-            using var sha384 = SHA384.Create();
-            hashbytes = sha384.ComputeHash(hashbytes);
-            for (int i = 0; hashbytes != null && i < hashbytes.Length; i++)
+            var salt = new byte[24];
+            using (var rngCsp = new RNGCryptoServiceProvider())
             {
-                stringBuilder.AppendFormat("{0:x2}", hashbytes[i]);
+                // Fill the array with a random value.
+                rngCsp.GetBytes(salt);
             }
-            string result = stringBuilder.ToString();
-            return result;
+
+            int iterations = new Random().Next(900, 1100);
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
+            byte[] hash = pbkdf2.GetBytes(24);
+
+            return Convert.ToBase64String(salt) + "|B|" + iterations + "|B|" + Convert.ToBase64String(hash);
+        }
+
+        public static bool IsPasswordValid(string isPassword, string shouldBePassword)
+        {
+            try
+            {
+                var shouldBeHashedParts = shouldBePassword.Split("|B|");
+                var shouldBeSalt = Convert.FromBase64String(shouldBeHashedParts[0]);
+                var shouldBeIterations = int.Parse(shouldBeHashedParts[1]);
+                var shouldBeHash = shouldBeHashedParts[2];
+
+                var isPbkdf2 = new Rfc2898DeriveBytes(isPassword, shouldBeSalt, shouldBeIterations);
+                byte[] isHash = isPbkdf2.GetBytes(24);
+
+                return Convert.ToBase64String(isHash) == shouldBeHash;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static float ToFloat(this string str)
@@ -188,7 +208,7 @@ namespace TDS_Server.Data
 
             var splittedReason = Utils.SplitPartsByLength($"Banned!\nName: {ban.Player?.Name ?? modPlayer.Name}\nAdmin: {ban.Admin.Name}\nReason: {ban.Reason}\nEnd: {endstr} UTC\nStart: {startstr} UTC", 90);
 
-            foreach (var split in splittedReason) 
+            foreach (var split in splittedReason)
                 modPlayer.SendNotification(split, true);
 
             _ = new TDSTimer(() =>

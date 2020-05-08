@@ -96,15 +96,21 @@ namespace TDS_Server.Handler.Account
             bool worked = await player.ExecuteForDBAsync(async (dbContext) =>
             {
                 Players? entity = await dbContext.Players
-                   .Include(p => p.PlayerStats)
-                   .Include(p => p.PlayerTotalStats)
-                   .Include(p => p.PlayerSettings)
-                   .Include(p => p.OfflinemessagesTarget)
-                   .Include(p => p.PlayerMapRatings)
-                   .Include(p => p.PlayerMapFavourites)
-                   .Include(p => p.PlayerRelationsTarget)
-                   .Include(p => p.PlayerClothes)
-                   .Include(p => p.Challenges)
+                    .Include(p => p.PlayerStats)
+                    .Include(p => p.PlayerTotalStats)
+                    .Include(p => p.PlayerSettings)
+                    .Include(p => p.OfflinemessagesTarget)
+                    .Include(p => p.PlayerMapRatings)
+                    .Include(p => p.PlayerMapFavourites)
+                    .Include(p => p.PlayerRelationsTarget)
+                    .Include(p => p.PlayerClothes)
+                    .Include(p => p.Challenges)
+                    .Include(p => p.CharDatas.GeneralData)
+                    .Include(p => p.CharDatas.HeritageData)
+                    .Include(p => p.CharDatas.FeaturesData)
+                    .Include(p => p.CharDatas.AppearanceData)
+                    .Include(p => p.CharDatas.HairAndColorsData)
+                        
                    .FirstOrDefaultAsync(p => p.Id == id);
 
                 _modAPI.Thread.RunInMainThread(() => player.Entity = entity);
@@ -115,7 +121,7 @@ namespace TDS_Server.Handler.Account
                     return false;
                 }
 
-                if (password is { } && Utils.HashPWServer(password) != entity.Password)
+                if (password is { } && !Utils.IsPasswordValid(password, entity.Password))
                 {
                     _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.WRONG_PASSWORD));
                     return false;
