@@ -15,6 +15,16 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
         bool Exists { get; }
         EntityType Type { get; }
 
+        bool IsLocal { get; }
+        //
+        // Summary:
+        //     Local (client-side) entity ID.
+        ushort Id { get; }
+        //
+        // Summary:
+        //     Entity model.
+        uint Model { get; set; }
+
         void Destroy();
     }
 }

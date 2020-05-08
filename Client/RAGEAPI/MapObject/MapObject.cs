@@ -8,13 +8,5 @@ namespace TDS_Client.RAGEAPI.MapObject
 
         public MapObject(RAGE.Elements.MapObject instance) : base(instance)
             => _instance = instance;
-
-        public uint Model
-        {
-            get => _instance.Model;
-            set => _instance.Model = value;
-        }
-
-
     }
 }

@@ -32,6 +32,16 @@ namespace TDS_Client.RAGEAPI.Entity
 
         public EntityType Type => (EntityType)_instance.Type;
 
+        public bool IsLocal => _instance.IsLocal;
+
+        public ushort Id => _instance.Id;
+
+        public uint Model 
+        { 
+            get => _instance.Model; 
+            set => _instance.Model = value; 
+        }
+
         public void Destroy()
         {
             _instance.Destroy();

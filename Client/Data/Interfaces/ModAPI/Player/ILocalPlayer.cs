@@ -105,7 +105,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
         //     Tints: None = -1, Rainbow = 0, Red = 1, SeasideStripes = 2, WidowMaker = 3, Patriot
         //     = 4, Blue = 5, Black = 6, Hornet = 7, AirFocce = 8, Desert = 9, Shadow = 10,
         //     HighAltitude = 11, Airbone = 12, Sunrise = 13,
-        void GetParachuteTintIndex(ref int tintIndex);
+        new void GetParachuteTintIndex(ref int tintIndex);
         //
         // Summary:
         //     Gets the ped id of a player - Please update and release your native hash translation
@@ -277,7 +277,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
         // Summary:
         //     Returns current player ped
         int PlayerPedId();
-        void RemoveHelmet(bool p2);
+        new void RemoveHelmet(bool p2);
         //
         // Summary:
         //     PLAYER::REPORT_CRIME(PLAYER::PLAYER_ID(), 37, PLAYER::GET_WANTED_LEVEL_THRESHOLD(1));
@@ -405,7 +405,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
         //     Tints: None = -1, Rainbow = 0, Red = 1, SeasideStripes = 2, WidowMaker = 3, Patriot
         //     = 4, Blue = 5, Black = 6, Hornet = 7, AirFocce = 8, Desert = 9, Shadow = 10,
         //     HighAltitude = 11, Airbone = 12, Sunrise = 13,
-        void SetParachuteTintIndex(int tintIndex);
+        new void SetParachuteTintIndex(int tintIndex);
         //
         // Summary:
         //     p1 was always 5. p4 was always false.
@@ -415,7 +415,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
         //     Tints: None = -1, Rainbow = 0, Red = 1, SeasideStripes = 2, WidowMaker = 3, Patriot
         //     = 4, Blue = 5, Black = 6, Hornet = 7, AirFocce = 8, Desert = 9, Shadow = 10,
         //     HighAltitude = 11, Airbone = 12, Sunrise = 13,
-        void SetReserveParachuteTintIndex(int index);
+        new void SetReserveParachuteTintIndex(int index);
         //
         // Summary:
         //     example: flags: 0-6 PLAYER::SET_PLAYER_RESET_FLAG_PREFER_REAR_SEATS(PLAYER::PLAYER_ID(),

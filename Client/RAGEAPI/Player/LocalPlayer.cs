@@ -125,7 +125,7 @@ namespace TDS_Client.RAGEAPI.Player
         public void GetParachuteSmokeTrailColor(ref int r, ref int g, ref int b)
             => RAGE.Game.Player.GetPlayerParachuteSmokeTrailColor(ref r, ref g, ref b);
 
-        public void GetParachuteTintIndex(ref int tintIndex)
+        public new void GetParachuteTintIndex(ref int tintIndex)
             => RAGE.Game.Player.GetPlayerParachuteTintIndex(ref tintIndex);
 
         public int GetPed()
@@ -293,7 +293,7 @@ namespace TDS_Client.RAGEAPI.Player
         public int PlayerPedId()
             => RAGE.Game.Player.PlayerPedId();
 
-        public void RemoveHelmet(bool p2)
+        public new void RemoveHelmet(bool p2)
             => RAGE.Game.Player.RemovePlayerHelmet(p2);
 
         public void ReportCrime(int crimeType, int wantedLvlThresh)
@@ -420,7 +420,7 @@ namespace TDS_Client.RAGEAPI.Player
         public void SetParachuteSmokeTrailColor(int r, int g, int b)
             => RAGE.Game.Player.SetPlayerParachuteSmokeTrailColor(r, g, b);
 
-        public void SetParachuteTintIndex(int tintIndex)
+        public new void SetParachuteTintIndex(int tintIndex)
             => RAGE.Game.Player.SetPlayerParachuteTintIndex(tintIndex);
 
         public void SetParachuteVariationOverride(int p1, int p2, int p3, bool p4)
@@ -432,7 +432,7 @@ namespace TDS_Client.RAGEAPI.Player
         public void SetPoliceRadarBlips(bool toggle)
             => RAGE.Game.Player.SetPoliceRadarBlips(toggle);
 
-        public void SetReserveParachuteTintIndex(int index)
+        public new void SetReserveParachuteTintIndex(int index)
             => RAGE.Game.Player.SetPlayerReserveParachuteTintIndex(index);
 
         public void SetResetFlagPreferRearSeats(int flags)
@@ -549,7 +549,7 @@ namespace TDS_Client.RAGEAPI.Player
         public void SwitchCrimeType(int p1)
             => RAGE.Game.Player.SwitchCrimeType(p1);
 
-        public new bool IsClimbing()
+        public bool IsClimbing()
             => RAGE.Game.Player.IsPlayerClimbing();
     }
 }

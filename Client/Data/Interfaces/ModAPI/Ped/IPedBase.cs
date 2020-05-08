@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Entity;
+﻿using TDS_Client.Data.Enums;
+using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
@@ -11,7 +12,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.AddAmmoToPed(System.Int32,System.UInt32,System.Int32)
-        void AddAmmoTo(uint weaponHash, int ammo);
+        void AddAmmoTo(WeaponHash weaponHash, int ammo);
         //
         // Summary:
         //     see RAGE.Game.Ped.AddArmourToPed(System.Int32,System.Int32)
@@ -19,7 +20,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Fire.AddOwnedExplosion(System.Int32,System.Single,System.Single,System.Single,System.Int32,System.Single,System.Boolean,System.Boolean,System.Single)
-        void AddOwnedExplosion(float x, float y, float z, int explosionType, float damageScale, bool isAudible, bool isInvisible, float cameraShake);
+        void AddOwnedExplosion(float x, float y, float z, ExplosionType explosionType, float damageScale, bool isAudible, bool isInvisible, float cameraShake);
         //
         // Summary:
         //     see RAGE.Game.Ai.AddVehicleSubtaskAttackPed(System.Int32,System.Int32)
@@ -187,11 +188,16 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.ExplodeProjectiles(System.Int32,System.UInt32,System.Boolean)
-        void ExplodeProjectiles(uint weaponHash, bool p2);
+        void ExplodeProjectiles(WeaponHash weaponHash, bool p2);
         //
         // Summary:
         //     see RAGE.Game.Ped.ForcePedMotionState(System.Int32,System.UInt32,System.Boolean,System.Boolean,System.Boolean)
-        bool ForceMotionState(uint motionStateHash, bool p2, bool p3, bool p4);
+        /**
+         * <summary>Regarding p2, p3
+         * and p4: Most common is 0, 0, 0); followed by 0, 1, 0); and 1, 1, 0); in the scripts.
+         * p4 is very rarely something other than 0.</summary> 
+         */
+        bool ForceMotionState(MotionState motionState, bool p2, bool p3, bool p4);
         //
         // Summary:
         //     see RAGE.Game.Ped.ForcePedToOpenParachute(System.Int32)
@@ -223,11 +229,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetPedAmmoTypeFromWeapon(System.Int32,System.UInt32)
-        uint GetAmmoTypeFromWeapon(uint weaponHash);
+        uint GetAmmoTypeFromWeapon(WeaponHash weaponHash);
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetPedAmmoTypeFromWeapon2(System.Int32,System.UInt32)
-        uint GetAmmoTypeFromWeapon2(uint weaponHash);
+        uint GetAmmoTypeFromWeapon2(WeaponHash weaponHash);
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedArmour(System.Int32)
@@ -239,11 +245,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedBoneCoords(System.Int32,System.Int32,System.Single,System.Single,System.Single)
-        Position3D GetBoneCoords(int boneId, float offsetX, float offsetY, float offsetZ);
+        Position3D GetBoneCoords(PedBone boneId, float offsetX, float offsetY, float offsetZ);
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedBoneIndex(System.Int32,System.Int32)
-        int GetBoneIndex(int boneId);
+        int GetBoneIndex(PedBone boneId);
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedCauseOfDeath(System.Int32)
@@ -267,11 +273,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetCurrentPedVehicleWeapon(System.Int32,System.Int32@)
-        bool GetCurrentVehicleWeapon(ref int weaponHash);
+        int? GetCurrentVehicleWeapon();
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetCurrentPedWeapon(System.Int32,System.Int32@,System.Boolean)
-        bool GetCurrentWeapon(ref int weaponHash, bool p2);
+        WeaponHash? GetCurrentWeapon(bool p2);
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetCurrentPedWeaponEntityIndex(System.Int32)
@@ -311,7 +317,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedHeadBlendData(System.Int32,System.Int32@)
-        bool GetHeadBlendData(ref int headBlendData);
+        int? GetHeadBlendData();
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedHeadOverlayValue(System.Int32,System.Int32)
@@ -331,11 +337,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedLastDamageBone(System.Int32,System.Int32@)
-        bool GetLastDamageBone(ref int outBone);
+        PedBone? GetLastDamageBone();
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetPedLastWeaponImpactCoord(System.Int32,RAGE.Vector3)
-        bool GetLastWeaponImpactCoord(Position3D coords);
+        Position3D GetLastWeaponImpactCoord();
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetLockonRangeOfCurrentPedWeapon(System.Int32)
@@ -343,11 +349,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetMaxAmmo(System.Int32,System.UInt32,System.Int32@)
-        bool GetMaxAmmo(uint weaponHash, ref int ammo);
+        int? GetMaxAmmo(WeaponHash weaponHash);
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetMaxAmmoInClip(System.Int32,System.UInt32,System.Boolean)
-        int GetMaxAmmoInClip(uint weaponHash, bool p2);
+        int GetMaxAmmoInClip(WeaponHash weaponHash, bool p2);
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedMaxHealth(System.Int32)
@@ -415,7 +421,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedParachuteTintIndex(System.Int32,System.Int32@)
-        void GetParachuteTintIndex(ref int outTintIndex);
+        int GetParachuteTintIndex();
         //
         // Summary:
         //     see RAGE.Game.Ai.GetPhoneGestureAnimCurrentTime(System.Int32)
@@ -439,7 +445,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedRagdollBoneIndex(System.Int32,System.Int32)
-        int GetRagdollBoneIndex(int bone);
+        int GetRagdollBoneIndex(PedBone bone);
         //
         // Summary:
         //     see RAGE.Game.Ped.GetPedRelationshipGroupDefaultHash(System.Int32)
@@ -511,7 +517,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetPedWeaponTintIndex(System.Int32,System.UInt32)
-        int GetWeaponTintIndex(uint weaponHash);
+        int GetWeaponTintIndex(WeaponHash weaponHash);
         //
         // Summary:
         //     see RAGE.Game.Weapon.GetPedWeapontypeInSlot(System.Int32,System.UInt32)
@@ -519,7 +525,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.GiveDelayedWeaponToPed(System.Int32,System.UInt32,System.Int32,System.Boolean)
-        void GiveDelayedWeaponTo(uint weaponHash, int time, bool equipNow);
+        void GiveDelayedWeaponTo(WeaponHash weaponHash, int time, bool equipNow);
         //
         // Summary:
         //     see RAGE.Game.Ped.GivePedHelmet(System.Int32,System.Boolean,System.Int32,System.Int32)
@@ -535,23 +541,23 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.GiveWeaponComponentToPed(System.Int32,System.UInt32,System.UInt32)
-        void GiveWeaponComponentTo(uint weaponHash, uint componentHash);
+        void GiveWeaponComponentTo(WeaponHash weaponHash, uint componentHash);
         //
         // Summary:
         //     see RAGE.Game.Weapon.GiveWeaponToPed(System.Int32,System.UInt32,System.Int32,System.Boolean,System.Boolean)
-        void GiveWeaponTo(uint weaponHash, int ammoCount, bool isHidden, bool equipNow);
+        void GiveWeaponTo(WeaponHash weaponHash, int ammoCount, bool isHidden, bool equipNow);
         //
         // Summary:
         //     see RAGE.Game.Weapon.HasPedBeenDamagedByWeapon(System.Int32,System.UInt32,System.Int32)
-        new bool HasBeenDamagedByWeapon(uint weaponHash, int weaponType);
+        bool HasBeenDamagedByWeapon(WeaponHash weaponHash, int weaponType);
         //
         // Summary:
         //     see RAGE.Game.Weapon.HasPedGotWeapon(System.Int32,System.UInt32,System.Boolean)
-        bool HasGotWeapon(uint weaponHash, bool p2);
+        bool HasGotWeapon(WeaponHash weaponHash, bool p2);
         //
         // Summary:
         //     see RAGE.Game.Weapon.HasPedGotWeaponComponent(System.Int32,System.UInt32,System.UInt32)
-        bool HasGotWeaponComponent(uint weaponHash, uint componentHash);
+        bool HasGotWeaponComponent(WeaponHash weaponHash, uint componentHash);
         //
         // Summary:
         //     see RAGE.Game.Ped.HasPedHeadBlendFinished(System.Int32)
@@ -703,11 +709,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ped.IsPedheadshotReady(System.Int32)
-        bool IsheadshotReady();
+        bool IsHeadshotReady();
         //
         // Summary:
         //     see RAGE.Game.Ped.IsPedheadshotValid(System.Int32)
-        bool IsheadshotValid();
+        bool IsHeadshotValid();
         //
         // Summary:
         //     see RAGE.Game.Ped.IsPedHeadtrackingEntity(System.Int32,System.Int32)
@@ -1007,7 +1013,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.IsPedWeaponComponentActive(System.Int32,System.UInt32,System.UInt32)
-        bool IsWeaponComponentActive(uint weaponHash, uint componentHash);
+        bool IsWeaponComponentActive(WeaponHash weaponHash, uint componentHash);
         //
         // Summary:
         //     see RAGE.Game.Weapon.IsPedWeaponReadyToShoot(System.Int32)
@@ -1055,7 +1061,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Audio.PlayPain(System.Int32,System.Int32,System.Int32,System.Int32)
-        void PlayPain(int painID, int p1, int p3);
+        void PlayPain(int painID, int p2, int p3);
         //
         // Summary:
         //     see RAGE.Game.Audio.PlayStreamFromPed(System.Int32)
@@ -1067,7 +1073,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ped.RegisterPedheadshot(System.Int32)
-        int Registerheadshot();
+        int RegisterHeadshot();
         //
         // Summary:
         //     see RAGE.Game.Ped.RegisterTarget(System.Int32,System.Int32)
@@ -1095,11 +1101,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.RemoveWeaponComponentFromPed(System.Int32,System.UInt32,System.UInt32)
-        void RemoveWeaponComponentFrom(uint weaponHash, uint componentHash);
+        void RemoveWeaponComponentFrom(WeaponHash weaponHash, uint componentHash);
         //
         // Summary:
         //     see RAGE.Game.Weapon.RemoveWeaponFromPed(System.Int32,System.UInt32)
-        void RemoveWeaponFrom(uint weaponHash);
+        void RemoveWeaponFrom(WeaponHash weaponHash);
         //
         // Summary:
         //     see RAGE.Game.Ped.ResetPedInVehicleContext(System.Int32)
@@ -1172,7 +1178,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedAmmo(System.Int32,System.UInt32,System.Int32,System.Int32)
-        void SetAmmo(uint weaponHash, int ammo, int p3);
+        void SetAmmo(WeaponHash weaponHash, int ammo, int p3);
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedAmmoByType(System.Int32,System.Int32,System.Int32)
@@ -1180,7 +1186,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetAmmoInClip(System.Int32,System.UInt32,System.Int32)
-        bool SetAmmoInClip(uint weaponHash, int ammo);
+        bool SetAmmoInClip(WeaponHash weaponHash, int ammo);
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedAmmoToDrop(System.Int32,System.Int32)
@@ -1380,11 +1386,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetCurrentPedVehicleWeapon(System.Int32,System.UInt32)
-        bool SetCurrentVehicleWeapon(uint weaponHash);
+        bool SetCurrentVehicleWeapon(WeaponHash weaponHash);
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetCurrentPedWeapon(System.Int32,System.UInt32,System.Boolean)
-        void SetCurrentWeapon(uint weaponHash, bool equipNow);
+        void SetCurrentWeapon(WeaponHash weaponHash, bool equipNow);
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedCurrentWeaponVisible(System.Int32,System.Boolean,System.Boolean,System.Boolean,System.Boolean)
@@ -1452,7 +1458,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedDropsInventoryWeapon(System.Int32,System.UInt32,System.Single,System.Single,System.Single,System.Int32)
-        void SetDropsInventoryWeapon(uint weaponHash, float xOffset, float yOffset, float zOffset, int p5);
+        void SetDropsInventoryWeapon(WeaponHash weaponHash, float xOffset, float yOffset, float zOffset, int p5);
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedDropsWeapon(System.Int32)
@@ -1592,7 +1598,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedInfiniteAmmo(System.Int32,System.Boolean,System.UInt32)
-        void SetInfiniteAmmo(bool toggle, uint weaponHash);
+        void SetInfiniteAmmo(bool toggle, WeaponHash weaponHash);
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedInfiniteAmmoClip(System.Int32,System.Boolean)
@@ -1600,7 +1606,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ped.SetPedIntoVehicle(System.Int32,System.Int32,System.Int32)
-        void SetIntoVehicle(int vehicle, int seatIndex);
+        void SetIntoVehicle(int vehicle, VehicleSeat seatIndex);
         //
         // Summary:
         //     see RAGE.Game.Ped.SetPedInVehicleContext(System.Int32,System.UInt32)
@@ -1916,7 +1922,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Weapon.SetPedWeaponTintIndex(System.Int32,System.UInt32,System.Int32)
-        void SetWeaponTintIndex(uint weaponHash, int tintIndex);
+        void SetWeaponTintIndex(WeaponHash weaponHash, int tintIndex);
         //
         // Summary:
         //     see RAGE.Game.Ped.SetPedWetnessEnabledThisFrame(System.Int32)
@@ -2032,7 +2038,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ai.TaskForceMotionState(System.Int32,System.UInt32,System.Boolean)
-        void TaskForceMotionState(uint state, bool p2);
+        void TaskForceMotionState(MotionState state, bool p2);
         //
         // Summary:
         //     see RAGE.Game.Ai.TaskGetOffBoat(System.Int32,System.Int32)
@@ -2064,7 +2070,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         //
         // Summary:
         //     see RAGE.Game.Ai.TaskGotoEntityAiming(System.Int32,System.Int32,System.Single,System.Single)
-        void TaskGotoEntityAiming(int target, float distanceToStopAt, float StartAimingDist);
+        void TaskGotoEntityAiming(int target, float distanceToStopAt, float startAimingDist);
         //
         // Summary:
         //     see RAGE.Game.Ai.TaskGotoEntityOffset(System.Int32,System.Int32,System.Int32,System.Single,System.Single,System.Single,System.Int32)
