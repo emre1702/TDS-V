@@ -18,7 +18,11 @@ namespace TDS_Client.Data.Defaults
         public static string MapLimitHashName => "prop_flagpole_1a";
         public static string TargetHashName => "v_ret_ta_skull";
         public static string BombPlantPlaceHashName => "prop_mp_placement_med";
-        public static uint[] TeamSpawnPedHash = new uint[] { 0x7A05FA59, 0x106D9A99, 0x5E3DA4A4, 0xC0F371B7, 0x45348DBB, 0xE83B93B7, 0x5CDEF405 };
+        public static PedHash[] TeamSpawnPedHash = new PedHash[] 
+        { 
+            PedHash.Blackops02SMY, PedHash.ChiCold01GMM, PedHash.Cop01SMY, PedHash.Claude01,
+            PedHash.ExArmy01, PedHash.Famca01GMY, PedHash.FibSec01 
+         };
         public static Dictionary<Sound, string> SoundPaths = new Dictionary<Sound, string>()
         {
             [Sound.Hitsound] = "package://sounds/hit.mp3",

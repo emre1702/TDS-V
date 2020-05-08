@@ -1,6 +1,7 @@
 ﻿using TDS_Client.Data.Interfaces.ModAPI.Ped;
 using TDS_Client.RAGEAPI.Entity;
 using TDS_Client.RAGEAPI.Extensions;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Ped
@@ -12,11 +13,16 @@ namespace TDS_Client.RAGEAPI.Ped
         public PedAPI(EntityConvertingHandler entityConvertingHandler)
             => _entityConvertingHandler = entityConvertingHandler;
 
-        public IPed Create(uint model, Position3D position, Position3D rotation, uint dimension)
+        public IPed Create(PedHash model, Position3D position, Position3D rotation, uint dimension)
+            => Create(model, position, rotation.Z, dimension);
+
+        public IPed Create(PedHash model, Position3D position, float heading, uint dimension)
         {
-            var instance = new RAGE.Elements.Ped(model, position.ToVector3(), rotation.Z, dimension);
+            var instance = new RAGE.Elements.Ped((uint)model, position.ToVector3(), heading, dimension);
             return _entityConvertingHandler.GetEntity(instance);
         }
+
+        
 
         public int GetPedArmor(int handle)
             => RAGE.Game.Ped.GetPedArmour(handle);

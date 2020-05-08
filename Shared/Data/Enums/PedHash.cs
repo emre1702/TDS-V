@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Enums
+﻿namespace TDS_Shared.Data.Enums
 {
     public enum PedHash : uint
     {
