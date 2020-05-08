@@ -20,42 +20,42 @@ namespace TDS_Server.RAGEAPI.Vehicle
 
         public ITDSVehicle Create(VehicleHash model, Position3D pos, Position3D rot, int color1, int color2, string numberPlate = "", byte alpha = 255, bool locked = false, bool engine = true, uint dimension = 0)
         {
-            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle((GTANetworkAPI.VehicleHash)model, pos.ToVector3(), rot.ToVector3(), color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
+            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle((GTANetworkAPI.VehicleHash)model, pos.ToMod(), rot.ToMod(), color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
             var modVehicle = _entityConvertingHandler.GetEntity(instance)!;
             return Init.GetTDSVehicle(modVehicle)!;
         }
 
         public ITDSVehicle Create(int model, Position3D pos, Position3D rot, int color1, int color2, string numberPlate = "", byte alpha = 255, bool locked = false, bool engine = true, uint dimension = 0)
         {
-            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle(model, pos.ToVector3(), rot.ToVector3(), color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
+            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle(model, pos.ToMod(), rot.ToMod(), color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
             var modVehicle = _entityConvertingHandler.GetEntity(instance)!;
             return Init.GetTDSVehicle(modVehicle)!;
         }
 
         public ITDSVehicle Create(uint model, Position3D pos, float rot, int color1, int color2, string numberPlate = "", byte alpha = 255, bool locked = false, bool engine = true, uint dimension = 0)
         {
-            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle(model, pos.ToVector3(), rot, color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
+            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle(model, pos.ToMod(), rot, color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
             var modVehicle = _entityConvertingHandler.GetEntity(instance)!;
             return Init.GetTDSVehicle(modVehicle)!;
         }
 
         public ITDSVehicle Create(VehicleHash model, Position3D pos, float rot, int color1, int color2, string numberPlate = "", byte alpha = 255, bool locked = false, bool engine = true, uint dimension = 0)
         {
-            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle((GTANetworkAPI.VehicleHash)model, pos.ToVector3(), rot, color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
+            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle((GTANetworkAPI.VehicleHash)model, pos.ToMod(), rot, color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
             var modVehicle = _entityConvertingHandler.GetEntity(instance)!;
             return Init.GetTDSVehicle(modVehicle)!;
         }
 
         public ITDSVehicle Create(VehicleHash model, Position3D pos, float rot, Color color1, Color color2, string numberPlate = "", byte alpha = 255, bool locked = false, bool engine = true, uint dimension = 0)
         {
-            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle((GTANetworkAPI.VehicleHash)model, pos.ToVector3(), rot, new GTANetworkAPI.Color(color1.ToArgb()), new GTANetworkAPI.Color(color2.ToArgb()), numberPlate, alpha, locked, engine, dimension: dimension);
+            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle((GTANetworkAPI.VehicleHash)model, pos.ToMod(), rot, new GTANetworkAPI.Color(color1.ToArgb()), new GTANetworkAPI.Color(color2.ToArgb()), numberPlate, alpha, locked, engine, dimension: dimension);
             var modVehicle = _entityConvertingHandler.GetEntity(instance)!;
             return Init.GetTDSVehicle(modVehicle)!;
         }
 
         public ITDSVehicle Create(int model, Position3D pos, float rot, int color1, int color2, string numberPlate = "", byte alpha = 255, bool locked = false, bool engine = true, uint dimension = 0)
         {
-            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle(model, pos.ToVector3(), rot, color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
+            var instance = GTANetworkAPI.NAPI.Vehicle.CreateVehicle(model, pos.ToMod(), rot, color1, color2, numberPlate, alpha, locked, engine, dimension: dimension);
             var modVehicle = _entityConvertingHandler.GetEntity(instance)!;
             return Init.GetTDSVehicle(modVehicle)!;
         }
@@ -298,6 +298,6 @@ namespace TDS_Server.RAGEAPI.Vehicle
             => GTANetworkAPI.NAPI.Vehicle.SetVehicleWindowTint((vehicle as Vehicle)!._instance, type);
 
         public void SpawnVehicle(IVehicle vehicle, Position3D position, float heading = 0)
-            => GTANetworkAPI.NAPI.Vehicle.SpawnVehicle((vehicle as Vehicle)!._instance, position.ToVector3(), heading);
+            => GTANetworkAPI.NAPI.Vehicle.SpawnVehicle((vehicle as Vehicle)!._instance, position.ToMod(), heading);
     }
 }

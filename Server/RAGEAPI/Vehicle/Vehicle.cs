@@ -202,6 +202,6 @@ namespace TDS_Server.RAGEAPI.Vehicle
             => _instance.SetMod(slot, mod);
 
         public void Spawn(Position3D position, float heading = 0)
-            => _instance.Spawn(position.ToVector3(), heading);
+            => _instance.Spawn(position.ToMod(), heading);
     }
 }

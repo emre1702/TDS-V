@@ -42,8 +42,8 @@ namespace TDS_Server.RAGEAPI.Entity
             if (!(player.ModPlayer is Player.Player modPlayer))
                 return;
 
-            var positionOffsetVector = positionOffset?.ToVector3() ?? new Vector3();
-            var rotationOffsetVector = rotationOffset?.ToVector3() ?? new Vector3();
+            var positionOffsetVector = positionOffset?.ToMod() ?? new Vector3();
+            var rotationOffsetVector = rotationOffset?.ToMod() ?? new Vector3();
             Init.WorkaroundsHandler.AttachEntityToEntity(_instance, modPlayer._instance, bone, positionOffsetVector, rotationOffsetVector, player.Lobby);
         }
 

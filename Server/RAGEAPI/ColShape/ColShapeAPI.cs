@@ -10,7 +10,7 @@ namespace TDS_Server.RAGEAPI.ColShape
     {
         public IColShape CreateSphere(Position3D position, double range, ILobby lobby)
         {
-            var modColshape = NAPI.ColShape.CreateSphereColShape(position.ToVector3(), (float)range, lobby.Dimension);
+            var modColshape = NAPI.ColShape.CreateSphereColShape(position.ToMod(), (float)range, lobby.Dimension);
             return new ColShape(modColshape);
         }
 

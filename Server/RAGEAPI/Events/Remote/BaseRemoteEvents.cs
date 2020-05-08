@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using System;
+using TDS_Server.Handler.Entities.Player;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -348,6 +349,6 @@ namespace TDS_Server.RAGEAPI.Events.Remote
 
             Init.TDSCore.RemoteEventsHandler.OnLoadUserpanelData(tdsPlayer, dataType);
         }
-        #endregion
+        #endregion Userpanel
     }
 }

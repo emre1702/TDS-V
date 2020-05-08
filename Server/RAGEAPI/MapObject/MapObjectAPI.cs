@@ -12,7 +12,7 @@ namespace TDS_Server.RAGEAPI.MapObject
         {
             var hash = GTANetworkAPI.NAPI.Util.GetHashKey(hashName);
             var pos = new GTANetworkAPI.Vector3(position.X, position.Y, position.Z);
-            var rot = rotation is null ? new GTANetworkAPI.Vector3() : rotation.ToVector3();
+            var rot = rotation is null ? new GTANetworkAPI.Vector3() : rotation.ToMod();
             var modObject = GTANetworkAPI.NAPI.Object.CreateObject(hash, pos, rot, alpha, lobby.Dimension);
 
             return new MapObject(modObject);
@@ -21,7 +21,7 @@ namespace TDS_Server.RAGEAPI.MapObject
         public IMapObject Create(int hash, Position3D position, Position3D? rotation, byte alpha, ILobby lobby)
         {
             var pos = new GTANetworkAPI.Vector3(position.X, position.Y, position.Z);
-            var rot = rotation is null ? new GTANetworkAPI.Vector3() : rotation.ToVector3();
+            var rot = rotation is null ? new GTANetworkAPI.Vector3() : rotation.ToMod();
             var modObject = GTANetworkAPI.NAPI.Object.CreateObject(hash, pos, rot, alpha, lobby.Dimension);
 
             return new MapObject(modObject);
