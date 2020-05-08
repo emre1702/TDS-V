@@ -136,7 +136,7 @@ namespace TDS_Server.Core.Init
             {
                 try
                 {
-                    string input = Console.ReadLine();
+                    string? input = Console.ReadLine();
                     if (input is null)
                         return;
                     if (input.Length == 0)
