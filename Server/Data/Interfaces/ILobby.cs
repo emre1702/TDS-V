@@ -39,5 +39,6 @@ namespace TDS_Server.Data.Interfaces
         void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true);
         void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player);
         Task<bool> IsPlayerBaned(ITDSPlayer player);
+        Task AddToDB();
     }
 }
