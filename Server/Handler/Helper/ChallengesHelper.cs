@@ -38,7 +38,7 @@ namespace TDS_Server.Handler.Helper
             _modAPI = modAPI;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
-            eventsHandler.PlayerRegistered += EventsHandler_PlayerRegister;
+            eventsHandler.PlayerRegisteredBefore += EventsHandler_PlayerRegister;
         }
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer iplayer)
@@ -66,15 +66,15 @@ namespace TDS_Server.Handler.Helper
            
         }
 
-        private async void EventsHandler_PlayerRegister(ITDSPlayer player, Players dbPlayer)
+        private async ValueTask EventsHandler_PlayerRegister((ITDSPlayer player, Players dbPlayer) args)
         {
             try 
             {
-                await AddForeverChallenges(dbPlayer);
+                await AddForeverChallenges(args.dbPlayer);
             } 
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, player);
+                LoggingHandler.LogError(ex, args.player);
             }
         }
 

@@ -25,6 +25,7 @@ namespace TDS_Server.Handler.Events
         public delegate void PlayerDelegate(ITDSPlayer player);
 
         public event PlayerDelegate? PlayerLoggedIn;
+        public event PlayerDelegate? ReloadPlayerChar;
 
         public event PlayerDelegate? PlayerLoggedOut;
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
@@ -40,6 +41,7 @@ namespace TDS_Server.Handler.Events
         public event ModPlayerDelegate? PlayerDisconnected;
         public event ModPlayerDelegate? PlayerConnected;
 
+        public AsyncValueTaskEvent<(ITDSPlayer, Players)>? PlayerRegisteredBefore;
         public AsyncValueTaskEvent<ITDSPlayer>? PlayerLoggedOutBefore;
 
         public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
@@ -147,8 +149,11 @@ namespace TDS_Server.Handler.Events
             });
         }
 
-        public void OnPlayerRegister(ITDSPlayer player, Players dbPlayer)
+        public async void OnPlayerRegister(ITDSPlayer player, Players dbPlayer)
         {
+            var task = PlayerRegisteredBefore?.InvokeAsync((player, dbPlayer));
+            if (task.HasValue)
+                await task.Value;
             PlayerRegistered?.Invoke(player, dbPlayer);
         }
 
@@ -196,7 +201,12 @@ namespace TDS_Server.Handler.Events
         {
             LobbyCreated?.Invoke(lobby);
         }
-        #endregion
+
+        internal void OnReloadPlayerChar(ITDSPlayer player)
+        {
+            ReloadPlayerChar?.Invoke(player);
+        }
+        #endregion Custom
 
 
         #region Timer
