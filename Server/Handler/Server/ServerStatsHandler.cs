@@ -38,14 +38,14 @@ namespace TDS_Server.Handler.Server
 
             ExecuteForDB(dbContext =>
             {
-                DailyStats = dbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.UtcNow.Date);
-                if (DailyStats is null)
+                ServerDailyStats? dailyStats = dbContext.ServerDailyStats.FirstOrDefault(s => s.Date.Date == DateTime.UtcNow.Date);
+                if (dailyStats is null)
                 {
-                    DailyStats = new ServerDailyStats { Date = DateTime.UtcNow.Date };
-                    dbContext.ServerDailyStats.Add(DailyStats);
+                    dailyStats = new ServerDailyStats { Date = DateTime.UtcNow.Date };
+                    dbContext.ServerDailyStats.Add(dailyStats);
                     dbContext.SaveChanges();
                 }
-
+                DailyStats = dailyStats;
                 TotalStats = dbContext.ServerTotalStats.First();
             }).Wait();
 
