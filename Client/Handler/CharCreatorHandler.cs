@@ -15,7 +15,7 @@ using TDS_Shared.Data.Models.CharCreator;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 
-namespace TDS_Client.Handler.CharCreator
+namespace TDS_Client.Handler
 {
     public class CharCreatorHandler : ServiceBase
     {
@@ -178,6 +178,8 @@ namespace TDS_Client.Handler.CharCreator
         private void MovePed(int currentMs)
         {
             if (_displayPed is null)
+                return;
+            if (_currentCamOffsetPos is null)
                 return;
 
             if (!_modAPI.Input.IsDown(Key.RightButton))

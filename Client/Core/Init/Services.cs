@@ -2,7 +2,6 @@
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler;
 using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.CharCreator;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Draw.Dx;
