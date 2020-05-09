@@ -40,6 +40,8 @@ namespace TDS_Server.Handler
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MapCreateLobby).Cast<MapCreateLobby>().First());
         public GangLobby GangLobby => _gangLobby ?? (_gangLobby =
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.GangLobby).Cast<GangLobby>().First());
+        public CharCreateLobby CharCreateLobbyDummy => _charCreateLobby ?? (_charCreateLobby =
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.CharCreateLobby).Cast<CharCreateLobby>().First());
 
         public readonly Dictionary<int, ILobby> LobbiesByIndex = new Dictionary<int, ILobby>();
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
@@ -48,6 +50,7 @@ namespace TDS_Server.Handler
         private Arena? _arena;
         private MapCreateLobby? _mapCreateLobby;
         private GangLobby? _gangLobby;
+        private CharCreateLobby? _charCreateLobby;
 
         private string? _customLobbyDatas;
 
@@ -117,6 +120,8 @@ namespace TDS_Server.Handler
 
                     LobbyType.GangLobby => ActivatorUtilities.CreateInstance<GangLobby>(_serviceProvider, lobbysetting),
 
+                    LobbyType.CharCreateLobby => ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, lobbysetting),
+
                     _ => ActivatorUtilities.CreateInstance<Lobby>(_serviceProvider, lobbysetting, false),
                 };
                 if (lobby is Arena arena)
@@ -127,6 +132,7 @@ namespace TDS_Server.Handler
             }
 
             _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
+            _settingsHandler.SyncedSettings.CharCreatorLobbyId = CharCreateLobbyDummy.Id;
             _settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Id;
 
             ExecuteForDB(dbContext =>
@@ -342,6 +348,16 @@ namespace TDS_Server.Handler
                         return null;
 
                     lobby = ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
+                    await lobby.AddToDB();
+                    _eventsHandler.OnLobbyCreated(lobby);
+                }
+                else if (lobby is CharCreateLobby)
+                {
+                    if (await lobby.IsPlayerBaned(player))
+                        return null;
+
+                    lobby = ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, player);
+                    await lobby.AddToDB();
                     _eventsHandler.OnLobbyCreated(lobby);
                 }
                 await lobby.AddPlayer(player, null);

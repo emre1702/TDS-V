@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef, HostListener, Sanitizer } from '@angular/core';
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatIconRegistry } from '@angular/material';
 import { RoundPlayerRankingStat } from './components/ranking/models/roundPlayerRankingStat';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
-import { DToClientEvent } from './enums/DToClientEvent.enum';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CharCreateData } from './components/char-creator/interfaces/charCreateData';
 
 @Component({
     selector: 'app-root',
@@ -42,16 +43,23 @@ export class AppComponent {
     showTeamChoice = false;
     showRankings = false;
     showHUD = false;
+    showCharCreator = false;
 
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;
+    charCreateData: CharCreateData;
 
     constructor(
         public settings: SettingsService,
-        private rageConnector: RageConnectorService,
+        rageConnector: RageConnectorService,
         changeDetector: ChangeDetectorRef,
         snackBar: MatSnackBar,
-        public vcRef: ViewContainerRef) {
+        public vcRef: ViewContainerRef,
+        iconRegistry: MatIconRegistry,
+        sanitizer: DomSanitizer) {
+
+        iconRegistry.addSvgIcon("man", sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));
+        iconRegistry.addSvgIcon("woman", sanitizer.bypassSecurityTrustResourceUrl('assets/woman.svg'));
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
@@ -104,6 +112,14 @@ export class AppComponent {
         rageConnector.listen(DFromClientEvent.HideRankings, () => {
             this.rankings = undefined;
             this.showRankings = false;
+            changeDetector.detectChanges();
+        });
+
+        rageConnector.listen(DFromClientEvent.ToggleCharCreator, (bool: boolean, dataJson: string) => {
+            if (dataJson.length) {
+                this.charCreateData = JSON.parse(dataJson);
+            }
+            this.showCharCreator = bool;
             changeDetector.detectChanges();
         });
 

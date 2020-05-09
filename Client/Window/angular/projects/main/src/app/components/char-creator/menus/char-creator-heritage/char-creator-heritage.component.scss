@@ -1,0 +1,54 @@
+.mat-list {
+    * {
+        width: 100%;
+    }
+
+    .select-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 15px;
+
+        span {
+            display: inline-flex;
+            align-items: center;
+        }
+    }
+
+    .slider-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 15px;
+
+        span {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .slider-in-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            .mat-icon {
+                vertical-align: middle;
+                width: 30px;
+                height: auto;
+
+                &:first-of-type {
+                    margin-right: 5px;
+                }
+
+                &:last-of-type {
+                    margin-left: 5px;
+                }
+            }
+        }
+    }
+}
+
+.margin-fake {
+    min-width: 10px !important;
+    height: 100%;
+}

@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Maps;
+using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Sync;
 using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Data.Enums;
@@ -32,7 +33,7 @@ namespace TDS_Server.Handler.Events
 
         public RemoteBrowserEventsHandler(UserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI)
+            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler)
         {
             _modAPI = modAPI;
             _loggingHandler = loggingHandler;
@@ -60,6 +61,8 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.SendSupportRequest] = userpanelHandler.SupportRequestHandler.SendRequest,
                 [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendMessage,
                 [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
+                [ToServerEvent.SaveCharCreateData] = playerCharHandler.Save,
+                [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel
             };
 
             _maybeAsyncMethods = new Dictionary<string, FromBrowserMaybeAsyncMethodDelegate>
@@ -82,8 +85,7 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.LeftSupportRequestsList] = userpanelHandler.SupportRequestHandler.LeftSupportRequestsList,
                 [ToServerEvent.LoadMapNamesToLoadForMapCreator] = mapCreatorHandler.SendPlayerMapNamesForMapCreator,
                 [ToServerEvent.LoadMapForMapCreator] = mapCreatorHandler.SendPlayerMapForMapCreator,
-                [ToServerEvent.MapCreatorSyncCurrentMapToServer] = mapCreatorHandler.SyncCurrentMapToClient
-
+                [ToServerEvent.MapCreatorSyncCurrentMapToServer] = mapCreatorHandler.SyncCurrentMapToClient,
             };
         }
 

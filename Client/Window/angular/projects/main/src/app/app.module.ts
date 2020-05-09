@@ -89,6 +89,13 @@ import { MentionDirective } from './extensions/mention/mentionDirective';
 import { MentionListComponent } from './extensions/mention/mentionListComponent';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
+import { CharCreatorComponent } from './components/char-creator/char-creator.component';
+import { CharCreatorMainmenuComponent } from './components/char-creator/menus/char-creator-mainmenu/char-creator-mainmenu.component';
+import { CharCreatorHeritageComponent } from './components/char-creator/menus/char-creator-heritage/char-creator-heritage.component';
+import { CharCreatorFeaturesComponent } from './components/char-creator/menus/char-creator-features/char-creator-features.component';
+import { CharCreatorAppearanceComponent } from './components/char-creator/menus/char-creator-appearance/char-creator-appearance.component';
+import { CharCreatorHairandcolorsComponent } from './components/char-creator/menus/char-creator-hairandcolors/char-creator-hairandcolors.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -139,7 +146,13 @@ import { CommonModule } from '@angular/common';
     HudComponent,
     CustomLobbyMapsMenuComponent,
     ChatComponent,
-    CustomLobbyWeaponsMenuComponent
+    CustomLobbyWeaponsMenuComponent,
+    CharCreatorComponent,
+    CharCreatorMainmenuComponent,
+    CharCreatorHeritageComponent,
+    CharCreatorFeaturesComponent,
+    CharCreatorAppearanceComponent,
+    CharCreatorHairandcolorsComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -178,7 +191,8 @@ import { CommonModule } from '@angular/common';
     MatCardModule,
     ClipboardModule,
     OverlayModule,
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
   entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent],
   providers: [

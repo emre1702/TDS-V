@@ -1,0 +1,22 @@
+.mat-list {
+    * {
+        width: 100%;
+    }
+
+    .mat-list-item  {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 15px;
+
+        ::ng-deep .mat-list-item-content {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+}
+
+.margin-fake {
+    min-width: 10px !important;
+    height: 100%;
+}

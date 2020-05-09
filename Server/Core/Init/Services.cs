@@ -82,6 +82,7 @@ namespace TDS_Server.Core.Init
                // Player
                .AddSingleton<ConnectedHandler>()
                .AddSingleton<TDSPlayerHandler>()
+               .AddSingleton<PlayerCharHandler>()
 
                // Server
                .AddSingleton<ServerInfoHandler>()
@@ -159,6 +160,7 @@ namespace TDS_Server.Core.Init
 
             serviceProvider.GetRequiredService<ConnectedHandler>();
             serviceProvider.GetRequiredService<TDSPlayerHandler>();
+            serviceProvider.GetRequiredService<PlayerCharHandler>();
 
             serviceProvider.GetRequiredService<ServerInfoHandler>();
             serviceProvider.GetRequiredService<ServerStartHandler>();
@@ -190,7 +192,6 @@ namespace TDS_Server.Core.Init
 
         internal static void InitDbContextOptionsBuilder(DbContextOptionsBuilder options, AppConfigHandler appConfigHandler, ILoggerFactory? loggerFactory)
         {
-            options.UseSnakeCaseNamingConvention();
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
 
             if (loggerFactory is { })

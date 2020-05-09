@@ -24,6 +24,7 @@ export enum DFromClientEvent {
     SyncTeamChoiceMenuData = "cb36",
     SyncUsernameChange = "cb42",
     ToggleChatInput = "cb41",
+    ToggleCharCreator = "cb7",
     ToggleChatOpened = "cb25",
     ToggleFreeroam = "cb26",
     ToggleHUD = "cb27",

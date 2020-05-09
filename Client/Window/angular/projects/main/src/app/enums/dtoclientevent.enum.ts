@@ -1,7 +1,9 @@
 export enum DToClientEvent {
     LoadMapForMapCreator = "b1",
+    CharCreatorDataChanged = "b10",
     ChatUsed = "b3",
     ChooseArenaToJoin = "b4",
+    ChooseCharCreatorToJoin = "b20",
     ChooseMapCreatorToJoin = "b5",
     CloseChat = "b6",
     CloseMapVotingMenu = "b7",

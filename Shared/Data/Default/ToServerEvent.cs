@@ -9,6 +9,7 @@
 
         public const string BuyMap = "c4";
 
+        public const string CancelCharCreateData = "c69";
         public const string ChooseTeam = "c6";
         public const string CommandUsed = "c7";
         public const string CreateCustomLobby = "c8";
@@ -56,6 +57,7 @@
         public const string RemoveMap = "c39";
         public const string RequestPlayersForScoreboard = "c40";
 
+        public const string SaveCharCreateData = "c29";
         public const string SaveMapCreatorData = "c41";
         public const string SaveSettings = "c42";
         public const string SaveSpecialSettingsChange = "c43";

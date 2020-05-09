@@ -4,6 +4,7 @@ using TDS_Server.Database.Entity.Admin;
 using TDS_Server.Database.Entity.Challenge;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Database.Entity.Player.Char;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Database.Entity.Userpanel;
 
@@ -66,6 +67,7 @@ namespace TDS_Server.Database.Entity.Player
         public virtual SupportRequests SupportRequests { get; set; }
         public virtual ICollection<SupportRequestMessages> SupportRequestMessages { get; set; }
         public virtual ICollection<GangHouses> CreatedHouses { get; set; }
+        public virtual PlayerCharDatas CharDatas { get; set; }
 
         public string GetDiscriminator()
         {

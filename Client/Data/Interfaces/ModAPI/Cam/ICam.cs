@@ -14,7 +14,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
         Position3D Rotation { get; set; }
 
         void Render(bool render, bool ease, int easeTime);
-        void AttachTo(IEntityBase ped, PedBone bone, int x, float y, float z, bool heading);
+        void AttachTo(IEntityBase ped, PedBone bone, float x, float y, float z, bool heading);
 
         void Detach();
 

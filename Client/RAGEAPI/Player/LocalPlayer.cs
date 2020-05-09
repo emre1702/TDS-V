@@ -125,7 +125,7 @@ namespace TDS_Client.RAGEAPI.Player
         public void GetParachuteSmokeTrailColor(ref int r, ref int g, ref int b)
             => RAGE.Game.Player.GetPlayerParachuteSmokeTrailColor(ref r, ref g, ref b);
 
-        public new void GetParachuteTintIndex(ref int tintIndex)
+        public void GetParachuteTintIndex(ref int tintIndex)
             => RAGE.Game.Player.GetPlayerParachuteTintIndex(ref tintIndex);
 
         public int GetPed()
@@ -549,7 +549,7 @@ namespace TDS_Client.RAGEAPI.Player
         public void SwitchCrimeType(int p1)
             => RAGE.Game.Player.SwitchCrimeType(p1);
 
-        public bool IsClimbing()
+        public new bool IsClimbing()
             => RAGE.Game.Player.IsPlayerClimbing();
     }
 }

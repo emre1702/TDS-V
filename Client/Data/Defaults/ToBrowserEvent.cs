@@ -29,6 +29,7 @@
         public const string SyncUsernameChange = "cb42";
         public const string ToggleChatInput = "cb41";
         public const string ToggleChatOpened = "cb25";
+        public const string ToggleCharCreator = "cb7";
         public const string ToggleFreeroam = "cb26";
         public const string ToggleHUD = "cb27";
         public const string ToggleInFightLobby = "cb28";

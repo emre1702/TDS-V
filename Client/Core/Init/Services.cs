@@ -2,6 +2,7 @@
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler;
 using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.CharCreator;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Draw.Dx;
@@ -45,7 +46,6 @@ namespace TDS_Client.Core.Init
                 new GangVehiclesHandler(modAPI, loggingHandler, dataSyncHandler, eventsHandler);
                 new GhostModeHandler(modAPI, loggingHandler, eventsHandler);
 
-
                 new SuicideAnimHandler(modAPI, loggingHandler, remoteEventsSender, utilsHandler);
 
                 var soundsHandler = new SoundsHandler(modAPI, loggingHandler, settingsHandler);
@@ -54,6 +54,7 @@ namespace TDS_Client.Core.Init
                 var deathHandler = new DeathHandler(modAPI, loggingHandler, settingsHandler, scaleformMessageHandler, eventsHandler, utilsHandler, browserHandler);
                 var camerasHandler = new CamerasHandler(modAPI, loggingHandler, utilsHandler, remoteEventsSender, bindsHandler, deathHandler, eventsHandler);
                 new UserpanelHandler(modAPI, loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler);
+                new CharCreatorHandler(modAPI, loggingHandler, browserHandler, serializer, deathHandler, camerasHandler, eventsHandler, cursorHandler, utilsHandler);
 
                 var registerLoginHandler = new RegisterLoginHandler(modAPI, loggingHandler, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, serializer, eventsHandler);
                 var voiceHandler = new VoiceHandler(modAPI, loggingHandler, bindsHandler, settingsHandler, browserHandler, utilsHandler, eventsHandler);

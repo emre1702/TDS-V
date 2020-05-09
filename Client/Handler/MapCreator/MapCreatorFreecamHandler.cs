@@ -104,7 +104,7 @@ namespace TDS_Client.Handler.MapCreator
             Position3D dir = cam.Direction;
             Position3D rot = cam.Rotation;
 
-            float rightAxisX = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisX) * 2f; //behave weird, fix
+            float rightAxisX = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisX) * 2f;
             float rightAxisY = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisY) * 2f;
 
             float leftAxisX = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptLeftAxisX);
@@ -125,7 +125,7 @@ namespace TDS_Client.Handler.MapCreator
                 Z = dir.Z * leftAxisY * slowMult * fastMult * _currentScrollSpeed
             };
             Position3D upVector = new Position3D(0, 0, 1);
-            Position3D rightVector = _utilsHandler.GetCrossProduct(dir.Normalized, upVector.Normalized); // Is this the same as * ?
+            Position3D rightVector = _utilsHandler.GetCrossProduct(dir.Normalized, upVector.Normalized);
 
             rightVector.X *= leftAxisX * 0.5f * slowMult * fastMult * _currentScrollSpeed;
             rightVector.Y *= leftAxisX * 0.5f * slowMult * fastMult * _currentScrollSpeed;

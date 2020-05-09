@@ -1,0 +1,26 @@
+<mat-list>
+    <ng-container *ngFor="let appearance of appearances; let i = index">
+        <mat-list-item>
+            <span>{{ appearance.Name | language: settings.Lang }}</span>
+            <div class="margin-fake"></div>
+            <mat-form-field color="accent">
+                <mat-select [(ngModel)]="data[i * 2]" (selectionChange)="onAppearanceDataChanged(i, i*2, $event)">
+                    <mat-option *ngFor="let item of appearance.Items; let i = index" [value]="i">
+                        {{ item | language: settings.Lang }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-list-item>
+        <mat-list-item>
+            <span>{{ appearance.Name | language: settings.Lang }} {{ 'Opacity' | language: settings.Lang }}:</span>
+            <div class="margin-fake"></div>
+            <mat-slider min="0" max="1" step="0.01" thumbLabel [(ngModel)]="data[i * 2 + 1]"
+                (change)="onAppearanceDataChanged(i, i*2 + 1, $event)" [displayWith]="getPercentage"></mat-slider>
+        </mat-list-item>
+    </ng-container>
+    <mat-list-item>
+        <button mat-button (click)="randomize()">
+            {{ "Randomize" | language: settings.Lang }}
+        </button>
+    </mat-list-item>
+</mat-list>

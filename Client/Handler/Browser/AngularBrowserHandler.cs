@@ -257,6 +257,11 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.SyncUsernameChange, name);
         }
 
+        public void ToggleCharCreator(bool toggle, string dataJson = "")
+        {
+            ExecuteFast(ToBrowserEvent.ToggleCharCreator, toggle, dataJson);
+        }
+
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             ResetMapVoting();

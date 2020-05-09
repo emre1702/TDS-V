@@ -10,6 +10,7 @@ using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Log;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Entity.Player.Char;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Database.Entity.Server;
 using TDS_Server.Database.Entity.Userpanel;
@@ -86,6 +87,12 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
         public virtual DbSet<PlayerBans> PlayerBans { get; set; }
         public virtual DbSet<PlayerChallenges> PlayerChallenges { get; set; }
+        public virtual DbSet<PlayerCharDatas> PlayerCharDatas { get; set; }
+        public virtual DbSet<PlayerCharAppearanceDatas> PlayerCharAppearanceDatas { get; set; }
+        public virtual DbSet<PlayerCharFeaturesDatas> PlayerCharFeaturesDatas { get; set; }
+        public virtual DbSet<PlayerCharGeneralDatas> PlayerCharGeneralDatas { get; set; }
+        public virtual DbSet<PlayerCharHairAndColorsDatas> PlayerCharHairAndColorsDatas { get; set; }
+        public virtual DbSet<PlayerCharHeritageDatas> PlayerCharHeritageDatas { get; set; }
         public virtual DbSet<PlayerClothes> PlayerClothes { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
@@ -788,6 +795,42 @@ namespace TDS_Server.Database.Entity
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
+            modelBuilder.Entity<PlayerCharDatas>(entity =>
+            {
+                entity.HasKey(e => e.PlayerId);
+
+                entity.Ignore(e => e.GeneralDataSynced);
+                entity.Ignore(e => e.HeritageDataSynced);
+                entity.Ignore(e => e.FeaturesDataSynced);
+                entity.Ignore(e => e.AppearanceDataSynced);
+                entity.Ignore(e => e.HairAndColorsDataSynced);
+
+                entity.HasOne(e => e.Player)
+                    .WithOne(d => d.CharDatas)
+                    .HasForeignKey<PlayerCharDatas>(e => e.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.GeneralData)
+                    .WithOne(d => d.CharDatas)
+                    .HasForeignKey<PlayerCharDatas>(e => e.GeneralDataId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.HeritageData)
+                    .WithOne(d => d.CharDatas)
+                    .HasForeignKey<PlayerCharDatas>(e => e.HeritageDataId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.FeaturesData)
+                    .WithOne(d => d.CharDatas)
+                    .HasForeignKey<PlayerCharDatas>(e => e.FeaturesDataId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.AppearanceData)
+                    .WithOne(d => d.CharDatas)
+                    .HasForeignKey<PlayerCharDatas>(e => e.AppearanceDataId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.HairAndColorsData)
+                    .WithOne(d => d.CharDatas)
+                    .HasForeignKey<PlayerCharDatas>(e => e.HairAndColorsDataId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<PlayerClothes>(entity =>
             {
                 entity.HasKey(e => e.PlayerId);
@@ -972,7 +1015,7 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.AdminLeaderId)
                     .IsRequired(false);
@@ -1316,7 +1359,10 @@ namespace TDS_Server.Database.Entity
                 new Lobbies { Id = -2, OwnerId = -1, Type = LobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true },
    
                 // only for map-creator ban
-                new Lobbies { Id = -3, OwnerId = -1, Type = LobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true }
+                new Lobbies { Id = -3, OwnerId = -1, Type = LobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true },
+
+                // only for char-creator ban
+                new Lobbies { Id = -5, OwnerId = -1, Type = LobbyType.CharCreateLobby, Name = "CharCreateLobby", IsTemporary = false, IsOfficial = true }
             };
             modelBuilder.Entity<Lobbies>().HasData(seedLobbies);
 

@@ -17,7 +17,7 @@ namespace TDS_Server.RAGEAPI
 
             hasError |= CheckIfEnumsAreNotEqual(typeof(GTANetworkAPI.WeaponHash), typeof(WeaponHash));
             hasError |= CheckIfEnumsAreNotEqual(typeof(GTANetworkAPI.Hash), typeof(NativeHash));
-            hasError |= CheckIfEnumsAreNotEqual(typeof(GTANetworkAPI.PedHash), typeof(Data.Enums.PedHash));
+            hasError |= CheckIfEnumsAreNotEqual(typeof(GTANetworkAPI.PedHash), typeof(PedHash));
             hasError |= CheckIfEnumsAreNotEqual(typeof(GTANetworkAPI.VehicleHash), typeof(VehicleHash));
 
             return hasError;

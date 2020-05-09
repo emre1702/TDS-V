@@ -2,6 +2,7 @@
 using TDS_Client.Data.Interfaces.ModAPI.Cam;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.ModAPI.Ped;
 using TDS_Client.Data.Models;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -72,7 +73,12 @@ namespace TDS_Client.Handler.Entities
             _loggingHandler.LogInfo("", "TDSCamera.SetPosition", true);
         }
 
-        public void Spectate(IEntityBase ped)
+        public void Spectate(IEntityBase entity)
+        {
+            //Todo
+        }
+
+        public void Spectate(IPedBase ped)
         {
             if (SpectatingEntity != null)
             {
@@ -81,6 +87,16 @@ namespace TDS_Client.Handler.Entities
 
             SpectatingEntity = ped;
             Cam.AttachTo(ped, PedBone.SKEL_Head, 0, -2f, 0.3f, true);
+
+            _modAPI.Streaming.SetFocusEntity(ped);
+            _camerasHandler.FocusAtPos = null;
+        }
+
+        public void LookAt(IPedBase ped, PedBone bone, float posOffsetX, float posOffsetY, float posOffsetZ, 
+            float lookAtOffsetX, float lookAtOffsetZ)
+        {
+            Cam.Position = ped.GetBoneCoords(bone, posOffsetZ, posOffsetY, posOffsetX);
+            Cam.PointAtCoord(ped.GetBoneCoords(bone, lookAtOffsetX, 0, lookAtOffsetZ));
 
             _modAPI.Streaming.SetFocusEntity(ped);
             _camerasHandler.FocusAtPos = null;
@@ -104,6 +120,11 @@ namespace TDS_Client.Handler.Entities
         public void Render(bool ease = false, int easeTime = 0)
         {
             Cam.Render(true, ease, easeTime);
+        }
+
+        public void Attach(IEntityBase ped, PedBone bone, int x, float y, float z, bool heading)
+        {
+            Cam.AttachTo(ped, bone, x, y, z, heading);
         }
 
         public void Detach()

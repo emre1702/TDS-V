@@ -8,6 +8,7 @@ using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Default;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Handler.Entities.Player
@@ -26,7 +27,7 @@ namespace TDS_Server.Handler.Entities.Player
         public ITDSVehicle? FreeroamVehicle { get; set; }
         public int VehicleSeat => ModPlayer?.VehicleSeat ?? -1;
 
-        public PedHash FreemodeSkin => Entity?.PlayerClothes.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
+        public PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
         public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel
             ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : ModPlayer.Name) : (Entity is { } ? Entity.Name : ModPlayer.Name));
         public bool IsVip => Entity?.IsVip ?? false;

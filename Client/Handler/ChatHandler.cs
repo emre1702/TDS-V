@@ -147,6 +147,12 @@ namespace TDS_Client.Handler
                 Logging.LogWarning((_camerasHandler.Spectating.IsSpectator ? "Is spectator" : "Is not spectator") + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + ((IPlayer)_camerasHandler.Spectating.SpectatingEntity).Name : "not spectating entity"), "ChatHandler.Command");
                 Logging.LogWarning(_camerasHandler.SpectateCam.Position.ToString() + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + _camerasHandler.Spectating.SpectatingEntity.Position.ToString() : "not spectating entity"), "ChatHandler.Command");
                 return;
+            } 
+            else if (msg == "campos" || msg == "camerapos")
+            {
+                ModAPI.Chat.Output("Position: " + _camerasHandler.ActiveCamera.Position.ToString());
+                ModAPI.Chat.Output("Rotation: " + _camerasHandler.ActiveCamera.Rotation.ToString());
+                return;
             }
             _remoteEventsSender.Send(ToServerEvent.CommandUsed, msg);
         }

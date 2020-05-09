@@ -51,7 +51,7 @@ namespace TDS_Server.Handler
             if (player.Entity is null)
                 return;
             if (player.Entity.PlayerClothes is null)
-                player.Entity.PlayerClothes = new PlayerClothes { IsMale = SharedUtils.GetRandom(true, false) };
+                player.Entity.PlayerClothes = new PlayerClothes();
         }
 
         private void ProcessItems(Item[] items, List<GenderOutfits> listToAddTo)

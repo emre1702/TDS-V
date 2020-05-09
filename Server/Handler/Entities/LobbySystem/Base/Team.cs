@@ -29,7 +29,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         protected ITeam GetTeamWithFewestPlayer()
         {
-            return Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+            return Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().First();
         }
 
         private void ClearTeamPlayersLists()

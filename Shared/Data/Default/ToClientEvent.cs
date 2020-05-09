@@ -67,6 +67,7 @@
         public const string SetPlayerData = "s56";
         public const string SetPlayerInvincible = "s57";
         public const string SpectatorReattachCam = "s59";
+        public const string StartCharCreator = "s20";
         public const string StartRankingShowAfterRound = "s60";
         public const string StartRegisterLogin = "s61";
         public const string StopBombPlantDefuse = "s62";

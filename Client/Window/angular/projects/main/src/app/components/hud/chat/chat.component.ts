@@ -17,6 +17,7 @@ declare const mp: {
     trigger(eventName: string, ...args: any): void;
     invoke(eventName: string, ...args: any): void;
 };
+declare const window: any;
 
 @Component({
     selector: 'app-chat',
@@ -86,6 +87,13 @@ export class ChatComponent implements OnInit, OnDestroy {
             mp.events.add("chat:clear", this.clearChat.bind(this));
             mp.events.add("chat:activate", this.activateChat.bind(this));
             mp.events.add("chat:show", this.showChat.bind(this));
+
+            window.chatAPI = {
+                push: this.addMessage.bind(this),
+                show: this.showChat.bind(this),
+                activate: this.activateChat.bind(this),
+                clear: this.clearChat.bind(this)
+            };
         }
 
         this.rageConnector.listen(DFromClientEvent.AddNameForChat, this.addNameForChat.bind(this));

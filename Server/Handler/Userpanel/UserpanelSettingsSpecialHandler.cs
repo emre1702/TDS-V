@@ -51,7 +51,7 @@ namespace TDS_Server.Handler.Userpanel
             string value = Convert.ToString(args[1])!;
             string password = Convert.ToString(args[2])!;
 
-            if (Utils.HashPWServer(password) != player.Entity.Password)
+            if (Utils.HashPasswordServer(password) != player.Entity.Password)
             {
                 return player.Language.WRONG_PASSWORD;
             }
@@ -82,7 +82,7 @@ namespace TDS_Server.Handler.Userpanel
                     break;
                 case UserpanelSettingsSpecialType.Password:
                     oldValue = player.Entity.Password;
-                    player.Entity.Password = Utils.HashPWServer(value);
+                    player.Entity.Password = Utils.HashPasswordServer(value);
                     break;
                 case UserpanelSettingsSpecialType.Email:
                     oldValue = player.Entity.Email;

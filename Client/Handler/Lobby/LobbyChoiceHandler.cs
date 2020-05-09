@@ -17,12 +17,18 @@ namespace TDS_Client.Handler.Lobby
             _settingsHandler = settingsHandler;
 
             modAPI.Event.Add(FromBrowserEvent.ChooseArenaToJoin, JoinArena);
+            modAPI.Event.Add(FromBrowserEvent.ChooseCharCreatorToJoin, JoinCharCreator);
             modAPI.Event.Add(FromBrowserEvent.ChooseMapCreatorToJoin, JoinMapCreator);
         }
 
         public void JoinArena(object[] args)
         {
             _remoteEventsSender.SendFromBrowser(ToServerEvent.JoinLobby, _settingsHandler.ArenaLobbyId);
+        }
+
+        public void JoinCharCreator(object[] args)
+        {
+            _remoteEventsSender.SendFromBrowser(ToServerEvent.JoinLobby, _settingsHandler.CharCreatorLobbyId);
         }
 
         public void JoinMapCreator(object[] args)

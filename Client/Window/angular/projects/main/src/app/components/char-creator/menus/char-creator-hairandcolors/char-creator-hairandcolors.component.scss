@@ -1,0 +1,22 @@
+.mat-list {
+    * {
+        width: 100%;
+    }
+
+    .select-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 15px;
+
+        span {
+            display: inline-flex;
+            align-items: center;
+        }
+    }
+}
+
+.margin-fake {
+    min-width: 10px !important;
+    height: 100%;
+}

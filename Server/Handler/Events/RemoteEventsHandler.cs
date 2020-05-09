@@ -4,15 +4,19 @@ using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Database.Entity.Player.Char;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
 using TDS_Server.Handler.Entities.GameModes.Bomb;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Maps;
+using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Sync;
 using TDS_Server.Handler.Userpanel;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Userpanel;
+using TDS_Shared.Data.Models.CharCreator;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Events
@@ -36,8 +40,10 @@ namespace TDS_Server.Handler.Events
             RegisterHandler registerHandler, ScoreboardHandler scoreboardHandler, LobbiesHandler lobbiesHandler,
             ILoggingHandler loggingHandler, IModAPI modAPI, DataSyncHandler dataSyncHandler,
             MapsRatingsHandler mapsRatingsHandler, MapCreatorHandler mapCreatorHandler, UserpanelHandler userpanelHandler)
+
             => (_chatHandler, _loginHandler, _commandsHandler, _registerHandler, _scoreboardHandler, _lobbiesHandler,
             _loggingHandler, _modAPI, _dataSyncHandler, _mapsRatingsHandler, _mapCreatorHandler, _userpanelHandler) 
+
             = (chatHandler, loginHandler, commandsHandler, registerHandler, scoreboardHandler, lobbiesHandler,
             loggingHandler, modAPI, dataSyncHandler, mapsRatingsHandler, mapCreatorHandler, userpanelHandler);
 
