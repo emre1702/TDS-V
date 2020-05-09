@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
@@ -25,6 +24,15 @@ namespace TDS_Server.Handler.Helper
         private readonly Serializer _serializer;
         private readonly IModAPI _modAPI;
 
+        private string _playerChallengesTableName = string.Empty;
+        private string _playerChallengesFrequencyColumnName = string.Empty;
+
+        private string _challengeSettingsTableName = string.Empty;
+        private string _challengeSettingsFrequencyColumnName = string.Empty;
+        private string _challengeSettingsMinNumberColumnName = string.Empty;
+        private string _challengeSettingsMaxNumberColumnName = string.Empty;
+        private string _challengeSettingsTypeColumnName = string.Empty;
+
         public ChallengesHelper(
             ISettingsHandler settingsHandler, 
             EventsHandler eventsHandler,
@@ -37,8 +45,48 @@ namespace TDS_Server.Handler.Helper
             _serializer = serializer;
             _modAPI = modAPI;
 
+            LoadPlayerChallengesTableData(dbContext);
+            LoadChallengeSettingsTableData(dbContext);
+
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.PlayerRegisteredBefore += EventsHandler_PlayerRegister;
+        }
+
+        private void LoadPlayerChallengesTableData(TDSDbContext dbContext)
+        {
+            var playerChallengesType = dbContext.Model.FindEntityType(typeof(PlayerChallenges));
+
+            _playerChallengesTableName = playerChallengesType.GetTableName();
+            var playerChallengesEntity = new PlayerChallenges();
+
+            _playerChallengesFrequencyColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Frequency)).GetColumnName();
+        }
+
+        private void LoadChallengeSettingsTableData(TDSDbContext dbContext)
+        {
+            var challengeSettingsType = dbContext.Model.FindEntityType(typeof(ChallengeSettings));
+
+            _challengeSettingsTableName = challengeSettingsType.GetTableName();
+            var challengeSettingsEntity = new ChallengeSettings();
+
+            foreach (var property in challengeSettingsType.GetProperties())
+            {
+                switch (property.Name)
+                {
+                    case nameof(challengeSettingsEntity.Frequency):
+                        _challengeSettingsFrequencyColumnName = property.GetColumnName();
+                        break;
+                    case nameof(challengeSettingsEntity.MinNumber):
+                        _challengeSettingsMinNumberColumnName = property.GetColumnName();
+                        break;
+                    case nameof(challengeSettingsEntity.MaxNumber):
+                        _challengeSettingsMaxNumberColumnName = property.GetColumnName();
+                        break;
+                    case nameof(challengeSettingsEntity.Type):
+                        _challengeSettingsTypeColumnName = property.GetColumnName();
+                        break;
+                }
+            }
         }
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer iplayer)
@@ -82,9 +130,7 @@ namespace TDS_Server.Handler.Helper
         {
             ExecuteForDB(dbContext =>
             { 
-                string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
-
-                string sql = $"DELETE FROM {playerChallengesTable} WHERE frequency = 'weekly'";
+                string sql = $"DELETE FROM \"{_playerChallengesTableName}\" WHERE {_playerChallengesFrequencyColumnName} = 'weekly'";
                 dbContext.Database.ExecuteSqlRaw(sql);
             }).Wait();
         }
@@ -93,22 +139,20 @@ namespace TDS_Server.Handler.Helper
         {
             await ExecuteForDBAsync(async dbContext =>
             {
-                string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
-                string challengeSettingsTable = dbContext.GetTableName(typeof(ChallengeSettings));
 
                 string sql = @$"
                 INSERT INTO 
-                    {playerChallengesTable}
+                    ""{_playerChallengesTableName}""
                 SELECT 
                     {player.Id},
-                    type,
-                    frequency,
-                    floor(random() * (max_number - min_number+1) + min_number)
+                    ""{_challengeSettingsTypeColumnName}"",
+                    ""{_challengeSettingsFrequencyColumnName}"",
+                    floor(random() * (""{_challengeSettingsMaxNumberColumnName}"" - ""{_challengeSettingsMinNumberColumnName}"" + 1) + ""{_challengeSettingsMinNumberColumnName}"")
                 FROM
-                    {challengeSettingsTable}
+                    ""{_challengeSettingsTableName}""
                 TABLESAMPLE SYSTEM_ROWS({_settingsHandler.ServerSettings.AmountWeeklyChallenges})
                 WHERE 
-                    frequency = 'weekly'
+                    ""{_challengeSettingsFrequencyColumnName}"" = 'weekly'
                 ";
                 await dbContext.Database.ExecuteSqlRawAsync(sql);
             });
@@ -119,21 +163,20 @@ namespace TDS_Server.Handler.Helper
         {
             await ExecuteForDBAsync(async dbContext =>
             {
-                string playerChallengesTable = dbContext.GetTableName(typeof(PlayerChallenges));
                 string challengeSettingsTable = dbContext.GetTableName(typeof(ChallengeSettings));
 
                 string sql = $@"
                     INSERT INTO 
-                        {playerChallengesTable}
+                        ""{_playerChallengesTableName}""
                     SELECT 
                         {dbPlayer.Id},
-                        type,
-                        frequency,
-                        max_number
+                        ""{_challengeSettingsTypeColumnName}"",
+                        ""{_challengeSettingsFrequencyColumnName}"",
+                        ""{_challengeSettingsMaxNumberColumnName}""
                     FROM
-                        {challengeSettingsTable}
+                        ""{challengeSettingsTable}""
                     WHERE 
-                        frequency = 'forever'
+                        ""{_challengeSettingsFrequencyColumnName}"" = 'forever'
                 ";
                 await dbContext.Database.ExecuteSqlRawAsync(sql);
             });
