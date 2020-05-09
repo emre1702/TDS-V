@@ -23,7 +23,7 @@ namespace TDS_Server.Database.Migrations
                 .HasAnnotation("Npgsql:Enum:challenge_type", "kills,assists,damage,play_time,round_played,bomb_defuse,bomb_plant,killstreak,buy_maps,review_maps,read_the_rules,read_the_faq,change_settings,join_discord_server,write_helpful_issue,creator_of_accepted_map,be_helpful_enough")
                 .HasAnnotation("Npgsql:Enum:freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .HasAnnotation("Npgsql:Enum:language", "german,english")
-                .HasAnnotation("Npgsql:Enum:lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby")
+                .HasAnnotation("Npgsql:Enum:lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,char_create_lobby")
                 .HasAnnotation("Npgsql:Enum:log_type", "kick,ban,mute,next,login,register,lobby_join,lobby_leave,lobby_kick,lobby_ban,goto,remove_map,voice_mute")
                 .HasAnnotation("Npgsql:Enum:map_limit_type", "kill_after_time,teleport_back_after_time,block,display")
                 .HasAnnotation("Npgsql:Enum:player_relation", "none,block,friend")
@@ -45,23 +45,19 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.Admin.AdminLevelNames", b =>
                 {
                     b.Property<short>("Level")
-                        .HasColumnName("level")
                         .HasColumnType("smallint");
 
                     b.Property<Language>("Language")
-                        .HasColumnName("language")
                         .HasColumnType("language");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("name")
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.HasKey("Level", "Language")
-                        .HasName("pk_admin_level_names");
+                    b.HasKey("Level", "Language");
 
-                    b.ToTable("admin_level_names");
+                    b.ToTable("AdminLevelNames");
 
                     b.HasData(
                         new
@@ -117,25 +113,20 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.Admin.AdminLevels", b =>
                 {
                     b.Property<short>("Level")
-                        .HasColumnName("level")
                         .HasColumnType("smallint");
 
                     b.Property<short>("ColorB")
-                        .HasColumnName("color_b")
                         .HasColumnType("smallint");
 
                     b.Property<short>("ColorG")
-                        .HasColumnName("color_g")
                         .HasColumnType("smallint");
 
                     b.Property<short>("ColorR")
-                        .HasColumnName("color_r")
                         .HasColumnType("smallint");
 
-                    b.HasKey("Level")
-                        .HasName("pk_admin_levels");
+                    b.HasKey("Level");
 
-                    b.ToTable("admin_levels");
+                    b.ToTable("AdminLevels");
 
                     b.HasData(
                         new
@@ -172,56 +163,44 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal?>("ActionsInfoChannelId")
-                        .HasColumnName("actions_info_channel_id")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<decimal?>("AdminApplicationsChannelId")
-                        .HasColumnName("admin_applications_channel_id")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<decimal?>("BansInfoChannelId")
-                        .HasColumnName("bans_info_channel_id")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<decimal?>("ErrorLogsChannelId")
-                        .HasColumnName("error_logs_channel_id")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<decimal?>("GuildId")
-                        .HasColumnName("guild_id")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<int>("RefreshServerStatsFrequencySec")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("refresh_server_stats_frequency_sec")
                         .HasColumnType("integer")
                         .HasDefaultValue(60);
 
                     b.Property<bool>("SendPrivateMessageOnBan")
-                        .HasColumnName("send_private_message_on_ban")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("SendPrivateMessageOnOfflineMessage")
-                        .HasColumnName("send_private_message_on_offline_message")
                         .HasColumnType("boolean");
 
                     b.Property<decimal?>("ServerInfosChannelId")
-                        .HasColumnName("server_infos_channel_id")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<decimal?>("SupportRequestsChannelId")
-                        .HasColumnName("support_requests_channel_id")
                         .HasColumnType("numeric(20,0)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_bonusbot_settings");
+                    b.HasKey("Id");
 
-                    b.ToTable("bonusbot_settings");
+                    b.ToTable("BonusbotSettings");
 
                     b.HasData(
                         new
@@ -243,29 +222,24 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.Challenge.ChallengeSettings", b =>
                 {
                     b.Property<ChallengeType>("Type")
-                        .HasColumnName("type")
                         .HasColumnType("challenge_type");
 
                     b.Property<ChallengeFrequency>("Frequency")
-                        .HasColumnName("frequency")
                         .HasColumnType("challenge_frequency");
 
                     b.Property<int>("MaxNumber")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("max_number")
                         .HasColumnType("integer")
                         .HasDefaultValue(1);
 
                     b.Property<int>("MinNumber")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("min_number")
                         .HasColumnType("integer")
                         .HasDefaultValue(1);
 
-                    b.HasKey("Type", "Frequency")
-                        .HasName("pk_challenge_settings");
+                    b.HasKey("Type", "Frequency");
 
-                    b.ToTable("challenge_settings");
+                    b.ToTable("ChallengeSettings");
 
                     b.HasData(
                         new
@@ -392,53 +366,43 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.Challenge.PlayerChallenges", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<ChallengeType>("Challenge")
-                        .HasColumnName("challenge")
                         .HasColumnType("challenge_type");
 
                     b.Property<ChallengeFrequency>("Frequency")
-                        .HasColumnName("frequency")
                         .HasColumnType("challenge_frequency");
 
                     b.Property<int>("Amount")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount")
                         .HasColumnType("integer")
                         .HasDefaultValue(1);
 
                     b.Property<int>("CurrentAmount")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("current_amount")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.HasKey("PlayerId", "Challenge", "Frequency")
-                        .HasName("pk_player_challenges");
+                    b.HasKey("PlayerId", "Challenge", "Frequency");
 
-                    b.ToTable("player_challenges");
+                    b.ToTable("PlayerChallenges");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Command.CommandAlias", b =>
                 {
                     b.Property<string>("Alias")
-                        .HasColumnName("alias")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<short>("Command")
-                        .HasColumnName("command")
                         .HasColumnType("smallint");
 
-                    b.HasKey("Alias", "Command")
-                        .HasName("pk_command_alias");
+                    b.HasKey("Alias", "Command");
 
-                    b.HasIndex("Command")
-                        .HasName("ix_command_alias_command");
+                    b.HasIndex("Command");
 
-                    b.ToTable("command_alias");
+                    b.ToTable("CommandAlias");
 
                     b.HasData(
                         new
@@ -946,23 +910,19 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.Command.CommandInfos", b =>
                 {
                     b.Property<short>("Id")
-                        .HasColumnName("id")
                         .HasColumnType("smallint");
 
                     b.Property<Language>("Language")
-                        .HasColumnName("language")
                         .HasColumnType("language");
 
                     b.Property<string>("Info")
                         .IsRequired()
-                        .HasColumnName("info")
                         .HasColumnType("character varying(500)")
                         .HasMaxLength(500);
 
-                    b.HasKey("Id", "Language")
-                        .HasName("pk_command_infos");
+                    b.HasKey("Id", "Language");
 
-                    b.ToTable("command_infos");
+                    b.ToTable("CommandInfos");
 
                     b.HasData(
                         new
@@ -1271,39 +1231,31 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("smallint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Command")
                         .IsRequired()
-                        .HasColumnName("command")
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
                     b.Property<bool>("LobbyOwnerCanUse")
-                        .HasColumnName("lobby_owner_can_use")
                         .HasColumnType("boolean");
 
                     b.Property<short?>("NeededAdminLevel")
-                        .HasColumnName("needed_admin_level")
                         .HasColumnType("smallint");
 
                     b.Property<short?>("NeededDonation")
-                        .HasColumnName("needed_donation")
                         .HasColumnType("smallint");
 
                     b.Property<bool>("VipCanUse")
-                        .HasColumnName("vip_can_use")
                         .HasColumnType("boolean");
 
-                    b.HasKey("Id")
-                        .HasName("pk_commands");
+                    b.HasKey("Id");
 
-                    b.HasIndex("NeededAdminLevel")
-                        .HasName("ix_commands_needed_admin_level");
+                    b.HasIndex("NeededAdminLevel");
 
-                    b.ToTable("commands");
+                    b.ToTable("Commands");
 
                     b.HasData(
                         new
@@ -1506,189 +1458,151 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("created")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<int>("CreatorId")
-                        .HasColumnName("creator_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastBought")
-                        .HasColumnName("last_bought")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<byte>("NeededGangLevel")
-                        .HasColumnName("needed_gang_level")
                         .HasColumnType("smallint");
 
                     b.Property<float>("PosX")
-                        .HasColumnName("pos_x")
                         .HasColumnType("real");
 
                     b.Property<float>("PosY")
-                        .HasColumnName("pos_y")
                         .HasColumnType("real");
 
                     b.Property<float>("PosZ")
-                        .HasColumnName("pos_z")
                         .HasColumnType("real");
 
                     b.Property<float>("Rot")
-                        .HasColumnName("rot")
                         .HasColumnType("real");
 
-                    b.HasKey("Id")
-                        .HasName("pk_gang_houses");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CreatorId")
-                        .HasName("ix_gang_houses_creator_id");
+                    b.HasIndex("CreatorId");
 
-                    b.ToTable("gang_houses");
+                    b.ToTable("GangHouses");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangLevelSettings", b =>
                 {
                     b.Property<byte>("Level")
-                        .HasColumnName("level")
                         .HasColumnType("smallint");
 
                     b.Property<bool>("CanChangeBlipColor")
-                        .HasColumnName("can_change_blip_color")
                         .HasColumnType("boolean");
 
                     b.Property<byte>("GangAreaSlots")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("gang_area_slots")
                         .HasColumnType("smallint")
                         .HasDefaultValue((byte)255);
 
                     b.Property<float>("HouseAreaRadius")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("house_area_radius")
                         .HasColumnType("real")
                         .HasDefaultValue(30f);
 
                     b.Property<int>("HousePrice")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("house_price")
                         .HasColumnType("integer")
                         .HasDefaultValue(2147483647);
 
                     b.Property<int>("NeededExperience")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("needed_experience")
                         .HasColumnType("integer")
                         .HasDefaultValue(2147483647);
 
                     b.Property<byte>("PlayerSlots")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("player_slots")
                         .HasColumnType("smallint")
                         .HasDefaultValue((byte)255);
 
                     b.Property<byte>("RankSlots")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("rank_slots")
                         .HasColumnType("smallint")
                         .HasDefaultValue((byte)255);
 
                     b.Property<int>("UpgradePrice")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("upgrade_price")
                         .HasColumnType("integer")
                         .HasDefaultValue(2147483647);
 
                     b.Property<byte>("VehicleSlots")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("vehicle_slots")
                         .HasColumnType("smallint")
                         .HasDefaultValue((byte)255);
 
-                    b.HasKey("Level")
-                        .HasName("pk_gang_level_settings");
+                    b.HasKey("Level");
 
-                    b.ToTable("gang_level_settings");
+                    b.ToTable("GangLevelSettings");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangMembers", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("GangId")
-                        .HasColumnName("gang_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("JoinTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("join_time")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<short>("Rank")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("rank")
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0);
 
                     b.Property<int?>("RankNavigationGangId")
-                        .HasColumnName("rank_navigation_gang_id")
                         .HasColumnType("integer");
 
                     b.Property<short?>("RankNavigationRank")
-                        .HasColumnName("rank_navigation_rank")
                         .HasColumnType("smallint");
 
-                    b.HasKey("PlayerId")
-                        .HasName("pk_gang_members");
+                    b.HasKey("PlayerId");
 
-                    b.HasIndex("GangId")
-                        .HasName("ix_gang_members_gang_id");
+                    b.HasIndex("GangId");
 
-                    b.HasIndex("RankNavigationGangId", "RankNavigationRank")
-                        .HasName("ix_gang_members_rank_navigation_gang_id_rank_navigation_rank");
+                    b.HasIndex("RankNavigationGangId", "RankNavigationRank");
 
-                    b.ToTable("gang_members");
+                    b.ToTable("GangMembers");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangRankPermissions", b =>
                 {
                     b.Property<int>("GangId")
-                        .HasColumnName("gang_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("InviteMembers")
-                        .HasColumnName("invite_members")
                         .HasColumnType("integer");
 
                     b.Property<int>("KickMembers")
-                        .HasColumnName("kick_members")
                         .HasColumnType("integer");
 
                     b.Property<int>("ManagePermissions")
-                        .HasColumnName("manage_permissions")
                         .HasColumnType("integer");
 
                     b.Property<int>("ManageRanks")
-                        .HasColumnName("manage_ranks")
                         .HasColumnType("integer");
 
                     b.Property<int>("StartGangwar")
-                        .HasColumnName("start_gangwar")
                         .HasColumnType("integer");
 
-                    b.HasKey("GangId")
-                        .HasName("pk_gang_rank_permissions");
+                    b.HasKey("GangId");
 
-                    b.ToTable("gang_rank_permissions");
+                    b.ToTable("GangRankPermissions");
 
                     b.HasData(
                         new
@@ -1705,21 +1619,17 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangRanks", b =>
                 {
                     b.Property<int>("GangId")
-                        .HasColumnName("gang_id")
                         .HasColumnType("integer");
 
                     b.Property<short>("Rank")
-                        .HasColumnName("rank")
                         .HasColumnType("smallint");
 
                     b.Property<string>("Name")
-                        .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.HasKey("GangId", "Rank")
-                        .HasName("pk_gang_ranks");
+                    b.HasKey("GangId", "Rank");
 
-                    b.ToTable("gang_ranks");
+                    b.ToTable("GangRanks");
 
                     b.HasData(
                         new
@@ -1733,183 +1643,147 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangStats", b =>
                 {
                     b.Property<int>("GangId")
-                        .HasColumnName("gang_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("AmountAttacks")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_attacks")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("AmountAttacksWon")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_attacks_won")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("AmountDefends")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_defends")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("AmountDefendsWon")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_defends_won")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("AmountMembersSoFar")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_members_so_far")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("Experience")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("experience")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("Money")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("money")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("PeakGangwarAreasOwned")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("peak_gangwar_areas_owned")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("TotalMoneySoFar")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("total_money_so_far")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.HasKey("GangId")
-                        .HasName("pk_gang_stats");
+                    b.HasKey("GangId");
 
-                    b.ToTable("gang_stats");
+                    b.ToTable("GangStats");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangVehicles", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Color1")
-                        .HasColumnName("color1")
                         .HasColumnType("integer");
 
                     b.Property<int>("Color2")
-                        .HasColumnName("color2")
                         .HasColumnType("integer");
 
                     b.Property<int>("GangId")
-                        .HasColumnName("gang_id")
                         .HasColumnType("integer");
 
                     b.Property<VehicleHash>("Model")
-                        .HasColumnName("model")
                         .HasColumnType("vehicle_hash");
 
                     b.Property<float>("SpawnPosX")
-                        .HasColumnName("spawn_pos_x")
                         .HasColumnType("real");
 
                     b.Property<float>("SpawnPosY")
-                        .HasColumnName("spawn_pos_y")
                         .HasColumnType("real");
 
                     b.Property<float>("SpawnPosZ")
-                        .HasColumnName("spawn_pos_z")
                         .HasColumnType("real");
 
                     b.Property<float>("SpawnRotX")
-                        .HasColumnName("spawn_rot_x")
                         .HasColumnType("real");
 
                     b.Property<float>("SpawnRotY")
-                        .HasColumnName("spawn_rot_y")
                         .HasColumnType("real");
 
                     b.Property<float>("SpawnRotZ")
-                        .HasColumnName("spawn_rot_z")
                         .HasColumnType("real");
 
-                    b.HasKey("Id")
-                        .HasName("pk_gang_vehicles");
+                    b.HasKey("Id");
 
-                    b.HasIndex("GangId")
-                        .HasName("ix_gang_vehicles_gang_id");
+                    b.HasIndex("GangId");
 
-                    b.ToTable("gang_vehicles");
+                    b.ToTable("GangVehicles");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.Gangs", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<byte>("BlipColor")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("blip_color")
                         .HasColumnType("smallint")
                         .HasDefaultValue((byte)1);
 
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("create_time")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<int?>("HouseId")
-                        .HasColumnName("house_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
-                        .HasColumnName("name")
                         .HasColumnType("text");
 
                     b.Property<int?>("OwnerId")
-                        .HasColumnName("owner_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("Short")
                         .IsRequired()
-                        .HasColumnName("short")
                         .HasColumnType("character varying(5)")
                         .HasMaxLength(5);
 
                     b.Property<int>("TeamId")
-                        .HasColumnName("team_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id")
-                        .HasName("pk_gangs");
+                    b.HasKey("Id");
 
                     b.HasIndex("HouseId")
-                        .IsUnique()
-                        .HasName("ix_gangs_house_id");
+                        .IsUnique();
 
                     b.HasIndex("OwnerId")
-                        .IsUnique()
-                        .HasName("ix_gangs_owner_id");
+                        .IsUnique();
 
-                    b.HasIndex("TeamId")
-                        .HasName("ix_gangs_team_id");
+                    b.HasIndex("TeamId");
 
-                    b.ToTable("gangs");
+                    b.ToTable("Gangs");
 
                     b.HasData(
                         new
@@ -1925,118 +1799,96 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangwarAreas", b =>
                 {
                     b.Property<int>("MapId")
-                        .HasColumnName("map_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("AttackCount")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("attack_count")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("DefendCount")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("defend_count")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<DateTime>("LastAttacked")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("last_attacked")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("'2019-1-1'::timestamp");
 
                     b.Property<int>("OwnerGangId")
-                        .HasColumnName("owner_gang_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("MapId")
-                        .HasName("pk_gangwar_areas");
+                    b.HasKey("MapId");
 
-                    b.HasIndex("OwnerGangId")
-                        .HasName("ix_gangwar_areas_owner_gang_id");
+                    b.HasIndex("OwnerGangId");
 
-                    b.ToTable("gangwar_areas");
+                    b.ToTable("GangwarAreas");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.Lobbies", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<float>("AroundSpawnPoint")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("around_spawn_point")
                         .HasColumnType("real")
                         .HasDefaultValueSql("3");
 
                     b.Property<DateTime>("CreateTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("create_timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<float>("DefaultSpawnRotation")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("default_spawn_rotation")
                         .HasColumnType("real")
                         .HasDefaultValueSql("0");
 
                     b.Property<float>("DefaultSpawnX")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("default_spawn_x")
                         .HasColumnType("real")
                         .HasDefaultValueSql("0");
 
                     b.Property<float>("DefaultSpawnY")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("default_spawn_y")
                         .HasColumnType("real")
                         .HasDefaultValueSql("0");
 
                     b.Property<float>("DefaultSpawnZ")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("default_spawn_z")
                         .HasColumnType("real")
                         .HasDefaultValueSql("9000");
 
                     b.Property<bool>("IsOfficial")
-                        .HasColumnName("is_official")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsTemporary")
-                        .HasColumnName("is_temporary")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("name")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<int>("OwnerId")
-                        .HasColumnName("owner_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("Password")
-                        .HasColumnName("password")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<LobbyType>("Type")
-                        .HasColumnName("type")
                         .HasColumnType("lobby_type");
 
-                    b.HasKey("Id")
-                        .HasName("pk_lobbies");
+                    b.HasKey("Id");
 
-                    b.HasIndex("OwnerId")
-                        .HasName("ix_lobbies_owner_id");
+                    b.HasIndex("OwnerId");
 
-                    b.ToTable("lobbies");
+                    b.ToTable("Lobbies");
 
                     b.HasData(
                         new
@@ -2098,43 +1950,52 @@ namespace TDS_Server.Database.Migrations
                             Name = "MapCreateLobby",
                             OwnerId = -1,
                             Type = LobbyType.MapCreateLobby
+                        },
+                        new
+                        {
+                            Id = -5,
+                            AroundSpawnPoint = 0f,
+                            CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DefaultSpawnRotation = 0f,
+                            DefaultSpawnX = 0f,
+                            DefaultSpawnY = 0f,
+                            DefaultSpawnZ = 0f,
+                            IsOfficial = true,
+                            IsTemporary = false,
+                            Name = "CharCreateLobby",
+                            OwnerId = -1,
+                            Type = LobbyType.CharCreateLobby
                         });
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyFightSettings", b =>
                 {
                     b.Property<int>("LobbyId")
-                        .HasColumnName("lobby_id")
                         .HasColumnType("integer");
 
                     b.Property<short>("AmountLifes")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_lifes")
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)1);
 
                     b.Property<int>("SpawnAgainAfterDeathMs")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("spawn_again_after_death_ms")
                         .HasColumnType("integer")
                         .HasDefaultValue(400);
 
                     b.Property<short>("StartArmor")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("start_armor")
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)100);
 
                     b.Property<short>("StartHealth")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("start_health")
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)100);
 
-                    b.HasKey("LobbyId")
-                        .HasName("pk_lobby_fight_settings");
+                    b.HasKey("LobbyId");
 
-                    b.ToTable("lobby_fight_settings");
+                    b.ToTable("LobbyFightSettings");
 
                     b.HasData(
                         new
@@ -2150,29 +2011,23 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyKillingspreeRewards", b =>
                 {
                     b.Property<int>("LobbyId")
-                        .HasColumnName("lobby_id")
                         .HasColumnType("integer");
 
                     b.Property<short>("KillsAmount")
-                        .HasColumnName("kills_amount")
                         .HasColumnType("smallint");
 
                     b.Property<short?>("HealthOrArmor")
-                        .HasColumnName("health_or_armor")
                         .HasColumnType("smallint");
 
                     b.Property<short?>("OnlyArmor")
-                        .HasColumnName("only_armor")
                         .HasColumnType("smallint");
 
                     b.Property<short?>("OnlyHealth")
-                        .HasColumnName("only_health")
                         .HasColumnType("smallint");
 
-                    b.HasKey("LobbyId", "KillsAmount")
-                        .HasName("pk_killingspree_rewards");
+                    b.HasKey("LobbyId", "KillsAmount");
 
-                    b.ToTable("killingspree_rewards");
+                    b.ToTable("KillingspreeRewards");
 
                     b.HasData(
                         new
@@ -2204,23 +2059,19 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyMapSettings", b =>
                 {
                     b.Property<int>("LobbyId")
-                        .HasColumnName("lobby_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("MapLimitTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("map_limit_time")
                         .HasColumnType("integer")
                         .HasDefaultValueSql("10");
 
                     b.Property<MapLimitType>("MapLimitType")
-                        .HasColumnName("map_limit_type")
                         .HasColumnType("map_limit_type");
 
-                    b.HasKey("LobbyId")
-                        .HasName("pk_lobby_map_settings");
+                    b.HasKey("LobbyId");
 
-                    b.ToTable("lobby_map_settings");
+                    b.ToTable("LobbyMapSettings");
 
                     b.HasData(
                         new
@@ -2234,20 +2085,16 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyMaps", b =>
                 {
                     b.Property<int>("LobbyId")
-                        .HasColumnName("lobby_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("MapId")
-                        .HasColumnName("map_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("LobbyId", "MapId")
-                        .HasName("pk_lobby_maps");
+                    b.HasKey("LobbyId", "MapId");
 
-                    b.HasIndex("MapId")
-                        .HasName("ix_lobby_maps_map_id");
+                    b.HasIndex("MapId");
 
-                    b.ToTable("lobby_maps");
+                    b.ToTable("LobbyMaps");
 
                     b.HasData(
                         new
@@ -2260,25 +2107,20 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyRewards", b =>
                 {
                     b.Property<int>("LobbyId")
-                        .HasColumnName("lobby_id")
                         .HasColumnType("integer");
 
                     b.Property<double>("MoneyPerAssist")
-                        .HasColumnName("money_per_assist")
                         .HasColumnType("double precision");
 
                     b.Property<double>("MoneyPerDamage")
-                        .HasColumnName("money_per_damage")
                         .HasColumnType("double precision");
 
                     b.Property<double>("MoneyPerKill")
-                        .HasColumnName("money_per_kill")
                         .HasColumnType("double precision");
 
-                    b.HasKey("LobbyId")
-                        .HasName("pk_lobby_rewards");
+                    b.HasKey("LobbyId");
 
-                    b.ToTable("lobby_rewards");
+                    b.ToTable("LobbyRewards");
 
                     b.HasData(
                         new
@@ -2300,51 +2142,42 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyRoundSettings", b =>
                 {
                     b.Property<int>("LobbyId")
-                        .HasColumnName("lobby_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("BombDefuseTimeMs")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("bomb_defuse_time_ms")
                         .HasColumnType("integer")
                         .HasDefaultValueSql("8000");
 
                     b.Property<int>("BombDetonateTimeMs")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("bomb_detonate_time_ms")
                         .HasColumnType("integer")
                         .HasDefaultValueSql("45000");
 
                     b.Property<int>("BombPlantTimeMs")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("bomb_plant_time_ms")
                         .HasColumnType("integer")
                         .HasDefaultValueSql("3000");
 
                     b.Property<int>("CountdownTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("countdown_time")
                         .HasColumnType("integer")
                         .HasDefaultValueSql("5");
 
                     b.Property<bool>("MixTeamsAfterRound")
-                        .HasColumnName("mix_teams_after_round")
                         .HasColumnType("boolean");
 
                     b.Property<int>("RoundTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("round_time")
                         .HasColumnType("integer")
                         .HasDefaultValueSql("240");
 
                     b.Property<bool>("ShowRanking")
-                        .HasColumnName("show_ranking")
                         .HasColumnType("boolean");
 
-                    b.HasKey("LobbyId")
-                        .HasName("pk_lobby_round_settings");
+                    b.HasKey("LobbyId");
 
-                    b.ToTable("lobby_round_settings");
+                    b.ToTable("LobbyRoundSettings");
 
                     b.HasData(
                         new
@@ -2363,32 +2196,25 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyWeapons", b =>
                 {
                     b.Property<WeaponHash>("Hash")
-                        .HasColumnName("hash")
                         .HasColumnType("weapon_hash");
 
                     b.Property<int>("Lobby")
-                        .HasColumnName("lobby")
                         .HasColumnType("integer");
 
                     b.Property<int>("Ammo")
-                        .HasColumnName("ammo")
                         .HasColumnType("integer");
 
                     b.Property<float?>("Damage")
-                        .HasColumnName("damage")
                         .HasColumnType("real");
 
                     b.Property<float?>("HeadMultiplicator")
-                        .HasColumnName("head_multiplicator")
                         .HasColumnType("real");
 
-                    b.HasKey("Hash", "Lobby")
-                        .HasName("pk_lobby_weapons");
+                    b.HasKey("Hash", "Lobby");
 
-                    b.HasIndex("Lobby")
-                        .HasName("ix_lobby_weapons_lobby");
+                    b.HasIndex("Lobby");
 
-                    b.ToTable("lobby_weapons");
+                    b.ToTable("LobbyWeapons");
 
                     b.HasData(
                         new
@@ -2961,764 +2787,895 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<bool>("AsDonator")
-                        .HasColumnName("as_donator")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("AsVip")
-                        .HasColumnName("as_vip")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LengthOrEndTime")
-                        .HasColumnName("length_or_end_time")
                         .HasColumnType("text");
 
                     b.Property<int?>("Lobby")
-                        .HasColumnName("lobby")
                         .HasColumnType("integer");
 
                     b.Property<string>("Reason")
                         .IsRequired()
-                        .HasColumnName("reason")
                         .HasColumnType("text");
 
                     b.Property<int>("Source")
-                        .HasColumnName("source")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Target")
-                        .HasColumnName("target")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<LogType>("Type")
-                        .HasColumnName("type")
                         .HasColumnType("log_type");
 
-                    b.HasKey("Id")
-                        .HasName("pk_log_admins");
+                    b.HasKey("Id");
 
-                    b.ToTable("log_admins");
+                    b.ToTable("LogAdmins");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogChats", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<bool>("IsAdminChat")
-                        .HasColumnName("is_admin_chat")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsTeamChat")
-                        .HasColumnName("is_team_chat")
                         .HasColumnType("boolean");
 
                     b.Property<int?>("Lobby")
-                        .HasColumnName("lobby")
                         .HasColumnType("integer");
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnName("message")
                         .HasColumnType("text");
 
                     b.Property<int>("Source")
-                        .HasColumnName("source")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Target")
-                        .HasColumnName("target")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.HasKey("Id")
-                        .HasName("pk_log_chats");
+                    b.HasKey("Id");
 
-                    b.ToTable("log_chats");
+                    b.ToTable("LogChats");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogErrors", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("Info")
                         .IsRequired()
-                        .HasColumnName("info")
                         .HasColumnType("text");
 
                     b.Property<int?>("Source")
-                        .HasColumnName("source")
                         .HasColumnType("integer");
 
                     b.Property<string>("StackTrace")
-                        .HasColumnName("stack_trace")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.HasKey("Id")
-                        .HasName("pk_log_errors");
+                    b.HasKey("Id");
 
-                    b.ToTable("log_errors");
+                    b.ToTable("LogErrors");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogKills", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<int>("DeadId")
-                        .HasColumnName("dead_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("KillerId")
-                        .HasColumnName("killer_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<long>("WeaponId")
-                        .HasColumnName("weapon_id")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id")
-                        .HasName("pk_log_kills");
+                    b.HasKey("Id");
 
-                    b.ToTable("log_kills");
+                    b.ToTable("LogKills");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogRests", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<IPAddress>("Ip")
-                        .HasColumnName("ip")
                         .HasColumnType("inet");
 
                     b.Property<int?>("Lobby")
-                        .HasColumnName("lobby")
                         .HasColumnType("integer");
 
                     b.Property<string>("Serial")
-                        .HasColumnName("serial")
                         .HasColumnType("character varying(200)")
                         .HasMaxLength(200);
 
                     b.Property<int>("Source")
-                        .HasColumnName("source")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<LogType>("Type")
-                        .HasColumnName("type")
                         .HasColumnType("log_type");
 
-                    b.HasKey("Id")
-                        .HasName("pk_log_rests");
+                    b.HasKey("Id");
 
-                    b.ToTable("log_rests");
+                    b.ToTable("LogRests");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharAppearanceDatas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("AddBodyBlemishes")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("AddBodyBlemishesOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Ageing")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("AgeingOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Blemishes")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("BlemishesOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Blush")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("BlushOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("BodyBlemishes")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("BodyBlemishesOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ChestHair")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("ChestHairOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Complexion")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("ComplexionOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Eyebrows")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("EyebrowsOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("FacialHair")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("FacialHairOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Lipstick")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("LipstickOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Makeup")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("MakeupOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("MolesAndFreckles")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("MolesAndFrecklesOpacity")
+                        .HasColumnType("real");
+
+                    b.Property<int>("SunDamage")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("SunDamageOpacity")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayerCharAppearanceDatas");
+
+                    b.HasDiscriminator();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AppearanceDataId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FeaturesDataId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GeneralDataId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HairAndColorsDataId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HeritageDataId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PlayerId");
+
+                    b.HasIndex("AppearanceDataId")
+                        .IsUnique();
+
+                    b.HasIndex("FeaturesDataId")
+                        .IsUnique();
+
+                    b.HasIndex("GeneralDataId")
+                        .IsUnique();
+
+                    b.HasIndex("HairAndColorsDataId")
+                        .IsUnique();
+
+                    b.HasIndex("HeritageDataId")
+                        .IsUnique();
+
+                    b.ToTable("PlayerCharDatas");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharFeaturesDatas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<float>("BrowHeight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("BrowWidth")
+                        .HasColumnType("real");
+
+                    b.Property<float>("CheekboneHeight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("CheekboneWidth")
+                        .HasColumnType("real");
+
+                    b.Property<float>("CheeksWidth")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ChinLength")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ChinPosition")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ChinShape")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ChinWidth")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Eyes")
+                        .HasColumnType("real");
+
+                    b.Property<float>("JawHeight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("JawWidth")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Lips")
+                        .HasColumnType("real");
+
+                    b.Property<float>("NeckWidth")
+                        .HasColumnType("real");
+
+                    b.Property<float>("NoseBridge")
+                        .HasColumnType("real");
+
+                    b.Property<float>("NoseBridgeShift")
+                        .HasColumnType("real");
+
+                    b.Property<float>("NoseHeight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("NoseLength")
+                        .HasColumnType("real");
+
+                    b.Property<float>("NoseTip")
+                        .HasColumnType("real");
+
+                    b.Property<float>("NoseWidth")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayerCharFeaturesDatas");
+
+                    b.HasDiscriminator();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharGeneralDatas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<bool>("IsMale")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayerCharGeneralDatas");
+
+                    b.HasDiscriminator();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharHairAndColorsDatas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("BlushColor")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ChestHairColor")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EyeColor")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EyebrowColor")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FacialHairColor")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Hair")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HairColor")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HairHighlightColor")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LipstickColor")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayerCharHairAndColorsDatas");
+
+                    b.HasDiscriminator();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharHeritageDatas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("FatherIndex")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MotherIndex")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("ResemblancePercentage")
+                        .HasColumnType("real");
+
+                    b.Property<float>("SkinTonePercentage")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayerCharHeritageDatas");
+
+                    b.HasDiscriminator();
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerBans", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("LobbyId")
-                        .HasColumnName("lobby_id")
                         .HasColumnType("integer");
 
                     b.Property<int?>("AdminId")
-                        .HasColumnName("admin_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("EndTimestamp")
-                        .HasColumnName("end_timestamp")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("IP")
-                        .HasColumnName("ip")
                         .HasColumnType("text");
 
                     b.Property<bool>("PreventConnection")
-                        .HasColumnName("prevent_connection")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Reason")
                         .IsRequired()
-                        .HasColumnName("reason")
                         .HasColumnType("text");
 
                     b.Property<decimal?>("SCId")
-                        .HasColumnName("sc_id")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<string>("SCName")
-                        .HasColumnName("sc_name")
                         .HasColumnType("text");
 
                     b.Property<string>("Serial")
-                        .HasColumnName("serial")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("start_timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.HasKey("PlayerId", "LobbyId")
-                        .HasName("pk_player_bans");
+                    b.HasKey("PlayerId", "LobbyId");
 
-                    b.HasIndex("AdminId")
-                        .HasName("ix_player_bans_admin_id");
+                    b.HasIndex("AdminId");
 
-                    b.HasIndex("IP")
-                        .HasName("ix_player_bans_ip");
+                    b.HasIndex("IP");
 
-                    b.HasIndex("LobbyId")
-                        .HasName("ix_player_bans_lobby_id");
+                    b.HasIndex("LobbyId");
 
-                    b.HasIndex("SCId")
-                        .HasName("ix_player_bans_sc_id");
+                    b.HasIndex("SCId");
 
-                    b.HasIndex("SCName")
-                        .HasName("ix_player_bans_sc_name");
+                    b.HasIndex("SCName");
 
-                    b.HasIndex("Serial")
-                        .HasName("ix_player_bans_serial");
+                    b.HasIndex("Serial");
 
-                    b.ToTable("player_bans");
+                    b.ToTable("PlayerBans");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerClothes", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsMale")
-                        .HasColumnName("is_male")
-                        .HasColumnType("boolean");
+                    b.HasKey("PlayerId");
 
-                    b.HasKey("PlayerId")
-                        .HasName("pk_player_clothes");
-
-                    b.ToTable("player_clothes");
+                    b.ToTable("PlayerClothes");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerLobbyStats", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("LobbyId")
-                        .HasColumnName("lobby_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("Assists")
-                        .HasColumnName("assists")
                         .HasColumnType("integer");
 
                     b.Property<int>("Damage")
-                        .HasColumnName("damage")
                         .HasColumnType("integer");
 
                     b.Property<int>("Deaths")
-                        .HasColumnName("deaths")
                         .HasColumnType("integer");
 
                     b.Property<int>("Kills")
-                        .HasColumnName("kills")
                         .HasColumnType("integer");
 
                     b.Property<int>("MostAssistsInARound")
-                        .HasColumnName("most_assists_in_a_round")
                         .HasColumnType("integer");
 
                     b.Property<int>("MostDamageInARound")
-                        .HasColumnName("most_damage_in_a_round")
                         .HasColumnType("integer");
 
                     b.Property<int>("MostKillsInARound")
-                        .HasColumnName("most_kills_in_a_round")
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalAssists")
-                        .HasColumnName("total_assists")
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalDamage")
-                        .HasColumnName("total_damage")
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalDeaths")
-                        .HasColumnName("total_deaths")
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalKills")
-                        .HasColumnName("total_kills")
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalMapsBought")
-                        .HasColumnName("total_maps_bought")
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalRounds")
-                        .HasColumnName("total_rounds")
                         .HasColumnType("integer");
 
-                    b.HasKey("PlayerId", "LobbyId")
-                        .HasName("pk_player_lobby_stats");
+                    b.HasKey("PlayerId", "LobbyId");
 
-                    b.HasIndex("LobbyId")
-                        .HasName("ix_player_lobby_stats_lobby_id");
+                    b.HasIndex("LobbyId");
 
-                    b.ToTable("player_lobby_stats");
+                    b.ToTable("PlayerLobbyStats");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerMapFavourites", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("MapId")
-                        .HasColumnName("map_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("PlayerId", "MapId")
-                        .HasName("pk_player_map_favourites");
+                    b.HasKey("PlayerId", "MapId");
 
-                    b.HasIndex("MapId")
-                        .HasName("ix_player_map_favourites_map_id");
+                    b.HasIndex("MapId");
 
-                    b.ToTable("player_map_favourites");
+                    b.ToTable("PlayerMapFavourites");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerMapRatings", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("MapId")
-                        .HasColumnName("map_id")
                         .HasColumnType("integer");
 
                     b.Property<short>("Rating")
-                        .HasColumnName("rating")
                         .HasColumnType("smallint");
 
-                    b.HasKey("PlayerId", "MapId")
-                        .HasName("pk_player_map_ratings");
+                    b.HasKey("PlayerId", "MapId");
 
-                    b.HasIndex("MapId")
-                        .HasName("ix_player_map_ratings_map_id");
+                    b.HasIndex("MapId");
 
-                    b.ToTable("player_map_ratings");
+                    b.ToTable("PlayerMapRatings");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerRelations", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("TargetId")
-                        .HasColumnName("target_id")
                         .HasColumnType("integer");
 
                     b.Property<PlayerRelation>("Relation")
-                        .HasColumnName("relation")
                         .HasColumnType("player_relation");
 
-                    b.HasKey("PlayerId", "TargetId")
-                        .HasName("pk_player_relations");
+                    b.HasKey("PlayerId", "TargetId");
 
-                    b.HasIndex("TargetId")
-                        .HasName("ix_player_relations_target_id");
+                    b.HasIndex("TargetId");
 
-                    b.ToTable("player_relations");
+                    b.ToTable("PlayerRelations");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerSettings", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("AFKKickAfterSeconds")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("afk_kick_after_seconds")
                         .HasColumnType("integer")
                         .HasDefaultValue(25);
 
                     b.Property<int>("AFKKickShowWarningLastSeconds")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("afk_kick_show_warning_last_seconds")
                         .HasColumnType("integer")
                         .HasDefaultValue(10);
 
                     b.Property<bool>("AllowDataTransfer")
-                        .HasColumnName("allow_data_transfer")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("Bloodscreen")
-                        .HasColumnName("bloodscreen")
                         .HasColumnType("boolean");
 
                     b.Property<int>("BloodscreenCooldownMs")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("bloodscreen_cooldown_ms")
                         .HasColumnType("integer")
                         .HasDefaultValue(150);
 
                     b.Property<float>("ChatFontSize")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("chat_font_size")
                         .HasColumnType("real")
                         .HasDefaultValue(1.4f);
 
                     b.Property<float>("ChatMaxHeight")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("chat_max_height")
                         .HasColumnType("real")
                         .HasDefaultValue(35f);
 
                     b.Property<float>("ChatWidth")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("chat_width")
                         .HasColumnType("real")
                         .HasDefaultValue(30f);
 
                     b.Property<bool>("CheckAFK")
-                        .HasColumnName("check_afk")
                         .HasColumnType("boolean");
 
                     b.Property<string>("DateTimeFormat")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("date_time_format")
                         .HasColumnType("text")
                         .HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
 
                     b.Property<decimal>("DiscordUserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("discord_user_id")
                         .HasColumnType("numeric(20,0)")
                         .HasDefaultValue(0m);
 
                     b.Property<bool>("FloatingDamageInfo")
-                        .HasColumnName("floating_damage_info")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HideDirtyChat")
-                        .HasColumnName("hide_dirty_chat")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("Hitsound")
-                        .HasColumnName("hitsound")
                         .HasColumnType("boolean");
 
                     b.Property<int>("HudAmmoUpdateCooldownMs")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("hud_ammo_update_cooldown_ms")
                         .HasColumnType("integer")
                         .HasDefaultValue(100);
 
                     b.Property<int>("HudHealthUpdateCooldownMs")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("hud_health_update_cooldown_ms")
                         .HasColumnType("integer")
                         .HasDefaultValue(100);
 
                     b.Property<Language>("Language")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("language")
                         .HasColumnType("language")
                         .HasDefaultValue(Language.English);
 
                     b.Property<string>("MapBorderColor")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("map_border_color")
                         .HasColumnType("text")
                         .HasDefaultValue("rgba(150,0,0,0.35)");
 
                     b.Property<string>("NametagArmorEmptyColor")
-                        .HasColumnName("nametag_armor_empty_color")
                         .HasColumnType("text");
 
                     b.Property<string>("NametagArmorFullColor")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_armor_full_color")
                         .HasColumnType("text")
                         .HasDefaultValue("rgba(255, 255, 255, 1)");
 
                     b.Property<string>("NametagDeadColor")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_dead_color")
                         .HasColumnType("text")
                         .HasDefaultValue("rgba(0, 0, 0, 1)");
 
                     b.Property<string>("NametagHealthEmptyColor")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_health_empty_color")
                         .HasColumnType("text")
                         .HasDefaultValue("rgba(50, 0, 0, 1)");
 
                     b.Property<string>("NametagHealthFullColor")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_health_full_color")
                         .HasColumnType("text")
                         .HasDefaultValue("rgba(0, 255, 0, 1)");
 
                     b.Property<ScoreboardPlayerSorting>("ScoreboardPlayerSorting")
-                        .HasColumnName("scoreboard_player_sorting")
                         .HasColumnType("scoreboard_player_sorting");
 
                     b.Property<bool>("ScoreboardPlayerSortingDesc")
-                        .HasColumnName("scoreboard_player_sorting_desc")
                         .HasColumnType("boolean");
 
                     b.Property<TimeSpanUnitsOfTime>("ScoreboardPlaytimeUnit")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("scoreboard_playtime_unit")
                         .HasColumnType("time_span_units_of_time")
                         .HasDefaultValue(TimeSpanUnitsOfTime.HourMinute);
 
                     b.Property<bool>("ShowConfettiAtRanking")
-                        .HasColumnName("show_confetti_at_ranking")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("ShowCursorOnChatOpen")
-                        .HasColumnName("show_cursor_on_chat_open")
                         .HasColumnType("boolean");
 
                     b.Property<int>("ShowFloatingDamageInfoDurationMs")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("show_floating_damage_info_duration_ms")
                         .HasColumnType("integer")
                         .HasDefaultValue(1000);
 
                     b.Property<string>("Timezone")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("timezone")
                         .HasColumnType("text")
                         .HasDefaultValue("UTC");
 
                     b.Property<bool>("Voice3D")
-                        .HasColumnName("voice3d")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("VoiceAutoVolume")
-                        .HasColumnName("voice_auto_volume")
                         .HasColumnType("boolean");
 
                     b.Property<float>("VoiceVolume")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("voice_volume")
                         .HasColumnType("real")
                         .HasDefaultValue(6f);
 
                     b.Property<bool>("WindowsNotifications")
-                        .HasColumnName("windows_notifications")
                         .HasColumnType("boolean");
 
-                    b.HasKey("PlayerId")
-                        .HasName("pk_player_settings");
+                    b.HasKey("PlayerId");
 
-                    b.ToTable("player_settings");
+                    b.ToTable("PlayerSettings");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerStats", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastFreeUsernameChange")
-                        .HasColumnName("last_free_username_change")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("LastLoginTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("last_login_timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<DateTime>("LastMapsBoughtCounterReduce")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("last_maps_bought_counter_reduce")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<bool>("LoggedIn")
-                        .HasColumnName("logged_in")
                         .HasColumnType("boolean");
 
                     b.Property<int>("MapsBoughtCounter")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("maps_bought_counter")
                         .HasColumnType("integer")
                         .HasDefaultValue(1);
 
                     b.Property<int>("Money")
-                        .HasColumnName("money")
                         .HasColumnType("integer");
 
                     b.Property<int?>("MuteTime")
-                        .HasColumnName("mute_time")
                         .HasColumnType("integer");
 
                     b.Property<int>("PlayTime")
-                        .HasColumnName("play_time")
                         .HasColumnType("integer");
 
                     b.Property<int?>("VoiceMuteTime")
-                        .HasColumnName("voice_mute_time")
                         .HasColumnType("integer");
 
-                    b.HasKey("PlayerId")
-                        .HasName("pk_player_stats");
+                    b.HasKey("PlayerId");
 
-                    b.ToTable("player_stats");
+                    b.ToTable("PlayerStats");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerTotalStats", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
                     b.Property<long>("Money")
-                        .HasColumnName("money")
                         .HasColumnType("bigint");
 
-                    b.HasKey("PlayerId")
-                        .HasName("pk_player_total_stats");
+                    b.HasKey("PlayerId");
 
-                    b.ToTable("player_total_stats");
+                    b.ToTable("PlayerTotalStats");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.Players", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("AdminLeaderId")
-                        .HasColumnName("admin_leader_id")
                         .HasColumnType("integer");
 
                     b.Property<short>("AdminLvl")
-                        .HasColumnName("admin_lvl")
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0);
 
                     b.Property<short>("Donation")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("donation")
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0);
 
                     b.Property<string>("Email")
-                        .HasColumnName("email")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<bool>("IsVip")
-                        .HasColumnName("is_vip")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("name")
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnName("password")
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
+                        .HasColumnType("character varying(500)")
+                        .HasMaxLength(500);
 
                     b.Property<DateTime>("RegisterTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("register_timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<decimal>("SCId")
-                        .HasColumnName("sc_id")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<string>("SCName")
                         .IsRequired()
-                        .HasColumnName("sc_name")
                         .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.HasKey("Id")
-                        .HasName("pk_players");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AdminLeaderId")
-                        .HasName("ix_players_admin_leader_id");
+                    b.HasIndex("AdminLeaderId");
 
-                    b.HasIndex("AdminLvl")
-                        .HasName("ix_players_admin_lvl");
+                    b.HasIndex("AdminLvl");
 
-                    b.ToTable("players");
+                    b.ToTable("Players");
 
                     b.HasData(
                         new
@@ -3739,45 +3696,37 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("created")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnName("text")
                         .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_announcements");
+                    b.HasKey("Id");
 
-                    b.ToTable("announcements");
+                    b.ToTable("Announcements");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Rest.FreeroamDefaultVehicle", b =>
                 {
                     b.Property<FreeroamVehicleType>("VehicleType")
-                        .HasColumnName("vehicle_type")
                         .HasColumnType("freeroam_vehicle_type");
 
                     b.Property<string>("Note")
-                        .HasColumnName("note")
                         .HasColumnType("character varying");
 
                     b.Property<VehicleHash>("VehicleHash")
-                        .HasColumnName("vehicle_hash")
                         .HasColumnType("vehicle_hash");
 
-                    b.HasKey("VehicleType")
-                        .HasName("pk_freeroam_default_vehicle");
+                    b.HasKey("VehicleType");
 
-                    b.ToTable("freeroam_default_vehicle");
+                    b.ToTable("FreeroamDefaultVehicle");
 
                     b.HasData(
                         new
@@ -3811,36 +3760,29 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<DateTime>("CreateTimestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("create_timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<int?>("CreatorId")
-                        .HasColumnName("creator_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnName("name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_maps");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CreatorId")
-                        .HasName("ix_maps_creator_id");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("Name")
-                        .HasName("ix_maps_name")
                         .HasAnnotation("Npgsql:IndexMethod", "hash");
 
-                    b.ToTable("maps");
+                    b.ToTable("Maps");
 
                     b.HasData(
                         new
@@ -3877,100 +3819,80 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnName("message")
                         .HasColumnType("text");
 
                     b.Property<bool>("Seen")
-                        .HasColumnName("seen")
                         .HasColumnType("boolean");
 
                     b.Property<int>("SourceId")
-                        .HasColumnName("source_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("TargetId")
-                        .HasColumnName("target_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("timestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.HasKey("Id")
-                        .HasName("pk_offlinemessages");
+                    b.HasKey("Id");
 
-                    b.HasIndex("SourceId")
-                        .HasName("ix_offlinemessages_source_id");
+                    b.HasIndex("SourceId");
 
-                    b.HasIndex("TargetId")
-                        .HasName("ix_offlinemessages_target_id");
+                    b.HasIndex("TargetId");
 
-                    b.ToTable("offlinemessages");
+                    b.ToTable("Offlinemessages");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Teams", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<byte>("BlipColor")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("blip_color")
                         .HasColumnType("smallint")
                         .HasDefaultValue((byte)4);
 
                     b.Property<short>("ColorB")
-                        .HasColumnName("color_b")
                         .HasColumnType("smallint");
 
                     b.Property<short>("ColorG")
-                        .HasColumnName("color_g")
                         .HasColumnType("smallint");
 
                     b.Property<short>("ColorR")
-                        .HasColumnName("color_r")
                         .HasColumnType("smallint");
 
                     b.Property<short>("Index")
-                        .HasColumnName("index")
                         .HasColumnType("smallint");
 
                     b.Property<int>("Lobby")
-                        .HasColumnName("lobby")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("name")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100)
                         .HasDefaultValue("Spectator");
 
                     b.Property<int>("SkinHash")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("skin_hash")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.HasKey("Id")
-                        .HasName("pk_teams");
+                    b.HasKey("Id");
 
-                    b.HasIndex("Lobby")
-                        .HasName("ix_teams_lobby");
+                    b.HasIndex("Lobby");
 
-                    b.ToTable("teams");
+                    b.ToTable("Teams");
 
                     b.HasData(
                         new
@@ -4038,71 +3960,59 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Weapons", b =>
                 {
                     b.Property<WeaponHash>("Hash")
-                        .HasColumnName("hash")
                         .HasColumnType("weapon_hash");
 
                     b.Property<int>("ClipSize")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("clip_size")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<float>("Damage")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("damage")
                         .HasColumnType("real")
                         .HasDefaultValue(0f);
 
                     b.Property<float>("HeadShotDamageModifier")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("head_shot_damage_modifier")
                         .HasColumnType("real")
                         .HasDefaultValue(0f);
 
                     b.Property<float>("HitLimbsDamageModifier")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("hit_limbs_damage_modifier")
                         .HasColumnType("real")
                         .HasDefaultValue(0f);
 
                     b.Property<float>("MaxHeadShotDistance")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("max_head_shot_distance")
                         .HasColumnType("real")
                         .HasDefaultValue(0f);
 
                     b.Property<float>("MinHeadShotDistance")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("min_head_shot_distance")
                         .HasColumnType("real")
                         .HasDefaultValue(0f);
 
                     b.Property<float>("Range")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("range")
                         .HasColumnType("real")
                         .HasDefaultValue(0f);
 
                     b.Property<float>("ReloadTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("reload_time")
                         .HasColumnType("real")
                         .HasDefaultValue(0f);
 
                     b.Property<float>("TimeBetweenShots")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("time_between_shots")
                         .HasColumnType("real")
                         .HasDefaultValue(0f);
 
                     b.Property<WeaponType>("Type")
-                        .HasColumnName("type")
                         .HasColumnType("weapon_type");
 
-                    b.HasKey("Hash")
-                        .HasName("pk_weapons");
+                    b.HasKey("Hash");
 
-                    b.ToTable("weapons");
+                    b.ToTable("Weapons");
 
                     b.HasData(
                         new
@@ -5441,274 +5351,225 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("date")
                         .HasColumnType("date")
                         .HasDefaultValueSql("timezone('utc', CURRENT_DATE)");
 
                     b.Property<int>("AmountLogins")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_logins")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("AmountRegistrations")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_registrations")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("ArenaRoundsPlayed")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("arena_rounds_played")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("CustomArenaRoundsPlayed")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("custom_arena_rounds_played")
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<short>("PlayerPeak")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("player_peak")
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0);
 
-                    b.HasKey("Date")
-                        .HasName("pk_server_daily_stats");
+                    b.HasKey("Date");
 
-                    b.ToTable("server_daily_stats");
+                    b.ToTable("ServerDailyStats");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Server.ServerSettings", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("smallint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AmountPlayersAllowedInGangwarTeamBeforeCountCheck")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_players_allowed_in_gangwar_team_before_count_check")
                         .HasColumnType("integer")
                         .HasDefaultValue(3);
 
                     b.Property<int>("AmountWeeklyChallenges")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("amount_weekly_challenges")
                         .HasColumnType("integer")
                         .HasDefaultValue(3);
 
                     b.Property<float>("ArenaNewMapProbabilityPercent")
-                        .HasColumnName("arena_new_map_probability_percent")
                         .HasColumnType("real");
 
                     b.Property<int>("CloseApplicationAfterDays")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("close_application_after_days")
                         .HasColumnType("integer")
                         .HasDefaultValue(7);
 
                     b.Property<int>("DeleteApplicationAfterDays")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("delete_application_after_days")
                         .HasColumnType("integer")
                         .HasDefaultValue(14);
 
                     b.Property<int>("DeleteOfflineMessagesAfterDays")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("delete_offline_messages_after_days")
                         .HasColumnType("integer")
                         .HasDefaultValue(60);
 
                     b.Property<long>("DeleteRequestsDaysAfterClose")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("delete_requests_days_after_close")
                         .HasColumnType("bigint")
                         .HasDefaultValue(30L);
 
                     b.Property<float>("DistanceToSpotToDefuse")
-                        .HasColumnName("distance_to_spot_to_defuse")
                         .HasColumnType("real");
 
                     b.Property<float>("DistanceToSpotToPlant")
-                        .HasColumnName("distance_to_spot_to_plant")
                         .HasColumnType("real");
 
                     b.Property<bool>("ErrorToPlayerOnNonExistentCommand")
-                        .HasColumnName("error_to_player_on_non_existent_command")
                         .HasColumnType("boolean");
 
                     b.Property<string>("GamemodeName")
                         .IsRequired()
-                        .HasColumnName("gamemode_name")
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
                     b.Property<long>("GangwarActionTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("gangwar_action_time")
                         .HasColumnType("bigint")
                         .HasDefaultValue(900L);
 
                     b.Property<int>("GangwarAreaAttackCooldownMinutes")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("gangwar_area_attack_cooldown_minutes")
                         .HasColumnType("integer")
                         .HasDefaultValue(60);
 
                     b.Property<bool>("GangwarAttackerCanBeMore")
-                        .HasColumnName("gangwar_attacker_can_be_more")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("GangwarOwnerCanBeMore")
-                        .HasColumnName("gangwar_owner_can_be_more")
                         .HasColumnType("boolean");
 
                     b.Property<long>("GangwarPreparationTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("gangwar_preparation_time")
                         .HasColumnType("bigint")
                         .HasDefaultValue(180L);
 
                     b.Property<double>("GangwarTargetRadius")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("gangwar_target_radius")
                         .HasColumnType("double precision")
                         .HasDefaultValue(5.0);
 
                     b.Property<int>("GangwarTargetWithoutAttackerMaxSeconds")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("gangwar_target_without_attacker_max_seconds")
                         .HasColumnType("integer")
                         .HasDefaultValue(10);
 
                     b.Property<float>("GiveMoneyFee")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("give_money_fee")
                         .HasColumnType("real")
                         .HasDefaultValue(0.05f);
 
                     b.Property<int>("GiveMoneyMinAmount")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("give_money_min_amount")
                         .HasColumnType("integer")
                         .HasDefaultValue(100);
 
                     b.Property<int>("KillingSpreeMaxSecondsUntilNextKill")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("killing_spree_max_seconds_until_next_kill")
                         .HasColumnType("integer")
                         .HasDefaultValue(18);
 
                     b.Property<int>("MapBuyBasePrice")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("map_buy_base_price")
                         .HasColumnType("integer")
                         .HasDefaultValue(1000);
 
                     b.Property<float>("MapBuyCounterMultiplicator")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("map_buy_counter_multiplicator")
                         .HasColumnType("real")
                         .HasDefaultValue(1f);
 
                     b.Property<int>("MapRatingAmountForCheck")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("map_rating_amount_for_check")
                         .HasColumnType("integer")
                         .HasDefaultValue(10);
 
                     b.Property<float>("MinMapRatingForNewMaps")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("min_map_rating_for_new_maps")
                         .HasColumnType("real")
                         .HasDefaultValue(3f);
 
                     b.Property<int>("MinPlayersOnlineForGangwar")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("min_players_online_for_gangwar")
                         .HasColumnType("integer")
                         .HasDefaultValue(3);
 
                     b.Property<float>("MultiplierRankingAssists")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("multiplier_ranking_assists")
                         .HasColumnType("real")
                         .HasDefaultValue(25f);
 
                     b.Property<float>("MultiplierRankingDamage")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("multiplier_ranking_damage")
                         .HasColumnType("real")
                         .HasDefaultValue(1f);
 
                     b.Property<float>("MultiplierRankingKills")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("multiplier_ranking_kills")
                         .HasColumnType("real")
                         .HasDefaultValue(75f);
 
                     b.Property<float>("NametagMaxDistance")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("nametag_max_distance")
                         .HasColumnType("real")
                         .HasDefaultValue(625f);
 
                     b.Property<int>("ReduceMapsBoughtCounterAfterMinute")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("reduce_maps_bought_counter_after_minute")
                         .HasColumnType("integer")
                         .HasDefaultValue(60);
 
                     b.Property<int>("ReloadServerBansEveryMinutes")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("reload_server_bans_every_minutes")
                         .HasColumnType("integer")
                         .HasDefaultValue(5);
 
                     b.Property<int>("SaveLogsCooldownMinutes")
-                        .HasColumnName("save_logs_cooldown_minutes")
                         .HasColumnType("integer");
 
                     b.Property<int>("SavePlayerDataCooldownMinutes")
-                        .HasColumnName("save_player_data_cooldown_minutes")
                         .HasColumnType("integer");
 
                     b.Property<int>("SaveSeasonsCooldownMinutes")
-                        .HasColumnName("save_seasons_cooldown_minutes")
                         .HasColumnType("integer");
 
                     b.Property<bool>("ShowNametagOnlyOnAiming")
-                        .HasColumnName("show_nametag_only_on_aiming")
                         .HasColumnType("boolean");
 
                     b.Property<int>("TeamOrderCooldownMs")
-                        .HasColumnName("team_order_cooldown_ms")
                         .HasColumnType("integer");
 
                     b.Property<bool>("ToChatOnNonExistentCommand")
-                        .HasColumnName("to_chat_on_non_existent_command")
                         .HasColumnType("boolean");
 
                     b.Property<int>("UsernameChangeCooldownDays")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("username_change_cooldown_days")
                         .HasColumnType("integer")
                         .HasDefaultValue(60);
 
                     b.Property<int>("UsernameChangeCost")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("username_change_cost")
                         .HasColumnType("integer")
                         .HasDefaultValue(20000);
 
-                    b.HasKey("Id")
-                        .HasName("pk_server_settings");
+                    b.HasKey("Id");
 
-                    b.ToTable("server_settings");
+                    b.ToTable("ServerSettings");
 
                     b.HasData(
                         new
@@ -5761,32 +5622,27 @@ namespace TDS_Server.Database.Migrations
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("smallint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<long>("ArenaRoundsPlayed")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("arena_rounds_played")
                         .HasColumnType("bigint")
                         .HasDefaultValue(0L);
 
                     b.Property<long>("CustomArenaRoundsPlayed")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("custom_arena_rounds_played")
                         .HasColumnType("bigint")
                         .HasDefaultValue(0L);
 
                     b.Property<short>("PlayerPeak")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("player_peak")
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0);
 
-                    b.HasKey("Id")
-                        .HasName("pk_server_total_stats");
+                    b.HasKey("Id");
 
-                    b.ToTable("server_total_stats");
+                    b.ToTable("ServerTotalStats");
 
                     b.HasData(
                         new
@@ -5801,141 +5657,112 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationAnswers", b =>
                 {
                     b.Property<int>("ApplicationId")
-                        .HasColumnName("application_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("QuestionId")
-                        .HasColumnName("question_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("Answer")
-                        .HasColumnName("answer")
                         .HasColumnType("text");
 
-                    b.HasKey("ApplicationId", "QuestionId")
-                        .HasName("pk_application_answers");
+                    b.HasKey("ApplicationId", "QuestionId");
 
-                    b.HasIndex("QuestionId")
-                        .HasName("ix_application_answers_question_id");
+                    b.HasIndex("QuestionId");
 
-                    b.ToTable("application_answers");
+                    b.ToTable("ApplicationAnswers");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationInvitations", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<int>("AdminId")
-                        .HasColumnName("admin_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("ApplicationId")
-                        .HasColumnName("application_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("Message")
-                        .HasColumnName("message")
                         .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_application_invitations");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AdminId")
-                        .HasName("ix_application_invitations_admin_id");
+                    b.HasIndex("AdminId");
 
-                    b.HasIndex("ApplicationId")
-                        .HasName("ix_application_invitations_application_id");
+                    b.HasIndex("ApplicationId");
 
-                    b.ToTable("application_invitations");
+                    b.ToTable("ApplicationInvitations");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationQuestions", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<int>("AdminId")
-                        .HasColumnName("admin_id")
                         .HasColumnType("integer");
 
                     b.Property<UserpanelAdminQuestionAnswerType>("AnswerType")
-                        .HasColumnName("answer_type")
                         .HasColumnType("userpanel_admin_question_answer_type");
 
                     b.Property<string>("Question")
-                        .HasColumnName("question")
                         .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_application_questions");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AdminId")
-                        .HasName("ix_application_questions_admin_id");
+                    b.HasIndex("AdminId");
 
-                    b.ToTable("application_questions");
+                    b.ToTable("ApplicationQuestions");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.Applications", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn);
 
                     b.Property<bool>("Closed")
-                        .HasColumnName("closed")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("create_time")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<int>("PlayerId")
-                        .HasColumnName("player_id")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id")
-                        .HasName("pk_applications");
+                    b.HasKey("Id");
 
                     b.HasIndex("PlayerId")
-                        .IsUnique()
-                        .HasName("ix_applications_player_id");
+                        .IsUnique();
 
-                    b.ToTable("applications");
+                    b.ToTable("Applications");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.FAQs", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnName("id")
                         .HasColumnType("integer");
 
                     b.Property<Language>("Language")
-                        .HasColumnName("language")
                         .HasColumnType("language");
 
                     b.Property<string>("Answer")
-                        .HasColumnName("answer")
                         .HasColumnType("text");
 
                     b.Property<string>("Question")
-                        .HasColumnName("question")
                         .HasColumnType("text");
 
-                    b.HasKey("Id", "Language")
-                        .HasName("pk_fa_qs");
+                    b.HasKey("Id", "Language");
 
-                    b.ToTable("fa_qs");
+                    b.ToTable("FAQs");
 
                     b.HasData(
                         new
@@ -5975,21 +5802,17 @@ Die Daten beinhalten keine sensiblen Informationen - IPs werden nicht gespeicher
             modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.RuleTexts", b =>
                 {
                     b.Property<int>("RuleId")
-                        .HasColumnName("rule_id")
                         .HasColumnType("integer");
 
                     b.Property<Language>("Language")
-                        .HasColumnName("language")
                         .HasColumnType("language");
 
                     b.Property<string>("RuleStr")
-                        .HasColumnName("rule_str")
                         .HasColumnType("text");
 
-                    b.HasKey("RuleId", "Language")
-                        .HasName("pk_rule_texts");
+                    b.HasKey("RuleId", "Language");
 
-                    b.ToTable("rule_texts");
+                    b.ToTable("RuleTexts");
 
                     b.HasData(
                         new
@@ -6098,22 +5921,18 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<RuleCategory>("Category")
-                        .HasColumnName("category")
                         .HasColumnType("rule_category");
 
                     b.Property<RuleTarget>("Target")
-                        .HasColumnName("target")
                         .HasColumnType("rule_target");
 
-                    b.HasKey("Id")
-                        .HasName("pk_rules");
+                    b.HasKey("Id");
 
-                    b.ToTable("rules");
+                    b.ToTable("Rules");
 
                     b.HasData(
                         new
@@ -6163,80 +5982,64 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
             modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.SupportRequestMessages", b =>
                 {
                     b.Property<int>("RequestId")
-                        .HasColumnName("request_id")
                         .HasColumnType("integer");
 
                     b.Property<int>("MessageIndex")
-                        .HasColumnName("message_index")
                         .HasColumnType("integer");
 
                     b.Property<int>("AuthorId")
-                        .HasColumnName("author_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("create_time")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', CURRENT_DATE)");
 
                     b.Property<string>("Text")
-                        .HasColumnName("text")
                         .HasColumnType("character varying(300)")
                         .HasMaxLength(300);
 
-                    b.HasKey("RequestId", "MessageIndex")
-                        .HasName("pk_support_request_messages");
+                    b.HasKey("RequestId", "MessageIndex");
 
-                    b.HasIndex("AuthorId")
-                        .HasName("ix_support_request_messages_author_id");
+                    b.HasIndex("AuthorId");
 
-                    b.ToTable("support_request_messages");
+                    b.ToTable("SupportRequestMessages");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.SupportRequests", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AtleastAdminLevel")
-                        .HasColumnName("atleast_admin_level")
                         .HasColumnType("integer");
 
                     b.Property<int>("AuthorId")
-                        .HasColumnName("author_id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("CloseTime")
-                        .HasColumnName("close_time")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("create_time")
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("timezone('utc', CURRENT_DATE)");
 
                     b.Property<string>("Title")
-                        .HasColumnName("title")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<SupportType>("Type")
-                        .HasColumnName("type")
                         .HasColumnType("support_type");
 
-                    b.HasKey("Id")
-                        .HasName("pk_support_requests");
+                    b.HasKey("Id");
 
                     b.HasIndex("AuthorId")
-                        .IsUnique()
-                        .HasName("ix_support_requests_author_id");
+                        .IsUnique();
 
-                    b.ToTable("support_requests");
+                    b.ToTable("SupportRequests");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Admin.AdminLevelNames", b =>
@@ -6244,7 +6047,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Admin.AdminLevels", "LevelNavigation")
                         .WithMany("AdminLevelNames")
                         .HasForeignKey("Level")
-                        .HasConstraintName("fk_admin_level_names_admin_levels_level_navigation_level")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6254,7 +6056,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithMany("Challenges")
                         .HasForeignKey("PlayerId")
-                        .HasConstraintName("fk_player_challenges_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6264,7 +6065,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Command.Commands", "CommandNavigation")
                         .WithMany("CommandAlias")
                         .HasForeignKey("Command")
-                        .HasConstraintName("fk_command_alias_commands_command_navigation_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6274,7 +6074,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Command.Commands", "IdNavigation")
                         .WithMany("CommandInfos")
                         .HasForeignKey("Id")
-                        .HasConstraintName("fk_command_infos_commands_id_navigation_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6284,7 +6083,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Admin.AdminLevels", "NeededAdminLevelNavigation")
                         .WithMany("Commands")
                         .HasForeignKey("NeededAdminLevel")
-                        .HasConstraintName("fk_commands_admin_levels_needed_admin_level_navigation_level")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -6293,7 +6091,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Creator")
                         .WithMany("CreatedHouses")
                         .HasForeignKey("CreatorId")
-                        .HasConstraintName("fk_gang_houses_players_creator_id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -6303,21 +6100,18 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithMany("Members")
                         .HasForeignKey("GangId")
-                        .HasConstraintName("fk_gang_members_gangs_gang_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithOne("GangMemberNavigation")
                         .HasForeignKey("TDS_Server.Database.Entity.GangEntities.GangMembers", "PlayerId")
-                        .HasConstraintName("fk_gang_members_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.GangEntities.GangRanks", "RankNavigation")
                         .WithMany()
-                        .HasForeignKey("RankNavigationGangId", "RankNavigationRank")
-                        .HasConstraintName("fk_gang_members_gang_ranks_rank_navigation_gang_id_rank_naviga");
+                        .HasForeignKey("RankNavigationGangId", "RankNavigationRank");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangRankPermissions", b =>
@@ -6325,7 +6119,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithOne("RankPermissions")
                         .HasForeignKey("TDS_Server.Database.Entity.GangEntities.GangRankPermissions", "GangId")
-                        .HasConstraintName("fk_gang_rank_permissions_gangs_gang_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6335,7 +6128,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithMany("Ranks")
                         .HasForeignKey("GangId")
-                        .HasConstraintName("fk_gang_ranks_gangs_gang_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6345,7 +6137,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithOne("Stats")
                         .HasForeignKey("TDS_Server.Database.Entity.GangEntities.GangStats", "GangId")
-                        .HasConstraintName("fk_gang_stats_gangs_gang_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6355,7 +6146,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithMany("Vehicles")
                         .HasForeignKey("GangId")
-                        .HasConstraintName("fk_gang_vehicles_gangs_gang_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6365,19 +6155,16 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.GangEntities.GangHouses", "House")
                         .WithOne("OwnerGang")
                         .HasForeignKey("TDS_Server.Database.Entity.GangEntities.Gangs", "HouseId")
-                        .HasConstraintName("fk_gangs_gang_houses_house_id")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Owner")
                         .WithOne("OwnedGang")
                         .HasForeignKey("TDS_Server.Database.Entity.GangEntities.Gangs", "OwnerId")
-                        .HasConstraintName("fk_gangs_players_owner_id")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TDS_Server.Database.Entity.Rest.Teams", "Team")
                         .WithMany("Gangs")
                         .HasForeignKey("TeamId")
-                        .HasConstraintName("fk_gangs_teams_team_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6387,14 +6174,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Rest.Maps", "Map")
                         .WithOne("GangwarArea")
                         .HasForeignKey("TDS_Server.Database.Entity.GangEntities.GangwarAreas", "MapId")
-                        .HasConstraintName("fk_gangwar_areas_maps_map_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "OwnerGang")
                         .WithMany("GangwarAreas")
                         .HasForeignKey("OwnerGangId")
-                        .HasConstraintName("fk_gangwar_areas_gangs_owner_gang_id")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
                 });
@@ -6404,7 +6189,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Owner")
                         .WithMany("Lobbies")
                         .HasForeignKey("OwnerId")
-                        .HasConstraintName("fk_lobbies_players_owner_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6414,7 +6198,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("FightSettings")
                         .HasForeignKey("TDS_Server.Database.Entity.LobbyEntities.LobbyFightSettings", "LobbyId")
-                        .HasConstraintName("fk_lobby_fight_settings_lobbies_lobby_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6424,7 +6207,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("LobbyKillingspreeRewards")
                         .HasForeignKey("LobbyId")
-                        .HasConstraintName("fk_killingspree_rewards_lobbies_lobby_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6434,7 +6216,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyMapSettings")
                         .HasForeignKey("TDS_Server.Database.Entity.LobbyEntities.LobbyMapSettings", "LobbyId")
-                        .HasConstraintName("fk_lobby_map_settings_lobbies_lobby_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6444,14 +6225,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("LobbyMaps")
                         .HasForeignKey("LobbyId")
-                        .HasConstraintName("fk_lobby_maps_lobbies_lobby_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Rest.Maps", "Map")
                         .WithMany("LobbyMaps")
                         .HasForeignKey("MapId")
-                        .HasConstraintName("fk_lobby_maps_maps_map_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6461,7 +6240,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyRewards")
                         .HasForeignKey("TDS_Server.Database.Entity.LobbyEntities.LobbyRewards", "LobbyId")
-                        .HasConstraintName("fk_lobby_rewards_lobbies_lobby_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6471,7 +6249,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyRoundSettings")
                         .HasForeignKey("TDS_Server.Database.Entity.LobbyEntities.LobbyRoundSettings", "LobbyId")
-                        .HasConstraintName("fk_lobby_round_settings_lobbies_lobby_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6481,14 +6258,51 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Rest.Weapons", "HashNavigation")
                         .WithMany("LobbyWeapons")
                         .HasForeignKey("Hash")
-                        .HasConstraintName("fk_lobby_weapons_weapons_hash")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "LobbyNavigation")
                         .WithMany("LobbyWeapons")
                         .HasForeignKey("Lobby")
-                        .HasConstraintName("fk_lobby_weapons_lobbies_lobby_navigation_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharAppearanceDatas", "AppearanceData")
+                        .WithOne("CharDatas")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "AppearanceDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharFeaturesDatas", "FeaturesData")
+                        .WithOne("CharDatas")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "FeaturesDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharGeneralDatas", "GeneralData")
+                        .WithOne("CharDatas")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "GeneralDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharHairAndColorsDatas", "HairAndColorsData")
+                        .WithOne("CharDatas")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "HairAndColorsDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharHeritageDatas", "HeritageData")
+                        .WithOne("CharDatas")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "HeritageDataId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                        .WithOne("CharDatas")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6498,20 +6312,17 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Admin")
                         .WithMany("PlayerBansAdmin")
                         .HasForeignKey("AdminId")
-                        .HasConstraintName("fk_player_bans_players_admin_id")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("PlayerBans")
                         .HasForeignKey("LobbyId")
-                        .HasConstraintName("fk_player_bans_lobbies_lobby_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerBansPlayer")
                         .HasForeignKey("PlayerId")
-                        .HasConstraintName("fk_player_bans_players_player_id")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
                 });
@@ -6521,7 +6332,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerClothes")
                         .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerClothes", "PlayerId")
-                        .HasConstraintName("fk_player_clothes_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6531,14 +6341,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("PlayerLobbyStats")
                         .HasForeignKey("LobbyId")
-                        .HasConstraintName("fk_player_lobby_stats_lobbies_lobby_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerLobbyStats")
                         .HasForeignKey("PlayerId")
-                        .HasConstraintName("fk_player_lobby_stats_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6548,14 +6356,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Rest.Maps", "Map")
                         .WithMany("PlayerMapFavourites")
                         .HasForeignKey("MapId")
-                        .HasConstraintName("fk_player_map_favourites_maps_map_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerMapFavourites")
                         .HasForeignKey("PlayerId")
-                        .HasConstraintName("fk_player_map_favourites_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6565,14 +6371,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Rest.Maps", "Map")
                         .WithMany("PlayerMapRatings")
                         .HasForeignKey("MapId")
-                        .HasConstraintName("fk_player_map_ratings_maps_map_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerMapRatings")
                         .HasForeignKey("PlayerId")
-                        .HasConstraintName("fk_player_map_ratings_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6582,14 +6386,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerRelationsPlayer")
                         .HasForeignKey("PlayerId")
-                        .HasConstraintName("fk_player_relations_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Target")
                         .WithMany("PlayerRelationsTarget")
                         .HasForeignKey("TargetId")
-                        .HasConstraintName("fk_player_relations_players_target_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6599,7 +6401,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerSettings")
                         .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerSettings", "PlayerId")
-                        .HasConstraintName("fk_player_settings_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6609,7 +6410,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerStats")
                         .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerStats", "PlayerId")
-                        .HasConstraintName("fk_player_stats_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6619,7 +6419,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerTotalStats")
                         .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerTotalStats", "PlayerId")
-                        .HasConstraintName("fk_player_total_stats_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6629,13 +6428,11 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "AdminLeader")
                         .WithMany("AdminMembers")
                         .HasForeignKey("AdminLeaderId")
-                        .HasConstraintName("fk_players_players_admin_leader_id")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("TDS_Server.Database.Entity.Admin.AdminLevels", "AdminLvlNavigation")
                         .WithMany("Players")
                         .HasForeignKey("AdminLvl")
-                        .HasConstraintName("fk_players_admin_levels_admin_lvl_navigation_level")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
                 });
@@ -6645,7 +6442,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Creator")
                         .WithMany("Maps")
                         .HasForeignKey("CreatorId")
-                        .HasConstraintName("fk_maps_players_creator_id")
                         .OnDelete(DeleteBehavior.SetNull);
                 });
 
@@ -6654,14 +6450,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Source")
                         .WithMany("OfflinemessagesSource")
                         .HasForeignKey("SourceId")
-                        .HasConstraintName("fk_offlinemessages_players_source_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Target")
                         .WithMany("OfflinemessagesTarget")
                         .HasForeignKey("TargetId")
-                        .HasConstraintName("fk_offlinemessages_players_target_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6671,7 +6465,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "LobbyNavigation")
                         .WithMany("Teams")
                         .HasForeignKey("Lobby")
-                        .HasConstraintName("fk_teams_lobbies_lobby_navigation_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6681,14 +6474,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Userpanel.Applications", "Application")
                         .WithMany("Answers")
                         .HasForeignKey("ApplicationId")
-                        .HasConstraintName("fk_application_answers_applications_application_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Userpanel.ApplicationQuestions", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
-                        .HasConstraintName("fk_application_answers_application_questions_question_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6698,14 +6489,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Admin")
                         .WithMany("ApplicationInvitations")
                         .HasForeignKey("AdminId")
-                        .HasConstraintName("fk_application_invitations_players_admin_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Userpanel.Applications", "Application")
                         .WithMany("Invitations")
                         .HasForeignKey("ApplicationId")
-                        .HasConstraintName("fk_application_invitations_applications_application_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6715,7 +6504,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Admin")
                         .WithMany("ApplicationQuestions")
                         .HasForeignKey("AdminId")
-                        .HasConstraintName("fk_application_questions_players_admin_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6725,7 +6513,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithOne("Application")
                         .HasForeignKey("TDS_Server.Database.Entity.Userpanel.Applications", "PlayerId")
-                        .HasConstraintName("fk_applications_players_player_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6735,7 +6522,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Userpanel.Rules", "Rule")
                         .WithMany("RuleTexts")
                         .HasForeignKey("RuleId")
-                        .HasConstraintName("fk_rule_texts_rules_rule_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6745,14 +6531,12 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Author")
                         .WithMany("SupportRequestMessages")
                         .HasForeignKey("AuthorId")
-                        .HasConstraintName("fk_support_request_messages_players_author_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TDS_Server.Database.Entity.Userpanel.SupportRequests", "Request")
                         .WithMany("Messages")
                         .HasForeignKey("RequestId")
-                        .HasConstraintName("fk_support_request_messages_support_requests_request_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -6762,7 +6546,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Author")
                         .WithOne("SupportRequests")
                         .HasForeignKey("TDS_Server.Database.Entity.Userpanel.SupportRequests", "AuthorId")
-                        .HasConstraintName("fk_support_requests_players_author_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
