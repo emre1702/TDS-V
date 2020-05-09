@@ -22,5 +22,7 @@ namespace TDS_Shared.Data.Models
         public int ArenaLobbyId;
         [JsonProperty("8")]
         public int MapCreatorLobbyId;
+        [JsonProperty("9")]
+        public int CharCreatorLobbyId;
     }
 }

@@ -77,6 +77,7 @@ namespace TDS_Client.Handler
         public bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
         public MapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? MapLimitType.KillAfterTime;
         public int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
+        public int CharCreatorLobbyId => _syncedServerSettings.CharCreatorLobbyId;
         public int MapCreatorLobbyId => _syncedServerSettings.MapCreatorLobbyId;
 
         public float NametagMaxDistance;

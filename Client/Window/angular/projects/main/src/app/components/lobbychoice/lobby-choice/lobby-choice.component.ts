@@ -39,6 +39,7 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
         { index: 1, name: "MapCreator", func: this.joinMapCreator.bind(this), imgUrl: "assets/mapcreatorchoice.png" },
         { index: 2, name: "UserLobbies", func: this.showUserLobbies.bind(this), imgUrl: "assets/customlobbychoice.png" },
         // { index: 3, name: "Gang", func: this.joinGang.bind(this), imgUrl: "assets/gangchoice.png" },
+        { index: 3, name: "CharCreator", func: this.joinCharCreator.bind(this), imgUrl: "assets/charcreatorchoice.png" }
     ];
 
     timeToNextWeeklyChallengesRestartInfo: string;
@@ -97,6 +98,10 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
 
     joinMapCreator() {
         this.rageConnector.call(DToClientEvent.ChooseMapCreatorToJoin);
+    }
+
+    joinCharCreator() {
+        this.rageConnector.call(DToClientEvent.ChooseCharCreatorToJoin);
     }
 
     showUserLobbies() {
