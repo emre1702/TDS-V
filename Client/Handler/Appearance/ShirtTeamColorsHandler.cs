@@ -15,7 +15,7 @@ namespace TDS_Client.Handler.Appearance
 {
     /// <summary>
     /// Works only with Clothing_M_11_0 (shirt) and Clothing_M_11_90 (jacket).
-    /// But because with jackets you can only change the 3rd index color (chest & cuffs), we'll use shirts.
+    /// But because with jackets you can only change the 3rd index color (chest &amp; cuffs), we'll use shirts.
     /// The shirt is getting set at serverside, here we'll only set the color.
     /// </summary>
     public class ShirtTeamColorsHandler : ServiceBase
@@ -48,7 +48,7 @@ namespace TDS_Client.Handler.Appearance
                     return;
 
                 var teamIndex = _dataSyncHandler.GetData(player, PlayerDataKey.TeamIndex, -1);
-                if (teamIndex == 0)
+                if (teamIndex == -1)
                     return;
 
                 if (_lobbyHandler.Teams.LobbyTeams is null)
