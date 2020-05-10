@@ -3905,7 +3905,7 @@ namespace TDS_Server.Database.Migrations
                             Index = (short)0,
                             Lobby = -4,
                             Name = "Spectator",
-                            SkinHash = 1004114196
+                            SkinHash = 0
                         },
                         new
                         {
@@ -3929,7 +3929,7 @@ namespace TDS_Server.Database.Migrations
                             Index = (short)1,
                             Lobby = -1,
                             Name = "SWAT",
-                            SkinHash = -1920001264
+                            SkinHash = 0
                         },
                         new
                         {
@@ -3941,7 +3941,7 @@ namespace TDS_Server.Database.Migrations
                             Index = (short)2,
                             Lobby = -1,
                             Name = "Terrorist",
-                            SkinHash = 275618457
+                            SkinHash = 0
                         },
                         new
                         {

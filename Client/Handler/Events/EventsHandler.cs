@@ -26,6 +26,7 @@ namespace TDS_Client.Handler.Events
         public event EmptyDelegate LocalPlayerDied;
         public event EmptyDelegate MapChanged;
         public event EmptyDelegate LoggedIn;
+        public event EmptyDelegate Spawn;
 
         public delegate void BoolDelegate(bool boolean);
         public event BoolDelegate CursorToggled;
@@ -496,6 +497,20 @@ namespace TDS_Client.Handler.Events
                 Logging.LogInfo("", "EventsHandler.OnChatInputToggleRequested");
                 CursorToggleRequested?.Invoke(value);
                 Logging.LogInfo("", "EventsHandler.OnChatInputToggleRequested", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnSpawn()
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnSpawn");
+                Spawn?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnSpawn", true);
             }
             catch (Exception ex)
             {

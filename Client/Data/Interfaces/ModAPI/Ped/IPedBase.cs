@@ -1,6 +1,8 @@
-﻿using TDS_Client.Data.Enums;
+﻿using System.Drawing;
+using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Ped
@@ -1555,6 +1557,30 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         // Summary:
         //     see RAGE.Game.Ped.SetPedHeadBlendData(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Single,System.Single,System.Single,System.Boolean)
         void SetHeadBlendData(int shapeFirstID, int shapeSecondID, int shapeThirdID, int skinFirstID, int skinSecondID, int skinThirdID, float shapeMix, float skinMix, float thirdMix, bool isParent);
+        /// <summary>
+        /// Shirt color for Clothing_M_11_0 or Clothing_M_11_90.
+        /// </summary>
+        /// <param name="color">RGB color</param>
+        /// <param name="type">
+        /// 0-3 id, Clothing_M_11_90 uses only 3 ("chest and cuffs")
+        /// 0 => Sleeves
+        /// 1 => Unknown
+        /// 2 => Neck
+        /// 3 => Chest
+        /// </param>
+        void SetHeadBlendPaletteColor(Color color, int type);
+        /// <summary>
+        /// Shirt color for Clothing_M_11_0 or Clothing_M_11_90.
+        /// </summary>
+        /// <param name="color">RGB color</param>
+        /// <param name="type">
+        /// 0-3 id, Clothing_M_11_90 uses only 3 ("chest and cuffs")
+        /// 0 => Sleeves
+        /// 1 => Unknown
+        /// 2 => Neck
+        /// 3 => Chest
+        /// </param>
+        void SetHeadBlendPaletteColor(ColorDto color, int type);
         //
         // Summary:
         //     see RAGE.Game.Ped.SetPedHeadOverlay(System.Int32,System.Int32,System.Int32,System.Single)

@@ -15,7 +15,7 @@ using TDS_Shared.Data.Models.CharCreator;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 
-namespace TDS_Client.Handler
+namespace TDS_Client.Handler.Appearance
 {
     public class CharCreatorHandler : ServiceBase
     {

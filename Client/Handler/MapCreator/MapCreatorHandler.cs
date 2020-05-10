@@ -2,6 +2,7 @@
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
@@ -37,7 +38,7 @@ namespace TDS_Client.Handler.MapCreator
         public MapCreatorHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler, 
             SettingsHandler settingsHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, 
             DxHandler dxHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, LobbyHandler lobbyHandler, 
-            TimerHandler timerHandler, DataSyncHandler dataSyncHandler)
+            TimerHandler timerHandler, DataSyncHandler dataSyncHandler, DeathHandler deathHandler)
             : base(modAPI, loggingHandler)
         {
             _browserHandler = browserHandler;
@@ -46,7 +47,7 @@ namespace TDS_Client.Handler.MapCreator
             _camerasHandler = camerasHandler;
 
             Draw = new MapCreatorDrawHandler(modAPI, utilsHandler);
-            Foot = new MapCreatorFootHandler(modAPI, camerasHandler, instructionalButtonHandler, settingsHandler);
+            Foot = new MapCreatorFootHandler(modAPI, camerasHandler, instructionalButtonHandler, settingsHandler, deathHandler);
             
             var clickedMarkerStorer = new ClickedMarkerStorer();
 

@@ -4,11 +4,8 @@ using System.Linq;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Handler;
 using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
@@ -52,7 +49,7 @@ namespace TDS_Client.Handler.Lobby
         private readonly UtilsHandler _utilsHandler;
         private readonly BindsHandler _bindsHandler;
 
-        public TeamsHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler, LobbyHandler lobbyHandler, 
+        public TeamsHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler, LobbyHandler lobbyHandler,
             RemoteEventsSender remoteEventsSender, CursorHandler cursorHandler, EventsHandler eventsHandler, UtilsHandler utilsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -221,7 +218,7 @@ namespace TDS_Client.Handler.Lobby
                 IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
                 if (player is null)
                     RemoveSameTeam(handleValue);
-                else 
+                else
                     RemoveSameTeam(player);
                 Logging.LogInfo("", "TeamsHandler.OnPlayerLeftTeamMethod", true);
             }

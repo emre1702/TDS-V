@@ -1,8 +1,10 @@
 ﻿using RAGE;
+using System.Drawing;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI.Ped;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Ped
@@ -1200,6 +1202,12 @@ namespace TDS_Client.RAGEAPI.Ped
 
         public void SetHeadBlendData(int shapeFirstID, int shapeSecondID, int shapeThirdID, int skinFirstID, int skinSecondID, int skinThirdID, float shapeMix, float skinMix, float thirdMix, bool isParent)
             => _instance.SetHeadBlendData(shapeFirstID, shapeSecondID, shapeThirdID, skinFirstID, skinSecondID, skinThirdID, shapeMix, skinMix, thirdMix, isParent);
+
+        public void SetHeadBlendPaletteColor(Color color, int type) 
+            => RAGE.Game.Invoker.Invoke((ulong)NativeHash.SET_HEAD_BLEND_PALETTE_COLOR, _instance.Handle, (int)color.R, (int)color.G, (int)color.B, type);
+
+        public void SetHeadBlendPaletteColor(ColorDto color, int type)
+            => RAGE.Game.Invoker.Invoke((ulong)NativeHash.SET_HEAD_BLEND_PALETTE_COLOR, _instance.Handle, (int)color.R, (int)color.G, (int)color.B, type);
 
         public void SetHeadOverlay(int overlayID, int index, float opacity)
             => _instance.SetHeadOverlay(overlayID, index, opacity);

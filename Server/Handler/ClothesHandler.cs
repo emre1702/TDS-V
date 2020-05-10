@@ -50,6 +50,8 @@ namespace TDS_Server.Handler
         {
             if (player.Entity is null)
                 return;
+            if (player.ModPlayer is null)
+                return;
             if (player.Entity.PlayerClothes is null)
                 player.Entity.PlayerClothes = new PlayerClothes();
         }

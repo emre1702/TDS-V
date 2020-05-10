@@ -2301,26 +2301,14 @@ namespace TDS_Server.Database.Migrations
             migrationBuilder.InsertData(
                 table: "Teams",
                 columns: new[] { "Id", "BlipColor", "ColorB", "ColorG", "ColorR", "Index", "Lobby", "Name" },
-                values: new object[] { -2, (byte)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator" });
-
-            migrationBuilder.InsertData(
-                table: "Teams",
-                columns: new[] { "Id", "BlipColor", "ColorB", "ColorG", "ColorR", "Index", "Lobby", "Name", "SkinHash" },
                 values: new object[,]
                 {
-                    { -3, (byte)52, (short)0, (short)150, (short)0, (short)1, -1, "SWAT", -1920001264 },
-                    { -4, (byte)1, (short)0, (short)0, (short)150, (short)2, -1, "Terrorist", 275618457 }
+                    { -2, (byte)4, (short)255, (short)255, (short)255, (short)0, -1, "Spectator" },
+                    { -3, (byte)52, (short)0, (short)150, (short)0, (short)1, -1, "SWAT" },
+                    { -4, (byte)1, (short)0, (short)0, (short)150, (short)2, -1, "Terrorist" },
+                    { -5, (byte)4, (short)255, (short)255, (short)255, (short)0, -2, "None" },
+                    { -1, (byte)4, (short)255, (short)255, (short)255, (short)0, -4, "Spectator" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Teams",
-                columns: new[] { "Id", "BlipColor", "ColorB", "ColorG", "ColorR", "Index", "Lobby", "Name" },
-                values: new object[] { -5, (byte)4, (short)255, (short)255, (short)255, (short)0, -2, "None" });
-
-            migrationBuilder.InsertData(
-                table: "Teams",
-                columns: new[] { "Id", "BlipColor", "ColorB", "ColorG", "ColorR", "Index", "Lobby", "Name", "SkinHash" },
-                values: new object[] { -1, (byte)4, (short)255, (short)255, (short)255, (short)0, -4, "Spectator", 1004114196 });
 
             migrationBuilder.InsertData(
                 table: "Gangs",

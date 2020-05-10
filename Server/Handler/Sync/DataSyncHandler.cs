@@ -145,10 +145,11 @@ namespace TDS_Server.Handler.Sync
 
         private void SyncPlayerLobbyData(ITDSPlayer player, ILobby lobby)
         {
-            if (!_playerHandleDatasLobby.ContainsKey(lobby.Id))
-                return;
-            _modAPI.Sync.SendEvent(player, ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
-            _modAPI.Sync.SendEvent(player, ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
+            if (_playerHandleDatasLobby.ContainsKey(lobby.Id))
+                _modAPI.Sync.SendEvent(player, ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
+
+            if (_entityHandleDatasLobby.ContainsKey(lobby.Id))
+                _modAPI.Sync.SendEvent(player, ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
         }
 
         private void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)

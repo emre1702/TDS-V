@@ -10,10 +10,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         protected Dictionary<ITDSPlayer, TDSTimer> DeathSpawnTimer { get; } = new Dictionary<ITDSPlayer, TDSTimer>();
 
-        public virtual void OnPlayerSpawn(ITDSPlayer character)
+        public virtual void OnPlayerSpawn(ITDSPlayer player)
         {
-            character.Health = Entity.FightSettings?.StartHealth ?? 100;
-            character.Armor = Entity.FightSettings?.StartArmor ?? 100;
+            player.Health = Entity.FightSettings?.StartHealth ?? 100;
+            player.Armor = Entity.FightSettings?.StartArmor ?? 100;
+            player.ModPlayer?.SetClothes(11, 0, 0);
         }
 
         public async void OnPlayerLoggedOut(ITDSPlayer character)

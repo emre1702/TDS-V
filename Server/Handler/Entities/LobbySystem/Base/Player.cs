@@ -35,21 +35,24 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             #endregion Remove from old lobby
 
             if (Entity.Type != LobbyType.MainMenu
-                && Entity.Type != LobbyType.MapCreateLobby)
+                && Entity.Type != LobbyType.MapCreateLobby
+                && Entity.Type != LobbyType.CharCreateLobby)
             {
                 await AddPlayerLobbyStats(player).ConfigureAwait(true);
             }
+
+            Players.TryAdd(player.Id, player);
 
             ModAPI.Thread.RunInMainThread(() =>
             {
                 ModAPI.Sync.SendEvent(this, ToClientEvent.JoinSameLobby, player.RemoteId);
 
                 player.Lobby = this;
-                Players.TryAdd(player.Id, player);
 
                 if (Entity.Type == LobbyType.MainMenu
                     || Entity.Type == LobbyType.MapCreateLobby
-                    || Entity.Type == LobbyType.GangLobby)
+                    || Entity.Type == LobbyType.GangLobby
+                    || Entity.Type == LobbyType.CharCreateLobby)
                     player.ModPlayer?.SetInvincible(true);
 
                 player.ModPlayer!.Dimension = Dimension;

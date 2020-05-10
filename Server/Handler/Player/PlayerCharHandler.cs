@@ -262,22 +262,7 @@ namespace TDS_Server.Handler.Player
                         SkinTonePercentage = isMale ? 1 : 0
                     },
                     FeaturesData = new PlayerCharFeaturesDatas(),
-                    AppearanceData = new PlayerCharAppearanceDatas 
-                    {
-                        AddBodyBlemishesOpacity = 100,
-                        AgeingOpacity = 100,
-                        BlemishesOpacity = 100,
-                        BlushOpacity = 100,
-                        BodyBlemishesOpacity = 100,
-                        ChestHairOpacity = 100,
-                        ComplexionOpacity = 100,
-                        EyebrowsOpacity = 100,
-                        FacialHairOpacity = 100,
-                        LipstickOpacity = 100,
-                        MakeupOpacity = 100,
-                        MolesAndFrecklesOpacity = 100,
-                        SunDamageOpacity = 100
-                    },
+                    AppearanceData = new PlayerCharAppearanceDatas(),
                     HairAndColorsData = new PlayerCharHairAndColorsDatas()
                 };
                 _dbContext.Add(charDatas);

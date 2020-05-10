@@ -20,5 +20,10 @@ namespace TDS_Shared.Data.Models
             B = b;
             A = a;
         }
+
+        public override string ToString()
+        {
+            return $"({R}, {G}, {B}, {A})";
+        }
     }
 }

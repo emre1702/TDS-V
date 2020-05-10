@@ -15,7 +15,7 @@ namespace TDS_Client.Handler
         public LoggingHandler(IModAPI modAPI)
         {
             _modAPI = modAPI;
-            _outputLogInfo = false;
+            _outputLogInfo = true;
         }
 
         public void LogError(Exception ex, string title = null)

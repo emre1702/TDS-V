@@ -47,6 +47,8 @@ namespace TDS_Client.Handler.Deathmatch
             ModAPI.Cam.DoScreenFadeIn(_settingsHandler.ScreenFadeInTimeAfterSpawn);
             ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
             ModAPI.Cam.SetCamEffect(0);
+
+            _eventsHandler.OnSpawn();
         }
 
         public void PlayerDeath(IPlayer player, uint reason, IPlayer killer, CancelEventArgs cancel)

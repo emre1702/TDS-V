@@ -1,6 +1,7 @@
 ﻿using System;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler;
+using TDS_Client.Handler.Appearance;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Draw;
@@ -74,7 +75,7 @@ namespace TDS_Client.Core.Init
                 var scoreboardHandler = new ScoreboardHandler(modAPI, loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler, serializer);
                 var chatHandler = new ChatHandler(modAPI, loggingHandler, browserHandler, bindsHandler, remoteEventsSender, lobbyHandler, playerFightHandler, 
                     eventsHandler, camerasHandler);
-
+                new ShirtTeamColorsHandler(modAPI, loggingHandler, lobbyHandler, dataSyncHandler, eventsHandler);
 
                 var workaroundsHandler = new WorkaroundsHandler(modAPI, loggingHandler, serializer, utilsHandler);
                 new AFKCheckHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, remoteEventsSender, playerFightHandler, timerHandler, dxHandler);
@@ -82,8 +83,8 @@ namespace TDS_Client.Core.Init
                 var nametagsHandler = new NametagsHandler(modAPI, loggingHandler, camerasHandler, settingsHandler, utilsHandler);
 
                 new RankingHandler(modAPI, loggingHandler, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler);
-                new MapCreatorHandler(modAPI, loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler, browserHandler, dxHandler,
-                    remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler);
+                new MapCreatorHandler(modAPI, loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler, 
+                    browserHandler, dxHandler, remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler, deathHandler);
 
                 loggingHandler.LogInfo("Services successfully initialized", "Services.Initialize", true);
             }
