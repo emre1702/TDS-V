@@ -44,52 +44,100 @@ namespace TDS_Client.Handler.Sync
 
         public T GetData<T>(IPlayer player, PlayerDataKey key, T returnOnEmpty = default)
         {
-            if (!_playerRemoteIdDatas.ContainsKey(player.RemoteId))
-                return returnOnEmpty;
-            if (!_playerRemoteIdDatas[player.RemoteId].ContainsKey(key))
-                return returnOnEmpty;
+            try
+            {
+                if (!_playerRemoteIdDatas.ContainsKey(player.RemoteId))
+                    return returnOnEmpty;
+                if (!_playerRemoteIdDatas[player.RemoteId].ContainsKey(key))
+                    return returnOnEmpty;
 
-            return (T)_playerRemoteIdDatas[player.RemoteId][key];
+                return (T)_playerRemoteIdDatas[player.RemoteId][key];
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, $"Name: {player.Name} | Key {key}");
+                return returnOnEmpty;
+            }
         }
 
         public T GetData<T>(IEntity entity, EntityDataKey key, T returnOnEmpty = default)
         {
-            if (!_entityRemoteIdDatas.ContainsKey(entity.RemoteId))
-                return returnOnEmpty;
-            if (!_entityRemoteIdDatas[entity.RemoteId].ContainsKey(key))
-                return returnOnEmpty;
+            try 
+            { 
+                if (!_entityRemoteIdDatas.ContainsKey(entity.RemoteId))
+                    return returnOnEmpty;
+                if (!_entityRemoteIdDatas[entity.RemoteId].ContainsKey(key))
+                    return returnOnEmpty;
 
-            return (T)_entityRemoteIdDatas[entity.RemoteId][key];
+                return (T)_entityRemoteIdDatas[entity.RemoteId][key];
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, $"IsEntity | Key {key}");
+                return returnOnEmpty;
+            }
         }
 
         public object GetData(IPlayer player, PlayerDataKey key)
         {
-            if (!_playerRemoteIdDatas.ContainsKey(player.RemoteId))
-                return null;
-            if (!_playerRemoteIdDatas[player.RemoteId].ContainsKey(key))
-                return null;
+            try
+            {
+                if (!_playerRemoteIdDatas.ContainsKey(player.RemoteId))
+                    return null;
+                if (!_playerRemoteIdDatas[player.RemoteId].ContainsKey(key))
+                    return null;
 
-            return _playerRemoteIdDatas[player.RemoteId][key];
+                return _playerRemoteIdDatas[player.RemoteId][key];
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, $"Name: {player.Name} | Key {key}");
+                return null;
+            }
         }
 
         public object GetData(IEntity entity, EntityDataKey key)
         {
-            if (!_entityRemoteIdDatas.ContainsKey(entity.RemoteId))
-                return null;
-            if (!_entityRemoteIdDatas[entity.RemoteId].ContainsKey(key))
-                return null;
+            try
+            {
+                if (!_entityRemoteIdDatas.ContainsKey(entity.RemoteId))
+                    return null;
+                if (!_entityRemoteIdDatas[entity.RemoteId].ContainsKey(key))
+                    return null;
 
-            return _entityRemoteIdDatas[entity.RemoteId][key];
+                return _entityRemoteIdDatas[entity.RemoteId][key];
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, $"IsEntity | Key {key}");
+                return null;
+            }
         }
 
         public T GetData<T>(PlayerDataKey key, T returnOnEmpty = default)
         {
-            return GetData<T>(ModAPI.LocalPlayer, key, returnOnEmpty);
+            try
+            {
+                return GetData(ModAPI.LocalPlayer, key, returnOnEmpty);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, $"LocalPlayer | Key {key}");
+                return returnOnEmpty;
+            }
         }
 
         public object GetData(PlayerDataKey key)
         {
-            return GetData(ModAPI.LocalPlayer, key);
+            try
+            {
+                return GetData(ModAPI.LocalPlayer, key);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, $"LocalPlayer | Key {key}");
+                return null;
+            }
         }
 
         private void OnSetPlayerDataMethod(object[] args)
