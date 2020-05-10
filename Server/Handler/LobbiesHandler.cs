@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -276,12 +277,15 @@ namespace TDS_Server.Handler
                 };
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
-                Arena? arena = null;
+                var taskCompletionSource = new TaskCompletionSource<Arena>();
+
                 _modAPI.Thread.RunInMainThread(() =>
                 {
-                    arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
+                    var arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
+                    taskCompletionSource.TrySetResult(arena);
                 });
-                await arena!.AddToDB();
+                var arena = await taskCompletionSource.Task;
+                await arena.AddToDB();
                 _modAPI.Thread.RunInMainThread(() =>
                 {
                     _eventsHandler.OnLobbyCreated(arena);
