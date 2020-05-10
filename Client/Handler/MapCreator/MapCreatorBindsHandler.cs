@@ -60,7 +60,7 @@ namespace TDS_Client.Handler.MapCreator
             _bindsHandler.Add(Key.F, _mapCreatorObjectPlacingHandler.TogglePlaceOnGround);
 
             var lang = _settingsHandler.Language;
-            _instructionalButtonHandler.Add(lang.LET_IT_FLOAT, "F");
+            _mapCreatorObjectPlacingHandler.AddInstructionalButton();
             _instructionalButtonHandler.Add(lang.DIRECTION, Control.VehicleRoof);
             _instructionalButtonHandler.Add(lang.DELETE_DESCRIPTION, lang.DELETE_KEY);
             _instructionalButtonHandler.Add(lang.SLOWER, Control.VehicleFlySelectPrevWeapon);

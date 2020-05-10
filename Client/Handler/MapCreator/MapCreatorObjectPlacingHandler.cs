@@ -355,8 +355,12 @@ namespace TDS_Client.Handler.MapCreator
                 return;
 
             _placeOnGround = !_placeOnGround;
+            AddInstructionalButton();
+        }
 
-            _instructionalButtonHandler.Add(_placeOnGround ? _settingsHandler.Language.PUT_ON_GROUND : _settingsHandler.Language.LET_IT_FLOAT, "F");
+        public void AddInstructionalButton()
+        {
+            _instructionalButtonHandler.Add(_placeOnGround ? _settingsHandler.Language.LET_IT_FLOAT : _settingsHandler.Language.PUT_ON_GROUND, "F");
         }
 
         private (RaycastHit, Position3D) GetCursorHit(float toDistance, int ignoreHandle, int flags)
