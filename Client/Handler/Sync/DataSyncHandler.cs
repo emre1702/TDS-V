@@ -142,102 +142,152 @@ namespace TDS_Client.Handler.Sync
 
         private void OnSetPlayerDataMethod(object[] args)
         {
-            ushort playerRemoteId = Convert.ToUInt16(args[0]);
-            PlayerDataKey key = (PlayerDataKey)Convert.ToInt32(args[1]);
-            object value = args[2];
-
-            if (!_playerRemoteIdDatas.ContainsKey(playerRemoteId))
-                _playerRemoteIdDatas[playerRemoteId] = new Dictionary<PlayerDataKey, object>();
-            _playerRemoteIdDatas[playerRemoteId][key] = value;
-
-            var player = ModAPI.Pool.Players.GetAtRemote(playerRemoteId);
-            if (player != null)
+            try
             {
-                _eventsHandler.OnDataChanged(player, key, value);
+                ushort playerRemoteId = Convert.ToUInt16(args[0]);
+                PlayerDataKey key = (PlayerDataKey)Convert.ToInt32(args[1]);
+                object value = args[2];
+
+                if (!_playerRemoteIdDatas.ContainsKey(playerRemoteId))
+                    _playerRemoteIdDatas[playerRemoteId] = new Dictionary<PlayerDataKey, object>();
+                _playerRemoteIdDatas[playerRemoteId][key] = value;
+
+                var player = ModAPI.Pool.Players.GetAtRemote(playerRemoteId);
+                if (player != null)
+                {
+                    _eventsHandler.OnDataChanged(player, key, value);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
             }
         }
 
         private void OnSetEntityDataMethod(object[] args)
         {
-            ushort entityRemoteId = Convert.ToUInt16(args[0]);
-            EntityDataKey key = (EntityDataKey)Convert.ToInt32(args[1]);
-            object value = args[2];
+            try
+            {
+                ushort entityRemoteId = Convert.ToUInt16(args[0]);
+                EntityDataKey key = (EntityDataKey)Convert.ToInt32(args[1]);
+                object value = args[2];
 
-            if (!_entityRemoteIdDatas.ContainsKey(entityRemoteId))
-                _entityRemoteIdDatas[entityRemoteId] = new Dictionary<EntityDataKey, object>();
-            _entityRemoteIdDatas[entityRemoteId][key] = value;
+                if (!_entityRemoteIdDatas.ContainsKey(entityRemoteId))
+                    _entityRemoteIdDatas[entityRemoteId] = new Dictionary<EntityDataKey, object>();
+                _entityRemoteIdDatas[entityRemoteId][key] = value;
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void OnSyncPlayerDataMethod(object[] args)
         {
-            string dictJson = (string)args[0];
-            var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
-            foreach (var entry in dict)
+            try
             {
-                var player = ModAPI.Pool.Players.GetAtRemote(entry.Key);
-                if (!_playerRemoteIdDatas.ContainsKey(entry.Key))
-                    _playerRemoteIdDatas[entry.Key] = new Dictionary<PlayerDataKey, object>();
-                foreach (var dataEntry in entry.Value)
+                string dictJson = (string)args[0];
+                var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
+                foreach (var entry in dict)
                 {
-                    _playerRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
-                    if (player != null)
+                    var player = ModAPI.Pool.Players.GetAtRemote(entry.Key);
+                    if (!_playerRemoteIdDatas.ContainsKey(entry.Key))
+                        _playerRemoteIdDatas[entry.Key] = new Dictionary<PlayerDataKey, object>();
+                    foreach (var dataEntry in entry.Value)
                     {
-                        _eventsHandler.OnDataChanged(player, dataEntry.Key, dataEntry.Value);
+                        _playerRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
+                        if (player != null)
+                        {
+                            _eventsHandler.OnDataChanged(player, dataEntry.Key, dataEntry.Value);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
             }
         }
 
         private void OnSyncEntityDataMethod(object[] args)
         {
-            string dictJson = (string)args[0];
-            var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<EntityDataKey, object>>>(dictJson);
-            foreach (var entry in dict)
+            try
             {
-                if (!_entityRemoteIdDatas.ContainsKey(entry.Key))
-                    _entityRemoteIdDatas[entry.Key] = new Dictionary<EntityDataKey, object>();
-                foreach (var dataEntry in entry.Value)
+                string dictJson = (string)args[0];
+                var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<EntityDataKey, object>>>(dictJson);
+                foreach (var entry in dict)
                 {
-                    _entityRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
+                    if (!_entityRemoteIdDatas.ContainsKey(entry.Key))
+                        _entityRemoteIdDatas[entry.Key] = new Dictionary<EntityDataKey, object>();
+                    foreach (var dataEntry in entry.Value)
+                    {
+                        _entityRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
             }
         }
 
         private void OnRemoveSyncedPlayerDatasMethod(object[] args)
         {
-            ushort playerRemoteId = Convert.ToUInt16(args[0]);
-            _playerRemoteIdDatas.Remove(playerRemoteId);
+            try
+            {
+                ushort playerRemoteId = Convert.ToUInt16(args[0]);
+                _playerRemoteIdDatas.Remove(playerRemoteId);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void OnRemoveSyncedEntityDatasMethod(object[] args)
         {
-            ushort entityRemoteId = Convert.ToUInt16(args[0]);
-            _entityRemoteIdDatas.Remove(entityRemoteId);
+            try
+            {
+                ushort entityRemoteId = Convert.ToUInt16(args[0]);
+                _entityRemoteIdDatas.Remove(entityRemoteId);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+   
         }
 
         private bool _nameSyncedWithAngular;
         private void OnLocalPlayerDataChange(IPlayer player, PlayerDataKey key, object obj)
         {
-            if (player != ModAPI.LocalPlayer)
-                return;
-            switch (key)
+            try
             {
-                case PlayerDataKey.Money:
-                    //Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
-                    _browserHandler.Angular.SyncMoney((int)obj);
-                    _browserHandler.Angular.SyncHudDataChange(HudDataType.Money, (int)obj);
-                    break;
-                case PlayerDataKey.AdminLevel:
-                    _browserHandler.Angular.RefreshAdminLevel(Convert.ToInt32(obj));
-                    break;
-                case PlayerDataKey.Name:
-                    if (!_nameSyncedWithAngular)
-                    {
-                        _nameSyncedWithAngular = true;
-                        return;
-                    }
-                    _browserHandler.Angular.SyncUsernameChange((string)obj);
-                    break;
+                if (player != ModAPI.LocalPlayer)
+                    return;
+                switch (key)
+                {
+                    case PlayerDataKey.Money:
+                        //Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
+                        _browserHandler.Angular.SyncMoney((int)obj);
+                        _browserHandler.Angular.SyncHudDataChange(HudDataType.Money, (int)obj);
+                        break;
+                    case PlayerDataKey.AdminLevel:
+                        _browserHandler.Angular.RefreshAdminLevel(Convert.ToInt32(obj));
+                        break;
+                    case PlayerDataKey.Name:
+                        if (!_nameSyncedWithAngular)
+                        {
+                            _nameSyncedWithAngular = true;
+                            return;
+                        }
+                        _browserHandler.Angular.SyncUsernameChange((string)obj);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, $"Name: {player.Name} | Key: {key} | Object: {obj}");
             }
         }
     }
