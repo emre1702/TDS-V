@@ -63,8 +63,11 @@
     </div>
 
     <div id="bottom">
-        <button id="back-button" mat-raised-button (click)="backButtonClicked()">
+        <button mat-raised-button (click)="backButtonClicked()">
             {{ 'Back' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button (click)="clearButtonClicked()">
+            {{ 'Clear' | language: settings.Lang }}
         </button>
     </div>
 </div>

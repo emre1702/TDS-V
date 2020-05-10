@@ -72,6 +72,18 @@ export class CustomLobbyWeaponsMenuComponent implements OnInit {
         this.backClicked.emit(this.selectedWeapons);
     }
 
+    clearButtonClicked() {
+        for (const group of this.weaponHashGroups) {
+            for (const weapon of group[1]) {
+                weapon[2] = false;
+            }
+        }
+        this.selectedWeapons = [];
+        this.selectedWeaponsDataSource.data = this.selectedWeapons;
+
+        this.changeDetector.detectChanges();
+    }
+
     selectWeapon(weaponData: [string, WeaponHash, boolean]) {
         if (weaponData[2]) {
             return;
