@@ -907,6 +907,8 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.PlayerId);
 
+                entity.HasIndex(e => e.DiscordUserId).IsUnique();
+
                 entity.Property(e => e.PlayerId)
                     .ValueGeneratedNever();
 
