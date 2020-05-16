@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace TDS_Server.Handler.Entities.Utility
+namespace TDS_Server.Data.Utility
 {
-
+    #nullable enable
     public class AsyncValueTaskEvent<T>
     {
         private readonly List<Func<T, ValueTask>> _invocationList;

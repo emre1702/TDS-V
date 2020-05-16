@@ -1,6 +1,8 @@
 ﻿using BonusBotConnector_Server;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
@@ -53,13 +55,26 @@ namespace TDS_Server.Handler.Userpanel
             SupportAdminHandler = new UserpanelSupportAdminHandler(SupportRequestHandler);
         }
 
-        private string? CommandService_OnUsedCommand(ulong userId, string command)
+        private async ValueTask CommandService_OnUsedCommand((ulong userId, string command, IList<string> args, BBUsedCommandReply reply) data)
         {
-            return command switch
+            switch (data.command)
             {
-                "confirmtds" => SettingsNormalHandler?.ConfirmDiscordUserId(userId) ?? "BonusBot-Connector is not started at server.",
-                _ => null,
-            };
+                case "ConfirmTDS":
+                    data.reply.Message = SettingsNormalHandler?.ConfirmDiscordUserId(data.userId) ?? "BonusBot-Connector is not started at server.";
+                    break;
+
+                case "CreateSupportRequest":
+                    var createTask = SupportRequestHandler?.CreateRequestFromDiscord(data.userId, data.args);
+                    if (createTask is { })
+                        data.reply.Message = await createTask;
+                    break;
+
+                case "AnswerSupportRequest":
+                    var answerTask = SupportRequestHandler?.AnswerRequestFromDiscord(data.userId, data.args);
+                    if (answerTask is { })
+                        data.reply.Message = await answerTask;
+                    break;
+            }
         }
 
         public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)

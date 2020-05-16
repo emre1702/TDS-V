@@ -1,20 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BonusBotConnector.Client;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
-using TDS_Server.Data;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces.ModAPI;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -26,14 +27,16 @@ namespace TDS_Server.Handler.Userpanel
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly BonusBotConnectorClient _bonusBotConnectorClient;
 
-        public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, 
-            ISettingsHandler settingsHandler, IModAPI modAPI)
+        public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
+            ISettingsHandler settingsHandler, IModAPI modAPI, BonusBotConnectorClient bonusBotConnectorClient)
             : base(dbContext, loggingHandler)
         {
             _modAPI = modAPI;
             _serializer = serializer;
             _settingsHandler = settingsHandler;
+            _bonusBotConnectorClient = bonusBotConnectorClient;
 
             eventsHandler.Hour += DeleteTooLongClosedRequests;
 
@@ -59,7 +62,7 @@ namespace TDS_Server.Handler.Userpanel
         public async Task<string?> GetSupportRequests(ITDSPlayer player)
         {
 
-            var data = await ExecuteForDBAsync(async dbContext 
+            var data = await ExecuteForDBAsync(async dbContext
                 => await dbContext.SupportRequests
                     .Include(r => r.Author)
                     .Where(r => r.AuthorId == player.Entity!.Id
@@ -94,7 +97,7 @@ namespace TDS_Server.Handler.Userpanel
                 int? requestId;
                 if ((requestId = Utils.GetInt(args[0])) == null)
                     return null;
-  
+
                 var data = await ExecuteForDBAsync(async dbContext
                     => await dbContext.SupportRequests
                         .Include(r => r.Messages)
@@ -142,6 +145,50 @@ namespace TDS_Server.Handler.Userpanel
             }
         }
 
+        internal async Task<string?> CreateRequestFromDiscord(ulong discordUserId, IList<string> args)
+        {
+            var playerId = await ExecuteForDBAsync(async dbContext =>
+            {
+                return await dbContext.PlayerSettings
+                    .Where(p => p.DiscordUserId == discordUserId)
+                    .Select(p => p.PlayerId)
+                    .FirstOrDefaultAsync();
+            });
+            if (playerId == 0)
+                return $"There is no player with that Discord-ID.";
+
+            string title = args[0];
+            string text = args[1];
+            var supportType = Enum.Parse<SupportType>(args[2], true);
+            int atLeastAdminLevel = int.Parse(args[3]);
+
+            var requestEntity = new SupportRequests
+            {
+                AuthorId = playerId,
+                AtleastAdminLevel = atLeastAdminLevel,
+                Messages = new List<SupportRequestMessages>
+                {
+                    new SupportRequestMessages
+                    {
+                        AuthorId = playerId,
+                        MessageIndex = 0,
+                        Text = text
+                    }
+                },
+                Title = title,
+                Type = supportType
+            };
+
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.SupportRequests.Add(requestEntity);
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            return requestEntity.Id.ToString();
+        }
+
         public async Task<object?> SendRequest(ITDSPlayer player, ArraySegment<object> args)
         {
             string json = (string)args[0];
@@ -167,14 +214,75 @@ namespace TDS_Server.Handler.Userpanel
                 Type = request.Type
             };
 
-            await ExecuteForDBAsync(async dbContext => 
+            await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.SupportRequests.Add(requestEntity);
 
                 await dbContext.SaveChangesAsync();
             });
 
+            _bonusBotConnectorClient.Support?.Create(player, requestEntity);
+
             _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
+            return null;
+        }
+
+        internal async Task<string?> AnswerRequestFromDiscord(ulong discordUserId, IList<string> args)
+        {
+            var playerData = await ExecuteForDBAsync(async dbContext =>
+            {
+                return await dbContext.PlayerSettings
+                    .Where(p => p.DiscordUserId == discordUserId)
+                    .Include(p => p.Player)
+                    .Select(p => new { p.PlayerId, p.Player.Name })
+                    .FirstOrDefaultAsync();
+            });
+            if (playerData is null)
+                return $"There is no player with that Discord-ID.";
+
+            int requestId = Convert.ToInt32(args[0]);
+            string text = args[1];
+
+            var request = await ExecuteForDBAsync(async dbContext
+                => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
+            if (request is null)
+                return "-";
+
+            var maxMessageIndex = await ExecuteForDBAsync(async dbContext
+               => await dbContext.SupportRequestMessages.Where(m => m.RequestId == requestId).MaxAsync(m => m.MessageIndex) + 1);
+
+            var messageEntity = new SupportRequestMessages
+            {
+                AuthorId = playerData.PlayerId,
+                MessageIndex = maxMessageIndex,
+                RequestId = requestId,
+                Text = text
+            };
+
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.SupportRequestMessages.Add(messageEntity);
+                await dbContext.SaveChangesAsync();
+            });
+
+            if (!_inSupportRequest.ContainsKey(requestId))
+                return null;
+
+            string messageJson = _serializer.ToBrowser(new SupportRequestMessage
+            {
+                Author = playerData.Name,
+                Message = messageEntity.Text,
+                CreateTime = messageEntity.CreateTime.ToString()
+            });
+
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                foreach (var target in _inSupportRequest[requestId])
+                {
+                    target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
+                }
+            });
+
             return null;
         }
 
@@ -193,7 +301,7 @@ namespace TDS_Server.Handler.Userpanel
             if (request.AuthorId != player.Entity!.Id && player.AdminLevel.Level == 0)
                 return null;
 
-            var maxMessageIndex = await ExecuteForDBAsync(async dbContext 
+            var maxMessageIndex = await ExecuteForDBAsync(async dbContext
                 => await dbContext.SupportRequestMessages.Where(m => m.RequestId == requestId).MaxAsync(m => m.MessageIndex) + 1);
 
             var messageEntity = new SupportRequestMessages
@@ -209,7 +317,9 @@ namespace TDS_Server.Handler.Userpanel
                 dbContext.SupportRequestMessages.Add(messageEntity);
                 await dbContext.SaveChangesAsync();
             });
-          
+
+            _bonusBotConnectorClient.Support?.Answer(player, messageEntity);
+
             if (!_inSupportRequest.ContainsKey(requestId.Value))
                 return null;
 
@@ -227,7 +337,7 @@ namespace TDS_Server.Handler.Userpanel
                     target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
                 }
             });
-            
+
             return null;
         }
 
@@ -238,7 +348,7 @@ namespace TDS_Server.Handler.Userpanel
                 return null;
             bool closed = (bool)args[1];
 
-            var request = await ExecuteForDBAsync(async dbContext 
+            var request = await ExecuteForDBAsync(async dbContext
                 => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
             if (request is null)
                 return null;

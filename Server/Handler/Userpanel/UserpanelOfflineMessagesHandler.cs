@@ -5,12 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data;
+using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
-using System.Collections.Generic;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -21,7 +20,7 @@ namespace TDS_Server.Handler.Userpanel
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
 
         public UserpanelOfflineMessagesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
-            ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) 
+            ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler)
             : base(dbContext, loggingHandler)
         {
             (_serializer, _settingsHandler, _offlineMessagesHandler) = (serializer, settingsHandler, offlineMessagesHandler);
@@ -31,7 +30,7 @@ namespace TDS_Server.Handler.Userpanel
 
         public async Task<string?> GetData(ITDSPlayer player)
         {
-            var offlineMessages = await ExecuteForDBAsync(async dbContext 
+            var offlineMessages = await ExecuteForDBAsync(async dbContext
                 => await dbContext.Offlinemessages
                     .Where(o => o.TargetId == player.Entity!.Id)
                     .Include(o => o.Source)
@@ -62,7 +61,7 @@ namespace TDS_Server.Handler.Userpanel
                     }
                     await dbContext.SaveChangesAsync();
                 });
-                
+
             }
 
             return json;
@@ -99,7 +98,7 @@ namespace TDS_Server.Handler.Userpanel
             int? targetId;
             if (!(targetId = Utils.GetInt(args[1])).HasValue)
             {
-                targetId = await ExecuteForDBAsync(async dbContext 
+                targetId = await ExecuteForDBAsync(async dbContext
                     => await dbContext.Players.Where(p => p.Name == playerName || p.SCName == playerName).Select(p => p.Id).FirstOrDefaultAsync());
                 if (targetId is null || targetId == 0)
                 {
@@ -139,7 +138,7 @@ namespace TDS_Server.Handler.Userpanel
 
                 await dbContext.SaveChangesAsync();
             });
-           
+
             return null;
         }
 
@@ -152,7 +151,7 @@ namespace TDS_Server.Handler.Userpanel
                 dbContext.Offlinemessages.RemoveRange(msgs);
                 await dbContext.SaveChangesAsync();
             });
-                
+
         }
     }
 

@@ -2,9 +2,7 @@
 using Grpc.Net.Client;
 using System;
 using System.Linq;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Bonusbot;
 
 namespace BonusBotConnector.Client
 {
@@ -13,6 +11,7 @@ namespace BonusBotConnector.Client
         public ChannelChat? ChannelChat { get; }
         public ServerInfos? ServerInfos { get; }
         public PrivateChat? PrivateChat { get; }
+        public Support? Support { get; }
         public Helper? Helper { get; }
 
         //public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
@@ -40,6 +39,7 @@ namespace BonusBotConnector.Client
             if (settings.ServerInfosChannelId is { })
                 ServerInfos = new ServerInfos(channel, settings);
             PrivateChat = new PrivateChat(channel, settings);
+            Support = new Support(channel, settings);
         }
     }
 }

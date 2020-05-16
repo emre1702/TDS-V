@@ -12,7 +12,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Core;
 
-namespace TDS_Server.Data
+namespace TDS_Server.Data.Utility
 {
     public static class Utils
     {
@@ -131,9 +131,10 @@ namespace TDS_Server.Data
         }
 
         public static IEnumerable<string> SplitByLength(string str, int length)
-            => Enumerable
-                    .Range(0, str.Length / length)
-                    .Select(i => str.Substring(i * length, length));
+        {
+            for (int i = 0; i < str.Length; i += length)
+                yield return str.Substring(i, Math.Min(length, str.Length - length * i));
+        }
 
         public static List<string> SplitPartsByLength(string str, int length, string partLimiter = "\n")
         {

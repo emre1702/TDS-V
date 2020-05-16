@@ -1,0 +1,38 @@
+﻿syntax = "proto3";
+
+//import "Protos/Shared.proto";
+
+option csharp_namespace = "BonusBotConnector.Client";
+
+service SupportRequest {
+  rpc Create (SupportRequestCreateRequest) returns (SupportRequestCreateReply);
+  rpc Answer (SupportRequestAnswerRequest) returns (SupportRequestAnswerReply);
+}
+
+message SupportRequestCreateRequest {
+  uint64 guildId = 1;
+  uint64 userId = 2;
+  string authorName = 3;
+  string title = 4;
+  string text = 5;
+  int32 supportType = 6;
+  int32 atLeastAdminLevel = 7;
+}
+
+message SupportRequestAnswerRequest {
+  uint64 guildId = 1;
+  int32 supportRequestId = 2;
+  string authorName = 3;
+  string text = 4;
+}
+
+message SupportRequestCreateReply {
+    string errorMessage = 1;
+    string errorStackTrace = 2;
+    uint64 createdChannelId = 3;
+}
+
+message SupportRequestAnswerReply {
+    string errorMessage = 1;
+    string errorStackTrace = 2;
+}
