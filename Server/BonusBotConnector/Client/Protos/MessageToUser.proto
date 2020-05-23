@@ -32,4 +32,5 @@ message EmbedToUserRequest {
 message MessageToUserRequestReply {
     string errorMessage = 1;
     string errorStackTrace = 2;
+    string errorType = 3;
 }

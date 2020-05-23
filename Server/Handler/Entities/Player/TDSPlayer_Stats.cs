@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Entities.Player
             }
             else
                 LoggingHandler?.LogError($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
-                                Environment.StackTrace, this);
+                                Environment.StackTrace, null, this);
         }
 
         public void GiveMoney(uint money)

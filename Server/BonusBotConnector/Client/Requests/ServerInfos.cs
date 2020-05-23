@@ -36,7 +36,7 @@ namespace BonusBotConnector.Client.Requests
 
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
-                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, true);
+                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
             }
             catch (Exception ex)
             {

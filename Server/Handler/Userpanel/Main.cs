@@ -6,29 +6,29 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class UserpanelHandler
+    public class UserpanelHandler : IUserpanelHandler
     {
-
-        public readonly UserpanelApplicationsAdminHandler ApplicationsAdminHandler;
-        public readonly UserpanelApplicationUserHandler ApplicationUserHandler;
+        public IUserpanelApplicationsAdminHandler ApplicationsAdminHandler { get; }
+        public IUserpanelApplicationUserHandler ApplicationUserHandler { get; }
 
         private readonly UserpanelCommandsHandler _commandsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
         private readonly UserpanelFAQsHandlers _fAQsHandlers;
         private readonly UserpanelPlayerStatsHandler _playerStatsHandler;
 
-        public readonly UserpanelSupportUserHandler SupportUserHandler;
-        public readonly UserpanelSupportAdminHandler SupportAdminHandler;
-        public readonly UserpanelSupportRequestHandler SupportRequestHandler;
-        public readonly UserpanelSettingsNormalHandler SettingsNormalHandler;
-        public readonly UserpanelSettingsSpecialHandler SettingsSpecialHandler;
-        public readonly UserpanelOfflineMessagesHandler OfflineMessagesHandler;
+        public IUserpanelSupportUserHandler SupportUserHandler { get; }
+        public IUserpanelSupportAdminHandler SupportAdminHandler { get; }
+        public IUserpanelSupportRequestHandler SupportRequestHandler { get; }
+        public IUserpanelSettingsNormalHandler SettingsNormalHandler { get; }
+        public IUserpanelSettingsSpecialHandler SettingsSpecialHandler { get; }
+        public IUserpanelOfflineMessagesHandler OfflineMessagesHandler { get; }
 
         private readonly IModAPI _modAPI;
 
@@ -60,19 +60,11 @@ namespace TDS_Server.Handler.Userpanel
             switch (data.command)
             {
                 case "ConfirmTDS":
-                    data.reply.Message = SettingsNormalHandler?.ConfirmDiscordUserId(data.userId) ?? "BonusBot-Connector is not started at server.";
-                    break;
+                    var task = SettingsNormalHandler?.ConfirmDiscordUserId(data.userId);
+                    if (task is { })
+                        data.reply.Message = await task;
 
-                case "CreateSupportRequest":
-                    var createTask = SupportRequestHandler?.CreateRequestFromDiscord(data.userId, data.args);
-                    if (createTask is { })
-                        data.reply.Message = await createTask;
-                    break;
-
-                case "AnswerSupportRequest":
-                    var answerTask = SupportRequestHandler?.AnswerRequestFromDiscord(data.userId, data.args);
-                    if (answerTask is { })
-                        data.reply.Message = await answerTask;
+                    data.reply.Message ??= "BonusBot-Connector is not started at server.";
                     break;
             }
         }

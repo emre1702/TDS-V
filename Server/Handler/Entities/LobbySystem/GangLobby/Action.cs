@@ -141,7 +141,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             if (attacker.Lobby?.Type != LobbyType.GangLobby)
             {
-                LoggingHandler.LogError("Tried to start an action, but is not in GangLobby", Environment.StackTrace, attacker);
+                LoggingHandler.LogError("Tried to start an action, but is not in GangLobby", Environment.StackTrace, null, attacker);
                 return false;
             }
 

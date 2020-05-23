@@ -16,7 +16,7 @@ namespace BonusBotConnector.Client
 
         //public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
         public delegate void ErrorLogDelegate(Exception ex, bool logToBonusBot = true);
-        public delegate void ErrorStringLogDelegate(string message, string stackTrace, bool logToBonusBot = true);
+        public delegate void ErrorStringLogDelegate(string message, string stackTrace, string exceptionType, bool logToBonusBot = true);
 
         public BonusBotConnectorClient(TDSDbContext dbContext)
         {

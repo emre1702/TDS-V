@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class UserpanelSupportUserHandler
+    public class UserpanelSupportUserHandler : IUserpanelSupportUserHandler
     {
-        private readonly UserpanelSupportRequestHandler _userpanelSupportRequestHandler;
+        private readonly IUserpanelSupportRequestHandler _userpanelSupportRequestHandler;
 
-        public UserpanelSupportUserHandler(UserpanelSupportRequestHandler userpanelSupportRequestHandler)
+        public UserpanelSupportUserHandler(IUserpanelSupportRequestHandler userpanelSupportRequestHandler)
             => _userpanelSupportRequestHandler = userpanelSupportRequestHandler;
 
         public Task<string?> GetData(ITDSPlayer player)

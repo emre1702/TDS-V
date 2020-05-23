@@ -10,9 +10,9 @@ namespace TDS_Server.Data.Interfaces
     public interface ILoggingHandler
     {
         void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true);
-        void LogError(string info, string? stackTrace = null, ITDSPlayer? source = null, bool logToBonusBot = true);
+        void LogError(string info, string? stackTrace = null, string? errorType = null, ITDSPlayer? source = null, bool logToBonusBot = true);
         void LogErrorFromBonusBot(Exception ex, bool logToBonusBot = true);
-        void LogErrorFromBonusBot(string info, string stacktrace, bool logToBonusBot = true);
+        void LogErrorFromBonusBot(string info, string stacktrace, string exceptionType, bool logToBonusBot = true);
         void LogChat(string chat, ITDSPlayer source, ITDSPlayer? target = null, bool isGlobal = false, bool isAdminChat = false, bool isTeamChat = false);
         void LogAdmin(LogType cmd, ITDSPlayer? source, ITDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null);
         void LogAdmin(LogType cmd, ITDSPlayer? source, string reason, int? targetid = null, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null);

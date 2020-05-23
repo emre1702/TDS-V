@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
@@ -19,7 +20,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class UserpanelSupportRequestHandler : DatabaseEntityWrapper
+    public class UserpanelSupportRequestHandler : DatabaseEntityWrapper, IUserpanelSupportRequestHandler
     {
         private readonly HashSet<ITDSPlayer> _inSupportRequestsList = new HashSet<ITDSPlayer>();
         private readonly Dictionary<int, HashSet<ITDSPlayer>> _inSupportRequest = new Dictionary<int, HashSet<ITDSPlayer>>();
@@ -145,7 +146,7 @@ namespace TDS_Server.Handler.Userpanel
             }
         }
 
-        internal async Task<string?> CreateRequestFromDiscord(ulong discordUserId, IList<string> args)
+        public async Task<string?> CreateRequestFromDiscord(ulong discordUserId, string title, string text, SupportType supportType, int atleastAdminLevel)
         {
             var playerId = await ExecuteForDBAsync(async dbContext =>
             {
@@ -157,15 +158,10 @@ namespace TDS_Server.Handler.Userpanel
             if (playerId == 0)
                 return $"There is no player with that Discord-ID.";
 
-            string title = args[0];
-            string text = args[1];
-            var supportType = Enum.Parse<SupportType>(args[2], true);
-            int atLeastAdminLevel = int.Parse(args[3]);
-
             var requestEntity = new SupportRequests
             {
                 AuthorId = playerId,
-                AtleastAdminLevel = atLeastAdminLevel,
+                AtleastAdminLevel = atleastAdminLevel,
                 Messages = new List<SupportRequestMessages>
                 {
                     new SupportRequestMessages
@@ -227,7 +223,7 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        internal async Task<string?> AnswerRequestFromDiscord(ulong discordUserId, IList<string> args)
+        public async Task<string?> AnswerRequestFromDiscord(ulong discordUserId, int requestId, string text)
         {
             var playerData = await ExecuteForDBAsync(async dbContext =>
             {
@@ -239,9 +235,6 @@ namespace TDS_Server.Handler.Userpanel
             });
             if (playerData is null)
                 return $"There is no player with that Discord-ID.";
-
-            int requestId = Convert.ToInt32(args[0]);
-            string text = args[1];
 
             var request = await ExecuteForDBAsync(async dbContext
                 => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
@@ -341,6 +334,35 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
+        public async Task<string?> ToggleClosedRequestFromDiscord(ulong discordUserId, int requestId, bool closed)
+        {
+
+            var request = await ExecuteForDBAsync(async dbContext
+                => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
+            if (request is null)
+                return null;
+            if (request.CloseTime is { } && closed || request.CloseTime is null && !closed)
+                return null;
+
+            if (closed)
+                request.CloseTime = DateTime.UtcNow;
+            else
+                request.CloseTime = null;
+
+            await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
+
+
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                foreach (var target in _inSupportRequestsList)
+                {
+                    target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
+                }
+            });
+
+            return null;
+        }
+
         public async Task<object?> SetSupportRequestClosed(ITDSPlayer player, ArraySegment<object> args)
         {
             int? requestId = Utils.GetInt(args[0]);
@@ -371,6 +393,8 @@ namespace TDS_Server.Handler.Userpanel
                     target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
                 }
             });
+
+            _bonusBotConnectorClient.Support?.ToggleClosed(player, request.Id, closed);
             return null;
         }
 
@@ -398,14 +422,23 @@ namespace TDS_Server.Handler.Userpanel
         {
 
             var deleteAfterDays = _settingsHandler.ServerSettings.DeleteRequestsDaysAfterClose;
-            await ExecuteForDBAsync(async dbContext =>
+            var requestIdsToDelete = await ExecuteForDBAsync(async dbContext =>
             {
                 var requests = await dbContext.SupportRequests
                     .Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow)
                     .ToListAsync();
+                if (requests.Count == 0)
+                    return null;
+
+                var requestIdsToDelete = requests.Select(r => r.Id);
                 dbContext.SupportRequests.RemoveRange(requests);
                 await dbContext.SaveChangesAsync();
+
+                return requestIdsToDelete;
             });
+
+            if (requestIdsToDelete is { })
+                _bonusBotConnectorClient.Support?.Delete(requestIdsToDelete);
         }
     }
 

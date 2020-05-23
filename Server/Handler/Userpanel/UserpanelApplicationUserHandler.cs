@@ -7,20 +7,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Player;
-using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Core;
-using TDS_Server.Data;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Utility;
+using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class UserpanelApplicationUserHandler : DatabaseEntityWrapper
+    public class UserpanelApplicationUserHandler : DatabaseEntityWrapper, IUserpanelApplicationUserHandler
     {
         public string AdminQuestions { get; set; } = string.Empty;
 
@@ -31,7 +31,7 @@ namespace TDS_Server.Handler.Userpanel
         private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
 
-        public UserpanelApplicationUserHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, 
+        public UserpanelApplicationUserHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, TDSPlayerHandler tdsPlayerHandler,
             OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
@@ -149,7 +149,7 @@ namespace TDS_Server.Handler.Userpanel
 
                 await dbContext.Entry(application).Reference(a => a.Player).LoadAsync();
             });
-            
+
             _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application, player);
             return null;
         }
@@ -175,11 +175,12 @@ namespace TDS_Server.Handler.Userpanel
                 return null;
             }
 
-            var application = await ExecuteForDBAsync(async dbContext => 
+            var application = await ExecuteForDBAsync(async dbContext =>
                 await dbContext.Applications.Include(a => a.Player).Where(a => a.Id == invitation.ApplicationId).FirstOrDefaultAsync());
             if (application.PlayerId != player.Entity!.Id)
             {
-                LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.", Environment.StackTrace, player);
+                LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.", 
+                    Environment.StackTrace, null, player);
                 return null;
             }
 
@@ -189,7 +190,7 @@ namespace TDS_Server.Handler.Userpanel
                 application.Closed = true;
                 await dbContext.SaveChangesAsync();
             });
-            
+
 
             player.Entity.AdminLeaderId = invitation.AdminId;
             player.Entity.AdminLvl = 1;
@@ -209,7 +210,7 @@ namespace TDS_Server.Handler.Userpanel
                     _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I've accepted your team application.");
                 }
             });
-            
+
             return null;
         }
 
@@ -222,7 +223,7 @@ namespace TDS_Server.Handler.Userpanel
             if ((invitationId = Utils.GetInt(args[0])) == null)
                 return null;
 
-            var invitation = await ExecuteForDBAsync(async dbContext => 
+            var invitation = await ExecuteForDBAsync(async dbContext =>
                 await dbContext.ApplicationInvitations
                     .Include(i => i.Admin)
                     .ThenInclude(a => a.PlayerSettings)
@@ -234,7 +235,7 @@ namespace TDS_Server.Handler.Userpanel
                 return null;
             }
 
-            var application = await ExecuteForDBAsync(async dbContext => 
+            var application = await ExecuteForDBAsync(async dbContext =>
                 await dbContext.Applications
                     .Include(a => a.Player)
                     .Where(a => a.Id == invitation.ApplicationId)
@@ -242,7 +243,7 @@ namespace TDS_Server.Handler.Userpanel
                     .FirstOrDefaultAsync());
             if (application.PlayerId != player.Entity!.Id)
             {
-                LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, player);
+                LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, null, player);
                 return null;
             }
 
@@ -266,7 +267,7 @@ namespace TDS_Server.Handler.Userpanel
                     _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I rejected your team application.");
                 }
             });
-            
+
 
             return null;
         }
@@ -280,7 +281,7 @@ namespace TDS_Server.Handler.Userpanel
                    .ForEachAsync(a => dbContext.Applications.Remove(a));
                 await dbContext.SaveChangesAsync();
             });
-           
+
         }
     }
 

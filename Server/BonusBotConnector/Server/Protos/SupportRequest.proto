@@ -1,0 +1,33 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "BonusBotConnector.Server";
+
+service SupportRequest {
+  rpc Create (CreateRequest) returns (Reply);
+  rpc Answer (AnswerRequest) returns (Reply);
+  rpc ToggleClosed (ToggleClosedRequest) returns (Reply);
+}
+
+message CreateRequest {
+    uint64 userId = 1;
+    string title = 2;
+    string text = 3;
+    int32 type = 4;
+    int32 atleastAdminLevel = 5;
+}
+
+message AnswerRequest {
+    uint64 userId = 1;
+    int32 supportRequestId = 2;
+    string text = 3;
+}
+
+message ToggleClosedRequest {
+    uint64 userId = 1;
+    int32 supportRequestId = 2;
+    bool closed = 3;
+}
+
+message Reply {
+    string message = 1;
+}

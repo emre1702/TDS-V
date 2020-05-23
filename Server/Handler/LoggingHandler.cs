@@ -74,14 +74,16 @@ namespace TDS_Server.Handler
         #region Error
         public async void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true)
         {
+            ex = ex.GetBaseException();
             var log = new LogErrors
             {
-                Info = ex.GetBaseException().Message,
+                ExceptionType = ex.GetType().Name,
+                Info = ex.Message,
                 StackTrace = ex.StackTrace ?? Environment.StackTrace,
                 Source = source?.Id,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
+            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
@@ -90,16 +92,17 @@ namespace TDS_Server.Handler
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
-        public async void LogError(string info, string? stackTrace = null, ITDSPlayer? source = null, bool logToBonusBot = true)
+        public async void LogError(string info, string? stackTrace = null, string? exceptionType = null, ITDSPlayer? source = null, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
+                ExceptionType = exceptionType,
                 Info = info,
                 StackTrace = stackTrace ?? Environment.StackTrace,
                 Source = source?.Id,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
+            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
@@ -110,14 +113,16 @@ namespace TDS_Server.Handler
 
         public async void LogErrorFromBonusBot(Exception ex, bool logToBonusBot = true)
         {
+            ex = ex.GetBaseException();
             var log = new LogErrors
             {
-                Info = ex.GetBaseException().Message,
+                ExceptionType = ex.GetType().Name,
+                Info = ex.Message,
                 StackTrace = ex.StackTrace ?? Environment.StackTrace,
                 Source = -1,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine(log.Info + Environment.NewLine + log.StackTrace);
+            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
@@ -126,10 +131,11 @@ namespace TDS_Server.Handler
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
-        public async void LogErrorFromBonusBot(string info, string stacktrace, bool logToBonusBot = true)
+        public async void LogErrorFromBonusBot(string info, string stacktrace, string exceptionType, bool logToBonusBot = true)
         {
             var log = new LogErrors
             {
+                ExceptionType = exceptionType,
                 Info = info,
                 StackTrace = stacktrace,
                 Source = -1,

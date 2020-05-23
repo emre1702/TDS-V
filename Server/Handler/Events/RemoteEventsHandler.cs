@@ -4,6 +4,7 @@ using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database.Entity.Player.Char;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
@@ -34,12 +35,12 @@ namespace TDS_Server.Handler.Events
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly MapsRatingsHandler _mapsRatingsHandler;
         private readonly MapCreatorHandler _mapCreatorHandler;
-        private readonly UserpanelHandler _userpanelHandler;
+        private readonly IUserpanelHandler _userpanelHandler;
 
         public RemoteEventsHandler(ChatHandler chatHandler, LoginHandler loginHandler, CommandsHandler commandsHandler,
             RegisterHandler registerHandler, ScoreboardHandler scoreboardHandler, LobbiesHandler lobbiesHandler,
             ILoggingHandler loggingHandler, IModAPI modAPI, DataSyncHandler dataSyncHandler,
-            MapsRatingsHandler mapsRatingsHandler, MapCreatorHandler mapCreatorHandler, UserpanelHandler userpanelHandler)
+            MapsRatingsHandler mapsRatingsHandler, MapCreatorHandler mapCreatorHandler, IUserpanelHandler userpanelHandler)
 
             => (_chatHandler, _loginHandler, _commandsHandler, _registerHandler, _scoreboardHandler, _lobbiesHandler,
             _loggingHandler, _modAPI, _dataSyncHandler, _mapsRatingsHandler, _mapCreatorHandler, _userpanelHandler) 
@@ -107,7 +108,7 @@ namespace TDS_Server.Handler.Events
             if (!(player.Lobby is FightLobby fightLobby))
             {
                 _loggingHandler.LogError(string.Format("Attacker {0} dealt damage on bone {1} to {2} - but this player isn't in fightlobby.", attacker.DisplayName, boneIdx, player.DisplayName), 
-                    Environment.StackTrace, attacker);
+                    Environment.StackTrace, null, attacker);
                 return;
             }
 

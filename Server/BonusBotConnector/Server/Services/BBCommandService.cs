@@ -34,7 +34,7 @@ namespace BonusBotConnector_Server
             catch (Exception ex)
             {
                 _loggingHandler.LogErrorFromBonusBot(ex, false);
-                return new UsedCommandReply { Message = "Error:" + Environment.NewLine + ex.GetBaseException().Message };
+                return new UsedCommandReply { Message = ex.GetType().Name + " error:" + Environment.NewLine + ex.GetBaseException().Message };
             }
             
         }

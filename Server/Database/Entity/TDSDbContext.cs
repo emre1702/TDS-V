@@ -668,7 +668,7 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.Id).UseHiLo();
 
-                entity.Property(e => e.Info).IsRequired();
+                entity.Property(e => e.ExceptionType).IsRequired(false);
 
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))

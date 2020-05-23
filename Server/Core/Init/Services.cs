@@ -9,6 +9,7 @@ using TDS_Server.Core.Manager.Timer;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
@@ -93,7 +94,7 @@ namespace TDS_Server.Core.Init
                .AddSingleton<DataSyncHandler>()
 
                // Userpanel
-               .AddSingleton<UserpanelHandler>()
+               .AddSingleton<IUserpanelHandler, UserpanelHandler>()
                .AddSingleton<UserpanelCommandsHandler>()
 
                .AddSingleton<AdminsHandler>()
@@ -168,7 +169,8 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<CustomLobbyMenuSyncHandler>();
             serviceProvider.GetRequiredService<DataSyncHandler>();
 
-            serviceProvider.GetRequiredService<UserpanelHandler>();
+            serviceProvider.GetRequiredService<IUserpanelHandler>();
+            serviceProvider.GetRequiredService<UserpanelCommandsHandler>();
 
             serviceProvider.GetRequiredService<AdminsHandler>();
             serviceProvider.GetRequiredService<IAnnouncementsHandler>();
@@ -187,7 +189,7 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<TimerHandler>();
             serviceProvider.GetRequiredService<WeaponDatasLoadingHandler>();
             serviceProvider.GetRequiredService<ScoreboardHandler>();
-            serviceProvider.GetRequiredService<UserpanelCommandsHandler>();
+            
         }
 
         internal static void InitDbContextOptionsBuilder(DbContextOptionsBuilder options, AppConfigHandler appConfigHandler, ILoggerFactory? loggerFactory)

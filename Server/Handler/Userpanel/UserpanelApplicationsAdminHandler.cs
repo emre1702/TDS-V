@@ -4,21 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
-using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper
+    public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper, IUserpanelApplicationsAdminHandler
     {
         private readonly IModAPI _modAPI;
         private readonly UserpanelPlayerStatsHandler _userpanelPlayerStatsHandler;
@@ -158,7 +157,7 @@ namespace TDS_Server.Handler.Userpanel
                     player.SendMessage(player.Language.SENT_APPLICATION);
                 }
             });
-            
+
 
             return null;
         }

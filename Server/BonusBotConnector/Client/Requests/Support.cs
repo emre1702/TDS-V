@@ -1,5 +1,7 @@
-﻿using Grpc.Net.Client;
+﻿using Google.Protobuf.Collections;
+using Grpc.Net.Client;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using TDS_Server.Data.Interfaces;
@@ -52,7 +54,7 @@ namespace BonusBotConnector.Client.Requests
 
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
-                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, true);
+                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
             }
             catch (Exception ex)
             {
@@ -79,7 +81,59 @@ namespace BonusBotConnector.Client.Requests
 
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
-                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, true);
+                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
+            }
+            catch (Exception ex)
+            {
+                Error?.Invoke(ex);
+            }
+        }
+
+        public async void ToggleClosed(ITDSPlayer player, int id, bool closed)
+        {
+            try
+            {
+                if (_settings.GuildId is null)
+                    return;
+
+                var request = new SupportRequestToggleClosedRequest
+                {
+                    GuildId = _settings.GuildId.Value,
+                    SupportRequestId = id,
+                    Closed = closed,
+                    RequesterName = player.DisplayName
+                };
+
+                var result = await _client.ToggleClosedAsync(request);
+
+                if (string.IsNullOrEmpty(result.ErrorMessage))
+                    return;
+                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
+            }
+            catch (Exception ex)
+            {
+                Error?.Invoke(ex);
+            }
+        }
+
+        public async void Delete(IEnumerable<int> requestIds)
+        {
+            try
+            {
+                if (_settings.GuildId is null)
+                    return;
+
+                var request = new SupportRequestDeleteRequest
+                {
+                    GuildId = _settings.GuildId.Value
+                };
+                request.SupportRequestIds.AddRange(requestIds);
+
+                var result = await _client.DeleteAsync(request);
+
+                if (string.IsNullOrEmpty(result.ErrorMessage))
+                    return;
+                ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
             }
             catch (Exception ex)
             {

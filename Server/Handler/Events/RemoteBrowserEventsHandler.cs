@@ -6,6 +6,7 @@ using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Maps;
@@ -32,7 +33,7 @@ namespace TDS_Server.Handler.Events
         private readonly ILoggingHandler _loggingHandler;
         private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
 
-        public RemoteBrowserEventsHandler(UserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
+        public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
             MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler)
         {
@@ -124,9 +125,10 @@ namespace TDS_Server.Handler.Events
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex.GetBaseException().Message + "\n"
+                var baseEx = ex.GetBaseException();
+                _loggingHandler.LogError(baseEx.Message + "\n"
                     + String.Join('\n', args.Select(a => Convert.ToString(a)?.Substring(0, Math.Min(Convert.ToString(a)?.Length ?? 0, 20)) ?? "-")),
-                    ex.StackTrace ?? Environment.StackTrace, player);
+                    ex.StackTrace ?? Environment.StackTrace, ex.GetType().Name + "|" + baseEx.GetType().Name, player);
             }
         }
 

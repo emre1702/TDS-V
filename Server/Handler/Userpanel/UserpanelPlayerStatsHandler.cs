@@ -32,7 +32,9 @@ namespace TDS_Server.Handler.Userpanel
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError("SendPlayerPlayerStats failed: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace, player);
+                var baseEx = ex.GetBaseException();
+                LoggingHandler.LogError("SendPlayerPlayerStats failed: " + baseEx.Message, ex.StackTrace ?? Environment.StackTrace, 
+                    ex.GetType().Name + "|" + baseEx.GetType().Name, player);
                 return null;
             }
         }

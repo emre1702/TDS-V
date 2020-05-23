@@ -6,13 +6,14 @@ namespace TDS_Server.Database.Entity.Log
     {
         public long Id { get; set; }
         public int? Source { get; set; }
+        public string ExceptionType { get; set; }
         public string Info { get; set; }
         public string StackTrace { get; set; }
         public DateTime Timestamp { get; set; }
 
         public override string ToString()
         {
-            return $"[{Timestamp.ToString()}] Error (source = {Source?.ToString() ?? "?"}) :{Environment.NewLine}{Info}{Environment.NewLine}{StackTrace}";
+            return $"[{Timestamp.ToString()}] {ExceptionType} error (source = {Source?.ToString() ?? "?"}) :{Environment.NewLine}{Info}{Environment.NewLine}{StackTrace}";
         }
     }
 }

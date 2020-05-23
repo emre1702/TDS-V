@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
@@ -13,7 +14,7 @@ using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper
+    public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper, IUserpanelOfflineMessagesHandler
     {
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;

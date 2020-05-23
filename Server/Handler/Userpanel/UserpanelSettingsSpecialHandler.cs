@@ -11,10 +11,11 @@ using TDS_Shared.Core;
 using TDS_Server.Data.Interfaces.ModAPI;
 using System.Collections.Generic;
 using TDS_Server.Data.Utility;
+using TDS_Server.Data.Interfaces.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class UserpanelSettingsSpecialHandler
+    public class UserpanelSettingsSpecialHandler : IUserpanelSettingsSpecialHandler
     {
         private readonly IModAPI _modAPI;
         private readonly ISettingsHandler _settingsHandler;

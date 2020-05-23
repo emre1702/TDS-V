@@ -6,7 +6,9 @@ option csharp_namespace = "BonusBotConnector.Client";
 
 service SupportRequest {
   rpc Create (SupportRequestCreateRequest) returns (SupportRequestCreateReply);
-  rpc Answer (SupportRequestAnswerRequest) returns (SupportRequestAnswerReply);
+  rpc Answer (SupportRequestAnswerRequest) returns (SupportRequestReply);
+  rpc ToggleClosed (SupportRequestToggleClosedRequest) returns (SupportRequestReply);
+  rpc Delete (SupportRequestDeleteRequest) returns (SupportRequestReply);
 }
 
 message SupportRequestCreateRequest {
@@ -26,13 +28,27 @@ message SupportRequestAnswerRequest {
   string text = 4;
 }
 
+message SupportRequestToggleClosedRequest {
+  uint64 guildId = 1;
+  int32 supportRequestId = 2;
+  string requesterName = 3;
+  bool closed = 4;
+}
+
+message SupportRequestDeleteRequest {
+  uint64 guildId = 1;
+  repeated int32 supportRequestIds = 2;
+}
+
 message SupportRequestCreateReply {
     string errorMessage = 1;
     string errorStackTrace = 2;
-    uint64 createdChannelId = 3;
+    string errorType = 3;
+    uint64 createdChannelId = 4;
 }
 
-message SupportRequestAnswerReply {
+message SupportRequestReply {
     string errorMessage = 1;
     string errorStackTrace = 2;
+    string errorType = 3;
 }
