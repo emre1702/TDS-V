@@ -6,21 +6,29 @@ namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxLine : DxBase
     {
+        #region Private Fields
+
+        //private readonly bool _relative;
+        //private bool is3D;
+        private readonly CamerasHandler _camerasHandler;
+
+        private readonly Color _color;
+
         private readonly float _startX,
-            _startY,
+                            _startY,
             _startZ,
             _endX,
             _endY,
             _endZ;
 
-        private readonly Color _color;
-        //private readonly bool _relative;
-        //private bool is3D;
-        private readonly CamerasHandler _camerasHandler;
         private readonly UtilsHandler _utilsHandler;
 
-        public DxLine(DxHandler dxHandler, IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, float startX, float startY, float? startZ, float endX, float endY, float? endZ, 
-            Color color, bool relative = true, int frontPriority = 0) 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public DxLine(DxHandler dxHandler, IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, float startX, float startY, float? startZ, float endX, float endY, float? endZ,
+            Color color, bool relative = true, int frontPriority = 0)
             : base(dxHandler, modAPI, frontPriority: frontPriority)
         {
             _camerasHandler = camerasHandler;
@@ -52,6 +60,10 @@ namespace TDS_Client.Handler.Draw.Dx
             //this._relative = relative;
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public override void Draw()
         {
             ModAPI.Graphics.DrawLine(_startX, _startY, _startZ, _endX, _endY, _endZ, _color.R, _color.G, _color.B, _color.A);
@@ -61,5 +73,7 @@ namespace TDS_Client.Handler.Draw.Dx
         {
             return DxType.Line;
         }
+
+        #endregion Public Methods
     }
 }

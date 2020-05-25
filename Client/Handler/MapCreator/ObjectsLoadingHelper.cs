@@ -4,8 +4,14 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class ObjectsLoadingHelper : ServiceBase
     {
-        private readonly UtilsHandler _utilsHandler;
+        #region Private Fields
+
         private readonly SettingsHandler _settingsHandler;
+        private readonly UtilsHandler _utilsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ObjectsLoadingHelper(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler)
             : base(modAPI, loggingHandler)
@@ -13,6 +19,10 @@ namespace TDS_Client.Handler.MapCreator
             _utilsHandler = utilsHandler;
             _settingsHandler = settingsHandler;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public bool LoadObjectHash(uint hash)
         {
@@ -28,6 +38,10 @@ namespace TDS_Client.Handler.MapCreator
             }
             return true;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private bool LoadObjectModel(uint hash)
         {
@@ -51,5 +65,7 @@ namespace TDS_Client.Handler.MapCreator
             }*/
             return true;
         }
+
+        #endregion Private Methods
     }
 }

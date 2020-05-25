@@ -33,14 +33,12 @@ namespace TDS_Server.Core.Init
 
         private readonly IServiceProvider _serviceProvider;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
-        private readonly TDSVehicleHandler _tdsVehicleHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
         private readonly CommandsHandler _commandsHandler;
 
-
-
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+
         public Program(IModAPI modAPI)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
@@ -58,7 +56,7 @@ namespace TDS_Server.Core.Init
                     connection.Open();
                     connection.ReloadTypes();
                 }
-                
+
                 var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
                 mapsLoadingHandler.LoadAllMaps();
 
@@ -77,16 +75,14 @@ namespace TDS_Server.Core.Init
 
                 var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
                 var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
-                bansHandler.RefreshServerBansCache(settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);                
+                bansHandler.RefreshServerBansCache(settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
 
                 var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
                 gangsHandler.LoadAll();
 
-                
                 RemoteEventsHandler = _serviceProvider.GetRequiredService<RemoteEventsHandler>();
                 RemoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
                 _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
-                _tdsVehicleHandler = _serviceProvider.GetRequiredService<TDSVehicleHandler>();
                 _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
 
@@ -102,7 +98,6 @@ namespace TDS_Server.Core.Init
                     Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
                 Environment.Exit(1);
             }
-
         }
 
         public ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer player)
@@ -113,9 +108,6 @@ namespace TDS_Server.Core.Init
 
         public ITDSPlayer GetTDSPlayer(IPlayer player)
             => _tdsPlayerHandler.Get(player);
-
-        public ITDSVehicle GetTDSVehicle(IVehicle vehicle) 
-            => _tdsVehicleHandler.Get(vehicle); 
 
         public ITDSPlayer GetNotLoggedInTDSPlayer(IPlayer player)
             => _tdsPlayerHandler.GetNotLoggedIn(player);
@@ -156,7 +148,6 @@ namespace TDS_Server.Core.Init
                 {
                     Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
                 }
-
             }
         }
     }

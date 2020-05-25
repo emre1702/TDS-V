@@ -5,6 +5,8 @@ namespace TDS_Server.Data.Languages
 {
     public class English : ILanguage
     {
+        #region Public Properties
+
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
         public virtual string ALREADY_IN_PRIVATE_CHAT_WITH => "You are already in a private chat with {0}.";
 
@@ -22,27 +24,30 @@ namespace TDS_Server.Data.Languages
         public virtual string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR => "This name is not allowed for lobbies.";
         public virtual string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR => "Unknown error when creating the lobby.";
 
-        public virtual string DEATH_KILLED_INFO => "{0} killed {1} with {2}";
         public virtual string DEATH_DIED_INFO => "{0} died";
+        public virtual string DEATH_KILLED_INFO => "{0} killed {1} with {2}";
 
         public virtual string[] DEFUSE_INFO => new string[] {
             "Round-time got changed. Now you have to kill all opponents or defuse the bomb.",
             "To defuse the bomb go to the red blip on your minimap (bomb), take your fists and hold the left mouse button."
         };
-        public virtual string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO => "The player '{0}' has set your discord user id in TDS-V." 
+
+        public virtual string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO => "The player '{0}' has set your discord user id in TDS-V."
             + Environment.NewLine + "Were you that player?"
             + Environment.NewLine + "Please confirm the setting with the command '!confirmtds'.";
+
         public virtual string DISCORD_IDENTITY_SAVE_FAILED => "Saving the Discord user id failed: {0}";
         public virtual string DISCORD_IDENTITY_SAVED_SUCCESSFULLY => "The discord user id has been successfully saved.";
 
         public virtual string ERROR_INFO => "An error occured. The Developer(s) have been notified.";
 
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
+        public virtual string GANG_INVITATION_WAS_REMOVED => "The invitation already got removed!";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
+        public virtual string GANGWAR_ATTACK_INVITATION => "Your gang is attacking an area!\n(Accept or use /attack)";
+        public virtual string GANGWAR_ATTACK_PREPARATION_INVITATION => "Your gang is preparing a gangwar!\n(Accept or use /attack)";
         public virtual string GANGWAR_ATTACKER_PREPARATION_INFO => "You are preparing an attack against '{1}' in the area '{0}'.";
         public virtual string GANGWAR_ATTACKER_STARTED_INFO => "You attack the area '{0}' of '{1}'.";
-        public virtual string GANGWAR_ATTACK_PREPARATION_INVITATION => "Your gang is preparing a gangwar!\n(Accept or use /attack)";
-        public virtual string GANGWAR_ATTACK_INVITATION => "Your gang is attacking an area!\n(Accept or use /attack)";
         public virtual string GANGWAR_DEFEND_INVITATION => "Defend your gang area!\n(Accept or use /defend)";
         public virtual string GANGWAR_OWNER_PREPARATION_INFO => "A gangwar is being prepared against one of your areas.";
         public virtual string GANGWAR_OWNER_STARTED_INFO => "Your area '{0}' is being attacked by the gang '{1}'.";
@@ -57,8 +62,6 @@ namespace TDS_Server.Data.Languages
         public virtual string GOT_LAST_HITTED_KILL => "You hitted {0} last and got the kill.";
         public virtual string GOT_LOBBY_BAN => "You got a ban from the lobby-owner here. Duration: {0} | Reason: {1}";
         public virtual string GOT_UNREAD_OFFLINE_MESSAGES => "You got {0} unread offline message(s) in userpanel";
-        public virtual string GANG_INVITATION_WAS_REMOVED => "The invitation already got removed!";
-
         public virtual string HITSOUND_ACTIVATED => "Hitsound activated!";
         public virtual string HITSOUND_DEACTIVATED => "Hitsound deactivated!";
 
@@ -68,8 +71,8 @@ namespace TDS_Server.Data.Languages
         public virtual string JOINED_LOBBY_MESSAGE => "You joined lobby \"{0}\".\nUse '/{1}' to leave.";
 
         public virtual string KICK_INFO => "{0} was kicked by {1}. Reason: {2}";
-        public virtual string KICK_YOU_INFO => "You were kicked by {0}. Reason: {1}";
         public virtual string KICK_LOBBY_INFO => "{0} was kicked by {1} out of the lobby. Reason: {2}";
+        public virtual string KICK_YOU_INFO => "You were kicked by {0}. Reason: {1}";
         public virtual string KILLING_SPREE_HEALTHARMOR => "{0} has got a {1}-killingspree and gets a {2} life/armor bonus.";
 
         public virtual string LOBBY_DOESNT_EXIST => "This lobby does not exist.";
@@ -92,9 +95,9 @@ namespace TDS_Server.Data.Languages
         public virtual string ORDER_STAY_BACK => "Stay back!";
 
         public virtual string PERMABAN_INFO => "{0} was baned permanently by {1}. Reason: {2}";
-        public virtual string PERMABAN_YOU_INFO => "You were baned permanently by {0}. Reason: {1}";
         public virtual string PERMABAN_LOBBY_INFO => "{0} was baned permanently in lobby '{1}' by {2}. Reason: {3}";
         public virtual string PERMABAN_LOBBY_YOU_INFO => "You was baned for {0} hours from lobby '{1}' by {2}. Reason {3}";
+        public virtual string PERMABAN_YOU_INFO => "You were baned permanently by {0}. Reason: {1}";
         public virtual string PERMAMUTE_INFO => "{0} was muted permanently by {1}. Reason: {2}";
         public virtual string PERMAVOICEMUTE_INFO => "{0} was muted permanently in voice-chat by {1}. Reason: {2}";
         public virtual string PLAYER_ACCEPTED_YOUR_INVITATION => "{0} accepted your team-invitation. He is your member now.";
@@ -125,8 +128,8 @@ namespace TDS_Server.Data.Languages
         public virtual string ROUND_END_BOMB_DEFUSED_INFO => "Bomb defused!<br>Team {0} wins!";
         public virtual string ROUND_END_BOMB_EXPLODED_INFO => "Bomb exploded!<br>Team {0} wins!";
         public virtual string ROUND_END_COMMAND_INFO => "Map was skipped by {0}!";
-        public virtual string ROUND_END_DEATH_INFO => "All opponents are dead!<br>Team {0} wins!";
         public virtual string ROUND_END_DEATH_ALL_INFO => "All players are dead!<br>No team wins!";
+        public virtual string ROUND_END_DEATH_INFO => "All opponents are dead!<br>Team {0} wins!";
         public virtual string ROUND_END_NEW_PLAYER_INFO => "Enough players in ...<br>Round starting!";
         public virtual string ROUND_END_TARGET_EMPTY_INFO => "The attackers had not been at the target for too long.<br>Owners win!";
         public virtual string ROUND_END_TIME_INFO => "Time's up!<br>Team {0} wins because of most HP left!";
@@ -159,13 +162,13 @@ namespace TDS_Server.Data.Languages
         public virtual string TEXT_TOO_LONG => "The text is too long.";
         public virtual string TEXT_TOO_SHORT => "The text is too short.";
         public virtual string TIMEBAN_INFO => "{0} was baned for {1} hours by {2}. Reason: {3}";
-        public virtual string TIMEBAN_YOU_INFO => "You were baned for {0} hours by {1}. Reason: {2}";
         public virtual string TIMEBAN_LOBBY_INFO => "{0} was baned for {1} hours in lobby '{2}' by {3}. Reason: {4}";
         public virtual string TIMEBAN_LOBBY_YOU_INFO => "You were baned for {0} hours from lobby '{1}' by {2}. Reason: {3}";
+        public virtual string TIMEBAN_YOU_INFO => "You were baned for {0} hours by {1}. Reason: {2}";
         public virtual string TIMEMUTE_INFO => "{0} was muted for {1} minutes by {2}. Reason: {3}";
         public virtual string TIMEVOICEMUTE_INFO => "{0} was muted in voice-chat for {1} minutes by {2}. Reason: {3}";
         public virtual string TOO_LONG_OUTSIDE_MAP => "You've been too long outside the map.";
-        public virtual string TRY_AGAIN_LATER => "Try again later."; 
+        public virtual string TRY_AGAIN_LATER => "Try again later.";
 
         public virtual string UNBAN_INFO => "{0} was unbaned by {1}. Reason: {2}";
         public virtual string UNBAN_LOBBY_INFO => "{0} was unbaned in lobby '{1}' by {2}. Reason: {3}";
@@ -187,5 +190,7 @@ namespace TDS_Server.Data.Languages
         public virtual string YOU_REJECTED_INVITATION => "You rejected the invitation of {0}.";
         public virtual string YOU_REJECTED_TEAM_INVITATION => "You rejected the team-invitation of {0}.";
         public virtual string YOU_UNBLOCKED => "You unblocked {0}.";
+
+        #endregion Public Properties
     }
 }

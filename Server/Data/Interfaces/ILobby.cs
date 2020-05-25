@@ -10,35 +10,58 @@ using TDS_Shared.Data.Enums;
 namespace TDS_Server.Data.Interfaces
 {
 #nullable enable
+
     public interface ILobby : IDatabaseEntityWrapper, IEquatable<ILobby>
     {
-        int Id { get; }
+        #region Public Properties
+
         uint Dimension { get; }
-        ConcurrentDictionary<int, ITDSPlayer> Players { get; }
+        Lobbies Entity { get; }
+        int Id { get; }
+        bool IsGangActionLobby { get; }
         bool IsOfficial { get; }
+        string Name { get; }
+        string OwnerName { get; }
+        ConcurrentDictionary<int, ITDSPlayer> Players { get; }
         bool SavePlayerLobbyStats { get; }
         int StartTotalHP { get; }
-        LobbyType Type { get; }
-        Lobbies Entity { get; }
-        string OwnerName { get; }
-        bool IsGangActionLobby { get; }
-        string Name { get; }
         List<ITeam> Teams { get; set; }
+        LobbyType Type { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        Task<bool> AddPlayer(ITDSPlayer iTDSPlayer, uint? teamIndex);
+
+        Task AddToDB();
+
+        Task<PlayerBans?> BanPlayer(ITDSPlayer player, ITDSPlayer target, TimeSpan? length, string reason);
+
+        Task<PlayerBans?> BanPlayer(ITDSPlayer player, Players dbTarget, TimeSpan? length, string reason, string? serial = null);
+
+        Task<bool> IsPlayerBaned(ITDSPlayer player);
 
         bool IsPlayerLobbyOwner(ITDSPlayer player);
-        Task RemovePlayer(ITDSPlayer player);
-        void UnbanPlayer(ITDSPlayer player, ITDSPlayer target, string reason);
-        void SendAllPlayerLangMessage(Func<ILanguage, string> langGetter, ITeam? targetTeam = null);
-        Task<PlayerBans?> BanPlayer(ITDSPlayer player, ITDSPlayer target, TimeSpan? length, string reason);
-        void UnbanPlayer(ITDSPlayer player, Players dbTarget, string reason);
-        Task<PlayerBans?> BanPlayer(ITDSPlayer player, Players dbTarget, TimeSpan? length, string reason, string? serial = null);
-        Task<bool> AddPlayer(ITDSPlayer iTDSPlayer, uint? teamIndex);
-        void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder);
-        void OnPlayerLoggedOut(ITDSPlayer tdsPlayer);
-        void OnPlayerSpawn(ITDSPlayer player);
+
         void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true);
+
         void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player);
-        Task<bool> IsPlayerBaned(ITDSPlayer player);
-        Task AddToDB();
+
+        void OnPlayerLoggedOut(ITDSPlayer tdsPlayer);
+
+        void OnPlayerSpawn(ITDSPlayer player);
+
+        Task RemovePlayer(ITDSPlayer player);
+
+        void SendAllPlayerLangMessage(Func<ILanguage, string> langGetter, ITeam? targetTeam = null);
+
+        void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder);
+
+        void UnbanPlayer(ITDSPlayer player, ITDSPlayer target, string reason);
+
+        void UnbanPlayer(ITDSPlayer player, Players dbTarget, string reason);
+
+        #endregion Public Methods
     }
 }

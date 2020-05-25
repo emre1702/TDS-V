@@ -8,7 +8,13 @@ namespace TDS_Client.Handler
 {
     public class TimerHandler : ServiceBase
     {
+        #region Public Fields
+
         public int ElapsedMs;
+
+        #endregion Public Fields
+
+        #region Public Constructors
 
         public TimerHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler)
             : base(modAPI, loggingHandler)
@@ -22,9 +28,15 @@ namespace TDS_Client.Handler
             new TDSTimer(dxHandler.RefreshResolution, 10000, 0);
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
         private void RefreshElapsedMs()
         {
             ElapsedMs = ModAPI.Misc.GetGameTimer();
         }
+
+        #endregion Private Methods
     }
 }

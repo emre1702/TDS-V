@@ -2,12 +2,16 @@
 
 namespace TDS_Client.RAGEAPI.Nametags
 {
-    class NametagsAPI : INametagsAPI
+    internal class NametagsAPI : INametagsAPI
     {
-        public bool Enabled 
-        { 
-            get => RAGE.Nametags.Enabled; 
-            set => RAGE.Nametags.Enabled = value; 
+        #region Public Properties
+
+        public bool Enabled
+        {
+            get => RAGE.Nametags.Enabled;
+            set => RAGE.Nametags.Enabled = value;
         }
+
+        #endregion Public Properties
     }
 }

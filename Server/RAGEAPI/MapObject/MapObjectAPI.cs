@@ -6,8 +6,10 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGEAPI.MapObject
 {
-    class MapObjectAPI : IMapObjectAPI
+    internal class MapObjectAPI : IMapObjectAPI
     {
+        #region Public Methods
+
         public IMapObject Create(string hashName, Position3DDto position, Position3D? rotation, byte alpha, ILobby lobby)
         {
             var hash = GTANetworkAPI.NAPI.Util.GetHashKey(hashName);
@@ -26,5 +28,7 @@ namespace TDS_Server.RAGEAPI.MapObject
 
             return new MapObject(modObject);
         }
+
+        #endregion Public Methods
     }
 }

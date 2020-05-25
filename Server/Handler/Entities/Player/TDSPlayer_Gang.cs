@@ -5,7 +5,13 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Private Fields
+
         private IGang? _gang;
+
+        #endregion Private Fields
+
+        #region Public Properties
 
         public IGang Gang
         {
@@ -21,5 +27,7 @@ namespace TDS_Server.Handler.Entities.Player
         }
 
         public GangRanks? GangRank { get; set; }
+
+        #endregion Public Properties
     }
 }

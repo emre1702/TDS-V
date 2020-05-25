@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Shared.Data.Enums.Userpanel
+﻿namespace TDS_Shared.Data.Enums.Userpanel
 {
     public enum UserpanelAdminQuestionAnswerType
     {
@@ -11,4 +7,3 @@ namespace TDS_Shared.Data.Enums.Userpanel
         Number
     }
 }
-

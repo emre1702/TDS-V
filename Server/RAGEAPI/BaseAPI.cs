@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using GTANetworkAPI;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Interfaces.ModAPI.Chat;
@@ -29,8 +30,32 @@ using TDS_Server.RAGEAPI.Vehicle;
 
 namespace TDS_Server.RAGEAPI
 {
-    class BaseAPI : IModAPI
+    internal class BaseAPI : IModAPI
     {
+        #region Internal Constructors
+
+        internal BaseAPI()
+        {
+            Blip = new BlipAPI();
+            Chat = new ChatAPI();
+            ColShape = new ColShapeAPI();
+            MapObject = new MapObjectAPI();
+            Marker = new MarkerAPI();
+            Native = new NativeAPI();
+            Player = new PlayerAPI();
+            Pool = new PoolAPI();
+            Resource = new ResourceAPI();
+            Server = new ServerAPI();
+            Sync = new SyncAPI();
+            TextLabel = new TextLabelAPI();
+            Thread = new ThreadAPI();
+            Vehicle = new VehicleAPI();
+        }
+
+        #endregion Internal Constructors
+
+        #region Public Properties
+
         public IBlipAPI Blip { get; }
         public IChatAPI Chat { get; }
         public IColShapeAPI ColShape { get; }
@@ -46,33 +71,16 @@ namespace TDS_Server.RAGEAPI
         public IThreadAPI Thread { get; }
         public IVehicleAPI Vehicle { get; }
 
-        internal EntityConvertingHandler EntityConvertingHandler { get; }
+        #endregion Public Properties
 
-        internal BaseAPI()
-        {
-            EntityConvertingHandler = new EntityConvertingHandler();
-
-            Blip = new BlipAPI();
-            Chat = new ChatAPI();
-            ColShape = new ColShapeAPI();
-            MapObject = new MapObjectAPI();
-            Marker = new MarkerAPI();
-            Native = new NativeAPI();
-            Player = new PlayerAPI(EntityConvertingHandler);
-            Pool = new PoolAPI();
-            Resource = new ResourceAPI();
-            Server = new ServerAPI();
-            Sync = new SyncAPI();
-            TextLabel = new TextLabelAPI();
-            Thread = new ThreadAPI();
-            Vehicle = new VehicleAPI(EntityConvertingHandler);
-        }
-
+        #region Public Methods
 
         public bool CheckHasErrors(ILoggingHandler loggingHandler)
         {
             var codeMistakesChecker = new CodeMistakesChecker(loggingHandler);
             return codeMistakesChecker.CheckHasErrors();
         }
+
+        #endregion Public Methods
     }
 }

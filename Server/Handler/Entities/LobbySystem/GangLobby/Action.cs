@@ -10,12 +10,12 @@ using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Shared.Data.Enums;
-using MapType = TDS_Server.Data.Enums.MapType;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
+        #region Public Methods
 
         public async Task StartGangwar(ITDSPlayer attacker, int gangwarAreaId)
         {
@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             var lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, CreateEntity(gangwarArea), gangwarArea, true);
 
             await lobby.AddToDB();
-            ModAPI.Thread.RunInMainThread(() => 
+            ModAPI.Thread.RunInMainThread(() =>
             {
                 EventsHandler.OnLobbyCreated(lobby);
                 lobby.SetMapList(new List<MapDto> { gangwarArea.Map });
@@ -54,63 +54,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             });
 
             await lobby.AddPlayer(attacker, 1);
-
         }
 
-        private Lobbies CreateEntity(GangwarArea area)
-        {
-            var dummyDBTeam = LobbiesHandler.MainMenu.Teams[0].Entity.DeepCopy();
+        #endregion Public Methods
 
-            var ownerDBTeam = area.Owner!.Entity.Team.DeepCopy();
-            ownerDBTeam.Index = 1;
-
-            var attackerDBTeam = area.Attacker!.Entity.Team.DeepCopy();
-            attackerDBTeam.Index = 2;
-
-            var lobby = new Lobbies
-            {
-                FightSettings = new LobbyFightSettings(),
-                LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity!.MapId } },
-                LobbyMapSettings = new LobbyMapSettings
-                {
-                    MapLimitType = MapLimitType.Display,
-                },
-                LobbyRoundSettings = new LobbyRoundSettings
-                {
-                    CountdownTime = (int)SettingsHandler.ServerSettings.GangwarPreparationTime,
-                    RoundTime = (int)SettingsHandler.ServerSettings.GangwarActionTime,
-                    ShowRanking = true
-                },
-                LobbyWeapons = LobbiesHandler.Arena.Entity.LobbyWeapons.Select(w => new LobbyWeapons 
-                {
-                    Ammo = w.Ammo,
-                    Damage = w.Damage,
-                    Hash = w.Hash,
-                    HeadMultiplicator = w.HeadMultiplicator
-                }).ToHashSet(),    //LobbiesHandler.GetAllPossibleLobbyWeapons(MapType.Normal),
-                LobbyRewards = new LobbyRewards
-                {
-                    MoneyPerAssist = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerAssist,
-                    MoneyPerDamage = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerDamage,
-                    MoneyPerKill = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerKill,
-                },
-                IsOfficial = true,
-                IsTemporary = false,
-                OwnerId = -1,
-                Name = $"[GW-Prep] {area.Attacker.Entity.Short}",
-                Type = LobbyType.Arena,
-                Teams = new List<Teams>
-                {
-                    dummyDBTeam,
-                    ownerDBTeam,
-                    attackerDBTeam
-                },
-
-            };
-
-
-            return lobby;
-        }
+        #region Private Methods
 
         private bool CheckCanStartAction(ITDSPlayer attacker, GangwarArea gangwarArea)
         {
@@ -145,7 +93,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return false;
             }
 
-            //todo Check general cooldowns 
+            //todo Check general cooldowns
             //todo Check max actions per day or whatever
 
             return true;
@@ -153,7 +101,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private bool CheckCanStartGangwar(ITDSPlayer attacker, GangwarArea gangwarArea)
         {
-
             if (attacker.Gang.Entity.RankPermissions.StartGangwar > attacker.GangRank!.Rank)
             {
                 //todo You don't have the permission in your gang to do that.
@@ -170,10 +117,65 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return false;
             }
 
-            //todo Check cooldown 
+            //todo Check cooldown
             //todo Check max gangwars per day or whatever
 
             return true;
         }
+
+        private Lobbies CreateEntity(GangwarArea area)
+        {
+            var dummyDBTeam = LobbiesHandler.MainMenu.Teams[0].Entity.DeepCopy();
+
+            var ownerDBTeam = area.Owner!.Entity.Team.DeepCopy();
+            ownerDBTeam.Index = 1;
+
+            var attackerDBTeam = area.Attacker!.Entity.Team.DeepCopy();
+            attackerDBTeam.Index = 2;
+
+            var lobby = new Lobbies
+            {
+                FightSettings = new LobbyFightSettings(),
+                LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity!.MapId } },
+                LobbyMapSettings = new LobbyMapSettings
+                {
+                    MapLimitType = MapLimitType.Display,
+                },
+                LobbyRoundSettings = new LobbyRoundSettings
+                {
+                    CountdownTime = (int)SettingsHandler.ServerSettings.GangwarPreparationTime,
+                    RoundTime = (int)SettingsHandler.ServerSettings.GangwarActionTime,
+                    ShowRanking = true
+                },
+                LobbyWeapons = LobbiesHandler.Arena.Entity.LobbyWeapons.Select(w => new LobbyWeapons
+                {
+                    Ammo = w.Ammo,
+                    Damage = w.Damage,
+                    Hash = w.Hash,
+                    HeadMultiplicator = w.HeadMultiplicator
+                }).ToHashSet(),    //LobbiesHandler.GetAllPossibleLobbyWeapons(MapType.Normal),
+                LobbyRewards = new LobbyRewards
+                {
+                    MoneyPerAssist = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerAssist,
+                    MoneyPerDamage = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerDamage,
+                    MoneyPerKill = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerKill,
+                },
+                IsOfficial = true,
+                IsTemporary = false,
+                OwnerId = -1,
+                Name = $"[GW-Prep] {area.Attacker.Entity.Short}",
+                Type = LobbyType.Arena,
+                Teams = new List<Teams>
+                {
+                    dummyDBTeam,
+                    ownerDBTeam,
+                    attackerDBTeam
+                },
+            };
+
+            return lobby;
+        }
+
+        #endregion Private Methods
     }
 }

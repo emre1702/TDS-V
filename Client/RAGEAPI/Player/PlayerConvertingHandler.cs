@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.RAGEAPI.Entity;
 
@@ -8,9 +6,15 @@ namespace TDS_Client.RAGEAPI.Player
 {
     public class PlayerConvertingHandler
     {
-        private Dictionary<RAGE.Elements.Player, IPlayer> _playersCache = new Dictionary<RAGE.Elements.Player, IPlayer>();
-        private readonly ILocalPlayer _localPlayer;
+        #region Private Fields
+
         private readonly EntityConvertingHandler _entityConvertingHandler;
+        private readonly ILocalPlayer _localPlayer;
+        private Dictionary<RAGE.Elements.Player, IPlayer> _playersCache = new Dictionary<RAGE.Elements.Player, IPlayer>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public PlayerConvertingHandler(RAGE.Elements.Player localPlayer, EntityConvertingHandler entityConvertingHandler)
         {
@@ -19,6 +23,13 @@ namespace TDS_Client.RAGEAPI.Player
             _localPlayer = new LocalPlayer(localPlayer, _entityConvertingHandler);
             _playersCache[localPlayer] = _localPlayer;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public ILocalPlayer GetLocalPlayer()
+            => _localPlayer;
 
         public IPlayer GetPlayer(RAGE.Elements.Player modPlayer)
         {
@@ -34,7 +45,6 @@ namespace TDS_Client.RAGEAPI.Player
             return player;
         }
 
-        public ILocalPlayer GetLocalPlayer()
-            => _localPlayer;
+        #endregion Public Methods
     }
 }

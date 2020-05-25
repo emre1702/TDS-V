@@ -2,6 +2,10 @@
 {
     public interface IAnnouncementsHandler
     {
+        #region Public Properties
+
         string Json { get; }
+
+        #endregion Public Properties
     }
 }

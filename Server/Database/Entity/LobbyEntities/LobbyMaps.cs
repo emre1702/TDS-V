@@ -4,10 +4,13 @@ namespace TDS_Server.Database.Entity.LobbyEntities
 {
     public partial class LobbyMaps
     {
-        public int LobbyId { get; set; }
-        public int MapId { get; set; }
+        #region Public Properties
 
         public virtual Lobbies Lobby { get; set; }
+        public int LobbyId { get; set; }
         public virtual Maps Map { get; set; }
+        public int MapId { get; set; }
+
+        #endregion Public Properties
     }
 }

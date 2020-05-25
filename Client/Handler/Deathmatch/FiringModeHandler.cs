@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TDS_Shared.Data.Models;
 using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
@@ -13,52 +12,50 @@ using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Entities.Draw.Scaleform;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.Deathmatch
 {
     public class FiringModeHandler
     {
-        // weapons in these groups are completely ignored
-        private readonly HashSet<uint> _ignoredWeaponGroups;
+        #region Private Fields
+
+        private readonly BindsHandler _bindsHandler;
+
+        private readonly BrowserHandler _browserHandler;
+
+        private readonly HashSet<uint> _burstFireAllowedGroups;
 
         // if a weapon's group is already in burstFireAllowedGroups, don't put it here
         private readonly HashSet<WeaponHash> _burstFireAllowedWeapons;
 
-        private readonly HashSet<uint> _burstFireAllowedGroups;
+        private readonly EventsHandler _eventsHandler;
+
+        // weapons in these groups are completely ignored
+        private readonly HashSet<uint> _ignoredWeaponGroups;
+
+        private readonly InstructionalButtonHandler _instructionalButtonHandler;
+
+        private readonly SettingsHandler _settingsHandler;
 
         // weapons in here are not able to use single fire mode
         private readonly HashSet<WeaponHash> _singleFireBlacklist;
 
-        private WeaponHash _currentWeapon;
-        private bool _ignoreCurrentWeapon;
-        private FiringMode _currentFiringMode;
-        private int _currentBurstShots = 0;
-        private Dictionary<WeaponHash, FiringMode> _lastFiringModeByWeapon = new Dictionary<WeaponHash, FiringMode>();
-        private InstructionalButton _instructionalButton;
-        private bool _isActive;
-
-        private FiringMode CurrentFiringMode
-        {
-            get => _currentFiringMode;
-            set
-            {
-                if (_currentFiringMode != value)
-                    _browserHandler.Angular.SyncHudDataChange(HudDataType.FiringMode, (int)value);
-                _currentFiringMode = value;
-
-            }
-        }
-
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly EventMethodData<WeaponShotDelegate> _weaponShotEventMethod;
-
         private readonly IModAPI ModAPI;
-        private readonly BrowserHandler _browserHandler;
-        private readonly BindsHandler _bindsHandler;
-        private readonly EventsHandler _eventsHandler;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly InstructionalButtonHandler _instructionalButtonHandler;
+        private int _currentBurstShots = 0;
+        private FiringMode _currentFiringMode;
+        private WeaponHash _currentWeapon;
+        private bool _ignoreCurrentWeapon;
+        private InstructionalButton _instructionalButton;
+        private bool _isActive;
+        private Dictionary<WeaponHash, FiringMode> _lastFiringModeByWeapon = new Dictionary<WeaponHash, FiringMode>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public FiringModeHandler(IModAPI modAPI, BrowserHandler browserHandler, BindsHandler bindsHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler,
             InstructionalButtonHandler instructionalButtonHandler)
@@ -120,6 +117,25 @@ namespace TDS_Client.Handler.Deathmatch
             _eventsHandler.InFightStatusChanged += EventsHandler_InFightStatusChanged;
         }
 
+        #endregion Public Constructors
+
+        #region Private Properties
+
+        private FiringMode CurrentFiringMode
+        {
+            get => _currentFiringMode;
+            set
+            {
+                if (_currentFiringMode != value)
+                    _browserHandler.Angular.SyncHudDataChange(HudDataType.FiringMode, (int)value);
+                _currentFiringMode = value;
+            }
+        }
+
+        #endregion Private Properties
+
+        #region Public Methods
+
         public void Start()
         {
             if (_isActive)
@@ -150,33 +166,52 @@ namespace TDS_Client.Handler.Deathmatch
             }
         }
 
-        private void ToggleFireMode(Key _)
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private bool CanWeaponUseBurstFire(WeaponHash weaponHash)
         {
-            if (_ignoreCurrentWeapon)
-                return;
+            return _burstFireAllowedGroups.Contains(ModAPI.Weapon.GetWeapontypeGroup(weaponHash)) || _burstFireAllowedWeapons.Contains(weaponHash);
+        }
 
-            FiringMode newFiringMode = (int)_currentFiringMode + 1 > System.Enum.GetValues(typeof(FiringMode)).Cast<int>().Max() ? 0 : _currentFiringMode + 1;
+        private bool CanWeaponUseSingleFire(WeaponHash weaponHash)
+        {
+            return !_singleFireBlacklist.Contains(weaponHash);
+        }
 
-            switch (newFiringMode)
-            {
-                case FiringMode.Burst:
-                    if (!CanWeaponUseBurstFire(_currentWeapon))
-                        newFiringMode = CanWeaponUseSingleFire(_currentWeapon) ? FiringMode.Single : FiringMode.Auto;
-                    break;
-                case FiringMode.Single:
-                    if (!CanWeaponUseSingleFire(_currentWeapon))
-                        newFiringMode = FiringMode.Auto;
-                    break;
-            }
+        private void CustomEventManager_OnLanguageChanged(ILanguage newLang, bool beforeLogin)
+        {
+            _instructionalButton?.SetTitle(newLang.FIRING_MODE);
+        }
 
-            if (newFiringMode != _currentFiringMode)
+        private void CustomEventManager_OnWeaponChange(WeaponHash _, WeaponHash newWeaponHash)
+        {
+            _currentWeapon = newWeaponHash;
+            _ignoreCurrentWeapon = IsWeaponIgnored(newWeaponHash);
+            if (_lastFiringModeByWeapon.TryGetValue(newWeaponHash, out FiringMode newFiringMode))
             {
                 CurrentFiringMode = newFiringMode;
-                _currentBurstShots = 0;
-
-                ModAPI.Audio.PlaySoundFrontend(-1, AudioName.FASTER_CLICK, AudioRef.RESPAWN_ONLINE_SOUNDSET);
-                _lastFiringModeByWeapon[_currentWeapon] = _currentFiringMode;
             }
+            else
+            {
+                CurrentFiringMode = FiringMode.Auto;
+            }
+            _currentBurstShots = 0;
+        }
+
+        private void EventsHandler_InFightStatusChanged(bool boolean)
+        {
+            if (boolean)
+                Start();
+            else
+                Stop();
+        }
+
+        private bool IsWeaponIgnored(WeaponHash weaponHash)
+        {
+            uint group = ModAPI.Weapon.GetWeapontypeGroup(weaponHash);
+            return _ignoredWeaponGroups.Contains(group);
         }
 
         private void OnTick(int currentMs)
@@ -188,6 +223,7 @@ namespace TDS_Client.Handler.Deathmatch
             {
                 case FiringMode.Auto:
                     break;
+
                 case FiringMode.Burst:
                     if (_currentBurstShots > 0 && _currentBurstShots < 3)
                         ModAPI.Control.SetControlNormal(InputGroup.MOVE, Control.Attack, 1f);
@@ -198,6 +234,7 @@ namespace TDS_Client.Handler.Deathmatch
                             _currentBurstShots = 0;
                     }
                     break;
+
                 case FiringMode.Single:
                     if (ModAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, Control.Attack))
                         ModAPI.LocalPlayer.DisableFiring(false);
@@ -217,55 +254,43 @@ namespace TDS_Client.Handler.Deathmatch
                 case FiringMode.Auto:
                 case FiringMode.Single:
                     break;
+
                 case FiringMode.Burst:
                     ++_currentBurstShots;
                     break;
             }
         }
 
-        private void CustomEventManager_OnWeaponChange(WeaponHash _, WeaponHash newWeaponHash)
+        private void ToggleFireMode(Key _)
         {
-            _currentWeapon = newWeaponHash;
-            _ignoreCurrentWeapon = IsWeaponIgnored(newWeaponHash);
-            if (_lastFiringModeByWeapon.TryGetValue(newWeaponHash, out FiringMode newFiringMode))
+            if (_ignoreCurrentWeapon)
+                return;
+
+            FiringMode newFiringMode = (int)_currentFiringMode + 1 > System.Enum.GetValues(typeof(FiringMode)).Cast<int>().Max() ? 0 : _currentFiringMode + 1;
+
+            switch (newFiringMode)
+            {
+                case FiringMode.Burst:
+                    if (!CanWeaponUseBurstFire(_currentWeapon))
+                        newFiringMode = CanWeaponUseSingleFire(_currentWeapon) ? FiringMode.Single : FiringMode.Auto;
+                    break;
+
+                case FiringMode.Single:
+                    if (!CanWeaponUseSingleFire(_currentWeapon))
+                        newFiringMode = FiringMode.Auto;
+                    break;
+            }
+
+            if (newFiringMode != _currentFiringMode)
             {
                 CurrentFiringMode = newFiringMode;
+                _currentBurstShots = 0;
+
+                ModAPI.Audio.PlaySoundFrontend(-1, AudioName.FASTER_CLICK, AudioRef.RESPAWN_ONLINE_SOUNDSET);
+                _lastFiringModeByWeapon[_currentWeapon] = _currentFiringMode;
             }
-            else
-            {
-                CurrentFiringMode = FiringMode.Auto;
-            }
-            _currentBurstShots = 0;
         }
 
-        private void CustomEventManager_OnLanguageChanged(ILanguage newLang, bool beforeLogin)
-        {
-            _instructionalButton?.SetTitle(newLang.FIRING_MODE);
-        }
-
-        private void EventsHandler_InFightStatusChanged(bool boolean)
-        {
-            if (boolean)
-                Start();
-            else
-                Stop();
-        }
-
-
-        private bool IsWeaponIgnored(WeaponHash weaponHash)
-        {
-            uint group = ModAPI.Weapon.GetWeapontypeGroup(weaponHash);
-            return _ignoredWeaponGroups.Contains(group);
-        }
-
-        private bool CanWeaponUseBurstFire(WeaponHash weaponHash)
-        {
-            return _burstFireAllowedGroups.Contains(ModAPI.Weapon.GetWeapontypeGroup(weaponHash)) || _burstFireAllowedWeapons.Contains(weaponHash);
-        }
-
-        private bool CanWeaponUseSingleFire(WeaponHash weaponHash)
-        {
-            return !_singleFireBlacklist.Contains(weaponHash);
-        }
+        #endregion Private Methods
     }
 }

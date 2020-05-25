@@ -12,25 +12,116 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
     partial class Bomb
     {
-        private ITDSPlayer? _planter;
+        #region Private Fields
+
         private readonly List<BombPlantPlaceDto> _bombPlantPlaces = new List<BombPlantPlaceDto>();
+
         private TDSTimer? _bombDetonateTimer,
                       _bombPlantDefuseTimer;
+
+        private ITDSPlayer? _planter;
+
+        #endregion Private Fields
+
+        #region Public Methods
+
+        public bool StartBombDefusing(ITDSPlayer player)
+        {
+            //Todo StartBombDefusing was empty, test it
+            if (_bomb is null)
+                return false;
+            if (Lobby.CurrentRoundStatus != RoundStatus.Round)
+                return false;
+            if (_bombDetonateTimer is null)
+                return false;
+            if (_bombPlantDefuseTimer is { })
+                return false;
+            if (player.ModPlayer!.Dead)
+                return false;
+            if (player.ModPlayer.CurrentWeapon != WeaponHash.Unarmed)
+                return false;
+            player.ModPlayer.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(AnimationFlag.Loop));
+            _bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(player), (uint)Lobby.RoundSettings.BombDefuseTimeMs);
+            return true;
+        }
+
+        public bool StartBombPlanting(ITDSPlayer player)
+        {
+            if (_bomb is null)
+                return false;
+            if (Lobby.CurrentRoundStatus != RoundStatus.Round)
+                return false;
+            if (_bombDetonateTimer is { })
+                return false;
+            if (_bombPlantDefuseTimer is { })
+                return false;
+            if (player.ModPlayer!.Dead)
+                return false;
+            if (player.ModPlayer.CurrentWeapon != WeaponHash.Unarmed)
+                return false;
+
+            player.ModPlayer.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(AnimationFlag.Loop));
+            _bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(player), (uint)Lobby.RoundSettings.BombPlantTimeMs);
+            return true;
+        }
+
+        public void StopBombDefusing(ITDSPlayer player)
+        {
+            _bombPlantDefuseTimer?.Kill();
+            _bombPlantDefuseTimer = null;
+            player.ModPlayer?.StopAnimation();
+        }
+
+        public void StopBombPlanting(ITDSPlayer player)
+        {
+            _bombPlantDefuseTimer?.Kill();
+            _bombPlantDefuseTimer = null;
+
+            player.ModPlayer?.StopAnimation();
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private static void SendBombPlantInfos(ITDSPlayer character)
         {
             character.SendMessage(character.Language.BOMB_PLANT_INFO);
         }
 
-        private void SendBombDefuseInfos()
+        private void DefuseBomb(ITDSPlayer player)
         {
-            _counterTerroristTeam.FuncIterate((character, team) =>
+            _bombPlantDefuseTimer = null;
+            if (player.ModPlayer!.Dead)
+                return;
+            if (_bomb is null)
+                return;
+
+            var playerpos = player.ModPlayer.Position;
+            if (playerpos.DistanceTo(_bomb.Position) > SettingsHandler.ServerSettings.DistanceToSpotToDefuse)
+                return;
+
+            if (Lobby.IsOfficial)
+                player.AddToChallenge(ChallengeType.BombDefuse);
+
+            _terroristTeam.FuncIterate((targetcharacter, team) =>
             {
-                foreach (string str in character.Language.DEFUSE_INFO)
-                {
-                    character.SendMessage(str);
-                }
+                Lobby.DmgSys.UpdateLastHitter(targetcharacter, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
+                targetcharacter.ModPlayer!.Kill();
             });
+            player.ModPlayer.StopAnimation();
+
+            // COUNTER-TERROR WON //
+            WinnerTeam = _counterTerroristTeam;
+            Lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.BombDefused);
+        }
+
+        private BombPlantPlaceDto? GetPlantPos(Position3D pos)
+        {
+            foreach (var place in _bombPlantPlaces)
+                if (pos.DistanceTo(place.Position) < SettingsHandler.ServerSettings.DistanceToSpotToPlant)
+                    return place;
+            return null;
         }
 
         private void PlantBomb(ITDSPlayer player)
@@ -73,94 +164,17 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             SendBombDefuseInfos();
         }
 
-        private BombPlantPlaceDto? GetPlantPos(Position3D pos)
+        private void SendBombDefuseInfos()
         {
-            foreach (var place in _bombPlantPlaces)
-                if (pos.DistanceTo(place.Position) < SettingsHandler.ServerSettings.DistanceToSpotToPlant)
-                    return place;
-            return null;
-        }
-
-        private void DefuseBomb(ITDSPlayer player)
-        {
-            _bombPlantDefuseTimer = null;
-            if (player.ModPlayer!.Dead)
-                return;
-            if (_bomb is null)
-                return;
-
-            var playerpos = player.ModPlayer.Position;
-            if (playerpos.DistanceTo(_bomb.Position) > SettingsHandler.ServerSettings.DistanceToSpotToDefuse)
-                return;
-
-            if (Lobby.IsOfficial)
-                player.AddToChallenge(ChallengeType.BombDefuse);
-
-            _terroristTeam.FuncIterate((targetcharacter, team) =>
+            _counterTerroristTeam.FuncIterate((character, team) =>
             {
-                Lobby.DmgSys.UpdateLastHitter(targetcharacter, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
-                targetcharacter.ModPlayer!.Kill();
+                foreach (string str in character.Language.DEFUSE_INFO)
+                {
+                    character.SendMessage(str);
+                }
             });
-            player.ModPlayer.StopAnimation();
-
-            // COUNTER-TERROR WON //
-            WinnerTeam = _counterTerroristTeam;
-            Lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.BombDefused);
         }
 
-        public bool StartBombPlanting(ITDSPlayer player)
-        {
-            if (_bomb is null)
-                return false;
-            if (Lobby.CurrentRoundStatus != RoundStatus.Round)
-                return false;
-            if (_bombDetonateTimer is { })
-                return false;
-            if (_bombPlantDefuseTimer is { })
-                return false;
-            if (player.ModPlayer!.Dead)
-                return false;
-            if (player.ModPlayer.CurrentWeapon != WeaponHash.Unarmed)
-                return false;
-
-            player.ModPlayer.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(AnimationFlag.Loop));
-            _bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(player), (uint)Lobby.RoundSettings.BombPlantTimeMs);
-            return true;
-        }
-
-        public void StopBombPlanting(ITDSPlayer player)
-        {
-            _bombPlantDefuseTimer?.Kill();
-            _bombPlantDefuseTimer = null;
-
-            player.ModPlayer?.StopAnimation();
-        }
-
-        public bool StartBombDefusing(ITDSPlayer player)
-        {
-            //Todo StartBombDefusing was empty, test it
-            if (_bomb is null)
-                return false;
-            if (Lobby.CurrentRoundStatus != RoundStatus.Round)
-                return false;
-            if (_bombDetonateTimer is null)
-                return false;
-            if (_bombPlantDefuseTimer is { })
-                return false;
-            if (player.ModPlayer!.Dead)
-                return false;
-            if (player.ModPlayer.CurrentWeapon != WeaponHash.Unarmed)
-                return false;
-            player.ModPlayer.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(AnimationFlag.Loop));
-            _bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(player), (uint)Lobby.RoundSettings.BombDefuseTimeMs);
-            return true;
-        }
-
-        public void StopBombDefusing(ITDSPlayer player)
-        {
-            _bombPlantDefuseTimer?.Kill();
-            _bombPlantDefuseTimer = null;
-            player.ModPlayer?.StopAnimation();
-        }
+        #endregion Private Methods
     }
 }

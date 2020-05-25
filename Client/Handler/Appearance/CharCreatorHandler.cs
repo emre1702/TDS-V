@@ -19,24 +19,28 @@ namespace TDS_Client.Handler.Appearance
 {
     public class CharCreatorHandler : ServiceBase
     {
-        private IPed _displayPed;
-        private uint _dimension;
-        private Position2D _initMovePedCursorPos;
-        private float _initMovingOffsetZ;
-        private float _initMovingAngle;
-        private Position3D _currentCamOffsetPos;
-        private float _currentCamAngle;
+        #region Private Fields
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
-
-        private readonly IModAPI _modAPI;
         private readonly BrowserHandler _browserHandler;
-        private readonly Serializer _serializer;
-        private readonly DeathHandler _deathHandler;
         private readonly CamerasHandler _camerasHandler;
-        private readonly EventsHandler _eventsHandler;
         private readonly CursorHandler _cursorHandler;
+        private readonly DeathHandler _deathHandler;
+        private readonly EventsHandler _eventsHandler;
+        private readonly IModAPI _modAPI;
+        private readonly Serializer _serializer;
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
+        private float _currentCamAngle;
+        private Position3D _currentCamOffsetPos;
+        private uint _dimension;
+        private IPed _displayPed;
+        private Position2D _initMovePedCursorPos;
+        private float _initMovingAngle;
+        private float _initMovingOffsetZ;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public CharCreatorHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, Serializer serializer, DeathHandler deathHandler,
             CamerasHandler camerasHandler, EventsHandler eventsHandler, CursorHandler cursorHandler, UtilsHandler utilsHandler)
@@ -56,6 +60,10 @@ namespace TDS_Client.Handler.Appearance
             ModAPI.Event.Add(ToClientEvent.StartCharCreator, Start);
             ModAPI.Event.Add(FromBrowserEvent.CharCreatorDataChanged, CharCreatorDataChanged);
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void Start(object[] args)
         {
@@ -100,6 +108,163 @@ namespace TDS_Client.Handler.Appearance
                 if (!(_displayPed is null))
                     _displayPed?.Destroy();
                 _currentCamOffsetPos = null;
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void ApplyAngle(Position3D pos, float distance, float angle)
+        {
+            pos.X = (float)Math.Cos(angle * Math.PI / 180) * distance;
+            pos.Y = (float)Math.Sin(angle * Math.PI / 180) * distance;
+        }
+
+        private void CharCreatorDataChanged(object[] args)
+        {
+            try
+            {
+                if (_displayPed is null)
+                    return;
+
+                var key = (CharCreatorDataKey)Convert.ToInt32(args[0]);
+
+                switch (key)
+                {
+                    case CharCreatorDataKey.IsMale:
+                        PreparePed(_serializer.FromBrowser<CharCreateData>((string)args[1]));
+                        new TDSTimer(PrepareCamera, 1000);
+                        break;
+
+                    case CharCreatorDataKey.Heritage:
+                        var heritageData = _serializer.FromBrowser<CharCreateHeritageData>((string)args[1]);
+                        UpdateHeritage(heritageData);
+                        break;
+
+                    case CharCreatorDataKey.Feature:
+                        UpdateFaceFeature(Convert.ToInt32(args[1]), Convert.ToSingle(args[2]));
+                        break;
+
+                    case CharCreatorDataKey.Appearance:
+                        UpdateAppearance(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]), Convert.ToSingle(args[3]));
+                        break;
+
+                    case CharCreatorDataKey.Hair:
+                        UpdateHair(Convert.ToInt32(args[1]));
+                        break;
+
+                    case CharCreatorDataKey.HairColor:
+                        UpdateHairColor(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
+                        break;
+
+                    case CharCreatorDataKey.EyeColor:
+                        UpdateEyeColor(Convert.ToInt32(args[1]));
+                        break;
+
+                    case CharCreatorDataKey.FacialHairColor:
+                        UpdateColor(1, 1, Convert.ToInt32(args[1]));
+                        break;
+
+                    case CharCreatorDataKey.EyebrowColor:
+                        UpdateColor(2, 1, Convert.ToInt32(args[1]));
+                        break;
+
+                    case CharCreatorDataKey.BlushColor:
+                        UpdateColor(5, 2, Convert.ToInt32(args[1]));
+                        break;
+
+                    case CharCreatorDataKey.LipstickColor:
+                        UpdateColor(8, 2, Convert.ToInt32(args[1]));
+                        break;
+
+                    case CharCreatorDataKey.ChestHairColor:
+                        UpdateColor(10, 1, Convert.ToInt32(args[1]));
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        private void MovePed(int currentMs)
+        {
+            try
+            {
+                if (_displayPed is null)
+                    return;
+                if (_currentCamOffsetPos is null)
+                    return;
+
+                if (!_modAPI.Input.IsDown(Key.RightButton))
+                {
+                    _initMovePedCursorPos = null;
+                    return;
+                }
+
+                var cursorPos = new Position2D(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY());
+                if (_initMovePedCursorPos is null)
+                {
+                    _initMovePedCursorPos = cursorPos;
+                    _initMovingOffsetZ = _currentCamOffsetPos.Z;
+                    _initMovingAngle = _currentCamAngle;
+                    return;
+                }
+
+                float differenceX = cursorPos.X - _initMovePedCursorPos.X;
+                float addToAngle = differenceX * 2 * 360;
+                var newAngle = _initMovingAngle + addToAngle;
+                while (newAngle < 0)
+                    newAngle += 360;
+                while (newAngle > 360)
+                    newAngle -= 360;
+
+                ApplyAngle(_currentCamOffsetPos, 0.5f, newAngle);
+
+                float differenceY = cursorPos.Y - _initMovePedCursorPos.Y;
+                // 0,5 -> 1 => 3
+                float addToHeadingY = differenceY * 2 * 3;
+                _currentCamOffsetPos.Z = _initMovingOffsetZ + addToHeadingY;
+
+                var cam = _camerasHandler.BetweenRoundsCam;
+                cam.LookAt(_displayPed, PedBone.SKEL_Head, _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
+                cam.Render(false, 0);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        private void PrepareCamera()
+        {
+            try
+            {
+                _deathHandler.PlayerSpawn();
+                _initMovePedCursorPos = null;
+                ModAPI.Cam.DoScreenFadeIn(200);
+
+                if (_currentCamOffsetPos is null)
+                {
+                    _currentCamOffsetPos = new Position3D(0, 0, 0.15f);
+                    _currentCamAngle = 90;
+                    ApplyAngle(_currentCamOffsetPos, 0.5f, _currentCamAngle);
+                }
+
+                var cam = _camerasHandler.BetweenRoundsCam;
+                cam.LookAt(_displayPed, PedBone.SKEL_Head, _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
+
+                cam.Activate();
+                cam.Render(true, 1000);
+                //cam.PointCamAtCoord(new Position3D(-425.48f, 1123.55f, 326.5171f));
+                //cam.Activate();
+                //cam.RenderToPosition(new Position3D(-425.3048f, 1124.125f, 326.5871f), true, 1000);
             }
             catch (Exception ex)
             {
@@ -173,109 +338,25 @@ namespace TDS_Client.Handler.Appearance
             }
         }
 
-        private void PrepareCamera()
+        private void UpdateAppearance(int overlayId, int index, float opacity)
         {
-            try
-            {
-                _deathHandler.PlayerSpawn();
-                _initMovePedCursorPos = null;
-                ModAPI.Cam.DoScreenFadeIn(200);
-
-                if (_currentCamOffsetPos is null)
-                {
-                    _currentCamOffsetPos = new Position3D(0, 0, 0.15f);
-                    _currentCamAngle = 90;
-                    ApplyAngle(_currentCamOffsetPos, 0.5f, _currentCamAngle);
-                }
-
-                var cam = _camerasHandler.BetweenRoundsCam;
-                cam.LookAt(_displayPed, PedBone.SKEL_Head, _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
-
-                cam.Activate();
-                cam.Render(true, 1000);
-                //cam.PointCamAtCoord(new Position3D(-425.48f, 1123.55f, 326.5171f));
-                //cam.Activate();
-                //cam.RenderToPosition(new Position3D(-425.3048f, 1124.125f, 326.5871f), true, 1000);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
+            index = index == 0 ? 255 : index - 1;
+            _displayPed.SetHeadOverlay(overlayId, index, opacity);
         }
 
-        private void MovePed(int currentMs)
+        private void UpdateColor(int overlayId, int colorType, int colorId)
         {
-            try
-            {
-                if (_displayPed is null)
-                    return;
-                if (_currentCamOffsetPos is null)
-                    return;
-
-                if (!_modAPI.Input.IsDown(Key.RightButton))
-                {
-                    _initMovePedCursorPos = null;
-                    return;
-                }
-
-                var cursorPos = new Position2D(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY());
-                if (_initMovePedCursorPos is null)
-                {
-                    _initMovePedCursorPos = cursorPos;
-                    _initMovingOffsetZ = _currentCamOffsetPos.Z;
-                    _initMovingAngle = _currentCamAngle;
-                    return;
-                }
-
-                float differenceX = cursorPos.X - _initMovePedCursorPos.X;
-                float addToAngle = differenceX * 2 * 360;
-                var newAngle = _initMovingAngle + addToAngle;
-                while (newAngle < 0)
-                    newAngle += 360;
-                while (newAngle > 360)
-                    newAngle -= 360;
-
-                ApplyAngle(_currentCamOffsetPos, 0.5f, newAngle);
-
-                float differenceY = cursorPos.Y - _initMovePedCursorPos.Y;
-                // 0,5 -> 1 => 3
-                float addToHeadingY = differenceY * 2 * 3;
-                _currentCamOffsetPos.Z = _initMovingOffsetZ + addToHeadingY;
-
-                var cam = _camerasHandler.BetweenRoundsCam;
-                cam.LookAt(_displayPed, PedBone.SKEL_Head, _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
-                cam.Render(false, 0);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
+            _displayPed.SetHeadOverlayColor(overlayId, colorType, colorId, 0);
         }
 
-        private void ApplyAngle(Position3D pos, float distance, float angle)
+        private void UpdateEyeColor(int index)
         {
-            pos.X = (float)Math.Cos(angle * Math.PI / 180) * distance;
-            pos.Y = (float)Math.Sin(angle * Math.PI / 180) * distance;
-        }
-
-        private void UpdateHeritage(CharCreateHeritageData data)
-        {
-            _displayPed.SetHeadBlendData(
-                data.MotherIndex, data.FatherIndex, 0,
-                data.MotherIndex, data.FatherIndex, 0,
-                data.ResemblancePercentage, data.SkinTonePercentage, 0,
-                false);
+            _displayPed.SetEyeColor(index);
         }
 
         private void UpdateFaceFeature(int index, float scale)
         {
             _displayPed.SetFaceFeature(index, scale);
-        }
-
-        private void UpdateAppearance(int overlayId, int index, float opacity)
-        {
-            index = index == 0 ? 255 : index - 1;
-            _displayPed.SetHeadOverlay(overlayId, index, opacity);
         }
 
         private void UpdateHair(int id)
@@ -288,82 +369,15 @@ namespace TDS_Client.Handler.Appearance
             _displayPed.SetHairColor(hairColor, hairHighlightColor);
         }
 
-        private void UpdateEyeColor(int index)
+        private void UpdateHeritage(CharCreateHeritageData data)
         {
-            _displayPed.SetEyeColor(index);
+            _displayPed.SetHeadBlendData(
+                data.MotherIndex, data.FatherIndex, 0,
+                data.MotherIndex, data.FatherIndex, 0,
+                data.ResemblancePercentage, data.SkinTonePercentage, 0,
+                false);
         }
 
-        private void UpdateColor(int overlayId, int colorType, int colorId)
-        {
-            _displayPed.SetHeadOverlayColor(overlayId, colorType, colorId, 0);
-        }
-
-        private void CharCreatorDataChanged(object[] args)
-        {
-            try
-            {
-                if (_displayPed is null)
-                    return;
-
-                var key = (CharCreatorDataKey)Convert.ToInt32(args[0]);
-
-                switch (key)
-                {
-                    case CharCreatorDataKey.IsMale:
-                        PreparePed(_serializer.FromBrowser<CharCreateData>((string)args[1]));
-                        new TDSTimer(PrepareCamera, 1000);
-                        break;
-
-                    case CharCreatorDataKey.Heritage:
-                        var heritageData = _serializer.FromBrowser<CharCreateHeritageData>((string)args[1]);
-                        UpdateHeritage(heritageData);
-                        break;
-
-                    case CharCreatorDataKey.Feature:
-                        UpdateFaceFeature(Convert.ToInt32(args[1]), Convert.ToSingle(args[2]));
-                        break;
-
-                    case CharCreatorDataKey.Appearance:
-                        UpdateAppearance(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]), Convert.ToSingle(args[3]));
-                        break;
-
-                    case CharCreatorDataKey.Hair:
-                        UpdateHair(Convert.ToInt32(args[1]));
-                        break;
-
-                    case CharCreatorDataKey.HairColor:
-                        UpdateHairColor(Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
-                        break;
-
-                    case CharCreatorDataKey.EyeColor:
-                        UpdateEyeColor(Convert.ToInt32(args[1]));
-                        break;
-
-                    case CharCreatorDataKey.FacialHairColor:
-                        UpdateColor(1, 1, Convert.ToInt32(args[1]));
-                        break;
-
-                    case CharCreatorDataKey.EyebrowColor:
-                        UpdateColor(2, 1, Convert.ToInt32(args[1]));
-                        break;
-
-                    case CharCreatorDataKey.BlushColor:
-                        UpdateColor(5, 2, Convert.ToInt32(args[1]));
-                        break;
-
-                    case CharCreatorDataKey.LipstickColor:
-                        UpdateColor(8, 2, Convert.ToInt32(args[1]));
-                        break;
-
-                    case CharCreatorDataKey.ChestHairColor:
-                        UpdateColor(10, 1, Convert.ToInt32(args[1]));
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        #endregion Private Methods
     }
 }

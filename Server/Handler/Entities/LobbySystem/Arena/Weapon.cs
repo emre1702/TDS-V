@@ -1,14 +1,19 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
+        #region Private Fields
+
         private static IEnumerable<LobbyWeapons>? _allRoundWeapons;
+
+        #endregion Private Fields
+
+        #region Public Methods
 
         public override void GivePlayerWeapons(ITDSPlayer player)
         {
@@ -37,5 +42,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             base.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
             CurrentGameMode?.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
         }
+
+        #endregion Public Methods
     }
 }

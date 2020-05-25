@@ -9,21 +9,26 @@ using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
 using TDS_Client.Handler.Sync;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
 
 namespace TDS_Client.Handler.Appearance
 {
     /// <summary>
-    /// Works only with Clothing_M_11_0 (shirt) and Clothing_M_11_90 (jacket).
-    /// But because with jackets you can only change the 3rd index color (chest &amp; cuffs), we'll use shirts.
-    /// The shirt is getting set at serverside, here we'll only set the color.
+    /// Works only with Clothing_M_11_0 (shirt) and Clothing_M_11_90 (jacket). But because with
+    /// jackets you can only change the 3rd index color (chest &amp; cuffs), we'll use shirts. The
+    /// shirt is getting set at serverside, here we'll only set the color.
     /// </summary>
     public class ShirtTeamColorsHandler : ServiceBase
     {
-        private readonly LobbyHandler _lobbyHandler;
-        private readonly DataSyncHandler _dataSyncHandler;
+        #region Private Fields
 
-        public ShirtTeamColorsHandler(IModAPI modAPI, LoggingHandler loggingHandler, LobbyHandler lobbyHandler, 
+        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly LobbyHandler _lobbyHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public ShirtTeamColorsHandler(IModAPI modAPI, LoggingHandler loggingHandler, LobbyHandler lobbyHandler,
             DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -35,9 +40,25 @@ namespace TDS_Client.Handler.Appearance
             modAPI.Event.EntityStreamIn.Add(new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn));
         }
 
-        private void OnSpawn()
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private Color GetColorRelativeToMe(int hisTeamIndex)
         {
-            OnEntityStreamIn(ModAPI.LocalPlayer);
+            try
+            {
+                var myTeamIndex = _dataSyncHandler.GetData(ModAPI.LocalPlayer, PlayerDataKey.TeamIndex, -1);
+                if (myTeamIndex == -1)
+                    return Color.FromArgb(255, 255, 255);
+
+                return myTeamIndex == hisTeamIndex ? Color.Green : Color.DarkRed;
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+                return Color.White;
+            }
         }
 
         private void OnEntityStreamIn(IEntity entity)
@@ -70,21 +91,11 @@ namespace TDS_Client.Handler.Appearance
             }
         }
 
-        private Color GetColorRelativeToMe(int hisTeamIndex)
+        private void OnSpawn()
         {
-            try
-            {
-                var myTeamIndex = _dataSyncHandler.GetData(ModAPI.LocalPlayer, PlayerDataKey.TeamIndex, -1);
-                if (myTeamIndex == -1)
-                    return Color.FromArgb(255, 255, 255);
-
-                return myTeamIndex == hisTeamIndex ? Color.Green : Color.DarkRed;
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-                return Color.White;
-            }
+            OnEntityStreamIn(ModAPI.LocalPlayer);
         }
+
+        #endregion Private Methods
     }
 }

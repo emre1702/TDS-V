@@ -12,10 +12,16 @@ namespace TDS_Client.Handler.GangSystem
 {
     public class GangHousesHandler : ServiceBase
     {
+        #region Private Fields
+
         private readonly List<IBlip> _blips = new List<IBlip>();
 
-        private readonly SettingsHandler _settingsHandler;
         private readonly Serializer _serializer;
+        private readonly SettingsHandler _settingsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public GangHousesHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, Serializer serializer)
             : base(modAPI, loggingHandler)
@@ -27,8 +33,11 @@ namespace TDS_Client.Handler.GangSystem
 
             //Todo: Add house blips on request
             modAPI.Event.Add(ToClientEvent.CreateFreeGangHousesForLevel, CreateFreeGangHousesForLevel);
-
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void CreateFreeGangHousesForLevel(object[] args)
         {
@@ -55,5 +64,7 @@ namespace TDS_Client.Handler.GangSystem
             }
             _blips.Clear();
         }
+
+        #endregion Private Methods
     }
 }

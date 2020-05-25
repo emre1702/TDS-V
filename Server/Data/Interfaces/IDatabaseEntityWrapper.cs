@@ -6,9 +6,16 @@ namespace TDS_Server.Data.Interfaces
 {
     public interface IDatabaseEntityWrapper
     {
-        Task ExecuteForDBAsync(Func<TDSDbContext, Task> action);
-        Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action);
+        #region Public Methods
+
         Task ExecuteForDB(Action<TDSDbContext> action);
+
         Task<T> ExecuteForDB<T>(Func<TDSDbContext, T> action);
+
+        Task ExecuteForDBAsync(Func<TDSDbContext, Task> action);
+
+        Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action);
+
+        #endregion Public Methods
     }
 }

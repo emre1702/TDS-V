@@ -2,6 +2,10 @@
 {
     public interface INametagsAPI
     {
+        #region Public Properties
+
         bool Enabled { get; set; }
+
+        #endregion Public Properties
     }
 }

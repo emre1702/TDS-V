@@ -1,20 +1,18 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.RAGEAPI.Player;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 
 namespace TDS_Server.RAGEAPI.Events.RAGE
 {
     partial class BaseRAGEEvents
     {
+        #region Public Methods
+
         [ServerEvent(Event.PlayerConnected)]
-        public void PlayerConnected(GTANetworkAPI.Player player)
+        public void PlayerConnected(IPlayer player)
         {
-            Init.BaseAPI.EntityConvertingHandler.PlayerConnected(player);
-
-            var modPlayer = Init.BaseAPI.EntityConvertingHandler.GetEntity(player);
-            if (modPlayer is null)
-                return;
-
-            Init.TDSCore.EventsHandler.OnPlayerConnected(modPlayer);
+            Init.TDSCore.EventsHandler.OnPlayerConnected(player);
         }
+
+        #endregion Public Methods
     }
 }

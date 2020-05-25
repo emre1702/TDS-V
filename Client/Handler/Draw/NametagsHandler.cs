@@ -7,15 +7,20 @@ using TDS_Client.Data.Extensions;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
-using TDS_Client.Handler;
 
 namespace TDS_Client.Handler.Draw
 {
     public class NametagsHandler : ServiceBase
     {
+        #region Private Fields
+
         private readonly CamerasHandler _camerasHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly UtilsHandler _utilsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public NametagsHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler)
             : base(modAPI, loggingHandler)
@@ -27,6 +32,10 @@ namespace TDS_Client.Handler.Draw
             modAPI.Event.TickNametag.Add(new EventMethodData<TickNametagDelegate>(Draw));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public void Draw(List<TickNametagData> nametags)
         {
             if (_settingsHandler.ShowNametagOnlyOnAiming)
@@ -34,6 +43,27 @@ namespace TDS_Client.Handler.Draw
             else
                 DrawAtSight(nametags);
         }
+
+        public void DrawNametag(int handle, string name, float distance)
+        {
+            float scale = Math.Max(distance / _settingsHandler.NametagMaxDistance, 0.5f);
+            var position = ModAPI.Entity.GetEntityCoords(handle, true);
+            position.Z += 0.9f + distance / _settingsHandler.NametagMaxDistance;
+
+            float screenX = 0;
+            float screenY = 0;
+            ModAPI.Graphics.GetScreenCoordFromWorldCoord(position.X, position.Y, position.Z, ref screenX, ref screenY);
+
+            float textheight = ModAPI.Ui.GetTextScaleHeight(scale, Font.ChaletLondon);
+            screenY -= textheight;
+
+            ModAPI.Graphics.DrawText(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
+                AlignmentX.Center, true, true, 0);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void DrawAtAim()
         {
@@ -55,7 +85,7 @@ namespace TDS_Client.Handler.Draw
             var player = ModAPI.Pool.Players.GetAtHandle(targetEntity);
             if (!(player is null))
                 name = _utilsHandler.GetDisplayName(player);
-            
+
             if (player is null)
                 Logging.LogWarning("GetAtHandle did not work. TargetEntity: " + targetEntity + " | Linq: " + (ModAPI.Pool.Players.All.Any(p => p.Handle == targetEntity)), "NametagsHandler.DrawAtAim");
 
@@ -75,23 +105,21 @@ namespace TDS_Client.Handler.Draw
             }
         }
 
-        public void DrawNametag(int handle, string name, float distance)
+        private Color GetArmorColor(int armor)
         {
-            float scale = Math.Max(distance / _settingsHandler.NametagMaxDistance, 0.5f);
-            var position = ModAPI.Entity.GetEntityCoords(handle, true);
-            position.Z += 0.9f + distance / _settingsHandler.NametagMaxDistance;
+            if (!_settingsHandler.NametagArmorEmptyColor.HasValue)
+                return GetArmorColor(100, armor);
 
-            float screenX = 0;
-            float screenY = 0;
-            ModAPI.Graphics.GetScreenCoordFromWorldCoord(position.X, position.Y, position.Z, ref screenX, ref screenY);
-
-            float textheight = ModAPI.Ui.GetTextScaleHeight(scale, Font.ChaletLondon);
-            screenY -= textheight;
-
-            ModAPI.Graphics.DrawText(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
-                AlignmentX.Center, true, true, 0);
+            return _settingsHandler.NametagArmorFullColor.GetBetween(_settingsHandler.NametagArmorEmptyColor.Value, armor / _settingsHandler.StartArmor);
         }
 
+        private Color GetArmorColor(int hp, int armor)
+        {
+            if (_settingsHandler.NametagArmorEmptyColor.HasValue)
+                return GetArmorColor(armor);
+
+            return _settingsHandler.NametagArmorFullColor.GetBetween(GetHpColor(hp), armor / _settingsHandler.StartArmor);
+        }
 
         private Color GetHealthColor(int handle)
         {
@@ -128,7 +156,6 @@ namespace TDS_Client.Handler.Draw
                     (int)Math.Ceiling(armor * 2.55),
                     (int)Math.Ceiling(armor * 2.55 / 2 + hp * 2.55 / 2),
                     (int)Math.Ceiling(armor * 2.55));*/
-
         }
 
         private Color GetHpColor(int hp)
@@ -136,20 +163,6 @@ namespace TDS_Client.Handler.Draw
             return _settingsHandler.NametagHealthFullColor.GetBetween(_settingsHandler.NametagHealthEmptyColor, hp / _settingsHandler.StartHealth);
         }
 
-        private Color GetArmorColor(int armor)
-        {
-            if (!_settingsHandler.NametagArmorEmptyColor.HasValue)
-                return GetArmorColor(100, armor);
-
-            return _settingsHandler.NametagArmorFullColor.GetBetween(_settingsHandler.NametagArmorEmptyColor.Value, armor / _settingsHandler.StartArmor);
-        }
-
-        private Color GetArmorColor(int hp, int armor)
-        {
-            if (_settingsHandler.NametagArmorEmptyColor.HasValue)
-                return GetArmorColor(armor);
-
-            return _settingsHandler.NametagArmorFullColor.GetBetween(GetHpColor(hp), armor / _settingsHandler.StartArmor);
-        }
+        #endregion Private Methods
     }
 }

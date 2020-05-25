@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TDS_Server.Database.Entity.Player;
 
 namespace BonusBotConnector.Client
 {
     public class Helper
     {
+        #region Public Methods
+
         public List<EmbedField> GetBanEmbedFields(PlayerBans ban)
         {
-           var list = new List<EmbedField>
+            var list = new List<EmbedField>
            {
                new EmbedField { Name = "Location:", Value = ban.Lobby.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu ? "Server" : ban.Lobby.Name },
                new EmbedField { Name = "Admin:", Value = $"{ban.Admin.Name} ({ban.Admin.SCName})" },
@@ -19,5 +20,7 @@ namespace BonusBotConnector.Client
 
             return list;
         }
+
+        #endregion Public Methods
     }
 }

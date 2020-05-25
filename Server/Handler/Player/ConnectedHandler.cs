@@ -19,11 +19,17 @@ namespace TDS_Server.Handler.Player
 {
     public class ConnectedHandler
     {
-        private readonly IModAPI _modAPI;
+        #region Private Fields
+
         private readonly BansHandler _bansHandler;
+        private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly EventsHandler _eventsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly DatabasePlayerHelper _databasePlayerHelper;
+        private readonly IModAPI _modAPI;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ConnectedHandler(
             BansHandler bansHandler,
@@ -41,6 +47,10 @@ namespace TDS_Server.Handler.Player
             _eventsHandler.PlayerConnected += PlayerConnected;
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
         private async void PlayerConnected(IPlayer modPlayer)
         {
             if (modPlayer is null)
@@ -49,7 +59,7 @@ namespace TDS_Server.Handler.Player
             modPlayer.Position = new Position3D(0, 0, 1000).Around(10);
             modPlayer.Freeze(true);
 
-            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, modPlayer.IPAddress, modPlayer.Serial, modPlayer.SocialClubName,
+            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, modPlayer.Address, modPlayer.Serial, modPlayer.SocialClubName,
                 modPlayer.SocialClubId, false);
 
             if (ban is { })
@@ -62,7 +72,7 @@ namespace TDS_Server.Handler.Player
             var playerIdName = await _databasePlayerHelper.GetPlayerIdName(modPlayer);
             if (playerIdName is null)
             {
-                _modAPI.Thread.RunInMainThread(() 
+                _modAPI.Thread.RunInMainThread(()
                     => modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, modPlayer.SocialClubName, false));
                 return;
             }
@@ -74,9 +84,11 @@ namespace TDS_Server.Handler.Player
                     => Utils.HandleBan(modPlayer, ban));
                 return;
             }
-                
+
             _modAPI.Thread.RunInMainThread(()
                 => modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
         }
+
+        #endregion Private Methods
     }
 }

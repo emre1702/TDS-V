@@ -1,26 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Shared.Default;
 using TDS_Shared.Core;
-using System.Threading.Tasks;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces.ModAPI;
-using System;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Maps
 {
     public class MapFavouritesHandler : DatabaseEntityWrapper
     {
+        #region Private Fields
+
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
 
-        public MapFavouritesHandler(EventsHandler eventsHandler, Serializer serializer, TDSDbContext dbContext, ILoggingHandler loggingHandler, IModAPI modAPI) 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public MapFavouritesHandler(EventsHandler eventsHandler, Serializer serializer, TDSDbContext dbContext, ILoggingHandler loggingHandler, IModAPI modAPI)
             : base(dbContext, loggingHandler)
         {
             _modAPI = modAPI;
@@ -28,6 +34,10 @@ namespace TDS_Server.Handler.Maps
 
             eventsHandler.PlayerLoggedIn += LoadPlayerFavourites;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async void LoadPlayerFavourites(ITDSPlayer player)
         {
@@ -71,10 +81,12 @@ namespace TDS_Server.Handler.Maps
                     await dbContext.SaveChangesAsync();
                     return;
                 }
-                #endregion
+
+                #endregion Remove Favourite
             });
             return null;
-
         }
+
+        #endregion Public Methods
     }
 }

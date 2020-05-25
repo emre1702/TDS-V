@@ -2,21 +2,16 @@
 using System.Linq;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Models.Map.Creator;
-using TDS_Shared.Data.Enums;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Data.Extensions
 {
-    #nullable enable
+#nullable enable
+
     public static class MapExtensions
     {
-        public static void LoadSyncedData(this MapDto map)
-        {
-            map.BrowserSyncedData.Name = map.Info.Name;
-            map.BrowserSyncedData.Description[(int)Language.English] = map.Descriptions?.English;
-            map.BrowserSyncedData.Description[(int)Language.German] = map.Descriptions?.German;
-            map.BrowserSyncedData.Type = (MapType)(int)map.Info.Type;
-        }
+        #region Public Methods
 
         public static void CreateJsons(this MapDto map, Serializer serializer)
         {
@@ -35,26 +30,38 @@ namespace TDS_Server.Data.Extensions
             return map.GetCenterByLimits(zpos);
         }
 
-        private static float GetCenterZPos(this MapDto map)
+        public static void LoadSyncedData(this MapDto map)
         {
-            var teamSpawns1 = map.TeamSpawnsList.TeamSpawns.FirstOrDefault();
-            if (teamSpawns1 is null || teamSpawns1.Spawns.Length == 0)
-                return 0;
-            var teamSpawns2 = map.TeamSpawnsList.TeamSpawns.Last();
-            var spawn1 = teamSpawns1.Spawns.FirstOrDefault();
-            var spawn2 = teamSpawns2.Spawns.FirstOrDefault();
-            if (spawn1 is null && spawn2 is { })
-                return spawn2.Z;
-            if (spawn2 is null && spawn1 is { })
-                return spawn1.Z;
-            if (spawn1 is null && spawn2 is null)
-                return 0;
-            return (spawn1!.Z + spawn2!.Z) / 2;
+            map.BrowserSyncedData.Name = map.Info.Name;
+            map.BrowserSyncedData.Description[(int)Language.English] = map.Descriptions?.English;
+            map.BrowserSyncedData.Description[(int)Language.German] = map.Descriptions?.German;
+            map.BrowserSyncedData.Type = (MapType)(int)map.Info.Type;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private static Position3DDto? GetCenterByLimits(this MapDto map, float zpos)
         {
             return GetCenterOfMapPositions(map.LimitInfo.Edges, zpos) ?? GetCenterBySpawns(map);
+        }
+
+        private static Position3DDto? GetCenterBySpawns(this MapDto map)
+        {
+            int amountteams = map.TeamSpawnsList.TeamSpawns.Length;
+            if (amountteams == 1)
+            {
+                return map.TeamSpawnsList.TeamSpawns[0].Spawns.First().To3DDto();
+            }
+            else if (amountteams > 1)
+            {
+                Position3DDto[] positions = map.TeamSpawnsList.TeamSpawns
+                    .Select(entry => entry.Spawns[0].To3DDto())
+                    .ToArray();
+                return GetCenterOfMapPositions(positions);
+            }
+            return null;
         }
 
         private static Position3DDto? GetCenterOfMapPositions(Position3DDto[]? positions, float zpos = 0)
@@ -76,21 +83,23 @@ namespace TDS_Server.Data.Extensions
             return new Position3DDto { X = centerX / positions.Length, Y = centerY / positions.Length, Z = centerZ / positions.Length };
         }
 
-        private static Position3DDto? GetCenterBySpawns(this MapDto map)
+        private static float GetCenterZPos(this MapDto map)
         {
-            int amountteams = map.TeamSpawnsList.TeamSpawns.Length;
-            if (amountteams == 1)
-            {
-                return map.TeamSpawnsList.TeamSpawns[0].Spawns.First().To3DDto();
-            }
-            else if (amountteams > 1)
-            {
-                Position3DDto[] positions = map.TeamSpawnsList.TeamSpawns
-                    .Select(entry => entry.Spawns[0].To3DDto())
-                    .ToArray();
-                return GetCenterOfMapPositions(positions);
-            }
-            return null;
+            var teamSpawns1 = map.TeamSpawnsList.TeamSpawns.FirstOrDefault();
+            if (teamSpawns1 is null || teamSpawns1.Spawns.Length == 0)
+                return 0;
+            var teamSpawns2 = map.TeamSpawnsList.TeamSpawns.Last();
+            var spawn1 = teamSpawns1.Spawns.FirstOrDefault();
+            var spawn2 = teamSpawns2.Spawns.FirstOrDefault();
+            if (spawn1 is null && spawn2 is { })
+                return spawn2.Z;
+            if (spawn2 is null && spawn1 is { })
+                return spawn1.Z;
+            if (spawn1 is null && spawn2 is null)
+                return 0;
+            return (spawn1!.Z + spawn2!.Z) / 2;
         }
+
+        #endregion Private Methods
     }
 }

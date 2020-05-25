@@ -15,15 +15,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class FightLobby : Lobby
     {
+        #region Public Fields
+
         public readonly Damagesys DmgSys;
+
+        #endregion Public Fields
+
+        #region Public Constructors
 
         public FightLobby(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler,
-            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler) 
-            : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, 
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
+            : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper,
                   dataSyncHandler, eventsHandler, bonusBotConnectorClient, bansHandler)
         {
             DmgSys = new Damagesys(entity.LobbyWeapons, entity.LobbyKillingspreeRewards, modAPI, loggingHandler, weaponDatasLoadingHandler);
         }
+
+        #endregion Public Constructors
     }
 }

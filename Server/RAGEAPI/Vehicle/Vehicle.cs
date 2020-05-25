@@ -1,207 +1,134 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Data.Models.GTA;
 using TDS_Server.RAGEAPI.Extensions;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGEAPI.Vehicle
 {
-    class Vehicle : Entity.Entity, IVehicle
+    internal class Vehicle : GTANetworkAPI.Vehicle, IVehicle
     {
-        internal readonly GTANetworkAPI.Vehicle _instance;
-        private readonly EntityConvertingHandler _entityConvertingHandler;
+        #region Public Constructors
 
-        public Vehicle(GTANetworkAPI.Vehicle instance, EntityConvertingHandler entityConvertingHandler) : base(instance)
-            => (_instance, _entityConvertingHandler) = (instance, entityConvertingHandler);
+        public Vehicle(GTANetworkAPI.NetHandle netHandle) : base(netHandle)
+        { }
 
+        #endregion Public Constructors
 
-        public List<IEntity> Occupants
-            => _instance.Occupants.Select(o => _entityConvertingHandler.GetEntity(o)).ToList();
+        #region Public Properties
 
-        public int MaxOccupants => _instance.MaxOccupants;
+        public new ITDSPlayer? Controller => Init.GetTDSPlayerIfLoggedIn(base.Controller as IPlayer);
 
-        public int WheelColor
+        public new Color CustomPrimaryColor
         {
-            get => _instance.WheelColor;
-            set => _instance.WheelColor = value;
-        }
-        public bool EngineStatus
-        {
-            get => _instance.EngineStatus;
-            set => _instance.EngineStatus = value;
-        }
-        public Color TyreSmokeColor
-        {
-            get => _instance.TyreSmokeColor.ToTDS();
-            set => _instance.TyreSmokeColor = value.ToMod();
-        }
-        public VehiclePaint PrimaryPaint
-        {
-            get => _instance.PrimaryPaint.ToTDS();
-            set => _instance.PrimaryPaint = value.ToMod();
-        }
-        public VehiclePaint SecondaryPaint
-        {
-            get => _instance.SecondaryPaint.ToTDS();
-            set => _instance.SecondaryPaint = value.ToMod();
-        }
-        public int WindowTint
-        {
-            get => _instance.WindowTint;
-            set => _instance.WindowTint = value;
-        }
-        public float EnginePowerMultiplier
-        {
-            get => _instance.EnginePowerMultiplier;
-            set => _instance.EnginePowerMultiplier = value;
-        }
-        public float EngineTorqueMultiplier
-        {
-            get => _instance.EngineTorqueMultiplier;
-            set => _instance.EngineTorqueMultiplier = value;
-        }
-        public Color NeonColor
-        {
-            get => _instance.NeonColor.ToTDS();
-            set => _instance.NeonColor = value.ToMod();
-        }
-        public int DashboardColor
-        {
-            get => _instance.DashboardColor;
-            set => _instance.DashboardColor = value;
-        }
-        public int WheelType
-        {
-            get => _instance.WheelType;
-            set => _instance.WheelType = value;
-        }
-        public int TrimColor
-        {
-            get => _instance.TrimColor;
-            set => _instance.TrimColor = value;
+            get => base.CustomPrimaryColor.ToTDS();
+            set => base.CustomPrimaryColor = value.ToMod();
         }
 
-        public string DisplayName => _instance.DisplayName;
-
-        public int MaxPassengers => _instance.MaxPassengers;
-
-        public float MaxSpeed => _instance.MaxSpeed;
-
-        public float MaxAcceleration => _instance.MaxAcceleration;
-
-        public float MaxTraction => _instance.MaxTraction;
-
-        public float MaxBraking => _instance.MaxBraking;
-
-        public bool Locked
+        public new Color CustomSecondaryColor
         {
-            get => _instance.Locked;
-            set => _instance.Locked = value;
-        }
-        public bool Neons
-        {
-            get => _instance.Neons;
-            set => _instance.Neons = value;
+            get => base.CustomSecondaryColor.ToTDS();
+            set => base.CustomSecondaryColor = value.ToMod();
         }
 
-        public int Class => _instance.Class;
-
-        public int ClassName => _instance.ClassName;
-
-        public int NumberPlateStyle
+        public new Color NeonColor
         {
-            get => _instance.NumberPlateStyle;
-            set => _instance.NumberPlateStyle = value;
+            get => base.NeonColor.ToTDS();
+            set => base.NeonColor = value.ToMod();
         }
 
-        public ITDSPlayer? Controller => Init.GetTDSPlayerIfLoggedIn(_entityConvertingHandler.GetEntity(_instance.Controller));
+        public new List<IEntity> Occupants => base.Occupants.OfType<IEntity>().ToList();
 
-        public int PrimaryColor
+        public new Position3D Position
         {
-            get => _instance.PrimaryColor;
-            set => _instance.PrimaryColor = value;
-        }
-        public int SecondaryColor
-        {
-            get => _instance.SecondaryColor;
-            set => _instance.SecondaryColor = value;
-        }
-        public int PearlescentColor
-        {
-            get => _instance.PearlescentColor;
-            set => _instance.PearlescentColor = value;
-        }
-        public Color CustomSecondaryColor
-        {
-            get => _instance.CustomSecondaryColor.ToTDS();
-            set => _instance.CustomSecondaryColor = value.ToMod();
-        }
-        public float Health
-        {
-            get => _instance.Health;
-            set => _instance.Health = value;
-        }
-        public int Livery
-        {
-            get => _instance.Livery;
-            set => _instance.Livery = value;
-        }
-        public Color CustomPrimaryColor
-        {
-            get => _instance.CustomPrimaryColor.ToTDS();
-            set => _instance.CustomPrimaryColor = value.ToMod();
+            get => new Position3D(base.Position.X, base.Position.Y, base.Position.Z);
+            set => base.Position = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
 
-        public ITDSVehicle? TraileredBy => Init.GetTDSVehicle(_entityConvertingHandler.GetEntity(_instance.TraileredBy));
-
-        public bool Siren => _instance.Siren;
-
-        public string NumberPlate
+        public new VehiclePaint PrimaryPaint
         {
-            get => _instance.NumberPlate;
-            set => _instance.NumberPlate = value;
-        }
-        public bool SpecialLight
-        {
-            get => _instance.SpecialLight;
-            set => _instance.SpecialLight = value;
-        }
-        public bool CustomTires
-        {
-            get => _instance.CustomTires;
-            set => _instance.CustomTires = value;
-        }
-        public bool BulletproofTyres
-        {
-            get => _instance.BulletproofTyres;
-            set => _instance.BulletproofTyres = value;
+            get => base.PrimaryPaint.ToTDS();
+            set => base.PrimaryPaint = value.ToMod();
         }
 
-        public ITDSVehicle? Trailer => Init.GetTDSVehicle(_entityConvertingHandler.GetEntity(_instance.Trailer));
+        public new Position3D Rotation
+        {
+            get => new Position3D(base.Rotation.X, base.Rotation.Y, base.Rotation.Z);
+            set => base.Rotation = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
+        }
 
-        public bool GetExtra(int extra)
-            => _instance.GetExtra(extra);
+        public new VehiclePaint SecondaryPaint
+        {
+            get => base.SecondaryPaint.ToTDS();
+            set => base.SecondaryPaint = value.ToMod();
+        }
 
-        public int GetMod(int slot)
-            => _instance.GetMod(slot);
+        public new IVehicle? Trailer => base.Trailer as IVehicle;
 
-        public void RemoveMod(int slot)
-            => _instance.RemoveMod(slot);
+        public new IVehicle? TraileredBy => base.TraileredBy as IVehicle;
 
-        public void Repair()
-            => _instance.Repair();
+        public new Color TyreSmokeColor
+        {
+            get => base.TyreSmokeColor.ToTDS();
+            set => base.TyreSmokeColor = value.ToMod();
+        }
 
-        public void SetExtra(int extra, bool enabled)
-            => _instance.SetExtra(extra, enabled);
+        #endregion Public Properties
 
-        public void SetMod(int slot, int mod)
-            => _instance.SetMod(slot, mod);
+        #region Public Methods
+
+        public void AttachTo(ITDSPlayer player, PedBone bone, Position3D? positionOffset, Position3D? rotationOffset)
+        {
+            if (!(player.ModPlayer is Player.Player modPlayer))
+                return;
+
+            var positionOffsetVector = positionOffset?.ToMod() ?? new GTANetworkAPI.Vector3();
+            var rotationOffsetVector = rotationOffset?.ToMod() ?? new GTANetworkAPI.Vector3();
+            Init.WorkaroundsHandler.AttachEntityToEntity(this, modPlayer, bone, positionOffsetVector, rotationOffsetVector, player.Lobby);
+        }
+
+        public void Detach()
+        {
+            Init.WorkaroundsHandler.DetachEntity(this);
+        }
+
+        public bool Equals([AllowNull] IEntity other)
+        {
+            return base.Id == other?.Id;
+        }
+
+        public void Freeze(bool toggle, ILobby lobby)
+        {
+            Init.WorkaroundsHandler.FreezeEntity(this, toggle, lobby);
+        }
+
+        public void SetCollisionsless(bool toggle, ILobby lobby)
+        {
+            Init.WorkaroundsHandler.SetEntityCollisionless(this, toggle, lobby);
+        }
+
+        public void SetInvincible(bool toggle, ITDSPlayer forPlayer)
+        {
+            if (!(forPlayer.ModPlayer is Player.Player player))
+                return;
+            Init.WorkaroundsHandler.SetEntityInvincible(player, this, toggle);
+        }
+
+        public void SetInvincible(bool toggle, ILobby lobby)
+        {
+            Init.WorkaroundsHandler.SetEntityInvincible(lobby, this, toggle);
+        }
 
         public void Spawn(Position3D position, float heading = 0)
-            => _instance.Spawn(position.ToMod(), heading);
+            => base.Spawn(position.ToMod(), heading);
+
+        #endregion Public Methods
     }
 }

@@ -9,10 +9,15 @@ namespace TDS_Client.Handler.Lobby
 {
     public class LobbyCamHandler : ServiceBase
     {
-        private TDSTimer _timer;
+        #region Private Fields
 
         private readonly CamerasHandler _camerasHandler;
         private readonly SettingsHandler _settingsHandler;
+        private TDSTimer _timer;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public LobbyCamHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
@@ -24,6 +29,24 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.CountdownStarted += _ => Stop();
             eventsHandler.RoundStarted += _ => StopCountdown();
             eventsHandler.RoundEnded += _ => StopCountdown();
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void SetGoTowardsPlayer(int? time = null)
+        {
+            Logging.LogInfo("", "LobbyCamHandler.SetGoTowardsPlayer");
+            _camerasHandler.RenderBack(true, (int)(time ?? (_settingsHandler.CountdownTime * 0.9)));
+            Logging.LogInfo("", "LobbyCamHandler.SetGoTowardsPlayer", true);
+        }
+
+        public void SetTimerTowardsPlayer(uint execafterms)
+        {
+            Logging.LogInfo("", "LobbyCamHandler.SetTimerTowardsPlayer");
+            _timer = new TDSTimer(() => SetGoTowardsPlayer(), execafterms, 1);
+            Logging.LogInfo("", "LobbyCamHandler.SetTimerTowardsPlayer", true);
         }
 
         public void SetToMapCenter(Position3D mapcenter)
@@ -44,18 +67,10 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        public void SetGoTowardsPlayer(int? time = null)
+        public void Stop()
         {
-            Logging.LogInfo("", "LobbyCamHandler.SetGoTowardsPlayer");
-            _camerasHandler.RenderBack(true, (int)(time ?? (_settingsHandler.CountdownTime * 0.9)));
-            Logging.LogInfo("", "LobbyCamHandler.SetGoTowardsPlayer", true);
-        }
-
-        public void SetTimerTowardsPlayer(uint execafterms)
-        {
-            Logging.LogInfo("", "LobbyCamHandler.SetTimerTowardsPlayer");
-            _timer = new TDSTimer(() => SetGoTowardsPlayer(), execafterms, 1);
-            Logging.LogInfo("", "LobbyCamHandler.SetTimerTowardsPlayer", true);
+            _timer?.Kill();
+            _timer = null;
         }
 
         public void StopCountdown()
@@ -65,15 +80,15 @@ namespace TDS_Client.Handler.Lobby
             Logging.LogInfo("", "LobbyCamHandler.StopCountdown", true);
         }
 
-        public void Stop()
-        {
-            _timer?.Kill();
-            _timer = null;
-        }
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             Stop();
         }
+
+        #endregion Private Methods
     }
 }

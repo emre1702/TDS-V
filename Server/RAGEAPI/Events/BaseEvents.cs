@@ -2,8 +2,7 @@
 
 namespace TDS_Server.RAGEAPI.Events
 {
-    class BaseEvents : Script
+    internal class BaseEvents : Script
     {
-
     }
 }

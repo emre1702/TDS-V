@@ -9,14 +9,8 @@
 
     partial class Damagesys
     {
-        private Dictionary<short, LobbyKillingspreeRewards> _killingSpreeRewards = new Dictionary<short, LobbyKillingspreeRewards>();
-        private static readonly Dictionary<short, string> _shortTimeKillingSpreeSounds = new Dictionary<short, string>
-        {
-            [2] = CustomSound.DoubleKill,
-            [3] = CustomSound.TripleKill,
-            [4] = CustomSound.UltraKill,
-            [5] = CustomSound.Rampage
-        };
+        #region Private Fields
+
         private static readonly Dictionary<short, string> _longTimeKillingSpreeSounds = new Dictionary<short, string>
         {
             [3] = CustomSound.KillingSpree,
@@ -29,6 +23,19 @@
             [10] = CustomSound.HolyShit
         };
 
+        private static readonly Dictionary<short, string> _shortTimeKillingSpreeSounds = new Dictionary<short, string>
+        {
+            [2] = CustomSound.DoubleKill,
+            [3] = CustomSound.TripleKill,
+            [4] = CustomSound.UltraKill,
+            [5] = CustomSound.Rampage
+        };
+
+        private Dictionary<short, LobbyKillingspreeRewards> _killingSpreeRewards = new Dictionary<short, LobbyKillingspreeRewards>();
+
+        #endregion Private Fields
+
+        #region Private Methods
 
         private void InitKillingSpreeRewards(ICollection<LobbyKillingspreeRewards> killingspreeRewards)
         {
@@ -74,7 +81,7 @@
             player.LastKillAt = timeNow;
         }
 
-
+        #endregion Private Methods
 
         /*private static readonly Dictionary<int, Tuple<string, int, int>> sSpreeReward =
             new Dictionary<int, Tuple<string, int, int>>

@@ -5,46 +5,25 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
 {
     public class InstructionalButton
     {
-        public string Title
-        {
-            get => _title;
-            set => SetTitle(value);
-        }
-        public int Slot
-        {
-            get => _slot;
-            set => SetSlot(value);
-        }
-        public string ControlString
-        {
-            get => _controlString;
-            set => SetControl(value);
-        }
-        public Control ControlEnum
-        {
-            get => _controlEnum;
-            set => SetControl(value);
-        }
-
-        public string OriginalControlString { get; set; }
-
-
-        private string _title;
-        private int _slot;
-        private string _controlString;
-        private Control _controlEnum;
-        private bool _useStringForControl;
+        #region Private Fields
 
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
 
-        private InstructionalButton(string title, int slot, InstructionalButtonHandler instructionalButtonHandler)
-        {
-            _title = title;
-            _slot = slot;
-            _instructionalButtonHandler = instructionalButtonHandler;
-        }
+        private Control _controlEnum;
 
-        public InstructionalButton(string title, Control control, int slot, InstructionalButtonHandler instructionalButtonHandler) 
+        private string _controlString;
+
+        private int _slot;
+
+        private string _title;
+
+        private bool _useStringForControl;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public InstructionalButton(string title, Control control, int slot, InstructionalButtonHandler instructionalButtonHandler)
             : this(title, slot, instructionalButtonHandler)
         {
             _controlEnum = control;
@@ -52,7 +31,7 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             instructionalButtonHandler.SetDataSlot(_slot, _controlEnum, _title);
         }
 
-        public InstructionalButton(string title, string control, int slot, InstructionalButtonHandler instructionalButtonHandler) 
+        public InstructionalButton(string title, string control, int slot, InstructionalButtonHandler instructionalButtonHandler)
             : this(title, slot, instructionalButtonHandler)
         {
             OriginalControlString = control;
@@ -68,23 +47,50 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             instructionalButtonHandler.SetDataSlot(_slot, _controlString, _title);
         }
 
-        public void SetTitle(string title)
+        #endregion Public Constructors
+
+        #region Private Constructors
+
+        private InstructionalButton(string title, int slot, InstructionalButtonHandler instructionalButtonHandler)
         {
             _title = title;
-            if (_useStringForControl)
-                _instructionalButtonHandler.SetDataSlot(_slot, _controlString, _title);
-            else
-                _instructionalButtonHandler.SetDataSlot(_slot, _controlEnum, _title);
+            _slot = slot;
+            _instructionalButtonHandler = instructionalButtonHandler;
         }
 
-        public void SetSlot(int slot)
+        #endregion Private Constructors
+
+        #region Public Properties
+
+        public Control ControlEnum
         {
-            _slot = slot;
-            if (_useStringForControl)
-                _instructionalButtonHandler.SetDataSlot(_slot, _controlString, _title);
-            else
-                _instructionalButtonHandler.SetDataSlot(_slot, _controlEnum, _title);
+            get => _controlEnum;
+            set => SetControl(value);
         }
+
+        public string ControlString
+        {
+            get => _controlString;
+            set => SetControl(value);
+        }
+
+        public string OriginalControlString { get; set; }
+
+        public int Slot
+        {
+            get => _slot;
+            set => SetSlot(value);
+        }
+
+        public string Title
+        {
+            get => _title;
+            set => SetTitle(value);
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void SetControl(Control control)
         {
@@ -101,5 +107,25 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             _useStringForControl = true;
             _instructionalButtonHandler.SetDataSlot(_slot, _controlString, _title);
         }
+
+        public void SetSlot(int slot)
+        {
+            _slot = slot;
+            if (_useStringForControl)
+                _instructionalButtonHandler.SetDataSlot(_slot, _controlString, _title);
+            else
+                _instructionalButtonHandler.SetDataSlot(_slot, _controlEnum, _title);
+        }
+
+        public void SetTitle(string title)
+        {
+            _title = title;
+            if (_useStringForControl)
+                _instructionalButtonHandler.SetDataSlot(_slot, _controlString, _title);
+            else
+                _instructionalButtonHandler.SetDataSlot(_slot, _controlEnum, _title);
+        }
+
+        #endregion Public Methods
     }
 }

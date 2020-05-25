@@ -11,8 +11,14 @@ namespace TDS_Client.RAGEAPI.Event
 {
     public class OutgoingDamageEventHandler : BaseEventHandler<OutgoingDamageDelegate>
     {
-        private readonly LoggingHandler _loggingHandler;
+        #region Private Fields
+
         private readonly EntityConvertingHandler _entityConvertingHandler;
+        private readonly LoggingHandler _loggingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public OutgoingDamageEventHandler(LoggingHandler loggingHandler, EntityConvertingHandler entityConvertingHandler)
             : base()
@@ -23,18 +29,22 @@ namespace TDS_Client.RAGEAPI.Event
             RAGE.Events.OnOutgoingDamage += OutgoingDamage;
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
         private void OutgoingDamage(RAGE.Elements.Entity sourceEntityMod, RAGE.Elements.Entity targetEntityMod, RAGE.Elements.Player sourcePlayerMod,
             ulong weaponHashMod, ulong boneIdx, int damage, RAGE.Events.CancelEventArgs cancelMod)
         {
             if (Actions.Count == 0)
                 return;
 
-            try 
-            { 
+            try
+            {
                 IEntity sourceEntity = _entityConvertingHandler.GetEntity(sourceEntityMod);
                 IEntity targetEntity = _entityConvertingHandler.GetEntity(targetEntityMod);
                 IPlayer sourcePlayer = _entityConvertingHandler.GetEntity(sourcePlayerMod);
-            
+
                 var weaponHash = (WeaponHash)weaponHashMod;
                 var cancel = new CancelEventArgs();
 
@@ -46,12 +56,13 @@ namespace TDS_Client.RAGEAPI.Event
                 }
 
                 cancelMod.Cancel = cancel.Cancel;
-            } 
+            }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
             }
         }
 
+        #endregion Private Methods
     }
 }

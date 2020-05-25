@@ -29,100 +29,18 @@ namespace TDS_Server.Core.Init
 {
     internal static class Services
     {
+        #region Internal Methods
 
-        internal static ServiceProvider InitServiceCollection(IModAPI modAPI)
+        internal static void InitDbContextOptionsBuilder(DbContextOptionsBuilder options, AppConfigHandler appConfigHandler, ILoggerFactory? loggerFactory)
         {
-            var appConfigHandler = new AppConfigHandler();
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
 
-            var loggerFactory = LoggerFactory.Create(builder =>
-                    builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
-                        .AddProvider(new CustomDBLogger(@"D:\DBLogs\FromCsharp\log.txt"))
-                );
+            if (loggerFactory is { })
+                options.UseLoggerFactory(loggerFactory);
 
-            var serviceCollection = new ServiceCollection();
-
-            serviceCollection
-               .AddSingleton(modAPI)
-
-               .AddSingleton<BonusBotConnectorClient>()
-               .AddSingleton<BonusBotConnectorServer>()
-
-               // Account
-               .AddSingleton<BansHandler>()
-               .AddSingleton<LoginHandler>()
-               .AddSingleton<RegisterHandler>()
-
-               // Commands
-               .AddSingleton<CommandsHandler>()
-               .AddSingleton<BaseCommands>()
-
-               // Events
-               .AddSingleton<EventsHandler>()
-               .AddSingleton<RemoteEventsHandler>()
-               .AddSingleton<RemoteBrowserEventsHandler>()
-
-               // GangSystem
-               .AddSingleton<GangHousesHandler>()
-               .AddSingleton<GangLevelsHandler>()
-               .AddSingleton<GangsHandler>()
-               .AddSingleton<GangwarAreasHandler>()
-
-               // Helper
-               .AddSingleton<ChallengesHelper>()
-               .AddSingleton<DatabasePlayerHelper>()
-               .AddSingleton<LangHelper>()
-               .AddSingleton<NameCheckHelper>()
-               .AddSingleton<XmlHelper>()
-
-               // Maps 
-               .AddSingleton<MapCreatorHandler>()
-               .AddSingleton<MapFavouritesHandler>()
-               .AddSingleton<MapsLoadingHandler>()
-               .AddSingleton<MapsRatingsHandler>()
-
-               // Player
-               .AddSingleton<ConnectedHandler>()
-               .AddSingleton<TDSPlayerHandler>()
-               .AddSingleton<PlayerCharHandler>()
-
-               // Server
-               .AddSingleton<ServerInfoHandler>()
-               .AddSingleton<ServerStartHandler>()
-
-               // Sync
-               .AddSingleton<CustomLobbyMenuSyncHandler>()
-               .AddSingleton<DataSyncHandler>()
-
-               // Userpanel
-               .AddSingleton<IUserpanelHandler, UserpanelHandler>()
-               .AddSingleton<UserpanelCommandsHandler>()
-
-               .AddSingleton<AdminsHandler>()
-               .AddSingleton<IAnnouncementsHandler, AnnouncementsHandler>()
-               .AddSingleton<AppConfigHandler>()
-               .AddSingleton<ChatHandler>()
-               .AddSingleton<ClothesHandler>()
-               .AddSingleton<InvitationsHandler>()
-               .AddSingleton<LobbiesHandler>()
-               .AddSingleton<ILoggingHandler, LoggingHandler>()
-               .AddSingleton<MappingHandler>()
-               .AddSingleton<OfflineMessagesHandler>()
-               .AddSingleton<ResourceStopHandler>()
-               .AddSingleton<ServerStatsHandler>()
-               .AddSingleton<ISettingsHandler, SettingsHandler>()
-               .AddSingleton<SpectateHandler>()
-               .AddSingleton<TimerHandler>()
-               .AddSingleton<WeaponDatasLoadingHandler>()
-               .AddSingleton<ScoreboardHandler>()
-               .AddSingleton<TDSVehicleHandler>()
-
-
-               .AddSingleton<Serializer>()
-
-
-               .AddDbContext<TDSDbContext>(options => InitDbContextOptionsBuilder(options, appConfigHandler, loggerFactory), ServiceLifetime.Transient, ServiceLifetime.Singleton);
-
-            return serviceCollection.BuildServiceProvider();
+            options.UseNpgsql(appConfigHandler.ConnectionString /*, options =>
+                    options.EnableRetryOnFailure()*/);
+            // .EnableSensitiveDataLogging()
         }
 
         internal static void InitializeSingletons(IServiceProvider serviceProvider)
@@ -189,20 +107,100 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<TimerHandler>();
             serviceProvider.GetRequiredService<WeaponDatasLoadingHandler>();
             serviceProvider.GetRequiredService<ScoreboardHandler>();
-            
         }
 
-        internal static void InitDbContextOptionsBuilder(DbContextOptionsBuilder options, AppConfigHandler appConfigHandler, ILoggerFactory? loggerFactory)
+        internal static ServiceProvider InitServiceCollection(IModAPI modAPI)
         {
-            options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
+            var appConfigHandler = new AppConfigHandler();
 
-            if (loggerFactory is { })
-                options.UseLoggerFactory(loggerFactory);
+            var loggerFactory = LoggerFactory.Create(builder =>
+                    builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
+                        .AddProvider(new CustomDBLogger(@"D:\DBLogs\FromCsharp\log.txt"))
+                );
 
-            options.UseNpgsql(appConfigHandler.ConnectionString /*, options =>
-                    options.EnableRetryOnFailure()*/);
-            // .EnableSensitiveDataLogging()
+            var serviceCollection = new ServiceCollection();
+
+            serviceCollection
+               .AddSingleton(modAPI)
+
+               .AddSingleton<BonusBotConnectorClient>()
+               .AddSingleton<BonusBotConnectorServer>()
+
+               // Account
+               .AddSingleton<BansHandler>()
+               .AddSingleton<LoginHandler>()
+               .AddSingleton<RegisterHandler>()
+
+               // Commands
+               .AddSingleton<CommandsHandler>()
+               .AddSingleton<BaseCommands>()
+
+               // Events
+               .AddSingleton<EventsHandler>()
+               .AddSingleton<RemoteEventsHandler>()
+               .AddSingleton<RemoteBrowserEventsHandler>()
+
+               // GangSystem
+               .AddSingleton<GangHousesHandler>()
+               .AddSingleton<GangLevelsHandler>()
+               .AddSingleton<GangsHandler>()
+               .AddSingleton<GangwarAreasHandler>()
+
+               // Helper
+               .AddSingleton<ChallengesHelper>()
+               .AddSingleton<DatabasePlayerHelper>()
+               .AddSingleton<LangHelper>()
+               .AddSingleton<NameCheckHelper>()
+               .AddSingleton<XmlHelper>()
+
+               // Maps
+               .AddSingleton<MapCreatorHandler>()
+               .AddSingleton<MapFavouritesHandler>()
+               .AddSingleton<MapsLoadingHandler>()
+               .AddSingleton<MapsRatingsHandler>()
+
+               // Player
+               .AddSingleton<ConnectedHandler>()
+               .AddSingleton<TDSPlayerHandler>()
+               .AddSingleton<PlayerCharHandler>()
+
+               // Server
+               .AddSingleton<ServerInfoHandler>()
+               .AddSingleton<ServerStartHandler>()
+
+               // Sync
+               .AddSingleton<CustomLobbyMenuSyncHandler>()
+               .AddSingleton<DataSyncHandler>()
+
+               // Userpanel
+               .AddSingleton<IUserpanelHandler, UserpanelHandler>()
+               .AddSingleton<UserpanelCommandsHandler>()
+
+               .AddSingleton<AdminsHandler>()
+               .AddSingleton<IAnnouncementsHandler, AnnouncementsHandler>()
+               .AddSingleton<AppConfigHandler>()
+               .AddSingleton<ChatHandler>()
+               .AddSingleton<ClothesHandler>()
+               .AddSingleton<InvitationsHandler>()
+               .AddSingleton<LobbiesHandler>()
+               .AddSingleton<ILoggingHandler, LoggingHandler>()
+               .AddSingleton<MappingHandler>()
+               .AddSingleton<OfflineMessagesHandler>()
+               .AddSingleton<ResourceStopHandler>()
+               .AddSingleton<ServerStatsHandler>()
+               .AddSingleton<ISettingsHandler, SettingsHandler>()
+               .AddSingleton<SpectateHandler>()
+               .AddSingleton<TimerHandler>()
+               .AddSingleton<WeaponDatasLoadingHandler>()
+               .AddSingleton<ScoreboardHandler>()
+
+               .AddSingleton<Serializer>()
+
+               .AddDbContext<TDSDbContext>(options => InitDbContextOptionsBuilder(options, appConfigHandler, loggerFactory), ServiceLifetime.Transient, ServiceLifetime.Singleton);
+
+            return serviceCollection.BuildServiceProvider();
         }
 
+        #endregion Internal Methods
     }
 }

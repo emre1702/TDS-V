@@ -1,32 +1,37 @@
 ﻿using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
-using TDS_Server.Data.Interfaces.ModAPI;
 
 namespace TDS_Server.Handler.Maps
 {
     public class MapsRatingsHandler : DatabaseEntityWrapper
     {
+        #region Private Fields
+
         private readonly IModAPI _modAPI;
-        private Serializer _serializer;
-        private MapsLoadingHandler _mapsLoadingHandler;
         private MapCreatorHandler _mapsCreatingHandler;
+        private MapsLoadingHandler _mapsLoadingHandler;
+        private Serializer _serializer;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapsRatingsHandler(
             IModAPI modAPI,
-            EventsHandler eventsHandler, 
-            Serializer serializer, 
+            EventsHandler eventsHandler,
+            Serializer serializer,
             MapsLoadingHandler mapsLoadingHandler,
-            MapCreatorHandler mapsCreatorHandler, 
-            TDSDbContext dbContext, 
+            MapCreatorHandler mapsCreatorHandler,
+            TDSDbContext dbContext,
             ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
@@ -37,6 +42,10 @@ namespace TDS_Server.Handler.Maps
 
             eventsHandler.PlayerLoggedIn += SendPlayerHisRatings;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async void AddPlayerMapRating(ITDSPlayer player, int mapId, byte rating)
         {
@@ -57,7 +66,7 @@ namespace TDS_Server.Handler.Maps
             map.BrowserSyncedData.Rating = rating;
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
-            
+
             map.Ratings.Add(maprating);
             map.RatingAverage = map.Ratings.Average(r => r.Rating);
 
@@ -75,5 +84,7 @@ namespace TDS_Server.Handler.Maps
             var ratingsDict = player.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
             _modAPI.Thread.RunInMainThread(() => player.SendEvent(ToClientEvent.LoadOwnMapRatings, _serializer.ToBrowser(ratingsDict)));
         }
+
+        #endregion Public Methods
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
@@ -15,85 +14,35 @@ namespace TDS_Server.Core.Manager.PlayerManager
 {
     public class DatabasePlayerHelper : DatabaseEntityWrapper
     {
-        private readonly IModAPI _modAPI;
-        private readonly ChatHandler _chatHandler;
+        #region Private Fields
 
-        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler, ChatHandler chatHandler, IModAPI modAPI) 
+        private readonly ChatHandler _chatHandler;
+        private readonly IModAPI _modAPI;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler, ChatHandler chatHandler, IModAPI modAPI)
             : base(dbContext, loggingHandler)
         {
             _modAPI = modAPI;
             _chatHandler = chatHandler;
 
             ExecuteForDB(dbContext =>
-            { 
+            {
                 var playerStats = dbContext.PlayerStats.Where(p => p.LoggedIn).ToList();
                 foreach (var stat in playerStats)
                 {
                     stat.LoggedIn = false;
                 }
-                dbContext.SaveChanges();                
+                dbContext.SaveChanges();
             }).Wait();
-                
         }
 
-        public async Task<bool> DoesPlayerWithScnameExist(string scname)
-        {
-            int id = await GetPlayerIDByScname(scname).ConfigureAwait(false);
-            return id is { } && id != 0;
-        }
+        #endregion Public Constructors
 
-        public async Task<bool> DoesPlayerWithNameExist(string name)
-        {
-            return await ExecuteForDBAsync(async dbContext =>
-                 await dbContext.Players
-                    .AsNoTracking()
-                    .AnyAsync(p => EF.Functions.ILike(p.Name, name))
-                    .ConfigureAwait(false));
-        }
-
-        public async Task<Players?> GetPlayerByName(string name)
-        {
-            return await ExecuteForDBAsync(async dbContext => 
-                await dbContext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()));
-        }
-
-        public async Task<int> GetPlayerIDByScname(string scname)
-        {
-            return await ExecuteForDBAsync(async dbContext =>
-                await dbContext.Players
-                    .AsNoTracking()
-                    .Where(p => p.SCName == scname)
-                    .Select(p => p.Id)
-                    .FirstOrDefaultAsync()
-                    .ConfigureAwait(false));
-        }
-
-        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(ITDSPlayer player)
-        {
-            if (player.ModPlayer is null)
-                return null;
-
-            return await GetPlayerIdName(player.ModPlayer);
-        }
-
-        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(IPlayer modPlayer)
-        {
-            return await ExecuteForDBAsync(async dbContext =>
-                await dbContext.Players.Where(p => p.Name == modPlayer.Name || p.SCName == modPlayer.SocialClubName)
-                    .Select(p => new DatabasePlayerIdName(p.Id, p.Name))
-                    .FirstOrDefaultAsync());
-        }
-
-        public async Task<int> GetPlayerIDByName(string name)
-        {
-            return await ExecuteForDBAsync(async dbContext =>
-                await dbContext.Players
-                    .AsNoTracking()
-                    .Where(p => p.Name == name)
-                    .Select(p => p.Id)
-                    .FirstOrDefaultAsync()
-                    .ConfigureAwait(false));
-        }
+        #region Public Methods
 
         public async Task ChangePlayerMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
@@ -110,7 +59,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
                 await dbContext.SaveChangesAsync();
                 dbContext.Entry(target.PlayerStats).State = EntityState.Detached;
-            });            
+            });
         }
 
         public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
@@ -128,7 +77,72 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
                 await dbContext.SaveChangesAsync();
                 dbContext.Entry(target.PlayerStats).State = EntityState.Detached;
-            });            
+            });
         }
+
+        public async Task<bool> DoesPlayerWithNameExist(string name)
+        {
+            return await ExecuteForDBAsync(async dbContext =>
+                 await dbContext.Players
+                    .AsNoTracking()
+                    .AnyAsync(p => EF.Functions.ILike(p.Name, name))
+                    .ConfigureAwait(false));
+        }
+
+        public async Task<bool> DoesPlayerWithScnameExist(string scname)
+        {
+            int id = await GetPlayerIDByScname(scname).ConfigureAwait(false);
+            return id is { } && id != 0;
+        }
+
+        public async Task<Players?> GetPlayerByName(string name)
+        {
+            return await ExecuteForDBAsync(async dbContext =>
+                await dbContext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()));
+        }
+
+        public async Task<int> GetPlayerIDByName(string name)
+        {
+            return await ExecuteForDBAsync(async dbContext =>
+                await dbContext.Players
+                    .AsNoTracking()
+                    .Where(p => p.Name == name)
+                    .Select(p => p.Id)
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false));
+        }
+
+        public async Task<int> GetPlayerIDByScname(string scname)
+        {
+            return await ExecuteForDBAsync(async dbContext =>
+                await dbContext.Players
+                    .AsNoTracking()
+                    .Where(p => p.SCName == scname)
+                    .Select(p => p.Id)
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false));
+        }
+
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(ITDSPlayer player)
+        {
+            if (player.ModPlayer is null)
+                return null;
+
+            return await GetPlayerIdName(player.ModPlayer);
+        }
+
+        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(IPlayer modPlayer)
+        {
+            return await ExecuteForDBAsync(async dbContext =>
+                await dbContext.Players.Where(p => p.Name == modPlayer.Name || p.SCName == modPlayer.SocialClubName)
+                    .Select(p => new DatabasePlayerIdName(p.Id, p.Name))
+                    .FirstOrDefaultAsync());
+        }
+
+        #endregion Internal Methods
     }
 }

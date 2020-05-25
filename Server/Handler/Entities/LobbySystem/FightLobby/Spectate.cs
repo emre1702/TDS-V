@@ -5,6 +5,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
+        #region Public Methods
+
         public void SpectateNext(ITDSPlayer player, bool forward)
         {
             if (player.Lifes > 0)
@@ -16,6 +18,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 SpectateOtherSameTeam(player, forward);
         }
 
+        #endregion Public Methods
+
+        #region Protected Methods
+
         protected void RemoveAsSpectator(ITDSPlayer character)
         {
             if (character.Spectates is null)
@@ -23,8 +29,22 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             character.Spectates = null;
         }
 
+        protected virtual void SpectateOtherAllTeams(ITDSPlayer player, bool spectateNext = true)
+        {
+            ITDSPlayer currentlySpectating = player.Spectates ?? player;
+            ITDSPlayer? nextPlayer;
+            if (spectateNext)
+                nextPlayer = GetNextSpectatePlayerInAllTeams(currentlySpectating);
+            else
+                nextPlayer = GetPreviousSpectatePlayerInAllTeams(currentlySpectating);
+            nextPlayer ??= currentlySpectating;
+
+            player.Spectates = nextPlayer;
+        }
+
         /// <summary>
-        /// Always call that before the players leaves the lobby etc. (we need his team and his index on AliveOrNotDisappearedPlayers)
+        /// Always call that before the players leaves the lobby etc. (we need his team and his
+        /// index on AliveOrNotDisappearedPlayers)
         /// </summary>
         /// <param name="start"></param>
         /// <returns></returns>
@@ -45,40 +65,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        protected virtual void SpectateOtherAllTeams(ITDSPlayer player, bool spectateNext = true)
-        {
-            ITDSPlayer currentlySpectating = player.Spectates ?? player;
-            ITDSPlayer? nextPlayer;
-            if (spectateNext)
-                nextPlayer = GetNextSpectatePlayerInAllTeams(currentlySpectating);
-            else
-                nextPlayer = GetPreviousSpectatePlayerInAllTeams(currentlySpectating);
-            nextPlayer ??= currentlySpectating;
+        #endregion Protected Methods
 
-            player.Spectates = nextPlayer;
-        }
-
-        private ITDSPlayer? GetNextSpectatePlayerInSameTeam(ITDSPlayer start)
-        {
-            List<ITDSPlayer>? teamlist = start.Team?.SpectateablePlayers;
-            if (teamlist is null || teamlist.Count == 0)
-                return null;
-            int startindex = teamlist.IndexOf(start) + 1;
-            if (startindex >= teamlist.Count - 1)
-                startindex = 0;
-            return teamlist[startindex];
-        }
-
-        private ITDSPlayer? GetPreviousSpectatePlayerInSameTeam(ITDSPlayer start)
-        {
-            List<ITDSPlayer>? teamlist = start.Team?.SpectateablePlayers;
-            if (teamlist is null || teamlist.Count == 0)
-                return null;
-            int startindex = teamlist.IndexOf(start) - 1;
-            if (startindex < 0)
-                startindex = teamlist.Count - 1;
-            return teamlist[startindex];
-        }
+        #region Private Methods
 
         private ITDSPlayer? GetNextSpectatePlayerInAllTeams(ITDSPlayer start)
         {
@@ -102,6 +91,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return teamlist[charIndex];
         }
 
+        private ITDSPlayer? GetNextSpectatePlayerInSameTeam(ITDSPlayer start)
+        {
+            List<ITDSPlayer>? teamlist = start.Team?.SpectateablePlayers;
+            if (teamlist is null || teamlist.Count == 0)
+                return null;
+            int startindex = teamlist.IndexOf(start) + 1;
+            if (startindex >= teamlist.Count - 1)
+                startindex = 0;
+            return teamlist[startindex];
+        }
+
         private ITDSPlayer? GetPreviousSpectatePlayerInAllTeams(ITDSPlayer start)
         {
             int teamIndex = start.Team?.Entity.Index ?? 0;
@@ -123,5 +123,18 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             return teamlist[charIndex];
         }
+
+        private ITDSPlayer? GetPreviousSpectatePlayerInSameTeam(ITDSPlayer start)
+        {
+            List<ITDSPlayer>? teamlist = start.Team?.SpectateablePlayers;
+            if (teamlist is null || teamlist.Count == 0)
+                return null;
+            int startindex = teamlist.IndexOf(start) - 1;
+            if (startindex < 0)
+                startindex = teamlist.Count - 1;
+            return teamlist[startindex];
+        }
+
+        #endregion Private Methods
     }
 }

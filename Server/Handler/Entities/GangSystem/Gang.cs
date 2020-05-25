@@ -10,23 +10,13 @@ namespace TDS_Server.Handler.Entities.GangSystem
 {
     public class Gang : DatabaseEntityWrapper, IGang
     {
-
-        public Gangs Entity { get; set; }
-        public List<ITDSPlayer> PlayersOnline { get; } = new List<ITDSPlayer>();
-#nullable disable
-        // This can't be null! 
-        // If it's null, we got serious problems in the code!
-        // Every gang needs a team in GangLobby! Even "None" gang (spectator team)!
-        public ITeam GangLobbyTeam { get; set; }
-#nullable restore
-
-        public bool InAction { get; set; }
-        //Todo: Don't forget to use this when buying, selling or losing the house
-        public IGangHouse? House { get; set; }
-        public bool Initialized { get; set; }
-
+        #region Private Fields
 
         private readonly LangHelper _langHelper;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper) : base(dbContext, loggingHandler)
         {
@@ -37,6 +27,29 @@ namespace TDS_Server.Handler.Entities.GangSystem
 
             dbContext.Attach(entity);
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public Gangs Entity { get; set; }
+
+        // This can't be null! If it's null, we got serious problems in the code! Every gang needs a
+        // team in GangLobby! Even "None" gang (spectator team)!
+#nullable disable
+        public ITeam GangLobbyTeam { get; set; }
+#nullable restore
+
+        //Todo: Don't forget to use this when buying, selling or losing the house
+        public IGangHouse? House { get; set; }
+
+        public bool InAction { get; set; }
+        public bool Initialized { get; set; }
+        public List<ITDSPlayer> PlayersOnline { get; } = new List<ITDSPlayer>();
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void FuncIterate(Action<ITDSPlayer> func)
         {
@@ -73,5 +86,7 @@ namespace TDS_Server.Handler.Entities.GangSystem
                 player.SendNotification(returndict[player.Language]);
             }
         }
+
+        #endregion Public Methods
     }
 }

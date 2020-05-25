@@ -34,6 +34,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI
 {
     public interface IModAPI
     {
+        #region Public Properties
+
         IAudioAPI Audio { get; }
         IBlipAPI Blip { get; }
         IBrowserAPI Browser { get; }
@@ -48,6 +50,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI
         IGraphicsAPI Graphics { get; }
         IInputAPI Input { get; }
         ILocaleAPI Locale { get; }
+        ILocalPlayer LocalPlayer { get; }
         IMapObjectAPI MapObject { get; }
         IMiscAPI Misc { get; }
         INametagsAPI Nametags { get; }
@@ -66,6 +69,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI
         IWeaponAPI Weapon { get; }
         IWindowsAPI Windows { get; }
 
-        ILocalPlayer LocalPlayer { get; }
+        #endregion Public Properties
     }
 }

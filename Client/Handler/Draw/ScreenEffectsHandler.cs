@@ -114,7 +114,7 @@ namespace TDS_Client.Handler.Draw
             else
             {
                 Chat.Output("ScreenFx: off");
-                StopAllScreenFx();                
+                StopAllScreenFx();
             }
         }
 

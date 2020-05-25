@@ -7,9 +7,15 @@ namespace TDS_Client.Handler.Browser
 {
     public class RegisterLoginBrowserHandler : BrowserHandlerBase
     {
+        #region Public Constructors
+
         public RegisterLoginBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer)
             : base(modAPI, loggingHandler, serializer, Constants.RegisterLoginBrowserPath)
-        {}
+        { }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void SendDataToBrowser(string name, bool isRegistered, ILanguage lang)
         {
@@ -20,5 +26,7 @@ namespace TDS_Client.Handler.Browser
         {
             Browser?.ExecuteJs($"loadLanguage(`{Serializer.ToBrowser(lang.LOGIN_REGISTER_TEXTS)}`)");
         }
+
+        #endregion Public Methods
     }
 }

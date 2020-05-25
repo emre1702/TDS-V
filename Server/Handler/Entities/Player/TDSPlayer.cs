@@ -15,37 +15,22 @@ namespace TDS_Server.Handler.Entities.Player
 {
     public partial class TDSPlayer : DatabaseEntityWrapper, ITDSPlayer
     {
-        public int Id => Entity?.Id ?? 0;
-        public ushort RemoteId => ModPlayer?.RemoteId ?? 0;
-        public ulong SocialClubId => ModPlayer?.SocialClubId ?? 0;
-        public IPlayer? ModPlayer { get; set; }
-        public string IPAddress => ModPlayer?.IPAddress ?? "-";
-        public string Serial => ModPlayer?.Serial ?? "-";
-
-        public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
-
-        public ITDSVehicle? FreeroamVehicle { get; set; }
-        public int VehicleSeat => ModPlayer?.VehicleSeat ?? -1;
-
-        public PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
-        public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel
-            ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : ModPlayer.Name) : (Entity is { } ? Entity.Name : ModPlayer.Name));
-        public bool IsVip => Entity?.IsVip ?? false;
-
-        public bool IsCrouched { get; set; }
-        public bool IsConsole { get; set; }
-        public bool TryingToLoginRegister { get; set; }
+        #region Private Fields
 
         private readonly AdminsHandler _adminsHandler;
         private readonly ChallengesHelper _challengesHandler;
+        private readonly ChatHandler _chatHandler;
+        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly GangsHandler _gangsHandler;
         private readonly LangHelper _langHelper;
+        private readonly LobbiesHandler _lobbiesHandler;
         private readonly IModAPI _modAPI;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly DataSyncHandler _dataSyncHandler;
         private readonly SpectateHandler _spectateHandler;
-        private readonly GangsHandler _gangsHandler;
-        private readonly LobbiesHandler _lobbiesHandler;
-        private readonly ChatHandler _chatHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public TDSPlayer(
             TDSDbContext dbContext,
@@ -75,14 +60,39 @@ namespace TDS_Server.Handler.Entities.Player
             Language = _langHelper.GetLang(TDS_Shared.Data.Enums.Language.English);
         }
 
-        public void Logout()
-        {
+        #endregion Public Constructors
 
-        }
+        #region Public Properties
+
+        public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel
+            ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : ModPlayer.Name) : (Entity is { } ? Entity.Name : ModPlayer.Name));
+
+        public PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
+        public IVehicle? FreeroamVehicle { get; set; }
+        public int Id => Entity?.Id ?? 0;
+        public string IPAddress => ModPlayer?.Address ?? "-";
+        public bool IsConsole { get; set; }
+        public bool IsCrouched { get; set; }
+        public bool IsVip => Entity?.IsVip ?? false;
+        public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
+        public IPlayer? ModPlayer { get; set; }
+        public ushort RemoteId => ModPlayer?.RemoteId ?? 0;
+        public string Serial => ModPlayer?.Serial ?? "-";
+        public ulong SocialClubId => ModPlayer?.SocialClubId ?? 0;
+        public bool TryingToLoginRegister { get; set; }
+        public int VehicleSeat => ModPlayer?.VehicleSeat ?? -1;
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public bool Equals(ITDSPlayer? other)
         {
             return Id == other?.Id;
+        }
+
+        public void Logout()
+        {
         }
 
         public void Spawn(Position3D position, float rotation)
@@ -90,6 +100,6 @@ namespace TDS_Server.Handler.Entities.Player
             ModPlayer?.Spawn(position, rotation);
         }
 
-
+        #endregion Public Methods
     }
 }

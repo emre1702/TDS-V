@@ -9,9 +9,13 @@ namespace TDS_Server.Handler.Server
 {
     public class SettingsHandler : ISettingsHandler
     {
-        public SyncedServerSettingsDto SyncedSettings { get; }
-        public ServerSettings ServerSettings { get; }
+        #region Private Fields
+
         private readonly Command _loadMapOfOthersRightInfos;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SettingsHandler(TDSDbContext dbContext)
         {
@@ -31,11 +35,23 @@ namespace TDS_Server.Handler.Server
             _loadMapOfOthersRightInfos = dbContext.Commands.First(c => c.Command == "LoadMapOfOthers");
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public ServerSettings ServerSettings { get; }
+        public SyncedServerSettingsDto SyncedSettings { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public bool CanLoadMapsFromOthers(ITDSPlayer player)
         {
             return _loadMapOfOthersRightInfos.NeededAdminLevel.HasValue && _loadMapOfOthersRightInfos.NeededAdminLevel <= player.AdminLevel.Level
                 || _loadMapOfOthersRightInfos.VipCanUse && player.IsVip == true;
-
         }
+
+        #endregion Public Methods
     }
 }

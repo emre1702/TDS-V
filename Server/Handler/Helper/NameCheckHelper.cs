@@ -1,15 +1,15 @@
 ﻿using System;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Shared.Data.Default;
 
 namespace TDS_Server.Handler.Helper
 {
     public class NameCheckHelper
     {
+        #region Public Methods
+
         public bool IsName(ITDSPlayer player, string input, IsNameCheckLevel isNameCheckLevel)
         {
-            
             return isNameCheckLevel switch
             {
                 IsNameCheckLevel.EqualsName
@@ -27,5 +27,7 @@ namespace TDS_Server.Handler.Helper
                 _ => false
             };
         }
+
+        #endregion Public Methods
     }
 }

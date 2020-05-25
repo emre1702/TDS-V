@@ -4,22 +4,53 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
-using TDS_Shared.Data.Enums;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelFAQsHandlers
+    public class FAQData
     {
+        #region Public Properties
+
+        [JsonProperty("2")]
+        public string Answer { get; set; } = string.Empty;
+
+        [JsonProperty("0")]
+        public int Id { get; set; }
+
+        [JsonProperty("1")]
+        public string Question { get; set; } = string.Empty;
+
+        #endregion Public Properties
+    }
+
+    internal class UserpanelFAQsHandlers
+    {
+        #region Private Fields
+
         private readonly Dictionary<Language, string> _faqsJsonByLanguage = new Dictionary<Language, string>()
         {
             [Language.English] = string.Empty,
             [Language.German] = string.Empty
         };
 
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public UserpanelFAQsHandlers(TDSDbContext dbContext, Serializer serializer)
         {
             LoadFAQs(dbContext, serializer);
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public string GetData(ITDSPlayer player)
+        {
+            return _faqsJsonByLanguage[player.LanguageEnum];
         }
 
         public void LoadFAQs(TDSDbContext dbContext, Serializer serializer)
@@ -42,19 +73,6 @@ namespace TDS_Server.Handler.Userpanel
             }
         }
 
-        public string GetData(ITDSPlayer player)
-        {
-            return _faqsJsonByLanguage[player.LanguageEnum];
-        }
-    }
-
-    public class FAQData
-    {
-        [JsonProperty("0")]
-        public int Id { get; set; }
-        [JsonProperty("1")]
-        public string Question { get; set; } = string.Empty;
-        [JsonProperty("2")]
-        public string Answer { get; set; } = string.Empty;
+        #endregion Public Methods
     }
 }

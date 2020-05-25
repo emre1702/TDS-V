@@ -11,9 +11,15 @@ namespace TDS_Client.RAGEAPI.Entity
 {
     public class EntityConvertingHandler
     {
+        #region Private Fields
+
         private readonly Dictionary<RAGE.Elements.Entity, IEntity> _entitiesCache = new Dictionary<RAGE.Elements.Entity, IEntity>();
 
         private PlayerConvertingHandler _playerConvertingHandler;
+
+        #endregion Private Fields
+
+        #region Public Methods
 
         public IBlip GetEntity(RAGE.Elements.Blip modBlip)
         {
@@ -113,5 +119,7 @@ namespace TDS_Client.RAGEAPI.Entity
 
         public void SetPlayerConvertingHandler(PlayerConvertingHandler playerConvertingHandler)
             => _playerConvertingHandler = playerConvertingHandler;
+
+        #endregion Public Methods
     }
 }

@@ -5,9 +5,32 @@ using TDS_Shared.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map.Creator
 {
-    #nullable enable
+#nullable enable
+
     public class Position4DDto
     {
+        #region Public Constructors
+
+        public Position4DDto()
+        {
+        }
+
+        public Position4DDto(MapCreatorPosition pos)
+        {
+            X = pos.PosX;
+            Y = pos.PosY;
+            Z = pos.PosZ;
+            Rotation = pos.RotZ;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        [XmlAttribute("rot")]
+        [JsonProperty("3")]
+        public float Rotation { get; set; }
+
         [XmlAttribute("x")]
         [JsonProperty("0")]
         public float X { get; set; }
@@ -20,19 +43,9 @@ namespace TDS_Server.Data.Models.Map.Creator
         [JsonProperty("2")]
         public float Z { get; set; }
 
-        [XmlAttribute("rot")]
-        [JsonProperty("3")]
-        public float Rotation { get; set; }
+        #endregion Public Properties
 
-        public Position4DDto() { }
-
-        public Position4DDto(MapCreatorPosition pos)
-        {
-            X = pos.PosX;
-            Y = pos.PosY;
-            Z = pos.PosZ;
-            Rotation = pos.RotZ;
-        }
+        #region Public Methods
 
         public Position3D To3D()
         {
@@ -56,5 +69,7 @@ namespace TDS_Server.Data.Models.Map.Creator
                 RotZ = Rotation
             };
         }
+
+        #endregion Public Methods
     }
 }

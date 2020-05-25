@@ -408,15 +408,12 @@ namespace TDS_Client.Handler
             }));
         }
 
-
         public static void PlaySound()
         {
             RAGE.Game.Audio.StopSound(_currentIndex);
             var (id, soundName, soundSetName) = _sounds[_currentIndex];
             RAGE.Chat.Output($"Playing ({id}): {soundName} - {soundSetName}");
             RAGE.Game.Audio.PlaySoundFrontend(id, soundName, soundSetName, true);
-
-            
         }
     }
 }

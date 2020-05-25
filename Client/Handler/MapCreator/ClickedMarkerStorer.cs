@@ -2,6 +2,10 @@
 {
     public class ClickedMarkerStorer
     {
+        #region Public Properties
+
         public AxisMarker ClickedMarker { get; set; }
+
+        #endregion Public Properties
     }
 }

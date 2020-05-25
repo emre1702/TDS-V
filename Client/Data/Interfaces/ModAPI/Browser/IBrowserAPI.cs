@@ -2,6 +2,10 @@
 {
     public interface IBrowserAPI
     {
+        #region Public Methods
+
         IBrowser Create(string url);
+
+        #endregion Public Methods
     }
 }

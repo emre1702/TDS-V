@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Numerics;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity.Player;
@@ -9,13 +10,17 @@ namespace TDS_Server.Handler.Server
 {
     public class ServerStartHandler
     {
-        public bool IsReadyForLogin 
-            => _loadedServerBans;
+        #region Private Fields
+
+        private readonly BansHandler _bansHandler;
+
+        private readonly IModAPI _modAPI;
 
         private bool _loadedServerBans;
 
-        private readonly BansHandler _bansHandler;
-        private readonly IModAPI _modAPI;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ServerStartHandler(BansHandler bansHandler, IModAPI modAPI, EventsHandler eventsHandler)
         {
@@ -25,6 +30,17 @@ namespace TDS_Server.Handler.Server
             eventsHandler.LoadedServerBans += EventsHandler_LoadedServerBans;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public bool IsReadyForLogin
+                                            => _loadedServerBans;
+
+        #endregion Public Properties
+
+        #region Private Methods
+
         private void EventsHandler_LoadedServerBans()
         {
             if (_loadedServerBans)
@@ -32,16 +48,6 @@ namespace TDS_Server.Handler.Server
 
             _loadedServerBans = true;
             KickServerBannedPlayers();
-        }
-
-        private void KickServerBannedPlayers()
-        {
-            var players = _modAPI.Pool.GetAllModPlayers();
-            foreach (var player in players)
-            {
-                var ban = _bansHandler.GetServerBan(null, player.IPAddress, player.Serial, player.SocialClubName, player.SocialClubId, null, false);
-                HandleBan(player, ban);
-            }
         }
 
         private bool HandleBan(IPlayer player, PlayerBans? ban)
@@ -56,5 +62,17 @@ namespace TDS_Server.Handler.Server
 
             return false;
         }
+
+        private void KickServerBannedPlayers()
+        {
+            var players = _modAPI.Pool.Players.All;
+            foreach (var player in players)
+            {
+                var ban = _bansHandler.GetServerBan(null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, null, false);
+                HandleBan(player, ban);
+            }
+        }
+
+        #endregion Private Methods
     }
 }

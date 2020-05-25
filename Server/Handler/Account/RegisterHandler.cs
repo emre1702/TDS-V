@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Database.Entity.Player.Char;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Server;
@@ -16,15 +14,25 @@ namespace TDS_Server.Core.Manager.PlayerManager
 {
     public class RegisterHandler : DatabaseEntityWrapper
     {
-        private readonly IModAPI _modAPI;
-        private readonly EventsHandler _eventsHandler;
+        #region Private Fields
+
         private readonly DatabasePlayerHelper _databasePlayerHelper;
+        private readonly EventsHandler _eventsHandler;
+        private readonly IModAPI _modAPI;
         private readonly ServerStartHandler _serverStartHandler;
 
-        public RegisterHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public RegisterHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler,
             DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler)
             : base(dbContext, loggingHandler)
             => (_modAPI, _eventsHandler, _databasePlayerHelper, _serverStartHandler) = (modAPI, eventsHandler, databasePlayerHelper, serverStartHandler);
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email)
         {
@@ -69,7 +77,6 @@ namespace TDS_Server.Core.Manager.PlayerManager
             dbPlayer.PlayerTotalStats = new PlayerTotalStats();
             dbPlayer.PlayerClothes = new PlayerClothes();
 
-
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Players.Add(dbPlayer);
@@ -83,7 +90,6 @@ namespace TDS_Server.Core.Manager.PlayerManager
             //Todo: Implement that
             // _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
         }
-
 
         public async void TryRegister(ITDSPlayer player, string username, string password, string email)
         {
@@ -112,7 +118,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 char? invalidChar = Utils.CheckNameValid(username);
                 if (invalidChar.HasValue)
                 {
-                    _modAPI.Thread.RunInMainThread(() 
+                    _modAPI.Thread.RunInMainThread(()
                         => player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value)));
                     return;
                 }
@@ -123,5 +129,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 player.TryingToLoginRegister = false;
             }
         }
+
+        #endregion Public Methods
     }
 }

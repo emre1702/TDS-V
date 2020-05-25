@@ -2,7 +2,6 @@
 //#define reloadArenaWeaponDamages
 //#define reloadArenaWeaponHeadshots
 
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,13 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.WeaponsMeta;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Core.Manager.Utility
@@ -114,7 +111,6 @@ namespace TDS_Server.Core.Manager.Utility
                                 $"{Environment.StackTrace}Error: {ex.GetBaseException().Message}" +
                                 $"{Environment.NewLine}Stacktrace: {(ex.StackTrace ?? Environment.StackTrace)}", LogType.Error);
                         }
-
                     }
                 }
                 catch (Exception ex)
@@ -174,9 +170,11 @@ namespace TDS_Server.Core.Manager.Utility
                 case LogType.Info:
                     Console.WriteLine("[WeaponDatasLoader - Info] " + msg);
                     break;
+
                 case LogType.Warning:
                     Console.WriteLine("[WeaponDatasLoader - Warning] " + msg);
                     break;
+
                 case LogType.Error:
                     Console.WriteLine("[WeaponDatasLoader - Error] " + msg);
                     break;

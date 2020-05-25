@@ -6,15 +6,66 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Graphics
 {
     public interface IGraphicsAPI
     {
+        #region Public Methods
+
+        void DrawLine(float startX, float startY, float startZ, float endX, float endY, float endZ, byte r, byte g, byte b, byte a);
+
+        void DrawLine(Position3D startPos, Position3D endPos, Color color);
+
+        void DrawMarker(MarkerType type, float posX, float posY, float posZ, float dirX, float dirY, float dirZ, float rotX, float rotY, float rotZ,
+            float scaleX, float scaleY, float scaleZ, byte r, byte g, byte b, byte a,
+            bool bobUpAndDown, bool faceCamera, bool rotate, string textureDict, string textureName, bool drawOnEnts);
+
+        void DrawPoly(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, byte r, byte g, byte b, byte a);
+
+        void DrawPoly(Position3D edge1, Position3D edge2, Position3D edge3, Color color);
+
+        void DrawRect(float x, float y, float width, float height, byte r, byte g, byte b, byte a);
+
+        void DrawScaleformMovie(int handle, float x, float y, float width, float height, int r, int g, int b, int a);
+
+        void DrawScaleformMovie3d(int handle, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, int p7, int p8, int p9,
+            float scaleX, float scaleY, float scaleZ, int p13);
+
+        void DrawScaleformMovie3dNonAdditive(int handle, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, int p7, int p8, int p9,
+            float scaleX, float scaleY, float scaleZ, int p13);
+
+        void DrawScaleformMovieFullscreen(int handle, int r, int g, int b, int a);
+
+        void DrawSprite(string textureDict, string textureName, float screenX, float screenY, float width, float height, int heading, byte r, byte g, byte b, byte a);
+
+        void DrawText(string text, int screenX, int screenY, Font font, float scale, Color color, AlignmentX alignmentX, bool dropShadow, bool outline, int wordWrap);
+
+        bool GetScreenCoordFromWorldCoord(float worldX, float worldY, float worldZ, ref float screenX, ref float screenY);
+
         void GetScreenResolution(ref int x, ref int y);
-        bool HasScaleformMovieLoaded(int handle);
 
         // Graphics.GetActiveScreenResolution(ref ResX, ref ResY);
         float GetTextScaleHeight(float scale, Font font);
-        void DrawLine(float startX, float startY, float startZ, float endX, float endY, float endZ, byte r, byte g, byte b, byte a);
-        bool GetScreenCoordFromWorldCoord(float worldX, float worldY, float worldZ, ref float screenX, ref float screenY);
+
+        bool HasScaleformMovieLoaded(int handle);
+
+        void PopScaleformMovieFunctionVoid();
+
+        void PushScaleformMovieFunction(int handle, string functionName);
+
+        void PushScaleformMovieFunctionParameterBool(bool arg);
+
+        void PushScaleformMovieFunctionParameterFloat(float arg);
+
+        void PushScaleformMovieFunctionParameterInt(int arg);
+
+        void PushScaleformMovieFunctionParameterString(string arg);
+
+        int RequestScaleformMovie(string scaleformName);
+
+        void SetScaleformMovieAsNoLongerNeeded(ref int handle);
+
+        int StartParticleFxNonLoopedAtCoord(string effectName, float xPos, float yPos, float zPos, int xRot, int yRot, int zRot, float scale, bool xAxis, bool yAxis, bool zAxis);
+
+        void StartScreenEffect(string effectName, int duration, bool looped);
+
         void StopScreenEffect(string effectName);
-        void DrawPoly(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, byte r, byte g, byte b, byte a);
 
         /**
          * <summary>
@@ -36,32 +87,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Graphics
          0, 0, 0);
          * </summary>
          * */
-        void DrawMarker(MarkerType type, float posX, float posY, float posZ, float dirX, float dirY, float dirZ, float rotX, float rotY, float rotZ,
-            float scaleX, float scaleY, float scaleZ, byte r, byte g, byte b, byte a,
-            bool bobUpAndDown, bool faceCamera, bool rotate, string textureDict, string textureName, bool drawOnEnts);
-        int RequestScaleformMovie(string scaleformName);
-        void PushScaleformMovieFunction(int handle, string functionName);
-        void PushScaleformMovieFunctionParameterString(string arg);
-        void PushScaleformMovieFunctionParameterBool(bool arg);
-        void PushScaleformMovieFunctionParameterInt(int arg);
-        void PushScaleformMovieFunctionParameterFloat(float arg);
-        void PopScaleformMovieFunctionVoid();
-        void DrawScaleformMovieFullscreen(int handle, int r, int g, int b, int a);
-        void DrawScaleformMovie(int handle, float x, float y, float width, float height, int r, int g, int b, int a);
-        void DrawScaleformMovie3dNonAdditive(int handle, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, int p7, int p8, int p9,
-            float scaleX, float scaleY, float scaleZ, int p13);
-        void StartScreenEffect(string effectName, int duration, bool looped);
-        void DrawScaleformMovie3d(int handle, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, int p7, int p8, int p9,
-            float scaleX, float scaleY, float scaleZ, int p13);
-        void SetScaleformMovieAsNoLongerNeeded(ref int handle);
-        void UseParticleFxAssetNextCall(string name);
-        int StartParticleFxNonLoopedAtCoord(string effectName, float xPos, float yPos, float zPos, int xRot, int yRot, int zRot, float scale, bool xAxis, bool yAxis, bool zAxis);
-        void DrawRect(float x, float y, float width, float height, byte r, byte g, byte b, byte a);
-        void DrawText(string text, int screenX, int screenY, Font font, float scale, Color color, AlignmentX alignmentX, bool dropShadow, bool outline, int wordWrap);
-        void DrawSprite(string textureDict, string textureName, float screenX, float screenY, float width, float height, int heading, byte r, byte g, byte b, byte a);
-        void DrawLine(Position3D startPos, Position3D endPos, Color color);
-        void DrawPoly(Position3D edge1, Position3D edge2, Position3D edge3, Color color);
-        // Ui.GetTextScaleHeight(scale, (int)font)
 
+        void UseParticleFxAssetNextCall(string name);
+
+        #endregion Public Methods
+
+        // Ui.GetTextScaleHeight(scale, (int)font)
     }
 }

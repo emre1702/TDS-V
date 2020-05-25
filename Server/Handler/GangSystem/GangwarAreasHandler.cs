@@ -14,12 +14,16 @@ namespace TDS_Server.Handler.GangSystem
 {
     public class GangwarAreasHandler
     {
-        public List<GangwarArea> GangwarAreas { get; set; } = new List<GangwarArea>();
+        #region Private Fields
 
         private readonly TDSDbContext _dbContext;
-        private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly ILoggingHandler _loggingHandler;
+        private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly IServiceProvider _serviceProvider;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler, ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
         {
@@ -31,9 +35,18 @@ namespace TDS_Server.Handler.GangSystem
             eventsHandler.MapsLoaded += LoadGangwarAreas;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public List<GangwarArea> GangwarAreas { get; set; } = new List<GangwarArea>();
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         /// <summary>
-        /// Returns the Gangwar area by Id / MapId.
-        /// MapId is used as Id!
+        /// Returns the Gangwar area by Id / MapId. MapId is used as Id!
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -41,6 +54,10 @@ namespace TDS_Server.Handler.GangSystem
         {
             return GangwarAreas.FirstOrDefault(a => a.Entity?.MapId == id);
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void LoadGangwarAreas()
         {
@@ -57,5 +74,7 @@ namespace TDS_Server.Handler.GangSystem
                 GangwarAreas.Add(area);
             }
         }
+
+        #endregion Private Methods
     }
 }

@@ -1,4 +1,2 @@
-﻿namespace TDS_Server.Core.JavaScript
-{
-
+﻿namespace TDS_Server.Core.JavaScript {
 }

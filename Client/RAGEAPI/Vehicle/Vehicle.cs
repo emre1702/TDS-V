@@ -7,16 +7,29 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Vehicle
 {
-    class Vehicle : Entity.EntityBase, IVehicle
+    internal class Vehicle : Entity.EntityBase, IVehicle
     {
-        private readonly RAGE.Elements.Vehicle _instance;
+        #region Private Fields
 
         private readonly EntityConvertingHandler _entityConvertingHandler;
+        private readonly RAGE.Elements.Vehicle _instance;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Vehicle(RAGE.Elements.Vehicle instance, EntityConvertingHandler entityConvertingHandler) : base(instance)
             => (_instance, _entityConvertingHandler) = (instance, entityConvertingHandler);
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
         public IPlayer Controller => _instance.Controller is null ? null : _entityConvertingHandler.GetEntity(_instance.Controller);
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public bool AddClanDecalTo(int ped, int boneIndex, float x1, float x2, float x3, float y1, float y2, float y3, float z1, float z2, float z3, float scale, int p13, int alpha)
             => _instance.AddClanDecalTo(ped, boneIndex, x1, x2, x3, y1, y2, y3, z1, z2, z3, scale, p13, alpha);
@@ -974,5 +987,7 @@ namespace TDS_Client.RAGEAPI.Vehicle
 
         public void WashDecalsFrom(float p1)
             => _instance.WashDecalsFrom(p1);
+
+        #endregion Public Methods
     }
 }

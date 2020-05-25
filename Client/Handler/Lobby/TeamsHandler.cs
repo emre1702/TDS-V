@@ -14,40 +14,35 @@ namespace TDS_Client.Handler.Lobby
 {
     public class TeamsHandler : ServiceBase
     {
-        public List<SyncedTeamDataDto> LobbyTeams
-        {
-            get => _LobbyTeams;
-            set
-            {
-                _LobbyTeams = value;
-                if (_LobbyTeams != null)
-                {
-                    if (_LobbyTeams.Count == 1)
-                    {
-                        ModAPI.LocalPlayer.SetCanAttackFriendly(true);
-                    }
-                    else
-                    {
-                        ModAPI.LocalPlayer.SetCanAttackFriendly(false);
-                    }
+        #region Public Fields
 
-                }
-            }
-        }
         public readonly HashSet<IPlayer> SameTeamPlayers = new HashSet<IPlayer>();
-        public string CurrentTeamName { get; set; } = "Login/Register";
-        public int AmountPlayersSameTeam => SameTeamPlayers.Count;
 
-        private bool _activated;
-        private List<SyncedTeamDataDto> _LobbyTeams;
+        #endregion Public Fields
+
+        #region Private Fields
+
+        private readonly BindsHandler _bindsHandler;
 
         private readonly BrowserHandler _browserHandler;
-        private readonly LobbyHandler _lobbyHandler;
-        private readonly RemoteEventsSender _remoteEventsSender;
+
         private readonly CursorHandler _cursorHandler;
+
         private readonly EventsHandler _eventsHandler;
+
+        private readonly LobbyHandler _lobbyHandler;
+
+        private readonly RemoteEventsSender _remoteEventsSender;
+
         private readonly UtilsHandler _utilsHandler;
-        private readonly BindsHandler _bindsHandler;
+
+        private bool _activated;
+
+        private List<SyncedTeamDataDto> _LobbyTeams;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public TeamsHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler, LobbyHandler lobbyHandler,
             RemoteEventsSender remoteEventsSender, CursorHandler cursorHandler, EventsHandler eventsHandler, UtilsHandler utilsHandler)
@@ -73,6 +68,38 @@ namespace TDS_Client.Handler.Lobby
             modAPI.Event.Add(ToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public int AmountPlayersSameTeam => SameTeamPlayers.Count;
+
+        public string CurrentTeamName { get; set; } = "Login/Register";
+
+        public List<SyncedTeamDataDto> LobbyTeams
+        {
+            get => _LobbyTeams;
+            set
+            {
+                _LobbyTeams = value;
+                if (_LobbyTeams != null)
+                {
+                    if (_LobbyTeams.Count == 1)
+                    {
+                        ModAPI.LocalPlayer.SetCanAttackFriendly(true);
+                    }
+                    else
+                    {
+                        ModAPI.LocalPlayer.SetCanAttackFriendly(false);
+                    }
+                }
+            }
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public void AddSameTeam(IPlayer player)
         {
             try
@@ -93,28 +120,6 @@ namespace TDS_Client.Handler.Lobby
             {
                 Logging.LogError(ex);
             }
-        }
-
-        public void RemoveSameTeam(IPlayer player)
-        {
-            Logging.LogInfo("", "TeamsHandler.RemoveSameTeam");
-            SameTeamPlayers.Remove(player);
-            var prevBlipHandle = player.GetBlipFrom();
-            if (ModAPI.Ui.DoesBlipExist(prevBlipHandle))
-                ModAPI.Ui.RemoveBlip(ref prevBlipHandle);
-            Logging.LogInfo("", "TeamsHandler.RemoveSameTeam", true);
-        }
-
-        public void RemoveSameTeam(ushort remoteId)
-        {
-            Logging.LogInfo(remoteId.ToString(), "TeamsHandler.RemoveSameTeam");
-
-            var player = SameTeamPlayers.FirstOrDefault(p => p.RemoteId == remoteId);
-            if (player is null)
-                return;
-            RemoveSameTeam(player);
-
-            Logging.LogInfo(remoteId.ToString(), "TeamsHandler.RemoveSameTeam", true);
         }
 
         public void ClearSameTeam()
@@ -142,6 +147,28 @@ namespace TDS_Client.Handler.Lobby
             return SameTeamPlayers.Contains(player);
         }
 
+        public void RemoveSameTeam(IPlayer player)
+        {
+            Logging.LogInfo("", "TeamsHandler.RemoveSameTeam");
+            SameTeamPlayers.Remove(player);
+            var prevBlipHandle = player.GetBlipFrom();
+            if (ModAPI.Ui.DoesBlipExist(prevBlipHandle))
+                ModAPI.Ui.RemoveBlip(ref prevBlipHandle);
+            Logging.LogInfo("", "TeamsHandler.RemoveSameTeam", true);
+        }
+
+        public void RemoveSameTeam(ushort remoteId)
+        {
+            Logging.LogInfo(remoteId.ToString(), "TeamsHandler.RemoveSameTeam");
+
+            var player = SameTeamPlayers.FirstOrDefault(p => p.RemoteId == remoteId);
+            if (player is null)
+                return;
+            RemoveSameTeam(player);
+
+            Logging.LogInfo(remoteId.ToString(), "TeamsHandler.RemoveSameTeam", true);
+        }
+
         public void ToggleOrderMode(Key _)
         {
             if (!_activated && _browserHandler.InInput)
@@ -150,24 +177,9 @@ namespace TDS_Client.Handler.Lobby
             _browserHandler.Angular.ToggleTeamOrderModus(_activated);
         }
 
-        private void GiveOrder(Key key)
-        {
-            if (!_activated)
-                return;
-            if (!_lobbyHandler.InFightLobby)
-                return;
-            if (_browserHandler.InInput)
-                return;
+        #endregion Public Methods
 
-            TeamOrder order = GetTeamOrderByKey(key);
-            _remoteEventsSender.Send(ToServerEvent.SendTeamOrder, (int)order);
-            ToggleOrderMode(Key.Noname);
-        }
-
-        private TeamOrder GetTeamOrderByKey(Key key)
-        {
-            return (TeamOrder)(key - Key.Numpad1);
-        }
+        #region Private Methods
 
         private void ChooseTeam(object[] args)
         {
@@ -186,6 +198,36 @@ namespace TDS_Client.Handler.Lobby
             {
                 Logging.LogError(ex);
             }
+        }
+
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Key.Numpad0, ToggleOrderMode);
+            int i = 0;
+            foreach (var orderobj in Enum.GetValues(typeof(TeamOrder)))
+            {
+                _bindsHandler.Add(Key.Numpad1 + (ushort)i, GiveOrder);
+                ++i;
+            }
+        }
+
+        private TeamOrder GetTeamOrderByKey(Key key)
+        {
+            return (TeamOrder)(key - Key.Numpad1);
+        }
+
+        private void GiveOrder(Key key)
+        {
+            if (!_activated)
+                return;
+            if (!_lobbyHandler.InFightLobby)
+                return;
+            if (_browserHandler.InInput)
+                return;
+
+            TeamOrder order = GetTeamOrderByKey(key);
+            _remoteEventsSender.Send(ToServerEvent.SendTeamOrder, (int)order);
+            ToggleOrderMode(Key.Noname);
         }
 
         private void OnClearTeamPlayersMethod(object[] args)
@@ -240,17 +282,6 @@ namespace TDS_Client.Handler.Lobby
             catch (Exception ex)
             {
                 Logging.LogError(ex);
-            }
-        }
-
-        private void EventsHandler_LoggedIn()
-        {
-            _bindsHandler.Add(Key.Numpad0, ToggleOrderMode);
-            int i = 0;
-            foreach (var orderobj in Enum.GetValues(typeof(TeamOrder)))
-            {
-                _bindsHandler.Add(Key.Numpad1 + (ushort)i, GiveOrder);
-                ++i;
             }
         }
 
@@ -310,5 +341,7 @@ namespace TDS_Client.Handler.Lobby
                 Logging.LogError(ex);
             }
         }
+
+        #endregion Private Methods
     }
 }

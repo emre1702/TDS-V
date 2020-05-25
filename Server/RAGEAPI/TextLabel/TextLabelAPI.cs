@@ -6,8 +6,10 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGEAPI.TextLabel
 {
-    class TextLabelAPI : ITextLabelAPI
+    internal class TextLabelAPI : ITextLabelAPI
     {
+        #region Public Methods
+
         public ITextLabel Create(string text, Position3D position, double range, float fontSize, int font, System.Drawing.Color color, bool entitySeethrough, ILobby lobby)
         {
             var instance = NAPI.TextLabel.CreateTextLabel(text, position.ToMod(), (float)range, fontSize, font, color.ToMod(), entitySeethrough, lobby.Dimension);
@@ -15,5 +17,7 @@ namespace TDS_Server.RAGEAPI.TextLabel
             var textLabel = new TextLabel(instance);
             return textLabel;
         }
+
+        #endregion Public Methods
     }
 }

@@ -22,20 +22,31 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorObjectsHandler : ServiceBase
     {
-        private readonly Dictionary<IEntityBase, MapCreatorObject> _cacheMapEditorObjects = new Dictionary<IEntityBase, MapCreatorObject>();
-        public MapLimit MapLimitDisplay;
+        #region Public Fields
+
         public int IdCounter = 0;
+        public MapLimit MapLimitDisplay;
 
-        private readonly EventMethodData<EntityStreamInDelegate> _entityStreamInEventMethod;
-        //private readonly EventMethodData<EntityStreamOutDelegate> _entityStreamOutEventMethod;
+        #endregion Public Fields
 
-        private readonly CamerasHandler _camerasHandler;
-        private readonly LobbyHandler _lobbyHandler;
-        private readonly EventsHandler _eventsHandler;
+        #region Private Fields
+
         private readonly BrowserHandler _browserHandler;
+        private readonly Dictionary<IEntityBase, MapCreatorObject> _cacheMapEditorObjects = new Dictionary<IEntityBase, MapCreatorObject>();
+        private readonly CamerasHandler _camerasHandler;
+        private readonly EventMethodData<EntityStreamInDelegate> _entityStreamInEventMethod;
+        private readonly EventsHandler _eventsHandler;
+
+        //private readonly EventMethodData<EntityStreamOutDelegate> _entityStreamOutEventMethod;
+        private readonly LobbyHandler _lobbyHandler;
+
         private readonly Serializer _serializer;
 
-        public MapCreatorObjectsHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, LobbyHandler lobbyHandler, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public MapCreatorObjectsHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, LobbyHandler lobbyHandler,
             EventsHandler eventsHandler, BrowserHandler browserHandler, Serializer serializer)
             : base(modAPI, loggingHandler)
         {
@@ -55,36 +66,13 @@ namespace TDS_Client.Handler.MapCreator
             modAPI.Event.Add(ToClientEvent.LoadMapForMapCreator, OnLoadMapForMapCreatorServerMethod);
         }
 
-        public void Start()
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public bool CanEditObject(MapCreatorObject obj)
         {
-            ModAPI.Event.EntityStreamIn.Add(_entityStreamInEventMethod);
-            //ModAPI.Event.EntityStreamOut.Add(_entityStreamOutEventMethod);
-        }
-
-        public void Stop()
-        {
-            ModAPI.Event.EntityStreamIn.Remove(_entityStreamInEventMethod);
-            //ModAPI.Event.EntityStreamOut.Remove(_entityStreamOutEventMethod);
-
-            foreach (var entry in _cacheMapEditorObjects)
-            {
-                entry.Value.Delete(false);
-            }
-            _cacheMapEditorObjects.Clear();
-            IdCounter = 0;
-
-            MapLimitDisplay?.Stop();
-            MapLimitDisplay = null;
-        }
-
-        public MapCreatorObject GetByHandle(int handle)
-        {
-            return _cacheMapEditorObjects.FirstOrDefault(g => g.Key.Handle == handle).Value;
-        }
-
-        public MapCreatorObject GetByID(int id)
-        {
-            return _cacheMapEditorObjects.FirstOrDefault(g => g.Value.ID == id).Value;
+            return obj.OwnerRemoteId == ModAPI.LocalPlayer.RemoteId || _lobbyHandler.IsLobbyOwner;
         }
 
         public MapCreatorObject CreateMapCreatorObject(MapCreatorPositionType type, object info, ushort ownerRemoteId,
@@ -94,17 +82,23 @@ namespace TDS_Client.Handler.MapCreator
             {
                 case MapCreatorPositionType.TeamSpawn:
                     return GetTeamSpawn(Convert.ToInt32(info), ownerRemoteId, pos, rot);
+
                 case MapCreatorPositionType.MapCenter:
                     return GetMapCenter(ownerRemoteId, pos, rot);
+
                 case MapCreatorPositionType.BombPlantPlace:
                     return GetBombPlantPlace(ownerRemoteId, pos, rot);
+
                 case MapCreatorPositionType.MapLimit:
                     return GetMapLimit(ownerRemoteId, pos, rot);
+
                 case MapCreatorPositionType.Target:
                     return GetTarget(ownerRemoteId, pos, rot);
+
                 case MapCreatorPositionType.Object:
                     string objName = (string)info;
                     return GetObject(objName, MapCreatorPositionType.Object, ownerRemoteId, pos, rot, objName);
+
                 case MapCreatorPositionType.Vehicle:
                     string vehName = (string)info;
                     return GetVehicle(vehName, ownerRemoteId, vehName: vehName, pos: pos, rot: rot);
@@ -119,142 +113,30 @@ namespace TDS_Client.Handler.MapCreator
                 case MapCreatorPositionType.TeamSpawn:
                     return GetTeamSpawn(Convert.ToInt32(data.Info), data.OwnerRemoteId,
                         Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+
                 case MapCreatorPositionType.MapCenter:
                     return GetMapCenter(data.OwnerRemoteId, Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+
                 case MapCreatorPositionType.BombPlantPlace:
                     return GetBombPlantPlace(data.OwnerRemoteId, Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+
                 case MapCreatorPositionType.MapLimit:
                     return GetMapLimit(data.OwnerRemoteId, Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+
                 case MapCreatorPositionType.Target:
                     return GetTarget(data.OwnerRemoteId, Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+
                 case MapCreatorPositionType.Object:
                     string objName = (string)data.Info;
-                    return GetObject(objName, MapCreatorPositionType.Object, data.OwnerRemoteId, 
+                    return GetObject(objName, MapCreatorPositionType.Object, data.OwnerRemoteId,
                         Position3D.GetPos(data), Position3D.GetRot(data), objName, id: data.Id);
+
                 case MapCreatorPositionType.Vehicle:
                     string vehName = (string)data.Info;
                     return GetVehicle(vehName, data.OwnerRemoteId, vehName: vehName, id: data.Id,
                         pos: Position3D.GetPos(data), rot: Position3D.GetRot(data));
             }
             return null;
-        }
-
-        public MapCreatorObject GetOrCreateByHandle(int handle, MapCreatorPositionType? type = null)
-        {
-            var alreadyCached = GetByHandle(handle);
-            if (alreadyCached != null)
-                return alreadyCached;
-            var entityType = ModAPI.Entity.GetEntityType(handle);
-
-            IEntityBase entity;
-            switch (entityType)
-            {
-                case EntityType.Ped:
-                    entity = ModAPI.Pool.Peds.GetAtHandle(handle);
-                    break;
-                case EntityType.Vehicle:
-                    entity = ModAPI.Pool.Vehicles.GetAtHandle(handle);
-                    break;
-                case EntityType.Object:
-                    entity = ModAPI.Pool.Objects.GetAtHandle(handle);
-                    break;
-                default:
-                    return null;
-            }
-
-            if (!type.HasValue)
-            {
-                switch (ModAPI.Entity.GetEntityType(handle))
-                {
-                    case EntityType.Ped:
-                        type = MapCreatorPositionType.TeamSpawn;
-                        break;
-                    case EntityType.Object:
-                        type = MapCreatorPositionType.Object;
-                        break;
-                    case EntityType.Vehicle:
-                        type = MapCreatorPositionType.Vehicle;
-                        break;
-                    default:
-                        return null;
-                }
-            }
-
-            var obj = new MapCreatorObject(ModAPI, this, _eventsHandler, entity, type.Value, ModAPI.LocalPlayer.RemoteId, entity.Position, entity.Rotation);
-            _cacheMapEditorObjects[entity] = obj;
-            return obj;
-        }
-
-        public MapCreatorObject GetTeamSpawn(int editingTeamIndex, ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
-        {
-            int pedHashIndex = editingTeamIndex;
-            while (pedHashIndex >= Constants.TeamSpawnPedHash.Length)
-                pedHashIndex -= Constants.TeamSpawnPedHash.Length;
-            var obj = ModAPI.Ped.Create(Constants.TeamSpawnPedHash[pedHashIndex], pos, rot, dimension: ModAPI.LocalPlayer.Dimension);
-            obj.SetInvincible(true);
-            obj.FreezePosition(true);
-            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, obj, MapCreatorPositionType.TeamSpawn, playerRemoteId, pos, rot, editingTeamIndex, id: id);
-            _cacheMapEditorObjects[obj] = mapCreatorObj;
-            return mapCreatorObj;
-        }
-
-        public MapCreatorObject GetMapCenter(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
-        {
-            var entry = _cacheMapEditorObjects.FirstOrDefault(e => e.Value.Type == MapCreatorPositionType.MapCenter);
-            if (entry.Value != null)
-                return entry.Value;
-            return GetObject(Constants.MapCenterHashName, MapCreatorPositionType.MapCenter, playerRemoteId, pos, rot, id: id);
-        }
-
-        public MapCreatorObject GetMapLimit(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
-        {
-            return GetObject(Constants.MapLimitHashName, MapCreatorPositionType.MapLimit, playerRemoteId, pos, rot, id: id);
-        }
-
-        public MapCreatorObject GetBombPlantPlace(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
-        {
-            return GetObject(Constants.BombPlantPlaceHashName, MapCreatorPositionType.BombPlantPlace, playerRemoteId, pos, rot, id: id);
-        }
-
-        public MapCreatorObject GetTarget(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
-        {
-            var entry = _cacheMapEditorObjects.FirstOrDefault(e => e.Value.Type == MapCreatorPositionType.Target);
-            if (entry.Value != null)
-                return entry.Value;
-            return GetObject(Constants.TargetHashName, MapCreatorPositionType.Target, playerRemoteId, pos, rot, id: id);
-        }
-
-        public MapCreatorObject GetVehicle(string hashName, ushort playerRemoteId, Position3D pos, Position3D rot, string vehName = null, int id = -1)
-        {
-            uint hash = ModAPI.Misc.GetHashKey(hashName);
-            var vehicle = ModAPI.Vehicle.Create(hash, pos, rot, "Map", 
-                locked: true, dimension: ModAPI.LocalPlayer.Dimension);
-            vehicle.FreezePosition(true);
-            //vehicle.SetCollision(false, true);
-            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, vehicle, MapCreatorPositionType.Vehicle, playerRemoteId, pos, rot, objectName: vehName, id: id);
-            _cacheMapEditorObjects[vehicle] = mapCreatorObj;
-            return mapCreatorObj;
-        }
-
-        public MapCreatorObject GetObject(string hashName, MapCreatorPositionType type, ushort playerRemoteId, 
-            Position3D pos, Position3D rot, string objName = null, int id = -1)
-        {
-            uint hash = ModAPI.Misc.GetHashKey(hashName);
-            var obj = ModAPI.MapObject.Create(hash, pos, rot, dimension: ModAPI.LocalPlayer.Dimension);
-            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, obj, type, playerRemoteId, pos, rot, objectName: objName, id: id);
-            _cacheMapEditorObjects[obj] = mapCreatorObj;
-            return mapCreatorObj;
-        }
-
-        public void DeleteTeamObjects(int teamNumber, bool syncToServer = true)
-        {
-            var teamObjects = _cacheMapEditorObjects.Where(entry => entry.Value.TeamNumber == teamNumber && (!syncToServer || CanEditObject(entry.Value))).ToList();
-            foreach (var entry in teamObjects)
-            {
-                Delete(entry.Value, false);
-            }
-            if (syncToServer)
-                _eventsHandler.OnMapCreatorSyncTeamObjectsDeleted(teamNumber);
         }
 
         public void Delete(int posId)
@@ -277,6 +159,17 @@ namespace TDS_Client.Handler.MapCreator
             }
         }
 
+        public void DeleteTeamObjects(int teamNumber, bool syncToServer = true)
+        {
+            var teamObjects = _cacheMapEditorObjects.Where(entry => entry.Value.TeamNumber == teamNumber && (!syncToServer || CanEditObject(entry.Value))).ToList();
+            foreach (var entry in teamObjects)
+            {
+                Delete(entry.Value, false);
+            }
+            if (syncToServer)
+                _eventsHandler.OnMapCreatorSyncTeamObjectsDeleted(teamNumber);
+        }
+
         public MapCreatorObject FromDto(MapCreatorPosition dto)
         {
             var obj = CreateMapCreatorObject(dto);
@@ -284,6 +177,134 @@ namespace TDS_Client.Handler.MapCreator
             obj.LoadPos(dto);
 
             return obj;
+        }
+
+        public IEnumerable<MapCreatorObject> GetAll()
+        {
+            return _cacheMapEditorObjects.Values;
+        }
+
+        public MapCreatorObject GetBombPlantPlace(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        {
+            return GetObject(Constants.BombPlantPlaceHashName, MapCreatorPositionType.BombPlantPlace, playerRemoteId, pos, rot, id: id);
+        }
+
+        public MapCreatorObject GetByHandle(int handle)
+        {
+            return _cacheMapEditorObjects.FirstOrDefault(g => g.Key.Handle == handle).Value;
+        }
+
+        public MapCreatorObject GetByID(int id)
+        {
+            return _cacheMapEditorObjects.FirstOrDefault(g => g.Value.ID == id).Value;
+        }
+
+        public MapCreatorObject GetMapCenter(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        {
+            var entry = _cacheMapEditorObjects.FirstOrDefault(e => e.Value.Type == MapCreatorPositionType.MapCenter);
+            if (entry.Value != null)
+                return entry.Value;
+            return GetObject(Constants.MapCenterHashName, MapCreatorPositionType.MapCenter, playerRemoteId, pos, rot, id: id);
+        }
+
+        public MapCreatorObject GetMapLimit(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        {
+            return GetObject(Constants.MapLimitHashName, MapCreatorPositionType.MapLimit, playerRemoteId, pos, rot, id: id);
+        }
+
+        public MapCreatorObject GetObject(string hashName, MapCreatorPositionType type, ushort playerRemoteId,
+            Position3D pos, Position3D rot, string objName = null, int id = -1)
+        {
+            uint hash = ModAPI.Misc.GetHashKey(hashName);
+            var obj = ModAPI.MapObject.Create(hash, pos, rot, dimension: ModAPI.LocalPlayer.Dimension);
+            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, obj, type, playerRemoteId, pos, rot, objectName: objName, id: id);
+            _cacheMapEditorObjects[obj] = mapCreatorObj;
+            return mapCreatorObj;
+        }
+
+        public MapCreatorObject GetOrCreateByHandle(int handle, MapCreatorPositionType? type = null)
+        {
+            var alreadyCached = GetByHandle(handle);
+            if (alreadyCached != null)
+                return alreadyCached;
+            var entityType = ModAPI.Entity.GetEntityType(handle);
+
+            IEntityBase entity;
+            switch (entityType)
+            {
+                case EntityType.Ped:
+                    entity = ModAPI.Pool.Peds.GetAtHandle(handle);
+                    break;
+
+                case EntityType.Vehicle:
+                    entity = ModAPI.Pool.Vehicles.GetAtHandle(handle);
+                    break;
+
+                case EntityType.Object:
+                    entity = ModAPI.Pool.Objects.GetAtHandle(handle);
+                    break;
+
+                default:
+                    return null;
+            }
+
+            if (!type.HasValue)
+            {
+                switch (ModAPI.Entity.GetEntityType(handle))
+                {
+                    case EntityType.Ped:
+                        type = MapCreatorPositionType.TeamSpawn;
+                        break;
+
+                    case EntityType.Object:
+                        type = MapCreatorPositionType.Object;
+                        break;
+
+                    case EntityType.Vehicle:
+                        type = MapCreatorPositionType.Vehicle;
+                        break;
+
+                    default:
+                        return null;
+                }
+            }
+
+            var obj = new MapCreatorObject(ModAPI, this, _eventsHandler, entity, type.Value, ModAPI.LocalPlayer.RemoteId, entity.Position, entity.Rotation);
+            _cacheMapEditorObjects[entity] = obj;
+            return obj;
+        }
+
+        public MapCreatorObject GetTarget(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        {
+            var entry = _cacheMapEditorObjects.FirstOrDefault(e => e.Value.Type == MapCreatorPositionType.Target);
+            if (entry.Value != null)
+                return entry.Value;
+            return GetObject(Constants.TargetHashName, MapCreatorPositionType.Target, playerRemoteId, pos, rot, id: id);
+        }
+
+        public MapCreatorObject GetTeamSpawn(int editingTeamIndex, ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        {
+            int pedHashIndex = editingTeamIndex;
+            while (pedHashIndex >= Constants.TeamSpawnPedHash.Length)
+                pedHashIndex -= Constants.TeamSpawnPedHash.Length;
+            var obj = ModAPI.Ped.Create(Constants.TeamSpawnPedHash[pedHashIndex], pos, rot, dimension: ModAPI.LocalPlayer.Dimension);
+            obj.SetInvincible(true);
+            obj.FreezePosition(true);
+            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, obj, MapCreatorPositionType.TeamSpawn, playerRemoteId, pos, rot, editingTeamIndex, id: id);
+            _cacheMapEditorObjects[obj] = mapCreatorObj;
+            return mapCreatorObj;
+        }
+
+        public MapCreatorObject GetVehicle(string hashName, ushort playerRemoteId, Position3D pos, Position3D rot, string vehName = null, int id = -1)
+        {
+            uint hash = ModAPI.Misc.GetHashKey(hashName);
+            var vehicle = ModAPI.Vehicle.Create(hash, pos, rot, "Map",
+                locked: true, dimension: ModAPI.LocalPlayer.Dimension);
+            vehicle.FreezePosition(true);
+            //vehicle.SetCollision(false, true);
+            var mapCreatorObj = new MapCreatorObject(ModAPI, this, _eventsHandler, vehicle, MapCreatorPositionType.Vehicle, playerRemoteId, pos, rot, objectName: vehName, id: id);
+            _cacheMapEditorObjects[vehicle] = mapCreatorObj;
+            return mapCreatorObj;
         }
 
         public void LoadMap(MapCreateDataDto map, int lastId)
@@ -348,7 +369,6 @@ namespace TDS_Client.Handler.MapCreator
 
             if (map.TeamSpawns != null)
             {
-
                 foreach (var teamSpawns in map.TeamSpawns)
                 {
                     foreach (var spawnPos in teamSpawns)
@@ -366,12 +386,12 @@ namespace TDS_Client.Handler.MapCreator
 
             //new TDSTimer(() =>
             //{
-                foreach (var obj in GetAll())
-                {
-                    obj.MovingRotation = new Position3D(obj.Rotation);
-                    obj.Freeze(true);
-                    //obj.SetCollision(false, true);
-                }
+            foreach (var obj in GetAll())
+            {
+                obj.MovingRotation = new Position3D(obj.Rotation);
+                obj.Freeze(true);
+                //obj.SetCollision(false, true);
+            }
             //}, 1000);
         }
 
@@ -383,16 +403,37 @@ namespace TDS_Client.Handler.MapCreator
                 .ToList());
         }
 
-        public bool CanEditObject(MapCreatorObject obj)
+        public void Start()
         {
-            return obj.OwnerRemoteId == ModAPI.LocalPlayer.RemoteId || _lobbyHandler.IsLobbyOwner;
+            ModAPI.Event.EntityStreamIn.Add(_entityStreamInEventMethod);
+            //ModAPI.Event.EntityStreamOut.Add(_entityStreamOutEventMethod);
         }
 
-        public IEnumerable<MapCreatorObject> GetAll()
+        public void Stop()
         {
-            return _cacheMapEditorObjects.Values;
+            ModAPI.Event.EntityStreamIn.Remove(_entityStreamInEventMethod);
+            //ModAPI.Event.EntityStreamOut.Remove(_entityStreamOutEventMethod);
+
+            foreach (var entry in _cacheMapEditorObjects)
+            {
+                entry.Value.Delete(false);
+            }
+            _cacheMapEditorObjects.Clear();
+            IdCounter = 0;
+
+            MapLimitDisplay?.Stop();
+            MapLimitDisplay = null;
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void EventsHandler_MapBorderColorChanged(Color color)
+        {
+            if (!(MapLimitDisplay is null))
+                MapLimitDisplay.MapBorderColor = color;
+        }
 
         private void OnEntityStreamIn(IEntity entity)
         {
@@ -412,6 +453,16 @@ namespace TDS_Client.Handler.MapCreator
             Logging.LogWarning("Entity stream out: " + entity.Handle);
         }*/
 
+        private void OnLoadMapForMapCreatorServerMethod(object[] args)
+        {
+            string json = (string)args[0];
+            _browserHandler.Angular.LoadMapForMapCreator(json);
+
+            int lastId = (int)args[1];
+            var mapCreatorData = _serializer.FromServer<MapCreateDataDto>(json);
+            LoadMap(mapCreatorData, lastId);
+        }
+
         private void OnRemoveMapCreatorPositionMethod(object[] args)
         {
             int posId = Convert.ToInt32(args[0]);
@@ -424,20 +475,6 @@ namespace TDS_Client.Handler.MapCreator
             DeleteTeamObjects(teamNumber);
         }
 
-        private void OnLoadMapForMapCreatorServerMethod(object[] args)
-        {
-            string json = (string)args[0];
-            _browserHandler.Angular.LoadMapForMapCreator(json);
-
-            int lastId = (int)args[1];
-            var mapCreatorData = _serializer.FromServer<MapCreateDataDto>(json);
-            LoadMap(mapCreatorData, lastId);
-        }
-
-        private void EventsHandler_MapBorderColorChanged(Color color)
-        {
-            if (!(MapLimitDisplay is null))
-                MapLimitDisplay.MapBorderColor = color;
-        }
+        #endregion Private Methods
     }
 }

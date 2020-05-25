@@ -6,6 +6,8 @@ namespace TDS_Server.Database.Entity.Admin
 {
     public partial class AdminLevels
     {
+        #region Public Constructors
+
         public AdminLevels()
         {
             AdminLevelNames = new HashSet<AdminLevelNames>();
@@ -13,13 +15,18 @@ namespace TDS_Server.Database.Entity.Admin
             Players = new HashSet<Players>();
         }
 
-        public short Level { get; set; }
-        public short ColorR { get; set; }
-        public short ColorG { get; set; }
-        public short ColorB { get; set; }
+        #endregion Public Constructors
+
+        #region Public Properties
 
         public virtual ICollection<AdminLevelNames> AdminLevelNames { get; set; }
+        public short ColorB { get; set; }
+        public short ColorG { get; set; }
+        public short ColorR { get; set; }
         public virtual ICollection<Commands> Commands { get; set; }
+        public short Level { get; set; }
         public virtual ICollection<Players> Players { get; set; }
+
+        #endregion Public Properties
     }
 }

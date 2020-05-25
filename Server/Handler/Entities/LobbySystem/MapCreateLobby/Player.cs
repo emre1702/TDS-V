@@ -13,6 +13,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class MapCreateLobby
     {
+        #region Public Methods
+
         public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
             if (!await base.AddPlayer(player, 0))
@@ -32,26 +34,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
                 }
             });
-            
+
             return true;
-        }
-
-        public override async Task RemovePlayer(ITDSPlayer player)
-        {
-            await base.RemovePlayer(player);
-
-            if (player.Entity?.Id == Entity.OwnerId && Players.Count >= 1)
-            {
-                var newOwner = SharedUtils.GetRandom(Players.Values);
-                Entity.OwnerId = newOwner.Entity!.Id;
-                DataSyncHandler.SetData(newOwner, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, true);
-            }
-        }
-
-        public void SetPosition(ITDSPlayer player, float x, float y, float z, float rot)
-        {
-            player.ModPlayer!.Position = new Position3D(x, y, z);
-            player.ModPlayer!.Rotation = new Position3D(0, 0, rot);
         }
 
         public async void GiveVehicle(ITDSPlayer player, FreeroamVehicleType vehType)
@@ -77,9 +61,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     player.FreeroamVehicle = null;
                 }
 
-                ITDSVehicle? vehicle = ModAPI.Vehicle.Create(vehHash, pos, player.ModPlayer.Rotation.Z, 0, 0, player.ModPlayer.Name, dimension: Dimension);
-                if (vehicle is null)
-                    return;
+                var vehicle = ModAPI.Vehicle.Create(vehHash, pos, player.ModPlayer.Rotation.Z, 0, 0, player.ModPlayer.Name, dimension: Dimension);
                 player.FreeroamVehicle = vehicle;
 
                 player.SetEntityInvincible(vehicle, true);
@@ -87,5 +69,25 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 player.ModPlayer.SetIntoVehicle(vehicle, 0);
             });
         }
+
+        public override async Task RemovePlayer(ITDSPlayer player)
+        {
+            await base.RemovePlayer(player);
+
+            if (player.Entity?.Id == Entity.OwnerId && Players.Count >= 1)
+            {
+                var newOwner = SharedUtils.GetRandom(Players.Values);
+                Entity.OwnerId = newOwner.Entity!.Id;
+                DataSyncHandler.SetData(newOwner, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, true);
+            }
+        }
+
+        public void SetPosition(ITDSPlayer player, float x, float y, float z, float rot)
+        {
+            player.ModPlayer!.Position = new Position3D(x, y, z);
+            player.ModPlayer!.Rotation = new Position3D(0, 0, rot);
+        }
+
+        #endregion Public Methods
     }
 }

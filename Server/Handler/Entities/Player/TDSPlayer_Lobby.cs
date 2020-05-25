@@ -8,12 +8,17 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
-        public ILobby? Lobby { get; set; }
-        public ILobby? PreviousLobby { get; set; }
-        public PlayerLobbyStats? LobbyStats { get; private set; }
+        #region Public Properties
+
         public RoundStatsDto? CurrentRoundStats { get; set; }
         public bool IsLobbyOwner => Lobby?.IsPlayerLobbyOwner(this) ?? false;
+        public ILobby? Lobby { get; set; }
+        public PlayerLobbyStats? LobbyStats { get; private set; }
+        public ILobby? PreviousLobby { get; set; }
 
+        #endregion Public Properties
+
+        #region Public Methods
 
         public async Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats)
         {
@@ -25,5 +30,7 @@ namespace TDS_Server.Handler.Entities.Player
             if (playerLobbyStats != null)
                 await ExecuteForDB(dbContext => dbContext.Attach(LobbyStats));
         }
+
+        #endregion Public Methods
     }
 }

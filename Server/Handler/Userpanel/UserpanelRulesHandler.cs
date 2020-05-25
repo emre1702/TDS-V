@@ -3,19 +3,57 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Database.Entity;
-using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    class UserpanelRulesHandler
+    public class RuleData
     {
+        #region Public Properties
+
+        [JsonProperty("3")]
+        public RuleCategory Category { get; set; }
+
+        [JsonProperty("0")]
+        public int Id { get; set; }
+
+        [JsonProperty("2")]
+        public RuleTarget Target { get; set; }
+
+        [JsonProperty("1")]
+        public Dictionary<int, string>? Texts { get; set; }
+
+        #endregion Public Properties
+    }
+
+    internal class UserpanelRulesHandler
+    {
+        #region Private Fields
+
         private string _rulesJson = string.Empty;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public UserpanelRulesHandler(TDSDbContext dbContext, Serializer serializer)
         {
             LoadRules(dbContext, serializer);
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public string GetData()
+        {
+            return _rulesJson;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void LoadRules(TDSDbContext context, Serializer serializer)
         {
@@ -30,20 +68,6 @@ namespace TDS_Server.Handler.Userpanel
             _rulesJson = serializer.ToBrowser(sendRules);
         }
 
-        public string GetData()
-        {
-            return _rulesJson;
-        }
-    }
-    public class RuleData
-    {
-        [JsonProperty("0")]
-        public int Id { get; set; }
-        [JsonProperty("1")]
-        public Dictionary<int, string>? Texts { get; set; }
-        [JsonProperty("2")]
-        public RuleTarget Target { get; set; }
-        [JsonProperty("3")]
-        public RuleCategory Category { get; set; }
+        #endregion Private Methods
     }
 }

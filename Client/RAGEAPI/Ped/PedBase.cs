@@ -9,18 +9,32 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Ped
 {
-    class PedBase : Entity.EntityBase, IPedBase
+    internal class PedBase : Entity.EntityBase, IPedBase
     {
+        #region Private Fields
+
         private readonly RAGE.Elements.PedBase _instance;
+
+        #endregion Private Fields
+
+        #region Protected Constructors
 
         protected PedBase(RAGE.Elements.PedBase instance) : base(instance)
             => _instance = instance;
 
-        public int Armor 
-        { 
-            get => _instance.GetArmour(); 
-            set => _instance.SetArmour(value); 
+        #endregion Protected Constructors
+
+        #region Public Properties
+
+        public int Armor
+        {
+            get => _instance.GetArmour();
+            set => _instance.SetArmour(value);
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void AddAmmoTo(WeaponHash weaponHash, int ammo)
             => _instance.AddAmmoTo((uint)weaponHash, ammo);
@@ -453,8 +467,11 @@ namespace TDS_Client.RAGEAPI.Ped
         public void GiveWeaponTo(WeaponHash weaponHash, int ammoCount, bool isHidden, bool equipNow)
             => _instance.GiveWeaponTo((uint)weaponHash, ammoCount, isHidden, equipNow);
 
+        public bool HasBeenDamagedByWeapon(WeaponHash weaponHash, int weaponType)
+            => _instance.HasBeenDamagedByWeapon((uint)weaponHash, weaponType);
+
         public bool HasGotWeapon(WeaponHash weaponHash, bool p2)
-            => _instance.HasGotWeapon((uint)weaponHash, p2);
+                    => _instance.HasGotWeapon((uint)weaponHash, p2);
 
         public bool HasGotWeaponComponent(WeaponHash weaponHash, uint componentHash)
             => _instance.HasGotWeaponComponent((uint)weaponHash, componentHash);
@@ -504,8 +521,11 @@ namespace TDS_Client.RAGEAPI.Ped
         public bool IsBlushColorValid()
             => _instance.IsBlushColorValid();
 
+        public bool IsClimbing()
+            => _instance.IsClimbing();
+
         public bool IsComponentVariationValid(int componentId, int drawableId, int textureId)
-            => _instance.IsComponentVariationValid(componentId, drawableId, textureId);
+                    => _instance.IsComponentVariationValid(componentId, drawableId, textureId);
 
         public bool IsConversationDead()
             => _instance.IsConversationDead();
@@ -1203,7 +1223,7 @@ namespace TDS_Client.RAGEAPI.Ped
         public void SetHeadBlendData(int shapeFirstID, int shapeSecondID, int shapeThirdID, int skinFirstID, int skinSecondID, int skinThirdID, float shapeMix, float skinMix, float thirdMix, bool isParent)
             => _instance.SetHeadBlendData(shapeFirstID, shapeSecondID, shapeThirdID, skinFirstID, skinSecondID, skinThirdID, shapeMix, skinMix, thirdMix, isParent);
 
-        public void SetHeadBlendPaletteColor(Color color, int type) 
+        public void SetHeadBlendPaletteColor(Color color, int type)
             => RAGE.Game.Invoker.Invoke((ulong)NativeHash.SET_HEAD_BLEND_PALETTE_COLOR, _instance.Handle, (int)color.R, (int)color.G, (int)color.B, type);
 
         public void SetHeadBlendPaletteColor(ColorDto color, int type)
@@ -1830,10 +1850,6 @@ namespace TDS_Client.RAGEAPI.Ped
         public bool WasSkeletonUpdated()
             => _instance.WasSkeletonUpdated();
 
-        public bool HasBeenDamagedByWeapon(WeaponHash weaponHash, int weaponType) 
-            => _instance.HasBeenDamagedByWeapon((uint)weaponHash, weaponType);
-
-        public bool IsClimbing() 
-            => _instance.IsClimbing();
+        #endregion Public Methods
     }
 }

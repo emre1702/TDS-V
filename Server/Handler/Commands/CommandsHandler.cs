@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +12,18 @@ using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Command;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler;
 using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Userpanel;
-using TDS_Shared.Default;
+
 using DB = TDS_Server.Database.Entity.Command;
 
 namespace TDS_Server.Handler.Commands
 {
     public class CommandsHandler
     {
-        // private delegate void CommandDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos, object[] args);
-        // private delegate void CommandEmptyDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos);
-
+        // private delegate void CommandDefaultMethod(TDSPlayer player, TDSCommandInfos
+        // commandinfos, object[] args); private delegate void CommandEmptyDefaultMethod(TDSPlayer
+        // player, TDSCommandInfos commandinfos);
 
         private class HandleArgumentsResult
         {
@@ -40,9 +37,11 @@ namespace TDS_Server.Handler.Commands
 
         // private const int AmountDefaultParams = 2;
 
-        // With implicit types it's much slower than direct call (Test: 8ms in 10000) - but then you can use Methods with implicit types (e.g. AdminSay([defaultParams], string text, int number))
-        // Without implicit types it's much faster but you can only use Methods with signature Method([defaultParams]) or Method([defaultParams], object[] args)
-        // private const bool UseImplicitTypes = true;
+        // With implicit types it's much slower than direct call (Test: 8ms in 10000) - but then you
+        // can use Methods with implicit types (e.g. AdminSay([defaultParams], string text, int
+        // number)) Without implicit types it's much faster but you can only use Methods with
+        // signature Method([defaultParams]) or Method([defaultParams], object[] args) private const
+        // bool UseImplicitTypes = true;
 
         private readonly MappingHandler _mappingHandler;
         private readonly ISettingsHandler _settingsHandler;
@@ -50,7 +49,7 @@ namespace TDS_Server.Handler.Commands
         private readonly BaseCommands _baseCommands;
         private readonly IModAPI _modAPI;
 
-        public CommandsHandler(IModAPI modAPI, TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler, 
+        public CommandsHandler(IModAPI modAPI, TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler,
             ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands)
         {
             _modAPI = modAPI;
@@ -114,13 +113,16 @@ namespace TDS_Server.Handler.Commands
                     var parameter = parameters[i];
 
                     #region Save parameters start index with default value
+
                     if (methoddata.ParametersWithDefaultValueStartIndex is null && parameter.HasDefaultValue)
                     {
                         methoddata.ParametersWithDefaultValueStartIndex = i;
                     }
+
                     #endregion Save parameters start index with default value
 
                     #region TDSRemainingText attribute
+
                     if (!methoddata.ToOneStringAfterParameterCount.HasValue)
                     {
                         var remainingTextAttribute = parameter.GetCustomAttribute(typeof(TDSRemainingText), false);
@@ -131,7 +133,6 @@ namespace TDS_Server.Handler.Commands
                             break;
                         }
                     }
-
 
                     #endregion TDSRemainingText attribute
                 }
@@ -157,10 +158,8 @@ namespace TDS_Server.Handler.Commands
             userpanelCommandsHandler.LoadCommandData(_commandDataByCommand, _commandsDict);
         }
 
-
         public async void UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
-
             try
             {
                 List<object> args = GetArgs(msg, out string cmd);
@@ -190,6 +189,7 @@ namespace TDS_Server.Handler.Commands
                     args = HandleRemaingText(methoddata, args, out string remainingText);
 
                     #region Check if remaining text is correct (length)
+
                     if (methoddata.RemainingTextAttribute != null)
                     {
                         if (remainingText.Length < methoddata.RemainingTextAttribute.MinLength)
@@ -203,7 +203,8 @@ namespace TDS_Server.Handler.Commands
                             return;
                         }
                     }
-                    #endregion
+
+                    #endregion Check if remaining text is correct (length)
 
                     var handleArgumentsResult = await HandleArgumentsTypeConvertings(player, methoddata, methodindex, amountmethods, args);
                     if (handleArgumentsResult.IsWrongMethod)
@@ -236,7 +237,7 @@ namespace TDS_Server.Handler.Commands
             }
         }
 
-        private async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex, 
+        private async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex,
             int amountmethodsavailable, List<object> args)
         {
             if (args.Count == 0)
@@ -258,11 +259,12 @@ namespace TDS_Server.Handler.Commands
                     {
                         #region Check if player exists
 
-                        if (parameterInfo.ParameterType == typeof(TDSPlayer) 
-                            || parameterInfo.ParameterType == typeof(ITDSPlayer) 
+                        if (parameterInfo.ParameterType == typeof(TDSPlayer)
+                            || parameterInfo.ParameterType == typeof(ITDSPlayer)
                             || parameterInfo.ParameterType == typeof(Players))
                         {
-                            // if it's the last method (there can be an alternative method with string etc. instead of TDSPlayer/Player)
+                            // if it's the last method (there can be an alternative method with
+                            // string etc. instead of TDSPlayer/Player)
                             if (methodindex + 1 == amountmethodsavailable)
                             {
                                 player.SendMessage(player.Language.PLAYER_DOESNT_EXIST);
@@ -288,7 +290,6 @@ namespace TDS_Server.Handler.Commands
                 else
                     return new HandleArgumentsResult { IsWrongMethod = true };
             }
-
         }
 
         private List<object> HandleDefaultValues(CommandMethodDataDto methodData, List<object> args)

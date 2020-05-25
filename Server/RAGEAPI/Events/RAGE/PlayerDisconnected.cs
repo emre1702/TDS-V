@@ -1,16 +1,15 @@
 ﻿using GTANetworkAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 
 namespace TDS_Server.RAGEAPI.Events.RAGE
 {
     partial class BaseRAGEEvents
     {
-        [ServerEvent(Event.PlayerDisconnected)]
-        public async void PlayerDisconnected(GTANetworkAPI.Player player, DisconnectionType disconnectionType, string reason)
-        {
-            var modPlayer = Init.GetModPlayer(player);
-            if (modPlayer is null)
-                return;
+        #region Public Methods
 
+        [ServerEvent(Event.PlayerDisconnected)]
+        public async void PlayerDisconnected(IPlayer player, DisconnectionType disconnectionType, string reason)
+        {
             var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
             if (tdsPlayer is { })
             {
@@ -19,11 +18,10 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
 
             NAPI.Task.Run(() =>
             {
-                Init.TDSCore.EventsHandler.OnPlayerDisconnected(modPlayer);
-
-                Init.BaseAPI.EntityConvertingHandler.PlayerDisconnected(player);
+                Init.TDSCore.EventsHandler.OnPlayerDisconnected(player);
             });
-            
         }
+
+        #endregion Public Methods
     }
 }

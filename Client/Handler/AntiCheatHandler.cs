@@ -1,5 +1,4 @@
-﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI;
+﻿using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Deathmatch;
@@ -8,7 +7,13 @@ namespace TDS_Client.Handler
 {
     public class AntiCheatHandler : ServiceBase
     {
+        #region Private Fields
+
         private readonly PlayerFightHandler _playerFightHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public AntiCheatHandler(IModAPI modAPI, LoggingHandler loggingHandler, PlayerFightHandler playerFightHandler)
             : base(modAPI, loggingHandler)
@@ -17,6 +22,10 @@ namespace TDS_Client.Handler
 
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void OnTick(int currentMs)
         {
@@ -32,5 +41,7 @@ namespace TDS_Client.Handler
                 }
             }
         }
+
+        #endregion Public Methods
     }
 }

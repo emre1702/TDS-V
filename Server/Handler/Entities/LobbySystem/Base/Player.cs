@@ -4,8 +4,6 @@ using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -13,10 +11,16 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
+        #region Public Properties
+
+        public bool FreezePlayerOnCountdown => !SetPositionOnPlayerAdd;
         public bool SavePlayerLobbyStats { get; set; } = true;
         public bool SetPositionOnPlayerAdd => !IsGangActionLobby && !(this is GangLobby);
         public bool SpawnPlayer => SetPositionOnPlayerAdd;
-        public bool FreezePlayerOnCountdown => !SetPositionOnPlayerAdd;
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public virtual async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
@@ -76,8 +80,26 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 EventsHandler.OnLobbyJoin(player, this);
             });
-           
+
             return true;
+        }
+
+        public ITDSPlayer? GetOwner()
+        {
+            Players.TryGetValue(Entity.OwnerId, out ITDSPlayer? owner);
+            return owner;
+        }
+
+        public ITDSPlayer? GetPlayerById(int id)
+        {
+            return Players.Values.FirstOrDefault(p => p.Entity!.Id == id);
+        }
+
+        public bool IsPlayerLobbyOwner(ITDSPlayer player)
+        {
+            if (player.Entity is null)
+                return false;
+            return player.Lobby is Lobby lobby && lobby == this && Entity.OwnerId == player.Entity.Id;
         }
 
         public virtual async Task RemovePlayer(ITDSPlayer player)
@@ -105,7 +127,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     DeathSpawnTimer.Remove(player);
                 }
             });
-            
+
             if (IsEmpty())
             {
                 if (Entity.IsTemporary)
@@ -120,8 +142,24 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 EventsHandler.OnLobbyLeave(player, this);
             });
-            
         }
+
+        public virtual void SetPlayerTeam(ITDSPlayer player, ITeam? team)
+        {
+            if (player.Team is { })
+            {
+                if (player.Team == team)
+                    return;
+                player.Team.SyncRemovedPlayer(player);
+            }
+
+            player.SetTeam(team, true);
+            team?.SyncAddedPlayer(player);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private async Task AddPlayerLobbyStats(ITDSPlayer player)
         {
@@ -142,35 +180,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             await player.SetPlayerLobbyStats(stats);
         }
 
-        public virtual void SetPlayerTeam(ITDSPlayer player, ITeam? team)
-        {
-            if (player.Team is { })
-            {
-                if (player.Team == team)
-                    return;
-                player.Team.SyncRemovedPlayer(player);
-            }
-
-            player.SetTeam(team, true);
-            team?.SyncAddedPlayer(player);
-        }
-
-        public bool IsPlayerLobbyOwner(ITDSPlayer player)
-        {
-            if (player.Entity is null)
-                return false;
-            return player.Lobby is Lobby lobby && lobby == this && Entity.OwnerId == player.Entity.Id;
-        }
-
-        public ITDSPlayer? GetOwner()
-        {
-            Players.TryGetValue(Entity.OwnerId, out ITDSPlayer? owner);
-            return owner;
-        }
-
-        public ITDSPlayer? GetPlayerById(int id)
-        {
-            return Players.Values.FirstOrDefault(p => p.Entity!.Id == id);
-        }
+        #endregion Private Methods
     }
 }

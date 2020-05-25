@@ -4,7 +4,6 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
 
@@ -12,18 +11,24 @@ namespace TDS_Server.Handler.Commands
 {
     public partial class BaseCommands
     {
-        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
-        private readonly LobbiesHandler _lobbiesHandler;
-        private readonly IModAPI _modAPI;
-        private readonly ChatHandler _chatHandler;
-        private readonly ISettingsHandler _settingsHandler;
-        private readonly Serializer _serializer;
-        private readonly InvitationsHandler _invitationsHandler;
-        private readonly ILoggingHandler _loggingHandler;
-        private readonly LangHelper _langHelper;
-        private readonly DatabasePlayerHelper _databasePlayerHelper;
+        #region Private Fields
+
         private readonly BansHandler _bansHandler;
+        private readonly ChatHandler _chatHandler;
+        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
+        private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly DataSyncHandler _dataSyncHandler;
+        private readonly InvitationsHandler _invitationsHandler;
+        private readonly LangHelper _langHelper;
+        private readonly LobbiesHandler _lobbiesHandler;
+        private readonly ILoggingHandler _loggingHandler;
+        private readonly IModAPI _modAPI;
+        private readonly Serializer _serializer;
+        private readonly ISettingsHandler _settingsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public BaseCommands(CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler, IModAPI modAPI, ChatHandler chatHandler,
             ISettingsHandler settingsHandler, Serializer serializer, InvitationsHandler invitationsHandler, ILoggingHandler loggingHandler, LangHelper langHelper,
@@ -42,5 +47,7 @@ namespace TDS_Server.Handler.Commands
             _bansHandler = bansHandler;
             _dataSyncHandler = dataSyncHandler;
         }
+
+        #endregion Public Constructors
     }
 }

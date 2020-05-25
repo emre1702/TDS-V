@@ -4,6 +4,8 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Sync
 {
     public interface ISyncAPI
     {
+        #region Public Methods
+
         /// <summary>
         /// Sends an event to every player
         /// </summary>
@@ -42,5 +44,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Sync
         /// <param name="eventName"></param>
         /// <param name="args"></param>
         void SendEvent(ITeam team, string eventName, params object[] args);
+
+        #endregion Public Methods
     }
 }

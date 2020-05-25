@@ -12,42 +12,19 @@ namespace TDS_Client.Handler
 {
     public class SpectatingHandler : ServiceBase
     {
-        public bool IsSpectator { get; set; }
+        #region Private Fields
 
-        public IEntityBase SpectatingEntity
-        {
-            get => _spectatingEntity;
-            set
-            {
-                Logging.LogInfo("", "SpectatingHandler.SpectatingEntity");
-                if (value == _spectatingEntity)
-                    return;
-                
-                _spectatingEntity = value;
-
-                if (value != null)
-                {
-                    _camerasHandler.SpectateCam.Spectate(value);
-                }
-                else
-                {
-                    _camerasHandler.SpectateCam.Detach();
-                }
-                    
-                _camerasHandler.SpectateCam.Render(true, Constants.DefaultSpectatePlayerChangeEaseTime);
-                Logging.LogInfo("", "SpectatingHandler.SpectatingEntity", true);
-            }
-        }
-
-
-        private static IEntityBase _spectatingEntity;
         private static bool _binded;
-
-        private readonly RemoteEventsSender _remoteEventsSender;
+        private static IEntityBase _spectatingEntity;
         private readonly BindsHandler _bindsHandler;
         private readonly CamerasHandler _camerasHandler;
         private readonly DeathHandler _deathHandler;
+        private readonly RemoteEventsSender _remoteEventsSender;
         private readonly UtilsHandler _utilsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SpectatingHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
             CamerasHandler camerasHandler, DeathHandler deathHandler,
@@ -69,16 +46,40 @@ namespace TDS_Client.Handler
             modAPI.Event.Add(ToClientEvent.StopSpectator, OnStopSpectatorMethod);
         }
 
+        #endregion Public Constructors
 
-        private void Next(Key _)
+        #region Public Properties
+
+        public bool IsSpectator { get; set; }
+
+        public IEntityBase SpectatingEntity
         {
-            _remoteEventsSender.Send(ToServerEvent.SpectateNext, true);
+            get => _spectatingEntity;
+            set
+            {
+                Logging.LogInfo("", "SpectatingHandler.SpectatingEntity");
+                if (value == _spectatingEntity)
+                    return;
+
+                _spectatingEntity = value;
+
+                if (value != null)
+                {
+                    _camerasHandler.SpectateCam.Spectate(value);
+                }
+                else
+                {
+                    _camerasHandler.SpectateCam.Detach();
+                }
+
+                _camerasHandler.SpectateCam.Render(true, Constants.DefaultSpectatePlayerChangeEaseTime);
+                Logging.LogInfo("", "SpectatingHandler.SpectatingEntity", true);
+            }
         }
 
-        private void Previous(Key _)
-        {
-            _remoteEventsSender.Send(ToServerEvent.SpectateNext, false);
-        }
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void Start()
         {
@@ -113,21 +114,30 @@ namespace TDS_Client.Handler
             IsSpectator = false;
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private void EventsHandler_CountdownStarted(bool isSpectator)
         {
             if (isSpectator)
                 Start();
         }
 
+        private void EventsHandler_RoundStarted(bool isSpectator)
+        {
+            IsSpectator = isSpectator;
+        }
+
+        private void Next(Key _)
+        {
+            _remoteEventsSender.Send(ToServerEvent.SpectateNext, true);
+        }
+
         private void OnPlayerSpectateModeMethod(object[] args)
         {
             IsSpectator = true;
             Start();
-        }
-
-        private void EventsHandler_RoundStarted(bool isSpectator)
-        {
-            IsSpectator = isSpectator;
         }
 
         private void OnSetPlayerToSpectatePlayerMethod(object[] args)
@@ -137,7 +147,6 @@ namespace TDS_Client.Handler
             {
                 SpectatingEntity = target;
             }
-                
         }
 
         private void OnSpectatorReattachCamMethod(object[] args)
@@ -153,5 +162,11 @@ namespace TDS_Client.Handler
             Stop();
         }
 
+        private void Previous(Key _)
+        {
+            _remoteEventsSender.Send(ToServerEvent.SpectateNext, false);
+        }
+
+        #endregion Private Methods
     }
 }

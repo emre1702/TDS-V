@@ -6,11 +6,17 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorFootHandler
     {
-        private readonly IModAPI _modAPI;
+        #region Private Fields
+
         private readonly CamerasHandler _camerasHandler;
-        private readonly InstructionalButtonHandler _instructionalButtonHandler;
-        private readonly SettingsHandler _settingsHandler;
         private readonly DeathHandler _deathHandler;
+        private readonly InstructionalButtonHandler _instructionalButtonHandler;
+        private readonly IModAPI _modAPI;
+        private readonly SettingsHandler _settingsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapCreatorFootHandler(IModAPI modAPI, CamerasHandler camerasHandler, InstructionalButtonHandler instructionalButtonHandler,
             SettingsHandler settingsHandler, DeathHandler deathHandler)
@@ -21,6 +27,10 @@ namespace TDS_Client.Handler.MapCreator
             _settingsHandler = settingsHandler;
             _deathHandler = deathHandler;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void Start(bool addInstructionalButtom = true)
         {
@@ -45,7 +55,8 @@ namespace TDS_Client.Handler.MapCreator
 
         public void Stop()
         {
-            
         }
+
+        #endregion Public Methods
     }
 }

@@ -9,6 +9,52 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
+        #region Protected Methods
+
+        protected void SaveAllPlayerRoundStats()
+        {
+            FuncIterateAllPlayers((player, team) =>
+            {
+                if (team is null || team.IsSpectator)
+                    return;
+                SavePlayerRoundStats(player);
+            });
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        private List<RoundPlayerRankingStat>? GetOrderedRoundRanking()
+        {
+            if (IsEmpty())
+                return null;
+
+            var list = Players.Values
+                .Where(p => p.CurrentRoundStats != null && p.Team is { } && !p.Team.IsSpectator)
+                .Select(p => new RoundPlayerRankingStat(p))
+                .ToList();
+
+            float killsMult = SettingsHandler.ServerSettings.MultiplierRankingKills;
+            float assistsMult = SettingsHandler.ServerSettings.MultiplierRankingAssists;
+            float damageMult = SettingsHandler.ServerSettings.MultiplierRankingDamage;
+
+            foreach (var ranking in list)
+            {
+                ranking.Points = (int)(ranking.Kills * killsMult + ranking.Assists * assistsMult + ranking.Damage * damageMult);
+            }
+
+            list.Sort((a, b) => a.Points.CompareTo(b.Points) * -1);
+
+            int place = 0;
+            foreach (var ranking in list)
+            {
+                ranking.Place = ++place;
+            }
+
+            return list;
+        }
+
         private void RewardAllPlayer()
         {
             if (!Entity.IsOfficial)
@@ -54,36 +100,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             });
         }
 
-        private List<RoundPlayerRankingStat>? GetOrderedRoundRanking()
-        {
-            if (IsEmpty())
-                return null;
-
-            var list = Players.Values
-                .Where(p => p.CurrentRoundStats != null && p.Team is { } && !p.Team.IsSpectator)
-                .Select(p => new RoundPlayerRankingStat(p))
-                .ToList();
-
-            float killsMult = SettingsHandler.ServerSettings.MultiplierRankingKills;
-            float assistsMult = SettingsHandler.ServerSettings.MultiplierRankingAssists;
-            float damageMult = SettingsHandler.ServerSettings.MultiplierRankingDamage;
-
-            foreach (var ranking in list)
-            {
-                ranking.Points = (int)(ranking.Kills * killsMult + ranking.Assists * assistsMult + ranking.Damage * damageMult);
-            }
-
-            list.Sort((a, b) => a.Points.CompareTo(b.Points) * -1);
-
-            int place = 0;
-            foreach (var ranking in list)
-            {
-                ranking.Place = ++place;
-            }
-
-            return list;
-        }
-
         private void SetAllPlayersInCountdown()
         {
             FuncIterateAllPlayers((player, team) =>
@@ -123,14 +139,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             ModAPI.Sync.SendEvent(this, ToClientEvent.AmountInFightSync, json);
         }
 
-        protected void SaveAllPlayerRoundStats()
-        {
-            FuncIterateAllPlayers((player, team) =>
-            {
-                if (team is null || team.IsSpectator)
-                    return;
-                SavePlayerRoundStats(player);
-            });
-        }
+        #endregion Private Methods
     }
 }

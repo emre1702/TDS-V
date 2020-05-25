@@ -2,34 +2,64 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Player;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
-using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelSettingsNormalHandler : DatabaseEntityWrapper, IUserpanelSettingsNormalHandler
     {
-        private Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
+        #region Private Fields
 
+        private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
-        private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 
-        public UserpanelSettingsNormalHandler(Serializer serializer, BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public UserpanelSettingsNormalHandler(Serializer serializer, BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext,
             ILoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
             : base(dbContext, loggingHandler)
-            => (_modAPI, _serializer, _bonusBotConnectorClient, _tdsPlayerHandler) 
+            => (_modAPI, _serializer, _bonusBotConnectorClient, _tdsPlayerHandler)
             = (modAPI, serializer, bonusBotConnectorClient, tdsPlayerHandler);
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public async Task<string> ConfirmDiscordUserId(ulong discordUserId)
+        {
+            if (!_playerIdWaitingForDiscordUserIdConfirm.TryGetValue(discordUserId, out int userId))
+                return "This discord user id is not waiting for a confirmation.";
+
+            try
+            {
+                var player = _tdsPlayerHandler.GetIfExists(userId);
+                if (player is { })
+                    await SaveDiscordUserId(player, discordUserId);
+                else
+                    await SaveDiscordUserId(userId, discordUserId);
+
+                return "Discord Id confirmation was successful";
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.GetBaseException().Message;
+            }
+        }
 
         public async Task<object?> SaveSettings(ITDSPlayer player, ArraySegment<object> args)
         {
@@ -62,34 +92,17 @@ namespace TDS_Server.Handler.Userpanel
                     });
                 }
             });
-            
+
             return null;
         }
 
-        public async Task<string> ConfirmDiscordUserId(ulong discordUserId)
-        {
-            if (!_playerIdWaitingForDiscordUserIdConfirm.TryGetValue(discordUserId, out int userId))
-                return "This discord user id is not waiting for a confirmation.";
+        #endregion Public Methods
 
-            try
-            {
-                var player = _tdsPlayerHandler.GetIfExists(userId);
-                if (player is { })
-                    await SaveDiscordUserId(player, discordUserId);
-                else 
-                    await SaveDiscordUserId(userId, discordUserId);
-
-                return "Discord Id confirmation was successful";
-            }
-            catch (Exception ex)
-            {
-                return "Error: " + ex.GetBaseException().Message;
-            }
-        }
+        #region Private Methods
 
         private async Task SaveDiscordUserId(int userId, ulong discordUserId)
         {
-            var settings = await ExecuteForDBAsync(async dbContext 
+            var settings = await ExecuteForDBAsync(async dbContext
                 => await dbContext.PlayerSettings.FirstOrDefaultAsync(s => s.PlayerId == userId));
             if (settings is null)
                 throw new Exception("Your player settings do not exist?!");
@@ -103,5 +116,7 @@ namespace TDS_Server.Handler.Userpanel
             player.Entity!.PlayerSettings.DiscordUserId = discordUserId;
             await player.SaveData(true);
         }
+
+        #endregion Private Methods
     }
 }

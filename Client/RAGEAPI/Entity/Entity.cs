@@ -5,42 +5,54 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Entity
 {
-    class Entity : IEntity
+    internal class Entity : IEntity
     {
+        #region Private Fields
+
         private readonly RAGE.Elements.GameEntity _instance;
 
-        public Entity(RAGE.Elements.GameEntity instance) 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public Entity(RAGE.Elements.GameEntity instance)
             => _instance = instance;
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public uint Dimension
+        {
+            get => _instance.Dimension;
+            set => _instance.Dimension = value;
+        }
+
+        public bool Exists => _instance.Exists;
         public int Handle => _instance.Handle;
-        public ushort RemoteId => _instance.RemoteId;
+        public ushort Id => _instance.Id;
+        public bool IsLocal => _instance.IsLocal;
+        public bool IsNull => _instance.IsNull;
+
+        public uint Model
+        {
+            get => _instance.Model;
+            set => _instance.Model = value;
+        }
 
         public virtual Position3D Position
         {
             get => _instance.Position.ToPosition3D();
             set => _instance.Position = value.ToVector3();
         }
-        public uint Dimension
-        {
-            get => _instance.Dimension;
-            set => _instance.Dimension = value;
-        }
-        public bool IsNull => _instance.IsNull;
 
+        public ushort RemoteId => _instance.RemoteId;
         /** <summary>Like Null but also checks if the entity spawned</summary> */
-        public bool Exists => _instance.Exists;
-
         public EntityType Type => (EntityType)_instance.Type;
 
-        public bool IsLocal => _instance.IsLocal;
+        #endregion Public Properties
 
-        public ushort Id => _instance.Id;
-
-        public uint Model 
-        { 
-            get => _instance.Model; 
-            set => _instance.Model = value; 
-        }
+        #region Public Methods
 
         public void Destroy()
         {
@@ -51,5 +63,7 @@ namespace TDS_Client.RAGEAPI.Entity
         {
             return Handle == other?.Handle;
         }
+
+        #endregion Public Methods
     }
 }

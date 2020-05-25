@@ -10,16 +10,20 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorObjectsPreviewHandler
     {
+        #region Private Fields
+
+        private readonly BrowserHandler _browserHandler;
+        private readonly CamerasHandler _camerasHandler;
+        private readonly IModAPI _modAPI;
+        private readonly ObjectsLoadingHelper _objectLoadingHelper;
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        private readonly UtilsHandler _utilsHandler;
         private IMapObject _object;
         private Position3D _objectRotation;
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        #endregion Private Fields
 
-        private readonly IModAPI _modAPI;
-        private readonly ObjectsLoadingHelper _objectLoadingHelper;
-        private readonly CamerasHandler _camerasHandler;
-        private readonly UtilsHandler _utilsHandler;
-        private readonly BrowserHandler _browserHandler;
+        #region Public Constructors
 
         public MapCreatorObjectsPreviewHandler(IModAPI modAPI, ObjectsLoadingHelper objectLoadingHelper, CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
         {
@@ -35,6 +39,10 @@ namespace TDS_Client.Handler.MapCreator
             modAPI.Event.Add(FromBrowserEvent.MapCreatorShowObject, args => ShowObject((string)args[0]));
             modAPI.Event.Add(FromBrowserEvent.MapCreatorStopObjectPreview, _ => Stop());
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void ShowObject(string objectName)
         {
@@ -53,12 +61,6 @@ namespace TDS_Client.Handler.MapCreator
             _object.SetInvincible(true);
         }
 
-        private void Start(object[] args)
-        {
-            _browserHandler.MapCreatorObjectChoice.CreateBrowser();
-            _browserHandler.MapCreatorObjectChoice.SetReady();
-        }
-
         public void Stop()
         {
             if (_object != null)
@@ -70,6 +72,10 @@ namespace TDS_Client.Handler.MapCreator
             }
             _browserHandler.MapCreatorObjectChoice.Stop();
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void RenderObjectInFrontOfCam(int currentMs)
         {
@@ -95,5 +101,13 @@ namespace TDS_Client.Handler.MapCreator
 
             _object.Rotation = _objectRotation;
         }
+
+        private void Start(object[] args)
+        {
+            _browserHandler.MapCreatorObjectChoice.CreateBrowser();
+            _browserHandler.MapCreatorObjectChoice.SetReady();
+        }
+
+        #endregion Private Methods
     }
 }

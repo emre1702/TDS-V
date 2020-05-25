@@ -8,17 +8,9 @@ namespace TDS_Client.Handler
 {
     public class CamerasHandler : ServiceBase
     {
-        public TDSCamera BetweenRoundsCam { get; set; }
-        public TDSCamera FreeCam { get; set; }
-        public TDSCamera SpectateCam { get; set; }
+        #region Public Constructors
 
-        public TDSCamera ActiveCamera { get; set; }
-
-        public Position3D FocusAtPos { get; set; }
-
-        public SpectatingHandler Spectating { get; }
-
-        public CamerasHandler(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler, 
+        public CamerasHandler(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
             DeathHandler deathHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -31,6 +23,21 @@ namespace TDS_Client.Handler
             SpectateCam = new TDSCamera(nameof(SpectateCam), modAPI, loggingHandler, this, utilsHandler);
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public TDSCamera ActiveCamera { get; set; }
+        public TDSCamera BetweenRoundsCam { get; set; }
+        public Position3D FocusAtPos { get; set; }
+        public TDSCamera FreeCam { get; set; }
+        public TDSCamera SpectateCam { get; set; }
+        public SpectatingHandler Spectating { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public Position3D GetCurrentCamPos()
         {
             return ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
@@ -39,6 +46,12 @@ namespace TDS_Client.Handler
         public Position3D GetCurrentCamRot()
         {
             return ActiveCamera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
+        }
+
+        public void RemoveFocusArea()
+        {
+            ModAPI.Streaming.ClearFocus();
+            FocusAtPos = null;
         }
 
         public void RenderBack(bool ease = false, int easeTime = 0)
@@ -60,12 +73,6 @@ namespace TDS_Client.Handler
             }
         }
 
-        public void RemoveFocusArea()
-        {
-            ModAPI.Streaming.ClearFocus();
-            FocusAtPos = null;
-        }
-
         public void SetFocusArea(Position3D pos)
         {
             if (FocusAtPos is null || FocusAtPos.DistanceTo(pos) >= 50)
@@ -74,5 +81,7 @@ namespace TDS_Client.Handler
                 FocusAtPos = pos;
             }
         }
+
+        #endregion Public Methods
     }
 }

@@ -1,11 +1,12 @@
 ﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Blip;
 using TDS_Client.Data.Interfaces.ModAPI.Ui;
 
 namespace TDS_Client.RAGEAPI.Ui
 {
-    class UiAPI : IUiAPI
+    internal class UiAPI : IUiAPI
     {
+        #region Public Methods
+
         public void AddTextComponentSubstringPlayerName(string text)
         {
             RAGE.Game.Ui.AddTextComponentSubstringPlayerName(text);
@@ -90,5 +91,7 @@ namespace TDS_Client.RAGEAPI.Ui
         {
             RAGE.Game.Ui.SetTextScale(0f, size);
         }
+
+        #endregion Public Methods
     }
 }

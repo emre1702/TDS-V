@@ -5,6 +5,8 @@ namespace TDS_Server.Data.Languages
 {
     public class German : English, ILanguage
     {
+        #region Public Properties
+
         public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
         public override string ALREADY_IN_PRIVATE_CHAT_WITH => "Du bist bereits in einem Privatchat mit {0}.";
 
@@ -22,28 +24,31 @@ namespace TDS_Server.Data.Languages
         public override string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR => "Dieser Name ist nicht erlaubt für Lobbies.";
         public override string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR => "Unbekannter Fehler beim Erstellen der Lobby.";
 
-        public override string DEATH_KILLED_INFO => "{0} hat {1} mit {2} getötet";
         public override string DEATH_DIED_INFO => "{0} ist gestorben";
+        public override string DEATH_KILLED_INFO => "{0} hat {1} mit {2} getötet";
 
         public override string[] DEFUSE_INFO => new string[]
         {
             "Runden-Zeit hat sich verändert. Nun musst du entweder alle Gegner töten oder die Bombe entschärfen.",
             "Um die Bombe zu entschärfen, gehe zum roten Punkt auf der Map (Bombe), wechsel zur Faust und halte die linke Maustaste gedrückt."
         };
+
         public override string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO => "Der Spieler '{0}' hat deine Discord Benutzer-Id in TDS-V eingestellt."
             + Environment.NewLine + "Warst du dieser Spieler?"
             + Environment.NewLine + "Bitte bestätige die Einstellung mit dem Befehl '!confirmtds'.";
+
         public override string DISCORD_IDENTITY_SAVE_FAILED => "Speichern der Discord Benutzer-Id ist fehlgeschlagen: {0}";
         public override string DISCORD_IDENTITY_SAVED_SUCCESSFULLY => "Die Discord Benutzer-Id wurde erfolgreich gespeichert.";
 
         public override string ERROR_INFO => "Ein Fehler ist aufgetaucht. Der/die Entwickler wurde(n) benachrichtigt.";
 
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
+        public override string GANG_INVITATION_WAS_REMOVED => "Die Einladung wurde bereits zurückgezogen!";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
+        public override string GANGWAR_ATTACK_INVITATION => "Deine Gang greift ein Gebiet an!\n(Nimm an oder nutze /angreifen)";
+        public override string GANGWAR_ATTACK_PREPARATION_INVITATION => "Deine Gang bereitet einen Gangwar vor!\n(Nimm an oder nutze /angreifen)";
         public override string GANGWAR_ATTACKER_PREPARATION_INFO => "Ihr bereitet im Gebiet '{0}' einen Angriff gegen '{1}' vor.";
         public override string GANGWAR_ATTACKER_STARTED_INFO => "Ihr greift das Gebiet '{0}' von '{1}' an.";
-        public override string GANGWAR_ATTACK_PREPARATION_INVITATION => "Deine Gang bereitet einen Gangwar vor!\n(Nimm an oder nutze /angreifen)";
-        public override string GANGWAR_ATTACK_INVITATION => "Deine Gang greift ein Gebiet an!\n(Nimm an oder nutze /angreifen)";
         public override string GANGWAR_DEFEND_INVITATION => "Verteidige euer Gang-Gebiet!\n(Nimm an oder nutze /verteidigen)";
         public override string GANGWAR_OWNER_PREPARATION_INFO => "Gegen eines eurer Gebiete wird ein Gangwar vorbereitet.";
         public override string GANGWAR_OWNER_STARTED_INFO => "Euer Gebiet '{0}' wird von der Gang '{1}' angegriffen.";
@@ -58,8 +63,6 @@ namespace TDS_Server.Data.Languages
         public override string GOT_LAST_HITTED_KILL => "Du hast {0} zuletzt getroffen und den Kill bekommen.";
         public override string GOT_LOBBY_BAN => "Du hast hier vom Lobby-Besitzer einen Bann. Dauer: {0} | Grund: {1}";
         public override string GOT_UNREAD_OFFLINE_MESSAGES => "Du hast {0} ungelesene Offline-Nachricht(en) im Userpanel.";
-        public override string GANG_INVITATION_WAS_REMOVED => "Die Einladung wurde bereits zurückgezogen!";
-
         public override string HITSOUND_ACTIVATED => "Hitsound aktiviert!";
         public override string HITSOUND_DEACTIVATED => "Hitsound deaktiviert!";
 
@@ -69,8 +72,8 @@ namespace TDS_Server.Data.Languages
         public override string JOINED_LOBBY_MESSAGE => "Du bist in die Lobby \"{0}\" eingetreten.\nNutze '/{1}' zum Verlassen.";
 
         public override string KICK_INFO => "{0} wurde von {1} gekickt. Grund: {2}";
-        public override string KICK_YOU_INFO => "Du wurdest von {0} gekickt. Grund: {1}";
         public override string KICK_LOBBY_INFO => "{0} wurde von {1} aus der Lobby gekickt. Grund: {2}";
+        public override string KICK_YOU_INFO => "Du wurdest von {0} gekickt. Grund: {1}";
         public override string KILLING_SPREE_HEALTHARMOR => "{0} hat einen {1}er Killingspree und kriegt dafür {2} Leben/Weste.";
 
         public override string LOBBY_DOESNT_EXIST => "Diese Lobby existiert nicht.";
@@ -93,9 +96,9 @@ namespace TDS_Server.Data.Languages
         public override string ORDER_STAY_BACK => "Bleibt zurück!";
 
         public override string PERMABAN_INFO => "{0} wurde permanent von {1} gebannt. Grund: {2}";
-        public override string PERMABAN_YOU_INFO => "Du wurdest permanent von {0} gebannt. Grund: {1}";
         public override string PERMABAN_LOBBY_INFO => "{0} wurde permanent aus der Lobby '{1}' von {2} gebannt. Grund: {3}";
         public override string PERMABAN_LOBBY_YOU_INFO => "Du wurdest permanent aus der Lobby '{0}' von {1} gebannt. Grund {2}";
+        public override string PERMABAN_YOU_INFO => "Du wurdest permanent von {0} gebannt. Grund: {1}";
         public override string PERMAMUTE_INFO => "{0} wurde von {1} permanent gemutet. Grund: {2}";
         public override string PERMAVOICEMUTE_INFO => "{0} wurde von {1} im Voice-Chat permanent gemutet. Grund: {2}";
         public override string PLAYER_ACCEPTED_YOUR_INVITATION => "{0} hat deine Team-Einladung angenommen. Er ist nun dein Mitglied.";
@@ -126,8 +129,8 @@ namespace TDS_Server.Data.Languages
         public override string ROUND_END_BOMB_DEFUSED_INFO => "Bombe entschärft!<br>Team {0} gewinnt!";
         public override string ROUND_END_BOMB_EXPLODED_INFO => "Bombe explodiert!<br>Team {0} gewinnt!";
         public override string ROUND_END_COMMAND_INFO => "Die Map wurde von {0} übersprungen!";
-        public override string ROUND_END_DEATH_INFO => "Alle Gegner sind tot!<br>Team {0} gewinnt!";
         public override string ROUND_END_DEATH_ALL_INFO => "Alle sind tot!<br>Kein Team gewinnt!";
+        public override string ROUND_END_DEATH_INFO => "Alle Gegner sind tot!<br>Team {0} gewinnt!";
         public override string ROUND_END_NEW_PLAYER_INFO => "Genug Spieler drin ...<br>Runde startet!";
         public override string ROUND_END_TARGET_EMPTY_INFO => "Die Angreifer waren zu lange nicht mehr am Ziel.<br>Besitzer gewinnen!";
         public override string ROUND_END_TIME_INFO => "Zeit um!<br>Team {0} gewinnt mit den meisten HP übrig!";
@@ -160,9 +163,9 @@ namespace TDS_Server.Data.Languages
         public override string TEXT_TOO_LONG => "Der Text ist zu lang.";
         public override string TEXT_TOO_SHORT => "Der Text ist zu kurz.";
         public override string TIMEBAN_INFO => "{0} wurde für {1} Stunden von {2} gebannt. Grund: {3}";
-        public override string TIMEBAN_YOU_INFO => "Du wurdest für {0} Stunden von {1} gebannt. Grund: {2}";
         public override string TIMEBAN_LOBBY_INFO => "{0} wurde für {1} Stunden aus der Lobby '{2}' von {3} gebannt. Grund: {4}";
         public override string TIMEBAN_LOBBY_YOU_INFO => "Du wurdest für {0} Stunden aus der Lobby '{1}' von {2} gebannt. Grund {3}";
+        public override string TIMEBAN_YOU_INFO => "Du wurdest für {0} Stunden von {1} gebannt. Grund: {2}";
         public override string TIMEMUTE_INFO => "{0} wurde von {1} für {2} Minuten gemutet. Grund: {3}";
         public override string TIMEVOICEMUTE_INFO => "{0} wurde von {1} für {2} Minuten im Voice-Chat gemutet. Grund: {3}";
         public override string TOO_LONG_OUTSIDE_MAP => "Du warst zu lange außerhalb der Map.";
@@ -188,5 +191,7 @@ namespace TDS_Server.Data.Languages
         public override string YOU_REJECTED_INVITATION => "Du hast die Einladung von {0} abgelehnt.";
         public override string YOU_REJECTED_TEAM_INVITATION => "Du hast die Team-Einladung von {0} abgelehnt.";
         public override string YOU_UNBLOCKED => "Du hast {0} nicht mehr blockiert.";
+
+        #endregion Public Properties
     }
 }

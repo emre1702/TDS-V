@@ -13,21 +13,26 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorMarkerHandler : ServiceBase
     {
-        private AxisMarker[] _rotateMarker;
-        private AxisMarker _highlightedMarker;
+        #region Private Fields
 
-        private readonly UtilsHandler _utilsHandler;
-        private readonly DxHandler _dxHandler;
-        private readonly CamerasHandler _camerasHandler;
         private readonly BrowserHandler _browserHandler;
+        private readonly CamerasHandler _camerasHandler;
+        private readonly ClickedMarkerStorer _clickedMarkerStorer;
+        private readonly DxHandler _dxHandler;
         private readonly MapCreatorDrawHandler _mapCreatorDrawHandler;
         private readonly MapCreatorObjectPlacingHandler _mapCreatorObjectPlacingHandler;
         private readonly MapCreatorSyncHandler _mapCreatorSyncHandler;
-        private readonly ClickedMarkerStorer _clickedMarkerStorer;
+        private readonly UtilsHandler _utilsHandler;
+        private AxisMarker _highlightedMarker;
+        private AxisMarker[] _rotateMarker;
 
-        public MapCreatorMarkerHandler(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, DxHandler dxHandler, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public MapCreatorMarkerHandler(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, DxHandler dxHandler,
             CamerasHandler camerasHandler, BrowserHandler browserHandler,
-            MapCreatorDrawHandler mapCreatorDrawHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, 
+            MapCreatorDrawHandler mapCreatorDrawHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler,
             MapCreatorSyncHandler mapCreatorSyncHandler, ClickedMarkerStorer clickedMarkerStorer)
             : base(modAPI, loggingHandler)
         {
@@ -39,6 +44,108 @@ namespace TDS_Client.Handler.MapCreator
             _mapCreatorObjectPlacingHandler = mapCreatorObjectPlacingHandler;
             _mapCreatorSyncHandler = mapCreatorSyncHandler;
             _clickedMarkerStorer = clickedMarkerStorer;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void OnTick()
+        {
+            if (_rotateMarker == null)
+                return;
+
+            if (_mapCreatorObjectPlacingHandler.LastHighlightedObject == null || _mapCreatorObjectPlacingHandler.HoldingObject != null)
+                return;
+
+            var obj = _mapCreatorObjectPlacingHandler.LastHighlightedObject;
+            float rotateScale = Math.Max(Math.Max(obj.Size.X, obj.Size.Y), obj.Size.Z) * 1.25f;
+            float moveScale = Math.Max(Math.Max(obj.Size.X, obj.Size.Y), obj.Size.Z) / 15f;
+
+            if (_clickedMarkerStorer.ClickedMarker != null)
+            {
+                if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
+                {
+                    _clickedMarkerStorer.ClickedMarker = null;
+                    obj.Position = new Position3D(obj.MovingPosition);
+                    obj.Rotation = new Position3D(obj.MovingRotation);
+                    _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
+                        obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, obj.ObjOrVehName, obj.OwnerRemoteId);
+                    _mapCreatorSyncHandler.SyncObjectPositionToLobby(obj);
+                }
+                else
+                {
+                    _clickedMarkerStorer.ClickedMarker.LoadObjectData(obj, _clickedMarkerStorer.ClickedMarker.IsRotationMarker ? rotateScale : moveScale);
+                    _clickedMarkerStorer.ClickedMarker.Draw();
+                    _clickedMarkerStorer.ClickedMarker.MoveOrRotateObject(obj);
+                }
+            }
+            else
+            {
+                float closestDistToMarker = float.MaxValue;
+                AxisMarker closestMarker = null;
+                Position3D hitPointClosestMarker = null;
+                IEnumerable<AxisMarker> markerList;
+                switch (obj.Type)
+                {
+                    case MapCreatorPositionType.Target:
+                    case MapCreatorPositionType.MapCenter:
+                    case MapCreatorPositionType.MapLimit:
+                        markerList = _rotateMarker.Where(m => m.IsPositionMarker);
+                        break;
+
+                    case MapCreatorPositionType.TeamSpawn:
+                        markerList = _rotateMarker.Where(m => m.IsPositionMarker || m.Axis == AxisMarker.AxisEnum.Z);
+                        break;
+
+                    default:
+                        markerList = _rotateMarker;
+                        break;
+                }
+
+                foreach (var marker in markerList)
+                {
+                    marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
+                    marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
+                }
+
+                if (_highlightedMarker != closestMarker)
+                {
+                    _highlightedMarker?.SetNotHighlighted();
+                    _highlightedMarker = closestMarker;
+                    _highlightedMarker?.SetHighlighted(hitPointClosestMarker);
+                }
+
+                if (_highlightedMarker != null && _highlightedMarker.IsPositionMarker)
+                    // false comes first, so if we want to have RotationMarker first, we have to use
+                    // ! before it
+                    foreach (var marker in markerList.OrderBy(m => !m.IsRotationMarker))
+                        marker.Draw();
+                else
+                    // false comes first, so if we want to have PositionMarker first, we have to use
+                    // ! before it
+                    foreach (var marker in markerList.OrderBy(m => !m.IsPositionMarker))
+                        marker.Draw();
+            }
+
+            if (ModAPI.Control.IsDisabledControlJustPressed(InputGroup.MOVE, Control.Attack))
+            {
+                if (_highlightedMarker is null)
+                {
+                    _mapCreatorObjectPlacingHandler.LastHighlightedObject = null;
+                }
+                else
+                {
+                    _clickedMarkerStorer.ClickedMarker = _highlightedMarker;
+                    _mapCreatorDrawHandler.HighlightColor_Edge = Color.FromArgb(255, 255, 255, 0);
+                    _mapCreatorDrawHandler.HighlightColor_Full = Color.FromArgb(35, 255, 255, 0);
+                }
+            }
+            else if (_mapCreatorObjectPlacingHandler.HighlightedObject == null)
+            {
+                _mapCreatorDrawHandler.HighlightColor_Edge = Color.FromArgb(255, 255, 255, 255);
+                _mapCreatorDrawHandler.HighlightColor_Full = Color.FromArgb(35, 255, 255, 255);
+            }
         }
 
         public void Start()
@@ -81,102 +188,6 @@ namespace TDS_Client.Handler.MapCreator
             _clickedMarkerStorer.ClickedMarker = null;
         }
 
-        public void OnTick()
-        {
-            if (_rotateMarker == null)
-                return;
-
-            if (_mapCreatorObjectPlacingHandler.LastHighlightedObject == null || _mapCreatorObjectPlacingHandler.HoldingObject != null)
-                return;
-
-            var obj = _mapCreatorObjectPlacingHandler.LastHighlightedObject;
-            float rotateScale = Math.Max(Math.Max(obj.Size.X, obj.Size.Y), obj.Size.Z) * 1.25f;
-            float moveScale = Math.Max(Math.Max(obj.Size.X, obj.Size.Y), obj.Size.Z) / 15f;
-
-            if (_clickedMarkerStorer.ClickedMarker != null)
-            {
-                if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
-                {
-                    _clickedMarkerStorer.ClickedMarker = null;
-                    obj.Position = new Position3D(obj.MovingPosition);
-                    obj.Rotation = new Position3D(obj.MovingRotation);
-                    _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
-                        obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, obj.ObjOrVehName, obj.OwnerRemoteId);
-                    _mapCreatorSyncHandler.SyncObjectPositionToLobby(obj);
-
-
-                }
-                else
-                {
-                    _clickedMarkerStorer.ClickedMarker.LoadObjectData(obj, _clickedMarkerStorer.ClickedMarker.IsRotationMarker ? rotateScale : moveScale);
-                    _clickedMarkerStorer.ClickedMarker.Draw();
-                    _clickedMarkerStorer.ClickedMarker.MoveOrRotateObject(obj);
-                }
-            }
-            else
-            {
-                float closestDistToMarker = float.MaxValue;
-                AxisMarker closestMarker = null;
-                Position3D hitPointClosestMarker = null;
-                IEnumerable<AxisMarker> markerList;
-                switch (obj.Type)
-                {
-                    case MapCreatorPositionType.Target:
-                    case MapCreatorPositionType.MapCenter:
-                    case MapCreatorPositionType.MapLimit:
-                        markerList = _rotateMarker.Where(m => m.IsPositionMarker);
-                        break;
-                    case MapCreatorPositionType.TeamSpawn:
-                        markerList = _rotateMarker.Where(m => m.IsPositionMarker || m.Axis == AxisMarker.AxisEnum.Z);
-                        break;
-                    default:
-                        markerList = _rotateMarker;
-                        break;
-                }
-
-                foreach (var marker in markerList)
-                {
-                    marker.LoadObjectData(obj, marker.IsRotationMarker ? rotateScale : moveScale);
-                    marker.CheckClosest(ref closestDistToMarker, ref closestMarker, ref hitPointClosestMarker);
-                }
-
-
-                if (_highlightedMarker != closestMarker)
-                {
-                    _highlightedMarker?.SetNotHighlighted();
-                    _highlightedMarker = closestMarker;
-                    _highlightedMarker?.SetHighlighted(hitPointClosestMarker);
-                }
-
-                if (_highlightedMarker != null && _highlightedMarker.IsPositionMarker)
-                    // false comes first, so if we want to have RotationMarker first, we have to use ! before it
-                    foreach (var marker in markerList.OrderBy(m => !m.IsRotationMarker))
-                        marker.Draw();
-                else
-                    // false comes first, so if we want to have PositionMarker first, we have to use ! before it
-                    foreach (var marker in markerList.OrderBy(m => !m.IsPositionMarker))
-                        marker.Draw();
-            }
-
-            if (ModAPI.Control.IsDisabledControlJustPressed(InputGroup.MOVE, Control.Attack))
-            {
-                if (_highlightedMarker is null)
-                {
-                    _mapCreatorObjectPlacingHandler.LastHighlightedObject = null;
-                } 
-                else
-                {
-                    _clickedMarkerStorer.ClickedMarker = _highlightedMarker;
-                    _mapCreatorDrawHandler.HighlightColor_Edge = Color.FromArgb(255, 255, 255, 0);
-                    _mapCreatorDrawHandler.HighlightColor_Full = Color.FromArgb(35, 255, 255, 0);
-                }
-            }
-            else if (_mapCreatorObjectPlacingHandler.HighlightedObject == null)
-            {
-                _mapCreatorDrawHandler.HighlightColor_Edge = Color.FromArgb(255, 255, 255, 255);
-                _mapCreatorDrawHandler.HighlightColor_Full = Color.FromArgb(35, 255, 255, 255);
-            }
-        }
-
+        #endregion Public Methods
     }
 }

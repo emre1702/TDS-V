@@ -10,15 +10,19 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorVehiclesPreviewHandler
     {
+        #region Private Fields
+
+        private readonly BrowserHandler _browserHandler;
+        private readonly CamerasHandler _camerasHandler;
+        private readonly IModAPI _modAPI;
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        private readonly UtilsHandler _utilsHandler;
         private IVehicle _vehicle;
         private Position3D _vehicleRotation;
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        #endregion Private Fields
 
-        private readonly IModAPI _modAPI;
-        private readonly CamerasHandler _camerasHandler;
-        private readonly UtilsHandler _utilsHandler;
-        private readonly BrowserHandler _browserHandler;
+        #region Public Constructors
 
         public MapCreatorVehiclesPreviewHandler(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
         {
@@ -34,29 +38,26 @@ namespace TDS_Client.Handler.MapCreator
             modAPI.Event.Add(FromBrowserEvent.MapCreatorStopVehiclePreview, _ => Stop());
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public void ShowVehicle(string vehicleName)
         {
             var hash = _modAPI.Misc.GetHashKey(vehicleName);
             if (hash == default)
                 return;
 
-             _vehicleRotation = new Position3D();
+            _vehicleRotation = new Position3D();
             if (_vehicle == null)
                 _modAPI.Event.Tick.Add(_tickEventMethod);
             else
                 _vehicle.Destroy();
 
-           
             _vehicle = _modAPI.Vehicle.Create(hash, _modAPI.LocalPlayer.Position, _vehicleRotation, dimension: _modAPI.LocalPlayer.Dimension);
             _vehicle.SetCollision(false, false);
             _vehicle.SetInvincible(true);
             _vehicle.Rotation = _vehicleRotation;
-        }
-
-        private void Start(object[] args)
-        {
-            _browserHandler.MapCreatorVehicleChoice.CreateBrowser();
-            _browserHandler.MapCreatorVehicleChoice.SetReady();
         }
 
         public void Stop()
@@ -70,6 +71,10 @@ namespace TDS_Client.Handler.MapCreator
             }
             _browserHandler.MapCreatorVehicleChoice.Stop();
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void RenderVehicleInFrontOfCam(int currentMs)
         {
@@ -97,5 +102,13 @@ namespace TDS_Client.Handler.MapCreator
 
             _vehicle.Rotation = _vehicleRotation;
         }
+
+        private void Start(object[] args)
+        {
+            _browserHandler.MapCreatorVehicleChoice.CreateBrowser();
+            _browserHandler.MapCreatorVehicleChoice.SetReady();
+        }
+
+        #endregion Private Methods
     }
 }

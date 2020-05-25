@@ -6,14 +6,15 @@ using TDS_Server.Data.Interfaces.ModAPI.Sync;
 
 namespace TDS_Server.RAGEAPI.Sync
 {
-    class SyncAPI : ISyncAPI
+    internal class SyncAPI : ISyncAPI
     {
+        #region Public Methods
 
         public void SendEvent(ITDSPlayer player, string eventName, params object[] args)
         {
             if (!(player.ModPlayer is Player.Player modPlayer))
                 return;
-            NAPI.ClientEvent.TriggerClientEvent(modPlayer._instance, eventName, args);
+            NAPI.ClientEvent.TriggerClientEvent(modPlayer, eventName, args);
         }
 
         public void SendEvent(string eventName, params object[] args)
@@ -28,12 +29,14 @@ namespace TDS_Server.RAGEAPI.Sync
 
         public void SendEvent(IEnumerable<ITDSPlayer> players, string eventName, params object[] args)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers(players.Select(p => p.ModPlayer).OfType<Player.Player>().Select(p => p._instance).ToArray(), eventName, args);
+            NAPI.ClientEvent.TriggerClientEventToPlayers(players.Select(p => p.ModPlayer).OfType<Player.Player>().ToArray(), eventName, args);
         }
 
         public void SendEvent(ITeam team, string eventName, params object[] args)
         {
             SendEvent(team.Players, eventName, args);
         }
+
+        #endregion Public Methods
     }
 }

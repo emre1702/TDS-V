@@ -22,11 +22,7 @@ namespace TDS_Server.Database.Entity
 {
     public partial class TDSDbContext : DbContext
     {
-        public TDSDbContext(DbContextOptions<TDSDbContext> options)
-            : base(options)
-        {
-
-        }
+        #region Public Constructors
 
         static TDSDbContext()
         {
@@ -48,6 +44,15 @@ namespace TDS_Server.Database.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ScoreboardPlayerSorting>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TimeSpanUnitsOfTime>();
         }
+
+        public TDSDbContext(DbContextOptions<TDSDbContext> options)
+                    : base(options)
+        {
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
         public virtual DbSet<AdminLevels> AdminLevels { get; set; }
@@ -71,8 +76,8 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Gangs> Gangs { get; set; }
         public virtual DbSet<GangVehicles> GangVehicles { get; set; }
         public virtual DbSet<GangwarAreas> GangwarAreas { get; set; }
-        public virtual DbSet<Lobbies> Lobbies { get; set; }
         public virtual DbSet<LobbyKillingspreeRewards> KillingspreeRewards { get; set; }
+        public virtual DbSet<Lobbies> Lobbies { get; set; }
         public virtual DbSet<LobbyFightSettings> LobbyFightSettings { get; set; }
         public virtual DbSet<LobbyMaps> LobbyMaps { get; set; }
         public virtual DbSet<LobbyRewards> LobbyRewards { get; set; }
@@ -87,8 +92,8 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
         public virtual DbSet<PlayerBans> PlayerBans { get; set; }
         public virtual DbSet<PlayerChallenges> PlayerChallenges { get; set; }
-        public virtual DbSet<PlayerCharDatas> PlayerCharDatas { get; set; }
         public virtual DbSet<PlayerCharAppearanceDatas> PlayerCharAppearanceDatas { get; set; }
+        public virtual DbSet<PlayerCharDatas> PlayerCharDatas { get; set; }
         public virtual DbSet<PlayerCharFeaturesDatas> PlayerCharFeaturesDatas { get; set; }
         public virtual DbSet<PlayerCharGeneralDatas> PlayerCharGeneralDatas { get; set; }
         public virtual DbSet<PlayerCharHairAndColorsDatas> PlayerCharHairAndColorsDatas { get; set; }
@@ -98,18 +103,21 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual DbSet<PlayerMapRatings> PlayerMapRatings { get; set; }
         public virtual DbSet<PlayerRelations> PlayerRelations { get; set; }
+        public virtual DbSet<Players> Players { get; set; }
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
-        public virtual DbSet<Players> Players { get; set; }
         public virtual DbSet<Rules> Rules { get; set; }
         public virtual DbSet<ServerDailyStats> ServerDailyStats { get; set; }
         public virtual DbSet<ServerSettings> ServerSettings { get; set; }
         public virtual DbSet<ServerTotalStats> ServerTotalStats { get; set; }
-        public virtual DbSet<SupportRequests> SupportRequests { get; set; }
         public virtual DbSet<SupportRequestMessages> SupportRequestMessages { get; set; }
+        public virtual DbSet<SupportRequests> SupportRequests { get; set; }
         public virtual DbSet<Teams> Teams { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
+        #endregion Public Properties
+
+        #region Protected Methods
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -119,6 +127,7 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasPostgresExtension("tsm_system_rows");
 
             #region Enum
+
             modelBuilder.HasPostgresEnum<PlayerRelation>();
             modelBuilder.HasPostgresEnum<WeaponHash>();
             modelBuilder.HasPostgresEnum<WeaponType>();
@@ -136,9 +145,11 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasPostgresEnum<ChallengeFrequency>();
             modelBuilder.HasPostgresEnum<ScoreboardPlayerSorting>();
             modelBuilder.HasPostgresEnum<TimeSpanUnitsOfTime>();
-            #endregion
+
+            #endregion Enum
 
             #region Tables
+
             modelBuilder.Entity<AdminLevels>(entity =>
             {
                 entity.HasKey(e => e.Level);
@@ -1046,7 +1057,6 @@ namespace TDS_Server.Database.Entity
 
             modelBuilder.Entity<Rules>(entity =>
             {
-
             });
 
             modelBuilder.Entity<RuleTexts>(entity =>
@@ -1061,8 +1071,6 @@ namespace TDS_Server.Database.Entity
 
             modelBuilder.Entity<ServerDailyStats>(entity =>
             {
-
-
                 entity.HasKey(e => e.Date);
 
                 entity.Property(e => e.Date)
@@ -1240,7 +1248,6 @@ namespace TDS_Server.Database.Entity
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-
             modelBuilder.Entity<Teams>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -1264,7 +1271,6 @@ namespace TDS_Server.Database.Entity
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-
             modelBuilder.Entity<Weapons>(entity =>
             {
                 entity.HasKey(e => e.Hash);
@@ -1281,9 +1287,11 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.TimeBetweenShots).HasDefaultValue(0);
                 entity.Property(e => e.Range).HasDefaultValue(0);
             });
-            #endregion
+
+            #endregion Tables
 
             #region Seed data
+
             modelBuilder.Entity<ServerSettings>().HasData(
                 new ServerSettings
                 {
@@ -1359,7 +1367,7 @@ namespace TDS_Server.Database.Entity
                 new Lobbies { Id = -4, OwnerId = -1, Type = LobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true },
                 new Lobbies { Id = -1, OwnerId = -1, Type = LobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true },
                 new Lobbies { Id = -2, OwnerId = -1, Type = LobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true },
-   
+
                 // only for map-creator ban
                 new Lobbies { Id = -3, OwnerId = -1, Type = LobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true },
 
@@ -1405,7 +1413,6 @@ namespace TDS_Server.Database.Entity
                 new Commands { Id = 26, Command = "Test", NeededAdminLevel = 3 }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
-
 
             modelBuilder.Entity<AdminLevelNames>().HasData(new List<AdminLevelNames> {
                 new AdminLevelNames { Level = 0, Language = Language.English, Name = "User" },
@@ -2001,9 +2008,11 @@ namespace TDS_Server.Database.Entity
                             + "\nDie Daten beinhalten keine sensiblen Informationen - IPs werden nicht gespeichert, Passwörter sind sicher (Hash + Salt)."
                 }
             );
-            #endregion
+
+            #endregion Seed data
 
             #region Autoincrement
+
             /* Use this code at the before the first InsertData in the Up Method in the migration.
             migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" DROP IDENTITY");
             migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" DROP IDENTITY");
@@ -2025,7 +2034,6 @@ namespace TDS_Server.Database.Entity
             migrationBuilder.Sql("ALTER TABLE server_settings ALTER COLUMN \"ID\" ADD GENERATED ALWAYS AS IDENTITY");
             */
 
-
             // Sql("DBCC CHECKIDENT ('Offers', RESEED, 100);");
 
             /*modelBuilder.HasSequence<int>("players_ID_seq");
@@ -2039,7 +2047,10 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasSequence<int>("gangs_ID_seq");
 
             modelBuilder.HasSequence<int>("maps_ID_seq");*/
-            #endregion
+
+            #endregion Autoincrement
         }
+
+        #endregion Protected Methods
     }
 }

@@ -1,18 +1,26 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
-using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 
 namespace TDS_Server.Handler.Converter.Mapping
 {
-    class StringNameToDBPlayerConverter : ITypeConverter<string, Task<Players?>>
+    internal class StringNameToDBPlayerConverter : ITypeConverter<string, Task<Players?>>
     {
+        #region Private Fields
+
         private readonly DatabasePlayerHelper _databasePlayerHelper;
 
-        public StringNameToDBPlayerConverter(DatabasePlayerHelper databasePlayerHelper) 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public StringNameToDBPlayerConverter(DatabasePlayerHelper databasePlayerHelper)
             => _databasePlayerHelper = databasePlayerHelper;
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<Players?> Convert(string name, Task<Players?> destination, ResolutionContext _)
         {
@@ -21,5 +29,7 @@ namespace TDS_Server.Handler.Converter.Mapping
 
             return await _databasePlayerHelper.GetPlayerByName(name);
         }
+
+        #endregion Public Methods
     }
 }

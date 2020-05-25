@@ -2,7 +2,12 @@
 {
     public interface IAudioAPI
     {
-        void SetAudioFlag(string flagName, bool toggle);
+        #region Public Methods
+
         void PlaySoundFrontend(int soundId, string audioName, string audioRef);
+
+        void SetAudioFlag(string flagName, bool toggle);
+
+        #endregion Public Methods
     }
 }

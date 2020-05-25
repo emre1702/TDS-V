@@ -9,13 +9,23 @@ namespace TDS_Server.Database
 {
     public class CustomDBLogger : ILoggerProvider
     {
-        private bool _disposed = false;
-        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
+        #region Private Fields
+
         private readonly static object _locker = new object();
         private static string _path;
+        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
+        private bool _disposed = false;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public CustomDBLogger(string path)
             => _path = path;
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public ILogger CreateLogger(string categoryName)
         {
@@ -27,6 +37,10 @@ namespace TDS_Server.Database
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
 
         protected virtual void Dispose(bool disposing)
         {
@@ -41,9 +55,24 @@ namespace TDS_Server.Database
             _disposed = true;
         }
 
+        #endregion Protected Methods
+
+        #region Private Classes
+
         private class CustomLogger : ILogger
         {
+            #region Private Fields
+
             private readonly Queue<string> _logQuery = new Queue<string>();
+
+            #endregion Private Fields
+
+            #region Public Methods
+
+            public IDisposable BeginScope<TState>(TState state)
+            {
+                return null;
+            }
 
             public bool IsEnabled(LogLevel logLevel)
             {
@@ -71,7 +100,6 @@ namespace TDS_Server.Database
 
                         File.AppendAllText(_path, msg);
                     }
-                   
                 }
                 catch
                 {
@@ -79,10 +107,9 @@ namespace TDS_Server.Database
                 }
             }
 
-            public IDisposable BeginScope<TState>(TState state)
-            {
-                return null;
-            }
+            #endregion Public Methods
         }
+
+        #endregion Private Classes
     }
 }

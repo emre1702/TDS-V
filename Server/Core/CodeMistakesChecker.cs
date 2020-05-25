@@ -9,11 +9,21 @@ namespace TDS_Server.Core
 {
     public class CodeMistakesChecker
     {
+        #region Private Fields
+
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
 
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public CodeMistakesChecker(ILoggingHandler loggingHandler, IModAPI modAPI)
             => (_loggingHandler, _modAPI) = (loggingHandler, modAPI);
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public bool CheckHasErrors()
         {
@@ -27,6 +37,10 @@ namespace TDS_Server.Core
 
             return hasError;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private bool CheckHasDuplicateValuesInEventsType(Type type)
         {
@@ -46,5 +60,7 @@ namespace TDS_Server.Core
 
             return duplicateEntries.Count > 0;
         }
+
+        #endregion Private Methods
     }
 }

@@ -1,16 +1,21 @@
-﻿using System;
-
-namespace TDS_Server.Data.Interfaces.ModAPI.ColShape
+﻿namespace TDS_Server.Data.Interfaces.ModAPI.ColShape
 {
-    #nullable enable
-    public interface IColShape : IEquatable<IColShape>
+#nullable enable
+
+    public interface IColShape : IEntity
     {
-        ushort Id { get; }
+        #region Public Delegates
 
-        public delegate void ColShapeEnterExitDelegate(ITDSPlayer player);
-        public event ColShapeEnterExitDelegate? PlayerEntered;
-        public event ColShapeEnterExitDelegate? PlayerExited;
+        public delegate void ColshapeEnterExitDelegate(ITDSPlayer player);
 
-        void Delete();
+        #endregion Public Delegates
+
+        #region Public Events
+
+        public event ColshapeEnterExitDelegate? PlayerEntered;
+
+        public event ColshapeEnterExitDelegate? PlayerExited;
+
+        #endregion Public Events
     }
 }

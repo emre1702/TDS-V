@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
+using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Data.Models;
 using TDS_Server.RAGEAPI.Extensions;
 using TDS_Shared.Data.Enums;
@@ -10,338 +14,190 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGEAPI.Player
 {
-    class Player : Entity.Entity, IPlayer
+    internal class Player : GTANetworkAPI.Player, IPlayer
     {
-        internal readonly GTANetworkAPI.Player _instance;
+        #region Public Constructors
 
-        private string _name;
-
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        internal Player(GTANetworkAPI.Player instance, EntityConvertingHandler entityConvertingHandler) : base(instance)
+        public Player(GTANetworkAPI.NetHandle netHandle) : base(netHandle)
         {
-            _entityConvertingHandler = entityConvertingHandler;
-
-            _instance = instance;
-
-            _name = _instance.Name;
-            SocialClubId = _instance.SocialClubId;
-            SocialClubName = _instance.SocialClubName;
-            IPAddress = _instance.Address;
-            Serial = _instance.Serial;
         }
 
-        public ulong SocialClubId { get; }
-        public string SocialClubName { get; }
-        public string IPAddress { get; }
-        public string Serial { get; }
+        #endregion Public Constructors
 
-        public ushort RemoteId => _instance.Handle.Value;
-        public int Transparency
+        #region Public Properties
+
+        public new Position3D AimingPoint => base.AimingPoint.ToTDS();
+
+        public new WeaponHash CurrentWeapon
         {
-            get => _instance.Transparency;
-            set => _instance.Transparency = value;
+            get => (WeaponHash)base.CurrentWeapon;
+            set => GTANetworkAPI.NAPI.Player.SetPlayerCurrentWeapon(this, (GTANetworkAPI.WeaponHash)value);
         }
-        string IPlayer.Name
+
+        public new GameTypes GameType => (GameTypes)base.GameType;
+
+        public new HeadBlend HeadBlend
         {
-            get => _name;
-            set 
-            {
-                _instance.Name = value;
-                _name = value;
-            }
+            get => base.HeadBlend.ToTDS();
+            set => base.HeadBlend = value.ToMod();
         }
-        public int VehicleSeat => _instance.VehicleSeat;
 
-        public bool Dead => _instance.Dead;
-
-        public WeaponHash CurrentWeapon
+        public new Position3D Position
         {
-            get => (TDS_Shared.Data.Enums.WeaponHash)_instance.CurrentWeapon;
-            set => GTANetworkAPI.NAPI.Player.SetPlayerCurrentWeapon(_instance, (GTANetworkAPI.WeaponHash)value);
-
+            get => new Position3D(base.Position.X, base.Position.Y, base.Position.Z);
+            set => base.Position = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
-        public int Armor
+
+        public ushort RemoteId => Handle.Value;
+
+        public new Position3D Rotation
         {
-            get => _instance.Armor;
-            set => _instance.Armor = value;
+            get => new Position3D(base.Rotation.X, base.Rotation.Y, base.Rotation.Z);
+            set => base.Rotation = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
-        public int Health
+
+        public new IVehicle? Vehicle => base.Vehicle as IVehicle;
+
+        public new Position3D Velocity
         {
-            get => _instance.Health;
-            set => _instance.Health = value;
+            get => base.Velocity.ToTDS();
+            set => base.Velocity = value.ToMod();
         }
 
-        public bool IsInVehicle => _instance.IsInVehicle;
+        public new WeaponHash[] Weapons => base.Weapons.Select(w => (WeaponHash)w).ToArray();
 
-        public ITDSVehicle? Vehicle => Init.GetTDSVehicle(_entityConvertingHandler.GetEntity(_instance.Vehicle));
+        #endregion Public Properties
 
-        public bool IsDead => _instance.Dead;
+        #region Public Methods
 
-        public string Nametag 
-        { 
-            get => _instance.Nametag;
-            set => _instance.Nametag = value;
-        }
-
-        public int Ping => _instance.Ping;
-
-        public bool IsMediaStreamEnabled => _instance.IsMediaStreamEnabled;
-
-        public float Heading 
-        { 
-            get => _instance.Heading; 
-            set => _instance.Heading = value; 
-        }
-        public Position3D Velocity 
-        { 
-            get => _instance.Velocity.ToTDS(); 
-            set => _instance.Velocity = value.ToMod(); 
-        }
-
-        public bool IsCeFenabled => _instance.IsCeFenabled;
-
-        public WeaponHash[] Weapons => _instance.Weapons.Select(w => (WeaponHash)w).ToArray();
-
-        public string Address => _instance.Address;
-
-        public Position3D AimingPoint => _instance.AimingPoint.ToTDS();
-
-        public bool IsAiming => _instance.IsAiming;
-
-        public bool IsShooting => _instance.IsShooting;
-
-        public bool IsReloading => _instance.IsReloading;
-
-        public bool IsInCover => _instance.IsInCover;
-
-        public bool IsOnLadder => _instance.IsOnLadder;
-
-        public HeadBlend HeadBlend 
-        { 
-            get => _instance.HeadBlend.ToTDS(); 
-            set => _instance.HeadBlend = value.ToMod(); 
-        }
-
-        public void SetHealth(int health)
+        public void AttachTo(ITDSPlayer player, PedBone bone, Position3D? positionOffset, Position3D? rotationOffset)
         {
-            GTANetworkAPI.NAPI.Player.SetPlayerHealth(_instance, health);
-        }
-
-        public void SendEvent(string eventName, params object[] args)
-        {
-            GTANetworkAPI.NAPI.ClientEvent.TriggerClientEvent(_instance, eventName, args);
-        }
-
-        public void Spawn(Position3D position, float heading = 0)
-        {
-            GTANetworkAPI.NAPI.Player.SpawnPlayer(_instance, position.ToMod(), heading);
-        }
-
-        public void SetSkin(PedHash pedHash)
-        {
-            GTANetworkAPI.NAPI.Player.SetPlayerSkin(_instance, (GTANetworkAPI.PedHash)pedHash);
-        }
-
-        public void SetVoiceTo(ITDSPlayer target, bool on)
-        {
-            if (!(target.ModPlayer is Player targetModPlayer))
+            if (!(player.ModPlayer is Player modPlayer))
                 return;
-
-            if (on)
-                GTANetworkAPI.NAPI.Player.EnablePlayerVoiceTo(_instance, targetModPlayer._instance);
-            else
-                GTANetworkAPI.NAPI.Player.DisablePlayerVoiceTo(_instance, targetModPlayer._instance);
+            var positionOffsetVector = positionOffset?.ToMod() ?? new GTANetworkAPI.Vector3();
+            var rotationOffsetVector = rotationOffset?.ToMod() ?? new GTANetworkAPI.Vector3();
+            Init.WorkaroundsHandler.AttachEntityToEntity(this, modPlayer, bone, positionOffsetVector, rotationOffsetVector, player.Lobby);
         }
 
-        public void Kick(string reason)
+        public void Detach()
         {
-            GTANetworkAPI.NAPI.Player.KickPlayer(_instance, reason);
+            Init.WorkaroundsHandler.DetachEntity(this);
         }
 
-        public bool Equals(IPlayer? other)
+        public bool Equals([AllowNull] IEntity other)
         {
-            return SocialClubId == other?.SocialClubId;
-        }
-
-        public void StopAnimation()
-        {
-            _instance.StopAnimation();
-        }
-
-        public void Kill()
-        {
-            _instance.Kill();
+            return Id == other?.Id;
         }
 
         public void Freeze(bool toggle)
         {
-            Init.WorkaroundsHandler.FreezePlayer(_instance, toggle);
+            Init.WorkaroundsHandler.FreezePlayer(this, toggle);
         }
 
-        public void SetInvincible(bool toggle)
+        public void Freeze(bool toggle, ILobby lobby)
         {
-            Init.WorkaroundsHandler.SetPlayerInvincible(_instance, toggle);
+            Init.WorkaroundsHandler.FreezeEntity(this, toggle, lobby);
         }
 
-        public void RemoveAllWeapons()
-        {
-            _instance.RemoveAllWeapons();
-        }
+        public new Color GetHeadBlendPaletteColor(int slot)
+            => base.GetHeadBlendPaletteColor(slot).ToTDS();
+
+        public new HeadOverlay GetHeadOverlay(int overlayId)
+            => base.GetHeadOverlay(overlayId).ToTDS();
+
+        public int GetWeaponAmmo(WeaponHash weapon)
+            => GetWeaponAmmo((GTANetworkAPI.WeaponHash)weapon);
 
         public void GiveWeapon(WeaponHash hash, int ammo = 0)
-        {
-            _instance.GiveWeapon((GTANetworkAPI.WeaponHash)hash, ammo);
-        }
+            => GiveWeapon((GTANetworkAPI.WeaponHash)hash, ammo);
 
-        public void SetWeaponAmmo(WeaponHash hash, int ammo)
-        {
-            _instance.SetWeaponAmmo((GTANetworkAPI.WeaponHash)hash, ammo);
-        }
+        public void RemoveDecoration(Decoration decoration)
+            => RemoveDecoration(decoration.ToMod());
 
-        public void PlayAnimation(string animDict, string animName, int flag)
+        public void RemoveWeapon(WeaponHash weapon)
+            => RemoveWeapon((GTANetworkAPI.WeaponHash)weapon);
+
+        public void SendEvent(string eventName, params object[] args)
         {
-            _instance.PlayAnimation(animDict, animName, flag);
+            GTANetworkAPI.NAPI.ClientEvent.TriggerClientEvent(this, eventName, args);
         }
 
         public void SendMessage(string msg)
-        {
-            _instance.SendChatMessage(msg);
-        }
-
-        public void SendNotification(string msg, bool flashing = false)
-        {
-            _instance.SendNotification(msg, flashing);
-        }
-
-        public void WarpOutOfVehicle()
-        {
-            _instance.WarpOutOfVehicle();
-        }
-
-        public void SetIntoVehicle(ITDSVehicle vehicle, int seat)
-        {
-            if (!(vehicle is Vehicle.Vehicle veh))
-                return;
-            _instance.SetIntoVehicle(veh._instance, seat);
-        }
-
-        public void SetClothes(int slot, int drawable, int texture)
-        {
-            _instance.SetClothes(slot, drawable, texture);
-        }
-
-        public void Ban(string reason)
-            => _instance.Ban(reason);
-
-        public void Ban()
-            => _instance.Ban();
-
-        public void ClearAccessory(int slot)
-            => _instance.ClearAccessory(slot);
-
-        public void ClearDecorations()
-            => _instance.ClearDecorations();
-
-        public void Eval(string code)
-            => _instance.Eval(code);
-
-        public int GetAccessoryDrawable(int slot)
-            => _instance.GetAccessoryDrawable(slot);
-
-        public int GetAccessoryTexture(int slot)
-            => _instance.GetAccessoryTexture(slot);
-
-        public int GetClothesDrawable(int slot)
-            => _instance.GetClothesDrawable(slot);
-
-        public int GetClothesTexture(int slot)
-            => _instance.GetClothesTexture(slot);
-
-        public float GetFaceFeature(int slot)
-            => _instance.GetFaceFeature(slot);
-
-        public Color GetHeadBlendPaletteColor(int slot)
-            => _instance.GetHeadBlendPaletteColor(slot).ToTDS();
-
-        public HeadOverlay GetHeadOverlay(int overlayId)
-            => _instance.GetHeadOverlay(overlayId).ToTDS();
-
-        public T GetOwnSharedData<T>(string key)
-            => _instance.GetOwnSharedData<T>(key);
-
-        public int GetWeaponAmmo(WeaponHash weapon)
-            => _instance.GetWeaponAmmo((GTANetworkAPI.WeaponHash)weapon);
-
-        public bool HasOwnSharedData(string key)
-            => _instance.HasOwnSharedData(key);
-
-        public void Kick()
-            => _instance.Kick();
-
-        public void KickSilent(string reason)
-            => _instance.KickSilent(reason);
-
-        public void KickSilent()
-            => _instance.KickSilent();
-
-        public void PlayScenario(string scenarioName)
-            => _instance.PlayScenario(scenarioName);
-
-        public void RemoveDecoration(Decoration decoration)
-            => _instance.RemoveDecoration(decoration.ToMod());
-
-        public void RemoveHeadBlendPaletteColor(int slot)
-            => _instance.RemoveHeadBlendPaletteColor(slot);
-
-        public void RemoveWeapon(WeaponHash weapon)
-            => _instance.RemoveWeapon((GTANetworkAPI.WeaponHash)weapon);
-
-        public void ResetOwnSharedData(string key)
-            => _instance.ResetOwnSharedData(key);
-
-        public void SendPictureNotificationToPlayer(string body, string pic, int flash, int iconType, string sender, string subject)
-            => _instance.SendPictureNotificationToPlayer(body, pic, flash, iconType, sender, subject);
-
-        public void SetAccessories(int slot, int drawable, int texture)
-            => _instance.SetAccessories(slot, drawable, texture);
+            => SendChatMessage(msg);
 
         public void SetClothes(Dictionary<int, ComponentVariation> clothes)
-            => _instance.SetClothes(clothes.ToDictionary(c => c.Key, c => c.Value.ToMod()));
+            => SetClothes(clothes.ToDictionary(c => c.Key, c => c.Value.ToMod()));
 
-        public void SetCustomization(bool gender, HeadBlend headBlend, byte eyeColor, byte hairColor, byte highlightColor, float[] faceFeatures, 
+        public void SetCollisionsless(bool toggle, ILobby lobby)
+        {
+            Init.WorkaroundsHandler.SetEntityCollisionless(this, toggle, lobby);
+        }
+
+        public void SetCustomization(bool gender, HeadBlend headBlend, byte eyeColor, byte hairColor, byte highlightColor, float[] faceFeatures,
             Dictionary<int, HeadOverlay> headOverlays, Decoration[] decorations)
-            => _instance.SetCustomization(gender, headBlend.ToMod(), eyeColor, hairColor, highlightColor, faceFeatures, 
+            => SetCustomization(gender, headBlend.ToMod(), eyeColor, hairColor, highlightColor, faceFeatures,
                 headOverlays.ToDictionary(h => h.Key, h => h.Value.ToMod()), decorations.Select(d => d.ToMod()).ToArray());
 
         public void SetDecoration(Decoration[] decoration)
-            => _instance.SetDecoration(decoration.Select(d => d.ToMod()).ToArray());
+            => SetDecoration(decoration.Select(d => d.ToMod()).ToArray());
 
         public void SetDecoration(Decoration decoration)
-            => _instance.SetDecoration(decoration.ToMod());
-
-        public void SetFaceFeature(int slot, float scale)
-            => _instance.SetFaceFeature(slot, scale);
+            => SetDecoration(decoration.ToMod());
 
         public void SetHeadBlendPaletteColor(int slot, Color color)
-            => _instance.SetHeadBlendPaletteColor(slot, color.ToMod());
+            => SetHeadBlendPaletteColor(slot, color.ToMod());
 
         public void SetHeadOverlay(int overlayId, HeadOverlay headOverlay)
-            => _instance.SetHeadOverlay(overlayId, headOverlay.ToMod());
+            => SetHeadOverlay(overlayId, headOverlay.ToMod());
 
-        public void SetOwnSharedData(Dictionary<string, object> value)
-            => _instance.SetOwnSharedData(value);
+        public void SetHealth(int health)
+        {
+            GTANetworkAPI.NAPI.Player.SetPlayerHealth(this, health);
+        }
 
-        public void SetOwnSharedData(string key, object value)
-            => _instance.SetOwnSharedData(key, value);
+        public void SetIntoVehicle(IVehicle car, int seat)
+            => SetIntoVehicle(car as GTANetworkAPI.Vehicle, seat);
 
-        public void SetSkin(uint newSkin)
-            => _instance.SetSkin(newSkin);
+        public void SetInvincible(bool toggle)
+        {
+            Init.WorkaroundsHandler.SetPlayerInvincible(this, toggle);
+        }
 
-        public void TriggerEvent(string eventName, params object[] args)
-            => _instance.TriggerEvent(eventName, args);
+        public void SetInvincible(bool toggle, ITDSPlayer forPlayer)
+        {
+            if (!(forPlayer.ModPlayer is Player modPlayer))
+                return;
+            Init.WorkaroundsHandler.SetEntityInvincible(modPlayer, this, toggle);
+        }
 
-        public void UpdateHeadBlend(float shapeMix, float skinMix, float thirdMix)
-            => _instance.UpdateHeadBlend(shapeMix, skinMix, thirdMix);
+        public void SetInvincible(bool toggle, ILobby lobby)
+        {
+            Init.WorkaroundsHandler.SetEntityInvincible(lobby, this, toggle);
+        }
+
+        public void SetSkin(PedHash pedHash)
+        {
+            GTANetworkAPI.NAPI.Player.SetPlayerSkin(this, (GTANetworkAPI.PedHash)pedHash);
+        }
+
+        public void SetVoiceTo(ITDSPlayer target, bool on)
+        {
+            if (!(target.ModPlayer is Player targetPlayer))
+                return;
+            if (on)
+                GTANetworkAPI.NAPI.Player.EnablePlayerVoiceTo(this, targetPlayer);
+            else
+                GTANetworkAPI.NAPI.Player.DisablePlayerVoiceTo(this, targetPlayer);
+        }
+
+        public void SetWeaponAmmo(WeaponHash hash, int ammo)
+            => SetWeaponAmmo((GTANetworkAPI.WeaponHash)hash, ammo);
+
+        public void Spawn(Position3D position, float heading = 0)
+        {
+            GTANetworkAPI.NAPI.Player.SpawnPlayer(this, position.ToMod(), heading);
+        }
+
+        #endregion Public Methods
     }
 }

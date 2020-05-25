@@ -5,24 +5,39 @@ using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Data.Interfaces
 {
-    #nullable enable
+#nullable enable
+
     public interface ITeam : IEquatable<ITeam>
     {
-        Teams Entity { get; }
-        List<ITDSPlayer> Players { get; }
-        string ChatColor { get; }
-        bool IsSpectator { get; }
-        List<ITDSPlayer>? SpectateablePlayers { get; }
-        int SpawnCounter { get; set; }
+        #region Public Properties
+
         List<ITDSPlayer>? AlivePlayers { get; }
+        string ChatColor { get; }
+        Teams Entity { get; }
+        bool IsSpectator { get; }
+        List<ITDSPlayer> Players { get; }
+        int SpawnCounter { get; set; }
+        List<ITDSPlayer>? SpectateablePlayers { get; }
         SyncedTeamDataDto SyncedTeamData { get; set; }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
         void AddPlayer(ITDSPlayer tdsPlayer);
-        void RemovePlayer(ITDSPlayer tdsPlayer);
+
         void FuncIterate(Action<ITDSPlayer, ITeam> func);
+
         void RemoveAlivePlayer(ITDSPlayer player);
-        void SyncRemovedPlayer(ITDSPlayer player);
+
+        void RemovePlayer(ITDSPlayer tdsPlayer);
+
         void SyncAddedPlayer(ITDSPlayer player);
+
         void SyncAllPlayers();
+
+        void SyncRemovedPlayer(ITDSPlayer player);
+
+        #endregion Public Methods
     }
 }

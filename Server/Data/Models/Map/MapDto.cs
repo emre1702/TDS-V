@@ -13,59 +13,27 @@ using Position3DDto = TDS_Server.Data.Models.Map.Creator.Position3DDto;
 
 namespace TDS_Server.Data.Models.Map
 {
-    #nullable enable
-    #nullable disable warnings
+#nullable enable
+#nullable disable warnings
+
     [XmlRoot("TDSMap")]
     public class MapDto
     {
-        [XmlElement("map")]
-        public MapInfoDto Info { get; set; }
-
-        [XmlElement("description")]
-        public MapDescriptionsDto? Descriptions { get; set; }
-
-        [XmlElement("teamspawns")]
-        public MapTeamSpawnsListDto TeamSpawnsList { get; set; }
-
-        [XmlElement("limit")]
-        public MapLimitInfoDto LimitInfo { get; set; }
-
-        [XmlElement("objects")]
-        public MapObjectsListDto Objects { get; set; }
-
-        [XmlElement("vehicles")]
-        public MapVehiclesListDto Vehicles { get; set; }
-
-        [XmlElement("bomb")]
-        public MapBombInfoDto? BombInfo { get; set; }
-
-        [XmlElement("target")]
-        public Position3DDto? Target { get; set; }
-
-        [XmlIgnore]
-        public BrowserSyncedMapDataDto BrowserSyncedData { get; set; } = new BrowserSyncedMapDataDto();
-
-        [XmlIgnore]
-        public string ClientSyncedDataJson { get; set; }
-
-        [XmlIgnore]
-        public List<PlayerMapRatings> Ratings { get; set; } = new List<PlayerMapRatings>();
-
-        [XmlIgnore]
-        public double RatingAverage { get; set; }
-
-        [XmlIgnore]
-        public bool IsBomb => Info.Type == MapType.Bomb;
-        [XmlIgnore]
-        public bool IsSniper => Info.Type == MapType.Sniper;
+        #region Private Fields
 
         private readonly Serializer _serializer;
 
-        public MapDto() : this(new Serializer()) { }
+        #endregion Private Fields
 
-        public MapDto(Serializer serializer) 
+        #region Public Constructors
+
+        public MapDto() : this(new Serializer())
         {
-            _serializer = serializer;    
+        }
+
+        public MapDto(Serializer serializer)
+        {
+            _serializer = serializer;
         }
 
         public MapDto(MapCreateDataDto data, Serializer serializer) : this(serializer)
@@ -122,27 +90,55 @@ namespace TDS_Server.Data.Models.Map
             LoadMapObjectsDataDto();
         }
 
-        public void LoadMapObjectsDataDto()
-        {
-            var clientSyncedDataDto = new ClientSyncedDataDto
-            {
-                Name = Info.Name,
-                BombPlaces = BombInfo?.PlantPositions?.Select(e => e.SwitchNamespace()).ToList(),
-                MapEdges = LimitInfo?.Edges?.Select(e => e.SwitchNamespace()).ToList(),
-                Objects = Objects?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Object)).ToList(),
-                Target = Target?.SwitchNamespace(),
-                Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Vehicle)).ToList(),
-                Center = Target is null ? LimitInfo?.Center?.SwitchNamespace() : null
-            };
-            ClientSyncedDataJson = _serializer.ToClient(clientSyncedDataDto);
-        }
+        #endregion Public Constructors
 
-        public static bool operator ==(MapDto? thisMap, MapDto? otherMap)
-        {
-            if (thisMap is null || otherMap is null)
-                return ReferenceEquals(thisMap, otherMap);
-            return thisMap.BrowserSyncedData.Id == otherMap.BrowserSyncedData.Id;
-        }
+        #region Public Properties
+
+        [XmlElement("bomb")]
+        public MapBombInfoDto? BombInfo { get; set; }
+
+        [XmlIgnore]
+        public BrowserSyncedMapDataDto BrowserSyncedData { get; set; } = new BrowserSyncedMapDataDto();
+
+        [XmlIgnore]
+        public string ClientSyncedDataJson { get; set; }
+
+        [XmlElement("description")]
+        public MapDescriptionsDto? Descriptions { get; set; }
+
+        [XmlElement("map")]
+        public MapInfoDto Info { get; set; }
+
+        [XmlIgnore]
+        public bool IsBomb => Info.Type == MapType.Bomb;
+
+        [XmlIgnore]
+        public bool IsSniper => Info.Type == MapType.Sniper;
+
+        [XmlElement("limit")]
+        public MapLimitInfoDto LimitInfo { get; set; }
+
+        [XmlElement("objects")]
+        public MapObjectsListDto Objects { get; set; }
+
+        [XmlIgnore]
+        public double RatingAverage { get; set; }
+
+        [XmlIgnore]
+        public List<PlayerMapRatings> Ratings { get; set; } = new List<PlayerMapRatings>();
+
+        [XmlElement("target")]
+        public Position3DDto? Target { get; set; }
+
+        [XmlElement("teamspawns")]
+        public MapTeamSpawnsListDto TeamSpawnsList { get; set; }
+
+        [XmlElement("vehicles")]
+        public MapVehiclesListDto Vehicles { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public static bool operator !=(MapDto thisMap, MapDto otherMap)
         {
@@ -150,6 +146,13 @@ namespace TDS_Server.Data.Models.Map
                 return !ReferenceEquals(thisMap, otherMap);
 
             return thisMap.BrowserSyncedData.Id != otherMap.BrowserSyncedData.Id;
+        }
+
+        public static bool operator ==(MapDto? thisMap, MapDto? otherMap)
+        {
+            if (thisMap is null || otherMap is null)
+                return ReferenceEquals(thisMap, otherMap);
+            return thisMap.BrowserSyncedData.Id == otherMap.BrowserSyncedData.Id;
         }
 
         public override bool Equals(object obj)
@@ -170,5 +173,22 @@ namespace TDS_Server.Data.Models.Map
         {
             return base.GetHashCode();
         }
+
+        public void LoadMapObjectsDataDto()
+        {
+            var clientSyncedDataDto = new ClientSyncedDataDto
+            {
+                Name = Info.Name,
+                BombPlaces = BombInfo?.PlantPositions?.Select(e => e.SwitchNamespace()).ToList(),
+                MapEdges = LimitInfo?.Edges?.Select(e => e.SwitchNamespace()).ToList(),
+                Objects = Objects?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Object)).ToList(),
+                Target = Target?.SwitchNamespace(),
+                Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Vehicle)).ToList(),
+                Center = Target is null ? LimitInfo?.Center?.SwitchNamespace() : null
+            };
+            ClientSyncedDataJson = _serializer.ToClient(clientSyncedDataDto);
+        }
+
+        #endregion Public Methods
     }
 }

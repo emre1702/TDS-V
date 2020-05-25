@@ -5,8 +5,7 @@ namespace TDS_Server.Data.Models.CustomLobby
 {
     public class CustomLobbyWeaponData
     {
-        [JsonProperty("0")]
-        public WeaponHash WeaponHash { get; set; }
+        #region Public Properties
 
         [JsonProperty("1")]
         public int Ammo { get; set; }
@@ -16,6 +15,11 @@ namespace TDS_Server.Data.Models.CustomLobby
 
         [JsonProperty("3")]
         public float? HeadshotMultiplicator { get; set; }
+
+        [JsonProperty("0")]
+        public WeaponHash WeaponHash { get; set; }
+
+        #endregion Public Properties
 
         /*[JsonProperty("4")]
         public float MinHeadshotDistance { get; set; }

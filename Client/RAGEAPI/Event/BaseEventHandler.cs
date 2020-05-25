@@ -6,14 +6,28 @@ namespace TDS_Client.RAGEAPI.Event
 {
     public abstract class BaseEventHandler<T> : ICollection<EventMethodData<T>>
     {
+        #region Protected Fields
+
+        protected readonly List<EventMethodData<T>> Actions = new List<EventMethodData<T>>();
+
+        #endregion Protected Fields
+
+        #region Protected Constructors
+
+        protected BaseEventHandler()
+        { }
+
+        #endregion Protected Constructors
+
+        #region Public Properties
+
         public int Count => Actions.Count;
 
         public bool IsReadOnly => true;
 
-        protected readonly List<EventMethodData<T>> Actions = new List<EventMethodData<T>>();
+        #endregion Public Properties
 
-        protected BaseEventHandler()
-        { }
+        #region Public Methods
 
         public void Add(EventMethodData<T> item)
         {
@@ -41,14 +55,16 @@ namespace TDS_Client.RAGEAPI.Event
             return Actions.GetEnumerator();
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Actions.GetEnumerator();
+        }
+
         public bool Remove(EventMethodData<T> item)
         {
             return Actions.Remove(item);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Actions.GetEnumerator();
-        }
+        #endregion Public Methods
     }
 }

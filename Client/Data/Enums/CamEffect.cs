@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Client.Data.Enums
+﻿namespace TDS_Client.Data.Enums
 {
-
     /**
      * <summary>
      * if p0 is 0, effect is cancelled
@@ -18,20 +13,20 @@ namespace TDS_Client.Data.Enums
 
     public enum CamEffect
     {
-        /** 
+        /**
          * <summary>Effect is canceled</summary>
          */
         Cancel = 0,
 
-        /** 
+        /**
          *  <summary>
-         *  Effect zooms in, gradually tilts cam clockwise apx 30 degrees, 
+         *  Effect zooms in, gradually tilts cam clockwise apx 30 degrees,
          *  wobbles slowly. Motion blur is active until cancelled.
          *  </summary>
          */
         ZoomIn_Tilt30Deg_WobbleSlowly = 1,
 
-        /** 
+        /**
          * <summary>
          * Effect immediately tilts cam clockwise apx 30 degrees, begins to
          * wobble slowly, then gradually tilts cam back to normal. The wobbling will continue
@@ -39,7 +34,5 @@ namespace TDS_Client.Data.Enums
          * </summary>
          */
         Tilt30Deg_WobbleSlowly_TiltBack = 2
-
     }
 }
-

@@ -8,15 +8,7 @@ namespace BonusBotConnector.Client
 {
     public class BonusBotConnectorClient
     {
-        public ChannelChat? ChannelChat { get; }
-        public ServerInfos? ServerInfos { get; }
-        public PrivateChat? PrivateChat { get; }
-        public Support? Support { get; }
-        public Helper? Helper { get; }
-
-        //public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
-        public delegate void ErrorLogDelegate(Exception ex, bool logToBonusBot = true);
-        public delegate void ErrorStringLogDelegate(string message, string stackTrace, string exceptionType, bool logToBonusBot = true);
+        #region Public Constructors
 
         public BonusBotConnectorClient(TDSDbContext dbContext)
         {
@@ -41,5 +33,26 @@ namespace BonusBotConnector.Client
             PrivateChat = new PrivateChat(channel, settings);
             Support = new Support(channel, settings);
         }
+
+        #endregion Public Constructors
+
+        #region Public Delegates
+
+        //public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
+        public delegate void ErrorLogDelegate(Exception ex, bool logToBonusBot = true);
+
+        public delegate void ErrorStringLogDelegate(string message, string stackTrace, string exceptionType, bool logToBonusBot = true);
+
+        #endregion Public Delegates
+
+        #region Public Properties
+
+        public ChannelChat? ChannelChat { get; }
+        public Helper? Helper { get; }
+        public PrivateChat? PrivateChat { get; }
+        public ServerInfos? ServerInfos { get; }
+        public Support? Support { get; }
+
+        #endregion Public Properties
     }
 }

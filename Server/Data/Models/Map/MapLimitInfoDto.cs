@@ -4,19 +4,24 @@ using TDS_Server.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map
 {
-    #nullable enable
+#nullable enable
+
     public class MapLimitInfoDto
     {
-        [XmlElement("pos")]
-        [JsonProperty("0")]
-        public Position3DDto[]? Edges { get; set; }
+        #region Public Properties
 
         [XmlElement("center")]
         [JsonProperty("1")]
         public Position3DDto? Center { get; set; }
 
+        [XmlElement("pos")]
+        [JsonProperty("0")]
+        public Position3DDto[]? Edges { get; set; }
+
         [XmlIgnore]
         [JsonIgnore]
         public string EdgesJson { get; set; } = "[]";
+
+        #endregion Public Properties
     }
 }

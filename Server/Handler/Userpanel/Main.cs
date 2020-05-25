@@ -15,24 +15,19 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelHandler : IUserpanelHandler
     {
-        public IUserpanelApplicationsAdminHandler ApplicationsAdminHandler { get; }
-        public IUserpanelApplicationUserHandler ApplicationUserHandler { get; }
+        #region Private Fields
 
         private readonly UserpanelCommandsHandler _commandsHandler;
-        private readonly UserpanelRulesHandler _rulesHandler;
         private readonly UserpanelFAQsHandlers _fAQsHandlers;
-        private readonly UserpanelPlayerStatsHandler _playerStatsHandler;
-
-        public IUserpanelSupportUserHandler SupportUserHandler { get; }
-        public IUserpanelSupportAdminHandler SupportAdminHandler { get; }
-        public IUserpanelSupportRequestHandler SupportRequestHandler { get; }
-        public IUserpanelSettingsNormalHandler SettingsNormalHandler { get; }
-        public IUserpanelSettingsSpecialHandler SettingsSpecialHandler { get; }
-        public IUserpanelOfflineMessagesHandler OfflineMessagesHandler { get; }
-
         private readonly IModAPI _modAPI;
+        private readonly UserpanelPlayerStatsHandler _playerStatsHandler;
+        private readonly UserpanelRulesHandler _rulesHandler;
 
-        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer,
             UserpanelCommandsHandler userpanelCommandsHandler, IModAPI modAPI)
         {
             _modAPI = modAPI;
@@ -55,19 +50,22 @@ namespace TDS_Server.Handler.Userpanel
             SupportAdminHandler = new UserpanelSupportAdminHandler(SupportRequestHandler);
         }
 
-        private async ValueTask CommandService_OnUsedCommand((ulong userId, string command, IList<string> args, BBUsedCommandReply reply) data)
-        {
-            switch (data.command)
-            {
-                case "ConfirmTDS":
-                    var task = SettingsNormalHandler?.ConfirmDiscordUserId(data.userId);
-                    if (task is { })
-                        data.reply.Message = await task;
+        #endregion Public Constructors
 
-                    data.reply.Message ??= "BonusBot-Connector is not started at server.";
-                    break;
-            }
-        }
+        #region Public Properties
+
+        public IUserpanelApplicationsAdminHandler ApplicationsAdminHandler { get; }
+        public IUserpanelApplicationUserHandler ApplicationUserHandler { get; }
+        public IUserpanelOfflineMessagesHandler OfflineMessagesHandler { get; }
+        public IUserpanelSettingsNormalHandler SettingsNormalHandler { get; }
+        public IUserpanelSettingsSpecialHandler SettingsSpecialHandler { get; }
+        public IUserpanelSupportAdminHandler SupportAdminHandler { get; }
+        public IUserpanelSupportRequestHandler SupportRequestHandler { get; }
+        public IUserpanelSupportUserHandler SupportUserHandler { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)
         {
@@ -111,6 +109,7 @@ namespace TDS_Server.Handler.Userpanel
                 case UserpanelLoadDataType.SupportAdmin:
                     json = await SupportAdminHandler.GetData(player);
                     break;
+
                 case UserpanelLoadDataType.OfflineMessages:
                     json = await OfflineMessagesHandler.GetData(player);
                     break;
@@ -121,5 +120,25 @@ namespace TDS_Server.Handler.Userpanel
 
             _modAPI.Thread.RunInMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private async ValueTask CommandService_OnUsedCommand((ulong userId, string command, IList<string> args, BBUsedCommandReply reply) data)
+        {
+            switch (data.command)
+            {
+                case "ConfirmTDS":
+                    var task = SettingsNormalHandler?.ConfirmDiscordUserId(data.userId);
+                    if (task is { })
+                        data.reply.Message = await task;
+
+                    data.reply.Message ??= "BonusBot-Connector is not started at server.";
+                    break;
+            }
+        }
+
+        #endregion Private Methods
     }
 }

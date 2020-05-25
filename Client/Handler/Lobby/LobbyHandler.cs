@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
@@ -22,57 +21,35 @@ namespace TDS_Client.Handler.Lobby
 {
     public class LobbyHandler : ServiceBase
     {
-        public bool IsLobbyOwner
-        {
-            get => _isLobbyOwner;
-            set
-            {
-                if (_isLobbyOwner != value)
-                {
-                    _browserHandler.Angular.SyncIsLobbyOwner(value);
-                }
-                _isLobbyOwner = value;
-            }
-        }
-
-        public bool InFightLobby
-        {
-            get => _inFightLobby;
-            set
-            {
-                _inFightLobby = value;
-                _browserHandler.Angular.SyncInFightLobby(value);
-                _browserHandler.Angular.ToggleHUD(_inFightLobby);
-                _playerFightHandler.Reset();
-            }
-        }
-
-        private LobbyType? _inLobbyType;
-        private bool _isLobbyOwner;
-        private bool _inFightLobby;
-
-        public BombHandler Bomb { get; }
-        public LobbyCamHandler Camera { get; }
-        public CountdownHandler Countdown { get; }
-        public LobbyChoiceHandler Choice { get; }
-        public LobbyMapDatasHandler MapDatas { get; }
-        public MainMenuHandler MainMenu { get; }
-        public MapManagerHandler MapManager { get; }
-        public LobbyPlayersHandler Players { get; }
-        public RoundHandler Round { get; }
-        public RoundInfosHandler RoundInfos { get; }
-        public TeamsHandler Teams { get; }
+        #region Private Fields
 
         private readonly BrowserHandler _browserHandler;
-        private readonly PlayerFightHandler _playerFightHandler;
-        private readonly InstructionalButtonHandler _instructionalButtonHandler;
+
         private readonly EventsHandler _eventsHandler;
-        private readonly SettingsHandler _settingsHandler;
+
+        private readonly InstructionalButtonHandler _instructionalButtonHandler;
+
+        private readonly PlayerFightHandler _playerFightHandler;
+
         private readonly RemoteEventsSender _remoteEventsSender;
+
         private readonly Serializer _serializer;
+
+        private readonly SettingsHandler _settingsHandler;
+
         private readonly UtilsHandler _utilsHandler;
 
-        public LobbyHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, PlayerFightHandler playerFightHandler, 
+        private bool _inFightLobby;
+
+        private LobbyType? _inLobbyType;
+
+        private bool _isLobbyOwner;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public LobbyHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, PlayerFightHandler playerFightHandler,
             InstructionalButtonHandler instructionalButtonHandler,
             EventsHandler eventsHandler, SettingsHandler settingsHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender, DxHandler dxHandler,
             TimerHandler timerHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, DataSyncHandler dataSyncHandler,
@@ -98,7 +75,7 @@ namespace TDS_Client.Handler.Lobby
             Teams = new TeamsHandler(modAPI, loggingHandler, browserHandler, bindsHandler, this, remoteEventsSender, cursorHandler, eventsHandler, utilsHandler);
             RoundInfos = new RoundInfosHandler(modAPI, loggingHandler, Teams, timerHandler, dxHandler, settingsHandler, eventsHandler, serializer);
             Round = new RoundHandler(modAPI, loggingHandler, eventsHandler, RoundInfos, settingsHandler, browserHandler);
-            Bomb = new BombHandler(modAPI, loggingHandler, browserHandler, RoundInfos, settingsHandler, utilsHandler, remoteEventsSender, dxHandler, timerHandler, eventsHandler, 
+            Bomb = new BombHandler(modAPI, loggingHandler, browserHandler, RoundInfos, settingsHandler, utilsHandler, remoteEventsSender, dxHandler, timerHandler, eventsHandler,
                 MapDatas, serializer);
 
             eventsHandler.DataChanged += EventsHandler_DataChanged;
@@ -108,6 +85,72 @@ namespace TDS_Client.Handler.Lobby
             ModAPI.Event.Add(ToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
             ModAPI.Event.Add(ToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
             ModAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableAttack, () => Bomb.BombOnHand || !playerFightHandler.InFight));
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public BombHandler Bomb { get; }
+
+        public LobbyCamHandler Camera { get; }
+
+        public LobbyChoiceHandler Choice { get; }
+
+        public CountdownHandler Countdown { get; }
+
+        public bool InFightLobby
+        {
+            get => _inFightLobby;
+            set
+            {
+                _inFightLobby = value;
+                _browserHandler.Angular.SyncInFightLobby(value);
+                _browserHandler.Angular.ToggleHUD(_inFightLobby);
+                _playerFightHandler.Reset();
+            }
+        }
+
+        public bool IsLobbyOwner
+        {
+            get => _isLobbyOwner;
+            set
+            {
+                if (_isLobbyOwner != value)
+                {
+                    _browserHandler.Angular.SyncIsLobbyOwner(value);
+                }
+                _isLobbyOwner = value;
+            }
+        }
+
+        public MainMenuHandler MainMenu { get; }
+        public LobbyMapDatasHandler MapDatas { get; }
+        public MapManagerHandler MapManager { get; }
+        public LobbyPlayersHandler Players { get; }
+        public RoundHandler Round { get; }
+        public RoundInfosHandler RoundInfos { get; }
+        public TeamsHandler Teams { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void Join(object[] args)
+        {
+            try
+            {
+                var oldSettings = _settingsHandler.GetSyncedLobbySettings();
+                SyncedLobbySettings settings = _serializer.FromServer<SyncedLobbySettings>((string)args[0]);
+
+                Players.Load(_utilsHandler.GetTriggeredPlayersList((string)args[1]));
+                Teams.LobbyTeams = _serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
+                Joined(oldSettings, settings);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         public void Joined(SyncedLobbySettings oldSettings, SyncedLobbySettings settings)
@@ -140,16 +183,30 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        public void Join(object[] args)
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void DisableAttack(int _)
+        {
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack2);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackLight);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackHeavy);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackAlternate);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack1);
+            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack2);
+        }
+
+        private void EventsHandler_DataChanged(IPlayer player, PlayerDataKey key, object data)
         {
             try
-            { 
-                var oldSettings = _settingsHandler.GetSyncedLobbySettings();
-                SyncedLobbySettings settings = _serializer.FromServer<SyncedLobbySettings>((string)args[0]);
-
-                Players.Load(_utilsHandler.GetTriggeredPlayersList((string)args[1]));
-                Teams.LobbyTeams = _serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
-                Joined(oldSettings, settings);
+            {
+                if (key != PlayerDataKey.IsLobbyOwner)
+                    return;
+                if (player != ModAPI.LocalPlayer)
+                    return;
+                IsLobbyOwner = (bool)data;
             }
             catch (Exception ex)
             {
@@ -160,7 +217,7 @@ namespace TDS_Client.Handler.Lobby
         private void Leave(object[] args)
         {
             try
-            { 
+            {
                 _browserHandler.Angular.ToggleTeamChoiceMenu(false);
                 // If we were in team choice
                 _remoteEventsSender.Send(ToServerEvent.LeaveLobby);
@@ -188,7 +245,7 @@ namespace TDS_Client.Handler.Lobby
         private void OnLeaveSameLobbyMethod(object[] args)
         {
             try
-            { 
+            {
                 ushort handleValue = Convert.ToUInt16(args[0]);
                 IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
                 string name = (string)args[1];
@@ -200,31 +257,6 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        private void EventsHandler_DataChanged(IPlayer player, PlayerDataKey key, object data)
-        {
-            try
-            {
-                if (key != PlayerDataKey.IsLobbyOwner)
-                    return;
-                if (player != ModAPI.LocalPlayer)
-                    return;
-                IsLobbyOwner = (bool)data;
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        private void DisableAttack(int _)
-        {
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack2);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackLight);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackHeavy);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackAlternate);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack1);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack2);
-        }
+        #endregion Private Methods
     }
 }

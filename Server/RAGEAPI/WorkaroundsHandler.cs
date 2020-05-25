@@ -4,15 +4,17 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
 
 namespace TDS_Server.RAGEAPI
 {
     internal class WorkaroundsHandler
     {
+        #region Private Fields
+
         private static readonly Dictionary<GTANetworkAPI.Entity, EntityAttachInfoDto> _attachedEntitiesInfos = new Dictionary<GTANetworkAPI.Entity, EntityAttachInfoDto>();
         private static readonly Dictionary<ILobby, List<GTANetworkAPI.Entity>> _attachedEntitiesPerLobby = new Dictionary<ILobby, List<GTANetworkAPI.Entity>>();
 
@@ -23,9 +25,13 @@ namespace TDS_Server.RAGEAPI
 
         private static readonly Dictionary<ILobby, List<GTANetworkAPI.Entity>> _invincibleEntityPerLobby = new Dictionary<ILobby, List<GTANetworkAPI.Entity>>();
 
+        private readonly LobbiesHandler _lobbiesHandler;
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
-        private readonly LobbiesHandler _lobbiesHandler;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal WorkaroundsHandler(EventsHandler eventsHandler, IModAPI modAPI, LobbiesHandler lobbiesHandler)
         {
@@ -37,33 +43,9 @@ namespace TDS_Server.RAGEAPI
             eventsHandler.PlayerLeftLobby += PlayerLeftLobby;
         }
 
-        public void FreezePlayer(GTANetworkAPI.Player player, bool freeze)
-        {
-            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.FreezePlayerWorkaround, freeze);
-        }
+        #endregion Internal Constructors
 
-        public void FreezeEntity(GTANetworkAPI.Entity entity, bool freeze, ILobby lobby)
-        {
-            _modAPI.Sync.SendEvent(lobby, ToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, freeze);
-
-            if (freeze)
-            {
-                if (!_frozenEntityPerLobby.ContainsKey(lobby))
-                    _frozenEntityPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
-                _frozenEntityPerLobby[lobby].Add(entity);
-            }
-            else
-            {
-                if (!_frozenEntityPerLobby.ContainsKey(lobby))
-                    return;
-                _frozenEntityPerLobby[lobby].Remove(entity);
-            }
-        }
-
-        public void SetPlayerTeam(GTANetworkAPI.Player player, int team)
-        {
-            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerTeamWorkaround, team);
-        }
+        #region Public Methods
 
         public void AttachEntityToEntity(GTANetworkAPI.Entity entity, GTANetworkAPI.Entity entityTarget, PedBone bone, Vector3 positionOffset, Vector3 rotationOffset, ILobby? lobby = null)
         {
@@ -113,6 +95,29 @@ namespace TDS_Server.RAGEAPI
             _attachedEntitiesInfos.Remove(entity);
         }
 
+        public void FreezeEntity(GTANetworkAPI.Entity entity, bool freeze, ILobby lobby)
+        {
+            _modAPI.Sync.SendEvent(lobby, ToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, freeze);
+
+            if (freeze)
+            {
+                if (!_frozenEntityPerLobby.ContainsKey(lobby))
+                    _frozenEntityPerLobby[lobby] = new List<GTANetworkAPI.Entity>();
+                _frozenEntityPerLobby[lobby].Add(entity);
+            }
+            else
+            {
+                if (!_frozenEntityPerLobby.ContainsKey(lobby))
+                    return;
+                _frozenEntityPerLobby[lobby].Remove(entity);
+            }
+        }
+
+        public void FreezePlayer(GTANetworkAPI.Player player, bool freeze)
+        {
+            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.FreezePlayerWorkaround, freeze);
+        }
+
         public void SetEntityCollisionless(GTANetworkAPI.Entity entity, bool collisionless, ILobby? lobby = null)
         {
             var info = new EntityCollisionlessInfoDto
@@ -135,11 +140,6 @@ namespace TDS_Server.RAGEAPI
             }
         }
 
-        public void SetPlayerInvincible(GTANetworkAPI.Player player, bool invincible)
-        {
-            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerInvincible, invincible);
-        }
-
         public void SetEntityInvincible(GTANetworkAPI.Player invincibleAtClient, GTANetworkAPI.Entity entity, bool invincible)
         {
             NAPI.ClientEvent.TriggerClientEvent(invincibleAtClient, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
@@ -154,6 +154,19 @@ namespace TDS_Server.RAGEAPI
             _invincibleEntityPerLobby[atLobby].Add(entity);
         }
 
+        public void SetPlayerInvincible(GTANetworkAPI.Player player, bool invincible)
+        {
+            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerInvincible, invincible);
+        }
+
+        public void SetPlayerTeam(GTANetworkAPI.Player player, int team)
+        {
+            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerTeamWorkaround, team);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private static void PlayerJoinedLobby(ITDSPlayer player, ILobby lobby)
         {
@@ -206,5 +219,7 @@ namespace TDS_Server.RAGEAPI
         private static void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
         {
         }
+
+        #endregion Private Methods
     }
 }

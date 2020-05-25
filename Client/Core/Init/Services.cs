@@ -17,8 +17,10 @@ using TDS_Shared.Core;
 
 namespace TDS_Client.Core.Init
 {
-    class Services
+    internal class Services
     {
+        #region Internal Methods
+
         internal static void Initialize(IModAPI modAPI)
         {
             var loggingHandler = new LoggingHandler(modAPI);
@@ -39,7 +41,7 @@ namespace TDS_Client.Core.Init
                 var browserHandler = new BrowserHandler(modAPI, loggingHandler, eventsHandler, serializer, remoteEventsSender);
                 var settingsHandler = new SettingsHandler(modAPI, loggingHandler, remoteEventsSender, eventsHandler, browserHandler, serializer);
                 var cursorHandler = new CursorHandler(modAPI, loggingHandler, eventsHandler, bindsHandler, settingsHandler);
-                
+
                 var dataSyncHandler = new DataSyncHandler(modAPI, loggingHandler, eventsHandler, browserHandler, serializer);
                 var utilsHandler = new UtilsHandler(modAPI, loggingHandler, serializer, dataSyncHandler, eventsHandler);
                 new GangHousesHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, serializer);
@@ -67,13 +69,12 @@ namespace TDS_Client.Core.Init
                 var playerFightHandler = new PlayerFightHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, browserHandler, floatingDamageInfoHandler, utilsHandler, camerasHandler);
                 new AntiCheatHandler(modAPI, loggingHandler, playerFightHandler);
                 var mapLimitHandler = new MapLimitHandler(modAPI, loggingHandler, settingsHandler, remoteEventsSender, eventsHandler, dxHandler, timerHandler);
-               
 
                 var lobbyHandler = new LobbyHandler(modAPI, loggingHandler, browserHandler, playerFightHandler, instructionalButtonHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
                     timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler, serializer);
                 new DamageHandler(modAPI, browserHandler, remoteEventsSender, playerFightHandler, lobbyHandler);
                 var scoreboardHandler = new ScoreboardHandler(modAPI, loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler, serializer);
-                var chatHandler = new ChatHandler(modAPI, loggingHandler, browserHandler, bindsHandler, remoteEventsSender, lobbyHandler, playerFightHandler, 
+                var chatHandler = new ChatHandler(modAPI, loggingHandler, browserHandler, bindsHandler, remoteEventsSender, lobbyHandler, playerFightHandler,
                     eventsHandler, camerasHandler);
                 new ShirtTeamColorsHandler(modAPI, loggingHandler, lobbyHandler, dataSyncHandler, eventsHandler);
 
@@ -83,7 +84,7 @@ namespace TDS_Client.Core.Init
                 var nametagsHandler = new NametagsHandler(modAPI, loggingHandler, camerasHandler, settingsHandler, utilsHandler);
 
                 new RankingHandler(modAPI, loggingHandler, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler);
-                new MapCreatorHandler(modAPI, loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler, 
+                new MapCreatorHandler(modAPI, loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler,
                     browserHandler, dxHandler, remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler, deathHandler);
 
                 loggingHandler.LogInfo("Services successfully initialized", "Services.Initialize", true);
@@ -92,7 +93,8 @@ namespace TDS_Client.Core.Init
             {
                 loggingHandler.LogError(ex);
             }
-
         }
+
+        #endregion Internal Methods
     }
 }

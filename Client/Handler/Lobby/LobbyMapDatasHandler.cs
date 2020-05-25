@@ -19,20 +19,23 @@ namespace TDS_Client.Handler.Lobby
 {
     public class LobbyMapDatasHandler : ServiceBase
     {
-        public ClientSyncedDataDto MapDatas { get; set; }
-
-        private DxText _mapInfo;
-        private readonly List<IEntityBase> _objects = new List<IEntityBase>();
+        #region Private Fields
 
         private readonly DxHandler _dxHandler;
-        private readonly TimerHandler _timerHandler;
+        private readonly EventsHandler _eventsHandler;
         private readonly LobbyCamHandler _lobbyCamHandler;
         private readonly MapLimitHandler _mapLimitHandler;
+        private readonly List<IEntityBase> _objects = new List<IEntityBase>();
         private readonly Serializer _serializer;
         private readonly SettingsHandler _settingsHandler;
-        private readonly EventsHandler _eventsHandler;
+        private readonly TimerHandler _timerHandler;
+        private DxText _mapInfo;
 
-        public LobbyMapDatasHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public LobbyMapDatasHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler,
             LobbyCamHandler lobbyCamHandler, MapLimitHandler mapLimitHandler, Serializer serializer, SettingsHandler settingsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -48,6 +51,22 @@ namespace TDS_Client.Handler.Lobby
 
             modAPI.Event.Add(ToClientEvent.MapChange, OnMapChangeMethod);
             modAPI.Event.Add(ToClientEvent.MapClear, OnMapClearMethod);
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public ClientSyncedDataDto MapDatas { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void RemoveMapInfo()
+        {
+            _mapInfo?.Remove();
+            _mapInfo = null;
         }
 
         public void SetMapData(ClientSyncedDataDto mapData)
@@ -79,6 +98,10 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private void CustomEventManager_OnLobbyLeave(SyncedLobbySettings settings)
         {
             OnMapClearMethod(Array.Empty<object>());
@@ -86,10 +109,14 @@ namespace TDS_Client.Handler.Lobby
             RemoveMapInfo();
         }
 
-        public void RemoveMapInfo()
+        private Position3D GetPos(MapCreatorPosition pos)
         {
-            _mapInfo?.Remove();
-            _mapInfo = null;
+            return new Position3D(pos.PosX, pos.PosY, pos.PosZ);
+        }
+
+        private Position3D GetRot(MapCreatorPosition pos)
+        {
+            return new Position3D(pos.RotX, pos.RotY, pos.RotZ);
         }
 
         private void LoadMap(ClientSyncedDataDto map)
@@ -151,14 +178,26 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        private Position3D GetPos(MapCreatorPosition pos)
+        private void OnMapChangeMethod(object[] args)
         {
-            return new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-        }
+            try
+            {
+                if (args.Length > 0)
+                {
+                    var mapData = _serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
+                    SetMapData(mapData);
+                }
 
-        private Position3D GetRot(MapCreatorPosition pos)
-        {
-            return new Position3D(pos.RotX, pos.RotY, pos.RotZ);
+                ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
+                ModAPI.Cam.SetCamEffect(0);
+                ModAPI.Cam.DoScreenFadeIn(_settingsHandler.MapChooseTime);
+
+                _eventsHandler.OnMapChanged();
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         private void OnMapClearMethod(object[] args)
@@ -179,26 +218,6 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        private void OnMapChangeMethod(object[] args)
-        {
-            try
-            {
-                if (args.Length > 0)
-                {
-                    var mapData = _serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
-                    SetMapData(mapData);
-                }
-            
-                ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
-                ModAPI.Cam.SetCamEffect(0);
-                ModAPI.Cam.DoScreenFadeIn(_settingsHandler.MapChooseTime);
-
-                _eventsHandler.OnMapChanged();
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-}
+        #endregion Private Methods
     }
 }

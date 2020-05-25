@@ -2,9 +2,12 @@
 
 namespace TDS_Server.Data.Models.ClothesMeta
 {
-    #nullable disable
+#nullable disable
+
     public class PropIndices
     {
+        #region Public Properties
+
         [XmlElement("pedPropIndex0")]
         public Component PropIndex0 { get; set; }
 
@@ -31,6 +34,9 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
         [XmlElement("pedPropIndex8")]
         public Component PropIndex8 { get; set; }
+
+        #endregion Public Properties
     }
-    #nullable restore
+
+#nullable restore
 }

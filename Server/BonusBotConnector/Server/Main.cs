@@ -8,9 +8,7 @@ namespace BonusBotConnector_Server
 {
     public class BonusBotConnectorServer
     {
-        public BBCommandService CommandService { get; }
-
-        public static void Main() { }
+        #region Public Constructors
 
         public BonusBotConnectorServer(ILoggingHandler loggingHandler, IUserpanelHandler userpanelHandler)
         {
@@ -19,8 +17,18 @@ namespace BonusBotConnector_Server
             host.RunAsync();
         }
 
-        // Additional configuration is required to successfully run gRPC on macOS.
-        // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public BBCommandService CommandService { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        // Additional configuration is required to successfully run gRPC on macOS. For instructions
+        // on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
         public static IHostBuilder CreateHostBuilder(ILoggingHandler loggingHandler, IUserpanelHandler userpanelHandler) =>
             Host.CreateDefaultBuilder()
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -34,5 +42,11 @@ namespace BonusBotConnector_Server
                             .AddSingleton<SupportRequestService>()
                         );
                 });
+
+        public static void Main()
+        {
+        }
+
+        #endregion Public Methods
     }
 }

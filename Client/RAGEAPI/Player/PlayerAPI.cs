@@ -4,6 +4,8 @@ namespace TDS_Client.RAGEAPI.Player
 {
     internal class PlayerAPI : IPlayerAPI
     {
+        #region Public Methods
+
         public bool GetEntityPlayerIsFreeAimingAt(ref int targetEntity)
         {
             return RAGE.Game.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity);
@@ -38,5 +40,7 @@ namespace TDS_Client.RAGEAPI.Player
         {
             RAGE.Game.Player.SetPlayerTeam(team);
         }
+
+        #endregion Public Methods
     }
 }

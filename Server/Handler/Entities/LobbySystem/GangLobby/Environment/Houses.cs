@@ -7,6 +7,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
+        #region Private Methods
+
         private void LoadHouses()
         {
             foreach (var house in _gangHousesHandler.Houses)
@@ -30,7 +32,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         Level = entity.NeededGangLevel
                     };
                 }*/
-
             }
         }
 
@@ -52,5 +53,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (house.TextLabel is { })
                 house.TextLabel.Text = house.GetTextLabelText();
         }
+
+        #endregion Private Methods
     }
 }

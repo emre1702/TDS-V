@@ -2,8 +2,10 @@
 
 namespace TDS_Client.RAGEAPI.Utils
 {
-    class UtilsAPI : IUtilsAPI
+    internal class UtilsAPI : IUtilsAPI
     {
+        #region Public Methods
+
         public void Settimera(int value)
         {
             RAGE.Game.Utils.Settimera(value);
@@ -18,5 +20,7 @@ namespace TDS_Client.RAGEAPI.Utils
         {
             RAGE.Game.Utils.Wait(ms);
         }
+
+        #endregion Public Methods
     }
 }

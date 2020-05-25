@@ -5,7 +5,13 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
     partial class Bomb
     {
+        #region Private Fields
+
         private static HashSet<WeaponHash> _allowedWeaponHashes = new HashSet<WeaponHash>();
+
+        #endregion Private Fields
+
+        #region Public Methods
 
         public static HashSet<WeaponHash> GetAllowedWeapons()
         {
@@ -16,5 +22,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
         {
             return _allowedWeaponHashes.Contains(weaponHash);
         }
+
+        #endregion Public Methods
     }
 }

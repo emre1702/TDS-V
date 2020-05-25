@@ -4,8 +4,13 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Streaming
 {
-    class StreamingAPI : IStreamingAPI
+    internal class StreamingAPI : IStreamingAPI
     {
+        #region Public Methods
+
+        public void ClearFocus()
+            => RAGE.Game.Streaming.ClearFocus();
+
         public bool HasModelLoaded(uint model)
         {
             return RAGE.Game.Streaming.HasModelLoaded(model);
@@ -31,6 +36,9 @@ namespace TDS_Client.RAGEAPI.Streaming
             RAGE.Game.Streaming.RequestModel(model);
         }
 
+        public void RequestNamedPtfxAsset(string fxName)
+            => RAGE.Game.Streaming.RequestNamedPtfxAsset(fxName);
+
         public void SetFocusArea(Position3D pos, int offsetX, int offsetY, int offsetZ)
         {
             RAGE.Game.Streaming.SetFocusArea(pos.X, pos.Y, pos.Z, offsetX, offsetY, offsetZ);
@@ -41,10 +49,6 @@ namespace TDS_Client.RAGEAPI.Streaming
             RAGE.Game.Streaming.SetFocusEntity(entity.Handle);
         }
 
-        public void ClearFocus() 
-            => RAGE.Game.Streaming.ClearFocus();
-
-        public void RequestNamedPtfxAsset(string fxName)
-            => RAGE.Game.Streaming.RequestNamedPtfxAsset(fxName);
+        #endregion Public Methods
     }
 }

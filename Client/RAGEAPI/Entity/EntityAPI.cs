@@ -5,9 +5,11 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Entity
 {
-    class EntityAPI : IEntityAPI
+    internal class EntityAPI : IEntityAPI
     {
-        public void AttachEntityToEntity(int sourceEntity, int targetEntity, int boneIndex, float xPos, float yPos, float zPos, float xRot, float yRot, float zRot, 
+        #region Public Methods
+
+        public void AttachEntityToEntity(int sourceEntity, int targetEntity, int boneIndex, float xPos, float yPos, float zPos, float xRot, float yRot, float zRot,
             bool p9, bool useSoftPinning, bool collision, bool isPed, int vertexIndex, bool fixedRot)
         {
             RAGE.Game.Entity.AttachEntityToEntity(sourceEntity, targetEntity, boneIndex, xPos, yPos, zPos, xRot, yRot, zRot, p9, useSoftPinning, collision, isPed, vertexIndex, fixedRot);
@@ -41,10 +43,13 @@ namespace TDS_Client.RAGEAPI.Entity
             {
                 case 3:
                     return EntityType.Object;
-                case 2: 
+
+                case 2:
                     return EntityType.Vehicle;
+
                 case 1:
                     return EntityType.Ped;
+
                 default:
                     return EntityType.Invalid;
             }
@@ -69,5 +74,7 @@ namespace TDS_Client.RAGEAPI.Entity
         {
             RAGE.Game.Entity.SetEntityInvincible(entity, toggle);
         }
+
+        #endregion Public Methods
     }
 }

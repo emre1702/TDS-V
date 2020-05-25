@@ -4,11 +4,18 @@ using System.Threading.Tasks;
 
 namespace TDS_Server.Data.Utility
 {
-    #nullable enable
+#nullable enable
+
     public class AsyncTaskEvent<T>
     {
+        #region Private Fields
+
         private readonly List<Func<object, T, Task>> _invocationList;
         private readonly object _locker;
+
+        #endregion Private Fields
+
+        #region Private Constructors
 
         private AsyncTaskEvent()
         {
@@ -16,19 +23,9 @@ namespace TDS_Server.Data.Utility
             _locker = new object();
         }
 
-        public static AsyncTaskEvent<T>? operator +(
-            AsyncTaskEvent<T> e, Func<object, T, Task> callback)
-        {
-            if (callback == null) throw new NullReferenceException("callback is null");
+        #endregion Private Constructors
 
-            if (e == null) e = new AsyncTaskEvent<T>();
-
-            lock (e._locker)
-            {
-                e._invocationList.Add(callback);
-            }
-            return e;
-        }
+        #region Public Methods
 
         public static AsyncTaskEvent<T>? operator -(
             AsyncTaskEvent<T> e, Func<object, T, Task> callback)
@@ -39,6 +36,20 @@ namespace TDS_Server.Data.Utility
             lock (e._locker)
             {
                 e._invocationList.Remove(callback);
+            }
+            return e;
+        }
+
+        public static AsyncTaskEvent<T>? operator +(
+                    AsyncTaskEvent<T> e, Func<object, T, Task> callback)
+        {
+            if (callback == null) throw new NullReferenceException("callback is null");
+
+            if (e == null) e = new AsyncTaskEvent<T>();
+
+            lock (e._locker)
+            {
+                e._invocationList.Add(callback);
             }
             return e;
         }
@@ -58,6 +69,6 @@ namespace TDS_Server.Data.Utility
             }
         }
 
-        
+        #endregion Public Methods
     }
 }

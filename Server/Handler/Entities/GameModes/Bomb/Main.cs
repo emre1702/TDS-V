@@ -12,9 +12,15 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
     partial class Bomb : GameMode
     {
-        private readonly ITeam _terroristTeam;
+        #region Private Fields
+
         private readonly ITeam _counterTerroristTeam;
+        private readonly ITeam _terroristTeam;
         private ITDSPlayer? _bombAtPlayer;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Bomb(Arena arena, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
             : base(arena, map, modAPI, serializer, settingsHandler, langHelper, invitationsHandler)
@@ -23,11 +29,17 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             _counterTerroristTeam = arena.Teams[1];
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public static void Init(TDSDbContext dbContext)
         {
             _allowedWeaponHashes = dbContext.Weapons
                 .Select(w => w.Hash)
                 .ToHashSet();
         }
+
+        #endregion Public Methods
     }
 }

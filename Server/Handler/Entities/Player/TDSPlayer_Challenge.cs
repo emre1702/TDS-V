@@ -8,12 +8,13 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Private Fields
+
         private Dictionary<ChallengeType, List<PlayerChallenges>> _challengesDict = new Dictionary<ChallengeType, List<PlayerChallenges>>();
 
-        public void InitChallengesDict()
-        {
-            _challengesDict = Entity!.Challenges.GroupBy(c => c.Challenge).ToDictionary(c => c.Key, c => c.ToList());
-        }
+        #endregion Private Fields
+
+        #region Public Methods
 
         public async void AddToChallenge(ChallengeType type, int amount = 1, bool setTheValue = false)
         {
@@ -44,5 +45,12 @@ namespace TDS_Server.Handler.Entities.Player
                 }
             }
         }
+
+        public void InitChallengesDict()
+        {
+            _challengesDict = Entity!.Challenges.GroupBy(c => c.Challenge).ToDictionary(c => c.Key, c => c.ToList());
+        }
+
+        #endregion Public Methods
     }
 }

@@ -2,8 +2,10 @@
 
 namespace TDS_Client.RAGEAPI.Audio
 {
-    class AudioAPI : IAudioAPI
+    internal class AudioAPI : IAudioAPI
     {
+        #region Public Methods
+
         public void PlaySoundFrontend(int soundId, string audioName, string audioRef)
         {
             RAGE.Game.Audio.PlaySoundFrontend(soundId, audioName, audioRef, true);
@@ -13,5 +15,7 @@ namespace TDS_Client.RAGEAPI.Audio
         {
             RAGE.Game.Audio.SetAudioFlag(flagName, toggle);
         }
+
+        #endregion Public Methods
     }
 }

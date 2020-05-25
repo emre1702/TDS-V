@@ -4,8 +4,12 @@ namespace TDS_Server.Database.Entity.Rest
 {
     public partial class FreeroamDefaultVehicle
     {
-        public FreeroamVehicleType VehicleType { get; set; }
-        public VehicleHash VehicleHash { get; set; }
+        #region Public Properties
+
         public string Note { get; set; }
+        public VehicleHash VehicleHash { get; set; }
+        public FreeroamVehicleType VehicleType { get; set; }
+
+        #endregion Public Properties
     }
 }

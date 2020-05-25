@@ -2,7 +2,11 @@
 {
     public interface IVoiceAPI
     {
-        bool Muted { get; set; }
+        #region Public Properties
+
         bool Allowed { get; }
+        bool Muted { get; set; }
+
+        #endregion Public Properties
     }
 }

@@ -2,6 +2,8 @@
 {
     public static class FromBrowserEvent
     {
+        #region Public Fields
+
         public const string CharCreatorDataChanged = "b10";
         public const string ChatUsed = "b3";
         public const string ChooseArenaToJoin = "b4";
@@ -31,8 +33,8 @@
         public const string MapCreatorShowVehicle = "b23";
         public const string MapCreatorStartNew = "b24";
         public const string MapCreatorStartObjectChoice = "b25";
-        public const string MapCreatorStopObjectPreview = "b26";
         public const string MapCreatorStartVehicleChoice = "b27";
+        public const string MapCreatorStopObjectPreview = "b26";
         public const string MapCreatorStopVehiclePreview = "b28";
 
         public const string OnColorSettingChange = "b29";
@@ -45,12 +47,13 @@
         public const string StartMapCreatorPosPlacing = "b35";
         public const string SyncRegisterLoginLanguageTexts = "b36";
 
-        public const string TeleportToXY = "b37";
         public const string TeleportToPositionRotation = "b38";
+        public const string TeleportToXY = "b37";
         public const string ToggleMapFavorite = "b39";
         public const string TryLogin = "b40";
         public const string TryRegister = "b41";
 
+        #endregion Public Fields
 
         //ChooseMapCreatorToJoin
         //SyncChoicLanguageTexts

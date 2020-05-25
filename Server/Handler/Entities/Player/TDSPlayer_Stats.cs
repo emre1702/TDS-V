@@ -8,7 +8,7 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
-        public PlayerTotalStats? TotalStats => Entity?.PlayerTotalStats;
+        #region Public Properties
 
         public int Money
         {
@@ -36,8 +36,25 @@ namespace TDS_Server.Handler.Entities.Player
             }
         }
 
+        public PlayerTotalStats? TotalStats => Entity?.PlayerTotalStats;
 
-        #region Money
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void CheckReduceMapBoughtCounter()
+        {
+            if (Entity is null)
+                return;
+            if (Entity.PlayerStats.MapsBoughtCounter <= 1)
+                return;
+            if (DateTime.UtcNow >= Entity.PlayerStats.LastMapsBoughtCounterReduce.AddMinutes(_settingsHandler.ServerSettings.ReduceMapsBoughtCounterAfterMinute))
+            {
+                Entity.PlayerStats.LastMapsBoughtCounterReduce = DateTime.UtcNow;
+                --Entity.PlayerStats.MapsBoughtCounter;
+                _dataSyncHandler.SetData(this, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
+            }
+        }
 
         public void GiveMoney(int money)
         {
@@ -57,20 +74,6 @@ namespace TDS_Server.Handler.Entities.Player
             GiveMoney((int)money);
         }
 
-        #endregion Money
-
-        public void CheckReduceMapBoughtCounter()
-        {
-            if (Entity is null)
-                return;
-            if (Entity.PlayerStats.MapsBoughtCounter <= 1)
-                return;
-            if (DateTime.UtcNow >= Entity.PlayerStats.LastMapsBoughtCounterReduce.AddMinutes(_settingsHandler.ServerSettings.ReduceMapsBoughtCounterAfterMinute))
-            {
-                Entity.PlayerStats.LastMapsBoughtCounterReduce = DateTime.UtcNow;
-                --Entity.PlayerStats.MapsBoughtCounter;
-                _dataSyncHandler.SetData(this, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
-            }
-        }
+        #endregion Public Methods
     }
 }

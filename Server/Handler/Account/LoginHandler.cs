@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
-using TDS_Server.Data;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
@@ -23,19 +22,25 @@ namespace TDS_Server.Handler.Account
 {
     public class LoginHandler
     {
-        private readonly IModAPI _modAPI;
+        #region Private Fields
+
         private readonly DatabasePlayerHelper _databasePlayerHandler;
-        private readonly LangHelper _langHelper;
-        private readonly EventsHandler _eventsHandler;
-        private readonly Serializer _serializer;
-        private readonly ISettingsHandler _settingsHandler;
-        private readonly IServiceProvider _serviceProvider;
         private readonly DataSyncHandler _dataSyncHandler;
+        private readonly EventsHandler _eventsHandler;
+        private readonly LangHelper _langHelper;
         private readonly ILoggingHandler _loggingHandler;
+        private readonly IModAPI _modAPI;
+        private readonly Serializer _serializer;
         private readonly ServerStartHandler _serverStartHandler;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ISettingsHandler _settingsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public LoginHandler(
-            IModAPI modAPI, 
+            IModAPI modAPI,
             DatabasePlayerHelper databasePlayerHandler,
             LangHelper langHelper,
             EventsHandler eventsHandler,
@@ -60,31 +65,9 @@ namespace TDS_Server.Handler.Account
             _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
         }
 
-        public async void TryLogin(ITDSPlayer player, string username, string password)
-        {
-            player.TryingToLoginRegister = true;
-            try
-            {
-                if (!_serverStartHandler.IsReadyForLogin)
-                {
-                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
-                    return;
-                }
+        #endregion Public Constructors
 
-                int id = await _databasePlayerHandler.GetPlayerIDByName(username);
-                if (id != 0)
-                {
-                    await LoginPlayer(player, id, password);
-                }
-                else
-                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
-            }
-            finally
-            {
-                player.TryingToLoginRegister = false;
-            }
-            
-        }
+        #region Public Methods
 
         public async Task LoginPlayer(ITDSPlayer iplayer, int id, string? password)
         {
@@ -92,7 +75,6 @@ namespace TDS_Server.Handler.Account
                 return;
             if (player.ModPlayer is null)
                 return;
-
 
             bool worked = await player.ExecuteForDBAsync(async (dbContext) =>
             {
@@ -111,7 +93,7 @@ namespace TDS_Server.Handler.Account
                     .Include(p => p.CharDatas.FeaturesData)
                     .Include(p => p.CharDatas.AppearanceData)
                     .Include(p => p.CharDatas.HairAndColorsData)
-                        
+
                    .FirstOrDefaultAsync(p => p.Id == id);
 
                 _modAPI.Thread.RunInMainThread(() => player.Entity = entity);
@@ -135,7 +117,6 @@ namespace TDS_Server.Handler.Account
                     entity.PlayerStats.LoggedIn = true;
                     entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
                 });
-               
 
                 await dbContext.SaveChangesAsync();
                 return true;
@@ -163,12 +144,42 @@ namespace TDS_Server.Handler.Account
 
                 _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
             });
-            
         }
+
+        public async void TryLogin(ITDSPlayer player, string username, string password)
+        {
+            player.TryingToLoginRegister = true;
+            try
+            {
+                if (!_serverStartHandler.IsReadyForLogin)
+                {
+                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
+                    return;
+                }
+
+                int id = await _databasePlayerHandler.GetPlayerIDByName(username);
+                if (id != 0)
+                {
+                    await LoginPlayer(player, id, password);
+                }
+                else
+                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
+            }
+            finally
+            {
+                player.TryingToLoginRegister = false;
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private async void EventsHandler_PlayerRegistered(ITDSPlayer player, Players dbPlayer)
         {
             await LoginPlayer(player, dbPlayer.Id, null);
         }
+
+        #endregion Private Methods
     }
 }

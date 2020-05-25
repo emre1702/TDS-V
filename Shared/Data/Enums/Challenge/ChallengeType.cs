@@ -24,8 +24,6 @@
         CreatorOfAcceptedMap,   // Create a map that passes the testing phase
         BeHelpfulEnough,        // Help the server enough to get the "Contributor" role.
 
-        // HeadshotKills,
-        // JoinActions,
-        // JoinOrCreateGang,       // Join or create a gang.
+        // HeadshotKills, JoinActions, JoinOrCreateGang, // Join or create a gang.
     }
 }

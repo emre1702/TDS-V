@@ -1,15 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Interfaces.ModAPI.Pool;
 using TDS_Client.RAGEAPI.Entity;
 
 namespace TDS_Client.RAGEAPI.Pool
 {
-    class PoolPlayersAPI : IPoolPlayersAPI
+    internal class PoolPlayersAPI : IPoolPlayersAPI
     {
+        #region Private Fields
+
         private readonly List<IPlayer> _all = new List<IPlayer>();
+        private readonly EntityConvertingHandler _entityConvertingHandler;
+
+        private readonly List<IPlayer> _streamed = new List<IPlayer>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public PoolPlayersAPI(EntityConvertingHandler entityConvertingHandler)
+            => _entityConvertingHandler = entityConvertingHandler;
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
         public List<IPlayer> All
         {
             get
@@ -23,7 +38,6 @@ namespace TDS_Client.RAGEAPI.Pool
             }
         }
 
-        private readonly List<IPlayer> _streamed = new List<IPlayer>();
         public List<IPlayer> Streamed
         {
             get
@@ -37,6 +51,10 @@ namespace TDS_Client.RAGEAPI.Pool
             }
         }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
         public IPlayer GetAtHandle(int handle)
         {
             var obj = RAGE.Elements.Entities.Players.GetAtHandle(handle);
@@ -49,9 +67,6 @@ namespace TDS_Client.RAGEAPI.Pool
             return _entityConvertingHandler.GetEntity(obj);
         }
 
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        public PoolPlayersAPI(EntityConvertingHandler entityConvertingHandler)
-            => _entityConvertingHandler = entityConvertingHandler;
+        #endregion Public Methods
     }
 }

@@ -16,6 +16,8 @@ namespace TDS_Server.Data.Interfaces.ModAPI
 {
     public interface IModAPI
     {
+        #region Public Properties
+
         IBlipAPI Blip { get; }
         IChatAPI Chat { get; }
         IColShapeAPI ColShape { get; }
@@ -31,6 +33,12 @@ namespace TDS_Server.Data.Interfaces.ModAPI
         IThreadAPI Thread { get; }
         IVehicleAPI Vehicle { get; }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
         bool CheckHasErrors(ILoggingHandler loggingHandler);
+
+        #endregion Public Methods
     }
 }

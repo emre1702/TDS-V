@@ -6,10 +6,16 @@ using TDS_Client.RAGEAPI.Player;
 
 namespace TDS_Client.RAGEAPI.Event
 {
-    class PlayerStartTalkingEventHandler : BaseEventHandler<PlayerDelegate>
+    internal class PlayerStartTalkingEventHandler : BaseEventHandler<PlayerDelegate>
     {
+        #region Private Fields
+
         private readonly LoggingHandler _loggingHandler;
         private readonly PlayerConvertingHandler _playerConvertingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public PlayerStartTalkingEventHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler)
             : base()
@@ -20,11 +26,15 @@ namespace TDS_Client.RAGEAPI.Event
             RAGE.Events.OnPlayerStartTalking += PlayerStartTalking;
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
         private void PlayerStartTalking(RAGE.Elements.Player playerMod)
         {
             if (Actions.Count == 0)
                 return;
-            try 
+            try
             {
                 IPlayer player = _playerConvertingHandler.GetPlayer(playerMod);
 
@@ -40,5 +50,7 @@ namespace TDS_Client.RAGEAPI.Event
                 _loggingHandler.LogError(ex);
             }
         }
+
+        #endregion Private Methods
     }
 }

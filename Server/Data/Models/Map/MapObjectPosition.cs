@@ -6,28 +6,11 @@ namespace TDS_Server.Data.Models.Map
 {
     public class MapObjectPosition
     {
-        [XmlAttribute("name")]
-        public string Name { get; set; } = string.Empty;
+        #region Public Constructors
 
-        [XmlAttribute("x")]
-        public float X { get; set; }
-
-        [XmlAttribute("y")]
-        public float Y { get; set; }
-
-        [XmlAttribute("z")]
-        public float Z { get; set; }
-
-        [XmlAttribute("rotX")]
-        public float RotX { get; set; }
-
-        [XmlAttribute("rotY")]
-        public float RotY { get; set; }
-
-        [XmlAttribute("rotZ")]
-        public float RotZ { get; set; }
-
-        public MapObjectPosition() { }
+        public MapObjectPosition()
+        {
+        }
 
         public MapObjectPosition(MapCreatorPosition pos)
         {
@@ -41,6 +24,35 @@ namespace TDS_Server.Data.Models.Map
             RotY = pos.RotY;
             RotZ = pos.RotZ;
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        [XmlAttribute("name")]
+        public string Name { get; set; } = string.Empty;
+
+        [XmlAttribute("rotX")]
+        public float RotX { get; set; }
+
+        [XmlAttribute("rotY")]
+        public float RotY { get; set; }
+
+        [XmlAttribute("rotZ")]
+        public float RotZ { get; set; }
+
+        [XmlAttribute("x")]
+        public float X { get; set; }
+
+        [XmlAttribute("y")]
+        public float Y { get; set; }
+
+        [XmlAttribute("z")]
+        public float Z { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public MapCreatorPosition ToMapCreatorPosition(int id, MapCreatorPositionType type)
         {
@@ -57,5 +69,7 @@ namespace TDS_Server.Data.Models.Map
                 RotZ = RotZ
             };
         }
+
+        #endregion Public Methods
     }
 }

@@ -2,11 +2,15 @@
 
 namespace TDS_Client.RAGEAPI.Discord
 {
-    class DiscordAPI : IDiscordAPI
+    internal class DiscordAPI : IDiscordAPI
     {
+        #region Public Methods
+
         public void Update(string details, string state)
         {
             RAGE.Discord.Update(details, state);
         }
+
+        #endregion Public Methods
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
@@ -10,17 +9,26 @@ namespace TDS_Client.Handler.Entities.Draw
 {
     public class FloatingDamageInfo
     {
+        #region Public Fields
+
         public bool RemoveAtHandler;
 
+        #endregion Public Fields
+
+        #region Private Fields
+
         private readonly float _damage;
+        private readonly DxHandler _dxHandler;
+        private readonly SettingsHandler _settingsHandler;
         private readonly int _startTicks;
         private readonly Position3D _targetPosition;
+        private readonly TimerHandler _timerHandler;
+        private readonly IModAPI ModAPI;
         private DxText _text;
 
-        private readonly IModAPI ModAPI;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly DxHandler _dxHandler;
-        private readonly TimerHandler _timerHandler;
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal FloatingDamageInfo(IPlayer target, float damage, int currentMs, IModAPI modAPI, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler)
         {
@@ -32,6 +40,15 @@ namespace TDS_Client.Handler.Entities.Draw
             _damage = damage;
             _startTicks = currentMs;
             _targetPosition = target.Position;
+        }
+
+        #endregion Internal Constructors
+
+        #region Public Methods
+
+        public void Remove()
+        {
+            _text?.Remove();
         }
 
         public void UpdatePosition(int currentMs)
@@ -59,9 +76,6 @@ namespace TDS_Client.Handler.Entities.Draw
                 _text.SetRelativeY(screenY);
         }
 
-        public void Remove()
-        {
-            _text?.Remove();
-        }
+        #endregion Public Methods
     }
 }

@@ -8,13 +8,23 @@ namespace TDS_Client.RAGEAPI.Event
 {
     public class TickEventHandler : BaseEventHandler<TickDelegate>
     {
+        #region Private Fields
+
         private readonly LoggingHandler _loggingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public TickEventHandler(LoggingHandler loggingHandler)
         {
             _loggingHandler = loggingHandler;
             RAGE.Events.Tick += OnTick;
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void OnTick(List<RAGE.Events.TickNametagData> nametags)
         {
@@ -33,5 +43,7 @@ namespace TDS_Client.RAGEAPI.Event
                 _loggingHandler.LogError(ex);
             }
         }
+
+        #endregion Private Methods
     }
 }

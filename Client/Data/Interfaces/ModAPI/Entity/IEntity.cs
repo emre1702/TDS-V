@@ -4,27 +4,33 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 {
-    public interface IEntity: IEquatable<IEntity>
+    public interface IEntity : IEquatable<IEntity>
     {
-        int Handle { get; }
-        ushort RemoteId { get; }
+        #region Public Properties
 
-        Position3D Position { get; set; }
         uint Dimension { get; set; }
-        bool IsNull { get; }
         bool Exists { get; }
-        EntityType Type { get; }
+        int Handle { get; }
+
+        // Summary: Local (client-side) entity ID.
+        ushort Id { get; }
 
         bool IsLocal { get; }
-        //
-        // Summary:
-        //     Local (client-side) entity ID.
-        ushort Id { get; }
-        //
-        // Summary:
-        //     Entity model.
+        bool IsNull { get; }
+
+        // Summary: Entity model.
         uint Model { get; set; }
 
+        Position3D Position { get; set; }
+        ushort RemoteId { get; }
+        EntityType Type { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         void Destroy();
+
+        #endregion Public Methods
     }
 }

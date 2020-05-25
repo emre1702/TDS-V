@@ -6,13 +6,20 @@ namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxRectangle : DxBase
     {
+        #region Private Fields
+
+        private readonly Color _color;
+
+        private AlignmentX _alignmentX;
+
         private float _xPos,
-            _yPos,
+                            _yPos,
             _sizeX,
             _sizeY;
 
-        private readonly Color _color;
-        private AlignmentX _alignmentX;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public DxRectangle(DxHandler dxHandler, IModAPI modAPI, float x, float y, float width, float height, Color color,
             AlignmentX alignmentX = AlignmentX.Left, AlignmentY alignmentY = AlignmentY.Top,
@@ -37,6 +44,15 @@ namespace TDS_Client.Handler.Draw.Dx
                 _yPos -= _sizeY / 2;
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public override void Draw()
+        {
+            ModAPI.Graphics.DrawRect(_xPos, _yPos, _sizeX, _sizeY, _color.R, _color.G, _color.B, _color.A);
+        }
+
         public void SetAlignment(AlignmentX newalignmentX)
         {
             // convert old back
@@ -54,6 +70,13 @@ namespace TDS_Client.Handler.Draw.Dx
             _alignmentX = newalignmentX;
         }
 
+        public void SetHeight(float height)
+        {
+            _yPos -= _sizeY / 2;
+            _sizeY = height;
+            _yPos += height / 2;
+        }
+
         public void SetWidth(float width, bool relativePos)
         {
             AlignmentX currentalignment = _alignmentX;
@@ -62,16 +85,6 @@ namespace TDS_Client.Handler.Draw.Dx
             SetAlignment(currentalignment);
         }
 
-        public void SetHeight(float height)
-        {
-            _yPos -= _sizeY / 2;
-            _sizeY = height;
-            _yPos += height / 2;
-        }
-
-        public override void Draw()
-        {
-            ModAPI.Graphics.DrawRect(_xPos, _yPos, _sizeX, _sizeY, _color.R, _color.G, _color.B, _color.A);
-        }
+        #endregion Public Methods
     }
 }

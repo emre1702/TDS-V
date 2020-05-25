@@ -1,12 +1,16 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 
 namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
-        public void SetEntityInvincible(ITDSVehicle vehicle, bool invincible)
+        #region Public Methods
+
+        public void SetEntityInvincible(IVehicle vehicle, bool invincible)
         {
-            vehicle.Vehicle?.SetInvincible(invincible, this);
+            vehicle.SetInvincible(invincible, this);
         }
+
+        #endregion Public Methods
     }
 }

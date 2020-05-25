@@ -9,24 +9,32 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Server;
 using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Handler.Account
 {
     public class BansHandler : DatabaseEntityWrapper
     {
+        #region Private Fields
+
+        private readonly EventsHandler _eventsHandler;
+
+        private readonly LobbiesHandler _lobbiesHandler;
+
+        private readonly IModAPI _modAPI;
+
+        private readonly ISettingsHandler _settingsHandler;
+
         //Todo: Add new server bans in this list
         private List<PlayerBans> _cachedBans = new List<PlayerBans>();
 
-        private readonly IModAPI _modAPI;
-        private readonly LobbiesHandler _lobbiesHandler;
-        private readonly ISettingsHandler _settingsHandler;
-        private readonly EventsHandler _eventsHandler;
+        #endregion Private Fields
 
-        public BansHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler, 
-            ISettingsHandler settingsHandler) 
-            : base(dbContext, logger) 
+        #region Public Constructors
+
+        public BansHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler,
+            ISettingsHandler settingsHandler)
+            : base(dbContext, logger)
         {
             _modAPI = modAPI;
             _lobbiesHandler = lobbiesHandler;
@@ -38,8 +46,17 @@ namespace TDS_Server.Handler.Account
             eventsHandler.IncomingConnection += CheckBanOnIncomingConnection;
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void AddServerBan(PlayerBans ban)
+        {
+            _cachedBans.Add(ban);
+        }
+
         public async Task<PlayerBans?> GetBan(int lobbyId,
-            int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
+                    int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
             bool? preventConnection = null, bool andConnection = false)
         {
             PlayerBans? ban = (playerId, ip, serial, socialClubName, socialClubId, andConnection) switch
@@ -119,7 +136,7 @@ namespace TDS_Server.Handler.Account
                 (_, _, _, _, _, false)
                     => _cachedBans
                             .Where(b => b.LobbyId == lobbyId
-                                && b.EndTimestamp > DateTime.UtcNow 
+                                && b.EndTimestamp > DateTime.UtcNow
                                 && ((playerId is null || b.PlayerId == playerId)
                                 || (ip is null || b.IP == ip)
                                 || (serial is null || b.Serial == serial)
@@ -132,9 +149,16 @@ namespace TDS_Server.Handler.Account
             return ban;
         }
 
-        public void AddServerBan(PlayerBans ban)
+        public async void RefreshServerBansCache(int counter)
         {
-            _cachedBans.Add(ban);
+            if (counter % _settingsHandler.ServerSettings.ReloadServerBansEveryMinutes != 0)
+                return;
+
+            int lobbyId = _lobbiesHandler.MainMenu.Id;
+            _cachedBans = await ExecuteForDBAsync(async dbContext
+                => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
+
+            _modAPI.Thread.RunInMainThread(() => _eventsHandler.OnLoadedServerBans());
         }
 
         public void RemoveServerBanByPlayerId(PlayerBans ban)
@@ -142,6 +166,17 @@ namespace TDS_Server.Handler.Account
             var banToRemove = _cachedBans.FirstOrDefault(b => b.LobbyId == ban.LobbyId && b.PlayerId == ban.PlayerId);
             if (banToRemove is { })
                 _cachedBans.Remove(banToRemove);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void CheckBanOnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
+        {
+            var ban = GetServerBan(null, ip, serial, socialClubName, socialClubId, true);
+            if (ban is { })
+                cancel.Cancel = true;
         }
 
         private async void RemoveExpiredBans(int _)
@@ -156,24 +191,6 @@ namespace TDS_Server.Handler.Account
             });
         }
 
-
-        public async void RefreshServerBansCache(int counter)
-        {
-            if (counter % _settingsHandler.ServerSettings.ReloadServerBansEveryMinutes != 0)
-                return;
-
-            int lobbyId = _lobbiesHandler.MainMenu.Id;
-            _cachedBans = await ExecuteForDBAsync(async dbContext 
-                => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
-
-            _modAPI.Thread.RunInMainThread(() => _eventsHandler.OnLoadedServerBans());
-        }
-
-        private void CheckBanOnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
-        {
-            var ban = GetServerBan(null, ip, serial, socialClubName, socialClubId, true);
-            if (ban is { })
-                cancel.Cancel = true;
-        }
+        #endregion Private Methods
     }
 }

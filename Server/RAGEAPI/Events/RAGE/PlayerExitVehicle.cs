@@ -1,10 +1,11 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.RAGEAPI.Player;
 
 namespace TDS_Server.RAGEAPI.Events.RAGE
 {
     partial class BaseRAGEEvents
     {
+        #region Public Methods
+
         [ServerEvent(Event.PlayerExitVehicle)]
         public void PlayerExitVehicle(GTANetworkAPI.Player player, GTANetworkAPI.Vehicle vehicle)
         {
@@ -22,5 +23,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
 
             Init.TDSCore.EventsHandler.OnPlayerExitVehicle(tdsPlayer, tdsVehicle);*/
         }
+
+        #endregion Public Methods
     }
 }

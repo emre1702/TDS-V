@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Data.Enums;
@@ -18,85 +16,111 @@ namespace TDS_Server.Data.Interfaces
 
     public interface ITDSPlayer : ITDSPedBase, IDatabaseEntityWrapper, IEquatable<ITDSPlayer>
     {
-        ITDSPlayer? InPrivateChatWith { get; set; }
+        #region Public Properties
+
         AdminLevelDto AdminLevel { get; }
+        string AdminLevelName { get; }
+        int Armor { get; set; }
         RoundStatsDto? CurrentRoundStats { get; set; }
         string DisplayName { get; }
         Players? Entity { get; }
-        int Id { get; }
-        bool IsVip { get; }
-        ILanguage Language { get; }
-        ILobby? Lobby { get; set; }
-        IPlayer? ModPlayer { get; set; }
-        ushort RemoteId { get; }
-        ITeam? Team { get; }
-        bool IsPermamuted { get; }
-        bool IsMuted { get; }
-        int? MuteTime { get; set; }
-
-        void LoadTimezone();
-
-        string AdminLevelName { get; }
-        bool LoggedIn { get; }
-        ulong SocialClubId { get; }
-        GangRanks? GangRank { get; set; }
+        PedHash FreemodeSkin { get; }
+        IVehicle? FreeroamVehicle { get; set; }
         IGang Gang { get; set; }
-        ITDSPlayer? Spectates { get; set; }
-
-        sbyte Lifes { get; set; }
-        HashSet<ITDSPlayer> Spectators { get; }
+        GangRanks? GangRank { get; set; }
         int Health { get; set; }
-        int Armor { get; set; }
-        WeaponHash LastWeaponOnHand { get; set; }
-        DateTime? LastKillAt { get; set; }
-
-        void ResetVoiceToAndFrom();
-
+        int Id { get; }
+        ITDSPlayer? InPrivateChatWith { get; set; }
+        string IPAddress { get; }
+        bool IsConsole { get; set; }
+        bool IsCrouched { get; set; }
+        bool IsLobbyOwner { get; }
+        bool IsMuted { get; }
+        bool IsPermamuted { get; }
+        bool IsVip { get; }
+        bool IsVoiceMuted { get; }
         short KillingSpree { get; set; }
+        ILanguage Language { get; }
+        Language LanguageEnum { get; set; }
+        ITDSPlayer? LastHitter { get; set; }
+        DateTime? LastKillAt { get; set; }
+        WeaponHash LastWeaponOnHand { get; set; }
+        sbyte Lifes { get; set; }
+        ILobby? Lobby { get; set; }
+        PlayerLobbyStats? LobbyStats { get; }
+        bool LoggedIn { get; }
+        IPlayer? ModPlayer { get; set; }
+        int Money { get; set; }
+        int? MuteTime { get; set; }
+        int PlayMinutes { get; set; }
+        ILobby? PreviousLobby { get; set; }
+        ushort RemoteId { get; }
+        ITDSPlayer? SentPrivateChatRequestTo { get; set; }
+        short ShortTimeKillingSpree { get; }
+        ulong SocialClubId { get; }
+        ITDSPlayer? Spectates { get; set; }
+        HashSet<ITDSPlayer> Spectators { get; }
+        ITeam? Team { get; }
+        int TeamIndex { get; }
+
+        bool TryingToLoginRegister { get; set; }
+
+        int? VoiceMuteTime { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        void AddToChallenge(ChallengeType challengeType, int amount = 1, bool setTheValue = false);
+
+        void ChangeMuteTime(ITDSPlayer target, int minutes, string reason);
+
+        void ChangeVoiceMuteTime(ITDSPlayer player, int minutes, string reason);
+
+        void CheckReduceMapBoughtCounter();
+
+        void CheckSaveData();
+
+        void ClosePrivateChat(bool v);
+
+        void Damage(ref int damage);
 
         string GetLocalDateTimeString(DateTime createTime);
 
-        PedHash FreemodeSkin { get; }
-        bool IsVoiceMuted { get; }
+        PlayerRelation GetRelationTo(ITDSPlayer target);
+
+        void GiveMoney(uint money);
+
+        void GiveMoney(int money);
+
+        bool HasRelationTo(ITDSPlayer target, PlayerRelation block);
+
+        void LoadTimezone();
+
+        void ResetVoiceToAndFrom();
+
+        ValueTask SaveData(bool force = false);
+
+        void SendBrowserEvent(string eventName, params object[] args);
+
+        void SendEvent(string eventName, params object[] args);
+
+        void SendMessage(string msg);
+
+        void SendNotification(string msg, bool flashing = false);
+
+        void SetEntityInvincible(IVehicle vehicle, bool invincible);
+
+        Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats);
+
+        void SetRelation(ITDSPlayer target, PlayerRelation relation);
 
         void SetTeam(ITeam? team, bool forceIsNew);
 
-        int TeamIndex { get; }
-        ITDSPlayer? LastHitter { get; set; }
-        PlayerLobbyStats? LobbyStats { get; }
-        bool IsLobbyOwner { get; }
-        int Money { get; set; }
-        ILobby? PreviousLobby { get; set; }
-        short ShortTimeKillingSpree { get; }
-        ITDSVehicle? FreeroamVehicle { get; set; }
-        int PlayMinutes { get; set; }
-        int? VoiceMuteTime { get; set; }
-        Language LanguageEnum { get; set; }
-        bool IsConsole { get; set; }
-        bool IsCrouched { get; set; }
-        bool TryingToLoginRegister { get; set; }
-        ITDSPlayer? SentPrivateChatRequestTo { get; set; }
-
-        void SendBrowserEvent(string eventName, params object[] args);
-        void SendEvent(string eventName, params object[] args);
-        void SendMessage(string msg);
-        void SendNotification(string msg, bool flashing = false);
-        void GiveMoney(uint money);
-        void GiveMoney(int money);
-        void AddToChallenge(ChallengeType challengeType, int amount = 1, bool setTheValue = false);
-        void Damage(ref int damage);
-        PlayerRelation GetRelationTo(ITDSPlayer target);
-        bool HasRelationTo(ITDSPlayer target, PlayerRelation block);
         void SetVoiceTo(ITDSPlayer target, bool v);
+
         void Spawn(Position3D position, float rotation);
-        void SetEntityInvincible(ITDSVehicle vehicle, bool invincible);
-        void CheckSaveData();
-        void CheckReduceMapBoughtCounter();
-        ValueTask SaveData(bool force = false);
-        void ClosePrivateChat(bool v);
-        void ChangeVoiceMuteTime(ITDSPlayer player, int minutes, string reason);
-        void ChangeMuteTime(ITDSPlayer target, int minutes, string reason);
-        Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats);
-        void SetRelation(ITDSPlayer target, PlayerRelation relation);
+
+        #endregion Public Methods
     }
 }

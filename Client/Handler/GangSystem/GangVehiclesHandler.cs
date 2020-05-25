@@ -11,9 +11,14 @@ namespace TDS_Client.Handler.GangSystem
 {
     public class GangVehiclesHandler : ServiceBase
     {
-        private readonly EventMethodData<PlayerStartEnterVehicleDelegate> _vehicleStartEnterEventMethod;
+        #region Private Fields
 
         private readonly DataSyncHandler _dataSyncHandler;
+        private readonly EventMethodData<PlayerStartEnterVehicleDelegate> _vehicleStartEnterEventMethod;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public GangVehiclesHandler(IModAPI modAPI, LoggingHandler loggingHandler, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
@@ -24,6 +29,24 @@ namespace TDS_Client.Handler.GangSystem
 
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+        }
+
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
+        {
+            if (settings.Type != LobbyType.GangLobby && !settings.IsGangActionLobby)
+                return;
+            Start();
+        }
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
+        {
+            if (settings.Type != LobbyType.GangLobby && !settings.IsGangActionLobby)
+                return;
+            Stop();
         }
 
         private void HandleDriverOnlyGangMembers(IVehicle vehicle, VehicleSeat seat, CancelEventArgs cancel)
@@ -44,18 +67,6 @@ namespace TDS_Client.Handler.GangSystem
             ModAPI.Event.PlayerStartEnterVehicle.Remove(_vehicleStartEnterEventMethod);
         }
 
-        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
-        {
-            if (settings.Type != LobbyType.GangLobby && !settings.IsGangActionLobby)
-                return;
-            Start();
-        }
-
-        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
-        {
-            if (settings.Type != LobbyType.GangLobby && !settings.IsGangActionLobby)
-                return;
-            Stop();
-        }
+        #endregion Private Methods
     }
 }

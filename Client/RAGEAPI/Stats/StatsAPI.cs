@@ -2,11 +2,15 @@
 
 namespace TDS_Client.RAGEAPI.Stats
 {
-    class StatsAPI : IStatsAPI
+    internal class StatsAPI : IStatsAPI
     {
+        #region Public Methods
+
         public void StatSetInt(uint statName, int value, bool save)
         {
             RAGE.Game.Stats.StatSetInt(statName, value, save);
         }
+
+        #endregion Public Methods
     }
 }

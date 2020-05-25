@@ -6,14 +6,13 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Private Fields
+
         private TimeZoneInfo _timezone = TimeZoneInfo.Utc;
 
-        public void LoadTimezone()
-        {
-            if (Entity == null)
-                return;
-            _timezone = TZConvert.GetTimeZoneInfo(Entity.PlayerSettings.Timezone);
-        }
+        #endregion Private Fields
+
+        #region Public Methods
 
         public DateTime GetLocalDateTime(DateTime dateTime)
         {
@@ -24,5 +23,14 @@ namespace TDS_Server.Handler.Entities.Player
         {
             return GetLocalDateTime(dateTime).ToString(Entity?.PlayerSettings.DateTimeFormat ?? SharedConstants.DateTimeOffsetFormat);
         }
+
+        public void LoadTimezone()
+        {
+            if (Entity == null)
+                return;
+            _timezone = TZConvert.GetTimeZoneInfo(Entity.PlayerSettings.Timezone);
+        }
+
+        #endregion Public Methods
     }
 }

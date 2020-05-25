@@ -7,25 +7,9 @@ using TDS_Client.RAGEAPI.Player;
 
 namespace TDS_Client.RAGEAPI.Event
 {
-    class EventAPI : IEventAPI
+    internal class EventAPI : IEventAPI
     {
-        public ICollection<EventMethodData<DeathDelegate>> Death { get; }
-        public ICollection<EventMethodData<EntityStreamInDelegate>> EntityStreamIn { get; }
-        public ICollection<EventMethodData<EntityStreamOutDelegate>> EntityStreamOut { get; }
-        public ICollection<EventMethodData<TickDelegate>> Tick { get; }
-        public ICollection<EventMethodData<TickNametagDelegate>> TickNametag { get; }
-        public ICollection<EventMethodData<WeaponShotDelegate>> WeaponShot { get; }
-
-        public ICollection<EventMethodData<IncomingDamageDelegate>> IncomingDamage { get; }
-
-        public ICollection<EventMethodData<OutgoingDamageDelegate>> OutgoingDamage { get; }
-
-        public ICollection<EventMethodData<SpawnDelegate>> Spawn { get; }
-        public ICollection<EventMethodData<PlayerStartEnterVehicleDelegate>> PlayerStartEnterVehicle { get; }
-
-        public ICollection<EventMethodData<PlayerDelegate>> PlayerStartTalking { get; }
-
-        public ICollection<EventMethodData<PlayerDelegate>> PlayerStopTalking { get; }
+        #region Public Constructors
 
         public EventAPI(PlayerConvertingHandler playerConvertingHandler, EntityConvertingHandler entityConvertingHandler, LoggingHandler loggingHandler)
         {
@@ -43,6 +27,27 @@ namespace TDS_Client.RAGEAPI.Event
             WeaponShot = new WeaponShotHandler(loggingHandler, playerConvertingHandler);
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public ICollection<EventMethodData<DeathDelegate>> Death { get; }
+        public ICollection<EventMethodData<EntityStreamInDelegate>> EntityStreamIn { get; }
+        public ICollection<EventMethodData<EntityStreamOutDelegate>> EntityStreamOut { get; }
+        public ICollection<EventMethodData<IncomingDamageDelegate>> IncomingDamage { get; }
+        public ICollection<EventMethodData<OutgoingDamageDelegate>> OutgoingDamage { get; }
+        public ICollection<EventMethodData<PlayerStartEnterVehicleDelegate>> PlayerStartEnterVehicle { get; }
+        public ICollection<EventMethodData<PlayerDelegate>> PlayerStartTalking { get; }
+        public ICollection<EventMethodData<PlayerDelegate>> PlayerStopTalking { get; }
+        public ICollection<EventMethodData<SpawnDelegate>> Spawn { get; }
+        public ICollection<EventMethodData<TickDelegate>> Tick { get; }
+        public ICollection<EventMethodData<TickNametagDelegate>> TickNametag { get; }
+        public ICollection<EventMethodData<WeaponShotDelegate>> WeaponShot { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public void Add(string eventName, ObjectArgsDelegate method)
         {
             RAGE.Events.Add(eventName, new RAGE.Events.CallDelegate(method));
@@ -52,5 +57,7 @@ namespace TDS_Client.RAGEAPI.Event
         {
             RAGE.Events.CallLocal(eventName, args);
         }
+
+        #endregion Public Methods
     }
 }

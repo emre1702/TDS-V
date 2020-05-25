@@ -8,19 +8,11 @@ namespace TDS_Server.Data.Models.Map.Creator
 {
     public class Position3DDto
     {
-        [XmlAttribute("x")]
-        [JsonProperty("0")]
-        public float X { get; set; }
+        #region Public Constructors
 
-        [XmlAttribute("y")]
-        [JsonProperty("1")]
-        public float Y { get; set; }
-
-        [XmlAttribute("z")]
-        [JsonProperty("2")]
-        public float Z { get; set; }
-
-        public Position3DDto() { }
+        public Position3DDto()
+        {
+        }
 
         public Position3DDto(MapCreatorPosition pos)
         {
@@ -36,7 +28,28 @@ namespace TDS_Server.Data.Models.Map.Creator
             Z = pos.Z;
         }
 
-        #nullable enable
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        [XmlAttribute("x")]
+        [JsonProperty("0")]
+        public float X { get; set; }
+
+        [XmlAttribute("y")]
+        [JsonProperty("1")]
+        public float Y { get; set; }
+
+        [XmlAttribute("z")]
+        [JsonProperty("2")]
+        public float Z { get; set; }
+
+        #endregion Public Properties
+
+#nullable enable
+
+        #region Public Methods
+
         public MapCreatorPosition ToMapCreatorPosition(int id, MapCreatorPositionType type, object? info = null, ushort ownerRemoteId = 0)
         {
             return new MapCreatorPosition
@@ -50,5 +63,7 @@ namespace TDS_Server.Data.Models.Map.Creator
                 OwnerRemoteId = ownerRemoteId
             };
         }
+
+        #endregion Public Methods
     }
 }

@@ -20,17 +20,20 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class Arena : FightLobby
     {
-        public GangwarArea? GangwarArea { get; set; }
-
-        private bool _dontRemove;
+        #region Private Fields
 
         private readonly MapsLoadingHandler _mapsLoadingHandler;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ServerStatsHandler _serverStatsHandler;
+        private readonly IServiceProvider _serviceProvider;
+        private bool _dontRemove;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Arena(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler, 
+            IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
             : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
                   weaponDatasLoadingHandler, bonusBotConnectorClient, bansHandler)
@@ -69,10 +72,24 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             gangwarArea.InLobby = this;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public GangwarArea? GangwarArea { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public override void Start()
         {
             base.Start();
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
 
         protected override async Task Remove()
         {
@@ -91,7 +108,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
 
             await base.Remove();
-
         }
+
+        #endregion Protected Methods
     }
 }

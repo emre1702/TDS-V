@@ -9,7 +9,7 @@ namespace TDS_Server.Handler
 {
     public class AnnouncementsHandler : IAnnouncementsHandler
     {
-        public string Json { get; }
+        #region Public Constructors
 
         public AnnouncementsHandler(TDSDbContext dbContext, Serializer serializer)
         {
@@ -25,5 +25,13 @@ namespace TDS_Server.Handler
 
             Json = serializer.ToBrowser(data);
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public string Json { get; }
+
+        #endregion Public Properties
     }
 }

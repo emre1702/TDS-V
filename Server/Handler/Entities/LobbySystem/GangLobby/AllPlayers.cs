@@ -5,18 +5,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
-        public void SendAllPlayerLangMessage(Func<ILanguage, string> langGetter, bool includePlayersInActions)
-        {
-            SendAllPlayerLangMessage(langGetter);
-            if (includePlayersInActions)
-            {
-                var lobbiesToSendTheMsg = GetAllDerivedLobbies();
-                foreach (var lobby in lobbiesToSendTheMsg)
-                {
-                    lobby.SendAllPlayerLangMessage(langGetter);
-                }
-            }
-        }
+        #region Public Methods
 
         public void SendAllPlayerChatMessage(string message, bool includePlayersInActions)
         {
@@ -27,6 +16,19 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 foreach (var lobby in lobbiesToSendTheMsg)
                 {
                     lobby.SendAllPlayerChatMessage(message);
+                }
+            }
+        }
+
+        public void SendAllPlayerLangMessage(Func<ILanguage, string> langGetter, bool includePlayersInActions)
+        {
+            SendAllPlayerLangMessage(langGetter);
+            if (includePlayersInActions)
+            {
+                var lobbiesToSendTheMsg = GetAllDerivedLobbies();
+                foreach (var lobby in lobbiesToSendTheMsg)
+                {
+                    lobby.SendAllPlayerLangMessage(langGetter);
                 }
             }
         }
@@ -43,5 +45,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
             }
         }
+
+        #endregion Public Methods
     }
 }

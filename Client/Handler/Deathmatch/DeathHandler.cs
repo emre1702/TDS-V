@@ -1,5 +1,4 @@
 ﻿using System;
-using TDS_Shared.Data.Models;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
@@ -10,19 +9,26 @@ using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Deathmatch
 {
     public class DeathHandler : ServiceBase
     {
-        private readonly SettingsHandler _settingsHandler;
-        private readonly ScaleformMessageHandler _scaleformMessageHandler;
-        private readonly UtilsHandler _utilsHandler;
-        private readonly EventsHandler _eventsHandler;
-        private readonly BrowserHandler _browserHandler;
+        #region Private Fields
 
-        public DeathHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, ScaleformMessageHandler scaleformMessageHandler, 
+        private readonly BrowserHandler _browserHandler;
+        private readonly EventsHandler _eventsHandler;
+        private readonly ScaleformMessageHandler _scaleformMessageHandler;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly UtilsHandler _utilsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public DeathHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, ScaleformMessageHandler scaleformMessageHandler,
             EventsHandler eventsHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
            : base(modAPI, loggingHandler)
         {
@@ -41,15 +47,9 @@ namespace TDS_Client.Handler.Deathmatch
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
         }
 
-        public void PlayerSpawn()
-        {
-            Logging.LogWarning("", "DeathHandler.PlayerSpawn");
-            ModAPI.Cam.DoScreenFadeIn(_settingsHandler.ScreenFadeInTimeAfterSpawn);
-            ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
-            ModAPI.Cam.SetCamEffect(0);
+        #endregion Public Constructors
 
-            _eventsHandler.OnSpawn();
-        }
+        #region Public Methods
 
         public void PlayerDeath(IPlayer player, uint reason, IPlayer killer, CancelEventArgs cancel)
         {
@@ -66,13 +66,26 @@ namespace TDS_Client.Handler.Deathmatch
             _scaleformMessageHandler.ShowWastedMessage();
         }
 
+        public void PlayerSpawn()
+        {
+            Logging.LogWarning("", "DeathHandler.PlayerSpawn");
+            ModAPI.Cam.DoScreenFadeIn(_settingsHandler.ScreenFadeInTimeAfterSpawn);
+            ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
+            ModAPI.Cam.SetCamEffect(0);
+
+            _eventsHandler.OnSpawn();
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
             if (settings.Type == LobbyType.MainMenu)
             {
                 PlayerSpawn();
             }
-           
         }
 
         private void OnDeathMethod(object[] args)
@@ -95,5 +108,7 @@ namespace TDS_Client.Handler.Deathmatch
             var weaponHash = (WeaponHash)Convert.ToUInt32(args[0]);
             ModAPI.LocalPlayer.ExplodeHead(weaponHash);
         }
+
+        #endregion Private Methods
     }
 }

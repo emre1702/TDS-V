@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Server.Database.Entity.LobbyEntities
+﻿namespace TDS_Server.Database.Entity.LobbyEntities
 {
     public class LobbyFightSettings
     {
-        public int LobbyId { get; set; }
-        public short StartHealth { get; set; }
-        public short StartArmor { get; set; }
+        #region Public Properties
+
         public short AmountLifes { get; set; }
+        public virtual Lobbies Lobby { get; set; }
+        public int LobbyId { get; set; }
         public int SpawnAgainAfterDeathMs { get; set; }
+        public short StartArmor { get; set; }
+        public short StartHealth { get; set; }
+
+        #endregion Public Properties
 
         //Todo: Add SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER
         //Todo: Add SET_SWIM_MULTIPLIER_FOR_PLAYER
@@ -29,7 +30,5 @@ namespace TDS_Server.Database.Entity.LobbyEntities
         //Todo: Add SET_SUPER_JUMP_THIS_FRAME
         //Todo: Add SET_PED_INFINITE_AMMO
         //Todo: Add SET_PED_INFINITE_AMMO_CLIP
-
-        public virtual Lobbies Lobby { get; set; }
     }
 }

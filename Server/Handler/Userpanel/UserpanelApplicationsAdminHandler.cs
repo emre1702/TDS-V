@@ -17,14 +17,58 @@ using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {
+    public class ApplicationData
+    {
+        #region Public Properties
+
+        [JsonProperty("4")]
+        public bool AlreadyInvited { get; set; }
+
+        [JsonProperty("1")]
+        public Dictionary<int, string> Answers { get; set; } = new Dictionary<int, string>();
+
+        [JsonProperty("0")]
+        public int ApplicationID { get; set; }
+
+        [JsonProperty("2")]
+        public string Questions { get; set; } = string.Empty;
+
+        [JsonProperty("3")]
+        public PlayerUserpanelStatsDataDto? Stats { get; set; }
+
+        #endregion Public Properties
+    }
+
+    public class AppToSendData
+    {
+        #region Public Properties
+
+        [JsonProperty("1")]
+        public string CreateTime { get; set; } = string.Empty;
+
+        [JsonProperty("0")]
+        public int ID { get; set; }
+
+        [JsonProperty("2")]
+        public string PlayerName { get; set; } = string.Empty;
+
+        #endregion Public Properties
+    }
+
     public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper, IUserpanelApplicationsAdminHandler
     {
+        #region Private Fields
+
         private readonly IModAPI _modAPI;
-        private readonly UserpanelPlayerStatsHandler _userpanelPlayerStatsHandler;
-        private readonly ISettingsHandler _settingsHandler;
         private readonly Serializer _serializer;
+        private readonly ISettingsHandler _settingsHandler;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
+        private readonly UserpanelPlayerStatsHandler _userpanelPlayerStatsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler,
@@ -32,6 +76,10 @@ namespace TDS_Server.Handler.Userpanel
             : base(dbContext, loggingHandler)
             => (_modAPI, _userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler)
             = (modAPI, userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<string?> GetData(ITDSPlayer player)
         {
@@ -66,7 +114,6 @@ namespace TDS_Server.Handler.Userpanel
                 LoggingHandler.LogError(ex, player);
                 return null;
             }
-
         }
 
         public async Task<object?> SendApplicationData(ITDSPlayer player, ArraySegment<object> args)
@@ -158,32 +205,9 @@ namespace TDS_Server.Handler.Userpanel
                 }
             });
 
-
             return null;
         }
-    }
 
-    public class AppToSendData
-    {
-        [JsonProperty("0")]
-        public int ID { get; set; }
-        [JsonProperty("1")]
-        public string CreateTime { get; set; } = string.Empty;
-        [JsonProperty("2")]
-        public string PlayerName { get; set; } = string.Empty;
-    }
-
-    public class ApplicationData
-    {
-        [JsonProperty("0")]
-        public int ApplicationID { get; set; }
-        [JsonProperty("1")]
-        public Dictionary<int, string> Answers { get; set; } = new Dictionary<int, string>();
-        [JsonProperty("2")]
-        public string Questions { get; set; } = string.Empty;
-        [JsonProperty("3")]
-        public PlayerUserpanelStatsDataDto? Stats { get; set; }
-        [JsonProperty("4")]
-        public bool AlreadyInvited { get; set; }
+        #endregion Public Methods
     }
 }

@@ -2,9 +2,12 @@
 {
     public class PlayerTotalStats
     {
-        public int PlayerId { get; set; }
-        public long Money { get; set; }
+        #region Public Properties
 
+        public long Money { get; set; }
         public virtual Players Player { get; set; }
+        public int PlayerId { get; set; }
+
+        #endregion Public Properties
     }
 }

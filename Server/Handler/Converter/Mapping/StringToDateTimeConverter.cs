@@ -1,17 +1,21 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace TDS_Server.Handler.Converter.Mapping
 {
-    class StringToDateTimeConverter : ITypeConverter<string, DateTime?>
+    internal class StringToDateTimeConverter : ITypeConverter<string, DateTime?>
     {
+        #region Public Methods
+
         public DateTime? Convert(string time, DateTime? destination, ResolutionContext context)
         {
             return GetTime(time);
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private static DateTime? GetTime(string time)
         {
@@ -106,5 +110,7 @@ namespace TDS_Server.Handler.Converter.Mapping
                 || time.Equals("stop", StringComparison.CurrentCultureIgnoreCase)
                 || time.Equals("no", StringComparison.CurrentCultureIgnoreCase);
         }
+
+        #endregion Private Methods
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Database.Entity.Player;
@@ -10,8 +9,14 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Private Fields
+
         private Players? _entity;
         private int _lastSaveTick;
+
+        #endregion Private Fields
+
+        #region Public Properties
 
         public Players? Entity
         {
@@ -31,6 +36,18 @@ namespace TDS_Server.Handler.Entities.Player
             }
         }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public async void CheckSaveData()
+        {
+            if (Environment.TickCount - _lastSaveTick < _settingsHandler.ServerSettings.SavePlayerDataCooldownMinutes * 60 * 1000)
+                return;
+
+            await SaveData().ConfigureAwait(false);
+        }
+
         public async ValueTask SaveData(bool force = false)
         {
             if (!force && (Entity is null || !Entity.PlayerStats.LoggedIn))
@@ -48,12 +65,6 @@ namespace TDS_Server.Handler.Entities.Player
             }).ConfigureAwait(false);
         }
 
-        public async void CheckSaveData()
-        {
-            if (Environment.TickCount - _lastSaveTick < _settingsHandler.ServerSettings.SavePlayerDataCooldownMinutes * 60 * 1000)
-                return;
-
-            await SaveData().ConfigureAwait(false);
-        }
+        #endregion Public Methods
     }
 }

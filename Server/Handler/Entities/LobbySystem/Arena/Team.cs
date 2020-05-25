@@ -1,25 +1,26 @@
 ﻿using System.Linq;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Entities.TeamSystem;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
+        #region Private Methods
+
         /// <summary>
-        /// Returns the amount of teams with enough players alive.
-        /// Used to check if round ended.
+        /// Returns the amount of teams with enough players alive. Used to check if round ended.
         /// </summary>
-        /// <param name="minalive">Amount of alive players needed in a team to get considered as "still in round".</param>
+        /// <param name="minalive">
+        /// Amount of alive players needed in a team to get considered as "still in round".
+        /// </param>
         /// <returns>Amount teams still in round.</returns>
         private int GetTeamAmountStillInRound(int minalive = 1)
         {
-            // all vs all
-            // 2 because [0] => spectator
+            // all vs all 2 because [0] => spectator
             if (Teams.Count == 2)
                 return Teams[1].AlivePlayers?.Count ?? 0;
             // normal lobby
-            else 
+            else
                 return Teams.Count(team => team.AlivePlayers is { } && team.AlivePlayers.Count >= minalive);
         }
 
@@ -60,5 +61,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             return teamwithhighesthealth;
         }
+
+        #endregion Private Methods
     }
 }

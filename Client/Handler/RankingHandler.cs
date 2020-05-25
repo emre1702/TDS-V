@@ -15,21 +15,25 @@ namespace TDS_Client.Handler
 {
     public class RankingHandler : ServiceBase
     {
-        private IPlayer _winner = null;
+        #region Private Fields
+
+        private readonly BrowserHandler _browserHandler;
+        private readonly CamerasHandler _camerasHandler;
+        private readonly CursorHandler _cursorHandler;
+        private readonly DeathHandler _deathHandler;
+        private readonly NametagsHandler _nametagsHandler;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        private readonly UtilsHandler _utilsHandler;
         private IPlayer _second = null;
         private IPlayer _third = null;
+        private IPlayer _winner = null;
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        #endregion Private Fields
 
-        private readonly CamerasHandler _camerasHandler;
-        private readonly UtilsHandler _utilsHandler;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly CursorHandler _cursorHandler;
-        private readonly BrowserHandler _browserHandler;
-        private readonly NametagsHandler _nametagsHandler;
-        private readonly DeathHandler _deathHandler;
+        #region Public Constructors
 
-        public RankingHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler, 
+        public RankingHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler,
             CursorHandler cursorHandler, BrowserHandler browserHandler, NametagsHandler nametagsHandler, DeathHandler deathHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -48,6 +52,10 @@ namespace TDS_Client.Handler
 
             modAPI.Event.Add(ToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void Start(string rankingsJson, ushort winnerHandle, ushort secondHandle, ushort thirdHandle)
         {
@@ -83,6 +91,15 @@ namespace TDS_Client.Handler
             _cursorHandler.Visible = false;
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
+        {
+            Stop();
+        }
+
         private void OnRender(int currentMs)
         {
             //StartParticleFx("scr_xs_money_rain", -425.48f, 1123.55f, 325.85f, 1f);
@@ -108,20 +125,17 @@ namespace TDS_Client.Handler
             //StartParticleFx("scr_xs_beer_chug", 427.03f, 1123.21f, 325.85f, 1f);
         }
 
+        private void OnStartRankingShowAfterRoundMethod(object[] args)
+        {
+            Start((string)args[0], Convert.ToUInt16(args[1]), Convert.ToUInt16(args[2]), Convert.ToUInt16(args[3]));
+        }
+
         private int StartParticleFx(string effectName, float x, float y, float z, float scale)
         {
             ModAPI.Graphics.UseParticleFxAssetNextCall("scr_xs_celebration");
             return ModAPI.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
-        {
-            Stop();
-        }
-
-        private void OnStartRankingShowAfterRoundMethod(object[] args)
-        {
-            Start((string)args[0], Convert.ToUInt16(args[1]), Convert.ToUInt16(args[2]), Convert.ToUInt16(args[3]));
-        }
+        #endregion Private Methods
     }
 }

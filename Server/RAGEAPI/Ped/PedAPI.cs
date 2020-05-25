@@ -2,7 +2,7 @@
 
 namespace TDS_Server.RAGEAPI.Ped
 {
-    class PedAPI : IPedAPI
+    internal class PedAPI : IPedAPI
     {
     }
 }

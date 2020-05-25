@@ -6,17 +6,31 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorDrawHandler
     {
+        #region Public Fields
+
         public Color HighlightColor_Edge = Color.FromArgb(255, 255, 255, 255);
         public Color HighlightColor_Full = Color.FromArgb(35, 255, 255, 255);
 
-        private readonly IModAPI ModAPI;
+        #endregion Public Fields
+
+        #region Private Fields
+
         private readonly UtilsHandler _utilsHandler;
+        private readonly IModAPI ModAPI;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapCreatorDrawHandler(IModAPI modAPI, UtilsHandler utilsHandler)
         {
             ModAPI = modAPI;
             _utilsHandler = utilsHandler;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void DrawSkeleton(Position3D pos, Position3D size, Position3D rot)
         {
@@ -111,5 +125,7 @@ namespace TDS_Client.Handler.MapCreator
             ModAPI.Graphics.DrawPoly(p3, p7, p8, HighlightColor_Full);
             ModAPI.Graphics.DrawPoly(p8, p4, p3, HighlightColor_Full);
         }
+
+        #endregion Public Methods
     }
 }

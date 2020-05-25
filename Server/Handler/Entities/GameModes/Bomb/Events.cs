@@ -8,6 +8,15 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
     partial class Bomb
     {
+        #region Public Methods
+
+        public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
+        {
+            base.OnPlayerDeath(player, killer);
+            if (_bombAtPlayer == player)
+                DropBomb();
+        }
+
         public override void OnPlayerEnterColshape(IColShape shape, ITDSPlayer character)
         {
             base.OnPlayerEnterColshape(shape, character);
@@ -20,11 +29,13 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             }
         }
 
-        public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
+        public override void OnPlayerWeaponSwitch(ITDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
         {
-            base.OnPlayerDeath(player, killer);
-            if (_bombAtPlayer == player)
-                DropBomb();
+            base.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
+            if (_bombAtPlayer == character)
+            {
+                ToggleBombAtHand(character, oldweapon, newweapon);
+            }
         }
 
         public override void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
@@ -42,13 +53,6 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
                     _bombDetonateTimer.ExecuteAfterMs - _bombDetonateTimer.RemainingMsToExecute);
         }
 
-        public override void OnPlayerWeaponSwitch(ITDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
-        {
-            base.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
-            if (_bombAtPlayer == character)
-            {
-                ToggleBombAtHand(character, oldweapon, newweapon);
-            }
-        }
+        #endregion Public Methods
     }
 }

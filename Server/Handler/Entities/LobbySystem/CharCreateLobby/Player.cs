@@ -1,18 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Enums;
+﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class CharCreateLobby
     {
+        #region Public Methods
+
         public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
             if (player.Entity is null || player.Entity.CharDatas is null)
@@ -38,5 +33,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             await base.RemovePlayer(player);
         }
 
+        #endregion Public Methods
     }
 }

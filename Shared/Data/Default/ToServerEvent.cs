@@ -2,6 +2,8 @@
 {
     public static class ToServerEvent
     {
+        #region Public Fields
+
         public const string AcceptInvitation = "c1";
         public const string AcceptTDSTeamInvitation = "c67";
         public const string AddRatingToMap = "c2";
@@ -15,6 +17,9 @@
         public const string CreateCustomLobby = "c8";
 
         public const string DeleteOfflineMessage = "c9";
+
+        // Special:
+        public const string FromBrowserEvent = "c64";
 
         public const string GetSupportRequestData = "c10";
         public const string GetVehicle = "c11";
@@ -31,14 +36,13 @@
         public const string LeftCustomLobbiesMenu = "c20";
         public const string LeftSupportRequest = "c21";
         public const string LeftSupportRequestsList = "c22";
-        public const string LobbyChatMessage = "c23";
         public const string LoadAllMapsForCustomLobby = "c65";
         public const string LoadApplicationDataForAdmin = "c24";
         public const string LoadDatasForCustomLobby = "c66";
         public const string LoadMapForMapCreator = "c25";
         public const string LoadMapNamesToLoadForMapCreator = "c26";
         public const string LoadUserpanelData = "c27";
-
+        public const string LobbyChatMessage = "c23";
         public const string MapCreatorStartNewMap = "c28";
         public const string MapCreatorSyncCurrentMapToServer = "c17";
         public const string MapCreatorSyncData = "c30";
@@ -84,8 +88,6 @@
         public const string TryLogin = "c62";
         public const string TryRegister = "c63";
 
-
-        // Special:
-        public const string FromBrowserEvent = "c64";
+        #endregion Public Fields
     }
 }

@@ -2,6 +2,8 @@
 {
     public static class ToBrowserEvent
     {
+        #region Public Fields
+
         public const string AddNameForChat = "cb38";
         public const string AddPositionToMapCreatorBrowser = "cb3";
         public const string CloseMapMenu = "cb4";
@@ -27,17 +29,19 @@
         public const string SyncMoney = "cb24";
         public const string SyncTeamChoiceMenuData = "cb36";
         public const string SyncUsernameChange = "cb42";
+        public const string ToggleCharCreator = "cb7";
         public const string ToggleChatInput = "cb41";
         public const string ToggleChatOpened = "cb25";
-        public const string ToggleCharCreator = "cb7";
         public const string ToggleFreeroam = "cb26";
         public const string ToggleHUD = "cb27";
         public const string ToggleInFightLobby = "cb28";
-        public const string ToggleLobbyChoice = "cb29"; 
+        public const string ToggleLobbyChoice = "cb29";
         public const string ToggleMapCreator = "cb30";
         public const string ToggleRoundStats = "cb31";
         public const string ToggleTeamChoiceMenu = "cb37";
         public const string ToggleTeamOrderModus = "cb32";
         public const string ToggleUserpanel = "cb33";
+
+        #endregion Public Fields
     }
 }

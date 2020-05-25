@@ -1,25 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Sync
 {
     public class DataSyncHandler
     {
-        private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerHandleDatasAll
-            = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
-
-        private readonly Dictionary<int, Dictionary<ushort, Dictionary<PlayerDataKey, object>>> _playerHandleDatasLobby
-            = new Dictionary<int, Dictionary<ushort, Dictionary<PlayerDataKey, object>>>();
-
-        private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerHandleDatasPlayer
-            = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
+        #region Private Fields
 
         private readonly Dictionary<ushort, Dictionary<EntityDataKey, object>> _entityHandleDatasAll
             = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
@@ -30,8 +22,22 @@ namespace TDS_Server.Handler.Sync
         private readonly Dictionary<ushort, Dictionary<ushort, Dictionary<EntityDataKey, object>>> _entityHandleDatasPlayer
             = new Dictionary<ushort, Dictionary<ushort, Dictionary<EntityDataKey, object>>>();
 
-        private readonly Serializer _serializer;
         private readonly IModAPI _modAPI;
+
+        private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerHandleDatasAll
+                                            = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
+
+        private readonly Dictionary<int, Dictionary<ushort, Dictionary<PlayerDataKey, object>>> _playerHandleDatasLobby
+            = new Dictionary<int, Dictionary<ushort, Dictionary<PlayerDataKey, object>>>();
+
+        private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerHandleDatasPlayer
+            = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
+
+        private readonly Serializer _serializer;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public DataSyncHandler(EventsHandler eventsHandler, Serializer serializer, IModAPI modAPI)
         {
@@ -45,6 +51,10 @@ namespace TDS_Server.Handler.Sync
             eventsHandler.PlayerLoggedOut += PlayerLoggedOut;
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         /// <summary>
         /// Only works for default types like int, string etc.!
         /// </summary>
@@ -54,7 +64,6 @@ namespace TDS_Server.Handler.Sync
         /// <param name="value"></param>
         public void SetData(ITDSPlayer player, PlayerDataKey key, DataSyncMode syncMode, object value)
         {
-
             switch (syncMode)
             {
                 case DataSyncMode.All:
@@ -97,7 +106,6 @@ namespace TDS_Server.Handler.Sync
         /// <param name="value"></param>
         public void SetData(IEntity entity, EntityDataKey key, DataSyncMode syncMode, object value, ITDSPlayer? toPlayer = null, ILobby? toLobby = null)
         {
-
             switch (syncMode)
             {
                 case DataSyncMode.All:
@@ -137,20 +145,9 @@ namespace TDS_Server.Handler.Sync
             }
         }
 
-        private void SyncPlayerAllData(ITDSPlayer player)
-        {
-            player.SendEvent(ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasAll));
-            player.SendEvent(ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasAll));
-        }
+        #endregion Public Methods
 
-        private void SyncPlayerLobbyData(ITDSPlayer player, ILobby lobby)
-        {
-            if (_playerHandleDatasLobby.ContainsKey(lobby.Id))
-                _modAPI.Sync.SendEvent(player, ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
-
-            if (_entityHandleDatasLobby.ContainsKey(lobby.Id))
-                _modAPI.Sync.SendEvent(player, ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
-        }
+        #region Private Methods
 
         private void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
         {
@@ -173,5 +170,22 @@ namespace TDS_Server.Handler.Sync
             //Todo: Das hier auch für Entity nutzen (bei z.B. Delete?)
             _modAPI.Sync.SendEvent(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId);
         }
+
+        private void SyncPlayerAllData(ITDSPlayer player)
+        {
+            player.SendEvent(ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasAll));
+            player.SendEvent(ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasAll));
+        }
+
+        private void SyncPlayerLobbyData(ITDSPlayer player, ILobby lobby)
+        {
+            if (_playerHandleDatasLobby.ContainsKey(lobby.Id))
+                _modAPI.Sync.SendEvent(player, ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
+
+            if (_entityHandleDatasLobby.ContainsKey(lobby.Id))
+                _modAPI.Sync.SendEvent(player, ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
+        }
+
+        #endregion Private Methods
     }
 }

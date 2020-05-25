@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.CustomLobby;
@@ -17,6 +16,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
+        #region Public Methods
+
         public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex = null)
         {
             if (CurrentGameMode?.CanJoinLobby(player, teamindex) == false)
@@ -38,7 +39,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 CurrentGameMode?.AddPlayer(player, teamindex);
             });
-            
 
             return true;
         }
@@ -73,7 +73,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
                 CurrentGameMode?.RemovePlayer(player);
             });
-            
+
             await base.RemovePlayer(player);
 
             ModAPI.Thread.RunInMainThread(() =>
@@ -85,12 +85,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         if (Entity.LobbyRoundSettings.MixTeamsAfterRound)
                             BalanceCurrentTeams();
                         break;
+
                     case RoundStatus.Round:
                         RoundCheckForEnoughAlive();
                         break;
                 }
             });
-            
         }
 
         public override void SetPlayerTeam(ITDSPlayer player, ITeam? team)
@@ -115,12 +115,130 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.NewPlayer);
                     else
                         SetRoundStatus(RoundStatus.NewMapChoose);
-                }                
+                }
                 else
                 {
                     player.SendEvent(ToClientEvent.PlayerSpectateMode);
                 }
             }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void AddPlayerAsPlayer(ITDSPlayer player, int teamIndex)
+        {
+            var team = Entity.LobbyRoundSettings.MixTeamsAfterRound ? GetTeamWithFewestPlayer() : Teams[teamIndex];
+            SetPlayerTeam(player, team);
+        }
+
+        private void RemovePlayerFromAlive(ITDSPlayer player)
+        {
+            if (player.Team != null)
+            {
+                player.Team.RemoveAlivePlayer(player);
+            }
+
+            CurrentGameMode?.RemovePlayerFromAlive(player);
+
+            _removeSpectatorsTimer[player] = new TDSTimer(() =>
+            {
+                PlayerCantBeSpectatedAnymore(player);
+                SpectateOtherSameTeam(player);
+            }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
+        }
+
+        private void RespawnPlayer(ITDSPlayer player)
+        {
+            if (player.ModPlayer is null)
+                return;
+
+            SetPlayerReadyForRound(player);
+            player.ModPlayer.Freeze(false);
+            player.SendEvent(ToClientEvent.PlayerRespawned);
+        }
+
+        private void SavePlayerRoundStats(ITDSPlayer player)
+        {
+            if (!SavePlayerLobbyStats)
+                return;
+            if (player.LobbyStats is null)
+                return;
+
+            PlayerLobbyStats? to = player.LobbyStats;
+            RoundStatsDto? from = player.CurrentRoundStats;
+            if (to is null || from is null)
+                return;
+            to.Kills += from.Kills;
+            to.Assists += from.Assists;
+            to.Damage += from.Damage;
+            to.TotalKills += from.Kills;
+            to.TotalAssists += from.Assists;
+            to.TotalDamage += from.Damage;
+
+            ++to.TotalRounds;
+            if (from.Kills > to.MostKillsInARound)
+                to.MostKillsInARound = from.Kills;
+            if (from.Damage > to.MostDamageInARound)
+                to.MostDamageInARound = from.Damage;
+            if (from.Assists > to.MostAssistsInARound)
+                to.MostAssistsInARound = from.Assists;
+
+            if (IsOfficial && from.Damage > 0)
+            {
+                if (from.Kills > 0)
+                    player.AddToChallenge(ChallengeType.Kills, from.Kills);
+                if (from.Assists > 0)
+                    player.AddToChallenge(ChallengeType.Assists, from.Assists);
+                player.AddToChallenge(ChallengeType.Damage, from.Damage);
+                player.AddToChallenge(ChallengeType.RoundPlayed);
+            }
+
+            from.Clear();
+        }
+
+        private void SendPlayerAmountInFightInfo(ITDSPlayer player)
+        {
+            SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
+            player.SendEvent(ToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
+        }
+
+        private void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
+        {
+            if (player.ModPlayer is null)
+                return;
+
+            if (_currentMap is { })
+            {
+                player.SendEvent(ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
+            }
+
+            SendPlayerAmountInFightInfo(player);
+            SyncMapVotingOnJoin(player);
+            CurrentGameMode?.SendPlayerRoundInfoOnJoin(player);
+
+            switch (CurrentRoundStatus)
+            {
+                case RoundStatus.Countdown:
+                    player.SendEvent(ToClientEvent.CountdownStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
+                    break;
+
+                case RoundStatus.Round:
+                    player.SendEvent(ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
+                    break;
+            }
+        }
+
+        private void SetPlayerAlive(ITDSPlayer player)
+        {
+            if (player.Team is null || player.Team.AlivePlayers is null)
+                return;
+            player.Lifes = (sbyte)(Entity.FightSettings?.AmountLifes ?? 0);
+            player.Team.AlivePlayers.Add(player);
+            var teamamountdata = player.Team.SyncedTeamData.AmountPlayers;
+            ++teamamountdata.Amount;
+            ++teamamountdata.AmountAlive;
         }
 
         private void SetPlayerReadyForRound(ITDSPlayer player)
@@ -160,22 +278,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.CurrentRoundStats?.Clear();
         }
 
-        private void RemovePlayerFromAlive(ITDSPlayer player)
-        {
-            if (player.Team != null)
-            {
-                player.Team.RemoveAlivePlayer(player);
-            }
-
-            CurrentGameMode?.RemovePlayerFromAlive(player);
-
-            _removeSpectatorsTimer[player] = new TDSTimer(() =>
-            {
-                PlayerCantBeSpectatedAnymore(player);
-                SpectateOtherSameTeam(player);
-            }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
-        }
-
         private void StartRoundForPlayer(ITDSPlayer player)
         {
             if (player.ModPlayer is null)
@@ -189,103 +291,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.LastHitter = null;
         }
 
-        private void AddPlayerAsPlayer(ITDSPlayer player, int teamIndex)
-        {
-            var team = Entity.LobbyRoundSettings.MixTeamsAfterRound ? GetTeamWithFewestPlayer() : Teams[teamIndex];
-            SetPlayerTeam(player, team);
-        }
-
-        private void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
-        {
-            if (player.ModPlayer is null)
-                return;
-
-            if (_currentMap is { })
-            {
-                player.SendEvent(ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
-            }
-
-            SendPlayerAmountInFightInfo(player);
-            SyncMapVotingOnJoin(player);
-            CurrentGameMode?.SendPlayerRoundInfoOnJoin(player);
-
-            switch (CurrentRoundStatus)
-            {
-                case RoundStatus.Countdown:
-                    player.SendEvent(ToClientEvent.CountdownStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
-                    break;
-
-                case RoundStatus.Round:
-                    player.SendEvent(ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
-                    break;
-            }
-        }
-
-        private void SendPlayerAmountInFightInfo(ITDSPlayer player)
-        {
-            SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
-            player.SendEvent(ToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
-        }
-
-        private void SetPlayerAlive(ITDSPlayer player)
-        {
-            if (player.Team is null || player.Team.AlivePlayers is null)
-                return;
-            player.Lifes = (sbyte)(Entity.FightSettings?.AmountLifes ?? 0);
-            player.Team.AlivePlayers.Add(player);
-            var teamamountdata = player.Team.SyncedTeamData.AmountPlayers;
-            ++teamamountdata.Amount;
-            ++teamamountdata.AmountAlive;
-        }
-
-        private void SavePlayerRoundStats(ITDSPlayer player)
-        {
-            if (!SavePlayerLobbyStats)
-                return;
-            if (player.LobbyStats is null)
-                return;
-
-            PlayerLobbyStats? to = player.LobbyStats;
-            RoundStatsDto? from = player.CurrentRoundStats;
-            if (to is null || from is null)
-                return;
-            to.Kills += from.Kills;
-            to.Assists += from.Assists;
-            to.Damage += from.Damage;
-            to.TotalKills += from.Kills;
-            to.TotalAssists += from.Assists;
-            to.TotalDamage += from.Damage;
-
-            ++to.TotalRounds;
-            if (from.Kills > to.MostKillsInARound)
-                to.MostKillsInARound = from.Kills;
-            if (from.Damage > to.MostDamageInARound)
-                to.MostDamageInARound = from.Damage;
-            if (from.Assists > to.MostAssistsInARound)
-                to.MostAssistsInARound = from.Assists;
-
-            if (IsOfficial && from.Damage > 0)
-            {
-                if (from.Kills > 0)
-                    player.AddToChallenge(ChallengeType.Kills, from.Kills);
-                if (from.Assists > 0)
-                    player.AddToChallenge(ChallengeType.Assists, from.Assists);
-                player.AddToChallenge(ChallengeType.Damage, from.Damage);
-                player.AddToChallenge(ChallengeType.RoundPlayed);
-            }
-
-
-            from.Clear();
-        }
-
-        private void RespawnPlayer(ITDSPlayer player)
-        {
-            if (player.ModPlayer is null)
-                return;
-
-            SetPlayerReadyForRound(player);
-            player.ModPlayer.Freeze(false);
-            player.SendEvent(ToClientEvent.PlayerRespawned);
-        }
+        #endregion Private Methods
     }
 }

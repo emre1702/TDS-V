@@ -2,14 +2,17 @@
 
 namespace TDS_Client.RAGEAPI
 {
-    class Init : RAGE.Events.Script
+    internal class Init : RAGE.Events.Script
     {
+        #region Public Constructors
+
         public Init()
         {
             var modAPI = new BaseAPI();
             new Program(modAPI);
         }
 
+        #endregion Public Constructors
 
         /*private void TestWeapon()
         {
@@ -42,7 +45,6 @@ namespace TDS_Client.RAGEAPI
             var weapon2 = RAGE.Game.Weapon.CreateWeaponObject(weaponHash, -1, pos.X, pos.Y + 1, pos.Z, true, 1f, 0, 0, 1);
             RAGE.Game.Entity.SetEntityHeading(weapon2, 180);
 
-
             RAGE.Game.Weapon.CreateWeaponObject(weaponHash, -1, pos.X, pos.Y + 5, pos.Z, true, 1f, 0, 0, 180);
             RAGE.Game.Weapon.CreateWeaponObject(weaponHash, -1, pos.X, pos.Y + 7, pos.Z, true, 1f, 0, 180, 1);
         }
@@ -65,7 +67,6 @@ namespace TDS_Client.RAGEAPI
 
             var weapon4 = RAGE.Game.Weapon.CreateWeaponObject(weaponHash, -1, pos.X, pos.Y + 1, pos.Z, true, 1f, 0, 0, 1);
             RAGE.Game.Invoker.Invoke(RAGE.Game.Natives.SetEntityHeading, weapon4, 250);
-
         }*/
     }
 }

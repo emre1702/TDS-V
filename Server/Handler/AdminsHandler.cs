@@ -10,7 +10,7 @@ namespace TDS_Server.Handler
 {
     public class AdminsHandler
     {
-        public Dictionary<short, AdminLevelDto> AdminLevels { get; } = new Dictionary<short, AdminLevelDto>();
+        #region Public Constructors
 
         public AdminsHandler(TDSDbContext dbContext, EventsHandler eventsHandler)
         {
@@ -32,21 +32,15 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerLoggedOut += SetOffline;
         }
 
-        private void SetOnline(ITDSPlayer player)
-        {
-            if (AdminLevels.ContainsKey(player.AdminLevel.Level))
-            {
-                AdminLevels[player.AdminLevel.Level].PlayersOnline.Add(player);
-            }
-        }
+        #endregion Public Constructors
 
-        private void SetOffline(ITDSPlayer player)
-        {
-            if (AdminLevels.ContainsKey(player.AdminLevel.Level))
-            {
-                AdminLevels[player.AdminLevel.Level].PlayersOnline.Remove(player);
-            }
-        }
+        #region Public Properties
+
+        public Dictionary<short, AdminLevelDto> AdminLevels { get; } = new Dictionary<short, AdminLevelDto>();
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void CallMethodForAdmins(Action<ITDSPlayer> func, byte minadminlvl = 1)
         {
@@ -73,5 +67,27 @@ namespace TDS_Server.Handler
         {
             CallMethodForAdmins(player => player.SendNotification(propertygetter(player.Language)), minadminlvl);
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void SetOffline(ITDSPlayer player)
+        {
+            if (AdminLevels.ContainsKey(player.AdminLevel.Level))
+            {
+                AdminLevels[player.AdminLevel.Level].PlayersOnline.Remove(player);
+            }
+        }
+
+        private void SetOnline(ITDSPlayer player)
+        {
+            if (AdminLevels.ContainsKey(player.AdminLevel.Level))
+            {
+                AdminLevels[player.AdminLevel.Level].PlayersOnline.Add(player);
+            }
+        }
+
+        #endregion Private Methods
     }
 }

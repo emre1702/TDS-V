@@ -14,26 +14,34 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorFreecamHandler : ServiceBase
     {
+        #region Public Fields
+
         public bool IsActive;
 
-        private float _currentScrollSpeed = 1f;
-        private bool _isUpPressed;
-        private bool _isDownPressed;
+        #endregion Public Fields
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        #region Private Fields
 
-        private readonly CamerasHandler _camerasHandler;
-        private readonly UtilsHandler _utilsHandler;
-        private readonly InstructionalButtonHandler _instructionalButtonHandler;
-        private readonly CursorHandler _cursorHandler;
         private readonly BrowserHandler _browserHandler;
+        private readonly CamerasHandler _camerasHandler;
+        private readonly CursorHandler _cursorHandler;
+        private readonly EventsHandler _eventsHandler;
+        private readonly InstructionalButtonHandler _instructionalButtonHandler;
         private readonly MapCreatorFootHandler _mapCreatorFootHandler;
         private readonly MapCreatorMarkerHandler _mapCreatorMarkerHandler;
         private readonly MapCreatorObjectPlacingHandler _mapCreatorObjectPlacingHandler;
-        private readonly EventsHandler _eventsHandler;
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        private readonly UtilsHandler _utilsHandler;
+        private float _currentScrollSpeed = 1f;
+        private bool _isDownPressed;
+        private bool _isUpPressed;
 
-        public MapCreatorFreecamHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, 
-            InstructionalButtonHandler instructionalButtonHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, MapCreatorFootHandler mapCreatorFootHandler, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public MapCreatorFreecamHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler,
+            InstructionalButtonHandler instructionalButtonHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, MapCreatorFootHandler mapCreatorFootHandler,
             MapCreatorMarkerHandler mapCreatorMarkerHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -48,6 +56,41 @@ namespace TDS_Client.Handler.MapCreator
             _eventsHandler = eventsHandler;
 
             _tickEventMethod = new EventMethodData<TickDelegate>(OnTick);
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void KeyDown(Key key)
+        {
+            if (_browserHandler.InInput)
+                return;
+
+            switch (key)
+            {
+                case Key.E:
+                    _isDownPressed = true;
+                    break;
+
+                case Key.Q:
+                    _isUpPressed = true;
+                    break;
+            }
+        }
+
+        public void KeyUp(Key key)
+        {
+            switch (key)
+            {
+                case Key.E:
+                    _isDownPressed = false;
+                    break;
+
+                case Key.Q:
+                    _isUpPressed = false;
+                    break;
+            }
         }
 
         public void Start()
@@ -85,16 +128,28 @@ namespace TDS_Client.Handler.MapCreator
             ModAPI.Sync.SendEvent(ToServerEvent.SetInFreecam, false);
         }
 
-        private void OnTick(int _)
+        public void ToggleFreecam(Key _ = Key.Noname)
         {
-            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL);
+            if (_browserHandler.InInput)
+                return;
 
-            if (!_cursorHandler.Visible)
-                MoveCam();
-
-            _mapCreatorMarkerHandler.OnTick();
-            _mapCreatorObjectPlacingHandler.OnTick();
+            _instructionalButtonHandler.Reset();
+            if (IsActive)
+            {
+                Stop();
+                _mapCreatorFootHandler.Start();
+            }
+            else
+            {
+                _mapCreatorFootHandler.Stop();
+                Start();
+            }
+            _eventsHandler.OnFreecamToggled(IsActive);
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void MoveCam()
         {
@@ -147,55 +202,19 @@ namespace TDS_Client.Handler.MapCreator
                 cam.Rotation = newRot;
                 ModAPI.LocalPlayer.Rotation = newRot;
             }
-
         }
 
-        public void KeyDown(Key key)
+        private void OnTick(int _)
         {
-            if (_browserHandler.InInput)
-                return;
+            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL);
 
-            switch (key)
-            {
-                case Key.E:
-                    _isDownPressed = true;
-                    break;
-                case Key.Q:
-                    _isUpPressed = true;
-                    break;
-            }
+            if (!_cursorHandler.Visible)
+                MoveCam();
+
+            _mapCreatorMarkerHandler.OnTick();
+            _mapCreatorObjectPlacingHandler.OnTick();
         }
 
-        public void KeyUp(Key key)
-        {
-            switch (key)
-            {
-                case Key.E:
-                    _isDownPressed = false;
-                    break;
-                case Key.Q:
-                    _isUpPressed = false;
-                    break;
-            }
-        }
-
-        public void ToggleFreecam(Key _ = Key.Noname)
-        {
-            if (_browserHandler.InInput)
-                return;
-
-            _instructionalButtonHandler.Reset();
-            if (IsActive)
-            {
-                Stop();
-                _mapCreatorFootHandler.Start();
-            }
-            else
-            {
-                _mapCreatorFootHandler.Stop();
-                Start();
-            }
-            _eventsHandler.OnFreecamToggled(IsActive);
-        }
+        #endregion Private Methods
     }
 }

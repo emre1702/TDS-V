@@ -6,28 +6,26 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
 {
     public class DxGridCell : DxBase
     {
-        private string _text;
+        #region Public Fields
+
         public DxGridRow Row;
-        private DxGridColumn _column;
-        private Color? _backColor;
-        private Color? _textColor;
-        private float? _scale;
-        private Font? _font;
+
+        #endregion Public Fields
+
+        #region Private Fields
+
         private readonly AlignmentX _alignmentX;
-
+        private Color? _backColor;
+        private DxGridColumn _column;
         private DxText _dxText;
+        private Font? _font;
+        private float? _scale;
+        private string _text;
+        private Color? _textColor;
 
-        public Color BackColor
-        {
-            get => _backColor ?? Row.BackColor;
-            set
-            {
-                if (value != null && value != Row.BackColor)
-                    Row.UseColorForWholeRow = false;
-                else
-                    Row.CheckUseColorForWholeRow();
-            }
-        }
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public DxGridCell(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, DxGridRow row, DxGridColumn column, Color? backColor = null,
             Color? textColor = null, float? scale = null, Font? font = null,
@@ -51,6 +49,26 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             row.AddCell(this);
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public Color BackColor
+        {
+            get => _backColor ?? Row.BackColor;
+            set
+            {
+                if (value != null && value != Row.BackColor)
+                    Row.UseColorForWholeRow = false;
+                else
+                    Row.CheckUseColorForWholeRow();
+            }
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public override void Draw()
         {
             var x = GetXPos();
@@ -59,9 +77,9 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             else
                 _dxText.SetAbsoluteX((int)x);
 
-            if (Row.RelativePos) 
+            if (Row.RelativePos)
                 _dxText.SetRelativeY(Row.Y);
-            else 
+            else
                 _dxText.SetAbsoluteY((int)Row.Y);
             _dxText.Draw();
         }
@@ -72,9 +90,9 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             ModAPI.Graphics.DrawRect(_column.X, Row.Y, _column.Width, Row.Height, backcolor.R, backcolor.G, backcolor.B, backcolor.A);
         }
 
-        public void SetText(string text)
+        public override DxType GetDxType()
         {
-            this._text = text;
+            return DxType.GridCell;
         }
 
         public override void Remove()
@@ -84,10 +102,14 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             _dxText = null;
         }
 
-        public override DxType GetDxType()
+        public void SetText(string text)
         {
-            return DxType.GridCell;
+            this._text = text;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private float GetXPos()
         {
@@ -104,5 +126,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             }
             return 0;
         }
+
+        #endregion Private Methods
     }
 }

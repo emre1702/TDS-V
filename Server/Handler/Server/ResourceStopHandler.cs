@@ -13,16 +13,21 @@ namespace TDS_Server.Handler.Server
 {
     public class ResourceStopHandler
     {
-        private bool _resourceStopped = false;
-        private bool _isFirstResourceStopCheck = true;
+        #region Private Fields
 
-        private readonly LangHelper _langHelper;
-        private readonly ILoggingHandler _loggingHandler;
         private readonly ChallengesHelper _challengesHelper;
-        private readonly ServerStatsHandler _serverStatsHandler;
+        private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly TDSPlayerHandler _tdsPlayersHandler;
+        private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
+        private readonly ServerStatsHandler _serverStatsHandler;
+        private readonly TDSPlayerHandler _tdsPlayersHandler;
+        private bool _isFirstResourceStopCheck = true;
+        private bool _resourceStopped = false;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, ChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
             LobbiesHandler lobbiesHandler, TDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
@@ -40,15 +45,11 @@ namespace TDS_Server.Handler.Server
 
             eventsHandler.Hour += CheckHourForResourceRestart;
             eventsHandler.ResourceStop += OnResourceStop;
-
         }
 
+        #endregion Public Constructors
 
-        public void CurrentDomain_ProcessExit(object? sender, EventArgs e)
-        {
-            OnResourceStop();
-            Environment.Exit(0);
-        }
+        #region Public Methods
 
         public void CheckHourForResourceRestart(int _)
         {
@@ -64,6 +65,41 @@ namespace TDS_Server.Handler.Server
             ResourceRestartCountdown(3, true);
 
             return;
+        }
+
+        public void CurrentDomain_ProcessExit(object? sender, EventArgs e)
+        {
+            OnResourceStop();
+            Environment.Exit(0);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void ExecuteResourceRestart()
+        {
+            if (DateTime.UtcNow.DayOfWeek == DayOfWeek.Monday)
+            {
+                _challengesHelper.ClearWeeklyChallenges();
+            }
+
+            OnResourceStop();
+            Process.GetCurrentProcess().Kill();
+        }
+
+        private void OnResourceStop()
+        {
+            if (_resourceStopped)
+                return;
+            _resourceStopped = true;
+            SaveAllInDatabase();
+            RemoveAllCreated();
+        }
+
+        private void RemoveAllCreated()
+        {
+            _modAPI.Pool.RemoveAll();
         }
 
         private void ResourceRestartCountdown(int counter, bool isMinute)
@@ -100,18 +136,6 @@ namespace TDS_Server.Handler.Server
             }
         }
 
-
-        private void ExecuteResourceRestart()
-        {
-            if (DateTime.UtcNow.DayOfWeek == DayOfWeek.Monday)
-            {
-                _challengesHelper.ClearWeeklyChallenges();
-            }
-
-            OnResourceStop();
-            Process.GetCurrentProcess().Kill();
-        }
-
         private void SaveAllInDatabase()
         {
             try
@@ -121,7 +145,6 @@ namespace TDS_Server.Handler.Server
                     _loggingHandler.SaveTask(),
                     _serverStatsHandler.SaveTask(),
                     _lobbiesHandler.SaveAll(),
-
                 };
 
                 foreach (ITDSPlayer player in _tdsPlayersHandler.LoggedInPlayers)
@@ -134,7 +157,6 @@ namespace TDS_Server.Handler.Server
                     {
                         _loggingHandler.LogError(ex, player);
                     }
-
                 }
 
                 Task.WaitAll(tasks.ToArray(), System.Threading.Timeout.Infinite);
@@ -145,18 +167,6 @@ namespace TDS_Server.Handler.Server
             }
         }
 
-        private void RemoveAllCreated()
-        {
-            _modAPI.Pool.RemoveAll();
-        }
-
-        private void OnResourceStop()
-        {
-            if (_resourceStopped)
-                return;
-            _resourceStopped = true;
-            SaveAllInDatabase();
-            RemoveAllCreated();
-        }
+        #endregion Private Methods
     }
 }

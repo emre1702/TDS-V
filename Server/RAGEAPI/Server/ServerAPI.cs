@@ -2,8 +2,10 @@
 
 namespace TDS_Server.RAGEAPI.Server
 {
-    class ServerAPI : IServerAPI
+    internal class ServerAPI : IServerAPI
     {
+        #region Public Methods
+
         public string GetName()
         {
             return GTANetworkAPI.NAPI.Server.GetServerName();
@@ -13,5 +15,7 @@ namespace TDS_Server.RAGEAPI.Server
         {
             return GTANetworkAPI.NAPI.Server.GetServerPort();
         }
+
+        #endregion Public Methods
     }
 }

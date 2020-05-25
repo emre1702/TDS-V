@@ -8,6 +8,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
+        #region Public Methods
 
         public async Task LoadGangVehicles(IGang gang)
         {
@@ -29,15 +30,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     var vehicle = ModAPI.Vehicle.Create(dbVehicle.Model, new Position3D(dbVehicle.SpawnPosX, dbVehicle.SpawnPosY, dbVehicle.SpawnPosZ),
                         new Position3D(dbVehicle.SpawnRotX, dbVehicle.SpawnRotY, dbVehicle.SpawnRotZ),
                         dbVehicle.Color1, dbVehicle.Color2, gang.Entity.Short, 255, dimension: Dimension);
-                    if (vehicle.Vehicle is null)
-                        continue;
-                    vehicle.Vehicle.Freeze(true, this);
-                    vehicle.Vehicle.SetInvincible(true, this);
-                    DataSyncHandler.SetData(vehicle.Vehicle, EntityDataKey.GangId, DataSyncMode.Lobby, gang.Entity.Id, toLobby: this);
+                    vehicle.Freeze(true, this);
+                    vehicle.SetInvincible(true, this);
+                    DataSyncHandler.SetData(vehicle, EntityDataKey.GangId, DataSyncMode.Lobby, gang.Entity.Id, toLobby: this);
                     //Todo: Disable collision of the vehicle (maybe on clientside an EntityStreamIn?)
                 }
             });
-            
         }
+
+        #endregion Public Methods
     }
 }

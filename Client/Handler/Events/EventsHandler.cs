@@ -14,72 +14,15 @@ namespace TDS_Client.Handler.Events
 {
     public class EventsHandler : ServiceBase
     {
+        #region Private Fields
 
-        public delegate void EmptyDelegate();
-        public event EmptyDelegate SettingsLoaded;
-        public event EmptyDelegate MapCleared;
-        public event EmptyDelegate MapCreatorObjectDeleted;
-        public event EmptyDelegate MapCreatorSyncLatestObjectID;
-        public event EmptyDelegate ShowScoreboard;
-        public event EmptyDelegate HideScoreboard;
-        public event EmptyDelegate AngularCooldown;
-        public event EmptyDelegate LocalPlayerDied;
-        public event EmptyDelegate MapChanged;
-        public event EmptyDelegate LoggedIn;
-        public event EmptyDelegate Spawn;
-
-        public delegate void BoolDelegate(bool boolean);
-        public event BoolDelegate CursorToggled;
-        public event BoolDelegate CursorToggleRequested;
-        public event BoolDelegate InFightStatusChanged;
-        public event BoolDelegate FreecamToggled;
-        public event BoolDelegate ChatInputToggled;
-
-        public delegate void LanguageChangedDelegate(ILanguage lang, bool beforeLogin);
-        public event LanguageChangedDelegate LanguageChanged;
-
-        public delegate void WeaponChangedDelegate(WeaponHash previousWeapon, WeaponHash currentHash);
-        public event WeaponChangedDelegate WeaponChanged;
-
-        public delegate void DataChangedDelegate(IPlayer player, PlayerDataKey key, object data);
-        public event DataChangedDelegate DataChanged;
-
-        public delegate void LobbyLeftJoinedDelegate(SyncedLobbySettings settings);
-        public event LobbyLeftJoinedDelegate LobbyJoined;
-        public event LobbyLeftJoinedDelegate LobbyLeft;
-
-        public delegate void MapCreatorObjectDelegate(MapCreatorObject mapCreatorObject);
-        public event MapCreatorObjectDelegate MapCreatorSyncObjectDeleted;
-
-        public delegate void PlayerDiedDelegate(IPlayer player, int teamIndex, bool willRespawn);
-        public event PlayerDiedDelegate PlayerDied;
-
-        public delegate void PlayerDelegate(IPlayer player);
-        public event PlayerDelegate PlayerJoinedSameLobby;
-
-        public delegate void PlayerAndNameDelegate(IPlayer player, string name);
-        public event PlayerAndNameDelegate PlayerLeftSameLobby;
-
-        public delegate void RespawnedDelegate(bool inFightAgain);
-        public event RespawnedDelegate Respawned;
-
-        public delegate void TeamChangedDelegate(string currentTeamName);
-        public event TeamChangedDelegate TeamChanged;
-
-        public delegate void RoundStartedDelegate(bool isSpectator);
-        public event RoundStartedDelegate CountdownStarted;
-        public event RoundStartedDelegate RoundStarted;
-        public event RoundStartedDelegate RoundEnded;
-
-        public delegate void MapCreatorSyncTeamObjectsDeletedDelegate(int teamNumber);
-        public event MapCreatorSyncTeamObjectsDeletedDelegate MapCreatorSyncTeamObjectsDeleted;
-
-        public delegate void ColorDelegate(Color color);
-        public event ColorDelegate MapBorderColorChanged;
+        private readonly RemoteEventsSender _remoteEventsSender;
 
         private WeaponHash _lastWeaponHash;
 
-        private readonly RemoteEventsSender _remoteEventsSender;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public EventsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender)
             : base(modAPI, loggingHandler)
@@ -90,111 +33,111 @@ namespace TDS_Client.Handler.Events
             ModAPI.Event.Add(ToServerEvent.FromBrowserEvent, OnFromBrowserEventMethod);
         }
 
-        private void OnFromBrowserEventMethod(object[] args)
-        {
-            if (!_remoteEventsSender.SendFromBrowser(args))
-                AngularCooldown?.Invoke();
-        }
+        #endregion Public Constructors
 
-        internal void OnCursorToggled(bool visible)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnCursorToggled");
-                CursorToggled?.Invoke(visible);
-                Logging.LogInfo("", "EventsHandler.OnCursorToggled", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-    
-        }
+        #region Public Delegates
 
-        internal void OnLanguageChanged(ILanguage lang, bool beforeLogin)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnLanguageChanged");
-                LanguageChanged?.Invoke(lang, beforeLogin);
-                Logging.LogInfo("", "EventsHandler.OnLanguageChanged", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        public delegate void BoolDelegate(bool boolean);
 
-        internal void OnPlayerDied(IPlayer player, int teamIndex, bool willRespawn)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnPlayerDied");
-                PlayerDied?.Invoke(player, teamIndex, willRespawn);
-                Logging.LogInfo("", "EventsHandler.OnPlayerDied", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-            
-        }
+        public delegate void ColorDelegate(Color color);
 
-        internal void OnLocalPlayerDied()
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnLocalPlayerDied");
-                LocalPlayerDied?.Invoke();
-                Logging.LogInfo("", "EventsHandler.OnLocalPlayerDied", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        public delegate void DataChangedDelegate(IPlayer player, PlayerDataKey key, object data);
 
-        internal void OnSettingsLoaded()
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnSettingsLoaded");
-                SettingsLoaded?.Invoke();
-                Logging.LogInfo("", "EventsHandler.OnSettingsLoaded", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        public delegate void EmptyDelegate();
 
-        internal void OnInFightStatusChanged(bool value)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnInFightStatusChanged");
-                InFightStatusChanged?.Invoke(value);
-                Logging.LogInfo("", "EventsHandler.OnInFightStatusChanged", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        public delegate void LanguageChangedDelegate(ILanguage lang, bool beforeLogin);
 
-        internal void OnDataChanged(IPlayer player, PlayerDataKey key, object data)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnDataChanged");
-                DataChanged?.Invoke(player, key, data);
-                Logging.LogInfo("", "EventsHandler.OnDataChanged", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        public delegate void LobbyLeftJoinedDelegate(SyncedLobbySettings settings);
+
+        public delegate void MapCreatorObjectDelegate(MapCreatorObject mapCreatorObject);
+
+        public delegate void MapCreatorSyncTeamObjectsDeletedDelegate(int teamNumber);
+
+        public delegate void PlayerAndNameDelegate(IPlayer player, string name);
+
+        public delegate void PlayerDelegate(IPlayer player);
+
+        public delegate void PlayerDiedDelegate(IPlayer player, int teamIndex, bool willRespawn);
+
+        public delegate void RespawnedDelegate(bool inFightAgain);
+
+        public delegate void RoundStartedDelegate(bool isSpectator);
+
+        public delegate void TeamChangedDelegate(string currentTeamName);
+
+        public delegate void WeaponChangedDelegate(WeaponHash previousWeapon, WeaponHash currentHash);
+
+        #endregion Public Delegates
+
+        #region Public Events
+
+        public event EmptyDelegate AngularCooldown;
+
+        public event BoolDelegate ChatInputToggled;
+
+        public event RoundStartedDelegate CountdownStarted;
+
+        public event BoolDelegate CursorToggled;
+
+        public event BoolDelegate CursorToggleRequested;
+
+        public event DataChangedDelegate DataChanged;
+
+        public event BoolDelegate FreecamToggled;
+
+        public event EmptyDelegate HideScoreboard;
+
+        public event BoolDelegate InFightStatusChanged;
+
+        public event LanguageChangedDelegate LanguageChanged;
+
+        public event LobbyLeftJoinedDelegate LobbyJoined;
+
+        public event LobbyLeftJoinedDelegate LobbyLeft;
+
+        public event EmptyDelegate LocalPlayerDied;
+
+        public event EmptyDelegate LoggedIn;
+
+        public event ColorDelegate MapBorderColorChanged;
+
+        public event EmptyDelegate MapChanged;
+
+        public event EmptyDelegate MapCleared;
+
+        public event EmptyDelegate MapCreatorObjectDeleted;
+
+        public event EmptyDelegate MapCreatorSyncLatestObjectID;
+
+        public event MapCreatorObjectDelegate MapCreatorSyncObjectDeleted;
+
+        public event MapCreatorSyncTeamObjectsDeletedDelegate MapCreatorSyncTeamObjectsDeleted;
+
+        public event PlayerDiedDelegate PlayerDied;
+
+        public event PlayerDelegate PlayerJoinedSameLobby;
+
+        public event PlayerAndNameDelegate PlayerLeftSameLobby;
+
+        public event RespawnedDelegate Respawned;
+
+        public event RoundStartedDelegate RoundEnded;
+
+        public event RoundStartedDelegate RoundStarted;
+
+        public event EmptyDelegate SettingsLoaded;
+
+        public event EmptyDelegate ShowScoreboard;
+
+        public event EmptyDelegate Spawn;
+
+        public event TeamChangedDelegate TeamChanged;
+
+        public event WeaponChangedDelegate WeaponChanged;
+
+        #endregion Public Events
+
+        #region Public Methods
 
         public void OnLobbyJoined(SyncedLobbySettings newSettings)
         {
@@ -203,20 +146,6 @@ namespace TDS_Client.Handler.Events
                 Logging.LogInfo("", "EventsHandler.OnLobbyJoined");
                 LobbyJoined?.Invoke(newSettings);
                 Logging.LogInfo("", "EventsHandler.OnLobbyJoined", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        internal void OnMapCreatorSyncLatestObjectID()
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncLatestObjectID");
-                MapCreatorSyncLatestObjectID?.Invoke();
-                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncLatestObjectID", true);
             }
             catch (Exception ex)
             {
@@ -238,97 +167,17 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnMapCreatorObjectDeleted()
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnMapCreatorObjectDeleted");
-                MapCreatorObjectDeleted?.Invoke();
-                Logging.LogInfo("", "EventsHandler.OnMapCreatorObjectDeleted", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        #endregion Public Methods
 
-        internal void OnMapCreatorSyncTeamObjectsDeleted(int teamNumber)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncTeamObjectsDeleted");
-                MapCreatorSyncTeamObjectsDeleted?.Invoke(teamNumber);
-                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncTeamObjectsDeleted", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        #region Internal Methods
 
-        internal void OnMapBorderColorChanged(Color color)
+        internal void OnChatInputToggled(bool value)
         {
             try
             {
-                Logging.LogInfo("", "EventsHandler.OnMapBorderColorChanged");
-                MapBorderColorChanged?.Invoke(color);
-                Logging.LogInfo("", "EventsHandler.OnMapBorderColorChanged", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        internal void OnMapCreatorSyncObjectDeleted(MapCreatorObject mapCreatorObject)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncObjectDeleted");
-                MapCreatorSyncObjectDeleted?.Invoke(mapCreatorObject);
-                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncObjectDeleted", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        internal void OnFreecamToggled(bool toggle)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnFreecamToggled");
-                FreecamToggled?.Invoke(toggle);
-                Logging.LogInfo("", "EventsHandler.OnFreecamToggled", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        internal void OnShowScoreboard()
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnShowScoreboard");
-                ShowScoreboard?.Invoke();
-                Logging.LogInfo("", "EventsHandler.OnShowScoreboard", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        internal void OnHideScoreboard()
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnHideScoreboard");
-                HideScoreboard?.Invoke();
-                Logging.LogInfo("", "EventsHandler.OnHideScoreboard", true);
+                Logging.LogInfo("", "EventsHandler.OnChatInputToggled");
+                ChatInputToggled?.Invoke(value);
+                Logging.LogInfo("", "EventsHandler.OnChatInputToggled", true);
             }
             catch (Exception ex)
             {
@@ -350,13 +199,13 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnPlayerJoinedSameLobby(IPlayer player)
+        internal void OnCursorToggled(bool visible)
         {
             try
             {
-                Logging.LogInfo("", "EventsHandler.OnPlayerJoinedSameLobby");
-                PlayerJoinedSameLobby?.Invoke(player);
-                Logging.LogInfo("", "EventsHandler.OnPlayerJoinedSameLobby", true);
+                Logging.LogInfo("", "EventsHandler.OnCursorToggled");
+                CursorToggled?.Invoke(visible);
+                Logging.LogInfo("", "EventsHandler.OnCursorToggled", true);
             }
             catch (Exception ex)
             {
@@ -364,13 +213,125 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnPlayerLeftSameLobby(IPlayer player, string name)
+        internal void OnCursorToggleRequested(bool value)
         {
             try
             {
-                Logging.LogInfo("", "EventsHandler.OnPlayerLeftSameLobby");
-                PlayerLeftSameLobby?.Invoke(player, name);
-                Logging.LogInfo("", "EventsHandler.OnPlayerLeftSameLobby", true);
+                Logging.LogInfo("", "EventsHandler.OnChatInputToggleRequested");
+                CursorToggleRequested?.Invoke(value);
+                Logging.LogInfo("", "EventsHandler.OnChatInputToggleRequested", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnDataChanged(IPlayer player, PlayerDataKey key, object data)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnDataChanged");
+                DataChanged?.Invoke(player, key, data);
+                Logging.LogInfo("", "EventsHandler.OnDataChanged", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnFreecamToggled(bool toggle)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnFreecamToggled");
+                FreecamToggled?.Invoke(toggle);
+                Logging.LogInfo("", "EventsHandler.OnFreecamToggled", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnHideScoreboard()
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnHideScoreboard");
+                HideScoreboard?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnHideScoreboard", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnInFightStatusChanged(bool value)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnInFightStatusChanged");
+                InFightStatusChanged?.Invoke(value);
+                Logging.LogInfo("", "EventsHandler.OnInFightStatusChanged", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnLanguageChanged(ILanguage lang, bool beforeLogin)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnLanguageChanged");
+                LanguageChanged?.Invoke(lang, beforeLogin);
+                Logging.LogInfo("", "EventsHandler.OnLanguageChanged", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnLocalPlayerDied()
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnLocalPlayerDied");
+                LocalPlayerDied?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnLocalPlayerDied", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnLoggedIn()
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnLoggedIn");
+                LoggedIn?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnLoggedIn", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnMapBorderColorChanged(Color color)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnMapBorderColorChanged");
+                MapBorderColorChanged?.Invoke(color);
+                Logging.LogInfo("", "EventsHandler.OnMapBorderColorChanged", true);
             }
             catch (Exception ex)
             {
@@ -406,6 +367,104 @@ namespace TDS_Client.Handler.Events
             }
         }
 
+        internal void OnMapCreatorObjectDeleted()
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorObjectDeleted");
+                MapCreatorObjectDeleted?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorObjectDeleted", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnMapCreatorSyncLatestObjectID()
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncLatestObjectID");
+                MapCreatorSyncLatestObjectID?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncLatestObjectID", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnMapCreatorSyncObjectDeleted(MapCreatorObject mapCreatorObject)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncObjectDeleted");
+                MapCreatorSyncObjectDeleted?.Invoke(mapCreatorObject);
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncObjectDeleted", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnMapCreatorSyncTeamObjectsDeleted(int teamNumber)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncTeamObjectsDeleted");
+                MapCreatorSyncTeamObjectsDeleted?.Invoke(teamNumber);
+                Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncTeamObjectsDeleted", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnPlayerDied(IPlayer player, int teamIndex, bool willRespawn)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnPlayerDied");
+                PlayerDied?.Invoke(player, teamIndex, willRespawn);
+                Logging.LogInfo("", "EventsHandler.OnPlayerDied", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnPlayerJoinedSameLobby(IPlayer player)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnPlayerJoinedSameLobby");
+                PlayerJoinedSameLobby?.Invoke(player);
+                Logging.LogInfo("", "EventsHandler.OnPlayerJoinedSameLobby", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnPlayerLeftSameLobby(IPlayer player, string name)
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnPlayerLeftSameLobby");
+                PlayerLeftSameLobby?.Invoke(player, name);
+                Logging.LogInfo("", "EventsHandler.OnPlayerLeftSameLobby", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
         internal void OnRespawned(bool againInFight)
         {
             try
@@ -413,48 +472,6 @@ namespace TDS_Client.Handler.Events
                 Logging.LogInfo("", "EventsHandler.OnRespawned");
                 Respawned?.Invoke(againInFight);
                 Logging.LogInfo("", "EventsHandler.OnRespawned", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        internal void OnTeamChanged(string currentTeamName)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnTeamChanged");
-                TeamChanged?.Invoke(currentTeamName);
-                Logging.LogInfo("", "EventsHandler.OnTeamChanged", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        internal void OnLoggedIn()
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnLoggedIn");
-                LoggedIn?.Invoke();
-                Logging.LogInfo("", "EventsHandler.OnLoggedIn", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        internal void OnRoundStarted(bool isSpectator)
-        {
-            try
-            {
-                Logging.LogInfo("", "EventsHandler.OnRoundStarted");
-                RoundStarted?.Invoke(isSpectator);
-                Logging.LogInfo("", "EventsHandler.OnRoundStarted", true);
             }
             catch (Exception ex)
             {
@@ -476,13 +493,13 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnChatInputToggled(bool value)
+        internal void OnRoundStarted(bool isSpectator)
         {
             try
             {
-                Logging.LogInfo("", "EventsHandler.OnChatInputToggled");
-                ChatInputToggled?.Invoke(value);
-                Logging.LogInfo("", "EventsHandler.OnChatInputToggled", true);
+                Logging.LogInfo("", "EventsHandler.OnRoundStarted");
+                RoundStarted?.Invoke(isSpectator);
+                Logging.LogInfo("", "EventsHandler.OnRoundStarted", true);
             }
             catch (Exception ex)
             {
@@ -490,13 +507,27 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnCursorToggleRequested(bool value)
+        internal void OnSettingsLoaded()
         {
             try
             {
-                Logging.LogInfo("", "EventsHandler.OnChatInputToggleRequested");
-                CursorToggleRequested?.Invoke(value);
-                Logging.LogInfo("", "EventsHandler.OnChatInputToggleRequested", true);
+                Logging.LogInfo("", "EventsHandler.OnSettingsLoaded");
+                SettingsLoaded?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnSettingsLoaded", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnShowScoreboard()
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnShowScoreboard");
+                ShowScoreboard?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnShowScoreboard", true);
             }
             catch (Exception ex)
             {
@@ -518,10 +549,23 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        private void OnTick(int _)
+        internal void OnTeamChanged(string currentTeamName)
         {
-            CheckNewWeapon();
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnTeamChanged");
+                TeamChanged?.Invoke(currentTeamName);
+                Logging.LogInfo("", "EventsHandler.OnTeamChanged", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
+
+        #endregion Internal Methods
+
+        #region Private Methods
 
         private void CheckNewWeapon()
         {
@@ -533,6 +577,17 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        
+        private void OnFromBrowserEventMethod(object[] args)
+        {
+            if (!_remoteEventsSender.SendFromBrowser(args))
+                AngularCooldown?.Invoke();
+        }
+
+        private void OnTick(int _)
+        {
+            CheckNewWeapon();
+        }
+
+        #endregion Private Methods
     }
 }

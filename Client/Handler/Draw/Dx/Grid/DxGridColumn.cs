@@ -6,12 +6,17 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
 {
     public class DxGridColumn : DxBase
     {
-        public float X { get; set; }
-        public float Width;
+        #region Public Fields
+
         public bool RelativePos;
         public bool RelativeWidth;
+        public float Width;
 
-        public DxGridColumn(DxHandler dxHandler, IModAPI modAPI, float width, DxGrid grid, bool relativePos = true, bool relativeWidth = true, int frontPriority = 0) 
+        #endregion Public Fields
+
+        #region Public Constructors
+
+        public DxGridColumn(DxHandler dxHandler, IModAPI modAPI, float width, DxGrid grid, bool relativePos = true, bool relativeWidth = true, int frontPriority = 0)
             : base(dxHandler, modAPI, frontPriority, false)
         {
             Width = relativeWidth ? width * grid.Width : width;
@@ -26,9 +31,21 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             grid.Columns.Add(this);
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public float X { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public override DxType GetDxType()
         {
             return DxType.GridColumn;
         }
+
+        #endregion Public Methods
     }
 }

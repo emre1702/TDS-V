@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace TDS_Server.Data.Models.ClothesMeta
 {
-    #nullable disable
+#nullable disable
+
     public class Item
     {
+        #region Public Properties
+
         [XmlElement("ComponentDrawables")]
         public ComponentDrawables ComponentDrawables { get; set; }
 
@@ -22,6 +22,9 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
         [XmlElement("TattooHashes")]
         public TattooHashes TattooHashes { get; set; }
+
+        #endregion Public Properties
     }
-    #nullable restore
+
+#nullable restore
 }

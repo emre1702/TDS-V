@@ -8,8 +8,14 @@ namespace TDS_Client.RAGEAPI.Event
 {
     public class EntityStreamOutEventHandler : BaseEventHandler<EntityStreamOutDelegate>
     {
-        private readonly LoggingHandler _loggingHandler;
+        #region Private Fields
+
         private readonly EntityConvertingHandler _entityConvertingHandler;
+        private readonly LoggingHandler _loggingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public EntityStreamOutEventHandler(LoggingHandler loggingHandler, EntityConvertingHandler entityConvertingHandler)
             : base()
@@ -19,6 +25,10 @@ namespace TDS_Client.RAGEAPI.Event
 
             RAGE.Events.OnEntityStreamOut += EntityStreamOut;
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void EntityStreamOut(RAGE.Elements.Entity modEntity)
         {
@@ -42,5 +52,6 @@ namespace TDS_Client.RAGEAPI.Event
             }
         }
 
+        #endregion Private Methods
     }
 }

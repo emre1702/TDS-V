@@ -17,14 +17,17 @@ namespace TDS_Server.Handler.Player
 {
     public class TDSPlayerHandler
     {
-        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerCache.Values;
-        public int AmountLoggedInPlayers => LoggedInPlayers.Count;
+        #region Private Fields
 
-        private readonly ConcurrentDictionary<IPlayer, ITDSPlayer> _tdsPlayerCache = new ConcurrentDictionary<IPlayer, ITDSPlayer>();
-        private readonly ConcurrentDictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new ConcurrentDictionary<ushort, ITDSPlayer>();
+        private readonly ILoggingHandler _loggingHandler;
         private readonly NameCheckHelper _nameCheckHelper;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILoggingHandler _loggingHandler;
+        private readonly ConcurrentDictionary<IPlayer, ITDSPlayer> _tdsPlayerCache = new ConcurrentDictionary<IPlayer, ITDSPlayer>();
+        private readonly ConcurrentDictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new ConcurrentDictionary<ushort, ITDSPlayer>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public TDSPlayerHandler(
             NameCheckHelper nameCheckHelper,
@@ -42,6 +45,17 @@ namespace TDS_Server.Handler.Player
             eventsHandler.Minute += UpdatePlayers;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public int AmountLoggedInPlayers => LoggedInPlayers.Count;
+        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerCache.Values;
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public ITDSPlayer Get(IPlayer modPlayer)
         {
             if (!_tdsPlayerCache.TryGetValue(modPlayer, out ITDSPlayer? tdsPlayer))
@@ -54,16 +68,9 @@ namespace TDS_Server.Handler.Player
             return tdsPlayer;
         }
 
-        public ITDSPlayer GetNotLoggedIn(IPlayer modPlayer)
+        public ITDSPlayer? GetIfExists(int playerId)
         {
-            if (!_tdsPlayerCache.TryGetValue(modPlayer, out ITDSPlayer? tdsPlayer) || tdsPlayer.LoggedIn)
-            {
-                tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
-                tdsPlayer.ModPlayer = modPlayer;
-                _tdsPlayerCache[modPlayer] = tdsPlayer;
-            }
-
-            return tdsPlayer;
+            return _tdsPlayerCache.Values.FirstOrDefault(p => p.Id == playerId);
         }
 
         public ITDSPlayer? GetIfLoggedIn(IPlayer modPlayer)
@@ -84,10 +91,21 @@ namespace TDS_Server.Handler.Player
             return player;
         }
 
-        public ITDSPlayer? GetIfExists(int playerId)
+        public ITDSPlayer GetNotLoggedIn(IPlayer modPlayer)
         {
-            return _tdsPlayerCache.Values.FirstOrDefault(p => p.Id == playerId);
+            if (!_tdsPlayerCache.TryGetValue(modPlayer, out ITDSPlayer? tdsPlayer) || tdsPlayer.LoggedIn)
+            {
+                tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
+                tdsPlayer.ModPlayer = modPlayer;
+                _tdsPlayerCache[modPlayer] = tdsPlayer;
+            }
+
+            return tdsPlayer;
         }
+
+        #endregion Public Methods
+
+        #region Internal Methods
 
         internal ITDSPlayer? FindTDSPlayer(string name)
         {
@@ -123,14 +141,13 @@ namespace TDS_Server.Handler.Player
             return null;
         }
 
+        #endregion Internal Methods
+
+        #region Private Methods
+
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             _tdsPlayerRemoteIdCache[player.RemoteId] = player;
-        }
-
-        private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
-        {
-            return player.SaveData(true);
         }
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
@@ -140,24 +157,9 @@ namespace TDS_Server.Handler.Player
             _tdsPlayerRemoteIdCache.TryRemove(player.RemoteId, out _);
         }
 
-        private void UpdatePlayers(int _)
+        private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
         {
-            foreach (var player in LoggedInPlayers)
-            {
-                try
-                {
-                    ++player.PlayMinutes;
-                    ReduceMuteTime(player);
-                    ReduceVoiceMuteTime(player);
-                    player.CheckReduceMapBoughtCounter();
-
-                    player.CheckSaveData();
-                }
-                catch (Exception ex)
-                {
-                    _loggingHandler.LogError(ex, player);
-                }
-            }
+            return player.SaveData(true);
         }
 
         private void ReduceMuteTime(ITDSPlayer player)
@@ -192,5 +194,27 @@ namespace TDS_Server.Handler.Player
                     player.SetVoiceTo(target, true);
             }
         }
+
+        private void UpdatePlayers(int _)
+        {
+            foreach (var player in LoggedInPlayers)
+            {
+                try
+                {
+                    ++player.PlayMinutes;
+                    ReduceMuteTime(player);
+                    ReduceVoiceMuteTime(player);
+                    player.CheckReduceMapBoughtCounter();
+
+                    player.CheckSaveData();
+                }
+                catch (Exception ex)
+                {
+                    _loggingHandler.LogError(ex, player);
+                }
+            }
+        }
+
+        #endregion Private Methods
     }
 }

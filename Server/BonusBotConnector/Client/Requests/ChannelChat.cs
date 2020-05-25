@@ -12,16 +12,37 @@ namespace BonusBotConnector.Client.Requests
 {
     public class ChannelChat
     {
-        public event ErrorLogDelegate? Error;
-        public event ErrorStringLogDelegate? ErrorString;
+        #region Private Fields
 
         private readonly MessageToChannelClient _client;
+
         private readonly BonusbotSettings _settings;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ChannelChat(GrpcChannel channel, BonusbotSettings settings)
         {
             _client = new MessageToChannelClient(channel);
             _settings = settings;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Events
+
+        public event ErrorLogDelegate? Error;
+
+        public event ErrorStringLogDelegate? ErrorString;
+
+        #endregion Public Events
+
+        #region Public Methods
+
+        public void SendActionInfo(string info)
+        {
+            SendRequest(info, _settings.ActionsInfoChannelId);
         }
 
         public void SendAdminApplication(Applications application, ITDSPlayer player)
@@ -39,21 +60,6 @@ namespace BonusBotConnector.Client.Requests
             request.Fields.Add(new EmbedField { Name = "Play hours:", Value = (player.Entity.PlayerStats.PlayTime / 60f).ToString() });
             request.Fields.Add(new EmbedField { Name = "Created:", Value = application.CreateTime.ToString() });
             SendRequest(request, _settings.AdminApplicationsChannelId);
-        }
-
-        public void SendSupportRequest(string info)
-        {
-            SendRequest(info, _settings.SupportRequestsChannelId);
-        }
-
-        public void SendError(string msg)
-        {
-            SendRequest(msg, _settings.ErrorLogsChannelId, false);
-        }
-
-        public void SendActionInfo(string info)
-        {
-            SendRequest(info, _settings.ActionsInfoChannelId);
         }
 
         public void SendBanInfo(PlayerBans ban, List<EmbedField> fields)
@@ -74,12 +80,32 @@ namespace BonusBotConnector.Client.Requests
 
                 embed.Fields.AddRange(fields);
                 SendRequest(embed, _settings.BansInfoChannelId);
-
             }
             catch (Exception ex)
             {
                 Error?.Invoke(ex, true);
             }
+        }
+
+        public void SendError(string msg)
+        {
+            SendRequest(msg, _settings.ErrorLogsChannelId, false);
+        }
+
+        public void SendSupportRequest(string info)
+        {
+            SendRequest(info, _settings.SupportRequestsChannelId);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void HandleResult(MessageToChannelRequestReply result)
+        {
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return;
+            ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
         }
 
         private async void SendRequest(string text, ulong? channelId, bool logToBonusBotOnError = true)
@@ -114,11 +140,6 @@ namespace BonusBotConnector.Client.Requests
             }
         }
 
-        private void HandleResult(MessageToChannelRequestReply result)
-        {
-            if (string.IsNullOrEmpty(result.ErrorMessage))
-                return;
-            ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
-        }
+        #endregion Private Methods
     }
 }

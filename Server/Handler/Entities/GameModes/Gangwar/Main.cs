@@ -16,7 +16,13 @@ namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar : GameMode
     {
+        #region Private Fields
+
         private readonly GangwarArea? _gangwarArea;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Gangwar(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, IServiceProvider serviceProvider,
             GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, ILoggingHandler loggingHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
@@ -37,11 +43,17 @@ namespace TDS_Server.Handler.Entities.GameModes
             _gangwarArea = gangwarArea;
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public static void Init(TDSDbContext dbContext)
         {
             _allowedWeaponHashes = dbContext.Weapons
                 .Select(w => w.Hash)
                 .ToHashSet();
         }
+
+        #endregion Public Methods
     }
 }

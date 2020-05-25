@@ -6,12 +6,22 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Ped
 {
-    class PedAPI : IPedAPI
+    internal class PedAPI : IPedAPI
     {
+        #region Private Fields
+
         private readonly EntityConvertingHandler _entityConvertingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public PedAPI(EntityConvertingHandler entityConvertingHandler)
             => _entityConvertingHandler = entityConvertingHandler;
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public IPed Create(PedHash model, Position3D position, Position3D rotation, uint dimension)
             => Create(model, position, rotation.Z, dimension);
@@ -22,12 +32,12 @@ namespace TDS_Client.RAGEAPI.Ped
             return _entityConvertingHandler.GetEntity(instance);
         }
 
-        
-
         public int GetPedArmor(int handle)
             => RAGE.Game.Ped.GetPedArmour(handle);
 
         public int GetPedBoneIndex(int ped, int boneId)
             => RAGE.Game.Ped.GetPedBoneIndex(ped, boneId);
+
+        #endregion Public Methods
     }
 }

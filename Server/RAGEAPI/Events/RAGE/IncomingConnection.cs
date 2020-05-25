@@ -4,6 +4,8 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
 {
     partial class BaseRAGEEvents
     {
+        #region Public Methods
+
         [ServerEvent(Event.IncomingConnection)]
         public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
         {
@@ -12,5 +14,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
 
             cancel.Cancel = cancelEventArgs.Cancel;
         }
+
+        #endregion Public Methods
     }
 }

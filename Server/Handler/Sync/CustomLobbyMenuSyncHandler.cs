@@ -1,23 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.CustomLobby;
-using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
-using TDS_Server.Data.Defaults;
 
 namespace TDS_Server.Handler.Sync
 {
     public class CustomLobbyMenuSyncHandler
     {
+        #region Private Fields
+
+        private readonly LobbiesHandler _lobbiesHandler;
         private readonly List<ITDSPlayer> _playersInCustomLobbyMenu = new List<ITDSPlayer>();
 
         private readonly Serializer _serializer;
-        private readonly LobbiesHandler _lobbiesHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public CustomLobbyMenuSyncHandler(EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler)
         {
@@ -29,6 +33,30 @@ namespace TDS_Server.Handler.Sync
             eventsHandler.PlayerLeftCustomMenuLobby += RemovePlayer;
             eventsHandler.CustomLobbyCreated += SyncLobbyAdded;
             eventsHandler.CustomLobbyRemoved += SyncLobbyRemoved;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void AddPlayer(ITDSPlayer player)
+        {
+            _playersInCustomLobbyMenu.Add(player);
+            List<CustomLobbyData> lobbyDatas = _lobbiesHandler.Lobbies.Where(l => !l.IsOfficial && l.Entity.Type != LobbyType.MapCreateLobby)
+                                                        .Select(l => GetCustomLobbyData(l))
+                                                        .ToList();
+
+            player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, _serializer.ToBrowser(lobbyDatas));
+        }
+
+        public bool IsPlayerInCustomLobbyMenu(ITDSPlayer player)
+        {
+            return _playersInCustomLobbyMenu.Contains(player);
+        }
+
+        public void RemovePlayer(ITDSPlayer player)
+        {
+            _playersInCustomLobbyMenu.Remove(player);
         }
 
         public void SyncLobbyAdded(ILobby lobby)
@@ -66,25 +94,9 @@ namespace TDS_Server.Handler.Sync
             }
         }
 
-        public void AddPlayer(ITDSPlayer player)
-        {
-            _playersInCustomLobbyMenu.Add(player);
-            List<CustomLobbyData> lobbyDatas = _lobbiesHandler.Lobbies.Where(l => !l.IsOfficial && l.Entity.Type != LobbyType.MapCreateLobby)
-                                                        .Select(l => GetCustomLobbyData(l))
-                                                        .ToList();
+        #endregion Public Methods
 
-            player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, _serializer.ToBrowser(lobbyDatas));
-        }
-
-        public void RemovePlayer(ITDSPlayer player)
-        {
-            _playersInCustomLobbyMenu.Remove(player);
-        }
-
-        public bool IsPlayerInCustomLobbyMenu(ITDSPlayer player)
-        {
-            return _playersInCustomLobbyMenu.Contains(player);
-        }
+        #region Private Methods
 
         private CustomLobbyData GetCustomLobbyData(ILobby lobby)
         {
@@ -127,9 +139,9 @@ namespace TDS_Server.Handler.Sync
                     Damage = w.Damage,
                     HeadshotMultiplicator = w.HeadMultiplicator
                 }).ToList()
-
             };
         }
 
+        #endregion Private Methods
     }
 }

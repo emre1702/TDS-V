@@ -2,23 +2,36 @@
 using System.Linq;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Userpanel.Command;
-using TDS_Server.Database.Entity.Command;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelCommandsHandler
     {
+        #region Private Fields
+
         private readonly List<UserpanelCommandDataDto> _commandDatas = new List<UserpanelCommandDataDto>();
+        private readonly Serializer _serializer;
         private string _commandDatasJson = "[]";
 
-        private readonly Serializer _serializer;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public UserpanelCommandsHandler(Serializer serializer)
             => _serializer = serializer;
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public string GetData()
+        {
+            return _commandDatasJson;
+        }
+
         public void LoadCommandData(
-            Dictionary<string, CommandDataDto> commandDataByCommand,
+                    Dictionary<string, CommandDataDto> commandDataByCommand,
             Dictionary<string, Database.Entity.Command.Commands> commandsDict)
         {
             foreach (var entry in commandDataByCommand)
@@ -63,9 +76,6 @@ namespace TDS_Server.Handler.Userpanel
             _commandDatasJson = _serializer.ToBrowser(_commandDatas);
         }
 
-        public string GetData()
-        {
-            return _commandDatasJson;
-        }
+        #endregion Public Methods
     }
 }

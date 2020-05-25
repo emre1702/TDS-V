@@ -3,11 +3,15 @@ using TDS_Client.Data.Interfaces.ModAPI.Locale;
 
 namespace TDS_Client.RAGEAPI.Locale
 {
-    class LocaleAPI : ILocaleAPI
+    internal class LocaleAPI : ILocaleAPI
     {
+        #region Public Methods
+
         public LanguageID GetCurrentLanguageId()
         {
             return (LanguageID)RAGE.Game.Locale.GetCurrentLanguageId();
         }
+
+        #endregion Public Methods
     }
 }

@@ -15,35 +15,33 @@ namespace TDS_Client.Handler.Lobby
 {
     public class RoundInfosHandler : ServiceBase
     {
-        public bool RefreshOnTick
-        {
-            get => _refreshOnTick;
-            set
-            {
-                if (_refreshOnTick == value)
-                    return;
-                _refreshOnTick = value;
-                if (value)
-                    ModAPI.Event.Tick.Add(_tickEventMethod);
-                else
-                    ModAPI.Event.Tick.Remove(_tickEventMethod);
-            }
-        }
+        #region Private Fields
 
-        private int _startedMs;
-        private bool _refreshOnTick;
-        private DxTextRectangle _timeDisplay;
-        private DxTextRectangle[] _teamDisplays;
+        private readonly DxHandler _dxHandler;
+
+        private readonly Serializer _serializer;
+
+        private readonly SettingsHandler _settingsHandler;
+
+        private readonly TeamsHandler _teamsHandler;
 
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        private readonly TeamsHandler _teamsHandler;
         private readonly TimerHandler _timerHandler;
-        private readonly DxHandler _dxHandler;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly Serializer _serializer;
 
-        public RoundInfosHandler(IModAPI modAPI, LoggingHandler loggingHandler, TeamsHandler teamsHandler, TimerHandler timerHandler, DxHandler dxHandler, 
+        private bool _refreshOnTick;
+
+        private int _startedMs;
+
+        private DxTextRectangle[] _teamDisplays;
+
+        private DxTextRectangle _timeDisplay;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public RoundInfosHandler(IModAPI modAPI, LoggingHandler loggingHandler, TeamsHandler teamsHandler, TimerHandler timerHandler, DxHandler dxHandler,
             SettingsHandler settingsHandler, EventsHandler eventsHandler, Serializer serializer)
             : base(modAPI, loggingHandler)
         {
@@ -61,46 +59,85 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.CountdownStarted += EventsHandler_CountdownStarted;
             eventsHandler.RoundStarted += EventsHandler_RoundStarted;
             eventsHandler.RoundEnded += EventsHandler_RoundEnded;
-            
 
             modAPI.Event.Add(ToClientEvent.AmountInFightSync, OnAmountInFightSyncMethod);
             modAPI.Event.Add(ToClientEvent.StopRoundStats, OnStopRoundStatsMethod);
         }
 
-        private void EventsHandler_CountdownStarted(bool isSpectator)
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public bool RefreshOnTick
         {
-            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
-                return;
-            if (isSpectator)
-                return;
-            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.COUNTDOWN_STARTED_NOTIFICATION, "TDS-V", 4000);
+            get => _refreshOnTick;
+            set
+            {
+                if (_refreshOnTick == value)
+                    return;
+                _refreshOnTick = value;
+                if (value)
+                    ModAPI.Event.Tick.Add(_tickEventMethod);
+                else
+                    ModAPI.Event.Tick.Remove(_tickEventMethod);
+            }
         }
 
-        private void EventsHandler_RoundStarted(bool isSpectator)
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void OnePlayerDied(int teamindex)
         {
-            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
-                return;
-            if (isSpectator)
-                return;
-            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.ROUND_STARTED_NOTIFICATION, "TDS-V", 4000);
+            try
+            {
+                if (teamindex < 0 || teamindex >= _teamsHandler.LobbyTeams.Count)
+                    return;
+                --_teamsHandler.LobbyTeams[teamindex].AmountPlayers.AmountAlive;
+                RefreshTeamText(teamindex);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
-        private void EventsHandler_RoundEnded(bool isSpectator)
+        public void RefreshAllTeamTexts()
         {
-            Stop();
-            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
-                return;
-            if (isSpectator)
-                return;
-            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.ROUND_ENDED_NOTIFICATION, "TDS-V", 4000);
+            foreach (var team in _teamsHandler.LobbyTeams)
+            {
+                if (team.IsSpectator)
+                    continue;
+                RefreshTeamText(team.Index);
+            }
         }
 
-        
+        public void RefreshTeamText(int index)
+        {
+            if (_teamDisplays == null)
+                return;
+            SyncedTeamDataDto team = _teamsHandler.LobbyTeams[index];
+            _teamDisplays[index - 1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
+        }
+
+        public void RefreshTime(int currentMs)
+        {
+            var elapsedMs = (currentMs - _startedMs);
+            double timems = 0;
+            if (_settingsHandler.RoundTime * 1000 > elapsedMs)
+                timems = _settingsHandler.RoundTime * 1000 - (_timerHandler.ElapsedMs - _startedMs);
+            _timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
+        }
+
+        public void SetRoundTimeLeft(int lefttimems)
+        {
+            _startedMs = _timerHandler.ElapsedMs - (_settingsHandler.RoundTime * 1000 - lefttimems);
+        }
 
         public void Start(int elapsedMsSinceRoundStart)
         {
             try
-            { 
+            {
                 _startedMs = _timerHandler.ElapsedMs - elapsedMsSinceRoundStart;
 
                 if (_teamDisplays != null)
@@ -115,42 +152,10 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        private void CreateTimeDisplay()
-        {
-            if (_timeDisplay == null)
-                _timeDisplay = new DxTextRectangle(_dxHandler, ModAPI, _timerHandler, "00:00", 0.5f, 0f, 0.06f, 0.05f,
-                            Color.White, Color.FromArgb(180, 20, 20, 20), textScale: 0.5f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
-            _timeDisplay.Activated = true;
-            RefreshOnTick = true;
-        }
-
-        private void CreateTeamsDisplays()
-        {
-            var teams = _teamsHandler.LobbyTeams;
-            int showamountleft = (int)Math.Ceiling((teams.Count - 1) / 2d);
-            int showamountright = teams.Count - showamountleft - 1;
-            _teamDisplays = new DxTextRectangle[teams.Count - 1];
-            for (int i = 0; i < showamountleft; ++i)
-            {
-                float x = 0.5f - 0.06f * 0.5f - 0.13f * i - 0.13f * 0.5f;
-                var team = teams[i + 1];
-                _teamDisplays[i] = new DxTextRectangle(_dxHandler, ModAPI, _timerHandler, team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, 
-                    Color.White, Color.FromArgb(187, team.Color.R, team.Color.G, team.Color.B), 0.41f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top, amountLines: 2);
-            }
-            for (int j = 0; j < showamountright; ++j)
-            {
-                float x = 0.5f + 0.06f * 0.5f + 0.13f * j + 0.13f * 0.5f;
-                int i = j + showamountleft;
-                var team = teams[i + 1];
-                _teamDisplays[i] = new DxTextRectangle(_dxHandler, ModAPI, _timerHandler, team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f, 
-                    Color.White, Color.FromArgb(187, team.Color.R, team.Color.G, team.Color.B), 0.41f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top, amountLines: 2);
-            }
-        }
-
         public void Stop()
         {
             try
-            { 
+            {
                 RefreshOnTick = false;
                 if (_timeDisplay != null)
                     _timeDisplay.Activated = false;
@@ -174,56 +179,49 @@ namespace TDS_Client.Handler.Lobby
             // stop damage, assists and kills display here
         }
 
-        public void RefreshTime(int currentMs)
-        {
-            var elapsedMs = (currentMs - _startedMs);
-            double timems = 0;
-            if (_settingsHandler.RoundTime * 1000 > elapsedMs)
-                timems = _settingsHandler.RoundTime * 1000 - (_timerHandler.ElapsedMs - _startedMs);
-            _timeDisplay?.SetText(TimeSpan.FromMilliseconds(timems).ToString(@"mm\:ss"));
-        }
+        #endregion Public Methods
 
-        public void RefreshAllTeamTexts()
+        #region Private Methods
+
+        private void CreateTeamsDisplays()
         {
-            foreach (var team in _teamsHandler.LobbyTeams)
+            var teams = _teamsHandler.LobbyTeams;
+            int showamountleft = (int)Math.Ceiling((teams.Count - 1) / 2d);
+            int showamountright = teams.Count - showamountleft - 1;
+            _teamDisplays = new DxTextRectangle[teams.Count - 1];
+            for (int i = 0; i < showamountleft; ++i)
             {
-                if (team.IsSpectator)
-                    continue;
-                RefreshTeamText(team.Index);
+                float x = 0.5f - 0.06f * 0.5f - 0.13f * i - 0.13f * 0.5f;
+                var team = teams[i + 1];
+                _teamDisplays[i] = new DxTextRectangle(_dxHandler, ModAPI, _timerHandler, team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f,
+                    Color.White, Color.FromArgb(187, team.Color.R, team.Color.G, team.Color.B), 0.41f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top, amountLines: 2);
+            }
+            for (int j = 0; j < showamountright; ++j)
+            {
+                float x = 0.5f + 0.06f * 0.5f + 0.13f * j + 0.13f * 0.5f;
+                int i = j + showamountleft;
+                var team = teams[i + 1];
+                _teamDisplays[i] = new DxTextRectangle(_dxHandler, ModAPI, _timerHandler, team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount, x, 0, 0.13f, 0.06f,
+                    Color.White, Color.FromArgb(187, team.Color.R, team.Color.G, team.Color.B), 0.41f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top, amountLines: 2);
             }
         }
 
-        public void RefreshTeamText(int index)
+        private void CreateTimeDisplay()
         {
-            if (_teamDisplays == null)
+            if (_timeDisplay == null)
+                _timeDisplay = new DxTextRectangle(_dxHandler, ModAPI, _timerHandler, "00:00", 0.5f, 0f, 0.06f, 0.05f,
+                            Color.White, Color.FromArgb(180, 20, 20, 20), textScale: 0.5f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
+            _timeDisplay.Activated = true;
+            RefreshOnTick = true;
+        }
+
+        private void EventsHandler_CountdownStarted(bool isSpectator)
+        {
+            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
                 return;
-            SyncedTeamDataDto team = _teamsHandler.LobbyTeams[index];
-            _teamDisplays[index - 1].SetText(team.Name + "\n" + team.AmountPlayers.AmountAlive + "/" + team.AmountPlayers.Amount);
-        }
-
-        public void SetRoundTimeLeft(int lefttimems)
-        {
-            _startedMs = _timerHandler.ElapsedMs - (_settingsHandler.RoundTime * 1000 - lefttimems);
-        }
-
-        public void OnePlayerDied(int teamindex)
-        {
-            try
-            { 
-                if (teamindex < 0 || teamindex >= _teamsHandler.LobbyTeams.Count)
-                    return;
-                --_teamsHandler.LobbyTeams[teamindex].AmountPlayers.AmountAlive;
-                RefreshTeamText(teamindex);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        private void ShowDeathmatchInfo()
-        {
-            // show info of kills, damage, assists if not already showing
+            if (isSpectator)
+                return;
+            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.COUNTDOWN_STARTED_NOTIFICATION, "TDS-V", 4000);
         }
 
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
@@ -231,10 +229,36 @@ namespace TDS_Client.Handler.Lobby
             Stop();
         }
 
+        private void EventsHandler_PlayerDied(IPlayer player, int teamIndex, bool willRespawn)
+        {
+            if (willRespawn)
+                return;
+            OnePlayerDied(teamIndex);
+        }
+
+        private void EventsHandler_RoundEnded(bool isSpectator)
+        {
+            Stop();
+            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
+                return;
+            if (isSpectator)
+                return;
+            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.ROUND_ENDED_NOTIFICATION, "TDS-V", 4000);
+        }
+
+        private void EventsHandler_RoundStarted(bool isSpectator)
+        {
+            if (!_settingsHandler.PlayerSettings.WindowsNotifications)
+                return;
+            if (isSpectator)
+                return;
+            ModAPI.Windows.Notify(_settingsHandler.Language.ROUND_INFOS, _settingsHandler.Language.ROUND_STARTED_NOTIFICATION, "TDS-V", 4000);
+        }
+
         private void OnAmountInFightSyncMethod(object[] args)
         {
             try
-            { 
+            {
                 SyncedTeamPlayerAmountDto[] list = _serializer.FromServer<SyncedTeamPlayerAmountDto[]>((string)args[0]);
                 foreach (var team in _teamsHandler.LobbyTeams)
                 {
@@ -249,17 +273,17 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        private void EventsHandler_PlayerDied(IPlayer player, int teamIndex, bool willRespawn)
-        {
-            if (willRespawn)
-                return;
-            OnePlayerDied(teamIndex);
-        }
-
         private void OnStopRoundStatsMethod(object[] args)
         {
             StopDeathmatchInfo();
         }
+
+        private void ShowDeathmatchInfo()
+        {
+            // show info of kills, damage, assists if not already showing
+        }
+
+        #endregion Private Methods
 
         /*
        mp.events.add( "onClientPlayerAmountInFightSync", ( amountinteam, isroundstarted, amountaliveinteam ) => {

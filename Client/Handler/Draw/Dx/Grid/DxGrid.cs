@@ -8,20 +8,27 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
 {
     public class DxGrid : DxBase
     {
-        public readonly List<DxGridColumn> Columns = new List<DxGridColumn>();
-        private readonly List<DxGridRow> _rows = new List<DxGridRow>();
-        public int ScrollIndex;
+        #region Public Fields
 
-        public float X, Y, Width, BodyHeight;
+        public readonly List<DxGridColumn> Columns = new List<DxGridColumn>();
         public AlignmentX Alignment;
         public float RowHeight;
+        public int ScrollIndex;
+        public float X, Y, Width, BodyHeight;
 
-        public DxGridRow Header { get; private set; }
+        #endregion Public Fields
 
-        private float _bodyTextScale;
+        #region Private Fields
+
+        private readonly List<DxGridRow> _rows = new List<DxGridRow>();
         private Color _bodyBackColor;
         private Font _bodyFont;
+        private float _bodyTextScale;
         private int _maxRows;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public DxGrid(DxHandler dxHandler, IModAPI modAPI, float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
             AlignmentX alignment = AlignmentX.Center, int maxRows = 25, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority)
@@ -37,6 +44,32 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             _maxRows = maxRows;
 
             RowHeight = BodyHeight / maxRows;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public DxGridRow Header { get; private set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void AddRow(DxGridRow row, bool setPriority = true)
+        {
+            _rows.Add(row);
+            row.Grid = this;
+            if (setPriority)
+                row.FrontPriority = FrontPriority + 1;
+            Children.Add(row);
+        }
+
+        public void ClearRows()
+        {
+            foreach (var row in _rows)
+                row.Remove();
+            _rows.Clear();
         }
 
         public override void Draw()
@@ -58,6 +91,11 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             }
         }
 
+        public override DxType GetDxType()
+        {
+            return DxType.Grid;
+        }
+
         public void SetHeader(DxGridRow row, bool setPriority = true)
         {
             Header = row;
@@ -67,21 +105,9 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             Children.Add(row);
         }
 
-        public void AddRow(DxGridRow row, bool setPriority = true)
-        {
-            _rows.Add(row);
-            row.Grid = this;
-            if (setPriority)
-                row.FrontPriority = FrontPriority + 1;
-            Children.Add(row);
-        }
+        #endregion Public Methods
 
-        public void ClearRows()
-        {
-            foreach (var row in _rows)
-                row.Remove();
-            _rows.Clear();
-        }
+        #region Private Methods
 
         private void CheckScroll()
         {
@@ -108,9 +134,6 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             }
         }
 
-        public override DxType GetDxType()
-        {
-            return DxType.Grid;
-        }
+        #endregion Private Methods
     }
 }

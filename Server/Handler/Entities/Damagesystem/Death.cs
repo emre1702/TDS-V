@@ -5,7 +5,52 @@ namespace TDS_Server.Core.Damagesystem
 {
     partial class Damagesys
     {
+        #region Private Fields
+
         private readonly Dictionary<ITDSPlayer, ITDSPlayer> _deadTimer = new Dictionary<ITDSPlayer, ITDSPlayer>();
+
+        #endregion Private Fields
+
+        #region Public Methods
+
+        public void CheckLastHitter(ITDSPlayer character, out ITDSPlayer? killer)
+        {
+            killer = null;
+            if (character.LastHitter is null)
+                return;
+
+            ITDSPlayer lastHitterCharacter = character.LastHitter;
+            character.LastHitter = null;
+
+            if (lastHitterCharacter.ModPlayer is null)
+                return;
+
+            if (character.Lobby != lastHitterCharacter.Lobby)
+                return;
+
+            if (lastHitterCharacter.Lifes == 0)
+                return;
+
+            if (lastHitterCharacter.CurrentRoundStats != null)
+                ++lastHitterCharacter.CurrentRoundStats.Kills;
+            KillingSpreeKill(lastHitterCharacter);
+            lastHitterCharacter.SendNotification(string.Format(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
+            killer = lastHitterCharacter;
+        }
+
+        public ITDSPlayer GetKiller(ITDSPlayer player, ITDSPlayer? possiblekiller)
+        {
+            // It's the killer from the Death event //
+            if (player != possiblekiller && possiblekiller != null)
+                return possiblekiller;
+
+            // It's the last hitter //
+            if (player.LastHitter != null)
+                return player.LastHitter;
+
+            // It's a suicide //
+            return player;
+        }
 
         /// <summary>
         /// Gets called BEFORE decrementing the life of the player.
@@ -55,19 +100,9 @@ namespace TDS_Server.Core.Damagesystem
             }
         }
 
-        public ITDSPlayer GetKiller(ITDSPlayer player, ITDSPlayer? possiblekiller)
-        {
-            // It's the killer from the Death event //
-            if (player != possiblekiller && possiblekiller != null)
-                return possiblekiller;
+        #endregion Public Methods
 
-            // It's the last hitter //
-            if (player.LastHitter != null)
-                return player.LastHitter;
-
-            // It's a suicide //
-            return player;
-        }
+        #region Private Methods
 
         private void CheckForAssist(ITDSPlayer player, ITDSPlayer killer)
         {
@@ -94,29 +129,6 @@ namespace TDS_Server.Core.Damagesystem
             }
         }
 
-        public void CheckLastHitter(ITDSPlayer character, out ITDSPlayer? killer)
-        {
-            killer = null;
-            if (character.LastHitter is null)
-                return;
-
-            ITDSPlayer lastHitterCharacter = character.LastHitter;
-            character.LastHitter = null;
-
-            if (lastHitterCharacter.ModPlayer is null)
-                return;
-
-            if (character.Lobby != lastHitterCharacter.Lobby)
-                return;
-
-            if (lastHitterCharacter.Lifes == 0)
-                return;
-
-            if (lastHitterCharacter.CurrentRoundStats != null)
-                ++lastHitterCharacter.CurrentRoundStats.Kills;
-            KillingSpreeKill(lastHitterCharacter);
-            lastHitterCharacter.SendNotification(string.Format(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
-            killer = lastHitterCharacter;
-        }
+        #endregion Private Methods
     }
 }

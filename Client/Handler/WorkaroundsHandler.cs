@@ -9,8 +9,14 @@ namespace TDS_Client.Handler
 {
     public class WorkaroundsHandler : ServiceBase
     {
+        #region Private Fields
+
         private readonly Serializer _serializer;
         private readonly UtilsHandler _utilsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public WorkaroundsHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, UtilsHandler utilsHandler)
             : base(modAPI, loggingHandler)
@@ -27,6 +33,10 @@ namespace TDS_Client.Handler
             modAPI.Event.Add(ToClientEvent.SetPlayerInvincible, SetPlayerInvincibleMethod);
             modAPI.Event.Add(ToClientEvent.SetPlayerTeamWorkaround, SetPlayerTeamWorkaroundMethod);
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void AttachEntityToEntityWorkaroundMethod(object[] args)
         {
@@ -78,12 +88,6 @@ namespace TDS_Client.Handler
             ModAPI.Entity.SetEntityCollision(info.EntityValue, !info.Collisionless, true);
         }
 
-        public void SetPlayerTeamWorkaroundMethod(object[] args)
-        {
-            int team = (int)args[0];
-            ModAPI.Player.SetPlayerTeam(team);
-        }
-
         public void SetEntityInvincibleMethod(object[] args)
         {
             ushort handle = Convert.ToUInt16(args[0]);
@@ -103,5 +107,13 @@ namespace TDS_Client.Handler
             bool toggle = Convert.ToBoolean(args[0]);
             ModAPI.LocalPlayer.SetInvincible(toggle);
         }
+
+        public void SetPlayerTeamWorkaroundMethod(object[] args)
+        {
+            int team = (int)args[0];
+            ModAPI.Player.SetPlayerTeam(team);
+        }
+
+        #endregion Public Methods
     }
 }

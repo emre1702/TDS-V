@@ -5,13 +5,16 @@ namespace TDS_Client.Data.Models
 {
     public class ControlBindDto
     {
-        public Action<Control> Method;
-        public KeyPressState OnPressState;
-        public bool OnEnabled;
-        public bool OnDisabled;
+        #region Public Fields
 
-        public bool OnDown => OnPressState == KeyPressState.Both || OnPressState == KeyPressState.Down;
-        public bool OnUp => OnPressState == KeyPressState.Both || OnPressState == KeyPressState.Up;
+        public Action<Control> Method;
+        public bool OnDisabled;
+        public bool OnEnabled;
+        public KeyPressState OnPressState;
+
+        #endregion Public Fields
+
+        #region Public Constructors
 
         public ControlBindDto(Action<Control> method, KeyPressState onPressState, bool onEnabled, bool onDisabled)
         {
@@ -20,5 +23,14 @@ namespace TDS_Client.Data.Models
             OnEnabled = onEnabled;
             OnDisabled = onDisabled;
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public bool OnDown => OnPressState == KeyPressState.Both || OnPressState == KeyPressState.Down;
+        public bool OnUp => OnPressState == KeyPressState.Both || OnPressState == KeyPressState.Up;
+
+        #endregion Public Properties
     }
 }

@@ -1,14 +1,27 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System;
 
 namespace TDS_Server.Database.Entity
 {
     partial class TDSDbContext
     {
+        #region Public Methods
+
         public IEntityType GetDbEntityType(Type entityType)
         {
             return Model.FindEntityType(entityType);
+        }
+
+        public IProperty GetPropertyInfo(IEntityType entityDbType, string efCorePropertyName)
+        {
+            return entityDbType.FindProperty(efCorePropertyName);
+        }
+
+        public string GetPropertyName(IEntityType entityDbType, string efCorePropertyName)
+        {
+            var propertyInfo = entityDbType.FindProperty(efCorePropertyName);
+            return propertyInfo?.GetColumnName();
         }
 
         public string GetTableName(Type entityType)
@@ -30,15 +43,6 @@ namespace TDS_Server.Database.Entity
             return schema + "." + table;
         }
 
-        public IProperty GetPropertyInfo(IEntityType entityDbType, string efCorePropertyName)
-        {
-            return entityDbType.FindProperty(efCorePropertyName);
-        }
-
-        public string GetPropertyName(IEntityType entityDbType, string efCorePropertyName)
-        {
-            var propertyInfo = entityDbType.FindProperty(efCorePropertyName);
-            return propertyInfo?.GetColumnName();
-        }
+        #endregion Public Methods
     }
 }

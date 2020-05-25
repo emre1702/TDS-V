@@ -12,16 +12,21 @@ namespace TDS_Client.Handler
 {
     public class UserpanelHandler : ServiceBase
     {
-        private bool _open;
+        #region Private Fields
 
+        private readonly BindsHandler _bindsHandler;
         private readonly BrowserHandler _browserHandler;
         private readonly CursorHandler _cursorHandler;
-        private readonly SettingsHandler _settingsHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly Serializer _serializer;
-        private readonly BindsHandler _bindsHandler;
+        private readonly SettingsHandler _settingsHandler;
+        private bool _open;
 
-        public UserpanelHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public UserpanelHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler,
             RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -38,6 +43,15 @@ namespace TDS_Client.Handler
             modAPI.Event.Add(ToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void Close()
+        {
+            Toggle(Key.Noname);
+        }
+
         public void Toggle(Key key)
         {
             if (key != Key.Noname)
@@ -45,7 +59,7 @@ namespace TDS_Client.Handler
                 if (_browserHandler.InInput)
                     return;
             }
-            else 
+            else
                 _open = true;
 
             _open = !_open;
@@ -56,10 +70,9 @@ namespace TDS_Client.Handler
                 _settingsHandler.RevertTempSettings();
         }
 
-        public void Close()
-        {
-            Toggle(Key.Noname);
-        }
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void EventsHandler_LoggedIn()
         {
@@ -74,6 +87,7 @@ namespace TDS_Client.Handler
                 case UserpanelLoadDataType.SettingsNormal:
                     _browserHandler.Angular.LoadUserpanelData((int)type, _serializer.ToBrowser(_settingsHandler.PlayerSettings));
                     break;
+
                 default:
                     _remoteEventsSender.Send(ToServerEvent.LoadUserpanelData, (int)type);
                     break;
@@ -81,5 +95,7 @@ namespace TDS_Client.Handler
 
             _settingsHandler.RevertTempSettings();
         }
+
+        #endregion Private Methods
     }
 }

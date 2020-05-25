@@ -2,11 +2,15 @@
 
 namespace TDS_Server.RAGEAPI.Server
 {
-    class ResourceAPI : IResourceAPI
+    internal class ResourceAPI : IResourceAPI
     {
+        #region Public Methods
+
         public bool StopThis()
         {
             return GTANetworkAPI.NAPI.Resource.StopResource("tds");
         }
+
+        #endregion Public Methods
     }
 }

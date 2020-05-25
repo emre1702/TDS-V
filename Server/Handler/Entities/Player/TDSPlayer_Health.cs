@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Server.Handler.Entities.Player
+﻿namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Private Fields
+
         private int _armor;
         private int _health;
+
+        #endregion Private Fields
+
+        #region Public Properties
 
         public int Armor
         {
@@ -15,7 +17,7 @@ namespace TDS_Server.Handler.Entities.Player
             set
             {
                 _armor = value;
-                
+
                 if (ModPlayer is null)
                     return;
                 ModPlayer.Armor = value;
@@ -34,5 +36,7 @@ namespace TDS_Server.Handler.Entities.Player
                 ModPlayer.Health = value;
             }
         }
+
+        #endregion Public Properties
     }
 }

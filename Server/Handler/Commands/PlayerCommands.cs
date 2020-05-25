@@ -1,23 +1,160 @@
 ﻿using System;
-using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Entities.Utility;
-using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Commands
 {
     partial class BaseCommands
     {
+        #region Public Methods
+
+        [TDSCommand(PlayerCommand.BlockUser)]
+        public async void BlockUser(ITDSPlayer player, ITDSPlayer target)
+        {
+            if (player.ModPlayer is null || target.ModPlayer is null)
+                return;
+            if (player.Entity is null || target.Entity is null)
+                return;
+
+            bool continuue = await player.ExecuteForDBAsync(async (dbContext) =>
+            {
+                PlayerRelations relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
+
+                if (relation != null && relation.Relation == PlayerRelation.Block)
+                {
+                    //player.SendMessage(string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.DisplayName));
+                    UnblockUser(player, target);
+                    return false;
+                }
+
+                string msg;
+                if (relation != null && relation.Relation == PlayerRelation.Friend)
+                {
+                    msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.DisplayName);
+                }
+                else
+                {
+                    relation = new PlayerRelations { PlayerId = player.Entity.Id, TargetId = target.Entity.Id };
+                    dbContext.PlayerRelations.Add(relation);
+                    msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.DisplayName);
+                }
+                player.SetRelation(target, PlayerRelation.Block);
+                relation.Relation = PlayerRelation.Block;
+                await dbContext.SaveChangesAsync();
+                _modAPI.Thread.RunInMainThread(() => player.SendMessage(msg));
+
+                return true;
+            });
+
+            if (!continuue)
+                return;
+
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                if (player.InPrivateChatWith == target)
+                    player.ClosePrivateChat(false);
+                target.SetVoiceTo(player, false);
+
+                target.SendMessage(string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
+            });
+        }
+
+        [TDSCommand(PlayerCommand.ClosePrivateChat)]
+        public void ClosePrivateChat(ITDSPlayer player)
+        {
+            if (player.ModPlayer is null)
+                return;
+            if (player.InPrivateChatWith is null && player.SentPrivateChatRequestTo is null)
+            {
+                player.SendMessage(player.Language.NOT_IN_PRIVATE_CHAT);
+                return;
+            }
+            player.ClosePrivateChat(false);
+        }
+
+        [TDSCommand(PlayerCommand.GiveMoney)]
+        public void GiveMoney(TDSPlayer player, TDSPlayer target, uint money)
+        {
+            if (player.ModPlayer is null || target.ModPlayer is null)
+                return;
+            if (player.Entity is null || target.Entity is null)
+                return;
+
+            if (money < _settingsHandler.ServerSettings.GiveMoneyMinAmount)
+            {
+                player.ModPlayer.SendNotification(player.Language.GIVE_MONEY_TOO_LESS);
+                return;
+            }
+
+            uint fee = (uint)Math.Ceiling(money * _settingsHandler.ServerSettings.GiveMoneyFee);
+            money += fee;
+
+            if (player.Money < money)
+            {
+                player.ModPlayer.SendNotification(string.Format(player.Language.GIVE_MONEY_NEED_FEE, money, fee));
+                return;
+            }
+
+            player.GiveMoney((int)money * -1);
+            target.GiveMoney(money - fee);
+
+            player.SendMessage(string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.DisplayName));
+            target.SendMessage(string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.DisplayName));
+        }
+
+        [TDSCommand(PlayerCommand.GlobalChat)]
+        public void GlobalChat(ITDSPlayer player, [TDSRemainingText] string message)
+        {
+            _chatHandler.SendGlobalMessage(player, message);
+        }
+
+        [TDSCommand(PlayerCommand.LobbyInvitePlayer)]
+        public void LobbyInvitePlayer(TDSPlayer player, ITDSPlayer target)
+        {
+            if (player.Lobby is null)
+                return;
+
+            switch (player.Lobby.Type)
+            {
+                case LobbyType.MapCreateLobby:
+                    _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName),
+                        target: target,
+                        sender: player,
+                        serializer: _serializer,
+                        invitationsHandler: _invitationsHandler,
+                        onAccept: async (target, sender, invitation) =>
+                        {
+                            if (sender is null)
+                                return;
+                            if (sender.Lobby is null)
+                                return;
+                            await sender.Lobby.AddPlayer(target!, null);
+                            _modAPI.Thread.RunInMainThread(() =>
+                            {
+                                target.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
+                                sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target.DisplayName), false);
+                            });
+                        },
+
+                        onReject: (target, sender, invitation) =>
+                        {
+                            target.SendNotification(string.Format(target.Language.YOU_REJECTED_INVITATION, sender?.DisplayName ?? "?"), false);
+                            sender?.SendNotification(string.Format(sender.Language.TARGET_REJECTED_INVITATION, target.DisplayName), false);
+                        },
+
+                        type: InvitationType.Lobby
+                    );
+                    break;
+            }
+        }
 
         [TDSCommand(PlayerCommand.LobbyLeave)]
         public async void OnLobbyLeave(ITDSPlayer player)
@@ -27,7 +164,7 @@ namespace TDS_Server.Handler.Commands
             if (player.Lobby.Entity.Type == LobbyType.MainMenu)
             {
                 _modAPI.Thread.RunInMainThread(() =>
-                { 
+                {
                     if (_customLobbyMenuSyncHandler.IsPlayerInCustomLobbyMenu(player))
                     {
                         _customLobbyMenuSyncHandler.RemovePlayer(player);
@@ -38,54 +175,6 @@ namespace TDS_Server.Handler.Commands
             }
 
             await _lobbiesHandler.MainMenu.AddPlayer(player, 0);
-        }
-
-        [TDSCommand(PlayerCommand.Suicide)]
-        public void Suicide(ITDSPlayer player)
-        {
-            if (player.ModPlayer is null)
-                return;
-            if (!(player.Lobby is FightLobby fightLobby))
-                return;
-            if (player.Lifes == 0)
-                return;
-
-            string animName = "PILL";
-            float animTime = 0.536f;
-            switch (player.ModPlayer.CurrentWeapon)
-            {
-                // Pistols //
-                case WeaponHash.Pistol:
-                case WeaponHash.Combatpistol:
-                case WeaponHash.Appistol:
-                case WeaponHash.Pistol50:
-                case WeaponHash.Revolver:
-                case WeaponHash.Snspistol:
-                case WeaponHash.Heavypistol:
-                case WeaponHash.Doubleaction:
-                case WeaponHash.Revolver_mk2:
-                case WeaponHash.Snspistol_mk2:
-                case WeaponHash.Pistol_mk2:
-                case WeaponHash.Vintagepistol:
-                case WeaponHash.Marksmanpistol:
-                    animName = "PISTOL";
-                    animTime = 0.365f;
-                    break;
-            }
-
-            _modAPI.Sync.SendEvent(fightLobby, ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
-        }
-
-        [TDSCommand(PlayerCommand.GlobalChat)]
-        public void GlobalChat(ITDSPlayer player, [TDSRemainingText] string message)
-        {
-            _chatHandler.SendGlobalMessage(player, message);
-        }
-
-        [TDSCommand(PlayerCommand.TeamChat)]
-        public void TeamChat(ITDSPlayer player, [TDSRemainingText] string message)
-        {
-            _chatHandler.SendTeamChat(player, message);
         }
 
         [TDSCommand(PlayerCommand.OpenPrivateChat)]
@@ -144,17 +233,33 @@ namespace TDS_Server.Handler.Commands
             }
         }
 
-        [TDSCommand(PlayerCommand.ClosePrivateChat)]
-        public void ClosePrivateChat(ITDSPlayer player)
+        [TDSCommand(PlayerCommand.Position)]
+        public void OutputCurrentPosition(ITDSPlayer player)
         {
             if (player.ModPlayer is null)
                 return;
-            if (player.InPrivateChatWith is null && player.SentPrivateChatRequestTo is null)
+            if (player.ModPlayer.IsInVehicle && player.ModPlayer.Vehicle is { })
             {
-                player.SendMessage(player.Language.NOT_IN_PRIVATE_CHAT);
-                return;
+                var pos = player.ModPlayer.Vehicle.Position;
+                player.SendMessage("Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
+                var rot = player.ModPlayer.Vehicle.Rotation;
+                player.SendMessage("Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
+                player.SendMessage($"Vehicle dimension: {player.ModPlayer.Vehicle.Dimension} | Your dimension: {player.ModPlayer.Dimension}");
             }
-            player.ClosePrivateChat(false);
+            else
+            {
+                var pos = player.ModPlayer.Position;
+                player.SendMessage("Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
+                var rot = player.ModPlayer.Rotation;
+                player.SendMessage("Player ROT: " + rot);
+                player.SendMessage($"Dimension: {player.ModPlayer.Dimension}");
+            }
+        }
+
+        [TDSCommand(PlayerCommand.UserId)]
+        public void OutputUserId(ITDSPlayer player)
+        {
+            player.SendMessage("User id: " + (player.Entity?.Id.ToString() ?? "?"));
         }
 
         [TDSCommand(PlayerCommand.PrivateChat)]
@@ -185,85 +290,46 @@ namespace TDS_Server.Handler.Commands
             player.SendMessage(player.Language.PRIVATE_MESSAGE_SENT);
         }
 
-        [TDSCommand(PlayerCommand.Position)]
-        public void OutputCurrentPosition(ITDSPlayer player)
+        [TDSCommand(PlayerCommand.Suicide)]
+        public void Suicide(ITDSPlayer player)
         {
             if (player.ModPlayer is null)
                 return;
-            if (player.ModPlayer.IsInVehicle && player.ModPlayer.Vehicle is { } && player.ModPlayer.Vehicle.Vehicle is { })
+            if (!(player.Lobby is FightLobby fightLobby))
+                return;
+            if (player.Lifes == 0)
+                return;
+
+            string animName = "PILL";
+            float animTime = 0.536f;
+            switch (player.ModPlayer.CurrentWeapon)
             {
-                var pos = player.ModPlayer.Vehicle.Vehicle.Position;
-                player.SendMessage("Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
-                var rot = player.ModPlayer.Vehicle.Vehicle.Rotation;
-                player.SendMessage("Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
-                player.SendMessage($"Vehicle dimension: {player.ModPlayer.Vehicle.Vehicle.Dimension} | Your dimension: {player.ModPlayer.Dimension}");
+                // Pistols //
+                case WeaponHash.Pistol:
+                case WeaponHash.Combatpistol:
+                case WeaponHash.Appistol:
+                case WeaponHash.Pistol50:
+                case WeaponHash.Revolver:
+                case WeaponHash.Snspistol:
+                case WeaponHash.Heavypistol:
+                case WeaponHash.Doubleaction:
+                case WeaponHash.Revolver_mk2:
+                case WeaponHash.Snspistol_mk2:
+                case WeaponHash.Pistol_mk2:
+                case WeaponHash.Vintagepistol:
+                case WeaponHash.Marksmanpistol:
+                    animName = "PISTOL";
+                    animTime = 0.365f;
+                    break;
             }
-            else
-            {
-                var pos = player.ModPlayer.Position;
-                player.SendMessage("Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
-                var rot = player.ModPlayer.Rotation;
-                player.SendMessage("Player ROT: " + rot);
-                player.SendMessage($"Dimension: {player.ModPlayer.Dimension}");
-            }
+
+            _modAPI.Sync.SendEvent(fightLobby, ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
         }
 
-        [TDSCommand(PlayerCommand.UserId)]
-        public void OutputUserId(ITDSPlayer player)
+        [TDSCommand(PlayerCommand.TeamChat)]
+        public void TeamChat(ITDSPlayer player, [TDSRemainingText] string message)
         {
-            player.SendMessage("User id: " + (player.Entity?.Id.ToString() ?? "?"));
-        }
-
-        [TDSCommand(PlayerCommand.BlockUser)]
-        public async void BlockUser(ITDSPlayer player, ITDSPlayer target)
-        {
-            if (player.ModPlayer is null || target.ModPlayer is null)
-                return;
-            if (player.Entity is null || target.Entity is null)
-                return;
-
-            bool continuue = await player.ExecuteForDBAsync(async (dbContext) =>
-            {
-                PlayerRelations relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
-
-                if (relation != null && relation.Relation == PlayerRelation.Block)
-                {
-                    //player.SendMessage(string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.DisplayName));
-                    UnblockUser(player, target);
-                    return false;
-                }
-
-                string msg;
-                if (relation != null && relation.Relation == PlayerRelation.Friend)
-                {
-                    msg = string.Format(player.Language.TARGET_REMOVED_FRIEND_ADDED_BLOCK, target.DisplayName);
-                    
-                }
-                else
-                {
-                    relation = new PlayerRelations { PlayerId = player.Entity.Id, TargetId = target.Entity.Id };
-                    dbContext.PlayerRelations.Add(relation);
-                    msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.DisplayName);
-                }
-                player.SetRelation(target, PlayerRelation.Block);
-                relation.Relation = PlayerRelation.Block;
-                await dbContext.SaveChangesAsync();
-                _modAPI.Thread.RunInMainThread(() => player.SendMessage(msg));
-
-                return true;
-            });
-
-            if (!continuue)
-                return;
-
-            _modAPI.Thread.RunInMainThread(() =>
-            { 
-                if (player.InPrivateChatWith == target)
-                    player.ClosePrivateChat(false);
-                target.SetVoiceTo(player, false);
-
-                target.SendMessage(string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
-            });
+            _chatHandler.SendTeamChat(player, message);
         }
 
         [TDSCommand(PlayerCommand.UnblockUser)]
@@ -288,7 +354,7 @@ namespace TDS_Server.Handler.Commands
             });
 
             _modAPI.Thread.RunInMainThread(() =>
-            { 
+            {
                 if (target.Team == player.Team)
                     target.SetVoiceTo(player, true);
 
@@ -298,74 +364,6 @@ namespace TDS_Server.Handler.Commands
             });
         }
 
-        [TDSCommand(PlayerCommand.GiveMoney)]
-        public void GiveMoney(TDSPlayer player, TDSPlayer target, uint money)
-        {
-            if (player.ModPlayer is null || target.ModPlayer is null)
-                return;
-            if (player.Entity is null || target.Entity is null)
-                return;
-
-            if (money < _settingsHandler.ServerSettings.GiveMoneyMinAmount)
-            {
-                player.ModPlayer.SendNotification(player.Language.GIVE_MONEY_TOO_LESS);
-                return;
-            }
-
-            uint fee = (uint)Math.Ceiling(money * _settingsHandler.ServerSettings.GiveMoneyFee);
-            money += fee;
-
-            if (player.Money < money)
-            {
-                player.ModPlayer.SendNotification(string.Format(player.Language.GIVE_MONEY_NEED_FEE, money, fee));
-                return;
-            }
-
-            player.GiveMoney((int)money * -1);
-            target.GiveMoney(money - fee);
-
-            player.SendMessage(string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.DisplayName));
-            target.SendMessage(string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.DisplayName));
-        }
-
-        [TDSCommand(PlayerCommand.LobbyInvitePlayer)]
-        public void LobbyInvitePlayer(TDSPlayer player, ITDSPlayer target)
-        {
-            if (player.Lobby is null)
-                return;
-
-            switch (player.Lobby.Type)
-            {
-                case LobbyType.MapCreateLobby:
-                    _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName),
-                        target: target,
-                        sender: player,
-                        serializer: _serializer,
-                        invitationsHandler: _invitationsHandler,
-                        onAccept: async (target, sender, invitation) =>
-                        {
-                            if (sender is null)
-                                return;
-                            if (sender.Lobby is null)
-                                return;
-                            await sender.Lobby.AddPlayer(target!, null);
-                            _modAPI.Thread.RunInMainThread(() =>
-                            { 
-                                target.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
-                                sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target.DisplayName), false);
-                            });
-                        },
-
-                        onReject: (target, sender, invitation) =>
-                        {
-                            target.SendNotification(string.Format(target.Language.YOU_REJECTED_INVITATION, sender?.DisplayName ?? "?"), false);
-                            sender?.SendNotification(string.Format(sender.Language.TARGET_REJECTED_INVITATION, target.DisplayName), false);
-                        },
-
-                        type: InvitationType.Lobby
-                    );
-                    break;
-            }
-        }
+        #endregion Public Methods
     }
 }

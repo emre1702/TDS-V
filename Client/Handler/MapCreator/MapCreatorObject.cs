@@ -12,44 +12,23 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorObject
     {
-        public int ID { get; set; }
-        public MapCreatorPositionType Type { get; }
-        public string ObjOrVehName { get; }
-        public int? TeamNumber { get; }
-        public bool Deleted { get; private set; }
-        public IEntityBase Entity { get; }
-        public IBlip Blip { get; }
-        public Position3D Size { get; }
-        public Position3D MovingPosition
-        {
-            get => _movingPosition;
-            set
-            {
-                _movingPosition = value;
-                Entity.Position = value;
-                Blip.Position = value;
-            }
-        }
-        public Position3D MovingRotation
-        {
-            get => _movingRotation;
-            set
-            {
-                _movingRotation = value;
-                Entity.Rotation = value;
-                Blip.Rotation = value;
-            }
-        }
+        #region Public Fields
+
         public Position3D Position;
         public Position3D Rotation;
-        public ushort OwnerRemoteId { get; }
-        public bool IsSynced { get; set; }
 
+        #endregion Public Fields
+
+        #region Private Fields
+
+        private readonly EventsHandler _eventsHandler;
+        private readonly IModAPI _modAPI;
         private Position3D _movingPosition;
         private Position3D _movingRotation;
 
-        private readonly IModAPI _modAPI;
-        private readonly EventsHandler _eventsHandler;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntityBase entity, MapCreatorPositionType type,
             ushort ownerRemoteId, Position3D pos, Position3D rot, int? teamNumber = null, string objectName = null, int id = -1)
@@ -88,55 +67,51 @@ namespace TDS_Client.Handler.MapCreator
             Entity.FreezePosition(true);
         }
 
-        public void LoadPos(MapCreatorPosition pos)
-        {
-            MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-            Position = new Position3D(MovingPosition);
+        #endregion Public Constructors
 
-            MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
-            Rotation = new Position3D(MovingRotation);
+        #region Public Properties
+
+        public IBlip Blip { get; }
+        public bool Deleted { get; private set; }
+        public IEntityBase Entity { get; }
+        public int ID { get; set; }
+        public bool IsSynced { get; set; }
+
+        public Position3D MovingPosition
+        {
+            get => _movingPosition;
+            set
+            {
+                _movingPosition = value;
+                Entity.Position = value;
+                Blip.Position = value;
+            }
         }
 
-        public void LoadPos(MapCreatorPosData pos)
+        public Position3D MovingRotation
         {
-            MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-            Position = new Position3D(MovingPosition);
-
-            MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
-            Rotation = new Position3D(MovingRotation);
+            get => _movingRotation;
+            set
+            {
+                _movingRotation = value;
+                Entity.Rotation = value;
+                Blip.Rotation = value;
+            }
         }
 
-        public void LoadEntityData()
-        {
-            Position = Entity.Position;
-            _movingPosition = new Position3D(Position.X, Position.Y, Position.Z);
-            Rotation = Entity.Rotation;
-            _movingRotation = new Position3D(Rotation.X, Rotation.Y, Rotation.Z);
-        }
+        public string ObjOrVehName { get; }
+        public ushort OwnerRemoteId { get; }
+        public Position3D Size { get; }
+        public int? TeamNumber { get; }
+        public MapCreatorPositionType Type { get; }
 
-        public void ResetObjectPosition()
-        {
-            Entity.Position = Position;
-            Entity.Rotation = Rotation;
-            LoadEntityData();
+        #endregion Public Properties
 
-            Blip.Position = Position;
-            Blip.Rotation = Rotation;
-        }
+        #region Public Methods
 
         public void ActivatePhysics()
         {
             Entity.ActivatePhysics();
-        }
-
-        public void Freeze(bool toggle)
-        {
-            Entity.FreezePosition(toggle);
-        }
-
-        public void SetCollision(bool toggle, bool keepPhysics)
-        {
-            Entity.SetCollision(toggle, keepPhysics);
         }
 
         public void Delete(bool syncToServer)
@@ -151,8 +126,10 @@ namespace TDS_Client.Handler.MapCreator
             }
         }
 
-        public bool IsMine() 
-            => _modAPI.LocalPlayer.RemoteId == OwnerRemoteId;
+        public void Freeze(bool toggle)
+        {
+            Entity.FreezePosition(toggle);
+        }
 
         public MapCreatorPosition GetDto()
         {
@@ -187,6 +164,54 @@ namespace TDS_Client.Handler.MapCreator
             };
         }
 
+        public bool IsMine()
+            => _modAPI.LocalPlayer.RemoteId == OwnerRemoteId;
+
+        public void LoadEntityData()
+        {
+            Position = Entity.Position;
+            _movingPosition = new Position3D(Position.X, Position.Y, Position.Z);
+            Rotation = Entity.Rotation;
+            _movingRotation = new Position3D(Rotation.X, Rotation.Y, Rotation.Z);
+        }
+
+        public void LoadPos(MapCreatorPosition pos)
+        {
+            MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
+            Position = new Position3D(MovingPosition);
+
+            MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
+            Rotation = new Position3D(MovingRotation);
+        }
+
+        public void LoadPos(MapCreatorPosData pos)
+        {
+            MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
+            Position = new Position3D(MovingPosition);
+
+            MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
+            Rotation = new Position3D(MovingRotation);
+        }
+
+        public void ResetObjectPosition()
+        {
+            Entity.Position = Position;
+            Entity.Rotation = Rotation;
+            LoadEntityData();
+
+            Blip.Position = Position;
+            Blip.Rotation = Rotation;
+        }
+
+        public void SetCollision(bool toggle, bool keepPhysics)
+        {
+            Entity.SetCollision(toggle, keepPhysics);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private IBlip CreateBlip()
         {
             switch (Type)
@@ -215,5 +240,7 @@ namespace TDS_Client.Handler.MapCreator
 
             return null;
         }
+
+        #endregion Private Methods
     }
 }

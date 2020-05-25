@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
@@ -12,13 +11,18 @@ namespace TDS_Client.Handler.Draw
 {
     public class FloatingDamageInfoHandler : ServiceBase
     {
+        #region Private Fields
+
+        private readonly DxHandler _dxHandler;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly TimerHandler _timerHandler;
         private List<FloatingDamageInfo> _damageInfos = new List<FloatingDamageInfo>();
 
-        private readonly TimerHandler _timerHandler;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly DxHandler _dxHandler;
+        #endregion Private Fields
 
-        public FloatingDamageInfoHandler(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler, SettingsHandler settingsHandler, 
+        #region Public Constructors
+
+        public FloatingDamageInfoHandler(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler, SettingsHandler settingsHandler,
             EventsHandler eventsHandler, DxHandler dxHandler)
             : base(modAPI, loggingHandler)
         {
@@ -30,6 +34,10 @@ namespace TDS_Client.Handler.Draw
 
             eventsHandler.InFightStatusChanged += EventsHandler_InFightStatusChanged;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void Add(IPlayer target, float damage)
         {
@@ -46,6 +54,18 @@ namespace TDS_Client.Handler.Draw
             _damageInfos.Clear();
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void EventsHandler_InFightStatusChanged(bool inFight)
+        {
+            if (inFight)
+                UpdateAllPositions(0);
+            else
+                Clear();
+        }
+
         private void UpdateAllPositions(int currentMs)
         {
             _damageInfos.RemoveAll(x => x.RemoveAtHandler);
@@ -55,12 +75,6 @@ namespace TDS_Client.Handler.Draw
             }
         }
 
-        private void EventsHandler_InFightStatusChanged(bool inFight)
-        {
-            if (inFight)
-                UpdateAllPositions(0);
-            else
-                Clear();
-        }
+        #endregion Private Methods
     }
 }

@@ -5,8 +5,10 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Cam
 {
-    class CamAPI : ICamAPI
+    internal class CamAPI : ICamAPI
     {
+        #region Public Methods
+
         public ICam Create()
         {
             var cam = RAGE.Game.Cam.CreateCam("DEFAULT_SCRIPTED_CAMERA", false);
@@ -67,5 +69,7 @@ namespace TDS_Client.RAGEAPI.Cam
         {
             RAGE.Game.Cam.StopGameplayCamShaking(true);
         }
+
+        #endregion Public Methods
     }
 }

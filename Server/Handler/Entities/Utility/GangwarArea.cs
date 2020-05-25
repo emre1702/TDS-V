@@ -15,37 +15,17 @@ namespace TDS_Server.Handler.Entities.Utility
 {
     public class GangwarArea : DatabaseEntityWrapper
     {
-        public GangwarAreas? Entity { get; private set; }
-        public MapDto Map { get; private set; }
-        public IGang? Owner { get; private set; }
-        public IGang? Attacker { get; private set; }
-        public Arena? InLobby { get; set; }
+        #region Private Fields
 
-        private ITeam? OwnerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.OwnerTeam : null;
-        private ITeam? AttackerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.AttackerTeam : null;
-
-        // public delegate void Gangwar
-
-        public bool HasCooldown
-        {
-            get => Entity is null ? false : (DateTime.UtcNow - Entity.LastAttacked).TotalMinutes < _settingsHandler.ServerSettings.GangwarAreaAttackCooldownMinutes;
-            set
-            {
-                if (Entity is null)
-                    return;
-                if (value)
-                    Entity.LastAttacked = DateTime.UtcNow;
-                else
-                    Entity.LastAttacked = DateTime.UtcNow.AddMinutes(-_settingsHandler.ServerSettings.GangwarAreaAttackCooldownMinutes);
-            }
-        }
-
+        private readonly GangsHandler _gangsHandler;
+        private readonly IModAPI _modAPI;
+        private readonly ISettingsHandler _settingsHandler;
         private TDSTimer? _checkAtTarget;
         private int _playerNotAtTargetCounter;
 
-        private readonly IModAPI _modAPI;
-        private readonly ISettingsHandler _settingsHandler;
-        private readonly GangsHandler _gangsHandler;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public GangwarArea(GangwarArea copyFrom, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : this(copyFrom.Map, modAPI, settingsHandler, gangsHandler, dbContext, loggingHandler)
@@ -62,7 +42,7 @@ namespace TDS_Server.Handler.Entities.Utility
             _gangsHandler = gangsHandler;
         }
 
-        public GangwarArea(GangwarAreas entity, MapDto map, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler, 
+        public GangwarArea(GangwarAreas entity, MapDto map, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : this(map, modAPI, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
@@ -74,19 +54,41 @@ namespace TDS_Server.Handler.Entities.Utility
             }
         }
 
-        public void SetInPreparation(IGang attackerGang)
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public IGang? Attacker { get; private set; }
+        public GangwarAreas? Entity { get; private set; }
+
+        public bool HasCooldown
         {
-            Attacker = attackerGang;
-            Attacker.InAction = true;
-            Owner!.InAction = true;
+            get => Entity is null ? false : (DateTime.UtcNow - Entity.LastAttacked).TotalMinutes < _settingsHandler.ServerSettings.GangwarAreaAttackCooldownMinutes;
+            set
+            {
+                if (Entity is null)
+                    return;
+                if (value)
+                    Entity.LastAttacked = DateTime.UtcNow;
+                else
+                    Entity.LastAttacked = DateTime.UtcNow.AddMinutes(-_settingsHandler.ServerSettings.GangwarAreaAttackCooldownMinutes);
+            }
         }
 
-        public void SetInAttack()
-        {
-            _playerNotAtTargetCounter = 0;
-            //Todo: Use this on gangwar start if no one is at target OR on colshape leave
-            _checkAtTarget = new TDSTimer(OutputAtTargetInfo, 1000, 0);
-        }
+        public Arena? InLobby { get; set; }
+        public MapDto Map { get; private set; }
+        public IGang? Owner { get; private set; }
+
+        #endregion Public Properties
+
+        #region Private Properties
+
+        private ITeam? AttackerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.AttackerTeam : null;
+        private ITeam? OwnerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.OwnerTeam : null;
+
+        #endregion Private Properties
+
+        #region Public Methods
 
         public async Task SetAttackEnded(bool conquered)
         {
@@ -106,11 +108,9 @@ namespace TDS_Server.Handler.Entities.Utility
                         else
                             SetDefended(dbContext);
                     });
-                    
 
                     await dbContext.SaveChangesAsync();
                 });
-
             }
             ClearAttack();
         }
@@ -131,69 +131,27 @@ namespace TDS_Server.Handler.Entities.Utility
 
                     await dbContext.SaveChangesAsync();
                 });
-
             }
         }
 
-        private void SetDefended(TDSDbContext dbContext)
+        public void SetInAttack()
         {
-            if (Entity is { })
-            {
-                ++Entity.DefendCount;
-
-                //Todo: Inform everyone + owner + attacker
-            }
-
+            _playerNotAtTargetCounter = 0;
+            //Todo: Use this on gangwar start if no one is at target OR on colshape leave
+            _checkAtTarget = new TDSTimer(OutputAtTargetInfo, 1000, 0);
         }
 
-        private void SetConquered(TDSDbContext dbContext, bool outputInfos)
+        // public delegate void Gangwar
+        public void SetInPreparation(IGang attackerGang)
         {
-            if (Entity is { })
-            {
-                var oldOwner = Owner;
-
-                Owner = Attacker;
-
-                Entity.OwnerGangId = Owner!.Entity.Id;
-                Entity.DefendCount = 0;
-
-                if (outputInfos)
-                {
-                    if (Owner is { })
-                    {
-                        //Todo: Inform the owner
-                    }
-                    //Todo: Inform everyone + attacker
-                }
-            }
-
+            Attacker = attackerGang;
+            Attacker.InAction = true;
+            Owner!.InAction = true;
         }
 
-        private void OutputAtTargetInfo()
-        {
-            if (InLobby is null)
-                return;
+        #endregion Public Methods
 
-            if (!(InLobby.CurrentGameMode is Gangwar gangwar))
-                return;
-
-            if (gangwar.TargetObject is null)
-                return;
-
-            if (++_playerNotAtTargetCounter < _settingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds)
-            {
-                //Todo: Output to owner that they have xx seconds left to go back to target
-            }
-
-            /*else 
-             //Todo: Output to owner that no one was at target for too long
-                //OwnerTeamInGangwar?.FuncIterate((player, team) =>
-                //{
-                 //   player.SendMessage(player.Language.GANGWAR_LOST_);
-                //});
-            var lobby = InLobby;
-            lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.TargetEmpty);*/
-        }
+        #region Private Methods
 
         private void ClearAttack()
         {
@@ -226,6 +184,65 @@ namespace TDS_Server.Handler.Entities.Utility
 
             return true;
         }
+
+        private void OutputAtTargetInfo()
+        {
+            if (InLobby is null)
+                return;
+
+            if (!(InLobby.CurrentGameMode is Gangwar gangwar))
+                return;
+
+            if (gangwar.TargetObject is null)
+                return;
+
+            if (++_playerNotAtTargetCounter < _settingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds)
+            {
+                //Todo: Output to owner that they have xx seconds left to go back to target
+            }
+
+            /*else
+             //Todo: Output to owner that no one was at target for too long
+                //OwnerTeamInGangwar?.FuncIterate((player, team) =>
+                //{
+                 //   player.SendMessage(player.Language.GANGWAR_LOST_);
+                //});
+            var lobby = InLobby;
+            lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.TargetEmpty);*/
+        }
+
+        private void SetConquered(TDSDbContext dbContext, bool outputInfos)
+        {
+            if (Entity is { })
+            {
+                var oldOwner = Owner;
+
+                Owner = Attacker;
+
+                Entity.OwnerGangId = Owner!.Entity.Id;
+                Entity.DefendCount = 0;
+
+                if (outputInfos)
+                {
+                    if (Owner is { })
+                    {
+                        //Todo: Inform the owner
+                    }
+                    //Todo: Inform everyone + attacker
+                }
+            }
+        }
+
+        private void SetDefended(TDSDbContext dbContext)
+        {
+            if (Entity is { })
+            {
+                ++Entity.DefendCount;
+
+                //Todo: Inform everyone + owner + attacker
+            }
+        }
+
+        #endregion Private Methods
     }
 }
-

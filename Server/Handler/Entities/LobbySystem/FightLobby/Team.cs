@@ -4,23 +4,27 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
+        #region Private Methods
+
         /// <summary>
-        ///
         /// </summary>
         /// <param name="start"></param>
         /// <param name="index"></param>
-        /// <returns>Return the next team which is not spectator - if there is none, returns the spectator team</returns>
+        /// <returns>
+        /// Return the next team which is not spectator - if there is none, returns the spectator team
+        /// </returns>
         private ITeam GetNextNonSpectatorTeam(ITeam start)
         {
             return GetNextNonSpectatorTeam(start.Entity.Index);
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <param name="startindex"></param>
         /// <param name="index"></param>
-        /// <returns>Return the next team which is not spectator - if there is none, returns the spectator team</returns>
+        /// <returns>
+        /// Return the next team which is not spectator - if there is none, returns the spectator team
+        /// </returns>
         private ITeam GetNextNonSpectatorTeam(short startindex)
         {
             short startindextoiterate = startindex;
@@ -76,5 +80,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             return team.SpectateablePlayers.Count == 0 ? null : team;
         }
+
+        #endregion Private Methods
     }
 }

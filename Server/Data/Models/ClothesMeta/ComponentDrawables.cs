@@ -2,14 +2,23 @@
 
 namespace TDS_Server.Data.Models.ClothesMeta
 {
-    #nullable disable
+#nullable disable
+
     public class ComponentDrawables
     {
+        #region Public Properties
+
         [XmlElement("pedComponentDrawable0")]
         public Component Drawable0 { get; set; }
 
         [XmlElement("pedComponentDrawable1")]
         public Component Drawable1 { get; set; }
+
+        [XmlElement("pedComponentDrawable10")]
+        public Component Drawable10 { get; set; }
+
+        [XmlElement("pedComponentDrawable11")]
+        public Component Drawable11 { get; set; }
 
         [XmlElement("pedComponentDrawable2")]
         public Component Drawable2 { get; set; }
@@ -35,12 +44,8 @@ namespace TDS_Server.Data.Models.ClothesMeta
         [XmlElement("pedComponentDrawable9")]
         public Component Drawable9 { get; set; }
 
-        [XmlElement("pedComponentDrawable10")]
-        public Component Drawable10 { get; set; }
-
-        [XmlElement("pedComponentDrawable11")]
-        public Component Drawable11 { get; set; }
-
+        #endregion Public Properties
     }
-    #nullable restore
+
+#nullable restore
 }

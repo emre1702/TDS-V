@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace BonusBotConnector_Server
 {
@@ -21,6 +16,7 @@ namespace BonusBotConnector_Server
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 #pragma warning disable IDE0060 // Remove unused parameter
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
@@ -37,8 +33,8 @@ namespace BonusBotConnector_Server
 
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client.");
-                });
+                        await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client.");
+                    });
             });
         }
     }

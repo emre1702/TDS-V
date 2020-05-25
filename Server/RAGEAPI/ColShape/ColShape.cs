@@ -1,40 +1,103 @@
-﻿using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+﻿using System.Diagnostics.CodeAnalysis;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.RAGEAPI.Extensions;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models.GTA;
 using static TDS_Server.Data.Interfaces.ModAPI.ColShape.IColShape;
 
 namespace TDS_Server.RAGEAPI.ColShape
 {
-    class ColShape : IColShape
+    internal class ColShape : GTANetworkAPI.ColShape, IColShape
     {
-        private readonly GTANetworkAPI.ColShape _instance;
+        #region Public Constructors
 
-        public ColShape(GTANetworkAPI.ColShape colShape)
+        public ColShape(GTANetworkAPI.NetHandle netHandle) : base(netHandle)
         {
-            _instance = colShape;
-
-            _instance.OnEntityEnterColShape += Instance_OnEntityEnterColShape;
-            _instance.OnEntityExitColShape += Instance_OnEntityExitColShape;
+            OnEntityEnterColShape += Instance_OnEntityEnterColShape;
+            OnEntityExitColShape += Instance_OnEntityExitColShape;
         }
 
-        public event ColShapeEnterExitDelegate? PlayerEntered;
-        public event ColShapeEnterExitDelegate? PlayerExited;
+        #endregion Public Constructors
 
-        public ushort Id => _instance.Id;
+        #region Public Events
 
-        public void Delete()
+        public event ColshapeEnterExitDelegate? PlayerEntered;
+
+        public event ColshapeEnterExitDelegate? PlayerExited;
+
+        #endregion Public Events
+
+        #region Public Properties
+
+        public new Position3D Position
         {
-            _instance.Delete();
+            get => new Position3D(base.Position.X, base.Position.Y, base.Position.Z);
+            set => base.Position = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
 
-        public bool Equals(IColShape? other)
+        public new Position3D Rotation
         {
-            return _instance.Id == other?.Id;
+            get => new Position3D(base.Rotation.X, base.Rotation.Y, base.Rotation.Z);
+            set => base.Rotation = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void AttachTo(ITDSPlayer player, PedBone bone, Position3D? positionOffset, Position3D? rotationOffset)
+        {
+            if (!(player.ModPlayer is Player.Player modPlayer))
+                return;
+            var positionOffsetVector = positionOffset?.ToMod() ?? new GTANetworkAPI.Vector3();
+            var rotationOffsetVector = rotationOffset?.ToMod() ?? new GTANetworkAPI.Vector3();
+            Init.WorkaroundsHandler.AttachEntityToEntity(this, modPlayer, bone, positionOffsetVector, rotationOffsetVector, player.Lobby);
+        }
+
+        public void Detach()
+        {
+            Init.WorkaroundsHandler.DetachEntity(this);
+        }
+
+        public bool Equals([AllowNull] IEntity other)
+        {
+            return this.Id == other?.Id;
+        }
+
+        public void Freeze(bool toggle, ILobby lobby)
+        {
+            Init.WorkaroundsHandler.FreezeEntity(this, toggle, lobby);
+        }
+
+        public void SetCollisionsless(bool toggle, ILobby lobby)
+        {
+            Init.WorkaroundsHandler.SetEntityCollisionless(this, toggle, lobby);
+        }
+
+        public void SetInvincible(bool toggle, ITDSPlayer forPlayer)
+        {
+            if (!(forPlayer.ModPlayer is Player.Player modPlayer))
+                return;
+            Init.WorkaroundsHandler.SetEntityInvincible(modPlayer, this, toggle);
+        }
+
+        public void SetInvincible(bool toggle, ILobby lobby)
+        {
+            Init.WorkaroundsHandler.SetEntityInvincible(lobby, this, toggle);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void Instance_OnEntityEnterColShape(GTANetworkAPI.ColShape colShape, GTANetworkAPI.Player client)
         {
-            if (_instance != colShape)
+            if (this != colShape)
                 return;
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(client);
+            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn((IPlayer)client);
             if (tdsPlayer is null)
                 return;
 
@@ -43,13 +106,15 @@ namespace TDS_Server.RAGEAPI.ColShape
 
         private void Instance_OnEntityExitColShape(GTANetworkAPI.ColShape colShape, GTANetworkAPI.Player client)
         {
-            if (_instance != colShape)
+            if (this != colShape)
                 return;
-            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(client);
+            var tdsPlayer = Init.GetTDSPlayerIfLoggedIn((IPlayer)client);
             if (tdsPlayer is null)
                 return;
 
             PlayerExited?.Invoke(tdsPlayer);
         }
+
+        #endregion Private Methods
     }
 }

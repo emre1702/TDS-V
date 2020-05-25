@@ -8,12 +8,18 @@ namespace TDS_Client.Handler.Lobby
 {
     public class RoundHandler : ServiceBase
     {
+        #region Private Fields
+
+        private readonly BrowserHandler _browserHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly RoundInfosHandler _roundInfosHandler;
         private readonly SettingsHandler _settingsHandler;
-        private readonly BrowserHandler _browserHandler;
 
-        public RoundHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, RoundInfosHandler roundInfosHandler, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public RoundHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, RoundInfosHandler roundInfosHandler,
             SettingsHandler settingsHandler, BrowserHandler browserHandler)
             : base(modAPI, loggingHandler)
         {
@@ -24,6 +30,22 @@ namespace TDS_Client.Handler.Lobby
 
             modAPI.Event.Add(ToClientEvent.RoundStart, OnRoundStartMethod);
             modAPI.Event.Add(ToClientEvent.RoundEnd, OnRoundEndMethod);
+        }
+
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private void OnRoundEndMethod(object[] args)
+        {
+            bool isSpectator = (bool)args[0];
+            _eventsHandler.OnRoundEnded(isSpectator);
+
+            ModAPI.Cam.DoScreenFadeOut(_settingsHandler.RoundEndTime / 2);
+
+            string reason = (string)args[1];
+            int mapId = (int)args[2];
+            _browserHandler.PlainMain.ShowRoundEndReason(reason, mapId);
         }
 
         private void OnRoundStartMethod(object[] args)
@@ -42,16 +64,6 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        private void OnRoundEndMethod(object[] args)
-        {
-            bool isSpectator = (bool)args[0];
-            _eventsHandler.OnRoundEnded(isSpectator);
-
-            ModAPI.Cam.DoScreenFadeOut(_settingsHandler.RoundEndTime / 2);
-
-            string reason = (string)args[1];
-            int mapId = (int)args[2];
-            _browserHandler.PlainMain.ShowRoundEndReason(reason, mapId);
-        }
+        #endregion Private Methods
     }
 }

@@ -9,7 +9,6 @@ namespace TDS_Server.Core.Damagesystem
 {
     partial class Damagesys
     {
-
         private static readonly HashSet<ulong> _headBones = new HashSet<ulong>
         {
             12844, 31086
@@ -18,8 +17,8 @@ namespace TDS_Server.Core.Damagesystem
         private readonly Dictionary<WeaponHash, DamageDto> _damagesDict = new Dictionary<WeaponHash, DamageDto>();
         private readonly Dictionary<ITDSPlayer, Dictionary<ITDSPlayer, int>> _allHitters = new Dictionary<ITDSPlayer, Dictionary<ITDSPlayer, int>>();
 
-
 #pragma warning disable IDE0060 // Remove unused parameter
+
         public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, ulong bone, ITDSPlayer? source)
 #pragma warning restore IDE0060 // Remove unused parameter
         {

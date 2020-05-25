@@ -2,6 +2,8 @@
 {
     partial class GangLobby
     {
+        #region Private Methods
+
         private void LoadTeams()
         {
             foreach (var team in Teams)
@@ -15,6 +17,7 @@
             }
         }
 
+        #endregion Private Methods
 
         /*private Dictionary<Gang, int> gangTeamID = new Dictionary<Gang, int> ();
 

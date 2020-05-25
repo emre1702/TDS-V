@@ -9,8 +9,14 @@ namespace TDS_Client.RAGEAPI.Event
 {
     public class TickNametagEventHandler : BaseEventHandler<TickNametagDelegate>
     {
+        #region Private Fields
+
         private readonly LoggingHandler _loggingHandler;
         private readonly PlayerConvertingHandler _playerConvertingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public TickNametagEventHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler)
         {
@@ -19,6 +25,10 @@ namespace TDS_Client.RAGEAPI.Event
 
             RAGE.Events.Tick += OnTick;
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void OnTick(List<RAGE.Events.TickNametagData> nametags)
         {
@@ -42,7 +52,6 @@ namespace TDS_Client.RAGEAPI.Event
                             Distance = nametag.Distance
                         });
                     }
-                    
                 }
 
                 for (int i = Actions.Count - 1; i >= 0; --i)
@@ -57,5 +66,7 @@ namespace TDS_Client.RAGEAPI.Event
                 _loggingHandler.LogError(ex);
             }
         }
+
+        #endregion Private Methods
     }
 }

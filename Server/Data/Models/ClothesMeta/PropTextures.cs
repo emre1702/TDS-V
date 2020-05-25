@@ -3,8 +3,11 @@
 namespace TDS_Server.Data.Models.ClothesMeta
 {
 #nullable disable
+
     public class PropTextures
     {
+        #region Public Properties
+
         [XmlElement("pedPropTexture0")]
         public Component PropTexture0 { get; set; }
 
@@ -31,6 +34,9 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
         [XmlElement("pedPropTexture8")]
         public Component PropTexture8 { get; set; }
+
+        #endregion Public Properties
     }
+
 #nullable restore
 }

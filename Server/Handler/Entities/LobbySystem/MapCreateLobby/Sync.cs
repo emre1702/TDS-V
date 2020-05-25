@@ -11,20 +11,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class MapCreateLobby
     {
+        #region Private Fields
+
         private Dictionary<int, MapCreatorPosition> _posById = new Dictionary<int, MapCreatorPosition>();
 
-        public void SyncLastId(ITDSPlayer player, int lastId)
-        {
-            if (_lastId >= lastId)
-            {
-                player.SendEvent(ToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
-            }
-            else
-            {
-                _lastId = lastId;
-            }
+        #endregion Private Fields
 
-        }
+        #region Public Methods
 
         public void SyncCurrentMapToPlayer(string json, int tdsPlayerId, int lastId)
         {
@@ -36,7 +29,46 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             _currentMap = Serializer.FromBrowser<MapCreateDataDto>(json);
             _lastId = lastId;
+        }
 
+        public void SyncLastId(ITDSPlayer player, int lastId)
+        {
+            if (_lastId >= lastId)
+            {
+                player.SendEvent(ToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
+            }
+            else
+            {
+                _lastId = lastId;
+            }
+        }
+
+        public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
+        {
+            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);
+
+            switch (infoType)
+            {
+                case MapCreatorInfoType.DescriptionEnglish:
+                    _currentMap.Description[(int)Language.English] = Convert.ToString(data);
+                    break;
+
+                case MapCreatorInfoType.DescriptionGerman:
+                    _currentMap.Description[(int)Language.German] = Convert.ToString(data);
+                    break;
+
+                case MapCreatorInfoType.Name:
+                    _currentMap.Name = Convert.ToString(data);
+                    break;
+
+                case MapCreatorInfoType.Type:
+                    _currentMap.Type = (MapType)Convert.ToInt32(data);
+                    break;
+
+                case MapCreatorInfoType.Settings:
+                    _currentMap.Settings = Serializer.FromBrowser<MapCreateSettings>(Convert.ToString(data));
+                    break;
+            }
         }
 
         public void SyncNewObject(ITDSPlayer player, string json)
@@ -100,30 +132,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
-        {
-            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);
+        #endregion Public Methods
 
-            switch (infoType)
-            {
-                case MapCreatorInfoType.DescriptionEnglish:
-                    _currentMap.Description[(int)Language.English] = Convert.ToString(data);
-                    break;
-                case MapCreatorInfoType.DescriptionGerman:
-                    _currentMap.Description[(int)Language.German] = Convert.ToString(data);
-                    break;
-                case MapCreatorInfoType.Name:
-                    _currentMap.Name = Convert.ToString(data);
-                    break;
-                case MapCreatorInfoType.Type:
-                    _currentMap.Type = (MapType)Convert.ToInt32(data);
-                    break;
-                case MapCreatorInfoType.Settings:
-                    _currentMap.Settings = Serializer.FromBrowser<MapCreateSettings>(Convert.ToString(data));
-                    break;
-            }
-
-        }
+        #region Private Methods
 
         private List<MapCreatorPosition>? GetListInCurrentMapForMapType(MapCreatorPositionType type, object? info)
         {
@@ -133,18 +144,22 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     if (_currentMap.BombPlaces is null)
                         _currentMap.BombPlaces = new List<MapCreatorPosition>();
                     return _currentMap.BombPlaces;
+
                 case MapCreatorPositionType.MapLimit:
                     if (_currentMap.MapEdges is null)
                         _currentMap.MapEdges = new List<MapCreatorPosition>();
                     return _currentMap.MapEdges;
+
                 case MapCreatorPositionType.Object:
                     if (_currentMap.Objects is null)
                         _currentMap.Objects = new List<MapCreatorPosition>();
                     return _currentMap.Objects;
+
                 case MapCreatorPositionType.Vehicle:
                     if (_currentMap.Vehicles is null)
                         _currentMap.Vehicles = new List<MapCreatorPosition>();
                     return _currentMap.Vehicles;
+
                 case MapCreatorPositionType.TeamSpawn:
                     if (_currentMap.TeamSpawns is null)
                         _currentMap.TeamSpawns = new List<List<MapCreatorPosition>>();
@@ -156,5 +171,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             return null;
         }
+
+        #endregion Private Methods
     }
 }

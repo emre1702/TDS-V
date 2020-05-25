@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Shared.Data.Enums;
@@ -8,29 +7,37 @@ namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxText : DxBase
     {
+        #region Public Fields
+
         public string Text;
-        private int _x;
-        private int _y;
-        private float _scale;
-        private readonly Color _color;
-        private readonly Font _font;
+
+        #endregion Public Fields
+
+        #region Private Fields
+
         private readonly AlignmentX _alignmentX;
         private readonly AlignmentY _alignmentY;
-        private readonly bool _relative;
-        private readonly bool _dropShadow;
-        private readonly bool _outline;
-        private readonly int _wordWrap;
         private readonly int _amountLines;
-
-        private int? _endAlpha;
-        private int _endAlphaStartTick;
-        private int _endAlphaEndTick;
-
-        private float? _endScale;
-        private int _endScaleStartTick;
-        private int _endScaleEndTick;
-
+        private readonly Color _color;
+        private readonly bool _dropShadow;
+        private readonly Font _font;
+        private readonly bool _outline;
+        private readonly bool _relative;
         private readonly TimerHandler _timerHandler;
+        private readonly int _wordWrap;
+        private int? _endAlpha;
+        private int _endAlphaEndTick;
+        private int _endAlphaStartTick;
+        private float? _endScale;
+        private int _endScaleEndTick;
+        private int _endScaleStartTick;
+        private float _scale;
+        private int _x;
+        private int _y;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public DxText(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
             AlignmentX alignmentX = AlignmentX.Left, AlignmentY alignmentY = AlignmentY.Top, bool relative = true,
@@ -55,37 +62,9 @@ namespace TDS_Client.Handler.Draw.Dx
             ApplyTextAlignmentY();
         }
 
-        private int GetAbsoluteX(float x, bool relative)
-        {
-            return GetAbsoluteX(x, relative, true);
-        }
+        #endregion Public Constructors
 
-        private int GetAbsoluteY(float y, bool relative)
-        {
-            return GetAbsoluteY(y, relative, true);
-        }
-
-        public void SetAbsoluteX(int x)
-        {
-            _x = x;
-        }
-
-        public void SetRelativeX(float x)
-        {
-            _x = GetAbsoluteX(x, true);
-        }
-
-        public void SetAbsoluteY(int y)
-        {
-            _y = y;
-            ApplyTextAlignmentY();
-        }
-
-        public void SetRelativeY(float y)
-        {
-            _y = GetAbsoluteY(y, true);
-            ApplyTextAlignmentY();
-        }
+        #region Public Methods
 
         public void BlendAlpha(int endAlpha, int msToEnd)
         {
@@ -97,47 +76,8 @@ namespace TDS_Client.Handler.Draw.Dx
         public void BlendScale(float endScale, int msToEnd)
         {
             this._endScale = endScale;
-            _endScaleStartTick = _timerHandler.ElapsedMs ;
+            _endScaleStartTick = _timerHandler.ElapsedMs;
             _endScaleEndTick = _endScaleStartTick + msToEnd;
-        }
-
-        /*private static int GetStringWidth(string text, float scale, Font font)
-        {
-            Ui.BeginTextCommandWidth("STRING");
-            for (int i = 0; i < text.Length; i += 99)
-            {
-                string substr = text.Substring(i, Math.Min(99, text.Length - i));
-                Ui.AddTextComponentSubstringPlayerName(substr);
-            }
-            Ui.SetTextFont((int)font);
-            Ui.SetTextScale(scale, scale);
-            return (int) Ui.EndTextCommandGetWidth(1);
-        }*/
-
-        private void ApplyTextAlignmentY()
-        {
-            int textHeight = GetTextAbsoluteHeight(_amountLines != 0 ? _amountLines : GetLineCount(), _scale, _font, _relative);
-
-            if (_alignmentY == AlignmentY.Center)
-                _y -= textHeight / 2;
-            else if (_alignmentY == AlignmentY.Bottom)
-                _y -= textHeight;
-
-
-            // ((((UI::_GET_TEXT_SCALE_HEIGHT(0.35f, 0) * iVar6) + 0.00138888f * 13f) + 0.00138888f * 5f * (iVar6 - 1) * 0.5f)) - 0.00138888f)
-        }
-
-        private int GetLineCount()
-        {
-            ModAPI.Native.Invoke(NativeHash._BEGIN_TEXT_COMMAND_LINE_COUNT, "STRING");
-            ModAPI.Native.Invoke(NativeHash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Text);
-            return ModAPI.Native.Invoke<int>(NativeHash._GET_TEXT_SCREEN_LINE_COUNT, _x, _y);
-        }
-
-        public void SetScale(float scale)
-        {
-            this._scale = scale;
-            this._endScale = null;
         }
 
         public override void Draw()
@@ -168,5 +108,82 @@ namespace TDS_Client.Handler.Draw.Dx
         {
             return DxType.Text;
         }
+
+        public void SetAbsoluteX(int x)
+        {
+            _x = x;
+        }
+
+        public void SetAbsoluteY(int y)
+        {
+            _y = y;
+            ApplyTextAlignmentY();
+        }
+
+        public void SetRelativeX(float x)
+        {
+            _x = GetAbsoluteX(x, true);
+        }
+
+        public void SetRelativeY(float y)
+        {
+            _y = GetAbsoluteY(y, true);
+            ApplyTextAlignmentY();
+        }
+
+        public void SetScale(float scale)
+        {
+            this._scale = scale;
+            this._endScale = null;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void ApplyTextAlignmentY()
+        {
+            int textHeight = GetTextAbsoluteHeight(_amountLines != 0 ? _amountLines : GetLineCount(), _scale, _font, _relative);
+
+            if (_alignmentY == AlignmentY.Center)
+                _y -= textHeight / 2;
+            else if (_alignmentY == AlignmentY.Bottom)
+                _y -= textHeight;
+
+            // ((((UI::_GET_TEXT_SCALE_HEIGHT(0.35f, 0) * iVar6) + 0.00138888f * 13f) + 0.00138888f
+            // * 5f * (iVar6 - 1) * 0.5f)) - 0.00138888f)
+        }
+
+        private int GetAbsoluteX(float x, bool relative)
+        {
+            return GetAbsoluteX(x, relative, true);
+        }
+
+        private int GetAbsoluteY(float y, bool relative)
+        {
+            return GetAbsoluteY(y, relative, true);
+        }
+
+        /*private static int GetStringWidth(string text, float scale, Font font)
+        {
+            Ui.BeginTextCommandWidth("STRING");
+            for (int i = 0; i < text.Length; i += 99)
+            {
+                string substr = text.Substring(i, Math.Min(99, text.Length - i));
+                Ui.AddTextComponentSubstringPlayerName(substr);
+            }
+            Ui.SetTextFont((int)font);
+            Ui.SetTextScale(scale, scale);
+            return (int) Ui.EndTextCommandGetWidth(1);
+        }*/
+
+        private int GetLineCount()
+        {
+            ModAPI.Native.Invoke(NativeHash._BEGIN_TEXT_COMMAND_LINE_COUNT, "STRING");
+            ModAPI.Native.Invoke(NativeHash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Text);
+            return ModAPI.Native.Invoke<int>(NativeHash._GET_TEXT_SCREEN_LINE_COUNT, _x, _y);
+        }
+
+        #endregion Private Methods
     }
 }

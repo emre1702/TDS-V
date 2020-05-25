@@ -4,11 +4,17 @@ namespace TDS_Client.Core.Init
 {
     public class Program
     {
+        #region Public Constructors
+
         public Program(IModAPI modAPI)
         {
             Init(modAPI);
             Services.Initialize(modAPI);
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void Init(IModAPI modAPI)
         {
@@ -22,5 +28,7 @@ namespace TDS_Client.Core.Init
             // CLEAR_GPS_CUSTOM_ROUTE
             modAPI.Native.Invoke(TDS_Shared.Data.Enums.NativeHash.CLEAR_GPS_CUSTOM_ROUTE);
         }
+
+        #endregion Private Methods
     }
 }

@@ -8,7 +8,19 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
+        #region Private Fields
+
         private readonly Dictionary<ITDSPlayer, TDSTimer> _removeSpectatorsTimer = new Dictionary<ITDSPlayer, TDSTimer>();
+
+        #endregion Private Fields
+
+        #region Protected Methods
+
+        protected override void SpectateOtherAllTeams(ITDSPlayer character, bool next = true)
+        {
+            if (CurrentRoundStatus == RoundStatus.Countdown || CurrentRoundStatus == RoundStatus.Round)
+                base.SpectateOtherAllTeams(character, next);
+        }
 
         protected override void SpectateOtherSameTeam(ITDSPlayer character, bool next = true)
         {
@@ -16,10 +28,16 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 base.SpectateOtherSameTeam(character, next);
         }
 
-        protected override void SpectateOtherAllTeams(ITDSPlayer character, bool next = true)
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        private void MakeSurePlayerSpectatesAnyone(ITDSPlayer player)
         {
-            if (CurrentRoundStatus == RoundStatus.Countdown || CurrentRoundStatus == RoundStatus.Round)
-                base.SpectateOtherAllTeams(character, next);
+            if (player.Spectates is { })
+                return;
+
+            SpectateNext(player, true);
         }
 
         private void PlayerCantBeSpectatedAnymore(ITDSPlayer player)
@@ -37,12 +55,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        private void MakeSurePlayerSpectatesAnyone(ITDSPlayer player)
-        {
-            if (player.Spectates is { })
-                return;
-
-            SpectateNext(player, true);
-        }
+        #endregion Private Methods
     }
 }

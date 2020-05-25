@@ -5,11 +5,7 @@ namespace TDS_Server.Data.Extensions
 {
     public static class PositionExtensions
     {
-
-        public static Position3D ToPosition3D(this Position4DDto pos)
-        {
-            return new Position3D(pos.X, pos.Y, pos.Z);
-        }
+        #region Public Methods
 
         public static Position3DDto SwitchNamespace(this Position3D dto)
         {
@@ -20,5 +16,12 @@ namespace TDS_Server.Data.Extensions
         {
             return new Position3D { X = dto.X, Y = dto.Y, Z = dto.Z };
         }
+
+        public static Position3D ToPosition3D(this Position4DDto pos)
+        {
+            return new Position3D(pos.X, pos.Y, pos.Z);
+        }
+
+        #endregion Public Methods
     }
 }

@@ -5,12 +5,22 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.MapObject
 {
-    class MapObjectAPI : IMapObjectAPI
+    internal class MapObjectAPI : IMapObjectAPI
     {
+        #region Private Fields
+
         private readonly EntityConvertingHandler _entityConvertingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapObjectAPI(EntityConvertingHandler entityConvertingHandler)
             => _entityConvertingHandler = entityConvertingHandler;
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public IMapObject Create(uint hash, Position3D position, Position3D rotation, int alpha = 255, uint dimension = 0)
         {
@@ -22,5 +32,7 @@ namespace TDS_Client.RAGEAPI.MapObject
         {
             RAGE.Game.Object.PlaceObjectOnGroundProperly(handle);
         }
+
+        #endregion Public Methods
     }
 }

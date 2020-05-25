@@ -8,7 +8,13 @@ namespace TDS_Client.Handler
 {
     public class GhostModeHandler : ServiceBase
     {
+        #region Private Fields
+
         private TDSTimer _handleTimer;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public GhostModeHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
@@ -17,6 +23,27 @@ namespace TDS_Client.Handler
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
+        {
+            if (settings.Type != LobbyType.GangLobby && !settings.IsGangActionLobby)
+                return;
+
+            _handleTimer?.Kill();
+            _handleTimer = new TDSTimer(Handle, 1000, 0);
+        }
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
+        {
+            if (settings.Type != LobbyType.GangLobby && !settings.IsGangActionLobby)
+                return;
+
+            _handleTimer?.Kill();
+            _handleTimer = null;
+        }
 
         private void Handle()
         {
@@ -58,23 +85,6 @@ namespace TDS_Client.Handler
             }
         }
 
-
-        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
-        {
-            if (settings.Type != LobbyType.GangLobby && !settings.IsGangActionLobby)
-                return;
-
-            _handleTimer?.Kill();
-            _handleTimer = new TDSTimer(Handle, 1000, 0);
-        }
-
-        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
-        {
-            if (settings.Type != LobbyType.GangLobby && !settings.IsGangActionLobby)
-                return;
-
-            _handleTimer?.Kill();
-            _handleTimer = null;
-        }
+        #endregion Private Methods
     }
 }

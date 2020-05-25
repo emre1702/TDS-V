@@ -7,9 +7,15 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Public Properties
+
         public ITeam? Team { get; private set; }
 
         public int TeamIndex => Team?.Entity.Index ?? 0;
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void SetTeam(ITeam? team, bool forceIsNew)
         {
@@ -24,5 +30,6 @@ namespace TDS_Server.Handler.Entities.Player
             }
         }
 
+        #endregion Public Methods
     }
 }

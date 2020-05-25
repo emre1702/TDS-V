@@ -46,7 +46,6 @@ namespace TDS_Server.Handler
                 _bonusBotConnectorClient.ServerInfos.Error += LogErrorFromBonusBot;
                 _bonusBotConnectorClient.ServerInfos.ErrorString += LogErrorFromBonusBot;
             }
-
         }
 
         private async void Save(int counter)
@@ -68,10 +67,10 @@ namespace TDS_Server.Handler
                     foreach (var entry in changedEntriesCopy)
                         entry.State = EntityState.Detached;
                 });
-
         }
 
         #region Error
+
         public async void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true)
         {
             ex = ex.GetBaseException();
@@ -146,7 +145,6 @@ namespace TDS_Server.Handler
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
 
-
             if (logToBonusBot)
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
@@ -182,9 +180,11 @@ namespace TDS_Server.Handler
        }
 
       */
+
         #endregion Error
 
         #region Chat
+
         public async void LogChat(string chat, ITDSPlayer source, ITDSPlayer? target = null, bool isGlobal = false, bool isAdminChat = false, bool isTeamChat = false)
         {
             var log = new LogChats
@@ -201,9 +201,11 @@ namespace TDS_Server.Handler
             await ExecuteForDB(dbContext =>
                 dbContext.LogChats.Add(log));
         }
+
         #endregion Chat
 
         #region Admin
+
         public async void LogAdmin(LogType cmd, ITDSPlayer? source, ITDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null)
         {
             var log = new LogAdmins
@@ -241,9 +243,11 @@ namespace TDS_Server.Handler
             await ExecuteForDB(dbContext =>
                 dbContext.LogAdmins.Add(log));
         }
+
         #endregion Admin
 
         #region Kill
+
         public async void LogKill(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
             var log = new LogKills
@@ -256,12 +260,14 @@ namespace TDS_Server.Handler
             await ExecuteForDB(dbContext =>
                 dbContext.LogKills.Add(log));
         }
+
         #endregion Kill
 
         #region Rest
+
         public async void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false)
         {
-            bool ipAddressParseWorked = IPAddress.TryParse(source?.ModPlayer?.IPAddress ?? "-", out IPAddress? address);
+            bool ipAddressParseWorked = IPAddress.TryParse(source?.IPAddress ?? "-", out IPAddress? address);
             var log = new LogRests
             {
                 Type = type,
@@ -275,6 +281,7 @@ namespace TDS_Server.Handler
             await ExecuteForDB(dbContext =>
                 dbContext.LogRests.Add(log));
         }
-        #endregion
+
+        #endregion Rest
     }
 }

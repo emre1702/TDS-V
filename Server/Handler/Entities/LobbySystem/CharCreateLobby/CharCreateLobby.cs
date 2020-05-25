@@ -16,6 +16,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class CharCreateLobby : Lobby
     {
+        #region Public Constructors
+
         public CharCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI,
             LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
@@ -34,6 +36,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
         private static Lobbies CreateEntity(ITDSPlayer player)
         {
             Lobbies entity = new Lobbies
@@ -51,5 +57,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             return entity;
         }
+
+        #endregion Private Methods
     }
 }

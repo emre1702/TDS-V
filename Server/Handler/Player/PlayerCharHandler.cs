@@ -1,11 +1,9 @@
 ﻿using MoreLinq;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models;
@@ -21,17 +19,22 @@ namespace TDS_Server.Handler.Player
 {
     public class PlayerCharHandler
     {
-        private readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
+        #region Private Fields
 
-        private readonly IModAPI _modAPI;
-        private readonly Serializer _serializer;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly TDSDbContext _dbContext;
         private readonly EventsHandler _eventsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly TDSDbContext _dbContext;
         private readonly ILoggingHandler _loggingHandler;
+        private readonly IModAPI _modAPI;
+        private readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly Serializer _serializer;
+        private readonly IServiceProvider _serviceProvider;
 
-        public PlayerCharHandler(IModAPI modAPI, EventsHandler eventsHandler, Serializer serializer, IServiceProvider serviceProvider, LobbiesHandler lobbiesHandler, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public PlayerCharHandler(IModAPI modAPI, EventsHandler eventsHandler, Serializer serializer, IServiceProvider serviceProvider, LobbiesHandler lobbiesHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler)
         {
             _modAPI = modAPI;
@@ -45,6 +48,104 @@ namespace TDS_Server.Handler.Player
             eventsHandler.PlayerLoggedIn += LoadPlayerChar;
             eventsHandler.ReloadPlayerChar += LoadPlayerChar;
             eventsHandler.PlayerRegisteredBefore += InitPlayerChar;
+        }
+
+        #endregion Public Constructors
+
+        #region Internal Methods
+
+        internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> args)
+        {
+            if (!(player.Lobby is CharCreateLobby))
+                return null;
+
+            await _lobbiesHandler.MainMenu.AddPlayer(player, null);
+            return null;
+        }
+
+        internal async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)
+        {
+            if (player.Entity is null)
+                return null;
+
+            var data = _serializer.FromBrowser<PlayerCharDatas>((string)args[0]);
+
+            // By doing this we can ensure that player datas don't save while editing. Because else
+            // this could result in PlayerCharDatas getting messed up for the player
+            await player.ExecuteForDB(dbContext =>
+            {
+                player.Entity.CharDatas.AppearanceData = new PlayerCharAppearanceDatas();
+                player.Entity.CharDatas.FeaturesData = new PlayerCharFeaturesDatas();
+                player.Entity.CharDatas.GeneralData = new PlayerCharGeneralDatas();
+                player.Entity.CharDatas.HairAndColorsData = new PlayerCharHairAndColorsDatas();
+                player.Entity.CharDatas.HeritageData = new PlayerCharHeritageDatas();
+
+                CopyJsonValues(data.AppearanceDataSynced, player.Entity.CharDatas.AppearanceData);
+                CopyJsonValues(data.FeaturesDataSynced, player.Entity.CharDatas.FeaturesData);
+                CopyJsonValues(data.GeneralDataSynced, player.Entity.CharDatas.GeneralData);
+                CopyJsonValues(data.HairAndColorsDataSynced, player.Entity.CharDatas.HairAndColorsData);
+                CopyJsonValues(data.HeritageDataSynced, player.Entity.CharDatas.HeritageData);
+            });
+
+            await player.SaveData(true);
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                LoadPlayerChar(player);
+            });
+
+            await _lobbiesHandler.MainMenu.AddPlayer(player, null);
+            return null;
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private void CopyJsonValues(object originalObj, object newObj)
+        {
+            originalObj
+                .GetType()
+                .GetProperties()
+                .Where(p => p.GetCustomAttributes(typeof(Newtonsoft.Json.JsonPropertyAttribute), false).Length > 0)
+                .ForEach(p => p.SetValue(newObj, p.GetValue(originalObj)));
+        }
+
+        private async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
+        {
+            await _semaphoreSlim.WaitAsync();
+
+            try
+            {
+                var isMale = SharedUtils.GetRandom(true, false);
+                var charDatas = new PlayerCharDatas
+                {
+                    PlayerId = args.dbPlayer.Id,
+                    GeneralData = new PlayerCharGeneralDatas
+                    {
+                        IsMale = isMale
+                    },
+                    HeritageData = new PlayerCharHeritageDatas
+                    {
+                        FatherIndex = 0,
+                        MotherIndex = 21,
+                        ResemblancePercentage = isMale ? 1 : 0,
+                        SkinTonePercentage = isMale ? 1 : 0
+                    },
+                    FeaturesData = new PlayerCharFeaturesDatas(),
+                    AppearanceData = new PlayerCharAppearanceDatas(),
+                    HairAndColorsData = new PlayerCharHairAndColorsDatas()
+                };
+                _dbContext.Add(charDatas);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex, args.player);
+            }
+            finally
+            {
+                _semaphoreSlim.Release();
+            }
         }
 
         private void LoadPlayerChar(ITDSPlayer player)
@@ -187,95 +288,6 @@ namespace TDS_Server.Handler.Player
             );
         }
 
-        internal async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)
-        {
-            if (player.Entity is null)
-                return null;
-
-            var data = _serializer.FromBrowser<PlayerCharDatas>((string)args[0]);
-
-            // By doing this we can ensure that player datas don't save while editing.
-            // Because else this could result in PlayerCharDatas getting messed up for the player
-            await player.ExecuteForDB(dbContext =>
-            {
-                player.Entity.CharDatas.AppearanceData = new PlayerCharAppearanceDatas();
-                player.Entity.CharDatas.FeaturesData = new PlayerCharFeaturesDatas();
-                player.Entity.CharDatas.GeneralData = new PlayerCharGeneralDatas();
-                player.Entity.CharDatas.HairAndColorsData = new PlayerCharHairAndColorsDatas();
-                player.Entity.CharDatas.HeritageData = new PlayerCharHeritageDatas();
-
-                CopyJsonValues(data.AppearanceDataSynced, player.Entity.CharDatas.AppearanceData);
-                CopyJsonValues(data.FeaturesDataSynced, player.Entity.CharDatas.FeaturesData);
-                CopyJsonValues(data.GeneralDataSynced, player.Entity.CharDatas.GeneralData);
-                CopyJsonValues(data.HairAndColorsDataSynced, player.Entity.CharDatas.HairAndColorsData);
-                CopyJsonValues(data.HeritageDataSynced, player.Entity.CharDatas.HeritageData);
-            });
-
-            await player.SaveData(true);
-            _modAPI.Thread.RunInMainThread(() =>
-            {
-                LoadPlayerChar(player);
-            });
-            
-            await _lobbiesHandler.MainMenu.AddPlayer(player, null);
-            return null;
-        }
-
-        internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> args)
-        {
-            if (!(player.Lobby is CharCreateLobby))
-                return null;
-
-            await _lobbiesHandler.MainMenu.AddPlayer(player, null);
-            return null;
-        }
-
-        private void CopyJsonValues(object originalObj, object newObj)
-        {
-            originalObj
-                .GetType()
-                .GetProperties()
-                .Where(p => p.GetCustomAttributes(typeof(Newtonsoft.Json.JsonPropertyAttribute), false).Length > 0)
-                .ForEach(p => p.SetValue(newObj, p.GetValue(originalObj)));
-        }
-
-
-        private async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
-        {
-            await _semaphoreSlim.WaitAsync();
-            
-            try
-            {
-                var isMale = SharedUtils.GetRandom(true, false);
-                var charDatas = new PlayerCharDatas
-                {
-                    PlayerId = args.dbPlayer.Id,
-                    GeneralData = new PlayerCharGeneralDatas
-                    {
-                        IsMale = isMale
-                    },
-                    HeritageData = new PlayerCharHeritageDatas
-                    {
-                        FatherIndex = 0,
-                        MotherIndex = 21,
-                        ResemblancePercentage = isMale ? 1 : 0,
-                        SkinTonePercentage = isMale ? 1 : 0
-                    },
-                    FeaturesData = new PlayerCharFeaturesDatas(),
-                    AppearanceData = new PlayerCharAppearanceDatas(),
-                    HairAndColorsData = new PlayerCharHairAndColorsDatas()
-                };
-                _dbContext.Add(charDatas);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                _loggingHandler.LogError(ex, args.player);
-            }
-            finally
-            {
-                _semaphoreSlim.Release();
-            }
-        }
+        #endregion Private Methods
     }
 }

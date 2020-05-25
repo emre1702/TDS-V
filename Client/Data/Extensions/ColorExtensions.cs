@@ -5,12 +5,7 @@ namespace TDS_Client.Data.Extensions
 {
     public static class ColorExtensions
     {
-        public static Color GetContrast(this Color original)
-        {
-            var l = 0.2126 * (original.R / 255d) + 0.7152 * (original.G / 255d) + 0.0722 * (original.B / 255d);
-
-            return l < 0.4 ? Color.White : Color.Black;
-        }
+        #region Public Methods
 
         public static Color GetBetween(this Color first, Color second, float percentage = 0.5f)
         {
@@ -22,5 +17,13 @@ namespace TDS_Client.Data.Extensions
                 );
         }
 
+        public static Color GetContrast(this Color original)
+        {
+            var l = 0.2126 * (original.R / 255d) + 0.7152 * (original.G / 255d) + 0.0722 * (original.B / 255d);
+
+            return l < 0.4 ? Color.White : Color.Black;
+        }
+
+        #endregion Public Methods
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using TDS_Client.Data.Defaults;
+﻿using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
@@ -9,7 +8,6 @@ using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
-using TDS_Client.Manager.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
@@ -43,7 +41,7 @@ namespace TDS_Client.Handler
         private readonly EventsHandler _eventsHandler;
         private readonly CamerasHandler _camerasHandler;
 
-        public ChatHandler(IModAPI modAPI, LoggingHandler loggingHandler,  BrowserHandler browserHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender,
+        public ChatHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender,
             LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler, EventsHandler eventsHandler, CamerasHandler camerasHandler)
             : base(modAPI, loggingHandler)
         {
@@ -60,7 +58,7 @@ namespace TDS_Client.Handler
 
             bindsHandler.Add(Control.MpTextChatAll, OpenLobbyChatInput);
             bindsHandler.Add(Control.MpTextChatTeam, OpenTeamChatInput);
-            
+
             bindsHandler.Add(Key.Escape, (_) => CloseChatInput());
 
             modAPI.Event.Add(FromBrowserEvent.CloseChat, _ => CloseChatInput());
@@ -92,6 +90,7 @@ namespace TDS_Client.Handler
         }
 
 #pragma warning disable IDE0051 // Remove unused private members
+
         private void OpenGlobalChatInput(Control _)
 #pragma warning restore IDE0051 // Remove unused private members
         {
@@ -147,7 +146,7 @@ namespace TDS_Client.Handler
                 Logging.LogWarning((_camerasHandler.Spectating.IsSpectator ? "Is spectator" : "Is not spectator") + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + ((IPlayer)_camerasHandler.Spectating.SpectatingEntity).Name : "not spectating entity"), "ChatHandler.Command");
                 Logging.LogWarning(_camerasHandler.SpectateCam.Position.ToString() + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + _camerasHandler.Spectating.SpectatingEntity.Position.ToString() : "not spectating entity"), "ChatHandler.Command");
                 return;
-            } 
+            }
             else if (msg == "campos" || msg == "camerapos")
             {
                 ModAPI.Chat.Output("Position: " + _camerasHandler.ActiveCamera.Position.ToString());

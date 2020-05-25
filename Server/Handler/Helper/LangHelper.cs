@@ -9,44 +9,30 @@ namespace TDS_Server.Handler.Helper
 {
     public class LangHelper
     {
+        #region Public Fields
+
         public readonly Dictionary<Language, ILanguage> LanguageByID = new Dictionary<Language, ILanguage>
         {
             [Language.German] = new German(),
             [Language.English] = new English()
         };
 
+        #endregion Public Fields
+
+        #region Private Fields
+
         private readonly TDSPlayerHandler _tdsPlayerHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public LangHelper(TDSPlayerHandler tdsPlayerHandler)
             => _tdsPlayerHandler = tdsPlayerHandler;
 
-        public void SendAllChatMessage(Func<ILanguage, string> langgetter)
-        {
-            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in LanguageByID.Values)
-            {
-                returndict[lang] = langgetter(lang);
-            }
+        #endregion Public Constructors
 
-            foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
-            {
-                player.SendMessage(returndict[player.Language]);
-            }
-        }
-
-        public void SendAllNotification(Func<ILanguage, string> langgetter)
-        {
-            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in LanguageByID.Values)
-            {
-                returndict[lang] = langgetter(lang);
-            }
-
-            foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
-            {
-                player.SendNotification(returndict[player.Language]);
-            }
-        }
+        #region Public Methods
 
         public ILanguage GetLang(Type language)
         {
@@ -79,5 +65,35 @@ namespace TDS_Server.Handler.Helper
             }
             return returndict;
         }
+
+        public void SendAllChatMessage(Func<ILanguage, string> langgetter)
+        {
+            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            foreach (ILanguage lang in LanguageByID.Values)
+            {
+                returndict[lang] = langgetter(lang);
+            }
+
+            foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+            {
+                player.SendMessage(returndict[player.Language]);
+            }
+        }
+
+        public void SendAllNotification(Func<ILanguage, string> langgetter)
+        {
+            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            foreach (ILanguage lang in LanguageByID.Values)
+            {
+                returndict[lang] = langgetter(lang);
+            }
+
+            foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+            {
+                player.SendNotification(returndict[player.Language]);
+            }
+        }
+
+        #endregion Public Methods
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
@@ -11,12 +12,9 @@ using TDS_Server.Handler.Entities.GameModes;
 using TDS_Server.Handler.Entities.GameModes.Bomb;
 using TDS_Server.Handler.Entities.GameModes.Normal;
 using TDS_Server.Handler.Entities.GameModes.Sniper;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
-using TDS_Shared.Core;
-using TDS_Server.Data.Extensions;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -51,6 +49,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             [RoundStatus.RoundEndRanking] = RoundStatus.MapClear,
             [RoundStatus.None] = RoundStatus.NewMapChoose
         };
+
         private readonly Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, GameMode>> _gameModeByMapType
             = new Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, GameMode>>
             {
@@ -169,13 +168,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                     FuncIterateAllPlayers((character, team) =>
                     {
-                        character.SendEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
-                        if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
-                            character.ModPlayer?.Kill();
-                        character.Lifes = 0;
-                    });
+                          character.SendEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
+                          if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
+                              character.ModPlayer?.Kill();
+                          character.Lifes = 0;
+                      });
                 }
-
 
                 foreach (var team in Teams)
                 {
@@ -197,7 +195,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     _ranking = null;
                 }
             });
-            
+
             await ExecuteForDBAsync(async (dbContext) =>
             {
                 await dbContext.SaveChangesAsync();
@@ -239,9 +237,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 var othersPos = new Position3D(-425.48, 1123.55, 335.85);
                 foreach (var player in Players.Values)
                 {
-                    if (player != winner && player != second && player != third && player.ModPlayer is { }) 
+                    if (player != winner && player != second && player != third && player.ModPlayer is { })
                         player.ModPlayer.Position = othersPos;
-                } 
+                }
 
                 string json = Serializer.ToBrowser(_ranking);
                 ModAPI.Sync.SendEvent(this, ToClientEvent.StartRankingShowAfterRound, json, winner.RemoteId, second?.RemoteId ?? 0, third?.RemoteId ?? 0);

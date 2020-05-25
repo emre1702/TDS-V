@@ -1,15 +1,21 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Misc;
+﻿using TDS_Client.Data.Interfaces.ModAPI.Misc;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Misc
 {
-    class MiscAPI : IMiscAPI
+    internal class MiscAPI : IMiscAPI
     {
+        #region Public Methods
+
         public float GetDistanceBetweenCoords(Position3D pos1, Position3D pos2, bool useZ)
         {
             return RAGE.Game.Misc.GetDistanceBetweenCoords(pos1.X, pos1.Y, pos1.Z, pos2.X, pos2.Y, pos2.Z, useZ);
+        }
+
+        public int GetGameTimer()
+        {
+            return RAGE.Game.Misc.GetGameTimer();
         }
 
         public bool GetGroundZFor3dCoord(float x, float y, float z, ref float groundZ)
@@ -56,9 +62,6 @@ namespace TDS_Client.RAGEAPI.Misc
             RAGE.Game.Misc.SetWind(speed);
         }
 
-        public int GetGameTimer()
-        {
-            return RAGE.Game.Misc.GetGameTimer();
-        }
+        #endregion Public Methods
     }
 }

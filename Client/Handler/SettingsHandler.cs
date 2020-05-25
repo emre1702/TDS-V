@@ -19,8 +19,43 @@ namespace TDS_Client.Handler
 {
     public class SettingsHandler : ServiceBase
     {
+        #region Public Fields
+
         public readonly int ScreenFadeInTimeAfterSpawn = 2000;
         public readonly int ScreenFadeOutTimeAfterSpawn = 2000;
+
+        public Color MapBorderColor;
+
+        public Color? NametagArmorEmptyColor = null;
+
+        public Color NametagArmorFullColor = Color.FromArgb(255, 255, 255, 255);
+
+        public Color? NametagDeadColor = Color.FromArgb(255, 0, 0, 0);
+
+        public Color NametagHealthEmptyColor = Color.FromArgb(255, 50, 0, 0);
+
+        public Color NametagHealthFullColor = Color.FromArgb(255, 0, 255, 0);
+
+        public float NametagMaxDistance;
+
+        // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
+        public Color? NotTempMapBorderColor;
+
+        public SyncedPlayerSettingsDto PlayerSettings;
+
+        public bool ShowNametagOnlyOnAiming;
+
+        public int StartArmor;
+
+        public int StartHealth = 100;
+
+        #endregion Public Fields
+
+        #region Private Fields
+
+        private readonly BrowserHandler _browserHandler;
+
+        private readonly EventsHandler _eventsHandler;
 
         private readonly Dictionary<Language, ILanguage> _languagesDict = new Dictionary<Language, ILanguage>()
         {
@@ -28,82 +63,22 @@ namespace TDS_Client.Handler
             [TDS_Shared.Data.Enums.Language.English] = new English()
         };
 
+        private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly Serializer _serializer;
         private Language _languageEnum = TDS_Shared.Data.Enums.Language.English;
         private bool _languageManuallyChanged;
 
-        public Language LanguageEnum
-        {
-            get => _languageEnum;
-            set
-            {
-                _languageEnum = value;
-                _languageManuallyChanged = true;
-                Language = _languagesDict[_languageEnum];
-                bool beforeLogin = PlayerSettings == null;
-                _eventsHandler?.OnLanguageChanged(Language, beforeLogin);
-
-                if (!beforeLogin)
-                {
-                    PlayerSettings.Language = value;
-                    _remoteEventsSender.Send(ToServerEvent.LanguageChange, PlayerSettings.Language);
-                }
-            }
-        }
-
-        public ILanguage Language { get; private set; }
-
-        private SyncedServerSettingsDto _syncedServerSettings;
         private SyncedLobbySettings _syncedLobbySettings;
 
-        public SyncedPlayerSettingsDto PlayerSettings;
+        private SyncedServerSettingsDto _syncedServerSettings;
 
-        public int LobbyId => _syncedLobbySettings.Id;
-        public string LobbyName => _syncedLobbySettings != null ? _syncedLobbySettings.Name : "Mainmenu";
+        #endregion Private Fields
 
-        public float DistanceToSpotToPlant => _syncedServerSettings.DistanceToSpotToPlant;
-        public float DistanceToSpotToDefuse => _syncedServerSettings.DistanceToSpotToDefuse;
+        #region Public Constructors
 
-        //public uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
-        //public uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
-        public int BombDetonateTimeMs => _syncedLobbySettings.BombDetonateTimeMs ?? 0;
-
-        //public uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
-        public int CountdownTime => _syncedLobbySettings.CountdownTime ?? 0;
-
-        public int MapChooseTime => _syncedServerSettings.MapChooseTime;
-        public int RoundTime => _syncedLobbySettings.RoundTime ?? 0;
-        public int RoundEndTime => _syncedServerSettings.RoundEndTime;
-        public int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
-        public bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
-        public MapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? MapLimitType.KillAfterTime;
-        public int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
-        public int CharCreatorLobbyId => _syncedServerSettings.CharCreatorLobbyId;
-        public int MapCreatorLobbyId => _syncedServerSettings.MapCreatorLobbyId;
-
-        public float NametagMaxDistance;
-        public bool ShowNametagOnlyOnAiming;
-        public Color MapBorderColor;
-        public int StartHealth = 100;
-        public int StartArmor;
-        public Color? NametagDeadColor = Color.FromArgb(255, 0, 0, 0);
-        public Color NametagHealthEmptyColor = Color.FromArgb(255, 50, 0, 0);
-        public Color NametagHealthFullColor = Color.FromArgb(255, 0, 255, 0);
-        public Color? NametagArmorEmptyColor = null;
-        public Color NametagArmorFullColor = Color.FromArgb(255, 255, 255, 255);
-
-        public bool LoggedIn { get; set; }
-
-        // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
-        public Color? NotTempMapBorderColor;
-
-        private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly EventsHandler _eventsHandler;
-        private readonly BrowserHandler _browserHandler;
-        private readonly Serializer _serializer;
-
-        public SettingsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, 
+        public SettingsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler,
             BrowserHandler browserHandler, Serializer serializer)
-            : base (modAPI, loggingHandler) 
+            : base(modAPI, loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
             _eventsHandler = eventsHandler;
@@ -131,7 +106,84 @@ namespace TDS_Client.Handler
 
             modAPI.LocalPlayer.SetMaxArmour(Constants.MaxPossibleArmor);
             LoadLanguageFromRAGE();
+        }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
+
+        //public uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
+        //public uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
+        public int BombDetonateTimeMs => _syncedLobbySettings.BombDetonateTimeMs ?? 0;
+
+        public int CharCreatorLobbyId => _syncedServerSettings.CharCreatorLobbyId;
+
+        //public uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
+        public int CountdownTime => _syncedLobbySettings.CountdownTime ?? 0;
+
+        public float DistanceToSpotToDefuse => _syncedServerSettings.DistanceToSpotToDefuse;
+
+        public float DistanceToSpotToPlant => _syncedServerSettings.DistanceToSpotToPlant;
+
+        public bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
+
+        public ILanguage Language { get; private set; }
+
+        public Language LanguageEnum
+        {
+            get => _languageEnum;
+            set
+            {
+                _languageEnum = value;
+                _languageManuallyChanged = true;
+                Language = _languagesDict[_languageEnum];
+                bool beforeLogin = PlayerSettings == null;
+                _eventsHandler?.OnLanguageChanged(Language, beforeLogin);
+
+                if (!beforeLogin)
+                {
+                    PlayerSettings.Language = value;
+                    _remoteEventsSender.Send(ToServerEvent.LanguageChange, PlayerSettings.Language);
+                }
+            }
+        }
+
+        public int LobbyId => _syncedLobbySettings.Id;
+        public string LobbyName => _syncedLobbySettings != null ? _syncedLobbySettings.Name : "Mainmenu";
+        public bool LoggedIn { get; set; }
+        public int MapChooseTime => _syncedServerSettings.MapChooseTime;
+        public int MapCreatorLobbyId => _syncedServerSettings.MapCreatorLobbyId;
+        public int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
+        public MapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? MapLimitType.KillAfterTime;
+        public int RoundEndTime => _syncedServerSettings.RoundEndTime;
+        public int RoundTime => _syncedLobbySettings.RoundTime ?? 0;
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public int GetPlantOrDefuseTime(PlantDefuseStatus status)
+        {
+            if (status == PlantDefuseStatus.Defusing)
+                return _syncedLobbySettings.BombDefuseTimeMs ?? 0;
+            else if (status == PlantDefuseStatus.Planting)
+                return _syncedLobbySettings.BombPlantTimeMs ?? 0;
+            return 0;
+        }
+
+        public SyncedLobbySettings GetSyncedLobbySettings()
+        {
+            return _syncedLobbySettings;
+        }
+
+        public void LoadSyncedLobbySettings(SyncedLobbySettings loadedSyncedLobbySettings)
+        {
+            _syncedLobbySettings = loadedSyncedLobbySettings;
+
+            StartHealth = loadedSyncedLobbySettings.StartHealth;
+            StartArmor = loadedSyncedLobbySettings.StartArmor;
         }
 
         public void LoadSyncedSettings(SyncedServerSettingsDto loadedSyncedSettings)
@@ -172,28 +224,6 @@ namespace TDS_Client.Handler
             _eventsHandler.OnSettingsLoaded();
         }
 
-        public SyncedLobbySettings GetSyncedLobbySettings()
-        {
-            return _syncedLobbySettings;
-        }
-
-        public void LoadSyncedLobbySettings(SyncedLobbySettings loadedSyncedLobbySettings)
-        {
-            _syncedLobbySettings = loadedSyncedLobbySettings;
-
-            StartHealth = loadedSyncedLobbySettings.StartHealth;
-            StartArmor = loadedSyncedLobbySettings.StartArmor;
-        }
-
-        public int GetPlantOrDefuseTime(PlantDefuseStatus status)
-        {
-            if (status == PlantDefuseStatus.Defusing)
-                return _syncedLobbySettings.BombDefuseTimeMs ?? 0;
-            else if (status == PlantDefuseStatus.Planting)
-                return _syncedLobbySettings.BombPlantTimeMs ?? 0;
-            return 0;
-        }
-
         public void RevertTempSettings()
         {
             if (NotTempMapBorderColor.HasValue)
@@ -203,6 +233,10 @@ namespace TDS_Client.Handler
                 _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
             }
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void LoadLanguageFromRAGE()
         {
@@ -216,15 +250,6 @@ namespace TDS_Client.Handler
             }
         }
 
-        private void OnLanguageChangeMethod(object[] args)
-        {
-            var languageID = Convert.ToInt32(args[0]);
-            if (!Enum.IsDefined(typeof(Language), languageID))
-                return;
-
-            LanguageEnum = (Language)languageID;
-        }
-
         private void OnColorSettingChangeMethod(object[] args)
         {
             string color = (string)args[0];
@@ -236,23 +261,36 @@ namespace TDS_Client.Handler
                     MapBorderColor = SharedUtils.GetColorFromHtmlRgba(color) ?? MapBorderColor;
                     _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
                     break;
+
                 case UserpanelSettingKey.NametagDeadColor:
                     NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(color);
                     break;
+
                 case UserpanelSettingKey.NametagHealthEmptyColor:
                     NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagHealthEmptyColor;
                     break;
+
                 case UserpanelSettingKey.NametagHealthFullColor:
                     NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagHealthFullColor;
                     break;
+
                 case UserpanelSettingKey.NametagArmorEmptyColor:
                     NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(color);
                     break;
+
                 case UserpanelSettingKey.NametagArmorFullColor:
                     NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagArmorFullColor;
                     break;
             }
+        }
 
+        private void OnLanguageChangeMethod(object[] args)
+        {
+            var languageID = Convert.ToInt32(args[0]);
+            if (!Enum.IsDefined(typeof(Language), languageID))
+                return;
+
+            LanguageEnum = (Language)languageID;
         }
 
         private void OnSyncSettingsMethod(object[] args)
@@ -263,17 +301,12 @@ namespace TDS_Client.Handler
             _browserHandler.Angular.LoadUserpanelData((int)UserpanelLoadDataType.SettingsNormal, json);
         }
 
-        private void SyncRegisterLoginLanguageTexts(object[] args)
-        {
-            _browserHandler.RegisterLogin.SyncLanguage(Language);
-        }
-
         private void ReloadTempChangedPlayerSettings(object[] args)
         {
             var oldMapColor = MapBorderColor;
             MapBorderColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.MapBorderColor) ?? MapBorderColor;
 
-            if (oldMapColor != MapBorderColor) 
+            if (oldMapColor != MapBorderColor)
                 _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
 
             NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagDeadColor);
@@ -282,6 +315,13 @@ namespace TDS_Client.Handler
             NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagArmorEmptyColor);
             NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
         }
+
+        private void SyncRegisterLoginLanguageTexts(object[] args)
+        {
+            _browserHandler.RegisterLogin.SyncLanguage(Language);
+        }
+
+        #endregion Private Methods
 
         /*function loadSettings() {
             let savedlang = mp.storage.data.language;

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TDS_Server.Data.Models.ClothesMeta
+﻿namespace TDS_Server.Data.Models.ClothesMeta
 {
-    #nullable disable
+#nullable disable
+
     public class PedComponentDrawable
     {
     }
-    #nullable restore
+
+#nullable restore
 }

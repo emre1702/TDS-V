@@ -7,27 +7,32 @@ using System.Xml;
 using System.Xml.Serialization;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.ClothesMeta;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Data.Utility;
-using TDS_Shared.Core;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Events;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler
 {
     public class ClothesHandler
     {
-        // https://rage.mp/files/file/50-gtao-outfits/
-        private readonly List<GenderOutfits> _maleOutfits = new List<GenderOutfits>();
+        #region Private Fields
+
         private readonly List<GenderOutfits> _femaleOutfits = new List<GenderOutfits>();
 
+        private readonly ILoggingHandler _loggingHandler;
+
+        // https://rage.mp/files/file/50-gtao-outfits/
+        private readonly List<GenderOutfits> _maleOutfits = new List<GenderOutfits>();
+
+        private readonly Serializer _serializer;
         private List<PropertyInfo>? _drawableProperties;
-        private List<PropertyInfo>? _textureProperties;
         private List<PropertyInfo>? _propIndexProperties;
         private List<PropertyInfo>? _propTextureProperties;
+        private List<PropertyInfo>? _textureProperties;
 
-        private readonly ILoggingHandler _loggingHandler;
-        private readonly Serializer _serializer;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ClothesHandler(ILoggingHandler loggingHandler, Serializer serializer, EventsHandler eventsHandler)
         {
@@ -46,6 +51,29 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private bool DoesCacheExist()
+        {
+            if (!File.Exists("cache/maleClothes.json"))
+                return false;
+            if (!File.Exists("cache/femaleClothes.json"))
+                return false;
+            if (!File.Exists("cache/clothesSizeCache.json"))
+                return false;
+
+            var fileSize = new FileInfo("scriptmetadata.meta").Length;
+            if (!int.TryParse(File.ReadAllText("cache/clothesSizeCache.json"), out int previousFileSize))
+                return false;
+
+            if (fileSize != previousFileSize)
+                return false;
+
+            return true;
+        }
+
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             if (player.Entity is null)
@@ -54,39 +82,6 @@ namespace TDS_Server.Handler
                 return;
             if (player.Entity.PlayerClothes is null)
                 player.Entity.PlayerClothes = new PlayerClothes();
-        }
-
-        private void ProcessItems(Item[] items, List<GenderOutfits> listToAddTo)
-        {
-            foreach (var item in items)
-            {
-                var components = new List<OutfitData>();
-                var props = new List<OutfitData>();
-
-                for (int i = 0; i < 12; ++i)
-                {
-                    components.Add(new OutfitData
-                    {
-                        Drawable = ((Component)_drawableProperties![i].GetValue(item.ComponentDrawables)!).Value,
-                        Texture = ((Component)_textureProperties![i].GetValue(item.ComponentTextures)!).Value
-                    });
-                }
-
-                for (int i = 0; i < 9; ++i)
-                {
-                    props.Add(new OutfitData
-                    {
-                        Drawable = ((Component)_propIndexProperties![i].GetValue(item.PropIndices)!).Value,
-                        Texture = ((Component)_propTextureProperties![i].GetValue(item.PropTextures)!).Value
-                    });
-                }
-
-                listToAddTo.Add(new GenderOutfits
-                {
-                    Components = components,
-                    Props = props
-                });
-            }
         }
 
         private void InitCache()
@@ -141,37 +136,67 @@ namespace TDS_Server.Handler
             }
         }
 
-        private bool DoesCacheExist()
+        private void ProcessItems(Item[] items, List<GenderOutfits> listToAddTo)
         {
-            if (!File.Exists("cache/maleClothes.json"))
-                return false;
-            if (!File.Exists("cache/femaleClothes.json"))
-                return false;
-            if (!File.Exists("cache/clothesSizeCache.json"))
-                return false;
+            foreach (var item in items)
+            {
+                var components = new List<OutfitData>();
+                var props = new List<OutfitData>();
 
-            var fileSize = new FileInfo("scriptmetadata.meta").Length;
-            if (!int.TryParse(File.ReadAllText("cache/clothesSizeCache.json"), out int previousFileSize))
-                return false;
+                for (int i = 0; i < 12; ++i)
+                {
+                    components.Add(new OutfitData
+                    {
+                        Drawable = ((Component)_drawableProperties![i].GetValue(item.ComponentDrawables)!).Value,
+                        Texture = ((Component)_textureProperties![i].GetValue(item.ComponentTextures)!).Value
+                    });
+                }
 
-            if (fileSize != previousFileSize)
-                return false;
+                for (int i = 0; i < 9; ++i)
+                {
+                    props.Add(new OutfitData
+                    {
+                        Drawable = ((Component)_propIndexProperties![i].GetValue(item.PropIndices)!).Value,
+                        Texture = ((Component)_propTextureProperties![i].GetValue(item.PropTextures)!).Value
+                    });
+                }
 
-            return true;
+                listToAddTo.Add(new GenderOutfits
+                {
+                    Components = components,
+                    Props = props
+                });
+            }
         }
+
+        #endregion Private Methods
 
 #nullable disable
-        private class OutfitData
-        {
-            public int Drawable;
-            public int Texture;
-        }
+
+        #region Private Classes
 
         private class GenderOutfits
         {
+            #region Public Fields
+
             public List<OutfitData> Components;
             public List<OutfitData> Props;
+
+            #endregion Public Fields
         }
+
+        private class OutfitData
+        {
+            #region Public Fields
+
+            public int Drawable;
+            public int Texture;
+
+            #endregion Public Fields
+        }
+
+        #endregion Private Classes
+
 #nullable restore
     }
 }

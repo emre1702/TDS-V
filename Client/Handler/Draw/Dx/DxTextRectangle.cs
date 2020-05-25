@@ -6,17 +6,21 @@ namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxTextRectangle : DxBase
     {
-        private DxText _text;
-        private DxRectangle _rect;
-
-        private readonly float _x;
-        private readonly float _y;
-        private readonly float _width;
-        private readonly float _height;
-        private readonly bool _relativePos;
+        #region Private Fields
 
         private readonly AlignmentX _alignmentX;
         private readonly AlignmentY _alignmentY;
+        private readonly float _height;
+        private readonly bool _relativePos;
+        private readonly float _width;
+        private readonly float _x;
+        private readonly float _y;
+        private DxRectangle _rect;
+        private DxText _text;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public DxTextRectangle(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, float x, float y, float width, float height,
             Color textColor, Color rectColor, float textScale = 1.0f, Font textFont = Font.ChaletLondon,
@@ -51,43 +55,56 @@ namespace TDS_Client.Handler.Draw.Dx
             Children.Add(_rect);
         }
 
-        private float GetTextRelativePosX(float offsetX, AlignmentX alignX)
-        {
-            if (_relativePos)
-                offsetX = GetRelativeX(offsetX, false);
-            float rectLeftX = GetRectangleLeftX();
+        #endregion Public Constructors
 
-            switch (alignX)
+        #region Public Methods
+
+        public override void Draw()
+        {
+            _rect.Draw();
+            _text.Draw();
+        }
+
+        public void SetText(string text)
+        {
+            this._text.Text = text;
+            //this._text.SetAbsoluteY(GetAbsoluteY(_relativePos ? GetTextRelativePosY() : GetTextAbsolutePosY(), _relativePos));
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private float GetRectangleLeftX()
+        {
+            switch (_alignmentX)
             {
                 case AlignmentX.Center:
-                    return GetRelativeX(rectLeftX + _width / 2, _relativePos);
+                    return _x - _width / 2;
+
                 case AlignmentX.Left:
-                    return GetRelativeX(rectLeftX + offsetX, _relativePos);
+                    return _x;
+
                 case AlignmentX.Right:
-                    return GetRelativeX(rectLeftX + _width - offsetX, _relativePos);
+                    return _x - _width;
             }
             return _x;
         }
 
-        private float GetTextRelativePosY(AlignmentY alignY)
+        private float GetRectangleTopY()
         {
-            float rectTopY = GetRectangleTopY();
-
-            switch (alignY)
+            switch (_alignmentY)
             {
                 case AlignmentY.Center:
-                    return GetRelativeX(rectTopY + _height / 2, _relativePos);
+                    return _y - _height / 2;
+
                 case AlignmentY.Top:
-                    return GetRelativeX(rectTopY, _relativePos);
+                    return _y;
+
                 case AlignmentY.Bottom:
-                    return GetRelativeX(rectTopY + _height, _relativePos);
+                    return _y - _height;
             }
-
             return _y;
-
-            //int amountlines = textString.Count(t => t == '\n') + 1;
-            //return y + height / 2 - Ui.GetTextScaleHeight(scale, (int)font) / 2 * amountlines;            // - GetRelativeY(5, false);
-            //return _y + _height / 2 - GetRelativeY(5, false);
         }
 
         private float GetTextAbsolutePosX(float offsetX, AlignmentX alignX)
@@ -98,8 +115,10 @@ namespace TDS_Client.Handler.Draw.Dx
             {
                 case AlignmentX.Center:
                     return GetAbsoluteX(rectLeftX + _width / 2, _relativePos);
+
                 case AlignmentX.Left:
                     return GetAbsoluteX(rectLeftX, _relativePos) + offsetX;
+
                 case AlignmentX.Right:
                     return GetAbsoluteX(rectLeftX + _width, _relativePos) - offsetX;
             }
@@ -114,8 +133,10 @@ namespace TDS_Client.Handler.Draw.Dx
             {
                 case AlignmentY.Center:
                     return GetAbsoluteY(rectTopY + _height / 2, _relativePos);
+
                 case AlignmentY.Top:
                     return GetAbsoluteY(rectTopY, _relativePos);
+
                 case AlignmentY.Bottom:
                     return GetAbsoluteY(rectTopY + _height, _relativePos);
             }
@@ -127,44 +148,49 @@ namespace TDS_Client.Handler.Draw.Dx
             //return _y + _height / 2 - 5;
         }
 
-        private float GetRectangleLeftX()
+        private float GetTextRelativePosX(float offsetX, AlignmentX alignX)
         {
-            switch (_alignmentX)
+            if (_relativePos)
+                offsetX = GetRelativeX(offsetX, false);
+            float rectLeftX = GetRectangleLeftX();
+
+            switch (alignX)
             {
                 case AlignmentX.Center:
-                    return _x - _width / 2;
+                    return GetRelativeX(rectLeftX + _width / 2, _relativePos);
+
                 case AlignmentX.Left:
-                    return _x;
+                    return GetRelativeX(rectLeftX + offsetX, _relativePos);
+
                 case AlignmentX.Right:
-                    return _x - _width;
+                    return GetRelativeX(rectLeftX + _width - offsetX, _relativePos);
             }
             return _x;
         }
 
-        private float GetRectangleTopY()
+        private float GetTextRelativePosY(AlignmentY alignY)
         {
-            switch (_alignmentY)
+            float rectTopY = GetRectangleTopY();
+
+            switch (alignY)
             {
                 case AlignmentY.Center:
-                    return _y - _height / 2;
+                    return GetRelativeX(rectTopY + _height / 2, _relativePos);
+
                 case AlignmentY.Top:
-                    return _y;
+                    return GetRelativeX(rectTopY, _relativePos);
+
                 case AlignmentY.Bottom:
-                    return _y - _height;
+                    return GetRelativeX(rectTopY + _height, _relativePos);
             }
+
             return _y;
+
+            //int amountlines = textString.Count(t => t == '\n') + 1;
+            //return y + height / 2 - Ui.GetTextScaleHeight(scale, (int)font) / 2 * amountlines;            // - GetRelativeY(5, false);
+            //return _y + _height / 2 - GetRelativeY(5, false);
         }
 
-        public override void Draw()
-        {
-            _rect.Draw();
-            _text.Draw();
-        }
-
-        public void SetText(string text)
-        {
-            this._text.Text = text;
-            //this._text.SetAbsoluteY(GetAbsoluteY(_relativePos ? GetTextRelativePosY() : GetTextAbsolutePosY(), _relativePos));
-        }
+        #endregion Private Methods
     }
 }

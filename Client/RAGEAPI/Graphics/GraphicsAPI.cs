@@ -5,8 +5,10 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Graphics
 {
-    class GraphicsAPI : IGraphicsAPI
+    internal class GraphicsAPI : IGraphicsAPI
     {
+        #region Public Methods
+
         public void DrawLine(float startX, float startY, float startZ, float endX, float endY, float endZ, byte r, byte g, byte b, byte a)
         {
             RAGE.Game.Graphics.DrawLine(startX, startY, startZ, endX, endY, endZ, r, g, b, a);
@@ -20,11 +22,12 @@ namespace TDS_Client.RAGEAPI.Graphics
         /**
          * <summary>Doesn't work, use JS method instead</summary>
          */
-        public void DrawMarker(MarkerType type, float posX, float posY, float posZ, float dirX, float dirY, float dirZ, float rotX, float rotY, float rotZ, 
+
+        public void DrawMarker(MarkerType type, float posX, float posY, float posZ, float dirX, float dirY, float dirZ, float rotX, float rotY, float rotZ,
             float scaleX, float scaleY, float scaleZ, byte r, byte g, byte b, byte a,
             bool bobUpAndDown, bool faceCamera, bool rotate, string textureDict, string textureName, bool drawOnEnts)
         {
-            RAGE.Game.Graphics.DrawMarker((int)type, posX, posY, posZ, dirX, dirY, dirZ, rotX, rotY, rotZ, scaleX, scaleY, scaleZ, r, g, b, a, bobUpAndDown, faceCamera, 2, 
+            RAGE.Game.Graphics.DrawMarker((int)type, posX, posY, posZ, dirX, dirY, dirZ, rotX, rotY, rotZ, scaleX, scaleY, scaleZ, r, g, b, a, bobUpAndDown, faceCamera, 2,
                 rotate, textureDict, textureName, drawOnEnts);
         }
 
@@ -48,7 +51,7 @@ namespace TDS_Client.RAGEAPI.Graphics
             RAGE.Game.Graphics.DrawScaleformMovie(handle, x, y, width, height, r, g, b, a, 0);
         }
 
-        public void DrawScaleformMovie3d(int handle, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, int p7, int p8, int p9, 
+        public void DrawScaleformMovie3d(int handle, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, int p7, int p8, int p9,
             float scaleX, float scaleY, float scaleZ, int p13)
         {
             RAGE.Game.Graphics.DrawScaleformMovie3d(handle, posX, posY, posZ, rotX, rotY, rotZ, p7, p8, p9, scaleX, scaleY, scaleZ, p13);
@@ -154,5 +157,7 @@ namespace TDS_Client.RAGEAPI.Graphics
         {
             RAGE.Game.Graphics.UseParticleFxAssetNextCall(name);
         }
+
+        #endregion Public Methods
     }
 }

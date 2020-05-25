@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
@@ -17,19 +16,22 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorSyncHandler
     {
-        public bool HasToSync => true;    // => Team.AmountPlayersSameTeam > 1;
+        #region Private Fields
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
-
+        private readonly BrowserHandler _browserHandler;
+        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly LobbyHandler _lobbyHandler;
         private readonly MapCreatorObjectsHandler _mapCreatorObjectsHandler;
+        private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly Serializer _serializer;
-        private readonly BrowserHandler _browserHandler;
-        private readonly LobbyHandler _lobbyHandler;
-        private readonly DataSyncHandler _dataSyncHandler;
-        private readonly IModAPI _modAPI;
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        public MapCreatorSyncHandler(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, 
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public MapCreatorSyncHandler(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer,
             EventsHandler eventsHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler, DataSyncHandler dataSyncHandler)
         {
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
@@ -56,6 +58,17 @@ namespace TDS_Client.Handler.MapCreator
             modAPI.Event.Add(ToClientEvent.MapCreatorSyncTeamObjectsRemove, MapCreatorSyncTeamObjectsRemoveMethod);
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public bool HasToSync => true;
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        // => Team.AmountPlayersSameTeam > 1;
         public void Start()
         {
             _modAPI.Event.Tick.Add(_tickEventMethod);
@@ -66,30 +79,17 @@ namespace TDS_Client.Handler.MapCreator
             _modAPI.Event.Tick.Remove(_tickEventMethod);
         }
 
-        private void SyncOtherPlayers(int currentMs)
+        public void SyncAllObjectsToPlayer(int tdsPlayerId)
         {
-            foreach (var player in _lobbyHandler.Teams.SameTeamPlayers)
+            var objects = _mapCreatorObjectsHandler.GetAll();
+            foreach (var obj in objects)
             {
-                if (player == _modAPI.LocalPlayer)
-                    continue;
-                if (_dataSyncHandler.GetData(PlayerDataKey.InFreeCam, false))
-                {
-                    player.FreezePosition(true);
-                    player.SetCollision(false, false);
-                }
-                else
-                {
-                    player.FreezePosition(false);
-                    player.SetCollision(true, true);
-                }
+                obj.IsSynced = true;
             }
-        }
 
-        #region Id
-        public void SyncLatestIdToServer()
-        {
-            int lastUsedId = _mapCreatorObjectsHandler.IdCounter;
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncLastId, lastUsedId);
+            _browserHandler.Angular.MapCreatorSyncCurrentMapToServer(tdsPlayerId, _mapCreatorObjectsHandler.IdCounter);
+
+            // Todo: Add P2P here as alternative (if activated, else with server)
         }
 
         public void SyncLatestIdFromServer(int oldId, int newId)
@@ -101,17 +101,11 @@ namespace TDS_Client.Handler.MapCreator
             }
             _mapCreatorObjectsHandler.IdCounter = Math.Max(_mapCreatorObjectsHandler.IdCounter, newId);
         }
-        #endregion Id
 
-        #region New object
-        public void SyncNewObjectToLobby(MapCreatorObject obj)
+        public void SyncLatestIdToServer()
         {
-            if (!HasToSync)
-                return;
-            obj.IsSynced = true;
-            var dto = obj.GetDto();
-            var json = _serializer.ToServer(dto);
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncNewObject, json);
+            int lastUsedId = _mapCreatorObjectsHandler.IdCounter;
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncLastId, lastUsedId);
         }
 
         public void SyncNewObjectFromLobby(MapCreatorPosition dto)
@@ -126,18 +120,16 @@ namespace TDS_Client.Handler.MapCreator
 
             _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
                 obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, dto.Info, obj.OwnerRemoteId);
-
         }
-        #endregion New object
 
-        #region Object position
-        public void SyncObjectPositionToLobby(MapCreatorObject obj)
+        public void SyncNewObjectToLobby(MapCreatorObject obj)
         {
             if (!HasToSync)
                 return;
-            var posDto = obj.GetPosDto();
-            var json = _serializer.ToServer(posDto);
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncObjectPosition, json);
+            obj.IsSynced = true;
+            var dto = obj.GetDto();
+            var json = _serializer.ToServer(dto);
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncNewObject, json);
         }
 
         public void SyncObjectPositionFromLobby(MapCreatorPosData dto)
@@ -147,21 +139,14 @@ namespace TDS_Client.Handler.MapCreator
                 return;
             obj.LoadPos(dto);
         }
-        #endregion Object position
 
-        #region Remove object
-        public void SyncObjectRemoveToLobby(MapCreatorObject obj)
+        public void SyncObjectPositionToLobby(MapCreatorObject obj)
         {
             if (!HasToSync)
                 return;
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveObject, obj.ID);
-        }
-
-        public void SyncTeamObjectsRemoveToLobby(int teamNumber)
-        {
-            if (!HasToSync)
-                return;
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveTeamObjects, teamNumber);
+            var posDto = obj.GetPosDto();
+            var json = _serializer.ToServer(posDto);
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncObjectPosition, json);
         }
 
         public void SyncObjectRemoveFromLobby(int id)
@@ -174,34 +159,46 @@ namespace TDS_Client.Handler.MapCreator
             _mapCreatorObjectsHandler.Delete(obj, false);
         }
 
+        public void SyncObjectRemoveToLobby(MapCreatorObject obj)
+        {
+            if (!HasToSync)
+                return;
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveObject, obj.ID);
+        }
+
+        public void SyncStartNewMap(params object[] args)
+        {
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorStartNewMap);
+        }
+
         public void SyncTeamObjectsRemoveFromLobby(int teamNumber)
         {
             _mapCreatorObjectsHandler.DeleteTeamObjects(teamNumber, false);
             _browserHandler.Angular.RemoveTeamPositionInMapCreatorBrowser(teamNumber);
         }
-        #endregion Remove object
 
-        #region All objects
-        public void SyncAllObjectsToPlayer(int tdsPlayerId)
+        public void SyncTeamObjectsRemoveToLobby(int teamNumber)
         {
-            var objects = _mapCreatorObjectsHandler.GetAll();
-            foreach (var obj in objects)
-            {
-                obj.IsSynced = true;
-            }
-
-            _browserHandler.Angular.MapCreatorSyncCurrentMapToServer(tdsPlayerId, _mapCreatorObjectsHandler.IdCounter);
-
-            // Todo: Add P2P here as alternative (if activated, else with server)
+            if (!HasToSync)
+                return;
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveTeamObjects, teamNumber);
         }
-        #endregion All objects
 
-        #region Change map 
-        public void SyncStartNewMap(params object[] args)
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void MapCreatorSyncObjectRemoveMethod(object[] args)
         {
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorStartNewMap);
+            int objId = Convert.ToInt32(args[0]);
+            SyncObjectRemoveFromLobby(objId);
         }
-        #endregion Change map
+
+        private void MapCreatorSyncTeamObjectsRemoveMethod(object[] args)
+        {
+            int teamNumber = Convert.ToInt32(args[0]);
+            SyncTeamObjectsRemoveFromLobby(teamNumber);
+        }
 
         private void OnMapCreatorRequestAllObjectsForPlayerMethod(object[] args)
         {
@@ -238,16 +235,25 @@ namespace TDS_Client.Handler.MapCreator
             SyncObjectPositionFromLobby(dto);
         }
 
-        private void MapCreatorSyncObjectRemoveMethod(object[] args)
+        private void SyncOtherPlayers(int currentMs)
         {
-            int objId = Convert.ToInt32(args[0]);
-            SyncObjectRemoveFromLobby(objId);
+            foreach (var player in _lobbyHandler.Teams.SameTeamPlayers)
+            {
+                if (player == _modAPI.LocalPlayer)
+                    continue;
+                if (_dataSyncHandler.GetData(PlayerDataKey.InFreeCam, false))
+                {
+                    player.FreezePosition(true);
+                    player.SetCollision(false, false);
+                }
+                else
+                {
+                    player.FreezePosition(false);
+                    player.SetCollision(true, true);
+                }
+            }
         }
 
-        private void MapCreatorSyncTeamObjectsRemoveMethod(object[] args)
-        {
-            int teamNumber = Convert.ToInt32(args[0]);
-            SyncTeamObjectsRemoveFromLobby(teamNumber);
-        }
+        #endregion Private Methods
     }
 }

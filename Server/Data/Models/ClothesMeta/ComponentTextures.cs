@@ -2,14 +2,23 @@
 
 namespace TDS_Server.Data.Models.ClothesMeta
 {
-    #nullable disable
+#nullable disable
+
     public class ComponentTextures
     {
+        #region Public Properties
+
         [XmlElement("pedComponentTexture0")]
         public Component Texture0 { get; set; }
 
         [XmlElement("pedComponentTexture1")]
         public Component Texture1 { get; set; }
+
+        [XmlElement("pedComponentTexture10")]
+        public Component Texture10 { get; set; }
+
+        [XmlElement("pedComponentTexture11")]
+        public Component Texture11 { get; set; }
 
         [XmlElement("pedComponentTexture2")]
         public Component Texture2 { get; set; }
@@ -35,12 +44,8 @@ namespace TDS_Server.Data.Models.ClothesMeta
         [XmlElement("pedComponentTexture9")]
         public Component Texture9 { get; set; }
 
-        [XmlElement("pedComponentTexture10")]
-        public Component Texture10 { get; set; }
-
-        [XmlElement("pedComponentTexture11")]
-        public Component Texture11 { get; set; }
-
+        #endregion Public Properties
     }
-    #nullable restore
+
+#nullable restore
 }

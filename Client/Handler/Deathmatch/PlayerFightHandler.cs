@@ -14,44 +14,49 @@ namespace TDS_Client.Handler.Deathmatch
 {
     public class PlayerFightHandler : ServiceBase
     {
-        public bool InFight
-        {
-            get => _inFight;
-            set
-            {
-                if (_inFight == value)
-                    return;
-                _inFight = value;
-                _eventsHandler.OnInFightStatusChanged(value);
-
-                if (value)
-                {
-                    Reset();
-                }
-            }
-        }
+        #region Public Fields
 
         public int CurrentArmor;
+
         public int CurrentHp;
 
-        private bool _inFight;
-        private int _lastBloodscreenUpdateTick;
-        private int _lastHudHealthUpdateTick;
-        private int _lastHudAmmoUpdateMs;
+        #endregion Public Fields
 
-        private int _lastHudUpdateArmor;
-        private int _lastHudUpdateHp;
-        private int _lastHudUpdateTotalAmmo;
-        private int _lastHudUpdateAmmoInClip;
+        #region Private Fields
+
+        private readonly BrowserHandler _browserHandler;
+
+        private readonly CamerasHandler _camerasHandler;
+
+        private readonly EventsHandler _eventsHandler;
+
+        private readonly FloatingDamageInfoHandler _floatingDamageInfoHandler;
+
+        private readonly SettingsHandler _settingsHandler;
+
+        private readonly UtilsHandler _utilsHandler;
 
         private WeaponHash _currentWeapon;
 
-        private readonly EventsHandler _eventsHandler;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly BrowserHandler _browserHandler;
-        private readonly FloatingDamageInfoHandler _floatingDamageInfoHandler;
-        private readonly UtilsHandler _utilsHandler;
-        private readonly CamerasHandler _camerasHandler;
+        private bool _inFight;
+
+        private int _lastBloodscreenUpdateTick;
+
+        private int _lastHudAmmoUpdateMs;
+
+        private int _lastHudHealthUpdateTick;
+
+        private int _lastHudUpdateAmmoInClip;
+
+        private int _lastHudUpdateArmor;
+
+        private int _lastHudUpdateHp;
+
+        private int _lastHudUpdateTotalAmmo;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public PlayerFightHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler,
             FloatingDamageInfoHandler floatingDamageInfoHandler,
@@ -77,6 +82,43 @@ namespace TDS_Client.Handler.Deathmatch
             modAPI.Event.Add(ToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
 
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => InFight));
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public bool InFight
+        {
+            get => _inFight;
+            set
+            {
+                if (_inFight == value)
+                    return;
+                _inFight = value;
+                _eventsHandler.OnInFightStatusChanged(value);
+
+                if (value)
+                {
+                    Reset();
+                }
+            }
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void HittedOpponent()
+        {
+            if (_settingsHandler.PlayerSettings.Hitsound)
+                _browserHandler.PlainMain.PlayHitsound();
+        }
+
+        public void HittedOpponent(IPlayer hitted, int damage)
+        {
+            if (_settingsHandler.PlayerSettings.FloatingDamageInfo && hitted != null)
+                _floatingDamageInfoHandler.Add(hitted, damage);
         }
 
         public void OnTick(int currentMs)
@@ -113,10 +155,8 @@ namespace TDS_Client.Handler.Deathmatch
                 }
             }
 
-
             if ((int)(currentMs - _lastHudAmmoUpdateMs) >= _settingsHandler.PlayerSettings.HudAmmoUpdateCooldownMs)
             {
-                
                 int ammoInClip = ModAPI.LocalPlayer.GetAmmoInClip(_currentWeapon);
                 if (ammoInClip != _lastHudUpdateAmmoInClip)
                 {
@@ -134,19 +174,6 @@ namespace TDS_Client.Handler.Deathmatch
                 _lastHudAmmoUpdateMs = currentMs;
             }
         }
-
-        public void HittedOpponent()
-        {
-            if (_settingsHandler.PlayerSettings.Hitsound)
-                _browserHandler.PlainMain.PlayHitsound();
-        }
-
-        public void HittedOpponent(IPlayer hitted, int damage)
-        {
-            if (_settingsHandler.PlayerSettings.FloatingDamageInfo && hitted != null)
-                _floatingDamageInfoHandler.Add(hitted, damage);
-        }
-
 
         public void Reset()
         {
@@ -171,18 +198,13 @@ namespace TDS_Client.Handler.Deathmatch
             ModAPI.LocalPlayer.ClearBloodDamage();
         }
 
-        private void WeaponChanged(WeaponHash _, WeaponHash newWeaponHash)
-        {
-            if (_currentWeapon == newWeaponHash)
-                return;
+        #endregion Public Methods
 
-            _currentWeapon = newWeaponHash;
-        }
+        #region Private Methods
 
-        private void SetNotInFight()
+        private void EventsHandler_RoundStarted(bool isSpectator)
         {
-            InFight = false;
-            Reset();
+            InFight = !isSpectator;
         }
 
         private void OnHitOpponentMethod(object[] args)
@@ -201,9 +223,20 @@ namespace TDS_Client.Handler.Deathmatch
             _eventsHandler.OnRespawned(InFight);
         }
 
-        private void EventsHandler_RoundStarted(bool isSpectator)
+        private void SetNotInFight()
         {
-            InFight = !isSpectator;
+            InFight = false;
+            Reset();
         }
+
+        private void WeaponChanged(WeaponHash _, WeaponHash newWeaponHash)
+        {
+            if (_currentWeapon == newWeaponHash)
+                return;
+
+            _currentWeapon = newWeaponHash;
+        }
+
+        #endregion Private Methods
     }
 }

@@ -38,7 +38,7 @@ namespace TDS_Server.Database.Migrations
                 .HasAnnotation("Npgsql:Enum:weapon_type", "melee,handgun,machine_gun,assault_rifle,sniper_rifle,shotgun,heavy_weapon,thrown_weapon,rest")
                 .HasAnnotation("Npgsql:PostgresExtension:tsm_system_rows", ",,")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.3")
+                .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("Relational:Sequence:.EntityFrameworkHiLoSequence", "'EntityFrameworkHiLoSequence', '', '1', '10', '', '', 'Int64', 'False'");
 
@@ -2871,8 +2871,10 @@ namespace TDS_Server.Database.Migrations
                         .HasAnnotation("Npgsql:HiLoSequenceName", "EntityFrameworkHiLoSequence")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
+                    b.Property<string>("ExceptionType")
+                        .HasColumnType("text");
+
                     b.Property<string>("Info")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("Source")

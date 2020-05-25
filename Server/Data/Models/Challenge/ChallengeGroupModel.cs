@@ -6,9 +6,14 @@ namespace TDS_Server.Data.Models.Challenge
 {
     public class ChallengeGroupModel
     {
-        [JsonProperty("0")]
-        public ChallengeFrequency Frequency { get; set; }
+        #region Public Properties
+
         [JsonProperty("1")]
         public IEnumerable<ChallengeModel> Challenges { get; set; } = new List<ChallengeModel>();
+
+        [JsonProperty("0")]
+        public ChallengeFrequency Frequency { get; set; }
+
+        #endregion Public Properties
     }
 }

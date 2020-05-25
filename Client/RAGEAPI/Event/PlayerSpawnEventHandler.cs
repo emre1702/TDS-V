@@ -5,15 +5,25 @@ using TDS_Shared.Data.Models;
 
 namespace TDS_Client.RAGEAPI.Event
 {
-    class PlayerSpawnEventHandler : BaseEventHandler<SpawnDelegate>
+    internal class PlayerSpawnEventHandler : BaseEventHandler<SpawnDelegate>
     {
+        #region Private Fields
+
         private readonly LoggingHandler _loggingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public PlayerSpawnEventHandler(LoggingHandler loggingHandler) : base()
         {
             _loggingHandler = loggingHandler;
             RAGE.Events.OnPlayerSpawn += PlayerSpawn;
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void PlayerSpawn(RAGE.Events.CancelEventArgs cancelMod)
         {
@@ -29,14 +39,16 @@ namespace TDS_Client.RAGEAPI.Event
                     var action = Actions[i];
                     if (action.Requirement is null || action.Requirement())
                         action.Method(cancel);
-                }     
+                }
 
                 cancelMod.Cancel = cancel.Cancel;
-            } 
+            }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
             }
-}
+        }
+
+        #endregion Private Methods
     }
 }

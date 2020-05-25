@@ -7,13 +7,16 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
 {
     internal class BasicScaleform : IDisposable
     {
-        private bool IsLoaded => ModAPI.Graphics.HasScaleformMovieLoaded(_handle);
-        private bool IsValid => _handle != 0;
+        #region Private Fields
 
+        private readonly IModAPI ModAPI;
+        private bool _disposedValue = false;
         private Queue<(string, object[])> _functionQueue = new Queue<(string, object[])>();
         private int _handle;
 
-        private readonly IModAPI ModAPI;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public BasicScaleform(string scaleformName, IModAPI modAPI)
         {
@@ -21,6 +24,17 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
 
             _handle = modAPI.Graphics.RequestScaleformMovie(scaleformName);
         }
+
+        #endregion Public Constructors
+
+        #region Private Properties
+
+        private bool IsLoaded => ModAPI.Graphics.HasScaleformMovieLoaded(_handle);
+        private bool IsValid => _handle != 0;
+
+        #endregion Private Properties
+
+        #region Public Methods
 
         public void Call(string functionName, params object[] args)
         {
@@ -44,12 +58,9 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             ModAPI.Graphics.PopScaleformMovieFunctionVoid();
         }
 
-
-        public void RenderFullscreen()
+        public void Dispose()
         {
-            OnUpdate();
-            if (IsLoaded && IsValid)
-                ModAPI.Graphics.DrawScaleformMovieFullscreen(_handle, 255, 255, 255, 255);
+            Dispose(true);
         }
 
         public void Render2D(float x, float y, float width, float height)
@@ -73,19 +84,16 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
                 ModAPI.Graphics.DrawScaleformMovie3d(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
         }
 
-        private void OnUpdate()
+        public void RenderFullscreen()
         {
-            if (_functionQueue.Count == 0 || !IsLoaded || !IsValid)
-                return;
-            foreach (var entry in _functionQueue)
-            {
-                Call(entry.Item1, entry.Item2);
-            }
-            _functionQueue.Clear();
+            OnUpdate();
+            if (IsLoaded && IsValid)
+                ModAPI.Graphics.DrawScaleformMovieFullscreen(_handle, 255, 255, 255, 255);
         }
 
-        #region IDisposable Support
-        private bool _disposedValue = false;
+        #endregion Public Methods
+
+        #region Protected Methods
 
         protected virtual void Dispose(bool disposing)
         {
@@ -101,10 +109,21 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             }
         }
 
-        public void Dispose()
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        private void OnUpdate()
         {
-            Dispose(true);
+            if (_functionQueue.Count == 0 || !IsLoaded || !IsValid)
+                return;
+            foreach (var entry in _functionQueue)
+            {
+                Call(entry.Item1, entry.Item2);
+            }
+            _functionQueue.Clear();
         }
-        #endregion
+
+        #endregion Private Methods
     }
 }

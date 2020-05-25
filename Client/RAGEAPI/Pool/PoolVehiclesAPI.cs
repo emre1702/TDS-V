@@ -5,9 +5,26 @@ using TDS_Client.RAGEAPI.Entity;
 
 namespace TDS_Client.RAGEAPI.Pool
 {
-    class PoolVehiclesAPI : IPoolVehiclesAPI
+    internal class PoolVehiclesAPI : IPoolVehiclesAPI
     {
+        #region Private Fields
+
         private readonly List<IVehicle> _all = new List<IVehicle>();
+        private readonly EntityConvertingHandler _entityConvertingHandler;
+
+        private readonly List<IVehicle> _streamed = new List<IVehicle>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public PoolVehiclesAPI(EntityConvertingHandler entityConvertingHandler)
+            => _entityConvertingHandler = entityConvertingHandler;
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
         public List<IVehicle> All
         {
             get
@@ -21,7 +38,6 @@ namespace TDS_Client.RAGEAPI.Pool
             }
         }
 
-        private readonly List<IVehicle> _streamed = new List<IVehicle>();
         public List<IVehicle> Streamed
         {
             get
@@ -35,6 +51,10 @@ namespace TDS_Client.RAGEAPI.Pool
             }
         }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
         public IVehicle GetAtHandle(int handle)
         {
             var obj = RAGE.Elements.Entities.Vehicles.GetAtHandle(handle);
@@ -47,9 +67,6 @@ namespace TDS_Client.RAGEAPI.Pool
             return _entityConvertingHandler.GetEntity(obj);
         }
 
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        public PoolVehiclesAPI(EntityConvertingHandler entityConvertingHandler)
-            => _entityConvertingHandler = entityConvertingHandler;
+        #endregion Public Methods
     }
 }

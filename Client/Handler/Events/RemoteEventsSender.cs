@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Models;
 using TDS_Shared.Default;
@@ -8,6 +7,8 @@ namespace TDS_Client.Handler.Events
 {
     public class RemoteEventsSender : ServiceBase
     {
+        #region Private Fields
+
         private readonly Dictionary<string, CooldownEventDto> _cooldownEventsDict = new Dictionary<string, CooldownEventDto>
         {
             [ToServerEvent.AddRatingToMap] = new CooldownEventDto(1000),
@@ -47,11 +48,19 @@ namespace TDS_Client.Handler.Events
 
         private readonly TimerHandler _timerHandler;
 
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public RemoteEventsSender(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler)
             : base(modAPI, loggingHandler)
         {
             _timerHandler = timerHandler;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public bool Send(string eventName, params object[] args)
         {
@@ -67,26 +76,6 @@ namespace TDS_Client.Handler.Events
                 return false;
             }
 
-            entry.LastExecMs = currentTicks;
-            ModAPI.Sync.SendEvent(eventName, args);
-            return true;
-        }
-
-        /// <summary>
-        /// Still saves the last execute time for .Send cooldown.
-        /// </summary>
-        /// <param name="eventName"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public bool SendIgnoreCooldown(string eventName, params object[] args)
-        {
-            if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
-            {
-                ModAPI.Sync.SendEvent(eventName, args);
-                return true;
-            }
-
-            int currentTicks = _timerHandler.ElapsedMs;
             entry.LastExecMs = currentTicks;
             ModAPI.Sync.SendEvent(eventName, args);
             return true;
@@ -111,5 +100,27 @@ namespace TDS_Client.Handler.Events
             ModAPI.Sync.SendEvent(ToServerEvent.FromBrowserEvent, args);
             return true;
         }
+
+        /// <summary>
+        /// Still saves the last execute time for .Send cooldown.
+        /// </summary>
+        /// <param name="eventName"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public bool SendIgnoreCooldown(string eventName, params object[] args)
+        {
+            if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
+            {
+                ModAPI.Sync.SendEvent(eventName, args);
+                return true;
+            }
+
+            int currentTicks = _timerHandler.ElapsedMs;
+            entry.LastExecMs = currentTicks;
+            ModAPI.Sync.SendEvent(eventName, args);
+            return true;
+        }
+
+        #endregion Public Methods
     }
 }

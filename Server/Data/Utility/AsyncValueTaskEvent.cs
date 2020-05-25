@@ -4,11 +4,18 @@ using System.Threading.Tasks;
 
 namespace TDS_Server.Data.Utility
 {
-    #nullable enable
+#nullable enable
+
     public class AsyncValueTaskEvent<T>
     {
+        #region Private Fields
+
         private readonly List<Func<T, ValueTask>> _invocationList;
         private readonly object _locker;
+
+        #endregion Private Fields
+
+        #region Private Constructors
 
         private AsyncValueTaskEvent()
         {
@@ -16,17 +23,9 @@ namespace TDS_Server.Data.Utility
             _locker = new object();
         }
 
-        public static AsyncValueTaskEvent<T> operator +(
-            AsyncValueTaskEvent<T>? e, Func<T, ValueTask> callback)
-        {
-            if (e is null) e = new AsyncValueTaskEvent<T>();
+        #endregion Private Constructors
 
-            lock (e._locker)
-            {
-                e._invocationList.Add(callback);
-            }
-            return e;
-        }
+        #region Public Methods
 
         public static AsyncValueTaskEvent<T>? operator -(
             AsyncValueTaskEvent<T> e, Func<T, ValueTask> callback)
@@ -37,6 +36,18 @@ namespace TDS_Server.Data.Utility
             lock (e._locker)
             {
                 e._invocationList.Remove(callback);
+            }
+            return e;
+        }
+
+        public static AsyncValueTaskEvent<T> operator +(
+                    AsyncValueTaskEvent<T>? e, Func<T, ValueTask> callback)
+        {
+            if (e is null) e = new AsyncValueTaskEvent<T>();
+
+            lock (e._locker)
+            {
+                e._invocationList.Add(callback);
             }
             return e;
         }
@@ -55,6 +66,7 @@ namespace TDS_Server.Data.Utility
                 await callback(arg);
             }
         }
-    }
 
+        #endregion Public Methods
+    }
 }

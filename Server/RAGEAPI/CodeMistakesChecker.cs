@@ -6,10 +6,20 @@ namespace TDS_Server.RAGEAPI
 {
     internal class CodeMistakesChecker
     {
+        #region Private Fields
+
         private readonly ILoggingHandler _loggingHandler;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal CodeMistakesChecker(ILoggingHandler loggingHandler)
             => _loggingHandler = loggingHandler;
+
+        #endregion Internal Constructors
+
+        #region Internal Methods
 
         internal bool CheckHasErrors()
         {
@@ -22,6 +32,10 @@ namespace TDS_Server.RAGEAPI
 
             return hasError;
         }
+
+        #endregion Internal Methods
+
+        #region Private Methods
 
         private bool CheckIfEnumsAreNotEqual(Type enum1, Type enum2)
         {
@@ -40,5 +54,7 @@ namespace TDS_Server.RAGEAPI
 
             return false;
         }
+
+        #endregion Private Methods
     }
 }

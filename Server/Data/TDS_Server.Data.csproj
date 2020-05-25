@@ -11,7 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\ModAPI\Events\" />
+    <Compile Remove="Interfaces\ModAPI\Events\**" />
+    <EmbeddedResource Remove="Interfaces\ModAPI\Events\**" />
+    <None Remove="Interfaces\ModAPI\Events\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Models\MainMenu\" />
   </ItemGroup>
 

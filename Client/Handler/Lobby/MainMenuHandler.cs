@@ -7,7 +7,13 @@ namespace TDS_Client.Handler.Lobby
 {
     public class MainMenuHandler
     {
+        #region Private Fields
+
         private readonly BrowserHandler _browserHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MainMenuHandler(EventsHandler eventsHandler, BrowserHandler browserHandler)
         {
@@ -16,6 +22,10 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
@@ -32,5 +42,7 @@ namespace TDS_Client.Handler.Lobby
 
             _browserHandler.Angular.ToggleLobbyChoiceMenu(false);
         }
+
+        #endregion Private Methods
     }
 }

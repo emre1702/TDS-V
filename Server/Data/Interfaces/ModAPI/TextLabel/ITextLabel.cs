@@ -1,12 +1,14 @@
 ﻿namespace TDS_Server.Data.Interfaces.ModAPI.TextLabel
 {
-    public interface ITextLabel
+    public interface ITextLabel : IEntity
     {
-        System.Drawing.Color Color { get; set; }
-        string Text { get; set; }
-        bool Seethrough { get; set; }
-        float Range { get; set; }
+        #region Public Properties
 
-        void Delete();
+        System.Drawing.Color Color { get; set; }
+        float Range { get; set; }
+        bool Seethrough { get; set; }
+        string Text { get; set; }
+
+        #endregion Public Properties
     }
 }

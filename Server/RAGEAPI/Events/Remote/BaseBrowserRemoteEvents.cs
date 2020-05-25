@@ -1,12 +1,15 @@
 ﻿using GTANetworkAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Shared.Default;
 
 namespace TDS_Server.RAGEAPI.Events.Remote
 {
     partial class BaseRemoteEvents
     {
+        #region Public Methods
+
         [RemoteEvent(ToServerEvent.FromBrowserEvent)]
-        public void OnFromBrowserEvent(GTANetworkAPI.Player player, params object[] args)
+        public void OnFromBrowserEvent(IPlayer player, params object[] args)
         {
             var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
             if (tdsPlayer is null)
@@ -14,5 +17,7 @@ namespace TDS_Server.RAGEAPI.Events.Remote
 
             Init.TDSCore.RemoteBrowserEventsHandler.OnFromBrowserEvent(tdsPlayer, args);
         }
+
+        #endregion Public Methods
     }
 }

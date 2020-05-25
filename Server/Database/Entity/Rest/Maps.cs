@@ -8,6 +8,8 @@ namespace TDS_Server.Database.Entity.Rest
 {
     public partial class Maps
     {
+        #region Public Constructors
+
         public Maps()
         {
             LobbyMaps = new HashSet<LobbyMaps>();
@@ -15,15 +17,20 @@ namespace TDS_Server.Database.Entity.Rest
             PlayerMapRatings = new HashSet<PlayerMapRatings>();
         }
 
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int? CreatorId { get; set; }
-        public DateTime CreateTimestamp { get; set; }
+        #endregion Public Constructors
 
+        #region Public Properties
+
+        public DateTime CreateTimestamp { get; set; }
         public virtual Players Creator { get; set; }
-        public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
+        public int? CreatorId { get; set; }
         public virtual GangwarAreas GangwarArea { get; set; }
+        public int Id { get; set; }
+        public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
+        public string Name { get; set; }
         public virtual ICollection<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }
+
+        #endregion Public Properties
     }
 }

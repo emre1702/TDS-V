@@ -5,19 +5,24 @@ using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.RAGEAPI.Chat
 {
-    class ChatAPI : IChatAPI
+    internal class ChatAPI : IChatAPI
     {
+        #region Public Constructors
+
         public ChatAPI()
         {
-
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void SendMessage(string message, ITDSPlayer? source = null)
         {
             foreach (var player in Init.TDSCore.LoggedInPlayers)
             {
                 if (player.ModPlayer is Player.Player modPlayer && (source is null || !player.HasRelationTo(source, PlayerRelation.Block)))
-                    modPlayer._instance.SendChatMessage(message);
+                    modPlayer.SendChatMessage(message);
             }
         }
 
@@ -26,7 +31,7 @@ namespace TDS_Server.RAGEAPI.Chat
             foreach (var player in lobby.Players.Values)
             {
                 if (player.ModPlayer is Player.Player modPlayer && (source is null || !player.HasRelationTo(source, PlayerRelation.Block)))
-                    modPlayer._instance.SendChatMessage(message);
+                    modPlayer.SendChatMessage(message);
             }
         }
 
@@ -35,8 +40,10 @@ namespace TDS_Server.RAGEAPI.Chat
             foreach (var player in lobby.Players)
             {
                 if (player.ModPlayer is Player.Player modPlayer && (source is null || !player.HasRelationTo(source, PlayerRelation.Block)))
-                    modPlayer._instance.SendChatMessage(message);
+                    modPlayer.SendChatMessage(message);
             }
         }
+
+        #endregion Public Methods
     }
 }

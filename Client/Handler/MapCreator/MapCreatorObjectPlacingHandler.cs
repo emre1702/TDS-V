@@ -22,6 +22,7 @@ namespace TDS_Client.Handler.MapCreator
 #pragma warning restore IDE1006 // Naming Styles
 
         public MapCreatorObject LastHighlightedObject;
+
         public MapCreatorObject HighlightedObject
         {
             get => _highlightedObject;
@@ -32,6 +33,7 @@ namespace TDS_Client.Handler.MapCreator
                     LastHighlightedObject = value;
             }
         }
+
         public MapCreatorObject HoldingObject;
 
         private MapCreatorObject _highlightedObject;
@@ -102,7 +104,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void StartNewPlacing(MapCreatorPositionType type, object editingTeamIndexOrObjectName)
         {
-            MapCreatorObject obj = _mapCreatorObjectsHandler.CreateMapCreatorObject(type, editingTeamIndexOrObjectName, 
+            MapCreatorObject obj = _mapCreatorObjectsHandler.CreateMapCreatorObject(type, editingTeamIndexOrObjectName,
                 ModAPI.LocalPlayer.RemoteId, ModAPI.LocalPlayer.Position, ModAPI.LocalPlayer.Rotation);
             if (obj == null)
                 return;
@@ -116,7 +118,6 @@ namespace TDS_Client.Handler.MapCreator
             HoldingObject = null;
             HighlightedObject = obj;
             HoldHighlightingObject();
-
         }
 
         public void HighlightObjectWithId(int id)
@@ -215,6 +216,7 @@ namespace TDS_Client.Handler.MapCreator
                 case MapCreatorPositionType.TeamSpawn:
                     info = obj.TeamNumber.Value;
                     break;
+
                 case MapCreatorPositionType.Object:
                 case MapCreatorPositionType.Vehicle:
                     info = obj.ObjOrVehName;
@@ -402,10 +404,12 @@ namespace TDS_Client.Handler.MapCreator
                 case EntityType.Object:
                     ModAPI.MapObject.PlaceObjectOnGroundProperly(obj.Entity.Handle);
                     break;
+
                 case EntityType.Vehicle:
                     ModAPI.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle);
                     obj.MovingPosition = obj.Entity.Position;
                     break;
+
                 case EntityType.Ped:
                     float heightAboveGround = ModAPI.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
                     obj.MovingPosition = new Position3D(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + 1f);

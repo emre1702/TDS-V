@@ -1,11 +1,25 @@
-﻿using System;
-using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
+﻿using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Public Properties
+
+        public bool IsMuted => Entity?.PlayerStats.MuteTime.HasValue ?? false;
+
+        public bool IsPermamuted
+        {
+            get
+            {
+                if (Entity is null)
+                    return false;
+                return Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;
+            }
+        }
+
+        public bool IsVoiceMuted => Entity?.PlayerStats.VoiceMuteTime.HasValue ?? false;
+
         public int? MuteTime
         {
             get => Entity?.PlayerStats.MuteTime;
@@ -26,19 +40,9 @@ namespace TDS_Server.Handler.Entities.Player
             }
         }
 
-        public bool IsMuted => Entity?.PlayerStats.MuteTime.HasValue ?? false;
-        public bool IsVoiceMuted => Entity?.PlayerStats.VoiceMuteTime.HasValue ?? false;
+        #endregion Public Properties
 
-        public bool IsPermamuted
-        {
-            get
-            {
-                if (Entity is null)
-                    return false;
-                return Entity.PlayerStats.MuteTime.HasValue && Entity.PlayerStats.MuteTime.Value == 0;
-            }
-        }
-
+        #region Public Methods
 
         public void ChangeMuteTime(ITDSPlayer admin, int minutes, string reason)
         {
@@ -62,7 +66,8 @@ namespace TDS_Server.Handler.Entities.Player
                     SetVoiceTo(player, false);
                 }
             }
-
         }
+
+        #endregion Public Methods
     }
 }

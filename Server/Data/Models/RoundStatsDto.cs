@@ -5,20 +5,26 @@ namespace TDS_Server.Data.Models
 {
     public class RoundStatsDto
     {
-        private ITDSPlayer _player;
-        private int _kills;
+        #region Private Fields
+
         private int _assists;
         private int _damage;
+        private int _kills;
+        private ITDSPlayer _player;
 
-        public int Kills
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public RoundStatsDto(ITDSPlayer player)
         {
-            get => _kills;
-            set
-            {
-                _kills = value;
-                _player.SendBrowserEvent(ToBrowserEvent.SetKillsForRoundStats, value);
-            }
+            _player = player;
+            Clear();  // to sync it
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
 
         public int Assists
         {
@@ -40,11 +46,19 @@ namespace TDS_Server.Data.Models
             }
         }
 
-        public RoundStatsDto(ITDSPlayer player)
+        public int Kills
         {
-            _player = player;
-            Clear();  // to sync it
+            get => _kills;
+            set
+            {
+                _kills = value;
+                _player.SendBrowserEvent(ToBrowserEvent.SetKillsForRoundStats, value);
+            }
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void Clear()
         {
@@ -52,5 +66,7 @@ namespace TDS_Server.Data.Models
             Assists = 0;
             Damage = 0;
         }
+
+        #endregion Public Methods
     }
 }

@@ -2,6 +2,8 @@
 {
     public interface ILanguage
     {
+        #region Public Properties
+
         string ACCOUNT_DOESNT_EXIST { get; }
         string ALREADY_IN_PRIVATE_CHAT_WITH { get; }
 
@@ -19,8 +21,8 @@
         string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR { get; }
         string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR { get; }
 
-        string DEATH_KILLED_INFO { get; }
         string DEATH_DIED_INFO { get; }
+        string DEATH_KILLED_INFO { get; }
         string[] DEFUSE_INFO { get; }
         string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO { get; }
         string DISCORD_IDENTITY_SAVE_FAILED { get; }
@@ -31,10 +33,10 @@
         string GANG_DOESNT_EXIST_ANYMORE { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
+        string GANGWAR_ATTACK_INVITATION { get; }
+        string GANGWAR_ATTACK_PREPARATION_INVITATION { get; }
         string GANGWAR_ATTACKER_PREPARATION_INFO { get; }
         string GANGWAR_ATTACKER_STARTED_INFO { get; }
-        string GANGWAR_ATTACK_PREPARATION_INVITATION { get; }
-        string GANGWAR_ATTACK_INVITATION { get; }
         string GANGWAR_DEFEND_INVITATION { get; }
         string GANGWAR_OWNER_PREPARATION_INFO { get; }
         string GANGWAR_OWNER_STARTED_INFO { get; }
@@ -59,8 +61,8 @@
         string JOINED_LOBBY_MESSAGE { get; }
 
         string KICK_INFO { get; }
-        string KICK_YOU_INFO { get; }
         string KICK_LOBBY_INFO { get; }
+        string KICK_YOU_INFO { get; }
         string KILLING_SPREE_HEALTHARMOR { get; }
 
         string LOBBY_DOESNT_EXIST { get; }
@@ -83,21 +85,23 @@
         string ORDER_STAY_BACK { get; }
 
         string PERMABAN_INFO { get; }
-        string PERMABAN_YOU_INFO { get; }
         string PERMABAN_LOBBY_INFO { get; }
         string PERMABAN_LOBBY_YOU_INFO { get; }
+        string PERMABAN_YOU_INFO { get; }
         string PERMAMUTE_INFO { get; }
         string PERMAVOICEMUTE_INFO { get; }
         string PLAYER_ACCEPTED_YOUR_INVITATION { get; }
         string PLAYER_ALREADY_MUTED { get; }
         string PLAYER_DOESNT_EXIST { get; }
+
         //string PLAYER_GOT_KILLINGSPREE_NOTIFICATION { get; }
         string PLAYER_ISNT_BANED { get; }
+
         string PLAYER_LOGGED_IN { get; }
         string PLAYER_LOGGED_OUT { get; }
         string PLAYER_NOT_MUTED { get; }
-        string PLAYER_WITH_NAME_ALREADY_EXISTS { get; }
         string PLAYER_REJECTED_YOUR_INVITATION { get; }
+        string PLAYER_WITH_NAME_ALREADY_EXISTS { get; }
         string PRIVATE_CHAT_CLOSED_PARTNER { get; }
         string PRIVATE_CHAT_CLOSED_YOU { get; }
         string PRIVATE_CHAT_DISCONNECTED { get; }
@@ -108,7 +112,6 @@
         string PRIVATE_CHAT_REQUEST_SENT_TO { get; }
         string PRIVATE_MESSAGE_SENT { get; }
 
-
         string REASON_MISSING { get; }
         string REPORT_ANSWERED_INFO { get; }
         string REPORT_CREATED_INFO { get; }
@@ -118,8 +121,8 @@
         string ROUND_END_BOMB_DEFUSED_INFO { get; }
         string ROUND_END_BOMB_EXPLODED_INFO { get; }
         string ROUND_END_COMMAND_INFO { get; }
-        string ROUND_END_DEATH_INFO { get; }
         string ROUND_END_DEATH_ALL_INFO { get; }
+        string ROUND_END_DEATH_INFO { get; }
         string ROUND_END_NEW_PLAYER_INFO { get; }
         string ROUND_END_TARGET_EMPTY_INFO { get; }
         string ROUND_END_TIME_INFO { get; }
@@ -152,9 +155,9 @@
         string TEXT_TOO_LONG { get; }
         string TEXT_TOO_SHORT { get; }
         string TIMEBAN_INFO { get; }
-        string TIMEBAN_YOU_INFO { get; }
         string TIMEBAN_LOBBY_INFO { get; }
         string TIMEBAN_LOBBY_YOU_INFO { get; }
+        string TIMEBAN_YOU_INFO { get; }
         string TIMEMUTE_INFO { get; }
         string TIMEVOICEMUTE_INFO { get; }
         string TOO_LONG_OUTSIDE_MAP { get; }
@@ -174,11 +177,13 @@
         string YOU_ACCEPTED_TEAM_INVITATION { get; }
         string YOU_GAVE_MONEY_TO_WITH_FEE { get; }
         string YOU_GOT_BLOCKED_BY { get; }
-        string YOU_GOT_UNBLOCKED_BY { get; }
         string YOU_GOT_INVITATION_BY { get; }
         string YOU_GOT_MONEY_BY_WITH_FEE { get; }
+        string YOU_GOT_UNBLOCKED_BY { get; }
         string YOU_REJECTED_INVITATION { get; }
         string YOU_REJECTED_TEAM_INVITATION { get; }
         string YOU_UNBLOCKED { get; }
+
+        #endregion Public Properties
     }
 }

@@ -4,6 +4,8 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
 {
     partial class Bomb
     {
+        #region Public Methods
+
         public override void RemovePlayer(ITDSPlayer player)
         {
             base.RemovePlayer(player);
@@ -17,5 +19,7 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             if (_bombAtPlayer == player)
                 DropBomb();
         }
+
+        #endregion Public Methods
     }
 }

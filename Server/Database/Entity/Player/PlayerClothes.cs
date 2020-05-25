@@ -2,8 +2,11 @@
 {
     public partial class PlayerClothes
     {
-        public int PlayerId { get; set; }
+        #region Public Properties
 
         public virtual Players Player { get; set; }
+        public int PlayerId { get; set; }
+
+        #endregion Public Properties
     }
 }

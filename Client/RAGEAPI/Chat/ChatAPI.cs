@@ -2,13 +2,19 @@
 
 namespace TDS_Client.RAGEAPI.Chat
 {
-    class ChatAPI : IChatAPI
+    internal class ChatAPI : IChatAPI
     {
-        public bool SafeMode 
-        { 
+        #region Public Properties
+
+        public bool SafeMode
+        {
             get => RAGE.Chat.SafeMode;
-            set => RAGE.Chat.SafeMode = value; 
+            set => RAGE.Chat.SafeMode = value;
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void Output(string msg)
         {
@@ -19,5 +25,7 @@ namespace TDS_Client.RAGEAPI.Chat
         {
             RAGE.Chat.Show(show);
         }
+
+        #endregion Public Methods
     }
 }

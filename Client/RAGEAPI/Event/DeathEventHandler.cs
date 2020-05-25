@@ -1,15 +1,21 @@
-﻿using TDS_Shared.Data.Models;
+﻿using System;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.RAGEAPI.Player;
 using TDS_Client.Handler;
-using System;
+using TDS_Client.RAGEAPI.Player;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Client.RAGEAPI.Event
 {
     public class DeathEventHandler : BaseEventHandler<DeathDelegate>
     {
+        #region Private Fields
+
         private readonly LoggingHandler _loggingHandler;
         private readonly PlayerConvertingHandler _playerConvertingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public DeathEventHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler) : base()
         {
@@ -18,6 +24,10 @@ namespace TDS_Client.RAGEAPI.Event
 
             RAGE.Events.OnPlayerDeath += PlayerDeath;
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void PlayerDeath(RAGE.Elements.Player modPlayer, uint reason, RAGE.Elements.Player modKiller, RAGE.Events.CancelEventArgs modCancel)
         {
@@ -44,5 +54,7 @@ namespace TDS_Client.RAGEAPI.Event
                 _loggingHandler.LogError(ex);
             }
         }
+
+        #endregion Private Methods
     }
 }

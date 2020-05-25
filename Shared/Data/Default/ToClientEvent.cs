@@ -2,8 +2,13 @@
 {
     public static class ToClientEvent
     {
+        #region Public Fields
+
         public const string AmountInFightSync = "s2";
         public const string ApplySuicideAnimation = "s3";
+
+        // Workarounds //
+        public const string AttachEntityToEntityWorkaround = "s75";
 
         public const string BombDetonated = "s4";
         public const string BombNotOnHand = "s5";
@@ -17,8 +22,14 @@
 
         public const string Death = "s11";
 
+        //public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
+        public const string DetachEntityWorkaround = "s76";
+
         public const string ExplodeHead = "s86";
 
+        public const string FreezeEntityWorkaround = "s85";
+        public const string FreezePlayerWorkaround = "s77";
+        public const string FromBrowserEventReturn = "s82";
         public const string GotoPositionByMapCreator = "s13";
 
         public const string HitOpponent = "s14";
@@ -30,6 +41,7 @@
         public const string LoadMapForMapCreator = "s21";
         public const string LoadOwnMapRatings = "s23";
 
+        public const string LoginSuccessful = "s46";
         public const string MapChange = "s25";
         public const string MapClear = "s26";
         public const string MapCreatorRequestAllObjectsForPlayer = "s27";
@@ -44,28 +56,27 @@
 
         public const string PlayCustomSound = "s37";
         public const string PlayerGotBomb = "s38";
-        public const string PlayerPlantedBomb = "s39";
-        public const string PlayerSpectateMode = "s40";
         public const string PlayerJoinedTeam = "s41";
         public const string PlayerLeftTeam = "s42";
+        public const string PlayerPlantedBomb = "s39";
         public const string PlayerRespawned = "s43";
+        public const string PlayerSpectateMode = "s40";
         public const string PlayerTeamChange = "s44";
         public const string PlayerWeaponChange = "s45";
-
-        public const string LoginSuccessful = "s46";
         public const string RemoveForceStayAtPosition = "s84";
-        public const string RequestNewMapsList = "s48";
-
         public const string RemoveSyncedEntityDatas = "s17";
         public const string RemoveSyncedPlayerDatas = "s49";
-        public const string RoundStart = "s50";
+        public const string RequestNewMapsList = "s48";
         public const string RoundEnd = "s51";
-
+        public const string RoundStart = "s50";
+        public const string SetEntityCollisionlessWorkaround = "s78";
+        public const string SetEntityData = "s12";
         public const string SetEntityInvincible = "s54";
         public const string SetForceStayAtPosition = "s83";
-        public const string SetEntityData = "s12";
         public const string SetPlayerData = "s56";
         public const string SetPlayerInvincible = "s57";
+        public const string SetPlayerTeamWorkaround = "s79";
+        public const string SetPlayerToSpectatePlayer = "s80";
         public const string SpectatorReattachCam = "s59";
         public const string StartCharCreator = "s20";
         public const string StartRankingShowAfterRound = "s60";
@@ -75,28 +86,16 @@
         public const string StopSpectator = "s65";
         public const string SyncEntityData = "s19";
         public const string SyncPlayerData = "s69";
-        public const string SyncSettings = "s70";
         public const string SyncScoreboardData = "s71";
+        public const string SyncSettings = "s70";
         public const string SyncTeamChoiceMenuData = "s72";
         public const string SyncTeamPlayers = "s73";
 
-        public const string ToggleTeamChoiceMenu = "s74";
-
-        //public const string SyncPlayersSameLobby = "SyncPlayersSameLobby_Server";
-
-        // Workarounds //
-        public const string AttachEntityToEntityWorkaround = "s75";
-
-        public const string DetachEntityWorkaround = "s76";
-        public const string FreezeEntityWorkaround = "s85";
-        public const string FreezePlayerWorkaround = "s77";
-        public const string SetEntityCollisionlessWorkaround = "s78";
-        public const string SetPlayerTeamWorkaround = "s79";
-        public const string SetPlayerToSpectatePlayer = "s80";
-
-
         // Special //
         public const string ToBrowserEvent = "s81";
-        public const string FromBrowserEventReturn = "s82";
+
+        public const string ToggleTeamChoiceMenu = "s74";
+
+        #endregion Public Fields
     }
 }

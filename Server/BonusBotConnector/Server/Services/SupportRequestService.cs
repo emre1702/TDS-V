@@ -10,19 +10,28 @@ namespace BonusBotConnector_Server
 {
     public class SupportRequestService : SupportRequest.SupportRequestBase
     {
+        #region Private Fields
+
         private readonly ILoggingHandler _loggingHandler;
         private readonly IUserpanelHandler _userpanelHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SupportRequestService(ILoggingHandler loggingHandler, IUserpanelHandler userpanelHandler)
             => (_loggingHandler, _userpanelHandler) = (loggingHandler, userpanelHandler);
 
-        public override async Task<Reply> Create(CreateRequest request, ServerCallContext context)
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public override async Task<Reply> Answer(AnswerRequest request, ServerCallContext context)
         {
             try
             {
                 var msg = string.Empty;
-                var task = _userpanelHandler.SupportRequestHandler?.CreateRequestFromDiscord(request.UserId, request.Title, request.Text,
-                    (SupportType)request.Type, request.AtleastAdminLevel);
+                var task = _userpanelHandler.SupportRequestHandler?.AnswerRequestFromDiscord(request.UserId, request.SupportRequestId, request.Text);
                 if (task is { })
                     msg = await task ?? string.Empty;
                 return new Reply { Message = msg };
@@ -35,12 +44,13 @@ namespace BonusBotConnector_Server
             }
         }
 
-        public override async Task<Reply> Answer(AnswerRequest request, ServerCallContext context)
+        public override async Task<Reply> Create(CreateRequest request, ServerCallContext context)
         {
             try
             {
                 var msg = string.Empty;
-                var task = _userpanelHandler.SupportRequestHandler?.AnswerRequestFromDiscord(request.UserId, request.SupportRequestId, request.Text);
+                var task = _userpanelHandler.SupportRequestHandler?.CreateRequestFromDiscord(request.UserId, request.Title, request.Text,
+                    (SupportType)request.Type, request.AtleastAdminLevel);
                 if (task is { })
                     msg = await task ?? string.Empty;
                 return new Reply { Message = msg };
@@ -70,5 +80,7 @@ namespace BonusBotConnector_Server
                 return new Reply { Message = $"[{ex.GetType().Name}|{baseEx.GetType().Name}] + Error:" + Environment.NewLine + baseEx.Message };
             }
         }
+
+        #endregion Public Methods
     }
 }

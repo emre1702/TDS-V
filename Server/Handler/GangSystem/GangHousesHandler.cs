@@ -11,17 +11,31 @@ namespace TDS_Server.Handler.GangSystem
 {
     public class GangHousesHandler
     {
+        #region Public Fields
+
         public List<GangHouse> Houses = new List<GangHouse>();
 
-        private List<GangHouses> _houseEntities = new List<GangHouses>();
-        private readonly List<GangHouse> _occupiedHouses = new List<GangHouse>();
+        #endregion Public Fields
+
+        #region Private Fields
+
         private readonly Dictionary<int, List<GangHouse>> _evelFreeHouses = new Dictionary<int, List<GangHouse>>();
+        private readonly List<GangHouse> _occupiedHouses = new List<GangHouse>();
+        private List<GangHouses> _houseEntities = new List<GangHouses>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public GangHousesHandler(TDSDbContext dbContext, GangLevelsHandler gangLevelsHandler, GangsHandler gangsHandler,
             IServiceProvider serviceProvider)
         {
             LoadHouses(dbContext, gangLevelsHandler, gangsHandler, serviceProvider);
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void LoadHouses(TDSDbContext dbContext, GangLevelsHandler gangLevelsHandler, GangsHandler gangsHandler,
             IServiceProvider serviceProvider)
@@ -50,8 +64,9 @@ namespace TDS_Server.Handler.GangSystem
                     var gang = gangsHandler.GetById(houseEntity.OwnerGang.Id);
                     gang.House = house;
                 }
-
             }
         }
+
+        #endregion Public Methods
     }
 }

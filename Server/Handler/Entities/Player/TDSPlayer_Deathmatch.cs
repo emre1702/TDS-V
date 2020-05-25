@@ -7,13 +7,14 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Private Fields
+
         private short _killingSpree;
         private short _shortTimeKillingSpree;
 
-        public sbyte Lifes { get; set; } = 0;
-        public ITDSPlayer? LastHitter { get; set; }
-        public DateTime? LastKillAt { get; set; }
-        public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
+        #endregion Private Fields
+
+        #region Public Properties
 
         public short KillingSpree
         {
@@ -29,6 +30,12 @@ namespace TDS_Server.Handler.Entities.Player
                     AddToChallenge(ChallengeType.Killstreak, _killingSpree, true);
             }
         }
+
+        public ITDSPlayer? LastHitter { get; set; }
+        public DateTime? LastKillAt { get; set; }
+        public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
+        public sbyte Lifes { get; set; } = 0;
+
         public short ShortTimeKillingSpree
         {
             get
@@ -46,22 +53,9 @@ namespace TDS_Server.Handler.Entities.Player
             }
         }
 
+        #endregion Public Properties
 
-        public void Damage(ref int damage)
-        {
-            if (damage == 0)
-                return;
-            damage = Math.Min(_armor + _health, damage);
-
-            int leftdmg = damage;
-            if (_armor > 0)
-            {
-                leftdmg -= _armor;
-                Armor = leftdmg < 0 ? Math.Abs(leftdmg) : 0;
-            }
-            if (leftdmg > 0)
-                Health -= leftdmg;
-        }
+        #region Public Methods
 
         public void AddHPArmor(int healtharmor)
         {
@@ -89,5 +83,23 @@ namespace TDS_Server.Handler.Entities.Player
 
             #endregion Armor
         }
+
+        public void Damage(ref int damage)
+        {
+            if (damage == 0)
+                return;
+            damage = Math.Min(_armor + _health, damage);
+
+            int leftdmg = damage;
+            if (_armor > 0)
+            {
+                leftdmg -= _armor;
+                Armor = leftdmg < 0 ? Math.Abs(leftdmg) : 0;
+            }
+            if (leftdmg > 0)
+                Health -= leftdmg;
+        }
+
+        #endregion Public Methods
     }
 }

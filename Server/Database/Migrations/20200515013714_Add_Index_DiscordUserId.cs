@@ -1,11 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
 
 namespace TDS_Server.Database.Migrations
 {
     public partial class Add_Index_DiscordUserId : Migration
     {
+        #region Protected Methods
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropIndex(
+                name: "IX_PlayerSettings_DiscordUserId",
+                table: "PlayerSettings");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateIndex(
@@ -15,11 +22,6 @@ namespace TDS_Server.Database.Migrations
                 unique: true);
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropIndex(
-                name: "IX_PlayerSettings_DiscordUserId",
-                table: "PlayerSettings");
-        }
+        #endregion Protected Methods
     }
 }

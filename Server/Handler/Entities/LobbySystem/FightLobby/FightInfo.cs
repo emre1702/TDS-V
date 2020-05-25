@@ -7,6 +7,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
+        #region Protected Methods
+
         protected void DeathInfoSync(ITDSPlayer player, ITDSPlayer? killer, uint weapon)
         {
             Dictionary<ILanguage, string> killstr;
@@ -31,5 +33,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 targetPlayer.SendEvent(ToClientEvent.Death, player.RemoteId, player.TeamIndex, killstr[targetPlayer.Language], player.Lifes > 1);
             });
         }
+
+        #endregion Protected Methods
     }
 }

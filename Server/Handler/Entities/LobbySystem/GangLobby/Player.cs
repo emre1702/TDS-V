@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
+        #region Public Methods
+
         public async override Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
             if (!await base.AddPlayer(player, null))
@@ -24,8 +25,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 player.Spawn(spawnPoint, spawnRotation);
                 player.ModPlayer?.Freeze(false);
             });
-            
+
             return true;
         }
+
+        #endregion Public Methods
     }
 }

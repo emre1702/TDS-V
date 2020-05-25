@@ -6,13 +6,18 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorBindsHandler
     {
-        private bool _generalBinded;
+        #region Private Fields
 
         private readonly BindsHandler _bindsHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
-        private readonly SettingsHandler _settingsHandler;
         private readonly MapCreatorFreecamHandler _mapCreatorFreecamHandler;
         private readonly MapCreatorObjectPlacingHandler _mapCreatorObjectPlacingHandler;
+        private readonly SettingsHandler _settingsHandler;
+        private bool _generalBinded;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapCreatorBindsHandler(BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler, SettingsHandler settingsHandler,
             MapCreatorFreecamHandler mapCreatorFreecamHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, EventsHandler eventsHandler)
@@ -26,16 +31,18 @@ namespace TDS_Client.Handler.MapCreator
             eventsHandler.FreecamToggled += EventsHandler_FreecamToggled;
         }
 
-        public void SetGeneral()
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void RemoveForInFreeCam()
         {
-            if (!_generalBinded)
-            {
-                _bindsHandler.Add(Key.M, _mapCreatorFreecamHandler.ToggleFreecam);
-            }
-
-            _instructionalButtonHandler.Add(_settingsHandler.Language.FREECAM, "M");
-
-            _generalBinded = true;
+            _bindsHandler.Remove(Key.E, _mapCreatorFreecamHandler.KeyDown, KeyPressState.Down);
+            _bindsHandler.Remove(Key.E, _mapCreatorFreecamHandler.KeyUp, KeyPressState.Up);
+            _bindsHandler.Remove(Key.Q, _mapCreatorFreecamHandler.KeyDown, KeyPressState.Down);
+            _bindsHandler.Remove(Key.Q, _mapCreatorFreecamHandler.KeyUp, KeyPressState.Up);
+            _bindsHandler.Remove(Control.Attack, _mapCreatorObjectPlacingHandler.LeftMouseClick);
+            _bindsHandler.Remove(Key.F, _mapCreatorObjectPlacingHandler.TogglePlaceOnGround);
         }
 
         public void RemoveGeneral()
@@ -74,15 +81,21 @@ namespace TDS_Client.Handler.MapCreator
             _instructionalButtonHandler.IsLayoutPositive = false;
         }
 
-        public void RemoveForInFreeCam()
+        public void SetGeneral()
         {
-            _bindsHandler.Remove(Key.E, _mapCreatorFreecamHandler.KeyDown, KeyPressState.Down);
-            _bindsHandler.Remove(Key.E, _mapCreatorFreecamHandler.KeyUp, KeyPressState.Up);
-            _bindsHandler.Remove(Key.Q, _mapCreatorFreecamHandler.KeyDown, KeyPressState.Down);
-            _bindsHandler.Remove(Key.Q, _mapCreatorFreecamHandler.KeyUp, KeyPressState.Up);
-            _bindsHandler.Remove(Control.Attack, _mapCreatorObjectPlacingHandler.LeftMouseClick);
-            _bindsHandler.Remove(Key.F, _mapCreatorObjectPlacingHandler.TogglePlaceOnGround);
+            if (!_generalBinded)
+            {
+                _bindsHandler.Add(Key.M, _mapCreatorFreecamHandler.ToggleFreecam);
+            }
+
+            _instructionalButtonHandler.Add(_settingsHandler.Language.FREECAM, "M");
+
+            _generalBinded = true;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void EventsHandler_FreecamToggled(bool boolean)
         {
@@ -94,5 +107,6 @@ namespace TDS_Client.Handler.MapCreator
                 RemoveForInFreeCam();
         }
 
+        #endregion Private Methods
     }
 }

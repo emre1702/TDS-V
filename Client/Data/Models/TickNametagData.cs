@@ -1,16 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+﻿using TDS_Client.Data.Interfaces.ModAPI.Player;
 
 namespace TDS_Client.Data.Models
 {
     public struct TickNametagData
     {
+        #region Public Fields
+
+        public float Distance;
         public IPlayer Player;
         public float ScreenX;
         public float ScreenY;
-        public float Distance;
+
+        #endregion Public Fields
+
+        #region Public Methods
+
+        public static bool operator !=(TickNametagData left, TickNametagData right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator ==(TickNametagData left, TickNametagData right)
+        {
+            return left.Equals(right);
+        }
 
         public override bool Equals(object obj)
         {
@@ -24,14 +37,6 @@ namespace TDS_Client.Data.Models
             return base.GetHashCode();
         }
 
-        public static bool operator ==(TickNametagData left, TickNametagData right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(TickNametagData left, TickNametagData right)
-        {
-            return !(left == right);
-        }
+        #endregion Public Methods
     }
 }

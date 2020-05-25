@@ -65,8 +65,8 @@ namespace TDS_Server.Handler.Entities.GameModes
                 });
             }
 
-            // Do we need to force someone to stay at target?
-            // If yes, force him! Kill him if he don't want to stay there!
+            // Do we need to force someone to stay at target? If yes, force him! Kill him if he
+            // don't want to stay there!
             else if (TargetObject is { })
             {
                 var playerAtTarget = GetNextTargetMan();
@@ -117,7 +117,6 @@ namespace TDS_Server.Handler.Entities.GameModes
             };
         }
 
-
         private bool IsConquered =>
             Lobby.CurrentRoundEndReason switch
             {
@@ -130,7 +129,6 @@ namespace TDS_Server.Handler.Entities.GameModes
                 RoundEndReason.Death when (Lobby.CurrentGameMode is Gangwar gangwar) => gangwar.AttackerTeam.AlivePlayers!.Count > 0,
 
                 _ => false
-
             };
     }
 }

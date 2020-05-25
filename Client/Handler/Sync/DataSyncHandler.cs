@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
@@ -15,17 +14,27 @@ namespace TDS_Client.Handler.Sync
 {
     public class DataSyncHandler : ServiceBase
     {
-        private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas
-            = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
+        #region Private Fields
+
+        private readonly BrowserHandler _browserHandler;
+
         private readonly Dictionary<ushort, Dictionary<EntityDataKey, object>> _entityRemoteIdDatas
             = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
 
-        private readonly BrowserHandler _browserHandler;
-        private readonly Serializer _serializer;
         private readonly EventsHandler _eventsHandler;
 
+        private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas
+                                    = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
+
+        private readonly Serializer _serializer;
+        private bool _nameSyncedWithAngular;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public DataSyncHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, BrowserHandler angularHandler, Serializer serializer)
-            : base(modAPI, loggingHandler)
+                    : base(modAPI, loggingHandler)
         {
             _browserHandler = angularHandler;
             _serializer = serializer;
@@ -41,6 +50,10 @@ namespace TDS_Client.Handler.Sync
             modAPI.Event.Add(ToClientEvent.RemoveSyncedEntityDatas, OnRemoveSyncedEntityDatasMethod);
             modAPI.Event.Add(ToClientEvent.SyncEntityData, OnSyncEntityDataMethod);
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public T GetData<T>(IPlayer player, PlayerDataKey key, T returnOnEmpty = default)
         {
@@ -62,8 +75,8 @@ namespace TDS_Client.Handler.Sync
 
         public T GetData<T>(IEntity entity, EntityDataKey key, T returnOnEmpty = default)
         {
-            try 
-            { 
+            try
+            {
                 if (!_entityRemoteIdDatas.ContainsKey(entity.RemoteId))
                     return returnOnEmpty;
                 if (!_entityRemoteIdDatas[entity.RemoteId].ContainsKey(key))
@@ -140,6 +153,88 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void OnLocalPlayerDataChange(IPlayer player, PlayerDataKey key, object obj)
+        {
+            try
+            {
+                if (player != ModAPI.LocalPlayer)
+                    return;
+                switch (key)
+                {
+                    case PlayerDataKey.Money:
+                        //Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
+                        _browserHandler.Angular.SyncMoney((int)obj);
+                        _browserHandler.Angular.SyncHudDataChange(HudDataType.Money, (int)obj);
+                        break;
+
+                    case PlayerDataKey.AdminLevel:
+                        _browserHandler.Angular.RefreshAdminLevel(Convert.ToInt32(obj));
+                        break;
+
+                    case PlayerDataKey.Name:
+                        if (!_nameSyncedWithAngular)
+                        {
+                            _nameSyncedWithAngular = true;
+                            return;
+                        }
+                        _browserHandler.Angular.SyncUsernameChange((string)obj);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, $"Name: {player.Name} | Key: {key} | Object: {obj}");
+            }
+        }
+
+        private void OnRemoveSyncedEntityDatasMethod(object[] args)
+        {
+            try
+            {
+                ushort entityRemoteId = Convert.ToUInt16(args[0]);
+                _entityRemoteIdDatas.Remove(entityRemoteId);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        private void OnRemoveSyncedPlayerDatasMethod(object[] args)
+        {
+            try
+            {
+                ushort playerRemoteId = Convert.ToUInt16(args[0]);
+                _playerRemoteIdDatas.Remove(playerRemoteId);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        private void OnSetEntityDataMethod(object[] args)
+        {
+            try
+            {
+                ushort entityRemoteId = Convert.ToUInt16(args[0]);
+                EntityDataKey key = (EntityDataKey)Convert.ToInt32(args[1]);
+                object value = args[2];
+
+                if (!_entityRemoteIdDatas.ContainsKey(entityRemoteId))
+                    _entityRemoteIdDatas[entityRemoteId] = new Dictionary<EntityDataKey, object>();
+                _entityRemoteIdDatas[entityRemoteId][key] = value;
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
         private void OnSetPlayerDataMethod(object[] args)
         {
             try
@@ -164,17 +259,21 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
-        private void OnSetEntityDataMethod(object[] args)
+        private void OnSyncEntityDataMethod(object[] args)
         {
             try
             {
-                ushort entityRemoteId = Convert.ToUInt16(args[0]);
-                EntityDataKey key = (EntityDataKey)Convert.ToInt32(args[1]);
-                object value = args[2];
-
-                if (!_entityRemoteIdDatas.ContainsKey(entityRemoteId))
-                    _entityRemoteIdDatas[entityRemoteId] = new Dictionary<EntityDataKey, object>();
-                _entityRemoteIdDatas[entityRemoteId][key] = value;
+                string dictJson = (string)args[0];
+                var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<EntityDataKey, object>>>(dictJson);
+                foreach (var entry in dict)
+                {
+                    if (!_entityRemoteIdDatas.ContainsKey(entry.Key))
+                        _entityRemoteIdDatas[entry.Key] = new Dictionary<EntityDataKey, object>();
+                    foreach (var dataEntry in entry.Value)
+                    {
+                        _entityRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -209,86 +308,6 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
-        private void OnSyncEntityDataMethod(object[] args)
-        {
-            try
-            {
-                string dictJson = (string)args[0];
-                var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<EntityDataKey, object>>>(dictJson);
-                foreach (var entry in dict)
-                {
-                    if (!_entityRemoteIdDatas.ContainsKey(entry.Key))
-                        _entityRemoteIdDatas[entry.Key] = new Dictionary<EntityDataKey, object>();
-                    foreach (var dataEntry in entry.Value)
-                    {
-                        _entityRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        private void OnRemoveSyncedPlayerDatasMethod(object[] args)
-        {
-            try
-            {
-                ushort playerRemoteId = Convert.ToUInt16(args[0]);
-                _playerRemoteIdDatas.Remove(playerRemoteId);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        private void OnRemoveSyncedEntityDatasMethod(object[] args)
-        {
-            try
-            {
-                ushort entityRemoteId = Convert.ToUInt16(args[0]);
-                _entityRemoteIdDatas.Remove(entityRemoteId);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-   
-        }
-
-        private bool _nameSyncedWithAngular;
-        private void OnLocalPlayerDataChange(IPlayer player, PlayerDataKey key, object obj)
-        {
-            try
-            {
-                if (player != ModAPI.LocalPlayer)
-                    return;
-                switch (key)
-                {
-                    case PlayerDataKey.Money:
-                        //Stats.StatSetInt(Misc.GetHashKey("SP0_TOTAL_CASH"), (int)obj, false);
-                        _browserHandler.Angular.SyncMoney((int)obj);
-                        _browserHandler.Angular.SyncHudDataChange(HudDataType.Money, (int)obj);
-                        break;
-                    case PlayerDataKey.AdminLevel:
-                        _browserHandler.Angular.RefreshAdminLevel(Convert.ToInt32(obj));
-                        break;
-                    case PlayerDataKey.Name:
-                        if (!_nameSyncedWithAngular)
-                        {
-                            _nameSyncedWithAngular = true;
-                            return;
-                        }
-                        _browserHandler.Angular.SyncUsernameChange((string)obj);
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex, $"Name: {player.Name} | Key: {key} | Object: {obj}");
-            }
-        }
+        #endregion Private Methods
     }
 }

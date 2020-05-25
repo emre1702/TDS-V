@@ -1,7 +1,7 @@
-﻿using System;
-using System.Net;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using System;
+using System.Net;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
@@ -10,6 +10,206 @@ namespace TDS_Server.Database.Migrations
 {
     public partial class Init : Migration
     {
+        #region Protected Methods
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "AdminLevelNames");
+
+            migrationBuilder.DropTable(
+                name: "Announcements");
+
+            migrationBuilder.DropTable(
+                name: "ApplicationAnswers");
+
+            migrationBuilder.DropTable(
+                name: "ApplicationInvitations");
+
+            migrationBuilder.DropTable(
+                name: "BonusbotSettings");
+
+            migrationBuilder.DropTable(
+                name: "ChallengeSettings");
+
+            migrationBuilder.DropTable(
+                name: "CommandAlias");
+
+            migrationBuilder.DropTable(
+                name: "CommandInfos");
+
+            migrationBuilder.DropTable(
+                name: "FAQs");
+
+            migrationBuilder.DropTable(
+                name: "FreeroamDefaultVehicle");
+
+            migrationBuilder.DropTable(
+                name: "GangLevelSettings");
+
+            migrationBuilder.DropTable(
+                name: "GangMembers");
+
+            migrationBuilder.DropTable(
+                name: "GangRankPermissions");
+
+            migrationBuilder.DropTable(
+                name: "GangStats");
+
+            migrationBuilder.DropTable(
+                name: "GangVehicles");
+
+            migrationBuilder.DropTable(
+                name: "GangwarAreas");
+
+            migrationBuilder.DropTable(
+                name: "KillingspreeRewards");
+
+            migrationBuilder.DropTable(
+                name: "LobbyFightSettings");
+
+            migrationBuilder.DropTable(
+                name: "LobbyMaps");
+
+            migrationBuilder.DropTable(
+                name: "LobbyMapSettings");
+
+            migrationBuilder.DropTable(
+                name: "LobbyRewards");
+
+            migrationBuilder.DropTable(
+                name: "LobbyRoundSettings");
+
+            migrationBuilder.DropTable(
+                name: "LobbyWeapons");
+
+            migrationBuilder.DropTable(
+                name: "LogAdmins");
+
+            migrationBuilder.DropTable(
+                name: "LogChats");
+
+            migrationBuilder.DropTable(
+                name: "LogErrors");
+
+            migrationBuilder.DropTable(
+                name: "LogKills");
+
+            migrationBuilder.DropTable(
+                name: "LogRests");
+
+            migrationBuilder.DropTable(
+                name: "Offlinemessages");
+
+            migrationBuilder.DropTable(
+                name: "PlayerBans");
+
+            migrationBuilder.DropTable(
+                name: "PlayerChallenges");
+
+            migrationBuilder.DropTable(
+                name: "PlayerCharDatas");
+
+            migrationBuilder.DropTable(
+                name: "PlayerClothes");
+
+            migrationBuilder.DropTable(
+                name: "PlayerLobbyStats");
+
+            migrationBuilder.DropTable(
+                name: "PlayerMapFavourites");
+
+            migrationBuilder.DropTable(
+                name: "PlayerMapRatings");
+
+            migrationBuilder.DropTable(
+                name: "PlayerRelations");
+
+            migrationBuilder.DropTable(
+                name: "PlayerSettings");
+
+            migrationBuilder.DropTable(
+                name: "PlayerStats");
+
+            migrationBuilder.DropTable(
+                name: "PlayerTotalStats");
+
+            migrationBuilder.DropTable(
+                name: "RuleTexts");
+
+            migrationBuilder.DropTable(
+                name: "ServerDailyStats");
+
+            migrationBuilder.DropTable(
+                name: "ServerSettings");
+
+            migrationBuilder.DropTable(
+                name: "ServerTotalStats");
+
+            migrationBuilder.DropTable(
+                name: "SupportRequestMessages");
+
+            migrationBuilder.DropTable(
+                name: "ApplicationQuestions");
+
+            migrationBuilder.DropTable(
+                name: "Applications");
+
+            migrationBuilder.DropTable(
+                name: "Commands");
+
+            migrationBuilder.DropTable(
+                name: "GangRanks");
+
+            migrationBuilder.DropTable(
+                name: "Weapons");
+
+            migrationBuilder.DropTable(
+                name: "PlayerCharAppearanceDatas");
+
+            migrationBuilder.DropTable(
+                name: "PlayerCharFeaturesDatas");
+
+            migrationBuilder.DropTable(
+                name: "PlayerCharGeneralDatas");
+
+            migrationBuilder.DropTable(
+                name: "PlayerCharHairAndColorsDatas");
+
+            migrationBuilder.DropTable(
+                name: "PlayerCharHeritageDatas");
+
+            migrationBuilder.DropTable(
+                name: "Maps");
+
+            migrationBuilder.DropTable(
+                name: "Rules");
+
+            migrationBuilder.DropTable(
+                name: "SupportRequests");
+
+            migrationBuilder.DropTable(
+                name: "Gangs");
+
+            migrationBuilder.DropTable(
+                name: "GangHouses");
+
+            migrationBuilder.DropTable(
+                name: "Teams");
+
+            migrationBuilder.DropTable(
+                name: "Lobbies");
+
+            migrationBuilder.DropTable(
+                name: "Players");
+
+            migrationBuilder.DropTable(
+                name: "AdminLevels");
+
+            migrationBuilder.DropSequence(
+                name: "EntityFrameworkHiLoSequence");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
@@ -2546,202 +2746,6 @@ namespace TDS_Server.Database.Migrations
                 column: "Lobby");
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "AdminLevelNames");
-
-            migrationBuilder.DropTable(
-                name: "Announcements");
-
-            migrationBuilder.DropTable(
-                name: "ApplicationAnswers");
-
-            migrationBuilder.DropTable(
-                name: "ApplicationInvitations");
-
-            migrationBuilder.DropTable(
-                name: "BonusbotSettings");
-
-            migrationBuilder.DropTable(
-                name: "ChallengeSettings");
-
-            migrationBuilder.DropTable(
-                name: "CommandAlias");
-
-            migrationBuilder.DropTable(
-                name: "CommandInfos");
-
-            migrationBuilder.DropTable(
-                name: "FAQs");
-
-            migrationBuilder.DropTable(
-                name: "FreeroamDefaultVehicle");
-
-            migrationBuilder.DropTable(
-                name: "GangLevelSettings");
-
-            migrationBuilder.DropTable(
-                name: "GangMembers");
-
-            migrationBuilder.DropTable(
-                name: "GangRankPermissions");
-
-            migrationBuilder.DropTable(
-                name: "GangStats");
-
-            migrationBuilder.DropTable(
-                name: "GangVehicles");
-
-            migrationBuilder.DropTable(
-                name: "GangwarAreas");
-
-            migrationBuilder.DropTable(
-                name: "KillingspreeRewards");
-
-            migrationBuilder.DropTable(
-                name: "LobbyFightSettings");
-
-            migrationBuilder.DropTable(
-                name: "LobbyMaps");
-
-            migrationBuilder.DropTable(
-                name: "LobbyMapSettings");
-
-            migrationBuilder.DropTable(
-                name: "LobbyRewards");
-
-            migrationBuilder.DropTable(
-                name: "LobbyRoundSettings");
-
-            migrationBuilder.DropTable(
-                name: "LobbyWeapons");
-
-            migrationBuilder.DropTable(
-                name: "LogAdmins");
-
-            migrationBuilder.DropTable(
-                name: "LogChats");
-
-            migrationBuilder.DropTable(
-                name: "LogErrors");
-
-            migrationBuilder.DropTable(
-                name: "LogKills");
-
-            migrationBuilder.DropTable(
-                name: "LogRests");
-
-            migrationBuilder.DropTable(
-                name: "Offlinemessages");
-
-            migrationBuilder.DropTable(
-                name: "PlayerBans");
-
-            migrationBuilder.DropTable(
-                name: "PlayerChallenges");
-
-            migrationBuilder.DropTable(
-                name: "PlayerCharDatas");
-
-            migrationBuilder.DropTable(
-                name: "PlayerClothes");
-
-            migrationBuilder.DropTable(
-                name: "PlayerLobbyStats");
-
-            migrationBuilder.DropTable(
-                name: "PlayerMapFavourites");
-
-            migrationBuilder.DropTable(
-                name: "PlayerMapRatings");
-
-            migrationBuilder.DropTable(
-                name: "PlayerRelations");
-
-            migrationBuilder.DropTable(
-                name: "PlayerSettings");
-
-            migrationBuilder.DropTable(
-                name: "PlayerStats");
-
-            migrationBuilder.DropTable(
-                name: "PlayerTotalStats");
-
-            migrationBuilder.DropTable(
-                name: "RuleTexts");
-
-            migrationBuilder.DropTable(
-                name: "ServerDailyStats");
-
-            migrationBuilder.DropTable(
-                name: "ServerSettings");
-
-            migrationBuilder.DropTable(
-                name: "ServerTotalStats");
-
-            migrationBuilder.DropTable(
-                name: "SupportRequestMessages");
-
-            migrationBuilder.DropTable(
-                name: "ApplicationQuestions");
-
-            migrationBuilder.DropTable(
-                name: "Applications");
-
-            migrationBuilder.DropTable(
-                name: "Commands");
-
-            migrationBuilder.DropTable(
-                name: "GangRanks");
-
-            migrationBuilder.DropTable(
-                name: "Weapons");
-
-            migrationBuilder.DropTable(
-                name: "PlayerCharAppearanceDatas");
-
-            migrationBuilder.DropTable(
-                name: "PlayerCharFeaturesDatas");
-
-            migrationBuilder.DropTable(
-                name: "PlayerCharGeneralDatas");
-
-            migrationBuilder.DropTable(
-                name: "PlayerCharHairAndColorsDatas");
-
-            migrationBuilder.DropTable(
-                name: "PlayerCharHeritageDatas");
-
-            migrationBuilder.DropTable(
-                name: "Maps");
-
-            migrationBuilder.DropTable(
-                name: "Rules");
-
-            migrationBuilder.DropTable(
-                name: "SupportRequests");
-
-            migrationBuilder.DropTable(
-                name: "Gangs");
-
-            migrationBuilder.DropTable(
-                name: "GangHouses");
-
-            migrationBuilder.DropTable(
-                name: "Teams");
-
-            migrationBuilder.DropTable(
-                name: "Lobbies");
-
-            migrationBuilder.DropTable(
-                name: "Players");
-
-            migrationBuilder.DropTable(
-                name: "AdminLevels");
-
-            migrationBuilder.DropSequence(
-                name: "EntityFrameworkHiLoSequence");
-        }
+        #endregion Protected Methods
     }
 }

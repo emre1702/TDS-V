@@ -1,11 +1,12 @@
 ﻿using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
+        #region Public Methods
+
         public virtual void GivePlayerWeapons(ITDSPlayer player)
         {
             var lastWeapon = player.LastWeaponOnHand;
@@ -23,5 +24,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (giveLastWeapon)
                 player.ModPlayer.CurrentWeapon = lastWeapon;
         }
+
+        #endregion Public Methods
     }
 }

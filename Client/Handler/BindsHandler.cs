@@ -10,15 +10,25 @@ namespace TDS_Client.Handler
 {
     public class BindsHandler : ServiceBase
     {
-        private readonly List<(Key, List<KeyBindDto>)> _bindedKeys = new List<(Key, List<KeyBindDto>)>();
+        #region Private Fields
+
         private readonly List<(Control, List<ControlBindDto>)> _bindedControls = new List<(Control, List<ControlBindDto>)>();
-        private readonly Dictionary<Key, bool> _lastKeyDownState = new Dictionary<Key, bool>();
+        private readonly List<(Key, List<KeyBindDto>)> _bindedKeys = new List<(Key, List<KeyBindDto>)>();
         private readonly Dictionary<Control, bool> _lastControlPressedState = new Dictionary<Control, bool>();
+        private readonly Dictionary<Key, bool> _lastKeyDownState = new Dictionary<Key, bool>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public BindsHandler(IModAPI modAPI, LoggingHandler loggingHandler) : base(modAPI, loggingHandler)
         {
             modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => ModAPI.Windows.Focused));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void Add(Key key, Action<Key> method, KeyPressState pressState = KeyPressState.Down)
         {
@@ -72,6 +82,10 @@ namespace TDS_Client.Handler
                 _bindedControls.Remove(controlEntry);
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private void OnTick(int currentMs)
         {
             try
@@ -91,7 +105,6 @@ namespace TDS_Client.Handler
                         if (isDown && bind.OnDown || !isDown && bind.OnUp)
                             bind.Method(keyEntry.Item1);
                     }
-
                 }
 
                 for (int i = _bindedControls.Count - 1; i >= 0; --i)
@@ -118,7 +131,8 @@ namespace TDS_Client.Handler
             {
                 Logging.LogError(ex);
             }
-
         }
+
+        #endregion Private Methods
     }
 }

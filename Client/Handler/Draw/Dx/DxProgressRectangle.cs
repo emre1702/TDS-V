@@ -7,35 +7,39 @@ namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxProgressRectangle : DxBase
     {
-        /// <summary>
-        /// The progress between 0 and 1
-        /// </summary>
-        public float Progress
-        {
-            get => _progress;
-            set => _progress = Math.Min(1, Math.Max(0, value));
-        }
-
-        private readonly float _width;
-
-        private readonly bool _filling;
-        private float _progress;
-        private readonly bool _relativePos;
-        private int? _msToEnd;
-        private int _startTime;
-        private int _frontRectOffsetAbsoluteX;
+        #region Private Fields
 
         private readonly DxRectangle _backRect;
+
+        private readonly bool _filling;
+
         private readonly DxRectangle _frontRect;
+
+        private readonly bool _relativePos;
+
         private readonly DxText _text;
 
         private readonly TimerHandler _timerHandler;
 
+        private readonly float _width;
+
+        private int _frontRectOffsetAbsoluteX;
+
+        private int? _msToEnd;
+
+        private float _progress;
+
+        private int _startTime;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public DxProgressRectangle(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, float x, float y, float width, float height,
-            Color textColor, Color backColor, Color progressColor,
-            float textScale = 1.0f, Font textFont = Font.ChaletLondon, int frontRectOffsetAbsoluteX = 3, int frontRectOffsetAbsoluteY = 3, bool filling = true,
-            AlignmentX alignmentX = AlignmentX.Center, AlignmentY alignmentY = AlignmentY.Center, bool relativePos = true, int frontPriority = 0)
-            : base(dxHandler, modAPI, frontPriority: frontPriority)
+                    Color textColor, Color backColor, Color progressColor,
+                    float textScale = 1.0f, Font textFont = Font.ChaletLondon, int frontRectOffsetAbsoluteX = 3, int frontRectOffsetAbsoluteY = 3, bool filling = true,
+                    AlignmentX alignmentX = AlignmentX.Center, AlignmentY alignmentY = AlignmentY.Center, bool relativePos = true, int frontPriority = 0)
+                    : base(dxHandler, modAPI, frontPriority: frontPriority)
         {
             _timerHandler = timerHandler;
 
@@ -63,19 +67,22 @@ namespace TDS_Client.Handler.Draw.Dx
             Children.Add(_text);
         }
 
-        public void SetAutomatic(int msToEnd, bool restart = true)
-        {
-            if (restart)
-                Progress = 0;
-            _startTime = _timerHandler.ElapsedMs;
-            _msToEnd = msToEnd;
-            if (!restart)
-            {
-                int progressMs = (int)(msToEnd / Progress);
-                _startTime -= progressMs;
-            }
+        #endregion Public Constructors
 
+        #region Public Properties
+
+        /// <summary>
+        /// The progress between 0 and 1
+        /// </summary>
+        public float Progress
+        {
+            get => _progress;
+            set => _progress = Math.Min(1, Math.Max(0, value));
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public override void Draw()
         {
@@ -89,8 +96,25 @@ namespace TDS_Client.Handler.Draw.Dx
             if (_filling)
                 _frontRect.SetWidth(_progress * width, _relativePos);
             else
-                _frontRect.SetWidth(_width - _width * _progress , _relativePos);
+                _frontRect.SetWidth(_width - _width * _progress, _relativePos);
         }
+
+        public void SetAutomatic(int msToEnd, bool restart = true)
+        {
+            if (restart)
+                Progress = 0;
+            _startTime = _timerHandler.ElapsedMs;
+            _msToEnd = msToEnd;
+            if (!restart)
+            {
+                int progressMs = (int)(msToEnd / Progress);
+                _startTime -= progressMs;
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private float GetFrontRectX(float x, float width, AlignmentX alignment, bool relativePos)
         {
@@ -121,5 +145,7 @@ namespace TDS_Client.Handler.Draw.Dx
             else
                 return y - height / 2;
         }
+
+        #endregion Private Methods
     }
 }

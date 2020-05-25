@@ -1,7 +1,6 @@
 ﻿using BonusBotConnector.Client;
 using System;
 using System.Linq;
-using TDS_Server.Data;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
@@ -14,14 +13,19 @@ namespace TDS_Server.Handler.Server
 {
     public class ServerInfoHandler
     {
-        private readonly DateTime _dateTime;
+        #region Private Fields
 
-        private readonly BonusbotSettings? _bonusBotSettings;
-        private readonly LobbiesHandler _lobbiesHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
-        private readonly IModAPI _modAPI;
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
+        private readonly BonusbotSettings? _bonusBotSettings;
+        private readonly DateTime _dateTime;
+        private readonly LobbiesHandler _lobbiesHandler;
+        private readonly IModAPI _modAPI;
         private readonly ServerStatsHandler _serverStatsHandler;
+        private readonly TDSPlayerHandler _tdsPlayerHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ServerInfoHandler(EventsHandler eventsHandler, TDSDbContext dbContext, LobbiesHandler lobbiesHandler, TDSPlayerHandler tdsPlayerHandler,
             IModAPI modAPI, BonusBotConnectorClient bonusBotConnectorClient, ServerStatsHandler serverStatsHandler)
@@ -38,8 +42,11 @@ namespace TDS_Server.Handler.Server
 
             if (_bonusBotSettings is { } && _bonusBotConnectorClient.ServerInfos is { })
                 eventsHandler.Second += EventsHandler_Second;
-
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void EventsHandler_Second(int counter)
         {
@@ -66,5 +73,7 @@ namespace TDS_Server.Handler.Server
                 _bonusBotConnectorClient.ServerInfos?.Refresh(request);
             }
         }
+
+        #endregion Private Methods
     }
 }

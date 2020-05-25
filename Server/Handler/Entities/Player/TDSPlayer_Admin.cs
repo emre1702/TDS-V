@@ -6,6 +6,8 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Public Properties
+
         public AdminLevelDto AdminLevel
         {
             get
@@ -19,5 +21,7 @@ namespace TDS_Server.Handler.Entities.Player
         }
 
         public string AdminLevelName => AdminLevel.Names[LanguageEnum];
+
+        #endregion Public Properties
     }
 }

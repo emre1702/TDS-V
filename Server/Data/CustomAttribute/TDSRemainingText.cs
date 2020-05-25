@@ -5,7 +5,11 @@ namespace TDS_Server.Data.CustomAttribute
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class TDSRemainingText : Attribute
     {
-        public int MinLength { get; set; } = 1;
+        #region Public Properties
+
         public int MaxLength { get; set; } = int.MaxValue;
+        public int MinLength { get; set; } = 1;
+
+        #endregion Public Properties
     }
 }

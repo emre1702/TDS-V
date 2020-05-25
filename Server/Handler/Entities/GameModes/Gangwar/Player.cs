@@ -2,8 +2,6 @@
 using System.Linq;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
@@ -12,8 +10,14 @@ namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar
     {
+        #region Private Fields
+
         private ITDSPlayer? _attackLeader;
         private ITDSPlayer? _playerForcedAtTarget;
+
+        #endregion Private Fields
+
+        #region Public Methods
 
         public override void AddPlayer(ITDSPlayer player, uint? teamIndex)
         {
@@ -23,32 +27,14 @@ namespace TDS_Server.Handler.Entities.GameModes
                 SetAttackLeader(player);
         }
 
-        public override void RemovePlayer(ITDSPlayer player)
+        public override bool CanJoinDuringRound(ITDSPlayer player, ITeam team)
         {
-            base.RemovePlayer(player);
+            if (!Lobby.IsGangActionLobby)
+                return false;
+            if (Lobby.DmgSys.DamageDealtThisRound)
+                return false;
 
-            if (player == _attackLeader && AttackerTeam.Players.Count > 0)
-            {
-                var newAttackLeader = AttackerTeam.Players.First();
-                SetAttackLeader(newAttackLeader);
-            }
-
-            if (player == _playerForcedAtTarget)
-            {
-                var nextTargetMan = GetNextTargetMan();
-                SetTargetMan(nextTargetMan);
-            }
-        }
-
-        public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
-        {
-            base.OnPlayerDeath(player, killer);
-
-            if (player == _playerForcedAtTarget)
-            {
-                var nextTargetMan = GetNextTargetMan();
-                SetTargetMan(nextTargetMan);
-            }
+            return true;
         }
 
         public override bool CanJoinLobby(ITDSPlayer player, uint? teamIndex)
@@ -68,22 +54,37 @@ namespace TDS_Server.Handler.Entities.GameModes
             return true;
         }
 
-        public override bool CanJoinDuringRound(ITDSPlayer player, ITeam team)
+        public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
         {
-            if (!Lobby.IsGangActionLobby)
-                return false;
-            if (Lobby.DmgSys.DamageDealtThisRound)
-                return false;
+            base.OnPlayerDeath(player, killer);
 
-            return true;
+            if (player == _playerForcedAtTarget)
+            {
+                var nextTargetMan = GetNextTargetMan();
+                SetTargetMan(nextTargetMan);
+            }
         }
 
-        private void SetAttackLeader(ITDSPlayer attackLeader)
+        public override void RemovePlayer(ITDSPlayer player)
         {
-            _attackLeader = attackLeader;
+            base.RemovePlayer(player);
 
-            // Todo: Send him infos or open menu or whatever
+            if (player == _attackLeader && AttackerTeam.Players.Count > 0)
+            {
+                var newAttackLeader = AttackerTeam.Players.First();
+                SetAttackLeader(newAttackLeader);
+            }
+
+            if (player == _playerForcedAtTarget)
+            {
+                var nextTargetMan = GetNextTargetMan();
+                SetTargetMan(nextTargetMan);
+            }
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private ITDSPlayer? GetNextTargetMan()
         {
@@ -100,6 +101,27 @@ namespace TDS_Server.Handler.Entities.GameModes
                 return SharedUtils.GetRandom(AttackerTeam.Players);
 
             return AttackerTeam.Players.MinBy(p => p.ModPlayer!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
+        }
+
+        private bool HasTeamFreePlace(bool isAttacker)
+        {
+            if (isAttacker)
+            {
+                return AttackerTeam.Players.Count < SettingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
+                    || AttackerTeam.Players.Count < OwnerTeam.Players.Count + (SettingsHandler.ServerSettings.GangwarAttackerCanBeMore ? 1 : 0);
+            }
+            else
+            {
+                return OwnerTeam.Players.Count < SettingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
+                    || OwnerTeam.Players.Count < AttackerTeam.Players.Count + (SettingsHandler.ServerSettings.GangwarOwnerCanBeMore ? 1 : 0);
+            }
+        }
+
+        private void SetAttackLeader(ITDSPlayer attackLeader)
+        {
+            _attackLeader = attackLeader;
+
+            // Todo: Send him infos or open menu or whatever
         }
 
         private void SetTargetMan(ITDSPlayer? player)
@@ -124,18 +146,6 @@ namespace TDS_Server.Handler.Entities.GameModes
                 SettingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds);
         }
 
-        private bool HasTeamFreePlace(bool isAttacker)
-        {
-            if (isAttacker)
-            {
-                return AttackerTeam.Players.Count < SettingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
-                    || AttackerTeam.Players.Count < OwnerTeam.Players.Count + (SettingsHandler.ServerSettings.GangwarAttackerCanBeMore ? 1 : 0);
-            }
-            else
-            {
-                return OwnerTeam.Players.Count < SettingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
-                    || OwnerTeam.Players.Count < AttackerTeam.Players.Count + (SettingsHandler.ServerSettings.GangwarOwnerCanBeMore ? 1 : 0);
-            }
-        }
+        #endregion Private Methods
     }
 }

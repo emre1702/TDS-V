@@ -6,8 +6,12 @@ namespace TDS_Server.Data.Models
 
     public class AppConfigEntryDto
     {
+        #region Public Properties
+
         [XmlAttribute]
         public string Value { get; set; }
+
+        #endregion Public Properties
     }
 
 #nullable restore

@@ -4,12 +4,18 @@ using System.Globalization;
 
 namespace TDS_Server.Handler.Converter.Mapping
 {
-    class StringToTimeSpanConverter : ITypeConverter<string, TimeSpan?>
+    internal class StringToTimeSpanConverter : ITypeConverter<string, TimeSpan?>
     {
+        #region Public Methods
+
         public TimeSpan? Convert(string time, TimeSpan? destination, ResolutionContext context)
         {
             return GetTime(time);
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private TimeSpan? GetTime(string time)
         {
@@ -104,5 +110,7 @@ namespace TDS_Server.Handler.Converter.Mapping
                 || time.Equals("stop", StringComparison.CurrentCultureIgnoreCase)
                 || time.Equals("no", StringComparison.CurrentCultureIgnoreCase);
         }
+
+        #endregion Private Methods
     }
 }

@@ -2,9 +2,16 @@
 {
     public interface IBrowser
     {
-        void Destroy();
-        void ExecuteJs(string js);
-        void MarkAsChat();
+        #region Public Methods
+
         void Call(string eventName, params object[] args);
+
+        void Destroy();
+
+        void ExecuteJs(string js);
+
+        void MarkAsChat();
+
+        #endregion Public Methods
     }
 }

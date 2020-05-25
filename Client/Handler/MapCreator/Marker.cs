@@ -7,14 +7,24 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class Marker
     {
-        public MarkerType Type;
-        public Position3D Position;
+        #region Public Fields
+
+        public Color Color;
         public Position3D Direction;
+        public Position3D Position;
         public Position3D Rotation;
         public Position3D Scale;
-        public Color Color;
+        public MarkerType Type;
+
+        #endregion Public Fields
+
+        #region Private Fields
 
         private readonly IModAPI _modAPI;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public Marker(IModAPI modAPI, MarkerType type, Position3D pos, Position3D dir, Position3D rot, Position3D scale, Color col)
         {
@@ -28,6 +38,10 @@ namespace TDS_Client.Handler.MapCreator
             Scale = scale;
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public void Draw()
         {
             /*_modAPI.Graphics.DrawMarker(Type, Position.X, Position.Y, Position.Z,
@@ -39,5 +53,7 @@ namespace TDS_Client.Handler.MapCreator
                 Color.R, Color.G, Color.B, Color.A,
                 false, false, 2, false, "", "", false);
         }
+
+        #endregion Public Methods
     }
 }

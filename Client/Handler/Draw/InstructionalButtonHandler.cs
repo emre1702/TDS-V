@@ -15,44 +15,31 @@ namespace TDS_Client.Handler.Draw
 {
     public class InstructionalButtonHandler : ServiceBase
     {
-        public bool IsActive
-        {
-            get => _isActive;
-            set
-            {
-                _isActive = value;
-                if (value)
-                    Redraw();
-            }
-        }
+        #region Private Fields
 
-        /// <summary>
-        /// Negative => One Row | Positive => Row per button
-        /// </summary>
-        public bool IsLayoutPositive
-        {
-            get => _isLayoutPositive;
-            set => SetLayout(value);
-        }
-
-        public Color BackgroundColor
-        {
-            get => _backgroundColor;
-            set => SetBackgroundColor(value);
-        }
-
-        private readonly BasicScaleform _scaleform;
         private readonly List<InstructionalButton> _allButtons = new List<InstructionalButton>();
+
         private readonly List<InstructionalButton> _buttons = new List<InstructionalButton>();
-        private readonly List<InstructionalButton> _persistentButtons = new List<InstructionalButton>();
-        private bool _isLayoutPositive;
-        private Color _backgroundColor;
-        private bool _isActive = true;
 
         private readonly InstructionalButton _cursorButton;
-        private readonly InstructionalButton _userpanelButton;
+
+        private readonly List<InstructionalButton> _persistentButtons = new List<InstructionalButton>();
+
+        private readonly BasicScaleform _scaleform;
 
         private readonly SettingsHandler _settingsHandler;
+
+        private readonly InstructionalButton _userpanelButton;
+
+        private Color _backgroundColor;
+
+        private bool _isActive = true;
+
+        private bool _isLayoutPositive;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public InstructionalButtonHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler)
             : base(modAPI, loggingHandler)
@@ -73,10 +60,39 @@ namespace TDS_Client.Handler.Draw
             Reset();
         }
 
-        private void OnTick(int currentMs)
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public Color BackgroundColor
         {
-            _scaleform.RenderFullscreen();
+            get => _backgroundColor;
+            set => SetBackgroundColor(value);
         }
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set
+            {
+                _isActive = value;
+                if (value)
+                    Redraw();
+            }
+        }
+
+        /// <summary>
+        /// Negative =&gt; One Row | Positive =&gt; Row per button
+        /// </summary>
+        public bool IsLayoutPositive
+        {
+            get => _isLayoutPositive;
+            set => SetLayout(value);
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public InstructionalButton Add(string title, string control, bool persistent = false)
         {
@@ -124,6 +140,12 @@ namespace TDS_Client.Handler.Draw
             return button;
         }
 
+        public void Redraw()
+        {
+            if (IsActive)
+                _scaleform.Call("DRAW_INSTRUCTIONAL_BUTTONS", _isLayoutPositive ? 1 : -1);
+        }
+
         public void Remove(InstructionalButton button)
         {
             _allButtons.Remove(button);
@@ -137,36 +159,6 @@ namespace TDS_Client.Handler.Draw
                 buttonToFixSlot.Slot = i;
             }
             IsActive = true;
-        }
-
-        public void SetDataSlot(int slot, string control, string title)
-        {
-            _scaleform.Call("SET_DATA_SLOT", slot, control, title);
-            Redraw();
-        }
-
-        public void SetDataSlot(int slot, Control control, string title)
-        {
-            _scaleform.Call("SET_DATA_SLOT", slot, (int)control, title);
-            Redraw();
-        }
-
-        public void Redraw()
-        {
-            if (IsActive)
-                _scaleform.Call("DRAW_INSTRUCTIONAL_BUTTONS", _isLayoutPositive ? 1 : -1);
-        }
-
-        public void SetLayout(bool positive)
-        {
-            _isLayoutPositive = positive;
-        }
-
-        public void SetBackgroundColor(Color color)
-        {
-            _backgroundColor = color;
-            _scaleform.Call("SET_BACKGROUND_COLOUR", (int)color.R, (int)color.G, (int)color.B, (int)color.A);
-            Redraw();
         }
 
         public void Reset()
@@ -188,9 +180,36 @@ namespace TDS_Client.Handler.Draw
             IsActive = true;
         }
 
+        public void SetBackgroundColor(Color color)
+        {
+            _backgroundColor = color;
+            _scaleform.Call("SET_BACKGROUND_COLOUR", (int)color.R, (int)color.G, (int)color.B, (int)color.A);
+            Redraw();
+        }
+
+        public void SetDataSlot(int slot, string control, string title)
+        {
+            _scaleform.Call("SET_DATA_SLOT", slot, control, title);
+            Redraw();
+        }
+
+        public void SetDataSlot(int slot, Control control, string title)
+        {
+            _scaleform.Call("SET_DATA_SLOT", slot, (int)control, title);
+            Redraw();
+        }
+
+        public void SetLayout(bool positive)
+        {
+            _isLayoutPositive = positive;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private void EventsHandler_LanguageChanged(ILanguage lang, bool beforeLogin)
         {
-
         }
 
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
@@ -199,5 +218,11 @@ namespace TDS_Client.Handler.Draw
                 Add("Map-Voting", "F3");
         }
 
+        private void OnTick(int currentMs)
+        {
+            _scaleform.RenderFullscreen();
+        }
+
+        #endregion Private Methods
     }
 }

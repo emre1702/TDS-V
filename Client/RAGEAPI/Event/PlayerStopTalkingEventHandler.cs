@@ -6,10 +6,16 @@ using TDS_Client.RAGEAPI.Player;
 
 namespace TDS_Client.RAGEAPI.Event
 {
-    class PlayerStopTalkingEventHandler : BaseEventHandler<PlayerDelegate>
+    internal class PlayerStopTalkingEventHandler : BaseEventHandler<PlayerDelegate>
     {
+        #region Private Fields
+
         private readonly LoggingHandler _loggingHandler;
         private readonly PlayerConvertingHandler _playerConvertingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public PlayerStopTalkingEventHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler)
             : base()
@@ -19,6 +25,10 @@ namespace TDS_Client.RAGEAPI.Event
 
             RAGE.Events.OnPlayerStopTalking += PlayerStopTalking;
         }
+
+        #endregion Public Constructors
+
+        #region Private Methods
 
         private void PlayerStopTalking(RAGE.Elements.Player playerMod)
         {
@@ -41,5 +51,7 @@ namespace TDS_Client.RAGEAPI.Event
                 _loggingHandler.LogError(ex);
             }
         }
+
+        #endregion Private Methods
     }
 }

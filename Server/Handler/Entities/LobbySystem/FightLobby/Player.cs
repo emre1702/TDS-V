@@ -6,6 +6,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
+        #region Public Methods
+
+        public static void KillPlayer(ITDSPlayer player, string reason)
+        {
+            player.ModPlayer?.Kill();
+            player.SendMessage(reason);
+        }
+
         public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
             if (!await base.AddPlayer(player, teamindex))
@@ -13,6 +21,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             ModAPI.Thread.RunInMainThread(() => player.ModPlayer?.SetInvincible(false));
 
             return true;
+        }
+
+        public void DamagedPlayer(ITDSPlayer target, ITDSPlayer source, WeaponHash weapon, ulong bone)
+        {
+            DmgSys.DamagePlayer(target, weapon, bone, source);
         }
 
         public override async Task RemovePlayer(ITDSPlayer player)
@@ -25,18 +38,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 player.LastKillAt = null;
                 player.KillingSpree = 0;
             });
-            
         }
 
-        public static void KillPlayer(ITDSPlayer player, string reason)
-        {
-            player.ModPlayer?.Kill();
-            player.SendMessage(reason);
-        }
-
-        public void DamagedPlayer(ITDSPlayer target, ITDSPlayer source, WeaponHash weapon, ulong bone)
-        {
-            DmgSys.DamagePlayer(target, weapon, bone, source);
-        }
+        #endregion Public Methods
     }
 }

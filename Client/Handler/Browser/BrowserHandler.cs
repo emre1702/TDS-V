@@ -8,15 +8,9 @@ namespace TDS_Client.Handler.Browser
 {
     public class BrowserHandler : ServiceBase
     {
-        public bool InInput { get; private set; }
+        #region Public Constructors
 
-        public AngularBrowserHandler Angular { get; }
-        public RegisterLoginBrowserHandler RegisterLogin { get; }
-        public MapCreatorObjectChoiceBrowserHandler MapCreatorObjectChoice { get; }
-        public MapCreatorVehicleChoiceBrowserHandler MapCreatorVehicleChoice { get; }
-        public PlainMainBrowserHandler PlainMain { get; }
-
-        public BrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, 
+        public BrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler,
             Serializer serializer, RemoteEventsSender remoteEventsSender)
             : base(modAPI, loggingHandler)
         {
@@ -32,6 +26,21 @@ namespace TDS_Client.Handler.Browser
             modAPI.Event.Add(FromBrowserEvent.InputStopped, _ => InInput = false);
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public AngularBrowserHandler Angular { get; }
+        public bool InInput { get; private set; }
+        public MapCreatorObjectChoiceBrowserHandler MapCreatorObjectChoice { get; }
+        public MapCreatorVehicleChoiceBrowserHandler MapCreatorVehicleChoice { get; }
+        public PlainMainBrowserHandler PlainMain { get; }
+        public RegisterLoginBrowserHandler RegisterLogin { get; }
+
+        #endregion Public Properties
+
+        #region Private Methods
+
         private void EventsHandler_LanguageChanged(ILanguage lang, bool beforeLogin)
         {
             if (!(Angular.Browser is null))
@@ -39,5 +48,7 @@ namespace TDS_Client.Handler.Browser
             if (!(RegisterLogin.Browser is null))
                 RegisterLogin.SyncLanguage(lang);
         }
+
+        #endregion Private Methods
     }
 }

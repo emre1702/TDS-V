@@ -5,16 +5,7 @@ namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar
     {
-        private async void AcceptAttackPreparationInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
-        {
-            if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
-            {
-                ModAPI.Thread.RunInMainThread(() => invitation?.Resend());
-                return;
-            }
-
-            ModAPI.Thread.RunInMainThread(() => _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName)));
-        }
+        #region Private Methods
 
         private async void AcceptAttackInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
         {
@@ -31,6 +22,16 @@ namespace TDS_Server.Handler.Entities.GameModes
             });
         }
 
+        private async void AcceptAttackPreparationInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
+        {
+            if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
+            {
+                ModAPI.Thread.RunInMainThread(() => invitation?.Resend());
+                return;
+            }
+
+            ModAPI.Thread.RunInMainThread(() => _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName)));
+        }
 
         private async void AcceptDefendInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
         {
@@ -46,5 +47,7 @@ namespace TDS_Server.Handler.Entities.GameModes
                 _gangwarArea?.Owner!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName));
             });
         }
+
+        #endregion Private Methods
     }
 }

@@ -27,55 +27,30 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
         // name: prop_mp_cant_place_med
         // id: -263709501
 
+        #region Private Fields
+
+        private static readonly Dictionary<Arena, IColShape> _lobbyBombTakeCol = new Dictionary<Arena, IColShape>();
         private IMapObject? _bomb;
         private IMarker? _bombTakeMarker;
 
-        private static readonly Dictionary<Arena, IColShape> _lobbyBombTakeCol = new Dictionary<Arena, IColShape>();
+        #endregion Private Fields
 
-        private void GiveBombToRandomTerrorist()
+        #region Private Methods
+
+        private void BombToBack(ITDSPlayer player)
         {
-            int amount = _terroristTeam.Players.Count;
-            if (amount == 0)
+            if (_bomb is null)
                 return;
+            _bomb.Detach();
+            _bomb.SetCollisionsless(true, Lobby);
+            _bomb.AttachTo(player, PedBone.SKEL_Pelvis, new Position3D(0, 0, 0.24), new Position3D(270, 0, 0));
 
-            ITDSPlayer player = SharedUtils.GetRandom(_terroristTeam.Players);
-            if (player.ModPlayer!.CurrentWeapon == WeaponHash.Unarmed)
-                BombToHand(player);
-            else
-                BombToBack(player);
-            player.SendEvent(ToClientEvent.PlayerGotBomb, Map.BombInfo?.PlantPositionsJson ?? "{}");
-        }
-
-        private void DetonateBomb()
-        {
-            // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL, bomb.Position, 200, Dimension);   use 0x172AA1B624FA1013 as Hash instead if not getting fixed
-            ModAPI.Sync.SendEvent(Lobby, ToClientEvent.BombDetonated);
-            _counterTerroristTeam.FuncIterate((player, team) =>
+            if (_bombAtPlayer != player)
             {
-                if (player.Lifes == 0)
-                    return;
-                int damage = player.Health + player.Armor;
-                Lobby.DmgSys.UpdateLastHitter(player, _planter, damage);
-                player.Damage(ref damage);
-                if (_planter != null && _planter.CurrentRoundStats != null)
-                    _planter.CurrentRoundStats.Damage += damage;
-            });
-            // TERROR WON //
-            WinnerTeam = _terroristTeam;
-            if (Lobby.CurrentRoundStatus == RoundStatus.Round)
-                Lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.BombExploded);
-        }
-
-        private void ToggleBombAtHand(ITDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
-        {
-            if (newweapon == WeaponHash.Unarmed)
-            {
-                BombToHand(character);
+                SendBombPlantInfos(player);
+                _bombAtPlayer = player;
             }
-            else if (oldweapon == WeaponHash.Unarmed)
-            {
-                BombToBack(character);
-            }
+            player.SendEvent(ToClientEvent.BombNotOnHand);
         }
 
         private void BombToHand(ITDSPlayer player)
@@ -94,20 +69,25 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             player.SendEvent(ToClientEvent.BombOnHand);
         }
 
-        private void BombToBack(ITDSPlayer player)
+        private void DetonateBomb()
         {
-            if (_bomb is null)
-                return;
-            _bomb.Detach();
-            _bomb.SetCollisionsless(true, Lobby);
-            _bomb.AttachTo(player, PedBone.SKEL_Pelvis, new Position3D(0, 0, 0.24), new Position3D(270, 0, 0));
-
-            if (_bombAtPlayer != player)
+            // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL,
+            // bomb.Position, 200, Dimension); use 0x172AA1B624FA1013 as Hash instead if not getting fixed
+            ModAPI.Sync.SendEvent(Lobby, ToClientEvent.BombDetonated);
+            _counterTerroristTeam.FuncIterate((player, team) =>
             {
-                SendBombPlantInfos(player);
-                _bombAtPlayer = player;
-            }
-            player.SendEvent(ToClientEvent.BombNotOnHand);
+                if (player.Lifes == 0)
+                    return;
+                int damage = player.Health + player.Armor;
+                Lobby.DmgSys.UpdateLastHitter(player, _planter, damage);
+                player.Damage(ref damage);
+                if (_planter != null && _planter.CurrentRoundStats != null)
+                    _planter.CurrentRoundStats.Damage += damage;
+            });
+            // TERROR WON //
+            WinnerTeam = _terroristTeam;
+            if (Lobby.CurrentRoundStatus == RoundStatus.Round)
+                Lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.BombExploded);
         }
 
         private void DropBomb()
@@ -127,6 +107,20 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             _bombAtPlayer = null;
         }
 
+        private void GiveBombToRandomTerrorist()
+        {
+            int amount = _terroristTeam.Players.Count;
+            if (amount == 0)
+                return;
+
+            ITDSPlayer player = SharedUtils.GetRandom(_terroristTeam.Players);
+            if (player.ModPlayer!.CurrentWeapon == WeaponHash.Unarmed)
+                BombToHand(player);
+            else
+                BombToBack(player);
+            player.SendEvent(ToClientEvent.PlayerGotBomb, Map.BombInfo?.PlantPositionsJson ?? "{}");
+        }
+
         private void TakeBomb(ITDSPlayer player)
         {
             if (_bomb is null)
@@ -139,5 +133,19 @@ namespace TDS_Server.Handler.Entities.GameModes.Bomb
             if (col != null)
                 col.Delete();
         }
+
+        private void ToggleBombAtHand(ITDSPlayer character, WeaponHash oldweapon, WeaponHash newweapon)
+        {
+            if (newweapon == WeaponHash.Unarmed)
+            {
+                BombToHand(character);
+            }
+            else if (oldweapon == WeaponHash.Unarmed)
+            {
+                BombToBack(character);
+            }
+        }
+
+        #endregion Private Methods
     }
 }

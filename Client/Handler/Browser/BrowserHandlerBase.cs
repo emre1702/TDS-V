@@ -11,13 +11,21 @@ namespace TDS_Client.Handler.Browser
 {
     public class BrowserHandlerBase : ServiceBase
     {
-        public IBrowser Browser { get; private set; }
-
-        private readonly LinkedList<Action> _executeList = new LinkedList<Action>();
-        private readonly string _url;
-        private readonly StringBuilder _stringBuilder = new StringBuilder();
+        #region Protected Fields
 
         protected readonly Serializer Serializer;
+
+        #endregion Protected Fields
+
+        #region Private Fields
+
+        private readonly LinkedList<Action> _executeList = new LinkedList<Action>();
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
+        private readonly string _url;
+
+        #endregion Private Fields
+
+        #region Protected Constructors
 
         protected BrowserHandlerBase(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, string url)
             : base(modAPI, loggingHandler)
@@ -25,6 +33,16 @@ namespace TDS_Client.Handler.Browser
             Serializer = serializer;
             _url = url;
         }
+
+        #endregion Protected Constructors
+
+        #region Public Properties
+
+        public IBrowser Browser { get; private set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void CreateBrowser()
         {
@@ -34,7 +52,7 @@ namespace TDS_Client.Handler.Browser
 
         public virtual void SetReady(params object[] args)
         {
-            Execute(ToBrowserEvent.InitLoadAngular, args); 
+            Execute(ToBrowserEvent.InitLoadAngular, args);
         }
 
         public void Stop()
@@ -45,6 +63,10 @@ namespace TDS_Client.Handler.Browser
             Browser = null;
             _executeList.Clear();
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
 
         protected void Execute(string eventName, params object[] args)
         {
@@ -64,17 +86,8 @@ namespace TDS_Client.Handler.Browser
         {
             if (Browser is null)
                 _executeList.AddLast(() => Browser.ExecuteJs(str));
-            else 
+            else
                 Browser.ExecuteJs(str);
-        }
-
-        protected void ProcessExecuteList()
-        {
-            foreach (var exec in _executeList)
-            {
-                exec();
-            }
-            _executeList.Clear();
         }
 
         protected string GetExecStr(string eventName, params object[] args)
@@ -125,5 +138,16 @@ namespace TDS_Client.Handler.Browser
 
             return strBuilder.ToString();
         }
+
+        protected void ProcessExecuteList()
+        {
+            foreach (var exec in _executeList)
+            {
+                exec();
+            }
+            _executeList.Clear();
+        }
+
+        #endregion Protected Methods
     }
 }

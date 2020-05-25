@@ -1,11 +1,27 @@
-﻿using System.Collections.Generic;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
-
-namespace TDS_Server.Data.Interfaces.ModAPI.Pool
+﻿namespace TDS_Server.Data.Interfaces.ModAPI.Pool
 {
     public interface IPoolAPI
     {
-        List<IPlayer> GetAllModPlayers();
+        #region Public Properties
+
+        IPoolBlipsAPI Blips { get; }
+        IPoolCheckpointsAPI Checkpoints { get; }
+        IPoolColShapesAPI Colshapes { get; }
+        IPoolDummyEntitiesAPI DummyEntities { get; }
+        IPoolMapObjectsAPI MapObjects { get; }
+        IPoolMarkersAPI Markers { get; }
+        IPoolPedsAPI Peds { get; }
+        IPoolPickupsAPI Pickups { get; }
+        IPoolPlayersAPI Players { get; }
+        IPoolTextLabelsAPI TextLabels { get; }
+        IPoolVehiclesAPI Vehicles { get; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         void RemoveAll();
+
+        #endregion Public Methods
     }
 }

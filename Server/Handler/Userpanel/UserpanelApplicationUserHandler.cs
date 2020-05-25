@@ -20,16 +20,87 @@ using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class UserpanelApplicationUserHandler : DatabaseEntityWrapper, IUserpanelApplicationUserHandler
+    public class AdminQuestionData
     {
+        #region Public Properties
+
+        [JsonProperty("2")]
+        public UserpanelAdminQuestionAnswerType AnswerType { get; set; }
+
+        [JsonProperty("0")]
+        public int ID { get; set; }
+
+        [JsonProperty("1")]
+        public string Question { get; set; } = string.Empty;
+
+        #endregion Public Properties
+    }
+
+    public class AdminQuestionsData
+    {
+        #region Public Properties
+
+        [JsonProperty("0")]
+        public string AdminName { get; set; } = string.Empty;
+
+        [JsonProperty("1")]
+        public IEnumerable<AdminQuestionData>? Questions { get; set; }
+
+        #endregion Public Properties
+    }
+
+    public class ApplicationUserData
+    {
+        #region Public Properties
+
+        [JsonProperty("2")]
         public string AdminQuestions { get; set; } = string.Empty;
 
+        [JsonIgnore]
+        public DateTime CreateDateTime { get; set; }
+
+        [JsonProperty("0")]
+        public string? CreateTime { get; set; }
+
+        [JsonProperty("1")]
+        public IEnumerable<ApplicationUserInvitationData>? Invitations { get; set; }
+
+        #endregion Public Properties
+    }
+
+    public class ApplicationUserInvitationData
+    {
+        #region Public Properties
+
+        [JsonProperty("1")]
+        public string? AdminName { get; set; }
+
+        [JsonProperty("2")]
+        public string? AdminSCName { get; set; }
+
+        [JsonProperty("0")]
+        public int ID { get; set; }
+
+        [JsonProperty("3")]
+        public string? Message { get; set; }
+
+        #endregion Public Properties
+    }
+
+    public class UserpanelApplicationUserHandler : DatabaseEntityWrapper, IUserpanelApplicationUserHandler
+    {
+        #region Private Fields
+
+        private readonly BonusBotConnectorClient _bonusbotConnectorClient;
         private readonly IModAPI _modAPI;
+        private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly BonusBotConnectorClient _bonusbotConnectorClient;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
-        private readonly OfflineMessagesHandler _offlineMessagesHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public UserpanelApplicationUserHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, TDSPlayerHandler tdsPlayerHandler,
@@ -47,28 +118,120 @@ namespace TDS_Server.Handler.Userpanel
             eventsHandler.Hour += DeleteTooLongClosedApplications;
         }
 
-        private async void LoadAdminQuestions()
-        {
-            var list = await ExecuteForDB(dbContext => dbContext.ApplicationQuestions.Include(q => q.Admin).Select(e => new
-            {
-                AdminName = e.Admin.Name,
-                ID = e.Id,
-                e.Question,
-                e.AnswerType
-            }).ToList()
-            .GroupBy(g => g.AdminName)
-            .Select(g => new AdminQuestionsData
-            {
-                AdminName = g.Key,
-                Questions = g.Select(q => new AdminQuestionData
-                {
-                    ID = q.ID,
-                    Question = q.Question,
-                    AnswerType = q.AnswerType
-                })
-            }));
+        #endregion Public Constructors
 
-            AdminQuestions = _serializer.ToBrowser(list);
+        #region Public Properties
+
+        public string AdminQuestions { get; set; } = string.Empty;
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public async Task<object?> AcceptInvitation(ITDSPlayer player, ArraySegment<object> args)
+        {
+            if (args.Count == 0)
+                return null;
+
+            int? invitationId;
+            if ((invitationId = Utils.GetInt(args[0])) == null)
+                return null;
+
+            var invitation = await ExecuteForDBAsync(async dbContext
+                => await dbContext.ApplicationInvitations
+                .Include(i => i.Admin)
+                .ThenInclude(a => a.PlayerSettings)
+                .Where(i => i.Id == invitationId)
+                .FirstOrDefaultAsync());
+            if (invitation == null)
+            {
+                _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                return null;
+            }
+
+            var application = await ExecuteForDBAsync(async dbContext =>
+                await dbContext.Applications.Include(a => a.Player).Where(a => a.Id == invitation.ApplicationId).FirstOrDefaultAsync());
+            if (application.PlayerId != player.Entity!.Id)
+            {
+                LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.",
+                    Environment.StackTrace, null, player);
+                return null;
+            }
+
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.Remove(invitation);
+                application.Closed = true;
+                await dbContext.SaveChangesAsync();
+            });
+
+            player.Entity.AdminLeaderId = invitation.AdminId;
+            player.Entity.AdminLvl = 1;
+            await player.SaveData();
+
+            _modAPI.Thread.RunInMainThread(() =>
+            {
+                player.SendMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
+
+                ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
+                if (admin != null)
+                {
+                    admin.SendMessage(string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
+                }
+                else
+                {
+                    _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I've accepted your team application.");
+                }
+            });
+
+            return null;
+        }
+
+        public async Task<object?> CreateApplication(ITDSPlayer player, ArraySegment<object> args)
+        {
+            string answersJson = (string)args[0];
+            var answers = _serializer.FromBrowser<Dictionary<int, string>>(answersJson);
+
+            var application = new Applications
+            {
+                PlayerId = player.Entity!.Id,
+                Closed = false
+            };
+
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.Applications.Add(application);
+                await dbContext.SaveChangesAsync();
+
+                foreach (var entry in answers)
+                {
+                    var answer = new ApplicationAnswers
+                    {
+                        ApplicationId = application.Id,
+                        QuestionId = entry.Key,
+                        Answer = entry.Value
+                    };
+                    dbContext.ApplicationAnswers.Add(answer);
+                }
+
+                await dbContext.SaveChangesAsync();
+
+                await dbContext.Entry(application).Reference(a => a.Player).LoadAsync();
+            });
+
+            _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application, player);
+            return null;
+        }
+
+        public async void DeleteTooLongClosedApplications(int _)
+        {
+            await ExecuteForDB(async dbContext =>
+            {
+                await dbContext.Applications
+                   .Where(a => a.CreateTime.AddDays(_settingsHandler.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
+                   .ForEachAsync(a => dbContext.Applications.Remove(a));
+                await dbContext.SaveChangesAsync();
+            });
         }
 
         public async Task<string> GetData(ITDSPlayer player)
@@ -116,102 +279,6 @@ namespace TDS_Server.Handler.Userpanel
             }
 
             return _serializer.ToBrowser(new ApplicationUserData { CreateTime = player.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
-        }
-
-        public async Task<object?> CreateApplication(ITDSPlayer player, ArraySegment<object> args)
-        {
-            string answersJson = (string)args[0];
-            var answers = _serializer.FromBrowser<Dictionary<int, string>>(answersJson);
-
-            var application = new Applications
-            {
-                PlayerId = player.Entity!.Id,
-                Closed = false
-            };
-
-            await ExecuteForDBAsync(async dbContext =>
-            {
-                dbContext.Applications.Add(application);
-                await dbContext.SaveChangesAsync();
-
-                foreach (var entry in answers)
-                {
-                    var answer = new ApplicationAnswers
-                    {
-                        ApplicationId = application.Id,
-                        QuestionId = entry.Key,
-                        Answer = entry.Value
-                    };
-                    dbContext.ApplicationAnswers.Add(answer);
-                }
-
-                await dbContext.SaveChangesAsync();
-
-                await dbContext.Entry(application).Reference(a => a.Player).LoadAsync();
-            });
-
-            _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application, player);
-            return null;
-        }
-
-        public async Task<object?> AcceptInvitation(ITDSPlayer player, ArraySegment<object> args)
-        {
-            if (args.Count == 0)
-                return null;
-
-            int? invitationId;
-            if ((invitationId = Utils.GetInt(args[0])) == null)
-                return null;
-
-            var invitation = await ExecuteForDBAsync(async dbContext
-                => await dbContext.ApplicationInvitations
-                .Include(i => i.Admin)
-                .ThenInclude(a => a.PlayerSettings)
-                .Where(i => i.Id == invitationId)
-                .FirstOrDefaultAsync());
-            if (invitation == null)
-            {
-                _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
-                return null;
-            }
-
-            var application = await ExecuteForDBAsync(async dbContext =>
-                await dbContext.Applications.Include(a => a.Player).Where(a => a.Id == invitation.ApplicationId).FirstOrDefaultAsync());
-            if (application.PlayerId != player.Entity!.Id)
-            {
-                LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.", 
-                    Environment.StackTrace, null, player);
-                return null;
-            }
-
-            await ExecuteForDBAsync(async dbContext =>
-            {
-                dbContext.Remove(invitation);
-                application.Closed = true;
-                await dbContext.SaveChangesAsync();
-            });
-
-
-            player.Entity.AdminLeaderId = invitation.AdminId;
-            player.Entity.AdminLvl = 1;
-            await player.SaveData();
-
-            _modAPI.Thread.RunInMainThread(() =>
-            {
-                player.SendMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
-
-                ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
-                if (admin != null)
-                {
-                    admin.SendMessage(string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
-                }
-                else
-                {
-                    _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I've accepted your team application.");
-                }
-            });
-
-            return null;
         }
 
         public async Task<object?> RejectInvitation(ITDSPlayer player, ArraySegment<object> args)
@@ -268,63 +335,37 @@ namespace TDS_Server.Handler.Userpanel
                 }
             });
 
-
             return null;
         }
 
-        public async void DeleteTooLongClosedApplications(int _)
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private async void LoadAdminQuestions()
         {
-            await ExecuteForDB(async dbContext =>
+            var list = await ExecuteForDB(dbContext => dbContext.ApplicationQuestions.Include(q => q.Admin).Select(e => new
             {
-                await dbContext.Applications
-                   .Where(a => a.CreateTime.AddDays(_settingsHandler.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
-                   .ForEachAsync(a => dbContext.Applications.Remove(a));
-                await dbContext.SaveChangesAsync();
-            });
+                AdminName = e.Admin.Name,
+                ID = e.Id,
+                e.Question,
+                e.AnswerType
+            }).ToList()
+            .GroupBy(g => g.AdminName)
+            .Select(g => new AdminQuestionsData
+            {
+                AdminName = g.Key,
+                Questions = g.Select(q => new AdminQuestionData
+                {
+                    ID = q.ID,
+                    Question = q.Question,
+                    AnswerType = q.AnswerType
+                })
+            }));
 
+            AdminQuestions = _serializer.ToBrowser(list);
         }
-    }
 
-    public class ApplicationUserData
-    {
-        [JsonProperty("0")]
-        public string? CreateTime { get; set; }
-        [JsonProperty("1")]
-        public IEnumerable<ApplicationUserInvitationData>? Invitations { get; set; }
-        [JsonProperty("2")]
-        public string AdminQuestions { get; set; } = string.Empty;
-
-        [JsonIgnore]
-        public DateTime CreateDateTime { get; set; }
-    }
-
-    public class ApplicationUserInvitationData
-    {
-        [JsonProperty("0")]
-        public int ID { get; set; }
-        [JsonProperty("1")]
-        public string? AdminName { get; set; }
-        [JsonProperty("2")]
-        public string? AdminSCName { get; set; }
-        [JsonProperty("3")]
-        public string? Message { get; set; }
-    }
-
-    public class AdminQuestionsData
-    {
-        [JsonProperty("0")]
-        public string AdminName { get; set; } = string.Empty;
-        [JsonProperty("1")]
-        public IEnumerable<AdminQuestionData>? Questions { get; set; }
-    }
-
-    public class AdminQuestionData
-    {
-        [JsonProperty("0")]
-        public int ID { get; set; }
-        [JsonProperty("1")]
-        public string Question { get; set; } = string.Empty;
-        [JsonProperty("2")]
-        public UserpanelAdminQuestionAnswerType AnswerType { get; set; }
+        #endregion Private Methods
     }
 }

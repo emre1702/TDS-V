@@ -1,9 +1,7 @@
 ﻿using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Sync;
 using TDS_Shared.Data.Enums;
@@ -13,12 +11,17 @@ namespace TDS_Client.Handler
 {
     public class CrouchingHandler : ServiceBase
     {
+        #region Private Fields
+
+        private const float _clipSetSwitchTime = 0.25f;
         private const string _movementClipSet = "move_ped_crouched";
         private const string _strafeClipSet = "move_ped_crouched_strafing";
-        private const float _clipSetSwitchTime = 0.25f;
-
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public CrouchingHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, DataSyncHandler dataSyncHandler, RemoteEventsSender remoteEventsSender)
             : base(modAPI, loggingHandler)
@@ -26,12 +29,15 @@ namespace TDS_Client.Handler
             _dataSyncHandler = dataSyncHandler;
             _remoteEventsSender = remoteEventsSender;
 
-            // Do that on loggedin
-            // BindManager.Add(Enum.EKey.LCtrl, ToggleCrouch, Enum.EKeyPressState.Up);
+            // Do that on loggedin BindManager.Add(Enum.EKey.LCtrl, ToggleCrouch, Enum.EKeyPressState.Up);
             eventsHandler.DataChanged += PlayerDataSync_OnDataChanged;
 
             // modAPI.Event.EntityStreamIn.Add(new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void OnEntityStreamIn(IEntityBase entity)
         {
@@ -45,6 +51,10 @@ namespace TDS_Client.Handler
                 player.SetStrafeClipset(_strafeClipSet);
             }
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void PlayerDataSync_OnDataChanged(IPlayer player, PlayerDataKey key, object data)
         {
@@ -66,5 +76,7 @@ namespace TDS_Client.Handler
         {
             _remoteEventsSender.Send(ToServerEvent.ToggleCrouch);
         }
+
+        #endregion Private Methods
     }
 }

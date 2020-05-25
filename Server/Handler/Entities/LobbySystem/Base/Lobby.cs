@@ -8,45 +8,37 @@ using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Core;
-using TDS_Server.Handler.Account;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class Lobby : DatabaseEntityWrapper, ILobby
     {
-        public Lobbies Entity { get; }
+        #region Protected Fields
 
-        public int Id => Entity.Id;
-        public LobbyType Type => Entity.Type;
-        public string Name => Entity.Name;
-        public bool IsOfficial => Entity.IsOfficial;
-        public string CreatorName => Entity.Owner?.Name ?? "?";
-        public string OwnerName => CreatorName;
-        public int StartTotalHP => (Entity.FightSettings?.StartArmor ?? 100) + (Entity.FightSettings?.StartHealth ?? 100);
-
-        public uint Dimension { get; }
-        protected Position3D SpawnPoint { get; }
-        public bool IsGangActionLobby { get; set; }
-
-        protected SyncedLobbySettings SyncedLobbySettings;
-        protected readonly Serializer Serializer;
-        protected readonly IModAPI ModAPI;
-        protected readonly LobbiesHandler LobbiesHandler;
-        protected readonly ISettingsHandler SettingsHandler;
-        protected readonly LangHelper LangHelper;
+        protected readonly BansHandler BansHandler;
+        protected readonly BonusBotConnectorClient BonusBotConnectorClient;
         protected readonly DataSyncHandler DataSyncHandler;
         protected readonly EventsHandler EventsHandler;
-        protected readonly BonusBotConnectorClient BonusBotConnectorClient;
-        protected readonly BansHandler BansHandler;
+        protected readonly LangHelper LangHelper;
+        protected readonly LobbiesHandler LobbiesHandler;
+        protected readonly IModAPI ModAPI;
+        protected readonly Serializer Serializer;
+        protected readonly ISettingsHandler SettingsHandler;
+        protected SyncedLobbySettings SyncedLobbySettings;
+
+        #endregion Protected Fields
+
+        #region Public Constructors
 
         public Lobby(
             Lobbies entity,
@@ -113,31 +105,31 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             );
         }
 
-        public virtual void Start()
-        {
-        }
+        #endregion Public Constructors
 
-        protected async virtual Task Remove()
-        {
-            LobbiesHandler.RemoveLobby(this);
+        #region Public Properties
 
-            foreach (TDSPlayer player in Players.Values.ToArray())
-            {
-                await RemovePlayer(player);
-            }
+        public string CreatorName => Entity.Owner?.Name ?? "?";
+        public uint Dimension { get; }
+        public Lobbies Entity { get; }
 
-            await ExecuteForDBAsync(async (dbContext) =>
-            {
-                dbContext.Remove(Entity);
-                await dbContext.SaveChangesAsync();
-            });
-        }
+        public int Id => Entity.Id;
+        public bool IsGangActionLobby { get; set; }
+        public bool IsOfficial => Entity.IsOfficial;
+        public string Name => Entity.Name;
+        public string OwnerName => CreatorName;
+        public int StartTotalHP => (Entity.FightSettings?.StartArmor ?? 100) + (Entity.FightSettings?.StartHealth ?? 100);
+        public LobbyType Type => Entity.Type;
 
-        protected bool IsEmpty()
-        {
-            return Players.Count == 0;
-        }
+        #endregion Public Properties
 
+        #region Protected Properties
+
+        protected Position3D SpawnPoint { get; }
+
+        #endregion Protected Properties
+
+        #region Public Methods
 
         /// <summary>
         /// Call this on lobby create.
@@ -180,7 +172,37 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     IsGangActionLobby: IsGangActionLobby
                 );
             });
-
         }
+
+        public virtual void Start()
+        {
+        }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        protected bool IsEmpty()
+        {
+            return Players.Count == 0;
+        }
+
+        protected async virtual Task Remove()
+        {
+            LobbiesHandler.RemoveLobby(this);
+
+            foreach (TDSPlayer player in Players.Values.ToArray())
+            {
+                await RemovePlayer(player);
+            }
+
+            await ExecuteForDBAsync(async (dbContext) =>
+            {
+                dbContext.Remove(Entity);
+                await dbContext.SaveChangesAsync();
+            });
+        }
+
+        #endregion Protected Methods
     }
 }

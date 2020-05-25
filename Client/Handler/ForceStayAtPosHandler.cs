@@ -14,13 +14,18 @@ namespace TDS_Client.Handler
 {
     public class ForceStayAtPosHandler : ServiceBase
     {
+        #region Private Fields
+
+        private readonly DxHandler _dxHandler;
+        private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly Serializer _serializer;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly TimerHandler _timerHandler;
         private MapLimit _mapLimit;
 
-        private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly DxHandler _dxHandler;
-        private readonly TimerHandler _timerHandler;
-        private readonly Serializer _serializer;
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public ForceStayAtPosHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
             Serializer serializer)
@@ -36,20 +41,24 @@ namespace TDS_Client.Handler
             modAPI.Event.Add(ToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public void Start(Position3D pos, float radius, MapLimitType type, int allowedTimeOut = 0)
         {
             _mapLimit?.Stop();
 
             var edges = new List<Position3D>
             {
-                new Position3D { X = pos.X - radius, Y = pos.Y, Z = pos.Z },  // left 
+                new Position3D { X = pos.X - radius, Y = pos.Y, Z = pos.Z },  // left
                 new Position3D { X = pos.X - radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // left top
-                new Position3D { X = pos.X, Y = pos.Y - radius, Z = pos.Z },  // top 
-                new Position3D { X = pos.X + radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // top right 
-                new Position3D { X = pos.X + radius, Y = pos.Y, Z = pos.Z },  // right 
-                new Position3D { X = pos.X + radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // right bottom 
-                new Position3D { X = pos.X, Y = pos.Y + radius, Z = pos.Z },  // bottom 
-                new Position3D { X = pos.X - radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // bottom left  
+                new Position3D { X = pos.X, Y = pos.Y - radius, Z = pos.Z },  // top
+                new Position3D { X = pos.X + radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // top right
+                new Position3D { X = pos.X + radius, Y = pos.Y, Z = pos.Z },  // right
+                new Position3D { X = pos.X + radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // right bottom
+                new Position3D { X = pos.X, Y = pos.Y + radius, Z = pos.Z },  // bottom
+                new Position3D { X = pos.X - radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // bottom left
             };
             _mapLimit = new MapLimit(edges, type, allowedTimeOut, Color.FromArgb(30, 255, 255, 255), ModAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
             _mapLimit.Start();
@@ -60,6 +69,10 @@ namespace TDS_Client.Handler
             _mapLimit?.Stop();
             _mapLimit = null;
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void OnRemoveForceStayAtPositionMethod(object[] args)
         {
@@ -75,5 +88,7 @@ namespace TDS_Client.Handler
 
             Start(pos, radius, type, allowedTimeOut);
         }
+
+        #endregion Private Methods
     }
 }

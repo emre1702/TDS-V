@@ -5,16 +5,21 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Input
 {
     public interface IInputAPI
     {
+        #region Public Methods
+
+        int Bind(Key keyCode, bool down, Action handler);
+
+        int Bind(int keyCode, bool down, Action handler);
+
         bool IsDown(int keyCode);
+
         bool IsDown(Key keyCode);
 
         bool IsUp(int keyCode);
 
         bool IsUp(Key keyCode);
 
-        int Bind(Key keyCode, bool down, Action handler);
-
-        int Bind(int keyCode, bool down, Action handler);
+        void TakeScreenshot(string name, int type, float quality, float compQuality);
 
         void Unbind(int keyCode, bool down, Action handler);
 
@@ -24,6 +29,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Input
 
         void Unbind(Key keyCode, bool down, int bindIdx);
 
-        void TakeScreenshot(string name, int type, float quality, float compQuality);
+        #endregion Public Methods
     }
 }

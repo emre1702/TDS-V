@@ -4,7 +4,13 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Private Fields
+
         private TDS_Shared.Data.Enums.Language _langEnumBeforeLogin = TDS_Shared.Data.Enums.Language.English;
+
+        #endregion Private Fields
+
+        #region Public Properties
 
         public ILanguage Language { get; private set; }
 
@@ -26,5 +32,6 @@ namespace TDS_Server.Handler.Entities.Player
             }
         }
 
+        #endregion Public Properties
     }
 }

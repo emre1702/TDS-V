@@ -2,31 +2,39 @@
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel;
-using TDS_Server.Data;
+using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Sync;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Userpanel;
-using TDS_Shared.Core;
-using TDS_Server.Data.Interfaces.ModAPI;
-using System.Collections.Generic;
-using TDS_Server.Data.Utility;
-using TDS_Server.Data.Interfaces.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelSettingsSpecialHandler : IUserpanelSettingsSpecialHandler
     {
-        private readonly IModAPI _modAPI;
-        private readonly ISettingsHandler _settingsHandler;
-        private readonly Serializer _serializer;
-        private readonly ILoggingHandler _loggingHandler;
-        private readonly DataSyncHandler _dataSyncHandler;
+        #region Private Fields
 
-        public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, Serializer serializer, ILoggingHandler loggingHandler, 
-            DataSyncHandler dataSyncHandler, IModAPI modAPI) 
-            => (_modAPI, _settingsHandler, _serializer, _loggingHandler, _dataSyncHandler) 
+        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly ILoggingHandler _loggingHandler;
+        private readonly IModAPI _modAPI;
+        private readonly Serializer _serializer;
+        private readonly ISettingsHandler _settingsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, Serializer serializer, ILoggingHandler loggingHandler,
+            DataSyncHandler dataSyncHandler, IModAPI modAPI)
+            => (_modAPI, _settingsHandler, _serializer, _loggingHandler, _dataSyncHandler)
             = (modAPI, settingsHandler, serializer, loggingHandler, dataSyncHandler);
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public string? GetData(ITDSPlayer player)
         {
@@ -39,7 +47,6 @@ namespace TDS_Server.Handler.Userpanel
                 Username = player.Entity.Name,
                 Email = player.Entity.Email,
                 UsernameBuyInCooldown = lastUsernameChange.HasValue && lastUsernameChange.Value.AddDays(_settingsHandler.ServerSettings.UsernameChangeCooldownDays) > DateTime.UtcNow
-
             };
             return _serializer.ToBrowser(data);
         }
@@ -82,14 +89,17 @@ namespace TDS_Server.Handler.Userpanel
                     oldValue = player.Entity.Name;
                     player.Entity.Name = value;
                     break;
+
                 case UserpanelSettingsSpecialType.Password:
                     oldValue = player.Entity.Password;
                     player.Entity.Password = Utils.HashPasswordServer(value);
                     break;
+
                 case UserpanelSettingsSpecialType.Email:
                     oldValue = player.Entity.Email;
                     player.Entity.Email = value;
                     break;
+
                 default:
                     return "Unknown error";
             }
@@ -113,14 +123,15 @@ namespace TDS_Server.Handler.Userpanel
                         case UserpanelSettingsSpecialType.Username:
                             player.ModPlayer!.Name = (string)oldValue;
                             break;
+
                         case UserpanelSettingsSpecialType.Password:
                             player.Entity.Password = (string)oldValue;
                             break;
+
                         case UserpanelSettingsSpecialType.Email:
                             player.Entity.Email = (string)oldValue;
                             break;
                     }
-
                 }
 
                 return "Unknown error";
@@ -136,5 +147,7 @@ namespace TDS_Server.Handler.Userpanel
 
             return string.Empty;
         }
+
+        #endregion Public Methods
     }
 }

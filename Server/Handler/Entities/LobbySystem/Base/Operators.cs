@@ -4,14 +4,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        public static bool operator ==(Lobby? lobby1, Lobby? lobby2)
-        {
-            if (lobby1 is null)
-                return lobby2 is null;
-            if (lobby2 is null)
-                return false;
-            return lobby1.Id == lobby2.Id;
-        }
+        #region Public Methods
 
         public static bool operator !=(Lobby? lobby1, Lobby? lobby2)
         {
@@ -20,6 +13,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (lobby2 is null)
                 return true;
             return lobby1.Id != lobby2.Id;
+        }
+
+        public static bool operator ==(Lobby? lobby1, Lobby? lobby2)
+        {
+            if (lobby1 is null)
+                return lobby2 is null;
+            if (lobby2 is null)
+                return false;
+            return lobby1.Id == lobby2.Id;
         }
 
         public override bool Equals(object? obj)
@@ -42,5 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             return base.GetHashCode();
         }
+
+        #endregion Public Methods
     }
 }

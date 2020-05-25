@@ -8,12 +8,18 @@ namespace TDS_Client.Handler
 {
     public class VoiceHandler : ServiceBase
     {
-        private readonly SettingsHandler _settingsHandler;
-        private readonly BrowserHandler _browserHandler;
-        private readonly UtilsHandler _utilsHandler;
-        private readonly BindsHandler _bindsHandler;
+        #region Private Fields
 
-        public VoiceHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler, 
+        private readonly BindsHandler _bindsHandler;
+        private readonly BrowserHandler _browserHandler;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly UtilsHandler _utilsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public VoiceHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler,
             UtilsHandler utilsHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -28,6 +34,24 @@ namespace TDS_Client.Handler
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
             eventsHandler.SettingsLoaded += EventsHandler_SettingsLoaded;
             eventsHandler.PlayerJoinedSameLobby += SetForPlayer;
+        }
+
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Control.PushToTalk, Start, KeyPressState.Down);
+            _bindsHandler.Add(Control.PushToTalk, Stop, KeyPressState.Up);
+        }
+
+        private void EventsHandler_SettingsLoaded()
+        {
+            foreach (var player in ModAPI.Pool.Players.All)
+            {
+                SetForPlayer(player);
+            }
         }
 
         private void SetForPlayer(IPlayer player)
@@ -61,18 +85,6 @@ namespace TDS_Client.Handler
             _browserHandler.PlainMain.StopPlayerTalking(_utilsHandler.GetDisplayName(ModAPI.LocalPlayer));
         }
 
-        private void EventsHandler_LoggedIn()
-        {
-            _bindsHandler.Add(Control.PushToTalk, Start, KeyPressState.Down);
-            _bindsHandler.Add(Control.PushToTalk, Stop, KeyPressState.Up);
-        }
-
-        private void EventsHandler_SettingsLoaded()
-        {
-            foreach (var player in ModAPI.Pool.Players.All)
-            {
-                SetForPlayer(player);
-            }
-        }
+        #endregion Private Methods
     }
 }

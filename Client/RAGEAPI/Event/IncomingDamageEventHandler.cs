@@ -1,18 +1,24 @@
-﻿using TDS_Shared.Data.Models;
+﻿using System;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Entity;
 using TDS_Shared.Data.Enums;
-using TDS_Client.Handler;
-using System;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Client.RAGEAPI.Event
 {
     public class IncomingDamageEventHandler : BaseEventHandler<IncomingDamageDelegate>
     {
-        private readonly LoggingHandler _loggingHandler;
+        #region Private Fields
+
         private readonly EntityConvertingHandler _entityConvertingHandler;
+        private readonly LoggingHandler _loggingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public IncomingDamageEventHandler(LoggingHandler loggingHandler, EntityConvertingHandler entityConvertingHandler)
             : base()
@@ -23,7 +29,11 @@ namespace TDS_Client.RAGEAPI.Event
             RAGE.Events.OnIncomingDamage += IncomingDamage;
         }
 
-        private void IncomingDamage(RAGE.Elements.Player sourcePlayerMod, RAGE.Elements.Entity sourceEntityMod, RAGE.Elements.Entity targetEntityMod, 
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        private void IncomingDamage(RAGE.Elements.Player sourcePlayerMod, RAGE.Elements.Entity sourceEntityMod, RAGE.Elements.Entity targetEntityMod,
             ulong weaponHashMod, ulong boneIdx, int damage, RAGE.Events.CancelEventArgs cancelMod)
         {
             if (Actions.Count == 0)
@@ -37,7 +47,6 @@ namespace TDS_Client.RAGEAPI.Event
                 var weaponHash = (WeaponHash)weaponHashMod;
                 var cancel = new CancelEventArgs();
 
-
                 for (int i = Actions.Count - 1; i >= 0; --i)
                 {
                     var action = Actions[i];
@@ -46,12 +55,13 @@ namespace TDS_Client.RAGEAPI.Event
                 }
 
                 cancelMod.Cancel = cancel.Cancel;
-            } 
+            }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
             }
         }
 
+        #endregion Private Methods
     }
 }

@@ -14,19 +14,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
+        #region Private Fields
+
+        private readonly List<IBlip> _mapBlips = new List<IBlip>();
         private MapDto? _currentMap;
         private Position3D? _currentMapSpectatorPosition;
         private List<MapDto> _maps = new List<MapDto>();
-        private readonly List<IBlip> _mapBlips = new List<IBlip>();
         private string _mapsJson = string.Empty;
 
-        private MapDto? GetNextMap()
-        {
-            MapDto? map = GetVotedMap();
-            if (map is { })
-                return map;
-            return GetRandomMap();
-        }
+        #endregion Private Fields
+
+        #region Public Methods
 
         public MapDto? GetRandomMap()
         {
@@ -51,6 +49,18 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return GetRandomMapFromList(_maps);
         }
 
+        public void SetMapList(List<MapDto> themaps, string? syncjson = null)
+        {
+            // Only choose maps with team-amount same as this lobby got teams (without spectator)
+            _maps = themaps.Where(m => m.TeamSpawnsList.TeamSpawns.Length == Teams.Count - 1).ToList();
+
+            _mapsJson = syncjson ?? Serializer.ToBrowser(_maps.Select(m => m.BrowserSyncedData).ToList());
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         private static MapDto GetRandomMapFromList(List<MapDto> list)
         {
             var sumRatings = (int)Math.Floor(list.Sum(m => m.RatingAverage));
@@ -67,10 +77,22 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return SharedUtils.GetRandom(list);
         }
 
+        private void CreateMapLimitBlips(MapDto map)
+        {
+            if (map.LimitInfo.Edges is null)
+                return;
+            int i = 0;
+            foreach (Position3DDto edge in map.LimitInfo.Edges)
+            {
+                IBlip blip = ModAPI.Blip.Create(SharedConstants.MapLimitBlipSprite, edge, name: "Limit " + ++i, dimension: Dimension);
+                _mapBlips.Add(blip);
+            }
+        }
+
         /// <summary>
-        /// Creates a blip for every team-spawn "region".
-        /// If many spawns are at one position/region, only one blip will get created.
-        /// But if there are many spawn-regions, there will be multiple blips.
+        /// Creates a blip for every team-spawn "region". If many spawns are at one position/region,
+        /// only one blip will get created. But if there are many spawn-regions, there will be
+        /// multiple blips.
         /// </summary>
         /// <param name="map"></param>
         private void CreateTeamSpawnBlips(MapDto map)
@@ -96,16 +118,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        private void CreateMapLimitBlips(MapDto map)
+        private void DeleteMapBlips()
         {
-            if (map.LimitInfo.Edges is null)
-                return;
-            int i = 0;
-            foreach (Position3DDto edge in map.LimitInfo.Edges)
+            foreach (IBlip blip in _mapBlips)
             {
-                IBlip blip = ModAPI.Blip.Create(SharedConstants.MapLimitBlipSprite, edge, name: "Limit " + ++i, dimension: Dimension);
-                _mapBlips.Add(blip);
+                blip.Delete();
             }
+            _mapBlips.Clear();
         }
 
         private Position4DDto? GetMapRandomSpawnData(ITeam? team)
@@ -124,21 +143,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return teamSpawns[index];
         }
 
-        private void DeleteMapBlips()
+        private MapDto? GetNextMap()
         {
-            foreach (IBlip blip in _mapBlips)
-            {
-                blip.Delete();
-            }
-            _mapBlips.Clear();
+            MapDto? map = GetVotedMap();
+            if (map is { })
+                return map;
+            return GetRandomMap();
         }
 
-        public void SetMapList(List<MapDto> themaps, string? syncjson = null)
-        {
-            // Only choose maps with team-amount same as this lobby got teams (without spectator)
-            _maps = themaps.Where(m => m.TeamSpawnsList.TeamSpawns.Length == Teams.Count - 1).ToList();
-
-            _mapsJson = syncjson ?? Serializer.ToBrowser(_maps.Select(m => m.BrowserSyncedData).ToList());
-        }
+        #endregion Private Methods
     }
 }

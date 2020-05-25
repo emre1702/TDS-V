@@ -5,14 +5,24 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Player
 {
-    class LocalPlayer : Player, ILocalPlayer
+    internal class LocalPlayer : Player, ILocalPlayer
     {
-        private readonly RAGE.Elements.Player _instance;
+        #region Private Fields
+
         private readonly EntityConvertingHandler _entityConvertingHandler;
+        private readonly RAGE.Elements.Player _instance;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public LocalPlayer(RAGE.Elements.Player player, EntityConvertingHandler entityConvertingHandler)
             : base(player, entityConvertingHandler)
             => (_instance, _entityConvertingHandler) = (player, entityConvertingHandler);
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public bool AreFlashingStarsAboutToDrop()
             => RAGE.Game.Player.ArePlayerFlashingStarsAboutToDrop();
@@ -100,9 +110,6 @@ namespace TDS_Client.RAGEAPI.Player
 
         public bool GetInvincible()
             => RAGE.Game.Player.GetPlayerInvincible();
-
-        public new void SetInvincible(bool toggle) 
-            => RAGE.Game.Player.SetPlayerInvincible(toggle);
 
         public bool GetIsFreeAimingAt(ref int entity)
             => RAGE.Game.Player.GetEntityPlayerIsFreeAimingAt(ref entity);
@@ -223,6 +230,9 @@ namespace TDS_Client.RAGEAPI.Player
 
         public bool IsCamControlDisabled()
             => RAGE.Game.Player.IsPlayerCamControlDisabled();
+
+        public new bool IsClimbing()
+            => RAGE.Game.Player.IsPlayerClimbing();
 
         public bool IsControlOn()
             => RAGE.Game.Player.IsPlayerControlOn();
@@ -377,12 +387,14 @@ namespace TDS_Client.RAGEAPI.Player
         public void SetIgnoreLowPriorityShockingEvents(bool toggle)
             => RAGE.Game.Player.SetIgnoreLowPriorityShockingEvents(toggle);
 
+        public new void SetInvincible(bool toggle)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            => RAGE.Game.Player.SetPlayerInvincible(toggle);
+
         public void SetLockon(bool toggle)
             => RAGE.Game.Player.SetPlayerLockon(toggle);
 
         public void SetLockonRangeOverride(float range)
             => RAGE.Game.Player.SetPlayerLockonRangeOverride(range);
-
 
         public void SetMaxArmour(int value)
             => RAGE.Game.Player.SetPlayerMaxArmour(value);
@@ -549,7 +561,6 @@ namespace TDS_Client.RAGEAPI.Player
         public void SwitchCrimeType(int p1)
             => RAGE.Game.Player.SwitchCrimeType(p1);
 
-        public new bool IsClimbing()
-            => RAGE.Game.Player.IsPlayerClimbing();
+        #endregion Public Methods
     }
 }

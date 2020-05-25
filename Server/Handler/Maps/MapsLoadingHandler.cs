@@ -11,37 +11,82 @@ using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
-using TDS_Shared.Data.Utility;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Utility;
+
 using DB = TDS_Server.Database.Entity;
 
 namespace TDS_Server.Handler.Maps
 {
     public class MapsLoadingHandler
     {
-        public IEnumerable<MapDto> AllCreatingMaps => NewCreatedMaps.Union(NeedCheckMaps);    // .Union(_savedMaps)
+        #region Public Fields
 
         /// <summary>
         /// Former: AllMaps
         /// </summary>
         public List<MapDto> DefaultMaps = new List<MapDto>();
+
+        public List<MapDto> NeedCheckMaps = new List<MapDto>();
         public List<MapDto> NewCreatedMaps = new List<MapDto>();
         public List<MapDto> SavedMaps = new List<MapDto>();
-        public List<MapDto> NeedCheckMaps = new List<MapDto>();
 
-        private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
+        #endregion Public Fields
+
+        #region Private Fields
 
         private readonly TDSDbContext _dbContext;
         private readonly EventsHandler _eventsHandler;
-
-        private readonly Serializer _serializer;
         private readonly ILoggingHandler _loggingHandler;
+        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, Serializer serializer, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
             => (_dbContext, _eventsHandler, _serializer, _loggingHandler, _settingsHandler) = (dbContext, eventsHandler, serializer, loggingHandler, settingsHandler);
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public IEnumerable<MapDto> AllCreatingMaps => NewCreatedMaps.Union(NeedCheckMaps);
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        // .Union(_savedMaps)
+        public object? GetAllMapsForCustomLobby(ITDSPlayer player, ref ArraySegment<object> args)
+        {
+            var allMapsSyncData = DefaultMaps.Union(NewCreatedMaps).Union(NeedCheckMaps).Select(m => m.BrowserSyncedData);
+
+            return _serializer.ToBrowser(allMapsSyncData);
+        }
+
+        public MapDto? GetMapById(int id)
+        {
+            return DefaultMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == id);
+        }
+
+        public MapDto? GetMapByName(string mapName)
+        {
+            return DefaultMaps.FirstOrDefault(m => m.Info.Name == mapName);
+        }
+
+        public MapDto? GetRandomNewMap()
+        {
+            if (NewCreatedMaps.Count == 0)
+                return null;
+            var list = NewCreatedMaps.Where(m => m.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck).ToList();
+            if (list.Count == 0)
+                return null;
+            return SharedUtils.GetRandom(list);
+        }
 
         public void LoadAllMaps()
         {
@@ -50,7 +95,8 @@ namespace TDS_Server.Handler.Maps
             NewCreatedMaps = LoadMaps(Constants.NewMapsPath, false, allDbMaps);
             foreach (var map in NewCreatedMaps)
             {
-                // Player shouldn't be able to see the creator of the map (so they don't rate it depending of the creator)
+                // Player shouldn't be able to see the creator of the map (so they don't rate it
+                // depending of the creator)
                 map.BrowserSyncedData.CreatorName = string.Empty;
                 map.Info.IsNewMap = true;
             }
@@ -70,6 +116,66 @@ namespace TDS_Server.Handler.Maps
             DefaultMaps = LoadMaps(Constants.MapsPath, false, allDbMaps);
 
             _eventsHandler.OnMapsLoaded();
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private static void LoadMapsDBInfos(List<MapDto> maps, List<DB.Rest.Maps> allDbMap)
+        {
+            foreach (var map in maps)
+            {
+                var dbMap = allDbMap.First(m => m.Name == map.Info.Name);
+
+                map.BrowserSyncedData.CreatorName = dbMap.Creator?.Name ?? "?";
+                map.BrowserSyncedData.Id = dbMap.Id;
+                map.Ratings = dbMap.PlayerMapRatings.ToList();
+                map.RatingAverage = map.Ratings.Count > 0 ? map.Ratings.Average(r => r.Rating) : 5;
+            }
+        }
+
+        private static void LoadSavedMapsFakeDBInfos(List<MapDto> maps)
+        {
+            int negativeIdCounterForSaveMaps = 0;
+            foreach (var map in maps)
+            {
+                map.BrowserSyncedData.CreatorName = "?";
+                map.BrowserSyncedData.Id = --negativeIdCounterForSaveMaps;
+                map.Ratings = new List<DB.Player.PlayerMapRatings>();
+                map.RatingAverage = 5;
+            }
+        }
+
+        private MapDto? LoadMap(FileInfo fileInfo, bool isOnlySaved)
+        {
+            using XmlReader reader = XmlReader.Create(fileInfo.OpenText());
+            if (!_xmlSerializer.CanDeserialize(reader))
+            {
+                _loggingHandler.LogError($"Could not deserialize file {fileInfo.FullName}.", Environment.StackTrace);
+                return null;
+            }
+
+            MapDto map = (MapDto)_xmlSerializer.Deserialize(reader);
+            map.Info.FilePath = fileInfo.FullName;
+
+            if (isOnlySaved)
+                return map;
+
+            if (map.Info.Type != MapType.Gangwar &&
+                (map.LimitInfo.Center is null ||
+                (map.LimitInfo.Center.X == 0 && map.LimitInfo.Center.Y == 0 && map.LimitInfo.Center.Z == 0)))
+                map.LimitInfo.Center = map.GetCenter();
+
+            uint teamId = 0;
+            foreach (var mapTeamSpawns in map.TeamSpawnsList.TeamSpawns)
+            {
+                mapTeamSpawns.TeamID = ++teamId;
+            }
+
+            map.CreateJsons(_serializer);
+            map.LoadSyncedData();
+            return map;
         }
 
         private List<MapDto> LoadMaps(string path, bool isOnlySaved, List<DB.Rest.Maps> allDbMaps)
@@ -104,65 +210,6 @@ namespace TDS_Server.Handler.Maps
             return list;
         }
 
-        public object? GetAllMapsForCustomLobby(ITDSPlayer player, ref ArraySegment<object> args)
-        {
-            var allMapsSyncData = DefaultMaps.Union(NewCreatedMaps).Union(NeedCheckMaps).Select(m => m.BrowserSyncedData);
-
-            return _serializer.ToBrowser(allMapsSyncData);
-
-        }
-
-        private MapDto? LoadMap(FileInfo fileInfo, bool isOnlySaved)
-        {
-            using XmlReader reader = XmlReader.Create(fileInfo.OpenText());
-            if (!_xmlSerializer.CanDeserialize(reader))
-            {
-                _loggingHandler.LogError($"Could not deserialize file {fileInfo.FullName}.", Environment.StackTrace);
-                return null;
-            }
-
-            MapDto map = (MapDto)_xmlSerializer.Deserialize(reader);
-            map.Info.FilePath = fileInfo.FullName;
-
-            if (isOnlySaved)
-                return map;
-
-            if (map.Info.Type != MapType.Gangwar &&
-                (map.LimitInfo.Center is null ||
-                (map.LimitInfo.Center.X == 0 && map.LimitInfo.Center.Y == 0 && map.LimitInfo.Center.Z == 0)))
-                map.LimitInfo.Center = map.GetCenter();
-
-            uint teamId = 0;
-            foreach (var mapTeamSpawns in map.TeamSpawnsList.TeamSpawns)
-            {
-                mapTeamSpawns.TeamID = ++teamId;
-            }
-
-            map.CreateJsons(_serializer);
-            map.LoadSyncedData();
-            return map;
-        }
-
-        public MapDto? GetMapById(int id)
-        {
-            return DefaultMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == id);
-        }
-
-        public MapDto? GetMapByName(string mapName)
-        {
-            return DefaultMaps.FirstOrDefault(m => m.Info.Name == mapName);
-        }
-
-        public MapDto? GetRandomNewMap()
-        {
-            if (NewCreatedMaps.Count == 0)
-                return null;
-            var list = NewCreatedMaps.Where(m => m.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck).ToList();
-            if (list.Count == 0)
-                return null;
-            return SharedUtils.GetRandom(list);
-        }
-
         private void SaveMapsInDB(List<MapDto> maps, List<DB.Rest.Maps> allDbMap)
         {
             _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
@@ -183,29 +230,6 @@ namespace TDS_Server.Handler.Maps
             _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        private static void LoadMapsDBInfos(List<MapDto> maps, List<DB.Rest.Maps> allDbMap)
-        {
-            foreach (var map in maps)
-            {
-                var dbMap = allDbMap.First(m => m.Name == map.Info.Name);
-
-                map.BrowserSyncedData.CreatorName = dbMap.Creator?.Name ?? "?";
-                map.BrowserSyncedData.Id = dbMap.Id;
-                map.Ratings = dbMap.PlayerMapRatings.ToList();
-                map.RatingAverage = map.Ratings.Count > 0 ? map.Ratings.Average(r => r.Rating) : 5;
-            }
-        }
-
-        private static void LoadSavedMapsFakeDBInfos(List<MapDto> maps)
-        {
-            int negativeIdCounterForSaveMaps = 0;
-            foreach (var map in maps)
-            {
-                map.BrowserSyncedData.CreatorName = "?";
-                map.BrowserSyncedData.Id = --negativeIdCounterForSaveMaps;
-                map.Ratings = new List<DB.Player.PlayerMapRatings>();
-                map.RatingAverage = 5;
-            }
-        }
+        #endregion Private Methods
     }
 }

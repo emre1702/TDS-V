@@ -13,18 +13,23 @@ namespace TDS_Client.Handler.Lobby
 {
     public class MapManagerHandler
     {
-        private bool _open;
-        private int _lobbyIdAtLastLoad;
-        private string _lastMapsJson;
-        private bool _mapBuyDataSynced;
+        #region Private Fields
 
-        private readonly IModAPI ModAPI;
-        private readonly BrowserHandler _browserHandler;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly CursorHandler _cursorHandler;
-        private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly DataSyncHandler _dataSyncHandler;
         private readonly BindsHandler _bindsHandler;
+        private readonly BrowserHandler _browserHandler;
+        private readonly CursorHandler _cursorHandler;
+        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly IModAPI ModAPI;
+        private string _lastMapsJson;
+        private int _lobbyIdAtLastLoad;
+        private bool _mapBuyDataSynced;
+        private bool _open;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapManagerHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler browserHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler,
             RemoteEventsSender remoteEventsSender, DataSyncHandler dataSyncHandler, BindsHandler bindsHandler)
@@ -45,36 +50,9 @@ namespace TDS_Client.Handler.Lobby
             modAPI.Event.Add(ToClientEvent.MapsListRequest, OnMapListRequestMethod);
         }
 
-        public void ToggleMenu(Key _)
-        {
-            if (_browserHandler.InInput)
-                return;
+        #endregion Public Constructors
 
-            if (!_open)
-            {
-                if (!_settingsHandler.InLobbyWithMaps)
-                    return;
-                OpenMenu();
-            }
-            else
-            {
-                CloseMenu();
-            }
-        }
-
-        private void OpenMenu()
-        {
-            _cursorHandler.Visible = true;
-            _open = true;
-
-            if (_lobbyIdAtLastLoad == _settingsHandler.LobbyId)
-            {
-                _browserHandler.Angular.OpenMapMenu(_lastMapsJson);
-                return;
-            }
-
-            _remoteEventsSender.Send(ToServerEvent.MapsListRequest);
-        }
+        #region Public Methods
 
         public void CloseMenu(bool sendToBrowser = true)
         {
@@ -100,6 +78,42 @@ namespace TDS_Client.Handler.Lobby
             _browserHandler.Angular.OpenMapMenu(mapjson);
         }
 
+        public void ToggleMenu(Key _)
+        {
+            if (_browserHandler.InInput)
+                return;
+
+            if (!_open)
+            {
+                if (!_settingsHandler.InLobbyWithMaps)
+                    return;
+                OpenMenu();
+            }
+            else
+            {
+                CloseMenu();
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
+        {
+            CloseMenu();
+        }
+
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Key.F3, ToggleMenu);
+        }
+
+        private void OnMapListRequestMethod(object[] args)
+        {
+            LoadMapList((string)args[0]);
+        }
+
         private void OnMapsBoughtCounterChanged(IPlayer player, PlayerDataKey key, object data)
         {
             if (player != ModAPI.LocalPlayer)
@@ -110,19 +124,20 @@ namespace TDS_Client.Handler.Lobby
             _browserHandler.Angular.SyncMapPriceData((int)data);
         }
 
-        private void EventsHandler_LoggedIn()
+        private void OpenMenu()
         {
-            _bindsHandler.Add(Key.F3, ToggleMenu);
+            _cursorHandler.Visible = true;
+            _open = true;
+
+            if (_lobbyIdAtLastLoad == _settingsHandler.LobbyId)
+            {
+                _browserHandler.Angular.OpenMapMenu(_lastMapsJson);
+                return;
+            }
+
+            _remoteEventsSender.Send(ToServerEvent.MapsListRequest);
         }
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
-        {
-            CloseMenu();
-        }
-
-        private void OnMapListRequestMethod(object[] args)
-        {
-            LoadMapList((string)args[0]);
-        }
+        #endregion Private Methods
     }
 }

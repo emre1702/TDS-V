@@ -12,18 +12,22 @@ namespace TDS_Client.Handler.Lobby
 {
     public class CountdownHandler : ServiceBase
     {
-        private DxText _text;
-        private TDSTimer _countdownTimer;
-        private int _currentCountdownTime;
+        #region Private Fields
 
-        private readonly string[] _countdownSounds = new string[] { "go", "1", "2", "3" };
-
-        private readonly SettingsHandler _settingsHandler;
-        private readonly DxHandler _dxHandler;
-        private readonly TimerHandler _timerHandler;
         private readonly BrowserHandler _browserHandler;
+        private readonly string[] _countdownSounds = new string[] { "go", "1", "2", "3" };
+        private readonly DxHandler _dxHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly LobbyCamHandler _lobbyCamHandler;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly TimerHandler _timerHandler;
+        private TDSTimer _countdownTimer;
+        private int _currentCountdownTime;
+        private DxText _text;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public CountdownHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
             BrowserHandler browserHandler, EventsHandler eventsHandler, LobbyCamHandler lobbyCamHandler)
@@ -42,6 +46,37 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.RoundEnded += _ => Stop();
 
             modAPI.Event.Add(ToClientEvent.CountdownStart, OnCountdownStartMethod);
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void End()
+        {
+            try
+            {
+                _currentCountdownTime = 0;
+                if (_countdownTimer != null)
+                {
+                    _countdownTimer?.Kill();
+                    if (_text == null)
+                        _text = new DxText(_dxHandler, ModAPI, _timerHandler, "GO", 0.5f, 0.2f, 2f, Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Center);
+                    else
+                    {
+                        _text.Text = "GO";
+                        _text.SetScale(2f);
+                    }
+                    PlaySound();
+                    _countdownTimer = new TDSTimer(Stop, 2000, 1);
+                }
+                else
+                    Stop();
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
         public void Start()
@@ -89,33 +124,6 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        public void End()
-        {
-            try
-            {
-                _currentCountdownTime = 0;
-                if (_countdownTimer != null)
-                {
-                    _countdownTimer?.Kill();
-                    if (_text == null)
-                        _text = new DxText(_dxHandler, ModAPI, _timerHandler, "GO", 0.5f, 0.2f, 2f, Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Center);
-                    else
-                    {
-                        _text.Text = "GO";
-                        _text.SetScale(2f);
-                    }
-                    PlaySound();
-                    _countdownTimer = new TDSTimer(Stop, 2000, 1);
-                }
-                else
-                    Stop();
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
         public void Stop()
         {
             try
@@ -126,6 +134,56 @@ namespace TDS_Client.Handler.Lobby
                 _countdownTimer?.Kill();
                 _countdownTimer = null;
                 Logging.LogInfo("", "CountdownHandler.Stop", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void OnCountdownStartMethod(object[] args)
+        {
+            try
+            {
+                Logging.LogInfo("", "CountdownHandler.OnCountdownStartMethod");
+                _eventsHandler.OnCountdownStarted((bool)args[0]);
+
+                int mstimetoplayer = (int)Math.Ceiling(_settingsHandler.CountdownTime * 1000 * 0.9);
+                if (args.Length <= 1)
+                {
+                    Start();
+                    _lobbyCamHandler.SetGoTowardsPlayer(mstimetoplayer);
+                }
+                else
+                {
+                    int remainingms = (int)args[1];
+                    StartAfterwards(remainingms);
+                    int timeofcountdowncameraisatplayer = _settingsHandler.CountdownTime * 1000 - mstimetoplayer;
+                    if (remainingms < timeofcountdowncameraisatplayer)
+                        _lobbyCamHandler.SetGoTowardsPlayer(remainingms);
+                    else
+                        _lobbyCamHandler.SetGoTowardsPlayer(remainingms - timeofcountdowncameraisatplayer);
+                }
+                Logging.LogInfo("", "CountdownHandler.OnCountdownStartMethod", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        private void PlaySound()
+        {
+            try
+            {
+                Logging.LogInfo("", "CountdownHandler.PlaySound");
+                if (_countdownSounds.Length > _currentCountdownTime)
+                    _browserHandler.PlainMain.PlaySound(_countdownSounds[_currentCountdownTime]);
+                Logging.LogInfo("", "CountdownHandler.PlaySound", true);
             }
             catch (Exception ex)
             {
@@ -164,50 +222,6 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        private void PlaySound()
-        {
-            try
-            {
-                Logging.LogInfo("", "CountdownHandler.PlaySound");
-                if (_countdownSounds.Length > _currentCountdownTime)
-                    _browserHandler.PlainMain.PlaySound(_countdownSounds[_currentCountdownTime]);
-                Logging.LogInfo("", "CountdownHandler.PlaySound", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
-
-        private void OnCountdownStartMethod(object[] args)
-        {
-            try
-            {
-                Logging.LogInfo("", "CountdownHandler.OnCountdownStartMethod");
-                _eventsHandler.OnCountdownStarted((bool)args[0]);
-
-                int mstimetoplayer = (int)Math.Ceiling(_settingsHandler.CountdownTime * 1000 * 0.9);
-                if (args.Length <= 1)
-                {
-                    Start();
-                    _lobbyCamHandler.SetGoTowardsPlayer(mstimetoplayer);
-                }
-                else
-                {
-                    int remainingms = (int)args[1];
-                    StartAfterwards(remainingms);
-                    int timeofcountdowncameraisatplayer = _settingsHandler.CountdownTime * 1000 - mstimetoplayer;
-                    if (remainingms < timeofcountdowncameraisatplayer)
-                        _lobbyCamHandler.SetGoTowardsPlayer(remainingms);
-                    else
-                        _lobbyCamHandler.SetGoTowardsPlayer(remainingms - timeofcountdowncameraisatplayer);
-                }
-                Logging.LogInfo("", "CountdownHandler.OnCountdownStartMethod", true);
-            }
-            catch (Exception ex)
-            {
-                Logging.LogError(ex);
-            }
-        }
+        #endregion Private Methods
     }
 }

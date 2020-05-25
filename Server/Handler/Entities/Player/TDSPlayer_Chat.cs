@@ -5,9 +5,14 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Public Properties
 
         public ITDSPlayer? InPrivateChatWith { get; set; }
         public ITDSPlayer? SentPrivateChatRequestTo { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void ClosePrivateChat(bool disconnected)
         {
@@ -56,5 +61,7 @@ namespace TDS_Server.Handler.Entities.Player
             else if (ModPlayer is { })
                 ModPlayer.SendNotification(msg, flashing);
         }
+
+        #endregion Public Methods
     }
 }

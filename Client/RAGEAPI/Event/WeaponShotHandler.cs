@@ -9,8 +9,14 @@ namespace TDS_Client.RAGEAPI.Event
 {
     public class WeaponShotHandler : BaseEventHandler<WeaponShotDelegate>
     {
+        #region Private Fields
+
         private readonly LoggingHandler _loggingHandler;
         private readonly PlayerConvertingHandler _playerConvertingHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public WeaponShotHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler) : base()
         {
@@ -20,6 +26,10 @@ namespace TDS_Client.RAGEAPI.Event
             RAGE.Events.OnPlayerWeaponShot += OnWeaponShot;
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
         private void OnWeaponShot(RAGE.Vector3 targetPos, RAGE.Elements.Player modTarget, RAGE.Events.CancelEventArgs modCancel)
         {
             if (Actions.Count == 0)
@@ -28,7 +38,7 @@ namespace TDS_Client.RAGEAPI.Event
             try
             {
                 var pos = targetPos.ToPosition3D();
-                var target =  _playerConvertingHandler.GetPlayer(modTarget);
+                var target = _playerConvertingHandler.GetPlayer(modTarget);
                 var cancel = new CancelEventArgs();
 
                 for (int i = Actions.Count - 1; i >= 0; --i)
@@ -39,11 +49,13 @@ namespace TDS_Client.RAGEAPI.Event
                 }
 
                 modCancel.Cancel = cancel.Cancel;
-            } 
+            }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
             }
-}
-     }
+        }
+
+        #endregion Private Methods
+    }
 }

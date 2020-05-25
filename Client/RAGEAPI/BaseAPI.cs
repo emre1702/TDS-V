@@ -65,41 +65,9 @@ using TDS_Client.RAGEAPI.Windows;
 
 namespace TDS_Client.RAGEAPI
 {
-    class BaseAPI : IModAPI
+    internal class BaseAPI : IModAPI
     {
-        public IAudioAPI Audio { get; }
-        public IBrowserAPI Browser { get; }
-        public IBlipAPI Blip { get; }
-        public ICamAPI Cam { get; }
-        public IChatAPI Chat { get; }
-        public IConsoleAPI Console { get; }
-        public IControlAPI Control { get; }
-        public ICursorAPI Cursor { get; }
-        public IDiscordAPI Discord { get; }
-        public IEntityAPI Entity { get; }
-        public IEventAPI Event { get; }
-        public IGraphicsAPI Graphics { get; }
-        public IInputAPI Input { get; }
-        public ILocaleAPI Locale { get; }
-        public IMapObjectAPI MapObject { get; }
-        public IMiscAPI Misc { get; }
-        public INametagsAPI Nametags { get; }
-        public INativeAPI Native { get; }
-        public IPedAPI Ped { get; }
-        public IPlayerAPI Player { get; }
-        public IPoolAPI Pool { get; }
-        public IShapetestAPI Shapetest { get; }
-        public IStatsAPI Stats { get; }
-        public IStreamingAPI Streaming { get; }
-        public ISyncAPI Sync { get; }
-        public IUiAPI Ui { get; }
-        public IUtilsAPI Utils { get; }
-        public IVehicleAPI Vehicle { get; }
-        public IVoiceAPI Voice { get; }
-        public IWeaponAPI Weapon { get; }
-        public IWindowsAPI Windows { get; }
-
-        public ILocalPlayer LocalPlayer { get; }
+        #region Public Constructors
 
         public BaseAPI()
         {
@@ -143,5 +111,44 @@ namespace TDS_Client.RAGEAPI
             Weapon = new WeaponAPI();
             Windows = new WindowsAPI();
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public IAudioAPI Audio { get; }
+        public IBlipAPI Blip { get; }
+        public IBrowserAPI Browser { get; }
+        public ICamAPI Cam { get; }
+        public IChatAPI Chat { get; }
+        public IConsoleAPI Console { get; }
+        public IControlAPI Control { get; }
+        public ICursorAPI Cursor { get; }
+        public IDiscordAPI Discord { get; }
+        public IEntityAPI Entity { get; }
+        public IEventAPI Event { get; }
+        public IGraphicsAPI Graphics { get; }
+        public IInputAPI Input { get; }
+        public ILocaleAPI Locale { get; }
+        public ILocalPlayer LocalPlayer { get; }
+        public IMapObjectAPI MapObject { get; }
+        public IMiscAPI Misc { get; }
+        public INametagsAPI Nametags { get; }
+        public INativeAPI Native { get; }
+        public IPedAPI Ped { get; }
+        public IPlayerAPI Player { get; }
+        public IPoolAPI Pool { get; }
+        public IShapetestAPI Shapetest { get; }
+        public IStatsAPI Stats { get; }
+        public IStreamingAPI Streaming { get; }
+        public ISyncAPI Sync { get; }
+        public IUiAPI Ui { get; }
+        public IUtilsAPI Utils { get; }
+        public IVehicleAPI Vehicle { get; }
+        public IVoiceAPI Voice { get; }
+        public IWeaponAPI Weapon { get; }
+        public IWindowsAPI Windows { get; }
+
+        #endregion Public Properties
     }
 }

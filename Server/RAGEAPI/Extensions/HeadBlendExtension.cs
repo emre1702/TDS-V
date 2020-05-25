@@ -2,10 +2,12 @@
 {
     internal static class HeadBlendExtension
     {
+        #region Public Methods
+
         public static GTANetworkAPI.HeadBlend ToMod(this Data.Models.HeadBlend headBlend)
         {
-            return new GTANetworkAPI.HeadBlend 
-            { 
+            return new GTANetworkAPI.HeadBlend
+            {
                 ShapeFirst = headBlend.ShapeFirst,
                 ShapeSecond = headBlend.ShapeSecond,
                 ShapeThird = headBlend.ShapeThird,
@@ -33,5 +35,7 @@
                 ThirdMix = headBlend.ThirdMix
             };
         }
+
+        #endregion Public Methods
     }
 }

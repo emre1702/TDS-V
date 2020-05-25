@@ -1,23 +1,17 @@
 ﻿using GTANetworkAPI;
-using System.Collections.Generic;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 
 namespace TDS_Server.RAGEAPI.Player
 {
-    class PlayerAPI : IPlayerAPI
+    internal class PlayerAPI : IPlayerAPI
     {
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        internal PlayerAPI(EntityConvertingHandler entityConvertingHandler) 
-            => _entityConvertingHandler = entityConvertingHandler;
+        #region Public Methods
 
         public void SetHealth(IPlayer player, int health)
         {
-            if (!((player as Player)?._instance is { } instance))
-                return;
-            NAPI.Player.SetPlayerHealth(instance, health);
+            NAPI.Player.SetPlayerHealth(player as Player, health);
         }
 
-
+        #endregion Public Methods
     }
 }

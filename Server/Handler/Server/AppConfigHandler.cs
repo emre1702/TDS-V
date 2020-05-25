@@ -9,9 +9,13 @@ namespace TDS_Server.Handler.Server
 {
     public class AppConfigHandler
     {
-        public string ConnectionString => _localSettings.ConnectionString.Value; 
+        #region Private Fields
 
         private readonly AppConfigDto _localSettings;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public AppConfigHandler()
         {
@@ -23,6 +27,16 @@ namespace TDS_Server.Handler.Server
             _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public string ConnectionString => _localSettings.ConnectionString.Value;
+
+        #endregion Public Properties
+
+        #region Private Properties
+
         private string AssemblyDirectory
         {
             get
@@ -32,7 +46,8 @@ namespace TDS_Server.Handler.Server
                 string path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path) ?? ".";
             }
-            
         }
+
+        #endregion Private Properties
     }
 }

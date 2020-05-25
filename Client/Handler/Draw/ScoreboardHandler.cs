@@ -17,6 +17,7 @@ using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
 #pragma warning disable IDE0067 // Dispose objects before losing scope
+
 namespace TDS_Client.Handler.Draw
 {
     public class ScoreboardHandler : ServiceBase
@@ -52,7 +53,7 @@ namespace TDS_Client.Handler.Draw
         private readonly BindsHandler _bindsHandler;
         private readonly Serializer _serializer;
 
-        public ScoreboardHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler, SettingsHandler settingsHandler, LobbyHandler lobbyHandler, 
+        public ScoreboardHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler, SettingsHandler settingsHandler, LobbyHandler lobbyHandler,
             TimerHandler timerHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, BindsHandler bindsHandler, Serializer serializer)
             : base(modAPI, loggingHandler)
         {
@@ -104,7 +105,7 @@ namespace TDS_Client.Handler.Draw
         public void AddLobbyData(List<SyncedScoreboardLobbyDataDto> playerlist, List<SyncedScoreboardMainmenuLobbyDataDto> lobbylist)
         {
             playerlist.Sort((a, b) => ScoreboardLobbySortComparer(a, b) * (_settingsHandler.PlayerSettings.ScoreboardPlayerSortingDesc ? -1 : 1));
-            
+
             foreach (var playerdata in playerlist)
             {
                 var team = _lobbyHandler.Teams.LobbyTeams[playerdata.TeamIndex];
@@ -220,17 +221,22 @@ namespace TDS_Client.Handler.Draw
                 {
                     case ScoreboardPlayerSorting.Name:
                         return a.Name.CompareTo(b.Name);
+
                     case ScoreboardPlayerSorting.PlayTime:
                         return a.PlaytimeMinutes.CompareTo(b.PlaytimeMinutes);
+
                     case ScoreboardPlayerSorting.Kills:
                         return a.Kills.CompareTo(b.Kills);
+
                     case ScoreboardPlayerSorting.Assists:
                         return a.Assists.CompareTo(b.Assists);
+
                     case ScoreboardPlayerSorting.Deaths:
                         return a.Deaths.CompareTo(b.Deaths);
 
                     case ScoreboardPlayerSorting.KillsDeathsRatio:
                         return a.KillsDeathsRatio.CompareTo(b.KillsDeathsRatio);
+
                     case ScoreboardPlayerSorting.KillsDeathsAssistsRatio:
                         return a.KillsDeathsAssistsRatio.CompareTo(b.KillsDeathsAssistsRatio);
 
@@ -242,7 +248,7 @@ namespace TDS_Client.Handler.Draw
                 return -1;
             else if (b.TeamIndex == 0)
                 return 1;
-            else 
+            else
                 return a.TeamIndex.CompareTo(b.TeamIndex);
         }
 
@@ -253,14 +259,19 @@ namespace TDS_Client.Handler.Draw
             {
                 case TimeSpanUnitsOfTime.Second:
                     return timeSpan.TotalSeconds.ToString();
+
                 case TimeSpanUnitsOfTime.Minute:
                     return timeSpan.TotalMinutes.ToString();
+
                 case TimeSpanUnitsOfTime.HourMinute:
                     return timeSpan.ToString(@"%h\:mm");
+
                 case TimeSpanUnitsOfTime.Hour:
                     return timeSpan.TotalHours.ToString();
+
                 case TimeSpanUnitsOfTime.Day:
                     return timeSpan.TotalDays.ToString();
+
                 case TimeSpanUnitsOfTime.Week:
                     return (timeSpan.TotalDays / 7).ToString();
             }
@@ -290,7 +301,7 @@ namespace TDS_Client.Handler.Draw
                 AddLobbyData(playerlist, lobbylist);
             }
         }
-
     }
 }
+
 #pragma warning restore IDE0067 // Dispose objects before losing scope

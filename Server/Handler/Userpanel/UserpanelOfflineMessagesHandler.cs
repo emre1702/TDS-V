@@ -14,11 +14,42 @@ using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {
+    public class OfflineMessage
+    {
+        #region Public Properties
+
+        [JsonProperty("2")]
+        public string CreateTime { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        public DateTime CreateTimeDate { get; set; }
+
+        [JsonProperty("0")]
+        public int ID { get; set; }
+
+        [JsonProperty("1")]
+        public string PlayerName { get; set; } = string.Empty;
+
+        [JsonProperty("4")]
+        public bool Seen { get; set; }
+
+        [JsonProperty("3")]
+        public string Text { get; set; } = string.Empty;
+
+        #endregion Public Properties
+    }
+
     public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper, IUserpanelOfflineMessagesHandler
     {
+        #region Private Fields
+
+        private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly OfflineMessagesHandler _offlineMessagesHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public UserpanelOfflineMessagesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler)
@@ -27,6 +58,63 @@ namespace TDS_Server.Handler.Userpanel
             (_serializer, _settingsHandler, _offlineMessagesHandler) = (serializer, settingsHandler, offlineMessagesHandler);
 
             eventsHandler.Hour += DeleteOldMessages;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public async Task<object?> Answer(ITDSPlayer player, ArraySegment<object> args)
+        {
+            int? offlineMessageID;
+            if ((offlineMessageID = Utils.GetInt(args[0])) is null)
+                return null;
+            string? message = Convert.ToString(args[1]);
+            if (message is null)
+                return null;
+
+            var offlineMessage = await ExecuteForDBAsync(async dbContext =>
+                await dbContext.Offlinemessages
+                    .Include(o => o.Source)
+                    .ThenInclude(s => s.PlayerSettings)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(o => o.Id == offlineMessageID));
+            if (offlineMessage is null)
+                return null;
+
+            _offlineMessagesHandler.AddOfflineMessage(offlineMessage.Source, player.Entity!, message);
+
+            return null;
+        }
+
+        public async Task<object?> Delete(ITDSPlayer _, ArraySegment<object> args)
+        {
+            int? offlineMessageId;
+            if ((offlineMessageId = Utils.GetInt(args[0])) is null)
+                return null;
+
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                var offlineMessage = await dbContext.Offlinemessages.FirstOrDefaultAsync(o => o.Id == offlineMessageId);
+                if (offlineMessage is null)
+                    return;
+                dbContext.Offlinemessages.Remove(offlineMessage);
+
+                await dbContext.SaveChangesAsync();
+            });
+
+            return null;
+        }
+
+        public async void DeleteOldMessages(int _)
+        {
+            var deleteAfterDays = _settingsHandler.ServerSettings.DeleteOfflineMessagesAfterDays;
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                var msgs = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
+                dbContext.Offlinemessages.RemoveRange(msgs);
+                await dbContext.SaveChangesAsync();
+            });
         }
 
         public async Task<string?> GetData(ITDSPlayer player)
@@ -62,33 +150,9 @@ namespace TDS_Server.Handler.Userpanel
                     }
                     await dbContext.SaveChangesAsync();
                 });
-
             }
 
             return json;
-        }
-
-        public async Task<object?> Answer(ITDSPlayer player, ArraySegment<object> args)
-        {
-            int? offlineMessageID;
-            if ((offlineMessageID = Utils.GetInt(args[0])) is null)
-                return null;
-            string? message = Convert.ToString(args[1]);
-            if (message is null)
-                return null;
-
-            var offlineMessage = await ExecuteForDBAsync(async dbContext =>
-                await dbContext.Offlinemessages
-                    .Include(o => o.Source)
-                    .ThenInclude(s => s.PlayerSettings)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(o => o.Id == offlineMessageID));
-            if (offlineMessage is null)
-                return null;
-
-            _offlineMessagesHandler.AddOfflineMessage(offlineMessage.Source, player.Entity!, message);
-
-            return null;
         }
 
         public async Task<object?> Send(ITDSPlayer player, ArraySegment<object> args)
@@ -112,7 +176,6 @@ namespace TDS_Server.Handler.Userpanel
             if (message is null)
                 return false;
 
-
             var discordUserId = await ExecuteForDBAsync(async dbContext =>
                 await dbContext.PlayerSettings
                     .Where(p => p.PlayerId == targetId.Value)
@@ -124,52 +187,6 @@ namespace TDS_Server.Handler.Userpanel
             return true;
         }
 
-        public async Task<object?> Delete(ITDSPlayer _, ArraySegment<object> args)
-        {
-            int? offlineMessageId;
-            if ((offlineMessageId = Utils.GetInt(args[0])) is null)
-                return null;
-
-            await ExecuteForDBAsync(async dbContext =>
-            {
-                var offlineMessage = await dbContext.Offlinemessages.FirstOrDefaultAsync(o => o.Id == offlineMessageId);
-                if (offlineMessage is null)
-                    return;
-                dbContext.Offlinemessages.Remove(offlineMessage);
-
-                await dbContext.SaveChangesAsync();
-            });
-
-            return null;
-        }
-
-        public async void DeleteOldMessages(int _)
-        {
-            var deleteAfterDays = _settingsHandler.ServerSettings.DeleteOfflineMessagesAfterDays;
-            await ExecuteForDBAsync(async dbContext =>
-            {
-                var msgs = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
-                dbContext.Offlinemessages.RemoveRange(msgs);
-                await dbContext.SaveChangesAsync();
-            });
-
-        }
-    }
-
-    public class OfflineMessage
-    {
-        [JsonProperty("0")]
-        public int ID { get; set; }
-        [JsonProperty("1")]
-        public string PlayerName { get; set; } = string.Empty;
-        [JsonProperty("2")]
-        public string CreateTime { get; set; } = string.Empty;
-        [JsonProperty("3")]
-        public string Text { get; set; } = string.Empty;
-        [JsonProperty("4")]
-        public bool Seen { get; set; }
-
-        [JsonIgnore]
-        public DateTime CreateTimeDate { get; set; }
+        #endregion Public Methods
     }
 }

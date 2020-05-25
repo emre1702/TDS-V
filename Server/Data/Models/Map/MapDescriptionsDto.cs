@@ -2,13 +2,18 @@
 
 namespace TDS_Server.Data.Models.Map
 {
-    #nullable enable
+#nullable enable
+
     public class MapDescriptionsDto
     {
+        #region Public Properties
+
         [XmlElement("english")]
         public string? English { get; set; }
 
         [XmlElement("german")]
         public string? German { get; set; }
+
+        #endregion Public Properties
     }
 }

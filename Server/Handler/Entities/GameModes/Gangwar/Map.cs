@@ -9,11 +9,33 @@ namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Gangwar
     {
-        public IMapObject? TargetObject { get; set; }
-        public IColShape? TargetColShape { get; set; }
+        #region Private Fields
 
         private IBlip? _targetBlip;
         private ITextLabel? _targetTextLabel;
+
+        #endregion Private Fields
+
+        #region Public Properties
+
+        public IColShape? TargetColShape { get; set; }
+        public IMapObject? TargetObject { get; set; }
+
+        #endregion Public Properties
+
+        #region Private Methods
+
+        private void ClearMapFromTarget()
+        {
+            _targetBlip?.Delete();
+            _targetBlip = null;
+
+            TargetObject?.Delete();
+            TargetObject = null;
+
+            _targetTextLabel?.Delete();
+            _targetTextLabel = null;
+        }
 
         private void CreateTargetBlip()
         {
@@ -21,6 +43,17 @@ namespace TDS_Server.Handler.Entities.GameModes
                 return;
 
             _targetBlip = ModAPI.Blip.Create(SharedConstants.TargetBlipSprite, Map.Target, name: "Target", dimension: Lobby.Dimension);
+        }
+
+        private void CreateTargetColShape()
+        {
+            if (TargetObject is null)
+                return;
+
+            TargetColShape = ModAPI.ColShape.CreateSphere(TargetObject.Position, SettingsHandler.ServerSettings.GangwarTargetRadius, Lobby);
+
+            TargetColShape.PlayerEntered += PlayerEnteredTargetColShape;
+            TargetColShape.PlayerExited += PlayerExitedTargetColShape;
         }
 
         private void CreateTargetObject()
@@ -42,27 +75,6 @@ namespace TDS_Server.Handler.Entities.GameModes
                 SettingsHandler.ServerSettings.GangwarTargetRadius, 7f, 0, Color.FromArgb(220, 220, 220), true, Lobby);
         }
 
-        private void CreateTargetColShape()
-        {
-            if (TargetObject is null)
-                return;
-
-            TargetColShape = ModAPI.ColShape.CreateSphere(TargetObject.Position, SettingsHandler.ServerSettings.GangwarTargetRadius, Lobby);
-
-            TargetColShape.PlayerEntered += PlayerEnteredTargetColShape;
-            TargetColShape.PlayerExited += PlayerExitedTargetColShape;
-        }
-
-        private void ClearMapFromTarget()
-        {
-            _targetBlip?.Delete();
-            _targetBlip = null;
-
-            TargetObject?.Delete();
-            TargetObject = null;
-
-            _targetTextLabel?.Delete();
-            _targetTextLabel = null;
-        }
+        #endregion Private Methods
     }
 }

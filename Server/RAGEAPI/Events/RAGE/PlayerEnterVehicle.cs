@@ -1,10 +1,11 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.RAGEAPI.Player;
 
 namespace TDS_Server.RAGEAPI.Events.RAGE
 {
     partial class BaseRAGEEvents
     {
+        #region Public Methods
+
         [ServerEvent(Event.PlayerEnterVehicle)]
         public void PlayerEnterVehicle(GTANetworkAPI.Player player, GTANetworkAPI.Vehicle vehicle, sbyte seatId)
         {
@@ -22,5 +23,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
 
             Init.TDSCore.EventsHandler.OnPlayerEnterVehicle(tdsPlayer, tdsVehicle, seatId);*/
         }
+
+        #endregion Public Methods
     }
 }

@@ -31,50 +31,31 @@
 //            if (!player.LoggedIn)
 //                return;
 
-//            player.Lobby?.OnPlayerDisconnected(player);
+// player.Lobby?.OnPlayerDisconnected(player);
 
-//            player.Entity.PlayerStats.LoggedIn = false;
-//            player.ClosePrivateChat(true);
+// player.Entity.PlayerStats.LoggedIn = false; player.ClosePrivateChat(true);
 
-//            CustomEventManager.SetPlayerLoggedOut(player);
+// CustomEventManager.SetPlayerLoggedOut(player);
 
-//            await player.SaveData(true).ConfigureAwait(true);
-//            player.Logout();
+// await player.SaveData(true).ConfigureAwait(true); player.Logout();
 
-//            LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_OUT, player.DisplayName));
-//        }
+// LangUtils.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_OUT, player.DisplayName)); }
 
-//        //[DisableDefaultOnDeathRespawn]
-//        [ServerEvent(Event.PlayerDeath)]
-//        public static void OnPlayerDeath(Player player, Player killerClient, uint reason)
-//        {
-//            TDSPlayer character = player.GetChar();
-//            if (!character.LoggedIn)
-//                return;
-//            if (character.Lobby is null)
-//                return;
-//            TDSPlayer killer;
-//            if (character.Lobby is FightLobby fightLobby)
-//                killer = fightLobby.DmgSys.GetKiller(character, killerClient);
-//            else 
-//                killer = killerClient?.GetChar() ?? character;
-//            character.Lobby?.OnPlayerDeath(character, killer, reason);
-//        }
+// //[DisableDefaultOnDeathRespawn] [ServerEvent(Event.PlayerDeath)] public static void
+// OnPlayerDeath(Player player, Player killerClient, uint reason) { TDSPlayer character =
+// player.GetChar(); if (!character.LoggedIn) return; if (character.Lobby is null) return; TDSPlayer
+// killer; if (character.Lobby is FightLobby fightLobby) killer =
+// fightLobby.DmgSys.GetKiller(character, killerClient); else killer = killerClient?.GetChar() ??
+// character; character.Lobby?.OnPlayerDeath(character, killer, reason); }
 
-//        [ServerEvent(Event.PlayerEnterColshape)]
-//        public static void OnPlayerEnterColShape(ColShape shape, Player player)
-//        {
-//            TDSPlayer character = player.GetChar();
-//            character.Lobby?.OnPlayerEnterColShape(shape, character);
-//        }
+// [ServerEvent(Event.PlayerEnterColshape)] public static void OnPlayerEnterColShape(ColShape shape,
+// Player player) { TDSPlayer character = player.GetChar();
+// character.Lobby?.OnPlayerEnterColShape(shape, character); }
 
-//        [ServerEvent(Event.PlayerWeaponSwitch)]
-//        public static void OnPlayerWeaponSwitch(Player player, WeaponHash oldweapon, WeaponHash newweapon)
-//        {
-//            TDSPlayer character = player.GetChar();
-//            if (character.Lobby is FightLobby fightlobby)
-//                fightlobby.OnPlayerWeaponSwitch(character, oldweapon, newweapon);
-//            character.LastWeaponOnHand = newweapon;
+// [ServerEvent(Event.PlayerWeaponSwitch)] public static void OnPlayerWeaponSwitch(Player player,
+// WeaponHash oldweapon, WeaponHash newweapon) { TDSPlayer character = player.GetChar(); if
+// (character.Lobby is FightLobby fightlobby) fightlobby.OnPlayerWeaponSwitch(character, oldweapon,
+// newweapon); character.LastWeaponOnHand = newweapon;
 
 //        }
 //    }

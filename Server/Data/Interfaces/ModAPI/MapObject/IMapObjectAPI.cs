@@ -4,9 +4,15 @@ using TDS_Shared.Data.Models.GTA;
 namespace TDS_Server.Data.Interfaces.ModAPI.MapObject
 {
 #nullable enable
+
     public interface IMapObjectAPI
     {
+        #region Public Methods
+
         IMapObject Create(int hashNumber, Position3D position, Position3D? rotation, byte alpha, ILobby lobby);
+
         IMapObject Create(string hashName, Position3DDto position, Position3D? rotation, byte alpha, ILobby lobby);
+
+        #endregion Public Methods
     }
 }

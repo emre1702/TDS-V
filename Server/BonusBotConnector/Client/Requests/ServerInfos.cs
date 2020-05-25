@@ -1,7 +1,6 @@
 ﻿using Grpc.Net.Client;
 using System;
 using System.Net;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.Bonusbot;
 using static BonusBotConnector.Client.BonusBotConnectorClient;
 using static BonusBotConnector.Client.RAGEServerStats;
@@ -10,12 +9,17 @@ namespace BonusBotConnector.Client.Requests
 {
     public class ServerInfos
     {
-        public event ErrorLogDelegate? Error;
-        public event ErrorStringLogDelegate? ErrorString;
+        #region Private Fields
 
         private readonly RAGEServerStatsClient _client;
-        private readonly BonusbotSettings _settings;
+
         private readonly string _ipAddress = "?";
+
+        private readonly BonusbotSettings _settings;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal ServerInfos(GrpcChannel channel, BonusbotSettings settings)
         {
@@ -24,6 +28,18 @@ namespace BonusBotConnector.Client.Requests
 
             _ipAddress = new WebClient().DownloadString("https://www.l2.io/ip");
         }
+
+        #endregion Internal Constructors
+
+        #region Public Events
+
+        public event ErrorLogDelegate? Error;
+
+        public event ErrorStringLogDelegate? ErrorString;
+
+        #endregion Public Events
+
+        #region Public Methods
 
         public async void Refresh(RAGEServerStatsRequest request)
         {
@@ -43,5 +59,7 @@ namespace BonusBotConnector.Client.Requests
                 Error?.Invoke(ex);
             }
         }
+
+        #endregion Public Methods
     }
 }

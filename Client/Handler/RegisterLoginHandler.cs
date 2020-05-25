@@ -12,14 +12,20 @@ namespace TDS_Client.Handler
 {
     public class RegisterLoginHandler : ServiceBase
     {
-        private readonly CursorHandler _cursorHandler;
-        private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly BrowserHandler _browserHandler;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly Serializer _serializer;
-        private readonly EventsHandler _eventsHandler;
+        #region Private Fields
 
-        public RegisterLoginHandler(IModAPI modAPI, LoggingHandler loggingHandler, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender, 
+        private readonly BrowserHandler _browserHandler;
+        private readonly CursorHandler _cursorHandler;
+        private readonly EventsHandler _eventsHandler;
+        private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly Serializer _serializer;
+        private readonly SettingsHandler _settingsHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public RegisterLoginHandler(IModAPI modAPI, LoggingHandler loggingHandler, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender,
             BrowserHandler browserHandler, SettingsHandler settingsHandler, Serializer serializer, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
@@ -34,6 +40,25 @@ namespace TDS_Client.Handler
             modAPI.Event.Add(FromBrowserEvent.TryRegister, TryRegister);
             modAPI.Event.Add(ToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             modAPI.Event.Add(ToClientEvent.LoginSuccessful, OnLoginSuccessfulMethod);
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void Start(string name, bool isRegistered)
+        {
+            _browserHandler.RegisterLogin.CreateBrowser();
+            //_browserHandler.RegisterLogin.SetReady(); only for Angular browser
+
+            _cursorHandler.Visible = true;
+            _browserHandler.RegisterLogin.SendDataToBrowser(name, isRegistered, _settingsHandler.Language);
+        }
+
+        public void Stop()
+        {
+            _browserHandler.RegisterLogin.Stop();
+            _cursorHandler.Visible = false;
         }
 
         public void TryLogin(object[] args)
@@ -51,27 +76,9 @@ namespace TDS_Client.Handler
             _remoteEventsSender.Send(ToServerEvent.TryRegister, username, SharedUtils.HashPWClient(password), email ?? string.Empty);
         }
 
-        public void Start(string name, bool isRegistered)
-        {
-            _browserHandler.RegisterLogin.CreateBrowser();
-            //_browserHandler.RegisterLogin.SetReady(); only for Angular browser
+        #endregion Public Methods
 
-            _cursorHandler.Visible = true;
-            _browserHandler.RegisterLogin.SendDataToBrowser(name, isRegistered, _settingsHandler.Language);
-        }
-
-        public void Stop()
-        {
-            _browserHandler.RegisterLogin.Stop();
-            _cursorHandler.Visible = false;
-        }
-
-        private void OnStartRegisterLoginMethod(object[] args)
-        {
-            string scname = (string)args[0];
-            bool isregistered = Convert.ToBoolean(args[1]);
-            Start(scname, isregistered);
-        }
+        #region Private Methods
 
         private void OnLoginSuccessfulMethod(object[] args)
         {
@@ -87,11 +94,20 @@ namespace TDS_Client.Handler
             SendWelcomeMessage();
         }
 
+        private void OnStartRegisterLoginMethod(object[] args)
+        {
+            string scname = (string)args[0];
+            bool isregistered = Convert.ToBoolean(args[1]);
+            Start(scname, isregistered);
+        }
+
         private void SendWelcomeMessage()
         {
             ModAPI.Chat.Output("#o#__________________________________________");
             ModAPI.Chat.Output(string.Join("#n#", _settingsHandler.Language.WELCOME_MESSAGE));
             ModAPI.Chat.Output("#o#__________________________________________");
         }
+
+        #endregion Private Methods
     }
 }

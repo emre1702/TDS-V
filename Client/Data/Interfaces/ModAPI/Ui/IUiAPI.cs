@@ -1,39 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Blip;
+﻿using TDS_Client.Data.Enums;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Ui
 {
     public interface IUiAPI
     {
-        void SetNotificationTextEntry(string type);
+        #region Public Methods
+
         void AddTextComponentSubstringPlayerName(string text);
-        int DrawNotification(bool blink);
-        void HideHudComponentThisFrame(HudComponent hudComponent);
-        float GetTextScaleHeight(float scale, Font font);
-        void HideHudAndRadarThisFrame();
+
         void BeginTextCommandDisplayText(string text);
-        void SetTextScale(float size);
-        void SetTextColour(int r, int g, int b, int a);
+
+        bool DoesBlipExist(int blip);
+
+        int DrawNotification(bool blink);
+
+        void EndTextCommandDisplayText(float x, float y);
+
+        float GetTextScaleHeight(float scale, Font font);
+
+        void HideHudAndRadarThisFrame();
+
+        void HideHudComponentThisFrame(HudComponent hudComponent);
+
+        void RemoveBlip(ref int blip);
+
+        void SetBlipAsFriendly(int blip, bool toggle);
+
+        void SetNotificationTextEntry(string type);
+
         void SetTextCentre(bool align);
+
+        void SetTextColour(int r, int g, int b, int a);
+
+        void SetTextDropShadow();
+
+        void SetTextFont(Font font);
+
+        void SetTextJustification(int justify);
+
+        void SetTextScale(float size);
+
+        #endregion Public Methods
 
         /**
          * <summary>
-         * 0: Center-Justify 
-         * 1: Left-Justify 
-         * 2: Right-Justify 
+         * 0: Center-Justify
+         * 1: Left-Justify
+         * 2: Right-Justify
          * Right-Justify requires SET_TEXT_WRAP, otherwise it will draw to the far right of the screen
          * </summary>
          */
-        void SetTextJustification(int justify);
-        void SetTextFont(Font font);
-        void SetTextDropShadow();
-        void EndTextCommandDisplayText(float x, float y);
-        void SetBlipAsFriendly(int blip, bool toggle);
-        bool DoesBlipExist(int blip);
-        void RemoveBlip(ref int blip);
     }
 }

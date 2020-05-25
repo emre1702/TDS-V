@@ -1,5 +1,4 @@
-﻿using System;
-using TDS_Client.Data.Defaults;
+﻿using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Entities.Draw.Scaleform;
 
@@ -7,11 +6,28 @@ namespace TDS_Client.Handler.Draw
 {
     public class MidsizedMessageHandler : ServiceBase
     {
-        private int _initTimeMs;
-        private int _msgDurationMs;
+        #region Private Fields
+
+        private readonly TimerHandler _timerHandler;
         private bool _animatedOut;
-        private int _msgBgColor;
+        private int _initTimeMs;
         private BasicScaleform _midsizedScaleform;
+        private int _msgBgColor;
+        private int _msgDurationMs;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public MidsizedMessageHandler(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler)
+            : base(modAPI, loggingHandler)
+        {
+            _timerHandler = timerHandler;
+        }
+
+        #endregion Public Constructors
+
+        #region Private Properties
 
         private BasicScaleform MidsizedScaleform
         {
@@ -23,33 +39,9 @@ namespace TDS_Client.Handler.Draw
             }
         }
 
-        private readonly TimerHandler _timerHandler;
+        #endregion Private Properties
 
-        public MidsizedMessageHandler(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler)
-            : base(modAPI, loggingHandler)
-        {
-            _timerHandler = timerHandler;
-        }
-
-        public void ShowMidsizedMessage(string title, string message, int time = 5000)
-        {
-            MidsizedScaleform.Call(ScaleformFunction.SHOW_MIDSIZED_MESSAGE, title, message);
-            InitCommonSettings(time);
-        }
-
-        public void ShowMidsizedShardMessage(string title, string message, int bgColor, bool useDarkerShard, bool condensed, int time = 5000)
-        {
-            MidsizedScaleform.Call(ScaleformFunction.SHOW_SHARD_MIDSIZED_MESSAGE, title, message, bgColor, useDarkerShard, condensed);
-            InitCommonSettings(time);
-            _msgBgColor = bgColor;
-        }
-
-        private void InitCommonSettings(int time)
-        {
-            _initTimeMs = _timerHandler.ElapsedMs;
-            _msgDurationMs = time;
-            _animatedOut = false;
-        }
+        #region Public Methods
 
         public void Render()
         {
@@ -75,5 +67,31 @@ namespace TDS_Client.Handler.Draw
                 }
             }
         }
+
+        public void ShowMidsizedMessage(string title, string message, int time = 5000)
+        {
+            MidsizedScaleform.Call(ScaleformFunction.SHOW_MIDSIZED_MESSAGE, title, message);
+            InitCommonSettings(time);
+        }
+
+        public void ShowMidsizedShardMessage(string title, string message, int bgColor, bool useDarkerShard, bool condensed, int time = 5000)
+        {
+            MidsizedScaleform.Call(ScaleformFunction.SHOW_SHARD_MIDSIZED_MESSAGE, title, message, bgColor, useDarkerShard, condensed);
+            InitCommonSettings(time);
+            _msgBgColor = bgColor;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void InitCommonSettings(int time)
+        {
+            _initTimeMs = _timerHandler.ElapsedMs;
+            _msgDurationMs = time;
+            _animatedOut = false;
+        }
+
+        #endregion Private Methods
     }
 }

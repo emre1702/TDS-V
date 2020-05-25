@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Server.Data;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
@@ -21,21 +20,43 @@ using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
+
 using DB = TDS_Server.Database.Entity;
 
 namespace TDS_Server.Handler.Maps
 {
     public class MapCreatorHandler : DatabaseEntityWrapper
     {
-        private readonly Serializer _serializer;
+        #region Private Fields
+
         private readonly MapsLoadingHandler _mapsLoadingHandler;
-        private readonly XmlHelper _xmlHelper;
+        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly XmlHelper _xmlHelper;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
             => (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public void AddedMapRating(MapDto map)
+        {
+            if (map.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck)
+                return;
+
+            if (map.RatingAverage >= _settingsHandler.ServerSettings.MinMapRatingForNewMaps)
+                return;
+
+            DisableNewMap(map);
+        }
 
         public async Task<object?> Create(ITDSPlayer creator, ArraySegment<object> args)
         {
@@ -58,6 +79,47 @@ namespace TDS_Server.Handler.Maps
                 LoggingHandler.LogError(ex, creator);
                 return MapCreateError.Unknown;
             }
+        }
+
+        public async void RemoveMap(ITDSPlayer player, int mapId)
+        {
+            bool isSavedMap = true;
+            MapDto? map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+            if (map is null)
+            {
+                map = _mapsLoadingHandler.NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+                if (map is null)
+                    map = _mapsLoadingHandler.NeedCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+                isSavedMap = false;
+            }
+
+            if (map is null)
+                return;
+
+            bool canLoadMapsFromOthers = _settingsHandler.CanLoadMapsFromOthers(player);
+            if (map.Info.CreatorId != player.Entity?.Id && !canLoadMapsFromOthers)
+                return;
+            if (map.Info.CreatorId != player.Entity?.Id)
+                LoggingHandler.LogAdmin(LogType.RemoveMap, player, string.Empty, asvip: player.Entity?.IsVip ?? false);
+
+            if (isSavedMap)
+                _mapsLoadingHandler.SavedMaps.Remove(map);
+            else
+            {
+                if (_mapsLoadingHandler.NewCreatedMaps.Contains(map))
+                    _mapsLoadingHandler.NewCreatedMaps.Remove(map);
+                else
+                    _mapsLoadingHandler.NeedCheckMaps.Remove(map);
+
+                await ExecuteForDBAsync(async dbContext =>
+                {
+                    var maps = await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).ToListAsync();
+                    dbContext.RemoveRange(maps);
+                    await dbContext.SaveChangesAsync();
+                });
+            }
+
+            File.Delete(map.Info.FilePath);
         }
 
         public async Task<object?> Save(ITDSPlayer creator, ArraySegment<object> args)
@@ -86,63 +148,6 @@ namespace TDS_Server.Handler.Maps
             {
                 LoggingHandler.LogError(ex, creator);
                 return MapCreateError.Unknown;
-            }
-           
-        }
-
-        private async Task<(MapDto?, MapCreateError)> SaveOrCreate(ITDSPlayer creator, string mapJson, string mapBasePath)
-        {
-            if (creator.Entity is null)
-                return (null, MapCreateError.Unknown);
-            var serializer = new XmlSerializer(typeof(MapDto));
-            try
-            {
-                MapCreateDataDto mapCreateData;
-                try
-                {
-                    mapCreateData = _serializer.FromBrowser<MapCreateDataDto>(mapJson);
-                    if (mapCreateData is null)
-                        return (null, MapCreateError.CouldNotDeserialize);
-                }
-                catch
-                {
-                    return (null, MapCreateError.CouldNotDeserialize);
-                }
-
-                if (_mapsLoadingHandler.GetMapByName(mapCreateData.Name) is { } || _mapsLoadingHandler.GetMapByName(mapCreateData.Name) is { })
-                    return (null, MapCreateError.NameAlreadyExists);
-
-                //foreach (var bombPlace in mapCreateData.BombPlaces) 
-                //    bombPlace.PosZ -= 1;
-
-                var mapDto = new MapDto(mapCreateData, _serializer);
-                mapDto.Info.IsNewMap = true;
-                mapDto.Info.CreatorId = creator.Entity.Id;
-
-                mapDto.LoadSyncedData();
-                //mapDto.SyncedData.CreatorName = creator.Player.Name;
-
-                string mapFileName = mapDto.Info.Name + "_" + (mapDto.BrowserSyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
-                string mapPath = mapBasePath + Utils.MakeValidFileName(mapFileName);
-                mapDto.Info.FilePath = mapPath;
-
-                MemoryStream memStrm = new MemoryStream();
-                UTF8Encoding utf8e = new UTF8Encoding();
-                XmlTextWriter xmlSink = new XmlTextWriter(memStrm, utf8e);
-                serializer.Serialize(xmlSink, mapDto);
-                xmlSink.Dispose();
-                byte[] utf8EncodedData = memStrm.ToArray();
-
-                string mapXml = utf8e.GetString(utf8EncodedData);
-                string prettyMapXml = await _xmlHelper.GetPrettyAsync(mapXml).ConfigureAwait(true);
-                await File.WriteAllTextAsync(mapPath, prettyMapXml).ConfigureAwait(true);
-
-                return (mapDto, MapCreateError.MapCreatedSuccessfully);
-            }
-            catch (Exception ex)
-            {
-                LoggingHandler.LogError(ex, creator);
-                return (null, MapCreateError.Unknown);
             }
         }
 
@@ -189,7 +194,6 @@ namespace TDS_Server.Handler.Maps
                     [(int)Language.English] = map.Descriptions != null ? Regex.Replace(map.Descriptions.English ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty,
                     [(int)Language.German] = map.Descriptions != null ? Regex.Replace(map.Descriptions.German ?? string.Empty, @"\r\n?|\n", "\\n") : string.Empty
                 }
-
             };
 
             ((MapCreateLobby)player.Lobby!).SetMap(mapCreatorData);
@@ -255,47 +259,6 @@ namespace TDS_Server.Handler.Maps
             return _serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
         }
 
-        public async void RemoveMap(ITDSPlayer player, int mapId)
-        {
-            bool isSavedMap = true;
-            MapDto? map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
-            if (map is null)
-            {
-                map = _mapsLoadingHandler.NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
-                if (map is null)
-                    map = _mapsLoadingHandler.NeedCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
-                isSavedMap = false;
-            }
-
-            if (map is null)
-                return;
-
-            bool canLoadMapsFromOthers = _settingsHandler.CanLoadMapsFromOthers(player);
-            if (map.Info.CreatorId != player.Entity?.Id && !canLoadMapsFromOthers)
-                return;
-            if (map.Info.CreatorId != player.Entity?.Id)
-                LoggingHandler.LogAdmin(LogType.RemoveMap, player, string.Empty, asvip: player.Entity?.IsVip ?? false);
-
-            if (isSavedMap)
-                _mapsLoadingHandler.SavedMaps.Remove(map);
-            else
-            {
-                if (_mapsLoadingHandler.NewCreatedMaps.Contains(map))
-                    _mapsLoadingHandler.NewCreatedMaps.Remove(map);
-                else
-                    _mapsLoadingHandler.NeedCheckMaps.Remove(map);
-
-                await ExecuteForDBAsync(async dbContext =>
-                { 
-                    var maps = await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).ToListAsync();
-                    dbContext.RemoveRange(maps);
-                    await dbContext.SaveChangesAsync();
-                });
-            }
-
-            File.Delete(map.Info.FilePath);
-        }
-
         public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
         {
             if (!(player.Lobby is MapCreateLobby lobby))
@@ -309,16 +272,9 @@ namespace TDS_Server.Handler.Maps
             return null;
         }
 
-        public void AddedMapRating(MapDto map)
-        {
-            if (map.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck)
-                return;
+        #endregion Public Methods
 
-            if (map.RatingAverage >= _settingsHandler.ServerSettings.MinMapRatingForNewMaps)
-                return;
-
-            DisableNewMap(map);
-        }
+        #region Private Methods
 
         private void DisableNewMap(MapDto map)
         {
@@ -327,8 +283,65 @@ namespace TDS_Server.Handler.Maps
             string fileName = Path.GetFileName(map.Info.FilePath);
             string fileContent = File.ReadAllText(map.Info.FilePath);
             File.WriteAllText(Constants.NeedCheckMapsPath + Utils.MakeValidFileName(fileName), fileContent);
-
         }
+
+        private async Task<(MapDto?, MapCreateError)> SaveOrCreate(ITDSPlayer creator, string mapJson, string mapBasePath)
+        {
+            if (creator.Entity is null)
+                return (null, MapCreateError.Unknown);
+            var serializer = new XmlSerializer(typeof(MapDto));
+            try
+            {
+                MapCreateDataDto mapCreateData;
+                try
+                {
+                    mapCreateData = _serializer.FromBrowser<MapCreateDataDto>(mapJson);
+                    if (mapCreateData is null)
+                        return (null, MapCreateError.CouldNotDeserialize);
+                }
+                catch
+                {
+                    return (null, MapCreateError.CouldNotDeserialize);
+                }
+
+                if (_mapsLoadingHandler.GetMapByName(mapCreateData.Name) is { } || _mapsLoadingHandler.GetMapByName(mapCreateData.Name) is { })
+                    return (null, MapCreateError.NameAlreadyExists);
+
+                //foreach (var bombPlace in mapCreateData.BombPlaces)
+                //    bombPlace.PosZ -= 1;
+
+                var mapDto = new MapDto(mapCreateData, _serializer);
+                mapDto.Info.IsNewMap = true;
+                mapDto.Info.CreatorId = creator.Entity.Id;
+
+                mapDto.LoadSyncedData();
+                //mapDto.SyncedData.CreatorName = creator.Player.Name;
+
+                string mapFileName = mapDto.Info.Name + "_" + (mapDto.BrowserSyncedData.CreatorName ?? "?") + "_" + Utils.GetTimestamp() + ".map";
+                string mapPath = mapBasePath + Utils.MakeValidFileName(mapFileName);
+                mapDto.Info.FilePath = mapPath;
+
+                MemoryStream memStrm = new MemoryStream();
+                UTF8Encoding utf8e = new UTF8Encoding();
+                XmlTextWriter xmlSink = new XmlTextWriter(memStrm, utf8e);
+                serializer.Serialize(xmlSink, mapDto);
+                xmlSink.Dispose();
+                byte[] utf8EncodedData = memStrm.ToArray();
+
+                string mapXml = utf8e.GetString(utf8EncodedData);
+                string prettyMapXml = await _xmlHelper.GetPrettyAsync(mapXml).ConfigureAwait(true);
+                await File.WriteAllTextAsync(mapPath, prettyMapXml).ConfigureAwait(true);
+
+                return (mapDto, MapCreateError.MapCreatedSuccessfully);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex, creator);
+                return (null, MapCreateError.Unknown);
+            }
+        }
+
+        #endregion Private Methods
 
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
         {

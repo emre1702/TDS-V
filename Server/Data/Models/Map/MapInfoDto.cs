@@ -3,21 +3,11 @@ using TDS_Server.Data.Enums;
 
 namespace TDS_Server.Data.Models.Map
 {
-
 #nullable disable warnings
+
     public class MapInfoDto
     {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
-
-        [XmlAttribute("type")]
-        public MapType Type { get; set; } = MapType.Normal;
-
-        [XmlAttribute("minplayers")]
-        public uint MinPlayers { get; set; } = 0;
-
-        [XmlAttribute("maxplayers")]
-        public uint MaxPlayers { get; set; } = uint.MaxValue;
+        #region Public Properties
 
         [XmlElement("creatorid")]
         public int? CreatorId { get; set; }
@@ -27,6 +17,21 @@ namespace TDS_Server.Data.Models.Map
 
         [XmlIgnore]
         public bool IsNewMap { get; set; }
+
+        [XmlAttribute("maxplayers")]
+        public uint MaxPlayers { get; set; } = uint.MaxValue;
+
+        [XmlAttribute("minplayers")]
+        public uint MinPlayers { get; set; } = 0;
+
+        [XmlAttribute("name")]
+        public string Name { get; set; }
+
+        [XmlAttribute("type")]
+        public MapType Type { get; set; } = MapType.Normal;
+
+        #endregion Public Properties
     }
+
 #nullable restore warnings
 }

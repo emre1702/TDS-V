@@ -5,9 +5,26 @@ using TDS_Client.RAGEAPI.Entity;
 
 namespace TDS_Client.RAGEAPI.Pool
 {
-    class PoolObjectsAPI : IPoolObjectsAPI
+    internal class PoolObjectsAPI : IPoolObjectsAPI
     {
+        #region Private Fields
+
         private readonly List<IMapObject> _all = new List<IMapObject>();
+        private readonly EntityConvertingHandler _entityConvertingHandler;
+
+        private readonly List<IMapObject> _streamed = new List<IMapObject>();
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public PoolObjectsAPI(EntityConvertingHandler entityConvertingHandler)
+            => _entityConvertingHandler = entityConvertingHandler;
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
         public List<IMapObject> All
         {
             get
@@ -21,7 +38,6 @@ namespace TDS_Client.RAGEAPI.Pool
             }
         }
 
-        private readonly List<IMapObject> _streamed = new List<IMapObject>();
         public List<IMapObject> Streamed
         {
             get
@@ -35,6 +51,10 @@ namespace TDS_Client.RAGEAPI.Pool
             }
         }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
         public IMapObject GetAtHandle(int handle)
         {
             var obj = RAGE.Elements.Entities.Objects.GetAtHandle(handle);
@@ -47,9 +67,6 @@ namespace TDS_Client.RAGEAPI.Pool
             return _entityConvertingHandler.GetEntity(obj);
         }
 
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        public PoolObjectsAPI(EntityConvertingHandler entityConvertingHandler)
-            => _entityConvertingHandler = entityConvertingHandler;
+        #endregion Public Methods
     }
 }

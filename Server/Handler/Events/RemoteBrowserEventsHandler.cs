@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
-using TDS_Server.Data;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
@@ -12,7 +11,6 @@ using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Sync;
-using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -20,18 +18,23 @@ namespace TDS_Server.Handler.Events
 {
     public class RemoteBrowserEventsHandler
     {
-
-        public delegate Task<object?> FromBrowserAsyncMethodDelegate(ITDSPlayer player, ArraySegment<object> args);
-        public delegate ValueTask<object?> FromBrowserMaybeAsyncMethodDelegate(ITDSPlayer player, ArraySegment<object> args);
-        public delegate object? FromBrowserMethodDelegate(ITDSPlayer player, ref ArraySegment<object> args);
+        #region Private Fields
 
         private readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _asyncMethods;
+
+        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
+
+        private readonly ILoggingHandler _loggingHandler;
+
         private readonly Dictionary<string, FromBrowserMaybeAsyncMethodDelegate> _maybeAsyncMethods;
+
         private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
 
         private readonly IModAPI _modAPI;
-        private readonly ILoggingHandler _loggingHandler;
-        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
@@ -91,6 +94,20 @@ namespace TDS_Server.Handler.Events
             };
         }
 
+        #endregion Public Constructors
+
+        #region Public Delegates
+
+        public delegate Task<object?> FromBrowserAsyncMethodDelegate(ITDSPlayer player, ArraySegment<object> args);
+
+        public delegate ValueTask<object?> FromBrowserMaybeAsyncMethodDelegate(ITDSPlayer player, ArraySegment<object> args);
+
+        public delegate object? FromBrowserMethodDelegate(ITDSPlayer player, ref ArraySegment<object> args);
+
+        #endregion Public Delegates
+
+        #region Public Methods
+
         public async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
         {
             try
@@ -121,7 +138,6 @@ namespace TDS_Server.Handler.Events
                         player.SendEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret);
                     }
                 });
-                
             }
             catch (Exception ex)
             {
@@ -131,6 +147,10 @@ namespace TDS_Server.Handler.Events
                     ex.StackTrace ?? Environment.StackTrace, ex.GetType().Name + "|" + baseEx.GetType().Name, player);
             }
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private object? BuyMap(ITDSPlayer player, ref ArraySegment<object> args)
         {
@@ -143,6 +163,33 @@ namespace TDS_Server.Handler.Events
                 return null;
 
             arena.BuyMap(player, mapId.Value);
+            return null;
+        }
+
+        private object? GiveVehicle(ITDSPlayer player, ref ArraySegment<object> args)
+        {
+            if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
+                return null;
+
+            if (args.Count == 0)
+                return null;
+
+            if (!Enum.TryParse(args[0].ToString(), out FreeroamVehicleType vehType))
+                return null;
+
+            lobby.GiveVehicle(player, vehType);
+            return null;
+        }
+
+        private object? JoinedCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
+        {
+            _customLobbyMenuSyncHandler.AddPlayer(player);
+            return null;
+        }
+
+        private object? LeftCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
+        {
+            _customLobbyMenuSyncHandler.RemovePlayer(player);
             return null;
         }
 
@@ -175,31 +222,6 @@ namespace TDS_Server.Handler.Events
             return null;
         }
 
-        private object? GiveVehicle(ITDSPlayer player, ref ArraySegment<object> args)
-        {
-            if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
-                return null;
-
-            if (args.Count == 0)
-                return null;
-
-            if (!Enum.TryParse(args[0].ToString(), out FreeroamVehicleType vehType))
-                return null;
-
-            lobby.GiveVehicle(player, vehType);
-            return null;
-        }
-
-        private object? JoinedCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
-        {
-            _customLobbyMenuSyncHandler.AddPlayer(player);
-            return null;
-        }
-
-        private object? LeftCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
-        {
-            _customLobbyMenuSyncHandler.RemovePlayer(player);
-            return null;
-        }
+        #endregion Private Methods
     }
 }

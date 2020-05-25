@@ -3,8 +3,10 @@ using TDS_Client.Data.Interfaces.ModAPI.Control;
 
 namespace TDS_Client.RAGEAPI.Control
 {
-    class ControlAPI : IControlAPI
+    internal class ControlAPI : IControlAPI
     {
+        #region Public Methods
+
         public void DisableAllControlActions(InputGroup inputGroup)
         {
             RAGE.Game.Pad.DisableAllControlActions((int)inputGroup);
@@ -54,5 +56,7 @@ namespace TDS_Client.RAGEAPI.Control
         {
             return RAGE.Game.Pad.SetControlNormal((int)inputGroup, (int)control, amount);
         }
+
+        #endregion Public Methods
     }
 }

@@ -10,14 +10,18 @@ namespace TDS_Client.Handler.Deathmatch
 {
     public class SuicideAnimHandler : ServiceBase
     {
-        private bool _shotFired;
-        private string _animName;
-        private float _animTime;
-
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+        #region Private Fields
 
         private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
+        private string _animName;
+        private float _animTime;
+        private bool _shotFired;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SuicideAnimHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, UtilsHandler utilsHandler)
             : base(modAPI, loggingHandler)
@@ -30,6 +34,10 @@ namespace TDS_Client.Handler.Deathmatch
             modAPI.Event.Add(ToClientEvent.ApplySuicideAnimation, OnApplySuicideAnimationMethod);
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public void ApplyAnimation(IPlayer player, string animName, float animTime)
         {
             player.TaskPlayAnim("MP_SUICIDE", animName, 8f, 0, -1, 0, 0, false, false, false);
@@ -41,6 +49,23 @@ namespace TDS_Client.Handler.Deathmatch
             _animTime = animTime;
             _shotFired = false;
             ModAPI.Event.Tick.Add(_tickEventMethod);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void OnApplySuicideAnimationMethod(object[] args)
+        {
+            ushort playerHandle = Convert.ToUInt16(args[0]);
+            string animName = (string)args[1];
+            float animTime = Convert.ToSingle(args[2]);
+
+            IPlayer player = _utilsHandler.GetPlayerByHandleValue(playerHandle);
+            if (player == null)
+                return;
+
+            ApplyAnimation(player, animName, animTime);
         }
 
         private void OnRender(int _)
@@ -64,17 +89,6 @@ namespace TDS_Client.Handler.Deathmatch
             }
         }
 
-        private void OnApplySuicideAnimationMethod(object[] args)
-        {
-            ushort playerHandle = Convert.ToUInt16(args[0]);
-            string animName = (string)args[1];
-            float animTime = Convert.ToSingle(args[2]);
-
-            IPlayer player = _utilsHandler.GetPlayerByHandleValue(playerHandle);
-            if (player == null)
-                return;
-
-            ApplyAnimation(player, animName, animTime);
-        }
+        #endregion Private Methods
     }
 }

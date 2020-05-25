@@ -7,6 +7,8 @@ namespace TDS_Server.Core.Init
 {
     public class DbContextFactory : IDesignTimeDbContextFactory<TDSDbContext>
     {
+        #region Public Methods
+
         public TDSDbContext CreateDbContext(string[] args)
         {
             var appConfigHandler = new AppConfigHandler();
@@ -17,5 +19,7 @@ namespace TDS_Server.Core.Init
 
             return new TDSDbContext(optionsBuilder.Options);
         }
+
+        #endregion Public Methods
     }
 }

@@ -1,27 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
+        #region Private Fields
+
         private Dictionary<int, PlayerRelation> _relationsToUsersDict = new Dictionary<int, PlayerRelation>();
 
-        private void LoadRelations()
-        {
-            if (_entity is null)
-                return;
+        #endregion Private Fields
 
-            _relationsToUsersDict = _entity.PlayerRelationsPlayer.ToDictionary(r => r.TargetId, r => r.Relation);
-        }
-
-        public void SetRelation(ITDSPlayer target, PlayerRelation relation)
-        {
-            _relationsToUsersDict[target.Id] = relation;
-        }
+        #region Public Methods
 
         public PlayerRelation GetRelationTo(ITDSPlayer target)
         {
@@ -33,5 +25,24 @@ namespace TDS_Server.Handler.Entities.Player
 
         public bool HasRelationTo(ITDSPlayer target, PlayerRelation relation)
             => GetRelationTo(target) == relation;
+
+        public void SetRelation(ITDSPlayer target, PlayerRelation relation)
+        {
+            _relationsToUsersDict[target.Id] = relation;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void LoadRelations()
+        {
+            if (_entity is null)
+                return;
+
+            _relationsToUsersDict = _entity.PlayerRelationsPlayer.ToDictionary(r => r.TargetId, r => r.Relation);
+        }
+
+        #endregion Private Methods
     }
 }

@@ -7,9 +7,19 @@ namespace TDS_Client.Handler.Lobby
 {
     public class LobbyPlayersHandler
     {
+        #region Public Fields
+
         public List<IPlayer> PlayersSameLobby = new List<IPlayer>();
 
+        #endregion Public Fields
+
+        #region Private Fields
+
         private readonly BrowserHandler _browserHandler;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public LobbyPlayersHandler(BrowserHandler browserHandler, EventsHandler eventsHandler)
         {
@@ -18,6 +28,10 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.PlayerJoinedSameLobby += Load;
             eventsHandler.PlayerLeftSameLobby += Remove;
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public void Load(List<IPlayer> players)
         {
@@ -36,5 +50,7 @@ namespace TDS_Client.Handler.Lobby
             PlayersSameLobby.Remove(player);
             _browserHandler.Angular.RemoveNameForChat(name);
         }
+
+        #endregion Public Methods
     }
 }
