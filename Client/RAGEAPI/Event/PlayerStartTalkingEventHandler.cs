@@ -11,17 +11,15 @@ namespace TDS_Client.RAGEAPI.Event
         #region Private Fields
 
         private readonly LoggingHandler _loggingHandler;
-        private readonly PlayerConvertingHandler _playerConvertingHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public PlayerStartTalkingEventHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler)
+        public PlayerStartTalkingEventHandler(LoggingHandler loggingHandler)
             : base()
         {
             _loggingHandler = loggingHandler;
-            _playerConvertingHandler = playerConvertingHandler;
 
             RAGE.Events.OnPlayerStartTalking += PlayerStartTalking;
         }
@@ -36,7 +34,7 @@ namespace TDS_Client.RAGEAPI.Event
                 return;
             try
             {
-                IPlayer player = _playerConvertingHandler.GetPlayer(playerMod);
+                IPlayer player = playerMod as IPlayer;
 
                 for (int i = Actions.Count - 1; i >= 0; --i)
                 {

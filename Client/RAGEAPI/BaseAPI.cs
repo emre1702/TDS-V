@@ -71,42 +71,38 @@ namespace TDS_Client.RAGEAPI
 
         public BaseAPI()
         {
-            var entityConvertingHandler = new EntityConvertingHandler();
-            var playerConvertingHandler = new PlayerConvertingHandler(RAGE.Elements.Player.LocalPlayer, entityConvertingHandler);
-            entityConvertingHandler.SetPlayerConvertingHandler(playerConvertingHandler);
-
-            LocalPlayer = playerConvertingHandler.GetLocalPlayer();
+            LocalPlayer = RAGE.Elements.Player.LocalPlayer as IPlayer;
 
             Console = new ConsoleAPI();
             var loggingHandler = new LoggingHandler(this);
 
             Audio = new AudioAPI();
             Browser = new BrowserAPI();
-            Blip = new BlipAPI(entityConvertingHandler);
+            Blip = new BlipAPI();
             Cam = new CamAPI();
             Chat = new ChatAPI();
             Control = new ControlAPI();
             Cursor = new CursorAPI();
             Discord = new DiscordAPI();
             Entity = new EntityAPI();
-            Event = new EventAPI(playerConvertingHandler, entityConvertingHandler, loggingHandler);
+            Event = new EventAPI(loggingHandler);
             Graphics = new GraphicsAPI();
             Input = new InputAPI();
             Locale = new LocaleAPI();
-            MapObject = new MapObjectAPI(entityConvertingHandler);
+            MapObject = new MapObjectAPI();
             Misc = new MiscAPI();
             Nametags = new NametagsAPI();
             Native = new NativeAPI();
-            Ped = new PedAPI(entityConvertingHandler);
+            Ped = new PedAPI();
             Player = new PlayerAPI();
-            Pool = new PoolAPI(entityConvertingHandler);
+            Pool = new PoolAPI();
             Shapetest = new ShapetestAPI();
             Stats = new StatsAPI();
             Streaming = new StreamingAPI();
             Sync = new SyncAPI();
             Ui = new UiAPI();
             Utils = new UtilsAPI();
-            Vehicle = new VehicleAPI(entityConvertingHandler);
+            Vehicle = new VehicleAPI();
             Voice = new VoiceAPI();
             Weapon = new WeaponAPI();
             Windows = new WindowsAPI();
@@ -130,7 +126,7 @@ namespace TDS_Client.RAGEAPI
         public IGraphicsAPI Graphics { get; }
         public IInputAPI Input { get; }
         public ILocaleAPI Locale { get; }
-        public ILocalPlayer LocalPlayer { get; }
+        public IPlayer LocalPlayer { get; }
         public IMapObjectAPI MapObject { get; }
         public IMiscAPI Misc { get; }
         public INametagsAPI Nametags { get; }

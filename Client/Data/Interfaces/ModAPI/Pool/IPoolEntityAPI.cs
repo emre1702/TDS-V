@@ -15,6 +15,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Pool
 
         #region Public Methods
 
+        T GetAt(ushort id);
+
         T GetAtHandle(int handle);
 
         T GetAtRemote(ushort handleValue);

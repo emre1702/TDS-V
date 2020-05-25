@@ -50,7 +50,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI
         IGraphicsAPI Graphics { get; }
         IInputAPI Input { get; }
         ILocaleAPI Locale { get; }
-        ILocalPlayer LocalPlayer { get; }
+        IPlayer LocalPlayer { get; }
         IMapObjectAPI MapObject { get; }
         IMiscAPI Misc { get; }
         INametagsAPI Nametags { get; }

@@ -1,5 +1,4 @@
 ﻿using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Blip
 {
@@ -7,7 +6,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Blip
     {
         #region Public Properties
 
-        Position3D Rotation { set; }
+        int Rotation { set; }
 
         #endregion Public Properties
     }

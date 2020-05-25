@@ -95,7 +95,7 @@ namespace TDS_Client.Handler.MapCreator
             {
                 _movingRotation = value;
                 Entity.Rotation = value;
-                Blip.Rotation = value;
+                Blip.Rotation = (int)value.Z;
             }
         }
 
@@ -200,7 +200,7 @@ namespace TDS_Client.Handler.MapCreator
             LoadEntityData();
 
             Blip.Position = Position;
-            Blip.Rotation = Rotation;
+            Blip.Rotation = (int)Rotation.Z;
         }
 
         public void SetCollision(bool toggle, bool keepPhysics)

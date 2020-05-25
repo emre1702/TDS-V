@@ -3,7 +3,6 @@ using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler;
-using TDS_Client.RAGEAPI.Entity;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 
@@ -13,18 +12,16 @@ namespace TDS_Client.RAGEAPI.Event
     {
         #region Private Fields
 
-        private readonly EntityConvertingHandler _entityConvertingHandler;
         private readonly LoggingHandler _loggingHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public IncomingDamageEventHandler(LoggingHandler loggingHandler, EntityConvertingHandler entityConvertingHandler)
+        public IncomingDamageEventHandler(LoggingHandler loggingHandler)
             : base()
         {
             _loggingHandler = loggingHandler;
-            _entityConvertingHandler = entityConvertingHandler;
 
             RAGE.Events.OnIncomingDamage += IncomingDamage;
         }
@@ -41,9 +38,9 @@ namespace TDS_Client.RAGEAPI.Event
 
             try
             {
-                IPlayer sourcePlayer = _entityConvertingHandler.GetEntity(sourcePlayerMod);
-                IEntity sourceEntity = _entityConvertingHandler.GetEntity(sourceEntityMod);
-                IEntity targetEntity = _entityConvertingHandler.GetEntity(targetEntityMod);
+                IPlayer sourcePlayer = sourcePlayerMod as IPlayer;
+                IEntity sourceEntity = sourceEntityMod as IEntity;
+                IEntity targetEntity = targetEntityMod as IEntity;
                 var weaponHash = (WeaponHash)weaponHashMod;
                 var cancel = new CancelEventArgs();
 

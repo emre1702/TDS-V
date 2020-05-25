@@ -11,20 +11,20 @@ namespace TDS_Client.RAGEAPI.Event
     {
         #region Public Constructors
 
-        public EventAPI(PlayerConvertingHandler playerConvertingHandler, EntityConvertingHandler entityConvertingHandler, LoggingHandler loggingHandler)
+        public EventAPI(LoggingHandler loggingHandler)
         {
-            Death = new DeathEventHandler(loggingHandler, playerConvertingHandler);
-            EntityStreamIn = new EntityStreamInEventHandler(loggingHandler, entityConvertingHandler);
-            EntityStreamOut = new EntityStreamOutEventHandler(loggingHandler, entityConvertingHandler);
-            IncomingDamage = new IncomingDamageEventHandler(loggingHandler, entityConvertingHandler);
-            OutgoingDamage = new OutgoingDamageEventHandler(loggingHandler, entityConvertingHandler);
+            Death = new DeathEventHandler(loggingHandler);
+            EntityStreamIn = new EntityStreamInEventHandler(loggingHandler);
+            EntityStreamOut = new EntityStreamOutEventHandler(loggingHandler);
+            IncomingDamage = new IncomingDamageEventHandler(loggingHandler);
+            OutgoingDamage = new OutgoingDamageEventHandler(loggingHandler);
             Spawn = new PlayerSpawnEventHandler(loggingHandler);
-            PlayerStartEnterVehicle = new PlayerStartEnterVehicleEventHandler(loggingHandler, entityConvertingHandler);
-            PlayerStartTalking = new PlayerStartTalkingEventHandler(loggingHandler, playerConvertingHandler);
-            PlayerStopTalking = new PlayerStopTalkingEventHandler(loggingHandler, playerConvertingHandler);
+            PlayerStartEnterVehicle = new PlayerStartEnterVehicleEventHandler(loggingHandler);
+            PlayerStartTalking = new PlayerStartTalkingEventHandler(loggingHandler);
+            PlayerStopTalking = new PlayerStopTalkingEventHandler(loggingHandler);
             Tick = new TickEventHandler(loggingHandler);
-            TickNametag = new TickNametagEventHandler(loggingHandler, playerConvertingHandler);
-            WeaponShot = new WeaponShotHandler(loggingHandler, playerConvertingHandler);
+            TickNametag = new TickNametagEventHandler(loggingHandler);
+            WeaponShot = new WeaponShotHandler(loggingHandler);
         }
 
         #endregion Public Constructors

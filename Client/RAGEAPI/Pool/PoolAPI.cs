@@ -5,22 +5,14 @@ namespace TDS_Client.RAGEAPI.Pool
 {
     internal class PoolAPI : IPoolAPI
     {
-        #region Private Fields
-
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
-        public PoolAPI(EntityConvertingHandler entityConvertingHandler)
+        public PoolAPI()
         {
-            _entityConvertingHandler = entityConvertingHandler;
-
-            Objects = new PoolObjectsAPI(entityConvertingHandler);
-            Peds = new PoolPedsAPI(entityConvertingHandler);
-            Players = new PoolPlayersAPI(entityConvertingHandler);
-            Vehicles = new PoolVehiclesAPI(entityConvertingHandler);
+            Objects = new PoolObjectsAPI();
+            Peds = new PoolPedsAPI();
+            Players = new PoolPlayersAPI();
+            Vehicles = new PoolVehiclesAPI();
         }
 
         #endregion Public Constructors

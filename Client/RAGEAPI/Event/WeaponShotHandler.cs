@@ -1,5 +1,6 @@
 ﻿using System;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Client.RAGEAPI.Player;
@@ -12,16 +13,14 @@ namespace TDS_Client.RAGEAPI.Event
         #region Private Fields
 
         private readonly LoggingHandler _loggingHandler;
-        private readonly PlayerConvertingHandler _playerConvertingHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public WeaponShotHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler) : base()
+        public WeaponShotHandler(LoggingHandler loggingHandler) : base()
         {
             _loggingHandler = loggingHandler;
-            _playerConvertingHandler = playerConvertingHandler;
 
             RAGE.Events.OnPlayerWeaponShot += OnWeaponShot;
         }
@@ -38,7 +37,7 @@ namespace TDS_Client.RAGEAPI.Event
             try
             {
                 var pos = targetPos.ToPosition3D();
-                var target = _playerConvertingHandler.GetPlayer(modTarget);
+                var target = modTarget as IPlayer;
                 var cancel = new CancelEventArgs();
 
                 for (int i = Actions.Count - 1; i >= 0; --i)

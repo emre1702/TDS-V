@@ -10,18 +10,16 @@ namespace TDS_Client.RAGEAPI.Event
     {
         #region Private Fields
 
-        private readonly EntityConvertingHandler _entityConvertingHandler;
         private readonly LoggingHandler _loggingHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public EntityStreamOutEventHandler(LoggingHandler loggingHandler, EntityConvertingHandler entityConvertingHandler)
+        public EntityStreamOutEventHandler(LoggingHandler loggingHandler)
             : base()
         {
             _loggingHandler = loggingHandler;
-            _entityConvertingHandler = entityConvertingHandler;
 
             RAGE.Events.OnEntityStreamOut += EntityStreamOut;
         }
@@ -37,7 +35,7 @@ namespace TDS_Client.RAGEAPI.Event
 
             try
             {
-                IEntity entity = _entityConvertingHandler.GetEntity(modEntity);
+                IEntity entity = modEntity as IEntity;
 
                 for (int i = Actions.Count - 1; i >= 0; --i)
                 {

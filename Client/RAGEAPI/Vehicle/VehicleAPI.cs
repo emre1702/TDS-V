@@ -7,16 +7,11 @@ namespace TDS_Client.RAGEAPI.Vehicle
 {
     internal class VehicleAPI : IVehicleAPI
     {
-        #region Private Fields
-
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
-        public VehicleAPI(EntityConvertingHandler entityConvertingHandler)
-            => _entityConvertingHandler = entityConvertingHandler;
+        public VehicleAPI()
+        {
+        }
 
         #endregion Public Constructors
 
@@ -26,7 +21,7 @@ namespace TDS_Client.RAGEAPI.Vehicle
             int primColor = 0, int secColor = 1, uint dimension = 0)
         {
             var instance = new RAGE.Elements.Vehicle(hash, position.ToVector3(), rotation.Z, numberPlate, alpha, locked, primColor, secColor, dimension);
-            return _entityConvertingHandler.GetEntity(instance);
+            return instance as IVehicle;
         }
 
         public void SetVehicleOnGroundProperly(int handle)

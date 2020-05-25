@@ -8,16 +8,11 @@ namespace TDS_Client.RAGEAPI.Ped
 {
     internal class PedAPI : IPedAPI
     {
-        #region Private Fields
-
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
-        public PedAPI(EntityConvertingHandler entityConvertingHandler)
-            => _entityConvertingHandler = entityConvertingHandler;
+        public PedAPI()
+        {
+        }
 
         #endregion Public Constructors
 
@@ -29,7 +24,7 @@ namespace TDS_Client.RAGEAPI.Ped
         public IPed Create(PedHash model, Position3D position, float heading, uint dimension)
         {
             var instance = new RAGE.Elements.Ped((uint)model, position.ToVector3(), heading, dimension);
-            return _entityConvertingHandler.GetEntity(instance);
+            return instance as IPed;
         }
 
         public int GetPedArmor(int handle)

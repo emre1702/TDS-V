@@ -1,5 +1,6 @@
 ﻿using System;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Entity;
 using TDS_Shared.Data.Enums;
@@ -11,18 +12,16 @@ namespace TDS_Client.RAGEAPI.Event
     {
         #region Private Fields
 
-        private readonly EntityConvertingHandler _entityConvertingHandler;
         private readonly LoggingHandler _loggingHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public PlayerStartEnterVehicleEventHandler(LoggingHandler loggingHandler, EntityConvertingHandler entityConvertingHandler)
+        public PlayerStartEnterVehicleEventHandler(LoggingHandler loggingHandler)
             : base()
         {
             _loggingHandler = loggingHandler;
-            _entityConvertingHandler = entityConvertingHandler;
 
             RAGE.Events.OnPlayerStartEnterVehicle += PlayerStartEnterVehicle;
         }
@@ -40,7 +39,7 @@ namespace TDS_Client.RAGEAPI.Event
             {
                 var cancel = new CancelEventArgs();
 
-                var vehicle = _entityConvertingHandler.GetEntity(modVehicle);
+                var vehicle = modVehicle as IVehicle;
 
                 for (int i = Actions.Count - 1; i >= 0; --i)
                 {

@@ -3,13 +3,16 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 {
-    public interface IEntityBase : IEntity, IEquatable<IEntityBase>
+    public interface IEntityBase : IEntity
     {
         #region Public Properties
 
         int Alpha { get; set; }
+
         float Heading { get; set; }
+
         int Health { get; set; }
+
         Position3D Rotation { get; set; }
 
         #endregion Public Properties

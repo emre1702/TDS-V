@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Player;
@@ -12,16 +13,14 @@ namespace TDS_Client.RAGEAPI.Event
         #region Private Fields
 
         private readonly LoggingHandler _loggingHandler;
-        private readonly PlayerConvertingHandler _playerConvertingHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public TickNametagEventHandler(LoggingHandler loggingHandler, PlayerConvertingHandler playerConvertingHandler)
+        public TickNametagEventHandler(LoggingHandler loggingHandler)
         {
             _loggingHandler = loggingHandler;
-            _playerConvertingHandler = playerConvertingHandler;
 
             RAGE.Events.Tick += OnTick;
         }
@@ -46,7 +45,7 @@ namespace TDS_Client.RAGEAPI.Event
                             continue;
                         newNametags.Add(new TickNametagData
                         {
-                            Player = _playerConvertingHandler.GetPlayer(nametag.Player),
+                            Player = nametag.Player as IPlayer,
                             ScreenX = nametag.ScreenX,
                             ScreenY = nametag.ScreenY,
                             Distance = nametag.Distance

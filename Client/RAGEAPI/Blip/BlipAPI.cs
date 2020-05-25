@@ -7,16 +7,11 @@ namespace TDS_Client.RAGEAPI.Blip
 {
     internal class BlipAPI : IBlipAPI
     {
-        #region Private Fields
-
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
-        public BlipAPI(EntityConvertingHandler entityConvertingHandler)
-            => _entityConvertingHandler = entityConvertingHandler;
+        public BlipAPI()
+        {
+        }
 
         #endregion Public Constructors
 
@@ -26,7 +21,7 @@ namespace TDS_Client.RAGEAPI.Blip
             int rotation = 0, float radius = 0, uint dimension = 0)
         {
             var blip = new RAGE.Elements.Blip(sprite, position.ToVector3(), name, scale, color, alpha, drawDistance, shortRange, rotation, radius, dimension);
-            return _entityConvertingHandler.GetEntity(blip);
+            return blip as IBlip;
         }
 
         #endregion Public Methods

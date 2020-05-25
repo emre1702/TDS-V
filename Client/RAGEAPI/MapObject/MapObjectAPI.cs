@@ -7,16 +7,11 @@ namespace TDS_Client.RAGEAPI.MapObject
 {
     internal class MapObjectAPI : IMapObjectAPI
     {
-        #region Private Fields
-
-        private readonly EntityConvertingHandler _entityConvertingHandler;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
-        public MapObjectAPI(EntityConvertingHandler entityConvertingHandler)
-            => _entityConvertingHandler = entityConvertingHandler;
+        public MapObjectAPI()
+        {
+        }
 
         #endregion Public Constructors
 
@@ -25,7 +20,7 @@ namespace TDS_Client.RAGEAPI.MapObject
         public IMapObject Create(uint hash, Position3D position, Position3D rotation, int alpha = 255, uint dimension = 0)
         {
             var instance = new RAGE.Elements.MapObject(hash, position.ToVector3(), rotation.ToVector3(), alpha, dimension);
-            return _entityConvertingHandler.GetEntity(instance);
+            return instance as IMapObject;
         }
 
         public void PlaceObjectOnGroundProperly(int handle)
