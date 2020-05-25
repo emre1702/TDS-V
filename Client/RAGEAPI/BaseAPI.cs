@@ -71,6 +71,9 @@ namespace TDS_Client.RAGEAPI
 
         public BaseAPI()
         {
+            Pool = new PoolAPI();
+
+            RAGE.Elements.Player.RecreateLocal();
             LocalPlayer = RAGE.Elements.Player.LocalPlayer as IPlayer;
 
             Console = new ConsoleAPI();
@@ -95,7 +98,7 @@ namespace TDS_Client.RAGEAPI
             Native = new NativeAPI();
             Ped = new PedAPI();
             Player = new PlayerAPI();
-            Pool = new PoolAPI();
+
             Shapetest = new ShapetestAPI();
             Stats = new StatsAPI();
             Streaming = new StreamingAPI();
