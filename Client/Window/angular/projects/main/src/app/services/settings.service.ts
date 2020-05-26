@@ -114,6 +114,7 @@ export class SettingsService {
     public ChatMaxHeight = "35vh";
     public ChatFontSize = "1.4em";
     public ChatHideDirtyChat = false;
+    public ChatInfoAnimationTimeMs = 15000;
     public ChatSettingsChanged = new EventEmitter();
 
     public Constants: ConstantsData;

@@ -63,6 +63,7 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Applications> Applications { get; set; }
         public virtual DbSet<BonusbotSettings> BonusbotSettings { get; set; }
         public virtual DbSet<ChallengeSettings> ChallengeSettings { get; set; }
+        public virtual DbSet<ChatInfos> ChatInfos { get; set; }
         public virtual DbSet<CommandAlias> CommandAlias { get; set; }
         public virtual DbSet<CommandInfos> CommandInfos { get; set; }
         public virtual DbSet<Commands> Commands { get; set; }
@@ -98,8 +99,8 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<PlayerCharGeneralDatas> PlayerCharGeneralDatas { get; set; }
         public virtual DbSet<PlayerCharHairAndColorsDatas> PlayerCharHairAndColorsDatas { get; set; }
         public virtual DbSet<PlayerCharHeritageDatas> PlayerCharHeritageDatas { get; set; }
-        public virtual DbSet<PlayerCommands> PlayerCommands { get; set; }
         public virtual DbSet<PlayerClothes> PlayerClothes { get; set; }
+        public virtual DbSet<PlayerCommands> PlayerCommands { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual DbSet<PlayerMapRatings> PlayerMapRatings { get; set; }
@@ -281,6 +282,11 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.Frequency)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<ChatInfos>(entity =>
+            {
+                entity.HasKey(e => e.Id);
             });
 
             modelBuilder.Entity<CommandAlias>(entity =>
@@ -2026,6 +2032,57 @@ namespace TDS_Server.Database.Entity
                     Answer = "Im Falle einer Übergabe von TDS-V wird die Datenbank auch übergeben, jedoch ohne die Spieler-Daten (aus Datenschutz-Gründen)."
                             + "\nFalls du jedoch deine Daten auch dann weiterhin behalten willst, musst du es im Userpanel erlauben."
                             + "\nDie Daten beinhalten keine sensiblen Informationen - IPs werden nicht gespeichert, Passwörter sind sicher (Hash + Salt)."
+                }
+            );
+
+            modelBuilder.Entity<ChatInfos>().HasData(
+                new ChatInfos
+                {
+                    Id = 1,
+                    Language = Language.German,
+                    Message = "Du kannst die Lobby mit \"/leave\" verlassen."
+                },
+                new ChatInfos
+                {
+                    Id = 2,
+                    Language = Language.English,
+                    Message = "You can leave the lobby with \"/leave.\""
+                },
+                new ChatInfos
+                {
+                    Id = 3,
+                    Language = Language.German,
+                    Message = "VIPs sind keine Spender"
+                },
+                new ChatInfos
+                {
+                    Id = 4,
+                    Language = Language.English,
+                    Message = "VIPs are not donators"
+                },
+                new ChatInfos
+                {
+                    Id = 5,
+                    Language = Language.German,
+                    Message = "Es gibt 3 Admin-Ränge: Supporter, Administrator, Projektleiter"
+                },
+                new ChatInfos
+                {
+                    Id = 6,
+                    Language = Language.English,
+                    Message = "There are 3 admin ranks: Supporter, Administrator, Project Leader"
+                },
+                new ChatInfos
+                {
+                    Id = 7,
+                    Language = Language.German,
+                    Message = "Der Projektleiter ernennt Administratoren. Die Administratoren ernennen Supporter."
+                },
+                new ChatInfos
+                {
+                    Id = 8,
+                    Language = Language.English,
+                    Message = "The project leader appoints administrators. The administrators appoint supporters."
                 }
             );
 
