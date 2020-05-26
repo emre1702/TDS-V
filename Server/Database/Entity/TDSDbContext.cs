@@ -98,6 +98,7 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<PlayerCharGeneralDatas> PlayerCharGeneralDatas { get; set; }
         public virtual DbSet<PlayerCharHairAndColorsDatas> PlayerCharHairAndColorsDatas { get; set; }
         public virtual DbSet<PlayerCharHeritageDatas> PlayerCharHeritageDatas { get; set; }
+        public virtual DbSet<PlayerCommands> PlayerCommands { get; set; }
         public virtual DbSet<PlayerClothes> PlayerClothes { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
@@ -839,6 +840,25 @@ namespace TDS_Server.Database.Entity
                 entity.HasOne(e => e.HairAndColorsData)
                     .WithOne(d => d.CharDatas)
                     .HasForeignKey<PlayerCharDatas>(e => e.HairAndColorsDataId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<PlayerCommands>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasIndex(e => e.PlayerId);
+
+                entity.Property(e => e.CommandText).HasMaxLength(100);
+
+                entity.HasOne(c => c.Player)
+                    .WithMany(p => p.Commands)
+                    .HasForeignKey(c => c.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(c => c.Command)
+                    .WithMany(p => p.PlayerCommands)
+                    .HasForeignKey(c => c.CommandId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 

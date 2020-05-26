@@ -67,7 +67,8 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendMessage,
                 [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
                 [ToServerEvent.SaveCharCreateData] = playerCharHandler.Save,
-                [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel
+                [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel,
+                [ToServerEvent.SavePlayerCommandsSettings] = userpanelHandler.SettingsCommandsHandler.Save
             };
 
             _maybeAsyncMethods = new Dictionary<string, FromBrowserMaybeAsyncMethodDelegate>

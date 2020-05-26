@@ -30,6 +30,7 @@ export enum DToServerEvent {
     RemoveMap = "c39",
     SaveCharCreateData = "c29",
     SaveMapCreatorData = "c41",
+    SavePlayerCommandsSettings = "c70",
     SaveSettings = "c42",
     SaveSpecialSettingsChange = "c43",
     SendApplication = "c44",

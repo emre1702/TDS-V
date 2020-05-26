@@ -5,6 +5,7 @@ export enum UserpanelNavPage {
     Settings,
     SettingsSpecial,
     SettingsNormal,
+    SettingsCommands,
     Commands,
     CommandsUser,
     CommandsTDSTeam,

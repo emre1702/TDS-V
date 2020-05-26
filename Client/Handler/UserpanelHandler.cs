@@ -88,6 +88,10 @@ namespace TDS_Client.Handler
                     _browserHandler.Angular.LoadUserpanelData((int)type, _serializer.ToBrowser(_settingsHandler.PlayerSettings));
                     break;
 
+                case UserpanelLoadDataType.SettingsCommands:
+                    _browserHandler.Angular.LoadUserpanelData((int)type, _serializer.ToBrowser(_settingsHandler.CommandsData));
+                    break;
+
                 default:
                     _remoteEventsSender.Send(ToServerEvent.LoadUserpanelData, (int)type);
                     break;

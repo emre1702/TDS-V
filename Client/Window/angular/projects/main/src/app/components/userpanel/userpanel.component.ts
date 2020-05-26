@@ -88,6 +88,8 @@ export class UserpanelComponent implements OnInit, OnDestroy {
             this.userpanelService.loadSettingsSpecial();
         } else if (nav == UserpanelNavPage.SettingsNormal && !this.userpanelService.allSettingsNormal) {
             this.userpanelService.loadSettingsNormal();
+        } else if (nav == UserpanelNavPage.SettingsCommands) {
+            this.userpanelService.loadSettingsCommands();
         } else if (nav == UserpanelNavPage.MyStats) {
             this.userpanelService.loadMyStats();
         } else if (nav == UserpanelNavPage.Application) {

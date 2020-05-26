@@ -18,6 +18,10 @@ namespace TDS_Server.Data.Models.Userpanel.Command
         [JsonProperty("7")]
         public Dictionary<int, string> Description { get; set; }
 
+        // Used for UserpanelPlayerCommandsHandler
+        [JsonIgnore]
+        public int Id { get; set; }
+
         [JsonProperty("4")]
         public bool LobbyOwnerCanUse { get; set; }
 

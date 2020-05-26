@@ -39,6 +39,7 @@ namespace TDS_Server.Handler.Userpanel
             _rulesHandler = ActivatorUtilities.CreateInstance<UserpanelRulesHandler>(serviceProvider);
             _fAQsHandlers = ActivatorUtilities.CreateInstance<UserpanelFAQsHandlers>(serviceProvider);
             _commandsHandler = userpanelCommandsHandler;
+            SettingsCommandsHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsCommandsHandler>(serviceProvider);
             OfflineMessagesHandler = ActivatorUtilities.CreateInstance<UserpanelOfflineMessagesHandler>(serviceProvider);
             SettingsNormalHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsNormalHandler>(serviceProvider);
             SettingsSpecialHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsSpecialHandler>(serviceProvider);
@@ -57,6 +58,7 @@ namespace TDS_Server.Handler.Userpanel
         public IUserpanelApplicationsAdminHandler ApplicationsAdminHandler { get; }
         public IUserpanelApplicationUserHandler ApplicationUserHandler { get; }
         public IUserpanelOfflineMessagesHandler OfflineMessagesHandler { get; }
+        public IUserpanelPlayerCommandsHandler SettingsCommandsHandler { get; }
         public IUserpanelSettingsNormalHandler SettingsNormalHandler { get; }
         public IUserpanelSettingsSpecialHandler SettingsSpecialHandler { get; }
         public IUserpanelSupportAdminHandler SupportAdminHandler { get; }
@@ -101,6 +103,11 @@ namespace TDS_Server.Handler.Userpanel
                 case UserpanelLoadDataType.SettingsSpecial:
                     json = SettingsSpecialHandler.GetData(player);
                     break;
+
+                // Doing that at clientside
+                /*case UserpanelLoadDataType.SettingsCommands:
+                    json = await SettingsCommandsHandler.GetData(player);
+                    break;*/
 
                 case UserpanelLoadDataType.SupportUser:
                     json = await SupportUserHandler.GetData(player);

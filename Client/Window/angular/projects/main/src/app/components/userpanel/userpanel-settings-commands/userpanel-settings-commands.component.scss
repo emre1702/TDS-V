@@ -1,0 +1,44 @@
+#container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+
+    .info {
+        width: 100%;
+        margin-bottom: 10px;
+        white-space: pre-wrap;
+    }
+
+    .row {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .left {
+            width: 40%;
+        }
+
+        .between {
+            width: 15%;
+            text-align: center;
+            margin: auto;
+
+            .add-icon {
+                color: lightseagreen;
+            }
+        }
+
+        .right {
+            width: 40%;
+        }
+    }
+
+
+}
+
+::ng-deep .mat-figure {
+    display: inline !important;
+}

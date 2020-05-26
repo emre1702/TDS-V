@@ -125,6 +125,10 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     VoiceAutoVolume = "Voice autom. Lautstärke";
     VoiceVolume = "Voice Lautstärke";
     MapBorder = "Karten-Limit";
+    SettingsCommandsInfo = `Hier könnt ihr eure eigenen Aliasse für die Befehle einstellen.
+Dabei verschwinden die alten Befehle nicht, aber eure Einstellungen werden zuerst berücksichtigt.
+Alle Befehle sind unabhängig von Groß- oder Kleinschreibung (z.B. "AdminSay" und "adminsay" sind das selbe).
+WARNUNG! Benutze keine Leerzeichen!`;
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";
@@ -179,6 +183,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     Buy = "Kaufen";
     SettingsSpecial = "Einstellungen Spezial";
     SettingsNormal = "Einstellungen Normal";
+    SettingsCommands = "Einstellungen Befehle";
     Username = "Benutzername";
     UsernameChangeInfo = "Das Ändern des Benutzernamens hat eine Abklingzeit von {0} Tagen\nund kostet während des Cooldowns ${1}.";
     BuyUsername = "Kaufe Benutzername";

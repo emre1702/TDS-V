@@ -19,6 +19,7 @@ import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 import { UserpanelSupportRequestListData } from '../interfaces/userpanelSupportRequestListData';
+import { UserpanelSettingCommandDataDto } from '../interfaces/settings-commands/userpanelSettingCommandDataDto';
 
 @Injectable({
     providedIn: 'root'
@@ -54,6 +55,7 @@ export class UserpanelService {
     allFAQs: UserpanelFAQDataDto[] = [];
     allSettingsSpecial: UserpanelSettingSpecialDataDto;
     allSettingsNormal: UserpanelSettingNormalDataDto;
+    settingsCommandsData: UserpanelSettingCommandDataDto;
     myStats: UserpanelStatsDataDto /*= {
         Id: 1,
         AdminLvl: 3,
@@ -121,6 +123,7 @@ export class UserpanelService {
     public faqsLoaded = new EventEmitter();
     public settingsSpecialLoaded = new EventEmitter();
     public settingsNormalLoaded = new EventEmitter();
+    public settingsCommandsDataLoaded = new EventEmitter();
     public myStatsLoaded = new EventEmitter();
     public applicationDataLoaded = new EventEmitter();
     public applicationsLoaded = new EventEmitter();
@@ -160,6 +163,34 @@ export class UserpanelService {
         1, true, true, true, true, true, 0, "asd", DateTimeFormatEnum["dd'-'MM'-'yyyy HH':'mm':'ss"], 100, 105, 110, 115, 120, 125,
         "rgba(0, 0, 0, 1)", "rgba(50, 0, 0, 1)", "rgba(0, 255, 0, 1)", undefined, "rgba(255, 255, 255, 1)", true];
         this.settingsNormalLoaded.emit(null);
+        this.loadingData = false;
+        this.loadingDataChanged.emit(null);*/
+    }
+
+    loadSettingsCommands() {
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsCommands);
+
+        /*this.settingsCommandsData = {
+            0: [
+                { 0: 1, 1: "AdminSay" },
+                { 0: 2, 1: "AdminChat" },
+                { 0: 3, 1: "Goto1" },
+                { 0: 4, 1: "Goto2" },
+                { 0: 5, 1: "Goto3" },
+                { 0: 6, 1: "Goto4" },
+                { 0: 7, 1: "Goto5" },
+                { 0: 8, 1: "Goto6" },
+                { 0: 9, 1: "Goto7" },
+                { 0: 10, 1: "Goto8" },
+                { 0: 11, 1: "Goto9" },
+                { 0: 12, 1: "Goto10" },
+                { 0: 13, 1: "Goto11" },
+                { 0: 14, 1: "Goto12" },
+                { 0: 15, 1: "Goto13" },
+                { 0: 16, 1: "Goto14" },
+            ],
+            1: []
+        };
         this.loadingData = false;
         this.loadingDataChanged.emit(null);*/
     }
@@ -217,6 +248,9 @@ export class UserpanelService {
             case UserpanelLoadDataType.SettingsNormal:
                 this.loadedAllSettingsNormal(json);
                 break;
+            case UserpanelLoadDataType.SettingsCommands:
+                this.loadedSettingsCommandsData(json);
+                break;
             case UserpanelLoadDataType.MyStats:
                 this.loadedMyStats(json);
                 break;
@@ -265,6 +299,18 @@ export class UserpanelService {
     private loadedAllSettingsNormal(json: string) {
         this.allSettingsNormal = JSON.parse(json);
         this.settingsNormalLoaded.emit(null);
+    }
+
+    private loadedSettingsCommandsData(json: string) {
+        this.settingsCommandsData = JSON.parse(json);
+        if (typeof this.settingsCommandsData[0] === "string") {
+            this.settingsCommandsData[0] = JSON.parse(this.settingsCommandsData[0]);
+        }
+        for (const entry of this.settingsCommandsData[1]) {
+            entry.changed = false;
+            entry.initial = true;
+        }
+        this.settingsCommandsDataLoaded.emit(null);
     }
 
     private loadedMyStats(json: string) {

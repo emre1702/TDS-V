@@ -1,0 +1,26 @@
+<div id="container">
+    <span class="info">{{ "SettingsCommandsInfo" | language: settings.Lang }}</span>
+    <div class="row" *ngFor="let entry of userpanelService.settingsCommandsData[1]">
+        <mat-form-field color="accent" class="left">
+            <input matInput [(ngModel)]="entry[1]" (change)="changed(entry)">
+        </mat-form-field>
+        <mat-icon class="between">
+            arrow_forward
+        </mat-icon>
+        <mat-form-field color="accent" class="right">
+            <mat-select [(ngModel)]="entry[0]">
+                <mat-option *ngFor="let commandData of userpanelService.settingsCommandsData[0]" [value]="commandData[0]">
+                    {{ commandData[1] }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <div class="left"></div>
+        <button class="between" mat-icon-button (click)="addNewRow()">
+            <mat-icon class="add-icon">playlist_add</mat-icon>
+        </button>
+        <div class="right"></div>
+    </div>
+</div>

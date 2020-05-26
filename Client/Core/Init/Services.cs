@@ -74,8 +74,8 @@ namespace TDS_Client.Core.Init
                     timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler, serializer);
                 new DamageHandler(modAPI, browserHandler, remoteEventsSender, playerFightHandler, lobbyHandler);
                 var scoreboardHandler = new ScoreboardHandler(modAPI, loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler, serializer);
-                var chatHandler = new ChatHandler(modAPI, loggingHandler, browserHandler, bindsHandler, remoteEventsSender, lobbyHandler, playerFightHandler,
-                    eventsHandler, camerasHandler);
+                var chatHandler = new ChatHandler(modAPI, loggingHandler, browserHandler, bindsHandler, remoteEventsSender, eventsHandler);
+                new CommandsHandler(modAPI, loggingHandler, chatHandler, settingsHandler, lobbyHandler, playerFightHandler, camerasHandler, remoteEventsSender);
                 new ShirtTeamColorsHandler(modAPI, loggingHandler, lobbyHandler, dataSyncHandler, eventsHandler);
 
                 var workaroundsHandler = new WorkaroundsHandler(modAPI, loggingHandler, serializer, utilsHandler);

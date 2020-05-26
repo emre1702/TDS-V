@@ -96,6 +96,7 @@ import { CharCreatorFeaturesComponent } from './components/char-creator/menus/ch
 import { CharCreatorAppearanceComponent } from './components/char-creator/menus/char-creator-appearance/char-creator-appearance.component';
 import { CharCreatorHairandcolorsComponent } from './components/char-creator/menus/char-creator-hairandcolors/char-creator-hairandcolors.component';
 import { HttpClientModule } from '@angular/common/http';
+import { UserpanelSettingsCommandsComponent } from './components/userpanel/userpanel-settings-commands/userpanel-settings-commands.component';
 
 @NgModule({
   declarations: [
@@ -152,7 +153,8 @@ import { HttpClientModule } from '@angular/common/http';
     CharCreatorHeritageComponent,
     CharCreatorFeaturesComponent,
     CharCreatorAppearanceComponent,
-    CharCreatorHairandcolorsComponent
+    CharCreatorHairandcolorsComponent,
+    UserpanelSettingsCommandsComponent
   ],
   imports: [
     ReactiveFormsModule,

@@ -12,6 +12,7 @@ using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Data.Models.PlayerCommands;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
@@ -25,28 +26,18 @@ namespace TDS_Client.Handler
         public readonly int ScreenFadeOutTimeAfterSpawn = 2000;
 
         public Color MapBorderColor;
-
         public Color? NametagArmorEmptyColor = null;
-
         public Color NametagArmorFullColor = Color.FromArgb(255, 255, 255, 255);
-
         public Color? NametagDeadColor = Color.FromArgb(255, 0, 0, 0);
-
         public Color NametagHealthEmptyColor = Color.FromArgb(255, 50, 0, 0);
-
         public Color NametagHealthFullColor = Color.FromArgb(255, 0, 255, 0);
-
         public float NametagMaxDistance;
 
         // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
         public Color? NotTempMapBorderColor;
 
-        public SyncedPlayerSettingsDto PlayerSettings;
-
         public bool ShowNametagOnlyOnAiming;
-
         public int StartArmor;
-
         public int StartHealth = 100;
 
         #endregion Public Fields
@@ -54,7 +45,6 @@ namespace TDS_Client.Handler
         #region Private Fields
 
         private readonly BrowserHandler _browserHandler;
-
         private readonly EventsHandler _eventsHandler;
 
         private readonly Dictionary<Language, ILanguage> _languagesDict = new Dictionary<Language, ILanguage>()
@@ -67,9 +57,7 @@ namespace TDS_Client.Handler
         private readonly Serializer _serializer;
         private Language _languageEnum = TDS_Shared.Data.Enums.Language.English;
         private bool _languageManuallyChanged;
-
         private SyncedLobbySettings _syncedLobbySettings;
-
         private SyncedServerSettingsDto _syncedServerSettings;
 
         #endregion Private Fields
@@ -112,23 +100,7 @@ namespace TDS_Client.Handler
 
         #region Public Properties
 
-        public int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
-
-        //public uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
-        //public uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
-        public int BombDetonateTimeMs => _syncedLobbySettings.BombDetonateTimeMs ?? 0;
-
-        public int CharCreatorLobbyId => _syncedServerSettings.CharCreatorLobbyId;
-
-        //public uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
-        public int CountdownTime => _syncedLobbySettings.CountdownTime ?? 0;
-
-        public float DistanceToSpotToDefuse => _syncedServerSettings.DistanceToSpotToDefuse;
-
-        public float DistanceToSpotToPlant => _syncedServerSettings.DistanceToSpotToPlant;
-
-        public bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
-
+        public UserpanelPlayerCommandData CommandsData { get; private set; }
         public ILanguage Language { get; private set; }
 
         public Language LanguageEnum
@@ -153,6 +125,23 @@ namespace TDS_Client.Handler
         public int LobbyId => _syncedLobbySettings.Id;
         public string LobbyName => _syncedLobbySettings != null ? _syncedLobbySettings.Name : "Mainmenu";
         public bool LoggedIn { get; set; }
+        public SyncedPlayerSettingsDto PlayerSettings { get; private set; }
+        public int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
+
+        //public uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
+        //public uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
+        public int BombDetonateTimeMs => _syncedLobbySettings.BombDetonateTimeMs ?? 0;
+
+        public int CharCreatorLobbyId => _syncedServerSettings.CharCreatorLobbyId;
+
+        //public uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
+        public int CountdownTime => _syncedLobbySettings.CountdownTime ?? 0;
+
+        public float DistanceToSpotToDefuse => _syncedServerSettings.DistanceToSpotToDefuse;
+
+        public float DistanceToSpotToPlant => _syncedServerSettings.DistanceToSpotToPlant;
+
+        public bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
         public int MapChooseTime => _syncedServerSettings.MapChooseTime;
         public int MapCreatorLobbyId => _syncedServerSettings.MapCreatorLobbyId;
         public int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
@@ -176,6 +165,11 @@ namespace TDS_Client.Handler
         public SyncedLobbySettings GetSyncedLobbySettings()
         {
             return _syncedLobbySettings;
+        }
+
+        public void LoadCommandsData(UserpanelPlayerCommandData commandsData)
+        {
+            CommandsData = commandsData;
         }
 
         public void LoadSyncedLobbySettings(SyncedLobbySettings loadedSyncedLobbySettings)

@@ -5,6 +5,7 @@ using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Data.Models.PlayerCommands;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
@@ -85,9 +86,10 @@ namespace TDS_Client.Handler
             Stop();
             _settingsHandler.LoadSyncedSettings(_serializer.FromServer<SyncedServerSettingsDto>(args[0].ToString()));
             _settingsHandler.LoadUserSettings(_serializer.FromServer<SyncedPlayerSettingsDto>(args[1].ToString()));
+            _settingsHandler.LoadCommandsData(_serializer.FromServer<UserpanelPlayerCommandData>(args[2].ToString()));
             _settingsHandler.LoggedIn = true;
 
-            _browserHandler.Angular.SetReady((string)args[2]);
+            _browserHandler.Angular.SetReady((string)args[3]);
 
             _eventsHandler.OnLoggedIn();
 

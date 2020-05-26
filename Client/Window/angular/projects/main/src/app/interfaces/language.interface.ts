@@ -156,6 +156,7 @@ export interface Language {
     Buy: string;
     SettingsSpecial: string;
     SettingsNormal: string;
+    SettingsCommands: string;
     Username: string;
     UsernameChangeInfo: string;
     BuyUsername: string;
@@ -248,6 +249,7 @@ export interface Language {
     ScoreboardPlaytimeUnitInfo: string;
     KillsDeathsRatio: string;
     KillsDeathsAssistsRatio: string;
+    SettingsCommandsInfo: string;
 
     MainMenu: string;
     Heritage: string;

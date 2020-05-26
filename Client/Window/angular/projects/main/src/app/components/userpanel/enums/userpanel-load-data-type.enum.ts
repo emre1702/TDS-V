@@ -5,6 +5,7 @@ export enum UserpanelLoadDataType {
     FAQs,
     SettingsSpecial,
     SettingsNormal,
+    SettingsCommands,
     ApplicationUser,
     ApplicationsAdmin,
     SupportUser,

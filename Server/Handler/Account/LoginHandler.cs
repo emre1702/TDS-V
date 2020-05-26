@@ -6,6 +6,7 @@ using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
@@ -14,6 +15,7 @@ using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
+using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -34,6 +36,7 @@ namespace TDS_Server.Handler.Account
         private readonly ServerStartHandler _serverStartHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly IUserpanelHandler _userpanelHandler;
 
         #endregion Private Fields
 
@@ -49,7 +52,8 @@ namespace TDS_Server.Handler.Account
             IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler,
             ILoggingHandler loggingHandler,
-            ServerStartHandler serverStartHandler)
+            ServerStartHandler serverStartHandler,
+            IUserpanelHandler userpanelHandler)
         {
             _modAPI = modAPI;
             _databasePlayerHandler = databasePlayerHandler;
@@ -61,6 +65,7 @@ namespace TDS_Server.Handler.Account
             _dataSyncHandler = dataSyncHandler;
             _loggingHandler = loggingHandler;
             _serverStartHandler = serverStartHandler;
+            _userpanelHandler = userpanelHandler;
 
             _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
         }
@@ -126,12 +131,14 @@ namespace TDS_Server.Handler.Account
                 return;
 
             var angularConstantsData = ActivatorUtilities.CreateInstance<AngularConstantsDataDto>(_serviceProvider, player);
+            var playerCommandsData = await _userpanelHandler.SettingsCommandsHandler.GetData(player);
 
             _modAPI.Thread.RunInMainThread(() =>
             {
                 player.SendEvent(ToClientEvent.LoginSuccessful,
                     _serializer.ToClient(_settingsHandler.SyncedSettings),
                     _serializer.ToClient(player.Entity.PlayerSettings),
+                    playerCommandsData!,
                     _serializer.ToBrowser(angularConstantsData)
                 );
 

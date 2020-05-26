@@ -36,21 +36,15 @@ namespace TDS_Client.Handler
 
         private readonly BrowserHandler _browserHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly LobbyHandler _lobbyHandler;
-        private readonly PlayerFightHandler _playerFightHandler;
         private readonly EventsHandler _eventsHandler;
-        private readonly CamerasHandler _camerasHandler;
 
-        public ChatHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender,
-            LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler, EventsHandler eventsHandler, CamerasHandler camerasHandler)
+        public ChatHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler,
+            RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
             _browserHandler = browserHandler;
             _remoteEventsSender = remoteEventsSender;
-            _lobbyHandler = lobbyHandler;
-            _playerFightHandler = playerFightHandler;
             _eventsHandler = eventsHandler;
-            _camerasHandler = camerasHandler;
 
             _tickEventMethod = new EventMethodData<TickDelegate>(OnUpdate);
 
@@ -63,7 +57,6 @@ namespace TDS_Client.Handler
 
             modAPI.Event.Add(FromBrowserEvent.CloseChat, _ => CloseChatInput());
             modAPI.Event.Add(FromBrowserEvent.ChatUsed, OnChatUsedMethod);
-            modAPI.Event.Add(FromBrowserEvent.CommandUsed, OnCommandUsedMethod);
         }
 
         public void CloseChatInput(bool force = false)
@@ -126,34 +119,6 @@ namespace TDS_Client.Handler
             string msg = (string)args[0];
             int chatTypeNumber = (int)(args[1]);
             _remoteEventsSender.Send(ToServerEvent.LobbyChatMessage, msg, chatTypeNumber);
-        }
-
-        private void OnCommandUsedMethod(object[] args)
-        {
-            CloseChatInput();
-            string msg = (string)args[0];
-            if (msg == "checkshoot")
-            {
-                if (_lobbyHandler.Bomb.BombOnHand || !_playerFightHandler.InFight)
-                    ModAPI.Chat.Output("Shooting is blocked. Reason: " + (_playerFightHandler.InFight ? "bomb" : (!_lobbyHandler.Bomb.BombOnHand ? "round" : "both")));
-                else
-                    ModAPI.Chat.Output("Shooting is not blocked.");
-                return;
-            }
-            else if (msg == "activecam" || msg == "activecamera")
-            {
-                Logging.LogWarning((_camerasHandler.ActiveCamera?.Name ?? "No camera") + " | " + (_camerasHandler.ActiveCamera?.SpectatingEntity is null ? "no spectating" : "spectating"), "ChatHandler.Command");
-                Logging.LogWarning((_camerasHandler.Spectating.IsSpectator ? "Is spectator" : "Is not spectator") + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + ((IPlayer)_camerasHandler.Spectating.SpectatingEntity).Name : "not spectating entity"), "ChatHandler.Command");
-                Logging.LogWarning(_camerasHandler.SpectateCam.Position.ToString() + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + _camerasHandler.Spectating.SpectatingEntity.Position.ToString() : "not spectating entity"), "ChatHandler.Command");
-                return;
-            }
-            else if (msg == "campos" || msg == "camerapos")
-            {
-                ModAPI.Chat.Output("Position: " + _camerasHandler.ActiveCamera.Position.ToString());
-                ModAPI.Chat.Output("Rotation: " + _camerasHandler.ActiveCamera.Rotation.ToString());
-                return;
-            }
-            _remoteEventsSender.Send(ToServerEvent.CommandUsed, msg);
         }
     }
 }

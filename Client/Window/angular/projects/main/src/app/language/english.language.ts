@@ -169,6 +169,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     Buy = "Buy";
     SettingsSpecial = "Settings Special";
     SettingsNormal = "Settings Normal";
+    SettingsCommands = "Settings Commands";
     Username = "Username";
     UsernameChangeInfo = "Changing the username has a cooldown of {0} days\nand costs ${1} during the cooldown.";
     BuyUsername = "Buy username";
@@ -181,6 +182,10 @@ The user interface is always being worked on, so don't be surprised if you disco
     DaysLeft = "{0} day(s) left";
     HoursLeft = "{0} hour(s) left";
     NoTimeLimit = "No time limit";
+    SettingsCommandsInfo = `Here you can set your own aliases for the commands.
+The old commands will not disappear, but your settings will be taken into account first.
+All commands are case-insensitive (e.g. "AdminSay" and "adminsay" are the same).
+WARNING! Spaces will get removed and new lines with an already used command will not be saved!`;
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

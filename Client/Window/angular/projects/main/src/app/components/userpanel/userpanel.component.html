@@ -23,6 +23,7 @@
             <app-userpanel-faqs *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.FAQ]"></app-userpanel-faqs>
             <app-userpanel-settings-special *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsSpecial]"></app-userpanel-settings-special>
             <app-userpanel-settings-normal *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsNormal]"></app-userpanel-settings-normal>
+            <app-userpanel-settings-commands *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsCommands]"></app-userpanel-settings-commands>
             <app-userpanel-application *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Application] && settings.AdminLevel == 0">
             </app-userpanel-application>
             <app-userpanel-applications *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Applications] && settings.AdminLevel > 0">
@@ -98,6 +99,10 @@
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsNormal)">
         <mat-icon>list</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SettingsNormal] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsCommands)">
+        <mat-icon>speaker_notes</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.SettingsCommands] | language: settings.Lang }}</span>
     </button>
 </mat-menu>
 

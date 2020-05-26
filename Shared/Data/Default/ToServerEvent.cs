@@ -18,7 +18,6 @@
 
         public const string DeleteOfflineMessage = "c9";
 
-        // Special:
         public const string FromBrowserEvent = "c64";
 
         public const string GetSupportRequestData = "c10";
@@ -63,6 +62,7 @@
 
         public const string SaveCharCreateData = "c29";
         public const string SaveMapCreatorData = "c41";
+        public const string SavePlayerCommandsSettings = "c70";
         public const string SaveSettings = "c42";
         public const string SaveSpecialSettingsChange = "c43";
         public const string SendApplication = "c44";

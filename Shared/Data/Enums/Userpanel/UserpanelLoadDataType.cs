@@ -8,10 +8,12 @@
         FAQs,
         SettingsSpecial,
         SettingsNormal,
+        SettingsCommands,
         ApplicationUser,
         ApplicationsAdmin,
         SupportUser,
         SupportAdmin,
-        OfflineMessages
+        OfflineMessages,
+        PlayerCommands
     }
 }
