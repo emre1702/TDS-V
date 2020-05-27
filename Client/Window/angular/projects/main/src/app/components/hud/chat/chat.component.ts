@@ -57,13 +57,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     @ViewChild(MentionDirective, { static: true }) mentionDirective: MentionDirective;
     @ViewChild("marquee", { static: false }) infoSpan: ElementRef;
 
-    mentionConfig: MentionConfig = {
+    mentionConfig: MentionConfig[] = [{
         items: this.playerNames,
         triggerChar: "@",
         mentionSelect: this.getMentionText,
         seachStringEndChar: ":",
         maxItems: 10
-    };
+    }];
 
     private colorStrReplace = {
         "#r#": "rgb(222, 50, 50)",
@@ -343,7 +343,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private addNameForChat(name: string) {
         console.log("addNameForChat 1 | name: " + name + " | playerNames: " + this.playerNames);
         this.playerNames.push(name);
-        this.mentionDirective.refreshItems(this.mentionConfig.items);
+        this.mentionDirective.refreshItems(this.mentionConfig[0].items);
         console.log("addNameForChat 2");
         this.changeDetector.detectChanges();
     }
@@ -351,8 +351,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private loadNamesForChat(namesJson: string) {
         console.log("loadNamesForChat 1 | playerNames: " + this.playerNames);
         this.playerNames = JSON.parse(namesJson);
-        this.mentionConfig.items = this.playerNames;
-        this.mentionDirective.refreshItems(this.mentionConfig.items);
+        this.mentionConfig[0].items = this.playerNames;
+        this.mentionDirective.refreshItems(this.mentionConfig[0].items);
 
         console.log("loadNamesForChat 2 | playerNames: " + this.playerNames);
         this.changeDetector.detectChanges();
@@ -364,7 +364,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (index >= 0) {
             this.playerNames.splice(index, 1);
         }
-        this.mentionDirective.refreshItems(this.mentionConfig.items);
+        this.mentionDirective.refreshItems(this.mentionConfig[0].items);
         console.log("removeNameForChat 2 | playerNames: " + this.playerNames);
         this.changeDetector.detectChanges();
     }

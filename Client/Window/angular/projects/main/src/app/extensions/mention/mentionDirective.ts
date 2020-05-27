@@ -9,12 +9,13 @@ import { MentionConfig } from './mentionConfig';
 })
 export class MentionDirective {
 
-    @Input() mention: MentionConfig;
+    @Input() mention: MentionConfig[];
     @Input() mentionListTemplate: TemplateRef<any>;
     @Output() mentionShowingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     private searchList: MentionListComponent;
     private searchString: string;
+    private currentMentionIndex = -1;
 
     constructor(
         private _element: ElementRef,
@@ -24,36 +25,47 @@ export class MentionDirective {
 
 
     @HostListener("input", ["$event"])
-    inputHandler(event: any, nativeElement: HTMLInputElement = this._element.nativeElement) {
+    inputHandler(event: any) {
 
-        if (event.data === this.mention.triggerChar
-            || this.mention.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey)
+        if (this.currentMentionIndex === -1) {
             return;
-        if (this.searchString !== undefined) {
-            if (event.data) {
-                this.searchString += event.data;
-            } else {
-                this.searchString = this.searchString.substr(0, this.searchString.length - 1);
-            }
-
-            this.updateSearchList();
         }
+
+        if (event.data === this.mention[this.currentMentionIndex].triggerChar
+            || this.mention[this.currentMentionIndex].triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey)
+            return;
+
+        if (event.data) {
+            this.searchString += event.data;
+        } else {
+            this.searchString = this.searchString.substr(0, this.searchString.length - 1);
+        }
+
+        this.updateSearchList();
     }
 
     @HostListener("keydown", ["$event"])
     keyDownHandler(event: any, nativeElement: HTMLInputElement = this._element.nativeElement) {
-        if (event.key === this.mention.triggerChar
-            || this.mention.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey) {
-            if (!this.searchList || this.searchList.hidden) {
-                this.openSearchList(nativeElement);
+        if (this.currentMentionIndex !== -1) {
+            return;
+        }
+
+        for (const config of this.mention) {
+            if (event.key === config.triggerChar
+                || config.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey) {
+                this.currentMentionIndex = this.mention.indexOf(config);
+                if (!this.searchList || this.searchList.hidden) {
+                    this.openSearchList(nativeElement);
+                }
+                this.updateSearchList();
+                break;
             }
-            this.updateSearchList();
         }
     }
 
     @HostListener("keyup", ["$event"])
     keyUpHandler(event: any) {
-        if (this.searchString !== undefined) {
+        if (this.currentMentionIndex !== -1) {
             if (event.key === "Enter") {
                 this.selectFromSearchList();
             } else if (event.key === " ") {
@@ -76,10 +88,10 @@ export class MentionDirective {
                 this.keyUpHandler(fakeKeydown);
             });
         }
-        // this.searchList.dropUp = this.mention.dropUp;
-        // this.searchList.styleOff = this.mention.disableStyle;
+        // this.searchList.dropUp = this.mention[this.currentMentionIndex].dropUp;
+        // this.searchList.styleOff = this.mention[this.currentMentionIndex].disableStyle;
         this.searchList.activeIndex = 0;
-        this.searchList.dropUp = this.mention.dropUp || false;
+        this.searchList.dropUp = this.mention[this.currentMentionIndex].dropUp || false;
         this.searchList.position(nativeElement);
         this.searchString = "";
         window.setTimeout(() => this.searchList.reset());
@@ -91,14 +103,14 @@ export class MentionDirective {
             return;
         }
 
-        if (!this.searchString.length || this.searchString[this.searchString.length - 1] !== this.mention.seachStringEndChar) {
-            const str = this.mention.mentionSelect(this.searchList.activeItem);
+        if (!this.searchString.length || this.searchString[this.searchString.length - 1] !== this.mention[this.currentMentionIndex].seachStringEndChar) {
+            const str = this.mention[this.currentMentionIndex].mentionSelect(this.searchList.activeItem);
             let cursorPos = this.doGetCaretPosition(this._element.nativeElement);
             const currentValue = this._element.nativeElement.value as string;
             if (cursorPos === 0) {
                 cursorPos = currentValue.length;
             }
-            const startIndex = currentValue.lastIndexOf(this.mention.triggerChar, cursorPos);
+            const startIndex = currentValue.lastIndexOf(this.mention[this.currentMentionIndex].triggerChar, cursorPos);
             const spaceIndex = currentValue.indexOf(" ", startIndex);
             // Don't allow spaces in @mention
             if (spaceIndex < 0 || spaceIndex > cursorPos) {
@@ -115,6 +127,7 @@ export class MentionDirective {
             this.mentionShowingChanged.emit(false);
         }
         this.searchString = undefined;
+        this.currentMentionIndex = -1;
         this.mentionShowingChanged.emit(false);
 
         this.changeDetector.detectChanges();
@@ -127,7 +140,7 @@ export class MentionDirective {
 
         const cursorPos = this.doGetCaretPosition(this._element.nativeElement);
         const currentValue = this._element.nativeElement.value as string;
-        const startIndex = currentValue.lastIndexOf(this.mention.triggerChar, cursorPos);
+        const startIndex = currentValue.lastIndexOf(this.mention[this.currentMentionIndex].triggerChar, cursorPos);
         if (startIndex < 0) {
             this.closeSearchList();
             return;
@@ -145,18 +158,18 @@ export class MentionDirective {
     private updateSearchList() {
         let matches: string[] = [];
 
-        if (this.mention && this.mention.items) {
-            let objects = this.mention.items;
+        if (this.mention && this.mention[this.currentMentionIndex].items) {
+            let objects = this.mention[this.currentMentionIndex].items;
             if (this.searchString) {
                 const searchStringLowerCase = this.searchString.toLowerCase();
                 objects = objects.filter(e => e.toLowerCase().indexOf(searchStringLowerCase) >= 0);
             }
             matches = objects;
-            if (!this.mention.maxItems) {
-                this.mention.maxItems = 99;
+            if (!this.mention[this.currentMentionIndex].maxItems) {
+                this.mention[this.currentMentionIndex].maxItems = 99;
             }
-            if (this.mention.maxItems > 0) {
-                matches = matches.slice(0, this.mention.maxItems);
+            if (this.mention[this.currentMentionIndex].maxItems > 0) {
+                matches = matches.slice(0, this.mention[this.currentMentionIndex].maxItems);
             }
         }
 
@@ -174,7 +187,7 @@ export class MentionDirective {
             this.searchList.items = items;
             this.searchList.detectChanges();
         }
-        this.mention.items = items;
+        this.mention[this.currentMentionIndex].items = items;
         this.changeDetector.detectChanges();
     }
 
