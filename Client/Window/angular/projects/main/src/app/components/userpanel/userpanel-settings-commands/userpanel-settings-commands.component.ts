@@ -61,6 +61,8 @@ export class UserpanelSettingsCommandsComponent implements OnInit, OnDestroy {
         for (const entry of entries) {
             entry.changed = undefined;
             entry.initial = undefined;
+
+            entry[1].replace(" ", "");
         }
 
         this.rageConnector.callServer(DToServerEvent.SavePlayerCommandsSettings, JSON.stringify(entries));

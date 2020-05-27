@@ -128,7 +128,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     SettingsCommandsInfo = `Hier könnt ihr eure eigenen Aliasse für die Befehle einstellen.
 Dabei verschwinden die alten Befehle nicht, aber eure Einstellungen werden zuerst berücksichtigt.
 Alle Befehle sind unabhängig von Groß- oder Kleinschreibung (z.B. "AdminSay" und "adminsay" sind das selbe).
-WARNUNG! Benutze keine Leerzeichen!`;
+WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendeten Befehl werden nicht gespeichert!`;
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";
