@@ -81,6 +81,7 @@ namespace TDS_Client.Handler
             modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
             modAPI.Event.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, SyncRegisterLoginLanguageTexts);
             modAPI.Event.Add(FromBrowserEvent.ReloadPlayerSettings, ReloadTempChangedPlayerSettings);
+            modAPI.Event.Add(ToClientEvent.SyncPlayerCommandsSettings, LoadCommandsData);
 
             modAPI.Nametags.Enabled = false;
 
@@ -167,9 +168,9 @@ namespace TDS_Client.Handler
             return _syncedLobbySettings;
         }
 
-        public void LoadCommandsData(UserpanelPlayerCommandData commandsData)
+        public void LoadCommandsData(object[] args)
         {
-            CommandsData = commandsData;
+            CommandsData = _serializer.FromServer<UserpanelPlayerCommandData>((string)args[0]);
         }
 
         public void LoadSyncedLobbySettings(SyncedLobbySettings loadedSyncedLobbySettings)

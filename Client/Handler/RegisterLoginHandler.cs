@@ -86,10 +86,9 @@ namespace TDS_Client.Handler
             Stop();
             _settingsHandler.LoadSyncedSettings(_serializer.FromServer<SyncedServerSettingsDto>(args[0].ToString()));
             _settingsHandler.LoadUserSettings(_serializer.FromServer<SyncedPlayerSettingsDto>(args[1].ToString()));
-            _settingsHandler.LoadCommandsData(_serializer.FromServer<UserpanelPlayerCommandData>(args[2].ToString()));
             _settingsHandler.LoggedIn = true;
 
-            _browserHandler.Angular.SetReady((string)args[3]);
+            _browserHandler.Angular.SetReady((string)args[2]);
 
             _eventsHandler.OnLoggedIn();
 

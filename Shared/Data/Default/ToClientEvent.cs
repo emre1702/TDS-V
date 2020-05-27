@@ -85,6 +85,7 @@
         public const string StopRoundStats = "s64";
         public const string StopSpectator = "s65";
         public const string SyncEntityData = "s19";
+        public const string SyncPlayerCommandsSettings = "s87";
         public const string SyncPlayerData = "s69";
         public const string SyncScoreboardData = "s71";
         public const string SyncSettings = "s70";

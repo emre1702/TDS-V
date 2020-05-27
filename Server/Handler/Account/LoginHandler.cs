@@ -36,7 +36,6 @@ namespace TDS_Server.Handler.Account
         private readonly ServerStartHandler _serverStartHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly IUserpanelHandler _userpanelHandler;
 
         #endregion Private Fields
 
@@ -52,8 +51,7 @@ namespace TDS_Server.Handler.Account
             IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler,
             ILoggingHandler loggingHandler,
-            ServerStartHandler serverStartHandler,
-            IUserpanelHandler userpanelHandler)
+            ServerStartHandler serverStartHandler)
         {
             _modAPI = modAPI;
             _databasePlayerHandler = databasePlayerHandler;
@@ -65,7 +63,6 @@ namespace TDS_Server.Handler.Account
             _dataSyncHandler = dataSyncHandler;
             _loggingHandler = loggingHandler;
             _serverStartHandler = serverStartHandler;
-            _userpanelHandler = userpanelHandler;
 
             _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
         }
@@ -131,14 +128,12 @@ namespace TDS_Server.Handler.Account
                 return;
 
             var angularConstantsData = ActivatorUtilities.CreateInstance<AngularConstantsDataDto>(_serviceProvider, player);
-            var playerCommandsData = await _userpanelHandler.SettingsCommandsHandler.GetData(player);
 
             _modAPI.Thread.RunInMainThread(() =>
             {
                 player.SendEvent(ToClientEvent.LoginSuccessful,
                     _serializer.ToClient(_settingsHandler.SyncedSettings),
                     _serializer.ToClient(player.Entity.PlayerSettings),
-                    playerCommandsData!,
                     _serializer.ToBrowser(angularConstantsData)
                 );
 

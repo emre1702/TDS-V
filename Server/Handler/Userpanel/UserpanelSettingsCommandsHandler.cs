@@ -8,8 +8,10 @@ using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
+using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.PlayerCommands;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Userpanel
 {
@@ -25,15 +27,20 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelSettingsCommandsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, UserpanelCommandsHandler userpanelCommandsHandler,
-            Serializer serializer)
+            Serializer serializer, EventsHandler eventsHandler)
             : base(dbContext, loggingHandler)
-            => (_userpanelCommandsHandler, _serializer) = (userpanelCommandsHandler, serializer);
+        {
+            _userpanelCommandsHandler = userpanelCommandsHandler;
+            _serializer = serializer;
+
+            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+        }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public async Task<string?> GetData(ITDSPlayer player)
+        public async Task<UserpanelPlayerCommandData?> GetData(ITDSPlayer player)
         {
             try
             {
@@ -62,12 +69,12 @@ namespace TDS_Server.Handler.Userpanel
                     AddedCommands = addedCommandsList
                 };
 
-                return _serializer.ToClient(data);
+                return data;
             }
             catch (Exception ex)
             {
                 LoggingHandler.LogError(ex, player);
-                return "{}";
+                return null;
             }
         }
 
@@ -112,9 +119,22 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
 
+            var newData = await GetData(player);
+            player.SendEvent(ToClientEvent.SyncPlayerCommandsSettings, _serializer.ToClient(newData));
+
             return null;
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
+        {
+            var data = await GetData(player);
+            player.SendEvent(ToClientEvent.SyncPlayerCommandsSettings, _serializer.ToClient(data));
+        }
+
+        #endregion Private Methods
     }
 }
