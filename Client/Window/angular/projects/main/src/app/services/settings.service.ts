@@ -113,6 +113,8 @@ export class SettingsService {
     public ChatMaxHeight = "35vh";
     public ChatFontSize = "1.4em";
     public ChatHideDirtyChat = false;
+    public ChatInfoHide = false;
+    public ChatInfoFontSize = "1em";
     public ChatInfoAnimationTimeMs = 15000;
     public ChatSettingsChanged = new EventEmitter();
 
@@ -215,11 +217,15 @@ export class SettingsService {
         this.ChatSettingsChanged.emit(null);
     }
 
-    private loadChatSettings(width: number, maxHeight: number, fontSize: number, hideDirtyChat: boolean) {
+    private loadChatSettings(width: number, maxHeight: number, fontSize: number, hideDirtyChat: boolean,
+        hideChatInfo: boolean, chatInfoFontSize: number, chatInfoAnimationTimeMs: number) {
         this.ChatWidth = width + "vw";
         this.ChatMaxHeight = maxHeight + "vh";
         this.ChatFontSize = fontSize + "em";
         this.ChatHideDirtyChat = hideDirtyChat;
+        this.ChatInfoHide = hideChatInfo;
+        this.ChatInfoFontSize = chatInfoFontSize  + "em";
+        this.ChatInfoAnimationTimeMs = chatInfoAnimationTimeMs;
         this.triggerChatSettingsChanged();
     }
 

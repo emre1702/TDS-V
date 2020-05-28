@@ -214,6 +214,22 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     nullable: false, formControl: new FormControl(true),
                     tooltipLangKey: "ShowCursorOnChatOpenInfo"
                 },
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.HideChatInfo, defaultValue: false,
+                    nullable: false, formControl: new FormControl(false),
+                    tooltipLangKey: "HideChatInfoInfo", onValueChanged: this.onChatSettingsChanged.bind(this),
+                },
+                {
+                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatInfoFontSize, defaultValue: 1,
+                    min: 0, max: 5, nullable: false,
+                    formControl: new FormControl(1), onValueChanged: this.onChatSettingsChanged.bind(this),
+                    tooltipLangKey: "ChatInfoFontSizeInfo"
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.ChatInfoMoveTimeMs, defaultValue: 15000,
+                    formControl: new FormControl(15000), min: 50, max: 1000000,
+                    onlyInt: true, tooltipLangKey: "ChatInfoMoveTimeMsInfo", nullable: false,
+                }
             ]
         },
 

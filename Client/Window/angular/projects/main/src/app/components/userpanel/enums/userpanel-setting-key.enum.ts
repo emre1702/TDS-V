@@ -35,6 +35,9 @@ export enum UserpanelSettingKey {
     ChatFontSize = 29,
     HideDirtyChat = 30,
     ShowCursorOnChatOpen = 31,
+    HideChatInfo = 35,
+    ChatInfoFontSize = 36,
+    ChatInfoMoveTimeMs = 37,
 
     ScoreboardPlayerSorting = 32,
     ScoreboardPlayerSortingDesc = 33,

@@ -250,6 +250,12 @@ export interface Language {
     KillsDeathsRatio: string;
     KillsDeathsAssistsRatio: string;
     SettingsCommandsInfo: string;
+    HideChatInfo: string;
+    HideChatInfoInfo: string;
+    ChatInfoFontSize: string;
+    ChatInfoFontSizeInfo: string;
+    ChatInfoMoveTimeMs: string;
+    ChatInfoMoveTimeMsInfo: string;
 
     MainMenu: string;
     Heritage: string;

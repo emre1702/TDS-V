@@ -186,6 +186,12 @@ The user interface is always being worked on, so don't be surprised if you disco
 The old commands will not disappear, but your settings will be taken into account first.
 All commands are case-insensitive (e.g. "AdminSay" and "adminsay" are the same).
 WARNING! Spaces will get removed and new lines with an already used command will not be saved!`;
+    HideChatInfo = "Hide chat info";
+    HideChatInfoInfo = "Hides the information line above the chat.";
+    ChatInfoFontSize = "Chat info font size";
+    ChatInfoFontSizeInfo = "The font size of the information line above the chat.";
+    ChatInfoMoveTimeMs = "Chat info duration (ms)";
+    ChatInfoMoveTimeMsInfo = "The time in milliseconds until the info above the chat slides from right to left.";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

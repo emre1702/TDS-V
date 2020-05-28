@@ -37,7 +37,10 @@
         ChatMaxHeight = 28,
         ChatFontSize = 29,
         HideDirtyChat = 30,
-        ShowCursorOnChatOpen = 31
+        ShowCursorOnChatOpen = 31,
+        HideChatInfo = 35,
+        ChatInfoFontSize = 36,
+        ChatInfoMoveTimeMs = 37,
 
         /*HudWidth = 30,
         HudHeight = 31,

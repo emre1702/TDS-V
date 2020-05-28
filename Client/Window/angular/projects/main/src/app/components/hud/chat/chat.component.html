@@ -1,7 +1,7 @@
 <div id="chat_container" [style.max-width]="settings.ChatWidth" [style.display]="chatActive ? 'initial' : 'none'" tabindex="-1">
-    <div id="chat_info" class="marquee mat-app-background" [hidden]="!infoText">
+    <div id="chat_info" class="marquee mat-app-background" [hidden]="settings.ChatInfoHide || !infoText">
         <!--(@marquee.start)="infoAnimationEvent($event)"-->
-        <span #marquee>{{ infoText }}</span>
+        <span #marquee [style.font-size]="settings.ChatInfoFontSize">{{ infoText }}</span>
     </div>
     <div id="chat_div" [style.max-height]="settings.ChatMaxHeight">
         <div id="chat-body" #chatBody (scroll)="scrolled($event)" [style.font-size]="settings.ChatFontSize">

@@ -88,9 +88,9 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.HideRankings);
         }
 
-        public void LoadChatSettings(float width, float maxHeight, float fontSize, bool hideDirtyChat)
+        public void LoadChatSettings(float width, float maxHeight, float fontSize, bool hideDirtyChat, bool hideChatInfo, float chatInfoFontSize, int chatInfoAnimationTimeMs)
         {
-            Execute(ToBrowserEvent.LoadChatSettings, width, maxHeight, fontSize, hideDirtyChat);
+            Execute(ToBrowserEvent.LoadChatSettings, width, maxHeight, fontSize, hideDirtyChat, hideChatInfo, chatInfoFontSize, chatInfoAnimationTimeMs);
         }
 
         public void LoadFavoriteMaps(string mapFavoritesJson)

@@ -129,6 +129,12 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
 Dabei verschwinden die alten Befehle nicht, aber eure Einstellungen werden zuerst berücksichtigt.
 Alle Befehle sind unabhängig von Groß- oder Kleinschreibung (z.B. "AdminSay" und "adminsay" sind das selbe).
 WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendeten Befehl werden nicht gespeichert!`;
+    HideChatInfo = "Verstecke Chat-Info";
+    HideChatInfoInfo = "Versteckt die Informations-Zeile über dem Chat.";
+    ChatInfoFontSize = "Chat-Info Schriftgröße";
+    ChatInfoFontSizeInfo = "Die Schriftgröße der Informations-Zeile über dem Chat.";
+    ChatInfoMoveTimeMs = "Chat-Info Dauer (ms)";
+    ChatInfoMoveTimeMsInfo = "Die Dauer in Millisekunden, bis die Info über dem Chat von rechts nach links gerutscht ist.";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

@@ -214,7 +214,8 @@ namespace TDS_Client.Handler
             _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
 
             _browserHandler.Angular.LoadChatSettings(loadedSyncedSettings.ChatWidth, loadedSyncedSettings.ChatMaxHeight,
-                loadedSyncedSettings.ChatFontSize, loadedSyncedSettings.HideDirtyChat);
+                loadedSyncedSettings.ChatFontSize, loadedSyncedSettings.HideDirtyChat, loadedSyncedSettings.HideChatInfo,
+                loadedSyncedSettings.ChatInfoFontSize, loadedSyncedSettings.ChatInfoMoveTimeMs);
 
             _eventsHandler.OnSettingsLoaded();
         }
