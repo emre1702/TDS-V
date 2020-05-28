@@ -228,6 +228,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.ChatInfoMoveTimeMs, defaultValue: 15000,
                     formControl: new FormControl(15000), min: 50, max: 1000000,
+                    onValueChanged: this.onChatSettingsChanged.bind(this),
                     onlyInt: true, tooltipLangKey: "ChatInfoMoveTimeMsInfo", nullable: false,
                 }
             ]

@@ -16,7 +16,8 @@
                                     (blur)="changeDetector.detectChanges()"
                                     [placeholder]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
                                     [matTooltipDisabled]="!setting.tooltipLangKey"
-                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
+                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
+                                    (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)"/>
                             </mat-form-field>
                         </div>
                     </ng-container>
@@ -28,7 +29,8 @@
                                     (blur)="changeDetector.detectChanges()"
                                     [placeholder]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
                                     [matTooltipDisabled]="!setting.tooltipLangKey"
-                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
+                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
+                                    (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)" />
                             </mat-form-field>
                         </div>
                     </ng-container>
@@ -53,7 +55,8 @@
                                 </mat-label>
                                 <mat-select [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()"
                                     [matTooltipDisabled]="!setting.tooltipLangKey"
-                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
+                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
+                                    (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)">
                                     <mat-option *ngFor="let enumStr of getEnumKeys(setting.enum)"
                                         [value]="setting.enum[enumStr]">
                                         {{ enumStr | language: settings.Lang }}
@@ -70,7 +73,8 @@
                                 </mat-label>
                                 <mat-select [formControl]="setting.formControl" (blur)="changeDetector.detectChanges()"
                                     [matTooltipDisabled]="!setting.tooltipLangKey"
-                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
+                                    [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
+                                    (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)">
                                     <mat-option *ngFor="let dateTimeFormat of getEnumKeys(setting.enum)"
                                         [value]="setting.enum[dateTimeFormat]">
                                         {{ currentDate | date:dateTimeFormat }}
@@ -84,7 +88,8 @@
                         <div class="setting-row">
                             <mat-checkbox labelPosition="before" [formControl]="setting.formControl"
                                 (blur)="changeDetector.detectChanges()" [matTooltipDisabled]="!setting.tooltipLangKey"
-                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang">
+                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
+                                (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)">
                                 {{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}
                             </mat-checkbox>
                         </div>
@@ -110,7 +115,8 @@
                                 (colorPickerChange)="onColorChange(setting)" cpOutputFormat="rgba"
                                 cpAlphaChannel="always" readonly="true" cpUseRootViewContainer="true"
                                 [matTooltipDisabled]="!setting.tooltipLangKey"
-                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang" />
+                                [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
+                                (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)" />
                             <button *ngIf="setting.nullable" mat-icon-button (click)="setting.formControl.value = undefined">
                                 <mat-icon>delete_outline</mat-icon>
                             </button>
