@@ -71,6 +71,8 @@ namespace TDS_Server.Data.Interfaces
 
         #region Public Methods
 
+        void AddHPArmor(int healtharmor);
+
         void AddToChallenge(ChallengeType challengeType, int amount = 1, bool setTheValue = false);
 
         void ChangeMuteTime(ITDSPlayer target, int minutes, string reason);

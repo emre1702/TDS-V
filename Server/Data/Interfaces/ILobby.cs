@@ -40,6 +40,8 @@ namespace TDS_Server.Data.Interfaces
 
         Task<PlayerBans?> BanPlayer(ITDSPlayer player, Players dbTarget, TimeSpan? length, string reason, string? serial = null);
 
+        void FuncIterateAllPlayers(Action<ITDSPlayer, ITeam?> func);
+
         Task<bool> IsPlayerBaned(ITDSPlayer player);
 
         bool IsPlayerLobbyOwner(ITDSPlayer player);
@@ -52,9 +54,19 @@ namespace TDS_Server.Data.Interfaces
 
         void OnPlayerSpawn(ITDSPlayer player);
 
+        void PlaySound(string soundName);
+
         Task RemovePlayer(ITDSPlayer player);
 
+        void SendAllPlayerChatMessage(string msg, ITeam? targetTeam = null);
+
+        void SendAllPlayerChatMessage(string msg, HashSet<int> blockingPlayerIds, ITeam? targetTeam = null);
+
         void SendAllPlayerLangMessage(Func<ILanguage, string> langGetter, ITeam? targetTeam = null);
+
+        void SendAllPlayerLangMessage(Dictionary<ILanguage, string> texts, ITeam? targetTeam = null);
+
+        void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, ITeam? targetTeam = null, bool flashing = false);
 
         void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder);
 

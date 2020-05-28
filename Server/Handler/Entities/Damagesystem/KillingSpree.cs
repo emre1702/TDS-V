@@ -37,6 +37,21 @@
 
         #region Private Methods
 
+        private void GiveKillingSpreeReward(ITDSPlayer player)
+        {
+            if (player.Lobby is null)
+                return;
+            if (!_killingSpreeRewards.TryGetValue(player.KillingSpree, out LobbyKillingspreeRewards? reward))
+                return;
+
+            if (reward.HealthOrArmor.HasValue)
+            {
+                player.AddHPArmor(reward.HealthOrArmor.Value);
+                player.Lobby.SendAllPlayerLangNotification(lang
+                    => string.Format(lang.KILLING_SPREE_HEALTHARMOR, player.DisplayName, player.KillingSpree, reward.HealthOrArmor));
+            }
+        }
+
         private void InitKillingSpreeRewards(ICollection<LobbyKillingspreeRewards> killingspreeRewards)
         {
             if (killingspreeRewards is null || killingspreeRewards.Count == 0)
@@ -62,8 +77,15 @@
                 return;
             }
 
-            bool playLongTimeKillSound = true;
+            PlayKillingSpreeSound(player);
+            GiveKillingSpreeReward(player);
 
+            player.LastKillAt = timeNow;
+        }
+
+        private void PlayKillingSpreeSound(ITDSPlayer player)
+        {
+            bool playLongTimeKillSound = true;
             if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.ShortTimeKillingSpree)
             {
                 short playSoundIndex = Math.Min(player.ShortTimeKillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
@@ -77,40 +99,8 @@
                 short playSoundIndex = Math.Min(player.KillingSpree, _longTimeKillingSpreeSounds.Keys.Max());
                 _modAPI.Sync.SendEvent(player.Lobby, ToClientEvent.PlayCustomSound, _longTimeKillingSpreeSounds[playSoundIndex]);
             }
-
-            player.LastKillAt = timeNow;
         }
 
         #endregion Private Methods
-
-        /*private static readonly Dictionary<int, Tuple<string, int, int>> sSpreeReward =
-            new Dictionary<int, Tuple<string, int, int>>
-            {
-                [3] = new Tuple<string, int, int>("healtharmor", 30, 0),
-                [5] = new Tuple<string, int, int>("healtharmor", 50, 0),
-                [10] = new Tuple<string, int, int>("healtharmor", 100, 0),
-                [15] = new Tuple<string, int, int>("healtharmor", 100, 0)
-            };
-
-        private void CheckKillingSpree(TDSPlayer character)
-        {
-            if (!sSpreeReward.ContainsKey(character.KillingSpree))
-                return;
-            if (character.Lobby is null)
-                return;
-
-            Tuple<string, int, int> reward = sSpreeReward[character.KillingSpree];
-            string rewardtyp = reward.Item1;
-            if (rewardtyp == "healtharmor")
-            {
-                int bonus = reward.Item2;
-                character.Lobby.SendAllPlayerLangNotification((lang) =>
-                {
-                    return string.Format(lang.KILLING_SPREE_HEALTHARMOR, character.Player.Name,
-                        character.KillingSpree.ToString(), bonus.ToString());
-                });
-                character.AddHPArmor(bonus);
-            }
-        }*/
     }
 }
