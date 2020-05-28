@@ -5,7 +5,6 @@ import { English } from '../language/english.language';
 import { Language } from '../interfaces/language.interface';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../enums/dfromclientevent.enum';
-import { DToClientEvent } from '../enums/dtoclientevent.enum';
 import { EventEmitter } from 'events';
 import { ConstantsData } from '../interfaces/constants-data';
 import { ChallengeGroup } from '../components/lobbychoice/models/challenge-group';
@@ -13,11 +12,11 @@ import { ChallengeFrequency } from '../components/lobbychoice/enums/challenge-fr
 import { ChallengeType } from '../components/lobbychoice/enums/challenge-type.enum';
 import { DFromServerEvent } from '../enums/dfromserverevent.enum';
 import { MapDataDto } from '../components/mapvoting/models/mapDataDto';
-import { MapType } from '../enums/maptype.enum';
 import { Challenge } from '../components/lobbychoice/models/challenge';
 import { DomSanitizer } from '@angular/platform-browser';
 import { LanguagePipe } from '../pipes/language.pipe';
 import { DToServerEvent } from '../enums/dtoserverevent.enum';
+import { UserpanelCommandDataDto } from '../components/userpanel/interfaces/userpanelCommandDataDto';
 
 // tslint:disable: member-ordering
 
@@ -139,6 +138,9 @@ export class SettingsService {
     ]*/;
     public ChallengesLoaded = new EventEmitter();
 
+    public CommandsData: UserpanelCommandDataDto[];
+    public CommandsDataLoaded = new EventEmitter();
+
     public ShownRoundStatsType = 1;
     public ShownHudType = 1;
     public AllMapsForCustomLobby: MapDataDto[] = [];
@@ -228,6 +230,11 @@ export class SettingsService {
             + " " + this.getColorText(challenge[2], "yellow") + ")");
     }
 
+    private syncCommandsData(dataJson: string) {
+        this.CommandsData = JSON.parse(dataJson);
+        this.CommandsDataLoaded.emit(null);
+    }
+
     private getColorText(text: string|number, color: string) {
         return "<span style='color: " + color + "'>" + text + "</span>";
     }
@@ -248,6 +255,7 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.SyncMoney, this.onMoneySync.bind(this));
         rageConnector.listen(DFromClientEvent.SyncIsLobbyOwner, this.onSyncIsLobbyOwner.bind(this));
         rageConnector.listen(DFromClientEvent.LoadChatSettings, this.loadChatSettings.bind(this));
+        rageConnector.listen(DFromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
 
         this.LanguageChanged.setMaxListeners(9999);
     }

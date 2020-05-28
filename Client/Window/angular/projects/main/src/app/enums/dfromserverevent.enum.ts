@@ -19,5 +19,6 @@ export enum DFromServerEvent {
     SyncAllCustomLobbies = "sb19",
     SyncChallengeCurrentAmountChange = "sb6",
     SyncChallenges = "sb7",
+    SyncCommandsData = "sb22",
     SyncNewSupportRequestMessage = "sb9"
 }

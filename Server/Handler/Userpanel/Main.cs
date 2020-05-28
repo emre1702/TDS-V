@@ -74,9 +74,10 @@ namespace TDS_Server.Handler.Userpanel
             string? json = null;
             switch (dataType)
             {
-                case UserpanelLoadDataType.Commands:
+                // Doing that at login now because it's also used for chat
+                /*case UserpanelLoadDataType.Commands:
                     json = _commandsHandler.GetData();
-                    break;
+                    break;*/
 
                 case UserpanelLoadDataType.Rules:
                     json = _rulesHandler.GetData();

@@ -9,6 +9,8 @@ import { MentionConfig } from '../../../extensions/mention/mentionConfig';
 import { MentionDirective } from '../../../extensions/mention/mentionDirective';
 import { animate, style, AnimationBuilder, AnimationPlayer } from '@angular/animations';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { UserpanelCommandDataDto } from '../../userpanel/interfaces/userpanelCommandDataDto';
+import { LanguagePipe } from '../../../pipes/language.pipe';
 
 declare const mp: {
     events: {
@@ -51,19 +53,36 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     private commandPrefix = "/";
     private maxMessagesInBody = 40;
+    private languagePipe: LanguagePipe;
 
     @ViewChild(MatInput, { static: true }) input: MatInput;
     @ViewChild("chatBody", { static: true }) chatBody: ElementRef;
     @ViewChild(MentionDirective, { static: true }) mentionDirective: MentionDirective;
     @ViewChild("marquee", { static: false }) infoSpan: ElementRef;
 
-    mentionConfig: MentionConfig[] = [{
-        items: this.playerNames,
-        triggerChar: "@",
-        mentionSelect: this.getMentionText,
-        seachStringEndChar: ":",
-        maxItems: 10
-    }];
+    mentionConfig: MentionConfig[] = [
+        {
+            items: this.playerNames,
+            triggerChar: "@",
+            mentionSearch: (str, item) => item === str,
+            mentionSelectedInfo: item => item,
+            mentionSelect: this.getMentionText,
+            mentionInfo: item => item,
+            seachStringEndChar: ":",
+            maxItems: 10
+        },
+        {
+            items: this.settings.CommandsData.sort((a, b) => a[0] < b[0] ? -1 : 1),
+            triggerChar: this.commandPrefix,
+            mentionSearch: this.searchCommandMention,
+            mentionSelectedInfo: this.getCommandMentionSelectedInfo,
+            mentionSelect: this.getCommandMentionText,
+            mentionInfo: this.getCommandMentionInfo,
+            seachStringEndChar: " ",
+            maxItems: 10,
+            onlyAllowAtBeginning: true
+        },
+    ];
 
     private colorStrReplace = {
         "#r#": "rgb(222, 50, 50)",
@@ -104,6 +123,8 @@ export class ChatComponent implements OnInit, OnDestroy {
             };
         }
 
+        this.languagePipe = new LanguagePipe();
+
         this.rageConnector.listen(DFromClientEvent.AddNameForChat, this.addNameForChat.bind(this));
         this.rageConnector.listen(DFromClientEvent.LoadNamesForChat, this.loadNamesForChat.bind(this));
         this.rageConnector.listen(DFromClientEvent.RemoveNameForChat, this.removeNameForChat.bind(this));
@@ -111,6 +132,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromServerEvent.LoadChatInfos, this.loadChatInfos.bind(this));
 
         this.settings.ChatSettingsChanged.on(null, this.chatSettingsChanged.bind(this));
+        this.settings.CommandsDataLoaded.on(null, this.commandsDataLoaded.bind(this));
+
+        this.mentionConfig[1].items = this.settings.CommandsData.sort((a, b) => a[0] < b[0] ? -1 : 1);
     }
 
     ngOnDestroy() {
@@ -128,6 +152,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.rageConnector.remove(DFromServerEvent.LoadChatInfos, this.loadChatInfos.bind(this));
 
         this.settings.ChatSettingsChanged.off(null, this.chatSettingsChanged.bind(this));
+        this.settings.CommandsDataLoaded.off(null, this.commandsDataLoaded.bind(this));
     }
 
     removeInputFocus() {
@@ -343,7 +368,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private addNameForChat(name: string) {
         console.log("addNameForChat 1 | name: " + name + " | playerNames: " + this.playerNames);
         this.playerNames.push(name);
-        this.mentionDirective.refreshItems(this.mentionConfig[0].items);
+        this.mentionDirective.refreshItems(this.mentionConfig[0].items, 0);
         console.log("addNameForChat 2");
         this.changeDetector.detectChanges();
     }
@@ -352,7 +377,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         console.log("loadNamesForChat 1 | playerNames: " + this.playerNames);
         this.playerNames = JSON.parse(namesJson);
         this.mentionConfig[0].items = this.playerNames;
-        this.mentionDirective.refreshItems(this.mentionConfig[0].items);
+        this.mentionDirective.refreshItems(this.mentionConfig[0].items, 0);
 
         console.log("loadNamesForChat 2 | playerNames: " + this.playerNames);
         this.changeDetector.detectChanges();
@@ -364,7 +389,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (index >= 0) {
             this.playerNames.splice(index, 1);
         }
-        this.mentionDirective.refreshItems(this.mentionConfig[0].items);
+        this.mentionDirective.refreshItems(this.mentionConfig[0].items, 0);
         console.log("removeNameForChat 2 | playerNames: " + this.playerNames);
         this.changeDetector.detectChanges();
     }
@@ -435,6 +460,44 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.infoText = text;
         this.infoAnimationPlayer.restart();
         setTimeout(this.setNextInfo.bind(this), this.settings.ChatInfoAnimationTimeMs);
+        this.changeDetector.detectChanges();
+    }
+
+    searchCommandMention(command: UserpanelCommandDataDto, str: string): boolean {
+        if (command[0].toLowerCase() === str) {
+            return true;
+        }
+
+        for (const alias of command[6]) {
+            if (alias.toLowerCase() === str) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getCommandMentionText(command: UserpanelCommandDataDto): string {
+        return "/" + command[0] + " ";
+    }
+
+    getCommandMentionInfo(command: UserpanelCommandDataDto): string {
+        return this.commandPrefix + command[0] + ": " + command[7][this.settings.LangValue];
+    }
+
+    getCommandMentionSelectedInfo(command: UserpanelCommandDataDto): string {
+        let str = this.commandPrefix + command[0] + ": " + command[7][this.settings.LangValue] + "\n";
+        for (const syntax of command[5]) {
+            str += "\n" + this.commandPrefix + command[0];
+            for (const param of syntax[0]) {
+                str += " [" + this.languagePipe.transform(param[0], this.settings.Lang) + (param[2] && param[2].length ? " = " + param[2] : "") + "]";
+            }
+        }
+        return str;
+    }
+
+    commandsDataLoaded() {
+        this.mentionConfig[1].items = this.settings.CommandsData.sort((a, b) => a[0] < b[0] ? -1 : 1);
+        this.mentionDirective.refreshItems(this.mentionConfig[1].items, 1);
         this.changeDetector.detectChanges();
     }
 

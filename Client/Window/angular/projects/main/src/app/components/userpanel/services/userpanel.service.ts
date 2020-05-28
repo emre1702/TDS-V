@@ -50,7 +50,6 @@ export class UserpanelService {
         this.currentNavChanged.emit(null);
     }
 
-    allCommands: UserpanelCommandDataDto[] = [];
     allRules: UserpanelRuleDataDto[] = [];
     allFAQs: UserpanelFAQDataDto[] = [];
     allSettingsSpecial: UserpanelSettingSpecialDataDto;
@@ -118,7 +117,6 @@ export class UserpanelService {
 
     public currentNavChanged = new EventEmitter();
     public loadingDataChanged = new EventEmitter();
-    public commandsLoaded = new EventEmitter();
     public rulesLoaded = new EventEmitter();
     public faqsLoaded = new EventEmitter();
     public settingsSpecialLoaded = new EventEmitter();
@@ -135,10 +133,6 @@ export class UserpanelService {
     constructor(private rageConnector: RageConnectorService, private settings: SettingsService) {
         rageConnector.listen(DFromServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
         settings.LanguageChanged.on(null, this.languageChanged.bind(this));
-    }
-
-    loadCommands() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.Commands);
     }
 
     loadRules() {
@@ -233,9 +227,6 @@ export class UserpanelService {
         this.loadingDataChanged.emit(null);
 
         switch (type) {
-            case UserpanelLoadDataType.Commands:
-                this.loadedAllCommands(json);
-                break;
             case UserpanelLoadDataType.Rules:
                 this.loadedAllRules(json);
                 break;
@@ -270,13 +261,6 @@ export class UserpanelService {
                 this.loadedOfflineMessages(json);
                 break;
         }
-    }
-
-    private loadedAllCommands(json: string) {
-        this.allCommands = JSON.parse(json);
-        this.allCommands.sort((a, b) => a[0] < b[0] ? -1 : 1);
-        this.allCommands.forEach(c => c[6].sort());
-        this.commandsLoaded.emit(null);
     }
 
     private loadedAllRules(json: string) {

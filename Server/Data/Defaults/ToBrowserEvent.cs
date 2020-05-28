@@ -24,6 +24,7 @@
         public const string SyncAllCustomLobbies = "sb19";
         public const string SyncChallengeCurrentAmountChange = "sb6";
         public const string SyncChallenges = "sb7";
+        public const string SyncCommandsData = "sb22";
         public const string SyncNewSupportRequestMessage = "sb9";
 
         #endregion Public Fields

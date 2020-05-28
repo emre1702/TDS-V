@@ -78,9 +78,9 @@ export class UserpanelComponent implements OnInit, OnDestroy {
         this.userpanelService.loadingData = true;
         this.userpanelService.currentNav = UserpanelNavPage[nav];
 
-        if (this.userpanelService.currentNav.startsWith("Commands") && !this.userpanelService.allCommands.length) {
+        /*if (this.userpanelService.currentNav.startsWith("Commands") && !this.userpanelService.allCommands.length) {
             this.userpanelService.loadCommands();
-        } else if (this.userpanelService.currentNav.startsWith("Rules") && !this.userpanelService.allRules.length) {
+        } else*/ if (this.userpanelService.currentNav.startsWith("Rules") && !this.userpanelService.allRules.length) {
             this.userpanelService.loadRules();
         } else if (nav == UserpanelNavPage.FAQ && !this.userpanelService.allFAQs.length) {
             this.userpanelService.loadFAQs();

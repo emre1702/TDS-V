@@ -91,11 +91,14 @@ export class MentionDirective {
                 this.keyUpHandler(fakeKeydown);
             });
         }
+        const currentConf = this.mention[this.currentMentionIndex];
         // this.searchList.dropUp = this.mention[this.currentMentionIndex].dropUp;
         // this.searchList.styleOff = this.mention[this.currentMentionIndex].disableStyle;
         this.searchList.activeIndex = 0;
-        this.searchList.dropUp = this.mention[this.currentMentionIndex].dropUp || false;
+        this.searchList.dropUp = currentConf.dropUp || false;
         this.searchList.position(nativeElement);
+        this.searchList.infoSelecter = currentConf.mentionInfo;
+        this.searchList.selectedInfoSelecter = currentConf.mentionSelectedInfo;
         this.searchString = "";
         window.setTimeout(() => this.searchList.reset());
         this.changeDetector.detectChanges();

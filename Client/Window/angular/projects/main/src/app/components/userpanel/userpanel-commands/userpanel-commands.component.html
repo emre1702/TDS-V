@@ -1,7 +1,7 @@
 <div class="left-content">
     <mat-action-list>
         <mat-list-item (click)="gotoCommand(command)" class="map-item mat-body"
-        *ngFor="let command of userpanelService.allCommands | userpanelCommandNav: currentNav">
+        *ngFor="let command of settings.CommandsData | userpanelCommandNav: currentNav">
             {{ command[0] }}
         </mat-list-item>
     </mat-action-list>

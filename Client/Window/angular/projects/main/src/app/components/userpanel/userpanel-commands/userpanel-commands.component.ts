@@ -49,7 +49,7 @@ export class UserpanelCommandsComponent implements OnInit, OnDestroy {
   @Input() currentCommand: UserpanelCommandDataDto;
   @Input() currentNav: string;
 
-  constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, public userpanelService: UserpanelService,
+  constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService,
     private clipboardService: ClipboardService) { }
 
   gotoCommand(command: UserpanelCommandDataDto) {
@@ -63,12 +63,12 @@ export class UserpanelCommandsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
-    this.userpanelService.commandsLoaded.on(null, this.detectChanges.bind(this));
+    this.settings.CommandsDataLoaded.on(null, this.detectChanges.bind(this));
   }
 
   ngOnDestroy(): void {
     this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
-    this.userpanelService.commandsLoaded.off(null, this.detectChanges.bind(this));
+    this.settings.CommandsDataLoaded.off(null, this.detectChanges.bind(this));
   }
 
   private detectChanges() {
