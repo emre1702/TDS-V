@@ -42,6 +42,10 @@ namespace TDS_Server.Data.Languages
 
         public override string ERROR_INFO => "Ein Fehler ist aufgetaucht. Der/die Entwickler wurde(n) benachrichtigt.";
 
+        public override string FRIEND_JOINED_LOBBY_INFO => "Dein Freund {0} hat die Lobby '{1}' betreten.";
+        public override string FRIEND_LEFT_LOBBY_INFO => "Dein Freund {0} hat die Lobby '{1}' verlassen.";
+        public override string FRIEND_LOGGEDIN_INFO => "~g~Dein Freund {0} hat sich eingeloggt.";
+        public override string FRIEND_LOGGEDOFF_INFO => "~r~Dein Freund {0} hat sich ausgeloggt.";
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
         public override string GANG_INVITATION_WAS_REMOVED => "Die Einladung wurde bereits zurückgezogen!";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";

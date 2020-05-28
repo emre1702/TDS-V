@@ -41,6 +41,10 @@ namespace TDS_Server.Data.Languages
 
         public virtual string ERROR_INFO => "An error occured. The Developer(s) have been notified.";
 
+        public virtual string FRIEND_JOINED_LOBBY_INFO => "~g~Your friend {0} has joined the lobby '{1}'.";
+        public virtual string FRIEND_LEFT_LOBBY_INFO => "~r~Your friend {0} has left the lobby '{1}'.";
+        public virtual string FRIEND_LOGGEDIN_INFO => "Your friend {0} has logged in.";
+        public virtual string FRIEND_LOGGEDOFF_INFO => "Your friend {0} has logged off.";
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
         public virtual string GANG_INVITATION_WAS_REMOVED => "The invitation already got removed!";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";

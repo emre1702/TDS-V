@@ -4,6 +4,7 @@ using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity;
+using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
@@ -44,7 +45,8 @@ namespace TDS_Server.Handler.Entities.Player
             SpectateHandler spectateHandler,
             GangsHandler gangsHandler,
             LobbiesHandler lobbiesHandler,
-            ChatHandler chatHandler) : base(dbContext, loggingHandler)
+            ChatHandler chatHandler,
+            EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
             _adminsHandler = adminsHandler;
             _challengesHandler = challengesHandler;
@@ -58,6 +60,11 @@ namespace TDS_Server.Handler.Entities.Player
             _chatHandler = chatHandler;
 
             Language = _langHelper.GetLang(TDS_Shared.Data.Enums.Language.English);
+
+            eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+            eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
+            eventsHandler.PlayerJoinedLobby += EventsHandler_PlayerJoinedLobby;
+            eventsHandler.PlayerLeftLobby += EventsHandler_PlayerLeftLobby;
         }
 
         #endregion Public Constructors
@@ -68,18 +75,31 @@ namespace TDS_Server.Handler.Entities.Player
             ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : ModPlayer.Name) : (Entity is { } ? Entity.Name : ModPlayer.Name));
 
         public PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
+
         public IVehicle? FreeroamVehicle { get; set; }
-        public int Id => Entity?.Id ?? 0;
+
         public string IPAddress => ModPlayer?.Address ?? "-";
+
         public bool IsConsole { get; set; }
+
         public bool IsCrouched { get; set; }
-        public bool IsVip => Entity?.IsVip ?? false;
-        public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
+
         public IPlayer? ModPlayer { get; set; }
-        public ushort RemoteId => ModPlayer?.RemoteId ?? 0;
-        public string Serial => ModPlayer?.Serial ?? "-";
-        public ulong SocialClubId => ModPlayer?.SocialClubId ?? 0;
+
         public bool TryingToLoginRegister { get; set; }
+
+        public int Id => Entity?.Id ?? 0;
+
+        public bool IsVip => Entity?.IsVip ?? false;
+
+        public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
+
+        public ushort RemoteId => ModPlayer?.RemoteId ?? 0;
+
+        public string Serial => ModPlayer?.Serial ?? "-";
+
+        public ulong SocialClubId => ModPlayer?.SocialClubId ?? 0;
+
         public int VehicleSeat => ModPlayer?.VehicleSeat ?? -1;
 
         #endregion Public Properties
@@ -101,5 +121,29 @@ namespace TDS_Server.Handler.Entities.Player
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private void EventsHandler_PlayerJoinedLobby(ITDSPlayer player, ILobby lobby)
+        {
+            CheckFriendPlayerJoinedLobby(player, lobby);
+        }
+
+        private void EventsHandler_PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
+        {
+            CheckFriendPlayerLeftLobby(player, lobby);
+        }
+
+        private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
+        {
+            CheckPlayerOnlineIsFriend(player);
+        }
+
+        private void EventsHandler_PlayerLoggedOut(ITDSPlayer player)
+        {
+            RemovePlayerFromOnlineFriend(player);
+        }
+
+        #endregion Private Methods
     }
 }

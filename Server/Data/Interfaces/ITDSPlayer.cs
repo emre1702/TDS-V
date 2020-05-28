@@ -79,6 +79,8 @@ namespace TDS_Server.Data.Interfaces
 
         void ChangeVoiceMuteTime(ITDSPlayer player, int minutes, string reason);
 
+        void CheckPlayerOnlineIsFriend(ITDSPlayer otherPlayer, bool outputInfo = true);
+
         void CheckReduceMapBoughtCounter();
 
         void CheckSaveData();
@@ -98,6 +100,8 @@ namespace TDS_Server.Data.Interfaces
         bool HasRelationTo(ITDSPlayer target, PlayerRelation block);
 
         void LoadTimezone();
+
+        void RemovePlayerFromOnlineFriend(ITDSPlayer otherPlayer, bool outputInfo = true);
 
         void ResetVoiceToAndFrom();
 

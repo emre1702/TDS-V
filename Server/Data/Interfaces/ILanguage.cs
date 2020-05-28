@@ -30,6 +30,10 @@
 
         string ERROR_INFO { get; }
 
+        string FRIEND_JOINED_LOBBY_INFO { get; }
+        string FRIEND_LEFT_LOBBY_INFO { get; }
+        string FRIEND_LOGGEDIN_INFO { get; }
+        string FRIEND_LOGGEDOFF_INFO { get; }
         string GANG_DOESNT_EXIST_ANYMORE { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
