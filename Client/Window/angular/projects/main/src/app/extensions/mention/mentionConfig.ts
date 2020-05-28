@@ -1,8 +1,12 @@
 export interface MentionConfig {
-    items: string[];
+    items: any[];
     triggerChar: string;
     seachStringEndChar: string;
-    mentionSelect: (item: string) => string;
+    mentionSearch: (item: any, str: string) => boolean;
+    mentionSelect: (item: any) => string;
+    mentionInfo: (item: any) => string;
+    mentionSelectedInfo: (info: any) => string;
     maxItems?: number;
     dropUp?: boolean;
+    onlyAllowAtBeginning?: boolean;
 }

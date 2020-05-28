@@ -1,4 +1,5 @@
-import { HostListener, Input, ElementRef, ViewContainerRef, Component, Directive, ComponentFactoryResolver, TemplateRef, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { HostListener, Input, ElementRef, ViewContainerRef, Directive, ComponentFactoryResolver,
+    TemplateRef, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { MentionListComponent } from './mentionListComponent';
 import { MentionConfig } from './mentionConfig';
 
@@ -51,8 +52,10 @@ export class MentionDirective {
         }
 
         for (const config of this.mention) {
-            if (event.key === config.triggerChar
-                || config.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey) {
+            if ((event.key === config.triggerChar
+                || config.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey)
+                &&
+                (!config.onlyAllowAtBeginning || !this._element.nativeElement.value.length)) {
                 this.currentMentionIndex = this.mention.indexOf(config);
                 if (!this.searchList || this.searchList.hidden) {
                     this.openSearchList(nativeElement);
@@ -103,7 +106,8 @@ export class MentionDirective {
             return;
         }
 
-        if (!this.searchString.length || this.searchString[this.searchString.length - 1] !== this.mention[this.currentMentionIndex].seachStringEndChar) {
+        if (!this.searchString.length || this.searchString[this.searchString.length - 1]
+            !== this.mention[this.currentMentionIndex].seachStringEndChar) {
             const str = this.mention[this.currentMentionIndex].mentionSelect(this.searchList.activeItem);
             let cursorPos = this.doGetCaretPosition(this._element.nativeElement);
             const currentValue = this._element.nativeElement.value as string;
@@ -159,17 +163,18 @@ export class MentionDirective {
         let matches: string[] = [];
 
         if (this.mention && this.mention[this.currentMentionIndex].items) {
-            let objects = this.mention[this.currentMentionIndex].items;
+            const currentConf = this.mention[this.currentMentionIndex];
+            let objects = currentConf.items;
             if (this.searchString) {
                 const searchStringLowerCase = this.searchString.toLowerCase();
-                objects = objects.filter(e => e.toLowerCase().indexOf(searchStringLowerCase) >= 0);
+                objects = objects.filter(e => currentConf.mentionSearch(e, searchStringLowerCase));
             }
             matches = objects;
-            if (!this.mention[this.currentMentionIndex].maxItems) {
-                this.mention[this.currentMentionIndex].maxItems = 99;
+            if (!currentConf.maxItems) {
+                currentConf.maxItems = 99;
             }
-            if (this.mention[this.currentMentionIndex].maxItems > 0) {
-                matches = matches.slice(0, this.mention[this.currentMentionIndex].maxItems);
+            if (currentConf.maxItems > 0) {
+                matches = matches.slice(0, currentConf.maxItems);
             }
         }
 
@@ -182,12 +187,12 @@ export class MentionDirective {
         this.changeDetector.detectChanges();
     }
 
-    refreshItems(items: string[]) {
-        if (this.searchList) {
+    refreshItems(items: string[], configIndex: number) {
+        if (this.searchList && this.currentMentionIndex == configIndex) {
             this.searchList.items = items;
             this.searchList.detectChanges();
         }
-        this.mention[this.currentMentionIndex].items = items;
+        this.mention[configIndex].items = items;
         this.changeDetector.detectChanges();
     }
 

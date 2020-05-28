@@ -7,8 +7,8 @@ import { getCaretCoordinates } from './caretCoords';
     selector: 'mention-list',
     styleUrls: ['./mentionListComponent.scss'],
     template: `
-        <ng-template #defaultItemTemplate let-item="item">
-        {{item}}
+        <ng-template #defaultItemTemplate let-item="item" let-isActive="isActive">
+        {{ (isActive ? selectedInfoSelecter(item) : infoSelecter(item)) }}
         </ng-template>
         <div #list *ngIf="!hidden" [class.mention-dropdown]="dropUp"
         class="mat-app-background mat-elevation-z24 dropdown-menu scrollable-menu mention-menu">
@@ -16,7 +16,7 @@ import { getCaretCoordinates } from './caretCoords';
            [class.mention-active]="activeIndex == i"
            (click)="activeIndex=i; itemClick.emit()"
            (mouseenter)="activeIndex=i">
-            <ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{'item':item}"></ng-template>
+            <ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{'item':item, 'isActive': activeIndex == i}"></ng-template>
             </button>
         </div>`
 
@@ -45,6 +45,8 @@ export class MentionListComponent implements AfterContentChecked {
     hidden = false;
     styleOff = false;
     dropUp = false;
+    infoSelecter: (item: any) => string;
+    selectedInfoSelecter: (info: any) => string;
     private offset = 0;
     private coords: {top: number, left: number} = {top: 0, left: 0};
 
