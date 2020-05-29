@@ -12,7 +12,7 @@
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let map">
                         <button mat-icon-button (click)="setSelected(map)" [disabled]="!canSelectMap(map)">
-                            <mat-icon>add_circle_outline</mat-icon>
+                            <mat-icon color="accent">add_circle_outline</mat-icon>
                         </button>
                     </td>
                 </ng-container>
@@ -63,7 +63,7 @@
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let map">
                         <button mat-icon-button (click)="setUnselected(map)" [disabled]="!creating">
-                            <mat-icon>delete_outline</mat-icon>
+                            <mat-icon color="accent">delete_outline</mat-icon>
                         </button>
                     </td>
                 </ng-container>

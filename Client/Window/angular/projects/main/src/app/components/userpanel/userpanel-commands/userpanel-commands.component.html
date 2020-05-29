@@ -34,19 +34,19 @@
         <mat-divider></mat-divider>
     </div>
     <div class="rights-row">
-        <mat-icon [style.visibility]="(currentCommand[1] || currentCommand[2]
+        <mat-icon color="accent" [style.visibility]="(currentCommand[1] || currentCommand[2]
         || currentCommand[3] || currentCommand[4]) ? 'hidden' : 'visible'" [matTooltip]="'User' | language: settings.Lang">
             group
         </mat-icon>
-        <mat-icon [style.visibility]="currentCommand[1] ? 'visible' : 'hidden'" [matTooltip]="'TDSTeam' | language: settings.Lang"
+        <mat-icon color="accent" [style.visibility]="currentCommand[1] ? 'visible' : 'hidden'" [matTooltip]="'TDSTeam' | language: settings.Lang"
         [matBadge]="currentCommand[1] + ''" matBadgeColor="warn" >
             pan_tool
         </mat-icon>
-        <!--<mat-icon *ngIf="currentCommand.MinDonation" [matBadge]="currentCommand.MinDonation">monetization_on</mat-icon>-->
-        <mat-icon [style.visibility]="currentCommand[3] ? 'visible' : 'hidden'" [matTooltip]="'VIP' | language: settings.Lang">
+        <!--<mat-icon color="accent" *ngIf="currentCommand.MinDonation" [matBadge]="currentCommand.MinDonation">monetization_on</mat-icon>-->
+        <mat-icon color="accent" [style.visibility]="currentCommand[3] ? 'visible' : 'hidden'" [matTooltip]="'VIP' | language: settings.Lang">
             group_add
         </mat-icon>
-        <mat-icon [style.visibility]="currentCommand[4] ? 'visible' : 'hidden'" [matTooltip]="'LobbyOwner' | language: settings.Lang">
+        <mat-icon color="accent" [style.visibility]="currentCommand[4] ? 'visible' : 'hidden'" [matTooltip]="'LobbyOwner' | language: settings.Lang">
             how_to_reg
         </mat-icon>
     </div>

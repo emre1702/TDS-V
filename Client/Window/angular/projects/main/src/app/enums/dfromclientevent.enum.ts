@@ -8,6 +8,7 @@ export enum DFromClientEvent {
     LoadLanguage = "cb9",
     LoadMapForMapCreator = "cb43",
     LoadNamesForChat = "cb39",
+    LoadThemeSettings = "cb51",
     MapCreatorSyncCurrentMapToServer = "cb50",
     OpenMapMenu = "cb12",
     RefreshAdminLevel = "cb13",

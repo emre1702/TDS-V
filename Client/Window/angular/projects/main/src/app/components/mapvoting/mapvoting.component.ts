@@ -61,6 +61,8 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.settings.MapBuyStatsChanged.on(null, this.detectChanges.bind(this));
         this.settings.MoneyChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
 
         this.mapSearchFilter = "";
     }
@@ -73,6 +75,8 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.settings.MapBuyStatsChanged.off(null, this.detectChanges.bind(this));
         this.settings.MoneyChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     private detectChanges() {

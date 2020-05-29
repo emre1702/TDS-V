@@ -2,10 +2,10 @@
     <mat-toolbar color="primary" cdkDragHandle>
         <button mat-button id="menu-navigation" [matMenuTriggerFor]="userpanelNav" cdkFocusInitial
         [class.glowing-button]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]">
-            <mat-icon>menu</mat-icon>
+            <mat-icon color="accent">menu</mat-icon>
             <span>{{ userpanelService.currentNav | language: settings.Lang }}</span>
         </button>
-        <button mat-button (click)="closeUserpanel()"><mat-icon>clear</mat-icon></button>
+        <button mat-button (click)="closeUserpanel()"><mat-icon color="accent">clear</mat-icon></button>
     </mat-toolbar>
     <div class="container-content">
         <ng-container *ngIf="!userpanelService.loadingData">
@@ -46,100 +46,100 @@
 
 <mat-menu #userpanelNav="matMenu">
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Main)">
-        <mat-icon>dashboard</mat-icon>
+        <mat-icon color="accent">dashboard</mat-icon>
         {{ userpanelNavPage[userpanelNavPage.Main] | language: settings.Lang }}
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.MyStats)">
-        <mat-icon>info</mat-icon>
+        <mat-icon color="accent">info</mat-icon>
         {{ userpanelNavPage[userpanelNavPage.MyStats] | language: settings.Lang }}
     </button>
     <button mat-menu-item [matMenuTriggerFor]="rulesNav">
-        <mat-icon>assignment</mat-icon>
+        <mat-icon color="accent">assignment</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Rules] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item [matMenuTriggerFor]="settingsNav">
-        <mat-icon>settings</mat-icon>
+        <mat-icon color="accent">settings</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Settings] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item [matMenuTriggerFor]="commandsNav">
-        <mat-icon>speaker_notes</mat-icon>
+        <mat-icon color="accent">speaker_notes</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Commands] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.FAQ)">
-        <mat-icon>help</mat-icon>
+        <mat-icon color="accent">help</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.FAQ] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.SupportUser)" *ngIf="settings.AdminLevel == 0">
-        <mat-icon>question_answer</mat-icon>
+        <mat-icon color="accent">question_answer</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SupportUser] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.SupportAdmin)" *ngIf="settings.AdminLevel > 0">
-        <mat-icon>question_answer</mat-icon>
+        <mat-icon color="accent">question_answer</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SupportAdmin] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Application)" *ngIf="settings.AdminLevel == 0">
-      <mat-icon>post_add</mat-icon>
+      <mat-icon color="accent">post_add</mat-icon>
       <span>{{ userpanelNavPage[userpanelNavPage.Application] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Applications)" *ngIf="settings.AdminLevel > 0">
-        <mat-icon>post_add</mat-icon>
+        <mat-icon color="accent">post_add</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.Applications] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.OfflineMessages)">
-        <mat-icon>mail_outline</mat-icon>
+        <mat-icon color="accent">mail_outline</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.OfflineMessages] | language: settings.Lang }}</span>
     </button>
 </mat-menu>
 
 <mat-menu #settingsNav="matMenu">
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsSpecial)">
-        <mat-icon>account_box</mat-icon>
+        <mat-icon color="accent">account_box</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SettingsSpecial] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsNormal)">
-        <mat-icon>list</mat-icon>
+        <mat-icon color="accent">list</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SettingsNormal] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsCommands)">
-        <mat-icon>speaker_notes</mat-icon>
+        <mat-icon color="accent">speaker_notes</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SettingsCommands] | language: settings.Lang }}</span>
     </button>
 </mat-menu>
 
 <mat-menu #commandsNav="matMenu">
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsUser)">
-        <mat-icon>group</mat-icon>
+        <mat-icon color="accent">group</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsUser] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsTDSTeam)">
-        <mat-icon>pan_tool</mat-icon>
+        <mat-icon color="accent">pan_tool</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsTDSTeam] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsVIP)">
-        <mat-icon>group_add</mat-icon>
+        <mat-icon color="accent">group_add</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsVIP] | language: settings.Lang }}</span>
     </button>
     <!--<button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsDonator)">
-        <mat-icon>monetization_on</mat-icon>
+        <mat-icon color="accent">monetization_on</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsDonator] | language: settings.Lang }}</span>
     </button>-->
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.CommandsLobbyOwner)">
-        <mat-icon>how_to_reg</mat-icon>
+        <mat-icon color="accent">how_to_reg</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.CommandsLobbyOwner] | language: settings.Lang }}</span>
     </button>
 </mat-menu>
 
 <mat-menu #rulesNav="matMenu">
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.RulesUser)">
-        <mat-icon>group</mat-icon>
+        <mat-icon color="accent">group</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.RulesUser] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.RulesTDSTeam)">
-        <mat-icon>pan_tool</mat-icon>
+        <mat-icon color="accent">pan_tool</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.RulesTDSTeam] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.RulesVIP)">
-        <mat-icon>group_add</mat-icon>
+        <mat-icon color="accent">group_add</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.RulesVIP] | language: settings.Lang }}</span>
     </button>
 </mat-menu>

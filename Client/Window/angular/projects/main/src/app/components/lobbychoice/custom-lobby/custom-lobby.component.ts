@@ -196,14 +196,18 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromServerEvent.AddCustomLobby, this.addCustomLobby.bind(this));
         this.rageConnector.listen(DFromServerEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
         this.rageConnector.listen(DFromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
-        this.settings.LanguageChanged.on(null, this.detectChanged.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
         this.rageConnector.remove(DFromServerEvent.AddCustomLobby, this.addCustomLobby.bind(this));
         this.rageConnector.remove(DFromServerEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
         this.rageConnector.remove(DFromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
-        this.settings.LanguageChanged.off(null, this.detectChanged.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     private addCustomLobby(customLobbyDataJson: string) {
@@ -224,7 +228,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-    private detectChanged() {
+    private detectChanges() {
         this.changeDetector.detectChanges();
     }
 

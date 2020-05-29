@@ -97,6 +97,8 @@ import { CharCreatorAppearanceComponent } from './components/char-creator/menus/
 import { CharCreatorHairandcolorsComponent } from './components/char-creator/menus/char-creator-hairandcolors/char-creator-hairandcolors.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserpanelSettingsCommandsComponent } from './components/userpanel/userpanel-settings-commands/userpanel-settings-commands.component';
+import { MaterialCssVarsModule } from 'angular-material-css-vars';
+import { MatAppBackgroundDirective } from './extensions/matAppBackgroundDirective';
 
 @NgModule({
   declarations: [
@@ -131,6 +133,7 @@ import { UserpanelSettingsCommandsComponent } from './components/userpanel/userp
     TextareaTypeDirective,
     ToolbarDirective,
     MentionDirective,
+    MatAppBackgroundDirective,
     MentionListComponent,
     RankingComponent,
     CustomLobbyTeamsMenuComponent,
@@ -194,7 +197,15 @@ import { UserpanelSettingsCommandsComponent } from './components/userpanel/userp
     ClipboardModule,
     OverlayModule,
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+
+    MaterialCssVarsModule.forRoot({
+        isAutoContrast: true,
+        isDarkTheme: true,
+        primary: "rgba(0,0,77,1)",
+        accent: "rgba(255,152,0,1)",
+        warn: "rgba(244,67,54,1)"
+    })
   ],
   entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent],
   providers: [

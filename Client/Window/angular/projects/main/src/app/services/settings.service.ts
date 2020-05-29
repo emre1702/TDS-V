@@ -17,6 +17,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { LanguagePipe } from '../pipes/language.pipe';
 import { DToServerEvent } from '../enums/dtoserverevent.enum';
 import { UserpanelCommandDataDto } from '../components/userpanel/interfaces/userpanelCommandDataDto';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { UserpanelSettingKey } from '../components/userpanel/enums/userpanel-setting-key.enum';
+import { ThemeSettings } from '../interfaces/theme-settings';
 
 // tslint:disable: member-ordering
 
@@ -140,7 +143,7 @@ export class SettingsService {
     ]*/;
     public ChallengesLoaded = new EventEmitter();
 
-    public CommandsData: UserpanelCommandDataDto[];
+    public CommandsData: UserpanelCommandDataDto[] = [];
     public CommandsDataLoaded = new EventEmitter();
 
     public ShownRoundStatsType = 1;
@@ -246,6 +249,54 @@ export class SettingsService {
     }
     ////////////////////////////////////////////////////
 
+    //////////////////// Theme ////////////////////////
+    ThemeSettings: ThemeSettings
+        = {
+            0: true, 1: 87, 2: "rgba(0,0,77,1)", 3: "rgba(255,152,0,1)", 4: "rgba(244,67,54,1)",
+            5: "rgba(48, 48, 48, 0.87)", 6: "rgba(250, 250, 250, 0.87)"
+        };
+
+    ThemeSettingChangedBefore = new EventEmitter();
+    ThemeSettingChanged = new EventEmitter();
+    ThemeSettingChangedAfter = new EventEmitter();
+    ThemeSettingsLoaded = new EventEmitter();
+
+    setThemeChange(key: UserpanelSettingKey, value: any) {
+        switch (key) {
+            case UserpanelSettingKey.UseDarkTheme:
+                this.ThemeSettings[0] = value;
+                break;
+            case UserpanelSettingKey.ThemeBackgroundAlphaPercentage:
+                this.ThemeSettings[1] = value;
+                break;
+            case UserpanelSettingKey.ThemeMainColor:
+                this.ThemeSettings[2] = value;
+                break;
+            case UserpanelSettingKey.ThemeSecondaryColor:
+                this.ThemeSettings[3] = value;
+                break;
+            case UserpanelSettingKey.ThemeWarnColor:
+                this.ThemeSettings[4] = value;
+                break;
+            case UserpanelSettingKey.ThemeBackgroundDarkColor:
+                this.ThemeSettings[5] = value;
+                break;
+            case UserpanelSettingKey.ThemeBackgroundLightColor:
+                this.ThemeSettings[6] = value;
+                break;
+        }
+        this.ThemeSettingChangedBefore.emit(null, key, value);
+        this.ThemeSettingChanged.emit(null, key, value);
+        this.ThemeSettingChangedAfter.emit(null, key, value);
+    }
+
+    private loadThemeSettings(dataJson: string) {
+        this.ThemeSettings = JSON.parse(dataJson);
+        this.ThemeSettingsLoaded.emit(null, this.ThemeSettings);
+    }
+
+    ////////////////////////////////////////////////////
+
     constructor(
         private rageConnector: RageConnectorService,
         private sanitizer: DomSanitizer) {
@@ -262,7 +313,10 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.SyncIsLobbyOwner, this.onSyncIsLobbyOwner.bind(this));
         rageConnector.listen(DFromClientEvent.LoadChatSettings, this.loadChatSettings.bind(this));
         rageConnector.listen(DFromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
+        rageConnector.listen(DFromClientEvent.LoadThemeSettings, this.loadThemeSettings.bind(this));
 
         this.LanguageChanged.setMaxListeners(9999);
+        this.ThemeSettingsLoaded.setMaxListeners(9999);
+        this.ThemeSettingChangedAfter.setMaxListeners(9999);
     }
 }

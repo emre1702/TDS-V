@@ -135,6 +135,15 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     ChatInfoFontSizeInfo = "Die Schriftgröße der Informations-Zeile über dem Chat.";
     ChatInfoMoveTimeMs = "Chat-Info Dauer (ms)";
     ChatInfoMoveTimeMsInfo = "Die Dauer in Millisekunden, bis die Info über dem Chat von rechts nach links gerutscht ist.";
+    UseDarkTheme = "Dunkles Theme verwenden";
+    UseDarkThemeInfo = "Nutze das dunkle Theme statt dem hellen Theme für die Fenster.";
+    ThemeBackgroundAlphaPercentage = "Hintergrund-Deckkraft (%)";
+    ThemeBackgroundAlphaPercentageInfo = "Die Hintergrund-Farbe des Themes in Prozent (0-100)";
+    ThemeMainColor = "Hauptfarbe";
+    ThemeSecondaryColor = "Nebenfarbe";
+    ThemeWarnColor = "Warnungs-Farbe";
+    ThemeBackgroundDarkColor = "Dunkle Hintergrund-Farbe";
+    ThemeBackgroundLightColor = "Helle Hintergrund-Farbe";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

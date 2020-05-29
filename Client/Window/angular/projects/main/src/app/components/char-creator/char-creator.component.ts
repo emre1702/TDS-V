@@ -51,11 +51,15 @@ export class CharCreatorComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.goToMain();
-        this.settings.LanguageChanged.on(null, this.detectChanged.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.settings.LanguageChanged.off(null, this.detectChanged.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     goToMain() {
@@ -84,7 +88,7 @@ export class CharCreatorComponent implements OnInit, OnDestroy {
         this.rageConnector.call(DToClientEvent.CharCreatorDataChanged, CharCreatorDataKey.IsMale, JSON.stringify(this.data));
     }
 
-    private detectChanged() {
+    private detectChanges() {
         this.changeDetector.detectChanges();
     }
  }

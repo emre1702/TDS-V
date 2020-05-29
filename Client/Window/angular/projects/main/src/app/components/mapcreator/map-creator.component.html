@@ -1,9 +1,9 @@
 <form class="container mat-elevation-z8 mat-app-background" cdkDrag>
     <mat-toolbar color="primary" cdkDragHandle [closeOnDoubleClick]="content">
-        <mat-icon id="go-back-nav" (click)="currentTitle='MapCreator'; goBackNav()" *ngIf="isBackableNav()">arrow_back
+        <mat-icon color="accent" id="go-back-nav" (click)="currentTitle='MapCreator'; goBackNav()" *ngIf="isBackableNav()">arrow_back
         </mat-icon>
         <h1>{{ currentTitle | language: settings.Lang }}</h1>
-        <mat-icon id="save-nav" (click)="currentTitle='MapCreator'; saveNav()" *ngIf="isSaveableNav()">save</mat-icon>
+        <mat-icon color="accent" id="save-nav" (click)="currentTitle='MapCreator'; saveNav()" *ngIf="isSaveableNav()">save</mat-icon>
     </mat-toolbar>
 
     <div #content id="container-content">

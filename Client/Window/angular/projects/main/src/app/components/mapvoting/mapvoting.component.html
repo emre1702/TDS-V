@@ -1,11 +1,11 @@
 <div class="container mat-elevation-z24" cdkDrag *ngIf="active" [@hideShowAnimation]>
 	<mat-toolbar color="primary" cdkDragHandle>
 		<button mat-icon-button (click)="toggleSnav()">
-			<mat-icon>menu</mat-icon>
+			<mat-icon color="accent">menu</mat-icon>
 		</button>
 		<h1>{{ 'MapVoting' | language: settings.Lang }} {{ selectedMap ? " - " + selectedMap[1] : "" }}</h1>
 		<button mat-icon-button (click)="deactivate(true)">
-			<mat-icon>close</mat-icon>
+			<mat-icon color="accent">close</mat-icon>
 		</button>
 	</mat-toolbar>
 
@@ -37,7 +37,7 @@
 				</div>
 				<div id="map-action-row">
 					<button mat-icon-button (click)="toggleMapIdToFavorite(selectedMap[0])">
-						<mat-icon id="favorite-heart" [class.red-color]="settings.isInFavorites(selectedMap[0])">
+						<mat-icon color="accent" id="favorite-heart" [class.red-color]="settings.isInFavorites(selectedMap[0])">
 							favorite
 						</mat-icon>
 					</button>

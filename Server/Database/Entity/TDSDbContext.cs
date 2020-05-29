@@ -992,6 +992,13 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.ChatInfoMoveTimeMs).HasDefaultValue(15000);
                 entity.Property(e => e.ScoreboardPlaytimeUnit).HasDefaultValue(TimeSpanUnitsOfTime.HourMinute);
 
+                entity.Property(e => e.ThemeBackgroundAlphaPercentage).HasMaxLength(50).HasDefaultValue(87);
+                entity.Property(e => e.ThemeMainColor).HasMaxLength(50).HasDefaultValue("rgba(0,0,77,1)");
+                entity.Property(e => e.ThemeSecondaryColor).HasMaxLength(50).HasDefaultValue("rgba(255,152,0,1)");
+                entity.Property(e => e.ThemeWarnColor).HasMaxLength(50).HasDefaultValue("rgba(244,67,54,1)");
+                entity.Property(e => e.ThemeBackgroundDarkColor).HasMaxLength(50).HasDefaultValue("rgba(48, 48, 48, 0.87)");
+                entity.Property(e => e.ThemeBackgroundLightColor).HasMaxLength(50).HasDefaultValue("rgba(250, 250, 250, 0.87)");
+
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)
                     .HasForeignKey<PlayerSettings>(d => d.PlayerId)

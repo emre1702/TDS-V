@@ -1,3 +1,5 @@
+import { ExecSyncOptionsWithBufferEncoding } from 'child_process';
+
 export interface Language {
     MapVoting: string;
     MapCreator: string;
@@ -256,6 +258,15 @@ export interface Language {
     ChatInfoFontSizeInfo: string;
     ChatInfoMoveTimeMs: string;
     ChatInfoMoveTimeMsInfo: string;
+    UseDarkTheme: string;
+    UseDarkThemeInfo: string;
+    ThemeBackgroundAlphaPercentage: string;
+    ThemeBackgroundAlphaPercentageInfo: string;
+    ThemeMainColor: string;
+    ThemeSecondaryColor: string;
+    ThemeWarnColor: string;
+    ThemeBackgroundDarkColor: string;
+    ThemeBackgroundLightColor: string;
 
     MainMenu: string;
     Heritage: string;

@@ -28,10 +28,10 @@
             <span>{{ "Resemblance" | language: settings.Lang }}:</span>
             <div class="margin-fake"></div>
             <div class="slider-in-row">
-                <mat-icon svgIcon="woman"></mat-icon>
+                <mat-icon color="accent" svgIcon="woman"></mat-icon>
                 <mat-slider min="0" max="1" step="0.01" thumbLabel [(ngModel)]="data[2]"
                 (change)="onResemblanceChanged($event)" [displayWith]="getPercentage"></mat-slider>
-                <mat-icon svgIcon="man"></mat-icon>
+                <mat-icon color="accent" svgIcon="man"></mat-icon>
             </div>
         </div>
     </mat-list-item>
@@ -40,10 +40,10 @@
             <span>{{ "SkinTone" | language: settings.Lang }}:</span>
             <div class="margin-fake"></div>
             <div class="slider-in-row">
-                <mat-icon svgIcon="woman"></mat-icon>
+                <mat-icon color="accent" svgIcon="woman"></mat-icon>
                 <mat-slider min="0" max="1" step="0.01" thumbLabel [(ngModel)]="data[3]"
                 (change)="onSkinToneChanged($event)" [displayWith]="getPercentage"></mat-slider>
-                <mat-icon svgIcon="man"></mat-icon>
+                <mat-icon color="accent" svgIcon="man"></mat-icon>
             </div>
         </div>
     </mat-list-item>

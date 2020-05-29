@@ -69,7 +69,8 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 ShowCursorOnChatOpen = true,
                 Voice3D = false,
                 VoiceAutoVolume = false,
-                HideChatInfo = false
+                HideChatInfo = false,
+                UseDarkTheme = true
             };
             dbPlayer.PlayerStats = new PlayerStats
             {

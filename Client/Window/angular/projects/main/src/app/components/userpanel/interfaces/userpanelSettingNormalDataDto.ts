@@ -1,4 +1,6 @@
 import { LanguageEnum } from '../../../enums/language.enum';
+import { TimeSpanUnitsOfTime } from '../enums/timespan-units-of-time.enum';
+import { ScoreboardPlayerSorting } from '../enums/scoreboard-player-sorting';
 
 export interface UserpanelSettingNormalDataDto {
     /** PlayerId */
@@ -16,6 +18,10 @@ export interface UserpanelSettingNormalDataDto {
     [13]: string;
     /** DiscordUserId */
     [5]: number;
+    /** CheckAFK */
+    [25]: boolean;
+    /** WindowsNotifications */
+    [26]: boolean;
 
     /** Hitsound */
     [6]: boolean;
@@ -23,8 +29,6 @@ export interface UserpanelSettingNormalDataDto {
     [7]: boolean;
     /** FloatingDamageInfo */
     [8]: boolean;
-    /** CheckAFK */
-    [25]: boolean;
 
     /** Voice3D */
     [9]: boolean;
@@ -59,4 +63,42 @@ export interface UserpanelSettingNormalDataDto {
     /** ShowFloatingDamageInfoDurationMs */
     [19]: number;
 
+    /** ChatWidth */
+    [27]: number;
+    /** ChatMaxHeight */
+    [28]: number;
+    /** ChatFontSize */
+    [29]: number;
+    /** HideDirtyChat */
+    [30]: boolean;
+    /** ShowCursorOnChatOpen */
+    [31]: boolean;
+    /** HideChatInfo */
+    [35]: boolean;
+    /** ChatInfoFontSize */
+    [36]: number;
+    /** ChatInfoMoveTimeMs */
+    [37]: number;
+
+    /** ScoreboardPlayerSorting */
+    [32]: ScoreboardPlayerSorting;
+    /** ScoreboardPlayerSortingDesc */
+    [33]: boolean;
+    /** ScoreboardPlaytimeUnit */
+    [34]: TimeSpanUnitsOfTime;
+
+    /** UseDarkTheme */
+    [38]: boolean;
+    /** ThemeBackgroundAlphaPercentage */
+    [39]: number;
+    /** ThemeMainColor */
+    [40]: string;
+    /** ThemeSecondaryColor */
+    [41]: string;
+    /** ThemeWarnColor */
+    [42]: string;
+    /** ThemeBackgroundDarkColor */
+    [43]: string;
+    /** ThemeBackgroundLightColor */
+    [44]: string;
 }

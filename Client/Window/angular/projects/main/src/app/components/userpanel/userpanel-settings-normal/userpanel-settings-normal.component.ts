@@ -14,6 +14,7 @@ import { TimezoneEnum } from '../enums/timezone.enum';
 import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 import { TimeSpanUnitsOfTime } from '../enums/timespan-units-of-time.enum';
 import { ScoreboardPlayerSorting } from '../enums/scoreboard-player-sorting';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-userpanel-settings-normal',
@@ -91,7 +92,6 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.FloatingDamageInfo, defaultValue: true,
                     formControl: new FormControl(true), nullable: false,
                 },
-
             ],
         },
 
@@ -254,7 +254,49 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     tooltipLangKey: "ScoreboardPlaytimeUnitInfo"
                 },
             ]
-        }
+        },
+
+        {
+            title: "Theme", rows: [
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.UseDarkTheme,
+                    defaultValue: this.settings.ThemeSettings[0], nullable: false,
+                    formControl: new FormControl(this.settings.ThemeSettings[0]),
+                    tooltipLangKey: "UseDarkThemeInfo", onValueChanged: this.onThemeChange.bind(this)
+                },
+                {
+                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundAlphaPercentage,
+                    defaultValue: this.settings.ThemeSettings[1], nullable: false,
+                    formControl: new FormControl(this.settings.ThemeSettings[1]),
+                    tooltipLangKey: "ThemeBackgroundAlphaPercentageInfo", onValueChanged: this.onThemeChange.bind(this)
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeMainColor,
+                    defaultValue: this.settings.ThemeSettings[2],
+                    formControl: new FormControl(this.settings.ThemeSettings[2]), nullable: false
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeSecondaryColor,
+                    defaultValue: this.settings.ThemeSettings[3],
+                    formControl: new FormControl(this.settings.ThemeSettings[3]), nullable: false
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeWarnColor,
+                    defaultValue: this.settings.ThemeSettings[4],
+                    formControl: new FormControl(this.settings.ThemeSettings[4]), nullable: false
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundDarkColor,
+                    defaultValue: this.settings.ThemeSettings[5],
+                    formControl: new FormControl(this.settings.ThemeSettings[5]), nullable: false
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundLightColor,
+                    defaultValue: this.settings.ThemeSettings[6],
+                    formControl: new FormControl(this.settings.ThemeSettings[6]), nullable: false
+                },
+            ]
+        },
     ];
 
     private originalChatWidth: string;
@@ -295,6 +337,19 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             volumeControl.enable();
         }
         this.changeDetector.detectChanges();
+    }
+
+    private onThemeChange(key: UserpanelSettingKey) {
+        switch (key) {
+            case UserpanelSettingKey.UseDarkTheme:
+                const useDarkTheme = this.getFormControl("Theme", key).value as boolean;
+                this.settings.setThemeChange(key, useDarkTheme);
+                break;
+            case UserpanelSettingKey.ThemeBackgroundAlphaPercentage:
+                const backgroundAlpha = this.getFormControl("Theme", key).value as number;
+                this.settings.setThemeChange(key, backgroundAlpha);
+                break;
+        }
     }
 
     save() {
@@ -369,7 +424,18 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
     onColorChange(setting: UserpanelSettingRow) {
         this.changeDetector.detectChanges();
 
-        this.rageConnector.call(DToClientEvent.OnColorSettingChange, setting.formControl.value, setting.dataSettingIndex);
+        switch (setting.dataSettingIndex) {
+            case UserpanelSettingKey.ThemeMainColor:
+            case UserpanelSettingKey.ThemeSecondaryColor:
+            case UserpanelSettingKey.ThemeWarnColor:
+            case UserpanelSettingKey.ThemeBackgroundDarkColor:
+            case UserpanelSettingKey.ThemeBackgroundLightColor:
+                this.settings.setThemeChange(setting.dataSettingIndex, setting.formControl.value);
+                break;
+            default:
+                this.rageConnector.call(DToClientEvent.OnColorSettingChange, setting.formControl.value, setting.dataSettingIndex);
+                break;
+        }
     }
 
     onChatSettingsChanged(key: UserpanelSettingKey) {

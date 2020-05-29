@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef, HostListener, Sanitizer } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef, HostListener, Sanitizer, HostBinding } from '@angular/core';
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
@@ -8,6 +8,9 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CharCreateData } from './components/char-creator/interfaces/charCreateData';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { MaterialCssVarsService } from 'angular-material-css-vars';
+import { UserpanelSettingKey } from './components/userpanel/enums/userpanel-setting-key.enum';
 
 @Component({
     selector: 'app-root',
@@ -52,11 +55,12 @@ export class AppComponent {
     constructor(
         public settings: SettingsService,
         rageConnector: RageConnectorService,
-        changeDetector: ChangeDetectorRef,
+        private changeDetector: ChangeDetectorRef,
         snackBar: MatSnackBar,
         public vcRef: ViewContainerRef,
         iconRegistry: MatIconRegistry,
-        sanitizer: DomSanitizer) {
+        sanitizer: DomSanitizer,
+        private materialCssVarsService: MaterialCssVarsService) {
 
         iconRegistry.addSvgIcon("man", sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));
         iconRegistry.addSvgIcon("woman", sanitizer.bypassSecurityTrustResourceUrl('assets/woman.svg'));
@@ -132,6 +136,27 @@ export class AppComponent {
         });
 
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
+
+        this.settings.ThemeSettingChangedBefore.on(null, this.onThemeSettingChanged.bind(this));
+    }
+
+    private onThemeSettingChanged(key: UserpanelSettingKey, value: any) {
+        switch (key) {
+            case UserpanelSettingKey.UseDarkTheme:
+                this.materialCssVarsService.setDarkTheme(value);
+                break;
+            case UserpanelSettingKey.ThemeMainColor:
+                this.materialCssVarsService.setPrimaryColor(value);
+                break;
+            case UserpanelSettingKey.ThemeSecondaryColor:
+                this.materialCssVarsService.setAccentColor(value);
+                break;
+            case UserpanelSettingKey.ThemeWarnColor:
+                this.materialCssVarsService.setWarnColor(value);
+                break;
+        }
+
+        this.changeDetector.detectChanges();
     }
 
     @HostListener("window:keydown", ["$event"])

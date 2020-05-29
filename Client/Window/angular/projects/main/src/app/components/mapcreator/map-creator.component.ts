@@ -78,6 +78,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.isLobbyOwnerChanged.bind(this));
+        this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
 
         this.isLobbyOwnerChanged();
     }
@@ -91,6 +93,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.rageConnector.remove(DFromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.isLobbyOwnerChanged.bind(this));
+        this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     private addPositionToMapCreatorBrowser(id: number, type: MapCreatorPositionType, posX: number, posY: number, posZ: number,

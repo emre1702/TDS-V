@@ -1,10 +1,13 @@
-@import '~@angular/material/theming';
+@import '~angular-material-css-vars/main';
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 @include mat-core();
+
+$mat-css-dark-theme-selector: '.isDarkTheme';
+$mat-css-light-theme-selector: '.isLightTheme';
 
 $custom-primary: (
     50 : #e0e0ea,
@@ -39,6 +42,39 @@ $custom-primary: (
     )
 );
 
+$mat-light-theme-background: (
+  status-bar: map_get($mat-grey, 300),
+  app-bar:    map_get($mat-grey, 100),
+  background: rgba(250, 250, 250, 0.87),
+  hover:      rgba(black, 0.04),
+  card:       white,
+  dialog:     white,
+  disabled-button: rgba(black, 0.12),
+  raised-button: white,
+  focused-button: $dark-focused,
+  selected-button: map_get($mat-grey, 300),
+  selected-disabled-button: map_get($mat-grey, 400),
+  disabled-button-toggle: map_get($mat-grey, 200),
+  unselected-chip: map_get($mat-grey, 300),
+  disabled-list-option: map_get($mat-grey, 200),
+);
+
+$mat-dark-theme-background: (
+  status-bar: black,
+  app-bar:    map_get($mat-grey, 900),
+  background: rgba(48, 48, 48, 0.87),
+  hover:      rgba(white, 0.04),
+  card:       map_get($mat-grey, 800),
+  dialog:     map_get($mat-grey, 800),
+  disabled-button: rgba(white, 0.12),
+  raised-button: map-get($mat-grey, 800),
+  focused-button: $light-focused,
+  selected-button: map_get($mat-grey, 900),
+  selected-disabled-button: map_get($mat-grey, 800),
+  disabled-button-toggle: black,
+  unselected-chip: map_get($mat-grey, 700),
+  disabled-list-option: black,
+);
 
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
@@ -51,12 +87,40 @@ $dark-accent:  mat-palette($mat-orange, A200, A100, A400);
 $dark-warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
+$clight-theme: mat-light-theme($dark-primary, $dark-accent, $dark-warn);
 $cdark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($cdark-theme);
+
+@mixin app-theme($theme) {
+    // Extract the palettes you need from the theme definition.
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+
+    // Define any styles affected by the theme.
+    .app-header {
+      // Use mat-color to extract individual colors from a palette.
+      background-color: mat-color($primary);
+      border: medium solid mat-color($accent, A400);
+    }
+  }
+
+@include init-material-css-vars() {
+    @include app-theme($mat-css-theme);
+  };
+
+/*@include angular-material-theme($cdark-theme);
+
+.light-theme {
+    @include angular-material-theme($clight-theme);
+}
+
+.dark-theme {
+    @include angular-material-theme($cdark-theme);
+}*/
+
 
 $background-color: rgba(48, 48, 48, 0.78);
 
@@ -132,11 +196,10 @@ html, body, app-root {
   opacity: 0.95;
 }
 
-.mat-app-background {
+//.mat-app-background {
   // border: 4px outset mat-color($dark-primary);
-  background-color: $background-color;
-  color: white;
-}
+  // color: white;
+//}
 
 .border {
   border: 4px ridge mat-color($dark-primary);

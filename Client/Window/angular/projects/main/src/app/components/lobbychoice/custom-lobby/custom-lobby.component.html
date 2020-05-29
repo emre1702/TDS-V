@@ -116,7 +116,7 @@
 <div id="main-container" class="container" [@lobbyShowHideAnimation]
 *ngIf="inMenu == customLobbyMenuType.Main && !loadingData">
   <div matRipple class="lobby mat-app-background" (click)="showLobbyCreating()">
-    <mat-icon>add_to_photos</mat-icon>
+    <mat-icon color="accent">add_to_photos</mat-icon>
   </div>
   <div *ngFor="let lobbyData of lobbyDatas" matRipple class="lobby mat-app-background" (click)="showLobbyData(lobbyData)">
     <img src="assets/arenachoice.png" alt="Arena" style="width: 100%">

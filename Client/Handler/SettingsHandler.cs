@@ -5,6 +5,7 @@ using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Entities.Languages;
 using TDS_Client.Handler.Events;
@@ -217,6 +218,8 @@ namespace TDS_Client.Handler
                 loadedSyncedSettings.ChatFontSize, loadedSyncedSettings.HideDirtyChat, loadedSyncedSettings.HideChatInfo,
                 loadedSyncedSettings.ChatInfoFontSize, loadedSyncedSettings.ChatInfoMoveTimeMs);
 
+            SyncThemeSettings(loadedSyncedSettings);
+
             _eventsHandler.OnSettingsLoaded();
         }
 
@@ -315,6 +318,21 @@ namespace TDS_Client.Handler
         private void SyncRegisterLoginLanguageTexts(object[] args)
         {
             _browserHandler.RegisterLogin.SyncLanguage(Language);
+        }
+
+        private void SyncThemeSettings(SyncedPlayerSettingsDto settings)
+        {
+            var data = new ThemeSettings
+            {
+                UseDarkTheme = settings.UseDarkTheme,
+                ThemeBackgroundAlphaPercentage = settings.ThemeBackgroundAlphaPercentage,
+                ThemeMainColor = settings.ThemeMainColor,
+                ThemeSecondaryColor = settings.ThemeSecondaryColor,
+                ThemeWarnColor = settings.ThemeWarnColor,
+                ThemeBackgroundDarkColor = settings.ThemeBackgroundDarkColor,
+                ThemeBackgroundLightColor = settings.ThemeBackgroundLightColor
+            };
+            _browserHandler.Angular.SyncThemeSettings(_serializer.ToBrowser(data));
         }
 
         #endregion Private Methods

@@ -272,6 +272,11 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.MapCreatorSyncCurrentMapToServer, tdsPlayerId, idCounter);
         }
 
+        internal void SyncThemeSettings(string dataJson)
+        {
+            Execute(ToBrowserEvent.LoadThemeSettings, dataJson);
+        }
+
         #endregion Internal Methods
 
         #region Private Methods

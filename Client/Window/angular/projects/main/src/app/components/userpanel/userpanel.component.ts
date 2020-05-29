@@ -6,6 +6,7 @@ import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 import { UserpanelService } from './services/userpanel.service';
 import { LanguagePipe } from '../../pipes/language.pipe';
+import { MaterialCssVarsService } from 'angular-material-css-vars';
 
 @Component({
     selector: 'app-userpanel',
@@ -59,6 +60,7 @@ export class UserpanelComponent implements OnInit, OnDestroy {
         this.userpanelService.myStatsLoaded.on(null, this.detectChanges.bind(this));
         this.userpanelService.loadingDataChanged.on(null, this.detectChanges.bind(this));
         this.userpanelService.currentNavChanged.on(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
@@ -66,6 +68,7 @@ export class UserpanelComponent implements OnInit, OnDestroy {
         this.userpanelService.myStatsLoaded.off(null, this.detectChanges.bind(this));
         this.userpanelService.loadingDataChanged.off(null, this.detectChanges.bind(this));
         this.userpanelService.currentNavChanged.off(null, this.detectChanges.bind(this));
+        this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
     }
 
     closeUserpanel() {

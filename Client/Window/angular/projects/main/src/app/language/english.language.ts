@@ -192,6 +192,15 @@ WARNING! Spaces will get removed and new lines with an already used command will
     ChatInfoFontSizeInfo = "The font size of the information line above the chat.";
     ChatInfoMoveTimeMs = "Chat info duration (ms)";
     ChatInfoMoveTimeMsInfo = "The time in milliseconds until the info above the chat slides from right to left.";
+    UseDarkTheme = "Use dark theme";
+    UseDarkThemeInfo = "Use the dark theme for your windows instead of the light theme.";
+    ThemeBackgroundAlphaPercentage = "Background opacity (%)";
+    ThemeBackgroundAlphaPercentageInfo = "The background color for the theme in percentage (0-100)";
+    ThemeMainColor = "Main color";
+    ThemeSecondaryColor = "Secondary color";
+    ThemeWarnColor = "Warn color";
+    ThemeBackgroundDarkColor = "Dark background color";
+    ThemeBackgroundLightColor = "Light background color";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";

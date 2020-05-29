@@ -1,6 +1,6 @@
 <form class="mat-app-background container mat-elevation-z8" cdkDrag>
     <mat-toolbar color="primary" cdkDragHandle>
-        <mat-icon id="go-back-nav" (click)="goToMain()" *ngIf="currentNav != charCreatorMenuNav.MainMenu">arrow_back</mat-icon>
+        <mat-icon color="accent" id="go-back-nav" (click)="goToMain()" *ngIf="currentNav != charCreatorMenuNav.MainMenu">arrow_back</mat-icon>
         <h1>{{ charCreatorMenuNav[currentNav] | language: settings.Lang }}</h1>
     </mat-toolbar>
     <div class="content" [ngSwitch]="currentNav">
