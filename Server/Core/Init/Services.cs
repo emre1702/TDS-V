@@ -141,6 +141,7 @@ namespace TDS_Server.Core.Init
                // Events
                .AddSingleton<EventsHandler>()
                .AddSingleton<LobbyEventsHandler>()
+               .AddSingleton<RemoteBrowserEventsHandler>()
 
                // GangSystem
                .AddSingleton<GangHousesHandler>()
