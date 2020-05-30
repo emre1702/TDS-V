@@ -3,6 +3,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Interfaces.ModAPI.Chat;
+using TDS_Server.Data.Interfaces.ModAPI.ClientEvent;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.Marker;
@@ -16,6 +17,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Thread;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.RAGEAPI.Blip;
 using TDS_Server.RAGEAPI.Chat;
+using TDS_Server.RAGEAPI.ClientEvent;
 using TDS_Server.RAGEAPI.ColShape;
 using TDS_Server.RAGEAPI.MapObject;
 using TDS_Server.RAGEAPI.Marker;
@@ -38,6 +40,7 @@ namespace TDS_Server.RAGEAPI
         {
             Blip = new BlipAPI();
             Chat = new ChatAPI();
+            ClientEvent = new ClientEventAPI();
             ColShape = new ColShapeAPI();
             MapObject = new MapObjectAPI();
             Marker = new MarkerAPI();
@@ -58,6 +61,7 @@ namespace TDS_Server.RAGEAPI
 
         public IBlipAPI Blip { get; }
         public IChatAPI Chat { get; }
+        public IClientEventAPI ClientEvent { get; }
         public IColShapeAPI ColShape { get; }
         public IMapObjectAPI MapObject { get; }
         public IMarkerAPI Marker { get; }
