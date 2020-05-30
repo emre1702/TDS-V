@@ -262,7 +262,7 @@ export class SettingsService {
     ThemeSettingsLoaded = new EventEmitter();
 
     setThemeChange(key: UserpanelSettingKey, value: any) {
-        switch (key) {
+        /*switch (key) {
             case UserpanelSettingKey.UseDarkTheme:
                 this.ThemeSettings[0] = value;
                 break;
@@ -284,14 +284,17 @@ export class SettingsService {
             case UserpanelSettingKey.ThemeBackgroundLightColor:
                 this.ThemeSettings[6] = value;
                 break;
-        }
+        }*/
         this.ThemeSettingChangedBefore.emit(null, key, value);
         this.ThemeSettingChanged.emit(null, key, value);
         this.ThemeSettingChangedAfter.emit(null, key, value);
     }
 
-    private loadThemeSettings(dataJson: string) {
-        this.ThemeSettings = JSON.parse(dataJson);
+    loadThemeSettings(dataJson: string) {
+        if (dataJson.length) {
+            this.ThemeSettings = JSON.parse(dataJson);
+        }
+
         this.ThemeSettingsLoaded.emit(null, this.ThemeSettings);
     }
 
