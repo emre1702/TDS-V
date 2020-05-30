@@ -39,8 +39,8 @@ namespace TDS_Server.Core.Init
                 options.UseLoggerFactory(loggerFactory);
 
             options.UseNpgsql(appConfigHandler.ConnectionString /*, options =>
-                    options.EnableRetryOnFailure()*/);
-            // .EnableSensitiveDataLogging()
+                    options.EnableRetryOnFailure()*/)
+                .EnableSensitiveDataLogging();
         }
 
         internal static void InitializeSingletons(IServiceProvider serviceProvider)
