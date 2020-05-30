@@ -1,5 +1,6 @@
-import { Directive, OnInit, OnDestroy, ChangeDetectorRef, ViewContainerRef, Renderer2, AfterViewInit } from '@angular/core';
+import { Directive, OnInit, OnDestroy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
 import { SettingsService } from '../services/settings.service';
+import { UserpanelSettingKey } from '../components/userpanel/enums/userpanel-setting-key.enum';
 
 @Directive({
   // tslint:disable-next-line: directive-selector
@@ -17,12 +18,14 @@ export class MatAppBackgroundDirective implements OnInit, OnDestroy {
     ngOnInit() {
         this.settings.ThemeSettingChanged.on(null, this.revertBackgroundColorStyle.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.themeChanged.bind(this));
+        this.settings.ThemeSettingsLoaded.on(null, this.themeSettingsLoaded.bind(this));
         this.themeChanged();
     }
 
     ngOnDestroy() {
         this.settings.ThemeSettingChanged.off(null, this.revertBackgroundColorStyle.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.themeChanged.bind(this));
+        this.settings.ThemeSettingsLoaded.off(null, this.themeSettingsLoaded.bind(this));
     }
 
     private revertBackgroundColorStyle() {
@@ -60,10 +63,16 @@ export class MatAppBackgroundDirective implements OnInit, OnDestroy {
         return rgba;
     }
 
-    themeChanged() {
-        const colorStr = this.settings.ThemeSettings[0] ? this.settings.ThemeSettings[5] : this.settings.ThemeSettings[6];
+    themeChanged(key?: UserpanelSettingKey, value?: any) {
+        const useDarkTheme = key === UserpanelSettingKey.UseDarkTheme ? value : this.settings.ThemeSettings[0];
+        const colorStr = useDarkTheme ? this.settings.ThemeSettings[5] : this.settings.ThemeSettings[6];
         const rgba = this.getRGBAFromColorString(colorStr);
         this.viewContainerRef.element.nativeElement.style.backgroundColor = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
         this.changeDetector.detectChanges();
+    }
+
+    themeSettingsLoaded() {
+        this.revertBackgroundColorStyle();
+        this.themeChanged();
     }
 }
