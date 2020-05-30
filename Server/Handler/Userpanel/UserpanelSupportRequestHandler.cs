@@ -1,4 +1,5 @@
 ﻿using BonusBotConnector.Client;
+using BonusBotConnector_Server;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -130,13 +131,17 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
-            ISettingsHandler settingsHandler, IModAPI modAPI, BonusBotConnectorClient bonusBotConnectorClient)
+            ISettingsHandler settingsHandler, IModAPI modAPI, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
             : base(dbContext, loggingHandler)
         {
             _modAPI = modAPI;
             _serializer = serializer;
             _settingsHandler = settingsHandler;
             _bonusBotConnectorClient = bonusBotConnectorClient;
+
+            bonusBotConnectorServer.SupportRequestService.AnswerRequestFromDiscord += AnswerRequestFromDiscord;
+            bonusBotConnectorServer.SupportRequestService.CreateRequestFromDiscord += CreateRequestFromDiscord;
+            bonusBotConnectorServer.SupportRequestService.ToggleClosedRequestFromDiscord += ToggleClosedRequestFromDiscord;
 
             eventsHandler.Hour += DeleteTooLongClosedRequests;
 
