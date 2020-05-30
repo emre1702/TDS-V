@@ -1,5 +1,6 @@
 ﻿using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Interfaces.ModAPI.Chat;
+using TDS_Server.Data.Interfaces.ModAPI.ClientEvent;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.Marker;
@@ -20,6 +21,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI
 
         IBlipAPI Blip { get; }
         IChatAPI Chat { get; }
+        IClientEventAPI ClientEvent { get; }
         IColShapeAPI ColShape { get; }
         IMapObjectAPI MapObject { get; }
         IMarkerAPI Marker { get; }
