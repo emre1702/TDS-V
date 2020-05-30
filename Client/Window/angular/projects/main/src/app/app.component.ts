@@ -11,6 +11,7 @@ import { CharCreateData } from './components/char-creator/interfaces/charCreateD
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { UserpanelSettingKey } from './components/userpanel/enums/userpanel-setting-key.enum';
+import { ThemeSettings } from './interfaces/theme-settings';
 
 @Component({
     selector: 'app-root',
@@ -138,6 +139,7 @@ export class AppComponent {
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
 
         this.settings.ThemeSettingChangedBefore.on(null, this.onThemeSettingChanged.bind(this));
+        this.settings.ThemeSettingsLoaded.on(null, this.onThemeSettingsLoaded.bind(this));
     }
 
     private onThemeSettingChanged(key: UserpanelSettingKey, value: any) {
@@ -157,6 +159,13 @@ export class AppComponent {
         }
 
         this.changeDetector.detectChanges();
+    }
+
+    private onThemeSettingsLoaded(settings: ThemeSettings) {
+        this.materialCssVarsService.setDarkTheme(settings[0]);
+        this.materialCssVarsService.setPrimaryColor(settings[2]);
+        this.materialCssVarsService.setAccentColor(settings[3]);
+        this.materialCssVarsService.setWarnColor(settings[4]);
     }
 
     @HostListener("window:keydown", ["$event"])
