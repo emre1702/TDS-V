@@ -11,15 +11,19 @@ using System.Xml.Serialization;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
+using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
+using TDS_Shared.Default;
 
 using DB = TDS_Server.Database.Entity;
 
@@ -32,6 +36,7 @@ namespace TDS_Server.Handler.Maps
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly XmlHelper _xmlHelper;
 
         #endregion Private Fields
@@ -39,9 +44,13 @@ namespace TDS_Server.Handler.Maps
         #region Public Constructors
 
         public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
             : base(dbContext, loggingHandler)
-            => (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
+        {
+            (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
+            _tdsPlayerHandler = tdsPlayerHandler;
+            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
+        }
 
         #endregion Public Constructors
 
@@ -81,8 +90,12 @@ namespace TDS_Server.Handler.Maps
             }
         }
 
-        public async void RemoveMap(ITDSPlayer player, int mapId)
+        public async void RemoveMap(IPlayer modPlayer, int mapId)
         {
+            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
+            if (player is null)
+                return;
+
             bool isSavedMap = true;
             MapDto? map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
             if (map is null)

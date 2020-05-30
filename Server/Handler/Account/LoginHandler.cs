@@ -6,6 +6,7 @@ using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Utility;
@@ -13,6 +14,7 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
+using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
 using TDS_Server.Handler.Userpanel;
@@ -36,6 +38,7 @@ namespace TDS_Server.Handler.Account
         private readonly ServerStartHandler _serverStartHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
@@ -51,7 +54,8 @@ namespace TDS_Server.Handler.Account
             IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler,
             ILoggingHandler loggingHandler,
-            ServerStartHandler serverStartHandler)
+            ServerStartHandler serverStartHandler,
+            TDSPlayerHandler tdsPlayerHandler)
         {
             _modAPI = modAPI;
             _databasePlayerHandler = databasePlayerHandler;
@@ -63,8 +67,11 @@ namespace TDS_Server.Handler.Account
             _dataSyncHandler = dataSyncHandler;
             _loggingHandler = loggingHandler;
             _serverStartHandler = serverStartHandler;
+            _tdsPlayerHandler = tdsPlayerHandler;
 
             _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
+
+            modAPI.ClientEvent.Add<IPlayer, string, string>(ToServerEvent.TryLogin, this, TryLogin);
         }
 
         #endregion Public Constructors
@@ -148,8 +155,14 @@ namespace TDS_Server.Handler.Account
             });
         }
 
-        public async void TryLogin(ITDSPlayer player, string username, string password)
+        public async void TryLogin(IPlayer modPlayer, string username, string password)
         {
+            var player = _tdsPlayerHandler.GetNotLoggedIn(modPlayer);
+            if (player is null)
+                return;
+
+            if (player.TryingToLoginRegister)
+                return;
             player.TryingToLoginRegister = true;
             try
             {

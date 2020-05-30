@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
@@ -22,15 +24,17 @@ namespace TDS_Server.Handler.Userpanel
         private readonly IModAPI _modAPI;
         private readonly UserpanelPlayerStatsHandler _playerStatsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
+        private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer,
-            UserpanelCommandsHandler userpanelCommandsHandler, IModAPI modAPI)
+            UserpanelCommandsHandler userpanelCommandsHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler)
         {
             _modAPI = modAPI;
+            _tdsPlayerHandler = tdsPlayerHandler;
 
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
 
@@ -49,6 +53,8 @@ namespace TDS_Server.Handler.Userpanel
             ApplicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _playerStatsHandler, ApplicationUserHandler);
             SupportUserHandler = new UserpanelSupportUserHandler(SupportRequestHandler);
             SupportAdminHandler = new UserpanelSupportAdminHandler(SupportRequestHandler);
+
+            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.LoadUserpanelData, this, OnLoadUserpanelData);
         }
 
         #endregion Public Constructors
@@ -68,6 +74,16 @@ namespace TDS_Server.Handler.Userpanel
         #endregion Public Properties
 
         #region Public Methods
+
+        public void OnLoadUserpanelData(IPlayer modPlayer, int dataType)
+        {
+            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
+            if (player is null)
+                return;
+
+            var type = (UserpanelLoadDataType)dataType;
+            PlayerLoadData(player, type);
+        }
 
         public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)
         {

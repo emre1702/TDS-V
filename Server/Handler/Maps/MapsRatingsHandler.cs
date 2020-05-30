@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
@@ -16,10 +18,11 @@ namespace TDS_Server.Handler.Maps
     {
         #region Private Fields
 
+        private readonly MapCreatorHandler _mapsCreatingHandler;
+        private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly IModAPI _modAPI;
-        private MapCreatorHandler _mapsCreatingHandler;
-        private MapsLoadingHandler _mapsLoadingHandler;
-        private Serializer _serializer;
+        private readonly Serializer _serializer;
+        private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
@@ -32,23 +35,30 @@ namespace TDS_Server.Handler.Maps
             MapsLoadingHandler mapsLoadingHandler,
             MapCreatorHandler mapsCreatorHandler,
             TDSDbContext dbContext,
-            ILoggingHandler loggingHandler)
+            ILoggingHandler loggingHandler,
+            TDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
             _modAPI = modAPI;
             _serializer = serializer;
             _mapsLoadingHandler = mapsLoadingHandler;
             _mapsCreatingHandler = mapsCreatorHandler;
+            _tdsPlayerHandler = tdsPlayerHandler;
 
             eventsHandler.PlayerLoggedIn += SendPlayerHisRatings;
+
+            modAPI.ClientEvent.Add<IPlayer, int, int>(ToServerEvent.SendMapRating, this, AddPlayerMapRating);
         }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public async void AddPlayerMapRating(ITDSPlayer player, int mapId, byte rating)
+        public async void AddPlayerMapRating(IPlayer modPlayer, int mapId, int rating)
         {
+            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
+            if (player is null)
+                return;
             int playerId = player.Entity!.Id;
 
             MapDto? map = _mapsLoadingHandler.GetMapById(mapId);
@@ -62,8 +72,8 @@ namespace TDS_Server.Handler.Maps
                 await ExecuteForDB(dbContext => dbContext.PlayerMapRatings.Add(maprating));
                 player.AddToChallenge(ChallengeType.ReviewMaps);
             }
-            maprating.Rating = rating;
-            map.BrowserSyncedData.Rating = rating;
+            maprating.Rating = (byte)rating;
+            map.BrowserSyncedData.Rating = (byte)rating;
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 

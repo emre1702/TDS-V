@@ -1,8 +1,11 @@
-﻿using TDS_Server.Data.Enums;
+﻿using System;
+using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler
 {
@@ -21,7 +24,11 @@ namespace TDS_Server.Handler
         #region Public Constructors
 
         public ChatHandler(ILoggingHandler loggingHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler, LangHelper langHelper)
-            => (_loggingHandler, _modAPI, _tdsPlayerHandler, _adminsHandler, _langHelper) = (loggingHandler, modAPI, tdsPlayerHandler, adminsHandler, langHelper);
+        {
+            (_loggingHandler, _modAPI, _tdsPlayerHandler, _adminsHandler, _langHelper) = (loggingHandler, modAPI, tdsPlayerHandler, adminsHandler, langHelper);
+
+            modAPI.ClientEvent.Add<IPlayer, string, int>(ToServerEvent.LobbyChatMessage, this, SendLobbyMessage);
+        }
 
         #endregion Public Constructors
 
@@ -89,8 +96,11 @@ namespace TDS_Server.Handler
             _loggingHandler.LogChat(message, player, isGlobal: true);
         }
 
-        public void SendLobbyMessage(ITDSPlayer player, string message, int chatTypeNumber)
+        public void SendLobbyMessage(IPlayer modPlayer, string message, int chatTypeNumber)
         {
+            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
+            if (player is null)
+                return;
             if (player.IsPermamuted)
             {
                 player.SendNotification(player.Language.STILL_PERMAMUTED);

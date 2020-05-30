@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Entities.LobbySystem;
@@ -31,6 +32,7 @@ namespace TDS_Server.Handler.Events
         private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
 
         private readonly IModAPI _modAPI;
+        private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
@@ -38,11 +40,12 @@ namespace TDS_Server.Handler.Events
 
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler)
+            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler, TDSPlayerHandler tdsPlayerHandler)
         {
             _modAPI = modAPI;
             _loggingHandler = loggingHandler;
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
+            _tdsPlayerHandler = tdsPlayerHandler;
 
             _asyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
             {
@@ -93,6 +96,8 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.LoadMapForMapCreator] = mapCreatorHandler.SendPlayerMapForMapCreator,
                 [ToServerEvent.MapCreatorSyncCurrentMapToServer] = mapCreatorHandler.SyncCurrentMapToClient,
             };
+
+            modAPI.ClientEvent.Add<IPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
         }
 
         #endregion Public Constructors
@@ -109,8 +114,11 @@ namespace TDS_Server.Handler.Events
 
         #region Public Methods
 
-        public async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
+        public async void OnFromBrowserEvent(IPlayer modPlayer, params object[] args)
         {
+            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
+            if (player is null)
+                return;
             try
             {
                 object? ret = null;

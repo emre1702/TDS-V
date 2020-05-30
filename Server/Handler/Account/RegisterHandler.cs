@@ -1,14 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Server;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Core.Manager.PlayerManager
 {
@@ -20,15 +23,22 @@ namespace TDS_Server.Core.Manager.PlayerManager
         private readonly EventsHandler _eventsHandler;
         private readonly IModAPI _modAPI;
         private readonly ServerStartHandler _serverStartHandler;
+        private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public RegisterHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler,
-            DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler)
+            DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler,
+            TDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
-            => (_modAPI, _eventsHandler, _databasePlayerHelper, _serverStartHandler) = (modAPI, eventsHandler, databasePlayerHelper, serverStartHandler);
+        {
+            (_modAPI, _eventsHandler, _databasePlayerHelper, _serverStartHandler) = (modAPI, eventsHandler, databasePlayerHelper, serverStartHandler);
+            _tdsPlayerHandler = tdsPlayerHandler;
+
+            modAPI.ClientEvent.Add<IPlayer, string, string, string>(ToServerEvent.TryRegister, this, TryRegister);
+        }
 
         #endregion Public Constructors
 
@@ -93,8 +103,14 @@ namespace TDS_Server.Core.Manager.PlayerManager
             // _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
         }
 
-        public async void TryRegister(ITDSPlayer player, string username, string password, string email)
+        public async void TryRegister(IPlayer modPlayer, string username, string password, string email)
         {
+            var player = _tdsPlayerHandler.GetNotLoggedIn(modPlayer);
+            if (player is null)
+                return;
+            if (player.TryingToLoginRegister)
+                return;
+
             player.TryingToLoginRegister = true;
             try
             {

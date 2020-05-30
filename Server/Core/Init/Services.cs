@@ -56,8 +56,8 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<BaseCommands>();
 
             serviceProvider.GetRequiredService<EventsHandler>();
-            serviceProvider.GetRequiredService<RemoteEventsHandler>();
             serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
+            serviceProvider.GetRequiredService<LobbyEventsHandler>();
 
             // GangSystem
             serviceProvider.GetRequiredService<GangHousesHandler>();
@@ -80,6 +80,8 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<ConnectedHandler>();
             serviceProvider.GetRequiredService<TDSPlayerHandler>();
             serviceProvider.GetRequiredService<PlayerCharHandler>();
+            serviceProvider.GetRequiredService<PlayerCrouchHandler>();
+            serviceProvider.GetRequiredService<PlayerFreecamHandler>();
 
             serviceProvider.GetRequiredService<ServerInfoHandler>();
             serviceProvider.GetRequiredService<ServerStartHandler>();
@@ -138,8 +140,7 @@ namespace TDS_Server.Core.Init
 
                // Events
                .AddSingleton<EventsHandler>()
-               .AddSingleton<RemoteEventsHandler>()
-               .AddSingleton<RemoteBrowserEventsHandler>()
+               .AddSingleton<LobbyEventsHandler>()
 
                // GangSystem
                .AddSingleton<GangHousesHandler>()
@@ -164,6 +165,8 @@ namespace TDS_Server.Core.Init
                .AddSingleton<ConnectedHandler>()
                .AddSingleton<TDSPlayerHandler>()
                .AddSingleton<PlayerCharHandler>()
+               .AddSingleton<PlayerCrouchHandler>()
+               .AddSingleton<PlayerFreecamHandler>()
 
                // Server
                .AddSingleton<ServerInfoHandler>()

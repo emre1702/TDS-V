@@ -6,12 +6,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Player
 {
@@ -33,11 +35,14 @@ namespace TDS_Server.Handler.Player
             NameCheckHelper nameCheckHelper,
             IServiceProvider serviceProvider,
             EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler)
+            ILoggingHandler loggingHandler,
+            IModAPI modAPI)
         {
             _nameCheckHelper = nameCheckHelper;
             _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
+
+            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.LanguageChange, this, OnLanguageChange);
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOutBefore;
@@ -101,6 +106,18 @@ namespace TDS_Server.Handler.Player
             }
 
             return tdsPlayer;
+        }
+
+        public void OnLanguageChange(IPlayer modPlayer, int language)
+        {
+            var player = GetIfLoggedIn(modPlayer);
+            if (player is null)
+                return;
+
+            if (!Enum.IsDefined(typeof(Language), language))
+                return;
+
+            player.LanguageEnum = (Language)language;
         }
 
         #endregion Public Methods

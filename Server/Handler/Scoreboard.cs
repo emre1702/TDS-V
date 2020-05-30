@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -15,23 +18,31 @@ namespace TDS_Server.Handler
 
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly Serializer _serializer;
+        private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler)
+        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler)
         {
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
+            _tdsPlayerHandler = tdsPlayerHandler;
+
+            modAPI.ClientEvent.Add<IPlayer>(ToServerEvent.RequestPlayersForScoreboard, this, OnRequestPlayersForScoreboard);
         }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public void OnRequestPlayersForScoreboard(ITDSPlayer player)
+        public void OnRequestPlayersForScoreboard(IPlayer modPlayer)
         {
+            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
+            if (player is null)
+                return;
+
             if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
             {
                 var entries = GetDataForMainmenu();

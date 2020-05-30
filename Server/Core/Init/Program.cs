@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
@@ -24,7 +23,6 @@ namespace TDS_Server.Core.Init
     public class Program
     {
         public readonly EventsHandler EventsHandler;
-        public readonly RemoteEventsHandler RemoteEventsHandler;
         public readonly RemoteBrowserEventsHandler RemoteBrowserEventsHandler;
         public readonly LobbiesHandler LobbiesHandler;
         public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
@@ -80,7 +78,6 @@ namespace TDS_Server.Core.Init
                 var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
                 gangsHandler.LoadAll();
 
-                RemoteEventsHandler = _serviceProvider.GetRequiredService<RemoteEventsHandler>();
                 RemoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
                 _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
                 _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
