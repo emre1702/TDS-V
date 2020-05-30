@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
@@ -45,12 +46,13 @@ namespace TDS_Server.Handler
         private void LoadChatInfos(TDSDbContext dbContext, Serializer serializer)
         {
             var data = dbContext.ChatInfos
+                .ToList()
                 .GroupBy(c => c.Language)
                 .ToDictionary(c => c.Key, c => c.Select(e => e.Message).ToList());
 
             foreach (var entry in data)
             {
-                _chatInfosJsonCache[entry.Key] = serializer.ToBrowser(entry.Value);
+                _chatInfosJsonCache[entry.Key] = serializer.ToBrowser(entry.Value).Replace("\\", "\\\\");
             }
         }
 
