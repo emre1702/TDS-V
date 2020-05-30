@@ -7,7 +7,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
         #region Public Methods
 
         [ServerEvent(Event.IncomingConnection)]
-        public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
+        public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, GameTypes gameType, CancelEventArgs cancel)
         {
             var cancelEventArgs = new TDS_Shared.Data.Models.CancelEventArgs();
             Init.TDSCore.EventsHandler.OnIncomingConnection(ip, serial, socialClubName, socialClubId, cancelEventArgs);
