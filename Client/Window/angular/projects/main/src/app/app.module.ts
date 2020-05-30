@@ -97,7 +97,7 @@ import { CharCreatorAppearanceComponent } from './components/char-creator/menus/
 import { CharCreatorHairandcolorsComponent } from './components/char-creator/menus/char-creator-hairandcolors/char-creator-hairandcolors.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserpanelSettingsCommandsComponent } from './components/userpanel/userpanel-settings-commands/userpanel-settings-commands.component';
-import { MaterialCssVarsModule } from 'angular-material-css-vars';
+import { MaterialCssVarsModule, MaterialCssVarsService } from 'angular-material-css-vars';
 import { MatAppBackgroundDirective } from './extensions/matAppBackgroundDirective';
 
 @NgModule({
@@ -210,7 +210,8 @@ import { MatAppBackgroundDirective } from './extensions/matAppBackgroundDirectiv
   entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent],
   providers: [
     OrderByPipe,
-    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
+    MaterialCssVarsService
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
