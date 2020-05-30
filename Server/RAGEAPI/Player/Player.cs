@@ -9,6 +9,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Server.Data.Models;
 using TDS_Server.RAGEAPI.Extensions;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
@@ -16,17 +17,26 @@ namespace TDS_Server.RAGEAPI.Player
 {
     internal class Player : GTANetworkAPI.Player, IPlayer
     {
+        #region Private Fields
+
+        private string _name = string.Empty;
+
+        #endregion Private Fields
+
         #region Public Constructors
 
         public Player(GTANetworkAPI.NetHandle netHandle) : base(netHandle)
         {
+            new TDSTimer(() =>
+            {
+                _name = base.Name;
+                SocialClubName = base.SocialClubName;
+            }, 50, 1);
         }
 
         #endregion Public Constructors
 
         #region Public Properties
-
-        public new Position3D AimingPoint => base.AimingPoint.ToTDS();
 
         public new WeaponHash CurrentWeapon
         {
@@ -34,12 +44,20 @@ namespace TDS_Server.RAGEAPI.Player
             set => GTANetworkAPI.NAPI.Player.SetPlayerCurrentWeapon(this, (GTANetworkAPI.WeaponHash)value);
         }
 
-        public new GameTypes GameType => (GameTypes)base.GameType;
-
         public new HeadBlend HeadBlend
         {
             get => base.HeadBlend.ToTDS();
             set => base.HeadBlend = value.ToMod();
+        }
+
+        public new string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                base.Name = value;
+            }
         }
 
         public new Position3D Position
@@ -56,7 +74,7 @@ namespace TDS_Server.RAGEAPI.Player
             set => base.Rotation = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
 
-        public new IVehicle? Vehicle => base.Vehicle as IVehicle;
+        public new string SocialClubName { get; private set; } = string.Empty;
 
         public new Position3D Velocity
         {
@@ -64,6 +82,9 @@ namespace TDS_Server.RAGEAPI.Player
             set => base.Velocity = value.ToMod();
         }
 
+        public new Position3D AimingPoint => base.AimingPoint.ToTDS();
+        public new GameTypes GameType => (GameTypes)base.GameType;
+        public new IVehicle? Vehicle => base.Vehicle as IVehicle;
         public new WeaponHash[] Weapons => base.Weapons.Select(w => (WeaponHash)w).ToArray();
 
         #endregion Public Properties
