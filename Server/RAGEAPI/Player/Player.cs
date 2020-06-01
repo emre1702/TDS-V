@@ -31,12 +31,16 @@ namespace TDS_Server.RAGEAPI.Player
             {
                 _name = base.Name;
                 SocialClubName = base.SocialClubName;
+                Address = base.Address;
+                Serial = base.Serial;
             }, 50, 1);
         }
 
         #endregion Public Constructors
 
         #region Public Properties
+
+        public new string Address { get; private set; } = string.Empty;
 
         public new WeaponHash CurrentWeapon
         {
@@ -74,6 +78,7 @@ namespace TDS_Server.RAGEAPI.Player
             set => base.Rotation = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
 
+        public new string Serial { get; private set; } = string.Empty;
         public new string SocialClubName { get; private set; } = string.Empty;
 
         public new Position3D Velocity
