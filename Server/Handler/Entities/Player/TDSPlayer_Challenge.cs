@@ -21,6 +21,8 @@ namespace TDS_Server.Handler.Entities.Player
             if (!_challengesDict.TryGetValue(type, out List<PlayerChallenges>? list))
                 return;
 
+            if (list.Count == 0)
+                return;
             for (int i = list.Count - 1; i >= 0; --i)
             {
                 var challenge = list[i];
