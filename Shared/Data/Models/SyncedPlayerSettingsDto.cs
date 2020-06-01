@@ -43,7 +43,7 @@ namespace TDS_Shared.Data.Models
         public string DateTimeFormat { get; set; }
 
         [JsonProperty("5")]
-        public ulong DiscordUserId { get; set; }
+        public ulong? DiscordUserId { get; set; }
 
         [JsonProperty("8")]
         public bool FloatingDamageInfo { get; set; }

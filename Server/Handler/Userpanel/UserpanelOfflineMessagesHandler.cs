@@ -181,8 +181,8 @@ namespace TDS_Server.Handler.Userpanel
                     .Where(p => p.PlayerId == targetId.Value)
                     .Select(p => p.DiscordUserId)
                     .FirstOrDefaultAsync());
-
-            _offlineMessagesHandler.Add(targetId.Value, discordUserId, player.Entity!, message);
+            if (discordUserId.HasValue)
+                _offlineMessagesHandler.Add(targetId.Value, discordUserId.Value, player.Entity!, message);
 
             return true;
         }

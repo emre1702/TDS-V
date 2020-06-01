@@ -957,7 +957,7 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.VoiceVolume).HasDefaultValue(6.0);
                 entity.Property(e => e.MapBorderColor).HasDefaultValue("rgba(150,0,0,0.35)");
                 entity.Property(e => e.ShowConfettiAtRanking);
-                entity.Property(e => e.DiscordUserId).HasDefaultValue(0);
+                entity.Property(e => e.DiscordUserId).IsRequired(false);
                 entity.Property(e => e.Timezone)
                     .HasDefaultValue("UTC");
                 entity.Property(e => e.DateTimeFormat)

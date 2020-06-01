@@ -88,7 +88,7 @@ namespace BonusBotConnector.Client.Requests
                     SupportType = (int)requestEntity.Type,
                     Text = requestEntity.Messages.First().Text,
                     Title = requestEntity.Title,
-                    UserId = player.Entity.PlayerSettings.DiscordUserId
+                    UserId = player.Entity.PlayerSettings.DiscordUserId ?? 0
                 };
 
                 var result = await _client.CreateAsync(request);

@@ -66,7 +66,8 @@ namespace TDS_Server.Core.Manager.Utility
                 await dbContext.SaveChangesAsync();
             });
 
-            _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId);
+            if (target.PlayerSettings.DiscordUserId.HasValue)
+                _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId.Value);
         }
 
         public async void CheckOfflineMessages(ITDSPlayer player)

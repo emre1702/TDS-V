@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Server.Database.Entity;
@@ -13,9 +14,10 @@ using TDS_Shared.Data.Enums.Userpanel;
 namespace TDS_Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200601170638_DiscordUserId_Not_Required")]
+    partial class DiscordUserId_Not_Required
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3494,7 +3496,9 @@ namespace TDS_Server.Database.Migrations
                         .HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
 
                     b.Property<decimal?>("DiscordUserId")
-                        .HasColumnType("numeric(20,0)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("numeric(20,0)")
+                        .HasDefaultValue(0m);
 
                     b.Property<bool>("FloatingDamageInfo")
                         .HasColumnType("boolean");

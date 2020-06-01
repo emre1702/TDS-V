@@ -108,7 +108,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     if (embedFields is { })
                     {
                         BonusBotConnectorClient.ChannelChat?.SendBanInfo(ban, embedFields);
-                        BonusBotConnectorClient.PrivateChat?.SendBanMessage(target.PlayerSettings.DiscordUserId, ban, embedFields);
+                        if (target.PlayerSettings.DiscordUserId.HasValue)
+                            BonusBotConnectorClient.PrivateChat?.SendBanMessage(target.PlayerSettings.DiscordUserId.Value, ban, embedFields);
                     }
                 }
             });

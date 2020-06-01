@@ -81,9 +81,9 @@ namespace TDS_Server.Handler.Userpanel
 
                 player.SendEvent(ToClientEvent.SyncSettings, json);
 
-                if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId)
+                if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId && newDiscordUserId.HasValue)
                 {
-                    _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId, (reply) =>
+                    _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId.Value, (reply) =>
                     {
                         if (string.IsNullOrEmpty(reply.ErrorMessage))
                             return;
