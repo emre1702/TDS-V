@@ -20,8 +20,7 @@ namespace TDS_Client.RAGEAPI.Vehicle
         public IVehicle Create(uint hash, Position3D position, Position3D rotation, string numberPlate = "TDS-V", int alpha = 255, bool locked = false,
             int primColor = 0, int secColor = 1, uint dimension = 0)
         {
-            var instance = new RAGE.Elements.Vehicle(hash, position.ToVector3(), rotation.Z, numberPlate, alpha, locked, primColor, secColor, dimension);
-            return instance as IVehicle;
+            return new Vehicle(hash, position.ToVector3(), rotation.Z, numberPlate, alpha, locked, primColor, secColor, dimension);
         }
 
         public void SetVehicleOnGroundProperly(int handle)

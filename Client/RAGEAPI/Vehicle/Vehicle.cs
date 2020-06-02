@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Enums;
+﻿using RAGE;
+using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
@@ -14,6 +15,10 @@ namespace TDS_Client.RAGEAPI.Vehicle
 
         public Vehicle(ushort id, ushort remoteId) : base(id, remoteId)
         { }
+
+        public Vehicle(uint hash, Vector3 position, float heading = 0, string numberPlate = "", int alpha = 255, bool locked = false,
+            int primColor = 0, int secColor = 0, uint dimension = 0)
+            : base(hash, position, heading, numberPlate, alpha, locked, primColor, secColor, dimension) { }
 
         #endregion Public Constructors
 

@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Enums;
+﻿using RAGE;
+using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.MapObject;
 using TDS_Client.RAGEAPI.Extensions;
@@ -11,6 +12,10 @@ namespace TDS_Client.RAGEAPI.MapObject
         #region Public Constructors
 
         public MapObject(ushort id, ushort remoteId) : base(id, remoteId)
+        { }
+
+        public MapObject(uint hash, Vector3 position, Vector3 rotation, int alpha = 255, uint dimension = 0)
+            : base(hash, position, rotation, alpha, dimension)
         { }
 
         #endregion Public Constructors

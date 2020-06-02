@@ -283,6 +283,8 @@ namespace TDS_Client.Handler.Appearance
                     _displayPed.Destroy();
 
                 _displayPed = ModAPI.Ped.Create(skin, pos, 345, _dimension);
+                Logging.LogWarning("PreparePed ped exists: " + (!(_displayPed is null)));
+                new TDSTimer(() => Logging.LogWarning("PreparePed ped exists: " + (!(_displayPed is null))), 2000, 1);
 
                 //Todo Give him player outfits
 

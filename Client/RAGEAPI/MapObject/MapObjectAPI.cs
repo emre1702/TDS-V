@@ -19,8 +19,7 @@ namespace TDS_Client.RAGEAPI.MapObject
 
         public IMapObject Create(uint hash, Position3D position, Position3D rotation, int alpha = 255, uint dimension = 0)
         {
-            var instance = new RAGE.Elements.MapObject(hash, position.ToVector3(), rotation.ToVector3(), alpha, dimension);
-            return instance as IMapObject;
+            return new MapObject(hash, position.ToVector3(), rotation.ToVector3(), alpha, dimension);
         }
 
         public void PlaceObjectOnGroundProperly(int handle)

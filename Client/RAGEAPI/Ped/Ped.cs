@@ -16,6 +16,9 @@ namespace TDS_Client.RAGEAPI.Ped
         public Ped(ushort id, ushort remoteId) : base(id, remoteId)
         { }
 
+        public Ped(uint model, RAGE.Vector3 position, float heading = 0, uint dimension = 0)
+            : base(model, position, heading, dimension) { }
+
         #endregion Public Constructors
 
         #region Public Properties

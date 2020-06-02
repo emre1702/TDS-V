@@ -23,8 +23,8 @@ namespace TDS_Client.RAGEAPI.Ped
 
         public IPed Create(PedHash model, Position3D position, float heading, uint dimension)
         {
-            var instance = new RAGE.Elements.Ped((uint)model, position.ToVector3(), heading, dimension);
-            return instance as IPed;
+            var instance = new Ped((uint)model, position.ToVector3(), heading, dimension);
+            return instance;
         }
 
         public int GetPedArmor(int handle)
