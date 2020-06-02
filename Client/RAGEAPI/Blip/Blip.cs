@@ -42,8 +42,14 @@ namespace TDS_Client.RAGEAPI.Blip
 
         public bool Equals(IEntity other)
         {
-            return Handle == other?.Handle;
+            return Id == other?.Id;
         }
+
+        public new Position3D GetCoords()
+            => base.GetCoords().ToPosition3D();
+
+        public new Position3D GetInfoIdCoord()
+            => base.GetInfoIdCoord().ToPosition3D();
 
         public void GetModelDimensions(Position3D a, Position3D b)
         {

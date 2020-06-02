@@ -8,11 +8,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
         #region Public Properties
 
         int Alpha { get; set; }
-
+        bool Exists { get; }
+        int Handle { get; }
         float Heading { get; set; }
-
         int Health { get; set; }
-
+        Position3D Position { get; set; }
         Position3D Rotation { get; set; }
 
         #endregion Public Properties

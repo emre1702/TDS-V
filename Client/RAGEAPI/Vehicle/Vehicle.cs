@@ -2,7 +2,6 @@
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
-using TDS_Client.RAGEAPI.Entity;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -25,8 +24,6 @@ namespace TDS_Client.RAGEAPI.Vehicle
             get => GetAlpha();
             set => SetAlpha(value, false);
         }
-
-        public new IPlayer Controller => base.Controller as IPlayer;
 
         public float Heading
         {
@@ -52,6 +49,7 @@ namespace TDS_Client.RAGEAPI.Vehicle
             set => SetRotation(value.X, value.Y, value.Z, 2, true);
         }
 
+        public new IPlayer Controller => base.Controller as IPlayer;
         public new EntityType Type => (EntityType)base.Type;
 
         #endregion Public Properties
@@ -60,7 +58,7 @@ namespace TDS_Client.RAGEAPI.Vehicle
 
         public bool Equals(IEntity other)
         {
-            return Handle == other?.Handle;
+            return Id == other?.Id;
         }
 
         public new Position3D GetCollisionNormalOfLastHitFor()

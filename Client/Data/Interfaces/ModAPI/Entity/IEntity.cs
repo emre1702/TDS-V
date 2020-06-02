@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TDS_Client.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 
@@ -9,8 +10,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
         #region Public Properties
 
         uint Dimension { get; set; }
-        bool Exists { get; }
-        int Handle { get; }
 
         // Summary: Local (client-side) entity ID.
         ushort Id { get; }
@@ -21,7 +20,6 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
         // Summary: Entity model.
         uint Model { get; set; }
 
-        Position3D Position { get; set; }
         ushort RemoteId { get; }
         EntityType Type { get; }
 
@@ -30,6 +28,22 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
         #region Public Methods
 
         void Destroy();
+
+        Dictionary<string, object>.KeyCollection GetData();
+
+        T GetData<T>(string key);
+
+        object GetSharedData(string key);
+
+        object GetSharedData(ulong key);
+
+        bool HasData(string key);
+
+        void ResetData();
+
+        bool ResetData(string key);
+
+        void SetData<T>(string key, T value);
 
         #endregion Public Methods
     }

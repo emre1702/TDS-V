@@ -55,7 +55,7 @@ namespace TDS_Client.RAGEAPI.MapObject
 
         public bool Equals(IEntity other)
         {
-            return Handle == other?.Handle;
+            return Id == other?.Id;
         }
 
         public new Position3D GetCollisionNormalOfLastHitFor()

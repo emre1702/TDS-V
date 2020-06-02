@@ -129,7 +129,7 @@ namespace TDS_Client.RAGEAPI.Player
 
         public bool Equals(IEntity other)
         {
-            return Handle == other?.Handle;
+            return Id == other?.Id;
         }
 
         public void ExpandWorldLimits(float x, float y, float z)

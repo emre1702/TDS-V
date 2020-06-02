@@ -36,6 +36,8 @@ namespace TDS_Client.RAGEAPI.Event
             try
             {
                 IEntity entity = modEntity as IEntity;
+                if (entity is null)
+                    return;
 
                 for (int i = Actions.Count - 1; i >= 0; --i)
                 {

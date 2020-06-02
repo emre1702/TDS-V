@@ -7,6 +7,7 @@ using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.ModAPI.MapObject;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Entities;
@@ -437,7 +438,9 @@ namespace TDS_Client.Handler.MapCreator
 
         private void OnEntityStreamIn(IEntity entity)
         {
-            var obj = GetByHandle(entity.Handle);
+            if (!(entity is IMapObject mapObject))
+                return;
+            var obj = GetByHandle(mapObject.Handle);
             if (obj is null)
                 return;
             if (obj.Rotation is null)

@@ -71,7 +71,7 @@ namespace TDS_Client.RAGEAPI.Ped
 
         public bool Equals(IEntity other)
         {
-            return Handle == other?.Handle;
+            return Id == other?.Id;
         }
 
         public void ExplodeHead(WeaponHash weaponHash)
