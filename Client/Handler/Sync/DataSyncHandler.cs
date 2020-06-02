@@ -64,7 +64,7 @@ namespace TDS_Client.Handler.Sync
                 if (!_playerRemoteIdDatas[player.RemoteId].ContainsKey(key))
                     return returnOnEmpty;
 
-                return (T)_playerRemoteIdDatas[player.RemoteId][key];
+                return (T)Convert.ChangeType(_playerRemoteIdDatas[player.RemoteId][key], typeof(T));
             }
             catch (Exception ex)
             {
