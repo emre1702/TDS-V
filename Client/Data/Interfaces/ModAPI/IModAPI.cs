@@ -3,6 +3,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Blip;
 using TDS_Client.Data.Interfaces.ModAPI.Browser;
 using TDS_Client.Data.Interfaces.ModAPI.Cam;
 using TDS_Client.Data.Interfaces.ModAPI.Chat;
+using TDS_Client.Data.Interfaces.ModAPI.Checkpoint;
 using TDS_Client.Data.Interfaces.ModAPI.Console;
 using TDS_Client.Data.Interfaces.ModAPI.Control;
 using TDS_Client.Data.Interfaces.ModAPI.Cursor;
@@ -41,6 +42,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI
         IBrowserAPI Browser { get; }
         ICamAPI Cam { get; }
         IChatAPI Chat { get; }
+        ICheckpointAPI Checkpoint { get; }
         IConsoleAPI Console { get; }
         IControlAPI Control { get; }
         ICursorAPI Cursor { get; }

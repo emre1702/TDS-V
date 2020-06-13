@@ -4,6 +4,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Blip;
 using TDS_Client.Data.Interfaces.ModAPI.Browser;
 using TDS_Client.Data.Interfaces.ModAPI.Cam;
 using TDS_Client.Data.Interfaces.ModAPI.Chat;
+using TDS_Client.Data.Interfaces.ModAPI.Checkpoint;
 using TDS_Client.Data.Interfaces.ModAPI.Console;
 using TDS_Client.Data.Interfaces.ModAPI.Control;
 using TDS_Client.Data.Interfaces.ModAPI.Cursor;
@@ -36,6 +37,7 @@ using TDS_Client.RAGEAPI.Blip;
 using TDS_Client.RAGEAPI.Browser;
 using TDS_Client.RAGEAPI.Cam;
 using TDS_Client.RAGEAPI.Chat;
+using TDS_Client.RAGEAPI.Checkpoint;
 using TDS_Client.RAGEAPI.Console;
 using TDS_Client.RAGEAPI.Control;
 using TDS_Client.RAGEAPI.Cursor;
@@ -84,6 +86,7 @@ namespace TDS_Client.RAGEAPI
             Blip = new BlipAPI();
             Cam = new CamAPI();
             Chat = new ChatAPI();
+            Checkpoint = new CheckpointAPI();
             Control = new ControlAPI();
             Cursor = new CursorAPI();
             Discord = new DiscordAPI();
@@ -120,6 +123,7 @@ namespace TDS_Client.RAGEAPI
         public IBrowserAPI Browser { get; }
         public ICamAPI Cam { get; }
         public IChatAPI Chat { get; }
+        public ICheckpointAPI Checkpoint { get; }
         public IConsoleAPI Console { get; }
         public IControlAPI Control { get; }
         public ICursorAPI Cursor { get; }

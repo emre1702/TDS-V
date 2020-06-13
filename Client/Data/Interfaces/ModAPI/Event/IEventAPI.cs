@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TDS_Client.Data.Interfaces.ModAPI.Checkpoint;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
@@ -23,6 +24,10 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Event
 
     public delegate void PlayerDelegate(IPlayer player);
 
+    public delegate void PlayerEnterCheckpointDelegate(ICheckpoint checkpoint, CancelEventArgs cancel);
+
+    public delegate void PlayerExitCheckpointDelegate(ICheckpoint checkpoint, CancelEventArgs cancel);
+
     public delegate void PlayerStartEnterVehicleDelegate(IVehicle vehicle, VehicleSeat seat, CancelEventArgs cancel);
 
     public delegate void SpawnDelegate(CancelEventArgs cancel);
@@ -42,6 +47,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Event
         ICollection<EventMethodData<EntityStreamOutDelegate>> EntityStreamOut { get; }
         ICollection<EventMethodData<IncomingDamageDelegate>> IncomingDamage { get; }
         ICollection<EventMethodData<OutgoingDamageDelegate>> OutgoingDamage { get; }
+        ICollection<EventMethodData<PlayerEnterCheckpointDelegate>> PlayerEnterCheckpoint { get; }
+        ICollection<EventMethodData<PlayerExitCheckpointDelegate>> PlayerExitCheckpoint { get; }
         ICollection<EventMethodData<PlayerStartEnterVehicleDelegate>> PlayerStartEnterVehicle { get; }
         ICollection<EventMethodData<PlayerDelegate>> PlayerStartTalking { get; }
         ICollection<EventMethodData<PlayerDelegate>> PlayerStopTalking { get; }

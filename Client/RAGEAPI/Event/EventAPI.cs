@@ -19,6 +19,8 @@ namespace TDS_Client.RAGEAPI.Event
             IncomingDamage = new IncomingDamageEventHandler(loggingHandler);
             OutgoingDamage = new OutgoingDamageEventHandler(loggingHandler);
             Spawn = new PlayerSpawnEventHandler(loggingHandler);
+            PlayerEnterCheckpoint = new PlayerEnterCheckpointEventHandler(loggingHandler);
+            PlayerExitCheckpoint = new PlayerExitCheckpointEventHandler(loggingHandler);
             PlayerStartEnterVehicle = new PlayerStartEnterVehicleEventHandler(loggingHandler);
             PlayerStartTalking = new PlayerStartTalkingEventHandler(loggingHandler);
             PlayerStopTalking = new PlayerStopTalkingEventHandler(loggingHandler);
@@ -36,6 +38,8 @@ namespace TDS_Client.RAGEAPI.Event
         public ICollection<EventMethodData<EntityStreamOutDelegate>> EntityStreamOut { get; }
         public ICollection<EventMethodData<IncomingDamageDelegate>> IncomingDamage { get; }
         public ICollection<EventMethodData<OutgoingDamageDelegate>> OutgoingDamage { get; }
+        public ICollection<EventMethodData<PlayerEnterCheckpointDelegate>> PlayerEnterCheckpoint { get; }
+        public ICollection<EventMethodData<PlayerExitCheckpointDelegate>> PlayerExitCheckpoint { get; }
         public ICollection<EventMethodData<PlayerStartEnterVehicleDelegate>> PlayerStartEnterVehicle { get; }
         public ICollection<EventMethodData<PlayerDelegate>> PlayerStartTalking { get; }
         public ICollection<EventMethodData<PlayerDelegate>> PlayerStopTalking { get; }
