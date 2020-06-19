@@ -13,6 +13,8 @@ namespace TDS_Server.Data.Models
         public bool HasCommandInfos = false;
         public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
 
+        public List<CommandMultipleArgsToOneInfo> MultipleArgsToOneInfos = new List<CommandMultipleArgsToOneInfo>();
+
         // public CommandDefaultMethod? Method; // only used when UseImplicitTypes == false public
         // CommandEmptyDefaultMethod? MethodEmpty; // only used when UseImplicitTypes == false
         public List<ParameterInfo> ParameterInfos = new List<ParameterInfo>();

@@ -17,6 +17,7 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Userpanel;
+using TDS_Shared.Data.Attributes;
 using TDS_Shared.Default;
 
 using DB = TDS_Server.Database.Entity.Command;
@@ -120,6 +121,12 @@ namespace TDS_Server.Handler.Commands
                 {
                     var parameter = parameters[i];
 
+                    var argLength = parameter.ParameterType.GetCustomAttribute<TDSCommandArgLength>();
+                    if (argLength is { })
+                    {
+                        methoddata.MultipleArgsToOneInfos.Add(new CommandMultipleArgsToOneInfo { Index = i, Length = argLength.ArgLength });
+                    }
+
                     #region Save parameters start index with default value
 
                     if (methoddata.ParametersWithDefaultValueStartIndex is null && parameter.HasDefaultValue)
@@ -176,8 +183,6 @@ namespace TDS_Server.Handler.Commands
 
         public async void UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
             try
             {
                 List<object> origArgs = GetArgs(msg, out string cmd);
@@ -206,6 +211,10 @@ namespace TDS_Server.Handler.Commands
                         continue;
 
                     var args = new List<object>(origArgs);
+                    args = HandleMultipleArgsToOneArg(methoddata, args);
+                    if (args is null)
+                        continue;
+
                     args = HandleDefaultValues(methoddata, args);
                     args = HandleRemaingText(methoddata, args, out string remainingText);
 
@@ -256,8 +265,6 @@ namespace TDS_Server.Handler.Commands
             {
                 player.SendMessage(player.Language.COMMAND_USED_WRONG);
             }
-            stopWatch.Stop();
-            Console.WriteLine(stopWatch.ElapsedMilliseconds);
         }
 
         private async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex,
@@ -315,6 +322,20 @@ namespace TDS_Server.Handler.Commands
             }
         }
 
+        private List<object>? HandleMultipleArgsToOneArg(CommandMethodDataDto methodData, List<object> args)
+        {
+            foreach (var info in methodData.MultipleArgsToOneInfos)
+            {
+                if (args.Count < info.Index + info.Length)
+                    return null;
+
+                var entries = args.GetRange(info.Index, info.Length);
+                args.RemoveRange(info.Index + 1, info.Length - 1);
+                args[info.Index] = string.Join('|', entries);
+            }
+            return args;
+        }
+
         private List<object> HandleDefaultValues(CommandMethodDataDto methodData, List<object> args)
         {
             if (methodData.ParametersWithDefaultValueStartIndex.HasValue)
@@ -342,6 +363,9 @@ namespace TDS_Server.Handler.Commands
             foreach (var methodData in commanddata.MethodDatas)
             {
                 var requiredLength = methodData.ParametersWithDefaultValueStartIndex ?? methodData.ParameterInfos.Count;
+                if (methodData.MultipleArgsToOneInfos.Count > 0)
+                    requiredLength += methodData.MultipleArgsToOneInfos.Sum(m => m.Length - 1);
+
                 if (methodData.ToOneStringAfterParameterCount is { } && args.Count >= methodData.ToOneStringAfterParameterCount)
                     return false;
 
@@ -356,6 +380,9 @@ namespace TDS_Server.Handler.Commands
         private bool IsInvalidArgsCount(CommandMethodDataDto methodData, List<object> args)
         {
             var requiredLength = methodData.ParametersWithDefaultValueStartIndex ?? methodData.ParameterInfos.Count;
+            if (methodData.MultipleArgsToOneInfos.Count > 0)
+                requiredLength += methodData.MultipleArgsToOneInfos.Sum(m => m.Length - 1);
+
             if (methodData.ToOneStringAfterParameterCount is { } && args.Count >= methodData.ToOneStringAfterParameterCount)
                 return false;
 
