@@ -164,6 +164,8 @@ namespace TDS_Client.Handler.Entities
         public void Spectate(IEntityBase entity)
         {
             //Todo
+            if (entity is IPedBase ped)
+                Spectate(ped);
         }
 
         public void Spectate(IPedBase ped)

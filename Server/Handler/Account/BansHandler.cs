@@ -25,7 +25,6 @@ namespace TDS_Server.Handler.Account
 
         private readonly ISettingsHandler _settingsHandler;
 
-        //Todo: Add new server bans in this list
         private List<PlayerBans> _cachedBans = new List<PlayerBans>();
 
         #endregion Private Fields
