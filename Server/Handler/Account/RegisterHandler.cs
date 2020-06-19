@@ -7,6 +7,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Server;
 using TDS_Shared.Data.Enums;
@@ -21,6 +22,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly EventsHandler _eventsHandler;
+        private readonly LangHelper _langHelper;
         private readonly IModAPI _modAPI;
         private readonly ServerStartHandler _serverStartHandler;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
@@ -30,11 +32,12 @@ namespace TDS_Server.Core.Manager.PlayerManager
         #region Public Constructors
 
         public RegisterHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler,
-            DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler,
+            DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler, LangHelper langHelper,
             TDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
             (_modAPI, _eventsHandler, _databasePlayerHelper, _serverStartHandler) = (modAPI, eventsHandler, databasePlayerHelper, serverStartHandler);
+            _langHelper = langHelper;
             _tdsPlayerHandler = tdsPlayerHandler;
 
             modAPI.ClientEvent.Add<IPlayer, string, string, string>(ToServerEvent.TryRegister, this, TryRegister);
@@ -99,8 +102,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
             _eventsHandler.OnPlayerRegister(player, dbPlayer);
 
-            //Todo: Implement that
-            // _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
+            _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
         }
 
         public async void TryRegister(IPlayer modPlayer, string username, string password, string email)

@@ -104,6 +104,7 @@
         string PLAYER_LOGGED_IN { get; }
         string PLAYER_LOGGED_OUT { get; }
         string PLAYER_NOT_MUTED { get; }
+        string PLAYER_REGISTERED { get; }
         string PLAYER_REJECTED_YOUR_INVITATION { get; }
         string PLAYER_WITH_NAME_ALREADY_EXISTS { get; }
         string PRIVATE_CHAT_CLOSED_PARTNER { get; }
