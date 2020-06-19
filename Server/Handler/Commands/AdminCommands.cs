@@ -26,6 +26,8 @@ namespace TDS_Server.Handler.Commands
 
         #region Public Methods
 
+        #region Public Methods
+
         [TDSCommand(AdminCommand.AdminChat)]
         public void AdminChat(ITDSPlayer player, [TDSRemainingText] string text)
         {
@@ -106,7 +108,6 @@ namespace TDS_Server.Handler.Commands
                 _loggingHandler.LogAdmin(LogType.Goto, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        //Todo implement Position3D as parameter
         [TDSCommand(AdminCommand.Goto)]
         public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, Position3D pos, [TDSRemainingText(MinLength = 4)] string reason)
         {
@@ -325,6 +326,10 @@ namespace TDS_Server.Handler.Commands
 
         #endregion Public Methods
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         #region Private Methods
 
         #region Private Methods
@@ -344,6 +349,8 @@ namespace TDS_Server.Handler.Commands
             }
             return true;
         }
+
+        #endregion Private Methods
 
         #endregion Private Methods
 
