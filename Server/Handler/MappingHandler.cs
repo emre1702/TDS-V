@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Converter.Mapping;
 using TDS_Server.Handler.Player;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Handler
 {
@@ -28,6 +29,7 @@ namespace TDS_Server.Handler
 
                 cfg.CreateMap<string, DateTime?>().ConvertUsing<StringToDateTimeConverter>();
                 cfg.CreateMap<string, TimeSpan?>().ConvertUsing<StringToTimeSpanConverter>();
+                cfg.CreateMap<string, Position3D?>().ConvertUsing<StringToPosition3DConverter>();
 
                 cfg.CreateMap<string, ITDSPlayer?>().ConvertUsing(new StringNameToPlayerConverter(tdsPlayerHandler));
                 cfg.CreateMap<string, Task<Players?>>().ConvertUsing(new StringNameToDBPlayerConverter(databasePlayerHelper));
