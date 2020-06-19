@@ -135,7 +135,7 @@ namespace TDS_Server.Handler.Events
                     ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName);
                 }
 
-                _modAPI.Thread.RunInMainThread(() =>
+                _modAPI.Thread.QueueIntoMainThread(() =>
                 {
                     if (_methods.ContainsKey(eventName))
                     {

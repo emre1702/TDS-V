@@ -158,7 +158,7 @@ namespace TDS_Server.Handler.Account
             _cachedBans = await ExecuteForDBAsync(async dbContext
                 => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
 
-            _modAPI.Thread.RunInMainThread(() => _eventsHandler.OnLoadedServerBans());
+            _modAPI.Thread.QueueIntoMainThread(() => _eventsHandler.OnLoadedServerBans());
         }
 
         public void RemoveServerBanByPlayerId(PlayerBans ban)

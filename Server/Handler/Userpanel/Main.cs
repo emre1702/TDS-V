@@ -142,7 +142,7 @@ namespace TDS_Server.Handler.Userpanel
             if (json == null)
                 return;
 
-            _modAPI.Thread.RunInMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
+            _modAPI.Thread.QueueIntoMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
         }
 
         #endregion Public Methods

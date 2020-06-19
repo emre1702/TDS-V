@@ -189,14 +189,14 @@ namespace TDS_Server.Handler
 
                 var taskCompletionSource = new TaskCompletionSource<Arena>();
 
-                _modAPI.Thread.RunInMainThread(() =>
+                _modAPI.Thread.QueueIntoMainThread(() =>
                 {
                     var arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
                     taskCompletionSource.TrySetResult(arena);
                 });
                 var arena = await taskCompletionSource.Task;
                 await arena.AddToDB();
-                _modAPI.Thread.RunInMainThread(() =>
+                _modAPI.Thread.QueueIntoMainThread(() =>
                 {
                     _eventsHandler.OnLobbyCreated(arena);
 
@@ -361,7 +361,7 @@ namespace TDS_Server.Handler
             }
             else
             {
-                _modAPI.Thread.RunInMainThread(() => player.SendMessage(player.Language.LOBBY_DOESNT_EXIST));
+                _modAPI.Thread.QueueIntoMainThread(() => player.SendMessage(player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }
@@ -377,7 +377,7 @@ namespace TDS_Server.Handler
                 ILobby lobby = LobbiesByIndex[index];
                 if (password != null && lobby.Entity.Password != password)
                 {
-                    _modAPI.Thread.RunInMainThread(() => player.SendMessage(player.Language.WRONG_PASSWORD));
+                    _modAPI.Thread.QueueIntoMainThread(() => player.SendMessage(player.Language.WRONG_PASSWORD));
                     return null;
                 }
 
@@ -386,7 +386,7 @@ namespace TDS_Server.Handler
             }
             else
             {
-                _modAPI.Thread.RunInMainThread(() => player.SendMessage(player.Language.LOBBY_DOESNT_EXIST));
+                _modAPI.Thread.QueueIntoMainThread(() => player.SendMessage(player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }

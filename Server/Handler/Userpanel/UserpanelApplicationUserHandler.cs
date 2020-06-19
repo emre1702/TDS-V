@@ -145,7 +145,7 @@ namespace TDS_Server.Handler.Userpanel
                 .FirstOrDefaultAsync());
             if (invitation == null)
             {
-                _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -169,7 +169,7 @@ namespace TDS_Server.Handler.Userpanel
             player.Entity.AdminLvl = 1;
             await player.SaveData();
 
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 player.SendMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
 
@@ -298,7 +298,7 @@ namespace TDS_Server.Handler.Userpanel
                     .FirstOrDefaultAsync());
             if (invitation == null)
             {
-                _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -320,7 +320,7 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
 
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 player.SendMessage(string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
 

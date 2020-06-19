@@ -34,11 +34,11 @@ namespace TDS_Server.Handler.Entities.Player
                     challenge.CurrentAmount = Math.Min(amount, challenge.Amount);
                 else
                     challenge.CurrentAmount = Math.Min(challenge.CurrentAmount + amount, challenge.Amount);
-                _modAPI.Thread.RunInMainThread(() => _challengesHandler.SyncCurrentAmount(this, challenge));
+                _modAPI.Thread.QueueIntoMainThread(() => _challengesHandler.SyncCurrentAmount(this, challenge));
 
                 if (challenge.Frequency == ChallengeFrequency.Forever)
                 {
-                    _modAPI.Thread.RunInMainThread(() => list.RemoveAt(i));
+                    _modAPI.Thread.QueueIntoMainThread(() => list.RemoveAt(i));
                     await ExecuteForDBAsync(async dbContext =>
                     {
                         dbContext.PlayerChallenges.Remove(challenge);

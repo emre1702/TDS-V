@@ -17,7 +17,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             var json = Serializer.ToClient(player.Entity.CharDatas);
 
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 player.ModPlayer?.SetInvincible(true);
                 player.ModPlayer?.Freeze(true);

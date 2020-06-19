@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             var lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, CreateEntity(gangwarArea), gangwarArea, true);
 
             await lobby.AddToDB();
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 EventsHandler.OnLobbyCreated(lobby);
                 lobby.SetMapList(new List<MapDto> { gangwarArea.Map });

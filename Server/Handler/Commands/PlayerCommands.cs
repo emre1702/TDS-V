@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Commands
                 player.SetRelation(target, PlayerRelation.Block);
                 relation.Relation = PlayerRelation.Block;
                 await dbContext.SaveChangesAsync();
-                _modAPI.Thread.RunInMainThread(() => player.SendMessage(msg));
+                _modAPI.Thread.QueueIntoMainThread(() => player.SendMessage(msg));
 
                 return true;
             });
@@ -57,7 +57,7 @@ namespace TDS_Server.Handler.Commands
             if (!continuue)
                 return;
 
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 if (player.InPrivateChatWith == target)
                     player.ClosePrivateChat(false);
@@ -137,7 +137,7 @@ namespace TDS_Server.Handler.Commands
                             if (sender.Lobby is null)
                                 return;
                             await sender.Lobby.AddPlayer(target!, null);
-                            _modAPI.Thread.RunInMainThread(() =>
+                            _modAPI.Thread.QueueIntoMainThread(() =>
                             {
                                 target.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
                                 sender.SendNotification(string.Format(sender.Language.TARGET_ACCEPTED_INVITATION, target.DisplayName), false);
@@ -163,7 +163,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             if (player.Lobby.Entity.Type == LobbyType.MainMenu)
             {
-                _modAPI.Thread.RunInMainThread(() =>
+                _modAPI.Thread.QueueIntoMainThread(() =>
                 {
                     if (_customLobbyMenuSyncHandler.IsPlayerInCustomLobbyMenu(player))
                     {
@@ -345,7 +345,7 @@ namespace TDS_Server.Handler.Commands
                 var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
                 if (relation is null || relation.Relation != PlayerRelation.Block)
                 {
-                    _modAPI.Thread.RunInMainThread(() => player.SendMessage(string.Format(player.Language.TARGET_NOT_BLOCKED, target.DisplayName)));
+                    _modAPI.Thread.QueueIntoMainThread(() => player.SendMessage(string.Format(player.Language.TARGET_NOT_BLOCKED, target.DisplayName)));
                     return;
                 }
 
@@ -353,7 +353,7 @@ namespace TDS_Server.Handler.Commands
                 await dbContext.SaveChangesAsync();
             });
 
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 if (target.Team == player.Team)
                     target.SetVoiceTo(player, true);

@@ -98,7 +98,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             _dontRemove = true;
             EndRound();
-            ModAPI.Thread.RunInMainThread(() => StartMapClear());
+            ModAPI.Thread.QueueIntoMainThread(() => StartMapClear());
             RoundEndReasonText = null;
 
             if (GangwarArea is { })

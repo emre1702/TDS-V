@@ -88,7 +88,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 try
                 {
                     if (_roundStatusMethod.ContainsKey(status))
-                        ModAPI.Thread.RunInMainThread(_roundStatusMethod[status]);
+                        ModAPI.Thread.QueueIntoMainThread(_roundStatusMethod[status]);
                 }
                 catch (Exception ex)
                 {
@@ -102,8 +102,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             else if (CurrentRoundStatus != RoundStatus.RoundEnd)
             {
-                ModAPI.Thread.RunInMainThread(_roundStatusMethod[RoundStatus.RoundEnd]);
-                ModAPI.Thread.RunInMainThread(_roundStatusMethod[RoundStatus.MapClear]);
+                ModAPI.Thread.QueueIntoMainThread(_roundStatusMethod[RoundStatus.RoundEnd]);
+                ModAPI.Thread.QueueIntoMainThread(_roundStatusMethod[RoundStatus.MapClear]);
                 CurrentRoundStatus = RoundStatus.None;
             }
         }
@@ -159,7 +159,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return;
             }
 
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 if (!isEmpty)
                 {

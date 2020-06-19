@@ -13,7 +13,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return false;
 
             var team = player.Gang.GangLobbyTeam;
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 SetPlayerTeam(player, team);
 

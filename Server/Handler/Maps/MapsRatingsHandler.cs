@@ -81,7 +81,7 @@ namespace TDS_Server.Handler.Maps
             map.RatingAverage = map.Ratings.Average(r => r.Rating);
 
             if (map.Info.IsNewMap)
-                _modAPI.Thread.RunInMainThread(() => _mapsCreatingHandler.AddedMapRating(map));
+                _modAPI.Thread.QueueIntoMainThread(() => _mapsCreatingHandler.AddedMapRating(map));
         }
 
         public void SendPlayerHisRatings(ITDSPlayer player)
@@ -92,7 +92,7 @@ namespace TDS_Server.Handler.Maps
                 return;
 
             var ratingsDict = player.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
-            _modAPI.Thread.RunInMainThread(() => player.SendEvent(ToClientEvent.LoadOwnMapRatings, _serializer.ToBrowser(ratingsDict)));
+            _modAPI.Thread.QueueIntoMainThread(() => player.SendEvent(ToClientEvent.LoadOwnMapRatings, _serializer.ToBrowser(ratingsDict)));
         }
 
         #endregion Public Methods

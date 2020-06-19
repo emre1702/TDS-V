@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Maps
                     .Where(m => m.PlayerId == player.Entity.Id)
                     .Select(m => m.MapId)
                     .ToListAsync());
-            _modAPI.Thread.RunInMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, _serializer.ToBrowser(mapIDs)));
+            _modAPI.Thread.QueueIntoMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, _serializer.ToBrowser(mapIDs)));
         }
 
         public async Task<object?> ToggleMapFavouriteState(ITDSPlayer player, ArraySegment<object> args)

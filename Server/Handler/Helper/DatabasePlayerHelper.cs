@@ -46,7 +46,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async Task ChangePlayerMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 _chatHandler.OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
             });
@@ -64,7 +64,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 _chatHandler.OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
             });

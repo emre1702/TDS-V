@@ -101,7 +101,7 @@ namespace TDS_Server.Handler.Entities.Utility
                     ++Entity.AttackCount;
                     HasCooldown = true;
 
-                    _modAPI.Thread.RunInMainThread(() =>
+                    _modAPI.Thread.QueueIntoMainThread(() =>
                     {
                         if (conquered)
                             SetConquered(dbContext, true);
@@ -127,7 +127,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
                     HasCooldown = true;
 
-                    _modAPI.Thread.RunInMainThread(() => SetConquered(dbContext, false));
+                    _modAPI.Thread.QueueIntoMainThread(() => SetConquered(dbContext, false));
 
                     await dbContext.SaveChangesAsync();
                 });

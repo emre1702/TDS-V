@@ -88,7 +88,7 @@ namespace TDS_Server.Handler.Player
             });
 
             await player.SaveData(true);
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 LoadPlayerChar(player);
             });

@@ -20,7 +20,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 player.ModPlayer?.SetInvincible(true);
                 player.ModPlayer?.Freeze(false);
@@ -50,7 +50,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (vehHash == default)
                 return;
 
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 var pos = player.ModPlayer!.Position;
                 if (player.FreeroamVehicle is { })

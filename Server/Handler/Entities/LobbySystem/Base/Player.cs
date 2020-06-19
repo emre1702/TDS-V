@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             Players.TryAdd(player.Id, player);
 
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 ModAPI.Sync.SendEvent(this, ToClientEvent.JoinSameLobby, player.RemoteId);
 
@@ -110,7 +110,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.Lobby = null;
             player.PreviousLobby = this;
             await player.SetPlayerLobbyStats(null);
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 player.Lifes = 0;
                 SetPlayerTeam(player, null);
@@ -134,7 +134,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     await Remove();
             }
 
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 ModAPI.Sync.SendEvent(ToClientEvent.LeaveSameLobby, player.RemoteId, player.Entity?.Name ?? player.DisplayName);
                 if (Entity.Type != LobbyType.MainMenu)

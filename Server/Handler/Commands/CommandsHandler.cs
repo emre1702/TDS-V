@@ -231,7 +231,7 @@ namespace TDS_Server.Handler.Commands
                     //if (UseImplicitTypes)
                     //{
                     var finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
-                    _modAPI.Thread.RunInMainThread(() =>
+                    _modAPI.Thread.QueueIntoMainThread(() =>
                         methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray()));
                     /*}
                     else

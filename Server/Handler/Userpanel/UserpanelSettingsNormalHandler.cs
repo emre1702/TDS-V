@@ -74,7 +74,7 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
 
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 player.LoadTimezone();
                 player.AddToChallenge(ChallengeType.ChangeSettings);

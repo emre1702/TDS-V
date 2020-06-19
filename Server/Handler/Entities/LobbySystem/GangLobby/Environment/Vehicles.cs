@@ -23,7 +23,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (gang.Entity.Vehicles is null || gang.Entity.Vehicles.Count == 0)
                 return;
 
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 foreach (var dbVehicle in gang.Entity.Vehicles)
                 {

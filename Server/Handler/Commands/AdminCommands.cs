@@ -35,17 +35,17 @@ namespace TDS_Server.Handler.Commands
         {
             PlayerBans? ban = null;
             if (length == TimeSpan.MinValue)
-                _modAPI.Thread.RunInMainThread(() => _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason));
+                _modAPI.Thread.QueueIntoMainThread(() => _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason));
             else if (length == TimeSpan.MaxValue)
                 ban = await _lobbiesHandler.MainMenu.BanPlayer(player, target, null, reason);
             else
                 ban = await _lobbiesHandler.MainMenu.BanPlayer(player, target, length, reason);
 
             if (ban is { } && target.ModPlayer is { })
-                _modAPI.Thread.RunInMainThread(() => Utils.HandleBan(target.ModPlayer, ban));
+                _modAPI.Thread.QueueIntoMainThread(() => Utils.HandleBan(target.ModPlayer, ban));
 
             if (!cmdinfos.AsLobbyOwner)
-                _modAPI.Thread.RunInMainThread(() => _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                _modAPI.Thread.QueueIntoMainThread(() => _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.Ban, 0)]
@@ -59,7 +59,7 @@ namespace TDS_Server.Handler.Commands
                 await _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _modAPI.Thread.RunInMainThread(() => _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                _modAPI.Thread.QueueIntoMainThread(() => _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.Goto)]
@@ -179,7 +179,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             if (!cmdinfos.AsLobbyOwner)
             {
-                _modAPI.Thread.RunInMainThread(() =>
+                _modAPI.Thread.QueueIntoMainThread(() =>
                 {
                     _loggingHandler.LogAdmin(LogType.Lobby_Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
                     _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
@@ -187,7 +187,7 @@ namespace TDS_Server.Handler.Commands
             }
             else
             {
-                _modAPI.Thread.RunInMainThread(() =>
+                _modAPI.Thread.QueueIntoMainThread(() =>
                 {
                     if (player.Lobby != target.Lobby)
                     {
@@ -222,7 +222,7 @@ namespace TDS_Server.Handler.Commands
             await _databasePlayerHelper.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _modAPI.Thread.RunInMainThread(() => _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                _modAPI.Thread.QueueIntoMainThread(() => _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.NextMap)]
@@ -292,7 +292,7 @@ namespace TDS_Server.Handler.Commands
             await _databasePlayerHelper.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _modAPI.Thread.RunInMainThread(() => _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                _modAPI.Thread.QueueIntoMainThread(() => _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 1)]

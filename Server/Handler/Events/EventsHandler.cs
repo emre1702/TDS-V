@@ -149,7 +149,7 @@ namespace TDS_Server.Handler.Events
             var task = PlayerLoggedOutBefore?.InvokeAsync(tdsPlayer);
             if (task.HasValue)
                 await task.Value;
-            _modAPI.Thread.RunInMainThread(() =>
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 PlayerLoggedOut?.Invoke(tdsPlayer);
                 tdsPlayer.Lobby?.OnPlayerLoggedOut(tdsPlayer);

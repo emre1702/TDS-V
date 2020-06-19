@@ -25,7 +25,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (!await base.AddPlayer(player, 0))
                 return false;
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 SpectateOtherAllTeams(player);
                 SendPlayerRoundInfoOnJoin(player);
@@ -56,7 +56,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public override async Task RemovePlayer(ITDSPlayer player)
         {
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 if (player.Lifes > 0)
                 {
@@ -76,7 +76,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             await base.RemovePlayer(player);
 
-            ModAPI.Thread.RunInMainThread(() =>
+            ModAPI.Thread.QueueIntoMainThread(() =>
             {
                 switch (CurrentRoundStatus)
                 {

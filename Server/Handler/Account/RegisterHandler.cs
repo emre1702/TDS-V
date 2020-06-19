@@ -116,7 +116,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             {
                 if (!_serverStartHandler.IsReadyForLogin)
                 {
-                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
+                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
                     return;
                 }
 
@@ -125,18 +125,18 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 if (username.Length < 3 || username.Length > 20)
                     return;
                 string? scName = null;
-                _modAPI.Thread.RunInMainThread(() => scName = player.ModPlayer.SocialClubName);
+                _modAPI.Thread.QueueIntoMainThread(() => scName = player.ModPlayer.SocialClubName);
                 if (await _databasePlayerHelper.DoesPlayerWithScnameExist(scName!))
                     return;
                 if (await _databasePlayerHelper.DoesPlayerWithNameExist(username))
                 {
-                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
+                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
                     return;
                 }
                 char? invalidChar = Utils.CheckNameValid(username);
                 if (invalidChar.HasValue)
                 {
-                    _modAPI.Thread.RunInMainThread(()
+                    _modAPI.Thread.QueueIntoMainThread(()
                         => player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value)));
                     return;
                 }

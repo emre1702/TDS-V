@@ -23,7 +23,7 @@ namespace TDS_Server.Data.Interfaces
         int Armor { get; set; }
         RoundStatsDto? CurrentRoundStats { get; set; }
         string DisplayName { get; }
-        Players? Entity { get; }
+        Players? Entity { get; set; }
         PedHash FreemodeSkin { get; }
         IVehicle? FreeroamVehicle { get; set; }
         IGang Gang { get; set; }
