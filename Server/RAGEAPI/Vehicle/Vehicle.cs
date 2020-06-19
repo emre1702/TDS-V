@@ -24,8 +24,6 @@ namespace TDS_Server.RAGEAPI.Vehicle
 
         #region Public Properties
 
-        public new ITDSPlayer? Controller => Init.GetTDSPlayerIfLoggedIn(base.Controller as IPlayer);
-
         public new Color CustomPrimaryColor
         {
             get => base.CustomPrimaryColor.ToTDS();
@@ -44,8 +42,6 @@ namespace TDS_Server.RAGEAPI.Vehicle
             set => base.NeonColor = value.ToMod();
         }
 
-        public new List<IEntity> Occupants => base.Occupants.OfType<IEntity>().ToList();
-
         public new Position3D Position
         {
             get => new Position3D(base.Position.X, base.Position.Y, base.Position.Z);
@@ -57,6 +53,8 @@ namespace TDS_Server.RAGEAPI.Vehicle
             get => base.PrimaryPaint.ToTDS();
             set => base.PrimaryPaint = value.ToMod();
         }
+
+        public ushort RemoteId => Handle.Value;
 
         public new Position3D Rotation
         {
@@ -70,15 +68,17 @@ namespace TDS_Server.RAGEAPI.Vehicle
             set => base.SecondaryPaint = value.ToMod();
         }
 
-        public new IVehicle? Trailer => base.Trailer as IVehicle;
-
-        public new IVehicle? TraileredBy => base.TraileredBy as IVehicle;
-
         public new Color TyreSmokeColor
         {
             get => base.TyreSmokeColor.ToTDS();
             set => base.TyreSmokeColor = value.ToMod();
         }
+
+        public new ITDSPlayer? Controller => Init.GetTDSPlayerIfLoggedIn(base.Controller as IPlayer);
+        public new List<IEntity> Occupants => base.Occupants.OfType<IEntity>().ToList();
+        public new IVehicle? Trailer => base.Trailer as IVehicle;
+
+        public new IVehicle? TraileredBy => base.TraileredBy as IVehicle;
 
         #endregion Public Properties
 

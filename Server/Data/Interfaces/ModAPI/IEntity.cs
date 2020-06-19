@@ -15,6 +15,7 @@ namespace TDS_Server.Data.Interfaces.ModAPI
         ushort Id { get; }
         bool IsNull { get; }
         Position3D Position { get; set; }
+        ushort RemoteId { get; }
         Position3D Rotation { get; set; }
 
         #endregion Public Properties

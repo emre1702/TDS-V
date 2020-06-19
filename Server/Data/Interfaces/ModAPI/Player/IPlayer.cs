@@ -34,7 +34,6 @@ namespace TDS_Server.Data.Interfaces.ModAPI.Player
         string Name { get; set; }
         string Nametag { get; set; }
         int Ping { get; }
-        ushort RemoteId { get; }
         string Serial { get; }
         ulong SocialClubId { get; }
         string SocialClubName { get; }

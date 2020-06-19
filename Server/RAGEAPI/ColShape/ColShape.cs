@@ -38,6 +38,8 @@ namespace TDS_Server.RAGEAPI.ColShape
             set => base.Position = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
 
+        public ushort RemoteId => Handle.Value;
+
         public new Position3D Rotation
         {
             get => new Position3D(base.Rotation.X, base.Rotation.Y, base.Rotation.Z);

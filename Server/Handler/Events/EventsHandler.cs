@@ -48,6 +48,8 @@ namespace TDS_Server.Handler.Events
 
         public delegate void EmptyDelegate();
 
+        public delegate void EntityDelegate(IEntity entity);
+
         public delegate void ErrorDelegate(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true);
 
         public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
@@ -69,6 +71,8 @@ namespace TDS_Server.Handler.Events
         public event LobbyDelegate? CustomLobbyCreated;
 
         public event LobbyDelegate? CustomLobbyRemoved;
+
+        public event EntityDelegate? EntityDeleted;
 
         public event ErrorDelegate? Error;
 
@@ -113,6 +117,11 @@ namespace TDS_Server.Handler.Events
         #endregion Public Events
 
         #region Public Methods
+
+        public void OnEntityDeleted(IEntity entity)
+        {
+            EntityDeleted?.Invoke(entity);
+        }
 
         public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
         {

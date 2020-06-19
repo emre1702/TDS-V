@@ -49,6 +49,7 @@ namespace TDS_Server.Handler.Sync
 
             eventsHandler.PlayerLeftLobby += PlayerLeftLobby;
             eventsHandler.PlayerLoggedOut += PlayerLoggedOut;
+            eventsHandler.EntityDeleted += EntityDeleted;
         }
 
         #endregion Public Constructors
@@ -149,6 +150,11 @@ namespace TDS_Server.Handler.Sync
 
         #region Private Methods
 
+        private void EntityDeleted(IEntity entity)
+        {
+            _modAPI.Sync.SendEvent(ToClientEvent.RemoveSyncedEntityDatas, entity.RemoteId);
+        }
+
         private void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
         {
             if (!_playerHandleDatasLobby.ContainsKey(lobby.Id))
@@ -167,7 +173,6 @@ namespace TDS_Server.Handler.Sync
             if (_playerHandleDatasPlayer.ContainsKey(player.RemoteId))
                 _playerHandleDatasPlayer.Remove(player.RemoteId);
 
-            //Todo: Das hier auch für Entity nutzen (bei z.B. Delete?)
             _modAPI.Sync.SendEvent(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId);
         }
 
