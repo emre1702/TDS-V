@@ -78,10 +78,8 @@ namespace TDS_Server.Handler.Account
 
         #region Public Methods
 
-        public async Task LoginPlayer(ITDSPlayer iplayer, int id, string? password)
+        public async Task LoginPlayer(ITDSPlayer player, int id, string? password)
         {
-            if (!(iplayer is TDSPlayer player))
-                return;
             if (player.ModPlayer is null)
                 return;
 
@@ -105,21 +103,21 @@ namespace TDS_Server.Handler.Account
 
                    .FirstOrDefaultAsync(p => p.Id == id);
 
-                _modAPI.Thread.RunInMainThread(() => player.Entity = entity);
+                await _modAPI.Thread.RunInMainThread(() => player.Entity = entity);
 
                 if (entity is null)
                 {
-                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
+                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
                     return false;
                 }
 
                 if (password is { } && !Utils.IsPasswordValid(password, entity.Password))
                 {
-                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.WRONG_PASSWORD));
+                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.WRONG_PASSWORD));
                     return false;
                 }
 
-                _modAPI.Thread.RunInMainThread(() =>
+                _modAPI.Thread.QueueIntoMainThread(() =>
                 {
                     player.ModPlayer.Name = entity.Name;
                     //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
@@ -136,12 +134,16 @@ namespace TDS_Server.Handler.Account
 
             var angularConstantsData = ActivatorUtilities.CreateInstance<AngularConstantsDataDto>(_serviceProvider, player);
 
-            _modAPI.Thread.RunInMainThread(() =>
+            var syncedSettingsJson = _serializer.ToClient(_settingsHandler.SyncedSettings);
+            var playerSettingsJson = _serializer.ToClient(player.Entity.PlayerSettings);
+            var angularContentsJson = _serializer.ToBrowser(angularConstantsData);
+
+            _modAPI.Thread.QueueIntoMainThread(() =>
             {
                 player.SendEvent(ToClientEvent.LoginSuccessful,
-                    _serializer.ToClient(_settingsHandler.SyncedSettings),
-                    _serializer.ToClient(player.Entity.PlayerSettings),
-                    _serializer.ToBrowser(angularConstantsData)
+                    syncedSettingsJson,
+                    playerSettingsJson,
+                    angularContentsJson
                 );
 
                 _dataSyncHandler.SetData(player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
@@ -168,7 +170,7 @@ namespace TDS_Server.Handler.Account
             {
                 if (!_serverStartHandler.IsReadyForLogin)
                 {
-                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
+                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
                     return;
                 }
 
@@ -178,7 +180,7 @@ namespace TDS_Server.Handler.Account
                     await LoginPlayer(player, id, password);
                 }
                 else
-                    _modAPI.Thread.RunInMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
+                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
             }
             finally
             {
