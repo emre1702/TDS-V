@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -175,14 +176,16 @@ namespace TDS_Server.Handler.Commands
 
         public async void UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             try
             {
-                List<object> args = GetArgs(msg, out string cmd);
+                List<object> origArgs = GetArgs(msg, out string cmd);
                 TDSCommandInfos cmdinfos = new TDSCommandInfos(command: cmd);
                 if (_commandByAlias.ContainsKey(cmd))
                     cmd = _commandByAlias[cmd];
 
-                if (!CheckCommandExists(player, cmd, args))
+                if (!CheckCommandExists(player, cmd, origArgs))
                     return;
 
                 DB.Commands entity = _commandsDict[cmd];
@@ -192,14 +195,17 @@ namespace TDS_Server.Handler.Commands
 
                 CommandDataDto commanddata = _commandDataByCommand[cmd];
 
-                if (IsInvalidArgsCount(player, commanddata, args))
+                if (IsInvalidArgsCount(player, commanddata, origArgs))
                     return;
 
                 int amountmethods = commanddata.MethodDatas.Count;
                 for (int methodindex = 0; methodindex < amountmethods; ++methodindex)
                 {
                     var methoddata = commanddata.MethodDatas[methodindex];
+                    if (IsInvalidArgsCount(methoddata, origArgs))
+                        continue;
 
+                    var args = new List<object>(origArgs);
                     args = HandleDefaultValues(methoddata, args);
                     args = HandleRemaingText(methoddata, args, out string remainingText);
 
@@ -250,6 +256,8 @@ namespace TDS_Server.Handler.Commands
             {
                 player.SendMessage(player.Language.COMMAND_USED_WRONG);
             }
+            stopWatch.Stop();
+            Console.WriteLine(stopWatch.ElapsedMilliseconds);
         }
 
         private async Task<HandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex,
@@ -342,6 +350,18 @@ namespace TDS_Server.Handler.Commands
             }
 
             player.SendMessage(player.Language.COMMAND_TOO_LESS_ARGUMENTS);
+            return true;
+        }
+
+        private bool IsInvalidArgsCount(CommandMethodDataDto methodData, List<object> args)
+        {
+            var requiredLength = methodData.ParametersWithDefaultValueStartIndex ?? methodData.ParameterInfos.Count;
+            if (methodData.ToOneStringAfterParameterCount is { } && args.Count >= methodData.ToOneStringAfterParameterCount)
+                return false;
+
+            if (args.Count == requiredLength || args.Count > requiredLength && args.Count <= methodData.ParameterInfos.Count)
+                return false;
+
             return true;
         }
 
