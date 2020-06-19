@@ -18,6 +18,14 @@ namespace TDS_Server.Handler.Commands
     {
         #region Public Methods
 
+        #region Public Methods
+
+        #region Public Methods
+
+        #region Public Methods
+
+        #region Public Methods
+
         [TDSCommand(AdminCommand.AdminChat)]
         public void AdminChat(ITDSPlayer player, [TDSRemainingText] string text)
         {
@@ -100,12 +108,12 @@ namespace TDS_Server.Handler.Commands
 
         //Todo implement Position3D as parameter
         [TDSCommand(AdminCommand.Goto)]
-        public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, float x, float y, float z, [TDSRemainingText(MinLength = 4)] string reason)
+        public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, Position3D pos, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player.ModPlayer is null)
                 return;
 
-            player.ModPlayer.Position = new Position3D(x, y, z);
+            player.ModPlayer.Position = pos;
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Goto, player, null, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -309,6 +317,22 @@ namespace TDS_Server.Handler.Commands
 
         #endregion Public Methods
 
+        #endregion Public Methods
+
+        #endregion Public Methods
+
+        #endregion Public Methods
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        #region Private Methods
+
+        #region Private Methods
+
+        #region Private Methods
+
         #region Private Methods
 
         private bool IsMuteTimeValid(int muteTime, ITDSPlayer outputTo)
@@ -320,6 +344,14 @@ namespace TDS_Server.Handler.Commands
             }
             return true;
         }
+
+        #endregion Private Methods
+
+        #endregion Private Methods
+
+        #endregion Private Methods
+
+        #endregion Private Methods
 
         #endregion Private Methods
 
