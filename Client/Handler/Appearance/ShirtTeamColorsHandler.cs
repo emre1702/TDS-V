@@ -36,6 +36,7 @@ namespace TDS_Client.Handler.Appearance
             _dataSyncHandler = dataSyncHandler;
 
             eventsHandler.Spawn += OnSpawn;
+            eventsHandler.DataChanged += EventsHandler_DataChanged;
 
             modAPI.Event.EntityStreamIn.Add(new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn));
         }
@@ -43,6 +44,12 @@ namespace TDS_Client.Handler.Appearance
         #endregion Public Constructors
 
         #region Private Methods
+
+        private void EventsHandler_DataChanged(IPlayer player, PlayerDataKey key, object data)
+        {
+            if (key == PlayerDataKey.TeamIndex)
+                OnEntityStreamIn(player);
+        }
 
         private Color GetColorRelativeToMe(int hisTeamIndex)
         {
