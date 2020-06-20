@@ -41,6 +41,7 @@ namespace TDS_Server.Handler
             {
                 targetPlayer.Spectators.Add(player);
                 player.ModPlayer.Position = targetPlayer.ModPlayer.Position.AddToZ(10);
+                SetPlayerToSpectator(player, true);
                 new TDS_Shared.Core.TDSTimer(() =>
                     _modAPI.Sync.SendEvent(player, ToClientEvent.SetPlayerToSpectatePlayer, targetPlayer.RemoteId), 2000);
             }
