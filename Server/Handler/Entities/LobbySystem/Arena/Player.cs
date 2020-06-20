@@ -30,7 +30,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 var pos = _currentMap?.LimitInfo?.Center.SwitchNamespace();
                 if (pos is { } && player.ModPlayer is { })
-                    player.ModPlayer.Position = pos;
+                    player.ModPlayer.Position = pos.AddToZ(10);
                 SpectateOtherAllTeams(player);
                 SendPlayerRoundInfoOnJoin(player);
 
