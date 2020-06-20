@@ -329,9 +329,6 @@ namespace TDS_Client.RAGEAPI.Ped
         public void TaskForceMotionState(MotionState state, bool p2)
             => TaskForceMotionState((uint)state, p2);
 
-        public void TaskPlayAnim(string animDict, string animName, float speed, float speedMultiplier, int duration, int flat, int playbackRate, bool lockX, bool lockY, bool lockZ)
-            => TaskPlayAnim(animDict, animName, speed, speedMultiplier, duration, flat, playbackRate, lockX, lockY, lockZ);
-
         #endregion Public Methods
     }
 }

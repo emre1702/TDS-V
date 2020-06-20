@@ -1639,7 +1639,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         void TaskPlantBomb(float x, float y, float z, float heading);
 
         // Summary: see RAGE.Game.Ai.TaskPlayAnim(System.Int32,System.String,System.String,System.Single,System.Single,System.Int32,System.Int32,System.Single,System.Boolean,System.Boolean,System.Boolean)
-        void TaskPlayAnim(string animDict, string animName, float speed, float speedMultiplier, int duration, int flat, int playbackRate, bool lockX, bool lockY, bool lockZ);
+        void TaskPlayAnim(string animDict, string animName, float speed, float speedMultiplier, int duration, int flat, float playbackRate, bool lockX, bool lockY, bool lockZ);
 
         // Summary: see RAGE.Game.Ai.TaskPlayAnimAdvanced(System.Int32,System.String,System.String,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Single,System.Int32,System.Int32)
         void TaskPlayAnimAdvanced(string animDict, string animName, float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float speed, float speedMultiplier, int duration, int flag, float animTime, int p14, int p15);

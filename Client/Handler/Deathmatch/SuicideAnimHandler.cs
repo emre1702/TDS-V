@@ -40,15 +40,24 @@ namespace TDS_Client.Handler.Deathmatch
 
         public void ApplyAnimation(IPlayer player, string animName, float animTime)
         {
-            player.TaskPlayAnim("MP_SUICIDE", animName, 8f, 0, -1, 0, 0, false, false, false);
+            try
+            {
+                Logging.LogWarning("ApplyAnimation 1");
+                player.TaskPlayAnim("MP_SUICIDE", animName, 8f, 0, -1, 0, 0, false, false, false);
+                Logging.LogWarning("ApplyAnimation 2");
 
-            if (player != ModAPI.LocalPlayer)
-                return;
+                if (player != ModAPI.LocalPlayer)
+                    return;
 
-            _animName = animName;
-            _animTime = animTime;
-            _shotFired = false;
-            ModAPI.Event.Tick.Add(_tickEventMethod);
+                _animName = animName;
+                _animTime = animTime;
+                _shotFired = false;
+                ModAPI.Event.Tick.Add(_tickEventMethod);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, "ApplyAnimation");
+            }
         }
 
         #endregion Public Methods
