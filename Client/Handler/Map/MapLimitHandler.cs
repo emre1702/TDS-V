@@ -38,7 +38,7 @@ namespace TDS_Client.Handler.Map
             eventsHander.MapCleared += Stop;
             eventsHander.Respawned += EventsHander_Respawned;
             eventsHander.RoundEnded += _ => Stop();
-            eventsHander.RoundStarted += _ => Start();
+            eventsHander.RoundStarted += Start;
         }
 
         #endregion Public Constructors
@@ -52,9 +52,10 @@ namespace TDS_Client.Handler.Map
                 _dxHandler, _timerHandler);
         }
 
-        public void Start()
+        public void Start(bool isSpectator)
         {
-            _currentMapLimit?.Start();
+            if (!isSpectator)
+                _currentMapLimit?.Start();
         }
 
         public void Stop()
@@ -82,8 +83,7 @@ namespace TDS_Client.Handler.Map
 
         private void EventsHander_Respawned(bool inFightAgain)
         {
-            if (inFightAgain)
-                Start();
+            Start(!inFightAgain);
         }
 
         #endregion Private Methods
