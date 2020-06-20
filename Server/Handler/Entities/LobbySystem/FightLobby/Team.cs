@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using System.Linq;
+using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
@@ -42,21 +43,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return GetNextNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
         }
 
-        private ITeam? GetNextNonSpectatorTeamWithPlayers(short startindex)
+        private ITeam? GetNextNonSpectatorTeamWithPlayers(short startIndex)
         {
-            short startindextoiterate = startindex;
-            do
-            {
-                if (++startindextoiterate >= Teams.Count - 1)
-                    startindextoiterate = 0;
-            } while ((startindextoiterate == 0 || Teams[startindextoiterate - 1].SpectateablePlayers?.Count == 0) && startindextoiterate != startindex);
-            if (startindextoiterate == 0)
-                startindextoiterate = 1;
-            ITeam team = Teams[startindextoiterate];
-            if (team.SpectateablePlayers is null)
+            if (Teams.Count <= 1)
                 return null;
 
-            return team.SpectateablePlayers.Count == 0 ? null : team;
+            int index = startIndex;
+            do
+            {
+                if (++index >= Teams.Count - 1)
+                    index = 0;
+            } while (Teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
+
+            ITeam team = Teams[index];
+            if (team.SpectateablePlayers?.Any() != true)
+                return null;
+
+            return team;
         }
 
         private ITeam? GetPreviousNonSpectatorTeamWithPlayers(ITeam? start)
@@ -64,21 +67,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return GetPreviousNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
         }
 
-        private ITeam? GetPreviousNonSpectatorTeamWithPlayers(short startindex)
+        private ITeam? GetPreviousNonSpectatorTeamWithPlayers(short startIndex)
         {
-            int startindextoiterate = (int)startindex;
-            do
-            {
-                if (--startindextoiterate < 0)
-                    startindextoiterate = Teams.Count - 1;
-            } while ((startindextoiterate == 0 || Teams[startindextoiterate].SpectateablePlayers?.Count == 0) && startindextoiterate != startindex);
-            if (startindextoiterate == 0)
-                startindextoiterate = Teams.Count - 1;
-            ITeam team = Teams[startindextoiterate];
-            if (team.SpectateablePlayers is null)
+            if (Teams.Count <= 1)
                 return null;
 
-            return team.SpectateablePlayers.Count == 0 ? null : team;
+            int index = startIndex;
+            do
+            {
+                if (--index < 0)
+                    index = Teams.Count - 1;
+            } while (Teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
+
+            ITeam team = Teams[index];
+            if (team.SpectateablePlayers?.Any() != true)
+                return null;
+
+            return team;
         }
 
         #endregion Private Methods
