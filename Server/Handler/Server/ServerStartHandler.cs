@@ -2,9 +2,11 @@
 using System.Numerics;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Server
 {
@@ -57,8 +59,17 @@ namespace TDS_Server.Handler.Server
 
             string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
-            //todo Test line break and display
-            player.Kick($"Banned!\nName: {ban.Player?.Name ?? player.Name}\nAdmin: {ban.Admin}\nReason: {ban.Reason}\nEnd: {endstr}\nStart: {startstr}");
+
+            var splittedReason = Utils.SplitPartsByLength($"Banned!\nName: {ban.Player?.Name ?? player.Name}\nAdmin: {ban.Admin.Name}\nReason: {ban.Reason}\nEnd: {endstr} UTC\nStart: {startstr} UTC", 90);
+
+            foreach (var split in splittedReason)
+                player.SendNotification(split, true);
+
+            _ = new TDSTimer(() =>
+            {
+                if (!player.IsNull)
+                    player.Kick("Ban");
+            }, 3000, 1);
 
             return false;
         }
