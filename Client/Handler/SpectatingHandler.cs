@@ -65,6 +65,7 @@ namespace TDS_Client.Handler
 
                 if (value != null)
                 {
+                    _deathHandler.PlayerSpawn();
                     _camerasHandler.SpectateCam.Spectate(value);
                 }
                 else
