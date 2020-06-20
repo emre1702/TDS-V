@@ -60,9 +60,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public override async Task RemovePlayer(ITDSPlayer player)
         {
+            var lifes = player.Lifes;
             ModAPI.Thread.QueueIntoMainThread(() =>
             {
-                if (player.Lifes > 0)
+                if (lifes > 0)
                 {
                     RemovePlayerFromAlive(player);
                     PlayerCantBeSpectatedAnymore(player);
@@ -91,7 +92,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         break;
 
                     case RoundStatus.Round:
-                        RoundCheckForEnoughAlive();
+                        if (lifes > 0)
+                            RoundCheckForEnoughAlive();
                         break;
                 }
             });
