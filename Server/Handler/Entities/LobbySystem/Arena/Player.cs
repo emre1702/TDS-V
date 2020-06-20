@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.CustomLobby;
@@ -27,6 +28,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return false;
             ModAPI.Thread.QueueIntoMainThread(() =>
             {
+                var pos = _currentMap?.LimitInfo?.Center.SwitchNamespace();
+                if (pos is { } && player.ModPlayer is { })
+                    player.ModPlayer.Position = pos;
                 SpectateOtherAllTeams(player);
                 SendPlayerRoundInfoOnJoin(player);
 
