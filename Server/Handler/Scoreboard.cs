@@ -43,7 +43,7 @@ namespace TDS_Server.Handler
             if (player is null)
                 return;
 
-            if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
+            if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
             {
                 var entries = GetDataForMainmenu();
                 player.SendEvent(ToClientEvent.SyncScoreboardData, _serializer.ToClient(entries));
@@ -88,7 +88,7 @@ namespace TDS_Server.Handler
         private List<SyncedScoreboardMainmenuLobbyDataDto> GetDataForMainmenu()
         {
             List<SyncedScoreboardMainmenuLobbyDataDto> list = new List<SyncedScoreboardMainmenuLobbyDataDto>();
-            foreach (Lobby lobby in _lobbiesHandler.Lobbies.Where(l => l.Type != LobbyType.MapCreateLobby))
+            foreach (Lobby lobby in _lobbiesHandler.Lobbies.Where(l => !GetIgnoreLobbyInScoreboard(l)))
             {
                 int playerscount = lobby.Players.Count;
                 string playersstr = string.Empty;
@@ -108,6 +108,13 @@ namespace TDS_Server.Handler
             }
             return list;
         }
+
+        private bool GetIgnoreLobbyInScoreboard(ILobby lobby)
+            => (lobby.Type == LobbyType.MapCreateLobby && lobby.IsOfficial)     // Dummy map create lobby
+            || lobby.Type == LobbyType.CharCreateLobby;
+
+        private bool GetShowAllLobbies(LobbyType myLobbyType)
+            => myLobbyType == LobbyType.MainMenu || myLobbyType == LobbyType.CharCreateLobby;
 
         #endregion Private Methods
     }
