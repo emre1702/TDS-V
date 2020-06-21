@@ -28,4 +28,13 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\GameModes\ArmsRace\" />
+    <Folder Include="Entities\GameModes\CaptureTheFlag\" />
+    <Folder Include="Entities\GameModes\KingOfTheHill\" />
+    <Folder Include="Entities\GameModes\Domination\" />
+    <Folder Include="Entities\GameModes\JailBreak\" />
+    <Folder Include="Entities\GameModes\InstaGib\" />
+  </ItemGroup>
+
 </Project>
