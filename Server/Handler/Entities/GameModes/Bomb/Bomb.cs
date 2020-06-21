@@ -11,7 +11,7 @@ using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
-namespace TDS_Server.Handler.Entities.GameModes.Bomb
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Bomb
     {

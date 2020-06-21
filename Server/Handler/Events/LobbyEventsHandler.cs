@@ -2,7 +2,7 @@
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Entities.GameModes.Bomb;
+using TDS_Server.Handler.Entities.GameModes;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums;

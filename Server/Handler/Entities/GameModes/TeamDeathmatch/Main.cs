@@ -8,13 +8,13 @@ using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 
-namespace TDS_Server.Handler.Entities.GameModes.Normal
+namespace TDS_Server.Handler.Entities.GameModes
 {
-    partial class Normal : GameMode
+    partial class Deathmatch : GameMode
     {
         #region Public Constructors
 
-        public Normal(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
+        public Deathmatch(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
             : base(lobby, map, modAPI, serializer, settingsHandler, langHelper, invitationsHandler)
         {
         }

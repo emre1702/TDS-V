@@ -1,6 +1,6 @@
 ﻿using TDS_Server.Data.Interfaces;
 
-namespace TDS_Server.Handler.Entities.GameModes.Bomb
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Bomb
     {

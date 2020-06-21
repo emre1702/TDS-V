@@ -4,7 +4,7 @@ using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
-namespace TDS_Server.Handler.Entities.GameModes.Bomb
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Bomb
     {

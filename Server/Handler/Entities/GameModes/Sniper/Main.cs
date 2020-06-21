@@ -9,7 +9,7 @@ using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Entities.GameModes.Sniper
+namespace TDS_Server.Handler.Entities.GameModes
 {
     partial class Sniper : GameMode
     {
