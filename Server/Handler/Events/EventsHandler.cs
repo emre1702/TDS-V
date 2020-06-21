@@ -188,6 +188,7 @@ namespace TDS_Server.Handler.Events
             if (!(player.Lobby is FightLobby fightLobby))
                 return;
 
+            player.OnPlayerWeaponSwitch(previousWeapon, newWeapon);
             fightLobby.OnPlayerWeaponSwitch(player, previousWeapon, newWeapon);
         }
 

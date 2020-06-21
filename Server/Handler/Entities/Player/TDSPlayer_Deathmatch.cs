@@ -100,6 +100,11 @@ namespace TDS_Server.Handler.Entities.Player
                 Health -= leftdmg;
         }
 
+        public void OnPlayerWeaponSwitch(WeaponHash previousWeapon, WeaponHash newWeapon)
+        {
+            LastWeaponOnHand = newWeapon;
+        }
+
         #endregion Public Methods
     }
 }

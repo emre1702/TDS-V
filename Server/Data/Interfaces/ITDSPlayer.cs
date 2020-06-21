@@ -101,6 +101,8 @@ namespace TDS_Server.Data.Interfaces
 
         void LoadTimezone();
 
+        void OnPlayerWeaponSwitch(WeaponHash previousWeapon, WeaponHash newWeapon);
+
         void RemovePlayerFromOnlineFriend(ITDSPlayer otherPlayer, bool outputInfo = true);
 
         void ResetVoiceToAndFrom();
