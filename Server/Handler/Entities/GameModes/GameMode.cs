@@ -1,9 +1,12 @@
-﻿using TDS_Server.Core.Manager.Utility;
+﻿using System.Collections.Generic;
+using System.Linq;
+using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
@@ -24,6 +27,12 @@ namespace TDS_Server.Handler.Entities.GameModes
         protected readonly ISettingsHandler SettingsHandler;
 
         #endregion Protected Fields
+
+        #region Private Fields
+
+        private static HashSet<WeaponHash> _allowedWeaponHashes = new HashSet<WeaponHash>();
+
+        #endregion Private Fields
 
         #region Protected Constructors
 
@@ -48,6 +57,15 @@ namespace TDS_Server.Handler.Entities.GameModes
 
         #region Public Methods
 
+        public static HashSet<WeaponHash> GetAllowedWeapons() => _allowedWeaponHashes;
+
+        public static void Init(TDSDbContext dbContext)
+        {
+            _allowedWeaponHashes = dbContext.Weapons
+                .Select(w => w.Hash)
+                .ToHashSet();
+        }
+
         public virtual void AddPlayer(ITDSPlayer player, uint? teamIndex)
         {
         }
@@ -67,7 +85,7 @@ namespace TDS_Server.Handler.Entities.GameModes
             return true;
         }
 
-        public virtual bool IsWeaponAllowed(WeaponHash weaponHash) => true;
+        public virtual bool IsWeaponAllowed(WeaponHash weaponHash) => _allowedWeaponHashes.Contains(weaponHash);
 
         public virtual void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
         {

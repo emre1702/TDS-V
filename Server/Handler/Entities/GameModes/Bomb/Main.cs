@@ -30,16 +30,5 @@ namespace TDS_Server.Handler.Entities.GameModes
         }
 
         #endregion Public Constructors
-
-        #region Public Methods
-
-        public static void Init(TDSDbContext dbContext)
-        {
-            _allowedWeaponHashes = dbContext.Weapons
-                .Select(w => w.Hash)
-                .ToHashSet();
-        }
-
-        #endregion Public Methods
     }
 }

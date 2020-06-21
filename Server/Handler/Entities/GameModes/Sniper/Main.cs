@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Entities.GameModes
 
         #region Public Methods
 
-        public static void Init(TDSDbContext dbContext)
+        public static new void Init(TDSDbContext dbContext)
         {
             _allowedWeaponHashes = dbContext.Weapons
                 .Where(w => w.Type == WeaponType.SniperRifle)

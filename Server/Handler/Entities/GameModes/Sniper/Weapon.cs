@@ -13,7 +13,7 @@ namespace TDS_Server.Handler.Entities.GameModes
 
         #region Public Methods
 
-        public static HashSet<WeaponHash> GetAllowedWeapons()
+        public static new HashSet<WeaponHash> GetAllowedWeapons()
         {
             return _allowedWeaponHashes;
         }
