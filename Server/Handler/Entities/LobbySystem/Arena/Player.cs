@@ -240,7 +240,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (player.Team is null || player.Team.AlivePlayers is null)
                 return;
-            player.Lifes = (sbyte)(Entity.FightSettings?.AmountLifes ?? 0);
             player.Team.AlivePlayers.Add(player);
             var teamamountdata = player.Team.SyncedTeamData.AmountPlayers;
             ++teamamountdata.Amount;
@@ -280,8 +279,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (_removeSpectatorsTimer.ContainsKey(player))
                 _removeSpectatorsTimer.Remove(player);
-
-            player.CurrentRoundStats?.Clear();
         }
 
         private void StartRoundForPlayer(ITDSPlayer player)

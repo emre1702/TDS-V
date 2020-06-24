@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Models;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
@@ -31,7 +32,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return null;
 
             var list = Players.Values
-                .Where(p => p.CurrentRoundStats != null && p.Team is { } && !p.Team.IsSpectator)
+                .Where(p => p.CurrentRoundStats is { } && p.Team is { } && !p.Team.IsSpectator)
                 .Select(p => new RoundPlayerRankingStat(p))
                 .ToList();
 
@@ -102,6 +103,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private void SetAllPlayersInCountdown()
         {
+            var mapCenter = _currentMap?.LimitInfo.Center.SwitchNamespace();
             FuncIterateAllPlayers((player, team) =>
             {
                 if (team?.IsSpectator == false)
@@ -112,19 +114,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 else
                 {
                     MakeSurePlayerSpectatesAnyone(player);
+                    if (player.Spectates is { } && player.ModPlayer is { } && player.Spectates.ModPlayer is { })
+                        player.ModPlayer.Position = (mapCenter ?? player.Spectates.ModPlayer.Position).AddToZ(10);
                 }
                 SetPlayerReadyForRound(player);
+                player.CurrentRoundStats?.Clear();
                 player.SendEvent(ToClientEvent.CountdownStart, team is null || team.IsSpectator);
             });
-
-            /*FuncIterateAllPlayers((player, team) =>
-            {
-                if (team is null || team.IsSpectator)
-                {
-                    if (player.Spectates is { } && player.ModPlayer is { } && player.Spectates.ModPlayer is { })
-                        player.ModPlayer.Position = player.Spectates.ModPlayer.Position.AddToZ(10);
-                }
-            });*/
         }
 
         private void StartRoundForAllPlayer()
