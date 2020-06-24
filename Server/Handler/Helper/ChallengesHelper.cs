@@ -122,13 +122,14 @@ namespace TDS_Server.Handler.Helper
                 .Select(g => new ChallengeGroupModel
                 {
                     Frequency = g.Key,
-                    Challenges = g.Select(c => new ChallengeModel
+                    Challenges = g.OrderByDescending(g => g.CurrentAmount / g.Amount).Select(c => new ChallengeModel
                     {
                         Type = c.Challenge,
                         Amount = c.Amount,
                         CurrentAmount = c.CurrentAmount
                     })
-                });
+                })
+                .OrderBy(e => e.Frequency);
 
             return _serializer.ToBrowser(result);
         }
