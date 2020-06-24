@@ -10,6 +10,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ui
 
         void BeginTextCommandDisplayText(string text);
 
+        void DisplayRadar(bool toggle);
+
         bool DoesBlipExist(int blip);
 
         int DrawNotification(bool blink);
@@ -36,19 +38,17 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ui
 
         void SetTextFont(Font font);
 
+        /// <summary>
+        /// 0: Center-Justify
+        /// 1: Left-Justify
+        /// 2: Right-Justify Right-Justify requires SET_TEXT_WRAP, otherwise it will draw to the far
+        /// right of the screen
+        /// </summary>
+        /// <param name="justify"></param>
         void SetTextJustification(int justify);
 
         void SetTextScale(float size);
 
         #endregion Public Methods
-
-        /**
-         * <summary>
-         * 0: Center-Justify
-         * 1: Left-Justify
-         * 2: Right-Justify
-         * Right-Justify requires SET_TEXT_WRAP, otherwise it will draw to the far right of the screen
-         * </summary>
-         */
     }
 }

@@ -74,6 +74,8 @@ namespace TDS_Client.Handler.Appearance
                 var data = _serializer.FromServer<CharCreateData>(json);
                 _browserHandler.Angular.ToggleCharCreator(true, json);
                 ModAPI.Chat.Show(false);
+                ModAPI.Ui.DisplayRadar(false);
+
                 ModAPI.LocalPlayer.Alpha = 0;
                 _cursorHandler.Visible = true;
 
@@ -101,6 +103,7 @@ namespace TDS_Client.Handler.Appearance
                 ModAPI.LocalPlayer.Alpha = 255;
                 _browserHandler.Angular.ToggleCharCreator(false);
                 ModAPI.Chat.Show(true);
+                ModAPI.Ui.DisplayRadar(true);
                 _cursorHandler.Visible = false;
 
                 _camerasHandler.BetweenRoundsCam.Deactivate(true);

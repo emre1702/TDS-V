@@ -17,6 +17,9 @@ namespace TDS_Client.RAGEAPI.Ui
             RAGE.Game.Ui.BeginTextCommandDisplayText(text);
         }
 
+        public void DisplayRadar(bool toggle)
+            => RAGE.Game.Ui.DisplayRadar(toggle);
+
         public bool DoesBlipExist(int blip)
         {
             return RAGE.Game.Ui.DoesBlipExist(blip);
