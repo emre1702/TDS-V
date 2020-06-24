@@ -148,7 +148,7 @@
             "main": "projects/map-creator-object-choice/src/main.ts",
             "polyfills": "projects/map-creator-object-choice/src/polyfills.ts",
             "tsConfig": "projects/map-creator-object-choice/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "projects/map-creator-object-choice/src/assets"
             ],
@@ -171,7 +171,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -221,7 +220,12 @@
             "tsConfig": "projects/rage-connector/tsconfig.lib.json",
             "project": "projects/rage-connector/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/rage-connector/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -265,7 +269,7 @@
             "main": "projects/map-creator-vehicle-choice/src/main.ts",
             "polyfills": "projects/map-creator-vehicle-choice/src/polyfills.ts",
             "tsConfig": "projects/map-creator-vehicle-choice/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "projects/map-creator-vehicle-choice/src/assets"
             ],
@@ -288,7 +292,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,

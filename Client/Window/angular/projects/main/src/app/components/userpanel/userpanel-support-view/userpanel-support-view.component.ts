@@ -27,7 +27,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
     readonly messageMinLength = 10;
     readonly messageMaxLength = 255;
 
-    @ViewChild("messagesPanel", { static: false }) private messagesPanel: ElementRef;
+    @ViewChild("messagesPanel") private messagesPanel: ElementRef;
 
     @Output() back: EventEmitter<null> = new EventEmitter<null>();
 

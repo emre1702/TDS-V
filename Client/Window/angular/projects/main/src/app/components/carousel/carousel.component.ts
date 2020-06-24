@@ -45,7 +45,7 @@ export class CarouselComponent implements AfterViewInit {
     private selectedIndex = 0;
     private turnAroundPlayer: AnimationPlayer;
 
-    @ViewChild("carousel", { static: false }) carousel: ElementRef;
+    @ViewChild("carousel") carousel: ElementRef;
 
     @Input() buttons: LobbyChoice[];
     buttonStyles: { transform: string }[] = [{ transform: "" }];

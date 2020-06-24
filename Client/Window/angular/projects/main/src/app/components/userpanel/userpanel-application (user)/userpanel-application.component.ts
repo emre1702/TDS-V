@@ -14,7 +14,7 @@ import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserpanelApplicationComponent implements OnInit, OnDestroy {
-    @ViewChild("stepper", { static: false }) stepper: MatVerticalStepper;
+    @ViewChild("stepper") stepper: MatVerticalStepper;
 
     private amountUnchecked = 0;
     applicationAlreadyCreated = false;

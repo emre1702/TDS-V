@@ -44,7 +44,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     selectedMap: MapDataDto;
     mapSearchFilter = "";
 
-    @ViewChild('snav', { static: false }) snav: MatSidenav;
+    @ViewChild('snav') snav: MatSidenav;
 
     constructor(public settings: SettingsService, public voting: MapVotingService, private rageConnector: RageConnectorService,
         public changeDetector: ChangeDetectorRef) {

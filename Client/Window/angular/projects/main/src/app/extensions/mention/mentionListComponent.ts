@@ -38,8 +38,8 @@ export class MentionListComponent implements AfterContentChecked {
 
     @Input() itemTemplate: TemplateRef<any>;
     @Output() itemClick = new EventEmitter();
-    @ViewChild('list', { static: false }) list: ElementRef;
-    @ViewChild('defaultItemTemplate', { static: false }) defaultItemTemplate: TemplateRef<any>;
+    @ViewChild('list') list: ElementRef;
+    @ViewChild('defaultItemTemplate') defaultItemTemplate: TemplateRef<any>;
     items: string[] = [];
     activeIndex = 0;
     hidden = false;

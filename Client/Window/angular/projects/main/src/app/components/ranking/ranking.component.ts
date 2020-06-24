@@ -31,7 +31,7 @@ export class RankingComponent implements OnInit {
     displayedColumns = ["Place", "Name", "Points", "Kills", "Assists", "Damage"];
 
     dataSource: MatTableDataSource<RoundPlayerRankingStat>;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatSort) sort: MatSort;
 
     constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }
 

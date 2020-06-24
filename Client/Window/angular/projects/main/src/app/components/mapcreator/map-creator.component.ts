@@ -58,7 +58,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         Validators.required
     ]);
 
-    @ViewChild("descriptionTextArea", { static: false }) descriptionTextArea: ElementRef;
+    @ViewChild("descriptionTextArea") descriptionTextArea: ElementRef;
 
     constructor(
         public settings: SettingsService,

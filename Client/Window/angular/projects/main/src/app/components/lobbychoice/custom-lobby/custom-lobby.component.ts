@@ -308,7 +308,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             return;
         }
         if (this.creating) {
-            if (this.createLobbyDatas == undefined) {
+            if (!this.createLobbyDatas) {
                 this.loadDatasForCustomLobby(menuType);
             } else {
                 this.inMenu = menuType;

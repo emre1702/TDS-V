@@ -58,7 +58,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     @ViewChild(MatInput, { static: true }) input: MatInput;
     @ViewChild("chatBody", { static: true }) chatBody: ElementRef;
     @ViewChild(MentionDirective, { static: true }) mentionDirective: MentionDirective;
-    @ViewChild("marquee", { static: false }) infoSpan: ElementRef;
+    @ViewChild("marquee") infoSpan: ElementRef;
 
     mentionConfig: MentionConfig[] = [
         {

@@ -25,8 +25,8 @@ export class AppComponent implements AfterViewInit {
   objectsDataSource: MatTableDataSource<string>;
   selectedObject: string;
   filterDelay: NodeJS.Timer;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private changeDetector: ChangeDetectorRef,
