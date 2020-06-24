@@ -16,35 +16,42 @@ namespace TDS_Server.Handler.Entities.Player
 
         #region Public Methods
 
-        public async void AddToChallenge(ChallengeType type, int amount = 1, bool setTheValue = false)
+        public void AddToChallenge(ChallengeType type, int amount = 1, bool setTheValue = false)
         {
-            if (!_challengesDict.TryGetValue(type, out List<PlayerChallenges>? list))
-                return;
-
-            if (list.Count == 0)
-                return;
-            for (int i = list.Count - 1; i >= 0; --i)
+            try
             {
-                var challenge = list[i];
-                if (challenge.CurrentAmount == challenge.Amount)
-                    continue;
+                if (!_challengesDict.TryGetValue(type, out List<PlayerChallenges>? list))
+                    return;
 
-                //Todo: Check if this is enough to save the challenge in DB
-                if (setTheValue)
-                    challenge.CurrentAmount = Math.Min(amount, challenge.Amount);
-                else
-                    challenge.CurrentAmount = Math.Min(challenge.CurrentAmount + amount, challenge.Amount);
-                _modAPI.Thread.QueueIntoMainThread(() => _challengesHandler.SyncCurrentAmount(this, challenge));
-
-                if (challenge.Frequency == ChallengeFrequency.Forever)
+                if (list.Count == 0)
+                    return;
+                for (int i = list.Count - 1; i >= 0; --i)
                 {
-                    _modAPI.Thread.QueueIntoMainThread(() => list.RemoveAt(i));
-                    await ExecuteForDBAsync(async dbContext =>
+                    var challenge = list[i];
+                    if (challenge.CurrentAmount == challenge.Amount)
+                        continue;
+
+                    //Todo: Check if this is enough to save the challenge in DB
+                    if (setTheValue)
+                        challenge.CurrentAmount = Math.Min(amount, challenge.Amount);
+                    else
+                        challenge.CurrentAmount = Math.Min(challenge.CurrentAmount + amount, challenge.Amount);
+                    _modAPI.Thread.QueueIntoMainThread(() => _challengesHandler.SyncCurrentAmount(this, challenge));
+
+                    if (challenge.Frequency == ChallengeFrequency.Forever)
                     {
-                        dbContext.PlayerChallenges.Remove(challenge);
-                        await dbContext.SaveChangesAsync();
-                    });
+                        list.RemoveAt(i);
+                        ExecuteForDBAsyncWithoutWait(async dbContext =>
+                        {
+                            dbContext.PlayerChallenges.Remove(challenge);
+                            await dbContext.SaveChangesAsync();
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
             }
         }
 
