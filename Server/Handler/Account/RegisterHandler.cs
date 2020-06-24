@@ -40,14 +40,14 @@ namespace TDS_Server.Core.Manager.PlayerManager
             _langHelper = langHelper;
             _tdsPlayerHandler = tdsPlayerHandler;
 
-            modAPI.ClientEvent.Add<IPlayer, string, string, string>(ToServerEvent.TryRegister, this, TryRegister);
+            modAPI.ClientEvent.Add<IPlayer, string, string, string, int>(ToServerEvent.TryRegister, this, TryRegister);
         }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email)
+        public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language)
         {
             if (player.ModPlayer is null)
                 return;
@@ -71,7 +71,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             dbPlayer.PlayerSettings = new PlayerSettings
             {
                 AllowDataTransfer = false,
-                Language = Language.English,
+                Language = language,
                 Hitsound = true,
                 Bloodscreen = true,
                 FloatingDamageInfo = true,
@@ -105,7 +105,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
         }
 
-        public async void TryRegister(IPlayer modPlayer, string username, string password, string email)
+        public async void TryRegister(IPlayer modPlayer, string username, string password, string email, int language)
         {
             var player = _tdsPlayerHandler.GetNotLoggedIn(modPlayer);
             if (player is null)
@@ -142,7 +142,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
                         => player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value)));
                     return;
                 }
-                RegisterPlayer(player, username, password, email.Length != 0 ? email : null);
+                RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language);
             }
             finally
             {

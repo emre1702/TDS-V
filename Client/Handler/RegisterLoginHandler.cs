@@ -74,7 +74,7 @@ namespace TDS_Client.Handler
             string username = (string)args[0];
             string password = (string)args[1];
             string email = (string)args[2];
-            _remoteEventsSender.Send(ToServerEvent.TryRegister, username, SharedUtils.HashPWClient(password), email ?? string.Empty);
+            _remoteEventsSender.Send(ToServerEvent.TryRegister, username, SharedUtils.HashPWClient(password), email ?? string.Empty, (int)_settingsHandler.LanguageEnum);
         }
 
         #endregion Public Methods
