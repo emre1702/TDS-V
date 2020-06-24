@@ -57,7 +57,7 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.refreshTimeToWeeklyChallengesRestart();
         this.rageConnector.listen(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
-        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+        this.settings.LanguageChanged.on(null, this.languageChanged.bind(this));
         this.settings.ChallengesLoaded.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
@@ -65,7 +65,7 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.rageConnector.remove(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
-        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+        this.settings.LanguageChanged.off(null, this.languageChanged.bind(this));
         this.settings.ChallengesLoaded.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
@@ -79,7 +79,12 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    private languageChanged() {
+        this.changeDetector.detectChanges();
+    }
+
     private detectChanges() {
+        this.refreshTimeToWeeklyChallengesRestart();
         this.changeDetector.detectChanges();
     }
 
