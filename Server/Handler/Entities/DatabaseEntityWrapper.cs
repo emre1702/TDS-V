@@ -111,6 +111,24 @@ namespace TDS_Server.Handler.Entities
             }
         }
 
+        public async void ExecuteForDBAsyncWithoutWait(Func<TDSDbContext, Task> action)
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite);
+
+            try
+            {
+                await action(_dbContext);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex, _player);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
         #endregion Public Methods
     }
 }

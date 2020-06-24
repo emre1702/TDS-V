@@ -16,6 +16,8 @@ namespace TDS_Server.Data.Interfaces
 
         Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action);
 
+        void ExecuteForDBAsyncWithoutWait(Func<TDSDbContext, Task> action);
+
         #endregion Public Methods
     }
 }
