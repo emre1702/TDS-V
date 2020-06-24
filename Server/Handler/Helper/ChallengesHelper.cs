@@ -9,6 +9,7 @@ using TDS_Server.Data.Models.Challenge;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Challenge;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Extensions;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
@@ -157,9 +158,7 @@ namespace TDS_Server.Handler.Helper
                 await AddWeeklyChallenges(player);
                 await player.ExecuteForDBAsync(async dbContext =>
                 {
-                    player.Entity.Challenges = null;
-                    dbContext.Entry(player.Entity).Collection(p => p.Challenges).IsLoaded = false;
-                    await dbContext.Entry(player.Entity).Collection(p => p.Challenges).LoadAsync();
+                    await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload();
                 });
             }
             _modAPI.Thread.QueueIntoMainThread(() =>
