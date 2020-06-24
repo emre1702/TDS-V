@@ -23,6 +23,12 @@ namespace TDS_Server.Data.Extensions
 
         public static Position3DDto? GetCenter(this MapDto map)
         {
+            if (map.Info.Type == Enums.MapType.Gangwar)
+                return map.Target;
+
+            if (map.LimitInfo.Center is { } && (map.LimitInfo.Center.X != 0 || map.LimitInfo.Center.Y != 0 || map.LimitInfo.Center.Z != 0))
+                return map.LimitInfo.Center;
+
             if (map.LimitInfo.Edges is null || map.LimitInfo.Edges.Length == 0)
                 return map.GetCenterBySpawns();
 

@@ -162,10 +162,7 @@ namespace TDS_Server.Handler.Maps
             if (isOnlySaved)
                 return map;
 
-            if (map.Info.Type != MapType.Gangwar &&
-                (map.LimitInfo.Center is null ||
-                (map.LimitInfo.Center.X == 0 && map.LimitInfo.Center.Y == 0 && map.LimitInfo.Center.Z == 0)))
-                map.LimitInfo.Center = map.GetCenter();
+            map.LimitInfo.Center = map.GetCenter();
 
             uint teamId = 0;
             foreach (var mapTeamSpawns in map.TeamSpawnsList.TeamSpawns)
