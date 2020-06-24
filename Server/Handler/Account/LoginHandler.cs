@@ -121,10 +121,10 @@ namespace TDS_Server.Handler.Account
                 {
                     player.ModPlayer.Name = entity.Name;
                     //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
-                    entity.PlayerStats.LoggedIn = true;
-                    entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
                 });
 
+                entity.PlayerStats.LoggedIn = true;
+                entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
                 await dbContext.SaveChangesAsync();
                 return true;
             });
