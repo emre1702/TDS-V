@@ -659,6 +659,14 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     "Add Body Blemishes" = "Körperliche Makel hinzufügen";
     Father = "Vater";
     Mother = "Mutter";
+    StartWithMapcreatorError = "Name der Lobby darf nicht mit \"Mapcreator\" starten.";
+    LobbyWithNameAlreadyExistsError = "Lobby mit diesem Namen existiert bereits.";
+    "Error?" = "Unbekannter Fehler";
+    Errorrequired = "Mindestens eine Einstellung ist Pflicht, wurde aber nicht ausgefüllt.";
+    Errormaxlength = "Mindestens eine Einstellung hat zu viele Zeichen.";
+    Errorminlength = "Mindestens eine Einstellung hat zu wenig Zeichen.";
+    Errormin = "Mindestens eine Einstellung hat eine zu niedrige Zahl.";
+    Errormax = "Mindestens eine Einstellung hat eine zu hohe Zahl.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

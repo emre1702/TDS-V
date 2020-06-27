@@ -7,7 +7,12 @@ export function notEnoughTeamsValidator(selectedMapsGetter: () => MapDataDto[], 
     : ValidatorFn {
     return (control: AbstractControl): ValidationErrors => {
         const teams = teamsGetter();    // teams with spectators
+        if (!teams)
+            return { ["map"]: "?"};
+
         const selectedMaps = selectedMapsGetter();
+        if (!selectedMaps)
+            return { ["map"]: "?"};
 
         for (const selectedMap of selectedMaps) {
             if (teams.length - 1 < Constants.MIN_TEAMS_PER_TYPE[selectedMap[2]]) {

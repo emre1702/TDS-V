@@ -113,7 +113,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.button, dataSettingIndex: 17 /*"Teams"*/, defaultValue: [this.spectatorTeam, this.team1, this.team2],
                     formControl: new FormControl([this.spectatorTeam, this.team1, this.team2],
-                        [notEnoughTeamsValidator(this.getSelectedLobbyMaps, this.getSelectedLobbyTeams)]),
+                        [notEnoughTeamsValidator(this.getSelectedLobbyMaps.bind(this), this.getSelectedLobbyTeams.bind(this))]),
                     action: () => { this.changeToOtherMenu(CustomLobbyMenuType.Teams); }
                 }
             ]
@@ -189,6 +189,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
 
     lobbyDatas: CustomLobbyData[] = [];
     createLobbyDatas: DataForCustomLobbyCreation;
+    validationError: string;
 
     constructor(public settings: SettingsService, private rageConnector: RageConnectorService,
         public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog) {
@@ -366,6 +367,9 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         for (const panel of this.settingPanel) {
             for (const setting of panel.rows) {
                 if (!setting.formControl.valid) {
+                    console.log(setting.formControl.errors);
+                    setting.formControl.markAllAsTouched();
+                    this.validationError = "Error" + (Object.keys(setting.formControl.errors)[0] ?? "Occured");
                     return false;
                 }
             }
@@ -373,11 +377,16 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         const lobbyName: string = (this.settingPanel
             .find(p => p.title === "Default").rows
             .find(p => p.dataSettingIndex === 1 /*"Name"*/).formControl.value as string).toLowerCase();
-        if (lobbyName.startsWith("mapcreator"))
+        if (lobbyName.startsWith("mapcreator")) {
+            this.validationError = "StartWithMapcreatorError";
             return false;
-        if (this.lobbyDatas.find(l => l[1] == lobbyName))
+        }
+        if (this.lobbyDatas.find(l => l[1] == lobbyName)) {
+            this.validationError = "LobbyWithNameAlreadyExistsError";
             return false;
+        }
 
+        this.validationError = undefined;
         return true;
     }
 
@@ -387,6 +396,8 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     }
 
     getSelectedLobbyTeams() {
+        if (!this.settingPanel)
+            return undefined;
         return this.settingPanel
             .find(p => p.title === "Teams").rows
             .find(p => p.dataSettingIndex === 17 /*"Teams"*/).formControl.value;
@@ -400,12 +411,16 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     }
 
     getSelectedLobbyMaps() {
+        if (!this.settingPanel)
+            return undefined;
         return this.settingPanel
             .find(p => p.title === "Map").rows
             .find(p => p.dataSettingIndex === 18 /*"Map"*/).formControl.value;
     }
 
     getSelectedLobbyWeapons() {
+        if (!this.settingPanel)
+            return undefined;
         return this.settingPanel
             .find(p => p.title === "Weapons").rows
             .find(p => p.dataSettingIndex === 19 /*"Weapons"*/).formControl.value;

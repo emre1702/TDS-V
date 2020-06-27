@@ -683,7 +683,14 @@ export interface Language {
     "Add Body Blemishes": string;
     Father: string;
     Mother: string;
-
+    StartWithMapcreatorError: string;
+    LobbyWithNameAlreadyExistsError: string;
+    "Error?": string;
+    Errorrequired: string;
+    Errormaxlength: string;
+    Errorminlength: string;
+    Errormin: string;
+    Errormax: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

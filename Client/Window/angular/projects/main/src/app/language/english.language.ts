@@ -713,6 +713,14 @@ WARNING! Spaces will get removed and new lines with an already used command will
     "Add Body Blemishes" = "Add Body Blemishes";
     Father = "Father";
     Mother = "Mother";
+    StartWithMapcreatorError = "Lobby name must not start with \"Mapcreator\"";
+    LobbyWithNameAlreadyExistsError = "Lobby with this name already exists.";
+    "Error?" = "Unknown error";
+    Errorrequired = "At least one setting is mandatory, but have not been filled in.";
+    Errormaxlength = "At least one setting has too many characters.";
+    Errorminlength = "At least one setting has too less characters.";
+    Errormin = "At least one setting has a too low number.";
+    Errormax = "At least one setting has a too high number.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";
