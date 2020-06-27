@@ -21,6 +21,7 @@ import { CustomLobbyWeaponData } from '../models/custom-lobby-weapon-data';
 import { WeaponHash } from '../enums/weapon-hash.enum';
 import { isNumber } from 'util';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { notEnoughTeamsValidator } from './validators/notEnoughTeamsValidator';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -111,7 +112,8 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                 },
                 {
                     type: SettingType.button, dataSettingIndex: 17 /*"Teams"*/, defaultValue: [this.spectatorTeam, this.team1, this.team2],
-                    formControl: new FormControl([this.spectatorTeam, this.team1, this.team2]),
+                    formControl: new FormControl([this.spectatorTeam, this.team1, this.team2],
+                        [notEnoughTeamsValidator(this.getSelectedLobbyMaps, this.getSelectedLobbyTeams)]),
                     action: () => { this.changeToOtherMenu(CustomLobbyMenuType.Teams); }
                 }
             ]
