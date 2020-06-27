@@ -691,29 +691,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     isTeamSpawnsValid(): boolean {
-        if (this.data[6].length == 0)
+        // Check enough teams
+        if (this.data[6].length < Constants.MIN_TEAMS_PER_TYPE[this.mapTypeControl.value])
             return false;
 
-        switch (this.mapTypeControl.value) {
-            case MapType.ArmsRace:
-                if (this.data[6].length != 1) {
-                    return false;
-                }
-                break;
-            case MapType.Gangwar:
-            case MapType.Bomb:
-                if (this.data[6].length != 2) {
-                    return false;
-                }
-                break;
-        }
-
-        if (this.mapTypeControl.value == MapType.Gangwar || this.mapTypeControl.value == MapType.Bomb) {
-            if (this.data[6].length != 2) {
-                return false;
-            }
-        }
-
+        // Check enough spawns per team
         for (const spawnArr of this.data[6]) {
             if (spawnArr.length < Constants.MIN_TEAM_SPAWNS)
                 return false;
