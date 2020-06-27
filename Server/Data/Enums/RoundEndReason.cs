@@ -2,6 +2,6 @@
 {
     public enum RoundEndReason
     {
-        Death, Time, BombExploded, BombDefused, Command, NewPlayer, Empty, TargetEmpty, Error
+        Death, Time, BombExploded, BombDefused, Command, NewPlayer, Empty, TargetEmpty, Error, PlayerWon
     }
 }

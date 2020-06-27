@@ -115,6 +115,7 @@ namespace TDS_Server.Data.Languages
         public override string PLAYER_REGISTERED => "Ein neuer Spieler mit dem Namen \"{0}\" hat sich registriert!";
         public override string PLAYER_REJECTED_YOUR_INVITATION => "{0} hat deine Team-Einladung abgelehnt.";
         public override string PLAYER_WITH_NAME_ALREADY_EXISTS => "Es existiert bereits ein Spieler mit diesem Namen.";
+        public override string PLAYER_WON_INFO => "{0} hat die Runde gewonnen.";
         public override string PRIVATE_CHAT_CLOSED_PARTNER => "Dein Privatchat-Partner hat den Chat geschlossen.";
         public override string PRIVATE_CHAT_CLOSED_YOU => "Du hast den Privatchat geschlossen.";
         public override string PRIVATE_CHAT_DISCONNECTED => "Dein Privatchat-Partner ist disconnectet.";

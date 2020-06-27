@@ -510,6 +510,23 @@ namespace TDS_Server.Database.Entity
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
+            modelBuilder.Entity<LobbyArmsRaceWeapons>(entity =>
+            {
+                entity.HasKey(e => new { e.LobbyId, e.AtKill });
+
+                entity.Property(e => e.WeaponHash).IsRequired(false);
+
+                entity.HasOne(e => e.Lobby)
+                    .WithMany(l => l.ArmsRaceWeapons)
+                    .HasForeignKey(e => e.LobbyId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Weapon)
+                    .WithMany(w => w.ArmsRaceWeapons)
+                    .HasForeignKey(e => e.WeaponHash)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<LobbyKillingspreeRewards>(entity =>
             {
                 entity.HasKey(e => new { e.LobbyId, e.KillsAmount });
@@ -1879,6 +1896,8 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<Maps>().HasData(
+                new Maps { Id = -6, Name = "All Arms Races", CreatorId = -1 },
+                new Maps { Id = -5, Name = "All Gangwars", CreatorId = -1 },
                 new Maps { Id = -4, Name = "All Sniper", CreatorId = -1 },
                 new Maps { Id = -3, Name = "All Bombs", CreatorId = -1 },
                 new Maps { Id = -2, Name = "All Normals", CreatorId = -1 },

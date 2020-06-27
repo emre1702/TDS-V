@@ -105,6 +105,7 @@ namespace TDS_Server.Handler.Entities.GameModes
             {
                 RoundEndReason.BombDefused => false,
                 RoundEndReason.BombExploded => false,
+                RoundEndReason.PlayerWon => false,
                 RoundEndReason.Death => !Lobby.IsGangActionLobby,     // will handle this manually if gang action lobby
                 RoundEndReason.Empty => !Lobby.IsGangActionLobby,     // will handle this manually if gang action lobby
                 RoundEndReason.NewPlayer => !Lobby.IsGangActionLobby,

@@ -666,6 +666,7 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     DefaultMapIdsBombs = "Alle Bomben";
     DefaultMapIdsSnipers = "Alle Sniper";
     DefaultMapIdsGangwars = "Alle Gangwars";
+    DefaultMapIdsArmsRaces = "All Wettrüsten";
 
     ////////////// Challenges ///////////////
     Challenges = "Herausforderungen";

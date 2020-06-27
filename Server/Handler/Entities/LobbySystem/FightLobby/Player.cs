@@ -6,6 +6,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
+        #region Public Properties
+
+        public short AmountLifes { get; set; }
+
+        #endregion Public Properties
+
         #region Public Methods
 
         public static void KillPlayer(ITDSPlayer player, string reason)

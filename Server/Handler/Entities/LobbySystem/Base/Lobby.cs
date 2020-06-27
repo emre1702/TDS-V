@@ -113,12 +113,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         public uint Dimension { get; }
         public Lobbies Entity { get; }
 
-        public int Id => Entity.Id;
         public bool IsGangActionLobby { get; set; }
-        public bool IsOfficial => Entity.IsOfficial;
-        public string Name => Entity.Name;
         public string OwnerName => CreatorName;
         public int StartTotalHP => (Entity.FightSettings?.StartArmor ?? 100) + (Entity.FightSettings?.StartHealth ?? 100);
+        public int Id => Entity.Id;
+        public bool IsOfficial => Entity.IsOfficial;
+        public string Name => Entity.Name;
         public LobbyType Type => Entity.Type;
 
         #endregion Public Properties

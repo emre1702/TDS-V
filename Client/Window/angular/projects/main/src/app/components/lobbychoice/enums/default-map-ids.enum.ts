@@ -4,4 +4,5 @@ export enum DefaultMapIds {
     Bombs = -3,
     Snipers = -4,
     Gangwars = -5,
+    ArmsRaces = -6
 }

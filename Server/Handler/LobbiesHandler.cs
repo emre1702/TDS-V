@@ -25,6 +25,7 @@ using MapType = TDS_Server.Data.Enums.MapType;
 
 namespace TDS_Server.Handler
 {
+    //Todo: Add team check for special gamemodes (e.g. ArmsRace allow only 1 team)
     public class LobbiesHandler : DatabaseEntityWrapper
     {
         #region Public Fields
@@ -166,6 +167,7 @@ namespace TDS_Server.Handler
                         HeadMultiplicator = w.HeadMultiplicator
                     }).ToHashSet(),
                     Password = data.Password,
+                    //Todo: Add ArmsRaceWeapons (first in Angular)
                     Teams = data.Teams.Select((t, index) =>
                     {
                         var color = SharedUtils.GetColorFromHtmlRgba(t.Color) ?? System.Drawing.Color.FromArgb(255, 255, 255);
@@ -218,6 +220,7 @@ namespace TDS_Server.Handler
                 MapType.Bomb => Bomb.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
                 MapType.Sniper => Sniper.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
                 MapType.Gangwar => Gangwar.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
+                MapType.ArmsRace => Gangwar.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
                 _ => Deathmatch.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
             };
 
@@ -287,6 +290,7 @@ namespace TDS_Server.Handler
                     .ThenInclude((LobbyMaps map) => map.Map)
                     .Include(l => l.Owner)
                     .Include(l => l.FightSettings)
+                    .Include(l => l.ArmsRaceWeapons)
                     .ToList();
             }).Result;
 

@@ -3,9 +3,9 @@
     public enum MapType
     {
         Normal,
-
         Bomb,
         Sniper,
-        Gangwar
+        Gangwar,
+        ArmsRace
     }
 }

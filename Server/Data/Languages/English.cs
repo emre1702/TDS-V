@@ -111,9 +111,10 @@ namespace TDS_Server.Data.Languages
         public virtual string PLAYER_LOGGED_IN => "~b~~h~{0}~h~ ~w~logged in.";
         public virtual string PLAYER_LOGGED_OUT => "~b~~h~{0}~h~ ~w~logged out.";
         public virtual string PLAYER_NOT_MUTED => "The player is not muted!";
-        public virtual string PLAYER_REGISTERED => "A new player names \"{0}\" has registered!";
+        public virtual string PLAYER_REGISTERED => "A new player named \"{0}\" has registered!";
         public virtual string PLAYER_REJECTED_YOUR_INVITATION => "{0} rejected your team-invitation.";
         public virtual string PLAYER_WITH_NAME_ALREADY_EXISTS => "A player with that name already exists.";
+        public virtual string PLAYER_WON_INFO => "{0} has won the round.";
         public virtual string PRIVATE_CHAT_CLOSED_PARTNER => "Your private chat partner closed the chat.";
         public virtual string PRIVATE_CHAT_CLOSED_YOU => "You closed the private chat.";
         public virtual string PRIVATE_CHAT_DISCONNECTED => "Your private chat partner disconnected.";

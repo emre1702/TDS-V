@@ -1,40 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-      <TargetFramework>netcoreapp3.1</TargetFramework>
-      <Nullable>enable</Nullable>
-      <CodeAnalysisRuleSet>..\..\TDS\DeadCode.ruleset</CodeAnalysisRuleSet>
-      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Nullable>enable</Nullable>
+        <CodeAnalysisRuleSet>..\..\TDS\DeadCode.ruleset</CodeAnalysisRuleSet>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="morelinq" Version="3.3.2" />
-    <PackageReference Include="TimeZoneConverter" Version="3.2.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="morelinq" Version="3.3.2" />
+        <PackageReference Include="TimeZoneConverter" Version="3.2.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
-    <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
-    <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
+        <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
+        <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\GameModes\ArmsRace\" />
-    <Folder Include="Entities\GameModes\CaptureTheFlag\" />
-    <Folder Include="Entities\GameModes\KingOfTheHill\" />
-    <Folder Include="Entities\GameModes\Domination\" />
-    <Folder Include="Entities\GameModes\JailBreak\" />
-    <Folder Include="Entities\GameModes\InstaGib\" />
-  </ItemGroup>
-
+    <ItemGroup>
+        <Folder Include="Entities\GameModes\CaptureTheFlag\" />
+        <Folder Include="Entities\GameModes\KingOfTheHill\" />
+        <Folder Include="Entities\GameModes\Domination\" />
+        <Folder Include="Entities\GameModes\JailBreak\" />
+        <Folder Include="Entities\GameModes\InstaGib\" />
+    </ItemGroup>
 </Project>

@@ -19,6 +19,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (_allRoundWeapons is null)
                 return;
+            if (CurrentGameMode?.HandlesGivingWeapons == true)
+                return;
             var lastWeapon = player.LastWeaponOnHand;
             player.ModPlayer!.RemoveAllWeapons();
             bool giveLastWeapon = false;

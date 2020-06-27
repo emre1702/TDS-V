@@ -694,6 +694,20 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         if (this.data[6].length == 0)
             return false;
 
+        switch (this.mapTypeControl.value) {
+            case MapType.ArmsRace:
+                if (this.data[6].length != 1) {
+                    return false;
+                }
+                break;
+            case MapType.Gangwar:
+            case MapType.Bomb:
+                if (this.data[6].length != 2) {
+                    return false;
+                }
+                break;
+        }
+
         if (this.mapTypeControl.value == MapType.Gangwar || this.mapTypeControl.value == MapType.Bomb) {
             if (this.data[6].length != 2) {
                 return false;

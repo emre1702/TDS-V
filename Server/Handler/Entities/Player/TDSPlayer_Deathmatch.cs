@@ -34,7 +34,7 @@ namespace TDS_Server.Handler.Entities.Player
         public ITDSPlayer? LastHitter { get; set; }
         public DateTime? LastKillAt { get; set; }
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
-        public sbyte Lifes { get; set; } = 0;
+        public short Lifes { get; set; } = 0;
 
         public short ShortTimeKillingSpree
         {

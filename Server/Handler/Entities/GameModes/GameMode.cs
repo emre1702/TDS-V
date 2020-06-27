@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Enums;
@@ -20,10 +21,15 @@ namespace TDS_Server.Handler.Entities.GameModes
 
         protected readonly InvitationsHandler InvitationsHandler;
         protected readonly LangHelper LangHelper;
+
         protected readonly Arena Lobby;
+
         protected readonly MapDto Map;
+
         protected readonly IModAPI ModAPI;
+
         protected readonly Serializer Serializer;
+
         protected readonly ISettingsHandler SettingsHandler;
 
         #endregion Protected Fields
@@ -50,6 +56,8 @@ namespace TDS_Server.Handler.Entities.GameModes
         #endregion Protected Constructors
 
         #region Public Properties
+
+        public virtual bool HandlesGivingWeapons => false;
 
         public ITeam? WinnerTeam { get; set; }
 
@@ -85,6 +93,10 @@ namespace TDS_Server.Handler.Entities.GameModes
             return true;
         }
 
+        public virtual void GivePlayerWeapons(ITDSPlayer player)
+        {
+        }
+
         public virtual bool IsWeaponAllowed(WeaponHash weaponHash) => _allowedWeaponHashes.Contains(weaponHash);
 
         public virtual void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
@@ -104,6 +116,10 @@ namespace TDS_Server.Handler.Entities.GameModes
         }
 
         public virtual void RemovePlayerFromAlive(ITDSPlayer player)
+        {
+        }
+
+        public virtual void RespawnPlayer(ITDSPlayer player)
         {
         }
 

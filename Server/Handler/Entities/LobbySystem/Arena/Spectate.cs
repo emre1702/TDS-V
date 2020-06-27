@@ -34,7 +34,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private void MakeSurePlayerSpectatesAnyone(ITDSPlayer player)
         {
-            if (player.Spectates is { })
+            if (player.Spectates is { } && player.Spectates != player)
                 return;
 
             SpectateNext(player, true);

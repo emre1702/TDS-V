@@ -45,7 +45,7 @@ namespace TDS_Server.Data.Interfaces
         ITDSPlayer? LastHitter { get; set; }
         DateTime? LastKillAt { get; set; }
         WeaponHash LastWeaponOnHand { get; set; }
-        sbyte Lifes { get; set; }
+        short Lifes { get; set; }
         ILobby? Lobby { get; set; }
         PlayerLobbyStats? LobbyStats { get; }
         bool LoggedIn { get; }

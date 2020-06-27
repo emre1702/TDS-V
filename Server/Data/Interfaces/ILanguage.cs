@@ -107,6 +107,7 @@
         string PLAYER_REGISTERED { get; }
         string PLAYER_REJECTED_YOUR_INVITATION { get; }
         string PLAYER_WITH_NAME_ALREADY_EXISTS { get; }
+        string PLAYER_WON_INFO { get; }
         string PRIVATE_CHAT_CLOSED_PARTNER { get; }
         string PRIVATE_CHAT_CLOSED_YOU { get; }
         string PRIVATE_CHAT_DISCONNECTED { get; }

@@ -29,6 +29,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper,
                   dataSyncHandler, eventsHandler, bonusBotConnectorClient, bansHandler)
         {
+            AmountLifes = Entity.FightSettings?.AmountLifes ?? 0;
             DmgSys = new Damagesys(entity.LobbyWeapons, entity.LobbyKillingspreeRewards, modAPI, loggingHandler, weaponDatasLoadingHandler, langHelper);
         }
 

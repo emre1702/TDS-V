@@ -691,6 +691,7 @@ export interface Language {
     DefaultMapIdsBombs: string;
     DefaultMapIdsSnipers: string;
     DefaultMapIdsGangwars: string;
+    DefaultMapIdsArmsRaces: string;
 
     ////////////// Challenges ///////////////
     Challenges: string;

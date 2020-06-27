@@ -23,6 +23,7 @@ namespace TDS_Server.Database.Entity.LobbyEntities
 
         #region Public Properties
 
+        public virtual ICollection<LobbyArmsRaceWeapons> ArmsRaceWeapons { get; set; }
         public float AroundSpawnPoint { get; set; }
         public DateTime CreateTimestamp { get; set; }
         public float DefaultSpawnRotation { get; set; }

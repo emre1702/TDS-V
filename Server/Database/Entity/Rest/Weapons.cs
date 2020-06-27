@@ -8,6 +8,7 @@ namespace TDS_Server.Database.Entity.Rest
     {
         #region Public Properties
 
+        public virtual ICollection<LobbyArmsRaceWeapons> ArmsRaceWeapons { get; set; }
         public int ClipSize { get; set; }
         public float Damage { get; set; }
         public WeaponHash Hash { get; set; }

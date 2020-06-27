@@ -720,6 +720,7 @@ WARNING! Spaces will get removed and new lines with an already used command will
     DefaultMapIdsBombs = "All bombs";
     DefaultMapIdsSnipers = "All snipers";
     DefaultMapIdsGangwars = "All gangwars";
+    DefaultMapIdsArmsRaces = "All arms races";
 
     ////////////// Challenges ///////////////
     Challenges = "Challenges";

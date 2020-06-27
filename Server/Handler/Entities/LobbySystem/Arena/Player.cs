@@ -163,6 +163,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             SetPlayerReadyForRound(player);
             player.ModPlayer.Freeze(false);
             player.SendEvent(ToClientEvent.PlayerRespawned);
+            CurrentGameMode?.RespawnPlayer(player);
         }
 
         private void SavePlayerRoundStats(ITDSPlayer player)
@@ -240,6 +241,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (player.Team is null || player.Team.AlivePlayers is null)
                 return;
+            player.Lifes = AmountLifes;
             player.Team.AlivePlayers.Add(player);
             var teamamountdata = player.Team.SyncedTeamData.AmountPlayers;
             ++teamamountdata.Amount;

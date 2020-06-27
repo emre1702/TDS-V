@@ -22,13 +22,15 @@ export class CustomLobbyMapsMenuComponent implements OnInit {
         [DefaultMapIds.Normals]: MapType.Normal,
         [DefaultMapIds.Bombs]: MapType.Bomb,
         [DefaultMapIds.Snipers]: MapType.Sniper,
-        [DefaultMapIds.Gangwars]: MapType.Gangwar
+        [DefaultMapIds.Gangwars]: MapType.Gangwar,
+        [DefaultMapIds.ArmsRaces]: MapType.ArmsRace
     };
     private defaultMapIdByMapType = {
         [MapType.Normal]: DefaultMapIds.Normals,
         [MapType.Bomb]: DefaultMapIds.Bombs,
         [MapType.Sniper]: DefaultMapIds.Snipers,
-        [MapType.Gangwar]: DefaultMapIds.Gangwars
+        [MapType.Gangwar]: DefaultMapIds.Gangwars,
+        [MapType.ArmsRace]: DefaultMapIds.ArmsRaces
     };
     private _selectedMapsInput: number[] = [];
 
@@ -174,6 +176,12 @@ export class CustomLobbyMapsMenuComponent implements OnInit {
         this.settings.AllMapsForCustomLobby.unshift([
             DefaultMapIds.Gangwars, "DefaultMapIdsGangwars", MapType.Gangwar,
             { [7]: "Alle Gangwar Karten.", [9]: "All gangwar maps." },
+            "System", 5
+        ]);
+
+        this.settings.AllMapsForCustomLobby.unshift([
+            DefaultMapIds.ArmsRaces, "DefaultMapIdsArmsRaces", MapType.ArmsRace,
+            { [7]: "Alle Wettrüsten Karten.", [9]: "All arms race maps." },
             "System", 5
         ]);
     }
