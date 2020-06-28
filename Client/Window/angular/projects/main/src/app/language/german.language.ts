@@ -260,8 +260,8 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     SubmachineGuns = "Maschinenpistolen";
     Shotguns = "Schrotflinten";
     AssaultRifles = "Sturmgewehre";
-    LightMachineGuns = "Light machine guns";
-    SniperRifles = "Leichte Maschinengewehre";
+    LightMachineGuns = "Leichte Maschinengewehre";
+    SniperRifles = "Sniper";
     HeavyWeapons = "Schwere Waffen";
     Throwables = "Wurfkörper";
     Miscellaneous = "Sonstiges";
