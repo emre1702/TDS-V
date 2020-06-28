@@ -44,11 +44,19 @@ export class CustomLobbyWeaponsMenuComponent implements OnInit {
                     continue;
                 }
 
-                let selected = false;
                 const selectedWeapon = this.selectedWeapons.find(w => w[0] == weaponHash);
+                let selected = false;
                 if (selectedWeapon) {
                     selected = true;
+
+                    if (!selectedWeapon[2] && selectedWeapon[2] != 0) {
+                        selectedWeapon[2] = weapon[2];
+                    }
+                    if (!selectedWeapon[3] && selectedWeapon[3] != 0) {
+                        selectedWeapon[3] = weapon[3];
+                    }
                 }
+
                 arr.push([weaponName, weaponHash, selected]);
             }
             arr = arr.sort((a, b) => a[0].localeCompare(b[0]));
