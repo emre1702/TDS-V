@@ -31,8 +31,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 var pos = _currentMap?.LimitInfo?.Center.SwitchNamespace();
                 if (pos is { } && player.ModPlayer is { })
                     player.ModPlayer.Position = pos.AddToZ(10);
-                SpectateOtherAllTeams(player);
                 SendPlayerRoundInfoOnJoin(player);
+                new TDSTimer(() => SpectateOtherAllTeams(player), 1000, 1);
 
                 var teams = Teams.Select(t =>
                         new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)
