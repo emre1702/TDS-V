@@ -64,8 +64,8 @@
 
             <div class="main-bottom-buttons-row">
                 <button mat-raised-button type="button" (click)="sendDataToClient()"
-                    [disabled]="!isMapLimitValid() || !isTeamSpawnsValid() || !isBombPlacesValid() || !isTargetValid() || nameControl.invalid || !settings.IsLobbyOwner">
-                    {{ 'Send' | language: settings.Lang }}
+                    [disabled]="sendErrorService.hasError()">
+                    <span [matTooltip]="sendErrorService.errorMessage">{{ 'Send' | language: settings.Lang }}</span>
                 </button>
                 <button mat-raised-button [disabled]="!settings.IsLobbyOwner" type="button" (click)="removeTheMap()">
                     {{ 'Remove' | language: settings.Lang }}
@@ -77,8 +77,8 @@
                     {{ 'New' | language: settings.Lang }}
                 </button>
                 <button mat-raised-button type="button" (click)="saveData()"
-                    [disabled]="nameControl.invalid || !settings.IsLobbyOwner">
-                    {{ 'Save' | language: settings.Lang }}
+                    [disabled]="saveErrorService.hasError()">
+                    <span [matTooltip]="saveErrorService.errorMessage">{{ 'Save' | language: settings.Lang }}</span>
                 </button>
                 <button mat-raised-button type="button" (click)="loadPossibleMaps()"
                     [disabled]="!settings.IsLobbyOwner">

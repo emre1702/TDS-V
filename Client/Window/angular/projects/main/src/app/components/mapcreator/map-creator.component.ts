@@ -20,6 +20,7 @@ import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
 import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
 import { isNumber } from 'util';
+import { ErrorService, CustomErrorCheck } from '../../services/error.service';
 
 enum MapCreatorNav {
     Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, Vehicles, BombPlaces, Target
@@ -43,6 +44,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     editingDescriptionLang: string;
     currentTitle = "MapCreator";
     possibleMaps: string[];
+    sendErrorService: ErrorService;
+    saveErrorService: ErrorService;
 
     displayedColumns: string[] = ["id", "x", "y", "z", "rot"];
     displayedColumns2D: string[] = ["id", "x", "y"];
@@ -67,6 +70,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private snackBar: MatSnackBar) {
 
+        this.addValidationsForSend();
+        this.addValidationsForSave();
+
+        this.saveErrorService = new ErrorService(settings);
     }
 
     ngOnInit() {
@@ -681,6 +688,65 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         }
 
     }
+
+    addValidationsForSend() {
+        this.sendErrorService = new ErrorService(this.settings);
+
+        // Add custom checks
+        const notLobbyOwnerCheck: CustomErrorCheck = {
+            name: "NotLobbyOwnerCheck",
+            checkValid: () => this.settings.IsLobbyOwner,
+            errorKey: "ErrorNotLobbyOwner"
+        };
+        this.sendErrorService.add(notLobbyOwnerCheck);
+
+        const mapLimitCheck: CustomErrorCheck = {
+            name: "MapLimitCheck",
+            checkValid: this.isMapLimitValid.bind(this),
+            errorKey: "ErrorMapLimitMapCreator"
+        };
+        this.sendErrorService.add(mapLimitCheck);
+
+        const teamSpawnsCheck: CustomErrorCheck = {
+            name: "TeamSpawnsCheck",
+            checkValid: this.isTeamSpawnsValid.bind(this),
+            errorKey: "ErrorTeamSpawnsMapCreator"
+        };
+        this.sendErrorService.add(teamSpawnsCheck);
+
+        const bombPlacesCheck: CustomErrorCheck = {
+            name: "BombPlacesCheck",
+            checkValid: this.isBombPlacesValid.bind(this),
+            errorKey: "ErrorBombPlacesMapCreator"
+        };
+        this.sendErrorService.add(bombPlacesCheck);
+
+        const targetCheck: CustomErrorCheck = {
+            name: "TargetCheck",
+            checkValid: this.isTargetValid.bind(this),
+            errorKey: "ErrorTargetMapCreator"
+        };
+        this.sendErrorService.add(targetCheck);
+
+        // Add form controls
+        this.sendErrorService.add({name: "NameCheck", formControl: this.nameControl});
+    }
+
+    addValidationsForSave() {
+        this.saveErrorService = new ErrorService(this.settings);
+
+        // Add custom checks
+        const notLobbyOwnerCheck: CustomErrorCheck = {
+            name: "NotLobbyOwnerCheck",
+            checkValid: () => this.settings.IsLobbyOwner,
+            errorKey: "ErrorNotLobbyOwner"
+        };
+        this.sendErrorService.add(notLobbyOwnerCheck);
+
+        // Add form controls
+        this.sendErrorService.add({name: "NameCheck", formControl: this.nameControl});
+    }
+
 
     isSaveableNav() {
         return this.currentNav != MapCreatorNav.Main;

@@ -668,6 +668,15 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     Errormin = "Mindestens eine Einstellung hat eine zu niedrige Zahl.";
     Errormax = "Mindestens eine Einstellung hat eine zu hohe Zahl.";
     Errornotenoughteams = "Du hast nicht genug Teams für mindestens eine Karte.";
+    ErrorNotLobbyOwner = "Nur erlaubt für Lobby-Besitzer.";
+    ErrorMapLimitMapCreator = `Deine Map-Limit-Einstellungen sind ungültig.
+Du kannst nur 0 oder 3+ Ecken haben.`;
+    ErrorTeamSpawnsMapCreator = `Deine Team-Spawns-Einstellungen sind ungültig.
+Du hast entweder nicht genügend Teams für diesen Map-Typen oder zu wenig Spawn-Punkte für mindestens ein Team.`;
+    ErrorBombPlacesMapCreator = `Deine Bomben-Spots-Einstellungen sind ungültig.
+Du brauchst mindestens ein Bomben-Spot für diesen Mode.`;
+    ErrorTargetMapCreator = `Deine Ziel-Einstellungen sind ungültig.
+Du brauchst mindestens ein Ziel für diesen Mode.`;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

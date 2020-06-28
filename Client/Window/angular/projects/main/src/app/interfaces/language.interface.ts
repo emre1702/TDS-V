@@ -692,6 +692,11 @@ export interface Language {
     Errormin: string;
     Errormax: string;
     Errornotenoughteams: string;
+    ErrorNotLobbyOwner: string;
+    ErrorMapLimitMapCreator: string;
+    ErrorTeamSpawnsMapCreator: string;
+    ErrorBombPlacesMapCreator: string;
+    ErrorTargetMapCreator: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

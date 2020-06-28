@@ -722,6 +722,15 @@ WARNING! Spaces will get removed and new lines with an already used command will
     Errormin = "At least one setting has a too low number.";
     Errormax = "At least one setting has a too high number.";
     Errornotenoughteams = "You don't have enough teams for atleast one map.";
+    ErrorNotLobbyOwner = "Only allowed for lobby owners";
+    ErrorMapLimitMapCreator = `Your map limit settings are invalid.
+You can only have 0 or 3+ edges.`;
+    ErrorTeamSpawnsMapCreator = `Your team spawns settings are invalid.
+You either don't have enough teams for this map type or too few spawns for at least one team.`;
+    ErrorBombPlacesMapCreator = `Your bomb places settings are invalid.
+You need at least one bomb place for this mode.`;
+    ErrorTargetMapCreator = `Your target settings are invalid.
+You need to set the target for this mode.`;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";
