@@ -1,17 +1,32 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { LanguagePipe } from '../pipes/language.pipe';
 import { SettingsService } from './settings.service';
 
 export class FormControlCheck {
+    public readonly type = "FormControlCheck";
+
     public name: string;
     public formControl: FormControl;
+
+    constructor(name: string, formControl: FormControl) {
+        this.name = name;
+        this.formControl = formControl;
+    }
 }
 
 export class CustomErrorCheck {
+    public readonly type = "CustomErrorCheck";
+
     public name: string;
     public checkValid: () => boolean;
     public errorKey: string;
+
+    constructor(name: string, checkValid: () => boolean, errorKey: string) {
+        this.name = name;
+        this.checkValid = checkValid;
+        this.errorKey = errorKey;
+    }
 }
 
 @Injectable()
@@ -19,7 +34,7 @@ export class ErrorService implements OnDestroy {
 
     public errorMessage: string;
 
-    private toCheck: (FormControlCheck | CustomErrorCheck)[];
+    private toCheck: (FormControlCheck | CustomErrorCheck)[] = [];
     private langPipe = new LanguagePipe();
     private bindedLanguageChanged = false;
 
@@ -45,24 +60,26 @@ export class ErrorService implements OnDestroy {
 
         for (const check of this.toCheck) {
 
-            if (check instanceof FormControlCheck) {
-                if (!check.formControl.invalid) {
+            if (check.type === "FormControlCheck") {
+                const formControlCheck = check as FormControlCheck;
+                if (!formControlCheck.formControl.invalid) {
                     continue;
                 }
-                check.formControl.markAllAsTouched();
-                const key = Object.keys(check.formControl.errors)[0];
+                formControlCheck.formControl.markAllAsTouched();
+                const key = Object.keys(formControlCheck.formControl.errors)[0];
                 errorData = {
                     name: check.name,
                     errorKey: "Error" + key,
-                    data: check.formControl.errors[key]
+                    data: formControlCheck.formControl.errors[key]
                 };
                 break;
 
-            } else if (check instanceof CustomErrorCheck) {
-                if (check.checkValid()) {
+            } else if (check.type === "CustomErrorCheck") {
+                const customErrorCheck = check as CustomErrorCheck;
+                if (customErrorCheck.checkValid()) {
                     continue;
                 }
-                errorData = { name: check.name, errorKey: check.errorKey };
+                errorData = { name: check.name, errorKey: customErrorCheck.errorKey };
                 break;
             }
         }
