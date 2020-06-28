@@ -20,7 +20,7 @@ import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
 import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
 import { isNumber } from 'util';
-import { ErrorService, CustomErrorCheck } from '../../services/error.service';
+import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../services/error.service';
 
 enum MapCreatorNav {
     Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, Vehicles, BombPlaces, Target
@@ -72,8 +72,6 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
         this.addValidationsForSend();
         this.addValidationsForSave();
-
-        this.saveErrorService = new ErrorService(settings);
     }
 
     ngOnInit() {
@@ -693,58 +691,58 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.sendErrorService = new ErrorService(this.settings);
 
         // Add custom checks
-        const notLobbyOwnerCheck: CustomErrorCheck = {
-            name: "NotLobbyOwnerCheck",
-            checkValid: () => this.settings.IsLobbyOwner,
-            errorKey: "ErrorNotLobbyOwner"
-        };
+        const notLobbyOwnerCheck = new CustomErrorCheck(
+            "NotLobbyOwnerCheck",
+            () => this.settings.IsLobbyOwner,
+            "ErrorNotLobbyOwner"
+        );
         this.sendErrorService.add(notLobbyOwnerCheck);
 
-        const mapLimitCheck: CustomErrorCheck = {
-            name: "MapLimitCheck",
-            checkValid: this.isMapLimitValid.bind(this),
-            errorKey: "ErrorMapLimitMapCreator"
-        };
+        const mapLimitCheck = new CustomErrorCheck(
+            "MapLimitCheck",
+            this.isMapLimitValid.bind(this),
+            "ErrorMapLimitMapCreator"
+        );
         this.sendErrorService.add(mapLimitCheck);
 
-        const teamSpawnsCheck: CustomErrorCheck = {
-            name: "TeamSpawnsCheck",
-            checkValid: this.isTeamSpawnsValid.bind(this),
-            errorKey: "ErrorTeamSpawnsMapCreator"
-        };
+        const teamSpawnsCheck = new CustomErrorCheck(
+            "TeamSpawnsCheck",
+            this.isTeamSpawnsValid.bind(this),
+            "ErrorTeamSpawnsMapCreator"
+        );
         this.sendErrorService.add(teamSpawnsCheck);
 
-        const bombPlacesCheck: CustomErrorCheck = {
-            name: "BombPlacesCheck",
-            checkValid: this.isBombPlacesValid.bind(this),
-            errorKey: "ErrorBombPlacesMapCreator"
-        };
+        const bombPlacesCheck = new CustomErrorCheck(
+            "BombPlacesCheck",
+            this.isBombPlacesValid.bind(this),
+            "ErrorBombPlacesMapCreator"
+        );
         this.sendErrorService.add(bombPlacesCheck);
 
-        const targetCheck: CustomErrorCheck = {
-            name: "TargetCheck",
-            checkValid: this.isTargetValid.bind(this),
-            errorKey: "ErrorTargetMapCreator"
-        };
+        const targetCheck = new CustomErrorCheck(
+            "TargetCheck",
+            this.isTargetValid.bind(this),
+            "ErrorTargetMapCreator"
+        );
         this.sendErrorService.add(targetCheck);
 
         // Add form controls
-        this.sendErrorService.add({name: "NameCheck", formControl: this.nameControl});
+        this.sendErrorService.add(new FormControlCheck("NameCheck", this.nameControl));
     }
 
     addValidationsForSave() {
         this.saveErrorService = new ErrorService(this.settings);
 
         // Add custom checks
-        const notLobbyOwnerCheck: CustomErrorCheck = {
-            name: "NotLobbyOwnerCheck",
-            checkValid: () => this.settings.IsLobbyOwner,
-            errorKey: "ErrorNotLobbyOwner"
-        };
+        const notLobbyOwnerCheck = new CustomErrorCheck(
+            "NotLobbyOwnerCheck",
+            () => this.settings.IsLobbyOwner,
+            "ErrorNotLobbyOwner"
+        );
         this.sendErrorService.add(notLobbyOwnerCheck);
 
         // Add form controls
-        this.sendErrorService.add({name: "NameCheck", formControl: this.nameControl});
+        this.sendErrorService.add(new FormControlCheck("NameCheck", this.nameControl));
     }
 
 
