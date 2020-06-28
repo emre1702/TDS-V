@@ -4,10 +4,8 @@ import { LobbySettingPanel } from '../models/lobby-setting-panel';
 import { FormControl, Validators } from '@angular/forms';
 import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { CustomLobbyData } from '../models/custom-lobby-data';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
-import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { CustomLobbyPasswordDialog } from '../dialog/custom-lobby-password-dialog';
 import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
@@ -18,15 +16,15 @@ import { CustomLobbyMenuType } from '../enums/custom-lobby-menu-type.enum';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DataForCustomLobbyCreation } from '../models/data-for-custom-lobby-creation';
 import { CustomLobbyWeaponData } from '../models/custom-lobby-weapon-data';
-import { WeaponHash } from '../enums/weapon-hash.enum';
-import { isNumber } from 'util';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { notEnoughTeamsValidator } from './validators/notEnoughTeamsValidator';
+import { ErrorService, CustomErrorCheck } from '../../../services/error.service';
 
 @Component({
     selector: 'app-custom-lobby',
     templateUrl: './custom-lobby.component.html',
     styleUrls: ['./custom-lobby.component.scss'],
+    providers: [ErrorService],
     animations: [
         trigger('lobbyShowHideAnimation', [
             transition('* => *', [
@@ -192,7 +190,10 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     validationError: string;
 
     constructor(public settings: SettingsService, private rageConnector: RageConnectorService,
-        public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog) {
+        public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog,
+        public errorService: ErrorService) {
+
+        this.addValidatorsToErrorService();
     }
 
     ngOnInit() {
@@ -260,7 +261,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     createLobby() {
         if (!this.creating)
             return;
-        if (!this.areSettingsValid())
+        if (this.errorService.hasError())
             return;
 
         const data = new CustomLobbyData();
@@ -363,36 +364,50 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-    areSettingsValid(): boolean {
-        for (const panel of this.settingPanel) {
-            for (const setting of panel.rows) {
-                if (!setting.formControl.valid) {
-                    console.log(setting.formControl.errors);
-                    setting.formControl.markAllAsTouched();
-                    this.validationError = "Error" + (Object.keys(setting.formControl.errors)[0] ?? "Occured");
-                    return false;
+    private addValidatorsToErrorService() {
+        // Add checks without form controls
+        const checkStartsWithMapcreator: CustomErrorCheck = {
+            name: "StartWithMapcreator",
+            checkValid: () => {
+                const lobbyName = this.getLobbyName().toLowerCase();
+                return !lobbyName.startsWith("mapcreator");
+            },
+            errorKey: "StartWithMapcreatorError"
+        };
+        this.errorService.add(checkStartsWithMapcreator);
+
+        const checkLobbyWithSameName: CustomErrorCheck = {
+            name: "CheckLobbyWithSameName",
+            checkValid: () => {
+                const lobbyName = this.getLobbyName().toLowerCase();
+                return !this.lobbyDatas.some(l => l[1].toLowerCase() == lobbyName);
+            },
+            errorKey: "LobbyWithNameAlreadyExistsError"
+        };
+        this.errorService.add(checkLobbyWithSameName);
+
+        // Add the form controls
+        for (const setting of this.settingPanel) {
+            for (const row of setting.rows) {
+                if (row.formControl) {
+                    this.errorService.add({
+                        name: LobbySetting[row.dataSettingIndex],
+                        formControl: row.formControl,
+                    });
                 }
             }
         }
-        const lobbyName: string = (this.settingPanel
-            .find(p => p.title === "Default").rows
-            .find(p => p.dataSettingIndex === 1 /*"Name"*/).formControl.value as string).toLowerCase();
-        if (lobbyName.startsWith("mapcreator")) {
-            this.validationError = "StartWithMapcreatorError";
-            return false;
-        }
-        if (this.lobbyDatas.find(l => l[1] == lobbyName)) {
-            this.validationError = "LobbyWithNameAlreadyExistsError";
-            return false;
-        }
-
-        this.validationError = undefined;
-        return true;
     }
 
     getEnumKeys(e: {}) {
         const keys = Object.keys(e);
         return keys.slice(keys.length / 2);
+    }
+
+    getLobbyName(): string {
+        return this.settingPanel
+            .find(p => p.title === "Default").rows
+            .find(p => p.dataSettingIndex === 1 /*"Name"*/).formControl.value as string;
     }
 
     getSelectedLobbyTeams() {

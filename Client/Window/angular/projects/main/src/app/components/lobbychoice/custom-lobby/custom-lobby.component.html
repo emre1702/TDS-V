@@ -77,8 +77,8 @@
 
   <div class="last-row-buttons">
     <button *ngIf="creating" mat-raised-button (click)="createLobby()"
-    [disabled]="!areSettingsValid()">
-    <span [matTooltip]="validationError">{{ 'CreateLobby' | language: settings.Lang }}</span>
+    [disabled]="errorService.hasError()">
+    <span [matTooltip]="errorService.errorMessage">{{ 'CreateLobby' | language: settings.Lang }}</span>
     </button>
     <button *ngIf="!creating" mat-raised-button (click)="joinLobby()">
       {{ 'JoinLobby' | language: settings.Lang }}
