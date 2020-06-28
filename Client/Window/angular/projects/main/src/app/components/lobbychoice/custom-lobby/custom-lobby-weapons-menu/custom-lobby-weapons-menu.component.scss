@@ -2,7 +2,7 @@
     position: absolute;
     right: 10px;
     top: 10px;
-    width: 50%;
+    width: 60%;
     height: calc(100% - 20px);
     display: flex;
     flex-direction: column;
@@ -17,7 +17,7 @@
         overflow: auto;
 
         #selected-weapons {
-            width: calc(75% - 10px);
+            width: calc(70% - 10px);
             height: 100%;
             overflow: auto;
 
@@ -43,7 +43,7 @@
         }
 
         #available-weapons {
-            width: calc(25% - 10px);
+            width: calc(30% - 10px);
             height: 100%;
             overflow: hidden;
             border-radius: 30px;
