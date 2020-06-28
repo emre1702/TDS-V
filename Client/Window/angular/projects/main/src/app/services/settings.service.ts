@@ -318,8 +318,10 @@ export class SettingsService {
         rageConnector.listen(DFromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
         rageConnector.listen(DFromClientEvent.LoadThemeSettings, this.loadThemeSettings.bind(this));
 
-        this.LanguageChanged.setMaxListeners(9999);
-        this.ThemeSettingsLoaded.setMaxListeners(9999);
-        this.ThemeSettingChangedAfter.setMaxListeners(9999);
+        this.LanguageChanged.setMaxListeners(40);
+        this.ThemeSettingsLoaded.setMaxListeners(40);
+        this.ThemeSettingChangedBefore.setMaxListeners(40);
+        this.ThemeSettingChanged.setMaxListeners(40);
+        this.ThemeSettingChangedAfter.setMaxListeners(40);
     }
 }
