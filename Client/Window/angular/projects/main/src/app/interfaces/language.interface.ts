@@ -691,6 +691,7 @@ export interface Language {
     Errorminlength: string;
     Errormin: string;
     Errormax: string;
+    Errornotenoughteams: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

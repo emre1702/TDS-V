@@ -721,6 +721,7 @@ WARNING! Spaces will get removed and new lines with an already used command will
     Errorminlength = "At least one setting has too less characters.";
     Errormin = "At least one setting has a too low number.";
     Errormax = "At least one setting has a too high number.";
+    Errornotenoughteams = "You don't have enough teams for atleast one map.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

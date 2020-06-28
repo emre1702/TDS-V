@@ -667,6 +667,7 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     Errorminlength = "Mindestens eine Einstellung hat zu wenig Zeichen.";
     Errormin = "Mindestens eine Einstellung hat eine zu niedrige Zahl.";
     Errormax = "Mindestens eine Einstellung hat eine zu hohe Zahl.";
+    Errornotenoughteams = "Du hast nicht genug Teams für mindestens eine Karte.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";
