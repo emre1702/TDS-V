@@ -18,7 +18,7 @@ import { DataForCustomLobbyCreation } from '../models/data-for-custom-lobby-crea
 import { CustomLobbyWeaponData } from '../models/custom-lobby-weapon-data';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { notEnoughTeamsValidator } from './validators/notEnoughTeamsValidator';
-import { ErrorService, CustomErrorCheck } from '../../../services/error.service';
+import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../../services/error.service';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -366,34 +366,31 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
 
     private addValidatorsToErrorService() {
         // Add checks without form controls
-        const checkStartsWithMapcreator: CustomErrorCheck = {
-            name: "StartWithMapcreator",
-            checkValid: () => {
+        const checkStartsWithMapcreator = new CustomErrorCheck(
+            "StartWithMapcreator",
+            () => {
                 const lobbyName = this.getLobbyName().toLowerCase();
                 return !lobbyName.startsWith("mapcreator");
             },
-            errorKey: "StartWithMapcreatorError"
-        };
+            "StartWithMapcreatorError"
+        );
         this.errorService.add(checkStartsWithMapcreator);
 
-        const checkLobbyWithSameName: CustomErrorCheck = {
-            name: "CheckLobbyWithSameName",
-            checkValid: () => {
+        const checkLobbyWithSameName = new CustomErrorCheck(
+            "CheckLobbyWithSameName",
+            () => {
                 const lobbyName = this.getLobbyName().toLowerCase();
                 return !this.lobbyDatas.some(l => l[1].toLowerCase() == lobbyName);
             },
-            errorKey: "LobbyWithNameAlreadyExistsError"
-        };
+            "LobbyWithNameAlreadyExistsError"
+        );
         this.errorService.add(checkLobbyWithSameName);
 
         // Add the form controls
         for (const setting of this.settingPanel) {
             for (const row of setting.rows) {
                 if (row.formControl) {
-                    this.errorService.add({
-                        name: LobbySetting[row.dataSettingIndex],
-                        formControl: row.formControl,
-                    });
+                    this.errorService.add(new FormControlCheck(LobbySetting[row.dataSettingIndex], row.formControl));
                 }
             }
         }
