@@ -118,7 +118,7 @@ export class ErrorService implements OnDestroy {
                 info = String(data.data);
         }
 
-        if (info) {
+        if (info && info.length) {
             msg += this.langPipe.transform("Info: ", this.settings.Lang) + this.langPipe.transform(info, this.settings.Lang);
         }
 
