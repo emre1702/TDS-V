@@ -13,6 +13,7 @@ namespace TDS_Client.Handler
         private readonly AngularBrowserHandler _angularBrowserHandler;
 
         private bool _cursorToggled;
+        private bool _inMainMenu = true;
         private SyncedPlayerSettingsDto _settings;
 
         #endregion Private Fields
@@ -26,6 +27,7 @@ namespace TDS_Client.Handler
 
             eventsHandler.SettingsLoaded += EventsHandler_SettingsLoaded;
             eventsHandler.CursorToggled += EventsHandler_CursorToggled;
+            eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
         }
 
         #endregion Public Constructors
@@ -42,6 +44,14 @@ namespace TDS_Client.Handler
             }
         }
 
+        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
+        {
+            _inMainMenu = settings.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu;
+
+            if (_settings?.ShowLobbyLeaveInfo == true)
+                _angularBrowserHandler.ToggleInfo(InfoType.LobbyLeave, !_inMainMenu);
+        }
+
         private void EventsHandler_SettingsLoaded(SyncedPlayerSettingsDto settings)
         {
             _settings = settings;
@@ -52,7 +62,7 @@ namespace TDS_Client.Handler
                 _angularBrowserHandler.ToggleInfo(InfoType.Cursor, false);
 
             if (_settings?.ShowLobbyLeaveInfo == true)
-                _angularBrowserHandler.ToggleInfo(InfoType.LobbyLeave, true);
+                _angularBrowserHandler.ToggleInfo(InfoType.LobbyLeave, !_inMainMenu);
             else
                 _angularBrowserHandler.ToggleInfo(InfoType.LobbyLeave, false);
         }
