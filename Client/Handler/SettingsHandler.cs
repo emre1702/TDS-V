@@ -220,7 +220,7 @@ namespace TDS_Client.Handler
 
             SyncThemeSettings(loadedSyncedSettings);
 
-            _eventsHandler.OnSettingsLoaded();
+            _eventsHandler.OnSettingsLoaded(loadedSyncedSettings);
         }
 
         public void RevertTempSettings()

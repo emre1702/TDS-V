@@ -1,0 +1,16 @@
+.container {
+    height: auto;
+    max-width: 18vw;
+    width: auto;
+    margin-top: 10px;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: pre-line;
+
+    .mat-icon {
+        margin-right: 15px;
+    }
+}

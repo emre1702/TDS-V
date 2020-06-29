@@ -93,11 +93,17 @@ namespace TDS_Shared.Data.Models
         [JsonProperty("3")]
         public bool ShowConfettiAtRanking { get; set; }
 
+        [JsonProperty("45")]
+        public bool ShowCursorInfo { get; set; }
+
         [JsonProperty("31")]
         public bool ShowCursorOnChatOpen { get; set; }
 
         [JsonProperty("19")]
         public int ShowFloatingDamageInfoDurationMs { get; set; }
+
+        [JsonProperty("46")]
+        public bool ShowLobbyLeaveInfo { get; set; }
 
         [JsonProperty("39")]
         public float ThemeBackgroundAlphaPercentage { get; set; }

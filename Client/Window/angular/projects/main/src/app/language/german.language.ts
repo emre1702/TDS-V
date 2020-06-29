@@ -677,6 +677,10 @@ Du hast entweder nicht genügend Teams für diesen Map-Typen oder zu wenig Spawn
 Du brauchst mindestens ein Bomben-Spot für diesen Mode.`;
     ErrorTargetMapCreator = `Deine Ziel-Einstellungen sind ungültig.
 Du brauchst mindestens ein Ziel für diesen Mode.`;
+    ShowCursorInfo = "Cursor Info";
+    ShowCursorInfoInfo = "Zeigt oder versteckt die Info für den Cursor in der Ecke rechts-unten.";
+    ShowLobbyLeaveInfo = "Lobby verlassen Info";
+    ShowLobbyLeaveInfoInfo = "Zeigt oder versteckt die Info für das Verlassen der Lobby in der Ecke rechts-unten.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

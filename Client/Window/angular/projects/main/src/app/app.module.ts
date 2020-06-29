@@ -99,6 +99,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { UserpanelSettingsCommandsComponent } from './components/userpanel/userpanel-settings-commands/userpanel-settings-commands.component';
 import { MaterialCssVarsModule, MaterialCssVarsService } from 'angular-material-css-vars';
 import { MatAppBackgroundDirective } from './extensions/matAppBackgroundDirective';
+import { InfosHandlerComponent } from './components/infos-handler/infos-handler.component';
+import { InfoComponent } from './components/infos-handler/info/info.component';
 
 @NgModule({
   declarations: [
@@ -157,7 +159,9 @@ import { MatAppBackgroundDirective } from './extensions/matAppBackgroundDirectiv
     CharCreatorFeaturesComponent,
     CharCreatorAppearanceComponent,
     CharCreatorHairandcolorsComponent,
-    UserpanelSettingsCommandsComponent
+    UserpanelSettingsCommandsComponent,
+    InfosHandlerComponent,
+    InfoComponent
   ],
   imports: [
     ReactiveFormsModule,

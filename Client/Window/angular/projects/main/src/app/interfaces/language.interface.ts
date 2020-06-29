@@ -697,6 +697,12 @@ export interface Language {
     ErrorTeamSpawnsMapCreator: string;
     ErrorBombPlacesMapCreator: string;
     ErrorTargetMapCreator: string;
+    LobbyLeaveInfo: string;
+    CursorVisibleInfo: string;
+    ShowCursorInfo: string;
+    ShowCursorInfoInfo: string;
+    ShowLobbyLeaveInfo: string;
+    ShowLobbyLeaveInfoInfo: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

@@ -297,6 +297,21 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 },
             ]
         },
+
+        {
+            title: "Info", rows: [
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowCursorInfo,
+                    defaultValue: true, nullable: false, formControl: new FormControl(true),
+                    tooltipLangKey: "ShowCursorInfoInfo"
+                },
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowLobbyLeaveInfo,
+                    defaultValue: true, nullable: false, formControl: new FormControl(true),
+                    tooltipLangKey: "ShowLobbyLeaveInfoInfo"
+                },
+            ]
+        }
     ];
 
     private originalChatWidth: string;

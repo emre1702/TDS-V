@@ -30,6 +30,7 @@ export enum DFromClientEvent {
     ToggleFreeroam = "cb26",
     ToggleHUD = "cb27",
     ToggleInFightLobby = "cb28",
+    ToggleInfo = "cb52",
     ToggleLobbyChoice = "cb29",
     ToggleMapCreator = "cb30",
     ToggleRoundStats = "cb31",

@@ -49,5 +49,8 @@ export enum UserpanelSettingKey {
     ThemeSecondaryColor = 41,
     ThemeWarnColor = 42,
     ThemeBackgroundDarkColor = 43,
-    ThemeBackgroundLightColor = 44
+    ThemeBackgroundLightColor = 44,
+
+    ShowCursorInfo = 45,
+    ShowLobbyLeaveInfo = 46
 }

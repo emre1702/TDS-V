@@ -731,6 +731,13 @@ You either don't have enough teams for this map type or too few spawns for at le
 You need at least one bomb place for this mode.`;
     ErrorTargetMapCreator = `Your target settings are invalid.
 You need to set the target for this mode.`;
+    LobbyLeaveInfo = "You can use /leave to leave the lobby.";
+    CursorVisibleInfo = `Your cursor is enabled.
+    You won't be able to use any controls.`;
+    ShowCursorInfo = "Cursor info";
+    ShowCursorInfoInfo = "Shows or hides the info for cursor in the bottom right corner.";
+    ShowLobbyLeaveInfo = "Lobby leave info";
+    ShowLobbyLeaveInfoInfo = "Shows or hides the info for leaving the lobby in the bottom right corner.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

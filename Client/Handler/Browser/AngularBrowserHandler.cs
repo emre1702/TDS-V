@@ -231,6 +231,11 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.ToggleHUD, toggle);
         }
 
+        public void ToggleInfo(InfoType type, bool toggle)
+        {
+            ExecuteFast(ToBrowserEvent.ToggleInfo, (int)type, toggle);
+        }
+
         public void ToggleLobbyChoiceMenu(bool activated)
         {
             _eventsHandler.OnCursorToggleRequested(activated);

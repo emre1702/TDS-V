@@ -63,6 +63,8 @@ namespace TDS_Client.Handler.Events
 
         public delegate void RoundStartedDelegate(bool isSpectator);
 
+        public delegate void SettingsLoadedDelegate(SyncedPlayerSettingsDto settings);
+
         public delegate void TeamChangedDelegate(string currentTeamName);
 
         public delegate void WeaponChangedDelegate(WeaponHash previousWeapon, WeaponHash currentHash);
@@ -125,7 +127,7 @@ namespace TDS_Client.Handler.Events
 
         public event RoundStartedDelegate RoundStarted;
 
-        public event EmptyDelegate SettingsLoaded;
+        public event SettingsLoadedDelegate SettingsLoaded;
 
         public event EmptyDelegate ShowScoreboard;
 
@@ -507,12 +509,12 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnSettingsLoaded()
+        internal void OnSettingsLoaded(SyncedPlayerSettingsDto loadedSyncedSettings)
         {
             try
             {
                 Logging.LogInfo("", "EventsHandler.OnSettingsLoaded");
-                SettingsLoaded?.Invoke();
+                SettingsLoaded?.Invoke(loadedSyncedSettings);
                 Logging.LogInfo("", "EventsHandler.OnSettingsLoaded", true);
             }
             catch (Exception ex)

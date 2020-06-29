@@ -3,6 +3,7 @@ using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
+using TDS_Shared.Data.Models;
 
 namespace TDS_Client.Handler
 {
@@ -12,21 +13,20 @@ namespace TDS_Client.Handler
 
         private readonly BindsHandler _bindsHandler;
         private readonly BrowserHandler _browserHandler;
-        private readonly SettingsHandler _settingsHandler;
         private readonly UtilsHandler _utilsHandler;
+        private SyncedPlayerSettingsDto _syncedPlayerSettingsDto;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public VoiceHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler,
+        public VoiceHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, BrowserHandler browserHandler,
             UtilsHandler utilsHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
             if (!modAPI.Voice.Allowed)
                 return;
 
-            _settingsHandler = settingsHandler;
             _browserHandler = browserHandler;
             _utilsHandler = utilsHandler;
             _bindsHandler = bindsHandler;
@@ -46,8 +46,10 @@ namespace TDS_Client.Handler
             _bindsHandler.Add(Control.PushToTalk, Stop, KeyPressState.Up);
         }
 
-        private void EventsHandler_SettingsLoaded()
+        private void EventsHandler_SettingsLoaded(SyncedPlayerSettingsDto settings)
         {
+            _syncedPlayerSettingsDto = settings;
+
             foreach (var player in ModAPI.Pool.Players.All)
             {
                 SetForPlayer(player);
@@ -58,13 +60,13 @@ namespace TDS_Client.Handler
         {
             if (!ModAPI.Voice.Allowed)
                 return;
-            if (_settingsHandler.PlayerSettings is null)
+            if (_syncedPlayerSettingsDto is null)
                 return;
 
-            player.AutoVolume = _settingsHandler.PlayerSettings.VoiceAutoVolume;
-            if (!_settingsHandler.PlayerSettings.VoiceAutoVolume)
-                player.VoiceVolume = _settingsHandler.PlayerSettings.VoiceVolume;
-            player.Voice3d = _settingsHandler.PlayerSettings.Voice3D;
+            player.AutoVolume = _syncedPlayerSettingsDto.VoiceAutoVolume;
+            if (!_syncedPlayerSettingsDto.VoiceAutoVolume)
+                player.VoiceVolume = _syncedPlayerSettingsDto.VoiceVolume;
+            player.Voice3d = _syncedPlayerSettingsDto.Voice3D;
         }
 
         private void Start(Control _)

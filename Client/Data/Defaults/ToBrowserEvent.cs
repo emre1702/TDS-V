@@ -36,6 +36,7 @@
         public const string ToggleFreeroam = "cb26";
         public const string ToggleHUD = "cb27";
         public const string ToggleInFightLobby = "cb28";
+        public const string ToggleInfo = "cb52";
         public const string ToggleLobbyChoice = "cb29";
         public const string ToggleMapCreator = "cb30";
         public const string ToggleRoundStats = "cb31";
