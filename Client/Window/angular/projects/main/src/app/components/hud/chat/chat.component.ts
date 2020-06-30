@@ -64,7 +64,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         {
             items: this.playerNames,
             triggerChar: "@",
-            mentionSearch: (str, item) => item === str,
+            mentionSearch: (item: string, str) => item.toLowerCase().indexOf(str) >= 0,
             mentionSelectedInfo: item => item,
             mentionSelect: this.getMentionText,
             mentionInfo: item => item,
