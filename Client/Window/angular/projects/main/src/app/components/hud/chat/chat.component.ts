@@ -66,7 +66,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             triggerChar: "@",
             mentionSearch: (item: string, str) => item.toLowerCase().indexOf(str) >= 0,
             mentionSelectedInfo: item => item,
-            mentionSelect: this.getMentionText,
+            mentionSelect: this.getMentionText.bind(this),
             mentionInfo: item => item,
             seachStringEndChar: ":",
             maxItems: 10
@@ -74,10 +74,10 @@ export class ChatComponent implements OnInit, OnDestroy {
         {
             items: this.settings.CommandsData.sort((a, b) => a[0] < b[0] ? -1 : 1),
             triggerChar: this.commandPrefix,
-            mentionSearch: this.searchCommandMention,
-            mentionSelectedInfo: this.getCommandMentionSelectedInfo,
-            mentionSelect: this.getCommandMentionText,
-            mentionInfo: this.getCommandMentionInfo,
+            mentionSearch: this.searchCommandMention.bind(this),
+            mentionSelectedInfo: this.getCommandMentionSelectedInfo.bind(this),
+            mentionSelect: this.getCommandMentionText.bind(this),
+            mentionInfo: this.getCommandMentionInfo.bind(this),
             seachStringEndChar: " ",
             maxItems: 10,
             onlyAllowAtBeginning: true
@@ -464,12 +464,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     searchCommandMention(command: UserpanelCommandDataDto, str: string): boolean {
-        if (command[0].toLowerCase() === str) {
+        if (command[0].toLowerCase().indexOf(str) >= 0) {
             return true;
         }
 
         for (const alias of command[6]) {
-            if (alias.toLowerCase() === str) {
+            if (alias.toLowerCase().indexOf(str) >= 0) {
                 return true;
             }
         }
@@ -481,11 +481,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     getCommandMentionInfo(command: UserpanelCommandDataDto): string {
-        return this.commandPrefix + command[0] + ": " + command[7][this.settings.LangValue];
+        return this.commandPrefix + command[0] + ":    " + command[7][this.settings.LangValue];
     }
 
     getCommandMentionSelectedInfo(command: UserpanelCommandDataDto): string {
-        let str = this.commandPrefix + command[0] + ": " + command[7][this.settings.LangValue] + "\n";
+        let str = this.commandPrefix + command[0] + ":    " + command[7][this.settings.LangValue] + "\n";
         for (const syntax of command[5]) {
             str += "\n" + this.commandPrefix + command[0];
             for (const param of syntax[0]) {

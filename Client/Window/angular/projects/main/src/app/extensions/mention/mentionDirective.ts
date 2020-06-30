@@ -53,7 +53,8 @@ export class MentionDirective {
 
         for (const config of this.mention) {
             if ((event.key === config.triggerChar
-                || config.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey)
+                || config.triggerChar == "@" && event.key == "q" && event.ctrlKey && event.altKey
+                || config.triggerChar == "/" && event.key == "7" && event.shiftKey)
                 &&
                 (!config.onlyAllowAtBeginning || !this._element.nativeElement.value.length)) {
                 this.currentMentionIndex = this.mention.indexOf(config);
