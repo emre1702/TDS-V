@@ -72,9 +72,7 @@ namespace TDS_Client.Handler
             //Rot: 160
 
             ModAPI.Cam.DoScreenFadeIn(200);
-
-            if (_settingsHandler.PlayerSettings.ShowConfettiAtRanking)
-                ModAPI.Event.Tick.Add(_tickEventMethod);
+            ModAPI.Event.Tick.Add(_tickEventMethod);
 
             _winner = _utilsHandler.GetPlayerByHandleValue(winnerHandle);
             _second = secondHandle != 0 ? _utilsHandler.GetPlayerByHandleValue(secondHandle) : null;
@@ -105,9 +103,12 @@ namespace TDS_Client.Handler
             //StartParticleFx("scr_xs_money_rain", -425.48f, 1123.55f, 325.85f, 1f);
             //StartParticleFx("scr_xs_money_rain_celeb", 427.03f, 1123.21f, 325.85f, 1f);
 
-            StartParticleFx("scr_xs_confetti_burst", -428.01f, 1123.47f, 325f, 1.5f);
-            StartParticleFx("scr_xs_confetti_burst", -423.48f, 1122.09f, 325f, 1.5f);
-            StartParticleFx("scr_xs_confetti_burst", -426.17f, 1121.18f, 325f, 2f);
+            if (_settingsHandler.PlayerSettings.ShowConfettiAtRanking)
+            {
+                StartParticleFx("scr_xs_confetti_burst", "scr_xs_celebration", -428.01f, 1123.47f, 325f, 1.5f);
+                StartParticleFx("scr_xs_confetti_burst", "scr_xs_celebration", -423.48f, 1122.09f, 325f, 1.5f);
+                StartParticleFx("scr_xs_confetti_burst", "scr_xs_celebration", -426.17f, 1121.18f, 325f, 2f);
+            }
 
             // didnt work
             //StartParticleFx("scr_xs_champagne_spray", -428.01f, 1123.47f, 325f, 1.5f);
@@ -130,9 +131,9 @@ namespace TDS_Client.Handler
             Start((string)args[0], Convert.ToUInt16(args[1]), Convert.ToUInt16(args[2]), Convert.ToUInt16(args[3]));
         }
 
-        private int StartParticleFx(string effectName, float x, float y, float z, float scale)
+        private int StartParticleFx(string effectName, string effectDict, float x, float y, float z, float scale)
         {
-            ModAPI.Graphics.UseParticleFxAssetNextCall("scr_xs_celebration");
+            ModAPI.Graphics.UseParticleFxAssetNextCall(effectDict);
             return ModAPI.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
         }
 
