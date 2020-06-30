@@ -25,6 +25,7 @@ namespace TDS_Client.Handler
         private readonly SettingsHandler _settingsHandler;
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
+        private int _confettiShownLastMs = 0;
         private IPlayer _second = null;
         private IPlayer _third = null;
         private IPlayer _winner = null;
@@ -103,8 +104,9 @@ namespace TDS_Client.Handler
             //StartParticleFx("scr_xs_money_rain", -425.48f, 1123.55f, 325.85f, 1f);
             //StartParticleFx("scr_xs_money_rain_celeb", 427.03f, 1123.21f, 325.85f, 1f);
 
-            if (_settingsHandler.PlayerSettings.ShowConfettiAtRanking)
+            if (_settingsHandler.PlayerSettings.ShowConfettiAtRanking && currentMs - _confettiShownLastMs > 400)
             {
+                _confettiShownLastMs = currentMs;
                 StartParticleFx("scr_xs_confetti_burst", "scr_xs_celebration", -428.01f, 1123.47f, 325f, 1.5f);
                 StartParticleFx("scr_xs_confetti_burst", "scr_xs_celebration", -423.48f, 1122.09f, 325f, 1.5f);
                 StartParticleFx("scr_xs_confetti_burst", "scr_xs_celebration", -426.17f, 1121.18f, 325f, 2f);
