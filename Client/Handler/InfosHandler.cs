@@ -20,10 +20,10 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public InfosHandler(IModAPI modAPI, LoggingHandler loggingHandler, AngularBrowserHandler angularBrowserHandler, EventsHandler eventsHandler)
+        public InfosHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
-            _angularBrowserHandler = angularBrowserHandler;
+            _angularBrowserHandler = browserHandler.Angular;
 
             eventsHandler.SettingsLoaded += EventsHandler_SettingsLoaded;
             eventsHandler.CursorToggled += EventsHandler_CursorToggled;

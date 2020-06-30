@@ -59,7 +59,7 @@ namespace TDS_Client.Core.Init
                 new CharCreatorHandler(modAPI, loggingHandler, browserHandler, serializer, deathHandler, camerasHandler, eventsHandler, cursorHandler, utilsHandler);
 
                 var registerLoginHandler = new RegisterLoginHandler(modAPI, loggingHandler, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, serializer, eventsHandler);
-                var voiceHandler = new VoiceHandler(modAPI, loggingHandler, bindsHandler, settingsHandler, browserHandler, utilsHandler, eventsHandler);
+                var voiceHandler = new VoiceHandler(modAPI, loggingHandler, bindsHandler, browserHandler, utilsHandler, eventsHandler);
                 var forceStayAtPosHandler = new ForceStayAtPosHandler(modAPI, loggingHandler, remoteEventsSender, settingsHandler, dxHandler, timerHandler, serializer);
                 new CrouchingHandler(modAPI, loggingHandler, eventsHandler, dataSyncHandler, remoteEventsSender);
                 var instructionalButtonHandler = new InstructionalButtonHandler(modAPI, loggingHandler, eventsHandler, settingsHandler);
@@ -86,6 +86,7 @@ namespace TDS_Client.Core.Init
                 new RankingHandler(modAPI, loggingHandler, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler);
                 new MapCreatorHandler(modAPI, loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler,
                     browserHandler, dxHandler, remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler, deathHandler);
+                new InfosHandler(modAPI, loggingHandler, browserHandler, eventsHandler);
 
                 loggingHandler.LogInfo("Services successfully initialized", "Services.Initialize", true);
             }
