@@ -8,11 +8,12 @@ import { getCaretCoordinates } from './caretCoords';
     styleUrls: ['./mentionListComponent.scss'],
     template: `
         <ng-template #defaultItemTemplate let-item="item" let-isActive="isActive">
-        {{ (isActive ? selectedInfoSelecter(item) : infoSelecter(item)) }}
+            {{ (isActive ? selectedInfoSelecter(item) : infoSelecter(item)) }}
         </ng-template>
         <div #list *ngIf="!hidden" [class.mention-dropdown]="dropUp"
         class="mat-app-background mat-elevation-z24 dropdown-menu scrollable-menu mention-menu">
            <button mat-button *ngFor="let item of items; let i = index"
+           class="mention-item"
            [class.mention-active]="activeIndex == i"
            (click)="activeIndex=i; itemClick.emit()"
            (mouseenter)="activeIndex=i">
