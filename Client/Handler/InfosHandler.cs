@@ -38,7 +38,7 @@ namespace TDS_Client.Handler
         {
             _cursorToggled = boolean;
 
-            if (!(_settings is null))
+            if (_settings?.ShowCursorInfo == true)
             {
                 _angularBrowserHandler.ToggleInfo(InfoType.Cursor, boolean);
             }
