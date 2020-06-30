@@ -14,6 +14,7 @@
         string CHAR_IN_NAME_IS_NOT_ALLOWED { get; }
         string COMMAND_DOESNT_EXIST { get; }
         string COMMAND_TOO_LESS_ARGUMENTS { get; }
+        string COMMAND_TOO_MANY_ARGUMENTS { get; }
         string COMMAND_USED_WRONG { get; }
         string COMMITED_SUICIDE { get; }
         string CONNECTING { get; }

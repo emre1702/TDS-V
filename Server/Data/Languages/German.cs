@@ -17,6 +17,7 @@ namespace TDS_Server.Data.Languages
         public override string CHAR_IN_NAME_IS_NOT_ALLOWED => "Das Zeichen '{0}' in deinem Namen ist nicht erlaubt.";
         public override string COMMAND_DOESNT_EXIST => "Der Befehl existiert nicht.";
         public override string COMMAND_TOO_LESS_ARGUMENTS => "Du hast zu wenige Argumente für diesen Befehl angegeben.";
+        public override string COMMAND_TOO_MANY_ARGUMENTS => "Du hast zu viele Argumente für diesen Befehl angegeben.";
         public override string COMMAND_USED_WRONG => "Der Befehl wurde falsch benutzt.";
         public override string COMMITED_SUICIDE => "Du hast Selbstmord begangen.";
         public override string CONNECTING => "Verbindet ...";

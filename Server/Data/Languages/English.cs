@@ -17,6 +17,7 @@ namespace TDS_Server.Data.Languages
         public virtual string CHAR_IN_NAME_IS_NOT_ALLOWED => "The character '{0}' in your name is not allowed.";
         public virtual string COMMAND_DOESNT_EXIST => "The command doesn't exist.";
         public virtual string COMMAND_TOO_LESS_ARGUMENTS => "You used too less arguments for this command.";
+        public virtual string COMMAND_TOO_MANY_ARGUMENTS => "You used too many arguments for this command.";
         public virtual string COMMAND_USED_WRONG => "The command usage was wrong.";
         public virtual string COMMITED_SUICIDE => "You commited suicide.";
         public virtual string CONNECTING => "connecting ...";

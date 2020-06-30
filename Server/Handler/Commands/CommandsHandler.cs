@@ -371,9 +371,13 @@ namespace TDS_Server.Handler.Commands
 
                 if (args.Count == requiredLength || args.Count > requiredLength && args.Count <= methodData.ParameterInfos.Count)
                     return false;
+
+                if (args.Count < requiredLength)
+                    player.SendMessage(player.Language.COMMAND_TOO_LESS_ARGUMENTS);
+                else
+                    player.SendMessage(player.Language.COMMAND_TOO_MANY_ARGUMENTS);
             }
 
-            player.SendMessage(player.Language.COMMAND_TOO_LESS_ARGUMENTS);
             return true;
         }
 
