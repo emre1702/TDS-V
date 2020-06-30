@@ -185,6 +185,7 @@ namespace TDS_Server.Handler.Commands
         {
             try
             {
+                msg = msg.Trim();
                 List<object> origArgs = GetArgs(msg, out string cmd);
                 TDSCommandInfos cmdinfos = new TDSCommandInfos(command: cmd);
                 if (_commandByAlias.ContainsKey(cmd))
