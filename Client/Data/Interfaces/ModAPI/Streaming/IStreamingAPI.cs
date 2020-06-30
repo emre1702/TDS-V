@@ -11,6 +11,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Streaming
 
         bool HasModelLoaded(uint model);
 
+        bool HasNamedPtfxAssetLoaded(string fxName);
+
         bool IsModelInCdimage(uint model);
 
         bool IsModelValid(uint model);

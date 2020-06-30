@@ -16,6 +16,9 @@ namespace TDS_Client.RAGEAPI.Streaming
             return RAGE.Game.Streaming.HasModelLoaded(model);
         }
 
+        public bool HasNamedPtfxAssetLoaded(string fxName)
+            => RAGE.Game.Streaming.HasNamedPtfxAssetLoaded(fxName);
+
         public bool IsModelInCdimage(uint model)
         {
             return RAGE.Game.Streaming.IsModelInCdimage(model);
