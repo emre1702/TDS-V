@@ -782,8 +782,8 @@ Hier siehst du alle bisherigen Einladungen an dich:`;
     SPREAD_OUT = "Teilt euch auf!";
     TO_BOMB = "Geht zur Bombe!";
 
-    target = "Ziel";
-    dbTarget = "Ziel";
+    target = "Ziel (online)";
+    dbTarget = "Ziel (online/offline)";
     reason = "Grund";
     time = "Zeit";
     text = "Text";
@@ -791,6 +791,7 @@ Hier siehst du alle bisherigen Einladungen an dich:`;
     minutes = "Minuten";
     message = "Nachricht";
     money = "Geld";
+    pos = "Position";
 
     TDSPlayer = "Online Spieler";
     ITDSPlayer = "Online Spieler";

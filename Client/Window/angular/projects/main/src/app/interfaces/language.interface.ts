@@ -819,6 +819,7 @@ export interface Language {
     minutes: string;
     message: string;
     money: string;
+    pos: string;
 
     TDSPlayer: string;
     ITDSPlayer: string;

@@ -839,8 +839,8 @@ Here you can see all the invitations sent to you:`;
     SPREAD_OUT = "Spread out!";
     TO_BOMB = "Go to the bomb!";
 
-    target = "target";
-    dbTarget = "target";
+    target = "target (online)";
+    dbTarget = "target (online/offline)";
     reason = "reason";
     time = "time";
     text = "text";
@@ -848,6 +848,7 @@ Here you can see all the invitations sent to you:`;
     minutes = "minutes";
     message = "message";
     money = "money";
+    pos = "position";
 
     TDSPlayer = "online player";
     ITDSPlayer = "online player";
