@@ -8,7 +8,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Handler.Entities.GameModes;
+using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
@@ -19,7 +19,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         public LobbyRoundSettings RoundSettings => Entity.LobbyRoundSettings;
 
-        public GameMode? CurrentGameMode;
+        public Gamemode? CurrentGameMode;
 
         private TDSTimer? _nextRoundStatusTimer;
 
@@ -47,8 +47,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             [RoundStatus.None] = RoundStatus.NewMapChoose
         };
 
-        private readonly Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, GameMode>> _gameModeByMapType
-            = new Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, GameMode>>
+        private readonly Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, Gamemode>> _gameModeByMapType
+            = new Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, Gamemode>>
             {
                 [MapType.Normal] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<Deathmatch>(serviceProvider, lobby, map),
                 [MapType.Bomb] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<Bomb>(serviceProvider, lobby, map),

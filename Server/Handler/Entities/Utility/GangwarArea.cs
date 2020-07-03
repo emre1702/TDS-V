@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.GameModes;
+using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.GangSystem;
@@ -42,6 +43,7 @@ namespace TDS_Server.Handler.Entities.Utility
             _gangsHandler = gangsHandler;
         }
 
+        [ActivatorUtilitiesConstructor]
         public GangwarArea(GangwarAreas entity, MapDto map, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : this(map, modAPI, settingsHandler, gangsHandler, dbContext, loggingHandler)

@@ -1,6 +1,6 @@
 ﻿using TDS_Server.Data.Interfaces;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class ArmsRace
     {

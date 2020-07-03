@@ -1,9 +1,9 @@
 ﻿using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Entities.Utility;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
 {
-    partial class Gangwar
+    partial class GangGangwar
     {
         #region Private Methods
 

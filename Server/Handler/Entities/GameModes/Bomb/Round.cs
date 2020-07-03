@@ -3,7 +3,7 @@ using TDS_Server.Data.Models;
 using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Models.GTA;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class Bomb
     {

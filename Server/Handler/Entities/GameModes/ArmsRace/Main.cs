@@ -6,9 +6,9 @@ using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.Gamemodes
 {
-    partial class ArmsRace : GameMode
+    partial class ArmsRace : Gamemode
     {
         #region Public Constructors
 

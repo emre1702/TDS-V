@@ -29,10 +29,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Entities\GameModes\CaptureTheFlag\" />
-        <Folder Include="Entities\GameModes\KingOfTheHill\" />
-        <Folder Include="Entities\GameModes\Domination\" />
-        <Folder Include="Entities\GameModes\JailBreak\" />
-        <Folder Include="Entities\GameModes\InstaGib\" />
+        <Folder Include="Entities\Gamemodes\CaptureTheFlag\" />
+        <Folder Include="Entities\Gamemodes\KingOfTheHill\" />
+        <Folder Include="Entities\Gamemodes\Domination\" />
+        <Folder Include="Entities\Gamemodes\JailBreak\" />
+        <Folder Include="Entities\Gamemodes\InstaGib\" />
     </ItemGroup>
 </Project>

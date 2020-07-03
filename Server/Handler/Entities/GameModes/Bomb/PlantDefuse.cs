@@ -8,7 +8,7 @@ using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class Bomb
     {

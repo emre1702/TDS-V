@@ -5,7 +5,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class ArmsRace
     {

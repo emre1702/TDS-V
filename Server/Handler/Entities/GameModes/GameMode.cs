@@ -13,9 +13,9 @@ using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.Gamemodes
 {
-    public abstract class GameMode
+    public abstract class Gamemode
     {
         #region Protected Fields
 
@@ -42,7 +42,7 @@ namespace TDS_Server.Handler.Entities.GameModes
 
         #region Protected Constructors
 
-        protected GameMode(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
+        protected Gamemode(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
         {
             Lobby = lobby;
             Map = map;

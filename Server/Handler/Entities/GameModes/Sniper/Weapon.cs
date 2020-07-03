@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TDS_Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class Sniper
     {

@@ -5,7 +5,7 @@ using TDS_Server.Data.Interfaces.ModAPI.MapObject;
 using TDS_Server.Data.Interfaces.ModAPI.TextLabel;
 using TDS_Shared.Data.Default;
 
-namespace TDS_Server.Handler.Entities.GameModes
+namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class Gangwar
     {
