@@ -40,9 +40,32 @@ namespace BonusBotConnector.Client.Requests
 
         #region Public Methods
 
-        public void SendActionInfo(string info)
+        public void SendActionStartInfo(IGangGamemode gamemode)
         {
-            SendRequest(info, _settings.ActionsInfoChannelId);
+            if (_settings.ActionsInfoChannelId is null)
+                return;
+
+            try
+            {
+                var embed = new EmbedToChannelRequest
+                {
+                    Author = "",
+                    Title = "A gang action was started!",
+                    ColorR = 150,
+                    ColorG = 150,
+                    ColorB = 150
+                };
+                embed.Fields.Add(new EmbedField { Name = "Attacker", Value = gamemode.AttackerGang?.Entity.Name ?? "?" });
+                embed.Fields.Add(new EmbedField { Name = "Owner", Value = gamemode.OwnerGang?.Entity.Name ?? "?" });
+                embed.Fields.Add(new EmbedField { Name = "Type", Value = gamemode.Type.ToString() });
+                embed.Fields.Add(new EmbedField { Name = "Area name", Value = gamemode.AreaName });
+
+                SendRequest(embed, _settings.ActionsInfoChannelId);
+            }
+            catch (Exception ex)
+            {
+                Error?.Invoke(ex, true);
+            }
         }
 
         public void SendAdminApplication(Applications application, ITDSPlayer player)
