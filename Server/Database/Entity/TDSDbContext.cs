@@ -43,6 +43,7 @@ namespace TDS_Server.Database.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ChallengeFrequency>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ScoreboardPlayerSorting>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TimeSpanUnitsOfTime>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<PedBodyPart>();
         }
 
         public TDSDbContext(DbContextOptions<TDSDbContext> options)
@@ -108,6 +109,8 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Players> Players { get; set; }
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
+        public virtual DbSet<PlayerWeaponBodypartStats> PlayerWeaponBodypartStats { get; set; }
+        public virtual DbSet<PlayerWeaponStats> PlayerWeaponStats { get; set; }
         public virtual DbSet<Rules> Rules { get; set; }
         public virtual DbSet<ServerDailyStats> ServerDailyStats { get; set; }
         public virtual DbSet<ServerSettings> ServerSettings { get; set; }
@@ -147,6 +150,7 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasPostgresEnum<ChallengeFrequency>();
             modelBuilder.HasPostgresEnum<ScoreboardPlayerSorting>();
             modelBuilder.HasPostgresEnum<TimeSpanUnitsOfTime>();
+            modelBuilder.HasPostgresEnum<PedBodyPart>();
 
             #endregion Enum
 
@@ -1107,6 +1111,54 @@ namespace TDS_Server.Database.Entity
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
+            modelBuilder.Entity<PlayerWeaponBodypartStats>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.WeaponHash, e.BodyPart });
+
+                entity.Property(e => e.AmountHits).HasDefaultValue(0);
+                entity.Property(e => e.AmountOfficialHits).HasDefaultValue(0);
+                entity.Property(e => e.DealtDamage).HasDefaultValue(0);
+                entity.Property(e => e.DealtOfficialDamage).HasDefaultValue(0);
+                entity.Property(e => e.Kills).HasDefaultValue(0);
+                entity.Property(e => e.OfficialKills).HasDefaultValue(0);
+
+                entity.HasOne(e => e.Player)
+                    .WithMany(p => p.WeaponBodypartStats)
+                    .HasForeignKey(e => e.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Weapon)
+                    .WithMany(p => p.PlayerWeaponBodypartStats)
+                    .HasForeignKey(e => e.WeaponHash)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<PlayerWeaponStats>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.WeaponHash });
+
+                entity.Property(e => e.AmountHeadshots).HasDefaultValue(0);
+                entity.Property(e => e.AmountOfficialHeadshots).HasDefaultValue(0);
+                entity.Property(e => e.AmountHits).HasDefaultValue(0);
+                entity.Property(e => e.AmountOfficialHits).HasDefaultValue(0);
+                entity.Property(e => e.AmountShots).HasDefaultValue(0);
+                entity.Property(e => e.AmountOfficialShots).HasDefaultValue(0);
+                entity.Property(e => e.DealtDamage).HasDefaultValue(0);
+                entity.Property(e => e.DealtOfficialDamage).HasDefaultValue(0);
+                entity.Property(e => e.Kills).HasDefaultValue(0);
+                entity.Property(e => e.OfficialKills).HasDefaultValue(0);
+
+                entity.HasOne(e => e.Player)
+                    .WithMany(p => p.WeaponStats)
+                    .HasForeignKey(e => e.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Weapon)
+                    .WithMany(p => p.PlayerWeaponStats)
+                    .HasForeignKey(e => e.WeaponHash)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<Rules>(entity =>
             {
             });
@@ -1338,6 +1390,12 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.ReloadTime).HasDefaultValue(0);
                 entity.Property(e => e.TimeBetweenShots).HasDefaultValue(0);
                 entity.Property(e => e.Range).HasDefaultValue(0);
+
+                entity.Property(e => e.DamageExpMult).HasDefaultValue(0);
+                entity.Property(e => e.HeadshotsExpMult).HasDefaultValue(0);
+                entity.Property(e => e.HitsExpMult).HasDefaultValue(0);
+                entity.Property(e => e.KillsExpMult).HasDefaultValue(0);
+                entity.Property(e => e.ShotsExpMult).HasDefaultValue(0);
             });
 
             #endregion Tables
@@ -1702,101 +1760,101 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<Weapons>().HasData(
-                new Weapons { Hash = WeaponHash.Sniperrifle, Type = WeaponType.SniperRifle, Damage = 101, HeadShotDamageModifier = 1000 },
-                new Weapons { Hash = WeaponHash.Fireextinguisher, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Compactlauncher, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Snowball, Type = WeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Vintagepistol, Type = WeaponType.Handgun, Damage = 34, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Combatpdw, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Heavysniper, Type = WeaponType.SniperRifle, Damage = 216, HeadShotDamageModifier = 2 },
-                new Weapons { Hash = WeaponHash.Heavysniper_mk2, Type = WeaponType.SniperRifle, Damage = 216, HeadShotDamageModifier = 2 },
-                new Weapons { Hash = WeaponHash.Autoshotgun, Type = WeaponType.Shotgun, Damage = 162, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Microsmg, Type = WeaponType.MachineGun, Damage = 21, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Wrench, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pistol, Type = WeaponType.Handgun, Damage = 26, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pistol_mk2, Type = WeaponType.Handgun, Damage = 26, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pumpshotgun, Type = WeaponType.Shotgun, Damage = 58, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pumpshotgun_mk2, Type = WeaponType.Shotgun, Damage = 58, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Appistol, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Ball, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Molotov, Type = WeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Smg, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Smg_mk2, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Stickybomb, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Petrolcan, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Stungun, Type = WeaponType.Handgun, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Heavyshotgun, Type = WeaponType.Shotgun, Damage = 117, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Minigun, Type = WeaponType.HeavyWeapon, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Golfclub, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Flaregun, Type = WeaponType.Handgun, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Flare, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Grenadelauncher_smoke, Type = WeaponType.HeavyWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Hammer, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Combatpistol, Type = WeaponType.Handgun, Damage = 27, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Gusenberg, Type = WeaponType.MachineGun, Damage = 34, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Compactrifle, Type = WeaponType.AssaultRifle, Damage = 34, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Hominglauncher, Type = WeaponType.HeavyWeapon, Damage = 150, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Nightstick, Type = WeaponType.Melee, Damage = 35, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Railgun, Type = WeaponType.HeavyWeapon, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Sawnoffshotgun, Type = WeaponType.Shotgun, Damage = 160, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bullpuprifle, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Firework, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Combatmg, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Combatmg_mk2, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Carbinerifle, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Crowbar, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Flashlight, Type = WeaponType.Melee, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Dagger, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Grenade, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Poolcue, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bat, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pistol50, Type = WeaponType.Handgun, Damage = 51, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Knife, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Mg, Type = WeaponType.MachineGun, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bullpupshotgun, Type = WeaponType.Shotgun, Damage = 112, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bzgas, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Unarmed, Type = WeaponType.Melee, Damage = 15, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Grenadelauncher, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Musket, Type = WeaponType.Shotgun, Damage = 165, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Proximine, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Advancedrifle, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Rpg, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Pipebomb, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Minismg, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Snspistol, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Snspistol_mk2, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Assaultrifle, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Assaultrifle_mk2, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Specialcarbine, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Revolver, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Revolver_mk2, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Doubleaction, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Marksmanrifle, Type = WeaponType.SniperRifle, Damage = 65, HeadShotDamageModifier = 2 },
-                new Weapons { Hash = WeaponHash.Marksmanrifle_mk2, Type = WeaponType.SniperRifle, Damage = 65, HeadShotDamageModifier = 2 },
-                new Weapons { Hash = WeaponHash.Battleaxe, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Heavypistol, Type = WeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Knuckle, Type = WeaponType.Melee, Damage = 30, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Machinepistol, Type = WeaponType.MachineGun, Damage = 20, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Marksmanpistol, Type = WeaponType.Handgun, Damage = 150, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Machete, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Switchblade, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Assaultshotgun, Type = WeaponType.Shotgun, Damage = 192, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Dbshotgun, Type = WeaponType.Shotgun, Damage = 166, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Assaultsmg, Type = WeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Hatchet, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Stone_hatchet, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bottle, Type = WeaponType.Melee, Damage = 10, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Parachute, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Raypistol, Type = WeaponType.Handgun, Damage = 80, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Raycarbine, Type = WeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Carbinerifle_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Rayminigun, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Bullpuprifle_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Specialcarbine_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.Smokegrenade, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.CeramicPistol, Type = WeaponType.Handgun, Damage = 20, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.NavyRevolver, Type = WeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1 },
-                new Weapons { Hash = WeaponHash.HazardCan, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1 }
+                new Weapons { Hash = WeaponHash.Sniperrifle, Type = WeaponType.SniperRifle, Damage = 101, HeadShotDamageModifier = 1000, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Fireextinguisher, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Compactlauncher, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Snowball, Type = WeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Vintagepistol, Type = WeaponType.Handgun, Damage = 34, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Combatpdw, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Heavysniper, Type = WeaponType.SniperRifle, Damage = 216, HeadShotDamageModifier = 2, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Heavysniper_mk2, Type = WeaponType.SniperRifle, Damage = 216, HeadShotDamageModifier = 2, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Autoshotgun, Type = WeaponType.Shotgun, Damage = 162, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Microsmg, Type = WeaponType.MachineGun, Damage = 21, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Wrench, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Pistol, Type = WeaponType.Handgun, Damage = 26, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Pistol_mk2, Type = WeaponType.Handgun, Damage = 26, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Pumpshotgun, Type = WeaponType.Shotgun, Damage = 58, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Pumpshotgun_mk2, Type = WeaponType.Shotgun, Damage = 58, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Appistol, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Ball, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Molotov, Type = WeaponType.ThrownWeapon, Damage = 10, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Smg, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Smg_mk2, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Stickybomb, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Petrolcan, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Stungun, Type = WeaponType.Handgun, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Heavyshotgun, Type = WeaponType.Shotgun, Damage = 117, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Minigun, Type = WeaponType.HeavyWeapon, Damage = 30, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Golfclub, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Flaregun, Type = WeaponType.Handgun, Damage = 50, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Flare, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Grenadelauncher_smoke, Type = WeaponType.HeavyWeapon, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Hammer, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Combatpistol, Type = WeaponType.Handgun, Damage = 27, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Gusenberg, Type = WeaponType.MachineGun, Damage = 34, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Compactrifle, Type = WeaponType.AssaultRifle, Damage = 34, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Hominglauncher, Type = WeaponType.HeavyWeapon, Damage = 150, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Nightstick, Type = WeaponType.Melee, Damage = 35, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Railgun, Type = WeaponType.HeavyWeapon, Damage = 50, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Sawnoffshotgun, Type = WeaponType.Shotgun, Damage = 160, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Bullpuprifle, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Firework, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Combatmg, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Combatmg_mk2, Type = WeaponType.MachineGun, Damage = 28, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Carbinerifle, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Crowbar, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Flashlight, Type = WeaponType.Melee, Damage = 30, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Dagger, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Grenade, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Poolcue, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Bat, Type = WeaponType.Melee, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Pistol50, Type = WeaponType.Handgun, Damage = 51, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Knife, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Mg, Type = WeaponType.MachineGun, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Bullpupshotgun, Type = WeaponType.Shotgun, Damage = 112, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Bzgas, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Unarmed, Type = WeaponType.Melee, Damage = 15, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Grenadelauncher, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Musket, Type = WeaponType.Shotgun, Damage = 165, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Proximine, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Advancedrifle, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Rpg, Type = WeaponType.HeavyWeapon, Damage = 100, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Pipebomb, Type = WeaponType.ThrownWeapon, Damage = 100, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Minismg, Type = WeaponType.MachineGun, Damage = 22, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Snspistol, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Snspistol_mk2, Type = WeaponType.Handgun, Damage = 28, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Assaultrifle, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Assaultrifle_mk2, Type = WeaponType.AssaultRifle, Damage = 30, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Specialcarbine, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Revolver, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Revolver_mk2, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Doubleaction, Type = WeaponType.Handgun, Damage = 110, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Marksmanrifle, Type = WeaponType.SniperRifle, Damage = 65, HeadShotDamageModifier = 2, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Marksmanrifle_mk2, Type = WeaponType.SniperRifle, Damage = 65, HeadShotDamageModifier = 2, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Battleaxe, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Heavypistol, Type = WeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Knuckle, Type = WeaponType.Melee, Damage = 30, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Machinepistol, Type = WeaponType.MachineGun, Damage = 20, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Marksmanpistol, Type = WeaponType.Handgun, Damage = 150, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Machete, Type = WeaponType.Melee, Damage = 45, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Switchblade, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Assaultshotgun, Type = WeaponType.Shotgun, Damage = 192, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Dbshotgun, Type = WeaponType.Shotgun, Damage = 166, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Assaultsmg, Type = WeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Hatchet, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Stone_hatchet, Type = WeaponType.Melee, Damage = 50, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Bottle, Type = WeaponType.Melee, Damage = 10, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Parachute, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Raypistol, Type = WeaponType.Handgun, Damage = 80, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Raycarbine, Type = WeaponType.MachineGun, Damage = 23, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Carbinerifle_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Rayminigun, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Bullpuprifle_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Specialcarbine_mk2, Type = WeaponType.AssaultRifle, Damage = 32, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.Smokegrenade, Type = WeaponType.ThrownWeapon, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.CeramicPistol, Type = WeaponType.Handgun, Damage = 20, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.NavyRevolver, Type = WeaponType.Handgun, Damage = 40, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f },
+                new Weapons { Hash = WeaponHash.HazardCan, Type = WeaponType.Rest, Damage = 0, HeadShotDamageModifier = 1, KillsExpMult = 1, DamageExpMult = 0.005f, HeadshotsExpMult = 0.5f }
             );
 
             modelBuilder.Entity<LobbyWeapons>().HasData(

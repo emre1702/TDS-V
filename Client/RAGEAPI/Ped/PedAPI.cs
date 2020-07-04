@@ -30,6 +30,9 @@ namespace TDS_Client.RAGEAPI.Ped
         public int GetPedArmor(int handle)
             => RAGE.Game.Ped.GetPedArmour(handle);
 
+        public Position3D GetPedBoneCoords(int ped, int boneId, float offsetX = 0, float offsetY = 0, float offsetZ = 0)
+            => RAGE.Game.Ped.GetPedBoneCoords(ped, boneId, offsetX, offsetY, offsetZ).ToPosition3D();
+
         public int GetPedBoneIndex(int ped, int boneId)
             => RAGE.Game.Ped.GetPedBoneIndex(ped, boneId);
 

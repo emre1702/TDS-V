@@ -110,6 +110,7 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<WeaponDatasLoadingHandler>();
             serviceProvider.GetRequiredService<ScoreboardHandler>();
             serviceProvider.GetRequiredService<ChatInfosHandler>();
+            serviceProvider.GetRequiredService<WeaponLevelHandler>();
         }
 
         internal static ServiceProvider InitServiceCollection(IModAPI modAPI)
@@ -199,6 +200,7 @@ namespace TDS_Server.Core.Init
                .AddSingleton<WeaponDatasLoadingHandler>()
                .AddSingleton<ScoreboardHandler>()
                .AddSingleton<ChatInfosHandler>()
+               .AddSingleton<WeaponLevelHandler>()
 
                .AddSingleton<Serializer>()
 

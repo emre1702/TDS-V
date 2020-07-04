@@ -84,10 +84,15 @@ namespace TDS_Server.Handler.Entities.Player
             #endregion Armor
         }
 
-        public void Damage(ref int damage)
+        public void Damage(ref int damage, out bool killed)
         {
             if (damage == 0)
+            {
+                killed = false;
                 return;
+            }
+
+            killed = _armor + _health <= damage;
             damage = Math.Min(_armor + _health, damage);
 
             int leftdmg = damage;

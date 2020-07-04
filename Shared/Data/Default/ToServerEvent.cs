@@ -88,6 +88,8 @@
         public const string TryLogin = "c62";
         public const string TryRegister = "c63";
 
+        public const string WeaponShot = "c71";
+
         #endregion Public Fields
     }
 }

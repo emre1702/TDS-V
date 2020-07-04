@@ -29,7 +29,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return true;
         }
 
-        public void DamagedPlayer(ITDSPlayer target, ITDSPlayer source, WeaponHash weapon, ulong bone)
+        public void DamagedPlayer(ITDSPlayer target, ITDSPlayer source, WeaponHash weapon, PedBone bone)
         {
             DmgSys.DamagePlayer(target, weapon, bone, source);
         }

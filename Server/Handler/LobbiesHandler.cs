@@ -13,7 +13,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.GameModes;
+using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
@@ -326,7 +326,7 @@ namespace TDS_Server.Handler
 
             ExecuteForDB(dbContext =>
             {
-                GameMode.Init(dbContext);
+                Gamemode.Init(dbContext);
                 Sniper.Init(dbContext);
             }).Wait();
         }

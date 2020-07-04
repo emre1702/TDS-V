@@ -33,6 +33,7 @@ namespace TDS_Server.Handler.Entities.Player
                 _dataSyncHandler.SetData(this, PlayerDataKey.Money, DataSyncMode.Player, _entity.PlayerStats.Money);
                 _dataSyncHandler.SetData(this, PlayerDataKey.AdminLevel, DataSyncMode.All, _entity.AdminLvl);
                 LoadTimezone();
+                LoadWeaponStats();
             }
         }
 

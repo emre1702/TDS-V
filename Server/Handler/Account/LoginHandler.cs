@@ -97,6 +97,8 @@ namespace TDS_Server.Handler.Account
                     .Include(p => p.CharDatas.FeaturesData)
                     .Include(p => p.CharDatas.AppearanceData)
                     .Include(p => p.CharDatas.HairAndColorsData)
+                    .Include(p => p.WeaponStats)
+                    .Include(p => p.WeaponBodypartStats)
 
                    .FirstOrDefaultAsync(p => p.Id == id);
 

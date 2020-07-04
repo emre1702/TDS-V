@@ -80,7 +80,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                     return;
                 int damage = player.Health + player.Armor;
                 Lobby.DmgSys.UpdateLastHitter(player, _planter, damage);
-                player.Damage(ref damage);
+                player.Damage(ref damage, out bool killed);
                 if (_planter != null && _planter.CurrentRoundStats != null)
                     _planter.CurrentRoundStats.Damage += damage;
             });

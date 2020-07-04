@@ -2,7 +2,7 @@
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Entities.GameModes;
+using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums;
@@ -75,8 +75,9 @@ namespace TDS_Server.Handler.Events
                 return;
             if (!Enum.TryParse(weaponHashStr, out WeaponHash weaponHash))
                 return;
-            if (!ulong.TryParse(boneIdxStr, out ulong boneIdx))
+            if (!uint.TryParse(boneIdxStr, out uint boneIdx))
                 return;
+            PedBone pedBone = (PedBone)boneIdx;
 
             if (!(player.Lobby is FightLobby fightLobby))
             {
@@ -87,7 +88,7 @@ namespace TDS_Server.Handler.Events
                 return;
             }
 
-            fightLobby.DamagedPlayer(player, attacker, weaponHash, boneIdx);
+            fightLobby.DamagedPlayer(player, attacker, weaponHash, pedBone);
         }
 
         public async void OnLeaveLobby(IPlayer modPlayer)

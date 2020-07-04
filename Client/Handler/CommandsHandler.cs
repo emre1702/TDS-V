@@ -1,10 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Drawing;
+using System.Linq;
 using TDS_Client.Data.Defaults;
+using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
@@ -19,13 +24,17 @@ namespace TDS_Client.Handler
         private readonly PlayerFightHandler _playerFightHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
+        private readonly UtilsHandler _utilsHandler;
+
+        private PedBone _nextPedBone = PedBone.SKEL_ROOT;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public CommandsHandler(IModAPI modAPI, LoggingHandler loggingHandler, ChatHandler chatHandler, SettingsHandler settingsHandler,
-            LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler, CamerasHandler camerasHandler, RemoteEventsSender remoteEventsSender)
+                    LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler, CamerasHandler camerasHandler, RemoteEventsSender remoteEventsSender,
+            UtilsHandler utilsHandler)
             : base(modAPI, loggingHandler)
         {
             _chatHandler = chatHandler;
@@ -34,6 +43,7 @@ namespace TDS_Client.Handler
             _camerasHandler = camerasHandler;
             _remoteEventsSender = remoteEventsSender;
             _settingsHandler = settingsHandler;
+            _utilsHandler = utilsHandler;
 
             modAPI.Event.Add(FromBrowserEvent.CommandUsed, OnCommandUsedMethod);
         }
@@ -41,6 +51,17 @@ namespace TDS_Client.Handler
         #endregion Public Constructors
 
         #region Private Methods
+
+        private void DrawBone(int currentMs)
+        {
+            var pedId = ModAPI.LocalPlayer.PlayerPedId();
+            var coords = ModAPI.Ped.GetPedBoneCoords(pedId, (int)_nextPedBone);
+            if (coords is null)
+                return;
+
+            var screenCoords = _utilsHandler.GetScreenCoordFromWorldCoord(coords);
+            ModAPI.Graphics.DrawText(_nextPedBone.ToString(), (int)(screenCoords.X * 1920f), (int)(screenCoords.Y * 1080f), Data.Enums.Font.Monospace, 1f, Color.Red, AlignmentX.Center, true, true, 999);
+        }
 
         private void OnCommandUsedMethod(object[] args)
         {
@@ -70,8 +91,29 @@ namespace TDS_Client.Handler
                 ModAPI.Chat.Output("Rotation: " + _camerasHandler.ActiveCamera.Rotation.ToString());
                 return;
             }
+            else if (cmd == "bone")
+            {
+                string input = msg.Split(' ')[1];
+                if (input == "start")
+                {
+                    ModAPI.Event.Tick.Add(new Data.Models.EventMethodData<Data.Interfaces.ModAPI.Event.TickDelegate>(DrawBone));
+                }
+                else
+                {
+                    var bodyPart = SharedUtils.GetPedBodyPart(_nextPedBone);
+                    if (!bodyPart.ToString().Equals(input, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string m = "Wrong position for " + _nextPedBone.ToString() + ". Input: " + input + " - Expected: " + bodyPart.ToString();
+                        Logging.LogWarning(m);
+                        ModAPI.Chat.Output(m);
+                    }
+                    _nextPedBone = Enum.GetValues(typeof(PedBone)).Cast<PedBone>().Concat(new[] { default(PedBone) }).SkipWhile(e => !_nextPedBone.Equals(e)).Skip(1).First();
+                }
 
-            var origCmdData = _settingsHandler.CommandsData.AddedCommands.FirstOrDefault(c => c.CustomCommand.Equals(cmd, System.StringComparison.OrdinalIgnoreCase));
+                return;
+            }
+
+            var origCmdData = _settingsHandler.CommandsData.AddedCommands.FirstOrDefault(c => c.CustomCommand.Equals(cmd, StringComparison.OrdinalIgnoreCase));
 
             if (!(origCmdData is null))
             {

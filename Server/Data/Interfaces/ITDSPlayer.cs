@@ -75,6 +75,8 @@ namespace TDS_Server.Data.Interfaces
 
         void AddToChallenge(ChallengeType challengeType, int amount = 1, bool setTheValue = false);
 
+        void AddWeaponShot(WeaponHash weaponHash, PedBodyPart? pedBodyPart, int? damage, bool killed);
+
         void ChangeMuteTime(ITDSPlayer target, int minutes, string reason);
 
         void ChangeVoiceMuteTime(ITDSPlayer player, int minutes, string reason);
@@ -87,7 +89,7 @@ namespace TDS_Server.Data.Interfaces
 
         void ClosePrivateChat(bool v);
 
-        void Damage(ref int damage);
+        void Damage(ref int damage, out bool killed);
 
         string GetLocalDateTimeString(DateTime createTime);
 

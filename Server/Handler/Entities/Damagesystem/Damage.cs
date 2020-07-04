@@ -3,24 +3,23 @@ using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Core.Damagesystem
 {
     partial class Damagesys
     {
-        private static readonly HashSet<ulong> _headBones = new HashSet<ulong>
-        {
-            12844, 31086
-        };
+        #region Private Fields
 
-        private readonly Dictionary<WeaponHash, DamageDto> _damagesDict = new Dictionary<WeaponHash, DamageDto>();
         private readonly Dictionary<ITDSPlayer, Dictionary<ITDSPlayer, int>> _allHitters = new Dictionary<ITDSPlayer, Dictionary<ITDSPlayer, int>>();
+        private readonly Dictionary<WeaponHash, DamageDto> _damagesDict = new Dictionary<WeaponHash, DamageDto>();
 
-#pragma warning disable IDE0060 // Remove unused parameter
+        #endregion Private Fields
 
-        public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, ulong bone, ITDSPlayer? source)
-#pragma warning restore IDE0060 // Remove unused parameter
+        #region Public Methods
+
+        public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, PedBone pedBone, ITDSPlayer? source)
         {
             if (target.ModPlayer is null)
                 return;
@@ -36,10 +35,13 @@ namespace TDS_Server.Core.Damagesystem
             if (target.Team == source.Team)
                 return;
 
-            bool isHeadShot = _headBones.Contains(bone);
+            PedBodyPart pedBodyPart = SharedUtils.GetPedBodyPart(pedBone);
+
+            bool isHeadShot = pedBodyPart == PedBodyPart.Head;
             int damage = (int)Math.Ceiling(_damagesDict.TryGetValue(weapon, out DamageDto? value) ? (value.Damage * (isHeadShot ? value.HeadMultiplier : 1)) : 0);
 
-            target.Damage(ref damage);
+            target.Damage(ref damage, out bool killed);
+            source.AddWeaponShot(weapon, pedBodyPart, damage, killed);
 
             UpdateLastHitter(target, source, damage);
             if (source.CurrentRoundStats != null)
@@ -56,6 +58,16 @@ namespace TDS_Server.Core.Damagesystem
             }
         }
 
+        public int GetDamage(WeaponHash hash, bool headshot = false)
+        {
+            if (!_damagesDict.ContainsKey(hash))
+                return 0;
+            float damage = _damagesDict[hash].Damage;
+            if (headshot)
+                damage *= _damagesDict[hash].HeadMultiplier;
+            return (int)damage;
+        }
+
         public void UpdateLastHitter(ITDSPlayer target, ITDSPlayer? source, int damage)
         {
             if (source is null)
@@ -70,14 +82,6 @@ namespace TDS_Server.Core.Damagesystem
             target.LastHitter = source;
         }
 
-        public int GetDamage(WeaponHash hash, bool headshot = false)
-        {
-            if (!_damagesDict.ContainsKey(hash))
-                return 0;
-            float damage = _damagesDict[hash].Damage;
-            if (headshot)
-                damage *= _damagesDict[hash].HeadMultiplier;
-            return (int)damage;
-        }
+        #endregion Public Methods
     }
 }

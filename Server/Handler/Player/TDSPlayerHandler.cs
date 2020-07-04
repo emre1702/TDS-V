@@ -43,6 +43,7 @@ namespace TDS_Server.Handler.Player
             _loggingHandler = loggingHandler;
 
             modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.LanguageChange, this, OnLanguageChange);
+            modAPI.ClientEvent.Add(ToServerEvent.WeaponShot, this, OnWeaponShot);
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOutBefore;
@@ -177,6 +178,14 @@ namespace TDS_Server.Handler.Player
         private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
         {
             return player.SaveData(true);
+        }
+
+        private void OnWeaponShot(IPlayer player)
+        {
+            var tdsPlayer = GetIfLoggedIn(player);
+            if (tdsPlayer is null)
+                return;
+            tdsPlayer.AddWeaponShot(player.CurrentWeapon, null, null, false);
         }
 
         private void ReduceMuteTime(ITDSPlayer player)
