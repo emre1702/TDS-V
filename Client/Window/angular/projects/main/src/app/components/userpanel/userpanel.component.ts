@@ -19,7 +19,7 @@ export class UserpanelComponent implements OnInit, OnDestroy {
     langPipe = new LanguagePipe();
     userpanelNavPage = UserpanelNavPage;
     currentCommand: UserpanelCommandDataDto;
-    myStatsColumns = {
+    myStatsGeneralColumns = {
         0:  "Id",
         1:  "Name",
         2:  "SCName",
@@ -57,17 +57,19 @@ export class UserpanelComponent implements OnInit, OnDestroy {
         this.userpanelService.loadingData = false;
         this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
         this.settings.AdminLevelChanged.on(null, this.detectChanges.bind(this));
-        this.userpanelService.myStatsLoaded.on(null, this.detectChanges.bind(this));
+        this.userpanelService.myStatsGeneralLoaded.on(null, this.detectChanges.bind(this));
         this.userpanelService.loadingDataChanged.on(null, this.detectChanges.bind(this));
         this.userpanelService.currentNavChanged.on(null, this.detectChanges.bind(this));
+        this.userpanelService.myStatsWeaponsUsedLoaded.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
         this.settings.AdminLevelChanged.off(null, this.detectChanges.bind(this));
-        this.userpanelService.myStatsLoaded.off(null, this.detectChanges.bind(this));
+        this.userpanelService.myStatsGeneralLoaded.off(null, this.detectChanges.bind(this));
         this.userpanelService.loadingDataChanged.off(null, this.detectChanges.bind(this));
         this.userpanelService.currentNavChanged.off(null, this.detectChanges.bind(this));
+        this.userpanelService.myStatsWeaponsUsedLoaded.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
     }
 
@@ -93,8 +95,10 @@ export class UserpanelComponent implements OnInit, OnDestroy {
             this.userpanelService.loadSettingsNormal();
         } else if (nav == UserpanelNavPage.SettingsCommands) {
             this.userpanelService.loadSettingsCommands();
-        } else if (nav == UserpanelNavPage.MyStats) {
-            this.userpanelService.loadMyStats();
+        } else if (nav == UserpanelNavPage.MyStatsGeneral) {
+            this.userpanelService.loadMyStatsGeneral();
+        } else if (nav == UserpanelNavPage.MyStatsWeapon) {
+            this.userpanelService.loadMyStatsWeapon();
         } else if (nav == UserpanelNavPage.Application) {
             this.userpanelService.loadApplicationPage();
         } else if (nav == UserpanelNavPage.Applications) {

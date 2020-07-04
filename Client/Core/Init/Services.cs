@@ -87,6 +87,7 @@ namespace TDS_Client.Core.Init
                 new MapCreatorHandler(modAPI, loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler,
                     browserHandler, dxHandler, remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler, deathHandler);
                 new InfosHandler(modAPI, loggingHandler, browserHandler, eventsHandler);
+                new WeaponStatsHandler(modAPI, loggingHandler, remoteEventsSender);
 
                 loggingHandler.LogInfo("Services successfully initialized", "Services.Initialize", true);
             }

@@ -1,23 +1,23 @@
 import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
+import { UserpanelStatsDataDto as UserpanelStatsGeneralDataDto } from '../interfaces/userpanelStatsDataDto';
 import { SettingsService } from '../../../services/settings.service';
 
 @Component({
-    selector: 'app-userpanel-stats',
-    templateUrl: './userpanel-stats.component.html',
-    styleUrls: ['./userpanel-stats.component.scss'],
+    selector: 'app-userpanel-stats-general',
+    templateUrl: './userpanel-stats-general.component.html',
+    styleUrls: ['./userpanel-stats-general.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserpanelStatsComponent implements OnInit, OnDestroy {
+export class UserpanelStatsGeneralComponent implements OnInit, OnDestroy {
 
     array = Array;
 
     @Input()
-    set stats(value: UserpanelStatsDataDto) {
+    set stats(value: UserpanelStatsGeneralDataDto) {
         this._stats = value;
         this.changeDetector.detectChanges();
     }
-    get stats(): UserpanelStatsDataDto {
+    get stats(): UserpanelStatsGeneralDataDto {
         return this._stats;
     }
 
@@ -53,7 +53,7 @@ export class UserpanelStatsComponent implements OnInit, OnDestroy {
         16: "TotalMapsBought"
     };
 
-    private _stats: UserpanelStatsDataDto;
+    private _stats: UserpanelStatsGeneralDataDto;
     private _columns: { [index: number]: string };
 
     constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }

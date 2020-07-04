@@ -2,7 +2,8 @@
 {
     public enum UserpanelLoadDataType
     {
-        MyStats,
+        MyStatsGeneral,
+        MyStatsWeapon,
         Commands,
         Rules,
         FAQs,

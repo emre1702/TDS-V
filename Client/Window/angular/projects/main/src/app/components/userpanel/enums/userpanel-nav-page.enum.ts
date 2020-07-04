@@ -1,6 +1,8 @@
 export enum UserpanelNavPage {
     Main,
     MyStats,
+    MyStatsGeneral,
+    MyStatsWeapon,
     Admin,
     Settings,
     SettingsSpecial,

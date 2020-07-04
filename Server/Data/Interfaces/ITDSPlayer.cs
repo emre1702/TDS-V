@@ -62,10 +62,10 @@ namespace TDS_Server.Data.Interfaces
         HashSet<ITDSPlayer> Spectators { get; }
         ITeam? Team { get; }
         int TeamIndex { get; }
-
         bool TryingToLoginRegister { get; set; }
-
         int? VoiceMuteTime { get; set; }
+        Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>>? WeaponBodyPartsStats { get; }
+        Dictionary<WeaponHash, PlayerWeaponStats>? WeaponStats { get; }
 
         #endregion Public Properties
 

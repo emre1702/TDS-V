@@ -9,6 +9,7 @@ namespace TDS_Server.Data.Interfaces.Userpanel
         IUserpanelApplicationsAdminHandler ApplicationsAdminHandler { get; }
         IUserpanelApplicationUserHandler ApplicationUserHandler { get; }
         IUserpanelOfflineMessagesHandler OfflineMessagesHandler { get; }
+        IUserpanelPlayerWeaponStatsHandler PlayerWeaponStatsHandler { get; }
         IUserpanelPlayerCommandsHandler SettingsCommandsHandler { get; }
         IUserpanelSettingsNormalHandler SettingsNormalHandler { get; }
         IUserpanelSettingsSpecialHandler SettingsSpecialHandler { get; }

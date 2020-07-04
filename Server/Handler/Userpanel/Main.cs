@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Userpanel
         private readonly UserpanelCommandsHandler _commandsHandler;
         private readonly UserpanelFAQsHandlers _fAQsHandlers;
         private readonly IModAPI _modAPI;
-        private readonly UserpanelPlayerStatsHandler _playerStatsHandler;
+        private readonly UserpanelPlayerGeneralStatsHandler _playerStatsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
 
@@ -38,7 +38,7 @@ namespace TDS_Server.Handler.Userpanel
 
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
 
-            _playerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerStatsHandler>(serviceProvider);
+            _playerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerGeneralStatsHandler>(serviceProvider);
             ApplicationUserHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationUserHandler>(serviceProvider);
             _rulesHandler = ActivatorUtilities.CreateInstance<UserpanelRulesHandler>(serviceProvider);
             _fAQsHandlers = ActivatorUtilities.CreateInstance<UserpanelFAQsHandlers>(serviceProvider);
@@ -51,6 +51,8 @@ namespace TDS_Server.Handler.Userpanel
             SupportRequestHandler = ActivatorUtilities.CreateInstance<UserpanelSupportRequestHandler>(serviceProvider);
 
             ApplicationsAdminHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationsAdminHandler>(serviceProvider, _playerStatsHandler, ApplicationUserHandler);
+            PlayerWeaponStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerWeaponStatsHandler>(serviceProvider);
+
             SupportUserHandler = new UserpanelSupportUserHandler(SupportRequestHandler);
             SupportAdminHandler = new UserpanelSupportAdminHandler(SupportRequestHandler);
 
@@ -64,6 +66,7 @@ namespace TDS_Server.Handler.Userpanel
         public IUserpanelApplicationsAdminHandler ApplicationsAdminHandler { get; }
         public IUserpanelApplicationUserHandler ApplicationUserHandler { get; }
         public IUserpanelOfflineMessagesHandler OfflineMessagesHandler { get; }
+        public IUserpanelPlayerWeaponStatsHandler PlayerWeaponStatsHandler { get; }
         public IUserpanelPlayerCommandsHandler SettingsCommandsHandler { get; }
         public IUserpanelSettingsNormalHandler SettingsNormalHandler { get; }
         public IUserpanelSettingsSpecialHandler SettingsSpecialHandler { get; }
@@ -105,8 +108,12 @@ namespace TDS_Server.Handler.Userpanel
                     player.AddToChallenge(ChallengeType.ReadTheFAQ);
                     break;
 
-                case UserpanelLoadDataType.MyStats:
+                case UserpanelLoadDataType.MyStatsGeneral:
                     json = await _playerStatsHandler.GetData(player);
+                    break;
+
+                case UserpanelLoadDataType.MyStatsWeapon:
+                    json = PlayerWeaponStatsHandler.GetData(player);
                     break;
 
                 case UserpanelLoadDataType.ApplicationUser:

@@ -703,6 +703,24 @@ export interface Language {
     ShowCursorInfoInfo: string;
     ShowLobbyLeaveInfo: string;
     ShowLobbyLeaveInfoInfo: string;
+    OfficialKills: string;
+    DealtDamage: string;
+    DealtOfficialDamage: string;
+    AmountShots: string;
+    AmountOfficialShots: string;
+    AmountHits: string;
+    AmountOfficialHits: string;
+    AmountHeadshots: string;
+    AmountOfficialHeadshots: string;
+    Head: string;
+    Neck: string;
+    UpperBody: string;
+    Spine: string;
+    LowerBody: string;
+    Arm: string;
+    Hand: string;
+    Leg: string;
+    Foot: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;
@@ -791,6 +809,8 @@ export interface Language {
     UserpanelInfo: string;
     Main: string;
     MyStats: string;
+    MyStatsGeneral: string;
+    MyStatsWeapon: string;
     Rules: string;
     RulesUser: string;
     RulesTDSTeam: string;

@@ -34,7 +34,7 @@ namespace TDS_Server.Handler.Userpanel
         public string Questions { get; set; } = string.Empty;
 
         [JsonProperty("3")]
-        public PlayerUserpanelStatsDataDto? Stats { get; set; }
+        public PlayerUserpanelGeneralStatsDataDto? Stats { get; set; }
 
         #endregion Public Properties
     }
@@ -64,13 +64,13 @@ namespace TDS_Server.Handler.Userpanel
         private readonly ISettingsHandler _settingsHandler;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
-        private readonly UserpanelPlayerStatsHandler _userpanelPlayerStatsHandler;
+        private readonly UserpanelPlayerGeneralStatsHandler _userpanelPlayerStatsHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public UserpanelApplicationsAdminHandler(UserpanelPlayerStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
+        public UserpanelApplicationsAdminHandler(UserpanelPlayerGeneralStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler,
             IModAPI modAPI)
             : base(dbContext, loggingHandler)
@@ -140,7 +140,7 @@ namespace TDS_Server.Handler.Userpanel
                     .ConfigureAwait(false));
             var questionsJson = _userpanelApplicationUserHandler.AdminQuestions;
 
-            var stats = await _userpanelPlayerStatsHandler.GetPlayerStats(creatorId, false, player).ConfigureAwait(false);
+            var stats = await _userpanelPlayerStatsHandler.GetPlayerGeneralStats(creatorId, false, player).ConfigureAwait(false);
 
             bool alreadyInvited = await ExecuteForDBAsync(async dbContext
                 => await dbContext.ApplicationInvitations

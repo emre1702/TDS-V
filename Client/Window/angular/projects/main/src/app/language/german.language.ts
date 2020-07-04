@@ -681,6 +681,24 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     ShowCursorInfoInfo = "Zeigt oder versteckt die Info für den Cursor in der Ecke rechts-unten.";
     ShowLobbyLeaveInfo = "Lobby verlassen Info";
     ShowLobbyLeaveInfoInfo = "Zeigt oder versteckt die Info für das Verlassen der Lobby in der Ecke rechts-unten.";
+    OfficialKills = "Offizielle Morde";
+    DealtDamage = "Verursachter Schaden";
+    DealtOfficialDamage = "Verursachter offizieller Schaden";
+    AmountShots = "Anzahl Schüsse";
+    AmountOfficialShots = "Anzahl offizieller Schüsse";
+    AmountHits = "Anzahl Treffer";
+    AmountOfficialHits = "Anzahl offizieller Treffer";
+    AmountHeadshots = "Anzahl Kopfschüsse";
+    AmountOfficialHeadshots = "Anzahl offizieller Kopfschüsse";
+    Head = "Kopf";
+    Neck = "Nacken";
+    UpperBody = "Oberkörper";
+    Spine = "Wirbelsäule";
+    LowerBody = "Unterkörper";
+    Arm = "Arm";
+    Hand = "Hand";
+    Leg = "Bein";
+    Foot = "Fuß";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";
@@ -713,7 +731,9 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
 
     ////////////////// Stats ////////////////
     Main = "Hauptmenü";
-    MyStats = "Meine Stats (wird verbessert)";
+    MyStats = "Meine Stats";
+    MyStatsGeneral = "Stats - Allgemein";
+    MyStatsWeapon = "Stats - Waffen";
     Rules = "Regeln";
     RulesUser = "Regeln - Spieler";
     RulesTDSTeam = "Regeln - TDS-Team";

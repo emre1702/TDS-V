@@ -1,0 +1,39 @@
+<div id="container">
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let weapon of weaponsUsed" (afterExpand)="loadWeaponData(weapon)">
+            <mat-expansion-panel-header>
+                {{ weapon | language: settings.Lang }}
+            </mat-expansion-panel-header>
+            <div class="loading-container" *ngIf="!weaponStatsData[weapon]">
+                <mat-spinner color="accent"></mat-spinner>
+            </div>
+
+            <div class="stats-list" *ngIf="weaponStatsData[weapon]">
+                <div class="stat-row" *ngFor="let key of getWeaponStatKeys()">
+                    <span>{{ key | language: settings.Lang }}: </span>
+                    <span>{{ weaponStatsData[weapon][UserpanelWeaponStats[key]] }}</span>
+                </div>
+
+                <mat-accordion class="bodypart-accordion">
+                    <mat-expansion-panel *ngFor="let bodyPartData of weaponStatsData[weapon][1]">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title><mat-icon color="accent" [svgIcon]="PedBodyPart[bodyPartData[0]]"></mat-icon></mat-panel-title>
+                            <mat-panel-description> {{ PedBodyPart[bodyPartData[0]] | language: settings.Lang }}</mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <div class="stats-list">
+                            <div class="stat-row" *ngFor="let key of getWeaponBodypartStatKeys()">
+                                <span>{{ key | language: settings.Lang }}: </span>
+                                <span>{{ bodyPartData[UserpanelWeaponBodypartStats[key]] }}</span>
+                            </div>
+                        </div>
+
+                    </mat-expansion-panel>
+
+                </mat-accordion>
+            </div>
+
+        </mat-expansion-panel>
+
+    </mat-accordion>
+</div>

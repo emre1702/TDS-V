@@ -21,6 +21,7 @@ export enum DToServerEvent {
     LoadDatasForCustomLobby = "c66",
     LoadMapNamesToLoadForMapCreator = "c26",
     LoadMapForMapCreator = "c25",
+    LoadPlayerWeaponStats = "c72",
     LoadUserpanelData = "c27",
     MapCreatorSyncCurrentMapToServer = "c17",
     MapCreatorSyncData = "c30",

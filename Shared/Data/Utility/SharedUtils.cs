@@ -175,7 +175,7 @@ namespace TDS_Shared.Data.Utility
                 case PedBone.SKEL_Spine2:
                 case PedBone.SKEL_Spine3:
                 case PedBone.SKEL_Spine_Root:
-                    return PedBodyPart.Back;
+                    return PedBodyPart.Spine;
             }
 
             return PedBodyPart.UpperBody;

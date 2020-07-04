@@ -738,6 +738,24 @@ You need to set the target for this mode.`;
     ShowCursorInfoInfo = "Shows or hides the info for cursor in the bottom right corner.";
     ShowLobbyLeaveInfo = "Lobby leave info";
     ShowLobbyLeaveInfoInfo = "Shows or hides the info for leaving the lobby in the bottom right corner.";
+    OfficialKills = "Official kills";
+    DealtDamage = "Dealt damage";
+    DealtOfficialDamage = "Dealt official damage";
+    AmountShots = "Amount shots";
+    AmountOfficialShots = "Amount official shots";
+    AmountHits = "Amount hits";
+    AmountOfficialHits = "Amount official hits";
+    AmountHeadshots = "Amount headshots";
+    AmountOfficialHeadshots = "Amount official headshots";
+    Head = "Head";
+    Neck = "Neck";
+    UpperBody = "Upper body";
+    Spine = "Spine";
+    LowerBody = "Lower body";
+    Arm = "Arm";
+    Hand = "Hand";
+    Leg = "Leg";
+    Foot = "Foot";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";
@@ -770,7 +788,9 @@ You need to set the target for this mode.`;
 
     ////////////////// Stats ////////////////
     Main = "Main";
-    MyStats = "My stats (will improve)";
+    MyStats = "My stats";
+    MyStatsGeneral = "Stats - General";
+    MyStatsWeapon = "Stats - Weapon";
     Rules = "Rules";
     RulesUser = "Rules - User";
     RulesTDSTeam = "Rules - TDS-Team";

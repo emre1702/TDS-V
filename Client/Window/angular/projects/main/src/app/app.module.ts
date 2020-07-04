@@ -58,7 +58,7 @@ import { UserpanelRulesComponent } from './components/userpanel/userpanel-rules/
 import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRulesNav.pipe';
 import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/userpanel-faqs.component';
 import { UserpanelSettingsNormalComponent } from './components/userpanel/userpanel-settings-normal/userpanel-settings-normal.component';
-import { UserpanelStatsComponent } from './components/userpanel/userpanel-stats/userpanel-stats.component';
+import { UserpanelStatsGeneralComponent } from './components/userpanel/userpanel-stats-general/userpanel-stats-general.component';
 import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
 import { InputTypeDirective } from './extensions/inputTypeDirective';
 import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
@@ -101,6 +101,7 @@ import { MaterialCssVarsModule, MaterialCssVarsService } from 'angular-material-
 import { MatAppBackgroundDirective } from './extensions/matAppBackgroundDirective';
 import { InfosHandlerComponent } from './components/infos-handler/infos-handler.component';
 import { InfoComponent } from './components/infos-handler/info/info.component';
+import { UserpanelStatsWeaponComponent } from './components/userpanel/userpanel-stats-weapon/userpanel-stats-weapon.component';
 
 @NgModule({
   declarations: [
@@ -128,7 +129,7 @@ import { InfoComponent } from './components/infos-handler/info/info.component';
     UserpanelRulesComponent,
     UserpanelFAQsComponent,
     UserpanelSettingsNormalComponent,
-    UserpanelStatsComponent,
+    UserpanelStatsGeneralComponent,
     UserpanelApplicationComponent,
 
     InputTypeDirective,
@@ -161,7 +162,8 @@ import { InfoComponent } from './components/infos-handler/info/info.component';
     CharCreatorHairandcolorsComponent,
     UserpanelSettingsCommandsComponent,
     InfosHandlerComponent,
-    InfoComponent
+    InfoComponent,
+    UserpanelStatsWeaponComponent
   ],
   imports: [
     ReactiveFormsModule,

@@ -3,13 +3,13 @@
     public enum PedBodyPart
     {
         Head,
-        Foot,
-        Arm,
-        Leg,
-        UpperBody,
-        LowerBody,
-        Back,
-        Hand,
         Neck,
+        UpperBody,
+        Spine,
+        LowerBody,
+        Arm,
+        Hand,
+        Leg,
+        Foot
     }
 }

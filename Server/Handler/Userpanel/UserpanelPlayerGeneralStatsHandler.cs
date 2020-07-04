@@ -58,80 +58,7 @@ namespace TDS_Server.Handler.Userpanel
         #endregion Public Properties
     }
 
-    public class PlayerUserpanelLobbyStats
-    {
-        #region Public Constructors
-
-        public PlayerUserpanelLobbyStats(PlayerLobbyStats stats)
-        {
-            Lobby = stats.Lobby.Name;
-
-            Kills = stats.Kills;
-            Assists = stats.Assists;
-            Deaths = stats.Deaths;
-            Damage = stats.Damage;
-
-            TotalKills = stats.TotalKills;
-            TotalAssists = stats.TotalAssists;
-            TotalDeaths = stats.TotalDeaths;
-            TotalDamage = stats.TotalDamage;
-
-            TotalRounds = stats.TotalRounds;
-            MostKillsInARound = stats.MostKillsInARound;
-            MostDamageInARound = stats.MostDamageInARound;
-            MostAssistsInARound = stats.MostAssistsInARound;
-        }
-
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        [JsonProperty("2")]
-        public int Assists { get; set; }
-
-        [JsonProperty("4")]
-        public int Damage { get; set; }
-
-        [JsonProperty("3")]
-        public int Deaths { get; set; }
-
-        [JsonProperty("1")]
-        public int Kills { get; set; }
-
-        [JsonProperty("0")]
-        public string Lobby { get; internal set; }
-
-        [JsonProperty("12")]
-        public int MostAssistsInARound { get; set; }
-
-        [JsonProperty("11")]
-        public int MostDamageInARound { get; set; }
-
-        [JsonProperty("10")]
-        public int MostKillsInARound { get; set; }
-
-        [JsonProperty("6")]
-        public int TotalAssists { get; set; }
-
-        [JsonProperty("8")]
-        public int TotalDamage { get; set; }
-
-        [JsonProperty("7")]
-        public int TotalDeaths { get; set; }
-
-        [JsonProperty("5")]
-        public int TotalKills { get; set; }
-
-        [JsonProperty("13")]
-        public int TotalMapsBought { get; set; }
-
-        [JsonProperty("9")]
-        public int TotalRounds { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public class PlayerUserpanelStatsDataDto
+    public class PlayerUserpanelGeneralStatsDataDto
     {
         #region Public Properties
 
@@ -207,9 +134,82 @@ namespace TDS_Server.Handler.Userpanel
         #endregion Public Properties
     }
 
+    public class PlayerUserpanelLobbyStats
+    {
+        #region Public Constructors
+
+        public PlayerUserpanelLobbyStats(PlayerLobbyStats stats)
+        {
+            Lobby = stats.Lobby.Name;
+
+            Kills = stats.Kills;
+            Assists = stats.Assists;
+            Deaths = stats.Deaths;
+            Damage = stats.Damage;
+
+            TotalKills = stats.TotalKills;
+            TotalAssists = stats.TotalAssists;
+            TotalDeaths = stats.TotalDeaths;
+            TotalDamage = stats.TotalDamage;
+
+            TotalRounds = stats.TotalRounds;
+            MostKillsInARound = stats.MostKillsInARound;
+            MostDamageInARound = stats.MostDamageInARound;
+            MostAssistsInARound = stats.MostAssistsInARound;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        [JsonProperty("2")]
+        public int Assists { get; set; }
+
+        [JsonProperty("4")]
+        public int Damage { get; set; }
+
+        [JsonProperty("3")]
+        public int Deaths { get; set; }
+
+        [JsonProperty("1")]
+        public int Kills { get; set; }
+
+        [JsonProperty("0")]
+        public string Lobby { get; internal set; }
+
+        [JsonProperty("12")]
+        public int MostAssistsInARound { get; set; }
+
+        [JsonProperty("11")]
+        public int MostDamageInARound { get; set; }
+
+        [JsonProperty("10")]
+        public int MostKillsInARound { get; set; }
+
+        [JsonProperty("6")]
+        public int TotalAssists { get; set; }
+
+        [JsonProperty("8")]
+        public int TotalDamage { get; set; }
+
+        [JsonProperty("7")]
+        public int TotalDeaths { get; set; }
+
+        [JsonProperty("5")]
+        public int TotalKills { get; set; }
+
+        [JsonProperty("13")]
+        public int TotalMapsBought { get; set; }
+
+        [JsonProperty("9")]
+        public int TotalRounds { get; set; }
+
+        #endregion Public Properties
+    }
+
 #nullable restore
 
-    public class UserpanelPlayerStatsHandler : DatabaseEntityWrapper
+    public class UserpanelPlayerGeneralStatsHandler : DatabaseEntityWrapper
     {
         #region Private Fields
 
@@ -220,7 +220,7 @@ namespace TDS_Server.Handler.Userpanel
 
         #region Public Constructors
 
-        public UserpanelPlayerStatsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler)
+        public UserpanelPlayerGeneralStatsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler)
             => (_serializer, _lobbiesHandler) = (serializer, lobbiesHandler);
 
         #endregion Public Constructors
@@ -233,7 +233,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 if (player.Entity is null)
                     return null;
-                var stats = await GetPlayerStats(player.Entity.Id, true, player);
+                var stats = await GetPlayerGeneralStats(player.Entity.Id, true, player);
                 return _serializer.ToBrowser(stats);
             }
             catch (Exception ex)
@@ -245,7 +245,7 @@ namespace TDS_Server.Handler.Userpanel
             }
         }
 
-        public async Task<PlayerUserpanelStatsDataDto?> GetPlayerStats(int playerId, bool loadLobbyStats = false, ITDSPlayer? forPlayer = null)
+        public async Task<PlayerUserpanelGeneralStatsDataDto?> GetPlayerGeneralStats(int playerId, bool loadLobbyStats = false, ITDSPlayer? forPlayer = null)
         {
             var data = await ExecuteForDBAsync(async dbContext
                 => await dbContext.Players
@@ -263,7 +263,7 @@ namespace TDS_Server.Handler.Userpanel
                     .ThenInclude(s => s.Lobby)
                 .Where(p => p.Id == playerId)
                 .AsNoTracking()
-                .Select(p => new PlayerUserpanelStatsDataDto
+                .Select(p => new PlayerUserpanelGeneralStatsDataDto
                 {
                     Id = p.Id,
                     AdminLvl = p.AdminLvl,
@@ -349,7 +349,4 @@ namespace TDS_Server.Handler.Userpanel
 
         #endregion Public Methods
     }
-
-#nullable disable
-#nullable restore
 }

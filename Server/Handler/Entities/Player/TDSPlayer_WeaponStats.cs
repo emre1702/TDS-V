@@ -8,12 +8,12 @@ namespace TDS_Server.Handler.Entities.Player
 {
     partial class TDSPlayer
     {
-        #region Private Fields
+        #region Public Properties
 
-        private Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>>? _weaponBodyPartsStats;
-        private Dictionary<WeaponHash, PlayerWeaponStats>? _weaponStats;
+        public Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>>? WeaponBodyPartsStats { get; private set; }
+        public Dictionary<WeaponHash, PlayerWeaponStats>? WeaponStats { get; private set; }
 
-        #endregion Private Fields
+        #endregion Public Properties
 
         #region Public Methods
 
@@ -27,9 +27,9 @@ namespace TDS_Server.Handler.Entities.Player
         {
             if (Entity is null)
                 return;
-            if (_weaponStats is null)
+            if (WeaponStats is null)
                 return;
-            if (_weaponBodyPartsStats is null)
+            if (WeaponBodyPartsStats is null)
                 return;
 
             bool isOfficialLobby = Lobby?.IsOfficial == true;
@@ -91,10 +91,10 @@ namespace TDS_Server.Handler.Entities.Player
 
         private PlayerWeaponBodypartStats GetWeaponBodyPartStats(WeaponHash weaponHash, PedBodyPart pedBodyPart)
         {
-            if (!_weaponBodyPartsStats!.TryGetValue(weaponHash, out Dictionary<PedBodyPart, PlayerWeaponBodypartStats>? bodyPartStatsDict))
+            if (!WeaponBodyPartsStats!.TryGetValue(weaponHash, out Dictionary<PedBodyPart, PlayerWeaponBodypartStats>? bodyPartStatsDict))
             {
                 bodyPartStatsDict = new Dictionary<PedBodyPart, PlayerWeaponBodypartStats>();
-                _weaponBodyPartsStats[weaponHash] = bodyPartStatsDict;
+                WeaponBodyPartsStats[weaponHash] = bodyPartStatsDict;
             }
 
             if (!bodyPartStatsDict.TryGetValue(pedBodyPart, out PlayerWeaponBodypartStats? bodyPartStats))
@@ -109,10 +109,10 @@ namespace TDS_Server.Handler.Entities.Player
 
         private PlayerWeaponStats GetWeaponStats(WeaponHash weaponHash)
         {
-            if (!_weaponStats!.TryGetValue(weaponHash, out PlayerWeaponStats? weaponStats))
+            if (!WeaponStats!.TryGetValue(weaponHash, out PlayerWeaponStats? weaponStats))
             {
                 weaponStats = new PlayerWeaponStats { WeaponHash = weaponHash, PlayerId = Entity!.Id };
-                _weaponStats[weaponHash] = weaponStats;
+                WeaponStats[weaponHash] = weaponStats;
                 Entity.WeaponStats.Add(weaponStats);
             }
             return weaponStats;
@@ -122,8 +122,8 @@ namespace TDS_Server.Handler.Entities.Player
         {
             if (Entity is null)
                 return;
-            _weaponBodyPartsStats = Entity.WeaponBodypartStats.GroupBy(e => e.WeaponHash).ToDictionary(e => e.Key, e => e.ToDictionary(w => w.BodyPart, w => w));
-            _weaponStats = Entity.WeaponStats.ToDictionary(e => e.WeaponHash, e => e);
+            WeaponBodyPartsStats = Entity.WeaponBodypartStats.GroupBy(e => e.WeaponHash).ToDictionary(e => e.Key, e => e.ToDictionary(w => w.BodyPart, w => w));
+            WeaponStats = Entity.WeaponStats.ToDictionary(e => e.WeaponHash, e => e);
         }
 
         #endregion Private Methods

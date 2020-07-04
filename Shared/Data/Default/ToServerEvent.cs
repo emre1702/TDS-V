@@ -40,6 +40,7 @@
         public const string LoadDatasForCustomLobby = "c66";
         public const string LoadMapForMapCreator = "c25";
         public const string LoadMapNamesToLoadForMapCreator = "c26";
+        public const string LoadPlayerWeaponStats = "c72";
         public const string LoadUserpanelData = "c27";
         public const string LobbyChatMessage = "c23";
         public const string MapCreatorStartNewMap = "c28";

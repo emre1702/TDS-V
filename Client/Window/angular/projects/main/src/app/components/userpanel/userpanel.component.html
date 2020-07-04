@@ -9,10 +9,13 @@
     </mat-toolbar>
     <div class="container-content">
         <ng-container *ngIf="!userpanelService.loadingData">
-            <app-userpanel-stats *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStats]"
-                [stats]="userpanelService.myStats"
-                [columns]="myStatsColumns">
-            </app-userpanel-stats>
+            <app-userpanel-stats-general *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsGeneral]"
+                [stats]="userpanelService.myStatsGeneral"
+                [columns]="myStatsGeneralColumns">
+            </app-userpanel-stats-general>
+            <app-userpanel-stats-weapon *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsWeapon]"
+                [weaponsUsed]="userpanelService.myStatsWeaponsUsed">
+            </app-userpanel-stats-weapon>
             <app-userpanel-commands *ngIf="userpanelService.currentNav.startsWith('Commands')"
                 [(currentCommand)]="currentCommand"
                 [currentNav]="userpanelService.currentNav" >
@@ -49,7 +52,7 @@
         <mat-icon color="accent">dashboard</mat-icon>
         {{ userpanelNavPage[userpanelNavPage.Main] | language: settings.Lang }}
     </button>
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.MyStats)">
+    <button mat-menu-item [matMenuTriggerFor]="statsNav" >
         <mat-icon color="accent">info</mat-icon>
         {{ userpanelNavPage[userpanelNavPage.MyStats] | language: settings.Lang }}
     </button>
@@ -141,5 +144,16 @@
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.RulesVIP)">
         <mat-icon color="accent">group_add</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.RulesVIP] | language: settings.Lang }}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #statsNav="matMenu">
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.MyStatsGeneral)">
+        <mat-icon color="accent">account_circle</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.MyStatsGeneral] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoNav(userpanelNavPage.MyStatsWeapon)">
+        <mat-icon color="accent" svgIcon="pistol"></mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.MyStatsWeapon] | language: settings.Lang }}</span>
     </button>
 </mat-menu>

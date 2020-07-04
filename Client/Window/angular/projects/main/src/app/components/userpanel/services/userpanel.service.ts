@@ -57,7 +57,7 @@ export class UserpanelService {
     allSettingsSpecial: UserpanelSettingSpecialDataDto;
     allSettingsNormal: UserpanelSettingNormalDataDto;
     settingsCommandsData: UserpanelSettingCommandDataDto;
-    myStats: UserpanelStatsDataDto /*= {
+    myStatsGeneral: UserpanelStatsDataDto /*= {
         Id: 1,
         AdminLvl: 3,
         AmountMapsCreated: 5,
@@ -83,6 +83,7 @@ export class UserpanelService {
             Reason: "Hat dieas doias doijasoi djoas jdoiasoi djaosid jio", Timestamp: "a901290391 12 30912", Type: "Ban"}
         ]
       }*/;
+    myStatsWeaponsUsed: string[];
     adminQuestions: UserpanelAdminQuestionsGroup[] = [];
     myApplicationCreateTime: string = undefined;
     adminApplyInvitations: [
@@ -124,13 +125,14 @@ export class UserpanelService {
     public settingsSpecialLoaded = new EventEmitter();
     public settingsNormalLoaded = new EventEmitter();
     public settingsCommandsDataLoaded = new EventEmitter();
-    public myStatsLoaded = new EventEmitter();
+    public myStatsGeneralLoaded = new EventEmitter();
     public applicationDataLoaded = new EventEmitter();
     public applicationsLoaded = new EventEmitter();
     public supportRequestsLoaded = new EventEmitter();
     public offlineMessagesLoaded = new EventEmitter();
+    public myStatsWeaponsUsedLoaded = new EventEmitter();
 
-    private myStatsLoadCooldown: NodeJS.Timeout;
+    private myStatsGeneralLoadCooldown: NodeJS.Timeout;
 
     constructor(private rageConnector: RageConnectorService, private settings: SettingsService) {
         rageConnector.listen(DFromServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
@@ -198,15 +200,25 @@ export class UserpanelService {
         this.loadingDataChanged.emit(null);*/
     }
 
-    loadMyStats() {
-        if (this.myStatsLoadCooldown) {
+    loadMyStatsGeneral() {
+        if (this.myStatsGeneralLoadCooldown) {
             this.loadingData = false;
             this.loadingDataChanged.emit(null);
             return;
         }
 
-        this.myStatsLoadCooldown = setTimeout(this.myStatsLoadingCooldownEnded.bind(this), 3 * 60 * 1000);
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStats);
+        this.myStatsGeneralLoadCooldown = setTimeout(this.myStatsGeneralLoadingCooldownEnded.bind(this), 3 * 60 * 1000);
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStatsGeneral);
+    }
+
+    loadMyStatsWeapon() {
+        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStatsWeapon);
+
+        /*this.myStatsWeaponsUsed = [ "assaultrifle", "carbinerifle", "advancedrifle" ];
+        this.myStatsWeaponsUsedLoaded.emit(null);
+
+        this.loadingData = false;
+        this.loadingDataChanged.emit(null);*/
     }
 
     loadApplicationPage() {
@@ -251,8 +263,11 @@ export class UserpanelService {
             case UserpanelLoadDataType.SettingsCommands:
                 this.loadedSettingsCommandsData(json);
                 break;
-            case UserpanelLoadDataType.MyStats:
-                this.loadedMyStats(json);
+            case UserpanelLoadDataType.MyStatsGeneral:
+                this.loadedMyStatsGeneral(json);
+                break;
+            case UserpanelLoadDataType.MyStatsWeapon:
+                this.loadedMyStatsWeapon(json);
                 break;
             case UserpanelLoadDataType.ApplicationUser:
                 this.loadedApplicationDataForUser(json);
@@ -306,10 +321,15 @@ export class UserpanelService {
         this.settingsCommandsDataLoaded.emit(null);
     }
 
-    private loadedMyStats(json: string) {
-        this.myStats = JSON.parse(json);
-        this.myStats[20].sort((a, b) => a[1] < b[1] ? -1 : 1);
-        this.myStatsLoaded.emit(null);
+    private loadedMyStatsGeneral(json: string) {
+        this.myStatsGeneral = JSON.parse(json);
+        this.myStatsGeneral[20].sort((a, b) => a[1] < b[1] ? -1 : 1);
+        this.myStatsGeneralLoaded.emit(null);
+    }
+
+    private loadedMyStatsWeapon(json: string) {
+        this.myStatsWeaponsUsed = JSON.parse(json);
+        this.myStatsWeaponsUsedLoaded.emit(null);
     }
 
     private loadedApplicationDataForUser(json: string) {
@@ -367,8 +387,8 @@ export class UserpanelService {
     }
 
 
-    myStatsLoadingCooldownEnded() {
-        this.myStatsLoadCooldown = undefined;
+    myStatsGeneralLoadingCooldownEnded() {
+        this.myStatsGeneralLoadCooldown = undefined;
     }
 
     private escapeSpecialChars(json: string) {

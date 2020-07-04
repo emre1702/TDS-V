@@ -12,6 +12,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { UserpanelSettingKey } from './components/userpanel/enums/userpanel-setting-key.enum';
 import { ThemeSettings } from './interfaces/theme-settings';
+import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 
 @Component({
     selector: 'app-root',
@@ -65,6 +66,16 @@ export class AppComponent {
 
         iconRegistry.addSvgIcon("man", sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));
         iconRegistry.addSvgIcon("woman", sanitizer.bypassSecurityTrustResourceUrl('assets/woman.svg'));
+        iconRegistry.addSvgIcon("pistol", sanitizer.bypassSecurityTrustResourceUrl('assets/pistol.svg'));
+        iconRegistry.addSvgIcon("Head", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/head.svg'));
+        iconRegistry.addSvgIcon("Neck", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/neck.svg'));
+        iconRegistry.addSvgIcon("UpperBody", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/upperbody.svg'));
+        iconRegistry.addSvgIcon("Spine", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/spine.svg'));
+        iconRegistry.addSvgIcon("LowerBody", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/lowerbody.svg'));
+        iconRegistry.addSvgIcon("Arm", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/arm.svg'));
+        iconRegistry.addSvgIcon("Hand", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/hand.svg'));
+        iconRegistry.addSvgIcon("Leg", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/leg.svg'));
+        iconRegistry.addSvgIcon("Foot", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/foot.svg'));
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
