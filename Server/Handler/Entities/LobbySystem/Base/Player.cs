@@ -13,7 +13,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         #region Public Properties
 
-        public bool FreezePlayerOnCountdown => !SetPositionOnPlayerAdd;
+        public bool FreezePlayerOnCountdown => SetPositionOnPlayerAdd;
         public bool SavePlayerLobbyStats { get; set; } = true;
         public bool SetPositionOnPlayerAdd => !IsGangActionLobby && !(this is GangLobby);
         public bool SpawnPlayer => SetPositionOnPlayerAdd;
