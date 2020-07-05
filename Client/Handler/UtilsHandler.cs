@@ -466,6 +466,8 @@ namespace TDS_Client.Handler
             ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_CASH);
             ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL_STATS);
             ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_ICON);
+            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_CASH_CHANGE);
+            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_MP_CASH);
         }
 
         #endregion Private Methods
