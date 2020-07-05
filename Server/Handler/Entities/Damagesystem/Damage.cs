@@ -19,7 +19,7 @@ namespace TDS_Server.Core.Damagesystem
 
         #region Public Methods
 
-        public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, PedBone pedBone, ITDSPlayer? source)
+        public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, PedBodyPart pedBodyPart, ITDSPlayer? source)
         {
             if (target.ModPlayer is null)
                 return;
@@ -34,8 +34,6 @@ namespace TDS_Server.Core.Damagesystem
                 return;
             if (target.Team == source.Team)
                 return;
-
-            PedBodyPart pedBodyPart = SharedUtils.GetPedBodyPart(pedBone);
 
             bool isHeadShot = pedBodyPart == PedBodyPart.Head;
             int damage = (int)Math.Ceiling(_damagesDict.TryGetValue(weapon, out DamageDto? value) ? (value.Damage * (isHeadShot ? value.HeadMultiplier : 1)) : 0);

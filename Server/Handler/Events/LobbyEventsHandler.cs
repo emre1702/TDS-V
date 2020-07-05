@@ -31,7 +31,8 @@ namespace TDS_Server.Handler.Events
             _tdsPlayerHandler = tdsPlayerHandler;
 
             modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.ChooseTeam, this, OnChooseTeam);
-            modAPI.ClientEvent.Add<IPlayer, int, string, string>(ToServerEvent.GotHit, this, OnGotHit);
+            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.GotHit, this, OnGotHit);
+            modAPI.ClientEvent.Add<IPlayer, int, long, int>(ToServerEvent.HitOtherPlayer, this, OnHitOtherPlayer);
             modAPI.ClientEvent.Add<IPlayer, bool>(ToServerEvent.SpectateNext, this, OnSpectateNext);
             modAPI.ClientEvent.Add(ToServerEvent.StartDefusing, this, OnStartDefusing);
             modAPI.ClientEvent.Add(ToServerEvent.StartPlanting, this, OnStartPlanting);
@@ -65,30 +66,36 @@ namespace TDS_Server.Handler.Events
             arena.ChooseTeam(player, index);
         }
 
-        public void OnGotHit(IPlayer modPlayer, int attackerRemoteId, string weaponHashStr, string boneIdxStr)
+        public void OnGotHit(IPlayer modPlayer, int damage)
         {
             var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
             if (player is null)
                 return;
-            var attacker = _tdsPlayerHandler.GetIfLoggedIn((ushort)attackerRemoteId);
+
+            player.Damage(ref damage, out _);
+        }
+
+        public void OnHitOtherPlayer(IPlayer attackerModPlayer, int targetRemoteId, long weaponHashLong, int bodyPartValue)
+        {
+            var attacker = _tdsPlayerHandler.GetIfLoggedIn(attackerModPlayer);
             if (attacker is null)
                 return;
-            if (!Enum.TryParse(weaponHashStr, out WeaponHash weaponHash))
+            var target = _tdsPlayerHandler.GetIfLoggedIn((ushort)targetRemoteId);
+            if (target is null)
                 return;
-            if (!uint.TryParse(boneIdxStr, out uint boneIdx))
-                return;
-            PedBone pedBone = (PedBone)boneIdx;
+            WeaponHash weaponHash = (WeaponHash)weaponHashLong;
+            PedBodyPart bodyPart = (PedBodyPart)bodyPartValue;
 
-            if (!(player.Lobby is FightLobby fightLobby))
+            if (!(target.Lobby is FightLobby fightLobby))
             {
                 _loggingHandler.LogError(
-                    string.Format("Attacker {0} dealt damage on bone {1} to {2} - but this player isn't in fightlobby.",
-                        attacker.DisplayName, boneIdx, player.DisplayName),
+                    string.Format("Attacker {0} dealt damage on body part {1} to {2} - but this player isn't in fightlobby.",
+                        attacker.DisplayName, bodyPart, target.DisplayName),
                     Environment.StackTrace, null, attacker);
                 return;
             }
 
-            fightLobby.DamagedPlayer(player, attacker, weaponHash, pedBone);
+            fightLobby.DamagedPlayer(target, attacker, weaponHash, bodyPart);
         }
 
         public async void OnLeaveLobby(IPlayer modPlayer)

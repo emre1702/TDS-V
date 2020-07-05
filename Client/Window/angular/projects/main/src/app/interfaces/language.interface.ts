@@ -721,6 +721,8 @@ export interface Language {
     Hand: string;
     Leg: string;
     Foot: string;
+    Torso: string;
+    GenitalRegion: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

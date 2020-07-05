@@ -699,6 +699,8 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     Hand = "Hand";
     Leg = "Bein";
     Foot = "Fuß";
+    Torso = "Rumpf";
+    GenitalRegion = "Genitalbereich";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

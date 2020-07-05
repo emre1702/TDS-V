@@ -155,6 +155,7 @@ namespace TDS_Client.RAGEAPI.Ped
             int outBone = 0;
             if (!GetLastDamageBone(ref outBone))
                 return null;
+
             return (PedBone)outBone;
         }
 

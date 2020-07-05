@@ -1,4 +1,7 @@
-﻿using TDS_Client.Data.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
@@ -9,6 +12,7 @@ using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Deathmatch
@@ -16,6 +20,11 @@ namespace TDS_Client.Handler.Deathmatch
     public class DamageHandler
     {
         #region Private Fields
+
+        private readonly Dictionary<int, PedBodyPart> _bodyPartByBoneIndex = new Dictionary<int, PedBodyPart>
+        {
+            //Todo with OutgoingDamage
+        };
 
         private readonly BrowserHandler _browserHandler;
         private readonly LobbyHandler _lobbyHandler;
@@ -48,24 +57,27 @@ namespace TDS_Client.Handler.Deathmatch
         {
             _modAPI.Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
 
-            if (sourcePlayer != null)
+            if (sourcePlayer is null)
             {
-                cancel.Cancel = true;
-                if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer))
-                    return;
-
-                _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.GotHit, (int)sourcePlayer.RemoteId, weaponHash.ToString(), boneIdx.ToString());
+                _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.GotHit, damage);
                 _browserHandler.PlainMain.ShowBloodscreen();
             }
             else
-                _browserHandler.PlainMain.ShowBloodscreen();
+            {
+                cancel.Cancel = true;
+
+                if (!_lobbyHandler.Teams.IsInSameTeam(sourcePlayer))
+                    _browserHandler.PlainMain.ShowBloodscreen();
+            }
         }
 
         private void OnOutgoingDamageMethod(IEntity sourceEntity, IEntity targetEntity, IPlayer sourcePlayer, WeaponHash weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
         {
-            _modAPI.Console.Log(ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is IPlayer}", true);
+            _modAPI.Console.Log(ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {(targetEntity is IPlayer targetPlayer ? targetPlayer.Name : "Not player")}", true);
 
             if (sourcePlayer is null)
+                return;
+            if (sourcePlayer == _modAPI.LocalPlayer)
                 return;
 
             if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer))
@@ -74,6 +86,8 @@ namespace TDS_Client.Handler.Deathmatch
                 return;
             }
 
+            var bodyPart = SharedUtils.GetPedBodyPart((int)boneIdx);
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.HitOtherPlayer, (int)sourcePlayer.RemoteId, (long)weaponHash, (int)bodyPart);
             _playerFightHandler.HittedOpponent();
         }
 

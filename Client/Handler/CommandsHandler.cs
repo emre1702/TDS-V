@@ -91,6 +91,14 @@ namespace TDS_Client.Handler
                 ModAPI.Chat.Output("Rotation: " + _camerasHandler.ActiveCamera.Rotation.ToString());
                 return;
             }
+            else if (cmd == "boneindex")
+            {
+                foreach (var boneId in Enum.GetValues(typeof(PedBone)).Cast<PedBone>())
+                {
+                    var boneIndex = ModAPI.Ped.GetPedBoneIndex(ModAPI.LocalPlayer.Handle, (int)boneId);
+                    Logging.LogWarning("Bone id: " + boneId + " | Bone index: " + boneIndex);
+                }
+            }
             else if (cmd == "bone")
             {
                 string input = msg.Split(' ')[1];

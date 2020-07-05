@@ -36,6 +36,15 @@ namespace TDS_Client.RAGEAPI.Ped
         public int GetPedBoneIndex(int ped, int boneId)
             => RAGE.Game.Ped.GetPedBoneIndex(ped, boneId);
 
+        public PedBone? GetPedLastDamageBone(int ped)
+        {
+            int boneId = 0;
+            if (!RAGE.Game.Ped.GetPedLastDamageBone(ped, ref boneId))
+                return null;
+
+            return (PedBone)boneId;
+        }
+
         #endregion Public Methods
     }
 }

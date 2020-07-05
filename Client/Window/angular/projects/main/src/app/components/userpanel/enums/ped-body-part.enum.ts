@@ -1,11 +1,10 @@
 export enum PedBodyPart {
     Head,
     Neck,
-    UpperBody,
-    Spine,
-    LowerBody,
+    Torso,
+    GenitalRegion,
     Arm,
     Hand,
     Leg,
-    Foot,
+    Foot
 }

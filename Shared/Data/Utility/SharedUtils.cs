@@ -57,6 +57,51 @@ namespace TDS_Shared.Data.Utility
             return Color.White;
         }
 
+        public static PedBodyPart GetPedBodyPart(int boneIndex)
+        {
+            switch (boneIndex)
+            {
+                case 0:
+                    return PedBodyPart.GenitalRegion;
+
+                case 1:
+                case 2:
+                case 4:
+                case 5:
+                    return PedBodyPart.Leg;
+
+                case 3:
+                case 6:
+                    return PedBodyPart.Foot;
+
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    return PedBodyPart.Torso;
+
+                case 11:
+                case 12:
+                case 13:
+                case 15:
+                case 16:
+                case 17:
+                    return PedBodyPart.Arm;
+
+                case 14:
+                case 18:
+                    return PedBodyPart.Hand;
+
+                case 19:
+                    return PedBodyPart.Neck;
+
+                case 20:
+                    return PedBodyPart.Head;
+            }
+
+            return PedBodyPart.Head;
+        }
+
         public static PedBodyPart GetPedBodyPart(PedBone pedBone)
         {
             switch (pedBone)
@@ -149,14 +194,19 @@ namespace TDS_Shared.Data.Utility
 
                 case PedBone.SKEL_L_Clavicle:
                 case PedBone.SKEL_R_Clavicle:
-                    return PedBodyPart.UpperBody;
-
                 case PedBone.SKEL_ROOT:
                 case PedBone.IK_Root:
                 case PedBone.RB_L_ThighRoll:
                 case PedBone.RB_R_ThighRoll:
+                case PedBone.SKEL_Spine0:
+                case PedBone.SKEL_Spine1:
+                case PedBone.SKEL_Spine2:
+                case PedBone.SKEL_Spine3:
+                case PedBone.SKEL_Spine_Root:
+                    return PedBodyPart.Torso;
+
                 case PedBone.SKEL_Pelvis:
-                    return PedBodyPart.LowerBody;
+                    return PedBodyPart.GenitalRegion;
 
                 case PedBone.RB_Neck_1:
                 case PedBone.SKEL_Neck_1:
@@ -169,16 +219,9 @@ namespace TDS_Shared.Data.Utility
                 case PedBone.MH_L_Knee:
                 case PedBone.MH_R_Knee:
                     return PedBodyPart.Leg;
-
-                case PedBone.SKEL_Spine0:
-                case PedBone.SKEL_Spine1:
-                case PedBone.SKEL_Spine2:
-                case PedBone.SKEL_Spine3:
-                case PedBone.SKEL_Spine_Root:
-                    return PedBodyPart.Spine;
             }
 
-            return PedBodyPart.UpperBody;
+            return PedBodyPart.Torso;
         }
 
         public static T GetRandom<T>(params T[] elements)

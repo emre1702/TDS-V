@@ -4,9 +4,8 @@
     {
         Head,
         Neck,
-        UpperBody,
-        Spine,
-        LowerBody,
+        Torso,
+        GenitalRegion,
         Arm,
         Hand,
         Leg,

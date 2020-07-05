@@ -756,6 +756,8 @@ You need to set the target for this mode.`;
     Hand = "Hand";
     Leg = "Leg";
     Foot = "Foot";
+    Torso = "Torso";
+    GenitalRegion = "Genital region";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

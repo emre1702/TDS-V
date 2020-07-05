@@ -17,6 +17,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
 
         int GetPedBoneIndex(int ped, int boneId);
 
+        PedBone? GetPedLastDamageBone(int ped);
+
         #endregion Public Methods
     }
 }

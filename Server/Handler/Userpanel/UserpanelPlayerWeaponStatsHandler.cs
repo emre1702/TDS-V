@@ -61,6 +61,7 @@ namespace TDS_Server.Handler.Userpanel
             var data = new UserpanelPlayerWeaponStatsData
             {
                 WeaponName = weaponHash.ToString(),
+                BodyPartsStats = new List<UserpanelPlayerWeaponBodyPartStatsData>(),
                 Kills = weaponStats.Kills,
                 OfficialKills = weaponStats.OfficialKills,
                 AmountHeadshots = weaponStats.AmountHeadshots,

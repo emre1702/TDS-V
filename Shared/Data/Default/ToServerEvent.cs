@@ -24,7 +24,7 @@
         public const string GetVehicle = "c11";
         public const string GotHit = "c12";
 
-        //public const string HitOtherPlayer = "c";
+        public const string HitOtherPlayer = "c73";
 
         public const string JoinedCustomLobbiesMenu = "c14";
         public const string JoinLobby = "c15";

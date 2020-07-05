@@ -76,6 +76,8 @@ export class AppComponent {
         iconRegistry.addSvgIcon("Hand", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/hand.svg'));
         iconRegistry.addSvgIcon("Leg", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/leg.svg'));
         iconRegistry.addSvgIcon("Foot", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/foot.svg'));
+        iconRegistry.addSvgIcon("GenitalRegion", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/genitalregion.svg'));
+        iconRegistry.addSvgIcon("Torso", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/torso.svg'));
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
