@@ -264,8 +264,11 @@ namespace TDS_Client.RAGEAPI.Ped
         public bool HasGotWeaponComponent(WeaponHash weaponHash, uint componentHash)
             => HasGotWeaponComponent((uint)weaponHash, componentHash);
 
+        public bool IsArmed(ArmedType type)
+            => IsArmed((int)type);
+
         public bool IsDeadOrDying()
-            => IsDeadOrDying(true);
+                    => IsDeadOrDying(true);
 
         public bool IsHeadshotReady()
             => IsheadshotReady();

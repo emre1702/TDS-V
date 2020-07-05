@@ -454,6 +454,13 @@ namespace TDS_Client.Handler
         private void DisableControlActions(int _)
         {
             ModAPI.Control.DisableControlAction(InputGroup.WHEEL, Control.EnterCheatCode);
+
+            if (ModAPI.LocalPlayer.IsArmed(ArmedType.AllExceptMelee))
+            {
+                ModAPI.Control.DisableControlAction(InputGroup.MOVE, Control.MeleeAttackLight);
+                ModAPI.Control.DisableControlAction(InputGroup.MOVE, Control.MeleeAttackHeavy);
+                ModAPI.Control.DisableControlAction(InputGroup.MOVE, Control.MeleeAttackAlternate);
+            }
         }
 
         private void EventsHandler_LoggedIn()

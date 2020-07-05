@@ -459,7 +459,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         bool IsAPlayer();
 
         // Summary: see RAGE.Game.Weapon.IsPedArmed(System.Int32,System.Int32)
-        bool IsArmed(int p1);
+        bool IsArmed(ArmedType type);
 
         // Summary: see RAGE.Game.Ai.IsPedBeingArrested(System.Int32)
         bool IsBeingArrested();

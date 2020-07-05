@@ -460,6 +460,9 @@ namespace TDS_Client.RAGEAPI.Player
         public int IntToPlayerindex(int value)
             => RAGE.Game.Player.IntToPlayerindex(value);
 
+        public bool IsArmed(ArmedType type)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    => IsArmed((int)type);
+
         public bool IsBeingArrested(bool atArresting)
             => RAGE.Game.Player.IsPlayerBeingArrested(atArresting);
 
