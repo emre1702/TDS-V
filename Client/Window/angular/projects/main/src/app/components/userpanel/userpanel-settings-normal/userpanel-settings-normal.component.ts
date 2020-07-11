@@ -16,6 +16,7 @@ import { TimeSpanUnitsOfTime } from '../enums/timespan-units-of-time.enum';
 import { ScoreboardPlayerSorting } from '../enums/scoreboard-player-sorting';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatInput } from '@angular/material';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-userpanel-settings-normal',
@@ -324,7 +325,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         public settings: SettingsService,
         private userpanelService: UserpanelService,
         public changeDetector: ChangeDetectorRef,
-        private rageConnector: RageConnectorService) { }
+        private rageConnector: RageConnectorService,
+        private sanitizer: DomSanitizer) { }
 
     ngOnInit() {
         this.userpanelService.settingsNormalLoaded.on(null, this.loadSettings.bind(this));
@@ -486,6 +488,10 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 break;
         }
         this.settings.triggerChatSettingsChanged();
+    }
+
+    getColor(color: string): SafeStyle {
+        return this.sanitizer.bypassSecurityTrustStyle(color);
     }
 
     private overrideLoadedSettingsWithCurrentSettings() {

@@ -113,7 +113,7 @@
                                 <mat-label>{{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}</mat-label>
                                 <input #input matInput [(colorPicker)]="setting.formControl.value"
                                     [formControl]="setting.formControl"
-                                    [style.background]="setting.formControl.value" [cpFallbackColor]="setting.defaultValue"
+                                    [style.background]="getColor(setting.formControl.value)" [cpFallbackColor]="setting.defaultValue"
                                     (colorPickerChange)="onColorChange(setting)" cpOutputFormat="rgba"
                                     cpAlphaChannel="always" cpUseRootViewContainer="true"
                                     [cpIgnoredElements]="[input]"
@@ -125,7 +125,7 @@
                             <button mat-icon-button (click)="setting.toggleColorPicker = !setting.toggleColorPicker">
                                 <mat-icon color="accent">color_lens</mat-icon>
                             </button>
-                            <button *ngIf="setting.nullable" mat-icon-button (click)="setting.formControl.value = undefined">
+                            <button *ngIf="setting.nullable" mat-icon-button (click)="setting.formControl.setValue(undefined); changeDetector.detectChanges()">
                                 <mat-icon color="accent">delete_outline</mat-icon>
                             </button>
                         </div>
