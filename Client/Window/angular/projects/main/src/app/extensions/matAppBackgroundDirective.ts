@@ -7,6 +7,9 @@ import { UserpanelSettingKey } from '../components/userpanel/enums/userpanel-set
   selector: ".mat-app-background"
 })
 export class MatAppBackgroundDirective implements OnInit, OnDestroy {
+    private lastUseDarkTheme: boolean;
+    private lastDarkBackgroundColor: string;
+    private lastLightBackgroundColor: string;
 
     constructor(
         private settings: SettingsService,
@@ -19,7 +22,7 @@ export class MatAppBackgroundDirective implements OnInit, OnDestroy {
         this.settings.ThemeSettingChanged.on(null, this.revertBackgroundColorStyle.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.themeChanged.bind(this));
         this.settings.ThemeSettingsLoaded.on(null, this.themeSettingsLoaded.bind(this));
-        this.themeChanged();
+        this.themeSettingsLoaded();
     }
 
     ngOnDestroy() {
@@ -64,10 +67,19 @@ export class MatAppBackgroundDirective implements OnInit, OnDestroy {
     }
 
     themeChanged(key?: UserpanelSettingKey, value?: any) {
-        const useDarkTheme = key === UserpanelSettingKey.UseDarkTheme ? value : this.settings.ThemeSettings[0];
-        const colorStr = useDarkTheme
-            ? (key === UserpanelSettingKey.ThemeBackgroundDarkColor ? value : this.settings.ThemeSettings[5])
-            : (key === UserpanelSettingKey.ThemeBackgroundLightColor ? value : this.settings.ThemeSettings[6]);
+        switch (key) {
+            case UserpanelSettingKey.ThemeBackgroundDarkColor:
+                this.lastDarkBackgroundColor = value;
+                break;
+            case UserpanelSettingKey.ThemeBackgroundLightColor:
+                this.lastLightBackgroundColor = value;
+                break;
+            case UserpanelSettingKey.UseDarkTheme:
+                this.lastUseDarkTheme = value;
+                break;
+        }
+
+        const colorStr = this.lastUseDarkTheme ? this.lastDarkBackgroundColor : this.lastLightBackgroundColor;
         try {
             const rgba = this.getRGBAFromColorString(colorStr);
             this.viewContainerRef.element.nativeElement.style.background = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
@@ -79,6 +91,9 @@ export class MatAppBackgroundDirective implements OnInit, OnDestroy {
 
     themeSettingsLoaded() {
         this.revertBackgroundColorStyle();
+        this.lastUseDarkTheme = this.settings.ThemeSettings[0];
+        this.lastDarkBackgroundColor = this.settings.ThemeSettings[5];
+        this.lastLightBackgroundColor = this.settings.ThemeSettings[6];
         this.themeChanged();
     }
 }
