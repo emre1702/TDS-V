@@ -102,6 +102,8 @@ import { MatAppBackgroundDirective } from './extensions/matAppBackgroundDirectiv
 import { InfosHandlerComponent } from './components/infos-handler/infos-handler.component';
 import { InfoComponent } from './components/infos-handler/info/info.component';
 import { UserpanelStatsWeaponComponent } from './components/userpanel/userpanel-stats-weapon/userpanel-stats-weapon.component';
+import { TDSWindowComponent } from './components/tdswindow/tdswindow.component';
+import { GangWindowComponent } from './components/gang-window/gang-window.component';
 
 @NgModule({
   declarations: [
@@ -163,7 +165,9 @@ import { UserpanelStatsWeaponComponent } from './components/userpanel/userpanel-
     UserpanelSettingsCommandsComponent,
     InfosHandlerComponent,
     InfoComponent,
-    UserpanelStatsWeaponComponent
+    UserpanelStatsWeaponComponent,
+    TDSWindowComponent,
+    GangWindowComponent
   ],
   imports: [
     ReactiveFormsModule,
