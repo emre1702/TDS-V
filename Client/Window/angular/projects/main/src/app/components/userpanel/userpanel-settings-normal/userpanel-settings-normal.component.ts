@@ -98,6 +98,48 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         },
 
         {
+            title: "ThemeAndDesign", rows: [
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.UseDarkTheme,
+                    defaultValue: this.settings.ThemeSettings[0], nullable: false,
+                    formControl: new FormControl(this.settings.ThemeSettings[0]),
+                    tooltipLangKey: "UseDarkThemeInfo", onValueChanged: this.onThemeChange.bind(this)
+                },
+                {
+                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundAlphaPercentage,
+                    defaultValue: this.settings.ThemeSettings[1], nullable: false,
+                    formControl: new FormControl(this.settings.ThemeSettings[1]),
+                    tooltipLangKey: "ThemeBackgroundAlphaPercentageInfo", onValueChanged: this.onThemeChange.bind(this)
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeMainColor,
+                    defaultValue: this.settings.ThemeSettings[2], onValueChanged: this.onThemeChange.bind(this),
+                    formControl: new FormControl(this.settings.ThemeSettings[2]), nullable: false
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeSecondaryColor,
+                    defaultValue: this.settings.ThemeSettings[3], onValueChanged: this.onThemeChange.bind(this),
+                    formControl: new FormControl(this.settings.ThemeSettings[3]), nullable: false
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeWarnColor,
+                    defaultValue: this.settings.ThemeSettings[4], onValueChanged: this.onThemeChange.bind(this),
+                    formControl: new FormControl(this.settings.ThemeSettings[4]), nullable: false
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundDarkColor,
+                    defaultValue: this.settings.ThemeSettings[5], onValueChanged: this.onThemeChange.bind(this),
+                    formControl: new FormControl(this.settings.ThemeSettings[5]), nullable: false
+                },
+                {
+                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundLightColor,
+                    defaultValue: this.settings.ThemeSettings[6], onValueChanged: this.onThemeChange.bind(this),
+                    formControl: new FormControl(this.settings.ThemeSettings[6]), nullable: false
+                },
+            ]
+        },
+
+        {
             title: "Voice", rows: [
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Voice3D, defaultValue: false,
@@ -118,7 +160,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         },
 
         {
-            title: "Colors", rows: [
+            title: "OtherColors", rows: [
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.MapBorderColor, defaultValue: "rgba(150,0,0,0.35)",
                     formControl: new FormControl("rgba(150,0,0,0.35)"), nullable: false,
@@ -254,48 +296,6 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     defaultValue: TimeSpanUnitsOfTime.HourMinute, enum: TimeSpanUnitsOfTime, nullable: false,
                     formControl: new FormControl(TimeSpanUnitsOfTime.HourMinute),
                     tooltipLangKey: "ScoreboardPlaytimeUnitInfo"
-                },
-            ]
-        },
-
-        {
-            title: "Theme", rows: [
-                {
-                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.UseDarkTheme,
-                    defaultValue: this.settings.ThemeSettings[0], nullable: false,
-                    formControl: new FormControl(this.settings.ThemeSettings[0]),
-                    tooltipLangKey: "UseDarkThemeInfo", onValueChanged: this.onThemeChange.bind(this)
-                },
-                {
-                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundAlphaPercentage,
-                    defaultValue: this.settings.ThemeSettings[1], nullable: false,
-                    formControl: new FormControl(this.settings.ThemeSettings[1]),
-                    tooltipLangKey: "ThemeBackgroundAlphaPercentageInfo", onValueChanged: this.onThemeChange.bind(this)
-                },
-                {
-                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeMainColor,
-                    defaultValue: this.settings.ThemeSettings[2], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[2]), nullable: false
-                },
-                {
-                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeSecondaryColor,
-                    defaultValue: this.settings.ThemeSettings[3], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[3]), nullable: false
-                },
-                {
-                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeWarnColor,
-                    defaultValue: this.settings.ThemeSettings[4], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[4]), nullable: false
-                },
-                {
-                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundDarkColor,
-                    defaultValue: this.settings.ThemeSettings[5], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[5]), nullable: false
-                },
-                {
-                    type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundLightColor,
-                    defaultValue: this.settings.ThemeSettings[6], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[6]), nullable: false
                 },
             ]
         },
