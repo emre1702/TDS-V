@@ -259,8 +259,15 @@ button:not([disabled]):hover {
 
 .save-button {
     background: darkgreen !important;
+    color: white !important;
 }
 
 .revert-button {
     background: darkred !important;
+    color: white !important;
+}
+
+.default-button {
+    background: rgb(80,80,80) !important;
+    color: white !important;
 }
