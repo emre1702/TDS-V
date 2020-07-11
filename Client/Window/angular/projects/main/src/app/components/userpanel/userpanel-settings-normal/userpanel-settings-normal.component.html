@@ -136,13 +136,13 @@
     </div>
 
     <div id="last-row-buttons">
-        <button mat-raised-button (click)="save()">
+        <button mat-raised-button (click)="save()" class="save-button">
             {{ 'Save' | language: settings.Lang }}
         </button>
-        <button mat-raised-button (click)="revertAll()">
+        <button mat-raised-button (click)="revertAll()" class="revert-button">
             {{ 'Revert' | language: settings.Lang }}
         </button>
-        <button mat-raised-button (click)="setDefault()">
+        <button mat-raised-button (click)="setDefault()" class="default-button">
             {{ 'Default' | language: settings.Lang }}
         </button>
     </div>
