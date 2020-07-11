@@ -143,6 +143,8 @@ The user interface is always being worked on, so don't be surprised if you disco
     BlipColor = "Blip color";
     Color = "Color";
     Colors = "Colors";
+    OtherColors = "Other colors";
+    ThemeAndDesign = "Theme & Design";
     Transparent = "Transparent";
     HeightArrowDoesntBlink = "Height arrow doesn't blink";
     AddTeam = "Add team";

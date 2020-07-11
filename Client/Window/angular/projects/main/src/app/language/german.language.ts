@@ -172,6 +172,8 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     BlipColor = "Blip Farbe";
     Color = "Farbe";
     Colors = "Farben";
+    OtherColors = "Andere Farben";
+    ThemeAndDesign = "Theme & Design";
     Transparent = "Durchsichtig";
     HeightArrowDoesntBlink = "Höhen-Pfeil blinkt nicht";
     AddTeam = "Team hinzufügen";

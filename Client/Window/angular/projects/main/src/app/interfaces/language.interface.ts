@@ -132,6 +132,8 @@ export interface Language {
     BlipColor: string;
     Color: string;
     Colors: string;
+    OtherColors: string;
+    ThemeAndDesign: string;
     Transparent: string;
     HeightArrowDoesntBlink: string;
     AddTeam: string;
