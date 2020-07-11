@@ -13,6 +13,7 @@ export interface UserpanelSettingRow {
     min?: number;
     max?: number;
     nullable: boolean;
+    toggleColorPicker?: boolean;
 
     dataSettingIndex: number;
 

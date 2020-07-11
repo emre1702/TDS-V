@@ -1,51 +1,38 @@
-<div class="container mat-elevation-z8 mat-app-background" cdkDrag>
-    <mat-toolbar color="primary" cdkDragHandle>
-        <button mat-button id="menu-navigation" [matMenuTriggerFor]="userpanelNav" cdkFocusInitial
-        [class.glowing-button]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]">
-            <mat-icon color="accent">menu</mat-icon>
-            <span>{{ userpanelService.currentNav | language: settings.Lang }}</span>
-        </button>
-        <button mat-button (click)="closeUserpanel()"><mat-icon color="accent">clear</mat-icon></button>
-    </mat-toolbar>
-    <div class="container-content">
-        <ng-container *ngIf="!userpanelService.loadingData">
-            <app-userpanel-stats-general *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsGeneral]"
-                [stats]="userpanelService.myStatsGeneral"
-                [columns]="myStatsGeneralColumns">
-            </app-userpanel-stats-general>
-            <app-userpanel-stats-weapon *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsWeapon]"
-                [weaponsUsed]="userpanelService.myStatsWeaponsUsed">
-            </app-userpanel-stats-weapon>
-            <app-userpanel-commands *ngIf="userpanelService.currentNav.startsWith('Commands')"
-                [(currentCommand)]="currentCommand"
-                [currentNav]="userpanelService.currentNav" >
-            </app-userpanel-commands>
-            <app-userpanel-rules *ngIf="userpanelService.currentNav.startsWith('Rules')"
-                [currentNav]="userpanelService.currentNav" >
-            </app-userpanel-rules>
-            <app-userpanel-faqs *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.FAQ]"></app-userpanel-faqs>
-            <app-userpanel-settings-special *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsSpecial]"></app-userpanel-settings-special>
-            <app-userpanel-settings-normal *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsNormal]"></app-userpanel-settings-normal>
-            <app-userpanel-settings-commands *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsCommands]"></app-userpanel-settings-commands>
-            <app-userpanel-application *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Application] && settings.AdminLevel == 0">
-            </app-userpanel-application>
-            <app-userpanel-applications *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Applications] && settings.AdminLevel > 0">
-            </app-userpanel-applications>
-            <app-userpanel-support-user *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SupportUser] && settings.AdminLevel == 0">
-            </app-userpanel-support-user>
-            <app-userpanel-support-admin *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SupportAdmin] && settings.AdminLevel > 0">
-            </app-userpanel-support-admin>
-            <app-userpanel-offline-messages *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.OfflineMessages]">
-            </app-userpanel-offline-messages>
-            <div *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
-                [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
-            </div>
-        </ng-container>
-        <div class="loading-container" *ngIf="userpanelService.loadingData">
-            <mat-spinner color="accent"></mat-spinner>
-        </div>
+<tdswindow (close)="closeUserpanel()" [isLoading]="userpanelService.loadingData"
+[navMenu]="userpanelNav" [currentNav]="userpanelService.currentNav | language: settings.Lang"
+[navGlow]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]">
+    <app-userpanel-stats-general *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsGeneral]"
+        [stats]="userpanelService.myStatsGeneral"
+        [columns]="myStatsGeneralColumns">
+    </app-userpanel-stats-general>
+    <app-userpanel-stats-weapon *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsWeapon]"
+        [weaponsUsed]="userpanelService.myStatsWeaponsUsed">
+    </app-userpanel-stats-weapon>
+    <app-userpanel-commands *ngIf="userpanelService.currentNav.startsWith('Commands')"
+        [(currentCommand)]="currentCommand"
+        [currentNav]="userpanelService.currentNav" >
+    </app-userpanel-commands>
+    <app-userpanel-rules *ngIf="userpanelService.currentNav.startsWith('Rules')"
+        [currentNav]="userpanelService.currentNav" >
+    </app-userpanel-rules>
+    <app-userpanel-faqs *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.FAQ]"></app-userpanel-faqs>
+    <app-userpanel-settings-special *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsSpecial]"></app-userpanel-settings-special>
+    <app-userpanel-settings-normal *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsNormal]"></app-userpanel-settings-normal>
+    <app-userpanel-settings-commands *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsCommands]"></app-userpanel-settings-commands>
+    <app-userpanel-application *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Application] && settings.AdminLevel == 0">
+    </app-userpanel-application>
+    <app-userpanel-applications *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Applications] && settings.AdminLevel > 0">
+    </app-userpanel-applications>
+    <app-userpanel-support-user *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SupportUser] && settings.AdminLevel == 0">
+    </app-userpanel-support-user>
+    <app-userpanel-support-admin *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SupportAdmin] && settings.AdminLevel > 0">
+    </app-userpanel-support-admin>
+    <app-userpanel-offline-messages *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.OfflineMessages]">
+    </app-userpanel-offline-messages>
+    <div *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
+        [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
     </div>
-</div>
+</tdswindow>
 
 <mat-menu #userpanelNav="matMenu">
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Main)">

@@ -111,15 +111,20 @@
                         <div class="setting-row">
                             <mat-form-field color="accent">
                                 <mat-label>{{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}</mat-label>
-                                <input matInput [(colorPicker)]="setting.formControl.value"
-                                    [value]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
+                                <input #input matInput [(colorPicker)]="setting.formControl.value"
+                                    [formControl]="setting.formControl"
                                     [style.background]="setting.formControl.value" [cpFallbackColor]="setting.defaultValue"
                                     (colorPickerChange)="onColorChange(setting)" cpOutputFormat="rgba"
-                                    cpAlphaChannel="always" readonly="true" cpUseRootViewContainer="true"
+                                    cpAlphaChannel="always" cpUseRootViewContainer="true"
+                                    [cpIgnoredElements]="[input]"
+                                    [(cpToggle)]="setting.toggleColorPicker"
                                     [matTooltipDisabled]="!setting.tooltipLangKey"
                                     [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
                                     (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)" />
                             </mat-form-field>
+                            <button mat-icon-button (click)="setting.toggleColorPicker = !setting.toggleColorPicker">
+                                <mat-icon color="accent">color_lens</mat-icon>
+                            </button>
                             <button *ngIf="setting.nullable" mat-icon-button (click)="setting.formControl.value = undefined">
                                 <mat-icon color="accent">delete_outline</mat-icon>
                             </button>

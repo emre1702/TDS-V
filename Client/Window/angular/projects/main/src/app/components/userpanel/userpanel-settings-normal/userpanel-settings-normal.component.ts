@@ -15,6 +15,7 @@ import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 import { TimeSpanUnitsOfTime } from '../enums/timespan-units-of-time.enum';
 import { ScoreboardPlayerSorting } from '../enums/scoreboard-player-sorting';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatInput } from '@angular/material';
 
 @Component({
     selector: 'app-userpanel-settings-normal',
@@ -272,27 +273,27 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeMainColor,
-                    defaultValue: this.settings.ThemeSettings[2],
+                    defaultValue: this.settings.ThemeSettings[2], onValueChanged: this.onThemeChange.bind(this),
                     formControl: new FormControl(this.settings.ThemeSettings[2]), nullable: false
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeSecondaryColor,
-                    defaultValue: this.settings.ThemeSettings[3],
+                    defaultValue: this.settings.ThemeSettings[3], onValueChanged: this.onThemeChange.bind(this),
                     formControl: new FormControl(this.settings.ThemeSettings[3]), nullable: false
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeWarnColor,
-                    defaultValue: this.settings.ThemeSettings[4],
+                    defaultValue: this.settings.ThemeSettings[4], onValueChanged: this.onThemeChange.bind(this),
                     formControl: new FormControl(this.settings.ThemeSettings[4]), nullable: false
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundDarkColor,
-                    defaultValue: this.settings.ThemeSettings[5],
+                    defaultValue: this.settings.ThemeSettings[5], onValueChanged: this.onThemeChange.bind(this),
                     formControl: new FormControl(this.settings.ThemeSettings[5]), nullable: false
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundLightColor,
-                    defaultValue: this.settings.ThemeSettings[6],
+                    defaultValue: this.settings.ThemeSettings[6], onValueChanged: this.onThemeChange.bind(this),
                     formControl: new FormControl(this.settings.ThemeSettings[6]), nullable: false
                 },
             ]
@@ -364,6 +365,14 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             case UserpanelSettingKey.ThemeBackgroundAlphaPercentage:
                 const backgroundAlpha = this.getFormControl("Theme", key).value as number;
                 this.settings.setThemeChange(key, backgroundAlpha);
+                break;
+            case UserpanelSettingKey.ThemeBackgroundDarkColor:
+            case UserpanelSettingKey.ThemeBackgroundLightColor:
+            case UserpanelSettingKey.ThemeMainColor:
+            case UserpanelSettingKey.ThemeSecondaryColor:
+            case UserpanelSettingKey.ThemeWarnColor:
+                const setting = this.settingPanel.find(p => p.title === "Theme").rows.find(r => r.dataSettingIndex === key);
+                this.onColorChange(setting);
                 break;
         }
     }
@@ -437,8 +446,15 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         return Object.keys(e).filter(x => !(parseInt(x, 10) >= 0));
     }
 
-    onColorChange(setting: UserpanelSettingRow) {
+    onColorChange(setting: UserpanelSettingRow, event?: FocusEvent) {
         this.changeDetector.detectChanges();
+        let value = setting.formControl.value as string;
+        if (value.endsWith(";")) {
+            value = value.substr(0, value.length - 1);
+            if (event)
+                (event.target as unknown as MatInput).value = value;
+        }
+        setting.formControl.setValue(value);
 
         switch (setting.dataSettingIndex) {
             case UserpanelSettingKey.ThemeMainColor:
@@ -446,7 +462,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             case UserpanelSettingKey.ThemeWarnColor:
             case UserpanelSettingKey.ThemeBackgroundDarkColor:
             case UserpanelSettingKey.ThemeBackgroundLightColor:
-                this.settings.setThemeChange(setting.dataSettingIndex, setting.formControl.value);
+                this.settings.setThemeChange(setting.dataSettingIndex, value);
                 break;
             default:
                 this.rageConnector.call(DToClientEvent.OnColorSettingChange, setting.formControl.value, setting.dataSettingIndex);

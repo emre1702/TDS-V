@@ -65,9 +65,16 @@ export class MatAppBackgroundDirective implements OnInit, OnDestroy {
 
     themeChanged(key?: UserpanelSettingKey, value?: any) {
         const useDarkTheme = key === UserpanelSettingKey.UseDarkTheme ? value : this.settings.ThemeSettings[0];
-        const colorStr = useDarkTheme ? this.settings.ThemeSettings[5] : this.settings.ThemeSettings[6];
-        const rgba = this.getRGBAFromColorString(colorStr);
-        this.viewContainerRef.element.nativeElement.style.backgroundColor = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
+        const colorStr = useDarkTheme
+            ? (key === UserpanelSettingKey.ThemeBackgroundDarkColor ? value : this.settings.ThemeSettings[5])
+            : (key === UserpanelSettingKey.ThemeBackgroundLightColor ? value : this.settings.ThemeSettings[6]);
+        try {
+            // linear-gradient(0deg, rgba(2,0,36,1) 8%, rgba(23,52,111,1) 53%, rgba(0,69,255,1) 100%)
+            const rgba = this.getRGBAFromColorString(colorStr);
+            this.viewContainerRef.element.nativeElement.style.background = `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
+        } catch {
+            this.viewContainerRef.element.nativeElement.style.background = colorStr;
+        }
         this.changeDetector.detectChanges();
     }
 
