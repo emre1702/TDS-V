@@ -223,7 +223,7 @@ button:not([disabled]):hover {
 }
 
 .container {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .multi-line-text {
@@ -255,4 +255,12 @@ button:not([disabled]):hover {
 
 .mat-slider-thumb-label-text {
     font-weight: 100 !important;
+}
+
+.save-button {
+    background: darkgreen !important;
+}
+
+.revert-button {
+    background: darkred !important;
 }
