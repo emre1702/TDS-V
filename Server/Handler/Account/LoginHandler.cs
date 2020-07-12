@@ -125,6 +125,9 @@ namespace TDS_Server.Handler.Account
 
                 entity.PlayerStats.LoggedIn = true;
                 entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
+
+                if (entity.ThemeSettings is null)
+                    entity.ThemeSettings = new PlayerThemeSettings() { UseDarkTheme = true };
                 await dbContext.SaveChangesAsync();
                 return true;
             });

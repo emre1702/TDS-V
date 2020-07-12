@@ -69,6 +69,7 @@ namespace TDS_Server.Handler.Userpanel
 
             var newDiscordUserId = obj.General.DiscordUserId;
             obj.General.DiscordUserId = player.Entity!.PlayerSettings.DiscordUserId;
+            obj.ThemeSettings.PlayerId = player.Id;
             await player.ExecuteForDBAsync(async (dbContext) =>
             {
                 dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj.General);

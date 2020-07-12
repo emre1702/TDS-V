@@ -1,25 +1,22 @@
 export interface ThemeSettings {
     /** UseDarkTheme */
-    [0]: boolean;
-
-    /** ThemeBackgroundAlphaPercentage */
-    [1]: number;
+    [1000]: boolean;
 
     /** ThemeMainColor */
-    [2]: string;
+    [1001]: string;
 
     /** ThemeSecondaryColor */
-    [3]: string;
+    [1002]: string;
 
     /** ThemeWarnColor */
-    [4]: string;
+    [1003]: string;
 
     /** ThemeBackgroundDarkColor */
-    [5]: string;
+    [1004]: string;
 
     /** ThemeBackgroundLightColor */
-    [6]: string;
+    [1005]: string;
 
     /** ToolbarDesign */
-    [7]: number;
+    [1006]: number;
 }

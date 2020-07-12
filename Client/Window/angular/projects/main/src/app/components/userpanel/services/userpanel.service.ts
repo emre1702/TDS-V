@@ -162,9 +162,7 @@ export class UserpanelService {
             5: 1, 6: true, 7: true, 8: true, 9: true, 10: true, 11: 0, 12: "asd", 13: DateTimeFormatEnum["dd'-'MM'-'yyyy HH':'mm':'ss"],
             14: 100, 15: 105, 16: 110, 17: 115, 18: 120, 19: 125, 20: "rgba(0, 0, 0, 1)", 21: "rgba(50, 0, 0, 1)", 22: "rgba(0, 255, 0, 1)",
             23: undefined, 24: "rgba(255, 255, 255, 1)", 25: true, 26: true, 27: 20, 28: 30, 29: 1.4, 30: false, 31: true,
-            32: ScoreboardPlayerSorting.Name, 33: false, 34: TimeSpanUnitsOfTime.HourMinute, 35: false, 36: 1, 37: 15000, 38: true,
-            39: 87, 40: "rgba(0,0,77,1)", 41: "rgba(255,152,0,1)", 42: "rgba(244,67,54,1)",
-            43: this.settings.ThemeSettings[5], 44: this.settings.ThemeSettings[6]
+            32: ScoreboardPlayerSorting.Name, 33: false, 34: TimeSpanUnitsOfTime.HourMinute, 35: false, 36: 1, 37: 15000
         };
 
         this.settingsNormalLoaded.emit(null);

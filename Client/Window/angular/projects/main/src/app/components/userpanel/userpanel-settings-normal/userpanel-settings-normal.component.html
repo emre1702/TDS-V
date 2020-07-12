@@ -120,6 +120,7 @@
                                     [(cpToggle)]="setting.toggleColorPicker"
                                     [matTooltipDisabled]="!setting.tooltipLangKey"
                                     [matTooltip]="setting.tooltipLangKey | language: settings.Lang"
+                                    (focus)="$event.target.select()"
                                     (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)" />
                             </mat-form-field>
                             <button mat-icon-button (click)="setting.toggleColorPicker = !setting.toggleColorPicker">

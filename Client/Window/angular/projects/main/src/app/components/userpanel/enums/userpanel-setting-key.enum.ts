@@ -43,14 +43,13 @@ export enum UserpanelSettingKey {
     ScoreboardPlayerSortingDesc = 33,
     ScoreboardPlaytimeUnit = 34,
 
-    UseDarkTheme = 38,
-    ToolbarDesign = 47,
-    ThemeBackgroundAlphaPercentage = 39,
-    ThemeMainColor = 40,
-    ThemeSecondaryColor = 41,
-    ThemeWarnColor = 42,
-    ThemeBackgroundDarkColor = 43,
-    ThemeBackgroundLightColor = 44,
+    UseDarkTheme = 1000,
+    ToolbarDesign = 1006,
+    ThemeMainColor = 1001,
+    ThemeSecondaryColor = 1002,
+    ThemeWarnColor = 1003,
+    ThemeBackgroundDarkColor = 1004,
+    ThemeBackgroundLightColor = 1005,
 
     ShowCursorInfo = 45,
     ShowLobbyLeaveInfo = 46
