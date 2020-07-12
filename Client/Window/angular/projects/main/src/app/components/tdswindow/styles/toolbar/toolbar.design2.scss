@@ -1,4 +1,6 @@
 .toolbar.design2 {
+    flex-shrink: 0;
+    min-height: 30px;
 
     .glowing-button {
         animation: glowing 1500ms infinite;
@@ -6,11 +8,13 @@
 
     > * {
         display: table-cell;
+        flex-shrink: 0;
     }
 
     #title {
         width: 100%;
         text-align: center;
+        flex-shrink: 1;
     }
 
     #menu-navigation {

@@ -1,10 +1,10 @@
 
 <ng-container>
     <div class="container mat-elevation-z8 mat-app-background design1" cdkDrag>
-        <ng-container [ngTemplateOutlet]="this['toolbar' + toolbarDesign]">
+        <ng-container *ngIf="!hideToolbar" [ngTemplateOutlet]="this['toolbar' + toolbarDesign]">
             <ng-template #toolbar1 >
-                <div class="toolbar design1" cdkDragHandle color="primary">
-                    <button *ngIf="back.observers.length" mat-button (click)="back.emit()">
+                <div class="toolbar design1" cdkDragHandle color="primary" [closeOnDoubleClick]="content">
+                    <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
                         <mat-icon color="accent">arrow_back</mat-icon>
                     </button>
                     <button *ngIf="navMenu" mat-button id="menu-navigation" [matMenuTriggerFor]="navMenu" cdkFocusInitial
@@ -13,6 +13,9 @@
                         <span>{{ (currentNav ? currentNav : "") }}</span>
                     </button>
                     <span id="title">{{ (title ? title : "") }}</span>
+                    <button *ngIf="save.observers.length && showSave" mat-button (click)="save.emit()">
+                        <mat-icon color="accent">save</mat-icon>
+                    </button>
                     <button *ngIf="close.observers.length" mat-button (click)="close.emit()">
                         <mat-icon color="accent">clear</mat-icon>
                     </button>
@@ -20,8 +23,8 @@
             </ng-template>
 
             <ng-template #toolbar2>
-                <mat-toolbar class="toolbar design2" color="primary" cdkDragHandle>
-                    <button *ngIf="back.observers.length" mat-button (click)="back.emit()">
+                <mat-toolbar class="toolbar design2" color="primary" cdkDragHandle [closeOnDoubleClick]="content">
+                    <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
                         <mat-icon color="accent">arrow_back</mat-icon>
                     </button>
                     <button *ngIf="navMenu" mat-button id="menu-navigation" [matMenuTriggerFor]="navMenu" cdkFocusInitial
@@ -36,7 +39,7 @@
                 </mat-toolbar>
             </ng-template>
         </ng-container>
-        <div class="container-content">
+        <div class="container-content" #content [style.height]="contentHeight">
             <ng-container *ngIf="!isLoading">
                 <ng-content></ng-content>
             </ng-container>

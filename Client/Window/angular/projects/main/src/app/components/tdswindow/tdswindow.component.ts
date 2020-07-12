@@ -74,31 +74,81 @@ export class TDSWindowComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    private _showBack = true;
+    get showBack(): boolean {
+        return this._showBack;
+    }
+
+    @Input("showBack")
+    set showBack(value: boolean) {
+        this._showBack = value;
+        this.changeDetector.detectChanges();
+    }
+
+    private _hideToolbar: boolean;
+    get hideToolbar(): boolean {
+        return this._hideToolbar;
+    }
+
+    @Input("hideToolbar")
+    set hideToolbar(value: boolean) {
+        this._hideToolbar = value;
+        this.changeDetector.detectChanges();
+    }
+
+    private _showSave = true;
+    get showSave(): boolean {
+        return this._showSave;
+    }
+
+    @Input("showSave")
+    set showSave(value: boolean) {
+        this._showSave = value;
+        this.changeDetector.detectChanges();
+    }
+
+    private _contentHeight = "auto";
+    get contentHeight(): string {
+        return this._contentHeight;
+    }
+
+    @Input("contentHeight")
+    set contentHeight(value: string) {
+        this._contentHeight = value;
+        this.changeDetector.detectChanges();
+    }
+
     windowDesign = 1;
     toolbarDesign = 1;
 
     // tslint:disable-next-line: no-output-native
     @Output() close = new EventEmitter();
     @Output() back = new EventEmitter();
+    @Output() save = new EventEmitter();
 
     @ViewChild('toolbar1') toolbar1: TemplateRef<any>;
     @ViewChild('toolbar2') toolbar2: TemplateRef<any>;
-    @ViewChild('toolbar3') toolbar3: TemplateRef<any>;
 
     constructor(private changeDetector: ChangeDetectorRef, private settings: SettingsService) { }
 
     ngOnInit(): void {
         this.settings.ThemeSettingChanged.on(null, this.themeChanged.bind(this));
+        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy(): void {
         this.settings.ThemeSettingChanged.off(null, this.themeChanged.bind(this));
+        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     private themeChanged(key: UserpanelSettingKey, value: any) {
         if (key == UserpanelSettingKey.ToolbarDesign) {
             this.toolbarDesign = value;
         }
+        this.detectChanges();
+    }
+
+    private detectChanges() {
         this.changeDetector.detectChanges();
     }
 }
