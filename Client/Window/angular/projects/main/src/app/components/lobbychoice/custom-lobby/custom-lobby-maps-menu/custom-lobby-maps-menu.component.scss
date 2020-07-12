@@ -15,22 +15,8 @@
         width: 45%;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
         height: auto !important;
         max-height: calc(100%-20px);
-        margin-bottom: 10px;
-
-
-        .mat-toolbar {
-            height: 30px !important;
-            text-align: center;
-
-            * {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-            }
-        }
 
         .table-container {
             max-height: calc(90vh - 40px - 30px);

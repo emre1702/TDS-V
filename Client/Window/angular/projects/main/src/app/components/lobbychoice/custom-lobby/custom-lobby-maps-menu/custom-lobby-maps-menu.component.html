@@ -1,61 +1,52 @@
 <div id="container">
 
-    <div class="container mat-elevation-z8 mat-app-background" cdkDrag>
-        <mat-toolbar color="primary" cdkDragHandle>
-            <span>{{ 'AvailableMaps' | language: settings.Lang }}</span>
-        </mat-toolbar>
+    <tdswindow class="container" [title]="'AvailableMaps' | language: settings.Lang">
+        <table mat-table [dataSource]="availableMapsDataSource" matSort #availableMapsSort="matSort">
 
-        <div class="table-container">
-            <table mat-table [dataSource]="availableMapsDataSource" matSort #availableMapsSort="matSort">
+            <ng-container matColumnDef="Select">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let map">
+                    <button mat-icon-button (click)="setSelected(map)" [disabled]="!canSelectMap(map)">
+                        <mat-icon color="accent">add_circle_outline</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
 
-                <ng-container matColumnDef="Select">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let map">
-                        <button mat-icon-button (click)="setSelected(map)" [disabled]="!canSelectMap(map)">
-                            <mat-icon color="accent">add_circle_outline</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
+            <ng-container matColumnDef="Id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Id' | language: settings.Lang }}</th>
+                <td mat-cell *matCellDef="let map" [style.color]="map[0] < 0 ? 'orange' : 'inherit'">{{ map[0] }}</td>
+            </ng-container>
 
-                <ng-container matColumnDef="Id">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Id' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let map" [style.color]="map[0] < 0 ? 'orange' : 'inherit'">{{ map[0] }}</td>
-                </ng-container>
+            <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</th>
+                <td mat-cell *matCellDef="let map">{{ map[0] < 0 ? (map[1] | language: settings.Lang) : map[1] }}</td>
+            </ng-container>
 
-                <ng-container matColumnDef="Name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let map">{{ map[0] < 0 ? (map[1] | language: settings.Lang) : map[1] }}</td>
-                </ng-container>
+            <ng-container matColumnDef="Type">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Type' | language: settings.Lang }}</th>
+                <td mat-cell *matCellDef="let map">{{ map[0] == defaultMapIds.AllWithoutGangwars ? '-' : mapType[map[2]] | language: settings.Lang }}</td>
+            </ng-container>
 
-                <ng-container matColumnDef="Type">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Type' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let map">{{ map[0] == defaultMapIds.AllWithoutGangwars ? '-' : mapType[map[2]] | language: settings.Lang }}</td>
-                </ng-container>
+            <ng-container matColumnDef="CreatorName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Creator' | language: settings.Lang }}</th>
+                <td mat-cell *matCellDef="let map">{{ map[4] }}</td>
+            </ng-container>
 
-                <ng-container matColumnDef="CreatorName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Creator' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let map">{{ map[4] }}</td>
-                </ng-container>
+            <ng-container matColumnDef="Rating">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Rating' | language: settings.Lang }}</th>
+                <td mat-cell *matCellDef="let map">{{ map[0] < 0 ? '-' : map[5] }}</td>
+            </ng-container>
 
-                <ng-container matColumnDef="Rating">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Rating' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let map">{{ map[0] < 0 ? '-' : map[5] }}</td>
-                </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row [matTooltip]="row[3][settings.LangValue]" matTooltipPosition="before"
+                *matRowDef="let row; columns: displayedColumns"
+                [style.font-weight]="row[0] < 0 ? 'bold' : 'initial'"></tr>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row [matTooltip]="row[3][settings.LangValue]" matTooltipPosition="before"
-                    *matRowDef="let row; columns: displayedColumns"
-                    [style.font-weight]="row[0] < 0 ? 'bold' : 'initial'"></tr>
+        </table>
+    </tdswindow>
 
-            </table>
-        </div>
-    </div>
-
-    <div id="available-maps-with-button" class="container mat-elevation-z8 mat-app-background" cdkDrag>
-        <mat-toolbar color="primary" cdkDragHandle>
-            <span>{{ 'SelectedMaps' | language: settings.Lang }}</span>
-        </mat-toolbar>
-
+    <tdswindow id="available-maps-with-button" class="container" cdkDrag
+    [title]="'SelectedMaps' | language: settings.Lang">
         <div class="table-container">
             <table mat-table [dataSource]="selectedMapsDataSource" matSort #selectedMapsSort="matSort">
 
@@ -115,6 +106,6 @@
         <button mat-raised-button color="primary" id="back-button" (click)="backButtonClicked()" [disabled]="selectedMaps.length == 0">
             {{ 'Back' | language: settings.Lang }}
         </button>
-    </div>
+    </tdswindow>
 </div>
 

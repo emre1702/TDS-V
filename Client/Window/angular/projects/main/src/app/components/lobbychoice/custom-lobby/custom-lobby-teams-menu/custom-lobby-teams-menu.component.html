@@ -1,4 +1,4 @@
-<div id="main" class="container mat-elevation-z8 mat-app-background">
+<tdswindow id="main" hideToolbar="true">
   <div class="mat-table-container">
     <table mat-table [dataSource]="teams" matSort>
 
@@ -78,11 +78,11 @@
       {{ 'Back' | language: settings.Lang }}
     </button>
   </div>
-</div>
+</tdswindow>
 
-<div id="blip-color-window" class="container mat-app-background mat-elevation-z8" *ngIf="showBlipColorWindow">
+<tdswindow id="blip-color-window" *ngIf="showBlipColorWindow">
   <div *ngFor="let blip of blipColors"
   [style.background]="blip.Color"
   [matTooltip]="blip.Info | language: settings.Lang"
   (click)="clickedOnBlipColor(blip)"></div>
-</div>
+</tdswindow>

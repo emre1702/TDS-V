@@ -1,6 +1,7 @@
 <tdswindow (close)="closeUserpanel()" [isLoading]="userpanelService.loadingData"
 [navMenu]="userpanelNav" [currentNav]="userpanelService.currentNav | language: settings.Lang"
-[navGlow]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]">
+[navGlow]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
+contentHeight="36.5vh">
     <app-userpanel-stats-general *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsGeneral]"
         [stats]="userpanelService.myStatsGeneral"
         [columns]="myStatsGeneralColumns">

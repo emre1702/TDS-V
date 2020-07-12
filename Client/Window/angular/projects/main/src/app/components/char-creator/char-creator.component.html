@@ -1,9 +1,6 @@
-<form class="mat-app-background container mat-elevation-z8" cdkDrag>
-    <mat-toolbar color="primary" cdkDragHandle>
-        <mat-icon color="accent" id="go-back-nav" (click)="goToMain()" *ngIf="currentNav != charCreatorMenuNav.MainMenu">arrow_back</mat-icon>
-        <h1>{{ charCreatorMenuNav[currentNav] | language: settings.Lang }}</h1>
-    </mat-toolbar>
-    <div class="content" [ngSwitch]="currentNav">
+<tdswindow [title]="charCreatorMenuNav[currentNav] | language: settings.Lang"
+    (back)="goToMain()" [showBack]="currentNav != charCreatorMenuNav.MainMenu">
+    <ng-container [ngSwitch]="currentNav">
         <char-creator-mainmenu *ngSwitchCase="charCreatorMenuNav.MainMenu" [(data)]="data[0]" (recreate)="recreatePed()"
         (navChanged)="goToNav($event)" (saveClicked)="save()" (cancelClicked)="cancel()" (recreate)="recreatePed()"></char-creator-mainmenu>
         <char-creator-heritage *ngSwitchCase="charCreatorMenuNav.Heritage" [(data)]="data[1]" (recreate)="recreatePed()"></char-creator-heritage>
@@ -11,5 +8,5 @@
         <char-creator-appearance *ngSwitchCase="charCreatorMenuNav.Appearance" [(data)]="data[3]" (recreate)="recreatePed()"></char-creator-appearance>
         <char-creator-hairandcolors *ngSwitchCase="charCreatorMenuNav.HairAndColors" [(data)]="data[4]" (recreate)="recreatePed()"
         [isMale]="data[0][0]"></char-creator-hairandcolors>
-    </div>
-</form>
+    </ng-container>
+</tdswindow>

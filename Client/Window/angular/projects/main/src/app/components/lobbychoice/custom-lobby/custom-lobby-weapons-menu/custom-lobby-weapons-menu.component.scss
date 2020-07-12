@@ -1,9 +1,9 @@
-.container {
+tdswindow {
     position: absolute;
     right: 10px;
     top: 10px;
     width: 60%;
-    height: calc(100% - 20px);
+    max-height: calc(100% - 20px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;

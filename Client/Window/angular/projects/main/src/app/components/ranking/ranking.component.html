@@ -1,4 +1,4 @@
-<div class="container mat-app-background mat-elevation-z8" cdkDrag>
+<tdswindow [hideToolbar]="true">
   <table mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="Place">
@@ -34,4 +34,4 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-</div>
+</tdswindow>

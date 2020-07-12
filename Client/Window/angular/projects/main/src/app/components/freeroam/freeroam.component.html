@@ -1,9 +1,4 @@
-<form class="container mat-elevation-z24 mat-app-background" cdkDrag>
-  <mat-toolbar color="primary" cdkDragHandle [closeOnDoubleClick]="content">
-    <h1>{{ currentTitle | language: settings.Lang }}</h1>
-  </mat-toolbar>
-  <div id="container-content" #content>
-
+<tdswindow [title]="currentTitle | language: settings.Lang">
     <div id="teleport-container">
       <div id="teleport-position-container">
         <mat-form-field color="accent">
@@ -29,5 +24,4 @@
       <button #bikeButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Bike, bikeButton)">{{ 'Bike' | language: settings.Lang }}</button>
       <button #boatButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Boat, boatButton)">{{ 'Boat' | language: settings.Lang }}</button>
     </div>
-  </div>
-</form>
+</tdswindow>

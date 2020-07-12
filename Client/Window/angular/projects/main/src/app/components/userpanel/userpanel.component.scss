@@ -3,7 +3,8 @@ tdswindow {
     left: 37.5vw;
     top: 30vh;
     width: 25vw;
-    height: 40vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .glowing-button {
