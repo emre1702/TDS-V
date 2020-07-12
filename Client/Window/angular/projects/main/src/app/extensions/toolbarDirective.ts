@@ -2,7 +2,7 @@ import { Directive,  HostListener, Input, ComponentRef } from '@angular/core';
 
 @Directive({
   // tslint:disable-next-line: directive-selector
-  selector: "mat-toolbar[closeOnDoubleClick]"
+  selector: "[closeOnDoubleClick]"
 })
 export class ToolbarDirective {
 
