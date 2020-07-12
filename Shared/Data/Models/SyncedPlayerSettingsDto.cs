@@ -105,29 +105,8 @@ namespace TDS_Shared.Data.Models
         [JsonProperty("46")]
         public bool ShowLobbyLeaveInfo { get; set; }
 
-        [JsonProperty("39")]
-        public float ThemeBackgroundAlphaPercentage { get; set; }
-
-        [JsonProperty("43")]
-        public string ThemeBackgroundDarkColor { get; set; }
-
-        [JsonProperty("44")]
-        public string ThemeBackgroundLightColor { get; set; }
-
-        [JsonProperty("40")]
-        public string ThemeMainColor { get; set; }
-
-        [JsonProperty("41")]
-        public string ThemeSecondaryColor { get; set; }
-
-        [JsonProperty("42")]
-        public string ThemeWarnColor { get; set; }
-
         [JsonProperty("4")]
         public string Timezone { get; set; }
-
-        [JsonProperty("38")]
-        public bool UseDarkTheme { get; set; }
 
         [JsonProperty("9")]
         public bool Voice3D { get; set; }
