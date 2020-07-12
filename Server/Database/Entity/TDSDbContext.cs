@@ -1056,7 +1056,6 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.PlayerId)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.ThemeBackgroundAlphaPercentage).HasDefaultValue(87);
                 entity.Property(e => e.ThemeMainColor).HasDefaultValue("rgba(0,0,77,1)");
                 entity.Property(e => e.ThemeSecondaryColor).HasDefaultValue("rgba(255,152,0,1)");
                 entity.Property(e => e.ThemeWarnColor).HasDefaultValue("rgba(244,67,54,1)");

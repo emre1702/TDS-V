@@ -6,28 +6,25 @@ namespace TDS_Shared.Data.Models
     {
         #region Public Properties
 
-        [JsonProperty("1")]
-        public float ThemeBackgroundAlphaPercentage { get; set; }
-
-        [JsonProperty("5")]
+        [JsonProperty("1004")]
         public string ThemeBackgroundDarkColor { get; set; }
 
-        [JsonProperty("6")]
+        [JsonProperty("1005")]
         public string ThemeBackgroundLightColor { get; set; }
 
-        [JsonProperty("2")]
+        [JsonProperty("1001")]
         public string ThemeMainColor { get; set; }
 
-        [JsonProperty("3")]
+        [JsonProperty("1002")]
         public string ThemeSecondaryColor { get; set; }
 
-        [JsonProperty("4")]
+        [JsonProperty("1003")]
         public string ThemeWarnColor { get; set; }
 
-        [JsonProperty("7")]
+        [JsonProperty("1006")]
         public int ToolbarDesign { get; set; }
 
-        [JsonProperty("0")]
+        [JsonProperty("1000")]
         public bool UseDarkTheme { get; set; }
 
         #endregion Public Properties
