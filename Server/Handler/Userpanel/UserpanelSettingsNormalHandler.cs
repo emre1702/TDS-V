@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Data.Models.Userpanel;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
@@ -64,13 +65,14 @@ namespace TDS_Server.Handler.Userpanel
         public async Task<object?> SaveSettings(ITDSPlayer player, ArraySegment<object> args)
         {
             string json = (string)args[0];
-            var obj = _serializer.FromBrowser<PlayerSettings>(json);
+            var obj = _serializer.FromBrowser<UserpanelSettingsNormalDataDto>(json);
 
-            var newDiscordUserId = obj.DiscordUserId;
-            obj.DiscordUserId = player.Entity!.PlayerSettings.DiscordUserId;
+            var newDiscordUserId = obj.General.DiscordUserId;
+            obj.General.DiscordUserId = player.Entity!.PlayerSettings.DiscordUserId;
             await player.ExecuteForDBAsync(async (dbContext) =>
             {
-                dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj);
+                dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj.General);
+                dbContext.Entry(player.Entity.ThemeSettings).CurrentValues.SetValues(obj.ThemeSettings);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -79,7 +81,7 @@ namespace TDS_Server.Handler.Userpanel
                 player.LoadTimezone();
                 player.AddToChallenge(ChallengeType.ChangeSettings);
 
-                player.SendEvent(ToClientEvent.SyncSettings, json);
+                player.SendEvent(ToClientEvent.SyncSettings, _serializer.ToBrowser(obj.General));
 
                 if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId && newDiscordUserId.HasValue)
                 {

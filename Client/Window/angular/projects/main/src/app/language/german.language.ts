@@ -703,6 +703,8 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     Foot = "Fuß";
     Torso = "Rumpf";
     GenitalRegion = "Genitalbereich";
+    ToolbarDesign = "Toolbar Design";
+    ToolbarDesignInfo = "Das Design für die Toolbar.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

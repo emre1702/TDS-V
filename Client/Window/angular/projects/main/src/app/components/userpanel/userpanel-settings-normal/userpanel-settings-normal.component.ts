@@ -38,43 +38,44 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             title: "General", rows: [
                 {
                     type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.Language, defaultValue: LanguageEnum.English,
-                    enum: LanguageEnum, nullable: false,
+                    enum: LanguageEnum, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     formControl: new FormControl(LanguageEnum.English)
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.AllowDataTransfer, defaultValue: false,
-                    formControl: new FormControl(false), nullable: false,
+                    formControl: new FormControl(false), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     tooltipLangKey: "AllowDataTransferSettingInfo"
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowConfettiAtRanking, defaultValue: true,
-                    formControl: new FormControl(true), nullable: false,
+                    formControl: new FormControl(true), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     tooltipLangKey: "ShowConfettiAtRankingSettingInfo"
                 },
                 {
                     type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.Timezone,
                     defaultValue: TimezoneEnum["(UTC) Coordinated Universal Time"], enum: TimezoneEnum,
                     formControl: new FormControl(TimezoneEnum["(UTC) Coordinated Universal Time"]),
-                    nullable: false,
+                    nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.dateTimeFormatEnum, dataSettingIndex: UserpanelSettingKey.DateTimeFormat,
                     defaultValue: DateTimeFormatEnum[""], enum: DateTimeFormatEnum, nullable: false,
-                    formControl: new FormControl(DateTimeFormatEnum["yyyy'-'MM'-'dd HH':'mm':'ss"])
+                    formControl: new FormControl(DateTimeFormatEnum["yyyy'-'MM'-'dd HH':'mm':'ss"]),
+                    settingObject: this.getNormalGeneralSettings.bind(this)
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.DiscordUserId, defaultValue: 0,
-                    formControl: new FormControl(0), nullable: false,
+                    formControl: new FormControl(0), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     tooltipLangKey: "DiscordUserIdSettingInfo"
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.CheckAFK, defaultValue: true,
-                    formControl: new FormControl(true), nullable: false,
+                    formControl: new FormControl(true), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     tooltipLangKey: "CheckAFKSettingInfo"
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.WindowsNotifications, defaultValue: true,
-                    formControl: new FormControl(true), nullable: false,
+                    formControl: new FormControl(true), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     tooltipLangKey: "WindowsNotificationsInfo"
                 },
             ]
@@ -84,15 +85,15 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             title: "Fight", rows: [
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Bloodscreen, defaultValue: true,
-                    formControl: new FormControl(true), nullable: false,
+                    formControl: new FormControl(true), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Hitsound, defaultValue: true,
-                    formControl: new FormControl(true), nullable: false,
+                    formControl: new FormControl(true), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.FloatingDamageInfo, defaultValue: true,
-                    formControl: new FormControl(true), nullable: false,
+                    formControl: new FormControl(true), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                 },
             ],
         },
@@ -103,38 +104,52 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.UseDarkTheme,
                     defaultValue: this.settings.ThemeSettings[0], nullable: false,
                     formControl: new FormControl(this.settings.ThemeSettings[0]),
-                    tooltipLangKey: "UseDarkThemeInfo", onValueChanged: this.onThemeChange.bind(this)
+                    tooltipLangKey: "UseDarkThemeInfo", onValueChanged: this.onThemeChange.bind(this),
+                    settingObject: this.getNormalThemeSettings.bind(this)
+                },
+                {
+                    type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ToolbarDesign,
+                    defaultValue: this.settings.ThemeSettings[7], nullable: false,
+                    formControl: new FormControl(this.settings.ThemeSettings[7]),
+                    min: 1, max: 2, step: 1, settingObject: this.getNormalThemeSettings.bind(this),
+                    tooltipLangKey: "ToolbarDesignInfo", onValueChanged: this.onThemeChange.bind(this)
                 },
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundAlphaPercentage,
                     defaultValue: this.settings.ThemeSettings[1], nullable: false,
                     formControl: new FormControl(this.settings.ThemeSettings[1]),
+                    min: 0, max: 100, settingObject: this.getNormalThemeSettings.bind(this),
                     tooltipLangKey: "ThemeBackgroundAlphaPercentageInfo", onValueChanged: this.onThemeChange.bind(this)
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeMainColor,
                     defaultValue: this.settings.ThemeSettings[2], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[2]), nullable: false
+                    formControl: new FormControl(this.settings.ThemeSettings[2]), nullable: false,
+                    settingObject: this.getNormalThemeSettings.bind(this),
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeSecondaryColor,
                     defaultValue: this.settings.ThemeSettings[3], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[3]), nullable: false
+                    formControl: new FormControl(this.settings.ThemeSettings[3]), nullable: false,
+                    settingObject: this.getNormalThemeSettings.bind(this),
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeWarnColor,
                     defaultValue: this.settings.ThemeSettings[4], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[4]), nullable: false
+                    formControl: new FormControl(this.settings.ThemeSettings[4]), nullable: false,
+                    settingObject: this.getNormalThemeSettings.bind(this)
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundDarkColor,
                     defaultValue: this.settings.ThemeSettings[5], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[5]), nullable: false
+                    formControl: new FormControl(this.settings.ThemeSettings[5]), nullable: false,
+                    settingObject: this.getNormalThemeSettings.bind(this),
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.ThemeBackgroundLightColor,
                     defaultValue: this.settings.ThemeSettings[6], onValueChanged: this.onThemeChange.bind(this),
-                    formControl: new FormControl(this.settings.ThemeSettings[6]), nullable: false
+                    formControl: new FormControl(this.settings.ThemeSettings[6]), nullable: false,
+                    settingObject: this.getNormalThemeSettings.bind(this),
                 },
             ]
         },
@@ -143,17 +158,17 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             title: "Voice", rows: [
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.Voice3D, defaultValue: false,
-                    formControl: new FormControl(false), nullable: false,
+                    formControl: new FormControl(false), nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.VoiceAutoVolume, defaultValue: false,
                     formControl: new FormControl(false),
                     onValueChanged: this.voiceVolumeSettingChanged.bind(this),
-                    nullable: false,
+                    nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.VoiceVolume, defaultValue: 1,
-                    min: 0, max: 10, nullable: false,
+                    min: 0, max: 10, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     formControl: new FormControl(1)
                 },
             ]
@@ -164,31 +179,37 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.MapBorderColor, defaultValue: "rgba(150,0,0,0.35)",
                     formControl: new FormControl("rgba(150,0,0,0.35)"), nullable: false,
+                    settingObject: this.getNormalGeneralSettings.bind(this)
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagDeadColor, defaultValue: "rgba(0, 0, 0, 1)",
                     formControl: new FormControl("rgba(0, 0, 0, 1)"), nullable: true,
-                    tooltipLangKey: "NametagDeadColorSettingInfo"
+                    tooltipLangKey: "NametagDeadColorSettingInfo",
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagHealthEmptyColor, defaultValue: "rgba(50, 0, 0, 1)",
                     formControl: new FormControl("rgba(50, 0, 0, 1)"), nullable: false,
-                    tooltipLangKey: "NametagHealthEmptyColorSettingInfo"
+                    tooltipLangKey: "NametagHealthEmptyColorSettingInfo",
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagHealthFullColor, defaultValue: "rgba(0, 255, 0, 1)",
                     formControl: new FormControl("rgba(0, 255, 0, 1)"), nullable: false,
-                    tooltipLangKey: "NametagHealthFullColorSettingInfo"
+                    tooltipLangKey: "NametagHealthFullColorSettingInfo",
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagArmorEmptyColor, defaultValue: undefined,
                     formControl: new FormControl(undefined), nullable: true,
-                    tooltipLangKey: "NametagArmorEmptyColorSettingInfo"
+                    tooltipLangKey: "NametagArmorEmptyColorSettingInfo",
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.color, dataSettingIndex: UserpanelSettingKey.NametagArmorFullColor, defaultValue: "rgba(255, 255, 255, 1)",
                     formControl: new FormControl("rgba(255, 255, 255, 1)"), nullable: false,
-                    tooltipLangKey: "NametagArmorFullColorSettingInfo"
+                    tooltipLangKey: "NametagArmorFullColorSettingInfo",
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
             ]
         },
@@ -199,30 +220,34 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.BloodscreenCooldownMs, defaultValue: 150,
                     formControl: new FormControl(150), min: 0, max: 1000000,
                     onlyInt: true, tooltipLangKey: "BloodscreenCooldownMsSettingInfo", nullable: false,
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.HudAmmoUpdateCooldownMs, defaultValue: 100,
                     formControl: new FormControl(100), min: -1, max: 1000000,
                     onlyInt: true, tooltipLangKey: "HudAmmoUpdateCooldownMsSettingInfo", nullable: false,
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.HudHealthUpdateCooldownMs, defaultValue: 100,
                     formControl: new FormControl(100), min: -1, max: 1000000,
                     onlyInt: true, tooltipLangKey: "HudHealthUpdateCooldownMsSettingInfo", nullable: false,
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.AFKKickAfterSeconds, defaultValue: 25,
                     formControl: new FormControl(25), min: 0, max: 1000000,
                     onlyInt: true, tooltipLangKey: "AFKKickAfterSecondsSettingInfo", nullable: false,
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.AFKKickShowWarningLastSeconds, defaultValue: 10,
-                    formControl: new FormControl(10), min: 0, max: 1000000,
+                    formControl: new FormControl(10), min: 0, max: 1000000, settingObject: this.getNormalGeneralSettings.bind(this),
                     onlyInt: true, tooltipLangKey: "AFKKickShowWarningLastSecondsSettingInfo", nullable: false,
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.ShowFloatingDamageInfoDurationMs, defaultValue: 1000,
-                    formControl: new FormControl(1000), min: 0, max: 1000000,
+                    formControl: new FormControl(1000), min: 0, max: 1000000, settingObject: this.getNormalGeneralSettings.bind(this),
                     onlyInt: true, tooltipLangKey: "ShowFloatingDamageInfoDurationMsSettingInfo", nullable: false,
                 }
             ]
@@ -232,19 +257,19 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             title: "Chat", rows: [
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatWidth, defaultValue: 30,
-                    min: 0, max: 100, nullable: false,
+                    min: 0, max: 100, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     formControl: new FormControl(30), onValueChanged: this.onChatSettingsChanged.bind(this),
                     tooltipLangKey: "ChatWidthSettingInfo"
                 },
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatMaxHeight, defaultValue: 35,
-                    min: 0, max: 100, nullable: false,
+                    min: 0, max: 100, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     formControl: new FormControl(35), onValueChanged: this.onChatSettingsChanged.bind(this),
                     tooltipLangKey: "ChatHeightSettingInfo"
                 },
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatFontSize, defaultValue: 1.4,
-                    min: 0, max: 5, nullable: false,
+                    min: 0, max: 5, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     formControl: new FormControl(1.4), onValueChanged: this.onChatSettingsChanged.bind(this),
                     tooltipLangKey: "ChatFontSizeSettingInfo"
                 },
@@ -252,20 +277,21 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.HideDirtyChat, defaultValue: false,
                     nullable: false, formControl: new FormControl(false),
                     tooltipLangKey: "HideDirtyChatInfo", onValueChanged: this.onChatSettingsChanged.bind(this),
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowCursorOnChatOpen, defaultValue: true,
-                    nullable: false, formControl: new FormControl(true),
+                    nullable: false, formControl: new FormControl(true), settingObject: this.getNormalGeneralSettings.bind(this),
                     tooltipLangKey: "ShowCursorOnChatOpenInfo"
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.HideChatInfo, defaultValue: false,
-                    nullable: false, formControl: new FormControl(false),
+                    nullable: false, formControl: new FormControl(false), settingObject: this.getNormalGeneralSettings.bind(this),
                     tooltipLangKey: "HideChatInfoInfo", onValueChanged: this.onChatSettingsChanged.bind(this),
                 },
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatInfoFontSize, defaultValue: 1,
-                    min: 0, max: 5, nullable: false,
+                    min: 0, max: 5, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
                     formControl: new FormControl(1), onValueChanged: this.onChatSettingsChanged.bind(this),
                     tooltipLangKey: "ChatInfoFontSizeInfo"
                 },
@@ -274,6 +300,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     formControl: new FormControl(15000), min: 50, max: 1000000,
                     onValueChanged: this.onChatSettingsChanged.bind(this),
                     onlyInt: true, tooltipLangKey: "ChatInfoMoveTimeMsInfo", nullable: false,
+                    settingObject: this.getNormalGeneralSettings.bind(this),
                 }
             ]
         },
@@ -284,18 +311,18 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.ScoreboardPlayerSorting,
                     defaultValue: ScoreboardPlayerSorting.Name, enum: ScoreboardPlayerSorting, nullable: false,
                     formControl: new FormControl(ScoreboardPlayerSorting.Name),
-                    tooltipLangKey: "ScoreboardPlayerSortingInfo"
+                    tooltipLangKey: "ScoreboardPlayerSortingInfo", settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ScoreboardPlayerSortingDesc,
                     defaultValue: false, nullable: false, formControl: new FormControl(false),
-                    tooltipLangKey: "ScoreboardPlayerSortingDescInfo"
+                    tooltipLangKey: "ScoreboardPlayerSortingDescInfo", settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.enum, dataSettingIndex: UserpanelSettingKey.ScoreboardPlaytimeUnit,
                     defaultValue: TimeSpanUnitsOfTime.HourMinute, enum: TimeSpanUnitsOfTime, nullable: false,
                     formControl: new FormControl(TimeSpanUnitsOfTime.HourMinute),
-                    tooltipLangKey: "ScoreboardPlaytimeUnitInfo"
+                    tooltipLangKey: "ScoreboardPlaytimeUnitInfo", settingObject: this.getNormalGeneralSettings.bind(this),
                 },
             ]
         },
@@ -305,12 +332,12 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowCursorInfo,
                     defaultValue: true, nullable: false, formControl: new FormControl(true),
-                    tooltipLangKey: "ShowCursorInfoInfo"
+                    tooltipLangKey: "ShowCursorInfoInfo", settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.ShowLobbyLeaveInfo,
                     defaultValue: true, nullable: false, formControl: new FormControl(true),
-                    tooltipLangKey: "ShowLobbyLeaveInfoInfo"
+                    tooltipLangKey: "ShowLobbyLeaveInfoInfo", settingObject: this.getNormalGeneralSettings.bind(this),
                 },
             ]
         }
@@ -361,19 +388,23 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
     private onThemeChange(key: UserpanelSettingKey) {
         switch (key) {
             case UserpanelSettingKey.UseDarkTheme:
-                const useDarkTheme = this.getFormControl("Theme", key).value as boolean;
+                const useDarkTheme = this.getFormControl("ThemeAndDesign", key).value as boolean;
                 this.settings.setThemeChange(key, useDarkTheme);
                 break;
             case UserpanelSettingKey.ThemeBackgroundAlphaPercentage:
-                const backgroundAlpha = this.getFormControl("Theme", key).value as number;
+                const backgroundAlpha = this.getFormControl("ThemeAndDesign", key).value as number;
                 this.settings.setThemeChange(key, backgroundAlpha);
+                break;
+            case UserpanelSettingKey.ToolbarDesign:
+                const toolbarDesign = this.getFormControl("ThemeAndDesign", key).value as number;
+                this.settings.setThemeChange(key, toolbarDesign);
                 break;
             case UserpanelSettingKey.ThemeBackgroundDarkColor:
             case UserpanelSettingKey.ThemeBackgroundLightColor:
             case UserpanelSettingKey.ThemeMainColor:
             case UserpanelSettingKey.ThemeSecondaryColor:
             case UserpanelSettingKey.ThemeWarnColor:
-                const setting = this.settingPanel.find(p => p.title === "Theme").rows.find(r => r.dataSettingIndex === key);
+                const setting = this.settingPanel.find(p => p.title === "ThemeAndDesign").rows.find(r => r.dataSettingIndex === key);
                 this.onColorChange(setting);
                 break;
         }
@@ -386,13 +417,17 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         }
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
-                this.userpanelService.allSettingsNormal[row.dataSettingIndex] = row.formControl.value;
+                row.settingObject()[row.dataSettingIndex] = row.formControl.value;
             }
         }
 
         this.overrideLoadedSettingsWithCurrentSettings();
 
-        const json = JSON.stringify(this.userpanelService.allSettingsNormal);
+        const data = {
+            ["0"]: this.getNormalGeneralSettings(),
+            ["1"]: this.getNormalThemeSettings()
+        };
+        const json = JSON.stringify(data);
         this.rageConnector.callServer(DToServerEvent.SaveSettings, json);
 
         this.userpanelService.myStatsGeneralLoadingCooldownEnded();
@@ -403,7 +438,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
-                this.userpanelService.allSettingsNormal[row.dataSettingIndex] = row.initialValue;
+                row.settingObject()[row.dataSettingIndex] = row.initialValue;
                 row.formControl.setValue(row.initialValue, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
             }
         }
@@ -413,7 +448,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
     setDefault() {
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
-                this.userpanelService.allSettingsNormal[row.dataSettingIndex] = row.defaultValue;
+                row.settingObject()[row.dataSettingIndex] = row.defaultValue;
                 row.formControl.setValue(row.defaultValue, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
             }
         }
@@ -429,7 +464,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
         for (const group of this.settingPanel) {
             for (const row of group.rows) {
-                const value = this.userpanelService.allSettingsNormal[row.dataSettingIndex];
+                const value = row.settingObject()[row.dataSettingIndex];
                 row.formControl.setValue(value, { emitEvent: true, emitModelToViewChange: true, emitViewToModelChange: true });
                 row.initialValue = value;
             }
@@ -509,4 +544,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         this.originalChatFontSize = this.settings.ChatFontSize;
         this.originalHideDirtyChat = this.settings.ChatHideDirtyChat;
     }
+
+    private getNormalGeneralSettings() { return this.userpanelService.allSettingsNormal; }
+    private getNormalThemeSettings() { return this.settings.ThemeSettings; }
 }

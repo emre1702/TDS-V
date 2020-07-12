@@ -96,7 +96,7 @@ export class SettingsService {
     public ChatOpenedChange = new EventEmitter();
 
     public ChatInputOpen = false;
-    public UserpanelOpened = false;
+    public UserpanelOpened = true;
 
     public InFightLobby = false;
     public InFightLobbyChanged = new EventEmitter();
@@ -253,7 +253,8 @@ export class SettingsService {
     ThemeSettings: ThemeSettings
         = {
             0: true, 1: 87, 2: "rgba(0,0,77,1)", 3: "rgba(255,152,0,1)", 4: "rgba(244,67,54,1)",
-            5: "rgba(48, 48, 48, 0.87)", 6: "rgba(250, 250, 250, 0.87)"
+            5: "linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)", 6: "rgba(250, 250, 250, 0.87)",
+            7: 1
         };
 
     ThemeSettingChangedBefore = new EventEmitter();

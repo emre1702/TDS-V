@@ -190,6 +190,11 @@ namespace TDS_Client.Handler
             ShowNametagOnlyOnAiming = _syncedServerSettings.ShowNametagOnlyOnAiming;
         }
 
+        public void LoadThemeSettings(SyncedPlayerThemeSettings data)
+        {
+            _browserHandler.Angular.SyncThemeSettings(_serializer.ToBrowser(data));
+        }
+
         public void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
         {
             if (!_languageManuallyChanged || LanguageEnum == loadedSyncedSettings.Language || PlayerSettings != null)
@@ -217,8 +222,6 @@ namespace TDS_Client.Handler
             _browserHandler.Angular.LoadChatSettings(loadedSyncedSettings.ChatWidth, loadedSyncedSettings.ChatMaxHeight,
                 loadedSyncedSettings.ChatFontSize, loadedSyncedSettings.HideDirtyChat, loadedSyncedSettings.HideChatInfo,
                 loadedSyncedSettings.ChatInfoFontSize, loadedSyncedSettings.ChatInfoMoveTimeMs);
-
-            SyncThemeSettings(loadedSyncedSettings);
 
             _eventsHandler.OnSettingsLoaded(loadedSyncedSettings);
         }
@@ -318,21 +321,6 @@ namespace TDS_Client.Handler
         private void SyncRegisterLoginLanguageTexts(object[] args)
         {
             _browserHandler.RegisterLogin.SyncLanguage(Language);
-        }
-
-        private void SyncThemeSettings(SyncedPlayerSettingsDto settings)
-        {
-            var data = new ThemeSettings
-            {
-                UseDarkTheme = settings.UseDarkTheme,
-                ThemeBackgroundAlphaPercentage = settings.ThemeBackgroundAlphaPercentage,
-                ThemeMainColor = settings.ThemeMainColor,
-                ThemeSecondaryColor = settings.ThemeSecondaryColor,
-                ThemeWarnColor = settings.ThemeWarnColor,
-                ThemeBackgroundDarkColor = settings.ThemeBackgroundDarkColor,
-                ThemeBackgroundLightColor = settings.ThemeBackgroundLightColor
-            };
-            _browserHandler.Angular.SyncThemeSettings(_serializer.ToBrowser(data));
         }
 
         #endregion Private Methods

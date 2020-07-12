@@ -83,7 +83,6 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 Voice3D = false,
                 VoiceAutoVolume = false,
                 HideChatInfo = false,
-                UseDarkTheme = true,
                 ShowCursorInfo = true,
                 ShowLobbyLeaveInfo = true
             };
@@ -93,6 +92,10 @@ namespace TDS_Server.Core.Manager.PlayerManager
             };
             dbPlayer.PlayerTotalStats = new PlayerTotalStats();
             dbPlayer.PlayerClothes = new PlayerClothes();
+            dbPlayer.ThemeSettings = new PlayerThemeSettings
+            {
+                UseDarkTheme = true
+            };
 
             await ExecuteForDBAsync(async dbContext =>
             {

@@ -4,6 +4,7 @@ import { SettingType } from '../../../enums/setting-type';
 export interface UserpanelSettingRow {
     type: SettingType;
     formControl: FormControl;
+    settingObject: () => object;
 
     enum?: any;
     defaultValue: any;
@@ -14,6 +15,7 @@ export interface UserpanelSettingRow {
     max?: number;
     nullable: boolean;
     toggleColorPicker?: boolean;
+    step?: number;
 
     dataSettingIndex: number;
 

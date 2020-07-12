@@ -97,6 +97,7 @@ namespace TDS_Server.Handler.Account
                     .Include(p => p.CharDatas.FeaturesData)
                     .Include(p => p.CharDatas.AppearanceData)
                     .Include(p => p.CharDatas.HairAndColorsData)
+                    .Include(p => p.ThemeSettings)
                     .Include(p => p.WeaponStats)
                     .Include(p => p.WeaponBodypartStats)
 
@@ -135,6 +136,7 @@ namespace TDS_Server.Handler.Account
 
             var syncedSettingsJson = _serializer.ToClient(_settingsHandler.SyncedSettings);
             var playerSettingsJson = _serializer.ToClient(player.Entity.PlayerSettings);
+            var playerThemeSettingsJson = _serializer.ToClient(player.Entity.ThemeSettings);
             var angularContentsJson = _serializer.ToBrowser(angularConstantsData);
 
             _modAPI.Thread.QueueIntoMainThread(() =>
@@ -142,6 +144,7 @@ namespace TDS_Server.Handler.Account
                 player.SendEvent(ToClientEvent.LoginSuccessful,
                     syncedSettingsJson,
                     playerSettingsJson,
+                    playerThemeSettingsJson,
                     angularContentsJson
                 );
 

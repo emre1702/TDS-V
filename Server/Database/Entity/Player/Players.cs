@@ -74,6 +74,7 @@ namespace TDS_Server.Database.Entity.Player
         public string SCName { get; set; }
         public virtual ICollection<SupportRequestMessages> SupportRequestMessages { get; set; }
         public virtual SupportRequests SupportRequests { get; set; }
+        public virtual PlayerThemeSettings ThemeSettings { get; set; }
         public virtual ICollection<PlayerWeaponBodypartStats> WeaponBodypartStats { get; set; }
         public virtual ICollection<PlayerWeaponStats> WeaponStats { get; set; }
 

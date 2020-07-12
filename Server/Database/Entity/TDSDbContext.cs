@@ -109,6 +109,7 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Players> Players { get; set; }
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
+        public virtual DbSet<PlayerThemeSettings> PlayerThemeSettings { get; set; }
         public virtual DbSet<PlayerWeaponBodypartStats> PlayerWeaponBodypartStats { get; set; }
         public virtual DbSet<PlayerWeaponStats> PlayerWeaponStats { get; set; }
         public virtual DbSet<Rules> Rules { get; set; }
@@ -1013,13 +1014,6 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.ChatInfoMoveTimeMs).HasDefaultValue(15000);
                 entity.Property(e => e.ScoreboardPlaytimeUnit).HasDefaultValue(TimeSpanUnitsOfTime.HourMinute);
 
-                entity.Property(e => e.ThemeBackgroundAlphaPercentage).HasDefaultValue(87);
-                entity.Property(e => e.ThemeMainColor).HasDefaultValue("rgba(0,0,77,1)");
-                entity.Property(e => e.ThemeSecondaryColor).HasDefaultValue("rgba(255,152,0,1)");
-                entity.Property(e => e.ThemeWarnColor).HasDefaultValue("rgba(244,67,54,1)");
-                entity.Property(e => e.ThemeBackgroundDarkColor).HasDefaultValue("linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)");
-                entity.Property(e => e.ThemeBackgroundLightColor).HasDefaultValue("rgba(250, 250, 250, 0.87)");
-
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerSettings)
                     .HasForeignKey<PlayerSettings>(d => d.PlayerId)
@@ -1052,6 +1046,27 @@ namespace TDS_Server.Database.Entity
                 entity.HasOne(d => d.Player)
                     .WithOne(p => p.PlayerStats)
                     .HasForeignKey<PlayerStats>(d => d.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<PlayerThemeSettings>(entity =>
+            {
+                entity.HasKey(e => e.PlayerId);
+
+                entity.Property(e => e.PlayerId)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.ThemeBackgroundAlphaPercentage).HasDefaultValue(87);
+                entity.Property(e => e.ThemeMainColor).HasDefaultValue("rgba(0,0,77,1)");
+                entity.Property(e => e.ThemeSecondaryColor).HasDefaultValue("rgba(255,152,0,1)");
+                entity.Property(e => e.ThemeWarnColor).HasDefaultValue("rgba(244,67,54,1)");
+                entity.Property(e => e.ThemeBackgroundDarkColor).HasDefaultValue("linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)");
+                entity.Property(e => e.ThemeBackgroundLightColor).HasDefaultValue("rgba(250, 250, 250, 0.87)");
+                entity.Property(e => e.ToolbarDesign).HasDefaultValue(1);
+
+                entity.HasOne(e => e.Player)
+                    .WithOne(p => p.ThemeSettings)
+                    .HasForeignKey<PlayerThemeSettings>(e => e.PlayerId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 

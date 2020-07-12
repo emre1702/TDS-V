@@ -269,6 +269,8 @@ export interface Language {
     ThemeWarnColor: string;
     ThemeBackgroundDarkColor: string;
     ThemeBackgroundLightColor: string;
+    ToolbarDesign: string;
+    ToolbarDesignInfo: string;
 
     MainMenu: string;
     Heritage: string;

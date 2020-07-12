@@ -44,6 +44,7 @@ export enum UserpanelSettingKey {
     ScoreboardPlaytimeUnit = 34,
 
     UseDarkTheme = 38,
+    ToolbarDesign = 47,
     ThemeBackgroundAlphaPercentage = 39,
     ThemeMainColor = 40,
     ThemeSecondaryColor = 41,

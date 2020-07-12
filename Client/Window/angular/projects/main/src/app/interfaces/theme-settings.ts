@@ -19,4 +19,7 @@ export interface ThemeSettings {
 
     /** ThemeBackgroundLightColor */
     [6]: string;
+
+    /** ToolbarDesign */
+    [7]: number;
 }

@@ -203,6 +203,8 @@ WARNING! Spaces will get removed and new lines with an already used command will
     ThemeWarnColor = "Warn color";
     ThemeBackgroundDarkColor = "Dark background color";
     ThemeBackgroundLightColor = "Light background color";
+    ToolbarDesign = "Toolbar design";
+    ToolbarDesignInfo = "The design for the toolbar.";
 
     SCName = "Socialclub Name";
     AdminLvl = "Admin Level";
