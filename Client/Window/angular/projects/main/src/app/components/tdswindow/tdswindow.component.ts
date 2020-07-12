@@ -1,14 +1,21 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { MatMenuPanel } from '@angular/material';
+import { SettingsService } from '../../services/settings.service';
+import { UserpanelSettingKey } from '../userpanel/enums/userpanel-setting-key.enum';
 
 @Component({
     // tslint:disable-next-line: component-selector
     selector: 'tdswindow',
     templateUrl: './tdswindow.component.html',
-    styleUrls: ['./tdswindow.component.scss'],
+    styleUrls: [
+        './styles/window/window.design1.scss',
+
+        './styles/toolbar/toolbar.design1.scss',
+        './styles/toolbar/toolbar.design2.scss'
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TDSWindowComponent implements OnInit {
+export class TDSWindowComponent implements OnInit, OnDestroy {
 
     private _isLoading: boolean;
     get isLoading(): boolean {
@@ -67,15 +74,31 @@ export class TDSWindowComponent implements OnInit {
         this.changeDetector.detectChanges();
     }
 
-    design = 1;
+    windowDesign = 1;
+    toolbarDesign = 1;
 
     // tslint:disable-next-line: no-output-native
     @Output() close = new EventEmitter();
     @Output() back = new EventEmitter();
 
-    constructor(private changeDetector: ChangeDetectorRef) { }
+    @ViewChild('toolbar1') toolbar1: TemplateRef<any>;
+    @ViewChild('toolbar2') toolbar2: TemplateRef<any>;
+    @ViewChild('toolbar3') toolbar3: TemplateRef<any>;
+
+    constructor(private changeDetector: ChangeDetectorRef, private settings: SettingsService) { }
 
     ngOnInit(): void {
+        this.settings.ThemeSettingChanged.on(null, this.themeChanged.bind(this));
     }
 
+    ngOnDestroy(): void {
+        this.settings.ThemeSettingChanged.off(null, this.themeChanged.bind(this));
+    }
+
+    private themeChanged(key: UserpanelSettingKey, value: any) {
+        if (key == UserpanelSettingKey.ToolbarDesign) {
+            this.toolbarDesign = value;
+        }
+        this.changeDetector.detectChanges();
+    }
 }

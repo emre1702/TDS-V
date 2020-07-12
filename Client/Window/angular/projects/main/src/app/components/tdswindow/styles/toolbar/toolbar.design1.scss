@@ -1,0 +1,27 @@
+.toolbar.design1 {
+    display: flex;
+    flex-direction: row;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+
+    .glowing-button {
+        animation: glowing 1500ms infinite;
+    }
+
+    > * {
+        display: table-cell;
+    }
+
+    #title {
+        width: 100%;
+        text-align: center;
+    }
+
+    #menu-navigation {
+        min-width: initial !important;
+
+        .mat-icon {
+            margin-right: 10px;
+        }
+    }
+}

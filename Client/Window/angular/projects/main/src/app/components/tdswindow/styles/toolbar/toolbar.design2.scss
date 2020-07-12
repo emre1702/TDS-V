@@ -1,0 +1,23 @@
+.toolbar.design2 {
+
+    .glowing-button {
+        animation: glowing 1500ms infinite;
+    }
+
+    > * {
+        display: table-cell;
+    }
+
+    #title {
+        width: 100%;
+        text-align: center;
+    }
+
+    #menu-navigation {
+        min-width: initial !important;
+
+        .mat-icon {
+            margin-right: 10px;
+        }
+    }
+}
