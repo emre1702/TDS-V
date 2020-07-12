@@ -38,7 +38,7 @@
                     <ng-container *ngSwitchCase="userpanelSettingType.numberSlider">
                         <div class="setting-row">
                             <span>{{ userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang }}</span>
-                            <mat-slider color="primary" thumbLabel tickInterval="1" step="0.05"
+                            <mat-slider color="primary" thumbLabel tickInterval="1" step="setting.step"
                                 [formControl]="setting.formControl" [min]="setting.min" [max]="setting.max"
                                 (blur)="changeDetector.detectChanges()"
                                 (change)="setting.onValueChanged && setting.onValueChanged(setting.dataSettingIndex)"
