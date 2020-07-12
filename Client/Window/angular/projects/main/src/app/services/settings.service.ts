@@ -96,7 +96,7 @@ export class SettingsService {
     public ChatOpenedChange = new EventEmitter();
 
     public ChatInputOpen = false;
-    public UserpanelOpened = true;
+    public UserpanelOpened = false;
 
     public InFightLobby = false;
     public InFightLobbyChanged = new EventEmitter();
