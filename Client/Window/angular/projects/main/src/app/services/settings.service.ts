@@ -150,6 +150,11 @@ export class SettingsService {
     public ShownHudType = 1;
     public AllMapsForCustomLobby: MapDataDto[] = [];
 
+    public IsInGang = true;
+    public IsInGangChanged = new EventEmitter();
+
+    public InputFocused = false;
+
     public AdminLevels = [
         { Level: 0, Name: "User", Color: "rgb(220,220,220)" },
         { Level: 1, Name: "Supporter", Color: "rgb(113,202,113)" },
@@ -218,6 +223,11 @@ export class SettingsService {
 
     public triggerChatSettingsChanged() {
         this.ChatSettingsChanged.emit(null);
+    }
+
+    private syncIsInGang(value: boolean) {
+        this.IsInGang = value;
+        this.IsInGangChanged.emit(null, value);
     }
 
     private loadChatSettings(width: number, maxHeight: number, fontSize: number, hideDirtyChat: boolean,
@@ -295,6 +305,7 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.LoadChatSettings, this.loadChatSettings.bind(this));
         rageConnector.listen(DFromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
         rageConnector.listen(DFromClientEvent.LoadThemeSettings, this.loadThemeSettings.bind(this));
+        rageConnector.listen(DFromClientEvent.SyncIsInGang, this.syncIsInGang.bind(this));  // Todo: Add to C#
 
         this.LanguageChanged.setMaxListeners(40);
         this.ThemeSettingsLoaded.setMaxListeners(40);

@@ -13,6 +13,7 @@ import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { UserpanelSettingKey } from './components/userpanel/enums/userpanel-setting-key.enum';
 import { ThemeSettings } from './interfaces/theme-settings';
 import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
+import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
 
 @Component({
     selector: 'app-root',
@@ -40,15 +41,16 @@ import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
     ],
 })
 export class AppComponent {
-    started = false;
+    started = true;
 
     showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = true;
+    showLobbyChoice = false;
     showTeamChoice = false;
     showRankings = false;
     showHUD = false;
     showCharCreator = false;
+    showGangWindow = true;
 
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;
@@ -60,24 +62,11 @@ export class AppComponent {
         private changeDetector: ChangeDetectorRef,
         snackBar: MatSnackBar,
         public vcRef: ViewContainerRef,
-        iconRegistry: MatIconRegistry,
-        sanitizer: DomSanitizer,
+        private iconRegistry: MatIconRegistry,
+        private sanitizer: DomSanitizer,
         private materialCssVarsService: MaterialCssVarsService) {
 
-        iconRegistry.addSvgIcon("man", sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));
-        iconRegistry.addSvgIcon("woman", sanitizer.bypassSecurityTrustResourceUrl('assets/woman.svg'));
-        iconRegistry.addSvgIcon("pistol", sanitizer.bypassSecurityTrustResourceUrl('assets/pistol.svg'));
-        iconRegistry.addSvgIcon("Head", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/head.svg'));
-        iconRegistry.addSvgIcon("Neck", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/neck.svg'));
-        iconRegistry.addSvgIcon("UpperBody", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/upperbody.svg'));
-        iconRegistry.addSvgIcon("Spine", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/spine.svg'));
-        iconRegistry.addSvgIcon("LowerBody", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/lowerbody.svg'));
-        iconRegistry.addSvgIcon("Arm", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/arm.svg'));
-        iconRegistry.addSvgIcon("Hand", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/hand.svg'));
-        iconRegistry.addSvgIcon("Leg", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/leg.svg'));
-        iconRegistry.addSvgIcon("Foot", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/foot.svg'));
-        iconRegistry.addSvgIcon("GenitalRegion", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/genitalregion.svg'));
-        iconRegistry.addSvgIcon("Torso", sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/torso.svg'));
+        this.loadSvgIcons();
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
@@ -175,16 +164,36 @@ export class AppComponent {
     }
 
     private onThemeSettingsLoaded(settings: ThemeSettings) {
-        this.materialCssVarsService.setDarkTheme(settings[0]);
-        this.materialCssVarsService.setPrimaryColor(settings[2]);
-        this.materialCssVarsService.setAccentColor(settings[3]);
-        this.materialCssVarsService.setWarnColor(settings[4]);
+        this.materialCssVarsService.setDarkTheme(settings[1000]);
+        this.materialCssVarsService.setPrimaryColor(settings[1001]);
+        this.materialCssVarsService.setAccentColor(settings[1002]);
+        this.materialCssVarsService.setWarnColor(settings[1003]);
     }
 
     @HostListener("window:keydown", ["$event"])
     keyboardInput(event: KeyboardEvent) {
-        if (event.ctrlKey && event.key === "a") {
+        if (event.ctrlKey && event.key === "a" && !this.settings.InputFocused) {
             event.preventDefault();
         }
+    }
+
+
+    private loadSvgIcons() {
+        this.iconRegistry.addSvgIcon("man", this.sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));
+        this.iconRegistry.addSvgIcon("woman", this.sanitizer.bypassSecurityTrustResourceUrl('assets/woman.svg'));
+
+        const bodyPartKeys = Object.keys(PedBodyPart);
+        for (const bodyPart of bodyPartKeys.slice(bodyPartKeys.length / 2)) {
+            this.iconRegistry.addSvgIcon(bodyPart, this.sanitizer.bypassSecurityTrustResourceUrl("assets/body-parts/" + bodyPart + ".svg"));
+        }
+
+        const weaponKeys = Object.keys(WeaponHash);
+        for (const weapon of weaponKeys.slice(weaponKeys.length / 2)) {
+            this.iconRegistry.addSvgIcon(weapon, this.sanitizer.bypassSecurityTrustResourceUrl("assets/weapons/" + weapon + ".svg"));
+        }
+        this.iconRegistry.addSvgIcon("PistolColorless", this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/PistolColorless.svg'));
+
+        this.iconRegistry.addSvgIcon("test1", this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/Carbinerifle.svg'));
+        this.iconRegistry.addSvgIcon("test2", this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/Assaultrifle.svg'));
     }
 }
