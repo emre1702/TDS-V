@@ -120,6 +120,23 @@ namespace TDS_Client.Handler
 
                 return;
             }
+            /*else if (cmd == "cutscene")
+            {
+                
+                ModAPI.Cutscene.RequestCutscene(Enum.Parse<CutsceneType>(msg.Split(' ')[1]));
+                ModAPI.Native.Invoke(NativeHash.SET_NETWORK_CUTSCENE_ENTITIES, true);
+                ModAPI.Native.Invoke(NativeHash.NETWORK_SET_IN_MP_CUTSCENE, true, true);
+                ModAPI.Native.Invoke(NativeHash.SET_LOCAL_PLAYER_VISIBLE_IN_CUTSCENE, true, false);
+                ModAPI.Native.Invoke(NativeHash.SET_ENTITY_VISIBLE_IN_CUTSCENE, ModAPI.LocalPlayer.Handle, true, true);
+                ModAPI.Cutscene.RegisterEntityForCutscene(ModAPI.LocalPlayer, "MP_1", 0, 0, 64);
+                ModAPI.Native.Invoke(NativeHash.SET_CUTSCENE_ENTITY_STREAMING_FLAGS, "MP_1", 0, 1);
+                ModAPI.Native.Invoke((NativeHash)17876293797489278094, 2);
+                ModAPI.Native.Invoke((NativeHash)11413602432665415843, true);
+                ModAPI.Native.Invoke((NativeHash)18165510258038530118, true);
+                ModAPI.Native.Invoke((NativeHash)2361794840612055679, true);
+                ModAPI.Cutscene.StartCutscene(0);
+                return;
+            }*/
 
             var origCmdData = _settingsHandler.CommandsData.AddedCommands.FirstOrDefault(c => c.CustomCommand.Equals(cmd, StringComparison.OrdinalIgnoreCase));
 

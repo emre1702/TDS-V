@@ -7,6 +7,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Checkpoint;
 using TDS_Client.Data.Interfaces.ModAPI.Console;
 using TDS_Client.Data.Interfaces.ModAPI.Control;
 using TDS_Client.Data.Interfaces.ModAPI.Cursor;
+using TDS_Client.Data.Interfaces.ModAPI.Cutscene;
 using TDS_Client.Data.Interfaces.ModAPI.Discord;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
@@ -46,6 +47,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI
         IConsoleAPI Console { get; }
         IControlAPI Control { get; }
         ICursorAPI Cursor { get; }
+        ICutsceneAPI Cutscene { get; }
         IDiscordAPI Discord { get; }
         IEntityAPI Entity { get; }
         IEventAPI Event { get; }

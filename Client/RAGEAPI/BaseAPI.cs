@@ -8,6 +8,7 @@ using TDS_Client.Data.Interfaces.ModAPI.Checkpoint;
 using TDS_Client.Data.Interfaces.ModAPI.Console;
 using TDS_Client.Data.Interfaces.ModAPI.Control;
 using TDS_Client.Data.Interfaces.ModAPI.Cursor;
+using TDS_Client.Data.Interfaces.ModAPI.Cutscene;
 using TDS_Client.Data.Interfaces.ModAPI.Discord;
 using TDS_Client.Data.Interfaces.ModAPI.Entity;
 using TDS_Client.Data.Interfaces.ModAPI.Event;
@@ -41,6 +42,7 @@ using TDS_Client.RAGEAPI.Checkpoint;
 using TDS_Client.RAGEAPI.Console;
 using TDS_Client.RAGEAPI.Control;
 using TDS_Client.RAGEAPI.Cursor;
+using TDS_Client.RAGEAPI.Cutscene;
 using TDS_Client.RAGEAPI.Discord;
 using TDS_Client.RAGEAPI.Entity;
 using TDS_Client.RAGEAPI.Event;
@@ -89,6 +91,7 @@ namespace TDS_Client.RAGEAPI
             Checkpoint = new CheckpointAPI();
             Control = new ControlAPI();
             Cursor = new CursorAPI();
+            Cutscene = new CutsceneAPI();
             Discord = new DiscordAPI();
             Entity = new EntityAPI();
             Event = new EventAPI(loggingHandler);
@@ -127,6 +130,7 @@ namespace TDS_Client.RAGEAPI
         public IConsoleAPI Console { get; }
         public IControlAPI Control { get; }
         public ICursorAPI Cursor { get; }
+        public ICutsceneAPI Cutscene { get; }
         public IDiscordAPI Discord { get; }
         public IEntityAPI Entity { get; }
         public IEventAPI Event { get; }
