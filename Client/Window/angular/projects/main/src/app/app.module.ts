@@ -104,6 +104,13 @@ import { InfoComponent } from './components/infos-handler/info/info.component';
 import { UserpanelStatsWeaponComponent } from './components/userpanel/userpanel-stats-weapon/userpanel-stats-weapon.component';
 import { TDSWindowComponent } from './components/tdswindow/tdswindow.component';
 import { GangWindowComponent } from './components/gang-window/gang-window.component';
+import { GangWindowMembersComponent } from './components/gang-window/gang-window-members/gang-window-members.component';
+import { GangWindowRankLevelsComponent } from './components/gang-window/gang-window-rank-levels/gang-window-rank-levels.component';
+import { GangWindowCreateComponent } from './components/gang-window/gang-window-create/gang-window-create.component';
+import { GangWindowGangInfoComponent } from './components/gang-window/gang-window-gang-info/gang-window-gang-info.component';
+import { GangWindowVehiclesComponent } from './components/gang-window/gang-window-vehicles/gang-window-vehicles.component';
+import { GangWindowAllGangsComponent } from './components/gang-window/gang-window-all-gangs/gang-window-all-gangs.component';
+import { GangWindowRankPermissionsComponent } from './components/gang-window/gang-window-rank-permissions/gang-window-rank-permissions.component';
 
 @NgModule({
   declarations: [
@@ -167,7 +174,14 @@ import { GangWindowComponent } from './components/gang-window/gang-window.compon
     InfoComponent,
     UserpanelStatsWeaponComponent,
     TDSWindowComponent,
-    GangWindowComponent
+    GangWindowComponent,
+    GangWindowMembersComponent,
+    GangWindowRankLevelsComponent,
+    GangWindowCreateComponent,
+    GangWindowGangInfoComponent,
+    GangWindowVehiclesComponent,
+    GangWindowAllGangsComponent,
+    GangWindowRankPermissionsComponent
   ],
   imports: [
     ReactiveFormsModule,

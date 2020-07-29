@@ -1,0 +1,73 @@
+#container {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .table-container {
+        min-width: calc(35% - 10px);
+        max-width: calc(60% - 10px);
+        height: 100%;
+        overflow: auto;
+        direction: rtl;
+
+        .mat-table {
+            direction: ltr;
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+
+            ::ng-deep *:not(.mat-sort-header-arrow):not(.mat-sort-header-stem):not(.ng-trigger):not(.mat-sort-header-pointer-middle) {
+                background: transparent !important;
+            }
+
+            .mat-table-sticky:last-child {
+                width: 20px;
+            }
+
+            td {
+                padding: 5px 10px 5px 10px;
+            }
+
+            ::ng-deep .selectedRow {
+                border: 2px solid !important;
+            }
+        }
+    }
+
+    ::ng-deep .mat-tooltip {
+        white-space: pre-line;
+    }
+
+    .placeholder {
+        width: 20px;
+    }
+
+    .right-side {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        * {
+            width: 100%;
+        }
+
+        .rankup-button {
+            background: green;
+        }
+
+        .rankdown-button {
+            background-color: red;
+        }
+
+        .kick-button {
+            background-color: darkred;
+        }
+
+        .invite-button {
+            background-color: darkgreen;
+        }
+    }
+
+}
+

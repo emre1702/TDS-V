@@ -19,6 +19,7 @@ export enum DFromClientEvent {
     ShowCooldown = "cb18",
     ShowRankings = "cb19",
     SyncHUDDataChange = "cb21",
+    SyncIsInGang = "cb44",
     SyncIsLobbyOwner = "cb22",
     SyncMapPriceData = "cb23",
     SyncMoney = "cb24",

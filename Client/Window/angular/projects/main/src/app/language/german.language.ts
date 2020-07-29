@@ -158,6 +158,7 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     AmountMapsCreated = "Anzahl Maps erstellt";
     CreatedMapsAverageRating = "Durchschnitt der Bewertungen der erstellten Maps";
     LastLogin = "Letzter Login";
+    JoinDate = "Beitritts-Datum";
     RegisterTimestamp = "Register Zeit";
     of = "von";
     FirstPageLabel = "Erste Seite";
@@ -664,6 +665,13 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     StartWithMapcreatorError = "Name der Lobby darf nicht mit \"Mapcreator\" starten.";
     LobbyWithNameAlreadyExistsError = "Lobby mit diesem Namen existiert bereits.";
     "Error?" = "Unbekannter Fehler";
+    ThisErrorrequired = "Diese Einstellung ist Pflicht, wurde aber nicht ausgefüllt.";
+    ThisErrormaxlength = "Zu viele Zeichen benutzt.";
+    ThisErrorminlength = "Zu wenig Zeichen benutzt.";
+    ThisErrormin = "Die Zahl ist zu niedrig.";
+    ThisErrormax = "Die Zahl ist zu hoch.";
+    ThisErrorpattern = "Du hast ein ungültiges Zeichen benutzt.";
+    ThisErrorblipColorDoesntExists = "Diese Blip-Farbe existiert nicht.";
     Errorrequired = "Mindestens eine Einstellung ist Pflicht, wurde aber nicht ausgefüllt.";
     Errormaxlength = "Mindestens eine Einstellung hat zu viele Zeichen.";
     Errorminlength = "Mindestens eine Einstellung hat zu wenig Zeichen.";
@@ -705,6 +713,10 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     GenitalRegion = "Genitalbereich";
     ToolbarDesign = "Toolbar Design";
     ToolbarDesignInfo = "Das Design für die Toolbar.";
+    GangNameHint = "Ganzer Name der Gang";
+    GangShortHint = "Kürzel der Gang";
+    GangColorHint = "Farbe der Gang (außer für Blip)";
+    GangBlipColorHint = "Farbe nur für Blip der Gang";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

@@ -1,0 +1,67 @@
+<form [formGroup]="createFormGroup">
+    <div class="row">
+        <span>{{ "Name" | language: settings.Lang }}:</span>
+        <div class="placeholder"></div>
+        <mat-form-field color="accent" [hintLabel]="'GangNameHint' | language: settings.Lang">
+            <input matInput formControlName="0">
+            <mat-hint align="end">{{ nameFormControl.value.length }}/50</mat-hint>
+            <mat-error *ngIf="nameFormControl.invalid">{{ "ThisError" + getErrorMessage(nameFormControl) | language: settings.Lang }}</mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <span>{{ "Short" | language: settings.Lang }}:</span>
+        <div class="placeholder"></div>
+        <mat-form-field color="accent" [hintLabel]="'GangShortHint' | language: settings.Lang">
+            <input matInput formControlName="1">
+            <mat-hint align="end">{{ shortFormControl.value.length }}/6</mat-hint>
+            <mat-error *ngIf="shortFormControl.invalid">{{ "ThisError" + getErrorMessage(shortFormControl) | language: settings.Lang }}</mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <span>{{ "Color" | language: settings.Lang }}:</span>
+        <div class="placeholder"></div>
+        <mat-form-field color="accent" [hintLabel]="'GangColorHint' | language: settings.Lang">
+            <input #input matInput [colorPicker]="colorFormControl.value"
+                formControlName="2"
+                [style.background]="getColor(colorFormControl.value)" cpFallbackColor="rgb(255,255,255)"
+                cpOutputFormat="rgba"
+                [(cpToggle)]="showColorPickerForColor"
+                cpAlphaChannel="disabled" cpUseRootViewContainer="true"
+                [cpIgnoredElements]="[input]"
+                (colorPickerChange)="colorFormControl.setValue($event)"
+                (focus)="$event.target.select()" />
+            <mat-error *ngIf="colorFormControl.invalid">{{ "ThisError" + getErrorMessage(colorFormControl) | language: settings.Lang }}</mat-error>
+        </mat-form-field>
+        <button mat-icon-button (click)="showColorPickerForColor = !showColorPickerForColor">
+            <mat-icon color="accent">color_lens</mat-icon>
+        </button>
+    </div>
+
+    <div class="row">
+        <span>{{ "BlipColor" | language: settings.Lang }}:</span>
+        <div class="placeholder"></div>
+        <mat-form-field color="accent" [hintLabel]="'GangBlipColorHint' | language: settings.Lang">
+            <input #input matInput formControlName="3"
+                [style.background]="getBlipColor(blipColorFormControl.value)"
+                (focus)="$event.target.select()" />
+            <mat-error *ngIf="blipColorFormControl.invalid">{{ "ThisError" + getErrorMessage(blipColorFormControl) | language: settings.Lang }}</mat-error>
+        </mat-form-field>
+        <button mat-icon-button (click)="showBlipColorWindow = !showBlipColorWindow">
+            <mat-icon color="accent">color_lens</mat-icon>
+        </button>
+    </div>
+
+</form>
+
+<tdswindow id="blip-color-window" *ngIf="showBlipColorWindow" hideToolbar="true">
+    <div class="blip-container">
+        <div *ngFor="let blip of constants.BLIP_COLORS"
+        [style.background]="blip.Color"
+        [matTooltip]="blip.Info | language: settings.Lang"
+        (click)="blipColorFormControl.setValue(blip.ID); showBlipColorWindow = false"></div>
+    </div>
+
+</tdswindow>
+

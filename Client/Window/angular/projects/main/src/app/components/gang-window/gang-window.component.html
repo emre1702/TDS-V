@@ -1,0 +1,48 @@
+<tdswindow [navMenu]="navMenu"
+[currentNav]="gangWindowNav[currentNav] | language: settings.Lang"
+(close)="closeFunc()" [title]="'GangMenu' | language: settings.Lang"
+contentHeight="50vh">
+    <app-gang-window-create *ngIf="currentNav == gangWindowNav.Create"></app-gang-window-create>
+    <app-gang-window-members *ngIf="currentNav == gangWindowNav.Members"></app-gang-window-members>
+</tdswindow>
+
+
+<mat-menu #navMenu="matMenu" panelClass="mat-app-background" class="mat-app-background">
+    <button mat-menu-item *ngIf="!settings.IsInGang" (click)="gotoNav(gangWindowNav.Create)" >
+        <mat-icon color="accent">group_add</mat-icon>
+        {{ gangWindowNav[gangWindowNav.Create] | language: settings.Lang }}
+    </button>
+    <button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.GangInfo)" >
+        <mat-icon color="accent">info</mat-icon>
+        {{ gangWindowNav[gangWindowNav.GangInfo] | language: settings.Lang }}
+    </button>
+
+    <button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.Members)" >
+        <mat-icon color="accent">people_alt</mat-icon>
+        {{ gangWindowNav[gangWindowNav.Members] | language: settings.Lang }}
+    </button>
+    <button mat-menu-item *ngIf="settings.IsInGang" [matMenuTriggerFor]="ranksNav">
+        <mat-icon color="accent">accessibility</mat-icon>
+        <span>{{ gangWindowNav[gangWindowNav.Ranks]  | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.Vehicles)" >
+        <mat-icon color="accent">directions_car</mat-icon>
+        {{ gangWindowNav[gangWindowNav.Vehicles] | language: settings.Lang }}
+    </button>
+    <button mat-menu-item (click)="gotoNav(gangWindowNav.AllGangs)" >
+        <mat-icon color="accent">format_list_bulleted</mat-icon>
+        {{ gangWindowNav[gangWindowNav.AllGangs] | language: settings.Lang }}
+    </button>
+</mat-menu>
+
+<mat-menu #ranksNav="matMenu" class="mat-app-background">
+    <button mat-menu-item (click)="gotoNav(gangWindowNav.RanksLevels)" >
+        <mat-icon color="accent">stairs</mat-icon>
+        {{ gangWindowNav[gangWindowNav.RanksLevels] | language: settings.Lang }}
+    </button>
+    <button mat-menu-item (click)="gotoNav(gangWindowNav.RanksPermissions)" >
+        <mat-icon color="accent">miscellaneous_services</mat-icon>
+        {{ gangWindowNav[gangWindowNav.RanksPermissions] | language: settings.Lang }}
+    </button>
+</mat-menu>
+

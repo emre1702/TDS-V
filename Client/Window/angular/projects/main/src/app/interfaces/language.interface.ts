@@ -690,6 +690,13 @@ export interface Language {
     StartWithMapcreatorError: string;
     LobbyWithNameAlreadyExistsError: string;
     "Error?": string;
+    ThisErrorrequired: string;
+    ThisErrormaxlength: string;
+    ThisErrorminlength: string;
+    ThisErrormin: string;
+    ThisErrormax: string;
+    ThisErrorpattern: string;
+    ThisErrorblipColorDoesntExists: string;
     Errorrequired: string;
     Errormaxlength: string;
     Errorminlength: string;
@@ -727,6 +734,10 @@ export interface Language {
     Foot: string;
     Torso: string;
     GenitalRegion: string;
+    GangNameHint: string;
+    GangShortHint: string;
+    GangColorHint: string;
+    GangBlipColorHint: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;
@@ -771,6 +782,7 @@ export interface Language {
     CreatedMapsAverageRating: string;
     AmountMapsRated: string;
     LastLogin: string;
+    JoinDate: string;
     RegisterTimestamp: string;
     MuteTime: string;
     VoiceMuteTime: string;

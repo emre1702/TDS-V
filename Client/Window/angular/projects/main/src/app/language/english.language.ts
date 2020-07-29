@@ -219,6 +219,7 @@ WARNING! Spaces will get removed and new lines with an already used command will
     AmountMapsCreated = "Amount maps created";
     CreatedMapsAverageRating = "Created maps average rating";
     LastLogin = "Last login";
+    JoinDate = "Join date";
     RegisterTimestamp = "Register time";
     "Current:" = "current:";
     AutoFiringMode = "Auto";
@@ -720,7 +721,14 @@ WARNING! Spaces will get removed and new lines with an already used command will
     StartWithMapcreatorError = "Lobby name must not start with \"Mapcreator\"";
     LobbyWithNameAlreadyExistsError = "Lobby with this name already exists.";
     "Error?" = "Unknown error";
-    Errorrequired = "At least one setting is mandatory, but have not been filled in.";
+    ThisErrorrequired = "This field is mandatory but has not been filled in.";
+    ThisErrormaxlength = "Too many characters used.";
+    ThisErrorminlength = "Too less characters used.";
+    ThisErrormin = "The number is too low.";
+    ThisErrormax = "The number is too high.";
+    ThisErrorpattern = "You used an invalid character.";
+    ThisErrorblipColorDoesntExists = "This blip color does not exist.";
+    Errorrequired = "At least one setting is mandatory but have not been filled in.";
     Errormaxlength = "At least one setting has too many characters.";
     Errorminlength = "At least one setting has too less characters.";
     Errormin = "At least one setting has a too low number.";
@@ -762,6 +770,10 @@ You need to set the target for this mode.`;
     Foot = "Foot";
     Torso = "Torso";
     GenitalRegion = "Genital region";
+    GangNameHint = "Full name of the gang";
+    GangShortHint = "Short of the gang";
+    GangColorHint = "Color used for gang (except for blips)";
+    GangBlipColorHint = "Color only used for blip of gang";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";
