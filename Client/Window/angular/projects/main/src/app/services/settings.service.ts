@@ -150,7 +150,7 @@ export class SettingsService {
     public ShownHudType = 1;
     public AllMapsForCustomLobby: MapDataDto[] = [];
 
-    public IsInGang = false;
+    public IsInGang = true;
     public IsInGangChanged = new EventEmitter();
 
     public InputFocused = false;

@@ -1,33 +1,53 @@
 form {
     padding: 0 10px 0 10px;
     width: 30vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    .row {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        vertical-align: middle;
+    .rows {
+        .row {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            vertical-align: middle;
 
-        span {
-            width: 20%;
+            span {
+                width: 20%;
+            }
+
+            > span, .mat-icon-button {
+                margin-top: auto;
+                margin-bottom: auto;
+            }
+
+            .placeholder {
+                min-width: 5%;
+                max-width: 20%;
+            }
+
+            :not(span):not(.placeholder) {
+                flex-grow: 1;
+            }
+
+            .mat-hint {
+                text-align: right;
+            }
+
+            .color-input {
+                mix-blend-mode: difference;
+            }
         }
+    }
 
-        > span, .mat-icon-button {
-            margin-top: auto;
-            margin-bottom: auto;
-        }
+    .button-container {
+        text-align: center;
+        margin-bottom: 20px;
 
-        .placeholder {
-            width: 20%;
-        }
-
-        :not(span):not(.placeholder) {
-            flex-grow: 1;
-        }
-
-        .mat-hint {
-            text-align: right;
+        button {
+            width: 100%;
         }
     }
 }

@@ -16,7 +16,7 @@
             height: 100%;
             border-collapse: collapse;
 
-            ::ng-deep *:not(.mat-sort-header-arrow):not(.mat-sort-header-stem):not(.ng-trigger):not(.mat-sort-header-pointer-middle) {
+            ::ng-deep *:not(.mat-sort-header-arrow):not(.mat-sort-header-item):not(.ng-trigger):not(.mat-sort-header-pointer-middle) {
                 background: transparent !important;
             }
 

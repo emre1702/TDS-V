@@ -717,6 +717,7 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     GangShortHint = "Kürzel der Gang";
     GangColorHint = "Farbe der Gang (außer für Blip)";
     GangBlipColorHint = "Farbe nur für Blip der Gang";
+    BlipRGBColorCopied = "Blip RGB Farbe kopiert";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

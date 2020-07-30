@@ -4,6 +4,7 @@ import { SettingsService } from '../../../services/settings.service';
 import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 import { Constants } from '../../../constants';
 import { validBlipColorValidator } from './validators/valid-blip-color-validator';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
     selector: 'app-gang-window-create',
@@ -21,7 +22,7 @@ export class GangWindowCreateComponent implements OnInit {
     shortFormControl = new FormControl("", [
         Validators.required,
         Validators.minLength(1),
-        Validators.maxLength(6),
+        Validators.maxLength(10),
         Validators.pattern("[a-zA-Z0-9_\\-]*")
     ]);
     colorFormControl = new FormControl("rgb(255,255,255)", [
@@ -45,9 +46,27 @@ export class GangWindowCreateComponent implements OnInit {
 
     constants = Constants;
 
-    constructor(public settings: SettingsService, public sanitizer: DomSanitizer) { }
+    constructor(
+        public settings: SettingsService,
+        public sanitizer: DomSanitizer,
+        private clipboardService: ClipboardService) { }
 
     ngOnInit(): void {
+    }
+
+    createGang() {
+        if (this.createFormGroup.invalid)
+            return;
+        // TODO: Implement that
+        console.log("SUBMIT");
+    }
+
+    copyBlipColor() {
+        const currentBlipId = this.blipColorFormControl.value;
+        const blipColorData = Constants.BLIP_COLORS.find(b => b.ID == currentBlipId);
+        if (!blipColorData)
+            return;
+        this.clipboardService.copy(blipColorData.Color);
     }
 
     getErrorMessage(control: FormControl) {

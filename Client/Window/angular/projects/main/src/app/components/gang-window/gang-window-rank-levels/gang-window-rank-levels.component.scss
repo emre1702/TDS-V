@@ -1,0 +1,133 @@
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 40vw;
+
+    .table-container {
+        max-height: calc(50% - 10px);
+        overflow: auto;
+        width: 100%;
+
+        .mat-table {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-collapse: collapse;
+
+            ::ng-deep
+                *:not(.mat-sort-header-arrow):not(.mat-sort-header-item):not(.ng-trigger):not(.mat-sort-header-pointer-middle):not(.color-cell) {
+                background: transparent !important;
+            }
+
+            .color-cell > span {
+                mix-blend-mode: difference;
+            }
+
+            .mat-table-sticky:last-child {
+                width: 20px;
+            }
+
+            td {
+                padding: 5px 10px 5px 10px;
+            }
+
+            ::ng-deep .selectedRow {
+                border: 2px solid !important;
+            }
+        }
+    }
+
+    form {
+        padding: 0 10px 0 10px;
+        width: calc(100% - 20px);
+        min-height: calc(50% - 10px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .rows {
+            .row {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                vertical-align: middle;
+
+                span {
+                    width: 20%;
+                }
+
+                > span,
+                .mat-icon-button {
+                    margin-top: auto;
+                    margin-bottom: auto;
+                }
+
+                .placeholder {
+                    min-width: 5%;
+                    max-width: 20%;
+                }
+
+                :not(span):not(.placeholder) {
+                    flex-grow: 1;
+                }
+
+                .mat-hint {
+                    text-align: right;
+                }
+
+                .color-input {
+                    mix-blend-mode: difference;
+                }
+            }
+        }
+
+        .button-container {
+            text-align: center;
+            margin-bottom: 20px;
+
+            >* {
+                width: 100%;
+            }
+
+            >*:not(button) {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+
+                >* {
+                    flex-grow: 1;
+                }
+
+                .placeholder {
+                    flex-grow: 0;
+                    width: 20px;
+                }
+            }
+        }
+    }
+
+    #blip-color-window {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+
+        .blip-container {
+            width: 30vw;
+            height: auto;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            padding: 10px;
+
+            * {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    }
+}

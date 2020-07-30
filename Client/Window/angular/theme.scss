@@ -262,12 +262,17 @@ button:not([disabled]):hover {
     color: white !important;
 }
 
-.revert-button {
+.revert-button, .delete-button {
     background: darkred !important;
     color: white !important;
 }
 
 .default-button {
     background: rgb(80, 80, 80) !important;
+    color: white !important;
+}
+
+.add-button {
+    background: darkblue !important;
     color: white !important;
 }

@@ -774,6 +774,7 @@ You need to set the target for this mode.`;
     GangShortHint = "Short of the gang";
     GangColorHint = "Color used for gang (except for blips)";
     GangBlipColorHint = "Color only used for blip of gang";
+    BlipRGBColorCopied = "Blip RGB color copied";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

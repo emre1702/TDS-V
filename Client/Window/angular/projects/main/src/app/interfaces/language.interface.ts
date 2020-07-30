@@ -738,6 +738,7 @@ export interface Language {
     GangShortHint: string;
     GangColorHint: string;
     GangBlipColorHint: string;
+    BlipRGBColorCopied: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

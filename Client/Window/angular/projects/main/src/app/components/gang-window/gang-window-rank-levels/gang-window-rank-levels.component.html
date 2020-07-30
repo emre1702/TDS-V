@@ -1,1 +1,88 @@
-<p>gang-window-rank-levels works!</p>
+
+<div id="container">
+    <div class="table-container">
+        <table mat-table class="mat-app-background" [dataSource]="rankLevelFormGroups" matSort>
+
+            <ng-container matColumnDef="Rank">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Rank' | language: settings.Lang }}</th>
+                <td mat-cell *matCellDef="let formGroup" [style.color]="formGroup.invalid ? 'red' : 'inherit'">
+                    {{ rankLevelFormGroups.indexOf(formGroup) }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</th>
+                <td mat-cell *matCellDef="let formGroup" [style.color]="formGroup.invalid ? 'red' : 'inherit'">
+                    {{ formGroup.get("Name").value }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Color">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Color' | language: settings.Lang }}</th>
+                <td mat-cell class="color-cell" *matCellDef="let formGroup" [style.background-color]="getColor(formGroup.get('Color').value)">
+                    <span>{{ formGroup.get("Color").value }}</span>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns;"
+            [class.selectedRow]="rankLevelFormGroups[currentFormGroup] == row"
+            (click)="selectFormGroup(row)"></tr>
+        </table>
+    </div>
+
+    <form *ngIf="currentFormGroup >= 0" [formGroup]="rankLevelFormGroups[currentFormGroup]">
+        <div class="rows">
+            <div class="row">
+                <span>{{ "Name" | language: settings.Lang }}:</span>
+                <div class="placeholder"></div>
+                <mat-form-field color="accent" [hintLabel]="'RankNameHint' | language: settings.Lang">
+                    <input matInput formControlName="Name">
+                    <mat-hint align="end">{{ nameFormControl.value.length }}/25</mat-hint>
+                    <mat-error *ngIf="nameFormControl.invalid">{{ "ThisError" + getErrorMessage(nameFormControl) | language: settings.Lang }}</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <span>{{ "Color" | language: settings.Lang }}:</span>
+                <div class="placeholder"></div>
+                <mat-form-field color="accent" [hintLabel]="'RankColorHint' | language: settings.Lang">
+                    <div [style.background]="getColor(colorFormControl.value)">
+                        <input #input matInput [colorPicker]="colorFormControl.value"
+                            class="color-input"
+                            formControlName="Color"
+                            cpFallbackColor="rgb(255,255,255)"
+                            cpOutputFormat="rgba"
+                            [(cpToggle)]="showColorPickerForColor"
+                            cpAlphaChannel="disabled" cpUseRootViewContainer="true"
+                            [cpIgnoredElements]="[input]"
+                            (colorPickerChange)="colorFormControl.setValue($event)"
+                            (focus)="$event.target.select()">
+                    </div>
+                    <mat-error *ngIf="colorFormControl.invalid">{{ "ThisError" + getErrorMessage(colorFormControl) | language: settings.Lang }}</mat-error>
+                </mat-form-field>
+                <button mat-icon-button (click)="showColorPickerForColor = !showColorPickerForColor">
+                    <mat-icon color="accent">color_lens</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div>
+                <button mat-raised-button class="add-button" [disabled]="rankLevelFormGroups.length >= 20" (click)="addRankAfter()">
+                    {{ 'AddRankAfter' | language: settings.Lang }}
+                </button>
+                <div class="placeholder"></div>
+                <button mat-raised-button class="delete-button" (click)="deleteRank()">
+                    {{ 'DeleteThisRank' | language: settings.Lang }}
+                </button>
+            </div>
+            <button mat-raised-button [class.save-button]="isValid()" [disabled]="!isValid()" (click)="saveRanks()">
+                {{ 'SaveRanks' | language: settings.Lang }}
+            </button>
+        </div>
+
+    </form>
+</div>
+
+
