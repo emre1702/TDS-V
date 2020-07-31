@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GangMember } from '../models/gang-member';
-import { GangPermissions } from '../models/gang-permissions';
+import { MyGangPermissions } from '../models/my-gang-permissions';
 import { GangData } from '../models/gang-data';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class GangWindowService {
         99: 1
     };
 
-    permissions: GangPermissions = {
+    permissions: MyGangPermissions = {
         0: true, 1: true, 2: true, 3: true, 4: 4, 5: false
     };
 

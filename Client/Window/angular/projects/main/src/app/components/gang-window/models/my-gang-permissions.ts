@@ -1,4 +1,4 @@
-export interface GangPermissions {
+export interface MyGangPermissions {
     /** CanGiveRankUp */
     0: boolean;
 

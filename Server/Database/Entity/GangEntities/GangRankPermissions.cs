@@ -1,23 +1,19 @@
-﻿namespace TDS_Server.Database.Entity.GangEntities
+﻿using Newtonsoft.Json;
+using TDS_Shared.Data.Models;
+
+namespace TDS_Server.Database.Entity.GangEntities
 {
-    public class GangRankPermissions
+    public class GangRankPermissions : SyncedGangPermissions
     {
         #region Public Properties
 
+        [JsonIgnore]
         public virtual Gangs Gang { get; set; }
+
+        [JsonIgnore]
         public int GangId { get; set; }
 
-        public ushort InviteMembers { get; set; }
-
-        public ushort KickMembers { get; set; }
-
-        // Administration //
-        public ushort ManagePermissions { get; set; }
-
-        public ushort ManageRanks { get; set; }
-
-        // Action //
-        public ushort StartGangwar { get; set; }
+       
 
         #endregion Public Properties
     }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { GangRank } from './models/gang-rank';
+import { GangRank } from '../models/gang-rank';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({

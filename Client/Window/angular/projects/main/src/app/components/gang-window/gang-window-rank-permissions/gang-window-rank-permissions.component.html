@@ -1,1 +1,36 @@
-<p>gang-window-rank-permissions works!</p>
+<div id="container">
+    <div id="settings-expansion-panel-container">
+        <mat-accordion multi="false">
+            <mat-expansion-panel *ngFor="let panel of rankPermissions">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ panel.title | language: settings.Lang }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ng-container *ngFor="let setting of panel.rows">
+
+                    <div class="setting-row">
+                        <span>{{ setting.text | language: settings.Lang }}:</span>
+                        <div class="placeholder"></div>
+                        <mat-form-field color="accent">
+                            <mat-select [(ngModel)]="setting.value" (blur)="changeDetector.detectChanges()">
+                                <mat-option *ngFor="let rank of gangRanks; let i = index" [style.background]="getColor(rank[1])"
+                                    [value]="i">
+                                    {{ rank[0] | language: settings.Lang }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-hint>{{ setting.hint }}</mat-hint>
+                        </mat-form-field>
+                    </div>
+
+                </ng-container>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <div id="last-row-buttons">
+        <button mat-raised-button (click)="save()" class="save-button">
+            {{ 'Save' | language: settings.Lang }}
+        </button>
+    </div>
+</div>
