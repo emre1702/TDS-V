@@ -13,13 +13,15 @@
                         <span>{{ setting.text | language: settings.Lang }}:</span>
                         <div class="placeholder"></div>
                         <mat-form-field color="accent">
-                            <mat-select [(ngModel)]="setting.value" (blur)="changeDetector.detectChanges()">
-                                <mat-option *ngFor="let rank of gangRanks; let i = index" [style.background]="getColor(rank[1])"
+                            <mat-select [(ngModel)]="setting.value" (blur)="changeDetector.detectChanges()"
+                            [style.background]="getColor(gangWindowService.ranks[setting.value][1])"
+                            [disabled]="!canEdit">
+                                <mat-option *ngFor="let rank of gangWindowService.ranks; let i = index" [style.background]="getColor(rank[1])"
                                     [value]="i">
                                     {{ rank[0] | language: settings.Lang }}
                                 </mat-option>
                             </mat-select>
-                            <mat-hint>{{ setting.hint }}</mat-hint>
+                            <mat-hint>{{ setting.hint | language: settings.Lang }}</mat-hint>
                         </mat-form-field>
                     </div>
 
@@ -29,7 +31,7 @@
     </div>
 
     <div id="last-row-buttons">
-        <button mat-raised-button (click)="save()" class="save-button">
+        <button mat-raised-button (click)="save()" class="save-button" *ngIf="canEdit">
             {{ 'Save' | language: settings.Lang }}
         </button>
     </div>

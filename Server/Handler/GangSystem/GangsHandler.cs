@@ -84,6 +84,9 @@ namespace TDS_Server.Handler.GangSystem
             _dbContext.Gangs
                 .Include(g => g.Members)
                 .ThenInclude(m => m.RankNavigation)
+                .Include(g => g.Members)
+                .ThenInclude(m => m.Player)
+                .ThenInclude(p => p.PlayerStats)
                 .Include(g => g.RankPermissions)
                 .Include(g => g.Ranks)
                 .AsNoTracking()
@@ -112,6 +115,12 @@ namespace TDS_Server.Handler.GangSystem
             player.GangRank = GetPlayerGangRank(player);
 
             player.Gang.PlayersOnline.Add(player);
+
+            if (player.Entity is { } && player.Gang.Entity.Id > 0)
+            {
+                // Update LastLoginTimestamp in gang entity (for gang window)
+                player.Gang.Entity.Members.First(m => m.PlayerId == player.Entity.Id).Player.PlayerStats.LastLoginTimestamp = player.Entity.PlayerStats.LastLoginTimestamp;
+            }
 
             _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
         }

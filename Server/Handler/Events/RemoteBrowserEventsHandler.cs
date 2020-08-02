@@ -9,6 +9,7 @@ using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Sync;
@@ -40,7 +41,8 @@ namespace TDS_Server.Handler.Events
 
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler, TDSPlayerHandler tdsPlayerHandler)
+            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler, TDSPlayerHandler tdsPlayerHandler,
+            GangWindowHandler gangWindowHandler)
         {
             _modAPI = modAPI;
             _loggingHandler = loggingHandler;
@@ -71,7 +73,8 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
                 [ToServerEvent.SaveCharCreateData] = playerCharHandler.Save,
                 [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel,
-                [ToServerEvent.SavePlayerCommandsSettings] = userpanelHandler.SettingsCommandsHandler.Save
+                [ToServerEvent.SavePlayerCommandsSettings] = userpanelHandler.SettingsCommandsHandler.Save,
+                [ToServerEvent.GangCommand] = gangWindowHandler.ExecuteCommand
             };
 
             _maybeAsyncMethods = new Dictionary<string, FromBrowserMaybeAsyncMethodDelegate>
@@ -95,7 +98,8 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.LoadMapNamesToLoadForMapCreator] = mapCreatorHandler.SendPlayerMapNamesForMapCreator,
                 [ToServerEvent.LoadMapForMapCreator] = mapCreatorHandler.SendPlayerMapForMapCreator,
                 [ToServerEvent.MapCreatorSyncCurrentMapToServer] = mapCreatorHandler.SyncCurrentMapToClient,
-                [ToServerEvent.LoadPlayerWeaponStats] = userpanelHandler.PlayerWeaponStatsHandler.GetPlayerWeaponStats
+                [ToServerEvent.LoadPlayerWeaponStats] = userpanelHandler.PlayerWeaponStatsHandler.GetPlayerWeaponStats,
+                [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData
             };
 
             modAPI.ClientEvent.Add<IPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);

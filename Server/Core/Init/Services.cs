@@ -64,6 +64,7 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<GangLevelsHandler>();
             serviceProvider.GetRequiredService<GangsHandler>();
             serviceProvider.GetRequiredService<GangwarAreasHandler>();
+            serviceProvider.GetRequiredService<GangWindowHandler>();
 
             // Helper
             serviceProvider.GetRequiredService<ChallengesHelper>();
@@ -149,6 +150,7 @@ namespace TDS_Server.Core.Init
                .AddSingleton<GangLevelsHandler>()
                .AddSingleton<GangsHandler>()
                .AddSingleton<GangwarAreasHandler>()
+               .AddSingleton<GangWindowHandler>()
 
                // Helper
                .AddSingleton<ChallengesHelper>()

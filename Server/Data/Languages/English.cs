@@ -47,6 +47,7 @@ namespace TDS_Server.Data.Languages
         public virtual string FRIEND_LOGGEDIN_INFO => "Your friend {0} has logged in.";
         public virtual string FRIEND_LOGGEDOFF_INFO => "Your friend {0} has logged off.";
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
+        public virtual string GANG_INVITATION_INFO => "You've got a gang invitation.";
         public virtual string GANG_INVITATION_WAS_REMOVED => "The invitation already got removed!";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
         public virtual string GANGWAR_ATTACK_INVITATION => "Your gang is attacking an area!\n(Accept or use /attack)";
@@ -107,10 +108,13 @@ namespace TDS_Server.Data.Languages
         public virtual string PERMAVOICEMUTE_INFO => "{0} was muted permanently in voice-chat by {1}. Reason: {2}";
         public virtual string PLAYER_ACCEPTED_YOUR_INVITATION => "{0} accepted your team-invitation. He is your member now.";
         public virtual string PLAYER_ALREADY_MUTED => "The player is already muted!";
+        public virtual string PLAYER_ALREADY_ON_THIS_PAGE => "{0} is already on this page. Only one person may edit this page at a time.";
         public virtual string PLAYER_DOESNT_EXIST => "The player doesn't exist!";
         public virtual string PLAYER_ISNT_BANED => "The player isn't banned.";
+        public virtual string PLAYER_JOINED_YOUR_GANG => "{0} joined your gang.";
         public virtual string PLAYER_LOGGED_IN => "~b~~h~{0}~h~ ~w~logged in.";
         public virtual string PLAYER_LOGGED_OUT => "~b~~h~{0}~h~ ~w~logged out.";
+        public virtual string PLAYER_NOT_IN_YOUR_GANG => "The target is not in your gang (anymore).";
         public virtual string PLAYER_NOT_MUTED => "The player is not muted!";
         public virtual string PLAYER_REGISTERED => "A new player named \"{0}\" has registered!";
         public virtual string PLAYER_REJECTED_YOUR_INVITATION => "{0} rejected your team-invitation.";
@@ -158,16 +162,19 @@ namespace TDS_Server.Data.Languages
         public virtual string TARGET_ACCEPTED_INVITATION => "{0} accepted your invitation.";
         public virtual string TARGET_ADDED_BLOCK => "You blocked {0}.";
         public virtual string TARGET_ALREADY_BLOCKED => "You already blocked {0}.";
+        public virtual string TARGET_ALREADY_IN_A_GANG => "The target is already in a gang.";
         public virtual string TARGET_ALREADY_IN_PRIVATE_CHAT => "The target is already in a private chat.";
         public virtual string TARGET_NOT_BLOCKED => "{0} is not blocked.";
         public virtual string TARGET_NOT_IN_SAME_LOBBY => "The target is not in the same lobby.";
         public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
         public virtual string TARGET_PLAYER_DEFEND_INFO => "Your teammate {0} is at the target. Defend him!";
+        public virtual string TARGET_RANK_IS_HIGHER_OR_EQUAL => "The target's rank is higher or equal to yours.";
         public virtual string TARGET_REJECTED_INVITATION => "{0} turned down your invitation.";
         public virtual string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "The player {0} is not your friend anymore and got blocked now.";
         public virtual string TESTING_MAP_NOTIFICATION => "This is a newly created map, the round-stats will not be saved.";
         public virtual string TEXT_TOO_LONG => "The text is too long.";
         public virtual string TEXT_TOO_SHORT => "The text is too short.";
+        public virtual string THE_RANK_IS_INVALID_REFRESH_WINDOW => "The rank is invalid. Please refresh the window.";
         public virtual string TIMEBAN_INFO => "{0} was baned for {1} hours by {2}. Reason: {3}";
         public virtual string TIMEBAN_LOBBY_INFO => "{0} was baned for {1} hours in lobby '{2}' by {3}. Reason: {4}";
         public virtual string TIMEBAN_LOBBY_YOU_INFO => "You were baned for {0} hours from lobby '{1}' by {2}. Reason: {3}";
@@ -189,14 +196,25 @@ namespace TDS_Server.Data.Languages
 
         public virtual string YOU_ACCEPTED_INVITATION => "You accepted the invitation of {0}.";
         public virtual string YOU_ACCEPTED_TEAM_INVITATION => "You accepted the team-invitation. {0} is your team-leader now.";
+        public virtual string YOU_ALREADY_INVITED_TARGET => "You've already invited the target.";
+        public virtual string YOU_ARE_ALREADY_IN_A_GANG => "You are already in a gang.";
+        public virtual string YOU_ARE_NOT_IN_A_GANG => "You are not in a gang.";
         public virtual string YOU_GAVE_MONEY_TO_WITH_FEE => "You gave ${0} (${1} fee) to {2}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
         public virtual string YOU_GOT_INVITATION_BY => "You got an invitation to join the team from {0}.";
+        public virtual string YOU_GOT_KICKED_OUT_OF_THE_GANG_BY => "You got kicked out of the gang '{1}' by {0}.";
         public virtual string YOU_GOT_MONEY_BY_WITH_FEE => "You got ${0} (${1} fee) from {2}.";
+        public virtual string YOU_GOT_RANK_DOWN_BY => "You got a rank down from {1} to {2} by {0}.";
+        public virtual string YOU_GOT_RANK_UP => "You got a rank up from {1} to {2} by {0}.";
         public virtual string YOU_GOT_UNBLOCKED_BY => "You got unblocked by {0}.";
+        public virtual string YOU_JOINED_THE_GANG => "You've joined the gang '{0}'.";
+        public virtual string YOU_KICKED_OUT_OF_GANG => "You kicked {0} out of the gang.";
+        public virtual string YOU_REJECTED_GANG_INVITATION => "You've rejected the gang invitation from the gang '{0}'.";
         public virtual string YOU_REJECTED_INVITATION => "You rejected the invitation of {0}.";
         public virtual string YOU_REJECTED_TEAM_INVITATION => "You rejected the team-invitation of {0}.";
         public virtual string YOU_UNBLOCKED => "You unblocked {0}.";
+        public virtual string YOUVE_BECOME_GANG_LEADER => "You've become the gang owner.";
+        public virtual string YOUVE_LEFT_THE_GANG => "You've left the gang.";
 
         #endregion Public Properties
     }

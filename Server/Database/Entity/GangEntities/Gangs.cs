@@ -26,6 +26,7 @@ namespace TDS_Server.Database.Entity.GangEntities
         public virtual Teams Team { get; set; }
         public int TeamId { get; set; }
         public virtual ICollection<GangVehicles> Vehicles { get; set; }
+        public string Color { get; set; }
 
         #endregion Public Properties
     }

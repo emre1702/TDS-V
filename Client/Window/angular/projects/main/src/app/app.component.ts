@@ -101,7 +101,12 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ToggleUserpanel, (bool: boolean) => {
-            this.settings.UserpanelOpened = bool;
+            this.settings.setUserpanelOpened(bool);
+            changeDetector.detectChanges();
+        });
+
+        rageConnector.listen(DFromClientEvent.ToggleGangWindow, (bool: boolean) => {
+            this.settings.setGangWindowOpened(bool);
             changeDetector.detectChanges();
         });
 

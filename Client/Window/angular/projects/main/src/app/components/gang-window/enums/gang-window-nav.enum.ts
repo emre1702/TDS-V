@@ -1,4 +1,5 @@
 export enum GangWindowNav {
+    MainMenu,
     Create,
     AllGangs,
 

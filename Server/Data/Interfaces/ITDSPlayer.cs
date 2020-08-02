@@ -34,6 +34,8 @@ namespace TDS_Server.Data.Interfaces
         string IPAddress { get; }
         bool IsConsole { get; set; }
         bool IsCrouched { get; set; }
+        bool IsGangOwner { get; }
+        bool IsInGang { get; }
         bool IsLobbyOwner { get; }
         bool IsMuted { get; }
         bool IsPermamuted { get; }

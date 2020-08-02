@@ -415,7 +415,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => new { e.GangId, e.Rank });
 
-                entity.Property(e => e.GangId);
+                entity.Ignore(e => e.OriginalRank);
 
                 entity.HasOne(e => e.Gang)
                     .WithMany(g => g.Ranks)
@@ -1735,11 +1735,11 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<GangRanks>().HasData(
-                new GangRanks { GangId = -1, Rank = 0, Name = "-" }
+                new GangRanks { GangId = -1, Rank = 0, Name = "-", Color = "rgb(255,255,255)" }
             );
 
             modelBuilder.Entity<GangRankPermissions>().HasData(
-                new GangRankPermissions { GangId = -1, InviteMembers = 5, KickMembers = 5, ManagePermissions = 5, ManageRanks = 5, StartGangwar = 5 }
+                new GangRankPermissions { GangId = -1, InviteMembers = 1, KickMembers = 1, ManagePermissions = 1, ManageRanks = 1, StartGangwar = 1 }
             );
 
             modelBuilder.Entity<LobbyMaps>().HasData(

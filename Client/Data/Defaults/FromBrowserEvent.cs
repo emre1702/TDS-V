@@ -10,6 +10,7 @@
         public const string ChooseCharCreatorToJoin = "b20";
         public const string ChooseMapCreatorToJoin = "b5";
         public const string CloseChat = "b6";
+        public const string CloseGangWindow = "b42";
         public const string CloseMapVotingMenu = "b7";
         public const string CloseUserpanel = "b8";
         public const string CommandUsed = "b9";

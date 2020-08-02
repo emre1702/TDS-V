@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using TDS_Server.Data.Enums;
 using TDS_Server.Database.Entity.GangEntities;
 
 namespace TDS_Server.Data.Interfaces
@@ -26,6 +28,9 @@ namespace TDS_Server.Data.Interfaces
         void SendMessage(Func<ILanguage, string> langGetter);
 
         void SendNotification(Func<ILanguage, string> langGetter);
+        void AppointNextSuitableLeader();
+        Task Delete();
+        bool IsAllowedTo(ITDSPlayer player, GangCommand type);
 
         #endregion Public Methods
     }

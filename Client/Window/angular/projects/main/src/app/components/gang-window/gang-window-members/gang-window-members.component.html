@@ -49,16 +49,18 @@
     </div>
     <div class="placeholder"></div>
     <div class="right-side">
-        <button mat-raised-button class="rankup-button" *ngIf="canChangeUser && gangWindowService.permissions[0]">{{ 'RankUp' | language: settings.Lang }}</button>
-        <button mat-raised-button class="rankdown-button" *ngIf="canChangeUser && gangWindowService.permissions[1]">{{ 'RankDown' | language: settings.Lang }}</button>
-        <button mat-raised-button class="kick-button" *ngIf="canChangeUser && gangWindowService.permissions[2]">{{ 'Kick' | language: settings.Lang }}</button>
+        <button mat-raised-button class="rankup-button" *ngIf="canGiveRankUp()">{{ 'RankUp' | language: settings.Lang }}</button>
+        <button mat-raised-button class="rankdown-button" *ngIf="canGiveRankDown()">{{ 'RankDown' | language: settings.Lang }}</button>
+        <button mat-raised-button class="kick-button" *ngIf="canKick()">{{ 'Kick' | language: settings.Lang }}</button>
 
-        <div *ngIf="gangWindowService.permissions[3]">
+        <div *ngIf="canInvite()">
             <mat-form-field color="accent">
                 <input matInput [placeholder]="'Name' | language: settings.Lang"/>
             </mat-form-field>
 
             <button mat-raised-button class="invite-button">{{ 'Invite' | language: settings.Lang }}</button>
         </div>
+
+        <button mat-raised-button class="leave-button" (click)="leaveGang()">{{ 'LeaveGang' | language: settings.Lang }}</button>
     </div>
 </div>

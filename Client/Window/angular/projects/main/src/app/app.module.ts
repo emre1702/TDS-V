@@ -111,6 +111,7 @@ import { GangWindowGangInfoComponent } from './components/gang-window/gang-windo
 import { GangWindowVehiclesComponent } from './components/gang-window/gang-window-vehicles/gang-window-vehicles.component';
 import { GangWindowAllGangsComponent } from './components/gang-window/gang-window-all-gangs/gang-window-all-gangs.component';
 import { GangWindowRankPermissionsComponent } from './components/gang-window/gang-window-rank-permissions/gang-window-rank-permissions.component';
+import { GangWindowMainmenuComponent } from './components/gang-window/gang-window-mainmenu/gang-window-mainmenu.component';
 
 @NgModule({
   declarations: [
@@ -181,7 +182,8 @@ import { GangWindowRankPermissionsComponent } from './components/gang-window/gan
     GangWindowGangInfoComponent,
     GangWindowVehiclesComponent,
     GangWindowAllGangsComponent,
-    GangWindowRankPermissionsComponent
+    GangWindowRankPermissionsComponent,
+    GangWindowMainmenuComponent
   ],
   imports: [
     ReactiveFormsModule,

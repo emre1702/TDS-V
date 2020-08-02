@@ -59,6 +59,7 @@ namespace TDS_Server.Handler.Events
         public delegate void ModPlayerDelegate(IPlayer player);
 
         public delegate void PlayerDelegate(ITDSPlayer player);
+        public delegate void PlayerGangDelegate(ITDSPlayer player, IGang gang);
 
         public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
 
@@ -97,6 +98,8 @@ namespace TDS_Server.Handler.Events
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
 
         public event PlayerDelegate? PlayerLeftCustomMenuLobby;
+
+        public event PlayerGangDelegate? PlayerLeftGang;
 
         public event PlayerLobbyDelegate? PlayerLeftLobby;
 
@@ -162,6 +165,10 @@ namespace TDS_Server.Handler.Events
             {
                 PlayerLoggedOut?.Invoke(tdsPlayer);
                 tdsPlayer.Lobby?.OnPlayerLoggedOut(tdsPlayer);
+            });
+            await tdsPlayer.ExecuteForDBAsync(async dbContext =>
+            {
+                await dbContext.DisposeAsync();
             });
         }
 
@@ -261,6 +268,11 @@ namespace TDS_Server.Handler.Events
         internal void OnLobbyJoin(ITDSPlayer player, ILobby lobby)
         {
             PlayerJoinedLobby?.Invoke(player, lobby);
+        }
+
+        internal void OnGangLeave(ITDSPlayer player, IGang gang)
+        {
+            PlayerLeftGang?.Invoke(player, gang);
         }
 
         internal void OnLobbyLeave(ITDSPlayer player, ILobby lobby)

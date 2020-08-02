@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { SettingsService } from '../../../services/settings.service';
 import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 import { Constants } from '../../../constants';
 import { validBlipColorValidator } from './validators/valid-blip-color-validator';
 import { ClipboardService } from 'ngx-clipboard';
+import { RageConnectorService } from 'rage-connector';
+import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { MatSnackBar } from '@angular/material';
+import { GangWindowService } from '../services/gang-window-service';
+import { GangCommand } from '../enums/gang-command.enum';
 
 @Component({
     selector: 'app-gang-window-create',
@@ -46,10 +51,14 @@ export class GangWindowCreateComponent implements OnInit {
 
     constants = Constants;
 
+    @Output() back = new EventEmitter();
+
     constructor(
         public settings: SettingsService,
         public sanitizer: DomSanitizer,
-        private clipboardService: ClipboardService) { }
+        private clipboardService: ClipboardService,
+        private snackBar: MatSnackBar,
+        private gangWindowService: GangWindowService) { }
 
     ngOnInit(): void {
     }
@@ -57,8 +66,13 @@ export class GangWindowCreateComponent implements OnInit {
     createGang() {
         if (this.createFormGroup.invalid)
             return;
-        // TODO: Implement that
-        console.log("SUBMIT");
+
+        const data = this.createFormGroup.getRawValue();
+        this.gangWindowService.executeCommand(GangCommand.Create, [JSON.stringify(data)], () => {
+            this.snackBar.open(this.settings.Lang.GangSuccessfullyCreatedInfo, undefined, { duration: undefined, panelClass: "mat-app-background" });
+            this.settings.syncIsInGang(true);
+            this.back.emit();
+        }, true, false);
     }
 
     copyBlipColor() {

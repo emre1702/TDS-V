@@ -9,6 +9,7 @@
         public const string AddMapToVoting = "sb10";
         public const string LeaveCustomLobbyMenu = "sb11";
         public const string LoadChatInfos = "sb21";
+        public const string LoadedGangWindowData = "sb23";
         public const string LoadMapFavourites = "sb12";
         public const string LoadMapVoting = "sb15";
         public const string LoadUserpanelData = "sb13";

@@ -6,7 +6,10 @@ export enum DToServerEvent {
     CancelCharCreateData = "c69",
     ChooseTeam = "c6",
     CreateCustomLobby = "c8",
+    CreateGang = "c74",
+
     DeleteOfflineMessage = "c9",
+    GangCommand = "c76",
     GetSupportRequestData = "c10",
     GetVehicle = "c11",
     JoinedCustomLobbiesMenu = "c14",
@@ -19,6 +22,7 @@ export enum DToServerEvent {
     LoadAllMapsForCustomLobby = "c65",
     LoadApplicationDataForAdmin = "c24",
     LoadDatasForCustomLobby = "c66",
+    LoadGangWindowData = "c75",
     LoadMapNamesToLoadForMapCreator = "c26",
     LoadMapForMapCreator = "c25",
     LoadPlayerWeaponStats = "c72",

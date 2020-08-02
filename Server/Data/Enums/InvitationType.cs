@@ -3,6 +3,7 @@
     public enum InvitationType
     {
         None,
-        Lobby
+        Lobby,
+        Gang
     }
 }

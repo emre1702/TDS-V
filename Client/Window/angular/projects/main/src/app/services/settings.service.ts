@@ -40,7 +40,7 @@ export class SettingsService {
     }
 
     ///////////////////// Language /////////////////////
-    public LangValue: LanguageEnum = LanguageEnum.English;
+    public LangValue: LanguageEnum = LanguageEnum.German;
     public Lang: Language = SettingsService.langByLangValue[this.LangValue];
     public LanguageChanged = new EventEmitter();
     private langPipe = new LanguagePipe();
@@ -97,6 +97,7 @@ export class SettingsService {
 
     public ChatInputOpen = false;
     public UserpanelOpened = false;
+    public GangWindowOpened = false;
 
     public InFightLobby = false;
     public InFightLobbyChanged = new EventEmitter();
@@ -150,7 +151,7 @@ export class SettingsService {
     public ShownHudType = 1;
     public AllMapsForCustomLobby: MapDataDto[] = [];
 
-    public IsInGang = true;
+    public IsInGang = false;
     public IsInGangChanged = new EventEmitter();
 
     public InputFocused = false;
@@ -178,6 +179,10 @@ export class SettingsService {
 
     public setUserpanelOpened(bool: boolean) {
         this.UserpanelOpened = bool;
+    }
+
+    public setGangWindowOpened(bool: boolean) {
+        this.GangWindowOpened = bool;
     }
 
     public toggleInFightLobby(bool: boolean) {
@@ -225,7 +230,7 @@ export class SettingsService {
         this.ChatSettingsChanged.emit(null);
     }
 
-    private syncIsInGang(value: boolean) {
+    public syncIsInGang(value: boolean) {
         this.IsInGang = value;
         this.IsInGangChanged.emit(null, value);
     }

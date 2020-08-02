@@ -27,6 +27,8 @@ namespace TDS_Server.Handler.Entities.Player
         }
 
         public GangRanks? GangRank { get; set; }
+        public bool IsGangOwner => Gang.Entity.OwnerId == Entity?.Id;
+        public bool IsInGang => Gang.Entity.Id > 0;
 
         #endregion Public Properties
     }

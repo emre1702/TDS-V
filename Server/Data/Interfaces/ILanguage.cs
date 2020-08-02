@@ -36,6 +36,7 @@
         string FRIEND_LOGGEDIN_INFO { get; }
         string FRIEND_LOGGEDOFF_INFO { get; }
         string GANG_DOESNT_EXIST_ANYMORE { get; }
+        string GANG_INVITATION_INFO { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
         string GANGWAR_ATTACK_INVITATION { get; }
@@ -97,13 +98,16 @@
         string PERMAVOICEMUTE_INFO { get; }
         string PLAYER_ACCEPTED_YOUR_INVITATION { get; }
         string PLAYER_ALREADY_MUTED { get; }
+        string PLAYER_ALREADY_ON_THIS_PAGE { get; }
         string PLAYER_DOESNT_EXIST { get; }
 
         //string PLAYER_GOT_KILLINGSPREE_NOTIFICATION { get; }
         string PLAYER_ISNT_BANED { get; }
 
+        string PLAYER_JOINED_YOUR_GANG { get; }
         string PLAYER_LOGGED_IN { get; }
         string PLAYER_LOGGED_OUT { get; }
+        string PLAYER_NOT_IN_YOUR_GANG { get; }
         string PLAYER_NOT_MUTED { get; }
         string PLAYER_REGISTERED { get; }
         string PLAYER_REJECTED_YOUR_INVITATION { get; }
@@ -151,16 +155,19 @@
         string TARGET_ACCEPTED_INVITATION { get; }
         string TARGET_ADDED_BLOCK { get; }
         string TARGET_ALREADY_BLOCKED { get; }
+        string TARGET_ALREADY_IN_A_GANG { get; }
         string TARGET_ALREADY_IN_PRIVATE_CHAT { get; }
         string TARGET_NOT_BLOCKED { get; }
         string TARGET_NOT_IN_SAME_LOBBY { get; }
         string TARGET_NOT_LOGGED_IN { get; }
         string TARGET_PLAYER_DEFEND_INFO { get; }
+        string TARGET_RANK_IS_HIGHER_OR_EQUAL { get; }
         string TARGET_REJECTED_INVITATION { get; }
         string TARGET_REMOVED_FRIEND_ADDED_BLOCK { get; }
         string TESTING_MAP_NOTIFICATION { get; }
         string TEXT_TOO_LONG { get; }
         string TEXT_TOO_SHORT { get; }
+        string THE_RANK_IS_INVALID_REFRESH_WINDOW { get; }
         string TIMEBAN_INFO { get; }
         string TIMEBAN_LOBBY_INFO { get; }
         string TIMEBAN_LOBBY_YOU_INFO { get; }
@@ -182,14 +189,25 @@
 
         string YOU_ACCEPTED_INVITATION { get; }
         string YOU_ACCEPTED_TEAM_INVITATION { get; }
+        string YOU_ALREADY_INVITED_TARGET { get; }
+        string YOU_ARE_ALREADY_IN_A_GANG { get; }
+        string YOU_ARE_NOT_IN_A_GANG { get; }
         string YOU_GAVE_MONEY_TO_WITH_FEE { get; }
         string YOU_GOT_BLOCKED_BY { get; }
         string YOU_GOT_INVITATION_BY { get; }
+        string YOU_GOT_KICKED_OUT_OF_THE_GANG_BY { get; }
         string YOU_GOT_MONEY_BY_WITH_FEE { get; }
+        string YOU_GOT_RANK_DOWN_BY { get; }
+        string YOU_GOT_RANK_UP { get; }
         string YOU_GOT_UNBLOCKED_BY { get; }
+        string YOU_JOINED_THE_GANG { get; }
+        string YOU_KICKED_OUT_OF_GANG { get; }
+        string YOU_REJECTED_GANG_INVITATION { get; }
         string YOU_REJECTED_INVITATION { get; }
         string YOU_REJECTED_TEAM_INVITATION { get; }
         string YOU_UNBLOCKED { get; }
+        string YOUVE_BECOME_GANG_LEADER { get; }
+        string YOUVE_LEFT_THE_GANG { get; }
 
         #endregion Public Properties
     }

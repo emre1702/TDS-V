@@ -29,6 +29,7 @@ export enum DFromClientEvent {
     ToggleCharCreator = "cb7",
     ToggleChatOpened = "cb25",
     ToggleFreeroam = "cb26",
+    ToggleGangWindow = "cb77",
     ToggleHUD = "cb27",
     ToggleInFightLobby = "cb28",
     ToggleInfo = "cb52",

@@ -1,23 +1,29 @@
-<tdswindow [navMenu]="navMenu"
+<tdswindow [navMenu]="navMenu" [isLoading]="gangWindowService.loadingData"
 [currentNav]="gangWindowNav[currentNav] | language: settings.Lang"
 (close)="closeFunc()" [title]="'GangMenu' | language: settings.Lang"
 contentHeight="60vh">
-    <app-gang-window-create *ngIf="currentNav == gangWindowNav.Create"></app-gang-window-create>
-    <app-gang-window-members *ngIf="currentNav == gangWindowNav.Members"></app-gang-window-members>
-    <app-gang-window-rank-levels *ngIf="currentNav == gangWindowNav.RanksLevels"></app-gang-window-rank-levels>
-    <app-gang-window-rank-permissions *ngIf="currentNav == gangWindowNav.RanksPermissions"></app-gang-window-rank-permissions>
+    <app-gang-window-mainmenu *ngIf="currentNav == gangWindowNav.MainMenu"></app-gang-window-mainmenu>
+    <app-gang-window-create *ngIf="currentNav == gangWindowNav.Create" (back)="gotoNav(gangWindowNav.MainMenu)"></app-gang-window-create>
+    <app-gang-window-members *ngIf="currentNav == gangWindowNav.Members" (back)="gotoNav(gangWindowNav.MainMenu)"></app-gang-window-members>
+    <app-gang-window-rank-levels *ngIf="currentNav == gangWindowNav.RanksLevels" (back)="gotoNav(gangWindowNav.MainMenu)"></app-gang-window-rank-levels>
+    <app-gang-window-rank-permissions *ngIf="currentNav == gangWindowNav.RanksPermissions" (back)="gotoNav(gangWindowNav.MainMenu)"></app-gang-window-rank-permissions>
 </tdswindow>
 
 
 <mat-menu #navMenu="matMenu" panelClass="mat-app-background" class="mat-app-background">
+    <button mat-menu-item (click)="gotoNav(gangWindowNav.MainMenu)" >
+        <mat-icon color="accent">dashboard</mat-icon>
+        {{ gangWindowNav[gangWindowNav.MainMenu] | language: settings.Lang }}
+    </button>
+
     <button mat-menu-item *ngIf="!settings.IsInGang" (click)="gotoNav(gangWindowNav.Create)" >
         <mat-icon color="accent">group_add</mat-icon>
         {{ gangWindowNav[gangWindowNav.Create] | language: settings.Lang }}
     </button>
-    <button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.GangInfo)" >
+     <!--<button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.GangInfo)" >
         <mat-icon color="accent">info</mat-icon>
         {{ gangWindowNav[gangWindowNav.GangInfo] | language: settings.Lang }}
-    </button>
+    </button>-->
 
     <button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.Members)" >
         <mat-icon color="accent">people_alt</mat-icon>
@@ -27,14 +33,14 @@ contentHeight="60vh">
         <mat-icon color="accent">accessibility</mat-icon>
         <span>{{ gangWindowNav[gangWindowNav.Ranks]  | language: settings.Lang }}</span>
     </button>
-    <button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.Vehicles)" >
+    <!--<button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.Vehicles)" >
         <mat-icon color="accent">directions_car</mat-icon>
         {{ gangWindowNav[gangWindowNav.Vehicles] | language: settings.Lang }}
     </button>
     <button mat-menu-item (click)="gotoNav(gangWindowNav.AllGangs)" >
         <mat-icon color="accent">format_list_bulleted</mat-icon>
         {{ gangWindowNav[gangWindowNav.AllGangs] | language: settings.Lang }}
-    </button>
+    </button>-->
 </mat-menu>
 
 <mat-menu #ranksNav="matMenu" class="mat-app-background">

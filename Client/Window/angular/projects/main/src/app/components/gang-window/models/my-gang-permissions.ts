@@ -1,19 +1,7 @@
-export interface MyGangPermissions {
-    /** CanGiveRankUp */
-    0: boolean;
+export interface MyGangData {
+    /** Rank */
+    0: number;
 
-    /** CanGiveRankDown */
+    /** IsGangOwner */
     1: boolean;
-
-    /** CanKick */
-    2: boolean;
-
-    /** CanInvite */
-    3: boolean;
-
-    /** MyRank */
-    4: number;
-
-    /** ImGangLeader */
-    5: boolean;
 }

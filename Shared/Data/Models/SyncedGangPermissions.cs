@@ -18,5 +18,8 @@ namespace TDS_Shared.Data.Models
 
         [JsonProperty("4")]
         public ushort StartGangwar { get; set; }
+
+        [JsonProperty("5")]
+        public ushort SetRanks { get; set; }
     }
 }

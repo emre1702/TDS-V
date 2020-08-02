@@ -20,6 +20,7 @@
 
         public const string FromBrowserEvent = "c64";
 
+        public const string GangCommand = "c76";
         public const string GetSupportRequestData = "c10";
         public const string GetVehicle = "c11";
         public const string GotHit = "c12";
@@ -38,6 +39,7 @@
         public const string LoadAllMapsForCustomLobby = "c65";
         public const string LoadApplicationDataForAdmin = "c24";
         public const string LoadDatasForCustomLobby = "c66";
+        public const string LoadGangWindowData = "c75";
         public const string LoadMapForMapCreator = "c25";
         public const string LoadMapNamesToLoadForMapCreator = "c26";
         public const string LoadPlayerWeaponStats = "c72";

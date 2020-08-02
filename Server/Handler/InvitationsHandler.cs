@@ -21,6 +21,8 @@ namespace TDS_Server.Core.Manager.Utility
         public InvitationsHandler(EventsHandler eventsHandler)
         {
             eventsHandler.PlayerLeftLobby += RemoveSendersLobbyInvitations;
+            eventsHandler.PlayerLeftGang += RemoveSendersGangInvitations;
+            eventsHandler.PlayerLoggedOut += RemoveSendersGangInvitations;
         }
 
         #endregion Public Constructors
@@ -71,6 +73,11 @@ namespace TDS_Server.Core.Manager.Utility
             _invitationById.Remove(invitation.Dto.Id);
         }
 
+        public Invitation? FindInvitation(ITDSPlayer sender, ITDSPlayer target, InvitationType type)
+        {
+            return _invitationById.Values.FirstOrDefault(i => i.Sender == sender && i.Target == target && i.Type == type);
+        }
+
         #endregion Public Methods
 
         #region Private Methods
@@ -105,6 +112,20 @@ namespace TDS_Server.Core.Manager.Utility
             {
                 invitation.Withdraw();
             }
+        }
+
+        private void RemoveSendersGangInvitations(ITDSPlayer player)
+        {
+            var invitations = GetBySender(player, InvitationType.Gang);
+            foreach (var invitation in invitations)
+            {
+                invitation.Withdraw();
+            }
+        }
+
+        private void RemoveSendersGangInvitations(ITDSPlayer player, IGang gang)
+        {
+            RemoveSendersGangInvitations(player);
         }
 
         #endregion Private Methods

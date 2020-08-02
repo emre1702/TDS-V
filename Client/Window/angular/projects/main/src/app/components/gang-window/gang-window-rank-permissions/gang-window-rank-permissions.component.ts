@@ -1,18 +1,18 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { GangPermissionKey } from './enums/gang-permission-key.enum';
 import { SettingsService } from '../../../services/settings.service';
 import { GangWindowService } from '../services/gang-window-service';
-import { GangPermissionSettings } from './models/gang-permission-settings';
-import { GangRank } from '../models/gang-rank';
-import { GangPermissionData } from './models/gang-permission-data';
 import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
+import { GangWindowNav } from '../enums/gang-window-nav.enum';
+import { GangPermissionSettings } from './models/gang-permission-settings';
+import { GangCommand } from '../enums/gang-command.enum';
 
 @Component({
     selector: 'app-gang-window-rank-permissions',
     templateUrl: './gang-window-rank-permissions.component.html',
     styleUrls: ['./gang-window-rank-permissions.component.scss']
 })
-export class GangWindowRankPermissionsComponent implements OnInit {
+export class GangWindowRankPermissionsComponent implements OnInit, OnDestroy {
 
     rankPermissions = [
         {
@@ -24,16 +24,16 @@ export class GangWindowRankPermissionsComponent implements OnInit {
                     value: 0
                 },
                 {
-                    index: GangPermissionKey.ManagePermission,
-                    text: GangPermissionKey[GangPermissionKey.ManagePermission],
-                    hint: GangPermissionKey[GangPermissionKey.ManagePermission] + "Hint",
+                    index: GangPermissionKey.ManagePermissions,
+                    text: GangPermissionKey[GangPermissionKey.ManagePermissions],
+                    hint: GangPermissionKey[GangPermissionKey.ManagePermissions] + "Hint",
                     value: 0
                 }
             ]
         },
 
         {
-            title: "Member", rows: [
+            title: "Members", rows: [
                 {
                     index: GangPermissionKey.InviteMembers,
                     text: GangPermissionKey[GangPermissionKey.InviteMembers],
@@ -45,7 +45,13 @@ export class GangWindowRankPermissionsComponent implements OnInit {
                     text: GangPermissionKey[GangPermissionKey.KickMembers],
                     hint: GangPermissionKey[GangPermissionKey.KickMembers] + "Hint",
                     value: 0
-                }
+                },
+                {
+                    index: GangPermissionKey.SetRanks,
+                    text: GangPermissionKey[GangPermissionKey.SetRanks],
+                    hint: GangPermissionKey[GangPermissionKey.SetRanks] + "Hint",
+                    value: 0
+                },
             ]
         },
 
@@ -61,47 +67,52 @@ export class GangWindowRankPermissionsComponent implements OnInit {
         }
     ];
 
-    gangRanks: GangRank[] = [];
+    canEdit: boolean;
+
+    @Output() back = new EventEmitter();
 
     constructor(
         public settings: SettingsService,
         public changeDetector: ChangeDetectorRef,
-        private gangWindowService: GangWindowService,
+        public gangWindowService: GangWindowService,
         private sanitizer: DomSanitizer
     ) { }
 
     ngOnInit(): void {
-        const data: GangPermissionData = {
-            0: [
-                { 0: "NoobRank0", 1: "rgb(255, 255, 255)" },
-                { 0: "NoobRank1", 1: "rgb(255, 255, 255)" },
-                { 0: "NoobRank2", 1: "rgb(255, 255, 255)" },
-                { 0: "NoobRank3", 1: "rgb(255, 255, 255)" },
-                { 0: "Bonus' Rank", 1: "rgb(150, 0, 0)" },
-            ],
-            1: { 0: 3, 1: 2, 2: 4, 3: 2, 4: 5 }
-        };
-        this.loadPermissions(JSON.stringify(data));
+        this.gangWindowService.loadedData.on(GangWindowNav[GangWindowNav.RanksPermissions], this.dataLoaded.bind(this));
     }
 
-    loadPermissions(json: string) {
-        const data: GangPermissionData = JSON.parse(json);
-        for (const settingPanel of this.rankPermissions) {
-            for (const setting of settingPanel.rows) {
-                setting.value = data[1][setting.index];
-            }
-        }
-
-        this.gangRanks = data[0];
-
-        this.changeDetector.detectChanges();
+    ngOnDestroy(): void {
+        this.gangWindowService.loadedData.off(GangWindowNav[GangWindowNav.RanksPermissions], this.dataLoaded.bind(this));
     }
 
     save() {
+        const data = {};
 
+        for (const topic of this.rankPermissions) {
+            for (const row of topic.rows) {
+                data[row.index] = row.value;
+            }
+        }
+
+        this.gangWindowService.executeCommand(GangCommand.ModifyPermissions, [JSON.stringify(data)], () => {
+            this.back.emit();
+        });
     }
 
     getColor(color: string): SafeStyle {
         return this.sanitizer.bypassSecurityTrustStyle(color);
+    }
+
+    private dataLoaded() {
+        this.canEdit = this.gangWindowService.myGangData[1] || this.gangWindowService.myGangData[0] >= this.gangWindowService.permissions[2];
+
+        for (const settingPanel of this.rankPermissions) {
+            for (const setting of settingPanel.rows) {
+                setting.value = this.gangWindowService.permissions[1][setting.index];
+            }
+        }
+
+        this.changeDetector.detectChanges();
     }
 }

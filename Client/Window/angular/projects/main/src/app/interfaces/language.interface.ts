@@ -735,10 +735,38 @@ export interface Language {
     Torso: string;
     GenitalRegion: string;
     GangNameHint: string;
+    GangShort: string;
     GangShortHint: string;
     GangColorHint: string;
     GangBlipColorHint: string;
     BlipRGBColorCopied: string;
+
+    RanksPermissions: string;
+    GangMenu: string;
+    Administration: string;
+    ManageRanks: string;
+    ManageRanksHint: string;
+    ManagePermissions: string;
+    ManagePermissionsHint: string;
+    Member: string;
+    Action: string;
+    InviteMembers: string;
+    InviteMembersHint: string;
+    KickMembers: string;
+    KickMembersHint: string;
+    StartGangwar: string;
+    StartGangwarHint: string;
+    GangInfo: string;
+    Members: string;
+    Ranks: string;
+    RanksLevels: string;
+    AllGangs: string;
+    CreateGang: string;
+    GangSuccessfullyCreatedInfo: string;
+    LeaveGang: string;
+    SetRanks: string;
+    SetRanksHint: string;
+    CommandExecutedSuccessfully: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

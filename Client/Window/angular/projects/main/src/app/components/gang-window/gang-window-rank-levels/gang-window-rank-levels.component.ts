@@ -1,15 +1,18 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { GangRank } from '../models/gang-rank';
 import { DomSanitizer } from '@angular/platform-browser';
+import { GangWindowService } from '../services/gang-window-service';
+import { GangWindowNav } from '../enums/gang-window-nav.enum';
+import { GangCommand } from '../enums/gang-command.enum';
 
 @Component({
     selector: 'app-gang-window-rank-levels',
     templateUrl: './gang-window-rank-levels.component.html',
     styleUrls: ['./gang-window-rank-levels.component.scss']
 })
-export class GangWindowRankLevelsComponent implements OnInit {
+export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
 
     currentFormGroup: number;
     showColorPickerForColor: boolean;
@@ -29,36 +32,21 @@ export class GangWindowRankLevelsComponent implements OnInit {
 
     columns = ["Rank", "Name", "Color"];
 
+    @Output() back = new EventEmitter();
+
     constructor(
         public settings: SettingsService,
         private changeDetector: ChangeDetectorRef,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        public gangWindowService: GangWindowService
     ) { }
 
     ngOnInit(): void {
-        // Debug:
-        const ranks: GangRank[] = [
-            { 0: "Rank 0", 1: "rgb(255,255,255)" },
-            { 0: "Rank 1", 1: "rgb(220,220,220)" },
-            { 0: "Rank 2", 1: "rgb(0,150,0)" },
-            { 0: "Rank 3", 1: "rgb(150,0,0)" },
-        ];
-        this.loadRanks(JSON.stringify(ranks));
+        this.gangWindowService.loadedData.on(GangWindowNav[GangWindowNav.RanksLevels], this.loadedData.bind(this));
     }
 
-    loadRanks(json: string) {
-        const ranks: GangRank[] = JSON.parse(json);
-        this.rankLevelFormGroups = [];
-
-        for (const rank of ranks) {
-            const formGroup = new FormGroup({
-                Name: new FormControl(rank[0], this.nameFormControl.validator),
-                Color: new FormControl(rank[1], this.colorFormControl.validator),
-            });
-            this.rankLevelFormGroups.push(formGroup);
-        }
-
-        this.changeDetector.detectChanges();
+    ngOnDestroy(): void {
+        this.gangWindowService.loadedData.off(GangWindowNav[GangWindowNav.RanksLevels], this.loadedData.bind(this));
     }
 
     addRankAfter() {
@@ -81,7 +69,15 @@ export class GangWindowRankLevelsComponent implements OnInit {
     }
 
     saveRanks() {
+        const ranks: GangRank[] = [];
 
+        for (const formGroup of this.rankLevelFormGroups) {
+            ranks.push({ 0: formGroup.get("Name").value, 1: formGroup.get("Color").value });
+        }
+
+        this.gangWindowService.executeCommand(GangCommand.ModifyRanks, [JSON.stringify(ranks)], () => {
+            this.back.emit();
+        });
     }
 
     selectFormGroup(formGroup: FormGroup) {
@@ -114,5 +110,20 @@ export class GangWindowRankLevelsComponent implements OnInit {
         for (const error in control.errors) {
             return error;
         }
+    }
+
+    private loadedData() {
+        this.currentFormGroup = undefined;
+        this.rankLevelFormGroups = [];
+
+        for (const rank of this.gangWindowService.ranks) {
+            const formGroup = new FormGroup({
+                Name: new FormControl(rank[0], this.nameFormControl.validator),
+                Color: new FormControl(rank[1], this.colorFormControl.validator),
+            });
+            this.rankLevelFormGroups.push(formGroup);
+        }
+
+        this.changeDetector.detectChanges();
     }
 }

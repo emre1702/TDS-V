@@ -268,6 +268,11 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.ToggleUserpanel, boolean);
         }
 
+        public void ToggleGangWindow(bool boolean)
+        {
+            Execute(ToBrowserEvent.ToggleGangWindow, boolean);
+        }
+
         #endregion Public Methods
 
         #region Internal Methods

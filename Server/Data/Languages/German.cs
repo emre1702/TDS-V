@@ -48,6 +48,7 @@ namespace TDS_Server.Data.Languages
         public override string FRIEND_LOGGEDIN_INFO => "~g~Dein Freund {0} hat sich eingeloggt.";
         public override string FRIEND_LOGGEDOFF_INFO => "~r~Dein Freund {0} hat sich ausgeloggt.";
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
+        public override string GANG_INVITATION_INFO => "Du hast eine Gang-Einladung.";
         public override string GANG_INVITATION_WAS_REMOVED => "Die Einladung wurde bereits zurückgezogen!";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
         public override string GANGWAR_ATTACK_INVITATION => "Deine Gang greift ein Gebiet an!\n(Nimm an oder nutze /angreifen)";
@@ -108,10 +109,13 @@ namespace TDS_Server.Data.Languages
         public override string PERMAVOICEMUTE_INFO => "{0} wurde von {1} im Voice-Chat permanent gemutet. Grund: {2}";
         public override string PLAYER_ACCEPTED_YOUR_INVITATION => "{0} hat deine Team-Einladung angenommen. Er ist nun dein Mitglied.";
         public override string PLAYER_ALREADY_MUTED => "Der Spieler ist bereits gemutet!";
+        public override string PLAYER_ALREADY_ON_THIS_PAGE => "{0} ist bereits auf dieser Seite. Nur eine Person darf diese Seite gleichzeitig bearbeiten.";
         public override string PLAYER_DOESNT_EXIST => "Der Spieler existiert nicht!";
         public override string PLAYER_ISNT_BANED => "Der Spieler ist nicht gebannt.";
+        public override string PLAYER_JOINED_YOUR_GANG => "{0} ist eurer Gang beigetreten.";
         public override string PLAYER_LOGGED_IN => "~b~~h~{0}~h~ ~w~hat sich eingeloggt.";
         public override string PLAYER_LOGGED_OUT => "~b~~h~{0}~h~ ~w~hat sich ausgeloggt.";
+        public override string PLAYER_NOT_IN_YOUR_GANG => "Das Ziel ist nicht (mehr) in eurer Gang.";
         public override string PLAYER_NOT_MUTED => "Der Spieler ist nicht gemutet!";
         public override string PLAYER_REGISTERED => "Ein neuer Spieler mit dem Namen \"{0}\" hat sich registriert!";
         public override string PLAYER_REJECTED_YOUR_INVITATION => "{0} hat deine Team-Einladung abgelehnt.";
@@ -159,16 +163,19 @@ namespace TDS_Server.Data.Languages
         public override string TARGET_ACCEPTED_INVITATION => "{0} hat deine Einladung angenommen.";
         public override string TARGET_ADDED_BLOCK => "Der Spieler {0} wurde von dir geblockt.";
         public override string TARGET_ALREADY_BLOCKED => "Der Spieler {0} wurde bereits von dir geblockt.";
+        public override string TARGET_ALREADY_IN_A_GANG => "Das Ziel ist bereits in einer Gang.";
         public override string TARGET_ALREADY_IN_PRIVATE_CHAT => "Das Ziel ist bereits in einem Privatchat.";
         public override string TARGET_NOT_BLOCKED => "{0} ist nicht blockiert.";
         public override string TARGET_NOT_IN_SAME_LOBBY => "Das Ziel ist nicht in der selben Lobby.";
         public override string TARGET_NOT_LOGGED_IN => "Das Ziel ist nicht eingeloggt.";
         public override string TARGET_PLAYER_DEFEND_INFO => "Euer Teamkollege {0} ist am Ziel. Verteidigt ihn!";
+        public override string TARGET_RANK_IS_HIGHER_OR_EQUAL => "Der Rang des Ziels ist höher als oder gleichwertig wie dein Rang.";
         public override string TARGET_REJECTED_INVITATION => "{0} hat deine Einladung abgelehnt.";
         public override string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "Der Spieler {0} ist nicht mehr dein Freund und wurde nun geblockt.";
         public override string TESTING_MAP_NOTIFICATION => "Das ist eine neu erstellste Karte, die Runden-Statistiken werden nicht gespeichert werden.";
         public override string TEXT_TOO_LONG => "Der Text ist zu lang.";
         public override string TEXT_TOO_SHORT => "Der Text ist zu kurz.";
+        public override string THE_RANK_IS_INVALID_REFRESH_WINDOW => "Der Rang ist ungültig. Bitte aktualisiere das Fenster.";
         public override string TIMEBAN_INFO => "{0} wurde für {1} Stunden von {2} gebannt. Grund: {3}";
         public override string TIMEBAN_LOBBY_INFO => "{0} wurde für {1} Stunden aus der Lobby '{2}' von {3} gebannt. Grund: {4}";
         public override string TIMEBAN_LOBBY_YOU_INFO => "Du wurdest für {0} Stunden aus der Lobby '{1}' von {2} gebannt. Grund {3}";
@@ -190,14 +197,25 @@ namespace TDS_Server.Data.Languages
 
         public override string YOU_ACCEPTED_INVITATION => "Du hast die Einladung von {0} angenommen.";
         public override string YOU_ACCEPTED_TEAM_INVITATION => "Du hast die Team-Einladung angenommen. {0} ist nun dein Team-Leiter.";
+        public override string YOU_ALREADY_INVITED_TARGET => "Du hast das Ziel bereits eingeladen.";
+        public override string YOU_ARE_ALREADY_IN_A_GANG => "Du bist bereits in einer Gang.";
+        public override string YOU_ARE_NOT_IN_A_GANG => "Du bist nicht in einer Gang.";
         public override string YOU_GAVE_MONEY_TO_WITH_FEE => "Du hast {2} ${0} (${1} Gebühr) gegeben.";
         public override string YOU_GOT_BLOCKED_BY => "Du wurdest von {0} geblockt.";
         public override string YOU_GOT_INVITATION_BY => "Du hast von {0} eine Einladung ins Team bekommen.";
+        public override string YOU_GOT_KICKED_OUT_OF_THE_GANG_BY => "Du wurdest von {0} aus der Gang '{1}' geworfen.";
         public override string YOU_GOT_MONEY_BY_WITH_FEE => "Du hast ${0} (${1} Gebühr) von {2} bekommen.";
+        public override string YOU_GOT_RANK_DOWN_BY => "Du hast von {0} ein Rank-Down von {1} auf {2} bekommen.";
+        public override string YOU_GOT_RANK_UP => "Du hast von {0} ein Rank-Up von {1} auf {2} bekommen.";
         public override string YOU_GOT_UNBLOCKED_BY => "Du wurdest von {0} entblockt.";
+        public override string YOU_JOINED_THE_GANG => "Du bist der Gang '{0}' beigetreten.";
+        public override string YOU_KICKED_OUT_OF_GANG => "Du hast {0} aus der Gang geworfen.";
+        public override string YOU_REJECTED_GANG_INVITATION => "Du hast die Einladung von der Gang '{0}' abgelehnt.";
         public override string YOU_REJECTED_INVITATION => "Du hast die Einladung von {0} abgelehnt.";
         public override string YOU_REJECTED_TEAM_INVITATION => "Du hast die Team-Einladung von {0} abgelehnt.";
         public override string YOU_UNBLOCKED => "Du hast {0} nicht mehr blockiert.";
+        public override string YOUVE_BECOME_GANG_LEADER => "Du wurdest zum Gang-Besitzer.";
+        public override string YOUVE_LEFT_THE_GANG => "Du hast die Gang verlassen.";
 
         #endregion Public Properties
     }

@@ -4,6 +4,7 @@ export enum DFromServerEvent {
     AddInvitation = "sb1",
     LeaveCustomLobbyMenu = "sb11",
     LoadChatInfos = "sb21",
+    LoadedGangWindowData = "sb23",
     LoadMapFavourites = "sb12",
     LoadMapVoting = "sb15",
     LoadUserpanelData = "sb13",

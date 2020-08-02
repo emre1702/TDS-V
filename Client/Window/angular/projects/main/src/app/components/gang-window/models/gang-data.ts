@@ -15,6 +15,6 @@ export interface GangData {
     /** Id */
     99: number;
 
-    /** GangLeaderId */
+    /** OwnerId */
     98: number;
 }

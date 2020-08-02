@@ -6,6 +6,7 @@ export enum DToClientEvent {
     ChooseCharCreatorToJoin = "b20",
     ChooseMapCreatorToJoin = "b5",
     CloseChat = "b6",
+    CloseGangWindow = "b42",
     CloseMapVotingMenu = "b7",
     CloseUserpanel = "b8",
     CommandUsed = "b9",
