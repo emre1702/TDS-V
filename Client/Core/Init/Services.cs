@@ -56,7 +56,6 @@ namespace TDS_Client.Core.Init
                 var deathHandler = new DeathHandler(modAPI, loggingHandler, settingsHandler, scaleformMessageHandler, eventsHandler, utilsHandler, browserHandler);
                 var camerasHandler = new CamerasHandler(modAPI, loggingHandler, utilsHandler, remoteEventsSender, bindsHandler, deathHandler, eventsHandler);
                 new UserpanelHandler(modAPI, loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler);
-                new GangWindowHandler(modAPI, loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler);
                 new CharCreatorHandler(modAPI, loggingHandler, browserHandler, serializer, deathHandler, camerasHandler, eventsHandler, cursorHandler, utilsHandler);
 
                 var registerLoginHandler = new RegisterLoginHandler(modAPI, loggingHandler, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, serializer, eventsHandler);
@@ -73,6 +72,7 @@ namespace TDS_Client.Core.Init
 
                 var lobbyHandler = new LobbyHandler(modAPI, loggingHandler, browserHandler, playerFightHandler, instructionalButtonHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
                     timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler, serializer);
+                new GangWindowHandler(modAPI, loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler, lobbyHandler);
                 new DamageHandler(modAPI, browserHandler, remoteEventsSender, playerFightHandler, lobbyHandler);
                 var scoreboardHandler = new ScoreboardHandler(modAPI, loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler, serializer);
                 var chatHandler = new ChatHandler(modAPI, loggingHandler, browserHandler, bindsHandler, remoteEventsSender, eventsHandler);
