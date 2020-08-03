@@ -127,7 +127,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         public async Task<object?> RankDown(ITDSPlayer player, GangMembers gangMember)
         {
             var oldRank = gangMember.Rank;
-            if (oldRank == 0)
+            if (oldRank.Rank == 0)
                 return "?";
             
             var msg = await ChangeRank(player, gangMember, -1);
@@ -150,7 +150,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         public async Task<object?> RankUp(ITDSPlayer player, GangMembers gangMember)
         {
             var oldRank = gangMember.Rank;
-            if (oldRank == 0)
+            if (oldRank.Rank == 0)
                 return "?";
 
             var msg = await ChangeRank(player, gangMember, 1);
@@ -172,12 +172,12 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
         private async Task<string?> ChangeRank(ITDSPlayer executer, GangMembers gangMember, int addTo)
         {
-            var nextRank = executer.Gang.Entity.Ranks.FirstOrDefault(r => r.Rank == gangMember.Rank + addTo);
+            var nextRank = executer.Gang.Entity.Ranks.FirstOrDefault(r => r.Rank == gangMember.Rank.Rank + addTo);
             if (nextRank is null)
                 return executer.Language.THE_RANK_IS_INVALID_REFRESH_WINDOW;
 
-            gangMember.Rank += nextRank.Rank;
-            gangMember.RankNavigation = nextRank;
+            gangMember.RankId = nextRank.Id;
+            gangMember.Rank = nextRank;
 
             await executer.Gang.ExecuteForDBAsync(async dbContext =>
             {
@@ -186,7 +186,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             return null;
         }
 
-        private void AcceptedInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation invitation)
+        private async void AcceptedInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation invitation)
         {
             if (sender is null || !sender.LoggedIn)
                 return;
@@ -200,9 +200,15 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             player.Gang = sender.Gang;
             player.GangRank = sender.Gang.Entity.Ranks.First(r => r.Rank == 0);
 
+            await player.Gang.ExecuteForDBAsync(async dbContext => 
+            {
+                player.Gang.Entity.Members.Add(new GangMembers { PlayerId = player.Entity!.Id, RankId = player.GangRank.Id });
+                await dbContext.SaveChangesAsync();
+            });
+
             if (player.Lobby is GangLobby)
             {
-                _lobbiesHandler.MainMenu.AddPlayer(player, null);
+                await _lobbiesHandler.MainMenu.AddPlayer(player, null);
             }
 
             player.SendNotification(string.Format(player.Language.YOU_JOINED_THE_GANG, player.Gang.Entity.Name));

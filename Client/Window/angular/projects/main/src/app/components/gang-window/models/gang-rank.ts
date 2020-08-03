@@ -5,6 +5,6 @@ export interface GangRank {
     /** Color */
     1: string;
 
-    /** OriginalRank */
-    99?: number;
+    /** Id */
+    2: number;
 }

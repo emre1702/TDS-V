@@ -83,7 +83,7 @@ namespace TDS_Server.Handler.GangSystem
         {
             _dbContext.Gangs
                 .Include(g => g.Members)
-                .ThenInclude(m => m.RankNavigation)
+                .ThenInclude(m => m.Rank)
                 .Include(g => g.Members)
                 .ThenInclude(m => m.Player)
                 .ThenInclude(p => p.PlayerStats)
@@ -143,7 +143,7 @@ namespace TDS_Server.Handler.GangSystem
         {
             if (player.Entity != null)
                 if (_gangMemberByPlayerId.TryGetValue(player.Entity.Id, out GangMembers? gangMember))
-                    return gangMember.RankNavigation;
+                    return gangMember.Rank;
 
             return NoneRank;
         }

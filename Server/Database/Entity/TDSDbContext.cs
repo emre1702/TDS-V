@@ -382,8 +382,6 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.PlayerId);
 
-                entity.Property(e => e.Rank).HasDefaultValue(0);
-
                 entity.Property(e => e.JoinTime)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
@@ -396,6 +394,11 @@ namespace TDS_Server.Database.Entity
                 entity.HasOne(e => e.Player)
                     .WithOne(g => g.GangMemberNavigation)
                     .HasForeignKey<GangMembers>(e => e.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Rank)
+                    .WithMany(r => r.GangMembers)
+                    .HasForeignKey(e => e.RankId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -413,9 +416,9 @@ namespace TDS_Server.Database.Entity
 
             modelBuilder.Entity<GangRanks>(entity =>
             {
-                entity.HasKey(e => new { e.GangId, e.Rank });
+                entity.HasKey(e => e.Id);
 
-                entity.Ignore(e => e.OriginalRank);
+                entity.HasIndex(e => e.Rank);
 
                 entity.HasOne(e => e.Gang)
                     .WithMany(g => g.Ranks)
@@ -1735,7 +1738,7 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<GangRanks>().HasData(
-                new GangRanks { GangId = -1, Rank = 0, Name = "-", Color = "rgb(255,255,255)" }
+                new GangRanks { Id = -1, GangId = -1, Rank = 0, Name = "-", Color = "rgb(255,255,255)" }
             );
 
             modelBuilder.Entity<GangRankPermissions>().HasData(

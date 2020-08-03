@@ -143,7 +143,7 @@ namespace TDS_Server.Handler.GangSystem
             if (target is null)
                 return player.Language.PLAYER_NOT_IN_YOUR_GANG;
 
-            if (!player.IsGangOwner && target.Rank >= (player.GangRank?.Rank ?? 0))
+            if (!player.IsGangOwner && target.Rank.Rank >= (player.GangRank?.Rank ?? 0))
                 return player.Language.TARGET_RANK_IS_HIGHER_OR_EQUAL;
 
 

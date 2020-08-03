@@ -43,6 +43,7 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.gangWindowService.loadedData.on(GangWindowNav[GangWindowNav.RanksLevels], this.loadedData.bind(this));
+        this.gangWindowService.showInfo(this.settings.Lang.RankLevelsModifyInfo);
     }
 
     ngOnDestroy(): void {
@@ -51,8 +52,9 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
 
     addRankAfter() {
         const formGroup = new FormGroup({
+            Id: new FormControl(-1),
             Name: new FormControl("Rank " + (this.currentFormGroup + 1), this.nameFormControl.validator),
-            Color: new FormControl("rgb(255,255,255)", this.colorFormControl.validator),
+            Color: new FormControl("rgb(255,255,255)", this.colorFormControl.validator)
         });
         this.rankLevelFormGroups.splice(this.currentFormGroup + 1, 0, formGroup);
         this.rankLevelFormGroups = [...this.rankLevelFormGroups];
@@ -72,7 +74,7 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
         const ranks: GangRank[] = [];
 
         for (const formGroup of this.rankLevelFormGroups) {
-            ranks.push({ 0: formGroup.get("Name").value, 1: formGroup.get("Color").value });
+            ranks.push({ 0: formGroup.get("Name").value, 1: formGroup.get("Color").value, 2: formGroup.get("Id").value });
         }
 
         this.gangWindowService.executeCommand(GangCommand.ModifyRanks, [JSON.stringify(ranks)], () => {
@@ -120,6 +122,7 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
             const formGroup = new FormGroup({
                 Name: new FormControl(rank[0], this.nameFormControl.validator),
                 Color: new FormControl(rank[1], this.colorFormControl.validator),
+                Id: new FormControl(rank[2])
             });
             this.rankLevelFormGroups.push(formGroup);
         }

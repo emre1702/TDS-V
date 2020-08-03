@@ -59,6 +59,10 @@ export class GangWindowService {
         this.snackBar.open(msg, "OK", { duration: undefined, panelClass: "mat-app-background" });
     }
 
+    showInfo(msg: string) {
+        this.snackBar.open(msg, "OK", { duration: undefined, panelClass: "mat-app-background" });
+    }
+
     executeCommand(command: GangCommand, args: any[], onSuccess: () => void, withConfirm: boolean = true, showSuccess: boolean = true) {
         if (withConfirm) {
             this.doOnConfirm(() => {

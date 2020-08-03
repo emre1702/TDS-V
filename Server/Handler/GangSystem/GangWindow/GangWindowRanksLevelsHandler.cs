@@ -26,10 +26,6 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                 return null;
 
             var data = player.Gang.Entity.Ranks.OrderBy(g => g.Rank).ToList();
-            foreach (var rank in data)
-            {
-                rank.OriginalRank = rank.Rank;
-            }
 
             return _serializer.ToBrowser(data);
         }
@@ -40,14 +36,25 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             await player.Gang.ExecuteForDBAsync(async dbContext =>
             {
-
+                var rank0 = player.Gang.Entity.Ranks.First(r => r.Rank == 0);
                 foreach (var rank in player.Gang.Entity.Ranks)
                 {
-                    var newRank = fromList.FirstOrDefault(r => r.OriginalRank == rank.Rank);
+                    var newRank = fromList.FirstOrDefault(r => r.Id == rank.Id);
                     if (newRank is { })
                         CopyValues(newRank, rank, (short)fromList.IndexOf(newRank));
-                    else 
+                    else
+                    {
+                        var playersWithThatRank = player.Gang.Entity.Members.Where(m => m.RankId == rank.Id);
+                        foreach (var playerWithThatRank in playersWithThatRank)
+                        {
+                            playerWithThatRank.RankId = rank0.Rank;
+                            playerWithThatRank.Rank = rank0;
+                        }
+
                         player.Gang.Entity.Ranks.Remove(rank);
+
+                    }
+                        
                 }
                 await dbContext.SaveChangesAsync();
 
@@ -55,7 +62,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                 {
                     var rankEntity = fromList[rank];
 
-                    if (rankEntity.OriginalRank.HasValue)
+                    if (rankEntity.Id != -1)
                         continue;
 
                     player.Gang.Entity.Ranks.Add(new GangRanks

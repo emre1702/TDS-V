@@ -12,8 +12,8 @@ namespace TDS_Server.Database.Entity.GangEntities
         public DateTime JoinTime { get; set; }
         public virtual Players Player { get; set; }
         public int PlayerId { get; set; }
-        public short Rank { get; set; }
-        public virtual GangRanks RankNavigation { get; set; }
+        public int RankId { get; set; }
+        public virtual GangRanks Rank { get; set; }
 
         #endregion Public Properties
     }

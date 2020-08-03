@@ -767,6 +767,7 @@ export interface Language {
     SetRanks: string;
     SetRanksHint: string;
     CommandExecutedSuccessfully: string;
+    RankLevelsModifyInfo: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

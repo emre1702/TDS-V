@@ -61,7 +61,9 @@ namespace TDS_Server.Handler.GangSystem
 
 
         private Gangs GetGangEntity(GangCreateData data, int playerId)
-            => new Gangs
+        {
+            var highestRank = new GangRanks { Rank = 3, Name = "Rank 3", Color = "rgb(255,255,255)" };
+            return new Gangs
             {
                 Name = data.Name,
                 Short = data.Short,
@@ -73,7 +75,7 @@ namespace TDS_Server.Handler.GangSystem
                     new GangRanks { Rank = 0, Name = "Rank 0", Color = "rgb(255,255,255)" },
                     new GangRanks { Rank = 1, Name = "Rank 1", Color = "rgb(255,255,255)" },
                     new GangRanks { Rank = 2, Name = "Rank 2", Color = "rgb(255,255,255)" },
-                    new GangRanks { Rank = 3, Name = "Rank 3", Color = "rgb(255,255,255)" }
+                    highestRank
                 },
                 RankPermissions = new GangRankPermissions
                 {
@@ -86,10 +88,11 @@ namespace TDS_Server.Handler.GangSystem
                 },
                 Members = new List<GangMembers>
                 {
-                    new GangMembers { PlayerId = playerId, Rank = 3 }
+                    new GangMembers { PlayerId = playerId, Rank = highestRank }
                 },
                 Stats = new GangStats(),
             };
+        }
 
         #endregion Public Constructors
     }
