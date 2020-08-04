@@ -9,6 +9,7 @@ namespace TDS_Client.Handler.Lobby
     {
         #region Private Fields
 
+        private readonly IModAPI _modAPI;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
 
@@ -18,12 +19,14 @@ namespace TDS_Client.Handler.Lobby
 
         public LobbyChoiceHandler(IModAPI modAPI, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler)
         {
+            _modAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
             _settingsHandler = settingsHandler;
 
             modAPI.Event.Add(FromBrowserEvent.ChooseArenaToJoin, JoinArena);
             modAPI.Event.Add(FromBrowserEvent.ChooseCharCreatorToJoin, JoinCharCreator);
             modAPI.Event.Add(FromBrowserEvent.ChooseMapCreatorToJoin, JoinMapCreator);
+            modAPI.Event.Add(FromBrowserEvent.ChooseGangLobbyToJoin, JoinGangLobby);
         }
 
         #endregion Public Constructors
@@ -43,6 +46,11 @@ namespace TDS_Client.Handler.Lobby
         public void JoinMapCreator(object[] args)
         {
             _remoteEventsSender.SendFromBrowser(ToServerEvent.JoinLobby, _settingsHandler.MapCreatorLobbyId);
+        }
+
+        public void JoinGangLobby(object[] args)
+        {
+            _remoteEventsSender.SendFromBrowser(ToServerEvent.JoinLobby, _settingsHandler.GangLobbyLobbyId);
         }
 
         #endregion Public Methods

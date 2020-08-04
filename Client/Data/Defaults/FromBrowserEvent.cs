@@ -8,6 +8,7 @@
         public const string ChatUsed = "b3";
         public const string ChooseArenaToJoin = "b4";
         public const string ChooseCharCreatorToJoin = "b20";
+        public const string ChooseGangLobbyToJoin = "b43";
         public const string ChooseMapCreatorToJoin = "b5";
         public const string CloseChat = "b6";
         public const string CloseGangWindow = "b42";

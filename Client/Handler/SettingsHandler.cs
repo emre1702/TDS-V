@@ -146,6 +146,7 @@ namespace TDS_Client.Handler
         public bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
         public int MapChooseTime => _syncedServerSettings.MapChooseTime;
         public int MapCreatorLobbyId => _syncedServerSettings.MapCreatorLobbyId;
+        public int GangLobbyLobbyId => _syncedServerSettings.GangLobbyLobbyId;
         public int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
         public MapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? MapLimitType.KillAfterTime;
         public int RoundEndTime => _syncedServerSettings.RoundEndTime;

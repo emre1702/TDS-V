@@ -34,20 +34,22 @@ namespace TDS_Server.Handler.Events
 
         private readonly IModAPI _modAPI;
         private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly EventsHandler _eventsHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
-            ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler, MapCreatorHandler _mapCreatorHandler,
+            ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler,
             MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler, TDSPlayerHandler tdsPlayerHandler,
-            GangWindowHandler gangWindowHandler)
+            GangWindowHandler gangWindowHandler, EventsHandler eventsHandler)
         {
             _modAPI = modAPI;
             _loggingHandler = loggingHandler;
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
+            _eventsHandler = eventsHandler;
 
             _asyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
             {
@@ -63,8 +65,8 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.JoinLobby] = lobbiesHandler.OnJoinLobby,
                 [ToServerEvent.JoinLobbyWithPassword] = lobbiesHandler.OnJoinLobbyWithPassword,
                 [ToServerEvent.LoadApplicationDataForAdmin] = userpanelHandler.ApplicationsAdminHandler.SendApplicationData,
-                [ToServerEvent.SaveMapCreatorData] = _mapCreatorHandler.Save,
-                [ToServerEvent.SendMapCreatorData] = _mapCreatorHandler.Create,
+                [ToServerEvent.SaveMapCreatorData] = mapCreatorHandler.Save,
+                [ToServerEvent.SendMapCreatorData] = mapCreatorHandler.Create,
                 [ToServerEvent.SaveSettings] = userpanelHandler.SettingsNormalHandler.SaveSettings,
                 [ToServerEvent.SendApplication] = userpanelHandler.ApplicationUserHandler.CreateApplication,
                 [ToServerEvent.SetSupportRequestClosed] = userpanelHandler.SupportRequestHandler.SetSupportRequestClosed,
@@ -198,6 +200,7 @@ namespace TDS_Server.Handler.Events
         private object? JoinedCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
         {
             _customLobbyMenuSyncHandler.AddPlayer(player);
+            _eventsHandler.OnCustomLobbyMenuJoin(player);
             return null;
         }
 

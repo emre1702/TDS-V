@@ -79,22 +79,22 @@ namespace TDS_Server.Handler
 
         #region Public Properties
 
-        public CharCreateLobby CharCreateLobbyDummy => _charCreateLobby ?? (_charCreateLobby =
-        Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.CharCreateLobby).Cast<CharCreateLobby>().First());
+        public CharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.CharCreateLobby).Cast<CharCreateLobby>().First();
 
         public List<ILobby> Lobbies { get; } = new List<ILobby>();
 
-        public MapCreateLobby MapCreateLobbyDummy => _mapCreateLobby ?? (_mapCreateLobby =
-            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MapCreateLobby).Cast<MapCreateLobby>().First());
+        public MapCreateLobby MapCreateLobbyDummy => _mapCreateLobby ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MapCreateLobby).Cast<MapCreateLobby>().First();
 
-        public Arena Arena => _arena ?? (_arena =
-                                    Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.Arena && !l.IsGangActionLobby).Cast<Arena>().First());
+        public Arena Arena => _arena ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.Arena && !l.IsGangActionLobby).Cast<Arena>().First();
 
-        public GangLobby GangLobby => _gangLobby ?? (_gangLobby =
-            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.GangLobby).Cast<GangLobby>().First());
+        public GangLobby GangLobby => _gangLobby ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.GangLobby).Cast<GangLobby>().First();
 
-        public ILobby MainMenu => _mainMenu ?? (_mainMenu =
-            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MainMenu).First());
+        public ILobby MainMenu => _mainMenu ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MainMenu).First();
 
         #endregion Public Properties
 
@@ -302,9 +302,7 @@ namespace TDS_Server.Handler
                     LobbyType.FightLobby => ActivatorUtilities.CreateInstance<FightLobby>(_serviceProvider, lobbysetting, false),
 
                     LobbyType.Arena => ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, lobbysetting, false),
-                    //case LobbyType.GangLobby:
-                    //    lobby = new GangLobby(lobbysetting);
-                    //    break;
+
                     LobbyType.MapCreateLobby => ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, lobbysetting),
 
                     LobbyType.GangLobby => ActivatorUtilities.CreateInstance<GangLobby>(_serviceProvider, lobbysetting),
@@ -323,6 +321,7 @@ namespace TDS_Server.Handler
             _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
             _settingsHandler.SyncedSettings.CharCreatorLobbyId = CharCreateLobbyDummy.Id;
             _settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Id;
+            _settingsHandler.SyncedSettings.GangLobbyLobbyId = GangLobby.Id;
 
             ExecuteForDB(dbContext =>
             {

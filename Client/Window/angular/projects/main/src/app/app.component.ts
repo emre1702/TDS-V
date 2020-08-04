@@ -50,7 +50,7 @@ export class AppComponent {
     showRankings = false;
     showHUD = false;
     showCharCreator = false;
-    showGangWindow = true;
+    showGangWindow = false;
 
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;
@@ -106,7 +106,7 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ToggleGangWindow, (bool: boolean) => {
-            this.settings.setGangWindowOpened(bool);
+            this.showGangWindow = bool;
             changeDetector.detectChanges();
         });
 
