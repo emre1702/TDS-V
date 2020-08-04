@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Models.GangWindow;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
 
@@ -36,9 +37,14 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             return "";
         }
 
-        public string? GetPermissions(ITDSPlayer player)
+        public string? GetPermissions(ITDSPlayer player, GangWindowRanksLevelsHandler ranksLevels)
         {
-            return _serializer.ToBrowser(player.Gang.Entity.RankPermissions);
+            var data = new GangPermissionsWindowData
+            {
+                Permissions = player.Gang.Entity.RankPermissions,
+                Ranks = ranksLevels.GetRanks(player)
+            };
+            return _serializer.ToBrowser(data);
         }
     }
 }

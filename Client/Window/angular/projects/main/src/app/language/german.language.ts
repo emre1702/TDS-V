@@ -746,6 +746,11 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     SetRanksHint = "Ab welchem Rang sollte man einem Mitglied ein Rank-Up oder Rank-Down geben dürfen?";
     CommandExecutedSuccessfully = "Der Befehl wurde erfolgreich ausgeführt.";
     RankLevelsModifyInfo = "Warnung: Verändern der Rang-Level kann dafür sorgen, dass Mitglieder Rang-Ups/-Downs bekommen.\nÜberprüfe die Mitglieder-Ränge nach dem Speichern der Ränge!";
+    LoadingDataFailed = "Laden der Daten ist fehlgeschlagen.";
+    LastLoginDate = "Letztes Login-Datum";
+    RankUp = "Rang-Up";
+    RankDown = "Rang-Down";
+    Rank = "Rang";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

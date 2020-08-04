@@ -768,6 +768,11 @@ export interface Language {
     SetRanksHint: string;
     CommandExecutedSuccessfully: string;
     RankLevelsModifyInfo: string;
+    LoadingDataFailed: string;
+    LastLoginDate: string;
+    RankUp: string;
+    RankDown: string;
+    Rank: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

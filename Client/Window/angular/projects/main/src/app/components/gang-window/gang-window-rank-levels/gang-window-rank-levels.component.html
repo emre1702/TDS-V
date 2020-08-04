@@ -72,7 +72,7 @@
                 <button mat-raised-button class="add-button" [disabled]="rankLevelFormGroups.length >= 20" (click)="addRankAfter()">
                     {{ 'AddRankAfter' | language: settings.Lang }}
                 </button>
-                <div class="placeholder"></div>
+                <div class="placeholder" *ngIf="this.currentFormGroup > 0"></div>
                 <button mat-raised-button class="delete-button" (click)="deleteRank()" *ngIf="this.currentFormGroup > 0">
                     {{ 'DeleteThisRank' | language: settings.Lang }}
                 </button>

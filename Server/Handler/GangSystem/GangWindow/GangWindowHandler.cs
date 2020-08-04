@@ -65,10 +65,10 @@ namespace TDS_Server.Handler.GangSystem
                         json = _member.GetMembers(player);
                         break;
                     case GangWindowLoadDataType.RanksLevels:
-                        json = _ranksLevels.GetRanks(player);
+                        json = _ranksLevels.GetRanksJson(player);
                         break;
                     case GangWindowLoadDataType.RanksPermissions:
-                        json = _ranksPermissions.GetPermissions(player);
+                        json = _ranksPermissions.GetPermissions(player, _ranksLevels);
                         break;
                     case GangWindowLoadDataType.Vehicles:
                         break;
@@ -99,7 +99,7 @@ namespace TDS_Server.Handler.GangSystem
                 GangCommand.Invite => _member.Invite(player, args[1].ToString()!),
                 GangCommand.Kick => await _member.Kick(player, target!),
                 GangCommand.Leave => await _member.LeaveGang(player),
-                GangCommand.ModifyPermissions => _ranksPermissions.Modify(player, args[1].ToString()!),
+                GangCommand.ModifyPermissions => await _ranksPermissions.Modify(player, args[1].ToString()!),
                 GangCommand.ModifyRanks => await _ranksLevels.Modify(player, args[1].ToString()!),
                 GangCommand.RankDown => await _member.RankDown(player, target!),
                 GangCommand.RankUp => await _member.RankUp(player, target!),
@@ -116,7 +116,7 @@ namespace TDS_Server.Handler.GangSystem
             target = null;
 
             // Is he in a gang? Or does he want to create one?
-            if (type == GangCommand.Create && player.IsInGang || !player.IsInGang)
+            if (type == GangCommand.Create && player.IsInGang || type != GangCommand.Create && !player.IsInGang)
                 return player.IsInGang ? player.Language.YOU_ARE_ALREADY_IN_A_GANG : player.Language.YOU_ARE_NOT_IN_A_GANG;
 
             if (!player.Gang.IsAllowedTo(player, type))

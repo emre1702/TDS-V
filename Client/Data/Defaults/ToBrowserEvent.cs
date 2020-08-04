@@ -24,6 +24,7 @@
         public const string ResetMapVoting = "cb16";
         public const string ShowCooldown = "cb18";
         public const string ShowRankings = "cb19";
+        public const string SyncGangId = "cb44";
         public const string SyncHudDataChange = "cb21";
         public const string SyncIsLobbyOwner = "cb22";
         public const string SyncMapPriceData = "cb23";

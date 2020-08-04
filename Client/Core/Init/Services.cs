@@ -72,7 +72,7 @@ namespace TDS_Client.Core.Init
 
                 var lobbyHandler = new LobbyHandler(modAPI, loggingHandler, browserHandler, playerFightHandler, instructionalButtonHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
                     timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler, serializer);
-                new GangWindowHandler(modAPI, loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler, lobbyHandler);
+                new GangWindowHandler(modAPI, loggingHandler, browserHandler, cursorHandler, eventsHandler, bindsHandler);
                 new DamageHandler(modAPI, browserHandler, remoteEventsSender, playerFightHandler, lobbyHandler);
                 var scoreboardHandler = new ScoreboardHandler(modAPI, loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler, serializer);
                 var chatHandler = new ChatHandler(modAPI, loggingHandler, browserHandler, bindsHandler, remoteEventsSender, eventsHandler);

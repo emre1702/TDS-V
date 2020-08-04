@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -88,6 +89,9 @@ namespace TDS_Server.Handler.Userpanel
                     }
                     oldValue = player.Entity.Name;
                     player.Entity.Name = value;
+
+                    if (player.IsInGang)
+                        player.Gang.Entity.Members.First(m => m.PlayerId == player.Entity.Id).Name = player.Entity.Name;
                     break;
 
                 case UserpanelSettingsSpecialType.Password:

@@ -17,7 +17,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             await gang.ExecuteForDBAsync(async dbContext =>
             {
-                await dbContext.Entry(gang.Entity).Reference(e => e.Vehicles).LoadAsync();
+                await dbContext.Entry(gang.Entity).Collection(e => e.Vehicles).LoadAsync();
             });
 
             if (gang.Entity.Vehicles is null || gang.Entity.Vehicles.Count == 0)

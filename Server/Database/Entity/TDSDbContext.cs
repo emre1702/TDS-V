@@ -386,6 +386,10 @@ namespace TDS_Server.Database.Entity
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
 
+                entity.Ignore(e => e.RankNumber);
+                entity.Ignore(e => e.Name);
+                entity.Ignore(e => e.LastLogin);
+
                 entity.HasOne(e => e.Gang)
                     .WithMany(g => g.Members)
                     .HasForeignKey(e => e.GangId)
@@ -433,7 +437,7 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.Short)
                     .IsRequired()
-                    .HasMaxLength(5);
+                    .HasMaxLength(20);
 
                 // Not required so we can set Owner to null when Owner gets deleted
                 entity.Property(e => e.OwnerId)
@@ -1493,7 +1497,12 @@ namespace TDS_Server.Database.Entity
             var seedLobbies = new List<Lobbies> {
                 new Lobbies { Id = -4, OwnerId = -1, Type = LobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true },
                 new Lobbies { Id = -1, OwnerId = -1, Type = LobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true },
-                new Lobbies { Id = -2, OwnerId = -1, Type = LobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true },
+
+                new Lobbies 
+                { 
+                    Id = -2, OwnerId = -1, Type = LobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true,
+                    DefaultSpawnX =  -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f
+                },
 
                 // only for map-creator ban & spawn
                 new Lobbies 

@@ -18,7 +18,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         public string? GetMainData(ITDSPlayer player)
         {
             if (!player.IsInGang || player.GangRank is null)
-                return null;
+                return "";
 
             var gangEntity = player.Gang.Entity;
 

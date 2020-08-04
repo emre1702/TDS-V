@@ -12,6 +12,7 @@ using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
+using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 
@@ -28,9 +29,11 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         private readonly EventsHandler _eventsHandler;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly LangHelper _langHelper;
+        private readonly DataSyncHandler _dataSyncHandler;
 
         public GangWindowMembersHandler(IModAPI modAPI, Serializer serializer, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, TDSPlayerHandler tdsPlayerHandler,
-            InvitationsHandler invitationsHandler, EventsHandler eventsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper)
+            InvitationsHandler invitationsHandler, EventsHandler eventsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper,
+            DataSyncHandler dataSyncHandler)
         {
             _modAPI = modAPI;
             _serializer = serializer;
@@ -41,6 +44,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             _eventsHandler = eventsHandler;
             _offlineMessagesHandler = offlineMessagesHandler;
             _langHelper = langHelper;
+            _dataSyncHandler = dataSyncHandler;
         }
 
         public string? GetMembers(ITDSPlayer player)
@@ -69,6 +73,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             player.Gang = _gangsHandler.None;
             player.GangRank = _gangsHandler.NoneRank;
+            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
 
             if (player.Lobby is GangLobby || player.Lobby?.IsGangActionLobby == true)
                 await _lobbiesHandler.MainMenu.AddPlayer(player, null);
@@ -126,58 +131,58 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
         public async Task<object?> RankDown(ITDSPlayer player, GangMembers gangMember)
         {
-            var oldRank = gangMember.Rank;
-            if (oldRank.Rank == 0)
+            var oldRank = gangMember.RankNumber;
+            if (oldRank is null || oldRank == 0)
                 return "?";
             
-            var msg = await ChangeRank(player, gangMember, -1);
+            var msg = await ChangeRank(player, gangMember, (short)(oldRank - 1));
             if (msg is { })
                 return msg;
 
             var target = _tdsPlayerHandler.GetIfExists(gangMember.PlayerId);
             if (target is { })
             {
-                target.SendNotification(string.Format(target.Language.YOU_GOT_RANK_DOWN_BY, player.DisplayName, oldRank, gangMember.Rank));
+                target.SendNotification(string.Format(target.Language.YOU_GOT_RANK_DOWN_BY, player.DisplayName, oldRank, oldRank - 1));
             }
             else
             {
                 _offlineMessagesHandler.AddOfflineMessage(gangMember.Player, player.Entity!, 
-                    string.Format(_langHelper.GetLang(Language.English).YOU_GOT_RANK_DOWN_BY, player.DisplayName, oldRank, gangMember.Rank));
+                    string.Format(_langHelper.GetLang(Language.English).YOU_GOT_RANK_DOWN_BY, player.DisplayName, oldRank, oldRank - 1));
             }
             return "";
         }
 
         public async Task<object?> RankUp(ITDSPlayer player, GangMembers gangMember)
         {
-            var oldRank = gangMember.Rank;
-            if (oldRank.Rank == 0)
+            var oldRank = gangMember.RankNumber;
+            if (oldRank is null || oldRank == player.Gang.Entity.Ranks.Max(r => r.Rank))
                 return "?";
 
-            var msg = await ChangeRank(player, gangMember, 1);
+            var msg = await ChangeRank(player, gangMember, (short)(oldRank + 1));
             if (msg is { })
                 return msg;
 
             var target = _tdsPlayerHandler.GetIfExists(gangMember.PlayerId);
             if (target is { })
             {
-                target.SendNotification(string.Format(target.Language.YOU_GOT_RANK_UP, player.DisplayName, oldRank, gangMember.Rank));
+                target.SendNotification(string.Format(target.Language.YOU_GOT_RANK_UP, player.DisplayName, oldRank, oldRank + 1));
             }
             else
             {
                 _offlineMessagesHandler.AddOfflineMessage(gangMember.Player, player.Entity!,
-                    string.Format(_langHelper.GetLang(Language.English).YOU_GOT_RANK_UP, player.DisplayName, oldRank, gangMember.Rank));
+                    string.Format(_langHelper.GetLang(Language.English).YOU_GOT_RANK_UP, player.DisplayName, oldRank, oldRank + 1));
             }
             return "";
         }
 
-        private async Task<string?> ChangeRank(ITDSPlayer executer, GangMembers gangMember, int addTo)
+        private async Task<string?> ChangeRank(ITDSPlayer executer, GangMembers gangMember, short newRank)
         {
-            var nextRank = executer.Gang.Entity.Ranks.FirstOrDefault(r => r.Rank == gangMember.Rank.Rank + addTo);
+            var nextRank = executer.Gang.Entity.Ranks.FirstOrDefault(r => r.Rank == newRank);
             if (nextRank is null)
                 return executer.Language.THE_RANK_IS_INVALID_REFRESH_WINDOW;
 
             gangMember.RankId = nextRank.Id;
-            gangMember.Rank = nextRank;
+            gangMember.RankNumber = nextRank.Rank;
 
             await executer.Gang.ExecuteForDBAsync(async dbContext =>
             {
@@ -199,6 +204,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             player.Gang = sender.Gang;
             player.GangRank = sender.Gang.Entity.Ranks.First(r => r.Rank == 0);
+            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
 
             await player.Gang.ExecuteForDBAsync(async dbContext => 
             {

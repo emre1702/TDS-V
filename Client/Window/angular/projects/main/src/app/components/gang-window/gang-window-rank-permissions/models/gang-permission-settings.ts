@@ -13,4 +13,7 @@ export interface GangPermissionSettings {
 
     /** StartGangwar */
     4: number;
+
+    /** SetRanks */
+    5: number;
 }

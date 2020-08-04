@@ -18,7 +18,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             _serializer = serializer;
         }
 
-        public string? GetRanks(ITDSPlayer player)
+        public List<GangRanks>? GetRanks(ITDSPlayer player)
         {
             if (player.Entity is null)
                 return null;
@@ -27,6 +27,14 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             var data = player.Gang.Entity.Ranks.OrderBy(g => g.Rank).ToList();
 
+            return data;
+        }
+
+        public string? GetRanksJson(ITDSPlayer player)
+        {
+            var data = GetRanks(player);
+            if (data is null)
+                return null;
             return _serializer.ToBrowser(data);
         }
 

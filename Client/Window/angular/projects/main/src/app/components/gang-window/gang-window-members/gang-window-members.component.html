@@ -49,9 +49,9 @@
     </div>
     <div class="placeholder"></div>
     <div class="right-side">
-        <button mat-raised-button class="rankup-button" *ngIf="canGiveRankUp()" (click)="giveRankUp()">{{ 'RankUp' | language: settings.Lang }}</button>
-        <button mat-raised-button class="rankdown-button" *ngIf="canGiveRankDown()" (click)="giveRankDown()">{{ 'RankDown' | language: settings.Lang }}</button>
-        <button mat-raised-button class="kick-button" *ngIf="canKick()" (click)="kick()">{{ 'Kick' | language: settings.Lang }}</button>
+        <button mat-raised-button class="rankup-button" *ngIf="selectedMember && canGiveRankUp()" (click)="giveRankUp()">{{ 'RankUp' | language: settings.Lang }}</button>
+        <button mat-raised-button class="rankdown-button" *ngIf="selectedMember && canGiveRankDown()" (click)="giveRankDown()">{{ 'RankDown' | language: settings.Lang }}</button>
+        <button mat-raised-button class="kick-button" *ngIf="selectedMember && canKick()" (click)="kick()">{{ 'Kick' | language: settings.Lang }}</button>
 
         <div *ngIf="canInvite()">
             <mat-form-field color="accent">

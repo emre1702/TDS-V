@@ -2,15 +2,24 @@
 using MoreLinq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.GangSystem;
+using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.GangSystem
@@ -22,30 +31,32 @@ namespace TDS_Server.Handler.GangSystem
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly IServiceProvider _serviceProvider;
+        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly LobbiesHandler _lobbiesHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public GangWindowCreateHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IServiceProvider serviceProvider)
+        public GangWindowCreateHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IServiceProvider serviceProvider,
+            DataSyncHandler dataSyncHandler, LobbiesHandler lobbiesHandler)
             : base(dbContext, loggingHandler)
         {
             _modAPI = modAPI;
             _serializer = serializer;
             _serviceProvider = serviceProvider;
-
+            _dataSyncHandler = dataSyncHandler;
+            _lobbiesHandler = lobbiesHandler;
         }
 
         public async Task<object?> CreateGang(ITDSPlayer player, string json)
         {
             if (player.Entity is null)
                 return "";
-            if (player.Gang.Entity.Id <= 0)
-                return "";
 
             var gangCreateData = _serializer.FromBrowser<GangCreateData>(json);
 
-            var gang = GetGangEntity(gangCreateData, player.Entity.Id);
+            var gang = GetGangEntity(gangCreateData, player.Entity.Id, _lobbiesHandler.GangLobby);
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Gangs.Add(gang);
@@ -53,6 +64,7 @@ namespace TDS_Server.Handler.GangSystem
             });
             player.Gang = ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, gang);
             player.GangRank = gang.Ranks.MaxBy(r => r.Rank).First();
+            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, gang.Id);
             // IsInGang is set to true in Angular, not needed here
             // Permissions will get synced, too - not needed here.
 
@@ -60,9 +72,12 @@ namespace TDS_Server.Handler.GangSystem
         }
 
 
-        private Gangs GetGangEntity(GangCreateData data, int playerId)
+        private Gangs GetGangEntity(GangCreateData data, int playerId, GangLobby lobby)
         {
             var highestRank = new GangRanks { Rank = 3, Name = "Rank 3", Color = "rgb(255,255,255)" };
+            var highestTeamIndex = lobby.Entity.Teams.Max(t => t.Index);
+            var rgbColor = SharedUtils.GetColorFromHtmlRgba(data.Color) ?? Color.White;
+
             return new Gangs
             {
                 Name = data.Name,
@@ -91,6 +106,7 @@ namespace TDS_Server.Handler.GangSystem
                     new GangMembers { PlayerId = playerId, Rank = highestRank }
                 },
                 Stats = new GangStats(),
+                Team = new Teams { Lobby = lobby.Id, Index = (short)(highestTeamIndex + 1), Name = data.Short, ColorR = rgbColor.R, ColorG = rgbColor.G, ColorB = rgbColor.B }
             };
         }
 

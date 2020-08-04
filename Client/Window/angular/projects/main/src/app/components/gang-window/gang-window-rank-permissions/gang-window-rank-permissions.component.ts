@@ -109,7 +109,7 @@ export class GangWindowRankPermissionsComponent implements OnInit, OnDestroy {
 
         for (const settingPanel of this.rankPermissions) {
             for (const setting of settingPanel.rows) {
-                setting.value = this.gangWindowService.permissions[1][setting.index];
+                setting.value = this.gangWindowService.permissions[setting.index];
             }
         }
 

@@ -70,7 +70,6 @@ export class GangWindowCreateComponent implements OnInit {
         const data = this.createFormGroup.getRawValue();
         this.gangWindowService.executeCommand(GangCommand.Create, [JSON.stringify(data)], () => {
             this.snackBar.open(this.settings.Lang.GangSuccessfullyCreatedInfo, undefined, { duration: undefined, panelClass: "mat-app-background" });
-            this.settings.syncIsInGang(true);
             this.back.emit();
         }, true, false);
     }

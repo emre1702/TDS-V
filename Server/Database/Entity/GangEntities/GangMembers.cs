@@ -7,12 +7,16 @@ namespace TDS_Server.Database.Entity.GangEntities
     {
         #region Public Properties
 
-        public virtual Gangs Gang { get; set; }
         public int GangId { get; set; }
         public DateTime JoinTime { get; set; }
-        public virtual Players Player { get; set; }
         public int PlayerId { get; set; }
         public int RankId { get; set; }
+        public short? RankNumber { get; set; }
+        public string Name { get; set; }
+        public DateTime LastLogin { get; set; }
+
+        public virtual Gangs Gang { get; set; }
+        public virtual Players Player { get; set; }
         public virtual GangRanks Rank { get; set; }
 
         #endregion Public Properties

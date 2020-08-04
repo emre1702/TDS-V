@@ -37,13 +37,13 @@ namespace TDS_Server.Data.Models.GangWindow
         public SyncedGangMember(ITDSPlayer forPlayer, GangMembers copyFrom)
         {
             PlayerId = copyFrom.PlayerId;
-            Name = copyFrom.Player.Name;
+            Name = copyFrom.Name;
             JoinDate = forPlayer.GetLocalDateTimeString(copyFrom.JoinTime);
-            LastLoginDate = forPlayer.GetLocalDateTimeString(copyFrom.Player.PlayerStats.LastLoginTimestamp);
+            LastLoginDate = forPlayer.GetLocalDateTimeString(copyFrom.LastLogin);
             IsOnline = forPlayer.Gang.PlayersOnline.Any(p => p.Entity.Id == copyFrom.PlayerId);
             Rank = copyFrom.Rank.Rank;
             JoinDateSortNumber = (int)(DateTime.UtcNow - copyFrom.JoinTime).TotalSeconds;
-            LastLoginSortNumber = (int)(DateTime.UtcNow - copyFrom.Player.PlayerStats.LastLoginTimestamp).TotalSeconds;
+            LastLoginSortNumber = (int)(DateTime.UtcNow - copyFrom.LastLogin).TotalSeconds;
         }
     }
 }

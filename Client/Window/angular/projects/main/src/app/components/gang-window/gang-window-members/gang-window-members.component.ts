@@ -117,7 +117,6 @@ export class GangWindowMembersComponent implements OnInit, OnDestroy {
 
     leaveGang() {
         this.gangWindowService.executeCommand(GangCommand.Leave, [], () => {
-            this.settings.syncIsInGang(false);
             this.gangWindowService.clear();
             this.back.emit();
         });

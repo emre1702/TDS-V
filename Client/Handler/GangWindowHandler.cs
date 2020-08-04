@@ -1,5 +1,4 @@
-﻿using System;
-using TDS_Client.Data.Defaults;
+﻿using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
@@ -7,9 +6,7 @@ using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
 {
@@ -20,10 +17,6 @@ namespace TDS_Client.Handler
         private readonly BindsHandler _bindsHandler;
         private readonly BrowserHandler _browserHandler;
         private readonly CursorHandler _cursorHandler;
-        private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly Serializer _serializer;
-        private readonly SettingsHandler _settingsHandler;
-        private readonly LobbyHandler _lobbyHandler;
 
         private bool _open;
 
@@ -31,17 +24,13 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public GangWindowHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler,
-            RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler, LobbyHandler lobbyHandler)
+        public GangWindowHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, 
+            EventsHandler eventsHandler, BindsHandler bindsHandler)
             : base(modAPI, loggingHandler)
         {
             _browserHandler = browserHandler;
             _cursorHandler = cursorHandler;
-            _settingsHandler = settingsHandler;
-            _remoteEventsSender = remoteEventsSender;
-            _serializer = serializer;
             _bindsHandler = bindsHandler;
-            _lobbyHandler = lobbyHandler;
 
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
@@ -71,7 +60,7 @@ namespace TDS_Client.Handler
 
             _open = !_open;
             _cursorHandler.Visible = _open;
-            _browserHandler.Angular.ToggleUserpanel(_open);
+            _browserHandler.Angular.ToggleGangWindow(_open);
         }
 
         #endregion Public Methods

@@ -92,6 +92,16 @@ namespace TDS_Server.Handler.GangSystem
                 .AsNoTracking()
                 .ForEach(g =>
                 {
+                    foreach (var member in g.Members) 
+                    {
+                        member.RankNumber = member.Rank?.Rank;
+                        member.Name = member.Player!.Name;
+                        member.LastLogin = member.Player.PlayerStats.LastLoginTimestamp;
+
+                        member.Rank = null;
+                        member.Player = null;
+                    }
+
                     ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, g);
                 });
         }
@@ -116,10 +126,10 @@ namespace TDS_Server.Handler.GangSystem
 
             player.Gang.PlayersOnline.Add(player);
 
-            if (player.Entity is { } && player.Gang.Entity.Id > 0)
+            if (player.Entity is { } && player.IsInGang)
             {
                 // Update LastLoginTimestamp in gang entity (for gang window)
-                player.Gang.Entity.Members.First(m => m.PlayerId == player.Entity.Id).Player.PlayerStats.LastLoginTimestamp = player.Entity.PlayerStats.LastLoginTimestamp;
+                player.Gang.Entity.Members.First(m => m.PlayerId == player.Entity.Id).LastLogin = player.Entity.PlayerStats.LastLoginTimestamp;
             }
 
             _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);

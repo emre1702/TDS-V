@@ -1,5 +1,5 @@
 <div id="container">
-    <div id="settings-expansion-panel-container">
+    <div id="settings-expansion-panel-container" *ngIf="gangWindowService.ranks">
         <mat-accordion multi="false">
             <mat-expansion-panel *ngFor="let panel of rankPermissions">
                 <mat-expansion-panel-header>

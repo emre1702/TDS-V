@@ -803,6 +803,11 @@ You need to set the target for this mode.`;
     SetRanksHint = "From which rank should one be allowed to give rank ups or rank downs to members?";
     CommandExecutedSuccessfully = "Command has been executed successfully.";
     RankLevelsModifyInfo = "Warning: Modifying rank levels could result in members getting rank downs/ups.\nCheck member ranks after saving the ranks!";
+    LoadingDataFailed = "Loading data failed.";
+    LastLoginDate = "Last login date";
+    RankUp = "Rank up";
+    RankDown = "Rank down";
+    Rank = "Rank";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

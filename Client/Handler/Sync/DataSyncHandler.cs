@@ -183,6 +183,10 @@ namespace TDS_Client.Handler.Sync
                         }
                         _browserHandler.Angular.SyncUsernameChange((string)obj);
                         break;
+
+                    case PlayerDataKey.GangId:
+                        _browserHandler.Angular.SyncGangId((int)obj);
+                        break;
                 }
             }
             catch (Exception ex)

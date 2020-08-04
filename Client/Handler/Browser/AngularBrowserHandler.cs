@@ -206,6 +206,11 @@ namespace TDS_Client.Handler.Browser
             ExecuteFast(ToBrowserEvent.ToggleCharCreator, toggle, dataJson);
         }
 
+        public void SyncGangId(int gangId)
+        {
+            ExecuteFast(ToBrowserEvent.SyncGangId, gangId);
+        }
+
         public void ToggleChatInput(bool activated)
         {
             Execute(ToBrowserEvent.ToggleChatInput, activated);

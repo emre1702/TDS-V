@@ -225,9 +225,9 @@ export class SettingsService {
         this.ChatSettingsChanged.emit(null);
     }
 
-    public syncIsInGang(value: boolean) {
-        this.IsInGang = value;
-        this.IsInGangChanged.emit(null, value);
+    public syncGangId(gangId: number) {
+        this.IsInGang = gangId > 0;
+        this.IsInGangChanged.emit(null, this.IsInGang);
     }
 
     private loadChatSettings(width: number, maxHeight: number, fontSize: number, hideDirtyChat: boolean,
@@ -305,7 +305,7 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.LoadChatSettings, this.loadChatSettings.bind(this));
         rageConnector.listen(DFromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
         rageConnector.listen(DFromClientEvent.LoadThemeSettings, this.loadThemeSettings.bind(this));
-        rageConnector.listen(DFromClientEvent.SyncIsInGang, this.syncIsInGang.bind(this));  // Todo: Add to C#
+        rageConnector.listen(DFromClientEvent.SyncGangId, this.syncGangId.bind(this));
 
         this.LanguageChanged.setMaxListeners(40);
         this.ThemeSettingsLoaded.setMaxListeners(40);

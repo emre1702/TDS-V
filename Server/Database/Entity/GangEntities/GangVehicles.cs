@@ -4,13 +4,10 @@ namespace TDS_Server.Database.Entity.GangEntities
 {
     public class GangVehicles
     {
-        #region Public Properties
-
+        public int Id { get; set; }
         public int Color1 { get; set; }
         public int Color2 { get; set; }
-        public virtual Gangs Gang { get; set; }
         public int GangId { get; set; }
-        public int Id { get; set; }
         public VehicleHash Model { get; set; }
         public float SpawnPosX { get; set; }
         public float SpawnPosY { get; set; }
@@ -19,6 +16,7 @@ namespace TDS_Server.Database.Entity.GangEntities
         public float SpawnRotY { get; set; }
         public float SpawnRotZ { get; set; }
 
-        #endregion Public Properties
+
+        public virtual Gangs Gang { get; set; }
     }
 }

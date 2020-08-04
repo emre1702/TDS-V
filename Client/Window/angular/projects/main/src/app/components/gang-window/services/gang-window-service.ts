@@ -33,6 +33,10 @@ export class GangWindowService {
         switch (type) {
             case GangWindowNav.Create:
                 return;
+            case GangWindowNav.MainMenu:
+                if (!this.settings.IsInGang) {
+                    return;
+                }
         }
 
         this.loadingData = true;
@@ -85,22 +89,28 @@ export class GangWindowService {
     private loadedGangWindowData(type: GangWindowNav, json: string) {
         json = this.escapeSpecialChars(json);
 
-        switch (type) {
-            case GangWindowNav.Members:
-                this.members = JSON.parse(json);
-                break;
-            case GangWindowNav.RanksLevels:
-                this.ranks = JSON.parse(json);
-                break;
-            case GangWindowNav.RanksPermissions:
-                this.permissions = JSON.parse(json);
-                break;
-            case GangWindowNav.MainMenu:
-                const data: { 0: GangData, 1: MyGangData, 2: number } = JSON.parse(json);
-                this.gangData = data[0];
-                this.myGangData = data[1];
-                this.highestRank = data[2];
-                break;
+        if (json.length) {
+            switch (type) {
+                case GangWindowNav.Members:
+                    this.members = JSON.parse(json);
+                    break;
+                case GangWindowNav.RanksLevels:
+                    this.ranks = JSON.parse(json);
+                    break;
+                case GangWindowNav.RanksPermissions:
+                    const permissionsData: { 0: GangPermissionSettings, 1: GangRank[] } = JSON.parse(json);
+                    this.permissions = permissionsData[0];
+                    this.ranks = permissionsData[1];
+                    break;
+                case GangWindowNav.MainMenu:
+                    const data: { 0: GangData, 1: MyGangData, 2: number } = JSON.parse(json);
+                    this.gangData = data[0];
+                    this.myGangData = data[1];
+                    this.highestRank = data[2];
+                    break;
+            }
+        } else {
+            this.showError(this.settings.Lang.LoadingDataFailed);
         }
 
         this.loadedData.emit(GangWindowNav[type]);

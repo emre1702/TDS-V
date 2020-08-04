@@ -57,6 +57,9 @@ export class GangWindowComponent implements OnInit, OnDestroy {
                 this.gangWindowService.executeCommand(GangCommand.OpenOnlyOneEditorPage, [GangWindowOnlyOneEditorPage.RanksPermissions],
                     this.gotoNavFinal.bind(this, nav), false, false);
                 break;
+            default:
+                this.gotoNavFinal(nav);
+                break;
         }
     }
 
@@ -74,16 +77,7 @@ export class GangWindowComponent implements OnInit, OnDestroy {
     }
 
     private gotoNavFinal(nav: GangWindowNav) {
-        switch (this.currentNav) {
-            case GangWindowNav.RanksLevels:
-                this.gangWindowService.executeCommand(GangCommand.CloseOnlyOneEditorPage, [GangWindowOnlyOneEditorPage.RanksLevels],
-                    () => {}, false, false);
-                break;
-            case GangWindowNav.RanksPermissions:
-                this.gangWindowService.executeCommand(GangCommand.CloseOnlyOneEditorPage, [GangWindowOnlyOneEditorPage.RanksPermissions],
-                    () => {}, false, false);
-                break;
-        }
+        this.checkLeavePage();
 
         this.currentNav = nav;
         this.gangWindowService.loadData(nav);
