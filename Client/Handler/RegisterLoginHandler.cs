@@ -15,6 +15,7 @@ namespace TDS_Client.Handler
     {
         #region Private Fields
 
+        private readonly IModAPI _modAPI;
         private readonly BrowserHandler _browserHandler;
         private readonly CursorHandler _cursorHandler;
         private readonly EventsHandler _eventsHandler;
@@ -30,6 +31,7 @@ namespace TDS_Client.Handler
             BrowserHandler browserHandler, SettingsHandler settingsHandler, Serializer serializer, EventsHandler eventsHandler)
             : base(modAPI, loggingHandler)
         {
+            _modAPI = modAPI;
             _cursorHandler = cursorHandler;
             _remoteEventsSender = remoteEventsSender;
             _browserHandler = browserHandler;
@@ -60,6 +62,7 @@ namespace TDS_Client.Handler
         {
             _browserHandler.RegisterLogin.Stop();
             _cursorHandler.Visible = false;
+            _modAPI.Chat.Show(true);
         }
 
         public void TryLogin(object[] args)
