@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
 
-            : this(CreateEntity(player), dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
+            : this(CreateEntity(player, lobbiesHandler.CharCreateLobbyDummy.Entity), dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
                   eventsHandler, bonusBotConnectorClient, bansHandler)
         {
         }
@@ -40,7 +40,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         #region Private Methods
 
-        private static Lobbies CreateEntity(ITDSPlayer player)
+        private static Lobbies CreateEntity(ITDSPlayer player, Lobbies dummy)
         {
             Lobbies entity = new Lobbies
             {
@@ -49,10 +49,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 Type = LobbyType.CharCreateLobby,
                 OwnerId = player.Entity?.Id ?? -1,
                 IsTemporary = true,
-                DefaultSpawnX = -425.2233f,
-                DefaultSpawnY = 1126.9731f,
-                DefaultSpawnZ = 326.8f,
-                DefaultSpawnRotation = 0f
+                DefaultSpawnX = dummy.DefaultSpawnX,
+                DefaultSpawnY = dummy.DefaultSpawnY,
+                DefaultSpawnZ = dummy.DefaultSpawnZ,
+                DefaultSpawnRotation = dummy.DefaultSpawnRotation
             };
 
             return entity;
