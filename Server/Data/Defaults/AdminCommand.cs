@@ -15,6 +15,7 @@
         public const string NextMap = "nextmap";
         public const string Test = "test";
         public const string VoiceMute = "voicemute";
+        public const string CreateHouse = "createhouse";
 
         #endregion Public Fields
     }

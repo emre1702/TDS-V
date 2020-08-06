@@ -5,6 +5,7 @@
         #region Public Properties
 
         string ACCOUNT_DOESNT_EXIST { get; }
+        string ADDED_THE_GANG_HOUSE_SUCCESSFULLY { get; }
         string ALREADY_IN_PRIVATE_CHAT_WITH { get; }
 
         string BALANCE_TEAM_INFO { get; }
@@ -36,6 +37,7 @@
         string FRIEND_LOGGEDIN_INFO { get; }
         string FRIEND_LOGGEDOFF_INFO { get; }
         string GANG_DOESNT_EXIST_ANYMORE { get; }
+        string GANG_LEVEL_MAX_ALLOWED { get; }
         string GANG_INVITATION_INFO { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
@@ -85,6 +87,7 @@
         string NOT_MORE_MAPS_FOR_VOTING_ALLOWED { get; }
         string NOT_POSSIBLE_IN_THIS_LOBBY { get; }
 
+        string ONLY_ALLOWED_IN_GANG_LOBBY { get; }
         string ORDER_ATTACK { get; }
         string ORDER_GO_TO_BOMB { get; }
         string ORDER_SPREAD_OUT { get; }

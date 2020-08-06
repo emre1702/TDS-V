@@ -18,16 +18,6 @@ namespace TDS_Server.Handler.Commands
     {
         #region Public Methods
 
-        #region Public Methods
-
-        #region Public Methods
-
-        #region Public Methods
-
-        #region Public Methods
-
-        #region Public Methods
-
         [TDSCommand(AdminCommand.AdminChat)]
         public void AdminChat(ITDSPlayer player, [TDSRemainingText] string text)
         {
@@ -316,15 +306,27 @@ namespace TDS_Server.Handler.Commands
                 _loggingHandler.LogAdmin(LogType.VoiceMute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        #endregion Public Methods
+        [TDSCommand(AdminCommand.CreateHouse)]
+        public void CreateHouse(ITDSPlayer player, byte neededGangLevel)
+        {
+            if (player.ModPlayer is null || player.Entity is null)
+                return;
 
-        #endregion Public Methods
+            if (!(player.Lobby is GangLobby))
+            {
+                player.SendNotification(player.Language.ONLY_ALLOWED_IN_GANG_LOBBY);
+                return;
+            }
 
-        #endregion Public Methods
+            if (neededGangLevel > _gangLevelsHandler.HighestLevel)
+            {
+                player.SendNotification(string.Format(player.Language.GANG_LEVEL_MAX_ALLOWED, _gangLevelsHandler.HighestLevel));
+                return;
+            }
 
-        #endregion Public Methods
-
-        #endregion Public Methods
+            _gangHousesHandler.AddHouse(player.ModPlayer.Position, player.ModPlayer.Rotation.Z, neededGangLevel, player.Entity.Id);
+            player.SendNotification(player.Language.ADDED_THE_GANG_HOUSE_SUCCESSFULLY);
+        }
 
         #endregion Public Methods
 

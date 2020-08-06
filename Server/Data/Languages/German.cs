@@ -8,6 +8,7 @@ namespace TDS_Server.Data.Languages
         #region Public Properties
 
         public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
+        public override string ADDED_THE_GANG_HOUSE_SUCCESSFULLY => "Das Gang-Haus wurde erfolgreich hinzugefügt.";
         public override string ALREADY_IN_PRIVATE_CHAT_WITH => "Du bist bereits in einem Privatchat mit {0}.";
 
         public override string BALANCE_TEAM_INFO => "{0} wurde in ein anderes Team gesteckt, um die Teams auszugleichen.";
@@ -50,6 +51,7 @@ namespace TDS_Server.Data.Languages
         public override string GANG_DOESNT_EXIST_ANYMORE => "Die Gang existiert nicht mehr!";
         public override string GANG_INVITATION_INFO => "Du hast eine Gang-Einladung.";
         public override string GANG_INVITATION_WAS_REMOVED => "Die Einladung wurde bereits zurückgezogen!";
+        public override string GANG_LEVEL_MAX_ALLOWED => "Als Gang-Level ist höchstens {0} erlaubt.";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
         public override string GANGWAR_ATTACK_INVITATION => "Deine Gang greift ein Gebiet an!\n(Nimm an oder nutze /angreifen)";
         public override string GANGWAR_ATTACK_PREPARATION_INVITATION => "Deine Gang bereitet einen Gangwar vor!\n(Nimm an oder nutze /angreifen)";
@@ -96,6 +98,7 @@ namespace TDS_Server.Data.Languages
         public override string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "Es dürfen nur 6 Maps im Voting sein!";
         public override string NOT_POSSIBLE_IN_THIS_LOBBY => "In dieser Lobby nicht möglich!";
 
+        public override string ONLY_ALLOWED_IN_GANG_LOBBY => "Das ist nur in der Gang-Lobby erlaubt.";
         public override string ORDER_ATTACK => "Angriff! Los los los!";
         public override string ORDER_GO_TO_BOMB => "Geht zur Bombe!";
         public override string ORDER_SPREAD_OUT => "Teilt euch auf!";

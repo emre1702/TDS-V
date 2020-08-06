@@ -1554,7 +1554,8 @@ namespace TDS_Server.Database.Entity
                 new Commands { Id = 23, Command = "VoiceMute", NeededAdminLevel = 1, VipCanUse = true },
                 new Commands { Id = 24, Command = "GiveMoney" },
                 new Commands { Id = 25, Command = "LobbyInvitePlayer", LobbyOwnerCanUse = true },
-                new Commands { Id = 26, Command = "Test", NeededAdminLevel = 3 }
+                new Commands { Id = 26, Command = "Test", NeededAdminLevel = 3 },
+                new Commands { Id = 27, Command = "CreateHouse", NeededAdminLevel = 2 }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
 
@@ -1670,7 +1671,10 @@ namespace TDS_Server.Database.Entity
                 new CommandAlias { Alias = "MoneySend", Command = 24 },
                 new CommandAlias { Alias = "LobbyInvite", Command = 25 },
                 new CommandAlias { Alias = "InviteLobby", Command = 25 },
-                new CommandAlias { Alias = "InvitePlayerLobby", Command = 25 }
+                new CommandAlias { Alias = "InvitePlayerLobby", Command = 25 },
+                new CommandAlias { Alias = "HouseCreate", Command = 27 },
+                new CommandAlias { Alias = "NewHouse", Command = 27 },
+                new CommandAlias { Alias = "HouseNew", Command = 27 }
             );
 
             modelBuilder.Entity<CommandInfos>().HasData(
@@ -1723,7 +1727,9 @@ namespace TDS_Server.Database.Entity
                 new CommandInfos { Id = 25, Language = Language.German, Info = "Ladet einen Spieler in die eigene Lobby ein (falls möglich)." },
                 new CommandInfos { Id = 25, Language = Language.English, Info = "Invites a player to your lobby (if possible)." },
                 new CommandInfos { Id = 26, Language = Language.German, Info = "Befehl zum schnellen Testen von Codes." },
-                new CommandInfos { Id = 26, Language = Language.English, Info = "Command for quick testing of codes." }
+                new CommandInfos { Id = 26, Language = Language.English, Info = "Command for quick testing of codes." },
+                new CommandInfos { Id = 27, Language = Language.German, Info = "Erstellt ein Haus in der Gang-Lobby." },
+                new CommandInfos { Id = 27, Language = Language.English, Info = "Creates a house in the gang lobby." }
             );
 
             modelBuilder.Entity<FreeroamDefaultVehicle>().HasData(

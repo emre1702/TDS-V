@@ -3,6 +3,8 @@ using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Account;
+using TDS_Server.Handler.Entities.GangSystem;
+using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
@@ -25,6 +27,8 @@ namespace TDS_Server.Handler.Commands
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly GangLevelsHandler _gangLevelsHandler;
+        private readonly GangHousesHandler _gangHousesHandler;
 
         #endregion Private Fields
 
@@ -32,7 +36,8 @@ namespace TDS_Server.Handler.Commands
 
         public BaseCommands(CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler, IModAPI modAPI, ChatHandler chatHandler,
             ISettingsHandler settingsHandler, Serializer serializer, InvitationsHandler invitationsHandler, ILoggingHandler loggingHandler, LangHelper langHelper,
-            DatabasePlayerHelper databasePlayerHelper, BansHandler bansHandler, DataSyncHandler dataSyncHandler)
+            DatabasePlayerHelper databasePlayerHelper, BansHandler bansHandler, DataSyncHandler dataSyncHandler, GangLevelsHandler gangLevelsHandler,
+            GangHousesHandler gangHousesHandler)
         {
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
             _lobbiesHandler = lobbiesHandler;
@@ -46,6 +51,8 @@ namespace TDS_Server.Handler.Commands
             _databasePlayerHelper = databasePlayerHelper;
             _bansHandler = bansHandler;
             _dataSyncHandler = dataSyncHandler;
+            _gangLevelsHandler = gangLevelsHandler;
+            _gangHousesHandler = gangHousesHandler;
         }
 
         #endregion Public Constructors

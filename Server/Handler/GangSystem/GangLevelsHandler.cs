@@ -12,6 +12,8 @@ namespace TDS_Server.Handler.GangSystem
 
         public Dictionary<byte, GangLevelSettings> Levels = new Dictionary<byte, GangLevelSettings>();
 
+        public byte HighestLevel => Levels.Keys.Max();
+
         #endregion Public Fields
 
         #region Public Constructors

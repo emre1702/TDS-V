@@ -43,6 +43,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _gangHousesHandler = gangHousesHandler;
             _gangLevelsHandler = gangLevelsHandler;
 
+            eventsHandler.GangHouseLoaded += LoadHouse;
+
             LoadTeams();
             LoadHouses();
         }

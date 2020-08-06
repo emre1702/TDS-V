@@ -6,6 +6,7 @@ using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -52,6 +53,8 @@ namespace TDS_Server.Handler.Events
 
         public delegate void ErrorDelegate(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true);
 
+        public delegate void GangHouseDelegate(GangHouse house);
+
         public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
 
         public delegate void LobbyDelegate(ILobby lobby);
@@ -76,6 +79,8 @@ namespace TDS_Server.Handler.Events
         public event EntityDelegate? EntityDeleted;
 
         public event ErrorDelegate? Error;
+
+        public event GangHouseDelegate? GangHouseLoaded;
 
         public event CounterDelegate? Hour;
 
@@ -124,6 +129,11 @@ namespace TDS_Server.Handler.Events
         public void OnEntityDeleted(IEntity entity)
         {
             EntityDeleted?.Invoke(entity);
+        }
+
+        internal void OnGangHouseLoaded(GangHouse house)
+        {
+            GangHouseLoaded?.Invoke(house);
         }
 
         public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)

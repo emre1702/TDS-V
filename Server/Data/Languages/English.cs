@@ -8,6 +8,7 @@ namespace TDS_Server.Data.Languages
         #region Public Properties
 
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
+        public virtual string ADDED_THE_GANG_HOUSE_SUCCESSFULLY => "The gang house was successfully added.";
         public virtual string ALREADY_IN_PRIVATE_CHAT_WITH => "You are already in a private chat with {0}.";
 
         public virtual string BALANCE_TEAM_INFO => "{0} was put into another team to balance the teams.";
@@ -49,6 +50,7 @@ namespace TDS_Server.Data.Languages
         public virtual string GANG_DOESNT_EXIST_ANYMORE => "The gang doesn't exist anymore!";
         public virtual string GANG_INVITATION_INFO => "You've got a gang invitation.";
         public virtual string GANG_INVITATION_WAS_REMOVED => "The invitation already got removed!";
+        public virtual string GANG_LEVEL_MAX_ALLOWED => "A maximum of {0} is allowed as gang level.";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
         public virtual string GANGWAR_ATTACK_INVITATION => "Your gang is attacking an area!\n(Accept or use /attack)";
         public virtual string GANGWAR_ATTACK_PREPARATION_INVITATION => "Your gang is preparing a gangwar!\n(Accept or use /attack)";
@@ -95,6 +97,7 @@ namespace TDS_Server.Data.Languages
         public virtual string NOT_MORE_MAPS_FOR_VOTING_ALLOWED => "There can be only 6 maps in voting!";
         public virtual string NOT_POSSIBLE_IN_THIS_LOBBY => "Not possible in this lobby!";
 
+        public virtual string ONLY_ALLOWED_IN_GANG_LOBBY => "That is only allowed in the gang lobby.";
         public virtual string ORDER_ATTACK => "Attack! Go go go!";
         public virtual string ORDER_GO_TO_BOMB => "Go to the bomb!";
         public virtual string ORDER_SPREAD_OUT => "Spread out!";
