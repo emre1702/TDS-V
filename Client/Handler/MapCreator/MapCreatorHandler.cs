@@ -91,7 +91,6 @@ namespace TDS_Client.Handler.MapCreator
         {
             ModAPI.Cam.DoScreenFadeIn(100);
             _browserHandler.Angular.ToggleMapCreator(true);
-            _browserHandler.Angular.ToggleFreeroam(true);
             Freecam.ToggleFreecam();
             Objects.Start();
             Marker.Start();
@@ -111,7 +110,6 @@ namespace TDS_Client.Handler.MapCreator
             Freecam.Stop();
             Foot.Start(false);
             _browserHandler.Angular.ToggleMapCreator(false);
-            _browserHandler.Angular.ToggleFreeroam(false);
             Objects.Stop();
             Marker.Stop();
             Sync.Stop();
