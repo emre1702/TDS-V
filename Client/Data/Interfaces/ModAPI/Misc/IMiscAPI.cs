@@ -1,4 +1,5 @@
-﻿using TDS_Shared.Data.Models.GTA;
+﻿using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Data.Interfaces.ModAPI.Misc
 {
@@ -23,6 +24,16 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Misc
         void SetWeatherTypeNowPersist(string weatherType);
 
         void SetWind(float speed);
+
+        void SetGravityLevel(int level);
+
+        void SetExplosiveAmmoThisFrame(IPlayer player);
+
+        void SetExplosiveMeleeThisFrame(IPlayer player);
+
+        void SetFireAmmoThisFrame(IPlayer player);
+
+        void SetSuperJumpThisFrame(IPlayer player);
 
         #endregion Public Methods
     }
