@@ -11,6 +11,7 @@ using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Utility;
@@ -226,7 +227,6 @@ namespace TDS_Server.Handler.Maps
             _dbContext.SaveChanges();
             _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
-
         #endregion Private Methods
     }
 }

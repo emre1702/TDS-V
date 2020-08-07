@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
@@ -62,6 +64,7 @@ namespace TDS_Server.Handler.GangSystem
         private void LoadGangwarAreas()
         {
             var entities = _dbContext.GangwarAreas.Include(a => a.Map).Include(a => a.OwnerGang).ToList();
+            CreateMissingGangwarAreas(entities);
             foreach (var entity in entities)
             {
                 var map = _mapsLoadingHandler.DefaultMaps.FirstOrDefault(m => m.Info.Type == MapType.Gangwar && m.BrowserSyncedData.Id == entity.MapId);
@@ -72,6 +75,34 @@ namespace TDS_Server.Handler.GangSystem
                 }
                 var area = ActivatorUtilities.CreateInstance<GangwarArea>(_serviceProvider, entity, map);
                 GangwarAreas.Add(area);
+            }
+            // Don't need it anymore
+            _dbContext.Dispose();
+        }
+
+        private void CreateMissingGangwarAreas(List<GangwarAreas> gangwarAreas)
+        {
+            var mapsWithoutGangwarArea = _mapsLoadingHandler.DefaultMaps
+                .Where(map => map.BrowserSyncedData.Type == TDS_Shared.Data.Enums.MapType.Gangwar && !gangwarAreas.Any(a => a.MapId == map.BrowserSyncedData.Id));
+
+            var newEntities = new List<GangwarAreas>();
+            foreach (var map in mapsWithoutGangwarArea)
+            {
+                var entity = new GangwarAreas
+                {
+                    MapId = map.BrowserSyncedData.Id,
+                    OwnerGangId = -1
+                };
+                newEntities.Add(entity);
+                _dbContext.GangwarAreas.Add(entity);
+                gangwarAreas.Add(entity);
+            }
+
+            _dbContext.SaveChanges();
+
+            foreach (var entity in newEntities)
+            {
+                _dbContext.Entry(entity).Reference(e => e.Map).Load();
             }
         }
 
