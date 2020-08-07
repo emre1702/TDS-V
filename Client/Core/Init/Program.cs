@@ -24,6 +24,7 @@ namespace TDS_Client.Core.Init
             modAPI.Streaming.RequestAnimDict("MP_SUICIDE");
             modAPI.Audio.SetAudioFlag("LoadMPData", true);
             modAPI.Player.SetPlayerHealthRechargeMultiplier(0);
+            modAPI.LocalPlayer.SetCanRagdoll(false);
 
             // CLEAR_GPS_CUSTOM_ROUTE
             modAPI.Native.Invoke(TDS_Shared.Data.Enums.NativeHash.CLEAR_GPS_CUSTOM_ROUTE);
