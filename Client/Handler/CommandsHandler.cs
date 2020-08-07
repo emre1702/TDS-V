@@ -4,7 +4,9 @@ using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Models;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
@@ -63,6 +65,13 @@ namespace TDS_Client.Handler
             ModAPI.Graphics.DrawText(_nextPedBone.ToString(), (int)(screenCoords.X * 1920f), (int)(screenCoords.Y * 1080f), Data.Enums.Font.Monospace, 1f, Color.Red, AlignmentX.Center, true, true, 999);
         }
 
+
+        private EventMethodData<TickDelegate> _moveOverride;
+        private EventMethodData<TickDelegate> _explosiveAmmo;
+        private EventMethodData<TickDelegate> _explosiveMelee;
+        private EventMethodData<TickDelegate> _fireAmmo;
+        private EventMethodData<TickDelegate> _superJump;
+
         private void OnCommandUsedMethod(object[] args)
         {
             _chatHandler.CloseChatInput();
@@ -120,6 +129,169 @@ namespace TDS_Client.Handler
 
                 return;
             }
+            else if (cmd == "stat")
+            {
+                string type = msg.Split(' ')[1];
+                switch (type)
+                {
+                    case "stun":
+                        ModAPI.LocalPlayer.SetMinGroundTimeForStungun(int.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "move":
+                        if (_moveOverride is null)
+                        {
+                            _moveOverride = new EventMethodData<TickDelegate>(ms => MoveOverride(float.Parse(msg.Split(' ')[2])));
+                            ModAPI.Event.Tick.Add(_moveOverride);
+                        }
+                        else
+                        {
+                            ModAPI.Event.Tick.Remove(_moveOverride);
+                            _moveOverride = null;
+                        }
+                        break;
+
+                    case "run":
+                        ModAPI.LocalPlayer.SetRunSprintMultiplier(float.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "swim":
+                        ModAPI.LocalPlayer.SetSwimMultiplier(float.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "airdrag":
+                        ModAPI.LocalPlayer.SetAirDragMultiplierForVehicle(float.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "accuracy":
+                        ModAPI.LocalPlayer.SetAccuracy(int.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    
+
+                    case "shootrate":
+                        ModAPI.LocalPlayer.SetShootRate(int.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "gravity":
+                        ModAPI.LocalPlayer.SetGravity(bool.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "hasgravity":
+                        ModAPI.LocalPlayer.SetHasGravity(bool.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "health":
+                        ModAPI.LocalPlayer.SetHealth(int.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "maxhealth":
+                        ModAPI.LocalPlayer.SetMaxHealth(int.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "rechargehealth":
+                        ModAPI.LocalPlayer.SetHealthRechargeMultiplier(float.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "knocked":
+                        ModAPI.LocalPlayer.SetCanBeKnockedOffVehicle(bool.Parse(msg.Split(' ')[2]) ? 1 : 0);
+                        break;
+
+                    case "ragdoll":
+                        ModAPI.LocalPlayer.SetCanRagdoll(bool.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "gravitylevel":
+                        ModAPI.Misc.SetGravityLevel(int.Parse(msg.Split(' ')[2]));
+                        break;
+
+                    case "explosiveammo":
+                        if (_explosiveAmmo is null)
+                        {
+                            _explosiveAmmo = new EventMethodData<TickDelegate>(ExplosiveAmmo);
+                            ModAPI.Event.Tick.Add(_explosiveAmmo);
+                        }
+                        else
+                        {
+                            ModAPI.Event.Tick.Remove(_explosiveAmmo);
+                            _explosiveAmmo = null;
+                        }
+                            
+                        break;
+
+                    case "explosivemelee":
+                        if (_explosiveMelee is null)
+                        {
+                            _explosiveMelee = new EventMethodData<TickDelegate>(ExplosiveMelee);
+                            ModAPI.Event.Tick.Add(_explosiveMelee);
+                        }
+                        else
+                        {
+                            ModAPI.Event.Tick.Remove(_explosiveMelee);
+                            _explosiveMelee = null;
+                        }
+
+                        break;
+
+                    case "fireammo":
+                        if (_fireAmmo is null)
+                        {
+                            _fireAmmo = new EventMethodData<TickDelegate>(FireAmmo);
+                            ModAPI.Event.Tick.Add(_fireAmmo);
+                        }
+                        else
+                        {
+                            ModAPI.Event.Tick.Remove(_fireAmmo);
+                            _fireAmmo = null;
+                        }
+
+                        break;
+
+                    case "superjump":
+                        if (_superJump is null)
+                        {
+                            _superJump = new EventMethodData<TickDelegate>(SuperJump);
+                            ModAPI.Event.Tick.Add(_superJump);
+                        }
+                        else
+                        {
+                            ModAPI.Event.Tick.Remove(_superJump);
+                            _superJump = null;
+                        }
+
+                        break;
+
+                    case "infiniteammo":
+                        ModAPI.LocalPlayer.SetInfiniteAmmo(bool.Parse(msg.Split(' ')[2]), ModAPI.LocalPlayer.GetSelectedWeapon());
+                        break;
+
+                    case "infiniteammoclip":
+                        ModAPI.LocalPlayer.SetInfiniteAmmoClip(bool.Parse(msg.Split(' ')[2]));
+                        break;
+                }
+
+                return;
+
+
+
+                //Todo: Add SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER
+                //Todo: Add SET_SWIM_MULTIPLIER_FOR_PLAYER
+                //Todo: Add SET_AIR_DRAG_MULTIPLIER_FOR_PLAYERS_VEHICLE
+                //Todo: Add SET_PED_ACCURACY
+                //Todo: Add SET_PED_MIN_GROUND_TIME_FOR_STUNGUN
+                //Todo: Add SET_PED_SHOOT_RATE
+                //Todo: Add SET_PED_GRAVITY
+                //Todo: Add SET_PED_MAX_HEALTH
+                //Todo: Add SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE
+                //Todo: Add SET_PED_CAN_RAGDOLL
+                //Todo: Add SET_GRAVITY_LEVEL
+                //Todo: Add SET_EXPLOSIVE_AMMO_THIS_FRAME
+                //Todo: Add SET_FIRE_AMMO_THIS_FRAME
+                //Todo: Add SET_EXPLOSIVE_MELEE_THIS_FRAME
+                //Todo: Add SET_SUPER_JUMP_THIS_FRAME
+                //Todo: Add SET_PED_INFINITE_AMMO
+                //Todo: Add SET_PED_INFINITE_AMMO_CLIP
+            }
             /*else if (cmd == "cutscene")
             {
                 
@@ -150,6 +322,31 @@ namespace TDS_Client.Handler
                 }
             }
             _remoteEventsSender.Send(ToServerEvent.CommandUsed, msg);
+        }
+
+        private void MoveOverride(float value)
+        {
+            ModAPI.LocalPlayer.SetMoveRateOverride(value);
+        }
+
+        private void ExplosiveAmmo(int currentMs)
+        {
+            ModAPI.Misc.SetExplosiveAmmoThisFrame(ModAPI.LocalPlayer);
+        }
+
+        private void ExplosiveMelee(int currentMs)
+        {
+            ModAPI.Misc.SetExplosiveMeleeThisFrame(ModAPI.LocalPlayer);
+        }
+
+        private void FireAmmo(int currentMs)
+        {
+            ModAPI.Misc.SetFireAmmoThisFrame(ModAPI.LocalPlayer);
+        }
+
+        private void SuperJump(int currentMs)
+        {
+            ModAPI.Misc.SetSuperJumpThisFrame(ModAPI.LocalPlayer);
         }
 
         #endregion Private Methods
