@@ -79,7 +79,7 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<MapsRatingsHandler>();
 
             serviceProvider.GetRequiredService<ConnectedHandler>();
-            serviceProvider.GetRequiredService<TDSPlayerHandler>();
+            serviceProvider.GetRequiredService<ITDSPlayerHandler>();
             serviceProvider.GetRequiredService<PlayerCharHandler>();
             serviceProvider.GetRequiredService<PlayerCrouchHandler>();
             serviceProvider.GetRequiredService<PlayerFreecamHandler>();
@@ -167,7 +167,7 @@ namespace TDS_Server.Core.Init
 
                // Player
                .AddSingleton<ConnectedHandler>()
-               .AddSingleton<TDSPlayerHandler>()
+               .AddSingleton<ITDSPlayerHandler, TDSPlayerHandler>()
                .AddSingleton<PlayerCharHandler>()
                .AddSingleton<PlayerCrouchHandler>()
                .AddSingleton<PlayerFreecamHandler>()

@@ -36,7 +36,7 @@ namespace TDS_Client.Handler
             {
                 if (ModAPI.Player.GetPlayerInvincible())
                 {
-                    //Todo: Log to server
+                    Logging.LogToServer("Player is invincible, but shouldn't be.", "AntiCheatHandler");
                     ModAPI.Player.SetPlayerInvincible(false);
                 }
             }

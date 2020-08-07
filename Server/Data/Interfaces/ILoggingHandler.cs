@@ -28,6 +28,8 @@ namespace TDS_Server.Data.Interfaces
 
         void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false);
 
+        void SetTDSPlayerHandler(ITDSPlayerHandler tdsPlayerHandler);
+
         Task SaveTask(int? counter = null);
 
         #endregion Public Methods

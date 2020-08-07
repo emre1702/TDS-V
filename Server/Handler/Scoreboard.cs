@@ -18,13 +18,13 @@ namespace TDS_Server.Handler
 
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly Serializer _serializer;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler)
+        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler, IModAPI modAPI, ITDSPlayerHandler tdsPlayerHandler)
         {
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;

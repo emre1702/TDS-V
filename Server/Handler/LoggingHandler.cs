@@ -5,11 +5,15 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Handler
 {
@@ -17,9 +21,10 @@ namespace TDS_Server.Handler
     {
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly ISettingsHandler _settingsHandler;
+        private ITDSPlayerHandler? _tdsPlayerHandler;
 
         public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler,
-            ISettingsHandler settingsHandler)
+            ISettingsHandler settingsHandler, IModAPI modAPI)
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             : base(dbContext, null)
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
@@ -46,6 +51,50 @@ namespace TDS_Server.Handler
                 _bonusBotConnectorClient.ServerInfos.Error += LogErrorFromBonusBot;
                 _bonusBotConnectorClient.ServerInfos.ErrorString += LogErrorFromBonusBot;
             }
+
+            modAPI.ClientEvent.Add<IPlayer, string, string>(ToServerEvent.LogMessageToServer, this, LogMessageFromClient);
+            modAPI.ClientEvent.Add<IPlayer, string, string, string>(ToServerEvent.LogExceptionToServer, this, LogExceptionFromClient);
+        }
+
+        public void SetTDSPlayerHandler(ITDSPlayerHandler tdsPlayerHandler)
+        {
+            _tdsPlayerHandler = tdsPlayerHandler;
+        }
+
+        private async void LogExceptionFromClient(IPlayer player, string message, string stackTrace, string typeName)
+        {
+            var log = new LogErrors
+            {
+                ExceptionType = typeName,
+                Info = message,
+                StackTrace = player.Name + " // " + player.SocialClubName + " // " + (stackTrace ?? Environment.StackTrace),
+                Source = _tdsPlayerHandler?.GetIfLoggedIn(player)?.Id,
+                Timestamp = DateTime.UtcNow
+            };
+            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
+
+            await ExecuteForDB(dbContext =>
+                dbContext.LogErrors.Add(log));
+
+            _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
+        }
+
+        private async void LogMessageFromClient(IPlayer player, string message, string source)
+        {
+            var log = new LogErrors
+            {
+                ExceptionType = "Message",
+                Info = message,
+                StackTrace = player.Name + " // " + player.SocialClubName + " // " + source,
+                Source = _tdsPlayerHandler?.GetIfLoggedIn(player)?.Id,
+                Timestamp = DateTime.UtcNow
+            };
+            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
+
+            await ExecuteForDB(dbContext =>
+                dbContext.LogErrors.Add(log));
+
+            _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
         private async void Save(int counter)

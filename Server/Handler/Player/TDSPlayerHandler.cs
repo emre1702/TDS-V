@@ -17,9 +17,9 @@ using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Player
 {
-    public class TDSPlayerHandler
+    public class TDSPlayerHandler : ITDSPlayerHandler
     {
-        #region Private Fields
+        #region Fields
 
         private readonly ILoggingHandler _loggingHandler;
         private readonly NameCheckHelper _nameCheckHelper;
@@ -27,9 +27,9 @@ namespace TDS_Server.Handler.Player
         private readonly ConcurrentDictionary<IPlayer, ITDSPlayer> _tdsPlayerCache = new ConcurrentDictionary<IPlayer, ITDSPlayer>();
         private readonly ConcurrentDictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new ConcurrentDictionary<ushort, ITDSPlayer>();
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public TDSPlayerHandler(
             NameCheckHelper nameCheckHelper,
@@ -51,16 +51,16 @@ namespace TDS_Server.Handler.Player
             eventsHandler.Minute += UpdatePlayers;
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         public int AmountLoggedInPlayers => LoggedInPlayers.Count;
         public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerCache.Values;
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         public ITDSPlayer Get(IPlayer modPlayer)
         {
@@ -109,23 +109,7 @@ namespace TDS_Server.Handler.Player
             return tdsPlayer;
         }
 
-        public void OnLanguageChange(IPlayer modPlayer, int language)
-        {
-            var player = GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-
-            if (!Enum.IsDefined(typeof(Language), language))
-                return;
-
-            player.LanguageEnum = (Language)language;
-        }
-
-        #endregion Public Methods
-
-        #region Internal Methods
-
-        internal ITDSPlayer? FindTDSPlayer(string name)
+        public ITDSPlayer? FindTDSPlayer(string name)
         {
             var suffix = SharedConstants.ServerTeamSuffix.Trim();
             if (name.StartsWith(suffix))
@@ -159,10 +143,6 @@ namespace TDS_Server.Handler.Player
             return null;
         }
 
-        #endregion Internal Methods
-
-        #region Private Methods
-
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             _tdsPlayerRemoteIdCache[player.RemoteId] = player;
@@ -178,6 +158,18 @@ namespace TDS_Server.Handler.Player
         private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
         {
             return player.SaveData(true);
+        }
+
+        private void OnLanguageChange(IPlayer modPlayer, int language)
+        {
+            var player = GetIfLoggedIn(modPlayer);
+            if (player is null)
+                return;
+
+            if (!Enum.IsDefined(typeof(Language), language))
+                return;
+
+            player.LanguageEnum = (Language)language;
         }
 
         private void OnWeaponShot(IPlayer player)
@@ -241,6 +233,6 @@ namespace TDS_Server.Handler.Player
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

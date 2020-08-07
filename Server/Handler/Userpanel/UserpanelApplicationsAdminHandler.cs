@@ -62,7 +62,7 @@ namespace TDS_Server.Handler.Userpanel
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
         private readonly UserpanelPlayerGeneralStatsHandler _userpanelPlayerStatsHandler;
 
@@ -71,7 +71,7 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerGeneralStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, TDSPlayerHandler tdsPlayerHandler,
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, ITDSPlayerHandler tdsPlayerHandler,
             IModAPI modAPI)
             : base(dbContext, loggingHandler)
             => (_modAPI, _userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler)

@@ -17,13 +17,13 @@ namespace TDS_Server.Handler.Events
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public LobbyEventsHandler(IModAPI modAPI, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler, TDSPlayerHandler tdsPlayerHandler)
+        public LobbyEventsHandler(IModAPI modAPI, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
             _modAPI = modAPI;
             _loggingHandler = loggingHandler;

@@ -24,14 +24,14 @@ namespace TDS_Server.Handler.Userpanel
         private readonly IModAPI _modAPI;
         private readonly UserpanelPlayerGeneralStatsHandler _playerStatsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer,
-            UserpanelCommandsHandler userpanelCommandsHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler)
+            UserpanelCommandsHandler userpanelCommandsHandler, IModAPI modAPI, ITDSPlayerHandler tdsPlayerHandler)
         {
             _modAPI = modAPI;
             _tdsPlayerHandler = tdsPlayerHandler;

@@ -30,7 +30,7 @@ namespace TDS_Server.Core.Init
         private TDSPlayer? _consolePlayerCache;
 
         private readonly IServiceProvider _serviceProvider;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
         private readonly CommandsHandler _commandsHandler;
@@ -79,11 +79,14 @@ namespace TDS_Server.Core.Init
                 gangsHandler.LoadAll();
 
                 RemoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
-                _tdsPlayerHandler = _serviceProvider.GetRequiredService<TDSPlayerHandler>();
+                _tdsPlayerHandler = _serviceProvider.GetRequiredService<ITDSPlayerHandler>();
                 _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
 
                 Services.InitializeSingletons(_serviceProvider);
+
+                var loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
+                loggingHandler.S
 
                 Task.Run(ReadInput);
             }

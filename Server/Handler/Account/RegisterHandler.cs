@@ -25,7 +25,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
         private readonly LangHelper _langHelper;
         private readonly IModAPI _modAPI;
         private readonly ServerStartHandler _serverStartHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
@@ -33,7 +33,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public RegisterHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler,
             DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler, LangHelper langHelper,
-            TDSPlayerHandler tdsPlayerHandler)
+            ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
             (_modAPI, _eventsHandler, _databasePlayerHelper, _serverStartHandler) = (modAPI, eventsHandler, databasePlayerHelper, serverStartHandler);

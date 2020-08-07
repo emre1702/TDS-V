@@ -96,14 +96,14 @@ namespace TDS_Server.Handler.Userpanel
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public UserpanelApplicationUserHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
-            ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, TDSPlayerHandler tdsPlayerHandler,
+            ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, ITDSPlayerHandler tdsPlayerHandler,
             OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
             _modAPI = modAPI;

@@ -21,11 +21,6 @@ namespace TDS_Client.Handler.Deathmatch
     {
         #region Private Fields
 
-        private readonly Dictionary<int, PedBodyPart> _bodyPartByBoneIndex = new Dictionary<int, PedBodyPart>
-        {
-            //Todo with OutgoingDamage
-        };
-
         private readonly BrowserHandler _browserHandler;
         private readonly LobbyHandler _lobbyHandler;
         private readonly IModAPI _modAPI;

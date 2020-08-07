@@ -17,13 +17,13 @@ namespace TDS_Server.Handler
         private readonly LangHelper _langHelper;
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ChatHandler(ILoggingHandler loggingHandler, IModAPI modAPI, TDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler, LangHelper langHelper)
+        public ChatHandler(ILoggingHandler loggingHandler, IModAPI modAPI, ITDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler, LangHelper langHelper)
         {
             (_loggingHandler, _modAPI, _tdsPlayerHandler, _adminsHandler, _langHelper) = (loggingHandler, modAPI, tdsPlayerHandler, adminsHandler, langHelper);
 

@@ -24,14 +24,14 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         private readonly Serializer _serializer;
         private readonly GangsHandler _gangsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly InvitationsHandler _invitationsHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly LangHelper _langHelper;
         private readonly DataSyncHandler _dataSyncHandler;
 
-        public GangWindowMembersHandler(IModAPI modAPI, Serializer serializer, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, TDSPlayerHandler tdsPlayerHandler,
+        public GangWindowMembersHandler(IModAPI modAPI, Serializer serializer, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
             InvitationsHandler invitationsHandler, EventsHandler eventsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper,
             DataSyncHandler dataSyncHandler)
         {

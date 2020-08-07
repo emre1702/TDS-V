@@ -13,13 +13,13 @@ namespace TDS_Server.Handler.Player
         #region Private Fields
 
         private readonly DataSyncHandler _dataSyncHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public PlayerCrouchHandler(IModAPI modAPI, DataSyncHandler dataSyncHandler, TDSPlayerHandler tdsPlayerHandler)
+        public PlayerCrouchHandler(IModAPI modAPI, DataSyncHandler dataSyncHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
             _dataSyncHandler = dataSyncHandler;
             _tdsPlayerHandler = tdsPlayerHandler;

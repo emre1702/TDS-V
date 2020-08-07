@@ -21,13 +21,13 @@ namespace TDS_Server.Handler.Helper
 
         #region Private Fields
 
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public LangHelper(TDSPlayerHandler tdsPlayerHandler)
+        public LangHelper(ITDSPlayerHandler tdsPlayerHandler)
             => _tdsPlayerHandler = tdsPlayerHandler;
 
         #endregion Public Constructors

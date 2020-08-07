@@ -8,13 +8,13 @@ namespace TDS_Server.Handler.Converter.Mapping
     {
         #region Private Fields
 
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public StringNameToPlayerConverter(TDSPlayerHandler tdsPlayerHandler)
+        public StringNameToPlayerConverter(ITDSPlayerHandler tdsPlayerHandler)
             => _tdsPlayerHandler = tdsPlayerHandler;
 
         #endregion Public Constructors

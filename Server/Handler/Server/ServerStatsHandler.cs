@@ -18,13 +18,13 @@ namespace TDS_Server.Handler.Server
         #region Private Fields
 
         private readonly EventsHandler _eventsHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ServerStatsHandler(EventsHandler eventsHandler, TDSPlayerHandler tdsPlayerHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+        public ServerStatsHandler(EventsHandler eventsHandler, ITDSPlayerHandler tdsPlayerHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
             _eventsHandler = eventsHandler;

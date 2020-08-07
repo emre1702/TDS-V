@@ -33,7 +33,7 @@ namespace TDS_Server.Handler.Events
         private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
 
         private readonly IModAPI _modAPI;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly EventsHandler _eventsHandler;
 
         #endregion Private Fields
@@ -42,7 +42,7 @@ namespace TDS_Server.Handler.Events
 
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler, TDSPlayerHandler tdsPlayerHandler,
+            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler, ITDSPlayerHandler tdsPlayerHandler,
             GangWindowHandler gangWindowHandler, EventsHandler eventsHandler)
         {
             _modAPI = modAPI;

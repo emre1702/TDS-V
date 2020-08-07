@@ -45,6 +45,8 @@
         public const string LoadPlayerWeaponStats = "c72";
         public const string LoadUserpanelData = "c27";
         public const string LobbyChatMessage = "c23";
+        public const string LogMessageToServer = "c77";
+        public const string LogExceptionToServer = "c78";
         public const string MapCreatorStartNewMap = "c28";
         public const string MapCreatorSyncCurrentMapToServer = "c17";
         public const string MapCreatorSyncData = "c30";

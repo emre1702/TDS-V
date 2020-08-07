@@ -5,21 +5,14 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem.GangWindow;
-using TDS_Server.Handler.Player;
-using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.GangSystem
 {
     public class GangWindowHandler
     {
-        private readonly IModAPI _modAPI;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
 
         private readonly GangWindowMainMenuHandler _mainMenu;
         private readonly GangWindowCreateHandler _create;
@@ -29,12 +22,9 @@ namespace TDS_Server.Handler.GangSystem
         private readonly GangWindowSpecialPageHandler _specialPage;
 
 
-        public GangWindowHandler(IModAPI modAPI, ILoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler, TDSDbContext dbContext,
-            Serializer serializer, IServiceProvider serviceProvider)
+        public GangWindowHandler(ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
         {
-            _modAPI = modAPI;
             _loggingHandler = loggingHandler;
-            _tdsPlayerHandler = tdsPlayerHandler;
 
             _mainMenu = ActivatorUtilities.CreateInstance<GangWindowMainMenuHandler>(serviceProvider);
             _create = ActivatorUtilities.CreateInstance<GangWindowCreateHandler>(serviceProvider);

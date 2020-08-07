@@ -36,7 +36,7 @@ namespace TDS_Server.Handler.Maps
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly XmlHelper _xmlHelper;
 
         #endregion Private Fields
@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.Maps
         #region Public Constructors
 
         public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
             : base(dbContext, loggingHandler)
         {
             (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);

@@ -35,7 +35,7 @@ namespace TDS_Server.Handler.Account
         private readonly ServerStartHandler _serverStartHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
@@ -52,7 +52,7 @@ namespace TDS_Server.Handler.Account
             DataSyncHandler dataSyncHandler,
             ILoggingHandler loggingHandler,
             ServerStartHandler serverStartHandler,
-            TDSPlayerHandler tdsPlayerHandler)
+            ITDSPlayerHandler tdsPlayerHandler)
         {
             _modAPI = modAPI;
             _databasePlayerHandler = databasePlayerHandler;

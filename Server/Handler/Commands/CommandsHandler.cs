@@ -53,10 +53,10 @@ namespace TDS_Server.Handler.Commands
         private readonly ChatHandler _chatHandler;
         private readonly BaseCommands _baseCommands;
         private readonly IModAPI _modAPI;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         public CommandsHandler(IModAPI modAPI, TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler,
-            ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands, TDSPlayerHandler tdsPlayerHandler)
+            ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands, ITDSPlayerHandler tdsPlayerHandler)
         {
             _modAPI = modAPI;
             _mappingHandler = mappingHandler;

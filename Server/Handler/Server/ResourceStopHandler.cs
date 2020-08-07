@@ -21,7 +21,7 @@ namespace TDS_Server.Handler.Server
         private readonly ILoggingHandler _loggingHandler;
         private readonly IModAPI _modAPI;
         private readonly ServerStatsHandler _serverStatsHandler;
-        private readonly TDSPlayerHandler _tdsPlayersHandler;
+        private readonly ITDSPlayerHandler _tdsPlayersHandler;
         private bool _isFirstResourceStopCheck = true;
         private bool _resourceStopped = false;
 
@@ -30,7 +30,7 @@ namespace TDS_Server.Handler.Server
         #region Public Constructors
 
         public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, ChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
-            LobbiesHandler lobbiesHandler, TDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
+            LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
         {
             _langHelper = langHelper;
             _loggingHandler = loggingHandler;

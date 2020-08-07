@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Maps
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
@@ -36,7 +36,7 @@ namespace TDS_Server.Handler.Maps
             MapCreatorHandler mapsCreatorHandler,
             TDSDbContext dbContext,
             ILoggingHandler loggingHandler,
-            TDSPlayerHandler tdsPlayerHandler)
+            ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
             _modAPI = modAPI;

@@ -24,7 +24,7 @@ namespace TDS_Server.Handler.Userpanel
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 
         #endregion Private Fields
@@ -32,7 +32,7 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelSettingsNormalHandler(Serializer serializer, BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext,
-            ILoggingHandler loggingHandler, TDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
+            ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
             : base(dbContext, loggingHandler)
             => (_modAPI, _serializer, _bonusBotConnectorClient, _tdsPlayerHandler)
             = (modAPI, serializer, bonusBotConnectorClient, tdsPlayerHandler);

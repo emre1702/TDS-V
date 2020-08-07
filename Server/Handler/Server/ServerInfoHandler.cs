@@ -1,6 +1,7 @@
 ﻿using BonusBotConnector.Client;
 using System;
 using System.Linq;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
@@ -21,13 +22,13 @@ namespace TDS_Server.Handler.Server
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly IModAPI _modAPI;
         private readonly ServerStatsHandler _serverStatsHandler;
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ServerInfoHandler(EventsHandler eventsHandler, TDSDbContext dbContext, LobbiesHandler lobbiesHandler, TDSPlayerHandler tdsPlayerHandler,
+        public ServerInfoHandler(EventsHandler eventsHandler, TDSDbContext dbContext, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
             IModAPI modAPI, BonusBotConnectorClient bonusBotConnectorClient, ServerStatsHandler serverStatsHandler)
         {
             _dateTime = DateTime.UtcNow;

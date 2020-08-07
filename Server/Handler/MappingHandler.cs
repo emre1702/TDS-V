@@ -15,7 +15,7 @@ namespace TDS_Server.Handler
     {
         #region Public Constructors
 
-        public MappingHandler(TDSPlayerHandler tdsPlayerHandler, DatabasePlayerHelper databasePlayerHelper)
+        public MappingHandler(ITDSPlayerHandler tdsPlayerHandler, DatabasePlayerHelper databasePlayerHelper)
         {
             var config = new MapperConfiguration(cfg =>
             {
