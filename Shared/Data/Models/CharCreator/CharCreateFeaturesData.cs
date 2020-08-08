@@ -4,6 +4,9 @@ namespace TDS_Shared.Data.Models.CharCreator
 {
     public class CharCreateFeaturesData
     {
+        [JsonProperty("99")]
+        public byte Slot { get; set; }
+
         [JsonProperty("0")]
         public float NoseWidth { get; set; }
         [JsonProperty("1")]

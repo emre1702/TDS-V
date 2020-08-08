@@ -63,4 +63,7 @@ export interface CharCreateAppearanceData {
     [24]: number;
     /** AddBodyBlemishesOpacity */
     [25]: number;
+
+    /** Slot */
+    [99]: number;
 }

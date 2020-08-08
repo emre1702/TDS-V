@@ -45,6 +45,7 @@
         public bool ToChatOnNonExistentCommand { get; set; }
         public int UsernameChangeCooldownDays { get; set; }
         public int UsernameChangeCost { get; set; }
+        public byte AmountCharSlots { get; set; }
 
         #endregion Public Properties
     }

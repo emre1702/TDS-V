@@ -92,6 +92,7 @@ namespace TDS_Server.Handler.Account
                     .Include(p => p.PlayerRelationsTarget)
                     .Include(p => p.PlayerClothes)
                     .Include(p => p.Challenges)
+                    .Include(p => p.CharDatas)
                     .Include(p => p.CharDatas.GeneralData)
                     .Include(p => p.CharDatas.HeritageData)
                     .Include(p => p.CharDatas.FeaturesData)

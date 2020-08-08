@@ -11,6 +11,7 @@ using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
+using System.Linq;
 
 namespace TDS_Server.Handler.Entities.Player
 {
@@ -74,7 +75,7 @@ namespace TDS_Server.Handler.Entities.Player
         public string DisplayName => ModPlayer is null ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel
             ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : ModPlayer.Name) : (Entity is { } ? Entity.Name : ModPlayer.Name));
 
-        public PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
+        public PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.ElementAt(Entity.CharDatas.Slot).IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
 
         public IVehicle? FreeroamVehicle { get; set; }
 

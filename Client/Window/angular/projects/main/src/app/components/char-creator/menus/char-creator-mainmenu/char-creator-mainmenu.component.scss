@@ -3,4 +3,15 @@
         width: 100%;
     }
 
+    .radio-group {
+        height: 100%;
+
+        .mat-radio-button {
+            margin-top: 5px;
+        }
+
+        .mat-radio-button:last-child {
+            margin-bottom: 5px;
+        }
+    }
 }

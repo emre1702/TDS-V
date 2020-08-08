@@ -21,27 +21,44 @@ export class CharCreatorComponent implements OnInit, OnDestroy {
 
     currentNav = CharCreatorMenuNav.MainMenu;
     /*data: CharCreateData = {
-        [0]: {
-            [0]: true
-        },
-        [1]: {
+        [0]: [{[0]: true, [99]: 0}, {[0]: true, [99]: 1}, {[0]: true, [99]: 2}, {[0]: true, [99]: 3}],
+        [1]: [{
             [0]: 0,
             [1]: 21,
             [2]: 0.5,
-            [3]: 0.5
+            [3]: 0.5, [99]: 0
         },
-        [2]: {
+        {
+            [0]: 0,
+            [1]: 21,
+            [2]: 0.5,
+            [3]: 0.5, [99]: 1
+        }],
+        [2]: [{
             [0]: 0, [1]: 0, [2]: 0, [3]: 0, [4]: 0, [5]: 0, [6]: 0, [7]: 0, [8]: 0, [9]: 0,
-            [10]: 0, [11]: 0, [12]: 0, [13]: 0, [14]: 0, [15]: 0, [16]: 0, [17]: 0, [18]: 0, [19]: 0
+            [10]: 0, [11]: 0, [12]: 0, [13]: 0, [14]: 0, [15]: 0, [16]: 0, [17]: 0, [18]: 0, [19]: 0, [99]: 0
         },
-        [3]: {
+        {
+            [0]: 0, [1]: 0, [2]: 0, [3]: 0, [4]: 0, [5]: 0, [6]: 0, [7]: 0, [8]: 0, [9]: 0,
+            [10]: 0, [11]: 0, [12]: 0, [13]: 0, [14]: 0, [15]: 0, [16]: 0, [17]: 0, [18]: 0, [19]: 0, [99]: 1
+        }],
+        [3]: [{
             [0]: 0, [1]: 100, [2]: 0, [3]: 100, [4]: 0, [5]: 100, [6]: 0, [7]: 100, [8]: 0, [9]: 100, [10]: 0, [11]: 100,
             [12]: 0, [13]: 100, [14]: 0, [15]: 100, [16]: 0, [17]: 100, [18]: 0, [19]: 100, [20]: 0, [21]: 100, [22]: 0, [23]: 100,
-            [24]: 0, [25]: 100
+            [24]: 0, [25]: 100, [99]: 0
         },
-        [4]: {
-            [0]: 0, [1]: 0, [2]: 0, [3]: 0, [4]: 0, [5]: 0, [6]: 0, [7]: 0, [8]: 0
-        }
+        {
+            [0]: 0, [1]: 100, [2]: 0, [3]: 100, [4]: 0, [5]: 100, [6]: 0, [7]: 100, [8]: 0, [9]: 100, [10]: 0, [11]: 100,
+            [12]: 0, [13]: 100, [14]: 0, [15]: 100, [16]: 0, [17]: 100, [18]: 0, [19]: 100, [20]: 0, [21]: 100, [22]: 0, [23]: 100,
+            [24]: 0, [25]: 100, [99]: 1
+        }],
+        [4]: [{
+            [0]: 0, [1]: 0, [2]: 0, [3]: 0, [4]: 0, [5]: 0, [6]: 0, [7]: 0, [8]: 0, [99]: 0
+        },
+        {
+            [0]: 0, [1]: 0, [2]: 0, [3]: 0, [4]: 0, [5]: 0, [6]: 0, [7]: 0, [8]: 0, [99]: 1
+        }],
+        [99]: 0
     };*/
 
     constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService,
@@ -86,6 +103,18 @@ export class CharCreatorComponent implements OnInit, OnDestroy {
 
     recreatePed() {
         this.rageConnector.call(DToClientEvent.CharCreatorDataChanged, CharCreatorDataKey.IsMale, JSON.stringify(this.data));
+    }
+
+    setData(list: { 99: number }[], entry: { 99: number }) {
+        const index = list.findIndex(e => e[99] == this.data[99]);
+        list[index] = entry;
+        this.changeDetector.detectChanges();
+    }
+
+    getData(list: { 99: number }[]) {
+        console.log(list);
+        console.log(list.find(entry => entry[99] == this.data[99]));
+        return list.find(entry => entry[99] == this.data[99]);
     }
 
     private detectChanges() {

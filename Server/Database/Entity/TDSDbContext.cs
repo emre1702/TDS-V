@@ -851,30 +851,55 @@ namespace TDS_Server.Database.Entity
                 entity.Ignore(e => e.FeaturesDataSynced);
                 entity.Ignore(e => e.AppearanceDataSynced);
                 entity.Ignore(e => e.HairAndColorsDataSynced);
+            });
 
-                entity.HasOne(e => e.Player)
-                    .WithOne(d => d.CharDatas)
-                    .HasForeignKey<PlayerCharDatas>(e => e.PlayerId)
+            modelBuilder.Entity<PlayerCharAppearanceDatas>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.Slot });
+
+                entity.HasOne(e => e.CharDatas)
+                    .WithMany(c => c.AppearanceData)
+                    .HasForeignKey(e => e.PlayerId)
                     .OnDelete(DeleteBehavior.Cascade);
-                entity.HasOne(e => e.GeneralData)
-                    .WithOne(d => d.CharDatas)
-                    .HasForeignKey<PlayerCharDatas>(e => e.GeneralDataId)
+            });
+
+            modelBuilder.Entity<PlayerCharFeaturesDatas>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.Slot });
+
+                entity.HasOne(e => e.CharDatas)
+                    .WithMany(c => c.FeaturesData)
+                    .HasForeignKey(e => e.PlayerId)
                     .OnDelete(DeleteBehavior.Cascade);
-                entity.HasOne(e => e.HeritageData)
-                    .WithOne(d => d.CharDatas)
-                    .HasForeignKey<PlayerCharDatas>(e => e.HeritageDataId)
+            });
+
+            modelBuilder.Entity<PlayerCharGeneralDatas>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.Slot });
+
+                entity.HasOne(e => e.CharDatas)
+                    .WithMany(c => c.GeneralData)
+                    .HasForeignKey(e => e.PlayerId)
                     .OnDelete(DeleteBehavior.Cascade);
-                entity.HasOne(e => e.FeaturesData)
-                    .WithOne(d => d.CharDatas)
-                    .HasForeignKey<PlayerCharDatas>(e => e.FeaturesDataId)
+            });
+
+            modelBuilder.Entity<PlayerCharHairAndColorsDatas>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.Slot });
+
+                entity.HasOne(e => e.CharDatas)
+                    .WithMany(c => c.HairAndColorsData)
+                    .HasForeignKey(e => e.PlayerId)
                     .OnDelete(DeleteBehavior.Cascade);
-                entity.HasOne(e => e.AppearanceData)
-                    .WithOne(d => d.CharDatas)
-                    .HasForeignKey<PlayerCharDatas>(e => e.AppearanceDataId)
-                    .OnDelete(DeleteBehavior.Cascade);
-                entity.HasOne(e => e.HairAndColorsData)
-                    .WithOne(d => d.CharDatas)
-                    .HasForeignKey<PlayerCharDatas>(e => e.HairAndColorsDataId)
+            });
+
+            modelBuilder.Entity<PlayerCharHeritageDatas>(entity =>
+            {
+                entity.HasKey(e => new { e.PlayerId, e.Slot });
+
+                entity.HasOne(e => e.CharDatas)
+                    .WithMany(c => c.HeritageData)
+                    .HasForeignKey(e => e.PlayerId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -1326,6 +1351,10 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.ReloadServerBansEveryMinutes)
                     .IsRequired()
                     .HasDefaultValue(5);
+
+                entity.Property(e => e.AmountCharSlots)
+                    .IsRequired()
+                    .HasDefaultValue(3);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>

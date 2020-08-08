@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces.ModAPI;
@@ -28,8 +29,8 @@ namespace TDS_Client.Handler.Appearance
         private readonly EventsHandler _eventsHandler;
         private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
+
         private float _currentCamAngle;
         private Position3D _currentCamOffsetPos;
         private uint _dimension;
@@ -37,6 +38,8 @@ namespace TDS_Client.Handler.Appearance
         private Position2D _initMovePedCursorPos;
         private float _initMovingAngle;
         private float _initMovingOffsetZ;
+
+        private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
         #endregion Private Fields
 
@@ -279,7 +282,13 @@ namespace TDS_Client.Handler.Appearance
         {
             try
             {
-                var skin = data.GeneralDataSynced.IsMale ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
+                var generalData = data.GeneralDataSynced.First(e => e.Slot == data.Slot);
+                var heritageData = data.HeritageDataSynced.First(e => e.Slot == data.Slot);
+                var featuresData = data.FeaturesDataSynced.First(e => e.Slot == data.Slot);
+                var appearanceData = data.AppearanceDataSynced.First(e => e.Slot == data.Slot);
+                var hairAndColorsData = data.HairAndColorsDataSynced.First(e => e.Slot == data.Slot);
+
+                var skin = generalData.IsMale ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
                 var pos = new Position3D(-425.48, 1123.55, 325.85);
 
                 if (!(_displayPed is null))
@@ -291,51 +300,51 @@ namespace TDS_Client.Handler.Appearance
 
                 //Todo Give him player outfits
 
-                UpdateHeritage(data.HeritageDataSynced);
+                UpdateHeritage(heritageData);
 
-                UpdateFaceFeature(0, data.FeaturesDataSynced.NoseWidth);
-                UpdateFaceFeature(1, data.FeaturesDataSynced.NoseHeight);
-                UpdateFaceFeature(2, data.FeaturesDataSynced.NoseLength);
-                UpdateFaceFeature(3, data.FeaturesDataSynced.NoseBridge);
-                UpdateFaceFeature(4, data.FeaturesDataSynced.NoseTip);
-                UpdateFaceFeature(5, data.FeaturesDataSynced.NoseBridgeShift);
-                UpdateFaceFeature(6, data.FeaturesDataSynced.BrowHeight);
-                UpdateFaceFeature(7, data.FeaturesDataSynced.BrowWidth);
-                UpdateFaceFeature(8, data.FeaturesDataSynced.CheekboneHeight);
-                UpdateFaceFeature(9, data.FeaturesDataSynced.CheekboneWidth);
-                UpdateFaceFeature(10, data.FeaturesDataSynced.CheeksWidth);
-                UpdateFaceFeature(11, data.FeaturesDataSynced.Eyes);
-                UpdateFaceFeature(12, data.FeaturesDataSynced.Lips);
-                UpdateFaceFeature(13, data.FeaturesDataSynced.JawWidth);
-                UpdateFaceFeature(14, data.FeaturesDataSynced.JawHeight);
-                UpdateFaceFeature(15, data.FeaturesDataSynced.ChinLength);
-                UpdateFaceFeature(16, data.FeaturesDataSynced.ChinPosition);
-                UpdateFaceFeature(17, data.FeaturesDataSynced.ChinWidth);
-                UpdateFaceFeature(18, data.FeaturesDataSynced.ChinShape);
-                UpdateFaceFeature(19, data.FeaturesDataSynced.NeckWidth);
+                UpdateFaceFeature(0, featuresData.NoseWidth);
+                UpdateFaceFeature(1, featuresData.NoseHeight);
+                UpdateFaceFeature(2, featuresData.NoseLength);
+                UpdateFaceFeature(3, featuresData.NoseBridge);
+                UpdateFaceFeature(4, featuresData.NoseTip);
+                UpdateFaceFeature(5, featuresData.NoseBridgeShift);
+                UpdateFaceFeature(6, featuresData.BrowHeight);
+                UpdateFaceFeature(7, featuresData.BrowWidth);
+                UpdateFaceFeature(8, featuresData.CheekboneHeight);
+                UpdateFaceFeature(9, featuresData.CheekboneWidth);
+                UpdateFaceFeature(10, featuresData.CheeksWidth);
+                UpdateFaceFeature(11, featuresData.Eyes);
+                UpdateFaceFeature(12, featuresData.Lips);
+                UpdateFaceFeature(13, featuresData.JawWidth);
+                UpdateFaceFeature(14, featuresData.JawHeight);
+                UpdateFaceFeature(15, featuresData.ChinLength);
+                UpdateFaceFeature(16, featuresData.ChinPosition);
+                UpdateFaceFeature(17, featuresData.ChinWidth);
+                UpdateFaceFeature(18, featuresData.ChinShape);
+                UpdateFaceFeature(19, featuresData.NeckWidth);
 
-                UpdateAppearance(0, data.AppearanceDataSynced.Blemishes, data.AppearanceDataSynced.BlemishesOpacity);
-                UpdateAppearance(1, data.AppearanceDataSynced.FacialHair, data.AppearanceDataSynced.FacialHairOpacity);
-                UpdateAppearance(2, data.AppearanceDataSynced.Eyebrows, data.AppearanceDataSynced.EyebrowsOpacity);
-                UpdateAppearance(3, data.AppearanceDataSynced.Ageing, data.AppearanceDataSynced.AgeingOpacity);
-                UpdateAppearance(4, data.AppearanceDataSynced.Makeup, data.AppearanceDataSynced.MakeupOpacity);
-                UpdateAppearance(5, data.AppearanceDataSynced.Blush, data.AppearanceDataSynced.BlushOpacity);
-                UpdateAppearance(6, data.AppearanceDataSynced.Complexion, data.AppearanceDataSynced.ComplexionOpacity);
-                UpdateAppearance(7, data.AppearanceDataSynced.SunDamage, data.AppearanceDataSynced.SunDamageOpacity);
-                UpdateAppearance(8, data.AppearanceDataSynced.Lipstick, data.AppearanceDataSynced.LipstickOpacity);
-                UpdateAppearance(9, data.AppearanceDataSynced.MolesAndFreckles, data.AppearanceDataSynced.MolesAndFrecklesOpacity);
-                UpdateAppearance(10, data.AppearanceDataSynced.ChestHair, data.AppearanceDataSynced.ChestHairOpacity);
-                UpdateAppearance(11, data.AppearanceDataSynced.BodyBlemishes, data.AppearanceDataSynced.BodyBlemishesOpacity);
-                UpdateAppearance(12, data.AppearanceDataSynced.AddBodyBlemishes, data.AppearanceDataSynced.AddBodyBlemishesOpacity);
+                UpdateAppearance(0, appearanceData.Blemishes, appearanceData.BlemishesOpacity);
+                UpdateAppearance(1, appearanceData.FacialHair, appearanceData.FacialHairOpacity);
+                UpdateAppearance(2, appearanceData.Eyebrows, appearanceData.EyebrowsOpacity);
+                UpdateAppearance(3, appearanceData.Ageing, appearanceData.AgeingOpacity);
+                UpdateAppearance(4, appearanceData.Makeup, appearanceData.MakeupOpacity);
+                UpdateAppearance(5, appearanceData.Blush, appearanceData.BlushOpacity);
+                UpdateAppearance(6, appearanceData.Complexion, appearanceData.ComplexionOpacity);
+                UpdateAppearance(7, appearanceData.SunDamage, appearanceData.SunDamageOpacity);
+                UpdateAppearance(8, appearanceData.Lipstick, appearanceData.LipstickOpacity);
+                UpdateAppearance(9, appearanceData.MolesAndFreckles, appearanceData.MolesAndFrecklesOpacity);
+                UpdateAppearance(10, appearanceData.ChestHair, appearanceData.ChestHairOpacity);
+                UpdateAppearance(11, appearanceData.BodyBlemishes, appearanceData.BodyBlemishesOpacity);
+                UpdateAppearance(12, appearanceData.AddBodyBlemishes, appearanceData.AddBodyBlemishesOpacity);
 
-                UpdateHair(data.HairAndColorsDataSynced.Hair);
-                UpdateHairColor(data.HairAndColorsDataSynced.HairColor, data.HairAndColorsDataSynced.HairHighlightColor);
-                UpdateEyeColor(data.HairAndColorsDataSynced.EyeColor);
-                UpdateColor(1, 1, data.HairAndColorsDataSynced.FacialHairColor);
-                UpdateColor(2, 1, data.HairAndColorsDataSynced.EyebrowColor);
-                UpdateColor(5, 2, data.HairAndColorsDataSynced.BlushColor);
-                UpdateColor(8, 2, data.HairAndColorsDataSynced.LipstickColor);
-                UpdateColor(10, 1, data.HairAndColorsDataSynced.ChestHairColor);
+                UpdateHair(hairAndColorsData.Hair);
+                UpdateHairColor(hairAndColorsData.HairColor, hairAndColorsData.HairHighlightColor);
+                UpdateEyeColor(hairAndColorsData.EyeColor);
+                UpdateColor(1, 1, hairAndColorsData.FacialHairColor);
+                UpdateColor(2, 1, hairAndColorsData.EyebrowColor);
+                UpdateColor(5, 2, hairAndColorsData.BlushColor);
+                UpdateColor(8, 2, hairAndColorsData.LipstickColor);
+                UpdateColor(10, 1, hairAndColorsData.ChestHairColor);
             }
             catch (Exception ex)
             {

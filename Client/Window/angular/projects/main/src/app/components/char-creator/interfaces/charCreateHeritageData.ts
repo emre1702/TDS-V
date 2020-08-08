@@ -10,4 +10,7 @@ export interface CharCreateHeritageData {
 
     /** SkinTonePercentage */
     [3]: number;
+
+    /** Slot */
+    [99]: number;
 }

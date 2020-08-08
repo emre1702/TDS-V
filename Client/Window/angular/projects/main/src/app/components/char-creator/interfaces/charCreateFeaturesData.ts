@@ -58,4 +58,7 @@ export interface CharCreateFeaturesData {
 
     /** Neck width */
     [19]: number;
+
+    /** Slot */
+    [99]: number;
 }

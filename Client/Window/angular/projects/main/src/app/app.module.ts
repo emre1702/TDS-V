@@ -36,7 +36,8 @@ import {
   MatPaginatorIntl,
   MatStepperModule,
   MatProgressSpinnerModule,
-  MatCardModule
+  MatCardModule,
+  MatRadioModule
 } from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { LanguagePipe } from './pipes/language.pipe';
@@ -220,6 +221,7 @@ import { GangWindowMainmenuComponent } from './components/gang-window/gang-windo
     MatStepperModule,
     MatProgressSpinnerModule,
     MatCardModule,
+    MatRadioModule,
     ClipboardModule,
     OverlayModule,
     CommonModule,

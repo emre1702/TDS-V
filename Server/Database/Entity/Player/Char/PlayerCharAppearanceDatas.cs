@@ -8,10 +8,12 @@ namespace TDS_Server.Database.Entity.Player.Char
         #region Public Properties
 
         [JsonIgnore]
-        public virtual PlayerCharDatas CharDatas { get; set; }
+        public int PlayerId { get; set; }
 
         [JsonIgnore]
-        public int Id { get; set; }
+        public virtual PlayerCharDatas CharDatas { get; set; }
+
+       
 
         #endregion Public Properties
     }

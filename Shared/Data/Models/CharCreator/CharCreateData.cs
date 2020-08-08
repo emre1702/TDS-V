@@ -1,18 +1,22 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace TDS_Shared.Data.Models.CharCreator
 {
     public class CharCreateData 
     {
+        [JsonProperty("99")]
+        public byte Slot { get; set; }
+
         [JsonProperty("0")]
-        public virtual CharCreateGeneralData GeneralDataSynced { get; set; }
+        public virtual List<CharCreateGeneralData> GeneralDataSynced { get; set; }
         [JsonProperty("1")]
-        public virtual CharCreateHeritageData HeritageDataSynced { get; set; }
+        public virtual List<CharCreateHeritageData> HeritageDataSynced { get; set; }
         [JsonProperty("2")]
-        public virtual CharCreateFeaturesData FeaturesDataSynced { get; set; }
+        public virtual List<CharCreateFeaturesData> FeaturesDataSynced { get; set; }
         [JsonProperty("3")]
-        public virtual CharCreateAppearanceData AppearanceDataSynced { get; set; }
+        public virtual List<CharCreateAppearanceData> AppearanceDataSynced { get; set; }
         [JsonProperty("4")]
-        public virtual CharCreateHairAndColorsData HairAndColorsDataSynced { get; set; }
+        public virtual List<CharCreateHairAndColorsData> HairAndColorsDataSynced { get; set; }
     }
 }

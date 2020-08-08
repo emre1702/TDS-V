@@ -6,17 +6,20 @@ import { CharCreateGeneralData } from './charCreateGeneralData';
 
 export interface CharCreateData {
     /** GeneralData */
-    [0]: CharCreateGeneralData;
+    [0]: CharCreateGeneralData[];
 
     /** HeritageData */
-    [1]: CharCreateHeritageData;
+    [1]: CharCreateHeritageData[];
 
     /** FeaturesData */
-    [2]: CharCreateFeaturesData;
+    [2]: CharCreateFeaturesData[];
 
     /** AppearanceData */
-    [3]: CharCreateAppearanceData;
+    [3]: CharCreateAppearanceData[];
 
     /** HairAndColorsData */
-    [4]: CharCreateHairAndColorsData;
+    [4]: CharCreateHairAndColorsData[];
+
+    /** Slot */
+    [99]: number;
 }

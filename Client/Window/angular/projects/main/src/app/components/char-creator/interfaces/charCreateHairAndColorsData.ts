@@ -25,4 +25,7 @@ export interface CharCreateHairAndColorsData {
 
     /** ChestHairColor */
     [8]: number;
+
+    /** Slot */
+    [99]: number;
 }

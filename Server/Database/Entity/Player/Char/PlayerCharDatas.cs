@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using TDS_Shared.Data.Models.CharCreator;
 
 namespace TDS_Server.Database.Entity.Player.Char
@@ -8,40 +9,21 @@ namespace TDS_Server.Database.Entity.Player.Char
         #region Public Properties
 
         [JsonIgnore]
-        public virtual PlayerCharAppearanceDatas AppearanceData { get; set; }
-
-        [JsonIgnore]
-        public int AppearanceDataId { get; set; }
-
-        [JsonIgnore]
-        public virtual PlayerCharFeaturesDatas FeaturesData { get; set; }
-
-        [JsonIgnore]
-        public int FeaturesDataId { get; set; }
-
-        [JsonIgnore]
-        public virtual PlayerCharGeneralDatas GeneralData { get; set; }
-
-        [JsonIgnore]
-        public int GeneralDataId { get; set; }
-
-        [JsonIgnore]
-        public virtual PlayerCharHairAndColorsDatas HairAndColorsData { get; set; }
-
-        [JsonIgnore]
-        public int HairAndColorsDataId { get; set; }
-
-        [JsonIgnore]
-        public virtual PlayerCharHeritageDatas HeritageData { get; set; }
-
-        [JsonIgnore]
-        public int HeritageDataId { get; set; }
-
-        [JsonIgnore]
-        public virtual Players Player { get; }
-
-        [JsonIgnore]
         public int PlayerId { get; set; }
+
+
+        [JsonIgnore]
+        public virtual ICollection<Players> Player { get; }
+        [JsonIgnore]
+        public virtual ICollection<PlayerCharAppearanceDatas> AppearanceData { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<PlayerCharFeaturesDatas> FeaturesData { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<PlayerCharGeneralDatas> GeneralData { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<PlayerCharHairAndColorsDatas> HairAndColorsData { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<PlayerCharHeritageDatas> HeritageData { get; set; }
 
         #endregion Public Properties
     }
