@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Server.Database.Entity;
@@ -13,9 +14,10 @@ using TDS_Shared.Data.Enums.Userpanel;
 namespace TDS_Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200808214154_Char_Slots")]
+    partial class Char_Slots
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3114,7 +3116,9 @@ namespace TDS_Server.Database.Migrations
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<byte>("Slot")
                         .HasColumnType("smallint");
@@ -3872,6 +3876,9 @@ namespace TDS_Server.Database.Migrations
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0);
 
+                    b.Property<int?>("CharDatasPlayerId")
+                        .HasColumnType("integer");
+
                     b.Property<short>("Donation")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint")
@@ -3912,6 +3919,8 @@ namespace TDS_Server.Database.Migrations
                     b.HasIndex("AdminLeaderId");
 
                     b.HasIndex("AdminLvl");
+
+                    b.HasIndex("CharDatasPlayerId");
 
                     b.ToTable("Players");
 
@@ -7119,15 +7128,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
-                {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
-                        .WithOne("CharDatas")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharFeaturesDatas", b =>
                 {
                     b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
@@ -7346,6 +7346,10 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .HasForeignKey("AdminLvl")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
+
+                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
+                        .WithMany("Player")
+                        .HasForeignKey("CharDatasPlayerId");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Maps", b =>

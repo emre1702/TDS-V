@@ -851,6 +851,11 @@ namespace TDS_Server.Database.Entity
                 entity.Ignore(e => e.FeaturesDataSynced);
                 entity.Ignore(e => e.AppearanceDataSynced);
                 entity.Ignore(e => e.HairAndColorsDataSynced);
+
+                entity.HasOne(e => e.Player)
+                    .WithOne(p => p.CharDatas)
+                    .HasForeignKey<PlayerCharDatas>(e => e.PlayerId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PlayerCharAppearanceDatas>(entity =>
