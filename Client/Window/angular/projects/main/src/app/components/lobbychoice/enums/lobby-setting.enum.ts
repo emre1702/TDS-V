@@ -18,5 +18,6 @@ export enum LobbySetting {
     MapLimitType,
     Teams,
     Maps,
-    Weapons
+    Weapons,
+    ArmsRaceWeapons
 }

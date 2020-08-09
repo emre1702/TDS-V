@@ -70,6 +70,9 @@ namespace TDS_Server.Data.Models.CustomLobby
         [JsonProperty("19")]
         public List<CustomLobbyWeaponData> Weapons { get; set; }
 
+        [JsonProperty("20")]
+        public List<CustomLobbyArmsRaceWeaponData> ArmsRaceWeapons { get; set; }
+
         #endregion Public Properties
     }
 

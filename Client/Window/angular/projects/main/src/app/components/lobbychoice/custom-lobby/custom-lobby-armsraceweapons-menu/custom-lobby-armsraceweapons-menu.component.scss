@@ -17,7 +17,7 @@ tdswindow {
         overflow: auto;
 
         #selected-weapons {
-            width: calc(70% - 10px);
+            width: calc(50% - 10px);
             height: 100%;
             overflow: auto;
 
@@ -43,10 +43,9 @@ tdswindow {
         }
 
         #available-weapons {
-            width: calc(30% - 10px);
+            width: calc(50% - 10px);
             height: 100%;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
             border-radius: 30px;
 
             .scrollbar-container {
@@ -74,5 +73,9 @@ tdswindow {
             margin-right: 10px;
             margin-bottom: 5px;
         }
+    }
+
+    .snackbar {
+        white-space: pre-line;
     }
 }

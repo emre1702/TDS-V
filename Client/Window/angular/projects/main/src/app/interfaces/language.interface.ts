@@ -773,6 +773,14 @@ export interface Language {
     RankUp: string;
     RankDown: string;
     Rank: string;
+    ArmsRaceWeapons: string;
+    Clear: string;
+    AtKill: string;
+    Win: string;
+    ArmsRaceWeaponsDuplicateError: string;
+    ArmsRaceWeaponsFirstWeaponError: string;
+    ArmsRaceWeaponsWinError: string;
+    ArmsRaceWeaponsWinNotLastError: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

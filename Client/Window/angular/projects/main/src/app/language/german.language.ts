@@ -751,6 +751,14 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     RankUp = "Rang-Up";
     RankDown = "Rang-Down";
     Rank = "Rang";
+    ArmsRaceWeapons = "Wettrüsten Waffen";
+    Clear = "Einträge löschen";
+    AtKill = "Bei Mord";
+    Win = "Sieg";
+    ArmsRaceWeaponsDuplicateError = "Es gibt doppelte Werte für 'Bei Mord' bei den ausgewählten Waffen.\nJeder Wert für 'Bei Mord' muss einzigartig sein.";
+    ArmsRaceWeaponsFirstWeaponError = "Die erste Waffe mit 'Bei Mord' = 0 fehlt.";
+    ArmsRaceWeaponsWinError = "Die Sieg-Bedingung hat gefehlt und wurde hinzugefügt.\nÄndere den 'Bei Mord' Wert, falls du möchtest.";
+    ArmsRaceWeaponsWinNotLastError = "Die Sieg-Bedingung muss das Ende sein.\nDer 'Bei Mord' Wert wurde angepasst, ändere ihn, falls du möchtest.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

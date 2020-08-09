@@ -19,6 +19,8 @@ import { CustomLobbyWeaponData } from '../models/custom-lobby-weapon-data';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { notEnoughTeamsValidator } from './validators/notEnoughTeamsValidator';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../../services/error.service';
+import { CustomLobbyArmsRaceWeaponData } from '../models/custom-lobby-armsraceweapon-data';
+import { WeaponHash } from '../enums/weapon-hash.enum';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -69,17 +71,17 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         {
             title: "Default", rows: [
                 {
-                    type: SettingType.string, dataSettingIndex: 1 /*"Name"*/, defaultValue: "",
+                    type: SettingType.string, dataSettingIndex: LobbySetting.Name, defaultValue: "",
                     formControl: new FormControl("", [Validators.required, Validators.maxLength(50), Validators.minLength(3)])
                 },
                 /*{ type: LobbySettingType.option, dataSettingIndex: "Type", required: true, value: "",
                   options: Object.keys(LobbyMapType).slice(Object.keys(LobbyMapType).length / 2) }*/
                 {
-                    type: SettingType.password, dataSettingIndex: 3 /*"Password"*/, defaultValue: "",
+                    type: SettingType.password, dataSettingIndex: LobbySetting.Password, defaultValue: "",
                     formControl: new FormControl("", [Validators.maxLength(100)])
                 },
                 {
-                    type: SettingType.boolean, dataSettingIndex: 8 /*"ShowRanking"*/, defaultValue: true,
+                    type: SettingType.boolean, dataSettingIndex: LobbySetting.ShowRanking, defaultValue: true,
                     formControl: new FormControl(true)
                 }
             ]
@@ -88,15 +90,15 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         {
             title: "Player", rows: [
                 {
-                    type: SettingType.number, dataSettingIndex: 4 /*"StartHealth"*/, defaultValue: 100,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.StartHealth, defaultValue: 100,
                     formControl: new FormControl(100, [Validators.required, Validators.max(100), Validators.min(1)]), onlyInt: true
                 },
                 {
-                    type: SettingType.number, dataSettingIndex: 5 /*"StartArmor"*/, defaultValue: 100,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.StartArmor, defaultValue: 100,
                     formControl: new FormControl(100, [Validators.required, Validators.max(Constants.MAX_POSSIBLE_ARMOR), Validators.min(0)])
                 },
                 {
-                    type: SettingType.number, dataSettingIndex: 6 /*"AmountLifes"*/, defaultValue: 1,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.AmountLifes /*"AmountLifes"*/, defaultValue: 1,
                     formControl: new FormControl(1, [Validators.required, Validators.max(999), Validators.min(1)]), onlyInt: true
                 },
             ]
@@ -105,11 +107,11 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         {
             title: "Teams", rows: [
                 {
-                    type: SettingType.boolean, dataSettingIndex: 7 /*"MixTeamsAfterRound"*/, defaultValue: true,
+                    type: SettingType.boolean, dataSettingIndex: LobbySetting.MixTeamsAfterRound, defaultValue: true,
                     formControl: new FormControl(true, [])
                 },
                 {
-                    type: SettingType.button, dataSettingIndex: 17 /*"Teams"*/, defaultValue: [this.spectatorTeam, this.team1, this.team2],
+                    type: SettingType.button, dataSettingIndex: LobbySetting.Teams, defaultValue: [this.spectatorTeam, this.team1, this.team2],
                     formControl: new FormControl([this.spectatorTeam, this.team1, this.team2],
                         [notEnoughTeamsValidator(this.getSelectedLobbyMaps.bind(this), this.getSelectedLobbyTeams.bind(this))]),
                     action: () => { this.changeToOtherMenu(CustomLobbyMenuType.Teams); }
@@ -121,9 +123,14 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         {
             title: "Weapons", rows: [
                 {
-                    type: SettingType.button, dataSettingIndex: 19, defaultValue: null,
+                    type: SettingType.button, dataSettingIndex: LobbySetting.Weapons, defaultValue: null,
                     formControl: new FormControl(null),
                     action: () => { this.changeToOtherMenu(CustomLobbyMenuType.Weapons); }
+                },
+                {
+                    type: SettingType.button, dataSettingIndex: LobbySetting.ArmsRaceWeapons, defaultValue: null,
+                    formControl: new FormControl(null),
+                    action: () => { this.changeToOtherMenu(CustomLobbyMenuType.ArmsRaceWeapons); }
                 }
             ]
         },
@@ -131,12 +138,12 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         {
             title: "Map", rows: [
                 {
-                    type: SettingType.enum, dataSettingIndex: 16 /*"MapLimitType"*/, defaultValue: "KillAfterTime",
+                    type: SettingType.enum, dataSettingIndex: LobbySetting.MapLimitType, defaultValue: "KillAfterTime",
                     enum: LobbyMapLimitType,
                     formControl: new FormControl(LobbyMapLimitType.KillAfterTime, [])
                 },
                 {
-                    type: SettingType.button, dataSettingIndex: 18, defaultValue: [-1],
+                    type: SettingType.button, dataSettingIndex: LobbySetting.Maps, defaultValue: [-1],
                     formControl: new FormControl([-1]),
                     action: () => { this.changeToOtherMenu(CustomLobbyMenuType.Maps); }
                 }
@@ -146,31 +153,31 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         {
             title: "Times", rows: [
                 {
-                    type: SettingType.number, dataSettingIndex: 9 /*"BombDetonateTimeMs"*/, defaultValue: 45000,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.BombDetonateTimeMs /*"BombDetonateTimeMs"*/, defaultValue: 45000,
                     formControl: new FormControl(45000, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
                 },
                 {
-                    type: SettingType.number, dataSettingIndex: 10 /*"BombDefuseTimeMs"*/, defaultValue: 8000,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.BombDefuseTimeMs, defaultValue: 8000,
                     formControl: new FormControl(8000, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
                 },
                 {
-                    type: SettingType.number, dataSettingIndex: 11 /*"BombPlantTimeMs"*/, defaultValue: 3000,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.BombPlantTimeMs, defaultValue: 3000,
                     formControl: new FormControl(3000, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
                 },
                 {
-                    type: SettingType.number, dataSettingIndex: 12 /*"RoundTime"*/, defaultValue: 240,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.RoundTime, defaultValue: 240,
                     formControl: new FormControl(240, [Validators.required, Validators.max(999999), Validators.min(60)]), onlyInt: true
                 },
                 {
-                    type: SettingType.number, dataSettingIndex: 13 /*"CountdownTime"*/, defaultValue: 5,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.CountdownTime, defaultValue: 5,
                     formControl: new FormControl(5, [Validators.required, Validators.max(60), Validators.min(0)]), onlyInt: true
                 },
                 {
-                    type: SettingType.number, dataSettingIndex: 14 /*"SpawnAgainAfterDeathMs"*/, defaultValue: 400,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.SpawnAgainAfterDeathMs, defaultValue: 400,
                     formControl: new FormControl(400, [Validators.required, Validators.max(999999), Validators.min(0)]), onlyInt: true
                 },
                 {
-                    type: SettingType.number, dataSettingIndex: 15 /*"MapLimitTime"*/, defaultValue: 10,
+                    type: SettingType.number, dataSettingIndex: LobbySetting.MapLimitTime, defaultValue: 10,
                     formControl: new FormControl(10, [Validators.required, Validators.max(9999), Validators.min(0)]), onlyInt: true
                 },
             ]
@@ -203,6 +210,21 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+
+
+        // DEBUG //
+        this.createLobbyDatas = {
+            0: [
+                { 0: WeaponHash.Advancedrifle, 1: 99, 2: 99, 3: 99 },
+                { 0: WeaponHash.Appistol, 1: 99, 2: 99, 3: 99 },
+                { 0: WeaponHash.Assaultrifle, 1: 99, 2: 99, 3: 99 },
+                { 0: WeaponHash.Assaultsmg, 1: 99, 2: 99, 3: 99 }
+            ],
+            1: [],
+            2: []
+        };
+        this.setSelectedLobbyWeapons(this.createLobbyDatas[1]);
+        this.setSelectedLobbyArmsRaceWeapons(this.createLobbyDatas[2]);
     }
 
     ngOnDestroy() {
@@ -331,6 +353,8 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
 
             if (menuType == CustomLobbyMenuType.Weapons) {
                 this.setSelectedLobbyWeapons(this.createLobbyDatas[1]);
+            } else if (menuType == CustomLobbyMenuType.ArmsRaceWeapons) {
+                this.setSelectedLobbyArmsRaceWeapons(this.createLobbyDatas[2]);
             }
 
             this.inMenu = menuType;
@@ -356,6 +380,9 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                     break;
                 case CustomLobbyMenuType.Teams:
                     this.setSelectedLobbyTeams(event as CustomLobbyTeamData[]);
+                    break;
+                case CustomLobbyMenuType.ArmsRaceWeapons:
+                    this.setSelectedLobbyArmsRaceWeapons(event as CustomLobbyArmsRaceWeaponData[]);
                     break;
             }
         }
@@ -404,7 +431,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     getLobbyName(): string {
         return this.settingPanel
             .find(p => p.title === "Default").rows
-            .find(p => p.dataSettingIndex === 1 /*"Name"*/).formControl.value as string;
+            .find(p => p.dataSettingIndex === LobbySetting.Name).formControl.value as string;
     }
 
     getSelectedLobbyTeams() {
@@ -412,13 +439,13 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             return undefined;
         return this.settingPanel
             .find(p => p.title === "Teams").rows
-            .find(p => p.dataSettingIndex === 17 /*"Teams"*/).formControl.value;
+            .find(p => p.dataSettingIndex === LobbySetting.Teams).formControl.value;
     }
 
     setSelectedLobbyTeams(teams: CustomLobbyTeamData[]) {
         this.settingPanel
             .find(p => p.title === "Teams").rows
-            .find(p => p.dataSettingIndex === 17 /*"Teams"*/).formControl.setValue(teams);
+            .find(p => p.dataSettingIndex === LobbySetting.Teams).formControl.setValue(teams);
         this.changeDetector.detectChanges();
     }
 
@@ -427,7 +454,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             return undefined;
         return this.settingPanel
             .find(p => p.title === "Map").rows
-            .find(p => p.dataSettingIndex === 18 /*"Map"*/).formControl.value;
+            .find(p => p.dataSettingIndex === LobbySetting.Maps).formControl.value;
     }
 
     getSelectedLobbyWeapons() {
@@ -435,20 +462,35 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             return undefined;
         return this.settingPanel
             .find(p => p.title === "Weapons").rows
-            .find(p => p.dataSettingIndex === 19 /*"Weapons"*/).formControl.value;
+            .find(p => p.dataSettingIndex === LobbySetting.Weapons).formControl.value;
+    }
+
+    getSelectedLobbyArmsRaceWeapons() {
+        if (!this.settingPanel)
+            return undefined;
+        return this.settingPanel
+            .find(p => p.title === "Weapons").rows
+            .find(p => p.dataSettingIndex === LobbySetting.ArmsRaceWeapons).formControl.value;
     }
 
     setSelectedLobbyMaps(maps: number[]) {
         this.settingPanel
             .find(p => p.title === "Map").rows
-            .find(p => p.dataSettingIndex === 18 /*"Map"*/).formControl.setValue(maps);
+            .find(p => p.dataSettingIndex === LobbySetting.Maps).formControl.setValue(maps);
         this.changeDetector.detectChanges();
     }
 
     setSelectedLobbyWeapons(weapons: CustomLobbyWeaponData[]) {
         this.settingPanel
             .find(p => p.title === "Weapons").rows
-            .find(p => p.dataSettingIndex === 19 /*"Weapons"*/).formControl.setValue(weapons);
+            .find(p => p.dataSettingIndex === LobbySetting.Weapons).formControl.setValue(weapons);
+        this.changeDetector.detectChanges();
+    }
+
+    setSelectedLobbyArmsRaceWeapons(weapons: CustomLobbyArmsRaceWeaponData[]) {
+        this.settingPanel
+            .find(p => p.title === "Weapons").rows
+            .find(p => p.dataSettingIndex === LobbySetting.ArmsRaceWeapons).formControl.setValue(weapons);
         this.changeDetector.detectChanges();
     }
 }

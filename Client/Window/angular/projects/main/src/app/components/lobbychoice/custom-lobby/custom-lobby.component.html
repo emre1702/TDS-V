@@ -114,6 +114,15 @@
 (backClicked)="goBackToMainSettings($event)">
 </app-custom-lobby-weapons-menu>
 
+<app-custom-lobby-armsraceweapons-menu
+*ngIf="inMenu == customLobbyMenuType.ArmsRaceWeapons"
+[@settingsShowHideAnimation]
+[creating]="creating"
+[selectedWeapons]="getSelectedLobbyArmsRaceWeapons()"
+[allWeapons]="createLobbyDatas != undefined ? createLobbyDatas[0] : []"
+(backClicked)="goBackToMainSettings($event)">
+</app-custom-lobby-armsraceweapons-menu>
+
 <div id="main-container" class="container" [@lobbyShowHideAnimation]
 *ngIf="inMenu == customLobbyMenuType.Main && !loadingData">
   <div matRipple class="lobby mat-app-background" (click)="showLobbyCreating()">

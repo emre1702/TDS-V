@@ -1,4 +1,5 @@
 ﻿using BonusBotConnector.Client;
+using System.Linq;
 using TDS_Server.Core.Damagesystem;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
@@ -30,7 +31,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                   dataSyncHandler, eventsHandler, bonusBotConnectorClient, bansHandler)
         {
             AmountLifes = Entity.FightSettings?.AmountLifes ?? 0;
-            DmgSys = new Damagesys(entity.LobbyWeapons, entity.LobbyKillingspreeRewards, modAPI, loggingHandler, weaponDatasLoadingHandler, langHelper);
+            DmgSys = new Damagesys(entity.LobbyWeapons, entity.LobbyKillingspreeRewards, modAPI, loggingHandler, weaponDatasLoadingHandler);
         }
 
         #endregion Public Constructors

@@ -113,6 +113,7 @@ import { GangWindowVehiclesComponent } from './components/gang-window/gang-windo
 import { GangWindowAllGangsComponent } from './components/gang-window/gang-window-all-gangs/gang-window-all-gangs.component';
 import { GangWindowRankPermissionsComponent } from './components/gang-window/gang-window-rank-permissions/gang-window-rank-permissions.component';
 import { GangWindowMainmenuComponent } from './components/gang-window/gang-window-mainmenu/gang-window-mainmenu.component';
+import { CustomLobbyArmsRaceWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-armsraceweapons-menu/custom-lobby-armsraceweapons-menu.component';
 
 @NgModule({
   declarations: [
@@ -165,6 +166,7 @@ import { GangWindowMainmenuComponent } from './components/gang-window/gang-windo
     CustomLobbyMapsMenuComponent,
     ChatComponent,
     CustomLobbyWeaponsMenuComponent,
+    CustomLobbyArmsRaceWeaponsMenuComponent,
     CharCreatorComponent,
     CharCreatorMainmenuComponent,
     CharCreatorHeritageComponent,

@@ -41,11 +41,11 @@ import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
     ],
 })
 export class AppComponent {
-    started = false;
+    started = true;
 
     showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = false;
+    showLobbyChoice = true;
     showTeamChoice = false;
     showRankings = false;
     showHUD = false;

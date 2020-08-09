@@ -808,6 +808,14 @@ You need to set the target for this mode.`;
     RankUp = "Rank up";
     RankDown = "Rank down";
     Rank = "Rank";
+    ArmsRaceWeapons = "Arms race weapons";
+    Clear = "Clear";
+    AtKill = "At kill";
+    Win = "Win";
+    ArmsRaceWeaponsDuplicateError = "There are duplicates in your selected weapons and 'At kill'.\nEvery 'At kill' value has to be unique.";
+    ArmsRaceWeaponsFirstWeaponError = "The first weapon with 'At kill' = 0 is missing.";
+    ArmsRaceWeaponsWinError = "The win condition was missing and has been added.\nModify the 'At kill' value of it if you want.";
+    ArmsRaceWeaponsWinNotLastError = "The win condition has to be the end.\nThe 'At kill' value got fixed, modify it if you want.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

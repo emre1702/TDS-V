@@ -2028,6 +2028,31 @@ namespace TDS_Server.Database.Entity
                 new LobbyWeapons { Hash = WeaponHash.Stone_hatchet, Lobby = -1, Ammo = 9999 }
             );
 
+            modelBuilder.Entity<LobbyArmsRaceWeapons>().HasData(
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 0, WeaponHash = WeaponHash.Microsmg },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 1, WeaponHash = WeaponHash.Assaultsmg },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 2, WeaponHash = WeaponHash.Machinepistol },
+
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 3, WeaponHash = WeaponHash.Assaultrifle },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 4, WeaponHash = WeaponHash.Carbinerifle },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 5, WeaponHash = WeaponHash.Advancedrifle },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 6, WeaponHash = WeaponHash.Specialcarbine },
+
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 7, WeaponHash = WeaponHash.Pumpshotgun },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 8, WeaponHash = WeaponHash.Assaultshotgun },
+
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 9, WeaponHash = WeaponHash.Heavysniper },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 10, WeaponHash = WeaponHash.Marksmanrifle },
+
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 11, WeaponHash = WeaponHash.Combatmg },
+
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 12, WeaponHash = WeaponHash.Combatpistol },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 13, WeaponHash = WeaponHash.Pistol50 },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 14, WeaponHash = WeaponHash.Heavypistol },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 15, WeaponHash = WeaponHash.Revolver },
+                new LobbyArmsRaceWeapons { LobbyId = -1, AtKill = 16, WeaponHash = null }
+            );
+
             modelBuilder.Entity<Maps>().HasData(
                 new Maps { Id = -6, Name = "All Arms Races", CreatorId = -1 },
                 new Maps { Id = -5, Name = "All Gangwars", CreatorId = -1 },

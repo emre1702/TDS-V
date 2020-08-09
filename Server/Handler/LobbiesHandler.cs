@@ -166,6 +166,11 @@ namespace TDS_Server.Handler
                         Damage = w.Damage,
                         HeadMultiplicator = w.HeadMultiplicator
                     }).ToHashSet(),
+                    ArmsRaceWeapons = data.ArmsRaceWeapons.Select(w => new LobbyArmsRaceWeapons 
+                    {
+                        WeaponHash = w.WeaponHash,
+                        AtKill = w.AtKill
+                    }).ToHashSet(),
                     Password = data.Password,
                     //Todo: Add ArmsRaceWeapons (first in Angular)
                     Teams = data.Teams.Select((t, index) =>
@@ -261,7 +266,14 @@ namespace TDS_Server.Handler
                         Ammo = w.Ammo,
                         Damage = w.Damage,
                         HeadshotMultiplicator = w.HeadMultiplicator
+                    }).ToList(),
+
+                    ArenaArmsRaceWeaponDatas = Arena.Entity.ArmsRaceWeapons.Select(w => new CustomLobbyArmsRaceWeaponData
+                    {
+                        WeaponHash = w.WeaponHash,
+                        AtKill = w.AtKill
                     }).ToList()
+                    
                 };
 
                 _customLobbyDatas = _serializer.ToBrowser(model);
