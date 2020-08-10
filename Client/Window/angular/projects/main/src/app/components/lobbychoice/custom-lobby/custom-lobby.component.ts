@@ -214,7 +214,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
 
 
         // DEBUG //
-        this.createLobbyDatas = {
+        /*this.createLobbyDatas = {
             0: [
                 { 0: WeaponHash.Advancedrifle, 1: 99, 2: 99, 3: 99 },
                 { 0: WeaponHash.Appistol, 1: 99, 2: 99, 3: 99 },
@@ -225,7 +225,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             2: []
         };
         this.setSelectedLobbyWeapons(this.createLobbyDatas[1]);
-        this.setSelectedLobbyArmsRaceWeapons(this.createLobbyDatas[2]);
+        this.setSelectedLobbyArmsRaceWeapons(this.createLobbyDatas[2]);*/
     }
 
     ngOnDestroy() {

@@ -42,11 +42,11 @@ import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
     ],
 })
 export class AppComponent {
-    started = true;
+    started = false;
 
     showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = true;
+    showLobbyChoice = false;
     showTeamChoice = false;
     showRankings = false;
     showHUD = false;
