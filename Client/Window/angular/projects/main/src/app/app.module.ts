@@ -114,6 +114,7 @@ import { GangWindowAllGangsComponent } from './components/gang-window/gang-windo
 import { GangWindowRankPermissionsComponent } from './components/gang-window/gang-window-rank-permissions/gang-window-rank-permissions.component';
 import { GangWindowMainmenuComponent } from './components/gang-window/gang-window-mainmenu/gang-window-mainmenu.component';
 import { CustomLobbyArmsRaceWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-armsraceweapons-menu/custom-lobby-armsraceweapons-menu.component';
+import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
 
 @NgModule({
   declarations: [
@@ -143,6 +144,7 @@ import { CustomLobbyArmsRaceWeaponsMenuComponent } from './components/lobbychoic
     UserpanelSettingsNormalComponent,
     UserpanelStatsGeneralComponent,
     UserpanelApplicationComponent,
+    CustomMatSnackBarComponent,
 
     InputTypeDirective,
     TextareaTypeDirective,
@@ -237,7 +239,9 @@ import { CustomLobbyArmsRaceWeaponsMenuComponent } from './components/lobbychoic
         warn: "rgba(244,67,54,1)"
     })
   ],
-  entryComponents: [LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent],
+  entryComponents: [
+      LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent, CustomMatSnackBarComponent
+  ],
   providers: [
     OrderByPipe,
     { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },

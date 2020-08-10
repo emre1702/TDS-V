@@ -14,6 +14,7 @@ import { UserpanelSettingKey } from './components/userpanel/enums/userpanel-sett
 import { ThemeSettings } from './interfaces/theme-settings';
 import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
+import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
 
 @Component({
     selector: 'app-root',
@@ -136,7 +137,7 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ShowCooldown, () => {
-            snackBar.open("Cooldown", undefined, { duration: 3000, panelClass: "mat-app-background" });
+            snackBar.openFromComponent(CustomMatSnackBarComponent, { data: "Cooldown", duration: 3000 });
         });
 
         rageConnector.listen(DFromClientEvent.SyncUsernameChange, (newName: string) => {

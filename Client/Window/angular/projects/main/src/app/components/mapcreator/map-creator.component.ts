@@ -21,6 +21,7 @@ import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
 import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
 import { isNumber } from 'util';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../services/error.service';
+import { CustomMatSnackBarComponent } from '../../extensions/customMatSnackbar';
 
 enum MapCreatorNav {
     Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, Vehicles, BombPlaces, Target
@@ -377,10 +378,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
         this.rageConnector.callCallbackServer(DToServerEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
-            this.snackBar.open(this.settings.Lang[errName], "OK", {
-                duration: undefined,
-                panelClass: "mat-app-background"
-            });
+            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+                { data: this.settings.Lang[errName], duration: undefined });
         });
     }
 
@@ -417,10 +416,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.fixData();
         this.rageConnector.callCallbackServer(DToServerEvent.SaveMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
-            this.snackBar.open(this.settings.Lang[errName], "OK", {
-                duration: undefined,
-                panelClass: "mat-app-background"
-            });
+            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+                { data: this.settings.Lang[errName], duration: undefined });
         });
     }
 
@@ -445,10 +442,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.nameControl.setValue(this.data[1]);
         this.mapTypeControl.setValue(this.data[2]);
         this.fixData();
-        this.snackBar.open(this.settings.Lang.SavedMapLoadSuccessful, "OK", {
-            duration: 5000,
-            panelClass: "mat-app-background"
-        });
+        this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+            { data: this.settings.Lang.SavedMapLoadSuccessful, duration: 5000 });
         this.changeDetector.detectChanges();
     }
 

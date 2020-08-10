@@ -7,6 +7,7 @@ import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { UserpanelSettingsSpecialType } from '../enums/userpanel-settings-special-type.enum';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
+import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
 
 @Component({
     selector: 'app-userpanel-settings-special',
@@ -100,17 +101,12 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
     }
 
     private showSaveError(err: string) {
-        this.snackBar.open(err, "OK", {
-            duration: undefined,
-            panelClass: "mat-app-background"
-        });
+        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: err, duration: undefined });
     }
 
     private showSaveSuccess(type: UserpanelSettingsSpecialType) {
-        this.snackBar.open(this.settings.Lang[UserpanelSettingsSpecialType[type] + "SettingSaved"], "OK", {
-            duration: 3000,
-            panelClass: "mat-app-background"
-        });
+        this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+            { data: this.settings.Lang[UserpanelSettingsSpecialType[type] + "SettingSaved"], duration: 3000 });
     }
 
     private loadSettings() {

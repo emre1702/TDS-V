@@ -21,6 +21,7 @@ import { notEnoughTeamsValidator } from './validators/notEnoughTeamsValidator';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../../services/error.service';
 import { CustomLobbyArmsRaceWeaponData } from '../models/custom-lobby-armsraceweapon-data';
 import { WeaponHash } from '../enums/weapon-hash.enum';
+import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -296,10 +297,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.rageConnector.callCallbackServer(DToServerEvent.CreateCustomLobby, [JSON.stringify(data)], (error: string) => {
             if (!error || error == "")
                 return;
-            this.snackBar.open(error, "OK", {
-                duration: 6000,
-                panelClass: "mat-app-background"
-            });
+            this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: error, duration: 6000 });
         });
     }
 
@@ -319,7 +317,8 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                 if (inputedPassword == undefined)
                     return;
                 if (inputedPassword == false) {
-                    this.snackBar.open(this.settings.Lang.PasswordIncorrect, "OK", { duration: 7000, panelClass: "mat-app-background" });
+                    this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+                        { data: this.settings.Lang.PasswordIncorrect, duration: 7000 });
                     return;
                 }
                 this.rageConnector.callServer(DToServerEvent.JoinLobbyWithPassword, clickedLobbyData[0], inputedPassword);

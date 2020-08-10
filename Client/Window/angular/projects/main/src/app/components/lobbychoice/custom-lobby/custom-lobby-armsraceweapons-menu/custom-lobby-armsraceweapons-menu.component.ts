@@ -6,6 +6,7 @@ import { WeaponType } from '../../enums/weapon-type.enum';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { MatTableDataSource, MatSort, MatSnackBar } from '@angular/material';
 import { CustomLobbyArmsRaceWeaponData } from '../../models/custom-lobby-armsraceweapon-data';
+import { CustomMatSnackBarComponent } from 'projects/main/src/app/extensions/customMatSnackbar';
 
 @Component({
     selector: 'app-custom-lobby-armsraceweapons-menu',
@@ -132,8 +133,11 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
     private fixData(): boolean {
         const firstWeapon = this.selectedWeapons.find(w => w[1] == 0);
         if (!firstWeapon) {
-            this.snackBar.open(this.settings.Lang.ArmsRaceWeaponsFirstWeaponError, "OK",
-                { duration: undefined, panelClass: ["mat-app-background", "snackbar"] });
+            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+                {
+                    data: this.settings.Lang.ArmsRaceWeaponsFirstWeaponError,
+                    duration: undefined
+                });
             return false;
         }
 
@@ -147,8 +151,8 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
         });
 
         if (hasDuplicates) {
-            this.snackBar.open(this.settings.Lang.ArmsRaceWeaponsDuplicateError, "OK",
-                { duration: undefined, panelClass: ["mat-app-background", "snackbar"] });
+            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+                { data: this.settings.Lang.ArmsRaceWeaponsDuplicateError, duration: undefined });
             return false;
         }
 
@@ -157,14 +161,14 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
         const endEntry = this.selectedWeapons.find(w => !w[0]);
         if (!endEntry) {
             this.selectedWeapons.push({ 0: null, 1: maxSelectedAtKill + 1 });
-            this.snackBar.open(this.settings.Lang.ArmsRaceWeaponsWinError, "OK",
-                { duration: undefined, panelClass: ["mat-app-background", "snackbar"] });
+            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+                { data: this.settings.Lang.ArmsRaceWeaponsWinError, duration: undefined });
             return false;
         }
         if (endEntry[1] != maxSelectedAtKill) {
             endEntry[1] = maxSelectedAtKill + 1;
-            this.snackBar.open(this.settings.Lang.ArmsRaceWeaponsWinNotLastError, "OK",
-                { duration: undefined, panelClass: ["mat-app-background", "snackbar"] });
+            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+                { data: this.settings.Lang.ArmsRaceWeaponsWinNotLastError, duration: undefined });
             return false;
         }
 

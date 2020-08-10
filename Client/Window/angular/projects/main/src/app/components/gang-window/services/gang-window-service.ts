@@ -13,6 +13,7 @@ import { GangRank } from '../models/gang-rank';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { GangCommand } from '../enums/gang-command.enum';
 import { AreYouSureDialog } from '../../../dialog/are-you-sure-dialog';
+import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
 
 @Injectable()
 export class GangWindowService {
@@ -56,15 +57,15 @@ export class GangWindowService {
     }
 
     showSuccess(msg: string) {
-        this.snackBar.open(msg, "OK", { duration: 5000, panelClass: "mat-app-background" });
+        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: msg, duration: 5000 });
     }
 
     showError(msg: string) {
-        this.snackBar.open(msg, "OK", { duration: undefined, panelClass: "mat-app-background" });
+        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: msg, duration: undefined });
     }
 
     showInfo(msg: string) {
-        this.snackBar.open(msg, "OK", { duration: undefined, panelClass: "mat-app-background" });
+        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: msg, duration: undefined });
     }
 
     executeCommand(command: GangCommand, args: any[], onSuccess: () => void, withConfirm: boolean = true, showSuccess: boolean = true) {

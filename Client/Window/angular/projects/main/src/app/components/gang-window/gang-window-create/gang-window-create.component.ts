@@ -10,6 +10,7 @@ import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { MatSnackBar } from '@angular/material';
 import { GangWindowService } from '../services/gang-window-service';
 import { GangCommand } from '../enums/gang-command.enum';
+import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
 
 @Component({
     selector: 'app-gang-window-create',
@@ -69,7 +70,8 @@ export class GangWindowCreateComponent implements OnInit {
 
         const data = this.createFormGroup.getRawValue();
         this.gangWindowService.executeCommand(GangCommand.Create, [JSON.stringify(data)], () => {
-            this.snackBar.open(this.settings.Lang.GangSuccessfullyCreatedInfo, undefined, { duration: undefined, panelClass: "mat-app-background" });
+            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+                { data: this.settings.Lang.GangSuccessfullyCreatedInfo, duration: undefined });
             this.back.emit();
         }, true, false);
     }
