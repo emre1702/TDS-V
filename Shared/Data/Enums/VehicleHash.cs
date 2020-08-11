@@ -688,6 +688,21 @@
         Deathbike = 4267640610,
         Bison = 4278019151,
         Regina = 4280472072,
-        Exemplar = 4289813342
+        Exemplar = 4289813342,
+        OpenWheel1 = 0x58F77553,
+        Coquette4 = 0x98F65A5E,
+        Tigon = 0xAF0B8D48,
+        Penumbra2 = 0xDA5EC7DA,
+        Landstalker2 = 0xCE0B9F22,
+        Yosemite3 = 0x409D787,
+        Club = 0x82E47E85,
+        Gauntlet5 = 0x817AFAAD,
+        Dukes3 = 0x7F3415E3,
+        Youga3 = 0x6B73A9BE,
+        Glendale2 = 0xC98BBAD6,
+        Seminole2 = 0x94114926,
+        OpenWheel2 = 0x4669D038,
+        Peyote3 = 0x4201A843,
+        Manana2 = 0x665F785D
     }
 }
