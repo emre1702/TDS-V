@@ -1,11 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Player;
@@ -21,8 +24,10 @@ namespace TDS_Server.Handler.Entities.Utility
         private readonly GangsHandler _gangsHandler;
         private readonly IModAPI _modAPI;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly LobbiesHandler? _lobbiesHandler;
         private TDSTimer? _checkAtTarget;
         private int _playerNotAtTargetCounter;
+        private IBlip? _blip;
 
         #endregion Private Fields
 
@@ -45,15 +50,21 @@ namespace TDS_Server.Handler.Entities.Utility
 
         [ActivatorUtilitiesConstructor]
         public GangwarArea(GangwarAreas entity, MapDto map, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler)
             : this(map, modAPI, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = entity;
+            _lobbiesHandler = lobbiesHandler;
 
             if (entity.OwnerGangId != gangsHandler.None.Entity.Id)
             {
                 Owner = _gangsHandler.GetById(entity.OwnerGangId);
             }
+
+            dbContext.Attach(entity);
+
+            CreateGangLobbyMapInfo();
+
         }
 
         #endregion Public Constructors
@@ -65,12 +76,12 @@ namespace TDS_Server.Handler.Entities.Utility
 
         public bool HasCooldown
         {
-            get => Entity is null ? false : (DateTime.UtcNow - Entity.LastAttacked).TotalMinutes < _settingsHandler.ServerSettings.GangwarAreaAttackCooldownMinutes;
+            get => !(Entity is null) && (DateTime.UtcNow - Entity.LastAttacked).TotalMinutes < _settingsHandler.ServerSettings.GangwarAreaAttackCooldownMinutes;
             set
             {
                 if (Entity is null)
                     return;
-                if (value)
+                if (value) 
                     Entity.LastAttacked = DateTime.UtcNow;
                 else
                     Entity.LastAttacked = DateTime.UtcNow.AddMinutes(-_settingsHandler.ServerSettings.GangwarAreaAttackCooldownMinutes);
@@ -98,20 +109,23 @@ namespace TDS_Server.Handler.Entities.Utility
             {
                 await ExecuteForDBAsync(async dbContext =>
                 {
-                    dbContext.Attach(Entity);
-
                     ++Entity.AttackCount;
                     HasCooldown = true;
 
-                    _modAPI.Thread.QueueIntoMainThread(() =>
-                    {
-                        if (conquered)
-                            SetConquered(dbContext, true);
-                        else
-                            SetDefended(dbContext);
-                    });
+                    if (conquered)
+                        SetConquered(dbContext);
+                    else
+                        SetDefended(dbContext);
 
                     await dbContext.SaveChangesAsync();
+                });
+
+                _modAPI.Thread.QueueIntoMainThread(() =>
+                {
+                    CreateGangLobbyMapInfo();
+ 
+                    //Todo: Inform the owner
+                    //Todo: Inform everyone + attacker
                 });
             }
             ClearAttack();
@@ -125,13 +139,16 @@ namespace TDS_Server.Handler.Entities.Utility
 
                 await ExecuteForDBAsync(async dbContext =>
                 {
-                    dbContext.Attach(Entity);
-
                     HasCooldown = true;
 
-                    _modAPI.Thread.QueueIntoMainThread(() => SetConquered(dbContext, false));
+                    SetConquered(dbContext);
 
                     await dbContext.SaveChangesAsync();
+                });
+
+                _modAPI.Thread.QueueIntoMainThread(() =>
+                {
+                    //Todo: Inform everyone + attacker
                 });
             }
         }
@@ -213,7 +230,7 @@ namespace TDS_Server.Handler.Entities.Utility
             lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.TargetEmpty);*/
         }
 
-        private void SetConquered(TDSDbContext dbContext, bool outputInfos)
+        private void SetConquered(TDSDbContext dbContext)
         {
             if (Entity is { })
             {
@@ -223,15 +240,6 @@ namespace TDS_Server.Handler.Entities.Utility
 
                 Entity.OwnerGangId = Owner!.Entity.Id;
                 Entity.DefendCount = 0;
-
-                if (outputInfos)
-                {
-                    if (Owner is { })
-                    {
-                        //Todo: Inform the owner
-                    }
-                    //Todo: Inform everyone + attacker
-                }
             }
         }
 
@@ -243,6 +251,25 @@ namespace TDS_Server.Handler.Entities.Utility
 
                 //Todo: Inform everyone + owner + attacker
             }
+        }
+
+        public void CreateGangLobbyMapInfo()
+        {
+            if (_blip is { })
+                _blip.Delete();
+            if (_lobbiesHandler is null)
+                return;
+
+            _blip = _modAPI.Blip.Create(
+                sprite: 84, 
+                position: Map.Target, 
+                scale: 3f, 
+                color: Owner?.Entity.BlipColor ?? 4, 
+                name: Map.Info.Name,
+                alpha: (byte)(HasCooldown ? 120 : 255), 
+                drawDistance: 100f,
+                shortRange: true, 
+                dimension: _lobbiesHandler.GangLobby.Dimension);
         }
 
         #endregion Private Methods
