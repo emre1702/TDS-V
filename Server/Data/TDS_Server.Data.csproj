@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
@@ -11,15 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Interfaces\ModAPI\Events\**" />
     <Compile Remove="Models\MainMenu\**" />
-    <EmbeddedResource Remove="Interfaces\ModAPI\Events\**" />
     <EmbeddedResource Remove="Models\MainMenu\**" />
-    <None Remove="Interfaces\ModAPI\Events\**" />
     <None Remove="Models\MainMenu\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AltV.Net.Async" Version="1.38.2-rc" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
   </ItemGroup>
 

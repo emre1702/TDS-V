@@ -7,14 +7,14 @@ namespace TDS_Server.RAGEAPI.Extensions
     {
         #region Public Methods
 
-        public static Vector3 ToMod(this Position3D pos)
+        public static Vector3 ToMod(this Position pos)
         {
             return new Vector3(pos.X, pos.Y, pos.Z);
         }
 
-        public static Position3D ToTDS(this Vector3 pos)
+        public static Position ToTDS(this Vector3 pos)
         {
-            return new Position3D(pos.X, pos.Y, pos.Z);
+            return new Position(pos.X, pos.Y, pos.Z);
         }
 
         #endregion Public Methods

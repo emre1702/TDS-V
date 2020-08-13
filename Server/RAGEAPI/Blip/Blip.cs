@@ -21,17 +21,17 @@ namespace TDS_Server.RAGEAPI.Blip
 
         #region Public Properties
 
-        public new Position3D Position
+        public new Position Position
         {
-            get => new Position3D(base.Position.X, base.Position.Y, base.Position.Z);
+            get => new Position(base.Position.X, base.Position.Y, base.Position.Z);
             set => base.Position = new Vector3(value.X, value.Y, value.Z);
         }
 
         public ushort RemoteId => Handle.Value;
 
-        public new Position3D Rotation
+        public new Position Rotation
         {
-            get => new Position3D(base.Rotation.X, base.Rotation.Y, base.Rotation.Z);
+            get => new Position(base.Rotation.X, base.Rotation.Y, base.Rotation.Z);
             set => base.Rotation = new Vector3(value.X, value.Y, value.Z);
         }
 
@@ -39,7 +39,7 @@ namespace TDS_Server.RAGEAPI.Blip
 
         #region Public Methods
 
-        public void AttachTo(ITDSPlayer player, PedBone bone, Position3D? positionOffset, Position3D? rotationOffset)
+        public void AttachTo(ITDSPlayer player, PedBone bone, Position? positionOffset, Position? rotationOffset)
         {
             if (!(player.ModPlayer is Player.Player modPlayer))
                 return;

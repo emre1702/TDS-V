@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Xml.Serialization;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -6,22 +7,22 @@ using TDS_Shared.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map.Creator
 {
-    public class Position3DDto
+    public class PositionDto
     {
         #region Public Constructors
 
-        public Position3DDto()
+        public PositionDto()
         {
         }
 
-        public Position3DDto(MapCreatorPosition pos)
+        public PositionDto(MapCreatorPosition pos)
         {
             X = pos.PosX;
             Y = pos.PosY;
             Z = pos.PosZ;
         }
 
-        public Position3DDto(Position3D pos)
+        public PositionDto(TDS_Shared.Data.Models.GTA.Position pos)
         {
             X = pos.X;
             Y = pos.Y;
@@ -62,6 +63,11 @@ namespace TDS_Server.Data.Models.Map.Creator
                 PosZ = Z,
                 OwnerRemoteId = ownerRemoteId
             };
+        }
+
+        public AltV.Net.Data.Position ToAltV()
+        {
+            return new AltV.Net.Data.Position(X, Y, Z);
         }
 
         #endregion Public Methods

@@ -70,14 +70,14 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
                 ModAPI.Graphics.DrawScaleformMovie(_handle, x, y, width, height, 255, 255, 255, 255);
         }
 
-        public void Render3D(Position3D position, Position3D rotation, Position3D scale)
+        public void Render3D(Position position, Position rotation, Position scale)
         {
             OnUpdate();
             if (IsLoaded && IsValid)
                 ModAPI.Graphics.DrawScaleformMovie3dNonAdditive(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
         }
 
-        public void Render3DAdditive(Position3D position, Position3D rotation, Position3D scale)
+        public void Render3DAdditive(Position position, Position rotation, Position scale)
         {
             OnUpdate();
             if (IsLoaded && IsValid)

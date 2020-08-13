@@ -1,14 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AltV.Net.Async;
+using System.ComponentModel.DataAnnotations;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Server;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
@@ -23,7 +23,6 @@ namespace TDS_Server.Core.Manager.PlayerManager
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly EventsHandler _eventsHandler;
         private readonly LangHelper _langHelper;
-        private readonly IModAPI _modAPI;
         private readonly ServerStartHandler _serverStartHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
@@ -31,16 +30,16 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         #region Public Constructors
 
-        public RegisterHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler,
+        public RegisterHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler,
             DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler, LangHelper langHelper,
             ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
-            (_modAPI, _eventsHandler, _databasePlayerHelper, _serverStartHandler) = (modAPI, eventsHandler, databasePlayerHelper, serverStartHandler);
+            (_eventsHandler, _databasePlayerHelper, _serverStartHandler) = (eventsHandler, databasePlayerHelper, serverStartHandler);
             _langHelper = langHelper;
             _tdsPlayerHandler = tdsPlayerHandler;
 
-            modAPI.ClientEvent.Add<IPlayer, string, string, string, int>(ToServerEvent.TryRegister, this, TryRegister);
+            AltAsync.OnClient<ITDSPlayer, string, string, string, int>(ToServerEvent.TryRegister, TryRegister);
         }
 
         #endregion Public Constructors
@@ -49,8 +48,6 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language)
         {
-            if (player.ModPlayer is null)
-                return;
             if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
                 email = null;
             if (int.TryParse(username, out int result))
@@ -59,7 +56,6 @@ namespace TDS_Server.Core.Manager.PlayerManager
             Players dbPlayer = new Players
             {
                 Name = username,
-                SCName = player.ModPlayer.SocialClubName,
                 Password = Utils.HashPasswordServer(password),
                 Email = email,
                 IsVip = false,
@@ -110,10 +106,9 @@ namespace TDS_Server.Core.Manager.PlayerManager
             _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
         }
 
-        public async void TryRegister(IPlayer modPlayer, string username, string password, string email, int language)
+        public async void TryRegister(ITDSPlayer player, string username, string password, string email, int language)
         {
-            var player = _tdsPlayerHandler.GetNotLoggedIn(modPlayer);
-            if (player is null)
+            if (player.LoggedIn)
                 return;
             if (player.TryingToLoginRegister)
                 return;
@@ -123,27 +118,22 @@ namespace TDS_Server.Core.Manager.PlayerManager
             {
                 if (!_serverStartHandler.IsReadyForLogin)
                 {
-                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
+                    await AltAsync.Do(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
                     return;
                 }
 
-                if (player.ModPlayer is null)
-                    return;
                 if (username.Length < 3 || username.Length > 20)
                     return;
-                string? scName = null;
-                _modAPI.Thread.QueueIntoMainThread(() => scName = player.ModPlayer.SocialClubName);
-                if (await _databasePlayerHelper.DoesPlayerWithScnameExist(scName!))
-                    return;
+
                 if (await _databasePlayerHelper.DoesPlayerWithNameExist(username))
                 {
-                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
+                    await AltAsync.Do(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
                     return;
                 }
                 char? invalidChar = Utils.CheckNameValid(username);
                 if (invalidChar.HasValue)
                 {
-                    _modAPI.Thread.QueueIntoMainThread(()
+                    await AltAsync.Do(()
                         => player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value)));
                     return;
                 }

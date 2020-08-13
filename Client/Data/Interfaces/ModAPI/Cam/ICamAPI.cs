@@ -15,11 +15,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
 
         void DoScreenFadeOut(int duration);
 
-        Position3D GetGameplayCamCoord();
+        Position GetGameplayCamCoord();
 
         float GetGameplayCamFov();
 
-        Position3D GetGameplayCamRot(/* 0 */);
+        Position GetGameplayCamRot(/* 0 */);
 
         void Render(bool render, bool ease, int easeTime);
 

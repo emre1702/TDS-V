@@ -10,10 +10,10 @@ namespace TDS_Client.Handler.MapCreator
         #region Public Fields
 
         public Color Color;
-        public Position3D Direction;
-        public Position3D Position;
-        public Position3D Rotation;
-        public Position3D Scale;
+        public Position Direction;
+        public Position Position;
+        public Position Rotation;
+        public Position Scale;
         public MarkerType Type;
 
         #endregion Public Fields
@@ -26,7 +26,7 @@ namespace TDS_Client.Handler.MapCreator
 
         #region Public Constructors
 
-        public Marker(IModAPI modAPI, MarkerType type, Position3D pos, Position3D dir, Position3D rot, Position3D scale, Color col)
+        public Marker(IModAPI modAPI, MarkerType type, Position pos, Position dir, Position rot, Position scale, Color col)
         {
             _modAPI = modAPI;
 

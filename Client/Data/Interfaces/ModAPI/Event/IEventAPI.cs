@@ -36,7 +36,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Event
 
     public delegate void TickNametagDelegate(List<TickNametagData> nametagDatas);
 
-    public delegate void WeaponShotDelegate(Position3D targetPos, IPlayer target, CancelEventArgs cancel);
+    public delegate void WeaponShotDelegate(Position targetPos, IPlayer target, CancelEventArgs cancel);
 
     public interface IEventAPI
     {

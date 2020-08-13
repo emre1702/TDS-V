@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;

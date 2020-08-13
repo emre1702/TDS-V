@@ -9,7 +9,7 @@ namespace TDS_Client.RAGEAPI.Misc
     {
         #region Public Methods
 
-        public float GetDistanceBetweenCoords(Position3D pos1, Position3D pos2, bool useZ)
+        public float GetDistanceBetweenCoords(Position pos1, Position pos2, bool useZ)
         {
             return RAGE.Game.Misc.GetDistanceBetweenCoords(pos1.X, pos1.Y, pos1.Z, pos2.X, pos2.Y, pos2.Z, useZ);
         }
@@ -29,7 +29,7 @@ namespace TDS_Client.RAGEAPI.Misc
             return RAGE.Game.Misc.GetHashKey(hash);
         }
 
-        public void GetModelDimensions(uint modelHash, Position3D a, Position3D b)
+        public void GetModelDimensions(uint modelHash, Position a, Position b)
         {
             var aV = a.ToVector3();
             var bV = b.ToVector3();

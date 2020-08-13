@@ -1,4 +1,5 @@
 ﻿using System;
+using TDS_Server.Data.Interfaces.Entities;
 
 namespace TDS_Server.Data.Interfaces.Userpanel
 {

@@ -11,7 +11,7 @@ namespace TDS_Server.RAGEAPI.Marker
     {
         #region Public Methods
 
-        public IMarker Create(MarkerType type, Position3D position, Position3D? direction, Position3D? rotation, float scale, Color color, bool bobUpAndDown, ILobby lobby)
+        public IMarker Create(MarkerType type, Position position, Position? direction, Position? rotation, float scale, Color color, bool bobUpAndDown, ILobby lobby)
         {
             var dir = direction is null ? new GTANetworkAPI.Vector3() : direction.ToMod();
             var rot = rotation is null ? new GTANetworkAPI.Vector3() : rotation.ToMod();

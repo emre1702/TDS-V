@@ -56,7 +56,7 @@ namespace TDS_Server.Handler.Player
             if (modPlayer is null)
                 return;
 
-            modPlayer.Position = new Position3D(0, 0, 1000).Around(10);
+            modPlayer.Position = new Position(0, 0, 1000).Around(10);
             modPlayer.Freeze(true);
 
             var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, modPlayer.Address, modPlayer.Serial, modPlayer.SocialClubName,
@@ -64,7 +64,7 @@ namespace TDS_Server.Handler.Player
 
             if (ban is { })
             {
-                _modAPI.Thread.QueueIntoMainThread(()
+                AltAsync.Do(()
                     => Utils.HandleBan(modPlayer, ban));
                 return;
             }
@@ -72,7 +72,7 @@ namespace TDS_Server.Handler.Player
             var playerIdName = await _databasePlayerHelper.GetPlayerIdName(modPlayer);
             if (playerIdName is null)
             {
-                _modAPI.Thread.QueueIntoMainThread(()
+                AltAsync.Do(()
                     => modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, modPlayer.SocialClubName, false));
                 return;
             }
@@ -80,12 +80,12 @@ namespace TDS_Server.Handler.Player
             ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, playerIdName.Id);
             if (ban is { })
             {
-                _modAPI.Thread.QueueIntoMainThread(()
+                AltAsync.Do(()
                     => Utils.HandleBan(modPlayer, ban));
                 return;
             }
 
-            _modAPI.Thread.QueueIntoMainThread(()
+            AltAsync.Do(()
                 => modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
         }
 

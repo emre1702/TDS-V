@@ -24,15 +24,15 @@ namespace TDS_Client.RAGEAPI.Cam
 
         #region Public Properties
 
-        public Position3D Position
+        public Position Position
         {
-            get => RAGE.Game.Cam.GetCamCoord(_handle).ToPosition3D();
+            get => RAGE.Game.Cam.GetCamCoord(_handle).ToPosition();
             set => RAGE.Game.Cam.SetCamCoord(_handle, value.X, value.Y, value.Z);
         }
 
-        public Position3D Rotation
+        public Position Rotation
         {
-            get => RAGE.Game.Cam.GetCamRot(_handle, 2).ToPosition3D();
+            get => RAGE.Game.Cam.GetCamRot(_handle, 2).ToPosition();
             set => RAGE.Game.Cam.SetCamRot(_handle, value.X, value.Y, value.Z, 2);
         }
 
@@ -60,7 +60,7 @@ namespace TDS_Client.RAGEAPI.Cam
             RAGE.Game.Cam.DetachCam(_handle);
         }
 
-        public void PointAtCoord(Position3D pos)
+        public void PointAtCoord(Position pos)
         {
             RAGE.Game.Cam.PointCamAtCoord(_handle, pos.X, pos.Y, pos.Z);
         }

@@ -14,7 +14,7 @@ namespace TDS_Client.RAGEAPI.Graphics
             RAGE.Game.Graphics.DrawLine(startX, startY, startZ, endX, endY, endZ, r, g, b, a);
         }
 
-        public void DrawLine(Position3D startPos, Position3D endPos, Color color)
+        public void DrawLine(Position startPos, Position endPos, Color color)
         {
             RAGE.Game.Graphics.DrawLine(startPos.X, startPos.Y, startPos.Z, endPos.X, endPos.Y, endPos.Z, color.R, color.G, color.B, color.A);
         }
@@ -36,7 +36,7 @@ namespace TDS_Client.RAGEAPI.Graphics
             RAGE.Game.Graphics.DrawPoly(x1, y1, z1, x2, y2, z2, x3, y3, z3, r, g, b, a);
         }
 
-        public void DrawPoly(Position3D edge1, Position3D edge2, Position3D edge3, Color color)
+        public void DrawPoly(Position edge1, Position edge2, Position edge3, Color color)
         {
             RAGE.Game.Graphics.DrawPoly(edge1.X, edge1.Y, edge1.Z, edge2.X, edge2.Y, edge2.Z, edge3.X, edge3.Y, edge3.Z, color.R, color.G, color.B, color.A);
         }

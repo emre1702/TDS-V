@@ -1,10 +1,13 @@
-﻿using System;
+﻿using AltV.Net;
+using AltV.Net.Async;
+using AltV.Net.Data;
+using AltV.Net.Elements.Entities;
+using System;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Entities.Gamemodes;
-using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Player;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.Gamemodes;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -16,93 +19,85 @@ namespace TDS_Server.Handler.Events
 
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public LobbyEventsHandler(IModAPI modAPI, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
+        public LobbyEventsHandler(ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
-            _modAPI = modAPI;
             _loggingHandler = loggingHandler;
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
+ 
+            Alt.OnClient<ITDSPlayer, int>(ToServerEvent.ChooseTeam, OnChooseTeam);
+            Alt.OnClient<ITDSPlayer, int>(ToServerEvent.GotHit, OnGotHit);
+            Alt.OnClient<ITDSPlayer, bool>(ToServerEvent.SpectateNext, OnSpectateNext);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.StartDefusing, OnStartDefusing);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.StartPlanting, OnStartPlanting);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.StopDefusing, OnStopDefusing);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.StopPlanting, OnStopPlanting);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.SuicideKill, OnSuicideKill);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.SuicideShoot, OnSuicideShoot);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.OutsideMapLimit, OnOutsideMapLimit);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.MapsListRequest, OnMapsListRequest);
+            Alt.OnClient<ITDSPlayer, int>(ToServerEvent.MapCreatorSyncRemoveTeamObjects, OnMapCreatorSyncRemoveTeamObjects);
+            Alt.OnClient<ITDSPlayer, int>(ToServerEvent.MapCreatorSyncRemoveObject, OnMapCreatorSyncRemoveObject);
+            AltAsync.OnClient<ITDSPlayer>(ToServerEvent.LeaveLobby, OnLeaveLobby);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.MapCreatorStartNewMap, OnMapCreatorStartNewMap);
+            Alt.OnClient<ITDSPlayer, int>(ToServerEvent.MapCreatorSyncLastId, OnMapCreatorSyncLastId);
+            Alt.OnClient<ITDSPlayer, string>(ToServerEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObject);
+            Alt.OnClient<ITDSPlayer, string>(ToServerEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPosition);
+            Alt.OnClient<ITDSPlayer, int>(ToServerEvent.SendTeamOrder, OnSendTeamOrder);
 
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.ChooseTeam, this, OnChooseTeam);
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.GotHit, this, OnGotHit);
-            modAPI.ClientEvent.Add<IPlayer, int, long, int>(ToServerEvent.HitOtherPlayer, this, OnHitOtherPlayer);
-            modAPI.ClientEvent.Add<IPlayer, bool>(ToServerEvent.SpectateNext, this, OnSpectateNext);
-            modAPI.ClientEvent.Add(ToServerEvent.StartDefusing, this, OnStartDefusing);
-            modAPI.ClientEvent.Add(ToServerEvent.StartPlanting, this, OnStartPlanting);
-            modAPI.ClientEvent.Add(ToServerEvent.StopDefusing, this, OnStopDefusing);
-            modAPI.ClientEvent.Add(ToServerEvent.StopPlanting, this, OnStopPlanting);
-            modAPI.ClientEvent.Add(ToServerEvent.SuicideKill, this, OnSuicideKill);
-            modAPI.ClientEvent.Add(ToServerEvent.SuicideShoot, this, OnSuicideShoot);
-            modAPI.ClientEvent.Add(ToServerEvent.OutsideMapLimit, this, OnOutsideMapLimit);
-            modAPI.ClientEvent.Add(ToServerEvent.MapsListRequest, this, OnMapsListRequest);
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.MapCreatorSyncRemoveTeamObjects, this, OnMapCreatorSyncRemoveTeamObjects);
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.MapCreatorSyncRemoveObject, this, OnMapCreatorSyncRemoveObject);
-            modAPI.ClientEvent.Add(ToServerEvent.LeaveLobby, this, OnLeaveLobby);
-            modAPI.ClientEvent.Add(ToServerEvent.MapCreatorStartNewMap, this, OnMapCreatorStartNewMap);
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.MapCreatorSyncLastId, this, OnMapCreatorSyncLastId);
-            modAPI.ClientEvent.Add<IPlayer, string>(ToServerEvent.MapCreatorSyncNewObject, this, OnMapCreatorSyncNewObject);
-            modAPI.ClientEvent.Add<IPlayer, string>(ToServerEvent.MapCreatorSyncObjectPosition, this, OnMapCreatorSyncObjectPosition);
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.SendTeamOrder, this, OnSendTeamOrder);
+            Alt.OnWeaponDamage += OnWeaponDamage;
         }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public void OnChooseTeam(IPlayer modPlayer, int index)
+        public void OnChooseTeam(ITDSPlayer player, int index)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
-            if (player.Lobby is null || !(player.Lobby is Arena arena))
+            if (player.Lobby is null || !(player.Lobby is IArena arena))
                 return;
             arena.ChooseTeam(player, index);
         }
 
-        public void OnGotHit(IPlayer modPlayer, int damage)
+        public void OnGotHit(ITDSPlayer player, int damage)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
 
             player.Damage(ref damage, out _);
         }
 
-        public void OnHitOtherPlayer(IPlayer attackerModPlayer, int targetRemoteId, long weaponHashLong, int bodyPartValue)
+        private bool OnWeaponDamage(IPlayer modPlayer, IEntity targetEntity, uint weapon, ushort damage, Position shotOffset, BodyPart bodyPart)
         {
-            var attacker = _tdsPlayerHandler.GetIfLoggedIn(attackerModPlayer);
-            if (attacker is null)
-                return;
-            var target = _tdsPlayerHandler.GetIfLoggedIn((ushort)targetRemoteId);
-            if (target is null)
-                return;
-            WeaponHash weaponHash = (WeaponHash)weaponHashLong;
-            PedBodyPart bodyPart = (PedBodyPart)bodyPartValue;
+            var player = (ITDSPlayer)modPlayer;
+            var weaponHash = (WeaponHash)weapon;
 
-            if (!(target.Lobby is FightLobby fightLobby))
+            if (!(targetEntity is ITDSPlayer target))
+                return false;
+
+            if (!(target.Lobby is IFightLobby fightLobby))
             {
                 _loggingHandler.LogError(
                     string.Format("Attacker {0} dealt damage on body part {1} to {2} - but this player isn't in fightlobby.",
-                        attacker.DisplayName, bodyPart, target.DisplayName),
-                    Environment.StackTrace, null, attacker);
-                return;
+                        player.DisplayName, bodyPart, target.DisplayName),
+                    Environment.StackTrace, null, player);
+                return false;
             }
 
-            fightLobby.DamagedPlayer(target, attacker, weaponHash, bodyPart);
+            fightLobby.DamagedPlayer(target, player, weaponHash, bodyPart);
+            return true;
         }
 
-        public async void OnLeaveLobby(IPlayer modPlayer)
+        public async void OnLeaveLobby(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
             if (player.Lobby is null)
                 return;
 
@@ -110,181 +105,133 @@ namespace TDS_Server.Handler.Events
             await _lobbiesHandler.MainMenu.AddPlayer(player, 0);
         }
 
-        public void OnMapCreatorStartNewMap(IPlayer modPlayer)
+        public void OnMapCreatorStartNewMap(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreateLobby lobby))
                 return;
             lobby.StartNewMap();
         }
 
-        public void OnMapCreatorSyncLastId(IPlayer modPlayer, int id)
+        public void OnMapCreatorSyncLastId(ITDSPlayer player, int id)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreateLobby lobby))
                 return;
             lobby.SyncLastId(player, id);
         }
 
-        public void OnMapCreatorSyncNewObject(IPlayer modPlayer, string json)
+        public void OnMapCreatorSyncNewObject(ITDSPlayer player, string json)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreateLobby lobby))
                 return;
             lobby.SyncNewObject(player, json);
         }
 
-        public void OnMapCreatorSyncObjectPosition(IPlayer modPlayer, string json)
+        public void OnMapCreatorSyncObjectPosition(ITDSPlayer player, string json)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreateLobby lobby))
                 return;
             lobby.SyncObjectPosition(player, json);
         }
 
-        public void OnMapCreatorSyncRemoveObject(IPlayer modPlayer, int id)
+        public void OnMapCreatorSyncRemoveObject(ITDSPlayer player, int id)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreateLobby lobby))
                 return;
             lobby.SyncRemoveObject(player, id);
         }
 
-        public void OnMapCreatorSyncRemoveTeamObjects(IPlayer modPlayer, int teamNumber)
+        public void OnMapCreatorSyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreateLobby lobby))
                 return;
             lobby.SyncRemoveTeamObjects(player, teamNumber);
         }
 
-        public void OnMapsListRequest(IPlayer modPlayer)
+        public void OnMapsListRequest(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IArena arena))
                 return;
 
             arena.SendMapsForVoting(player);
         }
 
-        public void OnOutsideMapLimit(IPlayer modPlayer)
+        public void OnOutsideMapLimit(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IArena arena))
                 return;
             if (arena.Entity.LobbyMapSettings.MapLimitType == MapLimitType.KillAfterTime)
-                FightLobby.KillPlayer(player, player.Language.TOO_LONG_OUTSIDE_MAP);
+                player.Kill(player.Language.TOO_LONG_OUTSIDE_MAP);
         }
 
-        public void OnSendTeamOrder(IPlayer modPlayer, int teamOrderInt)
+        public void OnSendTeamOrder(ITDSPlayer player, int teamOrderInt)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
             if (!Enum.IsDefined(typeof(TeamOrder), teamOrderInt))
                 return;
             player.Lobby?.SendTeamOrder(player, (TeamOrder)teamOrderInt);
         }
 
-        public void OnSpectateNext(IPlayer modPlayer, bool forward)
+        public void OnSpectateNext(ITDSPlayer player, bool forward)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            if (!(player.Lobby is FightLobby lobby))
+            if (!(player.Lobby is IFightLobby lobby))
                 return;
             lobby.SpectateNext(player, forward);
         }
 
-        public void OnStartDefusing(IPlayer modPlayer)
+        public void OnStartDefusing(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!(player.Lobby is IArena arena))
                 return;
-            if (!(player.Lobby is Arena arena))
-                return;
-            if (!(arena.CurrentGameMode is Bomb bombMode))
+            if (!(arena.CurrentGameMode is IBomb bombMode))
                 return;
             if (!bombMode.StartBombDefusing(player))
                 player.SendEvent(ToClientEvent.StopBombPlantDefuse);
         }
 
-        public void OnStartPlanting(IPlayer modPlayer)
+        public void OnStartPlanting(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!(player.Lobby is IArena arena))
                 return;
-            if (!(player.Lobby is Arena arena))
-                return;
-            if (!(arena.CurrentGameMode is Bomb bombMode))
+            if (!(arena.CurrentGameMode is IBomb bombMode))
                 return;
             if (!bombMode.StartBombPlanting(player))
                 player.SendEvent(ToClientEvent.StopBombPlantDefuse);
         }
 
-        public void OnStopDefusing(IPlayer modPlayer)
+        public void OnStopDefusing(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!(player.Lobby is IArena arena))
                 return;
-            if (!(player.Lobby is Arena arena))
-                return;
-            if (!(arena.CurrentGameMode is Bomb bombMode))
+            if (!(arena.CurrentGameMode is IBomb bombMode))
                 return;
             bombMode.StopBombDefusing(player);
         }
 
-        public void OnStopPlanting(IPlayer modPlayer)
+        public void OnStopPlanting(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!(player.Lobby is IArena arena))
                 return;
-            if (!(player.Lobby is Arena arena))
-                return;
-            if (!(arena.CurrentGameMode is Bomb bombMode))
+            if (!(arena.CurrentGameMode is IBomb bombMode))
                 return;
             bombMode.StopBombPlanting(player);
         }
 
-        public void OnSuicideKill(IPlayer modPlayer)
+        public void OnSuicideKill(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
             if (player.Lifes == 0)
                 return;
-            if (!(player.Lobby is FightLobby))
+            if (!(player.Lobby is IFightLobby))
                 return;
-            FightLobby.KillPlayer(player, player.Language.COMMITED_SUICIDE);
+            player.Kill(player.Language.COMMITED_SUICIDE);
         }
 
-        public void OnSuicideShoot(IPlayer modPlayer)
+        public void OnSuicideShoot(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
             if (player.Lifes == 0)
                 return;
-            if (!(player.Lobby is FightLobby fightLobby))
+            if (!(player.Lobby is IFightLobby fightLobby))
                 return;
 
-            _modAPI.Native.Send(fightLobby, NativeHash.SET_PED_SHOOTS_AT_COORD, player.RemoteId, 0f, 0f, 0f, false);
+            fightLobby.SendNative(NativeHash.SET_PED_SHOOTS_AT_COORD, player, 0f, 0f, 0f, false);
         }
 
         #endregion Public Methods

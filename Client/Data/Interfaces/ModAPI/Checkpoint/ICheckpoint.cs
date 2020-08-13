@@ -17,7 +17,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Checkpoint
 
         #region Public Properties
 
-        Position3D Direction { get; set; }
+        Position Direction { get; set; }
         float Radius { get; set; }
         bool Visible { get; set; }
 

@@ -3,9 +3,6 @@ export interface ConstantsData {
     /** TDSId */
     [0]: number;
 
-    /** RemoteId */
-    [1]: number;
-
     /** UsernameChangeCost */
     [2]: number;
 
@@ -28,7 +25,4 @@ export interface ConstantsData {
 
     /** Username */
     [7]: string;
-
-    /** SCName */
-    [8]: string;
 }

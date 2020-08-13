@@ -17,7 +17,7 @@ namespace TDS_Client.RAGEAPI.MapObject
 
         #region Public Methods
 
-        public IMapObject Create(uint hash, Position3D position, Position3D rotation, int alpha = 255, uint dimension = 0)
+        public IMapObject Create(uint hash, Position position, Position rotation, int alpha = 255, uint dimension = 0)
         {
             return new MapObject(hash, position.ToVector3(), rotation.ToVector3(), alpha, dimension);
         }

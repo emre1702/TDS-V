@@ -26,7 +26,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 
         void DetachEntity(int entity);
 
-        Position3D GetEntityCoords(int entity, bool alive);
+        Position GetEntityCoords(int entity, bool alive);
 
         int GetEntityHealth(int entity);
 
@@ -34,7 +34,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 
         EntityType GetEntityType(int entity);
 
-        Position3D GetOffsetFromEntityInWorldCoords(int entity, float offsetX, float offsetY, float offsetZ);
+        Position GetOffsetFromEntityInWorldCoords(int entity, float offsetX, float offsetY, float offsetZ);
 
         void SetEntityCollision(int entity, bool toggle, bool keepPhysics);
 

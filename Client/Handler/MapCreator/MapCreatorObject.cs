@@ -14,8 +14,8 @@ namespace TDS_Client.Handler.MapCreator
     {
         #region Public Fields
 
-        public Position3D Position;
-        public Position3D Rotation;
+        public Position Position;
+        public Position Rotation;
 
         #endregion Public Fields
 
@@ -23,15 +23,15 @@ namespace TDS_Client.Handler.MapCreator
 
         private readonly EventsHandler _eventsHandler;
         private readonly IModAPI _modAPI;
-        private Position3D _movingPosition;
-        private Position3D _movingRotation;
+        private Position _movingPosition;
+        private Position _movingRotation;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntityBase entity, MapCreatorPositionType type,
-            ushort ownerRemoteId, Position3D pos, Position3D rot, int? teamNumber = null, string objectName = null, int id = -1)
+            ushort ownerRemoteId, Position pos, Position rot, int? teamNumber = null, string objectName = null, int id = -1)
         {
             _modAPI = modAPI;
             _eventsHandler = eventsHandler;
@@ -42,8 +42,8 @@ namespace TDS_Client.Handler.MapCreator
             TeamNumber = teamNumber;
             ObjOrVehName = objectName;
 
-            Position3D a = new Position3D();
-            Position3D b = new Position3D();
+            Position a = new Position();
+            Position b = new Position();
             Entity.GetModelDimensions(a, b);
             Size = b - a;
 
@@ -77,7 +77,7 @@ namespace TDS_Client.Handler.MapCreator
         public int ID { get; set; }
         public bool IsSynced { get; set; }
 
-        public Position3D MovingPosition
+        public Position MovingPosition
         {
             get => _movingPosition;
             set
@@ -88,7 +88,7 @@ namespace TDS_Client.Handler.MapCreator
             }
         }
 
-        public Position3D MovingRotation
+        public Position MovingRotation
         {
             get => _movingRotation;
             set
@@ -101,7 +101,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public string ObjOrVehName { get; }
         public ushort OwnerRemoteId { get; }
-        public Position3D Size { get; }
+        public Position Size { get; }
         public int? TeamNumber { get; }
         public MapCreatorPositionType Type { get; }
 
@@ -170,27 +170,27 @@ namespace TDS_Client.Handler.MapCreator
         public void LoadEntityData()
         {
             Position = Entity.Position;
-            _movingPosition = new Position3D(Position.X, Position.Y, Position.Z);
+            _movingPosition = new Position(Position.X, Position.Y, Position.Z);
             Rotation = Entity.Rotation;
-            _movingRotation = new Position3D(Rotation.X, Rotation.Y, Rotation.Z);
+            _movingRotation = new Position(Rotation.X, Rotation.Y, Rotation.Z);
         }
 
         public void LoadPos(MapCreatorPosition pos)
         {
-            MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-            Position = new Position3D(MovingPosition);
+            MovingPosition = new Position(pos.PosX, pos.PosY, pos.PosZ);
+            Position = new Position(MovingPosition);
 
-            MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
-            Rotation = new Position3D(MovingRotation);
+            MovingRotation = new Position(pos.RotX, pos.RotY, pos.RotZ);
+            Rotation = new Position(MovingRotation);
         }
 
         public void LoadPos(MapCreatorPosData pos)
         {
-            MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-            Position = new Position3D(MovingPosition);
+            MovingPosition = new Position(pos.PosX, pos.PosY, pos.PosZ);
+            Position = new Position(MovingPosition);
 
-            MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
-            Rotation = new Position3D(MovingRotation);
+            MovingRotation = new Position(pos.RotX, pos.RotY, pos.RotZ);
+            Rotation = new Position(MovingRotation);
         }
 
         public void ResetObjectPosition()

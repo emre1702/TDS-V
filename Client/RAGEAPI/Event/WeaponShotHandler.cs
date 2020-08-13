@@ -36,7 +36,7 @@ namespace TDS_Client.RAGEAPI.Event
 
             try
             {
-                var pos = targetPos.ToPosition3D();
+                var pos = targetPos.ToPosition();
                 var target = modTarget as IPlayer;
                 var cancel = new CancelEventArgs();
 

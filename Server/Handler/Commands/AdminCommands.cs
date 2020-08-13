@@ -1,13 +1,16 @@
-﻿using System;
-using TDS_Server.Data;
+﻿using AltV.Net.Async;
+using AltV.Net.Data;
+using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Extensions;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -31,25 +34,25 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Ban, 1)]
-        public async void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             PlayerBans? ban = null;
             if (length == TimeSpan.MinValue)
-                _modAPI.Thread.QueueIntoMainThread(() => _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason));
+                await AltAsync.Do(() => _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason));
             else if (length == TimeSpan.MaxValue)
                 ban = await _lobbiesHandler.MainMenu.BanPlayer(player, target, null, reason);
             else
                 ban = await _lobbiesHandler.MainMenu.BanPlayer(player, target, length, reason);
 
-            if (ban is { } && target.ModPlayer is { })
-                _modAPI.Thread.QueueIntoMainThread(() => Utils.HandleBan(target.ModPlayer, ban));
+            if (ban is { })
+                await AltAsync.Do(() => Utils.HandleBan(target, ban));
 
             if (!cmdinfos.AsLobbyOwner)
-                _modAPI.Thread.QueueIntoMainThread(() => _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                await AltAsync.Do(() => _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.Ban, 0)]
-        public async void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == TimeSpan.MinValue)
                 _lobbiesHandler.MainMenu.UnbanPlayer(player, dbTarget, reason);
@@ -59,39 +62,35 @@ namespace TDS_Server.Handler.Commands
                 await _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _modAPI.Thread.QueueIntoMainThread(() => _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                await AltAsync.Do(() => _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.Goto)]
         public void GotoPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (player.ModPlayer is null || target.ModPlayer is null)
-                return;
-
-            var targetPos = target.ModPlayer.Position;
+            var targetPos = target.Position;
 
             #region Admin is in vehicle
-            if (player.ModPlayer.IsInVehicle && player.ModPlayer.Vehicle is { })
+            if (player.IsInVehicle && player.Vehicle is { })
             {
-                player.ModPlayer.Vehicle.Position = targetPos.Around(2f, false);
+                player.Vehicle.Position = targetPos.Around(2f, false);
                 return;
             }
             #endregion Admin is in vehicle
 
             #region Target is in vehicle and we want to sit in it
-            if (target.ModPlayer.IsInVehicle && target.ModPlayer.Vehicle is { })
+            if (target.IsInVehicle && target.Vehicle is { })
             {
-                uint? freeSeat = Utils.GetVehicleFreeSeat(target.ModPlayer.Vehicle);
-                if (freeSeat.HasValue)
+                if (target.Vehicle.HasFreeSeat)
                 {
-                    player.ModPlayer.SetIntoVehicle(target.ModPlayer.Vehicle, (int)freeSeat.Value);
+                    player.SetIntoVehicle(target.Vehicle);
                     return;
                 }
             }
             #endregion Target is in vehicle and we want to sit in it
 
             #region Normal
-            player.ModPlayer.Position = targetPos.Around(2f, false);
+            player.Position = targetPos.Around(2f, false);
             #endregion Normal
 
             if (!cmdinfos.AsLobbyOwner)
@@ -99,12 +98,9 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Goto)]
-        public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, Position3D pos, [TDSRemainingText(MinLength = 4)] string reason)
+        public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, Position pos, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (player.ModPlayer is null)
-                return;
-
-            player.ModPlayer.Position = pos;
+            player.Position = pos;
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Goto, player, null, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -119,8 +115,8 @@ namespace TDS_Server.Handler.Commands
 
             var _ = new TDSTimer(() =>
             {
-                if (target.ModPlayer is { } && !target.ModPlayer.IsNull)
-                    target.ModPlayer?.Kick("Kick");
+                if (target.Exists)
+                    target.Kick("Kick");
             }, 2000);
 
             if (!cmdinfos.AsLobbyOwner)
@@ -170,7 +166,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.LobbyKick)]
-        public async void LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player == target)
                 return;
@@ -178,7 +174,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             if (!cmdinfos.AsLobbyOwner)
             {
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                await AltAsync.Do(() =>
                 {
                     _loggingHandler.LogAdmin(LogType.Lobby_Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
                     _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
@@ -186,7 +182,7 @@ namespace TDS_Server.Handler.Commands
             }
             else
             {
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                await AltAsync.Do(() =>
                 {
                     if (player.Lobby != target.Lobby)
                     {
@@ -213,7 +209,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Mute, 0)]
-        public async void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!IsMuteTimeValid(minutes, player))
                 return;
@@ -221,13 +217,13 @@ namespace TDS_Server.Handler.Commands
             await _databasePlayerHelper.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _modAPI.Thread.QueueIntoMainThread(() => _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                await AltAsync.Do(() => _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.NextMap)]
         public void NextMap(ITDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IArena arena))
                 return;
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Next, player, reason, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);
@@ -244,8 +240,6 @@ namespace TDS_Server.Handler.Commands
             switch (type)
             {
                 case "cloth":
-                    if (player.ModPlayer is null)
-                        return;
 
                     if (!int.TryParse(arg1, out int slot))
                     {
@@ -263,7 +257,7 @@ namespace TDS_Server.Handler.Commands
                         return;
                     }
 
-                    player.ModPlayer.SetClothes(slot, drawable, texture);
+                    player.SetClothes(slot, drawable, texture);
                     break;
 
                 case "admin":
@@ -283,7 +277,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 0)]
-        public async void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!IsMuteTimeValid(minutes, player))
                 return;
@@ -291,7 +285,7 @@ namespace TDS_Server.Handler.Commands
             await _databasePlayerHelper.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                _modAPI.Thread.QueueIntoMainThread(() => _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                await AltAsync.Do(() => _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 1)]
@@ -309,10 +303,10 @@ namespace TDS_Server.Handler.Commands
         [TDSCommand(AdminCommand.CreateHouse)]
         public void CreateHouse(ITDSPlayer player, byte neededGangLevel)
         {
-            if (player.ModPlayer is null || player.Entity is null)
+            if (player.Entity is null)
                 return;
 
-            if (!(player.Lobby is GangLobby))
+            if (!(player.Lobby is IGangLobby))
             {
                 player.SendNotification(player.Language.ONLY_ALLOWED_IN_GANG_LOBBY);
                 return;
@@ -324,21 +318,11 @@ namespace TDS_Server.Handler.Commands
                 return;
             }
 
-            _gangHousesHandler.AddHouse(player.ModPlayer.Position, player.ModPlayer.Rotation.Z, neededGangLevel, player.Entity.Id);
+            _gangHousesHandler.AddHouse(player.Position, player.Rotation.Yaw, neededGangLevel, player.Entity.Id);
             player.SendNotification(player.Language.ADDED_THE_GANG_HOUSE_SUCCESSFULLY);
         }
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        #region Private Methods
-
-        #region Private Methods
-
-        #region Private Methods
-
-        #region Private Methods
 
         #region Private Methods
 
@@ -351,16 +335,6 @@ namespace TDS_Server.Handler.Commands
             }
             return true;
         }
-
-        #endregion Private Methods
-
-        #endregion Private Methods
-
-        #endregion Private Methods
-
-        #endregion Private Methods
-
-        #endregion Private Methods
 
         #endregion Private Methods
 

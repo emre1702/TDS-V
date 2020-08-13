@@ -47,13 +47,13 @@ namespace TDS_Client.RAGEAPI.Player
             set => SetHealth(value);
         }
 
-        public new Position3D Position
+        public new Position Position
         {
-            get => base.Position.ToPosition3D();
+            get => base.Position.ToPosition();
             set => base.Position = value.ToVector3();
         }
 
-        public Position3D Rotation
+        public Position Rotation
         {
             get => GetRotation(2);
             set => SetRotation(value.X, value.Y, value.Z, 2, true);
@@ -169,8 +169,8 @@ namespace TDS_Client.RAGEAPI.Player
         public uint GetAmmoTypeFromWeapon2(WeaponHash weaponHash)
             => GetAmmoTypeFromWeapon2((uint)weaponHash);
 
-        public Position3D GetBoneCoords(PedBone boneId, float offsetX, float offsetY, float offsetZ)
-            => GetBoneCoords((int)boneId, offsetX, offsetY, offsetZ).ToPosition3D();
+        public Position GetBoneCoords(PedBone boneId, float offsetX, float offsetY, float offsetZ)
+            => GetBoneCoords((int)boneId, offsetX, offsetY, offsetZ).ToPosition();
 
         public int GetBoneIndex(PedBone boneId)
             => GetBoneIndex((int)boneId);
@@ -178,11 +178,11 @@ namespace TDS_Client.RAGEAPI.Player
         public int GetCauseOfMostRecentForceCleanup()
             => RAGE.Game.Player.GetCauseOfMostRecentForceCleanup();
 
-        public new Position3D GetCollisionNormalOfLastHitFor()
-                    => base.GetCollisionNormalOfLastHitFor().ToPosition3D();
+        public new Position GetCollisionNormalOfLastHitFor()
+                    => base.GetCollisionNormalOfLastHitFor().ToPosition();
 
-        public new Position3D GetCoords(bool alive)
-            => base.GetCoords(alive).ToPosition3D();
+        public new Position GetCoords(bool alive)
+            => base.GetCoords(alive).ToPosition();
 
         public float GetCurrentStealthNoise()
             => RAGE.Game.Player.GetPlayerCurrentStealthNoise();
@@ -203,17 +203,17 @@ namespace TDS_Client.RAGEAPI.Player
             return (WeaponHash)weaponHashNumber;
         }
 
-        public new Position3D GetDeadPickupCoords(float p1, float p2)
-            => base.GetDeadPickupCoords(p1, p2).ToPosition3D();
+        public new Position GetDeadPickupCoords(float p1, float p2)
+            => base.GetDeadPickupCoords(p1, p2).ToPosition();
 
-        public new Position3D GetDefensiveAreaPosition(bool p1)
-            => base.GetDefensiveAreaPosition(p1).ToPosition3D();
+        public new Position GetDefensiveAreaPosition(bool p1)
+            => base.GetDefensiveAreaPosition(p1).ToPosition();
 
-        public new Position3D GetExtractedDisplacement(bool worldSpace)
-            => base.GetExtractedDisplacement(worldSpace).ToPosition3D();
+        public new Position GetExtractedDisplacement(bool worldSpace)
+            => base.GetExtractedDisplacement(worldSpace).ToPosition();
 
-        public new Position3D GetForwardVector()
-            => base.GetForwardVector().ToPosition3D();
+        public new Position GetForwardVector()
+            => base.GetForwardVector().ToPosition();
 
         public int GetGroup()
             => RAGE.Game.Player.GetPlayerGroup();
@@ -250,15 +250,15 @@ namespace TDS_Client.RAGEAPI.Player
         public int GetLastVehicle()
             => RAGE.Game.Player.GetPlayersLastVehicle();
 
-        public Position3D GetLastWeaponImpactCoord()
+        public Position GetLastWeaponImpactCoord()
         {
             RAGE.Vector3 coords = new RAGE.Vector3();
             if (!GetLastWeaponImpactCoord(coords))
                 return null;
-            return coords?.ToPosition3D();
+            return coords?.ToPosition();
         }
 
-        public void GetMatrix(Position3D rightVector, Position3D forwardVector, Position3D upVector, Position3D position)
+        public void GetMatrix(Position rightVector, Position forwardVector, Position upVector, Position position)
         {
             var right = rightVector.ToVector3();
             var forward = forwardVector.ToVector3();
@@ -289,7 +289,7 @@ namespace TDS_Client.RAGEAPI.Player
         public int GetMaxWantedLevel()
             => RAGE.Game.Player.GetMaxWantedLevel();
 
-        public void GetModelDimensions(Position3D a, Position3D b)
+        public void GetModelDimensions(Position a, Position b)
         {
             var aV = a.ToVector3();
             var bV = b.ToVector3();
@@ -306,14 +306,14 @@ namespace TDS_Client.RAGEAPI.Player
         public string GetName()
             => RAGE.Game.Player.GetPlayerName();
 
-        public new Position3D GetOffsetFromGivenWorldCoords(float posX, float posY, float posZ)
-                    => base.GetOffsetFromGivenWorldCoords(posX, posY, posZ).ToPosition3D();
+        public new Position GetOffsetFromGivenWorldCoords(float posX, float posY, float posZ)
+                    => base.GetOffsetFromGivenWorldCoords(posX, posY, posZ).ToPosition();
 
-        public new Position3D GetOffsetFromInWorldCoords(float offsetX, float offsetY, float offsetZ)
-            => base.GetOffsetFromInWorldCoords(offsetX, offsetY, offsetZ).ToPosition3D();
+        public new Position GetOffsetFromInWorldCoords(float offsetX, float offsetY, float offsetZ)
+            => base.GetOffsetFromInWorldCoords(offsetX, offsetY, offsetZ).ToPosition();
 
-        public Position3D GetOffsetInWorldCoords(float offsetX, float offsetY, float offsetZ)
-            => RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(Handle, offsetX, offsetY, offsetZ).ToPosition3D();
+        public Position GetOffsetInWorldCoords(float offsetX, float offsetY, float offsetZ)
+            => RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(Handle, offsetX, offsetY, offsetZ).ToPosition();
 
         public void GetParachutePackTintIndex(ref int tintIndex)
             => RAGE.Game.Player.GetPlayerParachutePackTintIndex(ref tintIndex);
@@ -343,17 +343,17 @@ namespace TDS_Client.RAGEAPI.Player
         public void GetRgbColour(ref int r, ref int g, ref int b)
             => RAGE.Game.Player.GetPlayerRgbColour(ref r, ref g, ref b);
 
-        public new Position3D GetRotation(int rotationOrder)
-            => base.GetRotation(rotationOrder).ToPosition3D();
+        public new Position GetRotation(int rotationOrder)
+            => base.GetRotation(rotationOrder).ToPosition();
 
-        public new Position3D GetRotationVelocity()
-            => base.GetRotationVelocity().ToPosition3D();
+        public new Position GetRotationVelocity()
+            => base.GetRotationVelocity().ToPosition();
 
         public new WeaponHash GetSelectedWeapon()
             => (WeaponHash)base.GetSelectedWeapon();
 
-        public new Position3D GetSpeedVector(bool relative)
-            => base.GetSpeedVector(relative).ToPosition3D();
+        public new Position GetSpeedVector(bool relative)
+            => base.GetSpeedVector(relative).ToPosition();
 
         public float GetSprintStaminaRemaining()
             => RAGE.Game.Player.GetPlayerSprintStaminaRemaining();
@@ -388,11 +388,11 @@ namespace TDS_Client.RAGEAPI.Player
         public float GetUnderwaterTimeRemaining()
             => RAGE.Game.Player.GetPlayerUnderwaterTimeRemaining();
 
-        public new Position3D GetVelocity()
-                                                                                                    => base.GetVelocity().ToPosition3D();
+        public new Position GetVelocity()
+                                                                                                    => base.GetVelocity().ToPosition();
 
-        public Position3D GetWantedCentrePosition()
-            => RAGE.Game.Player.GetPlayerWantedCentrePosition().ToPosition3D();
+        public Position GetWantedCentrePosition()
+            => RAGE.Game.Player.GetPlayerWantedCentrePosition().ToPosition();
 
         public int GetWantedLevel()
             => RAGE.Game.Player.GetPlayerWantedLevel();
@@ -406,8 +406,8 @@ namespace TDS_Client.RAGEAPI.Player
         public int GetWeaponTintIndex(WeaponHash weaponHash)
                                             => GetWeaponTintIndex((uint)weaponHash);
 
-        public new Position3D GetWorldPositionOfBone(int boneIndex)
-            => base.GetWorldPositionOfBone(boneIndex).ToPosition3D();
+        public new Position GetWorldPositionOfBone(int boneIndex)
+            => base.GetWorldPositionOfBone(boneIndex).ToPosition();
 
         public bool GiveAchievement(int achievement)
             => RAGE.Game.Player.GiveAchievementToPlayer(achievement);
@@ -781,7 +781,7 @@ namespace TDS_Client.RAGEAPI.Player
         public void SetVisible(bool toggle)
                                                                                                                                                                                             => SetVisible(toggle, false);
 
-        public void SetWantedCentrePosition(Position3D position, bool p2, bool p3)
+        public void SetWantedCentrePosition(Position position, bool p2, bool p3)
             => RAGE.Game.Player.SetPlayerWantedCentrePosition(position.ToVector3(), p2, p3);
 
         public void SetWantedLevel(int wantedLevel, bool disableNoMission)

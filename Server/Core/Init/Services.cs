@@ -8,10 +8,28 @@ using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Core.Manager.Timer;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.Gamemodes;
+using TDS_Server.Data.Interfaces.Entities.Gang;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database;
 using TDS_Server.Database.Entity;
+using TDS_Server.Entity;
+using TDS_Server.Entity.Blip;
+using TDS_Server.Entity.ColShape;
+using TDS_Server.Entity.Gamemodes.Gangwar;
+using TDS_Server.Entity.GangSystem;
+using TDS_Server.Entity.LobbySystem.ArenaSystem;
+using TDS_Server.Entity.LobbySystem.BaseSystem;
+using TDS_Server.Entity.LobbySystem.CharCreateLobbySystem;
+using TDS_Server.Entity.LobbySystem.FightLobbySystem;
+using TDS_Server.Entity.LobbySystem.GangLobbySystem;
+using TDS_Server.Entity.LobbySystem.MapCreateLobbySystem;
+using TDS_Server.Entity.Player;
+using TDS_Server.Entity.TeamSystem;
+using TDS_Server.Entity.Vehicle;
+using TDS_Server.Entity.VoiceChannel;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
@@ -79,7 +97,6 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<MapsRatingsHandler>();
 
             serviceProvider.GetRequiredService<ConnectedHandler>();
-            serviceProvider.GetRequiredService<ITDSPlayerHandler>();
             serviceProvider.GetRequiredService<PlayerCharHandler>();
             serviceProvider.GetRequiredService<PlayerCrouchHandler>();
             serviceProvider.GetRequiredService<PlayerFreecamHandler>();
@@ -114,7 +131,7 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<WeaponLevelHandler>();
         }
 
-        internal static ServiceProvider InitServiceCollection(IModAPI modAPI)
+        internal static ServiceProvider InitServiceCollection()
         {
             var appConfigHandler = new AppConfigHandler();
 
@@ -126,8 +143,6 @@ namespace TDS_Server.Core.Init
             var serviceCollection = new ServiceCollection();
 
             serviceCollection
-               .AddSingleton(modAPI)
-
                .AddSingleton<BonusBotConnectorClient>()
                .AddSingleton<BonusBotConnectorServer>()
 
@@ -167,7 +182,6 @@ namespace TDS_Server.Core.Init
 
                // Player
                .AddSingleton<ConnectedHandler>()
-               .AddSingleton<ITDSPlayerHandler, TDSPlayerHandler>()
                .AddSingleton<PlayerCharHandler>()
                .AddSingleton<PlayerCrouchHandler>()
                .AddSingleton<PlayerFreecamHandler>()
@@ -205,6 +219,29 @@ namespace TDS_Server.Core.Init
                .AddSingleton<WeaponLevelHandler>()
 
                .AddSingleton<Serializer>()
+
+               .AddTransient<IArena, Arena>()
+               .AddTransient<IMapCreateLobby, MapCreateLobby>()
+               .AddTransient<ICharCreateLobby, CharCreateLobby>()
+               .AddTransient<IGangLobby, GangLobby>()
+               .AddTransient<IFightLobby, FightLobby>()
+               .AddTransient<ILobby, Lobby>()
+
+               .AddTransient<ITDSPlayer, TDSPlayer>()
+               .AddTransient<ITDSVehicle, TDSVehicle>()
+               .AddTransient<ITDSBlip, TDSBlip>()
+               .AddTransient<ITDSColShape, TDSColShape>()
+               .AddTransient<ITDSVoiceChannel, TDSVoiceChannel>()
+
+               .AddTransient<IGangHouse, GangHouse>()
+               .AddTransient<IGang, Gang>()
+               .AddTransient<IGangwarArea, GangwarArea>()
+
+               .AddTransient<IGangwar, Gangwar>()
+
+               .AddTransient<ITeam, Team>()
+
+               .AddSingleton<IEntitiesStaticConnector, EntitiesStaticConnector>()
 
                .AddDbContext<TDSDbContext>(options => InitDbContextOptionsBuilder(options, appConfigHandler, loggerFactory), ServiceLifetime.Transient, ServiceLifetime.Singleton);
 

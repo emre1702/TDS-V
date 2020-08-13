@@ -21,7 +21,7 @@ namespace TDS_Server.Data.Extensions
             map.LoadMapObjectsDataDto();
         }
 
-        public static Position3DDto? GetCenter(this MapDto map)
+        public static PositionDto? GetCenter(this MapDto map)
         {
             if (map.Info.Type == Enums.MapType.Gangwar)
                 return map.Target;
@@ -48,12 +48,12 @@ namespace TDS_Server.Data.Extensions
 
         #region Private Methods
 
-        private static Position3DDto? GetCenterByLimits(this MapDto map, float zpos)
+        private static PositionDto? GetCenterByLimits(this MapDto map, float zpos)
         {
             return GetCenterOfMapPositions(map.LimitInfo.Edges, zpos) ?? GetCenterBySpawns(map);
         }
 
-        private static Position3DDto? GetCenterBySpawns(this MapDto map)
+        private static PositionDto? GetCenterBySpawns(this MapDto map)
         {
             int amountteams = map.TeamSpawnsList.TeamSpawns.Length;
             if (amountteams == 1)
@@ -62,7 +62,7 @@ namespace TDS_Server.Data.Extensions
             }
             else if (amountteams > 1)
             {
-                Position3DDto[] positions = map.TeamSpawnsList.TeamSpawns
+                PositionDto[] positions = map.TeamSpawnsList.TeamSpawns
                     .Select(entry => entry.Spawns[0].To3DDto())
                     .ToArray();
                 return GetCenterOfMapPositions(positions);
@@ -70,7 +70,7 @@ namespace TDS_Server.Data.Extensions
             return null;
         }
 
-        private static Position3DDto? GetCenterOfMapPositions(Position3DDto[]? positions, float zpos = 0)
+        private static PositionDto? GetCenterOfMapPositions(PositionDto[]? positions, float zpos = 0)
         {
             if (positions == null || positions.Length <= 2)
                 return null;
@@ -79,14 +79,14 @@ namespace TDS_Server.Data.Extensions
             float centerY = 0.0f;
             float centerZ = 0.0f;
 
-            foreach (Position3DDto point in positions)
+            foreach (PositionDto point in positions)
             {
                 centerX += point.X;
                 centerY += point.Y;
                 centerZ += Math.Abs(zpos - (-1)) < 0.001 ? point.Z : zpos;
             }
 
-            return new Position3DDto { X = centerX / positions.Length, Y = centerY / positions.Length, Z = centerZ / positions.Length };
+            return new PositionDto { X = centerX / positions.Length, Y = centerY / positions.Length, Z = centerZ / positions.Length };
         }
 
         private static float GetCenterZPos(this MapDto map)

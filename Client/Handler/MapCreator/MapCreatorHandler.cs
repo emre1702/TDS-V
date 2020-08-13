@@ -157,10 +157,10 @@ namespace TDS_Client.Handler.MapCreator
             float rot = Convert.ToSingle(args[3]);
             if (_camerasHandler.ActiveCamera != null)
             {
-                _camerasHandler.ActiveCamera.Position = new Position3D(x, y, z);
-                _camerasHandler.ActiveCamera.Rotation = new Position3D(0, 0, rot);
+                _camerasHandler.ActiveCamera.Position = new Position(x, y, z);
+                _camerasHandler.ActiveCamera.Rotation = new Position(0, 0, rot);
             }
-            ModAPI.LocalPlayer.Position = new Position3D(x, y, z);
+            ModAPI.LocalPlayer.Position = new Position(x, y, z);
             ModAPI.LocalPlayer.Heading = rot;
         }
 
@@ -170,7 +170,7 @@ namespace TDS_Client.Handler.MapCreator
             float y = Convert.ToSingle(args[1]);
             float z = 0;
             ModAPI.Misc.GetGroundZFor3dCoord(x, y, 9000, ref z);
-            ModAPI.LocalPlayer.Position = new Position3D(x, y, z + 0.3f);
+            ModAPI.LocalPlayer.Position = new Position(x, y, z + 0.3f);
         }
 
         #endregion Private Methods

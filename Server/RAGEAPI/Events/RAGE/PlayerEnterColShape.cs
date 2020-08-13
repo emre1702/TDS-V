@@ -10,7 +10,7 @@ namespace TDS_Server.RAGEAPI.Events.RAGE
         #region Public Methods
 
         [ServerEvent(Event.PlayerEnterColshape)]
-        public void OnPlayerEnterColshape(IColShape colShape, IPlayer player)
+        public void OnPlayerEnterColshape(ITDSColShape colShape, IPlayer player)
         {
             var tdsPlayer = Init.GetTDSPlayerIfLoggedIn(player);
             if (tdsPlayer is null)

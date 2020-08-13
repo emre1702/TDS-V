@@ -38,10 +38,10 @@ namespace TDS_Client.Handler.Entities
         private TDSTimer _checkTimer;
         private TDSTimer _checkTimerFaster;
         private bool _createdGpsRoutes;
-        private List<Position3D> _edges;
+        private List<Position> _edges;
         private float _edgesMaxTop = -1;
         private DxText _info;
-        private Position3D _lastPosInMap;
+        private Position _lastPosInMap;
         private float _lastRotInMap;
         private float _minX, _minY, _maxX, _maxY;
         private int _outsideCounter;
@@ -52,7 +52,7 @@ namespace TDS_Client.Handler.Entities
 
         #region Public Constructors
 
-        public MapLimit(List<Position3D> edges, MapLimitType type, int maxOutsideCounter, Color mapBorderColor, IModAPI modAPI, RemoteEventsSender remoteEventsSender,
+        public MapLimit(List<Position> edges, MapLimitType type, int maxOutsideCounter, Color mapBorderColor, IModAPI modAPI, RemoteEventsSender remoteEventsSender,
             SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler)
         {
             ModAPI = modAPI;
@@ -98,7 +98,7 @@ namespace TDS_Client.Handler.Entities
                 _mapLimitTypeMethod[_type]();
         }
 
-        public void SetEdges(List<Position3D> edges)
+        public void SetEdges(List<Position> edges)
         {
             if (_type != MapLimitType.Display)
             {
@@ -293,7 +293,7 @@ namespace TDS_Client.Handler.Entities
 
         private bool IsWithin() => IsWithin(ModAPI.LocalPlayer.Position);
 
-        private bool IsWithin(Position3D point)
+        private bool IsWithin(Position point)
         {
             if (point.X < _minX || point.Y < _minY || point.X > _maxX || point.Y > _maxY)
                 return false;
@@ -301,8 +301,8 @@ namespace TDS_Client.Handler.Entities
             bool inside = false;
             for (int i = 0, j = _edges.Count - 1; i < _edges.Count; j = i++)
             {
-                Position3D iPoint = _edges[i];
-                Position3D jPoint = _edges[j];
+                Position iPoint = _edges[i];
+                Position jPoint = _edges[j];
                 bool intersect = ((iPoint.Y > point.Y) != (jPoint.Y > point.Y))
                         && (point.X < (jPoint.X - iPoint.X) * (point.Y - iPoint.Y) / (jPoint.Y - iPoint.Y) + iPoint.X);
                 if (intersect)

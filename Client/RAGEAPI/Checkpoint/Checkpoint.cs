@@ -15,7 +15,7 @@ namespace TDS_Client.RAGEAPI.Checkpoint
         {
         }
 
-        public Checkpoint(uint hash, Position3D position, float radius, Position3D direction, Color color, bool isVisible = true, uint dimension = 0)
+        public Checkpoint(uint hash, Position position, float radius, Position direction, Color color, bool isVisible = true, uint dimension = 0)
             : base(hash, position.ToVector3(), radius, direction.ToVector3(), color.ToRGBA(), isVisible, dimension)
         {
             base.OnEnter += this.OnEnterMethod;
@@ -34,9 +34,9 @@ namespace TDS_Client.RAGEAPI.Checkpoint
 
         #region Public Properties
 
-        public new Position3D Direction
+        public new Position Direction
         {
-            get => base.Direction.ToPosition3D();
+            get => base.Direction.ToPosition();
             set => base.Direction = value.ToVector3();
         }
 

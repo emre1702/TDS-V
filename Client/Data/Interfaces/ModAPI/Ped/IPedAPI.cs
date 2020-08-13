@@ -7,13 +7,13 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
     {
         #region Public Methods
 
-        IPed Create(PedHash model, Position3D position, Position3D rotation, uint dimension);
+        IPed Create(PedHash model, Position position, Position rotation, uint dimension);
 
-        IPed Create(PedHash model, Position3D position, float heading, uint dimension);
+        IPed Create(PedHash model, Position position, float heading, uint dimension);
 
         int GetPedArmor(int handle);
 
-        Position3D GetPedBoneCoords(int ped, int boneId, float offsetX = 0, float offsetY = 0, float offsetZ = 0);
+        Position GetPedBoneCoords(int ped, int boneId, float offsetX = 0, float offsetY = 0, float offsetZ = 0);
 
         int GetPedBoneIndex(int ped, int boneId);
 

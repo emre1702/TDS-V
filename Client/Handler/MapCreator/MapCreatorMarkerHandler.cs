@@ -67,8 +67,8 @@ namespace TDS_Client.Handler.MapCreator
                 if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.Attack))
                 {
                     _clickedMarkerStorer.ClickedMarker = null;
-                    obj.Position = new Position3D(obj.MovingPosition);
-                    obj.Rotation = new Position3D(obj.MovingRotation);
+                    obj.Position = new Position(obj.MovingPosition);
+                    obj.Rotation = new Position(obj.MovingRotation);
                     _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
                         obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, obj.ObjOrVehName, obj.OwnerRemoteId);
                     _mapCreatorSyncHandler.SyncObjectPositionToLobby(obj);
@@ -84,7 +84,7 @@ namespace TDS_Client.Handler.MapCreator
             {
                 float closestDistToMarker = float.MaxValue;
                 AxisMarker closestMarker = null;
-                Position3D hitPointClosestMarker = null;
+                Position hitPointClosestMarker = null;
                 IEnumerable<AxisMarker> markerList;
                 switch (obj.Type)
                 {
@@ -153,16 +153,16 @@ namespace TDS_Client.Handler.MapCreator
             _rotateMarker = new AxisMarker[]
             {
                 new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(255, 0, 0), AxisMarker.AxisEnum.X,
-                    rotationGetter: obj => new Position3D(-obj.MovingRotation.Z + 90f, 90, 0),
-                    objectRotationGetter: (obj, angle) => new Position3D(obj.Rotation.X, obj.Rotation.Y + angle, obj.Rotation.Z)),     // Marker_X_Rotate
+                    rotationGetter: obj => new Position(-obj.MovingRotation.Z + 90f, 90, 0),
+                    objectRotationGetter: (obj, angle) => new Position(obj.Rotation.X, obj.Rotation.Y + angle, obj.Rotation.Z)),     // Marker_X_Rotate
 
                 new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(0, 255, 0), AxisMarker.AxisEnum.Y,
-                    rotationGetter: obj => new Position3D(-obj.MovingRotation.Z, 90, 0),
-                    objectRotationGetter: (obj, angle) => new Position3D(obj.Rotation.X - angle, obj.Rotation.Y, obj.Rotation.Z)),     // Marker_Y_Rotate
+                    rotationGetter: obj => new Position(-obj.MovingRotation.Z, 90, 0),
+                    objectRotationGetter: (obj, angle) => new Position(obj.Rotation.X - angle, obj.Rotation.Y, obj.Rotation.Z)),     // Marker_Y_Rotate
 
                 new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(0, 0, 255), AxisMarker.AxisEnum.Z,
-                    rotationGetter: obj => new Position3D(),
-                    objectRotationGetter: (obj, angle) => new Position3D(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z - angle)),     // Marker_Z_Rotate
+                    rotationGetter: obj => new Position(),
+                    objectRotationGetter: (obj, angle) => new Position(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z - angle)),     // Marker_Z_Rotate
 
                 new AxisMarker(ModAPI, _utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(255, 0, 0), AxisMarker.AxisEnum.X,
                     positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(obj.Size.X / 2f + (obj.Size.X / 4f), 0f, 0f),

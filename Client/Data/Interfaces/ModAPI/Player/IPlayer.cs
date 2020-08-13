@@ -192,7 +192,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
 
         float GetVoiceAttribute(int attribute);
 
-        Position3D GetWantedCentrePosition();
+        Position GetWantedCentrePosition();
 
         int GetWantedLevel();
 
@@ -511,7 +511,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Player
         // ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1)); # Parameter value ranges
         // P0: PLAYER::PLAYER_ID() P1: ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(),
         // 1) P2: Not set by any call
-        void SetWantedCentrePosition(Position3D position, bool p2, bool p3);
+        void SetWantedCentrePosition(Position position, bool p2, bool p3);
 
         // Summary: Call SET_PLAYER_WANTED_LEVEL_NOW for immediate effect wantedLevel is an integer
         // value representing 0 to 5 stars even though the game supports the 6th wanted level but no

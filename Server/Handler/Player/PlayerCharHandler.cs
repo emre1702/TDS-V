@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
@@ -55,7 +57,7 @@ namespace TDS_Server.Handler.Player
 
         internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> args)
         {
-            if (!(player.Lobby is CharCreateLobby))
+            if (!(player.Lobby is ICharCreateLobby))
                 return null;
 
             await _lobbiesHandler.MainMenu.AddPlayer(player, null);
@@ -80,7 +82,7 @@ namespace TDS_Server.Handler.Player
             });
 
             await player.SaveData(true);
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 LoadPlayerChar(player);
             });

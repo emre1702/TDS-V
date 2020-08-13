@@ -21,6 +21,7 @@ namespace TDS_Server.Data.Models
 
         public int? ParametersWithDefaultValueStartIndex;
         public int Priority;
+        public bool IsAsync;
         public TDSRemainingText? RemainingTextAttribute;
         public int? ToOneStringAfterParameterCount = null;
 
@@ -28,10 +29,11 @@ namespace TDS_Server.Data.Models
 
         #region Public Constructors
 
-        public CommandMethodDataDto(MethodInfo methodDefault, int priority)
+        public CommandMethodDataDto(MethodInfo methodDefault, int priority, bool isAsync)
         {
             MethodDefault = methodDefault;
             Priority = priority;
+            IsAsync = isAsync;
         }
 
         #endregion Public Constructors

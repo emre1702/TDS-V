@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.Map;
+using TDS_Server.Data.Interfaces.Entities.Gang;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
 
@@ -27,7 +26,8 @@ namespace TDS_Server.Handler.GangSystem
 
         #region Public Constructors
 
-        public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler, ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
+        public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
+            ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
         {
             _dbContext = dbContext;
             _mapsLoadingHandler = mapsLoadingHandler;
@@ -41,7 +41,7 @@ namespace TDS_Server.Handler.GangSystem
 
         #region Public Properties
 
-        public List<GangwarArea> GangwarAreas { get; set; } = new List<GangwarArea>();
+        public List<IGangwarArea> GangwarAreas { get; set; } = new List<IGangwarArea>();
 
         #endregion Public Properties
 
@@ -52,7 +52,7 @@ namespace TDS_Server.Handler.GangSystem
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public GangwarArea? GetById(int id)
+        public IGangwarArea? GetById(int id)
         {
             return GangwarAreas.FirstOrDefault(a => a.Entity?.MapId == id);
         }
@@ -73,7 +73,7 @@ namespace TDS_Server.Handler.GangSystem
                     _loggingHandler.LogError($"GangwarArea with Map {entity.Map.Name} ({entity.MapId}) has no map file in default maps folder!", Environment.StackTrace);
                     continue;
                 }
-                var area = ActivatorUtilities.CreateInstance<GangwarArea>(_serviceProvider, entity, map);
+                var area = ActivatorUtilities.CreateInstance<IGangwarArea>(_serviceProvider, entity, map);
                 GangwarAreas.Add(area);
             }
             // Don't need it anymore

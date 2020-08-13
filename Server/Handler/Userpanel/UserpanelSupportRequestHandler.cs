@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
@@ -122,7 +123,6 @@ namespace TDS_Server.Handler.Userpanel
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly Dictionary<int, HashSet<ITDSPlayer>> _inSupportRequest = new Dictionary<int, HashSet<ITDSPlayer>>();
         private readonly HashSet<ITDSPlayer> _inSupportRequestsList = new HashSet<ITDSPlayer>();
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
 
@@ -131,10 +131,9 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
-            ISettingsHandler settingsHandler, IModAPI modAPI, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
+            ISettingsHandler settingsHandler, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
             : base(dbContext, loggingHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _settingsHandler = settingsHandler;
             _bonusBotConnectorClient = bonusBotConnectorClient;
@@ -213,7 +212,7 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = messageEntity.CreateTime.ToString()
             });
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 foreach (var target in _inSupportRequest[requestId])
                 {
@@ -433,7 +432,7 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = player.GetLocalDateTimeString(messageEntity.CreateTime)
             });
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 foreach (var target in _inSupportRequest[requestId.Value])
                 {
@@ -478,7 +477,7 @@ namespace TDS_Server.Handler.Userpanel
 
             _bonusBotConnectorClient.Support?.Create(player, requestEntity);
 
-            _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
+            AltAsync.Do(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
             return null;
         }
 
@@ -505,7 +504,7 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 foreach (var target in _inSupportRequestsList)
                 {
@@ -533,7 +532,7 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 foreach (var target in _inSupportRequestsList)
                 {

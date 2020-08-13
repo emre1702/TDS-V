@@ -19,7 +19,7 @@ namespace TDS_Client.Handler.MapCreator
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
         private IMapObject _object;
-        private Position3D _objectRotation;
+        private Position _objectRotation;
 
         #endregion Private Fields
 
@@ -55,7 +55,7 @@ namespace TDS_Client.Handler.MapCreator
             else
                 _object.Destroy();
 
-            _objectRotation = new Position3D();
+            _objectRotation = new Position();
             _object = _modAPI.MapObject.Create(hash, _modAPI.LocalPlayer.Position, _objectRotation, dimension: _modAPI.LocalPlayer.Dimension);
             _object.SetCollision(false, false);
             _object.SetInvincible(true);
@@ -82,8 +82,8 @@ namespace TDS_Client.Handler.MapCreator
             var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
             var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(_modAPI.Cam.GetGameplayCamRot());
 
-            Position3D a = new Position3D();
-            Position3D b = new Position3D();
+            Position a = new Position();
+            Position b = new Position();
             _object.GetModelDimensions(a, b);
             var objSize = b - a;
             var position = camPos + camDirection * (3 + objSize.Length());

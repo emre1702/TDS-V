@@ -48,7 +48,7 @@ namespace TDS_Client.Handler.Lobby
 
         private bool _gotBomb;
 
-        private Position3D _plantedPos;
+        private Position _plantedPos;
 
         private PlantDefuseStatus _playerStatus;
 
@@ -114,7 +114,7 @@ namespace TDS_Client.Handler.Lobby
 
         #region Public Methods
 
-        public void BombPlanted(Position3D pos, bool candefuse, int? startAtMs)
+        public void BombPlanted(Position pos, bool candefuse, int? startAtMs)
         {
             DataChanged = true;
             if (candefuse)
@@ -279,7 +279,7 @@ namespace TDS_Client.Handler.Lobby
         {
             if (_plantedPos == null)
                 return false;
-            Position3D playerpos = ModAPI.LocalPlayer.Position;
+            Position playerpos = ModAPI.LocalPlayer.Position;
             return ModAPI.Misc.GetDistanceBetweenCoords(playerpos, _plantedPos, true) <= _settingsHandler.DistanceToSpotToDefuse;
         }
 
@@ -287,8 +287,8 @@ namespace TDS_Client.Handler.Lobby
         {
             if (_lobbyMapDatasHandler.MapDatas is null || _lobbyMapDatasHandler.MapDatas.BombPlaces is null || _lobbyMapDatasHandler.MapDatas.BombPlaces.Count == 0)
                 return false;
-            Position3D playerpos = ModAPI.LocalPlayer.Position;
-            foreach (Position3D pos in _lobbyMapDatasHandler.MapDatas.BombPlaces)
+            Position playerpos = ModAPI.LocalPlayer.Position;
+            foreach (Position pos in _lobbyMapDatasHandler.MapDatas.BombPlaces)
             {
                 if (ModAPI.Misc.GetDistanceBetweenCoords(playerpos, pos, pos.Z != 0) <= _settingsHandler.DistanceToSpotToPlant)
                     return true;
@@ -314,7 +314,7 @@ namespace TDS_Client.Handler.Lobby
 
         private void OnBombPlantedMethod(object[] args)
         {
-            BombPlanted(_serializer.FromServer<Position3D>((string)args[0]), Convert.ToBoolean(args[1]), args.Length > 2 ? (int?)args[2] : null);
+            BombPlanted(_serializer.FromServer<Position>((string)args[0]), Convert.ToBoolean(args[1]), args.Length > 2 ? (int?)args[2] : null);
         }
 
         private void OnPlayerGotBombMethod(object[] args)

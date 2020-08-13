@@ -1,5 +1,5 @@
-﻿using TDS_Server.Data.Interfaces.ModAPI.Blip;
-using TDS_Server.Data.Interfaces.ModAPI.MapObject;
+﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Models
@@ -8,15 +8,15 @@ namespace TDS_Server.Data.Models
     {
         #region Public Fields
 
-        public IBlip Blip;
-        public IMapObject Object;
-        public Position3D Position;
+        public ITDSBlip Blip;
+        public ITDSObject Object;
+        public Position Position;
 
         #endregion Public Fields
 
         #region Public Constructors
 
-        public BombPlantPlaceDto(IMapObject obj, IBlip blip, Position3D pos) => (Object, Blip, Position) = (obj, blip, pos);
+        public BombPlantPlaceDto(ITDSObject obj, ITDSBlip blip, Position pos) => (Object, Blip, Position) = (obj, blip, pos);
 
         #endregion Public Constructors
 

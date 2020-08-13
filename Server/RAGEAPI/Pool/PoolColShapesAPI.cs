@@ -18,16 +18,16 @@ namespace TDS_Server.RAGEAPI.Pool
 
         #region Public Properties
 
-        public List<IColShape> All => RAGE.Entities.Colshapes.All.OfType<IColShape>().ToList();
-        public IEnumerable<IColShape> AsEnumerable => RAGE.Entities.Colshapes.AsEnumerable.OfType<IColShape>();
+        public List<ITDSColShape> All => RAGE.Entities.Colshapes.All.OfType<ITDSColShape>().ToList();
+        public IEnumerable<ITDSColShape> AsEnumerable => RAGE.Entities.Colshapes.AsEnumerable.OfType<ITDSColShape>();
         public int Count => RAGE.Entities.Colshapes.Count;
 
         #endregion Public Properties
 
         #region Public Methods
 
-        public IColShape? GetAt(ushort id)
-            => RAGE.Entities.Colshapes.GetAt(id) as IColShape;
+        public ITDSColShape? GetAt(ushort id)
+            => RAGE.Entities.Colshapes.GetAt(id) as ITDSColShape;
 
         #endregion Public Methods
     }

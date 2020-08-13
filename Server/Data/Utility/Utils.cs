@@ -6,8 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Core;
 
@@ -172,18 +171,18 @@ namespace TDS_Server.Data.Utility
             return new DateTimeOffset(dateTime).ToString("f", enUsCulture) + " +00:00";
         }
 
-        public static uint? GetVehicleFreeSeat(IVehicle veh)
+        public static byte? GetVehicleFreeSeat(ITDSVehicle veh)
         {
-            HashSet<int> occupiedSeats = veh.Occupants.OfType<IPlayer>().Select(o => o.VehicleSeat).ToHashSet();
-            for (int i = veh.MaxOccupants - 1; i >= 0; --i)
+            HashSet<byte> occupiedSeats = veh.Occupants.Select(o => o.Seat).ToHashSet();
+            for (byte i = (byte)(veh.Seats - 1); i >= 0; --i)
             {
                 if (!occupiedSeats.Contains(i))
-                    return (uint?)i;
+                    return i;
             }
             return null;
         }
 
-        public static void HandleBan(IPlayer modPlayer, PlayerBans? ban)
+        public static void HandleBan(ITDSPlayer player, PlayerBans? ban)
         {
             if (ban is null)
                 return;
@@ -191,15 +190,15 @@ namespace TDS_Server.Data.Utility
             string startstr = ban.StartTimestamp.ToString(DateTimeFormatInfo.InvariantInfo);
             string endstr = ban.EndTimestamp.HasValue ? ban.EndTimestamp.Value.ToString(DateTimeFormatInfo.InvariantInfo) : "never";
 
-            var splittedReason = Utils.SplitPartsByLength($"Banned!\nName: {ban.Player?.Name ?? modPlayer.Name}\nAdmin: {ban.Admin.Name}\nReason: {ban.Reason}\nEnd: {endstr} UTC\nStart: {startstr} UTC", 90);
+            var splittedReason = SplitPartsByLength($"Banned!\nName: {ban.Player?.Name ?? player.Name}\nAdmin: {ban.Admin.Name}\nReason: {ban.Reason}\nEnd: {endstr} UTC\nStart: {startstr} UTC", 90);
 
             foreach (var split in splittedReason)
-                modPlayer.SendNotification(split, true);
+                player.SendNotification(split, true);
 
             _ = new TDSTimer(() =>
             {
-                if (!modPlayer.IsNull)
-                    modPlayer.Kick("Ban");
+                if (player.Exists)
+                    player.Kick("Ban");
             }, 3000, 1);
         }
 

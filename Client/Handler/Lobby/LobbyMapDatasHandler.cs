@@ -109,14 +109,14 @@ namespace TDS_Client.Handler.Lobby
             RemoveMapInfo();
         }
 
-        private Position3D GetPos(MapCreatorPosition pos)
+        private Position GetPos(MapCreatorPosition pos)
         {
-            return new Position3D(pos.PosX, pos.PosY, pos.PosZ);
+            return new Position(pos.PosX, pos.PosY, pos.PosZ);
         }
 
-        private Position3D GetRot(MapCreatorPosition pos)
+        private Position GetRot(MapCreatorPosition pos)
         {
-            return new Position3D(pos.RotX, pos.RotY, pos.RotZ);
+            return new Position(pos.RotX, pos.RotY, pos.RotZ);
         }
 
         private void LoadMap(ClientSyncedDataDto map)
@@ -127,7 +127,7 @@ namespace TDS_Client.Handler.Lobby
 
                 if (map.Target != null)
                 {
-                    var obj = ModAPI.MapObject.Create(ModAPI.Misc.GetHashKey(Constants.TargetHashName), map.Target, new Position3D(), dimension: ModAPI.LocalPlayer.Dimension);
+                    var obj = ModAPI.MapObject.Create(ModAPI.Misc.GetHashKey(Constants.TargetHashName), map.Target, new Position(), dimension: ModAPI.LocalPlayer.Dimension);
                     obj.FreezePosition(true);
                     //obj.SetCollision(false, true);
                     obj.SetInvincible(true);
@@ -152,7 +152,7 @@ namespace TDS_Client.Handler.Lobby
                     foreach (var data in map.BombPlaces)
                     {
                         var bombPlantHash = ModAPI.Misc.GetHashKey(Constants.BombPlantPlaceHashName);
-                        var obj = ModAPI.MapObject.Create(bombPlantHash, data, new Position3D(), dimension: ModAPI.LocalPlayer.Dimension);
+                        var obj = ModAPI.MapObject.Create(bombPlantHash, data, new Position(), dimension: ModAPI.LocalPlayer.Dimension);
                         obj.FreezePosition(true);
                         obj.SetInvincible(true);
                         _objects.Add(obj);

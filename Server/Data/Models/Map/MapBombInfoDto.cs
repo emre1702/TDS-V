@@ -10,7 +10,7 @@ namespace TDS_Server.Data.Models.Map
         #region Public Properties
 
         [XmlElement("plantpos")]
-        public Position3DDto[] PlantPositions { get; set; }
+        public PositionDto[] PlantPositions { get; set; }
 
         [XmlIgnore]
         public string PlantPositionsJson { get; set; }

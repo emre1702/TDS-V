@@ -2,13 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
-using TDS_Server.Handler.Entities;
 
 namespace TDS_Server.Core.Manager.PlayerManager
 {
@@ -46,7 +44,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async Task ChangePlayerMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 _chatHandler.OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
             });
@@ -64,7 +62,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 _chatHandler.OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
             });

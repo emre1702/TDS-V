@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
+﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;

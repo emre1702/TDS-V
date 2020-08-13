@@ -85,7 +85,7 @@ namespace TDS_Server.Handler.Userpanel
                             return player.Language.NOT_ENOUGH_MONEY;
                         }
                         paid = _settingsHandler.ServerSettings.UsernameChangeCost;
-                        _modAPI.Thread.QueueIntoMainThread(() => player.GiveMoney(-_settingsHandler.ServerSettings.UsernameChangeCost));
+                        AltAsync.Do(() => player.GiveMoney(-_settingsHandler.ServerSettings.UsernameChangeCost));
                     }
                     oldValue = player.Entity.Name;
                     player.Entity.Name = value;
@@ -116,7 +116,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 _loggingHandler.LogError(ex, player);
                 if (paid.HasValue)
-                    _modAPI.Thread.QueueIntoMainThread(() => player.GiveMoney(paid.Value));
+                    AltAsync.Do(() => player.GiveMoney(paid.Value));
                 if (lastFreeUsernameChange != player.Entity.PlayerStats.LastFreeUsernameChange)
                     player.Entity.PlayerStats.LastFreeUsernameChange = lastFreeUsernameChange;
 
@@ -145,7 +145,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 case UserpanelSettingsSpecialType.Username:
                     player.ModPlayer!.Name = value;
-                    _modAPI.Thread.QueueIntoMainThread(() => _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, value));
+                    AltAsync.Do(() => _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, value));
                     break;
             }
 

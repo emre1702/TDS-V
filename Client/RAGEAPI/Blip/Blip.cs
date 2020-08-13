@@ -29,9 +29,9 @@ namespace TDS_Client.RAGEAPI.Blip
             set => SetAlpha(value);
         }
 
-        public new Position3D Position
+        public new Position Position
         {
-            get => base.Position.ToPosition3D();
+            get => base.Position.ToPosition();
             set => base.Position = value.ToVector3();
         }
 
@@ -51,13 +51,13 @@ namespace TDS_Client.RAGEAPI.Blip
             return Id == other?.Id;
         }
 
-        public new Position3D GetCoords()
-            => base.GetCoords().ToPosition3D();
+        public new Position GetCoords()
+            => base.GetCoords().ToPosition();
 
-        public new Position3D GetInfoIdCoord()
-            => base.GetInfoIdCoord().ToPosition3D();
+        public new Position GetInfoIdCoord()
+            => base.GetInfoIdCoord().ToPosition();
 
-        public void GetModelDimensions(Position3D a, Position3D b)
+        public void GetModelDimensions(Position a, Position b)
         {
             var aV = a.ToVector3();
             var bV = b.ToVector3();
@@ -71,8 +71,8 @@ namespace TDS_Client.RAGEAPI.Blip
             b.Z = bV.Z;
         }
 
-        public Position3D GetOffsetInWorldCoords(float offsetX, float offsetY, float offsetZ)
-            => RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(Handle, offsetX, offsetY, offsetZ).ToPosition3D();
+        public Position GetOffsetInWorldCoords(float offsetX, float offsetY, float offsetZ)
+            => RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(Handle, offsetX, offsetY, offsetZ).ToPosition();
 
         #endregion Public Methods
     }

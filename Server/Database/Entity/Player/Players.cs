@@ -71,7 +71,6 @@ namespace TDS_Server.Database.Entity.Player
         public virtual PlayerTotalStats PlayerTotalStats { get; set; }
         public DateTime RegisterTimestamp { get; set; }
         public ulong SCId { get; set; }
-        public string SCName { get; set; }
         public virtual ICollection<SupportRequestMessages> SupportRequestMessages { get; set; }
         public virtual SupportRequests SupportRequests { get; set; }
         public virtual PlayerThemeSettings ThemeSettings { get; set; }
@@ -84,7 +83,7 @@ namespace TDS_Server.Database.Entity.Player
 
         public string GetDiscriminator()
         {
-            return $"{Name} ({SCName})";
+            return $"{Name}";
         }
 
         #endregion Public Methods

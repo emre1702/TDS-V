@@ -8,14 +8,14 @@ namespace TDS_Client.RAGEAPI.Extensions
     {
         #region Public Methods
 
-        public static void CopyValuesFrom(this Position3D pos, Vector3 otherPos)
+        public static void CopyValuesFrom(this Position pos, Vector3 otherPos)
         {
             pos.X = otherPos.X;
             pos.Y = otherPos.Y;
             pos.Z = otherPos.Z;
         }
 
-        public static void CopyValuesTo(this Position3D pos, Vector3 otherPos)
+        public static void CopyValuesTo(this Position pos, Vector3 otherPos)
         {
             otherPos.X = pos.X;
             otherPos.Y = pos.Y;
@@ -27,9 +27,9 @@ namespace TDS_Client.RAGEAPI.Extensions
             return new Position2D(pos.X, pos.Y);
         }
 
-        public static Position3D ToPosition3D(this Vector3 pos)
+        public static Position ToPosition(this Vector3 pos)
         {
-            return new Position3D(pos.X, pos.Y, pos.Z);
+            return new Position(pos.X, pos.Y, pos.Z);
         }
 
         public static Vector2 ToVector2(this Position2D pos)
@@ -37,7 +37,7 @@ namespace TDS_Client.RAGEAPI.Extensions
             return new Vector2(pos.X, pos.Y);
         }
 
-        public static Vector3 ToVector3(this Position3D pos)
+        public static Vector3 ToVector3(this Position pos)
         {
             return new Vector3(pos.X, pos.Y, pos.Z);
         }

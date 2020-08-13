@@ -9,7 +9,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map;
 using TDS_Shared.Data.Models.Map.Creator;
 using MapType = TDS_Server.Data.Enums.MapType;
-using Position3DDto = TDS_Server.Data.Models.Map.Creator.Position3DDto;
+using PositionDto = TDS_Server.Data.Models.Map.Creator.PositionDto;
 
 namespace TDS_Server.Data.Models.Map
 {
@@ -61,8 +61,8 @@ namespace TDS_Server.Data.Models.Map
 
             LimitInfo = new MapLimitInfoDto
             {
-                Center = data.MapCenter != null ? new Position3DDto(data.MapCenter) : null,
-                Edges = data.MapEdges.Select(pos => new Position3DDto(pos)).ToArray(),
+                Center = data.MapCenter != null ? new PositionDto(data.MapCenter) : null,
+                Edges = data.MapEdges.Select(pos => new PositionDto(pos)).ToArray(),
                 EdgesJson = serializer.ToClient(data.MapEdges)
             };
 
@@ -76,13 +76,13 @@ namespace TDS_Server.Data.Models.Map
                 Entries = data.Vehicles.Select(o => new MapObjectPosition(o)).ToArray()
             };
 
-            Target = data.Target != null && data.Type == TDS_Shared.Data.Enums.MapType.Gangwar ? new Position3DDto(data.Target) : null;
+            Target = data.Target != null && data.Type == TDS_Shared.Data.Enums.MapType.Gangwar ? new PositionDto(data.Target) : null;
 
             if (data.BombPlaces != null)
             {
                 BombInfo = new MapBombInfoDto
                 {
-                    PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
+                    PlantPositions = data.BombPlaces.Select(pos => new PositionDto(pos)).ToArray(),
                 };
                 BombInfo.PlantPositionsJson = serializer.ToClient(BombInfo.PlantPositions);
             }
@@ -128,7 +128,7 @@ namespace TDS_Server.Data.Models.Map
         public List<PlayerMapRatings> Ratings { get; set; } = new List<PlayerMapRatings>();
 
         [XmlElement("target")]
-        public Position3DDto? Target { get; set; }
+        public PositionDto? Target { get; set; }
 
         [XmlElement("teamspawns")]
         public MapTeamSpawnsListDto TeamSpawnsList { get; set; }

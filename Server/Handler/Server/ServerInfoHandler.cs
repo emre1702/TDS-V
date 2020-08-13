@@ -1,14 +1,12 @@
 ﻿using BonusBotConnector.Client;
 using System;
 using System.Linq;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Bonusbot;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Player;
 
 namespace TDS_Server.Handler.Server
 {
@@ -20,7 +18,6 @@ namespace TDS_Server.Handler.Server
         private readonly BonusbotSettings? _bonusBotSettings;
         private readonly DateTime _dateTime;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly IModAPI _modAPI;
         private readonly ServerStatsHandler _serverStatsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
@@ -29,7 +26,7 @@ namespace TDS_Server.Handler.Server
         #region Public Constructors
 
         public ServerInfoHandler(EventsHandler eventsHandler, TDSDbContext dbContext, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
-            IModAPI modAPI, BonusBotConnectorClient bonusBotConnectorClient, ServerStatsHandler serverStatsHandler)
+            BonusBotConnectorClient bonusBotConnectorClient, ServerStatsHandler serverStatsHandler)
         {
             _dateTime = DateTime.UtcNow;
 
@@ -37,7 +34,6 @@ namespace TDS_Server.Handler.Server
 
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
-            _modAPI = modAPI;
             _bonusBotConnectorClient = bonusBotConnectorClient;
             _serverStatsHandler = serverStatsHandler;
 
@@ -56,16 +52,17 @@ namespace TDS_Server.Handler.Server
 
             if (counter % _bonusBotSettings.RefreshServerStatsFrequencySec == 0)
             {
+                //Todo: Read Server.cfg and get port & name
                 var request = new RAGEServerStatsRequest
                 {
                     PlayerAmountInArena = _lobbiesHandler.Arena.Players.Count,
                     PlayerAmountInCustomLobby = _lobbiesHandler.Lobbies.Where(p => !p.IsOfficial).Sum(l => l.Players.Count),
-                    PlayerAmountInGangLobby = _lobbiesHandler.Lobbies.Where(p => p is GangLobby || (p is Arena arena && arena.IsGangActionLobby)).Sum(l => l.Players.Count),
+                    PlayerAmountInGangLobby = _lobbiesHandler.Lobbies.Where(p => p is IGangLobby || (p is IArena arena && arena.IsGangActionLobby)).Sum(l => l.Players.Count),
                     PlayerAmountInMainMenu = _tdsPlayerHandler.LoggedInPlayers.Where(p => p.Lobby is null || p.Lobby.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu).Count(),
-                    PlayerAmountOnline = _tdsPlayerHandler.AmountLoggedInPlayers,
-                    ServerPort = _modAPI.Server.GetPort(),
+                    PlayerAmountOnline = _tdsPlayerHandler.LoggedInPlayers.Count,
+                    ServerPort = 0,
                     Version = "1.0.0",   // Todo: Save Version somewhere else
-                    ServerName = _modAPI.Server.GetName(),
+                    ServerName = "?",
                     RefreshFrequencySec = _bonusBotSettings.RefreshServerStatsFrequencySec,
                     PlayerPeakToday = _serverStatsHandler.DailyStats.PlayerPeak,
                     OnlineSince = Utils.GetUniversalDateTimeString(_dateTime)

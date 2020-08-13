@@ -739,8 +739,6 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.Id).UseHiLo();
 
-                entity.Property(e => e.Serial).HasMaxLength(200);
-
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
@@ -791,18 +789,12 @@ namespace TDS_Server.Database.Entity
                 entity.HasKey(e => new { e.PlayerId, e.LobbyId });
 
                 entity.HasIndex(e => e.IP);
-                entity.HasIndex(e => e.SCName);
                 entity.HasIndex(e => e.SCId);
-                entity.HasIndex(e => e.Serial);
 
                 entity.Property(e => e.EndTimestamp)
                     .HasConversion(v => v, v => v == null ? (DateTime?)null : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc));
 
                 entity.Property(e => e.IP).IsRequired(false);
-
-                entity.Property(e => e.Serial).IsRequired(false);
-
-                entity.Property(e => e.SCName).IsRequired(false);
 
                 entity.Property(e => e.SCId).IsRequired(false);
 
@@ -1143,10 +1135,6 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.RegisterTimestamp)
                     .HasDefaultValueSql("timezone('utc', now())")
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
-
-                entity.Property(e => e.SCName)
-                    .IsRequired()
-                    .HasMaxLength(255);
 
                 entity.Property(e => e.SCId)
                     .IsRequired();
@@ -1525,7 +1513,7 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<Players>().HasData(
-                new Players { Id = -1, SCName = "System", SCId = 0, Name = "System", Password = "" }
+                new Players { Id = -1, SCId = 0, Name = "System", Password = "" }
             );
 
             var seedLobbies = new List<Lobbies> {

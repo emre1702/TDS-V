@@ -17,7 +17,7 @@ namespace TDS_Client.RAGEAPI.Vehicle
 
         #region Public Methods
 
-        public IVehicle Create(uint hash, Position3D position, Position3D rotation, string numberPlate = "TDS-V", int alpha = 255, bool locked = false,
+        public IVehicle Create(uint hash, Position position, Position rotation, string numberPlate = "TDS-V", int alpha = 255, bool locked = false,
             int primColor = 0, int secColor = 1, uint dimension = 0)
         {
             return new Vehicle(hash, position.ToVector3(), rotation.Z, numberPlate, alpha, locked, primColor, secColor, dimension);

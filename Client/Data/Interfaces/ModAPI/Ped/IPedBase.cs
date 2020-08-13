@@ -195,7 +195,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         uint GetBestWeapon(bool p1);
 
         // Summary: see RAGE.Game.Ped.GetPedBoneCoords(System.Int32,System.Int32,System.Single,System.Single,System.Single)
-        Position3D GetBoneCoords(PedBone boneId, float offsetX, float offsetY, float offsetZ);
+        Position GetBoneCoords(PedBone boneId, float offsetX, float offsetY, float offsetZ);
 
         // Summary: see RAGE.Game.Ped.GetPedBoneIndex(System.Int32,System.Int32)
         int GetBoneIndex(PedBone boneId);
@@ -225,13 +225,13 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         int GetCurrentWeaponEntityIndex();
 
         // Summary: see RAGE.Game.Ped.GetDeadPedPickupCoords(System.Int32,System.Single,System.Single)
-        Position3D GetDeadPickupCoords(float p1, float p2);
+        Position GetDeadPickupCoords(float p1, float p2);
 
         // Summary: see RAGE.Game.Ped.GetPedDecorationsState(System.Int32)
         int GetDecorationsState();
 
         // Summary: see RAGE.Game.Ped.GetPedDefensiveAreaPosition(System.Int32,System.Boolean)
-        Position3D GetDefensiveAreaPosition(bool p1);
+        Position GetDefensiveAreaPosition(bool p1);
 
         // Summary: see RAGE.Game.Ai.GetPedDesiredMoveBlendRatio(System.Int32)
         float GetDesiredMoveBlendRatio();
@@ -243,7 +243,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         float GetEnveffScale();
 
         // Summary: see RAGE.Game.Ped.GetPedExtractedDisplacement(System.Int32,System.Boolean)
-        Position3D GetExtractedDisplacement(bool worldSpace);
+        Position GetExtractedDisplacement(bool worldSpace);
 
         // Summary: see RAGE.Game.Ped.GetPedGroupIndex(System.Int32)
         int GetGroupIndex();
@@ -267,7 +267,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Ped
         PedBone? GetLastDamageBone();
 
         // Summary: see RAGE.Game.Weapon.GetPedLastWeaponImpactCoord(System.Int32,RAGE.Vector3)
-        Position3D GetLastWeaponImpactCoord();
+        Position GetLastWeaponImpactCoord();
 
         // Summary: see RAGE.Game.Weapon.GetLockonRangeOfCurrentPedWeapon(System.Int32)
         float GetLockonRangeOfCurrentWeapon();

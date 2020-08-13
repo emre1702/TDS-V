@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.Gang;
 using TDS_Server.Database.Entity.Bonusbot;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Userpanel;
@@ -74,7 +76,7 @@ namespace BonusBotConnector.Client.Requests
                 return;
             var request = new EmbedToChannelRequest
             {
-                Author = $"{player.Entity.Name} ({player.Entity.SCName})",
+                Author = player.Entity.Name,
                 Title = "A new application was sent.",
                 ColorR = 0,
                 ColorG = 0,
@@ -94,7 +96,7 @@ namespace BonusBotConnector.Client.Requests
             {
                 var embed = new EmbedToChannelRequest
                 {
-                    Author = $"{ban.Player.Name} ({ban.Player.SCName})",
+                    Author = ban.Player.Name,
                     Title = "Someone got banned.",
                     ColorR = 130,
                     ColorG = 0,

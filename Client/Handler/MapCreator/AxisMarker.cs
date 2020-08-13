@@ -16,7 +16,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public AxisEnum Axis;
 
-        public Position3D HighlightStartHitPoint;
+        public Position HighlightStartHitPoint;
 
         #endregion Public Fields
 
@@ -28,17 +28,17 @@ namespace TDS_Client.Handler.MapCreator
 
         private readonly IModAPI _modAPI;
 
-        private readonly Func<MapCreatorObject, Position3D> _objectPositionFromGetter;
+        private readonly Func<MapCreatorObject, Position> _objectPositionFromGetter;
 
-        private readonly Func<MapCreatorObject, Position3D> _objectPositionToGetter;
+        private readonly Func<MapCreatorObject, Position> _objectPositionToGetter;
 
-        private readonly Func<MapCreatorObject, float, Position3D> _objectRotationGetter;
+        private readonly Func<MapCreatorObject, float, Position> _objectRotationGetter;
 
         private readonly Color _originalColor;
 
-        private readonly Func<MapCreatorObject, Position3D> _positionGetter;
+        private readonly Func<MapCreatorObject, Position> _positionGetter;
 
-        private readonly Func<MapCreatorObject, Position3D> _rotationGetter;
+        private readonly Func<MapCreatorObject, Position> _rotationGetter;
 
         private readonly UtilsHandler _utilsHandler;
 
@@ -54,11 +54,11 @@ namespace TDS_Client.Handler.MapCreator
             MarkerType type,
             Color color,
             AxisEnum axis,
-            Func<MapCreatorObject, Position3D> positionGetter = null,
-            Func<MapCreatorObject, Position3D> objectPositionFromGetter = null,
-            Func<MapCreatorObject, Position3D> objectPositionToGetter = null,
-            Func<MapCreatorObject, Position3D> rotationGetter = null,
-            Func<MapCreatorObject, float, Position3D> objectRotationGetter = null)
+            Func<MapCreatorObject, Position> positionGetter = null,
+            Func<MapCreatorObject, Position> objectPositionFromGetter = null,
+            Func<MapCreatorObject, Position> objectPositionToGetter = null,
+            Func<MapCreatorObject, Position> rotationGetter = null,
+            Func<MapCreatorObject, float, Position> objectRotationGetter = null)
         {
             _modAPI = modAPI;
             _utilsHandler = utilsHandler;
@@ -66,7 +66,7 @@ namespace TDS_Client.Handler.MapCreator
             _camerasHandler = camerasHandler;
 
             _originalColor = color;
-            Marker = new Marker(modAPI, type, new Position3D(), new Position3D(), new Position3D(), new Position3D(), color);
+            Marker = new Marker(modAPI, type, new Position(), new Position(), new Position(), new Position(), color);
             Axis = axis;
             _positionGetter = positionGetter;
             _objectPositionFromGetter = objectPositionFromGetter;
@@ -95,7 +95,7 @@ namespace TDS_Client.Handler.MapCreator
 
         #region Public Methods
 
-        public void CheckClosest(ref float closestDist, ref AxisMarker closestMarker, ref Position3D hitPointClosestMarker)
+        public void CheckClosest(ref float closestDist, ref AxisMarker closestMarker, ref Position hitPointClosestMarker)
         {
             if (IsRotationMarker)
                 CheckClosestRotateMarker(ref closestDist, ref closestMarker, ref hitPointClosestMarker);
@@ -106,7 +106,7 @@ namespace TDS_Client.Handler.MapCreator
         public void Draw()
         {
             Marker.Draw();
-            Position3D v = _utilsHandler.GetScreenCoordFromWorldCoord(Marker.Position);
+            Position v = _utilsHandler.GetScreenCoordFromWorldCoord(Marker.Position);
             if (v != null)
             {
                 var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
@@ -117,23 +117,23 @@ namespace TDS_Client.Handler.MapCreator
             }
         }
 
-        public bool IsRaycasted(ref Position3D hitPoint, ref Position3D norm, TDSCamera cam = null, float threshold = 0.1f, bool ignoreDistance = false)
+        public bool IsRaycasted(ref Position hitPoint, ref Position norm, TDSCamera cam = null, float threshold = 0.1f, bool ignoreDistance = false)
         {
-            Position3D test1 = cam?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
-            Position3D test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), cam);
-            Position3D test3 = test2 - test1;
-            Position3D from = test1 + test3 * 0.05f;
-            Position3D to = test1 + test3 * 1000f;
+            Position test1 = cam?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+            Position test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), cam);
+            Position test3 = test2 - test1;
+            Position from = test1 + test3 * 0.05f;
+            Position to = test1 + test3 * 1000f;
 
             if (!ignoreDistance)
             {
-                if (_utilsHandler.LineIntersectingCircle(Marker.Position, new Position3D(Marker.Rotation.X - 90f, Marker.Rotation.Y, Marker.Rotation.Z), Marker.Scale.X / 2f, from, to, ref hitPoint, threshold, ref norm))
+                if (_utilsHandler.LineIntersectingCircle(Marker.Position, new Position(Marker.Rotation.X - 90f, Marker.Rotation.Y, Marker.Rotation.Z), Marker.Scale.X / 2f, from, to, ref hitPoint, threshold, ref norm))
                     if (Marker.Position.DistanceTo(hitPoint) >= (Marker.Scale.X / 2f) * 0.775f - threshold)
                         return true;
             }
             else
             {
-                if (_utilsHandler.LineIntersectingCircle(Marker.Position, new Position3D(Marker.Rotation.X - 90f, Marker.Rotation.Y, Marker.Rotation.Z), threshold, from, to, ref hitPoint, 0f, ref norm))
+                if (_utilsHandler.LineIntersectingCircle(Marker.Position, new Position(Marker.Rotation.X - 90f, Marker.Rotation.Y, Marker.Rotation.Z), threshold, from, to, ref hitPoint, 0f, ref norm))
                     return true;
             }
             return false;
@@ -141,11 +141,11 @@ namespace TDS_Client.Handler.MapCreator
 
         public bool IsSphereCasted(TDSCamera cam = null)
         {
-            Position3D test1 = cam?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
-            Position3D test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), cam);
-            Position3D test3 = test2 - test1;
-            Position3D from = test1 + test3 * 0.05f;
-            Position3D to = test1 + test3 * 1000f;
+            Position test1 = cam?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+            Position test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), cam);
+            Position test3 = test2 - test1;
+            Position from = test1 + test3 * 0.05f;
+            Position to = test1 + test3 * 1000f;
 
             return _utilsHandler.LineIntersectingSphere(from, to, Marker.Position, Marker.Scale.X);
         }
@@ -160,15 +160,15 @@ namespace TDS_Client.Handler.MapCreator
             if (_rotationGetter != null)
                 Marker.Rotation = _rotationGetter(obj);
 
-            Marker.Scale = new Position3D(scale, scale, scale);
+            Marker.Scale = new Position(scale, scale, scale);
         }
 
         public void MoveOrRotateObject(MapCreatorObject obj)
         {
             if (IsRotationMarker)
             {
-                Position3D hitPoint = new Position3D();
-                Position3D norm = new Position3D();
+                Position hitPoint = new Position();
+                Position norm = new Position();
                 if (!IsRaycasted(ref hitPoint, ref norm, _camerasHandler.ActiveCamera, 999999f, true))
                     return;
 
@@ -179,22 +179,22 @@ namespace TDS_Client.Handler.MapCreator
             }
             else
             {
-                Position3D test1 = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
-                Position3D test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), _camerasHandler.ActiveCamera);
-                Position3D test3 = test2 - test1;
-                Position3D from = test1 + test3 * 0.05f;
-                Position3D to = test1 + test3 * 1000f;
+                Position test1 = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
+                Position test2 = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), _camerasHandler.ActiveCamera);
+                Position test3 = test2 - test1;
+                Position from = test1 + test3 * 0.05f;
+                Position to = test1 + test3 * 1000f;
 
-                Position3D from1 = _objectPositionFromGetter(obj);
-                Position3D to1 = _objectPositionToGetter(obj);
+                Position from1 = _objectPositionFromGetter(obj);
+                Position to1 = _objectPositionToGetter(obj);
                 _modAPI.Graphics.DrawLine(from1.X, from1.Y, from1.Z, to1.X, to1.Y, to1.Z, 255, 0, 0, 255);
                 _modAPI.Graphics.DrawLine(from.X, from.Y, from.Z, to.X, to.Y, to.Z, 255, 0, 0, 255);
-                Tuple<Position3D, Position3D> drawMe = _utilsHandler.ClosestDistanceBetweenLines(from, to, from1, to1);
+                Tuple<Position, Position> drawMe = _utilsHandler.ClosestDistanceBetweenLines(from, to, from1, to1);
                 obj.MovingPosition = drawMe.Item2 - (Marker.Position - obj.MovingPosition);
             }
         }
 
-        public void SetHighlighted(Position3D highlightStartHitPoint)
+        public void SetHighlighted(Position highlightStartHitPoint)
         {
             HighlightStartHitPoint = highlightStartHitPoint;
             Marker.Color = Color.FromArgb(255, 255, 0);
@@ -209,7 +209,7 @@ namespace TDS_Client.Handler.MapCreator
 
         #region Private Methods
 
-        private void CheckClosestMoveMarker(ref float closestDist, ref AxisMarker closestMarker, ref Position3D hitPointClosestMarker)
+        private void CheckClosestMoveMarker(ref float closestDist, ref AxisMarker closestMarker, ref Position hitPointClosestMarker)
         {
             if (IsSphereCasted(_camerasHandler.ActiveCamera))
             {
@@ -223,10 +223,10 @@ namespace TDS_Client.Handler.MapCreator
             }
         }
 
-        private void CheckClosestRotateMarker(ref float closestDist, ref AxisMarker closestMarker, ref Position3D hitPointClosestMarker)
+        private void CheckClosestRotateMarker(ref float closestDist, ref AxisMarker closestMarker, ref Position hitPointClosestMarker)
         {
-            Position3D hitPoint = new Position3D();
-            Position3D norm = new Position3D();
+            Position hitPoint = new Position();
+            Position norm = new Position();
             if (IsRaycasted(ref hitPoint, ref norm, _camerasHandler.ActiveCamera))
             {
                 float dist = hitPoint.DistanceTo(_camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord());

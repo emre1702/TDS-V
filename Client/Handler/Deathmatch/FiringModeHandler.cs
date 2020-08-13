@@ -247,7 +247,7 @@ namespace TDS_Client.Handler.Deathmatch
             }
         }
 
-        private void OnWeaponShot(Position3D targetPos, IPlayer target, CancelEventArgs cancel)
+        private void OnWeaponShot(Position targetPos, IPlayer target, CancelEventArgs cancel)
         {
             switch (_currentFiringMode)
             {

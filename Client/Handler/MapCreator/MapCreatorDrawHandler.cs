@@ -32,17 +32,17 @@ namespace TDS_Client.Handler.MapCreator
 
         #region Public Methods
 
-        public void DrawSkeleton(Position3D pos, Position3D size, Position3D rot)
+        public void DrawSkeleton(Position pos, Position size, Position rot)
         {
-            Position3D p1 = pos + new Position3D(size.X / 2, size.Y / 2, size.Z / 2);
-            Position3D p2 = pos + new Position3D(size.X / 2, -size.Y / 2, size.Z / 2);
-            Position3D p3 = pos + new Position3D(size.X / 2, -size.Y / 2, -size.Z / 2);
-            Position3D p4 = pos + new Position3D(size.X / 2, size.Y / 2, -size.Z / 2);
+            Position p1 = pos + new Position(size.X / 2, size.Y / 2, size.Z / 2);
+            Position p2 = pos + new Position(size.X / 2, -size.Y / 2, size.Z / 2);
+            Position p3 = pos + new Position(size.X / 2, -size.Y / 2, -size.Z / 2);
+            Position p4 = pos + new Position(size.X / 2, size.Y / 2, -size.Z / 2);
 
-            Position3D p5 = pos + new Position3D(-size.X / 2, size.Y / 2, size.Z / 2);
-            Position3D p6 = pos + new Position3D(-size.X / 2, -size.Y / 2, size.Z / 2);
-            Position3D p7 = pos + new Position3D(-size.X / 2, -size.Y / 2, -size.Z / 2);
-            Position3D p8 = pos + new Position3D(-size.X / 2, size.Y / 2, -size.Z / 2);
+            Position p5 = pos + new Position(-size.X / 2, size.Y / 2, size.Z / 2);
+            Position p6 = pos + new Position(-size.X / 2, -size.Y / 2, size.Z / 2);
+            Position p7 = pos + new Position(-size.X / 2, -size.Y / 2, -size.Z / 2);
+            Position p8 = pos + new Position(-size.X / 2, size.Y / 2, -size.Z / 2);
 
             p1 -= pos;
             p1 = _utilsHandler.RotateY(p1, rot.Y);

@@ -1,14 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AltV.Net;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Default;
@@ -23,9 +21,6 @@ namespace TDS_Server.Handler.Player
 
         private readonly ILoggingHandler _loggingHandler;
         private readonly NameCheckHelper _nameCheckHelper;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ConcurrentDictionary<IPlayer, ITDSPlayer> _tdsPlayerCache = new ConcurrentDictionary<IPlayer, ITDSPlayer>();
-        private readonly ConcurrentDictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new ConcurrentDictionary<ushort, ITDSPlayer>();
 
         #endregion Fields
 
@@ -33,17 +28,14 @@ namespace TDS_Server.Handler.Player
 
         public TDSPlayerHandler(
             NameCheckHelper nameCheckHelper,
-            IServiceProvider serviceProvider,
             EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler,
-            IModAPI modAPI)
+            ILoggingHandler loggingHandler)
         {
             _nameCheckHelper = nameCheckHelper;
-            _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
 
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.LanguageChange, this, OnLanguageChange);
-            modAPI.ClientEvent.Add(ToServerEvent.WeaponShot, this, OnWeaponShot);
+            Alt.OnClient<ITDSPlayer, int>(ToServerEvent.LanguageChange, OnLanguageChange);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.WeaponShot, OnWeaponShot);
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOutBefore;
@@ -55,59 +47,11 @@ namespace TDS_Server.Handler.Player
 
         #region Properties
 
-        public int AmountLoggedInPlayers => LoggedInPlayers.Count;
-        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerCache.Values;
+        public List<ITDSPlayer> LoggedInPlayers { get; set; } = new List<ITDSPlayer>();
 
         #endregion Properties
 
         #region Methods
-
-        public ITDSPlayer Get(IPlayer modPlayer)
-        {
-            if (!_tdsPlayerCache.TryGetValue(modPlayer, out ITDSPlayer? tdsPlayer))
-            {
-                tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
-                tdsPlayer.ModPlayer = modPlayer;
-                _tdsPlayerCache[modPlayer] = tdsPlayer;
-            }
-
-            return tdsPlayer;
-        }
-
-        public ITDSPlayer? GetIfExists(int playerId)
-        {
-            return _tdsPlayerCache.Values.FirstOrDefault(p => p.Id == playerId);
-        }
-
-        public ITDSPlayer? GetIfLoggedIn(IPlayer modPlayer)
-        {
-            if (!_tdsPlayerCache.ContainsKey(modPlayer))
-                return null;
-
-            var player = _tdsPlayerCache[modPlayer];
-            if (!player.LoggedIn)
-                return null;
-
-            return player;
-        }
-
-        public ITDSPlayer? GetIfLoggedIn(ushort remoteId)
-        {
-            _tdsPlayerRemoteIdCache.TryGetValue(remoteId, out ITDSPlayer? player);
-            return player;
-        }
-
-        public ITDSPlayer GetNotLoggedIn(IPlayer modPlayer)
-        {
-            if (!_tdsPlayerCache.TryGetValue(modPlayer, out ITDSPlayer? tdsPlayer) || tdsPlayer.LoggedIn)
-            {
-                tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
-                tdsPlayer.ModPlayer = modPlayer;
-                _tdsPlayerCache[modPlayer] = tdsPlayer;
-            }
-
-            return tdsPlayer;
-        }
 
         public ITDSPlayer? FindTDSPlayer(string name)
         {
@@ -116,43 +60,37 @@ namespace TDS_Server.Handler.Player
                 name = name.Substring(suffix.Length);
             name = name.Trim();
 
-            foreach (var player in _tdsPlayerCache.Values)
+            foreach (var player in LoggedInPlayers)
             {
                 if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
                     return player;
             }
 
-            foreach (var player in _tdsPlayerCache.Values)
+            foreach (var player in LoggedInPlayers)
             {
                 if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
-                    return player;
-            }
-
-            foreach (var player in _tdsPlayerCache.Values)
-            {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
-                    return player;
-            }
-
-            foreach (var player in _tdsPlayerCache.Values)
-            {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
                     return player;
             }
 
             return null;
         }
 
+        public ITDSPlayer? Get(int playerId)
+        {
+            return LoggedInPlayers.FirstOrDefault(p => p.Id == playerId);
+        }
+
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            _tdsPlayerRemoteIdCache[player.RemoteId] = player;
+            LoggedInPlayers.Add(player);
+            player.LoggedIn = true;
         }
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
-            if (player.ModPlayer is { })
-                _tdsPlayerCache.TryRemove(player.ModPlayer, out _);
-            _tdsPlayerRemoteIdCache.TryRemove(player.RemoteId, out _);
+            if (player.LoggedIn)
+                LoggedInPlayers.Remove(player);
+            player.LoggedIn = false;
         }
 
         private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
@@ -160,24 +98,19 @@ namespace TDS_Server.Handler.Player
             return player.SaveData(true);
         }
 
-        private void OnLanguageChange(IPlayer modPlayer, int language)
+        private void OnLanguageChange(ITDSPlayer player, int language)
         {
-            var player = GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-
             if (!Enum.IsDefined(typeof(Language), language))
                 return;
 
             player.LanguageEnum = (Language)language;
         }
 
-        private void OnWeaponShot(IPlayer player)
+        private void OnWeaponShot(ITDSPlayer player)
         {
-            var tdsPlayer = GetIfLoggedIn(player);
-            if (tdsPlayer is null)
+            if (!player.LoggedIn)
                 return;
-            tdsPlayer.AddWeaponShot(player.CurrentWeapon, null, null, false);
+            player.AddWeaponShot(player.CurrentWeapon, null, null, false);
         }
 
         private void ReduceMuteTime(ITDSPlayer player)

@@ -205,8 +205,8 @@ namespace TDS_Client.Handler.MapCreator
 
         private void ReleaseObject()
         {
-            HoldingObject.Position = new Position3D(HoldingObject.MovingPosition);
-            HoldingObject.Rotation = new Position3D(HoldingObject.MovingRotation);
+            HoldingObject.Position = new Position(HoldingObject.MovingPosition);
+            HoldingObject.Rotation = new Position(HoldingObject.MovingRotation);
             var obj = HoldingObject;
             HoldingObject = null;
             object info = null;
@@ -232,7 +232,7 @@ namespace TDS_Client.Handler.MapCreator
             {
                 if (_mapCreatorObjectsHandler.MapLimitDisplay == null)
                 {
-                    _mapCreatorObjectsHandler.MapLimitDisplay = new MapLimit(new List<Position3D>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor,
+                    _mapCreatorObjectsHandler.MapLimitDisplay = new MapLimit(new List<Position>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor,
                         ModAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
                     _mapCreatorObjectsHandler.MapLimitDisplay.Start();
                 }
@@ -365,34 +365,34 @@ namespace TDS_Client.Handler.MapCreator
             _instructionalButtonHandler.Add(_placeOnGround ? _settingsHandler.Language.LET_IT_FLOAT : _settingsHandler.Language.PUT_ON_GROUND, "F");
         }
 
-        private (RaycastHit, Position3D) GetCursorHit(float toDistance, int ignoreHandle, int flags)
+        private (RaycastHit, Position) GetCursorHit(float toDistance, int ignoreHandle, int flags)
         {
-            Position3D camPos = _camerasHandler.FreeCam.Position;
-            Position3D cursorPos = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), _camerasHandler.FreeCam);
-            Position3D difference = cursorPos - camPos;
-            Position3D from = camPos + difference * 0.05f;
-            Position3D to = camPos + difference * toDistance;
+            Position camPos = _camerasHandler.FreeCam.Position;
+            Position cursorPos = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), _camerasHandler.FreeCam);
+            Position difference = cursorPos - camPos;
+            Position from = camPos + difference * 0.05f;
+            Position to = camPos + difference * toDistance;
 
-            Position3D t = to - from;
+            Position t = to - from;
             t.Normalize();
             t *= _clampDistance;
-            Position3D v = camPos + t;
+            Position v = camPos + t;
 
             return (_utilsHandler.RaycastFromTo(from, to, ignoreHandle, flags), v);
         }
 
-        private (RaycastHit, Position3D) GetCameraHit(float toDistance, int ignoreHandle, int flags)
+        private (RaycastHit, Position) GetCameraHit(float toDistance, int ignoreHandle, int flags)
         {
-            Position3D camPos = _camerasHandler.FreeCam.Position;
-            Position3D lookingAtPos = _utilsHandler.GetWorldCoordFromScreenCoord(0.5f, 0.5f, _camerasHandler.FreeCam);
-            Position3D difference = lookingAtPos - camPos;
-            Position3D from = camPos + difference * 0.05f;
-            Position3D to = camPos + difference * toDistance;
+            Position camPos = _camerasHandler.FreeCam.Position;
+            Position lookingAtPos = _utilsHandler.GetWorldCoordFromScreenCoord(0.5f, 0.5f, _camerasHandler.FreeCam);
+            Position difference = lookingAtPos - camPos;
+            Position from = camPos + difference * 0.05f;
+            Position to = camPos + difference * toDistance;
 
-            Position3D t = to - from;
+            Position t = to - from;
             t.Normalize();
             t *= _clampDistance;
-            Position3D v = camPos + t;
+            Position v = camPos + t;
 
             return (_utilsHandler.RaycastFromTo(from, to, ignoreHandle, flags), v);
         }
@@ -412,7 +412,7 @@ namespace TDS_Client.Handler.MapCreator
 
                 case EntityType.Ped:
                     float heightAboveGround = ModAPI.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
-                    obj.MovingPosition = new Position3D(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + 1f);
+                    obj.MovingPosition = new Position(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + 1f);
                     break;
             }
         }

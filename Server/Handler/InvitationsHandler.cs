@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Entities.Utility;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.Gang;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 
 namespace TDS_Server.Core.Manager.Utility

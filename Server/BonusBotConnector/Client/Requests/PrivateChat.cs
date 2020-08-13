@@ -50,14 +50,14 @@ namespace BonusBotConnector.Client.Requests
                 var embed = new EmbedToUserRequest
                 {
                     UserId = userId,
-                    Author = $"{ban.Admin.Name} ({ban.Admin.SCName})",
+                    Author = ban.Admin.Name,
                     Title = "You got banned",
                     ColorR = 130,
                     ColorG = 0,
                     ColorB = 0
                 };
 
-                embed.Fields.Add(new EmbedField { Name = "You are:", Value = $"{ban.Player.Name} ({ban.Player.SCName})" });
+                embed.Fields.Add(new EmbedField { Name = "You are:", Value = ban.Player.Name });
                 embed.Fields.AddRange(fields);
 
                 SendRequest(embed);

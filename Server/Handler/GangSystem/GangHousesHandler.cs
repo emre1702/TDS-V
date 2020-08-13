@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities.Gang;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Models.GTA;
 
@@ -17,14 +17,14 @@ namespace TDS_Server.Handler.GangSystem
     {
         #region Public Fields
 
-        public List<GangHouse> Houses = new List<GangHouse>();
+        public List<IGangHouse> Houses = new List<IGangHouse>();
 
         #endregion Public Fields
 
         #region Private Fields
 
-        private readonly Dictionary<int, List<GangHouse>> _levelFreeHouses = new Dictionary<int, List<GangHouse>>();
-        private readonly List<GangHouse> _occupiedHouses = new List<GangHouse>();
+        private readonly Dictionary<int, List<IGangHouse>> _levelFreeHouses = new Dictionary<int, List<IGangHouse>>();
+        private readonly List<IGangHouse> _occupiedHouses = new List<IGangHouse>();
         private List<GangHouses> _houseEntities = new List<GangHouses>();
 
         private readonly GangLevelsHandler _gangLevelsHandler;
@@ -62,7 +62,7 @@ namespace TDS_Server.Handler.GangSystem
         }
 
 
-        public async void AddHouse(Position3D position, float rotation, byte neededGangLevel, int creatorId)
+        public async void AddHouse(Position position, float rotation, byte neededGangLevel, int creatorId)
         {
             var entity = new GangHouses
             {
@@ -86,14 +86,14 @@ namespace TDS_Server.Handler.GangSystem
         private void LoadHouse(GangHouses entity)
         {
             int cost = _gangLevelsHandler.Levels.TryGetValue(entity.NeededGangLevel, out GangLevelSettings? level) ? level.HousePrice : int.MaxValue;
-            var house = ActivatorUtilities.CreateInstance<GangHouse>(_serviceProvider, entity, cost);
+            var house = ActivatorUtilities.CreateInstance<IGangHouse>(_serviceProvider, entity, cost);
             Houses.Add(house);
 
             if (house.Entity.OwnerGang is null)
             {
-                if (!_levelFreeHouses.TryGetValue(house.Entity.NeededGangLevel, out List<GangHouse>? list))
+                if (!_levelFreeHouses.TryGetValue(house.Entity.NeededGangLevel, out List<IGangHouse>? list))
                 {
-                    list = new List<GangHouse>();
+                    list = new List<IGangHouse>();
                     _levelFreeHouses.Add(house.Entity.NeededGangLevel, list);
                 }
 

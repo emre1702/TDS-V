@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Handler.Player;
 
 namespace TDS_Server.Handler.Converter.Mapping

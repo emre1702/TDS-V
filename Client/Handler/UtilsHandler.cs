@@ -43,7 +43,7 @@ namespace TDS_Client.Handler
 
         #region Public Methods
 
-        public Tuple<Position3D, Position3D> ClosestDistanceBetweenLines(Position3D a0, Position3D a1, Position3D b0, Position3D b1)
+        public Tuple<Position, Position> ClosestDistanceBetweenLines(Position a0, Position a1, Position b0, Position b1)
         {
             var A = a1 - a0;
             var B = b1 - b0;
@@ -56,7 +56,7 @@ namespace TDS_Client.Handler
             var cross = GetCrossProduct(_A, _B);
             var denom = cross.Length() * cross.Length();
 
-            Position3D closest1, closest2;
+            Position closest1, closest2;
             if (denom == 0)
             {
                 var d0 = GetDotProduct(_A, (b0 - a0));
@@ -67,11 +67,11 @@ namespace TDS_Client.Handler
                     {
                         closest1 = a0;
                         closest2 = b0;
-                        return new Tuple<Position3D, Position3D>(closest1, closest2);
+                        return new Tuple<Position, Position>(closest1, closest2);
                     }
                     closest1 = a0;
                     closest2 = b1;
-                    return new Tuple<Position3D, Position3D>(closest1, closest2);
+                    return new Tuple<Position, Position>(closest1, closest2);
                 }
                 else if (d0 >= magA && magA <= d1)
                 {
@@ -80,14 +80,14 @@ namespace TDS_Client.Handler
                     {
                         closest1 = a1;
                         closest2 = b0;
-                        return new Tuple<Position3D, Position3D>(closest1, closest2);
+                        return new Tuple<Position, Position>(closest1, closest2);
                     }
                     closest1 = a1;
                     closest2 = b1;
-                    return new Tuple<Position3D, Position3D>(closest1, closest2);
+                    return new Tuple<Position, Position>(closest1, closest2);
                 }
 
-                return new Tuple<Position3D, Position3D>(new Position3D(), new Position3D());
+                return new Tuple<Position, Position>(new Position(), new Position());
             }
 
             var t = (b0 - a0);
@@ -133,7 +133,7 @@ namespace TDS_Client.Handler
 
             closest1 = pA;
             closest2 = pB;
-            return new Tuple<Position3D, Position3D>(closest1, closest2);
+            return new Tuple<Position, Position>(closest1, closest2);
         }
 
         public float DegreesToRad(float deg)
@@ -141,19 +141,19 @@ namespace TDS_Client.Handler
             return MathF.PI * deg / 180.0f;
         }
 
-        public float Determinent(Position3D a, Position3D b, Position3D c)
+        public float Determinent(Position a, Position b, Position c)
         {
             return a.X * b.Y * c.Z + a.Y * b.Z * c.X + a.Z * b.X * c.Y - c.X * b.Y * a.Z - c.Y * b.Z * a.X - c.Z * b.X * a.Y;
         }
 
-        public float GetAngleBetweenVectors(Position3D v1, Position3D v2)
+        public float GetAngleBetweenVectors(Position v1, Position v2)
         {
             return MathF.Acos(GetDotProduct(GetNormalizedVector(v1), GetNormalizedVector(v2)));
         }
 
-        public Position3D GetCrossProduct(Position3D left, Position3D right)
+        public Position GetCrossProduct(Position left, Position right)
         {
-            Position3D vec = new Position3D
+            Position vec = new Position
             {
                 X = left.Y * right.Z - left.Z * right.Y,
                 Y = left.Z * right.X - left.X * right.Z,
@@ -172,12 +172,12 @@ namespace TDS_Client.Handler
             return ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.CursorY);
         }
 
-        public Position3D GetDirectionByRotation(Position3D rotation)
+        public Position GetDirectionByRotation(Position rotation)
         {
             float num = rotation.Z * 0.0174532924f;
             float num2 = rotation.X * 0.0174532924f;
             float num3 = MathF.Abs(MathF.Cos(num2));
-            return new Position3D { X = -MathF.Sin(num) * num3, Y = MathF.Cos(num) * num3, Z = MathF.Sin(num2) };
+            return new Position { X = -MathF.Sin(num) * num3, Y = MathF.Cos(num) * num3, Z = MathF.Sin(num2) };
         }
 
         public string GetDisplayName(IPlayer player)
@@ -189,15 +189,15 @@ namespace TDS_Client.Handler
             return name;
         }
 
-        public float GetDotProduct(Position3D v1, Position3D v2)
+        public float GetDotProduct(Position v1, Position v2)
         {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
         }
 
-        public Position3D GetNormalizedVector(Position3D vec)
+        public Position GetNormalizedVector(Position vec)
         {
             float mag = MathF.Sqrt(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
-            return new Position3D(vec.X / mag, vec.Y / mag, vec.Z / mag);
+            return new Position(vec.X / mag, vec.Y / mag, vec.Z / mag);
         }
 
         public IPlayer GetPlayerByHandleValue(ushort handleValue)
@@ -210,12 +210,12 @@ namespace TDS_Client.Handler
             return Color.FromArgb(255, SharedUtils.Rnd.Next(255), SharedUtils.Rnd.Next(255), SharedUtils.Rnd.Next(255));
         }
 
-        public Position3D GetScreenCoordFromWorldCoord(Position3D vec)
+        public Position GetScreenCoordFromWorldCoord(Position vec)
         {
             float x = 0;
             float y = 0;
             if (ModAPI.Graphics.GetScreenCoordFromWorldCoord(vec.X, vec.Y, vec.Z, ref x, ref y))
-                return new Position3D(x, y, 0f);
+                return new Position(x, y, 0f);
             else
                 return null;
         }
@@ -236,15 +236,15 @@ namespace TDS_Client.Handler
             return newList;
         }
 
-        public Position3D GetWorldCoordFromScreenCoord(float x, float y, TDSCamera tdsCamera = null)
+        public Position GetWorldCoordFromScreenCoord(float x, float y, TDSCamera tdsCamera = null)
         {
-            Position3D camPos = tdsCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
-            Position3D camRot = tdsCamera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
+            Position camPos = tdsCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
+            Position camRot = tdsCamera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
             var camForward = RotationToDirection(camRot);
-            var rotUp = camRot + new Position3D(1, 0, 0);
-            var rotDown = camRot + new Position3D(-1, 0, 0);
-            var rotLeft = camRot + new Position3D(0, 0, -1);
-            var rotRight = camRot + new Position3D(0, 0, 1);
+            var rotUp = camRot + new Position(1, 0, 0);
+            var rotDown = camRot + new Position(-1, 0, 0);
+            var rotLeft = camRot + new Position(0, 0, -1);
+            var rotRight = camRot + new Position(0, 0, 1);
 
             var camRight = RotationToDirection(rotRight) - RotationToDirection(rotLeft);
             var camUp = RotationToDirection(rotUp) - RotationToDirection(rotDown);
@@ -283,10 +283,10 @@ namespace TDS_Client.Handler
             return point3Dret;
         }
 
-        public bool LineIntersectingCircle(Position3D CircleCenter, Position3D CircleRotation, float CircleRadius, Position3D LineStart, Position3D LineEnd, ref Position3D HitPosition, float threshold, ref Position3D planeNorm)
+        public bool LineIntersectingCircle(Position CircleCenter, Position CircleRotation, float CircleRadius, Position LineStart, Position LineEnd, ref Position HitPosition, float threshold, ref Position planeNorm)
         {
-            Position3D v2 = new Position3D(CircleCenter.X, CircleCenter.Y, CircleCenter.Z + CircleRadius);
-            Position3D v3 = new Position3D(CircleCenter.X - CircleRadius, CircleCenter.Y, CircleCenter.Z);
+            Position v2 = new Position(CircleCenter.X, CircleCenter.Y, CircleCenter.Z + CircleRadius);
+            Position v3 = new Position(CircleCenter.X - CircleRadius, CircleCenter.Y, CircleCenter.Z);
 
             v2 -= CircleCenter;
             v2 = RotateZ(v2, CircleRotation.Z);
@@ -314,11 +314,11 @@ namespace TDS_Client.Handler
 
             //RAGE.Game.Graphics.DrawPoly(CircleCenter.X, CircleCenter.Y, CircleCenter.Z, v2.X, v2.Y, v2.Z, v3.X, v3.Y, v3.Z, 0, 255, 0, 255);
 
-            Position3D four = v2 - CircleCenter;
-            Position3D five = v3 - CircleCenter;
+            Position four = v2 - CircleCenter;
+            Position five = v3 - CircleCenter;
 
-            Position3D cross = GetCrossProduct(four, five);
-            planeNorm = new Position3D(cross.X, cross.Y, cross.Z);
+            Position cross = GetCrossProduct(four, five);
+            planeNorm = new Position(cross.X, cross.Y, cross.Z);
             cross.Normalize();
             bool hit = LineIntersectingPlane(cross, CircleCenter, LineStart, LineEnd, ref HitPosition);
             if (hit)
@@ -331,13 +331,13 @@ namespace TDS_Client.Handler
             return false;
         }
 
-        public bool LineIntersectingPlane(Position3D PlaneNorm, Position3D PlanePoint, Position3D LineStart, Position3D LineEnd, ref Position3D HitPosition)
+        public bool LineIntersectingPlane(Position PlaneNorm, Position PlanePoint, Position LineStart, Position LineEnd, ref Position HitPosition)
         {
-            Position3D u = LineEnd - LineStart;
+            Position u = LineEnd - LineStart;
             float dot = GetDotProduct(PlaneNorm, u);
             if (MathF.Abs(dot) > float.Epsilon)
             {
-                Position3D w = LineStart - PlanePoint;
+                Position w = LineStart - PlanePoint;
                 float fac = -GetDotProduct(PlaneNorm, w) / dot;
                 u *= fac;
                 HitPosition = LineStart + u;
@@ -346,10 +346,10 @@ namespace TDS_Client.Handler
             return false;
         }
 
-        public bool LineIntersectingSphere(Position3D StartLine, Position3D LineEnd, Position3D SphereCenter, float SphereRadius)
+        public bool LineIntersectingSphere(Position StartLine, Position LineEnd, Position SphereCenter, float SphereRadius)
         {
-            Position3D d = LineEnd - StartLine;
-            Position3D f = StartLine - SphereCenter;
+            Position d = LineEnd - StartLine;
+            Position f = StartLine - SphereCenter;
 
             float c = GetDotProduct(f, f) - SphereRadius * SphereRadius;
             if (c <= 0f)
@@ -378,7 +378,7 @@ namespace TDS_Client.Handler
             return rad * (180f / MathF.PI);
         }
 
-        public RaycastHit RaycastFromTo(Position3D from, Position3D to, int ignoreEntity, int flags)
+        public RaycastHit RaycastFromTo(Position from, Position to, int ignoreEntity, int flags)
         {
             int ray = ModAPI.Shapetest.StartShapeTestRay(from.X, from.Y, from.Z, to.X, to.Y, to.Z, flags, ignoreEntity, 0);
             RaycastHit cast = new RaycastHit();
@@ -388,13 +388,13 @@ namespace TDS_Client.Handler
             return cast;
         }
 
-        public Position3D RotateX(Position3D point, float angle)
+        public Position RotateX(Position point, float angle)
         {
-            Position3D f1 = new Position3D(1, 0, 0);
-            Position3D f2 = new Position3D(0, MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)));
-            Position3D f3 = new Position3D(0, MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)));
+            Position f1 = new Position(1, 0, 0);
+            Position f2 = new Position(0, MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)));
+            Position f3 = new Position(0, MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)));
 
-            Position3D final = new Position3D
+            Position final = new Position
             {
                 X = (f1.X * point.X + f1.Y * point.Y + f1.Z * point.Z),
                 Y = (f2.X * point.X + f2.Y * point.Y + f2.Z * point.Z),
@@ -404,13 +404,13 @@ namespace TDS_Client.Handler
             return final;
         }
 
-        public Position3D RotateY(Position3D point, float angle)
+        public Position RotateY(Position point, float angle)
         {
-            Position3D f4 = new Position3D(MathF.Cos(DegreesToRad(angle)), 0, MathF.Sin(DegreesToRad(angle)));
-            Position3D f5 = new Position3D(0, 1, 0);
-            Position3D f6 = new Position3D(-MathF.Sin(DegreesToRad(angle)), 0, MathF.Cos(DegreesToRad(angle)));
+            Position f4 = new Position(MathF.Cos(DegreesToRad(angle)), 0, MathF.Sin(DegreesToRad(angle)));
+            Position f5 = new Position(0, 1, 0);
+            Position f6 = new Position(-MathF.Sin(DegreesToRad(angle)), 0, MathF.Cos(DegreesToRad(angle)));
 
-            Position3D final = new Position3D
+            Position final = new Position
             {
                 X = (f4.X * point.X + f4.Y * point.Y + f4.Z * point.Z),
                 Y = (f5.X * point.X + f5.Y * point.Y + f5.Z * point.Z),
@@ -419,13 +419,13 @@ namespace TDS_Client.Handler
             return final;
         }
 
-        public Position3D RotateZ(Position3D point, float angle)
+        public Position RotateZ(Position point, float angle)
         {
-            Position3D f7 = new Position3D(MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)), 0);
-            Position3D f8 = new Position3D(MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)), 0);
-            Position3D f9 = new Position3D(0, 0, 1);
+            Position f7 = new Position(MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)), 0);
+            Position f8 = new Position(MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)), 0);
+            Position f9 = new Position(0, 0, 1);
 
-            Position3D final = new Position3D
+            Position final = new Position
             {
                 X = (f7.X * point.X + f7.Y * point.Y + f7.Z * point.Z),
                 Y = (f8.X * point.X + f8.Y * point.Y + f8.Z * point.Z),
@@ -434,12 +434,12 @@ namespace TDS_Client.Handler
             return final;
         }
 
-        public Position3D RotationToDirection(Position3D rotation)
+        public Position RotationToDirection(Position rotation)
         {
             var z = DegreesToRad(rotation.Z);
             var x = DegreesToRad(rotation.X);
             var num = Math.Abs(Math.Cos(x));
-            return new Position3D
+            return new Position
             {
                 X = (float)(-Math.Sin(z) * num),
                 Y = (float)(Math.Cos(z) * num),

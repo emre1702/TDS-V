@@ -6,11 +6,11 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.RAGEAPI.ColShape
 {
-    internal class ColShapeAPI : IColShapeAPI
+    internal class ColShapeAPI : ITDSColShapeAPI
     {
         #region Public Methods
 
-        public IColShape CreateSphere(Position3D position, double range, ILobby lobby)
+        public ITDSColShape CreateSphere(Position position, double range, ILobby lobby)
         {
             var modColshape = NAPI.ColShape.CreateSphereColShape(position.ToMod(), (float)range, lobby.Dimension);
             return new ColShape(modColshape);

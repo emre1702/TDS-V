@@ -111,7 +111,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Vehicle
 
         uint GetDefaultHorn();
 
-        Position3D GetDeformationAtPos(float offsetX, float offsetY, float offsetZ);
+        Position GetDeformationAtPos(float offsetX, float offsetY, float offsetZ);
 
         float GetDirtLevel();
 
@@ -123,7 +123,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Vehicle
 
         float GetEngineHealth();
 
-        Position3D GetEntryPositionOfDoor(int doorIndex);
+        Position GetEntryPositionOfDoor(int doorIndex);
 
         float GetEnveffScale();
 

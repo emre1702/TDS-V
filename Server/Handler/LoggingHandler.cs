@@ -1,17 +1,15 @@
-﻿using BonusBotConnector.Client;
+﻿using AltV.Net.Async;
+using BonusBotConnector.Client;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
-using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -21,10 +19,9 @@ namespace TDS_Server.Handler
     {
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly ISettingsHandler _settingsHandler;
-        private ITDSPlayerHandler? _tdsPlayerHandler;
 
         public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler,
-            ISettingsHandler settingsHandler, IModAPI modAPI)
+            ISettingsHandler settingsHandler)
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             : base(dbContext, null)
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
@@ -52,23 +49,18 @@ namespace TDS_Server.Handler
                 _bonusBotConnectorClient.ServerInfos.ErrorString += LogErrorFromBonusBot;
             }
 
-            modAPI.ClientEvent.Add<IPlayer, string, string>(ToServerEvent.LogMessageToServer, this, LogMessageFromClient);
-            modAPI.ClientEvent.Add<IPlayer, string, string, string>(ToServerEvent.LogExceptionToServer, this, LogExceptionFromClient);
+            AltAsync.OnClient<ITDSPlayer, string, string>(ToServerEvent.LogMessageToServer, LogMessageFromClient);
+            AltAsync.OnClient<ITDSPlayer, string, string, string>(ToServerEvent.LogExceptionToServer, LogExceptionFromClient);
         }
 
-        public void SetTDSPlayerHandler(ITDSPlayerHandler tdsPlayerHandler)
-        {
-            _tdsPlayerHandler = tdsPlayerHandler;
-        }
-
-        private async void LogExceptionFromClient(IPlayer player, string message, string stackTrace, string typeName)
+        private async void LogExceptionFromClient(ITDSPlayer player, string message, string stackTrace, string typeName)
         {
             var log = new LogErrors
             {
                 ExceptionType = typeName,
                 Info = message,
-                StackTrace = player.Name + " // " + player.SocialClubName + " // " + (stackTrace ?? Environment.StackTrace),
-                Source = _tdsPlayerHandler?.GetIfLoggedIn(player)?.Id,
+                StackTrace = player.Name + " // " + player.SocialClubId + " // " + (stackTrace ?? Environment.StackTrace),
+                Source = player.Id,
                 Timestamp = DateTime.UtcNow
             };
             Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
@@ -79,14 +71,14 @@ namespace TDS_Server.Handler
             _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
-        private async void LogMessageFromClient(IPlayer player, string message, string source)
+        private async void LogMessageFromClient(ITDSPlayer player, string message, string source)
         {
             var log = new LogErrors
             {
                 ExceptionType = "Message",
                 Info = message,
-                StackTrace = player.Name + " // " + player.SocialClubName + " // " + source,
-                Source = _tdsPlayerHandler?.GetIfLoggedIn(player)?.Id,
+                StackTrace = player.Name + " // " + player.SocialClubId + " // " + source,
+                Source = player.Id,
                 Timestamp = DateTime.UtcNow
             };
             Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
@@ -316,13 +308,12 @@ namespace TDS_Server.Handler
 
         public async void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false)
         {
-            bool ipAddressParseWorked = IPAddress.TryParse(source?.IPAddress ?? "-", out IPAddress? address);
+            bool ipAddressParseWorked = IPAddress.TryParse(source?.Ip ?? "-", out IPAddress? address);
             var log = new LogRests
             {
                 Type = type,
                 Source = source?.Id ?? 0,
                 Ip = saveipserial && ipAddressParseWorked ? address : null,
-                Serial = saveipserial ? source?.ModPlayer?.Serial ?? null : null,
                 Lobby = savelobby ? source?.Lobby?.Id : null,
                 Timestamp = DateTime.UtcNow
             };

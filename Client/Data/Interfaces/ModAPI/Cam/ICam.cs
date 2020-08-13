@@ -8,8 +8,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
     {
         #region Public Properties
 
-        Position3D Position { get; set; }
-        Position3D Rotation { get; set; }
+        Position Position { get; set; }
+        Position Rotation { get; set; }
 
         #endregion Public Properties
 
@@ -21,7 +21,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Cam
 
         void Detach();
 
-        void PointAtCoord(Position3D pos);
+        void PointAtCoord(Position pos);
 
         void Render(bool render, bool ease, int easeTime);
 

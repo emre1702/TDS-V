@@ -64,30 +64,30 @@ namespace TDS_Server.RAGEAPI.Player
             }
         }
 
-        public new Position3D Position
+        public new Position Position
         {
-            get => new Position3D(base.Position.X, base.Position.Y, base.Position.Z);
+            get => new Position(base.Position.X, base.Position.Y, base.Position.Z);
             set => base.Position = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
 
         public ushort RemoteId => Handle.Value;
 
-        public new Position3D Rotation
+        public new Position Rotation
         {
-            get => new Position3D(base.Rotation.X, base.Rotation.Y, base.Rotation.Z);
+            get => new Position(base.Rotation.X, base.Rotation.Y, base.Rotation.Z);
             set => base.Rotation = new GTANetworkAPI.Vector3(value.X, value.Y, value.Z);
         }
 
         public new string Serial { get; private set; } = string.Empty;
         public new string SocialClubName { get; private set; } = string.Empty;
 
-        public new Position3D Velocity
+        public new Position Velocity
         {
             get => base.Velocity.ToTDS();
             set => base.Velocity = value.ToMod();
         }
 
-        public new Position3D AimingPoint => base.AimingPoint.ToTDS();
+        public new Position AimingPoint => base.AimingPoint.ToTDS();
         public new GameTypes GameType => (GameTypes)base.GameType;
         public new IVehicle? Vehicle => base.Vehicle as IVehicle;
         public new WeaponHash[] Weapons => base.Weapons.Select(w => (WeaponHash)w).ToArray();
@@ -96,7 +96,7 @@ namespace TDS_Server.RAGEAPI.Player
 
         #region Public Methods
 
-        public void AttachTo(ITDSPlayer player, PedBone bone, Position3D? positionOffset, Position3D? rotationOffset)
+        public void AttachTo(ITDSPlayer player, PedBone bone, Position? positionOffset, Position? rotationOffset)
         {
             if (!(player.ModPlayer is Player modPlayer))
                 return;
@@ -219,7 +219,7 @@ namespace TDS_Server.RAGEAPI.Player
         public void SetWeaponAmmo(WeaponHash hash, int ammo)
             => SetWeaponAmmo((GTANetworkAPI.WeaponHash)hash, ammo);
 
-        public void Spawn(Position3D position, float heading = 0)
+        public void Spawn(Position position, float heading = 0)
         {
             GTANetworkAPI.NAPI.Player.SpawnPlayer(this, position.ToMod(), heading);
         }

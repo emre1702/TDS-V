@@ -42,13 +42,13 @@ namespace TDS_Client.RAGEAPI.Vehicle
             set => SetHealth(value);
         }
 
-        public new Position3D Position
+        public new Position Position
         {
-            get => base.Position.ToPosition3D();
+            get => base.Position.ToPosition();
             set => base.Position = value.ToVector3();
         }
 
-        public Position3D Rotation
+        public Position Rotation
         {
             get => GetRotation(2);
             set => SetRotation(value.X, value.Y, value.Z, 2, true);
@@ -66,22 +66,22 @@ namespace TDS_Client.RAGEAPI.Vehicle
             return Id == other?.Id;
         }
 
-        public new Position3D GetCollisionNormalOfLastHitFor()
-            => base.GetCollisionNormalOfLastHitFor().ToPosition3D();
+        public new Position GetCollisionNormalOfLastHitFor()
+            => base.GetCollisionNormalOfLastHitFor().ToPosition();
 
-        public new Position3D GetCoords(bool alive)
-            => base.GetCoords(alive).ToPosition3D();
+        public new Position GetCoords(bool alive)
+            => base.GetCoords(alive).ToPosition();
 
-        public new Position3D GetDeformationAtPos(float offsetX, float offsetY, float offsetZ)
-                            => base.GetDeformationAtPos(offsetX, offsetY, offsetZ).ToPosition3D();
+        public new Position GetDeformationAtPos(float offsetX, float offsetY, float offsetZ)
+                            => base.GetDeformationAtPos(offsetX, offsetY, offsetZ).ToPosition();
 
-        public new Position3D GetEntryPositionOfDoor(int doorIndex)
-            => base.GetEntryPositionOfDoor(doorIndex).ToPosition3D();
+        public new Position GetEntryPositionOfDoor(int doorIndex)
+            => base.GetEntryPositionOfDoor(doorIndex).ToPosition();
 
-        public new Position3D GetForwardVector()
-            => base.GetForwardVector().ToPosition3D();
+        public new Position GetForwardVector()
+            => base.GetForwardVector().ToPosition();
 
-        public void GetMatrix(Position3D rightVector, Position3D forwardVector, Position3D upVector, Position3D position)
+        public void GetMatrix(Position rightVector, Position forwardVector, Position upVector, Position position)
         {
             var right = rightVector.ToVector3();
             var forward = forwardVector.ToVector3();
@@ -95,7 +95,7 @@ namespace TDS_Client.RAGEAPI.Vehicle
             position.CopyValuesFrom(pos);
         }
 
-        public void GetModelDimensions(Position3D a, Position3D b)
+        public void GetModelDimensions(Position a, Position b)
         {
             var aV = a.ToVector3();
             var bV = b.ToVector3();
@@ -109,29 +109,29 @@ namespace TDS_Client.RAGEAPI.Vehicle
             b.Z = bV.Z;
         }
 
-        public new Position3D GetOffsetFromGivenWorldCoords(float posX, float posY, float posZ)
-            => base.GetOffsetFromGivenWorldCoords(posX, posY, posZ).ToPosition3D();
+        public new Position GetOffsetFromGivenWorldCoords(float posX, float posY, float posZ)
+            => base.GetOffsetFromGivenWorldCoords(posX, posY, posZ).ToPosition();
 
-        public new Position3D GetOffsetFromInWorldCoords(float offsetX, float offsetY, float offsetZ)
-            => base.GetOffsetFromInWorldCoords(offsetX, offsetY, offsetZ).ToPosition3D();
+        public new Position GetOffsetFromInWorldCoords(float offsetX, float offsetY, float offsetZ)
+            => base.GetOffsetFromInWorldCoords(offsetX, offsetY, offsetZ).ToPosition();
 
-        public Position3D GetOffsetInWorldCoords(float offsetX, float offsetY, float offsetZ)
-            => RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(Handle, offsetX, offsetY, offsetZ).ToPosition3D();
+        public Position GetOffsetInWorldCoords(float offsetX, float offsetY, float offsetZ)
+            => RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(Handle, offsetX, offsetY, offsetZ).ToPosition();
 
-        public new Position3D GetRotation(int rotationOrder)
-            => base.GetRotation(rotationOrder).ToPosition3D();
+        public new Position GetRotation(int rotationOrder)
+            => base.GetRotation(rotationOrder).ToPosition();
 
-        public new Position3D GetRotationVelocity()
-            => base.GetRotationVelocity().ToPosition3D();
+        public new Position GetRotationVelocity()
+            => base.GetRotationVelocity().ToPosition();
 
-        public new Position3D GetSpeedVector(bool relative)
-            => base.GetSpeedVector(relative).ToPosition3D();
+        public new Position GetSpeedVector(bool relative)
+            => base.GetSpeedVector(relative).ToPosition();
 
-        public new Position3D GetVelocity()
-            => base.GetVelocity().ToPosition3D();
+        public new Position GetVelocity()
+            => base.GetVelocity().ToPosition();
 
-        public new Position3D GetWorldPositionOfBone(int boneIndex)
-            => base.GetWorldPositionOfBone(boneIndex).ToPosition3D();
+        public new Position GetWorldPositionOfBone(int boneIndex)
+            => base.GetWorldPositionOfBone(boneIndex).ToPosition();
 
         public bool IsPlayingAnim(string animDict, string animName)
             => IsPlayingAnim(animDict, animName, 3);

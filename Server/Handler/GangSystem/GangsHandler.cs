@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.Gang;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.GangSystem;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
@@ -22,8 +22,8 @@ namespace TDS_Server.Handler.GangSystem
 
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly TDSDbContext _dbContext;
-        private readonly Dictionary<int, Gang> _gangById = new Dictionary<int, Gang>();
-        private readonly Dictionary<int, Gang> _gangByPlayerId = new Dictionary<int, Gang>();
+        private readonly Dictionary<int, IGang> _gangById = new Dictionary<int, IGang>();
+        private readonly Dictionary<int, IGang> _gangByPlayerId = new Dictionary<int, IGang>();
         private readonly Dictionary<int, GangMembers> _gangMemberByPlayerId = new Dictionary<int, GangMembers>();
 
         private readonly IServiceProvider _serviceProvider;
@@ -48,14 +48,14 @@ namespace TDS_Server.Handler.GangSystem
 
         #region Public Properties
 
-        public Gang None => _gangById[-1];
+        public IGang None => _gangById[-1];
         public GangRanks NoneRank => None.Entity.Ranks.First();
 
         #endregion Public Properties
 
         #region Public Methods
 
-        public void Add(Gang gang)
+        public void Add(IGang gang)
         {
             _gangById[gang.Entity.Id] = gang;
 
@@ -69,12 +69,12 @@ namespace TDS_Server.Handler.GangSystem
                 gang.Initialized = true;
         }
 
-        public Gang GetById(int id)
+        public IGang GetById(int id)
         {
             return _gangById[id];
         }
 
-        public Gang? GetByTeamId(int teamId)
+        public IGang? GetByTeamId(int teamId)
         {
             return _gangById.Values.FirstOrDefault(g => g.Entity.TeamId == teamId);
         }
@@ -92,7 +92,7 @@ namespace TDS_Server.Handler.GangSystem
                 .AsNoTracking()
                 .ForEach(g =>
                 {
-                    foreach (var member in g.Members) 
+                    foreach (var member in g.Members)
                     {
                         member.RankNumber = member.Rank?.Rank;
                         member.Name = member.Player!.Name;
@@ -102,7 +102,7 @@ namespace TDS_Server.Handler.GangSystem
                         member.Player = null;
                     }
 
-                    ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, g);
+                    ActivatorUtilities.CreateInstance<IGang>(_serviceProvider, g);
                 });
         }
 
@@ -112,7 +112,7 @@ namespace TDS_Server.Handler.GangSystem
 
         private void EventsHandler_PlayerJoinedLobby(ITDSPlayer player, ILobby lobby)
         {
-            if (!(lobby is GangLobby gangLobby))
+            if (!(lobby is IGangLobby gangLobby))
                 return;
 
             if (!player.Gang.Initialized)
@@ -143,7 +143,7 @@ namespace TDS_Server.Handler.GangSystem
         private IGang GetPlayerGang(ITDSPlayer player)
         {
             if (player.Entity != null)
-                if (_gangByPlayerId.TryGetValue(player.Entity.Id, out Gang? gang))
+                if (_gangByPlayerId.TryGetValue(player.Entity.Id, out IGang? gang))
                     return gang;
 
             return None;
@@ -158,7 +158,7 @@ namespace TDS_Server.Handler.GangSystem
             return NoneRank;
         }
 
-        private async void InitGangForFirstTimeToday(IGang gang, GangLobby gangLobby)
+        private async void InitGangForFirstTimeToday(IGang gang, IGangLobby gangLobby)
         {
             await gangLobby.LoadGangVehicles(gang);
         }

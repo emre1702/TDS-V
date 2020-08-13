@@ -20,9 +20,9 @@ namespace TDS_Client.RAGEAPI.Entity
             RAGE.Game.Entity.DetachEntity(entity, true, true);
         }
 
-        public Position3D GetEntityCoords(int entity, bool alive)
+        public Position GetEntityCoords(int entity, bool alive)
         {
-            return RAGE.Game.Entity.GetEntityCoords(entity, alive).ToPosition3D();
+            return RAGE.Game.Entity.GetEntityCoords(entity, alive).ToPosition();
         }
 
         public int GetEntityHealth(int entity)
@@ -55,9 +55,9 @@ namespace TDS_Client.RAGEAPI.Entity
             }
         }
 
-        public Position3D GetOffsetFromEntityInWorldCoords(int entity, float offsetX, float offsetY, float offsetZ)
+        public Position GetOffsetFromEntityInWorldCoords(int entity, float offsetX, float offsetY, float offsetZ)
         {
-            return RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(entity, offsetX, offsetY, offsetZ).ToPosition3D();
+            return RAGE.Game.Entity.GetOffsetFromEntityInWorldCoords(entity, offsetX, offsetY, offsetZ).ToPosition();
         }
 
         public void SetEntityCollision(int entity, bool toggle, bool keepPhysics)

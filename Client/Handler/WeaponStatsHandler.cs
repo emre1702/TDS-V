@@ -31,7 +31,7 @@ namespace TDS_Client.Handler
 
         #region Private Methods
 
-        private void WeaponShot(Position3D pos, IPlayer target, CancelEventArgs cancelEventArgs)
+        private void WeaponShot(Position pos, IPlayer target, CancelEventArgs cancelEventArgs)
         {
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.WeaponShot);
         }

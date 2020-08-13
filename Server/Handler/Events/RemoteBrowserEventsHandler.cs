@@ -1,14 +1,15 @@
-﻿using System;
+﻿using AltV.Net.Async;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Player;
@@ -32,7 +33,6 @@ namespace TDS_Server.Handler.Events
 
         private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
 
-        private readonly IModAPI _modAPI;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly EventsHandler _eventsHandler;
 
@@ -42,10 +42,9 @@ namespace TDS_Server.Handler.Events
 
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler, ITDSPlayerHandler tdsPlayerHandler,
+            MapFavouritesHandler mapFavouritesHandler,PlayerCharHandler playerCharHandler, ITDSPlayerHandler tdsPlayerHandler,
             GangWindowHandler gangWindowHandler, EventsHandler eventsHandler)
         {
-            _modAPI = modAPI;
             _loggingHandler = loggingHandler;
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
@@ -104,7 +103,7 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData
             };
 
-            modAPI.ClientEvent.Add<IPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
+            AltAsync.OnClient<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, OnFromBrowserEvent);
         }
 
         #endregion Public Constructors
@@ -121,10 +120,9 @@ namespace TDS_Server.Handler.Events
 
         #region Public Methods
 
-        public async void OnFromBrowserEvent(IPlayer modPlayer, params object[] args)
+        public async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
             try
             {
@@ -142,7 +140,7 @@ namespace TDS_Server.Handler.Events
                     ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName);
                 }
 
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                await AltAsync.Do(() =>
                 {
                     if (_methods.ContainsKey(eventName))
                     {
@@ -172,7 +170,7 @@ namespace TDS_Server.Handler.Events
         {
             if (player.Lobby is null)
                 return null;
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IArena arena))
                 return null;
             int? mapId;
             if ((mapId = Utils.GetInt(args[0])) == null)
@@ -184,7 +182,7 @@ namespace TDS_Server.Handler.Events
 
         private object? GiveVehicle(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
+            if (player.Lobby is null || !(player.Lobby is IMapCreateLobby lobby))
                 return null;
 
             if (args.Count == 0)
@@ -214,7 +212,7 @@ namespace TDS_Server.Handler.Events
         {
             if (player.Lobby is null)
                 return null;
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreateLobby lobby))
                 return null;
             var infoType = (MapCreatorInfoType)Convert.ToInt32(args[0]);
             var data = args[1];
@@ -225,7 +223,7 @@ namespace TDS_Server.Handler.Events
 
         private object? MapVote(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IArena arena))
                 return null;
 
             if (args.Count == 0)

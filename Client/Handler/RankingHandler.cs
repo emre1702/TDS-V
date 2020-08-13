@@ -63,8 +63,8 @@ namespace TDS_Client.Handler
             _deathHandler.PlayerSpawn();
 
             var cam = _camerasHandler.BetweenRoundsCam;
-            cam.Position = new Position3D(-425.2233f, 1126.9731f, 326.8f);
-            cam.PointCamAtCoord(new Position3D(-427.03f, 1123.21f, 325.85f));
+            cam.Position = new Position(-425.2233f, 1126.9731f, 326.8f);
+            cam.PointCamAtCoord(new Position(-427.03f, 1123.21f, 325.85f));
             cam.Activate(true);
             // Cam-pos:
             //X: -425,2233

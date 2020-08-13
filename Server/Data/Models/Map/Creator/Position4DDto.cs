@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AltV.Net.Data;
+using Newtonsoft.Json;
 using System.Xml.Serialization;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -47,14 +48,14 @@ namespace TDS_Server.Data.Models.Map.Creator
 
         #region Public Methods
 
-        public Position3D To3D()
+        public Position ToAltV()
         {
-            return new Position3D { X = X, Y = Y, Z = Z };
+            return new Position(X, Y, Z);
         }
 
-        public Position3DDto To3DDto()
+        public PositionDto To3DDto()
         {
-            return new Position3DDto { X = X, Y = Y, Z = Z };
+            return new PositionDto { X = X, Y = Y, Z = Z };
         }
 
         public MapCreatorPosition ToMapCreatorPosition(int id, object? info = null)

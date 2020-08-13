@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using AltV.Net;
+using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Player;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -18,29 +17,26 @@ namespace TDS_Server.Handler
 
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly Serializer _serializer;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler, IModAPI modAPI, ITDSPlayerHandler tdsPlayerHandler)
+        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler)
         {
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
-            _tdsPlayerHandler = tdsPlayerHandler;
 
-            modAPI.ClientEvent.Add<IPlayer>(ToServerEvent.RequestPlayersForScoreboard, this, OnRequestPlayersForScoreboard);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.RequestPlayersForScoreboard, OnRequestPlayersForScoreboard);
         }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public void OnRequestPlayersForScoreboard(IPlayer modPlayer)
+        public void OnRequestPlayersForScoreboard(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
 
             if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
@@ -88,7 +84,7 @@ namespace TDS_Server.Handler
         private List<SyncedScoreboardMainmenuLobbyDataDto> GetDataForMainmenu()
         {
             List<SyncedScoreboardMainmenuLobbyDataDto> list = new List<SyncedScoreboardMainmenuLobbyDataDto>();
-            foreach (Lobby lobby in _lobbiesHandler.Lobbies.Where(l => !GetIgnoreLobbyInScoreboard(l)))
+            foreach (ILobby lobby in _lobbiesHandler.Lobbies.Where(l => !GetIgnoreLobbyInScoreboard(l)))
             {
                 int playerscount = lobby.Players.Count;
                 string playersstr = string.Empty;

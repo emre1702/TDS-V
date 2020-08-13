@@ -25,8 +25,6 @@
         public const string GetVehicle = "c11";
         public const string GotHit = "c12";
 
-        public const string HitOtherPlayer = "c73";
-
         public const string JoinedCustomLobbiesMenu = "c14";
         public const string JoinLobby = "c15";
         public const string JoinLobbyWithPassword = "c16";
@@ -94,6 +92,7 @@
         public const string TryRegister = "c63";
 
         public const string WeaponShot = "c71";
+        public const string WeaponSwitch = "c79";
 
         #endregion Public Fields
     }

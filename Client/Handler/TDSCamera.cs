@@ -48,17 +48,17 @@ namespace TDS_Client.Handler.Entities
         #region Public Properties
 
         public ICam Cam { get; set; }
-        public Position3D Direction => _utilsHandler.GetDirectionByRotation(Rotation);
+        public Position Direction => _utilsHandler.GetDirectionByRotation(Rotation);
         public bool IsActive => this == _camerasHandler.ActiveCamera;
         public string Name { get; set; }
 
-        public Position3D Position
+        public Position Position
         {
             get => Cam.Position;
             set => SetPosition(value);
         }
 
-        public Position3D Rotation
+        public Position Rotation
         {
             get => Cam.Rotation;
             set => Cam.Rotation = value;
@@ -124,7 +124,7 @@ namespace TDS_Client.Handler.Entities
                 Rotation = SpectatingEntity.Rotation;
         }
 
-        public void PointCamAtCoord(Position3D pos)
+        public void PointCamAtCoord(Position pos)
         {
             Cam.PointAtCoord(pos);
 
@@ -136,7 +136,7 @@ namespace TDS_Client.Handler.Entities
             Cam.Render(true, ease, easeTime);
         }
 
-        public void RenderToPosition(Position3D pos, bool ease = false, int easeTime = 0)
+        public void RenderToPosition(Position pos, bool ease = false, int easeTime = 0)
         {
             _loggingHandler.LogInfo("", "TDSCamera.RenderToPosition");
             SetPosition(pos);
@@ -149,7 +149,7 @@ namespace TDS_Client.Handler.Entities
             Cam.SetFov(fov);
         }
 
-        public void SetPosition(Position3D position, bool instantly = false)
+        public void SetPosition(Position position, bool instantly = false)
         {
             _loggingHandler.LogInfo("", "TDSCamera.SetPosition");
             Cam.Position = position;

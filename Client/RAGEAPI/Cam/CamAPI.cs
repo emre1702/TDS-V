@@ -30,9 +30,9 @@ namespace TDS_Client.RAGEAPI.Cam
             RAGE.Game.Cam.DoScreenFadeOut(duration);
         }
 
-        public Position3D GetGameplayCamCoord()
+        public Position GetGameplayCamCoord()
         {
-            return RAGE.Game.Cam.GetGameplayCamCoord().ToPosition3D();
+            return RAGE.Game.Cam.GetGameplayCamCoord().ToPosition();
         }
 
         public float GetGameplayCamFov()
@@ -40,9 +40,9 @@ namespace TDS_Client.RAGEAPI.Cam
             return RAGE.Game.Cam.GetGameplayCamFov();
         }
 
-        public Position3D GetGameplayCamRot()
+        public Position GetGameplayCamRot()
         {
-            return RAGE.Game.Cam.GetGameplayCamRot(2).ToPosition3D();
+            return RAGE.Game.Cam.GetGameplayCamRot(2).ToPosition();
         }
 
         public void Render(bool render, bool ease, int easeTime)

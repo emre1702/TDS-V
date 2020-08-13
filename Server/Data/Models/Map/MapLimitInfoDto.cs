@@ -12,11 +12,11 @@ namespace TDS_Server.Data.Models.Map
 
         [XmlElement("center")]
         [JsonProperty("1")]
-        public Position3DDto? Center { get; set; }
+        public PositionDto? Center { get; set; }
 
         [XmlElement("pos")]
         [JsonProperty("0")]
-        public Position3DDto[]? Edges { get; set; }
+        public PositionDto[]? Edges { get; set; }
 
         [XmlIgnore]
         [JsonIgnore]

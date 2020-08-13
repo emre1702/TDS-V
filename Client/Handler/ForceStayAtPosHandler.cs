@@ -45,20 +45,20 @@ namespace TDS_Client.Handler
 
         #region Public Methods
 
-        public void Start(Position3D pos, float radius, MapLimitType type, int allowedTimeOut = 0)
+        public void Start(Position pos, float radius, MapLimitType type, int allowedTimeOut = 0)
         {
             _mapLimit?.Stop();
 
-            var edges = new List<Position3D>
+            var edges = new List<Position>
             {
-                new Position3D { X = pos.X - radius, Y = pos.Y, Z = pos.Z },  // left
-                new Position3D { X = pos.X - radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // left top
-                new Position3D { X = pos.X, Y = pos.Y - radius, Z = pos.Z },  // top
-                new Position3D { X = pos.X + radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // top right
-                new Position3D { X = pos.X + radius, Y = pos.Y, Z = pos.Z },  // right
-                new Position3D { X = pos.X + radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // right bottom
-                new Position3D { X = pos.X, Y = pos.Y + radius, Z = pos.Z },  // bottom
-                new Position3D { X = pos.X - radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // bottom left
+                new Position { X = pos.X - radius, Y = pos.Y, Z = pos.Z },  // left
+                new Position { X = pos.X - radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // left top
+                new Position { X = pos.X, Y = pos.Y - radius, Z = pos.Z },  // top
+                new Position { X = pos.X + radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // top right
+                new Position { X = pos.X + radius, Y = pos.Y, Z = pos.Z },  // right
+                new Position { X = pos.X + radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // right bottom
+                new Position { X = pos.X, Y = pos.Y + radius, Z = pos.Z },  // bottom
+                new Position { X = pos.X - radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // bottom left
             };
             _mapLimit = new MapLimit(edges, type, allowedTimeOut, Color.FromArgb(30, 255, 255, 255), ModAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
             _mapLimit.Start();
@@ -81,7 +81,7 @@ namespace TDS_Client.Handler
 
         private void OnSetForceStayAtPositionMethod(object[] args)
         {
-            var pos = _serializer.FromServer<Position3D>(Convert.ToString(args[0]));
+            var pos = _serializer.FromServer<Position>(Convert.ToString(args[0]));
             var radius = Convert.ToSingle(args[1]);
             var type = args.Length >= 3 ? (MapLimitType)Convert.ToInt32(args[2]) : MapLimitType.Block;
             var allowedTimeOut = args.Length >= 4 ? Convert.ToInt32(args[3]) : 0;

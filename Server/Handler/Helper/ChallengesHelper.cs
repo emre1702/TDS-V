@@ -162,7 +162,7 @@ namespace TDS_Server.Handler.Helper
                     await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload();
                 });
             }
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 player.InitChallengesDict();
                 player.SendBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));

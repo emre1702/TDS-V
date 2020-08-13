@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 
 namespace TDS_Server.Data.Models
 {
@@ -12,14 +13,12 @@ namespace TDS_Server.Data.Models
         public AngularConstantsDataDto(ITDSPlayer player, ISettingsHandler settingsHandler, IAnnouncementsHandler announcementsHandler)
         {
             TDSId = player.Id;
-            RemoteId = player.RemoteId;
             UsernameChangeCost = settingsHandler.ServerSettings.UsernameChangeCost;
             UsernameChangeCooldownDays = settingsHandler.ServerSettings.UsernameChangeCooldownDays;
             MapBuyBasePrice = settingsHandler.ServerSettings.MapBuyBasePrice;
             MapBuyCounterMultiplicator = settingsHandler.ServerSettings.MapBuyCounterMultiplicator;
             AnnouncementsJson = announcementsHandler.Json;
             Username = player.Entity.Name;
-            SCName = player.Entity.SCName;
         }
 
         #endregion Public Constructors

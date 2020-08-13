@@ -7,7 +7,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Blip
     {
         #region Public Properties
 
-        Position3D Position { get; set; }
+        Position Position { get; set; }
         int Rotation { set; }
 
         #endregion Public Properties
@@ -24,11 +24,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Blip
 
         int GetColour();
 
-        Position3D GetCoords();
+        Position GetCoords();
 
         int GetHudColour();
 
-        Position3D GetInfoIdCoord();
+        Position GetInfoIdCoord();
 
         int GetInfoIdDisplay();
 

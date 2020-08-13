@@ -77,7 +77,7 @@ namespace TDS_Client.Handler.MapCreator
         }
 
         public MapCreatorObject CreateMapCreatorObject(MapCreatorPositionType type, object info, ushort ownerRemoteId,
-            Position3D pos, Position3D rot)
+            Position pos, Position rot)
         {
             switch (type)
             {
@@ -113,29 +113,29 @@ namespace TDS_Client.Handler.MapCreator
             {
                 case MapCreatorPositionType.TeamSpawn:
                     return GetTeamSpawn(Convert.ToInt32(data.Info), data.OwnerRemoteId,
-                        Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+                        Position.GetPos(data), Position.GetRot(data), id: data.Id);
 
                 case MapCreatorPositionType.MapCenter:
-                    return GetMapCenter(data.OwnerRemoteId, Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+                    return GetMapCenter(data.OwnerRemoteId, Position.GetPos(data), Position.GetRot(data), id: data.Id);
 
                 case MapCreatorPositionType.BombPlantPlace:
-                    return GetBombPlantPlace(data.OwnerRemoteId, Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+                    return GetBombPlantPlace(data.OwnerRemoteId, Position.GetPos(data), Position.GetRot(data), id: data.Id);
 
                 case MapCreatorPositionType.MapLimit:
-                    return GetMapLimit(data.OwnerRemoteId, Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+                    return GetMapLimit(data.OwnerRemoteId, Position.GetPos(data), Position.GetRot(data), id: data.Id);
 
                 case MapCreatorPositionType.Target:
-                    return GetTarget(data.OwnerRemoteId, Position3D.GetPos(data), Position3D.GetRot(data), id: data.Id);
+                    return GetTarget(data.OwnerRemoteId, Position.GetPos(data), Position.GetRot(data), id: data.Id);
 
                 case MapCreatorPositionType.Object:
                     string objName = (string)data.Info;
                     return GetObject(objName, MapCreatorPositionType.Object, data.OwnerRemoteId,
-                        Position3D.GetPos(data), Position3D.GetRot(data), objName, id: data.Id);
+                        Position.GetPos(data), Position.GetRot(data), objName, id: data.Id);
 
                 case MapCreatorPositionType.Vehicle:
                     string vehName = (string)data.Info;
                     return GetVehicle(vehName, data.OwnerRemoteId, vehName: vehName, id: data.Id,
-                        pos: Position3D.GetPos(data), rot: Position3D.GetRot(data));
+                        pos: Position.GetPos(data), rot: Position.GetRot(data));
             }
             return null;
         }
@@ -185,7 +185,7 @@ namespace TDS_Client.Handler.MapCreator
             return _cacheMapEditorObjects.Values;
         }
 
-        public MapCreatorObject GetBombPlantPlace(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        public MapCreatorObject GetBombPlantPlace(ushort playerRemoteId, Position pos, Position rot, int id = -1)
         {
             return GetObject(Constants.BombPlantPlaceHashName, MapCreatorPositionType.BombPlantPlace, playerRemoteId, pos, rot, id: id);
         }
@@ -200,7 +200,7 @@ namespace TDS_Client.Handler.MapCreator
             return _cacheMapEditorObjects.FirstOrDefault(g => g.Value.ID == id).Value;
         }
 
-        public MapCreatorObject GetMapCenter(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        public MapCreatorObject GetMapCenter(ushort playerRemoteId, Position pos, Position rot, int id = -1)
         {
             var entry = _cacheMapEditorObjects.FirstOrDefault(e => e.Value.Type == MapCreatorPositionType.MapCenter);
             if (entry.Value != null)
@@ -208,13 +208,13 @@ namespace TDS_Client.Handler.MapCreator
             return GetObject(Constants.MapCenterHashName, MapCreatorPositionType.MapCenter, playerRemoteId, pos, rot, id: id);
         }
 
-        public MapCreatorObject GetMapLimit(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        public MapCreatorObject GetMapLimit(ushort playerRemoteId, Position pos, Position rot, int id = -1)
         {
             return GetObject(Constants.MapLimitHashName, MapCreatorPositionType.MapLimit, playerRemoteId, pos, rot, id: id);
         }
 
         public MapCreatorObject GetObject(string hashName, MapCreatorPositionType type, ushort playerRemoteId,
-            Position3D pos, Position3D rot, string objName = null, int id = -1)
+            Position pos, Position rot, string objName = null, int id = -1)
         {
             uint hash = ModAPI.Misc.GetHashKey(hashName);
             var obj = ModAPI.MapObject.Create(hash, pos, rot, dimension: ModAPI.LocalPlayer.Dimension);
@@ -275,7 +275,7 @@ namespace TDS_Client.Handler.MapCreator
             return obj;
         }
 
-        public MapCreatorObject GetTarget(ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        public MapCreatorObject GetTarget(ushort playerRemoteId, Position pos, Position rot, int id = -1)
         {
             var entry = _cacheMapEditorObjects.FirstOrDefault(e => e.Value.Type == MapCreatorPositionType.Target);
             if (entry.Value != null)
@@ -283,7 +283,7 @@ namespace TDS_Client.Handler.MapCreator
             return GetObject(Constants.TargetHashName, MapCreatorPositionType.Target, playerRemoteId, pos, rot, id: id);
         }
 
-        public MapCreatorObject GetTeamSpawn(int editingTeamIndex, ushort playerRemoteId, Position3D pos, Position3D rot, int id = -1)
+        public MapCreatorObject GetTeamSpawn(int editingTeamIndex, ushort playerRemoteId, Position pos, Position rot, int id = -1)
         {
             int pedHashIndex = editingTeamIndex;
             while (pedHashIndex >= Constants.TeamSpawnPedHash.Length)
@@ -296,7 +296,7 @@ namespace TDS_Client.Handler.MapCreator
             return mapCreatorObj;
         }
 
-        public MapCreatorObject GetVehicle(string hashName, ushort playerRemoteId, Position3D pos, Position3D rot, string vehName = null, int id = -1)
+        public MapCreatorObject GetVehicle(string hashName, ushort playerRemoteId, Position pos, Position rot, string vehName = null, int id = -1)
         {
             uint hash = ModAPI.Misc.GetHashKey(hashName);
             var vehicle = ModAPI.Vehicle.Create(hash, pos, rot, "Map",
@@ -317,27 +317,27 @@ namespace TDS_Client.Handler.MapCreator
 
             if (map.MapCenter != null)
             {
-                var obj = GetMapCenter(map.MapCenter.OwnerRemoteId, Position3D.GetPos(map.MapCenter), Position3D.GetRot(map.MapCenter), map.MapCenter.Id);
+                var obj = GetMapCenter(map.MapCenter.OwnerRemoteId, Position.GetPos(map.MapCenter), Position.GetRot(map.MapCenter), map.MapCenter.Id);
                 if (_camerasHandler.ActiveCamera != null)
-                    _camerasHandler.ActiveCamera.Position = Position3D.GetPos(map.MapCenter);
+                    _camerasHandler.ActiveCamera.Position = Position.GetPos(map.MapCenter);
                 else
-                    ModAPI.LocalPlayer.Position = Position3D.GetPos(map.MapCenter);
+                    ModAPI.LocalPlayer.Position = Position.GetPos(map.MapCenter);
             }
 
             if (map.Target != null)
             {
-                var obj = GetTarget(map.Target.OwnerRemoteId, Position3D.GetPos(map.Target), Position3D.GetRot(map.Target), map.Target.Id);
+                var obj = GetTarget(map.Target.OwnerRemoteId, Position.GetPos(map.Target), Position.GetRot(map.Target), map.Target.Id);
                 if (_camerasHandler.ActiveCamera != null)
-                    _camerasHandler.ActiveCamera.Position = Position3D.GetPos(map.Target);
+                    _camerasHandler.ActiveCamera.Position = Position.GetPos(map.Target);
                 else
-                    ModAPI.LocalPlayer.Position = Position3D.GetPos(map.Target);
+                    ModAPI.LocalPlayer.Position = Position.GetPos(map.Target);
             }
 
             if (map.BombPlaces != null)
             {
                 foreach (var bombPlace in map.BombPlaces)
                 {
-                    var obj = GetBombPlantPlace(bombPlace.OwnerRemoteId, Position3D.GetPos(bombPlace), Position3D.GetRot(bombPlace), bombPlace.Id);
+                    var obj = GetBombPlantPlace(bombPlace.OwnerRemoteId, Position.GetPos(bombPlace), Position.GetRot(bombPlace), bombPlace.Id);
                 }
             }
 
@@ -345,7 +345,7 @@ namespace TDS_Client.Handler.MapCreator
             {
                 foreach (var mapEdge in map.MapEdges)
                 {
-                    var obj = GetMapLimit(mapEdge.OwnerRemoteId, Position3D.GetPos(mapEdge), Position3D.GetRot(mapEdge), mapEdge.Id);
+                    var obj = GetMapLimit(mapEdge.OwnerRemoteId, Position.GetPos(mapEdge), Position.GetRot(mapEdge), mapEdge.Id);
                 }
             }
 
@@ -355,7 +355,7 @@ namespace TDS_Client.Handler.MapCreator
                 {
                     string objName = Convert.ToString(objPos.Info);
                     var obj = GetObject(objName, MapCreatorPositionType.Object, objPos.OwnerRemoteId,
-                        Position3D.GetPos(objPos), Position3D.GetRot(objPos), objName, objPos.Id);
+                        Position.GetPos(objPos), Position.GetRot(objPos), objName, objPos.Id);
                 }
             }
 
@@ -364,7 +364,7 @@ namespace TDS_Client.Handler.MapCreator
                 foreach (var vehPos in map.Vehicles)
                 {
                     string vehName = Convert.ToString(vehPos.Info);
-                    GetVehicle(vehName, vehPos.OwnerRemoteId, Position3D.GetPos(vehPos), Position3D.GetRot(vehPos), vehName, vehPos.Id);
+                    GetVehicle(vehName, vehPos.OwnerRemoteId, Position.GetPos(vehPos), Position.GetRot(vehPos), vehName, vehPos.Id);
                 }
             }
 
@@ -375,7 +375,7 @@ namespace TDS_Client.Handler.MapCreator
                     foreach (var spawnPos in teamSpawns)
                     {
                         var obj = GetTeamSpawn(Convert.ToInt32(spawnPos.Info), spawnPos.OwnerRemoteId,
-                            Position3D.GetPos(spawnPos), Position3D.GetRot(spawnPos), spawnPos.Id);
+                            Position.GetPos(spawnPos), Position.GetRot(spawnPos), spawnPos.Id);
                     }
                 }
             }
@@ -389,7 +389,7 @@ namespace TDS_Client.Handler.MapCreator
             //{
             foreach (var obj in GetAll())
             {
-                obj.MovingRotation = new Position3D(obj.Rotation);
+                obj.MovingRotation = new Position(obj.Rotation);
                 obj.Freeze(true);
                 //obj.SetCollision(false, true);
             }
@@ -446,7 +446,7 @@ namespace TDS_Client.Handler.MapCreator
             if (obj.Rotation is null)
                 return;
 
-            obj.MovingRotation = new Position3D(obj.Rotation);
+            obj.MovingRotation = new Position(obj.Rotation);
             obj.Freeze(true);
             //obj.SetCollision(false, true);
         }

@@ -191,7 +191,7 @@ namespace TDS_Server.Handler.Userpanel
             if (playerId == default)
                 return null;
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 var target = _tdsPlayerHandler.GetIfExists(playerId);
                 if (target is { })

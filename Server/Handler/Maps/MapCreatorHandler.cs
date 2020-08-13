@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models.Map;

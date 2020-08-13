@@ -135,7 +135,7 @@ namespace TDS_Server.Handler.Userpanel
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             var data = await GetData(player);
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            AltAsync.Do(() =>
             {
                 player.SendEvent(ToClientEvent.SyncPlayerCommandsSettings, _serializer.ToClient(data));
             });

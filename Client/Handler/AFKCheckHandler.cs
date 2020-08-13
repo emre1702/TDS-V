@@ -27,12 +27,12 @@ namespace TDS_Client.Handler
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
         private readonly EventMethodData<WeaponShotDelegate> _weaponShotMethod;
-        private Position3D _afkStartPos;
+        private Position _afkStartPos;
         private TDSTimer _checkTimer;
         private DxTextRectangle _draw;
         private bool _inAFKCheckLobby;
         private TDSTimer _kickTimer;
-        private Position3D _lastPos;
+        private Position _lastPos;
 
         #endregion Private Fields
 
@@ -134,7 +134,7 @@ namespace TDS_Client.Handler
             }
         }
 
-        private void Event_WeaponShot(Position3D targetPos, IPlayer target, CancelEventArgs cancel)
+        private void Event_WeaponShot(Position targetPos, IPlayer target, CancelEventArgs cancel)
         {
             OnShoot();
         }
@@ -170,7 +170,7 @@ namespace TDS_Client.Handler
             if (!CanBeAFK())
                 return false;
 
-            Position3D currentPos = ModAPI.LocalPlayer.Position;
+            Position currentPos = ModAPI.LocalPlayer.Position;
             if (currentPos.DistanceTo(_afkStartPos) > Constants.NeededDistanceToBeNotAFK)
                 return false;
 

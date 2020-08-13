@@ -18,8 +18,6 @@ namespace TDS_Server.Database.Entity.Player
         public bool PreventConnection { get; set; }
         public string Reason { get; set; }
         public ulong? SCId { get; set; }
-        public string SCName { get; set; }
-        public string Serial { get; set; }
         public DateTime StartTimestamp { get; set; }
 
         #endregion Public Properties

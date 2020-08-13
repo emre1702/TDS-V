@@ -12,8 +12,8 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
         int Handle { get; }
         float Heading { get; set; }
         int Health { get; set; }
-        Position3D Position { get; set; }
-        Position3D Rotation { get; set; }
+        Position Position { get; set; }
+        Position Rotation { get; set; }
 
         #endregion Public Properties
 
@@ -87,11 +87,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 
         bool GetCollisionDisabled();
 
-        Position3D GetCollisionNormalOfLastHitFor();
+        Position GetCollisionNormalOfLastHitFor();
 
-        Position3D GetCoords(bool alive);
+        Position GetCoords(bool alive);
 
-        Position3D GetForwardVector();
+        Position GetForwardVector();
 
         float GetForwardX();
 
@@ -117,13 +117,13 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 
         int GetLodDist();
 
-        void GetMatrix(Position3D rightVector, Position3D forwardVector, Position3D upVector, Position3D position);
+        void GetMatrix(Position rightVector, Position forwardVector, Position upVector, Position position);
 
         int GetMaxHealth();
 
         uint GetModel();
 
-        void GetModelDimensions(Position3D a, Position3D b);
+        void GetModelDimensions(Position a, Position b);
 
         int GetNearestPlayerTo();
 
@@ -131,11 +131,11 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 
         int GetObjectIndexFromIndex();
 
-        Position3D GetOffsetFromGivenWorldCoords(float posX, float posY, float posZ);
+        Position GetOffsetFromGivenWorldCoords(float posX, float posY, float posZ);
 
-        Position3D GetOffsetFromInWorldCoords(float offsetX, float offsetY, float offsetZ);
+        Position GetOffsetFromInWorldCoords(float offsetX, float offsetY, float offsetZ);
 
-        Position3D GetOffsetInWorldCoords(float offsetX, float offsetY, float offsetZ);
+        Position GetOffsetInWorldCoords(float offsetX, float offsetY, float offsetZ);
 
         int GetPedIndexFromIndex();
 
@@ -151,15 +151,15 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 
         uint GetRoomKeyFrom();
 
-        Position3D GetRotation(int rotationOrder);
+        Position GetRotation(int rotationOrder);
 
-        Position3D GetRotationVelocity();
+        Position GetRotationVelocity();
 
         string GetScript(ref int script);
 
         float GetSpeed();
 
-        Position3D GetSpeedVector(bool relative);
+        Position GetSpeedVector(bool relative);
 
         float GetSubmergedLevel();
 
@@ -169,9 +169,9 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Entity
 
         int GetVehicleIndexFromIndex();
 
-        Position3D GetVelocity();
+        Position GetVelocity();
 
-        Position3D GetWorldPositionOfBone(int boneIndex);
+        Position GetWorldPositionOfBone(int boneIndex);
 
         bool HasAnimEventFired(uint actionHash);
 

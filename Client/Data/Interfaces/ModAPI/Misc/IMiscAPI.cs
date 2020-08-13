@@ -7,7 +7,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Misc
     {
         #region Public Methods
 
-        float GetDistanceBetweenCoords(Position3D pos1, Position3D pos2, bool useZ);
+        float GetDistanceBetweenCoords(Position pos1, Position pos2, bool useZ);
 
         int GetGameTimer();
 
@@ -15,7 +15,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Misc
 
         uint GetHashKey(string hash);
 
-        void GetModelDimensions(uint model, Position3D a, Position3D b);
+        void GetModelDimensions(uint model, Position a, Position b);
 
         void IgnoreNextRestart(bool toggle);
 

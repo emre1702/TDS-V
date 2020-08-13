@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Shared.Core;

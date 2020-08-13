@@ -32,7 +32,7 @@ namespace TDS_Client.Handler.Appearance
         private readonly UtilsHandler _utilsHandler;
 
         private float _currentCamAngle;
-        private Position3D _currentCamOffsetPos;
+        private Position _currentCamOffsetPos;
         private uint _dimension;
         private IPed _displayPed;
         private Position2D _initMovePedCursorPos;
@@ -125,7 +125,7 @@ namespace TDS_Client.Handler.Appearance
 
         #region Private Methods
 
-        private void ApplyAngle(Position3D pos, float distance, float angle)
+        private void ApplyAngle(Position pos, float distance, float angle)
         {
             pos.X = (float)Math.Cos(angle * Math.PI / 180) * distance;
             pos.Y = (float)Math.Sin(angle * Math.PI / 180) * distance;
@@ -258,7 +258,7 @@ namespace TDS_Client.Handler.Appearance
 
                 if (_currentCamOffsetPos is null)
                 {
-                    _currentCamOffsetPos = new Position3D(0, 0, 0.15f);
+                    _currentCamOffsetPos = new Position(0, 0, 0.15f);
                     _currentCamAngle = 90;
                     ApplyAngle(_currentCamOffsetPos, 0.5f, _currentCamAngle);
                 }
@@ -268,9 +268,9 @@ namespace TDS_Client.Handler.Appearance
 
                 cam.Activate();
                 cam.Render(true, 1000);
-                //cam.PointCamAtCoord(new Position3D(-425.48f, 1123.55f, 326.5171f));
+                //cam.PointCamAtCoord(new Position(-425.48f, 1123.55f, 326.5171f));
                 //cam.Activate();
-                //cam.RenderToPosition(new Position3D(-425.3048f, 1124.125f, 326.5871f), true, 1000);
+                //cam.RenderToPosition(new Position(-425.3048f, 1124.125f, 326.5871f), true, 1000);
             }
             catch (Exception ex)
             {
@@ -289,7 +289,7 @@ namespace TDS_Client.Handler.Appearance
                 var hairAndColorsData = data.HairAndColorsDataSynced.First(e => e.Slot == data.Slot);
 
                 var skin = generalData.IsMale ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
-                var pos = new Position3D(-425.48, 1123.55, 325.85);
+                var pos = new Position(-425.48, 1123.55, 325.85);
 
                 if (!(_displayPed is null))
                     _displayPed.Destroy();

@@ -49,7 +49,7 @@ namespace TDS_Client.Handler.Lobby
             Logging.LogInfo("", "LobbyCamHandler.SetTimerTowardsPlayer", true);
         }
 
-        public void SetToMapCenter(Position3D mapcenter)
+        public void SetToMapCenter(Position mapcenter)
         {
             try
             {

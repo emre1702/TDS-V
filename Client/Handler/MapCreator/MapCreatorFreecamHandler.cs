@@ -155,9 +155,9 @@ namespace TDS_Client.Handler.MapCreator
         {
             var cam = _camerasHandler.FreeCam;
 
-            Position3D pos = cam.Position;
-            Position3D dir = cam.Direction;
-            Position3D rot = cam.Rotation;
+            Position pos = cam.Position;
+            Position dir = cam.Direction;
+            Position rot = cam.Rotation;
 
             float rightAxisX = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisX) * 2f;
             float rightAxisY = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisY) * 2f;
@@ -173,14 +173,14 @@ namespace TDS_Client.Handler.MapCreator
             else if (ModAPI.Control.IsControlJustReleased(InputGroup.MOVE, Control.CursorScrollDown))
                 _currentScrollSpeed /= 2f;
 
-            Position3D vector = new Position3D
+            Position vector = new Position
             {
                 X = dir.X * leftAxisY * slowMult * fastMult * _currentScrollSpeed,
                 Y = dir.Y * leftAxisY * slowMult * fastMult * _currentScrollSpeed,
                 Z = dir.Z * leftAxisY * slowMult * fastMult * _currentScrollSpeed
             };
-            Position3D upVector = new Position3D(0, 0, 1);
-            Position3D rightVector = _utilsHandler.GetCrossProduct(dir.Normalized, upVector.Normalized);
+            Position upVector = new Position(0, 0, 1);
+            Position rightVector = _utilsHandler.GetCrossProduct(dir.Normalized, upVector.Normalized);
 
             rightVector.X *= leftAxisX * 0.5f * slowMult * fastMult * _currentScrollSpeed;
             rightVector.Y *= leftAxisX * 0.5f * slowMult * fastMult * _currentScrollSpeed;
@@ -189,7 +189,7 @@ namespace TDS_Client.Handler.MapCreator
             float goUp = _isUpPressed ? 0.5f : 0f;
             float goDown = _isDownPressed ? 0.5f : 0f;
 
-            Position3D newPos = new Position3D(pos.X - vector.X + rightVector.X, pos.Y - vector.Y + rightVector.Y, pos.Z - vector.Z + rightVector.Z + goUp - goDown);
+            Position newPos = new Position(pos.X - vector.X + rightVector.X, pos.Y - vector.Y + rightVector.Y, pos.Z - vector.Z + rightVector.Z + goUp - goDown);
             if (cam.Position != newPos)
             {
                 cam.SetPosition(newPos);
@@ -198,7 +198,7 @@ namespace TDS_Client.Handler.MapCreator
             if (ModAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Aim))
             {
                 float rotX = Math.Max(Math.Min(rot.X + rightAxisY * -5f, 89), -89);
-                var newRot = new Position3D(rotX, 0.0f, rot.Z + rightAxisX * -5f);
+                var newRot = new Position(rotX, 0.0f, rot.Z + rightAxisX * -5f);
                 cam.Rotation = newRot;
                 ModAPI.LocalPlayer.Rotation = newRot;
             }

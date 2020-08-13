@@ -7,7 +7,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Checkpoint
     {
         #region Public Methods
 
-        ICheckpoint Create(uint hash, Position3D position, float radius, Position3D direction, Color color, bool isVisible = true, uint dimension = 0);
+        ICheckpoint Create(uint hash, Position position, float radius, Position direction, Color color, bool isVisible = true, uint dimension = 0);
 
         #endregion Public Methods
     }

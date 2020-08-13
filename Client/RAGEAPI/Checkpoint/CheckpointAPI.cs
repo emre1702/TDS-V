@@ -8,7 +8,7 @@ namespace TDS_Client.RAGEAPI.Checkpoint
     {
         #region Public Methods
 
-        public ICheckpoint Create(uint hash, Position3D position, float radius, Position3D direction, Color color, bool isVisible = true, uint dimension = 0)
+        public ICheckpoint Create(uint hash, Position position, float radius, Position direction, Color color, bool isVisible = true, uint dimension = 0)
         {
             return new Checkpoint(hash, position, radius, direction, color, isVisible, dimension);
         }

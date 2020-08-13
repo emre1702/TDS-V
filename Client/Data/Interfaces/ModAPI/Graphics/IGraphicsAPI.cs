@@ -10,7 +10,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Graphics
 
         void DrawLine(float startX, float startY, float startZ, float endX, float endY, float endZ, byte r, byte g, byte b, byte a);
 
-        void DrawLine(Position3D startPos, Position3D endPos, Color color);
+        void DrawLine(Position startPos, Position endPos, Color color);
 
         void DrawMarker(MarkerType type, float posX, float posY, float posZ, float dirX, float dirY, float dirZ, float rotX, float rotY, float rotZ,
             float scaleX, float scaleY, float scaleZ, byte r, byte g, byte b, byte a,
@@ -18,7 +18,7 @@ namespace TDS_Client.Data.Interfaces.ModAPI.Graphics
 
         void DrawPoly(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, byte r, byte g, byte b, byte a);
 
-        void DrawPoly(Position3D edge1, Position3D edge2, Position3D edge3, Color color);
+        void DrawPoly(Position edge1, Position edge2, Position edge3, Color color);
 
         void DrawRect(float x, float y, float width, float height, byte r, byte g, byte b, byte a);
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Database.Entity.Bonusbot;
 using TDS_Server.Database.Entity.Userpanel;
 using static BonusBotConnector.Client.BonusBotConnectorClient;

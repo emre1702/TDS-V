@@ -45,7 +45,7 @@ namespace TDS_Client.Handler.Map
 
         #region Public Methods
 
-        public void Load(List<Position3D> edges)
+        public void Load(List<Position> edges)
         {
             _currentMapLimit?.Stop();
             _currentMapLimit = new MapLimit(edges, _settingsHandler.MapLimitType, _settingsHandler.MapLimitTime, _settingsHandler.MapBorderColor, ModAPI, _remoteEventsSender, _settingsHandler,

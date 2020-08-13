@@ -1,53 +1,40 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net;
+using AltV.Net.Async;
+using AltV.Net.Elements.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
-using TDS_Server.Handler.Commands;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Factories;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
-using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Server;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Core.Init
 {
-    public class Program
+    public class Program : AsyncResource
     {
-        public readonly EventsHandler EventsHandler;
-        public readonly RemoteBrowserEventsHandler RemoteBrowserEventsHandler;
-        public readonly LobbiesHandler LobbiesHandler;
-        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
-
-        private TDSPlayer? _consolePlayerCache;
-
+        private readonly ILoggingHandler? _loggingHandler;
+        private readonly EventsHandler? _eventsHandler;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
-        private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
-        private readonly CommandsHandler _commandsHandler;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-
-        public Program(IModAPI modAPI)
+        public Program()
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             try
             {
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-                _modAPI = modAPI;
-                _serviceProvider = Services.InitServiceCollection(modAPI);
+                var serviceProvider = Services.InitServiceCollection();
 
-                using (var dbContext = _serviceProvider.GetRequiredService<TDSDbContext>())
+                using (var dbContext = serviceProvider.GetRequiredService<TDSDbContext>())
                 {
                     dbContext.Database.Migrate();
                     var connection = (NpgsqlConnection)dbContext.Database.GetDbConnection();
@@ -55,40 +42,32 @@ namespace TDS_Server.Core.Init
                     connection.ReloadTypes();
                 }
 
-                var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
+                var mapsLoadingHandler = serviceProvider.GetRequiredService<MapsLoadingHandler>();
                 mapsLoadingHandler.LoadAllMaps();
 
-                var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(_serviceProvider);
+                var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(serviceProvider);
                 if (codeChecker.CheckHasErrors())
                 {
-                    modAPI.Resource.StopThis();
                     Environment.Exit(1);
                 }
 
-                EventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
-                _serviceProvider.GetRequiredService<ServerStartHandler>();
+                _eventsHandler = serviceProvider.GetRequiredService<EventsHandler>();
+                serviceProvider.GetRequiredService<ServerStartHandler>();
 
-                LobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
-                LobbiesHandler.LoadLobbies();
+                var lobbiesHandler = serviceProvider.GetRequiredService<LobbiesHandler>();
+                lobbiesHandler.LoadLobbies();
 
-                var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
-                var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
+                var bansHandler = serviceProvider.GetRequiredService<BansHandler>();
+                var settingsHandler = serviceProvider.GetRequiredService<ISettingsHandler>();
                 bansHandler.RefreshServerBansCache(settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
 
-                var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
+                var gangsHandler = serviceProvider.GetRequiredService<GangsHandler>();
                 gangsHandler.LoadAll();
 
-                RemoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
-                _tdsPlayerHandler = _serviceProvider.GetRequiredService<ITDSPlayerHandler>();
-                _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
-                _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
+                var remoteBrowserEventsHandler = serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
+                _loggingHandler = serviceProvider.GetRequiredService<ILoggingHandler>();
 
-                Services.InitializeSingletons(_serviceProvider);
-
-                var loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
-                loggingHandler.SetTDSPlayerHandler(_tdsPlayerHandler);
-
-                Task.Run(ReadInput);
+                Services.InitializeSingletons(serviceProvider);
             }
             catch (Exception ex)
             {
@@ -98,23 +77,42 @@ namespace TDS_Server.Core.Init
                     Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
                 Environment.Exit(1);
             }
+            finally
+            {
+                #if DEBUG 
+                Console.ReadLine();
+                #endif
+            }
         }
 
-        public ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer player)
-            => _tdsPlayerHandler.GetIfLoggedIn(player);
+        public override void OnStart()
+        {
+            
+        }
 
-        public ITDSPlayer? GetTDSPlayerIfLoggedIn(ushort remoteId)
-            => _tdsPlayerHandler.GetIfLoggedIn(remoteId);
+        public override void OnStop()
+        {
+            _eventsHandler?.OnResourceStop();
+        }
 
-        public ITDSPlayer GetTDSPlayer(IPlayer player)
-            => _tdsPlayerHandler.Get(player);
+        public override IEntityFactory<IVehicle> GetVehicleFactory()
+            => new VehicleFactory(_serviceProvider);
 
-        public ITDSPlayer GetNotLoggedInTDSPlayer(IPlayer player)
-            => _tdsPlayerHandler.GetNotLoggedIn(player);
+        public override IEntityFactory<IPlayer> GetPlayerFactory()
+            => new PlayerFactory(_serviceProvider);
+
+        public override IBaseObjectFactory<IColShape> GetColShapeFactory()
+            => new ColShapeFactory(_serviceProvider);
+
+        public override IBaseObjectFactory<IVoiceChannel> GetVoiceChannelFactory()
+            => new VoiceChannelFactory(_serviceProvider);
+
+        public override void OnTick()
+            => TDSTimer.OnUpdateFunc();
 
         public void HandleProgramException(Exception ex, string msgBefore = "")
         {
-            _loggingHandler.LogError($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
+            _loggingHandler?.LogError($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -122,7 +120,8 @@ namespace TDS_Server.Core.Init
             HandleProgramException((Exception)e.ExceptionObject, "CurrentDomain_UnhandledException: ");
         }
 
-        private void ReadInput()
+        //Todo: Add ScriptEventType.ConsoleCommand   (string command, string[] args)
+        /*private async void ReadInput()
         {
             while (true)
             {
@@ -138,17 +137,17 @@ namespace TDS_Server.Core.Init
 
                     if (_consolePlayerCache is null)
                     {
-                        _consolePlayerCache = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
+                        _consolePlayerCache = ActivatorUtilities.CreateInstance<TDSPlayer>(serviceProvider);
                         _consolePlayerCache.IsConsole = true;
                     }
 
-                    _modAPI.Thread.QueueIntoMainThread(() => _commandsHandler.UseCommand(_consolePlayerCache, input));
+                    await AltAsync.Do(() => _commandsHandler.UseCommand(_consolePlayerCache, input));
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
                 }
             }
-        }
+        }*/
     }
 }

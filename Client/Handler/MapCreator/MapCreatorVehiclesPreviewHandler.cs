@@ -18,7 +18,7 @@ namespace TDS_Client.Handler.MapCreator
         private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
         private IVehicle _vehicle;
-        private Position3D _vehicleRotation;
+        private Position _vehicleRotation;
 
         #endregion Private Fields
 
@@ -48,7 +48,7 @@ namespace TDS_Client.Handler.MapCreator
             if (hash == default)
                 return;
 
-            _vehicleRotation = new Position3D();
+            _vehicleRotation = new Position();
             if (_vehicle == null)
                 _modAPI.Event.Tick.Add(_tickEventMethod);
             else
@@ -83,8 +83,8 @@ namespace TDS_Client.Handler.MapCreator
             var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
             var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(_modAPI.Cam.GetGameplayCamRot());
 
-            Position3D a = new Position3D();
-            Position3D b = new Position3D();
+            Position a = new Position();
+            Position b = new Position();
             _vehicle.GetModelDimensions(a, b);
             var objSize = b - a;
             var position = camPos + camDirection * (3 + objSize.Length());

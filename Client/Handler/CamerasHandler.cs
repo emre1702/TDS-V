@@ -29,7 +29,7 @@ namespace TDS_Client.Handler
 
         public TDSCamera ActiveCamera { get; set; }
         public TDSCamera BetweenRoundsCam { get; set; }
-        public Position3D FocusAtPos { get; set; }
+        public Position FocusAtPos { get; set; }
         public TDSCamera FreeCam { get; set; }
         public TDSCamera SpectateCam { get; set; }
         public SpectatingHandler Spectating { get; }
@@ -38,12 +38,12 @@ namespace TDS_Client.Handler
 
         #region Public Methods
 
-        public Position3D GetCurrentCamPos()
+        public Position GetCurrentCamPos()
         {
             return ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
         }
 
-        public Position3D GetCurrentCamRot()
+        public Position GetCurrentCamRot()
         {
             return ActiveCamera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
         }
@@ -73,7 +73,7 @@ namespace TDS_Client.Handler
             }
         }
 
-        public void SetFocusArea(Position3D pos)
+        public void SetFocusArea(Position pos)
         {
             if (FocusAtPos is null || FocusAtPos.DistanceTo(pos) >= 50)
             {

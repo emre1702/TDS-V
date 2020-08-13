@@ -21,7 +21,7 @@ namespace TDS_Client.Handler.Entities.Draw
         private readonly DxHandler _dxHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly int _startTicks;
-        private readonly Position3D _targetPosition;
+        private readonly Position _targetPosition;
         private readonly TimerHandler _timerHandler;
         private readonly IModAPI ModAPI;
         private DxText _text;

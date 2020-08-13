@@ -1,21 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net.Async;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Command;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Data.Attributes;
 using TDS_Shared.Default;
@@ -52,22 +51,18 @@ namespace TDS_Server.Handler.Commands
         private readonly ISettingsHandler _settingsHandler;
         private readonly ChatHandler _chatHandler;
         private readonly BaseCommands _baseCommands;
-        private readonly IModAPI _modAPI;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public CommandsHandler(IModAPI modAPI, TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler,
-            ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands, ITDSPlayerHandler tdsPlayerHandler)
+        public CommandsHandler(TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler,
+            ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands)
         {
-            _modAPI = modAPI;
             _mappingHandler = mappingHandler;
             _settingsHandler = settingsHandler;
             _chatHandler = chatHandler;
             _baseCommands = baseCommands;
-            _tdsPlayerHandler = tdsPlayerHandler;
 
             LoadCommands(dbContext, userpanelCommandsHandler);
 
-            modAPI.ClientEvent.Add<IPlayer, string>(ToServerEvent.CommandUsed, this, UseCommand);
+            AltAsync.OnClient<ITDSPlayer, string>(ToServerEvent.CommandUsed, UseCommand);
         }
 
         public void LoadCommands(TDSDbContext dbcontext, UserpanelCommandsHandler userpanelCommandsHandler)
@@ -104,7 +99,8 @@ namespace TDS_Server.Handler.Commands
                 CommandMethodDataDto methoddata = new CommandMethodDataDto
                 (
                     priority: attribute.Priority,
-                    methodDefault: method
+                    methodDefault: method,
+                    isAsync: IsAsyncMethod(method)
                 );
                 commanddata.MethodDatas.Add(methoddata);
 
@@ -173,14 +169,6 @@ namespace TDS_Server.Handler.Commands
             userpanelCommandsHandler.LoadCommandData(_commandDataByCommand, _commandsDict);
         }
 
-        public void UseCommand(IPlayer modPlayer, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
-        {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            UseCommand(player, msg);
-        }
-
         public async void UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
             try
@@ -247,8 +235,11 @@ namespace TDS_Server.Handler.Commands
                     //if (UseImplicitTypes)
                     //{
                     var finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
-                    _modAPI.Thread.QueueIntoMainThread(() =>
-                        methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray()));
+                    if (methoddata.IsAsync)
+                        await (Task)(methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray()))!;
+                    else
+                        await AltAsync.Do(() =>
+                            methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray()));
                     /*}
                     else
                     {
@@ -290,8 +281,7 @@ namespace TDS_Server.Handler.Commands
                     {
                         #region Check if player exists
 
-                        if (parameterInfo.ParameterType == typeof(TDSPlayer)
-                            || parameterInfo.ParameterType == typeof(ITDSPlayer)
+                        if (parameterInfo.ParameterType == typeof(ITDSPlayer)
                             || parameterInfo.ParameterType == typeof(Players))
                         {
                             // if it's the last method (there can be an alternative method with
@@ -506,6 +496,11 @@ namespace TDS_Server.Handler.Commands
             if (converterReturn != null && converterReturn is Task<Players?> task)
                 return await task;
             return converterReturn;
+        }
+
+        private bool IsAsyncMethod(MethodInfo method)
+        {
+            return method.GetCustomAttribute<AsyncStateMachineAttribute>() is { };
         }
     }
 }

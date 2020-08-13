@@ -8,7 +8,7 @@ namespace TDS_Client.RAGEAPI.Shapetest
     {
         #region Public Methods
 
-        public int GetShapeTestResult(int rayHandle, ref int hit, Position3D endCoords, Position3D surfaceNormal, ref int entityHit)
+        public int GetShapeTestResult(int rayHandle, ref int hit, Position endCoords, Position surfaceNormal, ref int entityHit)
         {
             var endCoorsV = endCoords.ToVector3();
             var surfaceNormalV = surfaceNormal.ToVector3();
@@ -25,7 +25,7 @@ namespace TDS_Client.RAGEAPI.Shapetest
             return result;
         }
 
-        public int GetShapeTestResultEx(int rayHandle, ref int hit, Position3D endCoords, Position3D surfaceNormal, ref int materialHash, ref int entityHit)
+        public int GetShapeTestResultEx(int rayHandle, ref int hit, Position endCoords, Position surfaceNormal, ref int materialHash, ref int entityHit)
         {
             var endCoorsV = endCoords.ToVector3();
             var surfaceNormalV = surfaceNormal.ToVector3();
