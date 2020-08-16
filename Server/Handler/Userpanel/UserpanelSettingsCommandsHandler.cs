@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net.Async;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.PlayerCommands;
@@ -18,30 +18,28 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelSettingsCommandsHandler : DatabaseEntityWrapper, IUserpanelPlayerCommandsHandler
     {
-        #region Private Fields
+        #region Fields
 
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly UserpanelCommandsHandler _userpanelCommandsHandler;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public UserpanelSettingsCommandsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, UserpanelCommandsHandler userpanelCommandsHandler,
-            Serializer serializer, EventsHandler eventsHandler, IModAPI modAPI)
+            Serializer serializer, EventsHandler eventsHandler)
             : base(dbContext, loggingHandler)
         {
             _userpanelCommandsHandler = userpanelCommandsHandler;
             _serializer = serializer;
-            _modAPI = modAPI;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         public async Task<UserpanelPlayerCommandData?> GetData(ITDSPlayer player)
         {
@@ -128,19 +126,15 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             var data = await GetData(player);
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 player.SendEvent(ToClientEvent.SyncPlayerCommandsSettings, _serializer.ToClient(data));
             });
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

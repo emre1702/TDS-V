@@ -20,19 +20,19 @@ namespace TDS_Server.Handler.GangSystem
         private readonly TDSDbContext _dbContext;
         private readonly ILoggingHandler _loggingHandler;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEntitiesByInterfaceCreator _entitiesByInterfaceCreator;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
+            ILoggingHandler loggingHandler, IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
         {
             _dbContext = dbContext;
             _mapsLoadingHandler = mapsLoadingHandler;
             _loggingHandler = loggingHandler;
-            _serviceProvider = serviceProvider;
+            _entitiesByInterfaceCreator = entitiesByInterfaceCreator;
 
             eventsHandler.MapsLoaded += LoadGangwarAreas;
         }
@@ -73,7 +73,7 @@ namespace TDS_Server.Handler.GangSystem
                     _loggingHandler.LogError($"GangwarArea with Map {entity.Map.Name} ({entity.MapId}) has no map file in default maps folder!", Environment.StackTrace);
                     continue;
                 }
-                var area = ActivatorUtilities.CreateInstance<IGangwarArea>(_serviceProvider, entity, map);
+                var area = _entitiesByInterfaceCreator.Create<IGangwarArea>(entity, map);
                 GangwarAreas.Add(area);
             }
             // Don't need it anymore

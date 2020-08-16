@@ -54,18 +54,18 @@ namespace TDS_Server.Handler.Account
         }
 
         public async Task<PlayerBans?> GetBan(int lobbyId,
-                    int? playerId = null, string? ip = null, ulong? socialClubId = null,
+            int? playerId = null, string? ip = null, ulong? socialClubId = null, ulong? hwid = null, ulong? hwidEx = null,
             bool? preventConnection = null, bool andConnection = false)
         {
-            PlayerBans? ban = (playerId, ip, socialClubId, andConnection) switch
+            PlayerBans? ban = (playerId, ip, socialClubId, hwid, hwidEx, andConnection) switch
             {
-                ({ }, null, null, _)
+                ({ }, null, null, null, null, _)
                     => await ExecuteForDBAsync(async (dbContext) =>
                         {
                             return await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.PlayerId == playerId && b.LobbyId == lobbyId);
                         }),
 
-                (_, _, _, true)
+                (_, _, _, _, _, true)
                     => await ExecuteForDBAsync(async (dbContext) =>
                     {
                         return await dbContext.PlayerBans
@@ -73,11 +73,13 @@ namespace TDS_Server.Handler.Account
                                 && (playerId == null || b.PlayerId == playerId)
                                 && (ip == null || b.IP == ip)
                                 && (socialClubId == null || b.SCId == socialClubId)
+                                && (hwid == null || b.HwId == hwid)
+                                && (hwidEx == null || b.HwIdEx == hwidEx)
                                 && (preventConnection == null || b.PreventConnection == preventConnection))
                             .FirstOrDefaultAsync();
                     }),
 
-                (_, _, _, false)
+                (_, _, _, _, _, false)
                     => await ExecuteForDBAsync(async (dbContext) =>
                     {
                         return await dbContext.PlayerBans
@@ -85,6 +87,8 @@ namespace TDS_Server.Handler.Account
                                 (playerId == null || b.PlayerId == playerId)
                                 || (ip == null || b.IP == ip)
                                 || (socialClubId == null || b.SCId == socialClubId)
+                                || (hwid == null || b.HwId == hwid)
+                                || (hwidEx == null || b.HwIdEx == hwidEx)
                                 || (preventConnection == null || b.PreventConnection == preventConnection)))
                             .FirstOrDefaultAsync();
                     }),
@@ -107,31 +111,36 @@ namespace TDS_Server.Handler.Account
         }
 
         public PlayerBans? GetServerBan(int? playerId = null, string? ip = null, ulong? socialClubId = null,
+            ulong? hwid = null, ulong? hwidEx = null,
             bool? preventConnection = null, bool andConnection = false)
         {
             int lobbyId = _lobbiesHandler.MainMenu.Id;
-            PlayerBans? ban = (playerId, ip, socialClubId, andConnection) switch
+            PlayerBans? ban = (playerId, ip, socialClubId, hwid, hwidEx, andConnection) switch
             {
-                ({ }, null, null, _)
+                ({ }, null, null, null, null, _)
                     => _cachedBans.FirstOrDefault(b => b.PlayerId == playerId && b.LobbyId == lobbyId),
 
-                (_, _, _, true)
+                (_, _, _, _, _, true)
                     => _cachedBans
                             .Where(b => b.LobbyId == lobbyId
                                 && b.EndTimestamp > DateTime.UtcNow
                                 && (playerId is null || b.PlayerId == playerId)
                                 && (ip is null || b.IP == ip)
                                 && (socialClubId is null || b.SCId == socialClubId)
+                                && (hwid == null || b.HwId == hwid)
+                                && (hwidEx == null || b.HwIdEx == hwidEx)
                                 && (preventConnection is null || b.PreventConnection == preventConnection))
                             .FirstOrDefault(),
 
-                (_, _, _, false)
+                (_, _, _, _, _, false)
                     => _cachedBans
                             .Where(b => b.LobbyId == lobbyId
                                 && b.EndTimestamp > DateTime.UtcNow
                                 && ((playerId is null || b.PlayerId == playerId)
                                 || (ip is null || b.IP == ip)
-                                || (socialClubId is null || b.SCId == socialClubId))
+                                || (socialClubId is null || b.SCId == socialClubId)
+                                || (hwid == null || b.HwId == hwid)
+                                || (hwidEx == null || b.HwIdEx == hwidEx))
                                 && (preventConnection is null || b.PreventConnection == preventConnection))
                             .FirstOrDefault()
             };
@@ -168,7 +177,7 @@ namespace TDS_Server.Handler.Account
 
         private void CheckBanOnIncomingConnection(ITDSPlayer player, string reason)
         {
-            var ban = GetServerBan(null, player.Ip, player.SocialClubId, true);
+            var ban = GetServerBan(null, player.Ip, player.SocialClubId, player.HardwareIdHash, player.HardwareIdExHash, true);
             if (ban is { })
                 Utils.HandleBan(player, ban);
         }

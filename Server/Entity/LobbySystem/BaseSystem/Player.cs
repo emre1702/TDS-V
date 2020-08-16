@@ -1,8 +1,12 @@
-﻿using System.Linq;
+﻿using AltV.Net.Async;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -15,7 +19,7 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
 
         public bool FreezePlayerOnCountdown => SetPositionOnPlayerAdd;
         public bool SavePlayerLobbyStats { get; set; } = true;
-        public bool SetPositionOnPlayerAdd => !IsGangActionLobby && !(this is GangLobby);
+        public bool SetPositionOnPlayerAdd => !IsGangActionLobby && !(this is IGangLobby);
         public bool SpawnPlayer => SetPositionOnPlayerAdd;
 
         #endregion Public Properties
@@ -47,9 +51,9 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
 
             Players.TryAdd(player.Id, player);
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
-                ModAPI.Sync.SendEvent(this, ToClientEvent.JoinSameLobby, player.RemoteId);
+                SendEvent(ToClientEvent.JoinSameLobby, player);
 
                 player.Lobby = this;
 
@@ -57,19 +61,19 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                     || Entity.Type == LobbyType.MapCreateLobby
                     || Entity.Type == LobbyType.GangLobby
                     || Entity.Type == LobbyType.CharCreateLobby)
-                    player.ModPlayer?.SetInvincible(true);
+                    player.SetInvincible(true);
 
-                player.ModPlayer!.Dimension = Dimension;
+                player.Dimension = (int)Dimension;
                 if (SetPositionOnPlayerAdd)
-                    player.ModPlayer.Position = SpawnPoint.Around(Entity.AroundSpawnPoint);
-                player.ModPlayer.Freeze(true);
+                    player.Position = SpawnPoint.Around(Entity.AroundSpawnPoint);
+                player.Freeze(true);
 
                 if (teamindex != null)
                     SetPlayerTeam(player, Teams[(int)teamindex.Value]);
 
-                DataSyncHandler.SetData(player, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, IsPlayerLobbyOwner(player));
+                player.SetClientMetaData(PlayerDataKey.IsLobbyOwner.ToString(), IsPlayerLobbyOwner(player));
 
-                player.SendEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Serializer.ToClient(Players.Values.Select(p => p.RemoteId).ToList()),
+                player.SendEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Players.Values.ToArray(),
                                                                                      Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
 
                 if (Entity.Type != LobbyType.MainMenu)
@@ -110,16 +114,13 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
             player.Lobby = null;
             player.PreviousLobby = this;
             await player.SetPlayerLobbyStats(null);
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 player.Lifes = 0;
                 SetPlayerTeam(player, null);
                 player.Spectates = null;
-                if (player.ModPlayer is { })
-                {
-                    player.ModPlayer.Freeze(true);
-                    player.ModPlayer.Transparency = 255;
-                }
+                player.Freeze(true);
+                player.Transparency = 255;
 
                 if (DeathSpawnTimer.ContainsKey(player))
                 {
@@ -134,9 +135,9 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                     await Remove();
             }
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
-                ModAPI.Sync.SendEvent(ToClientEvent.LeaveSameLobby, player.RemoteId, player.Entity?.Name ?? player.DisplayName);
+                SendEvent(ToClientEvent.LeaveSameLobby, player, player.Entity?.Name ?? player.DisplayName);
                 if (Entity.Type != LobbyType.MainMenu)
                     LoggingHandler?.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
 

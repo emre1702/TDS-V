@@ -23,20 +23,10 @@ namespace TDS_Client.Core.Init
 
         internal static void Initialize(IModAPI modAPI)
         {
-            var loggingHandler = new LoggingHandler(modAPI);
-            var serializer = new Serializer(str => loggingHandler.LogInfo(str, "Serializer"), ex => loggingHandler.LogError(ex));
-
             try
             {
-                loggingHandler.LogInfo("Initializing services ...", "Services.Initialize");
-
-                var dxHandler = new DxHandler(modAPI, loggingHandler);
-                var timerHandler = new TimerHandler(modAPI, loggingHandler, dxHandler);
-                var remoteEventsSender = new RemoteEventsSender(modAPI, loggingHandler, timerHandler);
-
                 var eventsHandler = new EventsHandler(modAPI, loggingHandler, remoteEventsSender);
-                var bindsHandler = new BindsHandler(modAPI, loggingHandler);
-                var discordHandler = new DiscordHandler(modAPI, loggingHandler, eventsHandler);
+
 
                 var browserHandler = new BrowserHandler(modAPI, loggingHandler, eventsHandler, serializer, remoteEventsSender);
                 var settingsHandler = new SettingsHandler(modAPI, loggingHandler, remoteEventsSender, eventsHandler, browserHandler, serializer);

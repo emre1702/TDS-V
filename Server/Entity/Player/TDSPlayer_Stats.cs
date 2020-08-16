@@ -18,7 +18,7 @@ namespace TDS_Server.Entity.Player
                 if (Entity is null)
                     return;
                 Entity.PlayerStats.Money = value;
-                _dataSyncHandler.SetData(this, PlayerDataKey.Money, DataSyncMode.Player, value);
+                SetClientMetaData(PlayerDataKey.Money.ToString(), value);
             }
         }
 
@@ -52,7 +52,7 @@ namespace TDS_Server.Entity.Player
             {
                 Entity.PlayerStats.LastMapsBoughtCounterReduce = DateTime.UtcNow;
                 --Entity.PlayerStats.MapsBoughtCounter;
-                _dataSyncHandler.SetData(this, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
+                SetClientMetaData(PlayerDataKey.MapsBoughtCounter.ToString(), Entity.PlayerStats.MapsBoughtCounter);
             }
         }
 
@@ -65,7 +65,7 @@ namespace TDS_Server.Entity.Player
                     TotalStats.Money += money;
             }
             else
-                LoggingHandler?.LogError($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
+                _loggingHandler?.LogError($"Should have went to minus money! Current: {Money} | Substracted money: {money}",
                                 Environment.StackTrace, null, this);
         }
 

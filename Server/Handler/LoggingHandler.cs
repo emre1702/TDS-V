@@ -49,11 +49,11 @@ namespace TDS_Server.Handler
                 _bonusBotConnectorClient.ServerInfos.ErrorString += LogErrorFromBonusBot;
             }
 
-            AltAsync.OnClient<ITDSPlayer, string, string>(ToServerEvent.LogMessageToServer, LogMessageFromClient);
-            AltAsync.OnClient<ITDSPlayer, string, string, string>(ToServerEvent.LogExceptionToServer, LogExceptionFromClient);
+            AltAsync.OnClient<ITDSPlayer, string, string, Task>(ToServerEvent.LogMessageToServer, LogMessageFromClient);
+            AltAsync.OnClient<ITDSPlayer, string, string, string, Task>(ToServerEvent.LogExceptionToServer, LogExceptionFromClient);
         }
 
-        private async void LogExceptionFromClient(ITDSPlayer player, string message, string stackTrace, string typeName)
+        private async Task LogExceptionFromClient(ITDSPlayer player, string message, string stackTrace, string typeName)
         {
             var log = new LogErrors
             {
@@ -71,7 +71,7 @@ namespace TDS_Server.Handler
             _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
         }
 
-        private async void LogMessageFromClient(ITDSPlayer player, string message, string source)
+        private async Task LogMessageFromClient(ITDSPlayer player, string message, string source)
         {
             var log = new LogErrors
             {

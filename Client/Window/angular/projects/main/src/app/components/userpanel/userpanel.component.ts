@@ -22,7 +22,7 @@ export class UserpanelComponent implements OnInit, OnDestroy {
     myStatsGeneralColumns = {
         0:  "Id",
         1:  "Name",
-        2:  "SCName",
+        2:  "SCId",
         3:  "Gang",
         4:  "AdminLvl",
         5:  "Donation",

@@ -26,6 +26,7 @@ namespace TDS_Server.Entity.GangSystem
         private readonly ISettingsHandler _settingsHandler;
         private readonly LobbiesHandler? _lobbiesHandler;
         private readonly IServiceProvider _serviceProvider;
+        private readonly TDSBlipHandler _tdsBlipHandler;
 
         private TDSTimer? _checkAtTarget;
         private int _playerNotAtTargetCounter;
@@ -36,26 +37,28 @@ namespace TDS_Server.Entity.GangSystem
         #region Public Constructors
 
         public GangwarArea(GangwarArea copyFrom, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler,
-            IServiceProvider serviceProvider)
-            : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext, loggingHandler, serviceProvider)
+            IServiceProvider serviceProvider, TDSBlipHandler tdsBlipHandler)
+            : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext, loggingHandler, serviceProvider, tdsBlipHandler)
         {
             Entity = null;
         }
 
         public GangwarArea(MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, 
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, TDSBlipHandler tdsBlipHandler)
             : base(dbContext, loggingHandler)
         {
             Map = map;
             _settingsHandler = settingsHandler;
             _gangsHandler = gangsHandler;
             _serviceProvider = serviceProvider;
+            _tdsBlipHandler = tdsBlipHandler;
         }
 
         [ActivatorUtilitiesConstructor]
         public GangwarArea(GangwarAreas entity, MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler, IServiceProvider serviceProvider)
-            : this(map, settingsHandler, gangsHandler, dbContext, loggingHandler, serviceProvider)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler, IServiceProvider serviceProvider,
+            TDSBlipHandler tdsBlipHandler)
+            : this(map, settingsHandler, gangsHandler, dbContext, loggingHandler, serviceProvider, tdsBlipHandler)
         {
             Entity = entity;
             _lobbiesHandler = lobbiesHandler;
@@ -267,14 +270,14 @@ namespace TDS_Server.Entity.GangSystem
             uint sprite = 84;
             Position pos = Map.Target.ToAltV();
             float scale = 3f;
-            int color = Owner?.Entity.BlipColor ?? 4;
+            byte color = Owner?.Entity.BlipColor ?? 4;
             string name = Map.Info.Name;
             byte alpha = (byte)(HasCooldown ? 120 : 255);
             float drawDistance = 100f;
             bool shortRange = false;
-            uint dimension = _lobbiesHandler.GangLobby.Dimension;
+            int dimension = (int)_lobbiesHandler.GangLobby.Dimension;
 
-            _blip = ActivatorUtilities.CreateInstance<ITDSBlip>(_serviceProvider, sprite, pos, scale, color, name, alpha, drawDistance, shortRange, dimension);
+            _blip = _tdsBlipHandler.Create(sprite, pos, scale, color, name, alpha, drawDistance, shortRange, dimension);
         }
 
         #endregion Private Methods

@@ -103,7 +103,7 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData
             };
 
-            AltAsync.OnClient<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, OnFromBrowserEvent);
+            AltAsync.OnClient<ITDSPlayer, object[], Task>(ToServerEvent.FromBrowserEvent, OnFromBrowserEvent);
         }
 
         #endregion Public Constructors
@@ -120,7 +120,7 @@ namespace TDS_Server.Handler.Events
 
         #region Public Methods
 
-        public async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
+        public async Task OnFromBrowserEvent(ITDSPlayer player, params object[] args)
         {
             if (!player.LoggedIn)
                 return;

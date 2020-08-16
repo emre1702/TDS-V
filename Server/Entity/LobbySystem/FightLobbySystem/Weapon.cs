@@ -1,4 +1,5 @@
 ﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Database.Entity.LobbyEntities;
 
 namespace TDS_Server.Entity.LobbySystem.FightLobbySystem
@@ -17,13 +18,13 @@ namespace TDS_Server.Entity.LobbySystem.FightLobbySystem
             {
                 //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
                 //    continue;
-                player.ModPlayer.GiveWeapon(weapon.Hash);
-                player.ModPlayer.SetWeaponAmmo(weapon.Hash, weapon.Ammo);
+
+                player.GiveWeapon((uint)weapon.Hash, weapon.Ammo, false);
                 if (weapon.Hash == lastWeapon)
                     giveLastWeapon = true;
             }
             if (giveLastWeapon)
-                player.ModPlayer.CurrentWeapon = lastWeapon;
+                player.CurrentWeapon = lastWeapon;
         }
 
         #endregion Public Methods

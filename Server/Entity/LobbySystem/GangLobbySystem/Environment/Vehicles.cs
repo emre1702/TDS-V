@@ -1,10 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using AltV.Net;
+using AltV.Net.Async;
+using AltV.Net.Data;
+using System.Drawing;
+using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.Gang;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
+using TDS_Shared.Data.Utility;
 
-namespace TDS_Server.Entity.LobbySystem.GangLobbySystem.Environment
+namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
 {
     partial class GangLobby
     {
@@ -23,17 +28,23 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem.Environment
             if (gang.Entity.Vehicles is null || gang.Entity.Vehicles.Count == 0)
                 return;
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            var gangColor = SharedUtils.GetColorFromHtmlRgba(gang.Entity.Color) ?? Color.FromArgb(255, 255, 255);
+            var rgbaColor = new Rgba(gangColor.R, gangColor.G, gangColor.B, gangColor.A);
+            await AltAsync.Do(() =>
             {
                 foreach (var dbVehicle in gang.Entity.Vehicles)
                 {
-                    var vehicle = ModAPI.Vehicle.Create(dbVehicle.Model, new Position(dbVehicle.SpawnPosX, dbVehicle.SpawnPosY, dbVehicle.SpawnPosZ),
-                        new Position(dbVehicle.SpawnRotX, dbVehicle.SpawnRotY, dbVehicle.SpawnRotZ),
-                        dbVehicle.Color1, dbVehicle.Color2, gang.Entity.Short, 255, dimension: Dimension);
+                    var vehicle = (ITDSVehicle)Alt.CreateVehicle((uint)dbVehicle.Model, new Position(dbVehicle.SpawnPosX, dbVehicle.SpawnPosY, dbVehicle.SpawnPosZ),
+                        new DegreeRotation(dbVehicle.SpawnRotX, dbVehicle.SpawnRotY, dbVehicle.SpawnRotZ));
+                    vehicle.PrimaryColorRgb = rgbaColor;
+                    vehicle.NumberplateText = gang.Entity.Short;
+                    vehicle.Dimension = (int)Dimension;
+
                     vehicle.Freeze(true, this);
                     vehicle.SetInvincible(true, this);
-                    DataSyncHandler.SetData(vehicle, EntityDataKey.GangId, DataSyncMode.Lobby, gang.Entity.Id, toLobby: this);
-                    //Todo: Disable collision of the vehicle (maybe on clientside an EntityStreamIn?)
+                    vehicle.SetStreamSyncedMetaData(EntityDataKey.GangId.ToString(), gang.Entity.Id);
+
+                    //Todo: Disable collision of the vehicle (maybe on clientside on EntityStreamIn?)
                 }
             });
         }

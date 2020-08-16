@@ -26,21 +26,19 @@ namespace TDS_Server.Handler.GangSystem
         #region Private Fields
 
         private readonly Serializer _serializer;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly DataSyncHandler _dataSyncHandler;
+        private readonly IEntitiesByInterfaceCreator _entitiesByInterfaceCreator;
         private readonly LobbiesHandler _lobbiesHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public GangWindowCreateHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IServiceProvider serviceProvider,
-            DataSyncHandler dataSyncHandler, LobbiesHandler lobbiesHandler)
+        public GangWindowCreateHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IEntitiesByInterfaceCreator entitiesByInterfaceCreator,
+            LobbiesHandler lobbiesHandler)
             : base(dbContext, loggingHandler)
         {
             _serializer = serializer;
-            _serviceProvider = serviceProvider;
-            _dataSyncHandler = dataSyncHandler;
+            _entitiesByInterfaceCreator = entitiesByInterfaceCreator;
             _lobbiesHandler = lobbiesHandler;
         }
 
@@ -57,9 +55,10 @@ namespace TDS_Server.Handler.GangSystem
                 dbContext.Gangs.Add(gang);
                 await dbContext.SaveChangesAsync();
             });
-            player.Gang = ActivatorUtilities.CreateInstance<IGang>(_serviceProvider, gang);
+            player.Gang = _entitiesByInterfaceCreator.Create<IGang>(gang);
             player.GangRank = gang.Ranks.MaxBy(r => r.Rank).First();
-            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, gang.Id);
+            player.SetClientMetaData(PlayerDataKey.GangId.ToString(), gang.Id);
+
             // IsInGang is set to true in Angular, not needed here
             // Permissions will get synced, too - not needed here.
 

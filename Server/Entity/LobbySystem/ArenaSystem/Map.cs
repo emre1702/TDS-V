@@ -50,7 +50,7 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
             return GetRandomMapFromList(_maps);
         }
 
-        public void SetMapList(List<MapDto> themaps, string? syncjson = null)
+        public void SetMapsList(List<MapDto> themaps, string? syncjson = null)
         {
             // Only choose maps with team-amount same as this lobby got teams (without spectator)
             _maps = themaps.Where(m => m.TeamSpawnsList.TeamSpawns.Length == Teams.Count - 1).ToList();
@@ -85,7 +85,7 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
             int i = 0;
             foreach (PositionDto edge in map.LimitInfo.Edges)
             {
-                ITDSBlip blip = ModAPI.Blip.Create(SharedConstants.MapLimitBlipSprite, edge, name: "Limit " + ++i, dimension: Dimension);
+                ITDSBlip blip = _tdsBlipHandler.Create(SharedConstants.MapLimitBlipSprite, edge.ToAltV(), name: "Limit " + ++i, dimension: (int)Dimension);
                 _mapBlips.Add(blip);
             }
         }
@@ -111,8 +111,8 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
                     regions.Add(position);
 
                     ITeam team = Teams[(int)teamsSpawnList.TeamID];
-                    ITDSBlip blip = ModAPI.Blip.Create(SharedConstants.TeamSpawnBlipSprite, position, color: team.Entity.BlipColor,
-                        name: "Spawn " + team.Entity.Name, dimension: Dimension);
+                    ITDSBlip blip = _tdsBlipHandler.Create(SharedConstants.TeamSpawnBlipSprite, position, color: team.Entity.BlipColor,
+                        name: "Spawn " + team.Entity.Name, dimension: (int)Dimension);
 
                     _mapBlips.Add(blip);
                 }

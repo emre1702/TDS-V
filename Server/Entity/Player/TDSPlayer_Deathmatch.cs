@@ -32,6 +32,11 @@ namespace TDS_Server.Entity.Player
             }
         }
 
+        public new WeaponHash CurrentWeapon
+        {
+            get => (WeaponHash)base.CurrentWeapon;
+            set => base.CurrentWeapon = (uint)value;
+        }
         public ITDSPlayer? LastHitter { get; set; }
         public DateTime? LastKillAt { get; set; }
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
@@ -64,7 +69,7 @@ namespace TDS_Server.Entity.Player
 
             if (_health + healtharmor <= 100)
             {
-                Health += healtharmor;
+                Health += (ushort)healtharmor;
                 healtharmor = 0;
             }
             else if (_health != 100)
@@ -79,7 +84,7 @@ namespace TDS_Server.Entity.Player
 
             if (healtharmor > 0)
             {
-                Armor = _armor + healtharmor <= 100 ? _armor + healtharmor : 100;
+                Armor = (ushort)(_armor + healtharmor <= 100 ? _armor + healtharmor : 100);
             }
 
             #endregion Armor
@@ -100,10 +105,10 @@ namespace TDS_Server.Entity.Player
             if (_armor > 0)
             {
                 leftdmg -= _armor;
-                Armor = leftdmg < 0 ? Math.Abs(leftdmg) : 0;
+                Armor = (ushort)(leftdmg < 0 ? Math.Abs(leftdmg) : 0);
             }
             if (leftdmg > 0)
-                Health -= leftdmg;
+                Health -= (ushort)leftdmg;
         }
 
         public void OnPlayerWeaponSwitch(WeaponHash previousWeapon, WeaponHash newWeapon)

@@ -5,7 +5,7 @@ using TDS_Server.Entity.Player;
 
 namespace TDS_Server.Entity.Damagesys
 {
-    partial class Damagesys
+    partial class DamageSystem
     {
         #region Private Fields
 
@@ -15,16 +15,16 @@ namespace TDS_Server.Entity.Damagesys
 
         #region Public Methods
 
-        public void CheckLastHitter(ITDSPlayer character, out ITDSPlayer? killer)
+        public void CheckLastHitter(ITDSPlayer player, out ITDSPlayer? killer)
         {
             killer = null;
-            if (character.LastHitter is null)
+            if (player.LastHitter is null)
                 return;
 
-            ITDSPlayer lastHitterCharacter = character.LastHitter;
-            character.LastHitter = null;
+            ITDSPlayer lastHitterCharacter = player.LastHitter;
+            player.LastHitter = null;
 
-            if (character.Lobby != lastHitterCharacter.Lobby)
+            if (player.Lobby != lastHitterCharacter.Lobby)
                 return;
 
             if (lastHitterCharacter.Lifes == 0)
@@ -33,7 +33,7 @@ namespace TDS_Server.Entity.Damagesys
             if (lastHitterCharacter.CurrentRoundStats != null)
                 ++lastHitterCharacter.CurrentRoundStats.Kills;
             KillingSpreeKill(lastHitterCharacter);
-            lastHitterCharacter.SendNotification(string.Format(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
+            lastHitterCharacter.SendNotification(string.Format(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, player.DisplayName));
             killer = lastHitterCharacter;
         }
 

@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using AltV.Net.Async;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map.Creator;
@@ -26,11 +27,11 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
 
             if (!await base.AddPlayer(player, 0))
                 return false;
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
-                var pos = _currentMap?.LimitInfo?.Center.SwitchNamespace();
-                if (pos is { } && player.ModPlayer is { })
-                    player.ModPlayer.Position = pos.AddToZ(10);
+                var pos = _currentMap?.LimitInfo?.Center?.ToAltV();
+                if (pos.HasValue)
+                    player.Position = pos.Value.AddToZ(10);
                 SendPlayerRoundInfoOnJoin(player);
                 new TDSTimer(() => SpectateOtherAllTeams(player), 1000, 1);
 
@@ -61,15 +62,15 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
         public override async Task RemovePlayer(ITDSPlayer player)
         {
             var lifes = player.Lifes;
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 if (lifes > 0)
                 {
                     RemovePlayerFromAlive(player);
                     PlayerCantBeSpectatedAnymore(player);
-                    DmgSys.CheckLastHitter(player, out ITDSPlayer? killercharacter);
+                    DmgSys.CheckLastHitter(player, out ITDSPlayer? killer);
 
-                    DeathInfoSync(player, killercharacter, (uint)WeaponHash.Unarmed);
+                    DeathInfoSync(player, killer, (uint)WeaponHash.Unarmed);
                 }
                 else
                 {
@@ -81,7 +82,7 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
 
             await base.RemovePlayer(player);
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 switch (CurrentRoundStatus)
                 {
@@ -157,11 +158,8 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
 
         private void RespawnPlayer(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
-
             SetPlayerReadyForRound(player);
-            player.ModPlayer.Freeze(false);
+            player.Freeze(false);
             player.SendEvent(ToClientEvent.PlayerRespawned);
             CurrentGameMode?.RespawnPlayer(player);
         }
@@ -213,9 +211,6 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
 
         private void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
-
             if (_currentMap is { })
             {
                 player.SendEvent(ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
@@ -250,9 +245,6 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
 
         private void SetPlayerReadyForRound(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
-
             if (player.Team != null && !player.Team.IsSpectator)
             {
                 if (SpawnPlayer)
@@ -260,13 +252,13 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
                     Position4DDto? spawndata = GetMapRandomSpawnData(player.Team);
                     if (spawndata is null)
                         return;
-                    player.Spawn(spawndata.To3D(), spawndata.Rotation);
+                    player.Spawn(spawndata.ToAltV(), spawndata.Rotation);
                 }
 
                 if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
                     player.Team.SpectateablePlayers?.Add(player);
 
-                player.ModPlayer.Freeze(FreezePlayerOnCountdown);
+                player.Freeze(FreezePlayerOnCountdown);
                 GivePlayerWeapons(player);
                 RemoveAsSpectator(player);
             }
@@ -275,8 +267,8 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
                 if (SpawnPlayer)
                     player.Spawn(_currentMapSpectatorPosition ?? SpawnPoint, 0);
 
-                player.ModPlayer.Freeze(true);
-                player.ModPlayer.RemoveAllWeapons();
+                player.Freeze(true);
+                player.RemoveAllWeapons();
             }
 
             if (_removeSpectatorsTimer.ContainsKey(player))
@@ -285,13 +277,11 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
 
         private void StartRoundForPlayer(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
             player.SendEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
             if (player.Team?.IsSpectator == false)
             {
                 SetPlayerAlive(player);
-                player.ModPlayer.Freeze(false);
+                player.Freeze(false);
             }
             player.LastHitter = null;
         }

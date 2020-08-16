@@ -14,12 +14,12 @@ namespace TDS_Server.Entity.Player
             {
                 newArgs[i + 1] = args[i];
             }
-            ModPlayer?.SendEvent(ToClientEvent.ToBrowserEvent, newArgs);
+            Emit(ToClientEvent.ToBrowserEvent, newArgs);
         }
 
         public void SendEvent(string eventName, params object[] args)
         {
-            ModPlayer?.SendEvent(eventName, args);
+            Emit(eventName, args);
         }
 
         #endregion Public Methods

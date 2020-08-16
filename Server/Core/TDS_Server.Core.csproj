@@ -11,13 +11,14 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>C:\altV\server\resources\tds\server\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.7.20364.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0-preview.7.20365.15">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -25,12 +26,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Core\TDS_Shared.Core.csproj" />
-    <ProjectReference Include="..\..\TDS_Server.Entity\TDS_Server.Entity.csproj" />
     <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
     <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
     <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
     <ProjectReference Include="..\Entity\TDS_Server.Entity.csproj" />
     <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
+      
   </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="B:\cygwin64\bin\dos2unix.exe B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh&#xD;&#xA;B:\cygwin64\bin\dos2unix.exe B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\ServerSync.sh&#xD;&#xA;B:\cygwin64\bin\bash.exe 'B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh'" />
+    </Target>
 
 </Project>

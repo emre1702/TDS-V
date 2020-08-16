@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
@@ -16,11 +17,9 @@ using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Entity.LobbySystem.BaseSystem
 {
@@ -30,12 +29,13 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
 
         protected readonly BansHandler BansHandler;
         protected readonly BonusBotConnectorClient BonusBotConnectorClient;
-        protected readonly DataSyncHandler DataSyncHandler;
         protected readonly EventsHandler EventsHandler;
         protected readonly LangHelper LangHelper;
         protected readonly LobbiesHandler LobbiesHandler;
         protected readonly Serializer Serializer;
         protected readonly ISettingsHandler SettingsHandler;
+        protected readonly IServiceProvider ServiceProvider;
+        protected readonly IEntitiesByInterfaceCreator EntitiesByInterfaceCreator;
         protected SyncedLobbySettings SyncedLobbySettings;
 
         #endregion Protected Fields
@@ -52,20 +52,21 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
             LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler,
             LangHelper langHelper,
-            DataSyncHandler dataSyncHandler,
             EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient,
             BansHandler bansHandler,
-            IServiceProvider serviceProvider) : base(dbContext, loggingHandler)
+            IServiceProvider serviceProvider,
+            IEntitiesByInterfaceCreator entitiesByInterfaceCreator) : base(dbContext, loggingHandler)
         {
             Serializer = serializer;
             LobbiesHandler = lobbiesHandler;
             SettingsHandler = settingsHandler;
             LangHelper = langHelper;
-            DataSyncHandler = dataSyncHandler;
             EventsHandler = eventsHandler;
             BonusBotConnectorClient = bonusBotConnectorClient;
             BansHandler = bansHandler;
+            ServiceProvider = serviceProvider;
+            EntitiesByInterfaceCreator = entitiesByInterfaceCreator;
 
             Entity = entity;
 
@@ -81,7 +82,7 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
             Teams = new List<ITeam>(entity.Teams.Count);
             foreach (Teams teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
-                ITeam team = ActivatorUtilities.CreateInstance<ITeam>(serviceProvider, teamEntity);
+                ITeam team = EntitiesByInterfaceCreator.Create<ITeam>(teamEntity);
                 Teams.Add(team);
             }
 
@@ -97,7 +98,7 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                 CountdownTime: isGangActionLobby ? 0 : entity.LobbyRoundSettings?.CountdownTime,
                 RoundTime: entity.LobbyRoundSettings?.RoundTime,
                 BombDetonateTimeMs: entity.LobbyRoundSettings?.BombDetonateTimeMs,
-                InLobbyWithMaps: this is Arena,
+                InLobbyWithMaps: this is IArena arena && !arena.IsGangActionLobby,
                 MapLimitTime: entity.LobbyMapSettings?.MapLimitTime,
                 MapLimitType: entity.LobbyMapSettings?.MapLimitType,
                 StartHealth: entity.FightSettings?.StartHealth ?? 100,
@@ -165,7 +166,7 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                     CountdownTime: IsGangActionLobby ? 0 : Entity.LobbyRoundSettings?.CountdownTime,
                     RoundTime: Entity.LobbyRoundSettings?.RoundTime,
                     BombDetonateTimeMs: Entity.LobbyRoundSettings?.BombDetonateTimeMs,
-                    InLobbyWithMaps: this is Arena,
+                    InLobbyWithMaps: this is IArena arena && !arena.IsGangActionLobby,
                     MapLimitTime: Entity.LobbyMapSettings?.MapLimitTime,
                     MapLimitType: Entity.LobbyMapSettings?.MapLimitType,
                     StartHealth: Entity.FightSettings?.StartHealth ?? 100,

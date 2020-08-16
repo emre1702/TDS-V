@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TDS_Server.Handler": {
+      "commandName": "Executable",
+      "executablePath": "C:\\altV\\server\\altv-server.exe"
+    }
+  }
+}

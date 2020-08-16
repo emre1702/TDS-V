@@ -93,7 +93,7 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
             ClearTeamPlayersLists();
             foreach (ITDSPlayer player in oldPlayersList)
             {
-                player.ResetVoiceToAndFrom();
+                //player.ResetVoiceToAndFrom();
                 if (player.Team is null) // propably not (yet) in the lobby
                     continue;
                 if (!player.Team.IsSpectator)

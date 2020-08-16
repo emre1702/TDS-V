@@ -1,6 +1,5 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using AltV.Net.Data;
 using TDS_Server.Data.Interfaces.Entities;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Models
 {

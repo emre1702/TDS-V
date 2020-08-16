@@ -1,16 +1,18 @@
 ﻿using BonusBotConnector.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Entity.LobbySystem.BaseSystem;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -20,34 +22,36 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
 {
     public partial class MapCreateLobby : Lobby, IMapCreateLobby
     {
-        #region Private Fields
+        #region Fields
 
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
         private int _lastId;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
-        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
-            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
-            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : this(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
-                  eventsHandler, bonusBotConnectorClient, bansHandler)
+        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+            ISettingsHandler settingsHandler, LangHelper langHelper, EventsHandler eventsHandler,
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler, IServiceProvider serviceProvider,
+            IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
+            : this(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper,
+                  eventsHandler, bonusBotConnectorClient, bansHandler, serviceProvider, entitiesByInterfaceCreator)
         {
         }
 
-        public MapCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
-            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
-            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : base(entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
-                  bonusBotConnectorClient, bansHandler)
+        public MapCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+            ISettingsHandler settingsHandler, LangHelper langHelper, EventsHandler eventsHandler,
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler, IServiceProvider serviceProvider, 
+            IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
+            : base(entity, false, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, eventsHandler,
+                  bonusBotConnectorClient, bansHandler, serviceProvider, entitiesByInterfaceCreator)
         {
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         public void SetMap(MapCreateDataDto dto)
         {
@@ -83,7 +87,7 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
             _lastId = _posById.Keys.Max();
 
             string json = Serializer.ToBrowser(dto);
-            ModAPI.Sync.SendEvent(this, ToClientEvent.LoadMapForMapCreator, json, _lastId);
+            SendEvent(ToClientEvent.LoadMapForMapCreator, json, _lastId);
         }
 
         public void StartNewMap()
@@ -91,19 +95,15 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
             _lastId = 0;
             _currentMap = new MapCreateDataDto();
             _posById = new Dictionary<int, MapCreatorPosition>();
-            ModAPI.Sync.SendEvent(ToClientEvent.MapCreatorStartNewMap);
+            SendEvent(ToClientEvent.MapCreatorStartNewMap);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private static Lobbies CreateEntity(ITDSPlayer player, Lobbies dummy)
         {
             Lobbies entity = new Lobbies
             {
-                Name = "MapCreator-" + player.ModPlayer?.Name ?? "?",
-                Teams = new List<Teams> { new Teams { Index = 0, Name = player.ModPlayer?.Name ?? "?", ColorR = 222, ColorB = 222, ColorG = 222 } },
+                Name = "MapCreator-" + player.Name ?? "?",
+                Teams = new List<Teams> { new Teams { Index = 0, Name = player.Name ?? "?", ColorR = 222, ColorB = 222, ColorG = 222 } },
                 Type = LobbyType.MapCreateLobby,
                 OwnerId = player.Entity?.Id ?? -1,
                 IsTemporary = true,
@@ -116,6 +116,6 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
             return entity;
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

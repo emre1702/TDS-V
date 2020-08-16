@@ -103,7 +103,7 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
 
         private void SetAllPlayersInCountdown()
         {
-            var mapCenter = _currentMap?.LimitInfo.Center.SwitchNamespace();
+            var mapCenter = _currentMap?.LimitInfo?.Center?.ToAltV();
             FuncIterateAllPlayers((player, team) =>
             {
                 if (team?.IsSpectator == false)
@@ -114,8 +114,8 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
                 else
                 {
                     MakeSurePlayerSpectatesAnyone(player);
-                    if (player.Spectates is { } && player.ModPlayer is { } && player.Spectates.ModPlayer is { })
-                        player.ModPlayer.Position = (mapCenter ?? player.Spectates.ModPlayer.Position).AddToZ(10);
+                    if (player.Spectates is { })
+                        player.Position = (mapCenter ?? player.Spectates.Position).AddToZ(10);
                 }
                 SetPlayerReadyForRound(player);
                 player.CurrentRoundStats?.Clear();
@@ -132,7 +132,7 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
 
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
             string json = Serializer.ToClient(amounts);
-            ModAPI.Sync.SendEvent(this, ToClientEvent.AmountInFightSync, json);
+            SendEvent(ToClientEvent.AmountInFightSync, json);
         }
 
         #endregion Private Methods

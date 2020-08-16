@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Entity.LobbySystem.BaseSystem
@@ -32,7 +34,7 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
             }
         }
 
-        public virtual void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player)
+        public virtual void OnPlayerEnterColShape(ITDSColShape colshape, ITDSPlayer player)
         {
         }
 
@@ -43,9 +45,9 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
 
         public virtual void OnPlayerSpawn(ITDSPlayer player)
         {
-            player.Health = Entity.FightSettings?.StartHealth ?? 100;
-            player.Armor = Entity.FightSettings?.StartArmor ?? 100;
-            player.ModPlayer?.SetClothes(11, 0, 0);
+            player.Health = (ushort)(Entity.FightSettings?.StartHealth ?? 100);
+            player.Armor = (ushort)(Entity.FightSettings?.StartArmor ?? 100);
+            player.SetClothes(11, 0, 0);
         }
 
         #endregion Public Methods

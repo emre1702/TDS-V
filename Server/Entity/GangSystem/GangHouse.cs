@@ -1,4 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.Entities.Gang;
+﻿using AltV.Net.Data;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.Gang;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Shared.Data.Models.GTA;
 
@@ -9,16 +11,13 @@ namespace TDS_Server.Entity.GangSystem
         #region Private Fields
 
         private readonly int _cost;
-        private readonly IModAPI _modAPI;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public GangHouse(GangHouses entity, int cost, IModAPI modAPI)
+        public GangHouse(GangHouses entity, int cost)
         {
-            _modAPI = modAPI;
-
             Entity = entity;
             _cost = cost;
 
@@ -29,11 +28,11 @@ namespace TDS_Server.Entity.GangSystem
 
         #region Public Properties
 
-        public IBlip? Blip { get; set; }
+        public ITDSBlip? Blip { get; set; }
         public GangHouses Entity { get; }
         public Position Position { get; }
         public float SpawnRotation => Entity.Rot;
-        public ITextLabel? TextLabel { get; set; }
+        public ITDSTextLabel? TextLabel { get; set; }
 
         #endregion Public Properties
 

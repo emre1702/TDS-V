@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Player;
@@ -13,32 +14,31 @@ namespace TDS_Server.Handler.Server
 {
     public class ResourceStopHandler
     {
-        #region Private Fields
+        #region Fields
 
         private readonly ChallengesHelper _challengesHelper;
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly ServerStatsHandler _serverStatsHandler;
-        private readonly ITDSPlayerHandler _tdsPlayersHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
+
         private bool _isFirstResourceStopCheck = true;
         private bool _resourceStopped = false;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
-        public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, ChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
-            LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
+        public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, ChallengesHelper challengesHelper,
+            ServerStatsHandler serverStatsHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
             _langHelper = langHelper;
             _loggingHandler = loggingHandler;
             _challengesHelper = challengesHelper;
             _serverStatsHandler = serverStatsHandler;
             _lobbiesHandler = lobbiesHandler;
-            _tdsPlayersHandler = tdsPlayerHandler;
-            _modAPI = modAPI;
+            _tdsPlayerHandler = tdsPlayerHandler;
 
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             Console.CancelKeyPress += CurrentDomain_ProcessExit;
@@ -47,9 +47,9 @@ namespace TDS_Server.Handler.Server
             eventsHandler.ResourceStop += OnResourceStop;
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         public void CheckHourForResourceRestart(int _)
         {
@@ -73,10 +73,6 @@ namespace TDS_Server.Handler.Server
             Environment.Exit(0);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void ExecuteResourceRestart()
         {
             if (DateTime.UtcNow.DayOfWeek == DayOfWeek.Monday)
@@ -94,13 +90,13 @@ namespace TDS_Server.Handler.Server
                 return;
             _resourceStopped = true;
             SaveAllInDatabase();
-            RemoveAllCreated();
+            //RemoveAllCreated();
         }
 
-        private void RemoveAllCreated()
+        /*private void RemoveAllCreated()
         {
             _modAPI.Pool.RemoveAll();
-        }
+        }*/
 
         private void ResourceRestartCountdown(int counter, bool isMinute)
         {
@@ -147,7 +143,7 @@ namespace TDS_Server.Handler.Server
                     _lobbiesHandler.SaveAll(),
                 };
 
-                foreach (ITDSPlayer player in _tdsPlayersHandler.LoggedInPlayers)
+                foreach (ITDSPlayer player in _tdsPlayerHandler.LoggedInPlayers)
                 {
                     try
                     {
@@ -167,6 +163,6 @@ namespace TDS_Server.Handler.Server
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

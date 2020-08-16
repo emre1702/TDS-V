@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Entities.Gang;
 using TDS_Server.Data.Interfaces.Entities.LobbySystem;
@@ -20,24 +21,21 @@ namespace TDS_Server.Handler.GangSystem
     {
         #region Private Fields
 
-        private readonly DataSyncHandler _dataSyncHandler;
         private readonly TDSDbContext _dbContext;
         private readonly Dictionary<int, IGang> _gangById = new Dictionary<int, IGang>();
         private readonly Dictionary<int, IGang> _gangByPlayerId = new Dictionary<int, IGang>();
         private readonly Dictionary<int, GangMembers> _gangMemberByPlayerId = new Dictionary<int, GangMembers>();
 
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEntitiesByInterfaceCreator _entitiesByInterfaceCreator;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public GangsHandler(EventsHandler eventsHandler, TDSDbContext dbContext, IServiceProvider serviceProvider,
-            DataSyncHandler dataSyncHandler)
+        public GangsHandler(EventsHandler eventsHandler, TDSDbContext dbContext, IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
         {
             _dbContext = dbContext;
-            _serviceProvider = serviceProvider;
-            _dataSyncHandler = dataSyncHandler;
+            _entitiesByInterfaceCreator = entitiesByInterfaceCreator;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
@@ -102,7 +100,7 @@ namespace TDS_Server.Handler.GangSystem
                         member.Player = null;
                     }
 
-                    ActivatorUtilities.CreateInstance<IGang>(_serviceProvider, g);
+                    _entitiesByInterfaceCreator.Create<IGang>(g);
                 });
         }
 
@@ -132,7 +130,7 @@ namespace TDS_Server.Handler.GangSystem
                 player.Gang.Entity.Members.First(m => m.PlayerId == player.Entity.Id).LastLogin = player.Entity.PlayerStats.LastLoginTimestamp;
             }
 
-            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
+            player.SetClientMetaData(PlayerDataKey.GangId.ToString(), player.Gang.Entity.Id);
         }
 
         private void EventsHandler_PlayerLoggedOut(ITDSPlayer player)

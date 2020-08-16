@@ -2,7 +2,7 @@
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 
-namespace TDS_Server.Handler.Entities
+namespace TDS_Server.Data.Models
 {
 #nullable disable
 

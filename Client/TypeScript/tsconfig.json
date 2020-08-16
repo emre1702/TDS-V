@@ -1,0 +1,25 @@
+﻿{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "lib": [ "ES6", "DOM" ],
+        "module": "ES6",
+        "target": "ESNEXT",
+        "typeRoots": [ "./node_modules/@types", "./node_modules/@altv" ],
+        "removeComments": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
+        "noImplicitReturns": true,
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "alwaysStrict": true,
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using AltV.Net.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Shared.Data.Enums;
+using Weapons = TDS_Server.Database.Entity.Rest.Weapons;
 
 namespace TDS_Server.Database.Entity.Player
 {
@@ -12,7 +14,7 @@ namespace TDS_Server.Database.Entity.Player
 
         public int AmountHits { get; set; }
         public int AmountOfficialHits { get; set; }
-        public PedBodyPart BodyPart { get; set; }
+        public BodyPart BodyPart { get; set; }
         public long DealtDamage { get; set; }
         public long DealtOfficialDamage { get; set; }
         public int Kills { get; set; }

@@ -59,7 +59,7 @@ namespace TDS_Server.Handler.Commands
             {
                 if (player.InPrivateChatWith == target)
                     player.ClosePrivateChat(false);
-                target.SetVoiceTo(player, false);
+                //target.SetVoiceTo(player, false);
 
                 target.SendMessage(string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
             });
@@ -339,8 +339,8 @@ namespace TDS_Server.Handler.Commands
 
             await AltAsync.Do(() =>
             {
-                if (target.Team == player.Team)
-                    target.SetVoiceTo(player, true);
+                /*if (target.Team == player.Team)
+                    target.SetVoiceTo(player, true);*/
 
                 player.SetRelation(target, PlayerRelation.None);
                 player.SendMessage(string.Format(player.Language.YOU_UNBLOCKED, target.DisplayName));

@@ -3,6 +3,7 @@ using System.Linq;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;

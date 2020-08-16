@@ -91,8 +91,8 @@ export class UserpanelService {
         number,
         /** AdminName */
         string,
-        /** AdminSCName */
-        string,
+        /** AdminSCId */
+        number,
         /** Message */
         string
     ][];

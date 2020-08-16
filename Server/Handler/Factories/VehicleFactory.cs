@@ -1,18 +1,20 @@
 ﻿using AltV.Net;
 using AltV.Net.Elements.Entities;
-using Microsoft.Extensions.DependencyInjection;
 using System;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 
 namespace TDS_Server.Handler.Factories
 {
     public class VehicleFactory : IEntityFactory<IVehicle>
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEntitiesByInterfaceCreator _entitiesByInterfaceCreator;
 
-        public VehicleFactory(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
+        public VehicleFactory(IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
+            => _entitiesByInterfaceCreator = entitiesByInterfaceCreator;
+
 
         public IVehicle Create(IntPtr entityPointer, ushort id)
-            => ActivatorUtilities.CreateInstance<IVehicle>(_serviceProvider, entityPointer, id);
+            => _entitiesByInterfaceCreator.Create<ITDSVehicle>(entityPointer, id);
     }
 }

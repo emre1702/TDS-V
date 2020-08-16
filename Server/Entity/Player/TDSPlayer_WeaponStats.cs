@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using AltV.Net.Data;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Utility;
 
 namespace TDS_Server.Entity.Player
 {
@@ -10,7 +10,7 @@ namespace TDS_Server.Entity.Player
     {
         #region Public Properties
 
-        public Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>>? WeaponBodyPartsStats { get; private set; }
+        public Dictionary<WeaponHash, Dictionary<BodyPart, PlayerWeaponBodypartStats>>? WeaponBodyPartsStats { get; private set; }
         public Dictionary<WeaponHash, PlayerWeaponStats>? WeaponStats { get; private set; }
 
         #endregion Public Properties
@@ -23,7 +23,7 @@ namespace TDS_Server.Entity.Player
         /// <param name="weaponHash"></param>
         /// <param name="pedBodyPart">Null if coming from shooting (not damage)</param>
         /// <param name="damage">Null if coming from shooting (not damage)</param>
-        public void AddWeaponShot(WeaponHash weaponHash, PedBodyPart? pedBodyPart, int? damage, bool killed)
+        public void AddWeaponShot(WeaponHash weaponHash, BodyPart? bodyPart, int? damage, bool killed)
         {
             if (Entity is null)
                 return;
@@ -36,8 +36,8 @@ namespace TDS_Server.Entity.Player
             var weaponStats = GetWeaponStats(weaponHash);
 
             // If we deal damage, we also shoot To prevent double adding, don't add to AmountShots
-            // if pedBodyPart is {} (so we dealt damage)
-            if (!pedBodyPart.HasValue || damage is null)
+            // if bodyPart is {} (so we dealt damage)
+            if (!bodyPart.HasValue || damage is null)
             {
                 ++weaponStats.AmountShots;
                 if (isOfficialLobby)
@@ -45,7 +45,7 @@ namespace TDS_Server.Entity.Player
                 return;
             }
 
-            var bodyPartStats = GetWeaponBodyPartStats(weaponHash, pedBodyPart.Value);
+            var bodyPartStats = GetWeaponBodyPartStats(weaponHash, bodyPart.Value);
 
             ++weaponStats.AmountHits;
             weaponStats.DealtDamage += damage.Value;
@@ -59,7 +59,7 @@ namespace TDS_Server.Entity.Player
                 ++bodyPartStats.Kills;
             }
 
-            if (pedBodyPart == PedBodyPart.Head)
+            if (bodyPart == BodyPart.Head)
             {
                 ++weaponStats.AmountHeadshots;
             }
@@ -78,7 +78,7 @@ namespace TDS_Server.Entity.Player
                     ++bodyPartStats.OfficialKills;
                 }
 
-                if (pedBodyPart == PedBodyPart.Head)
+                if (bodyPart == BodyPart.Head)
                 {
                     ++weaponStats.AmountOfficialHeadshots;
                 }
@@ -89,18 +89,18 @@ namespace TDS_Server.Entity.Player
 
         #region Private Methods
 
-        private PlayerWeaponBodypartStats GetWeaponBodyPartStats(WeaponHash weaponHash, PedBodyPart pedBodyPart)
+        private PlayerWeaponBodypartStats GetWeaponBodyPartStats(WeaponHash weaponHash, BodyPart bodyPart)
         {
-            if (!WeaponBodyPartsStats!.TryGetValue(weaponHash, out Dictionary<PedBodyPart, PlayerWeaponBodypartStats>? bodyPartStatsDict))
+            if (!WeaponBodyPartsStats!.TryGetValue(weaponHash, out Dictionary<BodyPart, PlayerWeaponBodypartStats>? bodyPartStatsDict))
             {
-                bodyPartStatsDict = new Dictionary<PedBodyPart, PlayerWeaponBodypartStats>();
+                bodyPartStatsDict = new Dictionary<BodyPart, PlayerWeaponBodypartStats>();
                 WeaponBodyPartsStats[weaponHash] = bodyPartStatsDict;
             }
 
-            if (!bodyPartStatsDict.TryGetValue(pedBodyPart, out PlayerWeaponBodypartStats? bodyPartStats))
+            if (!bodyPartStatsDict.TryGetValue(bodyPart, out PlayerWeaponBodypartStats? bodyPartStats))
             {
-                bodyPartStats = new PlayerWeaponBodypartStats { BodyPart = pedBodyPart, PlayerId = Entity!.Id, WeaponHash = weaponHash };
-                bodyPartStatsDict[pedBodyPart] = bodyPartStats;
+                bodyPartStats = new PlayerWeaponBodypartStats { BodyPart = bodyPart, PlayerId = Entity!.Id, WeaponHash = weaponHash };
+                bodyPartStatsDict[bodyPart] = bodyPartStats;
                 Entity.WeaponBodypartStats.Add(bodyPartStats);
             }
 

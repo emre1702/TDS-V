@@ -1,4 +1,5 @@
-﻿using BonusBotConnector.Client;
+﻿using AltV.Net.Async;
+using BonusBotConnector.Client;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -7,14 +8,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
-using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Userpanel;
 
@@ -76,7 +76,7 @@ namespace TDS_Server.Handler.Userpanel
         public string? AdminName { get; set; }
 
         [JsonProperty("2")]
-        public string? AdminSCName { get; set; }
+        public ulong? AdminSCId { get; set; }
 
         [JsonProperty("0")]
         public int ID { get; set; }
@@ -92,7 +92,6 @@ namespace TDS_Server.Handler.Userpanel
         #region Private Fields
 
         private readonly BonusBotConnectorClient _bonusbotConnectorClient;
-        private readonly IModAPI _modAPI;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
@@ -102,16 +101,15 @@ namespace TDS_Server.Handler.Userpanel
 
         #region Public Constructors
 
-        public UserpanelApplicationUserHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
+        public UserpanelApplicationUserHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, ITDSPlayerHandler tdsPlayerHandler,
             OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _settingsHandler = settingsHandler;
             _bonusbotConnectorClient = bonusbotConnectorClient;
-            _tdsPlayerHandler = tdsPlayerHandler;
             _offlineMessagesHandler = offlineMessagesHandler;
+            _tdsPlayerHandler = tdsPlayerHandler;
 
             LoadAdminQuestions();
 
@@ -145,7 +143,7 @@ namespace TDS_Server.Handler.Userpanel
                 .FirstOrDefaultAsync());
             if (invitation == null)
             {
-                AltAsync.Do(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                await AltAsync.Do(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -153,7 +151,7 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.Applications.Include(a => a.Player).Where(a => a.Id == invitation.ApplicationId).FirstOrDefaultAsync());
             if (application.PlayerId != player.Entity!.Id)
             {
-                LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.",
+                LoggingHandler.LogError($"{player.Name} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.",
                     Environment.StackTrace, null, player);
                 return null;
             }
@@ -169,11 +167,11 @@ namespace TDS_Server.Handler.Userpanel
             player.Entity.AdminLvl = 1;
             await player.SaveData();
 
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 player.SendMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
 
-                ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
+                ITDSPlayer? admin = _tdsPlayerHandler.Get(invitation.AdminId);
                 if (admin != null)
                 {
                     admin.SendMessage(string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
@@ -267,7 +265,7 @@ namespace TDS_Server.Handler.Userpanel
                             {
                                 ID = i.Id,
                                 AdminName = i.Admin.Name,
-                                AdminSCName = i.Admin.SCName,
+                                AdminSCId = i.Admin.SCId,
                                 Message = i.Message
                             })
                     })
@@ -298,7 +296,7 @@ namespace TDS_Server.Handler.Userpanel
                     .FirstOrDefaultAsync());
             if (invitation == null)
             {
-                AltAsync.Do(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                await AltAsync.Do(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -310,7 +308,7 @@ namespace TDS_Server.Handler.Userpanel
                     .FirstOrDefaultAsync());
             if (application.PlayerId != player.Entity!.Id)
             {
-                LoggingHandler.LogError($"{player.ModPlayer?.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, null, player);
+                LoggingHandler.LogError($"{player.Name} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, null, player);
                 return null;
             }
 
@@ -320,11 +318,11 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
 
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 player.SendMessage(string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
 
-                ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
+                ITDSPlayer? admin = _tdsPlayerHandler.Get(invitation.AdminId);
                 if (admin != null)
                 {
                     admin.SendMessage(string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.DisplayName));

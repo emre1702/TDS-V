@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AltV.Net.Async;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Database.Entity.Challenge;
@@ -51,7 +52,7 @@ namespace TDS_Server.Entity.Player
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex);
+                _loggingHandler.LogError(ex, this);
             }
         }
 

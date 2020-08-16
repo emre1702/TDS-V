@@ -1,7 +1,9 @@
-﻿using System;
+﻿using AltV.Net.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel.Stats;
 using TDS_Server.Database.Entity.Player;
@@ -74,7 +76,8 @@ namespace TDS_Server.Handler.Userpanel
                 DealtOfficialDamage = weaponStats.DealtOfficialDamage
             };
 
-            if (player.WeaponBodyPartsStats is { } && player.WeaponBodyPartsStats.TryGetValue(weaponHash, out Dictionary<PedBodyPart, PlayerWeaponBodypartStats>? bodyStats))
+            if (player.WeaponBodyPartsStats is { } 
+                && player.WeaponBodyPartsStats.TryGetValue(weaponHash, out Dictionary<BodyPart, PlayerWeaponBodypartStats>? bodyStats))
             {
                 foreach (var entry in bodyStats.OrderBy(b => (int)b.Key))
                 {
@@ -100,7 +103,7 @@ namespace TDS_Server.Handler.Userpanel
 
         private List<string> GetPlayerWeaponsUsed(ITDSPlayer player)
         {
-            return player.WeaponStats.OrderBy(w => w.Value.DealtDamage).Select(w => w.Key.ToString()).ToList();
+            return player.WeaponStats?.OrderBy(w => w.Value.DealtDamage).Select(w => w.Key.ToString()).ToList() ?? new List<string>();
         }
 
         #endregion Private Methods

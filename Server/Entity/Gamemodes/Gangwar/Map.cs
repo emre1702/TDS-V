@@ -1,8 +1,7 @@
-﻿using System.Drawing;
-using TDS_Server.Data.Interfaces.ModAPI.Blip;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
-using TDS_Server.Data.Interfaces.ModAPI.MapObject;
-using TDS_Server.Data.Interfaces.ModAPI.TextLabel;
+﻿using AltV.Net;
+using AltV.Net.Data;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Models;
 using TDS_Shared.Data.Default;
 
 namespace TDS_Server.Entity.Gamemodes.Gangwar
@@ -11,15 +10,15 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
     {
         #region Private Fields
 
-        private IBlip? _targetBlip;
-        private ITextLabel? _targetTextLabel;
+        private ITDSBlip? _targetBlip;
+        private ITDSTextLabel? _targetTextLabel;
 
         #endregion Private Fields
 
         #region Public Properties
 
         public ITDSColShape? TargetColShape { get; set; }
-        public IMapObject? TargetObject { get; set; }
+        public ITDSObject? TargetObject { get; private set; }
 
         #endregion Public Properties
 
@@ -42,7 +41,7 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
             if (Map.Target is null)
                 return;
 
-            _targetBlip = ModAPI.Blip.Create(SharedConstants.TargetBlipSprite, Map.Target, name: "Target", dimension: Lobby.Dimension);
+            _targetBlip = _tdsBlipHandler.Create(SharedConstants.TargetBlipSprite, Map.Target.ToAltV(), name: "Target", dimension: (int)Lobby.Dimension);
         }
 
         private void CreateTargetColShape()
@@ -50,7 +49,8 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
             if (TargetObject is null)
                 return;
 
-            TargetColShape = ModAPI.ColShape.CreateSphere(TargetObject.Position, SettingsHandler.ServerSettings.GangwarTargetRadius, Lobby);
+            TargetColShape = (ITDSColShape)Alt.CreateColShapeSphere(TargetObject.Position, (float)SettingsHandler.ServerSettings.GangwarTargetRadius);
+            TargetColShape.Dimension = (int)Lobby.Dimension;
 
             TargetColShape.PlayerEntered += PlayerEnteredTargetColShape;
             TargetColShape.PlayerExited += PlayerExitedTargetColShape;
@@ -61,7 +61,7 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
             if (Map.Target is null)
                 return;
 
-            TargetObject = ModAPI.MapObject.Create(SharedConstants.TargetHashName, Map.Target, null, 120, Lobby);
+            TargetObject =_tdsObjectHandler.Create(SharedConstants.TargetHashName, Map.Target.ToAltV(), new DegreeRotation(), 120, (int)Lobby.Dimension);
             TargetObject.Freeze(true, Lobby);
             TargetObject.SetCollisionsless(true, Lobby);
         }
@@ -71,8 +71,8 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
             if (TargetObject is null)
                 return;
 
-            _targetTextLabel = ModAPI.TextLabel.Create("Target", TargetObject.Position,
-                SettingsHandler.ServerSettings.GangwarTargetRadius, 7f, 0, Color.FromArgb(220, 220, 220), true, Lobby);
+            _targetTextLabel = _tdsTextLabelHandler.Create("Target", TargetObject.Position,
+                SettingsHandler.ServerSettings.GangwarTargetRadius, 7f, 0, new Color(220, 220, 220), true, (int)Lobby.Dimension);
         }
 
         #endregion Private Methods

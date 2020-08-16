@@ -16,7 +16,7 @@
 
         #region Private Fields
 
-        private const string _resourcePathPath = "dotnet/resources/tds/";
+        private const string _resourcePathPath = "resources/tds/server/";
 
         #endregion Private Fields
     }

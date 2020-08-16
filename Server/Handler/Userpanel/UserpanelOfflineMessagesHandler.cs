@@ -9,7 +9,6 @@ using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 
@@ -165,7 +164,7 @@ namespace TDS_Server.Handler.Userpanel
             if (!(targetId = Utils.GetInt(args[1])).HasValue)
             {
                 targetId = await ExecuteForDBAsync(async dbContext
-                    => await dbContext.Players.Where(p => p.Name == playerName || p.SCName == playerName).Select(p => p.Id).FirstOrDefaultAsync());
+                    => await dbContext.Players.Where(p => p.Name == playerName).Select(p => p.Id).FirstOrDefaultAsync());
                 if (targetId is null || targetId == 0)
                 {
                     player.SendNotification(player.Language.PLAYER_DOESNT_EXIST, true);

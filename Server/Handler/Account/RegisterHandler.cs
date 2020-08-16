@@ -1,5 +1,6 @@
 ﻿using AltV.Net.Async;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Handlers;
@@ -39,7 +40,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             _langHelper = langHelper;
             _tdsPlayerHandler = tdsPlayerHandler;
 
-            AltAsync.OnClient<ITDSPlayer, string, string, string, int>(ToServerEvent.TryRegister, TryRegister);
+            AltAsync.OnClient<ITDSPlayer, string, string, string, int, Task>(ToServerEvent.TryRegister, TryRegister);
         }
 
         #endregion Public Constructors
@@ -59,6 +60,8 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 Password = Utils.HashPasswordServer(password),
                 Email = email,
                 IsVip = false,
+                HwId = player.HardwareIdHash,
+                HwIdEx = player.HardwareIdExHash,
                 AdminLvl = SharedUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
             };
             if (dbPlayer is null)
@@ -106,7 +109,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
         }
 
-        public async void TryRegister(ITDSPlayer player, string username, string password, string email, int language)
+        public async Task TryRegister(ITDSPlayer player, string username, string password, string email, int language)
         {
             if (player.LoggedIn)
                 return;

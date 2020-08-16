@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+﻿using AltV.Net.Async;
+using AltV.Net.Data;
+using AltV.Net.Elements.Entities;
+using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
-using TDS_Server.Data;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Extensions;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Player
@@ -25,7 +20,6 @@ namespace TDS_Server.Handler.Player
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly EventsHandler _eventsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly IModAPI _modAPI;
 
         #endregion Private Fields
 
@@ -35,58 +29,57 @@ namespace TDS_Server.Handler.Player
             BansHandler bansHandler,
             EventsHandler eventsHandler,
             LobbiesHandler lobbiesHandler,
-            DatabasePlayerHelper databasePlayerHelper,
-            IModAPI modAPI)
+            DatabasePlayerHelper databasePlayerHelper)
         {
-            _modAPI = modAPI;
             _bansHandler = bansHandler;
             _eventsHandler = eventsHandler;
             _lobbiesHandler = lobbiesHandler;
             _databasePlayerHelper = databasePlayerHelper;
 
-            _eventsHandler.PlayerConnected += PlayerConnected;
+            AltAsync.OnPlayerConnect += PlayerConnected;
         }
 
         #endregion Public Constructors
 
         #region Private Methods
 
-        private async void PlayerConnected(IPlayer modPlayer)
+        private async Task PlayerConnected(IPlayer modPlayer, string reason)
         {
-            if (modPlayer is null)
+            var player = (ITDSPlayer)modPlayer;
+            if (player is null)
                 return;
 
-            modPlayer.Position = new Position(0, 0, 1000).Around(10);
-            modPlayer.Freeze(true);
+            player.Position = new Position(0, 0, 1000).Around(10);
+            player.Freeze(true);
 
-            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, modPlayer.Address, modPlayer.Serial, modPlayer.SocialClubName,
-                modPlayer.SocialClubId, false);
+            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, player.Ip, player.SocialClubId, 
+                player.HardwareIdHash, player.HardwareIdExHash, false);
 
             if (ban is { })
             {
-                AltAsync.Do(()
-                    => Utils.HandleBan(modPlayer, ban));
+                await AltAsync.Do(()
+                    => Utils.HandleBan(player, ban));
                 return;
             }
 
-            var playerIdName = await _databasePlayerHelper.GetPlayerIdName(modPlayer);
+            var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player);
             if (playerIdName is null)
             {
-                AltAsync.Do(()
-                    => modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, modPlayer.SocialClubName, false));
+                await AltAsync.Do(()
+                    => player.SendEvent(ToClientEvent.StartRegisterLogin, player.Name, false));
                 return;
             }
 
             ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, playerIdName.Id);
             if (ban is { })
             {
-                AltAsync.Do(()
-                    => Utils.HandleBan(modPlayer, ban));
+                await AltAsync.Do(()
+                    => Utils.HandleBan(player, ban));
                 return;
             }
 
-            AltAsync.Do(()
-                => modPlayer.SendEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
+            await AltAsync.Do(()
+                => player.SendEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
         }
 
         #endregion Private Methods

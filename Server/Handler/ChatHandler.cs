@@ -1,11 +1,12 @@
-﻿using System;
+﻿using AltV.Net;
+using System;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler
@@ -17,18 +18,17 @@ namespace TDS_Server.Handler
         private readonly AdminsHandler _adminsHandler;
         private readonly LangHelper _langHelper;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ChatHandler(ILoggingHandler loggingHandler, IModAPI modAPI, ITDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler, LangHelper langHelper)
+        public ChatHandler(ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler, LangHelper langHelper)
         {
-            (_loggingHandler, _modAPI, _tdsPlayerHandler, _adminsHandler, _langHelper) = (loggingHandler, modAPI, tdsPlayerHandler, adminsHandler, langHelper);
+            (_loggingHandler, _tdsPlayerHandler, _adminsHandler, _langHelper) = (loggingHandler, tdsPlayerHandler, adminsHandler, langHelper);
 
-            modAPI.ClientEvent.Add<IPlayer, string, int>(ToServerEvent.LobbyChatMessage, this, SendLobbyMessage);
+            Alt.OnClient<ITDSPlayer, string, int>(ToServerEvent.LobbyChatMessage, SendLobbyMessage);
         }
 
         #endregion Public Constructors
@@ -81,7 +81,7 @@ namespace TDS_Server.Handler
         public void SendAdminMessage(ITDSPlayer player, string message)
         {
             string changedMessage = player.AdminLevel.FontColor + "[" + player.AdminLevelName + "] !$255|255|255$" + player.DisplayName + ": !$220|220|220$" + message;
-            _modAPI.Chat.SendMessage(changedMessage);
+            SendMessage(changedMessage);
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
@@ -92,16 +92,16 @@ namespace TDS_Server.Handler
             {
                 if (target.HasRelationTo(player, TDS_Shared.Data.Enums.PlayerRelation.Block))
                     continue;
-                target.SendMessage(changedmessage);
+                SendMessage(target, changedmessage);
             }
             _loggingHandler.LogChat(message, player, isGlobal: true);
         }
 
-        public void SendLobbyMessage(IPlayer modPlayer, string message, int chatTypeNumber)
+        public void SendLobbyMessage(ITDSPlayer player, string message, int chatTypeNumber)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
+
             if (player.IsPermamuted)
             {
                 player.SendNotification(player.Language.STILL_PERMAMUTED);
@@ -145,7 +145,7 @@ namespace TDS_Server.Handler
             string changedmessage = (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message;
             if (isDirty)
                 changedmessage = "!$160|50|0$[DIRTY] " + changedmessage + "$Dirty$";
-            _modAPI.Chat.SendMessage(player.Lobby, changedmessage, player);
+            SendMessage(player.Lobby, changedmessage);
 
             if (player.Lobby?.IsOfficial == true && !isDirty)
                 _loggingHandler.LogChat(message, player);
@@ -158,7 +158,7 @@ namespace TDS_Server.Handler
         public void SendPrivateMessage(ITDSPlayer player, ITDSPlayer target, string message)
         {
             string changedMessage = "[PM] !$253|132|85$" + player.DisplayName + ": !$220|220|220$" + message;
-            target.SendMessage(changedMessage);
+            SendMessage(target, changedMessage);
             _loggingHandler.LogChat(message, player, target: target);
         }
 
@@ -167,8 +167,34 @@ namespace TDS_Server.Handler
             if (player.Team is null)
                 return;
             string changedMessage = "[TEAM] " + player.Team.ChatColor + player.DisplayName + ": !$220|220|220$" + message + "$Team$";
-            _modAPI.Chat.SendMessage(player.Team, changedMessage, player);
+            SendMessage(player.Team, changedMessage);
             _loggingHandler.LogChat(message, player, isTeamChat: true);
+        }
+
+        public void SendMessage(string message)
+        {
+            Alt.EmitAllClients(ToClientEvent.ToBrowserEvent, ToBrowserEvent.ChatOutput, message);
+        }
+
+        public void SendMessage(ITDSPlayer player, string message)
+        {
+            player.Emit(ToClientEvent.ToBrowserEvent, ToBrowserEvent.ChatOutput, message);
+        }
+
+        public void SendMessage(ILobby lobby, string message)
+        {
+            lobby.FuncIterateAllPlayers((player, team) =>
+            {
+                player.Emit(ToClientEvent.ToBrowserEvent, ToBrowserEvent.ChatOutput, message);
+            });
+        }
+
+        public void SendMessage(ITeam team, string message)
+        {
+            foreach (var player in team.Players)
+            {
+                player.Emit(ToClientEvent.ToBrowserEvent, ToBrowserEvent.ChatOutput, message);
+            }
         }
 
         #endregion Public Methods

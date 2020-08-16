@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net.Async;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 
@@ -14,17 +16,15 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
 
         public async Task<PlayerBans?> BanPlayer(ITDSPlayer admin, ITDSPlayer target, TimeSpan? length, string reason)
         {
-            if (target.ModPlayer is null)
-                return null;
             if (Players.ContainsKey(target.Id))
                 await RemovePlayer(target);
             if (target.Entity is null)
                 return null;
-            var ban = await BanPlayer(admin, target.Entity, length, reason, target.ModPlayer.Serial);
+            var ban = await BanPlayer(admin, target.Entity, length, reason);
             if (ban is null)
                 return null;
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 if (length.HasValue)
                 {
@@ -45,11 +45,15 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
             return ban;
         }
 
-        public async Task<PlayerBans?> BanPlayer(ITDSPlayer admin, Players target, TimeSpan? length, string reason, string? serial = null)
+        public async Task<PlayerBans?> BanPlayer(ITDSPlayer admin, Players target, TimeSpan? length, string reason, ulong? hwid = null, ulong? hwidEx = null)
         {
             int targetId = target.Id;
-            if (serial is null)
-                serial = await ExecuteForDBAsync(async (dbContext) => await dbContext.LogRests.Where(l => l.Source == targetId).OrderBy(l => l.Id).Select(l => l.Serial).LastOrDefaultAsync());
+
+            if (hwid is null)
+                hwid = target.HwId;
+            if (hwidEx is null)
+                hwidEx = target.HwIdEx;
+
 
             PlayerBans? ban = null;
             await ExecuteForDBAsync(async (dbContext) =>
@@ -58,10 +62,11 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                 if (ban != null)
                 {
                     ban.AdminId = admin.Entity?.Id ?? -1;
-                    ban.Serial = serial;
                     ban.StartTimestamp = DateTime.UtcNow;
                     ban.EndTimestamp = DateTime.UtcNow + length;
                     ban.Reason = reason;
+                    ban.HwId = hwid;
+                    ban.HwIdEx = hwidEx;
                 }
                 else
                 {
@@ -69,17 +74,18 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                     {
                         PlayerId = target.Id,
                         LobbyId = Entity.Id,
-                        Serial = serial,
                         AdminId = admin.Entity?.Id ?? -1,
                         EndTimestamp = DateTime.UtcNow + length,
-                        Reason = reason
-                    };
+                        Reason = reason,
+                        HwId = hwid,
+                        HwIdEx = hwidEx
+                };
                     dbContext.PlayerBans.Add(ban);
                 }
                 await dbContext.SaveChangesAsync();
             });
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 if (length.HasValue)
                 {
@@ -133,7 +139,7 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                 {
                     duration = DateTime.UtcNow.DurationTo(ban.EndTimestamp.Value);
                 }
-                ModAPI.Thread.QueueIntoMainThread(() => character.SendMessage(string.Format(character.Language.GOT_LOBBY_BAN, duration, ban.Reason)));
+                await AltAsync.Do(() => character.SendMessage(string.Format(character.Language.GOT_LOBBY_BAN, duration, ban.Reason)));
                 return true;
             }
             else if (ban.EndTimestamp.HasValue)
@@ -163,17 +169,17 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                 PlayerBans? ban = await dbContext.PlayerBans.FindAsync(target.Id, Entity.Id);
                 if (ban is null)
                 {
-                    ModAPI.Thread.QueueIntoMainThread(() => admin.SendMessage(admin.Language.PLAYER_ISNT_BANED));
+                    await AltAsync.Do(() => admin.SendMessage(admin.Language.PLAYER_ISNT_BANED));
                     return;
                 }
                 dbContext.PlayerBans.Remove(ban);
                 await dbContext.SaveChangesAsync();
 
                 if (ban.LobbyId == LobbiesHandler.MainMenu.Id)
-                    ModAPI.Thread.QueueIntoMainThread(() => BansHandler.RemoveServerBanByPlayerId(ban));
+                    await AltAsync.Do(() => BansHandler.RemoveServerBanByPlayerId(ban));
             });
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
                     LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, target.Name, Entity.Name, admin.AdminLevelName, reason));

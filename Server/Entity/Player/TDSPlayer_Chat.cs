@@ -1,5 +1,7 @@
-﻿using System;
-using TDS_Server.Data.Interfaces;
+﻿using AltV.Net;
+using System;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Entity.Player
 {
@@ -50,16 +52,16 @@ namespace TDS_Server.Entity.Player
         {
             if (IsConsole)
                 Console.WriteLine(msg);
-            else if (ModPlayer is { })
-                ModPlayer.SendMessage(msg);
+            else
+                _chatHandler.SendMessage(this, msg);
         }
 
         public void SendNotification(string msg, bool flashing = false)
         {
             if (IsConsole)
                 Console.WriteLine(msg);
-            else if (ModPlayer is { })
-                ModPlayer.SendNotification(msg, flashing);
+            else
+                Emit(ToClientEvent.Notification, msg, flashing);
         }
 
         #endregion Public Methods

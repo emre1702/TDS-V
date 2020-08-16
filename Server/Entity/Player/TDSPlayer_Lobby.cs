@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.Player;
 

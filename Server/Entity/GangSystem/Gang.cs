@@ -1,11 +1,14 @@
-﻿using MoreLinq;
+﻿using AltV.Net.Async;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Entities.Gang;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler;
@@ -23,22 +26,17 @@ namespace TDS_Server.Entity.GangSystem
         private readonly GangsHandler _gangsHandler;
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly IModAPI _modAPI;
-        private readonly DataSyncHandler _dataSyncHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper, LobbiesHandler lobbiesHandler,
-            IModAPI modAPI, DataSyncHandler dataSyncHandler)
+        public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper, LobbiesHandler lobbiesHandler)
             : base(dbContext, loggingHandler)
         {
             _langHelper = langHelper;
             _lobbiesHandler = lobbiesHandler;
             _gangsHandler = gangsHandler;
-            _modAPI = modAPI;
-            _dataSyncHandler = dataSyncHandler;
 
             Entity = entity;
             gangsHandler.Add(this);
@@ -85,7 +83,7 @@ namespace TDS_Server.Entity.GangSystem
             var onlinePlayer = PlayersOnline.FirstOrDefault(p => p.Entity?.Id == nextLeader.PlayerId);
             AltAsync.Do(() =>
             {
-                onlinePlayer.SendNotification(onlinePlayer.Language.YOUVE_BECOME_GANG_LEADER);
+                onlinePlayer?.SendNotification(onlinePlayer.Language.YOUVE_BECOME_GANG_LEADER);
             });
         }
 
@@ -95,9 +93,9 @@ namespace TDS_Server.Entity.GangSystem
             {
                 player.Gang = _gangsHandler.None;
                 player.GangRank = _gangsHandler.NoneRank;
-                _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
+                player.SetClientMetaData(PlayerDataKey.GangId.ToString(), player.Gang.Entity.Id);
 
-                if (player.Lobby is GangLobby || player.Lobby?.IsGangActionLobby == true)
+                if (player.Lobby is IGangLobby || player.Lobby?.IsGangActionLobby == true)
                     await _lobbiesHandler.MainMenu.AddPlayer(player, null);
             }
 

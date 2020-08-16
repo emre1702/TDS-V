@@ -1,8 +1,7 @@
-﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Sync;
+﻿using AltV.Net;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Handler.Events;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -10,36 +9,31 @@ namespace TDS_Server.Handler.Player
 {
     public class PlayerCrouchHandler
     {
-        #region Private Fields
+        #region Constructors
 
-        private readonly DataSyncHandler _dataSyncHandler;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public PlayerCrouchHandler(IModAPI modAPI, DataSyncHandler dataSyncHandler, ITDSPlayerHandler tdsPlayerHandler)
+        public PlayerCrouchHandler(EventsHandler eventsHandler)
         {
-            _dataSyncHandler = dataSyncHandler;
-            _tdsPlayerHandler = tdsPlayerHandler;
+            eventsHandler.PlayerLeftLobby += EventsHandler_PlayerLeftLobby;
 
-            modAPI.ClientEvent.Add(ToServerEvent.ToggleCrouch, this, OnToggleCrouch);
+            Alt.OnClient<ITDSPlayer>(ToServerEvent.ToggleCrouch, OnToggleCrouch);
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
-        public void OnToggleCrouch(IPlayer modPlayer)
+        public void OnToggleCrouch(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
             player.IsCrouched = !player.IsCrouched;
-            _dataSyncHandler.SetData(player, PlayerDataKey.Crouched, DataSyncMode.Lobby, player.IsCrouched);
+            player.SetStreamSyncedMetaData(PlayerDataKey.Crouched.ToString(), player.IsCrouched);
         }
 
-        #endregion Public Methods
+        private void EventsHandler_PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
+        {
+            if (player.IsCrouched)
+                OnToggleCrouch(player);
+        }
+
+        #endregion Methods
     }
 }

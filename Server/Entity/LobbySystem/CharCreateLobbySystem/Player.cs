@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using AltV.Net.Async;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Entity.LobbySystem.CharCreateLobbySystem
@@ -17,10 +19,10 @@ namespace TDS_Server.Entity.LobbySystem.CharCreateLobbySystem
 
             var json = Serializer.ToClient(player.Entity.CharDatas);
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
-                player.ModPlayer?.SetInvincible(true);
-                player.ModPlayer?.Freeze(true);
+                player.SetInvincible(true);
+                player.Freeze(true);
 
                 player.SendEvent(ToClientEvent.StartCharCreator, json, Dimension);
             });

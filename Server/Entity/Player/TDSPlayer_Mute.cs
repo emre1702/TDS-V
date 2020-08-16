@@ -1,4 +1,5 @@
 ﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 
 namespace TDS_Server.Entity.Player
 {
@@ -59,13 +60,13 @@ namespace TDS_Server.Entity.Player
             _chatHandler.OutputVoiceMuteInfo(admin.DisplayName, Entity.Name, minutes, reason);
             VoiceMuteTime = minutes == -1 ? 0 : (minutes == 0 ? (int?)null : minutes);
 
-            if (VoiceMuteTime is { } && Team is { })
+            /*if (VoiceMuteTime is { } && Team is { })
             {
                 foreach (var player in Team.Players)
                 {
                     SetVoiceTo(player, false);
                 }
-            }
+            }*/
         }
 
         #endregion Public Methods

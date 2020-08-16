@@ -1,7 +1,5 @@
 ﻿using AltV.Net.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
@@ -9,7 +7,6 @@ using TDS_Server.Data.Interfaces.Entities.Gang;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Events;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Handler.GangSystem
 {
@@ -28,21 +25,22 @@ namespace TDS_Server.Handler.GangSystem
         private List<GangHouses> _houseEntities = new List<GangHouses>();
 
         private readonly GangLevelsHandler _gangLevelsHandler;
-        private readonly IServiceProvider _serviceProvider;
         private readonly GangsHandler _gangsHandler;
         private readonly EventsHandler _eventsHandler;
+        private readonly IEntitiesByInterfaceCreator _entitiesByInterfaceCreator;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         public GangHousesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, GangLevelsHandler gangLevelsHandler, GangsHandler gangsHandler,
-            IServiceProvider serviceProvider, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
+            EventsHandler eventsHandler, IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
+            : base(dbContext, loggingHandler)
         {
             _gangLevelsHandler = gangLevelsHandler;
-            _serviceProvider = serviceProvider;
             _gangsHandler = gangsHandler;
             _eventsHandler = eventsHandler;
+            _entitiesByInterfaceCreator = entitiesByInterfaceCreator;
 
             LoadHouses(dbContext);
         }
@@ -86,7 +84,7 @@ namespace TDS_Server.Handler.GangSystem
         private void LoadHouse(GangHouses entity)
         {
             int cost = _gangLevelsHandler.Levels.TryGetValue(entity.NeededGangLevel, out GangLevelSettings? level) ? level.HousePrice : int.MaxValue;
-            var house = ActivatorUtilities.CreateInstance<IGangHouse>(_serviceProvider, entity, cost);
+            var house = _entitiesByInterfaceCreator.Create<IGangHouse>(entity, cost);
             Houses.Add(house);
 
             if (house.Entity.OwnerGang is null)

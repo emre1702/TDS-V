@@ -2,18 +2,19 @@
 using AltV.Net.Elements.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 
 namespace TDS_Server.Handler.Factories
 {
     public class PlayerFactory : IEntityFactory<IPlayer>
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEntitiesByInterfaceCreator _entitiesByInterfaceCreator;
 
-        public PlayerFactory(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
+        public PlayerFactory(IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
+            => _entitiesByInterfaceCreator = entitiesByInterfaceCreator;
 
         public IPlayer Create(IntPtr entityPointer, ushort id)
-            => ActivatorUtilities.CreateInstance<ITDSPlayer>(_serviceProvider, entityPointer, id);
+            => _entitiesByInterfaceCreator.Create<ITDSPlayer>(entityPointer, id);
     }
 }

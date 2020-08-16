@@ -179,12 +179,12 @@ namespace TDS_Server.Data.Models.Map
             var clientSyncedDataDto = new ClientSyncedDataDto
             {
                 Name = Info.Name,
-                BombPlaces = BombInfo?.PlantPositions?.Select(e => e.SwitchNamespace()).ToList(),
-                MapEdges = LimitInfo?.Edges?.Select(e => e.SwitchNamespace()).ToList(),
+                BombPlaces = BombInfo?.PlantPositions?.Select(e => e.ToPos3D()).ToList(),
+                MapEdges = LimitInfo?.Edges?.Select(e => e.ToPos3D()).ToList(),
                 Objects = Objects?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Object)).ToList(),
-                Target = Target?.SwitchNamespace(),
+                Target = Target?.ToPos3D(),
                 Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Vehicle)).ToList(),
-                Center = Target is null ? LimitInfo?.Center?.SwitchNamespace() : null
+                Center = Target is null ? LimitInfo?.Center?.ToPos3D() : null
             };
             ClientSyncedDataJson = _serializer.ToClient(clientSyncedDataDto);
         }

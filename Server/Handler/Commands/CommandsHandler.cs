@@ -62,7 +62,7 @@ namespace TDS_Server.Handler.Commands
 
             LoadCommands(dbContext, userpanelCommandsHandler);
 
-            AltAsync.OnClient<ITDSPlayer, string>(ToServerEvent.CommandUsed, UseCommand);
+            AltAsync.OnClient<ITDSPlayer, string, Task>(ToServerEvent.CommandUsed, UseCommand);
         }
 
         public void LoadCommands(TDSDbContext dbcontext, UserpanelCommandsHandler userpanelCommandsHandler)
@@ -169,7 +169,7 @@ namespace TDS_Server.Handler.Commands
             userpanelCommandsHandler.LoadCommandData(_commandDataByCommand, _commandsDict);
         }
 
-        public async void UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
+        public async Task UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
             try
             {

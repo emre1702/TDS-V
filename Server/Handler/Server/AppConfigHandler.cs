@@ -19,7 +19,7 @@ namespace TDS_Server.Handler.Server
 
         public AppConfigHandler()
         {
-            string path = Path.Join(AssemblyDirectory, "TDS_Server.config");
+            string path = "TDS_Server.config";
             using var fileStream = new FileStream(path, FileMode.Open);
             using var reader = XmlReader.Create(fileStream);
             var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));

@@ -1,14 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using AltV.Net.Async;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.Gang;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler.Entities.Utility;
+using TDS_Server.Entity.GangSystem;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
@@ -41,13 +43,13 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
 
             gangwarArea.SetInPreparation(attacker.Gang);
 
-            var lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, CreateEntity(gangwarArea), gangwarArea, true);
+            var lobby = EntitiesByInterfaceCreator.Create<IArena>(CreateEntity(gangwarArea), gangwarArea, true);
 
             await lobby.AddToDB();
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 EventsHandler.OnLobbyCreated(lobby);
-                lobby.SetMapList(new List<MapDto> { gangwarArea.Map });
+                lobby.SetMapsList(new List<MapDto> { gangwarArea.Map });
 
                 lobby.SetRoundStatus(RoundStatus.NewMapChoose);
                 lobby.Start();
@@ -60,7 +62,7 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
 
         #region Private Methods
 
-        private bool CheckCanStartAction(ITDSPlayer attacker, GangwarArea gangwarArea)
+        private bool CheckCanStartAction(ITDSPlayer attacker, IGangwarArea gangwarArea)
         {
             if (attacker.Gang == _gangsHandler.None)
             {
@@ -89,7 +91,7 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
             }
             if (attacker.Lobby?.Type != LobbyType.GangLobby)
             {
-                LoggingHandler.LogError("Tried to start an action, but is not in GangLobby", Environment.StackTrace, null, attacker);
+                LoggingHandler.LogError("Tried to start an action, but is not in GangLobby", System.Environment.StackTrace, null, attacker);
                 return false;
             }
 
@@ -99,7 +101,7 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
             return true;
         }
 
-        private bool CheckCanStartGangwar(ITDSPlayer attacker, GangwarArea gangwarArea)
+        private bool CheckCanStartGangwar(ITDSPlayer attacker, IGangwarArea gangwarArea)
         {
             if (attacker.Gang.Entity.RankPermissions.StartGangwar > attacker.GangRank!.Rank)
             {
@@ -123,7 +125,7 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
             return true;
         }
 
-        private Lobbies CreateEntity(GangwarArea area)
+        private Lobbies CreateEntity(IGangwarArea area)
         {
             var dummyDBTeam = LobbiesHandler.MainMenu.Teams[0].Entity.DeepCopy();
 

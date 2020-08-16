@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Default;
 
@@ -123,7 +123,7 @@ namespace TDS_Server.Handler.Userpanel
         public string RegisterTimestamp { get; internal set; }
 
         [JsonProperty("2")]
-        public string SCName { get; internal set; }
+        public ulong SCId { get; internal set; }
 
         [JsonProperty("8")]
         public long TotalMoney { get; internal set; }
@@ -271,7 +271,7 @@ namespace TDS_Server.Handler.Userpanel
                     IsVip = p.IsVip,
                     Name = p.Name,
                     RegisterDateTime = p.RegisterTimestamp,
-                    SCName = p.SCName,
+                    SCId = p.SCId,
                     Gang = p.GangMemberNavigation != null ? p.GangMemberNavigation.Gang.Name : "-",
                     AmountMapsCreated = p.Maps.Count,
                     CreatedMapsAverageRating = p.Maps.Average(map => map.PlayerMapRatings.Average(rating => rating.Rating)),

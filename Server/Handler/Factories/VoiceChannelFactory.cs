@@ -2,22 +2,21 @@
 using AltV.Net.Elements.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 
 namespace TDS_Server.Handler.Factories
 {
     public class VoiceChannelFactory : IBaseObjectFactory<IVoiceChannel>
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEntitiesByInterfaceCreator _entitiesByInterfaceCreator;
 
-        public VoiceChannelFactory(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        public VoiceChannelFactory(IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
+            => _entitiesByInterfaceCreator = entitiesByInterfaceCreator;
 
         public IVoiceChannel Create(IntPtr baseObjectPointer)
         {
-            return ActivatorUtilities.CreateInstance<ITDSVoiceChannel>(_serviceProvider, baseObjectPointer);
+            return _entitiesByInterfaceCreator.Create<ITDSVoiceChannel>(baseObjectPointer);
         }
     }
 }

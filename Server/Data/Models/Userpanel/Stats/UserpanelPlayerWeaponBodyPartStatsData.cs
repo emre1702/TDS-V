@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using TDS_Shared.Data.Enums;
+﻿using AltV.Net.Data;
+using Newtonsoft.Json;
 
 namespace TDS_Server.Data.Models.Userpanel.Stats
 {
@@ -14,7 +14,7 @@ namespace TDS_Server.Data.Models.Userpanel.Stats
         public int AmountOfficialHits { get; set; }
 
         [JsonProperty("0")]
-        public PedBodyPart BodyPart { get; set; }
+        public BodyPart BodyPart { get; set; }
 
         [JsonProperty("3")]
         public long DealtDamage { get; set; }

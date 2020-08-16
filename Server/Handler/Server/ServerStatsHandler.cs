@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Server;
-using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Player;
 
 namespace TDS_Server.Handler.Server
 {
@@ -123,7 +123,7 @@ namespace TDS_Server.Handler.Server
         private async void CheckPlayerPeak(ITDSPlayer _)
         {
             await CheckNewDay();
-            int amountLoggedIn = _tdsPlayerHandler.AmountLoggedInPlayers;
+            int amountLoggedIn = _tdsPlayerHandler.LoggedInPlayers.Count;
             if (amountLoggedIn > DailyStats.PlayerPeak)
             {
                 DailyStats.PlayerPeak = (short)amountLoggedIn;

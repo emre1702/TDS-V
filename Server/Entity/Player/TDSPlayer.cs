@@ -1,16 +1,18 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using AltV.Net.Data;
+using AltV.Net.Elements.Entities;
+using System;
+using System.Linq;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Database.Entity;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
-using System.Linq;
-using System;
-using TDS_Server.Handler;
-using TDS_Server.Data.Interfaces.Entities;
+using TDS_Shared.Default;
 
 namespace TDS_Server.Entity.Player
 {
@@ -21,12 +23,13 @@ namespace TDS_Server.Entity.Player
         private readonly AdminsHandler _adminsHandler;
         private readonly ChallengesHelper _challengesHandler;
         private readonly ChatHandler _chatHandler;
-        private readonly DataSyncHandler _dataSyncHandler;
         private readonly GangsHandler _gangsHandler;
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ISettingsHandler _settingsHandler;
         private readonly SpectateHandler _spectateHandler;
+        private readonly ILoggingHandler _loggingHandler;
+        private string _name;
 
         #endregion Private Fields
 
@@ -40,7 +43,6 @@ namespace TDS_Server.Entity.Player
             ChallengesHelper challengesHandler,
             LangHelper langHelper,
             ISettingsHandler settingsHandler,
-            DataSyncHandler dataSyncHandler,
             SpectateHandler spectateHandler,
             GangsHandler gangsHandler,
             LobbiesHandler lobbiesHandler,
@@ -48,15 +50,16 @@ namespace TDS_Server.Entity.Player
             EventsHandler eventsHandler) : base(entityPointer, id)
         {
             _dbContext = dbContext;
+            _loggingHandler = loggingHandler;
             _adminsHandler = adminsHandler;
             _challengesHandler = challengesHandler;
             _langHelper = langHelper;
             _settingsHandler = settingsHandler;
-            _dataSyncHandler = dataSyncHandler;
             _spectateHandler = spectateHandler;
             _gangsHandler = gangsHandler;
             _lobbiesHandler = lobbiesHandler;
             _chatHandler = chatHandler;
+            _name = base.Name;
 
             Language = _langHelper.GetLang(TDS_Shared.Data.Enums.Language.English);
 
@@ -77,6 +80,8 @@ namespace TDS_Server.Entity.Player
 
         public ITDSVehicle? FreeroamVehicle { get; set; }
 
+        public new ITDSVehicle? Vehicle => base.Vehicle as ITDSVehicle;
+
         public bool IsConsole { get; set; }
 
         public bool IsCrouched { get; set; }
@@ -90,6 +95,18 @@ namespace TDS_Server.Entity.Player
         public bool LoggedIn => Entity?.PlayerStats?.LoggedIn == true;
 
         public ushort AltVId => base.Id;
+
+        public new string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                SetSyncedMetaData(PlayerDataKey.Name.ToString(), value);
+            }
+        }
+
+        public int Transparency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         #endregion Public Properties
 
@@ -106,7 +123,8 @@ namespace TDS_Server.Entity.Player
 
         public void Spawn(Position position, float rotation)
         {
-            base.Spawn(position, rotation);
+            //Todo: Add more here?
+            base.Spawn(position, 0);
         }
 
         #endregion Public Methods
@@ -131,6 +149,11 @@ namespace TDS_Server.Entity.Player
         private void EventsHandler_PlayerLoggedOut(ITDSPlayer player)
         {
             RemovePlayerFromOnlineFriend(player);
+        }
+
+        public void SetClientMetaData(string key, object value)
+        {
+            SendEvent(ToClientEvent.SetPlayerData, key, value);
         }
 
         #endregion Private Methods

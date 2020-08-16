@@ -1,21 +1,20 @@
-﻿using System.Drawing;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Entities.GangSystem;
+﻿using TDS_Server.Data.Interfaces.Entities.Gang;
+using TDS_Server.Data.Models;
 using TDS_Shared.Data.Default;
 
-namespace TDS_Server.Entity.LobbySystem.GangLobbySystem.Environment
+namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
 {
     partial class GangLobby
     {
-        public void LoadHouse(GangHouse house)
+        public void LoadHouse(IGangHouse house)
         {
-            house.TextLabel = ModAPI.TextLabel.Create(house.GetTextLabelText(), house.Position, 10d, 7f, 0, Color.FromArgb(220, 220, 220), true, this);
+            house.TextLabel = _tdsTextLabelHandler.Create(house.GetTextLabelText(), house.Position, 10d, 7f, 0, new Color(220, 220, 220), true, (int)Dimension);
 
             if (house.Entity.OwnerGang is { })
             {
-                house.Blip = ModAPI.Blip.Create(
+                house.Blip = _tdsBlipHandler.Create(
                     SharedConstants.GangHouseOccupiedBlipModel,
-                    house.Position, dimension: Dimension, color: house.Entity.OwnerGang is null ? (byte)1 : house.Entity.OwnerGang.BlipColor,
+                    house.Position, dimension: (int)Dimension, color: house.Entity.OwnerGang is null ? (byte)1 : house.Entity.OwnerGang.BlipColor,
                     shortRange: true, alpha: house.Entity.OwnerGang is null ? (byte)180 : (byte)255,
                     name: $"[{house.Entity.NeededGangLevel}] " + (house.Entity.OwnerGang is null ? "-" : house.Entity.OwnerGang.Name));
             }
@@ -39,7 +38,7 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem.Environment
             }
         }
 
-        private void SetHouseOwner(GangHouse house, IGang? owner)
+        private void SetHouseOwner(IGangHouse house, IGang? owner)
         {
             if (owner is null)
             {
@@ -48,9 +47,9 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem.Environment
             }
             else
             {
-                house.Blip = ModAPI.Blip.Create(
+                house.Blip = _tdsBlipHandler.Create(
                     SharedConstants.GangHouseOccupiedBlipModel,
-                    house.Position, dimension: Dimension, color: house.Entity.OwnerGang is null ? (byte)1 : house.Entity.OwnerGang.BlipColor,
+                    house.Position, dimension: (int)Dimension, color: house.Entity.OwnerGang is null ? (byte)1 : house.Entity.OwnerGang.BlipColor,
                     shortRange: true, alpha: house.Entity.OwnerGang is null ? (byte)180 : (byte)255,
                     name: $"[{house.Entity.NeededGangLevel}] " + (house.Entity.OwnerGang is null ? "-" : house.Entity.OwnerGang.Name));
             }

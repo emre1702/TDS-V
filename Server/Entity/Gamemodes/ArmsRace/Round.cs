@@ -1,5 +1,6 @@
 ﻿using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Entity.Gamemodes.ArmsRace

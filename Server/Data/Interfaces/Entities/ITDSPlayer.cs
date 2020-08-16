@@ -21,24 +21,28 @@ namespace TDS_Server.Data.Interfaces.Entities
 
         AdminLevelDto AdminLevel { get; }
         string AdminLevelName { get; }
-        new int Armor { get; set; }
+        new ushort Armor { get; set; }
         RoundStatsDto? CurrentRoundStats { get; set; }
         new WeaponHash CurrentWeapon { get; set; }
         string DisplayName { get; }
         Players? Entity { get; set; }
         PedHash FreemodeSkin { get; }
+        new string Name { get; set; }
 
-        new ITDSVehicle Vehicle { get; }
-        IVehicle? FreeroamVehicle { get; set; }
+        new ITDSVehicle? Vehicle { get; }
+        ITDSVehicle? FreeroamVehicle { get; set; }
         IGang Gang { get; set; }
         GangRanks? GangRank { get; set; }
-        new int Health { get; set; }
+        new ushort Health { get; set; }
         new int Id { get; }
-        int AltVId { get; }
+        ushort AltVId { get; }
         ITDSPlayer? InPrivateChatWith { get; set; }
         bool IsConsole { get; set; }
         bool IsCrouched { get; set; }
         bool IsGangOwner { get; }
+
+        void PlayAnimation(string dict, string name, int flag);
+
         bool IsInGang { get; }
         bool IsLobbyOwner { get; }
         bool IsMuted { get; }
@@ -46,7 +50,6 @@ namespace TDS_Server.Data.Interfaces.Entities
         bool IsVip { get; }
         bool IsVoiceMuted { get; }
 
-        void SetCollisionsless(bool toggle, ILobby lobby);
 
         short KillingSpree { get; set; }
         ILanguage Language { get; }
@@ -54,10 +57,13 @@ namespace TDS_Server.Data.Interfaces.Entities
         ITDSPlayer? LastHitter { get; set; }
         DateTime? LastKillAt { get; set; }
         WeaponHash LastWeaponOnHand { get; set; }
+
+        void WarpOutOfVehicle();
+
         short Lifes { get; set; }
         ILobby? Lobby { get; set; }
         PlayerLobbyStats? LobbyStats { get; }
-        bool LoggedIn { get; set; }
+        bool LoggedIn { get; }
         int Money { get; set; }
         int? MuteTime { get; set; }
         int PlayMinutes { get; set; }
@@ -73,7 +79,7 @@ namespace TDS_Server.Data.Interfaces.Entities
         int TeamIndex { get; }
         bool TryingToLoginRegister { get; set; }
         int? VoiceMuteTime { get; set; }
-        Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>>? WeaponBodyPartsStats { get; }
+        Dictionary<WeaponHash, Dictionary<BodyPart, PlayerWeaponBodypartStats>>? WeaponBodyPartsStats { get; }
 
         void SetSkin(PedHash pedHash);
 
@@ -83,8 +89,8 @@ namespace TDS_Server.Data.Interfaces.Entities
         void AddHPArmor(int healtharmor);
 
         void AddToChallenge(ChallengeType challengeType, int amount = 1, bool setTheValue = false);
-
-        void AddWeaponShot(WeaponHash weaponHash, PedBodyPart? pedBodyPart, int? damage, bool killed);
+        void SetClientMetaData(string key, object value);
+        void AddWeaponShot(WeaponHash weaponHash, BodyPart? bodyPart, int? damage, bool killed);
 
         void ChangeMuteTime(ITDSPlayer target, int minutes, string reason);
 
@@ -116,8 +122,6 @@ namespace TDS_Server.Data.Interfaces.Entities
 
         void RemovePlayerFromOnlineFriend(ITDSPlayer otherPlayer, bool outputInfo = true);
 
-        void ResetVoiceToAndFrom();
-
         ValueTask SaveData(bool force = false);
 
         void SendBrowserEvent(string eventName, params object[] args);
@@ -135,11 +139,12 @@ namespace TDS_Server.Data.Interfaces.Entities
         void SetRelation(ITDSPlayer target, PlayerRelation relation);
 
         void SetTeam(ITeam? team, bool forceIsNew);
-
-        void SetVoiceTo(ITDSPlayer target, bool v);
+        void StopAnimation();
 
         void Spawn(Position position, float rotation);
         void Kill(string? reason = null);
         void SetClothes(int slot, int drawable, int texture);
+        void InitChallengesDict();
+        void SetInvincible(bool toggle);
     }
 }

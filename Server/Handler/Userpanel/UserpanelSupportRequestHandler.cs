@@ -1,4 +1,5 @@
-﻿using BonusBotConnector.Client;
+﻿using AltV.Net.Async;
+using BonusBotConnector.Client;
 using BonusBotConnector_Server;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -9,12 +10,10 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
-using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Userpanel;
@@ -24,7 +23,7 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class SupportRequestData
     {
-        #region Public Properties
+        #region Properties
 
         [JsonProperty("4")]
         public int AtleastAdminLevel { get; set; }
@@ -50,12 +49,12 @@ namespace TDS_Server.Handler.Userpanel
         [JsonProperty("3")]
         public SupportType Type { get; set; }
 
-        #endregion Public Properties
+        #endregion Properties
     }
 
     public class SupportRequestMessage
     {
-        #region Public Properties
+        #region Properties
 
         [JsonProperty("0")]
         public string? Author { get; set; }
@@ -66,12 +65,12 @@ namespace TDS_Server.Handler.Userpanel
         [JsonProperty("1")]
         public string? Message { get; set; }
 
-        #endregion Public Properties
+        #endregion Properties
     }
 
     public class SupportRequestMessageData
     {
-        #region Public Properties
+        #region Properties
 
         [JsonProperty("0")]
         public string Author { get; set; } = string.Empty;
@@ -85,12 +84,12 @@ namespace TDS_Server.Handler.Userpanel
         [JsonProperty("1")]
         public string Message { get; set; } = string.Empty;
 
-        #endregion Public Properties
+        #endregion Properties
     }
 
     public class SupportRequestsListData
     {
-        #region Public Properties
+        #region Properties
 
         [JsonProperty("5")]
         public bool Closed { get; set; }
@@ -113,12 +112,12 @@ namespace TDS_Server.Handler.Userpanel
         [JsonProperty("3")]
         public SupportType Type { get; set; }
 
-        #endregion Public Properties
+        #endregion Properties
     }
 
     public class UserpanelSupportRequestHandler : DatabaseEntityWrapper, IUserpanelSupportRequestHandler
     {
-        #region Private Fields
+        #region Fields
 
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly Dictionary<int, HashSet<ITDSPlayer>> _inSupportRequest = new Dictionary<int, HashSet<ITDSPlayer>>();
@@ -126,9 +125,9 @@ namespace TDS_Server.Handler.Userpanel
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
@@ -163,9 +162,9 @@ namespace TDS_Server.Handler.Userpanel
             };
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         public async Task<string?> AnswerRequestFromDiscord(ulong discordUserId, int requestId, string text)
         {
@@ -212,7 +211,7 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = messageEntity.CreateTime.ToString()
             });
 
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 foreach (var target in _inSupportRequest[requestId])
                 {
@@ -432,7 +431,7 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = player.GetLocalDateTimeString(messageEntity.CreateTime)
             });
 
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 foreach (var target in _inSupportRequest[requestId.Value])
                 {
@@ -477,7 +476,7 @@ namespace TDS_Server.Handler.Userpanel
 
             _bonusBotConnectorClient.Support?.Create(player, requestEntity);
 
-            AltAsync.Do(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
+            await AltAsync.Do(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
             return null;
         }
 
@@ -504,7 +503,7 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 foreach (var target in _inSupportRequestsList)
                 {
@@ -532,7 +531,7 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 foreach (var target in _inSupportRequestsList)
                 {
@@ -543,6 +542,6 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

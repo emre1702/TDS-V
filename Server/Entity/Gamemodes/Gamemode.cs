@@ -99,7 +99,7 @@ namespace TDS_Server.Entity.Gamemodes
         {
         }
 
-        public virtual void OnPlayerEnterColshape(ITDSColShape shape, ITDSPlayer player)
+        public virtual void OnPlayerEnterColShape(ITDSColShape shape, ITDSPlayer player)
         {
         }
 

@@ -1,11 +1,10 @@
 ﻿using TDS_Server.Data.Enums;
-using TDS_Server.Handler.Entities.Utility;
 
 namespace TDS_Server.Entity.Gamemodes.Gangwar
 {
     partial class Gangwar
     {
-        #region Public Methods
+        #region Methods
 
         public override bool CanEndRound(RoundEndReason endReason)
         {
@@ -54,7 +53,7 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
                 var playerAtTarget = GetNextTargetMan();
                 SetTargetMan(playerAtTarget);
                 if (playerAtTarget is { })
-                    playerAtTarget.ModPlayer!.Position = TargetObject.Position;
+                    playerAtTarget.Position = TargetObject.Position;
             }
         }
 
@@ -70,6 +69,6 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
             SetTargetMan(null);
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

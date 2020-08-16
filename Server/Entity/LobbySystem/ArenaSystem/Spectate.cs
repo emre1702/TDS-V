@@ -2,6 +2,7 @@
 using System.Linq;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Entity.LobbySystem.ArenaSystem

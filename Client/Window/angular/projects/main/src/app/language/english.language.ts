@@ -207,6 +207,7 @@ WARNING! Spaces will get removed and new lines with an already used command will
     ToolbarDesignInfo = "The design for the toolbar.";
 
     SCName = "Socialclub Name";
+    SCId = "Socialclub ID";
     AdminLvl = "Admin Level";
     Donation = "Donation";
     IsVip = "Is Vip";

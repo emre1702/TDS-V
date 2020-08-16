@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models.ClothesMeta;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Events;
@@ -77,8 +78,6 @@ namespace TDS_Server.Handler
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             if (player.Entity is null)
-                return;
-            if (player.ModPlayer is null)
                 return;
             if (player.Entity.PlayerClothes is null)
                 player.Entity.PlayerClothes = new PlayerClothes();

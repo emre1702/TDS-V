@@ -267,7 +267,7 @@ namespace TDS_Server.Handler.Commands
                         return;
                     }
                     player.Entity!.AdminLvl = adminLvl;
-                    _dataSyncHandler.SetData(player, PlayerDataKey.AdminLevel, DataSyncMode.All, adminLvl);
+                    player.SetSyncedMetaData(PlayerDataKey.AdminLevel.ToString(), adminLvl);
                     break;
 
                 default:

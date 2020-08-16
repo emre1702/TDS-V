@@ -1,7 +1,10 @@
 {
   "profiles": {
     "TDS_Server.Core": {
-      "commandName": "Executable"
+      "commandName": "Executable",
+      "executablePath": "C:\\altV\\server\\altv-server.exe",
+      "commandLineArgs": "-start",
+      "workingDirectory": "C:\\altV\\server"
     }
   }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net.Async;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,15 +13,12 @@ using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -45,12 +43,13 @@ namespace TDS_Server.Handler.Maps
         #region Public Constructors
 
         public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
             (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
             _tdsPlayerHandler = tdsPlayerHandler;
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
+
+            AltAsync.OnClient<ITDSPlayer, int, Task>(ToServerEvent.RemoveMap, RemoveMap);
         }
 
         #endregion Public Constructors
@@ -91,12 +90,8 @@ namespace TDS_Server.Handler.Maps
             }
         }
 
-        public async void RemoveMap(IPlayer modPlayer, int mapId)
+        public async Task RemoveMap(ITDSPlayer player, int mapId)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-
             bool isSavedMap = true;
             MapDto? map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
             if (map is null)
@@ -210,7 +205,7 @@ namespace TDS_Server.Handler.Maps
                 }
             };
 
-            ((MapCreateLobby)player.Lobby!).SetMap(mapCreatorData);
+            ((IMapCreateLobby)player.Lobby!).SetMap(mapCreatorData);
             return null;
         }
 
@@ -275,7 +270,7 @@ namespace TDS_Server.Handler.Maps
 
         public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreateLobby lobby))
                 return null;
 
             string json = (string)args[0];

@@ -1,0 +1,974 @@
+export function degToRad(degrees) {
+    return degrees * Math.PI / 180;
+}
+
+export function radToDeg(radians) {
+    return radians * 180 / Math.PI;
+}
+
+function normalizeVector(vector) {
+    let mag = native.vmag(vector.x, vector.y, vector.z);
+
+    return {x: vector.x / mag, y: vector.y / mag, z: vector.z / mag};
+};
+
+export function rotAnglesToVector(rotation) {
+    const z = degToRad(rotation.z);
+    const x = degToRad(rotation.x);
+    const num = Math.abs(Math.cos(x));
+
+    return { x: -(Math.sin(z) * num), y: (Math.cos(z) * num), z: Math.sin(x) };
+}
+
+export function vectorToRotAngles(vector) {
+    vector = normalizeVector(vector);
+    const ax = radToDeg(Math.asinh(vector.z));
+    const az = radToDeg(Math.atan2(vector.x, vector.y));
+
+    return {x: ax, y: 0, z: -az};
+}
+
+
+
+
+
+
+
+
+
+// Simple Snippet to activate/desactivate Rockstar Editor
+
+ alt.onServer('activateRockstarEditor', (state) => {
+            if (state) {
+                native.activateRockstarEditor();
+                native.setPlayerRockstarEditorDisabled(false);
+                let interval = alt.setInterval(() => {
+                    if (native.isScreenFadedOut()) {
+                        native.doScreenFadeIn(1000);
+                        alt.clearInterval(interval);
+                    }
+                }, 1000);
+            }
+            else {
+                native.setPlayerRockstarEditorDisabled(true);
+            }
+        });
+
+
+
+
+
+
+
+
+// Shows vehicle blips to vehicles within stream range. you can adjust the blip later on with vehicle.getMeta( 'blip' ); 
+
+import * as alt from 'alt';
+import * as natives from 'natives';
+
+alt.on( 'gameEntityCreate', ( vehicle ) => {
+    if( !( vehicle instanceof alt.Vehicle ) )
+        return;
+
+    if( !natives.doesBlipExist( natives.getBlipFromEntity( vehicle.scriptID ) ) ) {
+        const blip = natives.addBlipForEntity( vehicle.scriptID );
+
+        natives.setBlipDisplay( blip, 8 );
+        natives.setBlipCategory( blip, 7 );
+        natives.setBlipAsFriendly( blip, true );
+        natives.setBlipAsShortRange( blip, true );
+        natives.setBlipSprite( blip, 1 );
+        natives.hideNumberOnBlip( blip );
+        natives.setBlipScale( blip, 0.4 );
+        natives.setBlipColour( blip, 65 );
+        natives.setBlipAlpha( blip, 128 );
+        natives.setBlipNameFromTextFile( blip, 'Vehicle' );
+
+        vehicle.setMeta( 'blip', blip );
+    }
+
+} );
+
+
+
+
+
+
+
+
+
+// Small function to get the ground height at the specified position, recursive but fails after 20 tries.
+// This function only works if the area is loaded! Else it will always return 0
+
+function getGroundZ(x, y, z, tries = 0) {
+    native.setFocusPosAndVel(x, y, z, 0, 0, 0);
+    let [_, height] = native.getGroundZFor3dCoord(
+        x,
+        y,
+        z + 100,
+        undefined,
+        undefined
+    );
+    if (!height && tries < 20) return getGroundZ(x, y, z + 100, ++tries);
+    native.clearFocus();
+    if(!height) return 0;
+    return height;
+}
+
+
+
+
+
+
+// Auto restart when the server crashes, place it in a .bat file in the same folder as altv-server.exe
+
+@ECHO OFF
+SET RestartTimer=30
+
+:Loop
+%CD%\altv-server.exe
+TIMEOUT /T %RestartTimer%
+GOTO:Loop
+
+
+
+
+
+
+
+
+
+// Up To Date Snippet for default and Advanced Notifications
+
+export function displayNotification(text) {
+    native.beginTextCommandThefeedPost('STRING');
+    native.addTextComponentSubstringPlayerName(text);
+    native.endTextCommandThefeedPostTicker(false, true);
+}
+
+export function displayAdvancedNotification(message, title = "Title", subtitle = "subtitle", notifImage = null, iconType = 0, backgroundColor = null, durationMult = 1) {
+    native.beginTextCommandThefeedPost('STRING')
+    native.addTextComponentSubstringPlayerName(message)
+    if (backgroundColor != null) native.thefeedSetNextPostBackgroundColor(backgroundColor)
+    if (notifImage != null) native.endTextCommandThefeedPostMessagetextTu(notifImage, notifImage, false, iconType, title, subtitle, durationMult)
+    return native.endTextCommandThefeedPostTicker(false, true)
+}
+
+
+
+
+
+
+
+
+
+// Nametags with LOS check
+
+export function distance(vector1, vector2) {
+    return Math.sqrt(
+        Math.pow(vector1.x - vector2.x, 2) +
+            Math.pow(vector1.y - vector2.y, 2) +
+            Math.pow(vector1.z - vector2.z, 2)
+    );
+}
+alt.everyTick(renderNametags);
+function renderNametags() {
+    for(let player of alt.Player.all) {
+        if(player != alt.Player.local && player.scriptID) {
+            if(distance(player.pos, alt.Player.local.pos) < 50) {
+                game.requestPedVisibilityTracking(player.scriptID);
+                if(game.isTrackedPedVisible(player.scriptID)) {
+                    game.setDrawOrigin(player.pos.x, player.pos.y, player.pos.z + 1, false);
+                    game.beginTextCommandDisplayText('STRING');
+                    game.setTextFont(4);
+                    game.setTextCentre(true);
+                    game.setTextScale(0.4, 0.4);
+                    game.setTextProportional(true);
+                    game.setTextColour(255, 255, 255, 255);
+                    game.addTextComponentSubstringPlayerName(player.name);
+                    game.endTextCommandDisplayText(0, 0);
+                    game.clearDrawOrigin();
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/* Enhanced player Crouch snippet from @allahaka?? & @YaneonY snippet.
++ Removed alien anim.
++ Fixed when player is not crouched with proper anim.*/
+
+let crouched = false;
+alt.on('keydown', (key) => {
+  if (key == 17) { //ctrl
+    native.disableControlAction(0, 36, true);
+    if (!native.isPlayerDead(alt.Player.local) && !native.isPedSittingInAnyVehicle(alt.Player.local.scriptID)) {
+      if (!native.isPauseMenuActive()) {
+        native.requestAnimSet("move_ped_crouched");
+        if (crouched) {
+          native.clearPedTasks(alt.Player.local.scriptID);
+          alt.setTimeout(() => {
+            native.resetPedMovementClipset(alt.Player.local.scriptID, 0.45);
+            crouched = false;
+          }, 200);
+        } else {
+          native.setPedMovementClipset(alt.Player.local.scriptID, "move_ped_crouched", 0.45);
+          crouched = true;
+        }
+      }
+    }
+  }
+})
+
+
+
+
+
+
+// taskEnterVehicle native flags
+
+enum TaskEnterVehicleFlag = {
+    None = 0,
+    Normal = 1,
+    TeleportToDoor = 2,
+    TeleportToVehicle = 3,
+    AllowJacking = 8,
+    TeleportIntoVehicle = 16,
+    EnterFromOppositeSide = 262144,
+    OnlyOpenDoor = 524288
+};
+
+
+
+
+
+// seat bones indexes
+
+const seatBones = {
+    seat_dside_f: -1,
+    seat_dside_r: 1,
+    seat_dside_r1: 3,
+    seat_dside_r2: 5,
+    seat_dside_r3: 7,
+    seat_dside_r4: 9,
+    seat_dside_r5: 11,
+    seat_dside_r6: 13,
+    seat_dside_r7: 15,
+    seat_pside_f: 0,
+    seat_pside_r: 2,
+    seat_pside_r1: 4,
+    seat_pside_r2: 6,
+    seat_pside_r3: 8,
+    seat_pside_r4: 10,
+    seat_pside_r5: 12,
+    seat_pside_r6: 14,
+    seat_pside_r7: 16,
+};
+
+
+
+
+// Eval
+alt.onServer('ClientEval', (command) => {
+    alt.log(eval(command));
+});
+
+
+
+
+
+
+
+
+// right way to put player into vehicle, also clears interval if vehicle never got created.
+
+
+// server:
+const vehicle = new alt.Vehicle(arg[0], player.pos.x, player.pos.y, player.pos.z, 0, 0, 0);
+alt.emitClient(player, 'veh:enter', vehicle, -1);
+
+
+// client:
+alt.onServer("veh:enter", (vehicle, seat) => {
+    let cleared = false;
+    const interval = alt.setInterval(() => {
+        const vehicleScriptId = vehicle.scriptID;
+        if (vehicleScriptId) {
+            game.setPedIntoVehicle(alt.Player.local.scriptID, vehicleScriptId, seat);
+            alt.clearInterval(interval);
+            cleared = true;
+        }
+    }, 10);
+    alt.setTimeout(() => {
+        if (!cleared) {
+            alt.clearInterval(interval);
+        }
+    }, 5000);
+});
+
+
+
+
+
+
+
+
+
+
+// idea of calling natives from server side
+
+//server
+let execID = 0;
+
+function callNative(player, name, ...args) {
+    execID++;
+    alt.emitClient.apply(null, [ player, "callNative", name + execID, name ].concat(args));
+    return { then: (cb) => {
+        alt.onClient(name + execID, cb);
+    }};
+}
+
+//example
+alt.on("playerConnect", player => {
+    callNative(player, "setPedArmour", player, 50);
+    callNative(player, "getPedArmour", player).then((player, armour) => {
+        alt.log(armour);
+    });
+});
+
+//client
+alt.onServer("callNative", (execID, name, ...args) => {
+    for(let arg of args) {
+        if(typeof arg.type != "undefined") {
+            if(arg.type == 0)args[args.indexOf(arg)] = arg.scriptID;
+        }
+    }
+
+    let result = game[name].apply(null, args);
+    if(typeof result != "undefined") {
+        alt.emitServer(execID, result);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+// @Pinkyklein this file doesnt include all weapons, simple fix to disable Headshot for ALL weapons:
+// After Player Connect/Login -> clientside:
+native.setPedSuffersCriticalHits(alt.Player.local.scriptID, false);
+
+
+
+
+
+
+
+
+
+//drawRect without lag:
+function drawRectangle(posX, posY, posZ, width, height, r, g, b, a) {
+    const entity = alt.Player.local.vehicle ? alt.Player.local.vehicle.scriptID : alt.Player.local.scriptID;
+    const vector = native.getEntityVelocity(entity);
+    const frameTime = native.getFrameTime();
+    native.setDrawOrigin(posX + (vector.x * frameTime), posY + (vector.y * frameTime), posZ + (vector.z * frameTime), 0);
+    native.drawRect(0, 0, width, height, r, g, b, a);
+    native.clearDrawOrigin();
+}
+
+
+//draw3DText without lag:
+function drawText3d(msg, posX, posY, posZ, scale, fontType, r, g, b, a, useOutline = true, useDropShadow = true) {
+    const entity = alt.Player.local.vehicle ? alt.Player.local.vehicle.scriptID : alt.Player.local.scriptID;
+    const vector = native.getEntityVelocity(entity);
+    const frameTime = native.getFrameTime();
+    native.setDrawOrigin(posX + (vector.x * frameTime), posY + (vector.y * frameTime), posZ + (vector.z * frameTime), 0);
+    native.beginTextCommandDisplayText('STRING');
+    native.addTextComponentSubstringPlayerName(msg);
+    native.setTextFont(fontType);
+    native.setTextScale(1, scale);
+    native.setTextWrap(0.0, 1.0);
+    native.setTextCentre(true);
+    native.setTextColour(r, g, b, a);
+
+    if(useOutline) native.setTextOutline();
+    if(useDropShadow) native.setTextDropShadow();
+
+    native.endTextCommandDisplayText(0, 0);
+    native.clearDrawOrigin();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Simple Snippet to Attach a TextLabel to an entity without Lag/Flickering:
+
+  alt.onServer('CreateTextLabelOnPlayer', (player, msg, time) => {
+            if (player !== null) {
+                let id = player.id;
+
+                if (interval != null && interval[id]) {
+                    alt.clearInterval(interval[id]);
+                }
+                interval[id] = alt.setInterval(() => {
+                    if (!player || !player.valid) {
+                        alt.clearInterval(interval[id]);
+                        return;
+                    }
+                    if (Util.DistanceOf(player.pos, alt.Player.local.pos) <= 25) {
+                        Util.drawText3d(
+                            player,
+                            `${msg}`,
+                            0.35,
+                            4,
+                            194,
+                            162,
+                            218,
+                            255,
+                            true,
+                            false
+                        );
+                    }
+                }, 0);
+
+                alt.setTimeout(() => {
+                    alt.clearInterval(interval[id]);
+                }, time);
+            }
+        });
+
+
+
+export function drawText3d(
+    player,
+    msg,
+    scale,
+    fontType,
+    r,
+    g,
+    b,
+    a,
+    useOutline = true,
+    useDropShadow = true,
+    layer = 0
+) {
+    let hex = msg.match('{.*}');
+    if (hex) {
+        const rgb = hexToRgb(hex[0].replace('{', '').replace('}', ''));
+        r = rgb[0];
+        g = rgb[1];
+        b = rgb[2];
+        msg = msg.replace(hex[0], '');
+    }
+    const localPlayer = player;
+    const playerPos = localPlayer.pos;
+    const entity = localPlayer.vehicle ? localPlayer.vehicle.scriptID : localPlayer.scriptID;
+    const vector = native.getEntityVelocity(entity);
+    const frameTime = native.getFrameTime();
+    native.setDrawOrigin(playerPos.x + (vector.x * frameTime), playerPos.y + (vector.y * frameTime), playerPos.z + (vector.z * frameTime) + 1, 0);
+    native.beginTextCommandDisplayText('STRING');
+    native.addTextComponentSubstringPlayerName(msg);
+    native.setTextFont(fontType);
+    native.setTextScale(1, scale);
+    native.setTextWrap(0.0, 1.0);
+    native.setTextCentre(true);
+    native.setTextColour(r, g, b, a);
+
+    if (useOutline) native.setTextOutline();
+
+    if (useDropShadow) native.setTextDropShadow();
+
+    native.endTextCommandDisplayText(0, 0);
+    native.clearDrawOrigin();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Simple Snippets to disable ambiant sounds in the city
+ 
+native.startAudioScene("FBI_HEIST_H5_MUTE_AMBIENCE_SCENE"); // Used to stop police sound in town
+native.cancelCurrentPoliceReport(); // Used to stop default police radio around/In police vehicle
+native.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_GENERAL", 1, 0); // Turn off prison sound
+native.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_WARNING", 1, 0); // Turn off prison sound
+native.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_ALARM", 1, 0); // Turn off prison sound
+native.setAmbientZoneState(0, 0, 0); // Set ambiant sound to 0,0,0
+native.clearAmbientZoneState("AZ_DISTANT_SASQUATCH", 0, 0);
+native.setAudioFlag("LoadMPData", true);
+native.setAudioFlag("DisableFlightMusic", true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+// convert player heading (must be radian) to quaternion
+const quaternionFromHeading = (heading: number) => {
+    const halfAngle = heading * 0.5;
+
+    const a = 0;
+    const b = 1;
+    const c = 0;
+
+    const sin_2 = Math.sin(halfAngle);
+    const cos_2 = Math.cos(halfAngle);
+
+    const sin_norm = sin_2 / Math.sqrt(a * a + b * b + c * c);
+
+    return [cos_2, a * sin_norm, b * sin_norm, c * sin_norm];
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// All hair colors as RGB
+const colors = [{"r":28,"b":33,"g":31},{"r":39,"b":44,"g":42},{"r":49,"b":44,"g":46},{"r":53,"b":28,"g":38},{"r":75,"b":31,"g":50},{"r":92,"b":36,"g":59},{"r":109,"b":53,"g":76},{"r":107,"b":59,"g":80},{"r":118,"b":69,"g":92},{"r":127,"b":78,"g":104},{"r":153,"b":93,"g":129},{"r":167,"b":105,"g":147},{"r":175,"b":112,"g":156},{"r":187,"b":99,"g":160},{"r":214,"b":123,"g":185},{"r":218,"b":142,"g":195},{"r":159,"b":89,"g":127},{"r":132,"b":57,"g":80},{"r":104,"b":31,"g":43},{"r":97,"b":12,"g":18},{"r":100,"b":10,"g":15},{"r":124,"b":15,"g":20},{"r":160,"b":25,"g":46},{"r":182,"b":40,"g":75},{"r":162,"b":47,"g":80},{"r":170,"b":43,"g":78},{"r":98,"b":98,"g":98},{"r":128,"b":128,"g":128},{"r":170,"b":170,"g":170},{"r":197,"b":197,"g":197},{"r":70,"b":85,"g":57},{"r":90,"b":107,"g":63},{"r":118,"b":118,"g":60},{"r":237,"b":227,"g":116},{"r":235,"b":147,"g":75},{"r":242,"b":188,"g":153},{"r":4,"b":158,"g":149},{"r":2,"b":134,"g":95},{"r":2,"b":116,"g":57},{"r":63,"b":106,"g":161},{"r":33,"b":97,"g":124},{"r":24,"b":85,"g":92},{"r":182,"b":52,"g":192},{"r":112,"b":11,"g":169},{"r":67,"b":19,"g":157},{"r":220,"b":87,"g":184},{"r":229,"b":3,"g":177},{"r":230,"b":2,"g":145},{"r":242,"b":49,"g":136},{"r":251,"b":87,"g":128},{"r":226,"b":88,"g":139},{"r":209,"b":60,"g":89},{"r":206,"b":32,"g":49},{"r":173,"b":3,"g":9},{"r":136,"b":2,"g":3},{"r":31,"b":20,"g":24},{"r":41,"b":25,"g":31},{"r":46,"b":27,"g":34},{"r":55,"b":30,"g":41},{"r":46,"b":24,"g":34},{"r":35,"b":21,"g":27},{"r":2,"b":2,"g":2},{"r":112,"b":102,"g":108},{"r":157,"b":80,"g":122}];
+
+let colors = [];
+for(let i = 0; i < game.getNumHairColors(); i++)
+{
+    const [_,r,g,b] = game.getPedHairRgbColor(i);
+    colors.push({r,g,b});
+}
+
+alt.emitServer('callbackColors', colors)
+alt.onClient('callbackColors', (player, colors) =>
+{
+    alt.log(JSON.stringify(colors));
+});
+
+
+
+
+
+
+
+
+
+
+
+
+function showNotify(message) {
+  const textEntry = `TEXT_ENTRY_${(Math.random() * 1000).toFixed(0)}`
+  alt.addGxtText(textEntry, message)
+
+  game.beginTextCommandThefeedPost('STRING')
+  game.addTextComponentSubstringTextLabel(textEntry)
+  game.thefeedSetNextPostBackgroundColor(2)
+  game.endTextCommandThefeedPostTicker(false, false)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * 
+ * @param {string} message Message to display
+ * @param {string} title Title of the notification
+ * @param {string} subtitle Subtitle of the notification
+ * @param {string} icon Icon string "PLAYER" for pedIcon, or valid GTAicon, like. "CHAR_BANK_BOL"
+ * @param {int} color Background color of the notification
+ * @param {bool} blink should it blink?
+ */
+async function ShowIconNotification(
+    message,
+    title,
+    subtitle,
+    icon,
+    color = undefined,
+    blink = false
+) {
+    icon = icon.toUpperCase();
+    if (icon === 'PLAYER') {
+        let pedHeadshot = native.registerPedheadshot(alt.Player.local.scriptID);
+        icon = await loadPlayerHead(pedHeadshot);
+    }
+
+    native.beginTextCommandThefeedPost('STRING');
+    PushLongString(message, textblock => {
+        native.addTextComponentSubstringPlayerName(textblock);
+    });
+
+    // Set the notification icon, title and subtitle.
+    native.endTextCommandThefeedPostMessagetext(icon, icon, false, 0, title, subtitle);
+    if (color) native.thefeedSetNextPostBackgroundColor(color);
+    native.endTextCommandThefeedPostTicker(blink, false);
+
+    native.unregisterPedheadshot(alt.Player.local.scriptID);
+}
+
+function loadPlayerHead(pedHeadshot) {
+    return new Promise(resolve => {
+        let interval = alt.setInterval(() => {
+            if (native.isPedheadshotReady(pedHeadshot) && native.isPedheadshotValid(pedHeadshot)) {
+                alt.clearInterval(interval);
+                return resolve(native.getPedheadshotTxdString(pedHeadshot));
+            }
+        }, 0);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// client side typescript class for showing loading prompts ingame
+import * as alt from 'alt';
+import * as game from 'natives';
+
+enum LoadingSpinnerType {
+    Clockwise1 = 1,
+    Clockwise2,
+    Clockwise3,
+    SocialClubSaving,
+    RegularClockwise
+}
+
+export default class LoadingPrompt {
+    public static get IsActive(): boolean {
+        return game.busyspinnerIsOn();
+    }
+
+    public static Show(loadingText: string = null, spinnerType: LoadingSpinnerType = LoadingSpinnerType.RegularClockwise): void {
+        LoadingPrompt.Hide();
+
+        if (loadingText == null) {
+            game.beginTextCommandBusyspinnerOn("");
+        }
+        else {
+            game.beginTextCommandBusyspinnerOn("STRING");
+            game.addTextComponentSubstringPlayerName(loadingText);
+        }
+        game.endTextCommandBusyspinnerOn(spinnerType);
+    }
+
+    public static Hide(): void {
+        if (LoadingPrompt.IsActive) {
+            game.busyspinnerOff();
+        }
+    }
+}
+
+export {
+    LoadingSpinnerType
+}
+
+
+// Example use
+import * as alt from 'alt';
+import LoadingPrompt from './LoadingPrompt';
+
+alt.on('connectionComplete', () => {
+    LoadingPrompt.Show("Verifying discord...");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const blipColors = {
+    1: 'e13b3b',
+    2: '79ce79',
+    3: '64b8e6',
+    4: 'f0f0f0',
+    5: 'efca57',
+    6: 'c55758',
+    7: 'a074b3',
+    8: 'ff81c8',
+    9: 'f6a480',
+    10: 'b6968b',
+    11: '91cfaa',
+    12: '78adb3',
+    13: 'd5d3e8',
+    14: '95859f',
+    15: '70c7c1',
+    16: 'd8c59e',
+    17: 'eb9358',
+    18: '9dccea',
+    19: 'b6698d',
+    20: '95927f',
+    21: 'aa7a67',
+    22: 'b4abac',
+    23: 'e892a0',
+    24: 'bfd863',
+    25: '17815d',
+    26: '80c7ff',
+    27: 'ae44e6',
+    28: 'd0ac18',
+    29: '4e69b1',
+    30: '34a9bc',
+    31: 'bca183',
+    32: 'cde2ff',
+    33: 'f0f09b',
+    34: 'ed91a4',
+    35: 'f98f8f',
+    36: 'fdf0aa',
+    37: 'f1f1f1',
+    38: '3776bd',
+    39: '9f9f9f',
+    40: '545454',
+    41: 'f29e9e',
+    42: '6db8d7',
+    43: 'b0eeaf',
+    44: 'fea75e',
+    45: 'f0f0f0',
+    46: 'ebef28',
+    47: 'ff9a18',
+    48: 'f644a4',
+    49: 'e03b3b',
+    50: '8a6de2',
+    51: 'ff8a5c',
+    52: '426d42',
+    53: 'b3ddf3',
+    54: '3a647a',
+    55: 'a0a0a0',
+    56: '847232',
+    57: '65b9e7',
+    58: '4c4276',
+    59: 'e13b3b',
+    60: 'f0cb58',
+    61: 'cd3e98',
+    62: 'cfcfcf',
+    63: '286b9f',
+    64: 'd77a1a',
+    65: '8e8393',
+    66: 'f0ca57',
+    67: '64b8e6',
+    68: '65b9e7',
+    69: '78cd78',
+    70: 'efca57',
+    71: 'f0cb58',
+    72: '000000',
+    73: 'f0cb58',
+    74: '64b9e7',
+    75: 'e13b3b',
+    76: '782424',
+    77: '65b9e7',
+    78: '39647a',
+    79: 'e13b3b',
+    80: '65b9e7',
+    81: 'f2a40c',
+    82: 'a4ccaa',
+    83: 'a854f2',
+    84: '65b8e6',
+    85: '000000'
+};
+
+
+
+
+
+
+
+
+
+function SkyCameraTeleport(pos) {
+    game.switchOutPlayer(alt.Player.local.scriptID, 0, 1);
+    alt.setTimeout(() => {
+        game.setEntityCoords(alt.Player.local.scriptID, pos.x, pos.y, pos.z, 0, 0, 0, false);
+        game.freezeEntityPosition(alt.Player.local.scriptID, true);
+        game.switchInPlayer(alt.Player.local.scriptID);
+        game.freezeEntityPosition(alt.Player.local.scriptID, false);
+    }, 1000);
+}
+
+SkyCameraTeleport({x: 414.20746, y: -972.52386, z: 29.44237});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//TP to Waypoint
+//Client:
+function tpToWaypoint() {
+    var waypoint = native.getFirstBlipInfoId(8);
+
+    if (native.doesBlipExist(waypoint)) {
+        var coords = native.getBlipInfoIdCoord(waypoint);
+        alt.Player.local.pos = coords;
+
+        var res = native.getGroundZFor3dCoord(coords.x, coords.y, coords.z + 100, undefined, undefined);
+
+        coords.z = res + 1;
+        alt.emitServer('test', coords);
+    }
+}
+
+
+//Server:
+alt.onClient('test', (player, coords) => {
+    player.pos = coords;
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Get current FPS:
+var fps = [];
+fps.countedFrames = 0;
+fps.lastFPSReset = 0;
+fps.value = 0;
+
+export function getCurrentFPS() {
+    return fps.value;
+}
+
+alt.on('update', () => {
+    fps.countedFrames++;
+
+    if(!fps.lastFPSReset) {
+        fps.lastFPSReset = Date.now();
+    }
+
+    if(Date.now() - fps.lastFPSReset >= 1000) {
+        fps.value = fps.countedFrames;
+        fps.countedFrames = 0;
+        fps.lastFPSReset = Date.now();
+    }
+})
+
+export default { getCurrentFPS }
+
+
+
+
+
+
+
+
+
+
+native.setHdArea(pos1X, pos1Y, pos1Z, 30);

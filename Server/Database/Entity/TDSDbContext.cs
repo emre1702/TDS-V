@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net.Data;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TDS_Server.Database.Entity.Admin;
 using TDS_Server.Database.Entity.Bonusbot;
 using TDS_Server.Database.Entity.Challenge;
@@ -17,6 +19,7 @@ using TDS_Server.Database.Entity.Userpanel;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
+using Weapons = TDS_Server.Database.Entity.Rest.Weapons;
 
 namespace TDS_Server.Database.Entity
 {
@@ -43,7 +46,7 @@ namespace TDS_Server.Database.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ChallengeFrequency>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ScoreboardPlayerSorting>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TimeSpanUnitsOfTime>();
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<PedBodyPart>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<BodyPart>();
         }
 
         public TDSDbContext(DbContextOptions<TDSDbContext> options)
@@ -151,7 +154,7 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasPostgresEnum<ChallengeFrequency>();
             modelBuilder.HasPostgresEnum<ScoreboardPlayerSorting>();
             modelBuilder.HasPostgresEnum<TimeSpanUnitsOfTime>();
-            modelBuilder.HasPostgresEnum<PedBodyPart>();
+            modelBuilder.HasPostgresEnum<BodyPart>();
 
             #endregion Enum
 
@@ -169,7 +172,7 @@ namespace TDS_Server.Database.Entity
                 entity.HasKey(e => new { e.Level, e.Language });
 
                 entity.Property(e => e.Name)
-                    .IsRequired()
+                    
                     .HasMaxLength(50);
 
                 entity.HasOne(d => d.LevelNavigation)
@@ -184,12 +187,12 @@ namespace TDS_Server.Database.Entity
                     .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Created)
-                    .IsRequired()
+                    
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
 
                 entity.Property(e => e.Text)
-                    .IsRequired();
+                    ;
             });
 
             modelBuilder.Entity<ApplicationAnswers>(entity =>
@@ -267,7 +270,7 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.ErrorLogsChannelId).IsRequired(false);
 
-                entity.Property(e => e.RefreshServerStatsFrequencySec).IsRequired().HasDefaultValue(60);
+                entity.Property(e => e.RefreshServerStatsFrequencySec).HasDefaultValue(60);
             });
 
             modelBuilder.Entity<ChallengeSettings>(entity =>
@@ -278,15 +281,10 @@ namespace TDS_Server.Database.Entity
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.MinNumber)
-                    .IsRequired()
                     .HasDefaultValue(1);
 
                 entity.Property(e => e.MaxNumber)
-                    .IsRequired()
                     .HasDefaultValue(1);
-
-                entity.Property(e => e.Frequency)
-                    .IsRequired();
             });
 
             modelBuilder.Entity<ChatInfos>(entity =>
@@ -311,7 +309,6 @@ namespace TDS_Server.Database.Entity
                 entity.HasKey(e => new { e.Id, e.Language });
 
                 entity.Property(e => e.Info)
-                    .IsRequired()
                     .HasMaxLength(500);
 
                 entity.HasOne(d => d.IdNavigation)
@@ -323,7 +320,6 @@ namespace TDS_Server.Database.Entity
             modelBuilder.Entity<Commands>(entity =>
             {
                 entity.Property(e => e.Command)
-                    .IsRequired()
                     .HasMaxLength(50);
 
                 entity.HasOne(d => d.NeededAdminLevelNavigation)
@@ -367,15 +363,15 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Level);
 
-                entity.Property(e => e.UpgradePrice).IsRequired().HasDefaultValue(int.MaxValue);
-                entity.Property(e => e.HousePrice).IsRequired().HasDefaultValue(int.MaxValue);
-                entity.Property(e => e.NeededExperience).IsRequired().HasDefaultValue(int.MaxValue);
+                entity.Property(e => e.UpgradePrice).HasDefaultValue(int.MaxValue);
+                entity.Property(e => e.HousePrice).HasDefaultValue(int.MaxValue);
+                entity.Property(e => e.NeededExperience).HasDefaultValue(int.MaxValue);
 
-                entity.Property(e => e.PlayerSlots).IsRequired().HasDefaultValue(byte.MaxValue);
-                entity.Property(e => e.RankSlots).IsRequired().HasDefaultValue(byte.MaxValue);
-                entity.Property(e => e.VehicleSlots).IsRequired().HasDefaultValue(byte.MaxValue);
-                entity.Property(e => e.GangAreaSlots).IsRequired().HasDefaultValue(byte.MaxValue);
-                entity.Property(e => e.HouseAreaRadius).IsRequired().HasDefaultValue(30);
+                entity.Property(e => e.PlayerSlots).HasDefaultValue(byte.MaxValue);
+                entity.Property(e => e.RankSlots).HasDefaultValue(byte.MaxValue);
+                entity.Property(e => e.VehicleSlots).HasDefaultValue(byte.MaxValue);
+                entity.Property(e => e.GangAreaSlots).HasDefaultValue(byte.MaxValue);
+                entity.Property(e => e.HouseAreaRadius).HasDefaultValue(30);
             });
 
             modelBuilder.Entity<GangMembers>(entity =>
@@ -436,18 +432,20 @@ namespace TDS_Server.Database.Entity
                     .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Short)
-                    .IsRequired()
                     .HasMaxLength(20);
+
+                entity.Property(e => e.HouseId).IsRequired(false).HasDefaultValue(null);
 
                 // Not required so we can set Owner to null when Owner gets deleted
                 entity.Property(e => e.OwnerId)
-                    .IsRequired(false);
+                    .IsRequired(false)
+                    .HasDefaultValue(null);
 
                 entity.Property(e => e.CreateTime)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
 
-                entity.Property(e => e.BlipColor).IsRequired(true).HasDefaultValue(1);
+                entity.Property(e => e.BlipColor).HasDefaultValue(1);
 
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.Gangs)
@@ -469,15 +467,15 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.GangId);
 
-                entity.Property(e => e.Money).IsRequired(true).HasDefaultValue(0);
-                entity.Property(e => e.Experience).IsRequired(true).HasDefaultValue(0);
-                entity.Property(e => e.AmountAttacks).IsRequired(true).HasDefaultValue(0);
-                entity.Property(e => e.AmountDefends).IsRequired(true).HasDefaultValue(0);
-                entity.Property(e => e.AmountAttacksWon).IsRequired(true).HasDefaultValue(0);
-                entity.Property(e => e.AmountDefendsWon).IsRequired(true).HasDefaultValue(0);
-                entity.Property(e => e.AmountMembersSoFar).IsRequired(true).HasDefaultValue(0);
-                entity.Property(e => e.PeakGangwarAreasOwned).IsRequired(true).HasDefaultValue(0);
-                entity.Property(e => e.TotalMoneySoFar).IsRequired(true).HasDefaultValue(0);
+                entity.Property(e => e.Money).HasDefaultValue(0);
+                entity.Property(e => e.Experience).HasDefaultValue(0);
+                entity.Property(e => e.AmountAttacks).HasDefaultValue(0);
+                entity.Property(e => e.AmountDefends).HasDefaultValue(0);
+                entity.Property(e => e.AmountAttacksWon).HasDefaultValue(0);
+                entity.Property(e => e.AmountDefendsWon).HasDefaultValue(0);
+                entity.Property(e => e.AmountMembersSoFar).HasDefaultValue(0);
+                entity.Property(e => e.PeakGangwarAreasOwned).HasDefaultValue(0);
+                entity.Property(e => e.TotalMoneySoFar).HasDefaultValue(0);
 
                 entity.HasOne(e => e.Gang)
                     .WithOne(g => g.Stats)
@@ -504,11 +502,11 @@ namespace TDS_Server.Database.Entity
                     .HasDefaultValueSql("'2019-1-1'::timestamp");
 
                 entity.Property(e => e.AttackCount)
-                    .IsRequired()
+                    
                     .HasDefaultValue(0);
 
                 entity.Property(e => e.DefendCount)
-                    .IsRequired()
+                    
                     .HasDefaultValue(0);
 
                 entity.HasOne(g => g.Map)
@@ -569,10 +567,9 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.IsOfficial);
 
                 entity.Property(e => e.Name)
-                    .IsRequired()
                     .HasMaxLength(100);
 
-                entity.Property(e => e.Password).HasMaxLength(100);
+                entity.Property(e => e.Password).HasMaxLength(100).HasDefaultValue("");
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Lobbies)
@@ -686,10 +683,6 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
-
-                entity.Property(e => e.Reason).IsRequired();
-
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
@@ -700,10 +693,6 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
-
-                entity.Property(e => e.Message).IsRequired();
-
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
@@ -713,7 +702,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
+                entity.Property(e => e.Id);
 
                 entity.Property(e => e.ExceptionType).IsRequired(false);
 
@@ -726,7 +715,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
+                entity.Property(e => e.Id);
 
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
@@ -737,7 +726,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
+                entity.Property(e => e.Id);
 
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
@@ -755,8 +744,6 @@ namespace TDS_Server.Database.Entity
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
 
-                entity.Property(e => e.Name).IsRequired();
-
                 entity.HasOne(d => d.Creator)
                     .WithMany(p => p.Maps)
                     .HasForeignKey(d => d.CreatorId)
@@ -766,8 +753,6 @@ namespace TDS_Server.Database.Entity
             modelBuilder.Entity<Offlinemessages>(entity =>
             {
                 entity.Property(e => e.Id).UseIdentityAlwaysColumn();
-
-                entity.Property(e => e.Message).IsRequired();
 
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
@@ -798,11 +783,15 @@ namespace TDS_Server.Database.Entity
 
                 entity.Property(e => e.SCId).IsRequired(false);
 
-                entity.Property(e => e.Reason).IsRequired();
-
                 entity.Property(e => e.StartTimestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', now())");
+
+                entity.Property(e => e.__HwId).IsRequired(false);
+                entity.Ignore(e => e.HwId);
+
+                entity.Property(e => e.__HwIdEx).IsRequired(false);
+                entity.Ignore(e => e.HwIdEx);
 
                 entity.HasOne(d => d.Admin)
                     .WithMany(p => p.PlayerBansAdmin)
@@ -978,8 +967,6 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => new { e.PlayerId, e.TargetId });
 
-                entity.Property(e => e.Relation).IsRequired();
-
                 entity.HasOne(d => d.Player)
                     .WithMany(p => p.PlayerRelationsPlayer)
                     .HasForeignKey(d => d.PlayerId)
@@ -1057,7 +1044,6 @@ namespace TDS_Server.Database.Entity
                     .ValueGeneratedNever();
 
                 entity.Property(e => e.MapsBoughtCounter)
-                    .IsRequired()
                     .HasDefaultValue(1);
 
                 entity.Property(e => e.LastLoginTimestamp)
@@ -1122,22 +1108,23 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.AdminLvl).HasDefaultValue(0);
 
                 entity.Property(e => e.Name)
-                    .IsRequired()
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Password)
-                    .IsRequired()
                     .HasMaxLength(500);
 
                 entity.Property(e => e.AdminLeaderId)
-                    .IsRequired(false);
+                    .IsRequired(false)
+                    .HasDefaultValue(null);
 
                 entity.Property(e => e.RegisterTimestamp)
                     .HasDefaultValueSql("timezone('utc', now())")
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
-                entity.Property(e => e.SCId)
-                    .IsRequired();
+                entity.Property(e => e.SCId);
+
+                entity.Ignore(e => e.HwId);
+                entity.Ignore(e => e.HwIdEx);
 
                 entity.HasOne(d => d.AdminLvlNavigation)
                     .WithMany(p => p.Players)
@@ -1217,144 +1204,111 @@ namespace TDS_Server.Database.Entity
                 entity.HasKey(e => e.Date);
 
                 entity.Property(e => e.Date)
-                    .IsRequired()
                     .HasColumnType("date")
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
                     .HasDefaultValueSql("timezone('utc', CURRENT_DATE)");
-                entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
-                entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
-                entity.Property(e => e.CustomArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
-                entity.Property(e => e.AmountLogins).IsRequired().HasDefaultValue(0);
-                entity.Property(e => e.AmountRegistrations).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.PlayerPeak).HasDefaultValue(0);
+                entity.Property(e => e.ArenaRoundsPlayed).HasDefaultValue(0);
+                entity.Property(e => e.CustomArenaRoundsPlayed).HasDefaultValue(0);
+                entity.Property(e => e.AmountLogins).HasDefaultValue(0);
+                entity.Property(e => e.AmountRegistrations).HasDefaultValue(0);
             });
 
             modelBuilder.Entity<ServerSettings>(entity =>
             {
                 entity.Property(e => e.GamemodeName)
-                    .IsRequired()
                     .HasMaxLength(50);
 
                 entity.Property(e => e.KillingSpreeMaxSecondsUntilNextKill)
-                    .IsRequired()
                     .HasDefaultValue(18);
 
                 entity.Property(e => e.MapRatingAmountForCheck)
-                    .IsRequired()
                     .HasDefaultValue(10);
 
                 entity.Property(e => e.MinMapRatingForNewMaps)
-                    .IsRequired()
                     .HasDefaultValue(3f);
 
                 entity.Property(e => e.GiveMoneyFee)
-                    .IsRequired()
                     .HasDefaultValue(0.05);
 
                 entity.Property(e => e.GiveMoneyMinAmount)
-                    .IsRequired()
                     .HasDefaultValue(100);
 
                 entity.Property(e => e.NametagMaxDistance)
-                    .IsRequired()
                     .HasDefaultValue(25 * 25);
 
                 entity.Property(e => e.MultiplierRankingKills)
-                    .IsRequired()
                     .HasDefaultValue(75f);
 
                 entity.Property(e => e.MultiplierRankingAssists)
-                    .IsRequired()
                     .HasDefaultValue(25f);
 
                 entity.Property(e => e.MultiplierRankingDamage)
-                    .IsRequired()
                     .HasDefaultValue(1f);
 
-                entity.Property(e => e.ShowNametagOnlyOnAiming)
-                    .IsRequired();
-
                 entity.Property(e => e.CloseApplicationAfterDays)
-                    .IsRequired()
                     .HasDefaultValue(7);
 
                 entity.Property(e => e.DeleteApplicationAfterDays)
-                    .IsRequired()
                     .HasDefaultValue(14);
 
                 entity.Property(e => e.GangwarPreparationTime)
-                    .IsRequired()
                     .HasDefaultValue(3 * 60);
 
                 entity.Property(e => e.GangwarActionTime)
-                    .IsRequired()
                     .HasDefaultValue(15 * 60);
 
                 entity.Property(e => e.DeleteRequestsDaysAfterClose)
-                    .IsRequired()
                     .HasDefaultValue(30);
 
                 entity.Property(e => e.DeleteOfflineMessagesAfterDays)
-                    .IsRequired()
                     .HasDefaultValue(60);
 
                 entity.Property(e => e.MinPlayersOnlineForGangwar)
-                    .IsRequired()
                     .HasDefaultValue(3);
 
                 entity.Property(e => e.GangwarAreaAttackCooldownMinutes)
-                    .IsRequired()
                     .HasDefaultValue(60);
 
                 entity.Property(e => e.AmountPlayersAllowedInGangwarTeamBeforeCountCheck)
-                    .IsRequired()
                     .HasDefaultValue(3);
 
                 entity.Property(e => e.GangwarTargetRadius)
-                    .IsRequired()
                     .HasDefaultValue(5d);
 
                 entity.Property(e => e.GangwarTargetWithoutAttackerMaxSeconds)
-                    .IsRequired()
                     .HasDefaultValue(10);
 
                 entity.Property(e => e.ReduceMapsBoughtCounterAfterMinute)
-                    .IsRequired()
                     .HasDefaultValue(60);
 
                 entity.Property(e => e.MapBuyBasePrice)
-                    .IsRequired()
                     .HasDefaultValue(1000);
 
                 entity.Property(e => e.MapBuyCounterMultiplicator)
-                    .IsRequired()
                     .HasDefaultValue(1f);
 
                 entity.Property(e => e.UsernameChangeCost)
-                    .IsRequired()
                     .HasDefaultValue(20000);
 
                 entity.Property(e => e.UsernameChangeCooldownDays)
-                    .IsRequired()
                     .HasDefaultValue(60);
 
                 entity.Property(e => e.AmountWeeklyChallenges)
-                    .IsRequired()
                     .HasDefaultValue(3);
 
                 entity.Property(e => e.ReloadServerBansEveryMinutes)
-                    .IsRequired()
                     .HasDefaultValue(5);
 
                 entity.Property(e => e.AmountCharSlots)
-                    .IsRequired()
                     .HasDefaultValue(3);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
             {
-                entity.Property(e => e.PlayerPeak).IsRequired().HasDefaultValue(0);
-                entity.Property(e => e.ArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
-                entity.Property(e => e.CustomArenaRoundsPlayed).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.PlayerPeak).HasDefaultValue(0);
+                entity.Property(e => e.ArenaRoundsPlayed).HasDefaultValue(0);
+                entity.Property(e => e.CustomArenaRoundsPlayed).HasDefaultValue(0);
             });
 
             modelBuilder.Entity<SupportRequests>(entity =>
@@ -1401,12 +1355,10 @@ namespace TDS_Server.Database.Entity
                     .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Name)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .HasDefaultValue("Spectator");
 
                 entity.Property(e => e.SkinHash)
-                    .IsRequired()
                     .HasDefaultValue(0);
 
                 entity.Property(e => e.BlipColor)
@@ -1422,7 +1374,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Hash);
 
-                entity.Property(e => e.Hash).IsRequired();
+                entity.Property(e => e.Hash);
 
                 entity.Property(e => e.ClipSize).HasDefaultValue(0);
                 entity.Property(e => e.MinHeadShotDistance).HasDefaultValue(0);
@@ -1513,7 +1465,7 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<Players>().HasData(
-                new Players { Id = -1, SCId = 0, Name = "System", Password = "" }
+                new Players { Id = -1, SCId = 0, Name = "System", Password = "", Email = "", IsVip = false }
             );
 
             var seedLobbies = new List<Lobbies> {
@@ -1779,7 +1731,7 @@ namespace TDS_Server.Database.Entity
             modelBuilder.Entity<Teams>().HasData(seedTeams);
 
             modelBuilder.Entity<Gangs>().HasData(
-                new Gangs { Id = -1, TeamId = -5, Short = "-" }
+                new Gangs { Id = -1, TeamId = -5, Name = "No Gang", Short = "-", Color = "rgb(255,255,255)" }
             );
 
             modelBuilder.Entity<GangRanks>().HasData(

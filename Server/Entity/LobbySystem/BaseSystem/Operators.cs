@@ -1,4 +1,6 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using System.Diagnostics.CodeAnalysis;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 
 namespace TDS_Server.Entity.LobbySystem.BaseSystem
 {
@@ -33,11 +35,9 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
             return Id == ((Lobby)obj).Id;
         }
 
-        public bool Equals(ILobby? lobby)
+        public bool Equals([AllowNull] ILobby other)
         {
-            if (lobby is null)
-                return false;
-            return Id == lobby.Id;
+            return Entity.Id == other?.Id;
         }
 
         public override int GetHashCode()

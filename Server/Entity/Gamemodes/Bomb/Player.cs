@@ -1,4 +1,5 @@
 ﻿using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 
 namespace TDS_Server.Entity.Gamemodes.Bomb
 {

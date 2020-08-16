@@ -27,11 +27,9 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         private readonly EventsHandler _eventsHandler;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly LangHelper _langHelper;
-        private readonly DataSyncHandler _dataSyncHandler;
 
         public GangWindowMembersHandler(Serializer serializer, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
-            InvitationsHandler invitationsHandler, EventsHandler eventsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper,
-            DataSyncHandler dataSyncHandler)
+            InvitationsHandler invitationsHandler, EventsHandler eventsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper)
         {
             _serializer = serializer;
             _gangsHandler = gangsHandler;
@@ -41,7 +39,6 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             _eventsHandler = eventsHandler;
             _offlineMessagesHandler = offlineMessagesHandler;
             _langHelper = langHelper;
-            _dataSyncHandler = dataSyncHandler;
         }
 
         public string? GetMembers(ITDSPlayer player)
@@ -70,7 +67,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             player.Gang = _gangsHandler.None;
             player.GangRank = _gangsHandler.NoneRank;
-            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
+            player.SetClientMetaData(PlayerDataKey.GangId.ToString(), player.Gang.Entity.Id);
 
             if (player.Lobby is IGangLobby || player.Lobby?.IsGangActionLobby == true)
                 await _lobbiesHandler.MainMenu.AddPlayer(player, null);
@@ -202,7 +199,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             player.Gang = sender.Gang;
             player.GangRank = sender.Gang.Entity.Ranks.First(r => r.Rank == 0);
-            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
+            player.SetClientMetaData(PlayerDataKey.GangId.ToString(), player.Gang.Entity.Id);
 
             await player.Gang.ExecuteForDBAsync(async dbContext =>
             {

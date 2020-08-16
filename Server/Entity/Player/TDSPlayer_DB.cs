@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,8 +36,9 @@ namespace TDS_Server.Entity.Player
                     _entity.PlayerSettings.Language = _langEnumBeforeLogin;
                 Language = _langHelper.GetLang(_entity.PlayerSettings.Language);
                 LoadRelations();
-                _dataSyncHandler.SetData(this, PlayerDataKey.Money, DataSyncMode.Player, _entity.PlayerStats.Money);
-                _dataSyncHandler.SetData(this, PlayerDataKey.AdminLevel, DataSyncMode.All, _entity.AdminLvl);
+                SetClientMetaData(PlayerDataKey.Money.ToString(), _entity.PlayerStats.Money);
+                SetStreamSyncedMetaData(PlayerDataKey.AdminLevel.ToString(), _entity.AdminLvl);
+
                 LoadTimezone();
                 LoadWeaponStats();
             }
@@ -82,7 +84,7 @@ namespace TDS_Server.Entity.Player
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                _loggingHandler.LogError(ex, this);
             }
             finally
             {
@@ -100,7 +102,7 @@ namespace TDS_Server.Entity.Player
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                _loggingHandler.LogError(ex, this);
                 return default!;
             }
             finally
@@ -119,7 +121,7 @@ namespace TDS_Server.Entity.Player
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                _loggingHandler.LogError(ex, this);
             }
             finally
             {
@@ -137,7 +139,7 @@ namespace TDS_Server.Entity.Player
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                _loggingHandler.LogError(ex, this);
                 return default!;
             }
             finally
@@ -156,7 +158,7 @@ namespace TDS_Server.Entity.Player
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                _loggingHandler.LogError(ex, this);
             }
             finally
             {

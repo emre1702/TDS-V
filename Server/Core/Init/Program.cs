@@ -20,21 +20,26 @@ namespace TDS_Server.Core.Init
 {
     public class Program : AsyncResource
     {
-        private readonly ILoggingHandler? _loggingHandler;
-        private readonly EventsHandler? _eventsHandler;
+        private ILoggingHandler? _loggingHandler;
+        private EventsHandler? _eventsHandler;
         private readonly IServiceProvider _serviceProvider;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         public Program()
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
+            _serviceProvider = Services.InitServiceCollection();
+        }
+
+        public override void OnStart()
+        {
             try
             {
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-                var serviceProvider = Services.InitServiceCollection();
+                
 
-                using (var dbContext = serviceProvider.GetRequiredService<TDSDbContext>())
+                using (var dbContext = _serviceProvider.GetRequiredService<TDSDbContext>())
                 {
                     dbContext.Database.Migrate();
                     var connection = (NpgsqlConnection)dbContext.Database.GetDbConnection();
@@ -42,32 +47,32 @@ namespace TDS_Server.Core.Init
                     connection.ReloadTypes();
                 }
 
-                var mapsLoadingHandler = serviceProvider.GetRequiredService<MapsLoadingHandler>();
+                var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
                 mapsLoadingHandler.LoadAllMaps();
 
-                var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(serviceProvider);
+                var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(_serviceProvider);
                 if (codeChecker.CheckHasErrors())
                 {
                     Environment.Exit(1);
                 }
 
-                _eventsHandler = serviceProvider.GetRequiredService<EventsHandler>();
-                serviceProvider.GetRequiredService<ServerStartHandler>();
+                _eventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
+                _serviceProvider.GetRequiredService<ServerStartHandler>();
 
-                var lobbiesHandler = serviceProvider.GetRequiredService<LobbiesHandler>();
+                var lobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
                 lobbiesHandler.LoadLobbies();
 
-                var bansHandler = serviceProvider.GetRequiredService<BansHandler>();
-                var settingsHandler = serviceProvider.GetRequiredService<ISettingsHandler>();
+                var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
+                var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
                 bansHandler.RefreshServerBansCache(settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
 
-                var gangsHandler = serviceProvider.GetRequiredService<GangsHandler>();
+                var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
                 gangsHandler.LoadAll();
 
-                var remoteBrowserEventsHandler = serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
-                _loggingHandler = serviceProvider.GetRequiredService<ILoggingHandler>();
+                var remoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
+                _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
 
-                Services.InitializeSingletons(serviceProvider);
+                Services.InitializeSingletons(_serviceProvider);
             }
             catch (Exception ex)
             {
@@ -79,15 +84,10 @@ namespace TDS_Server.Core.Init
             }
             finally
             {
-                #if DEBUG 
+#if DEBUG
                 Console.ReadLine();
-                #endif
+#endif
             }
-        }
-
-        public override void OnStart()
-        {
-            
         }
 
         public override void OnStop()
@@ -96,16 +96,16 @@ namespace TDS_Server.Core.Init
         }
 
         public override IEntityFactory<IVehicle> GetVehicleFactory()
-            => new VehicleFactory(_serviceProvider);
+            => new VehicleFactory(_serviceProvider.GetRequiredService<IEntitiesByInterfaceCreator>());
 
         public override IEntityFactory<IPlayer> GetPlayerFactory()
-            => new PlayerFactory(_serviceProvider);
+            => new PlayerFactory(_serviceProvider.GetRequiredService<IEntitiesByInterfaceCreator>());
 
         public override IBaseObjectFactory<IColShape> GetColShapeFactory()
-            => new ColShapeFactory(_serviceProvider);
+            => new ColShapeFactory(_serviceProvider.GetRequiredService<IEntitiesByInterfaceCreator>());
 
         public override IBaseObjectFactory<IVoiceChannel> GetVoiceChannelFactory()
-            => new VoiceChannelFactory(_serviceProvider);
+            => new VoiceChannelFactory(_serviceProvider.GetRequiredService<IEntitiesByInterfaceCreator>());
 
         public override void OnTick()
             => TDSTimer.OnUpdateFunc();
@@ -137,7 +137,7 @@ namespace TDS_Server.Core.Init
 
                     if (_consolePlayerCache is null)
                     {
-                        _consolePlayerCache = ActivatorUtilities.CreateInstance<TDSPlayer>(serviceProvider);
+                        _consolePlayerCache = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
                         _consolePlayerCache.IsConsole = true;
                     }
 

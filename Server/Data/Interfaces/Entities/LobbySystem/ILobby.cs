@@ -39,7 +39,7 @@ namespace TDS_Server.Data.Interfaces.Entities.LobbySystem
 
         Task<PlayerBans?> BanPlayer(ITDSPlayer player, ITDSPlayer target, TimeSpan? length, string reason);
 
-        Task<PlayerBans?> BanPlayer(ITDSPlayer player, Players dbTarget, TimeSpan? length, string reason, string? serial = null);
+        Task<PlayerBans?> BanPlayer(ITDSPlayer player, Players dbTarget, TimeSpan? length, string reason, ulong? hwid = null, ulong? hwidEx = null);
 
         void FuncIterateAllPlayers(Action<ITDSPlayer, ITeam?> func);
 
@@ -47,7 +47,7 @@ namespace TDS_Server.Data.Interfaces.Entities.LobbySystem
 
         bool IsPlayerLobbyOwner(ITDSPlayer player);
 
-        void OnPlayerDeath(ITDSPlayer player, IEntity killer, uint weapon, bool spawnPlayer = true);
+        void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true);
 
         void OnPlayerEnterColShape(ITDSColShape colshape, ITDSPlayer player);
 

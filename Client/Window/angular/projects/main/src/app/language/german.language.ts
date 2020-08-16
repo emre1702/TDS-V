@@ -146,6 +146,7 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     ThemeBackgroundLightColor = "Helle Hintergrund-Farbe";
 
     SCName = "Socialclub Name";
+    SCId = "Socialclub ID";
     AdminLvl = "Admin Level";
     Donation = "Spende";
     IsVip = "Ist Vip";

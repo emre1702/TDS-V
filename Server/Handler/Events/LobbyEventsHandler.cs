@@ -3,6 +3,7 @@ using AltV.Net.Async;
 using AltV.Net.Data;
 using AltV.Net.Elements.Entities;
 using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Entities.Gamemodes;
@@ -44,7 +45,7 @@ namespace TDS_Server.Handler.Events
             Alt.OnClient<ITDSPlayer>(ToServerEvent.MapsListRequest, OnMapsListRequest);
             Alt.OnClient<ITDSPlayer, int>(ToServerEvent.MapCreatorSyncRemoveTeamObjects, OnMapCreatorSyncRemoveTeamObjects);
             Alt.OnClient<ITDSPlayer, int>(ToServerEvent.MapCreatorSyncRemoveObject, OnMapCreatorSyncRemoveObject);
-            AltAsync.OnClient<ITDSPlayer>(ToServerEvent.LeaveLobby, OnLeaveLobby);
+            AltAsync.OnClient<ITDSPlayer, Task>(ToServerEvent.LeaveLobby, OnLeaveLobby);
             Alt.OnClient<ITDSPlayer>(ToServerEvent.MapCreatorStartNewMap, OnMapCreatorStartNewMap);
             Alt.OnClient<ITDSPlayer, int>(ToServerEvent.MapCreatorSyncLastId, OnMapCreatorSyncLastId);
             Alt.OnClient<ITDSPlayer, string>(ToServerEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObject);
@@ -96,7 +97,7 @@ namespace TDS_Server.Handler.Events
             return true;
         }
 
-        public async void OnLeaveLobby(ITDSPlayer player)
+        public async Task OnLeaveLobby(ITDSPlayer player)
         {
             if (player.Lobby is null)
                 return;

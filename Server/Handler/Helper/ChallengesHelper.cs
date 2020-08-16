@@ -1,17 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AltV.Net.Async;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models.Challenge;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Challenge;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Extensions;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
@@ -23,9 +22,9 @@ namespace TDS_Server.Handler.Helper
     {
         #region Private Fields
 
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
+
         private string _challengeSettingsFrequencyColumnName = string.Empty;
         private string _challengeSettingsMaxNumberColumnName = string.Empty;
         private string _challengeSettingsMinNumberColumnName = string.Empty;
@@ -43,12 +42,10 @@ namespace TDS_Server.Handler.Helper
             EventsHandler eventsHandler,
             ILoggingHandler loggingHandler,
             TDSDbContext dbContext,
-            Serializer serializer,
-            IModAPI modAPI) : base(dbContext, loggingHandler)
+            Serializer serializer) : base(dbContext, loggingHandler)
         {
             _settingsHandler = settingsHandler;
             _serializer = serializer;
-            _modAPI = modAPI;
 
             LoadPlayerChallengesTableData(dbContext);
             LoadChallengeSettingsTableData(dbContext);
@@ -136,7 +133,7 @@ namespace TDS_Server.Handler.Helper
 
         public void SyncCurrentAmount(ITDSPlayer player, PlayerChallenges challenge)
         {
-            _modAPI.Sync.SendEvent(player, ToClientEvent.ToBrowserEvent,
+            player.SendEvent(ToClientEvent.ToBrowserEvent,
                 ToBrowserEvent.SyncChallengeCurrentAmountChange,
                 (int)challenge.Frequency,
                 (int)challenge.Challenge,
@@ -149,7 +146,7 @@ namespace TDS_Server.Handler.Helper
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer iplayer)
         {
-            if (!(iplayer is TDSPlayer player))
+            if (!(iplayer is ITDSPlayer player))
                 return;
             if (player.Entity is null)
                 return;
@@ -162,7 +159,7 @@ namespace TDS_Server.Handler.Helper
                     await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload();
                 });
             }
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 player.InitChallengesDict();
                 player.SendBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));

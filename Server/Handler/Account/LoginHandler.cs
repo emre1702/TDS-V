@@ -26,7 +26,6 @@ namespace TDS_Server.Handler.Account
         #region Private Fields
 
         private readonly DatabasePlayerHelper _databasePlayerHandler;
-        private readonly DataSyncHandler _dataSyncHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly LangHelper _langHelper;
         private readonly ILoggingHandler _loggingHandler;
@@ -46,7 +45,6 @@ namespace TDS_Server.Handler.Account
             Serializer serializer,
             ISettingsHandler settingsHandler,
             IServiceProvider serviceProvider,
-            DataSyncHandler dataSyncHandler,
             ILoggingHandler loggingHandler,
             ServerStartHandler serverStartHandler)
         {
@@ -56,13 +54,12 @@ namespace TDS_Server.Handler.Account
             _serializer = serializer;
             _settingsHandler = settingsHandler;
             _serviceProvider = serviceProvider;
-            _dataSyncHandler = dataSyncHandler;
             _loggingHandler = loggingHandler;
             _serverStartHandler = serverStartHandler;
 
             _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
 
-            AltAsync.OnClient<ITDSPlayer, string, string>(ToServerEvent.TryLogin, TryLogin);
+            AltAsync.OnClient<ITDSPlayer, string, string, Task>(ToServerEvent.TryLogin, TryLogin);
         }
 
         #endregion Public Constructors
@@ -144,8 +141,8 @@ namespace TDS_Server.Handler.Account
                     angularContentsJson
                 );
 
-                _dataSyncHandler.SetData(player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, player.Entity.PlayerStats.MapsBoughtCounter);
-                _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, player.Entity.Name);
+                player.SetClientMetaData(PlayerDataKey.MapsBoughtCounter.ToString(), player.Entity.PlayerStats.MapsBoughtCounter);
+                player.SetClientMetaData(PlayerDataKey.Name.ToString(), player.Entity.Name);
 
                 _eventsHandler.OnPlayerLogin(player);
 
@@ -155,7 +152,7 @@ namespace TDS_Server.Handler.Account
             });
         }
 
-        public async void TryLogin(ITDSPlayer player, string username, string password)
+        public async Task TryLogin(ITDSPlayer player, string username, string password)
         {
             if (player.TryingToLoginRegister)
                 return;

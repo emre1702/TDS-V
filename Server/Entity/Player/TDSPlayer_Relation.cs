@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Entity.Player

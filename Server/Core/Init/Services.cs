@@ -12,6 +12,7 @@ using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Entities.Gamemodes;
 using TDS_Server.Data.Interfaces.Entities.Gang;
 using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Data.Interfaces.Handlers;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database;
 using TDS_Server.Database.Entity;
@@ -28,6 +29,7 @@ using TDS_Server.Entity.LobbySystem.GangLobbySystem;
 using TDS_Server.Entity.LobbySystem.MapCreateLobbySystem;
 using TDS_Server.Entity.Player;
 using TDS_Server.Entity.TeamSystem;
+using TDS_Server.Entity.TextLabel;
 using TDS_Server.Entity.Vehicle;
 using TDS_Server.Entity.VoiceChannel;
 using TDS_Server.Handler;
@@ -47,7 +49,7 @@ namespace TDS_Server.Core.Init
 {
     internal static class Services
     {
-        #region Internal Methods
+        #region Methods
 
         internal static void InitDbContextOptionsBuilder(DbContextOptionsBuilder options, AppConfigHandler appConfigHandler, ILoggerFactory? loggerFactory)
         {
@@ -100,12 +102,12 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<PlayerCharHandler>();
             serviceProvider.GetRequiredService<PlayerCrouchHandler>();
             serviceProvider.GetRequiredService<PlayerFreecamHandler>();
+            serviceProvider.GetRequiredService<ITDSPlayerHandler>();
 
             serviceProvider.GetRequiredService<ServerInfoHandler>();
             serviceProvider.GetRequiredService<ServerStartHandler>();
 
             serviceProvider.GetRequiredService<CustomLobbyMenuSyncHandler>();
-            serviceProvider.GetRequiredService<DataSyncHandler>();
 
             serviceProvider.GetRequiredService<IUserpanelHandler>();
             serviceProvider.GetRequiredService<UserpanelCommandsHandler>();
@@ -185,6 +187,7 @@ namespace TDS_Server.Core.Init
                .AddSingleton<PlayerCharHandler>()
                .AddSingleton<PlayerCrouchHandler>()
                .AddSingleton<PlayerFreecamHandler>()
+               .AddSingleton<ITDSPlayerHandler, TDSPlayerHandler>()
 
                // Server
                .AddSingleton<ServerInfoHandler>()
@@ -192,7 +195,6 @@ namespace TDS_Server.Core.Init
 
                // Sync
                .AddSingleton<CustomLobbyMenuSyncHandler>()
-               .AddSingleton<DataSyncHandler>()
 
                // Userpanel
                .AddSingleton<IUserpanelHandler, UserpanelHandler>()
@@ -218,29 +220,13 @@ namespace TDS_Server.Core.Init
                .AddSingleton<ChatInfosHandler>()
                .AddSingleton<WeaponLevelHandler>()
 
+               .AddSingleton<TDSBlipHandler>()
+               .AddSingleton<TDSMarkerHandler>()
+               .AddSingleton<TDSObjectHandler>()
+               .AddSingleton<TDSTextLabelHandler>()
+
                .AddSingleton<Serializer>()
-
-               .AddTransient<IArena, Arena>()
-               .AddTransient<IMapCreateLobby, MapCreateLobby>()
-               .AddTransient<ICharCreateLobby, CharCreateLobby>()
-               .AddTransient<IGangLobby, GangLobby>()
-               .AddTransient<IFightLobby, FightLobby>()
-               .AddTransient<ILobby, Lobby>()
-
-               .AddTransient<ITDSPlayer, TDSPlayer>()
-               .AddTransient<ITDSVehicle, TDSVehicle>()
-               .AddTransient<ITDSBlip, TDSBlip>()
-               .AddTransient<ITDSColShape, TDSColShape>()
-               .AddTransient<ITDSVoiceChannel, TDSVoiceChannel>()
-
-               .AddTransient<IGangHouse, GangHouse>()
-               .AddTransient<IGang, Gang>()
-               .AddTransient<IGangwarArea, GangwarArea>()
-
-               .AddTransient<IGangwar, Gangwar>()
-
-               .AddTransient<ITeam, Team>()
-
+               .AddSingleton<IEntitiesByInterfaceCreator, EntitiesByInterfaceCreator>()
                .AddSingleton<IEntitiesStaticConnector, EntitiesStaticConnector>()
 
                .AddDbContext<TDSDbContext>(options => InitDbContextOptionsBuilder(options, appConfigHandler, loggerFactory), ServiceLifetime.Transient, ServiceLifetime.Singleton);
@@ -248,6 +234,6 @@ namespace TDS_Server.Core.Init
             return serviceCollection.BuildServiceProvider();
         }
 
-        #endregion Internal Methods
+        #endregion Methods
     }
 }

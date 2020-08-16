@@ -11,10 +11,10 @@ namespace TDS_Shared.Data.Models.Map
         public string Name { get; set; }
 
         [JsonProperty("1")]
-        public List<Position> BombPlaces { get; set; }
+        public List<Position3D> BombPlaces { get; set; }
 
         [JsonProperty("2")]
-        public Position Center { get; set; }
+        public Position3D Center { get; set; }
 
         [JsonProperty("3")]
         public List<MapCreatorPosition> Objects { get; set; }
@@ -23,9 +23,9 @@ namespace TDS_Shared.Data.Models.Map
         public List<MapCreatorPosition> Vehicles { get; set; }
 
         [JsonProperty("5")]
-        public Position Target { get; set; }
+        public Position3D Target { get; set; }
 
         [JsonProperty("6")]
-        public List<Position> MapEdges { get; set; }
+        public List<Position3D> MapEdges { get; set; }
     }
 }

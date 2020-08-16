@@ -1,13 +1,12 @@
-﻿using System;
+﻿using AltV.Net.Async;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel;
 using TDS_Server.Data.Utility;
-using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Userpanel;
@@ -16,26 +15,23 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelSettingsSpecialHandler : IUserpanelSettingsSpecialHandler
     {
-        #region Private Fields
+        #region Fields
 
-        private readonly DataSyncHandler _dataSyncHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
-        public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, Serializer serializer, ILoggingHandler loggingHandler,
-            DataSyncHandler dataSyncHandler, IModAPI modAPI)
-            => (_modAPI, _settingsHandler, _serializer, _loggingHandler, _dataSyncHandler)
-            = (modAPI, settingsHandler, serializer, loggingHandler, dataSyncHandler);
+        public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, Serializer serializer, ILoggingHandler loggingHandler)
+            => (_settingsHandler, _serializer, _loggingHandler)
+            = (settingsHandler, serializer, loggingHandler);
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Methods
+        #region Methods
 
         public string? GetData(ITDSPlayer player)
         {
@@ -85,7 +81,7 @@ namespace TDS_Server.Handler.Userpanel
                             return player.Language.NOT_ENOUGH_MONEY;
                         }
                         paid = _settingsHandler.ServerSettings.UsernameChangeCost;
-                        AltAsync.Do(() => player.GiveMoney(-_settingsHandler.ServerSettings.UsernameChangeCost));
+                        await AltAsync.Do(() => player.GiveMoney(-_settingsHandler.ServerSettings.UsernameChangeCost));
                     }
                     oldValue = player.Entity.Name;
                     player.Entity.Name = value;
@@ -116,7 +112,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 _loggingHandler.LogError(ex, player);
                 if (paid.HasValue)
-                    AltAsync.Do(() => player.GiveMoney(paid.Value));
+                    await AltAsync.Do(() => player.GiveMoney(paid.Value));
                 if (lastFreeUsernameChange != player.Entity.PlayerStats.LastFreeUsernameChange)
                     player.Entity.PlayerStats.LastFreeUsernameChange = lastFreeUsernameChange;
 
@@ -125,7 +121,7 @@ namespace TDS_Server.Handler.Userpanel
                     switch (type)
                     {
                         case UserpanelSettingsSpecialType.Username:
-                            player.ModPlayer!.Name = (string)oldValue;
+                            player.Name = (string)oldValue;
                             break;
 
                         case UserpanelSettingsSpecialType.Password:
@@ -144,14 +140,13 @@ namespace TDS_Server.Handler.Userpanel
             switch (type)
             {
                 case UserpanelSettingsSpecialType.Username:
-                    player.ModPlayer!.Name = value;
-                    AltAsync.Do(() => _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, value));
+                    await AltAsync.Do(() => player.Name = value);
                     break;
             }
 
             return string.Empty;
         }
 
-        #endregion Public Methods
+        #endregion Methods
     }
 }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AltV.Net.Data;
+using System;
 using TDS_Server.Data.Models.Map.Creator;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Data.Utility;
 using TDS_Shared.Core;
+using TDS_Shared.Data.Utility;
 
 namespace TDS_Server.Data.Extensions
 {
@@ -15,22 +15,22 @@ namespace TDS_Server.Data.Extensions
             return new PositionDto { X = dto.X, Y = dto.Y, Z = dto.Z };
         }
 
-        public static Position SwitchNamespace(this PositionDto dto)
+        public static Position ToAltV(this PositionDto dto)
         {
-            return new Position { X = dto.X, Y = dto.Y, Z = dto.Z };
+            return new Position(dto.X, dto.Y, dto.Z);
         }
 
-        public static Position ToPosition(this Position4DDto pos)
+        public static Position ToAltV(this Position4DDto pos)
         {
             return new Position(pos.X, pos.Y, pos.Z);
         }
 
-        public static AltV.Net.Data.Position AddToZ(this AltV.Net.Data.Position pos, float z)
+        public static Position AddToZ(this Position pos, float z)
         {
-            return new AltV.Net.Data.Position(pos.X, pos.Y, pos.Z + z);
+            return new Position(pos.X, pos.Y, pos.Z + z);
         }
 
-        public static AltV.Net.Data.Position Around(this AltV.Net.Data.Position pos, float around, bool considerZ = false)
+        public static Position Around(this Position pos, float around, bool considerZ = false)
         {
             float addToX = SharedUtils.Rnd.NextFloat(-around, around);
             pos.X += addToX;
@@ -57,12 +57,21 @@ namespace TDS_Server.Data.Extensions
             return pos;
         }
 
-        public static float Distance2D(this AltV.Net.Data.Position pos, AltV.Net.Data.Position otherPos)
+        public static float Distance(this Position pos, Position otherPos)
+        {
+            var nX = pos.X - otherPos.X;
+            var nY = pos.Y - otherPos.Y;
+            var nZ = pos.Z - otherPos.Z;
+
+            return (float)Math.Sqrt(nX * nX + nY * nY + nZ * nZ);
+        }
+
+        public static float Distance2D(this Position pos, Position otherPos)
         {
             var nX = pos.X - otherPos.X;
             var nY = pos.Y - otherPos.Y;
 
-            return nX * nX + nY * nY;
+            return (float)Math.Sqrt(nX * nX + nY * nY);
         }
 
         #endregion Public Methods

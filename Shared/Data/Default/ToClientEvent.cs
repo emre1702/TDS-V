@@ -54,6 +54,8 @@
         public const string MapCreatorSyncTeamObjectsRemove = "s1";
         public const string MapsListRequest = "s35";
 
+        public const string Notification = "s89";
+
         public const string PlayCustomSound = "s37";
         public const string PlayerGotBomb = "s38";
         public const string PlayerJoinedTeam = "s41";

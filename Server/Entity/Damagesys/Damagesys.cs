@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.LobbyEntities;
 
 namespace TDS_Server.Entity.Damagesys
 {
-    public partial class Damagesys
+    public partial class DamageSystem : IDamageSystem
     {
         #region Fields
 
@@ -16,7 +17,7 @@ namespace TDS_Server.Entity.Damagesys
 
         #region Constructors
 
-        public Damagesys(IEnumerable<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards,
+        public DamageSystem(IEnumerable<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards,
             ILoggingHandler loggingHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler)
         {
             _loggingHandler = loggingHandler;

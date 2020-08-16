@@ -9,7 +9,7 @@
     using TDS_Server.Database.Entity.LobbyEntities;
     using TDS_Shared.Default;
 
-    partial class Damagesys
+    partial class DamageSystem
     {
         #region Private Fields
 

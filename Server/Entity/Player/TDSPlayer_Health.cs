@@ -4,36 +4,30 @@
     {
         #region Private Fields
 
-        private int _armor;
-        private int _health;
+        private ushort _armor;
+        private ushort _health;
 
         #endregion Private Fields
 
         #region Public Properties
 
-        public int Armor
+        public new ushort Armor
         {
             get => _armor;
             set
             {
                 _armor = value;
-
-                if (ModPlayer is null)
-                    return;
-                ModPlayer.Armor = value;
+                base.Armor = value;
             }
         }
 
-        public int Health
+        public new ushort Health
         {
             get => _health;
             set
             {
                 _health = value;
-
-                if (ModPlayer is null)
-                    return;
-                ModPlayer.Health = value;
+                base.Health = value;
             }
         }
 

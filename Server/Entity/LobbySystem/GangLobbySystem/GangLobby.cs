@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.Entities.LobbySystem;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Entity.LobbySystem.BaseSystem;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
@@ -26,23 +27,28 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
         private readonly GangsHandler _gangsHandler;
         private readonly GangwarAreasHandler _gangwarAreasHandler;
         private readonly IServiceProvider _serviceProvider;
+        private readonly TDSTextLabelHandler _tdsTextLabelHandler;
+        private readonly TDSBlipHandler _tdsBlipHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
-            ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler,
+        public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+            ISettingsHandler settingsHandler, LangHelper langHelper, GangsHandler gangsHandler, EventsHandler eventsHandler,
             GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, GangLevelsHandler gangLevelsHandler,
-            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler, GangHousesHandler gangHousesHandler)
-            : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
-                  bonusBotConnectorClient, bansHandler)
+            BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler, GangHousesHandler gangHousesHandler,
+            TDSTextLabelHandler tdsTextLabelHandler, TDSBlipHandler tdsBlipHandler, IEntitiesByInterfaceCreator entitiesByInterfaceCreator)
+            : base(Entity, false, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, eventsHandler,
+                  bonusBotConnectorClient, bansHandler, serviceProvider, entitiesByInterfaceCreator)
         {
             _gangwarAreasHandler = gangwarAreasHandler;
             _gangsHandler = gangsHandler;
             _serviceProvider = serviceProvider;
             _gangHousesHandler = gangHousesHandler;
             _gangLevelsHandler = gangLevelsHandler;
+            _tdsTextLabelHandler = tdsTextLabelHandler;
+            _tdsBlipHandler = tdsBlipHandler;
 
             eventsHandler.GangHouseLoaded += LoadHouse;
 

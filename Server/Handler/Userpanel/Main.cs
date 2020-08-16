@@ -1,14 +1,12 @@
-﻿using BonusBotConnector_Server;
+﻿using AltV.Net.Async;
+using BonusBotConnector_Server;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
@@ -17,25 +15,20 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelHandler : IUserpanelHandler
     {
-        #region Private Fields
+        #region Fields
 
         private readonly UserpanelCommandsHandler _commandsHandler;
         private readonly UserpanelFAQsHandlers _fAQsHandlers;
-        private readonly IModAPI _modAPI;
         private readonly UserpanelPlayerGeneralStatsHandler _playerStatsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer,
-            UserpanelCommandsHandler userpanelCommandsHandler, IModAPI modAPI, ITDSPlayerHandler tdsPlayerHandler)
+            UserpanelCommandsHandler userpanelCommandsHandler)
         {
-            _modAPI = modAPI;
-            _tdsPlayerHandler = tdsPlayerHandler;
-
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
 
             _playerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerGeneralStatsHandler>(serviceProvider);
@@ -56,12 +49,12 @@ namespace TDS_Server.Handler.Userpanel
             SupportUserHandler = new UserpanelSupportUserHandler(SupportRequestHandler);
             SupportAdminHandler = new UserpanelSupportAdminHandler(SupportRequestHandler);
 
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.LoadUserpanelData, this, OnLoadUserpanelData);
+            AltAsync.OnClient<ITDSPlayer, int, Task>(ToServerEvent.LoadUserpanelData, OnLoadUserpanelData);
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         public IUserpanelApplicationsAdminHandler ApplicationsAdminHandler { get; }
         public IUserpanelApplicationUserHandler ApplicationUserHandler { get; }
@@ -74,21 +67,20 @@ namespace TDS_Server.Handler.Userpanel
         public IUserpanelSupportRequestHandler SupportRequestHandler { get; }
         public IUserpanelSupportUserHandler SupportUserHandler { get; }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
-        public void OnLoadUserpanelData(IPlayer modPlayer, int dataType)
+        private async Task OnLoadUserpanelData(ITDSPlayer player, int dataType)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
 
             var type = (UserpanelLoadDataType)dataType;
-            PlayerLoadData(player, type);
+            await PlayerLoadData(player, type);
         }
 
-        public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)
+        public async Task PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)
         {
             string? json = null;
             switch (dataType)
@@ -149,12 +141,8 @@ namespace TDS_Server.Handler.Userpanel
             if (json == null)
                 return;
 
-            AltAsync.Do(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
+            await AltAsync.Do(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private async ValueTask CommandService_OnUsedCommand((ulong userId, string command, IList<string> args, BBUsedCommandReply reply) data)
         {
@@ -170,6 +158,6 @@ namespace TDS_Server.Handler.Userpanel
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

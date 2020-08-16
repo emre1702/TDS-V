@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
+using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Entity.LobbySystem.BaseSystem
@@ -125,6 +126,11 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
             {
                 player.Emit(eventName, args);
             });
+        }
+
+        public void SendNative(NativeHash native, params object[] args)
+        {
+            //Todo: Implement - and convert player at clientside to scriptId
         }
 
         #endregion Public Methods

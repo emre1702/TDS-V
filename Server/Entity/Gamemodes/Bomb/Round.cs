@@ -1,7 +1,8 @@
-﻿using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+﻿using AltV.Net;
+using AltV.Net.Data;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models;
 using TDS_Shared.Data.Default;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Entity.Gamemodes.Bomb
 {
@@ -19,15 +20,15 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
             {
                 var pos = new Position(bombplace.X, bombplace.Y, bombplace.Z);
                 BombPlantPlaceDto dto = new BombPlantPlaceDto(
-                    obj: ModAPI.MapObject.Create(-51423166, pos, null, 255, Lobby),
-                    blip: ModAPI.Blip.Create(SharedConstants.BombPlantPlaceBlipSprite, pos, name: "Bomb-Plant", dimension: Lobby.Dimension),
+                    obj: _tdsObjectHandler.Create(-51423166, pos, new DegreeRotation(), 255, (int)Lobby.Dimension),
+                    blip: _tdsBlipHandler.Create(SharedConstants.BombPlantPlaceBlipSprite, pos, name: "Bomb-Plant", dimension: (int)Lobby.Dimension),
                     pos: pos
                 );
                 _bombPlantPlaces.Add(dto);
             }
 
             var bombPos = Map.BombInfo.PlantPositions[0];
-            _bomb = ModAPI.MapObject.Create(1764669601, new Position(bombPos.X, bombPos.Y, bombPos.Z), null, 255, Lobby);
+            _bomb = _tdsObjectHandler.Create(1764669601, new Position(bombPos.X, bombPos.Y, bombPos.Z), new DegreeRotation(), 255, (int)Lobby.Dimension);
         }
 
         public override void StartMapClear()

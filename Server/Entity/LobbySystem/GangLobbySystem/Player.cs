@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using AltV.Net.Async;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 
 namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
 {
@@ -13,17 +15,17 @@ namespace TDS_Server.Entity.LobbySystem.GangLobbySystem
                 return false;
 
             var team = player.Gang.GangLobbyTeam;
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 SetPlayerTeam(player, team);
 
-                player.ModPlayer?.Freeze(false);
-                player.ModPlayer?.SetInvincible(true);
+                player.Freeze(false);
+                player.SetInvincible(true);
 
                 var spawnPoint = player.Gang.House?.Position ?? SpawnPoint;
                 var spawnRotation = player.Gang.House?.SpawnRotation ?? Entity.DefaultSpawnRotation;
                 player.Spawn(spawnPoint, spawnRotation);
-                player.ModPlayer?.Freeze(false);
+                player.Freeze(false);
             });
 
             return true;

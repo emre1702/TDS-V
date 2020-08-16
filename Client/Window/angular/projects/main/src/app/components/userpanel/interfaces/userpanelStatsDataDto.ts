@@ -5,8 +5,8 @@ export interface UserpanelStatsDataDto {
     [0]: number;
     /** Name */
     [1]: string;
-    /** SCName */
-    [2]: string;
+    /** SCId */
+    [2]: number;
     /** Gang */
     [3]?: string;
     /** AdminLvl */

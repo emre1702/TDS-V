@@ -7,6 +7,7 @@
         public const string AddCustomLobby = "sb20";
         public const string AddInvitation = "sb1";
         public const string AddMapToVoting = "sb10";
+        public const string ChatOutput = "sb24";
         public const string LeaveCustomLobbyMenu = "sb11";
         public const string LoadChatInfos = "sb21";
         public const string LoadedGangWindowData = "sb23";

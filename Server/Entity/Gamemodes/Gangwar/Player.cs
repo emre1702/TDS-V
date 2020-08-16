@@ -1,7 +1,7 @@
 ﻿using MoreLinq;
 using System.Linq;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
@@ -10,14 +10,14 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
 {
     partial class Gangwar
     {
-        #region Private Fields
+        #region Fields
 
         private ITDSPlayer? _attackLeader;
         private ITDSPlayer? _playerForcedAtTarget;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Methods
+        #region Methods
 
         public override void AddPlayer(ITDSPlayer player, uint? teamIndex)
         {
@@ -82,10 +82,6 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private ITDSPlayer? GetNextTargetMan()
         {
             if (TargetObject is null)
@@ -100,7 +96,7 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
             if (Lobby.CurrentRoundStatus != RoundStatus.Round)
                 return SharedUtils.GetRandom(AttackerTeam.Players);
 
-            return AttackerTeam.Players.MinBy(p => p.ModPlayer!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
+            return AttackerTeam.Players.MinBy(p => p.Position.Distance(TargetObject.Position)).FirstOrDefault();
         }
 
         private bool HasTeamFreePlace(bool isAttacker)
@@ -146,6 +142,6 @@ namespace TDS_Server.Entity.Gamemodes.Gangwar
                 SettingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds);
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces.Entities;
+﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Data.Interfaces.Userpanel
@@ -22,7 +23,7 @@ namespace TDS_Server.Data.Interfaces.Userpanel
 
         #region Public Methods
 
-        void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType type);
+        Task PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType type);
 
         #endregion Public Methods
     }

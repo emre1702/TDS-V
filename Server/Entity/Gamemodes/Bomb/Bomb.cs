@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using AltV.Net;
+using AltV.Net.Data;
+using System.Collections.Generic;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
-using TDS_Server.Data.Interfaces.ModAPI.MapObject;
-using TDS_Server.Data.Interfaces.ModAPI.Marker;
-using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Interfaces.Entities.LobbySystem;
+using TDS_Server.Data.Models;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
@@ -29,9 +28,9 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
 
         #region Private Fields
 
-        private static readonly Dictionary<Arena, ITDSColShape> _lobbyBombTakeCol = new Dictionary<Arena, ITDSColShape>();
-        private IMapObject? _bomb;
-        private IMarker? _bombTakeMarker;
+        private static readonly Dictionary<IArena, ITDSColShape> _lobbyBombTakeCol = new Dictionary<IArena, ITDSColShape>();
+        private ITDSObject? _bomb;
+        private ITDSMarker? _bombTakeMarker;
 
         #endregion Private Fields
 
@@ -43,7 +42,7 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
                 return;
             _bomb.Detach();
             _bomb.SetCollisionsless(true, Lobby);
-            _bomb.AttachTo(player, PedBone.SKEL_Pelvis, new Position(0, 0, 0.24), new Position(270, 0, 0));
+            _bomb.AttachTo(player, PedBone.SKEL_Pelvis, new Position(0, 0, 0.24f), new DegreeRotation(270, 0, 0));
 
             if (_bombAtPlayer != player)
             {
@@ -59,7 +58,7 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
                 return;
             _bomb.Detach();
             _bomb.SetCollisionsless(true, Lobby);
-            _bomb.AttachTo(player, PedBone.SKEL_R_Finger01, new Position(0.1, 0, 0), null);
+            _bomb.AttachTo(player, PedBone.SKEL_R_Finger01, new Position(0.1f, 0, 0), null);
 
             if (_bombAtPlayer != player)
             {
@@ -73,7 +72,7 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
         {
             // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL,
             // bomb.Position, 200, Dimension); use 0x172AA1B624FA1013 as Hash instead if not getting fixed
-            ModAPI.Sync.SendEvent(Lobby, ToClientEvent.BombDetonated);
+            Lobby.SendEvent(ToClientEvent.BombDetonated);
             _counterTerroristTeam.FuncIterate((player, team) =>
             {
                 if (player.Lifes == 0)
@@ -98,10 +97,11 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
                 return;
             _bomb.Detach();
             _bomb.Freeze(true, Lobby);
-            _bomb.Position = _bombAtPlayer.ModPlayer!.Position;
-            _bombTakeMarker = ModAPI.Marker.Create(0, _bomb.Position, new Position(), new Position(), 1,
-                                                        Color.FromArgb(180, 180, 0, 0), true, Lobby);
-            ITDSColShape bombtakecol = ModAPI.ColShape.CreateSphere(_bomb.Position, 2, Lobby);
+            _bomb.Position = _bombAtPlayer.Position;
+            _bombTakeMarker = _tdsMarkerHandler.Create(MarkerType.UpsideDownCone, _bomb.Position, new Position(), new DegreeRotation(), new Position(1, 1, 1),
+                                                        new Color(180, 180, 0, 0), true, (int)Lobby.Dimension);
+            ITDSColShape bombtakecol = (ITDSColShape)Alt.CreateColShapeSphere(_bomb.Position, 2);
+            bombtakecol.Dimension = (int)Lobby.Dimension;
             _lobbyBombTakeCol[Lobby] = bombtakecol;
             _bombAtPlayer.SendEvent(ToClientEvent.BombNotOnHand);
             _bombAtPlayer = null;
@@ -114,7 +114,7 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
                 return;
 
             ITDSPlayer player = SharedUtils.GetRandom(_terroristTeam.Players);
-            if (player.ModPlayer!.CurrentWeapon == WeaponHash.Unarmed)
+            if (player.CurrentWeapon == WeaponHash.Unarmed)
                 BombToHand(player);
             else
                 BombToBack(player);
@@ -125,7 +125,7 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
         {
             if (_bomb is null)
                 return;
-            ToggleBombAtHand(player, player.ModPlayer!.CurrentWeapon, player.ModPlayer.CurrentWeapon);
+            ToggleBombAtHand(player, player.CurrentWeapon, player.CurrentWeapon);
             //_bomb.FreezePosition = false;
             _bombTakeMarker?.Delete();
             _bombTakeMarker = null;

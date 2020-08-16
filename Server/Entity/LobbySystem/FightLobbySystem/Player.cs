@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using AltV.Net.Async;
+using AltV.Net.Data;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Entity.LobbySystem.FightLobbySystem
@@ -18,12 +21,12 @@ namespace TDS_Server.Entity.LobbySystem.FightLobbySystem
         {
             if (!await base.AddPlayer(player, teamindex))
                 return false;
-            ModAPI.Thread.QueueIntoMainThread(() => player.ModPlayer?.SetInvincible(false));
+            await AltAsync.Do(() => player.SetInvincible(false));
 
             return true;
         }
 
-        public void DamagedPlayer(ITDSPlayer target, ITDSPlayer source, WeaponHash weapon, PedBodyPart bodyPart)
+        public void DamagedPlayer(ITDSPlayer target, ITDSPlayer source, WeaponHash weapon, BodyPart bodyPart)
         {
             DmgSys.DamagePlayer(target, weapon, bodyPart, source);
         }
@@ -32,7 +35,7 @@ namespace TDS_Server.Entity.LobbySystem.FightLobbySystem
         {
             await base.RemovePlayer(player);
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await AltAsync.Do(() =>
             {
                 player.Team?.SpectateablePlayers?.Remove(player);
                 player.LastKillAt = null;

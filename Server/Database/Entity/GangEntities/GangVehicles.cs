@@ -5,8 +5,6 @@ namespace TDS_Server.Database.Entity.GangEntities
     public class GangVehicles
     {
         public int Id { get; set; }
-        public int Color1 { get; set; }
-        public int Color2 { get; set; }
         public int GangId { get; set; }
         public VehicleHash Model { get; set; }
         public float SpawnPosX { get; set; }

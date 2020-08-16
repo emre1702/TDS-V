@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -30,7 +31,7 @@ namespace TDS_Server.Entity.LobbySystem.FightLobbySystem
 
             FuncIterateAllPlayers((targetPlayer, targetteam) =>
             {
-                targetPlayer.SendEvent(ToClientEvent.Death, player.RemoteId, player.TeamIndex, killstr[targetPlayer.Language], player.Lifes > 1);
+                targetPlayer.SendEvent(ToClientEvent.Death, player, player.TeamIndex, killstr[targetPlayer.Language], player.Lifes > 1);
             });
         }
 

@@ -22,7 +22,7 @@ namespace TDS_Server.Data.Models.Map.Creator
             Z = pos.PosZ;
         }
 
-        public PositionDto(TDS_Shared.Data.Models.GTA.Position pos)
+        public PositionDto(Position3D pos)
         {
             X = pos.X;
             Y = pos.Y;
@@ -68,6 +68,11 @@ namespace TDS_Server.Data.Models.Map.Creator
         public AltV.Net.Data.Position ToAltV()
         {
             return new AltV.Net.Data.Position(X, Y, Z);
+        }
+
+        public Position3D ToPos3D()
+        {
+            return new Position3D(X, Y, Z);
         }
 
         #endregion Public Methods

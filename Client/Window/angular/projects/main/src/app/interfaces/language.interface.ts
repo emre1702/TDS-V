@@ -813,6 +813,7 @@ export interface Language {
 
     ////////////////// Stats ////////////////
     SCName: string;
+    SCId: string;
     AdminLvl: string;
     Donation: string;
     IsVip: string;

@@ -1,4 +1,5 @@
-﻿using TDS_Server.Database.Entity.GangEntities;
+﻿using AltV.Net.Data;
+using TDS_Server.Database.Entity.GangEntities;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Interfaces.Entities.Gang
@@ -10,6 +11,10 @@ namespace TDS_Server.Data.Interfaces.Entities.Gang
         GangHouses Entity { get; }
         Position Position { get; }
         float SpawnRotation { get; }
+        ITDSTextLabel TextLabel { get; set; }
+        ITDSBlip Blip { get; set; }
+
+        string GetTextLabelText();
 
         #endregion Public Properties
     }

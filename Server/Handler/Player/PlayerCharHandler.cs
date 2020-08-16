@@ -1,4 +1,5 @@
-﻿using MoreLinq;
+﻿using AltV.Net.Async;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,10 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Entities.LobbySystem;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Player.Char;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.CharCreator;
@@ -27,7 +26,6 @@ namespace TDS_Server.Handler.Player
         private readonly TDSDbContext _dbContext;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
@@ -36,10 +34,9 @@ namespace TDS_Server.Handler.Player
 
         #region Public Constructors
 
-        public PlayerCharHandler(IModAPI modAPI, EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public PlayerCharHandler(EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
             _dbContext = dbContext;
@@ -82,7 +79,7 @@ namespace TDS_Server.Handler.Player
             });
 
             await player.SaveData(true);
-            AltAsync.Do(() =>
+            await AltAsync.Do(() =>
             {
                 LoadPlayerChar(player);
             });
@@ -108,7 +105,7 @@ namespace TDS_Server.Handler.Player
                     .Where(p => p.GetCustomAttributes(typeof(Newtonsoft.Json.JsonPropertyAttribute), false).Length > 0)
                     .ForEach(p => p.SetValue(newObj, p.GetValue(originalObj)));
             }
-            
+
         }
 
         private async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
@@ -182,18 +179,15 @@ namespace TDS_Server.Handler.Player
             data.HairAndColorsDataSynced = data.HairAndColorsData.Cast<CharCreateHairAndColorsData>().ToList();
             data.HeritageDataSynced = data.HeritageData.Cast<CharCreateHeritageData>().ToList();
 
-            if (player.ModPlayer is null)
-                return;
-
-
-            var currentHairAndColor = data.HairAndColorsData.First(d => d.Slot == data.Slot);
+            //Todo: Do that at clientside
+            /*var currentHairAndColor = data.HairAndColorsData.First(d => d.Slot == data.Slot);
             var currentHeritageData = data.HeritageData.First(d => d.Slot == data.Slot);
             var currentGeneralData = data.GeneralData.First(d => d.Slot == data.Slot);
             var currentAppearanceData = data.AppearanceData.First(d => d.Slot == data.Slot);
             var currentFeaturesData = data.FeaturesData.First(d => d.Slot == data.Slot);
 
-            player.ModPlayer.SetClothes(2, currentHairAndColor.Hair, 0);
-            player.ModPlayer.SetCustomization(
+            player.SetClothes(2, currentHairAndColor.Hair, 0);
+            player.SetCustomization(
                 gender: currentGeneralData.IsMale,
                 headBlend: new HeadBlend
                 {
@@ -314,7 +308,7 @@ namespace TDS_Server.Handler.Player
                     },
                 },
                 decorations: Array.Empty<Decoration>()
-            );
+            );*/
         }
 
         #endregion Private Methods

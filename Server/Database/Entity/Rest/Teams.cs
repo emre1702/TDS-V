@@ -18,9 +18,9 @@ namespace TDS_Server.Database.Entity.Rest
         #region Public Properties
 
         public byte BlipColor { get; set; }
-        public short ColorB { get; set; }
-        public short ColorG { get; set; }
-        public short ColorR { get; set; }
+        public byte ColorB { get; set; }
+        public byte ColorG { get; set; }
+        public byte ColorR { get; set; }
         public virtual ICollection<Gangs> Gangs { get; set; }
         public int Id { get; set; }
         public short Index { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AltV.Net.Data;
+using System;
 using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
@@ -8,7 +9,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Server.Entity.Damagesys
 {
-    partial class Damagesys
+    partial class DamageSystem
     {
         #region Private Fields
 
@@ -19,7 +20,7 @@ namespace TDS_Server.Entity.Damagesys
 
         #region Public Methods
 
-        public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, PedBodyPart pedBodyPart, ITDSPlayer? source)
+        public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, BodyPart bodyPart, ITDSPlayer? source)
         {
             if (!target.LoggedIn)
                 return;
@@ -35,11 +36,11 @@ namespace TDS_Server.Entity.Damagesys
             if (target.Team == source.Team)
                 return;
 
-            bool isHeadShot = pedBodyPart == PedBodyPart.Head;
+            bool isHeadShot = bodyPart == BodyPart.Head;
             int damage = (int)Math.Ceiling(_damagesDict.TryGetValue(weapon, out DamageDto? value) ? (value.Damage * (isHeadShot ? value.HeadMultiplier : 1)) : 0);
 
             target.Damage(ref damage, out bool killed);
-            source.AddWeaponShot(weapon, pedBodyPart, damage, killed);
+            source.AddWeaponShot(weapon, bodyPart, damage, killed);
 
             UpdateLastHitter(target, source, damage);
             if (source.CurrentRoundStats != null)

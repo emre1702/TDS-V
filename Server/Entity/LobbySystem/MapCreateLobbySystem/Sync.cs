@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Default;
@@ -45,7 +46,7 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
 
         public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
         {
-            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);
+            SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);
 
             switch (infoType)
             {
@@ -73,7 +74,11 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
 
         public void SyncNewObject(ITDSPlayer player, string json)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player).ToList(), ToClientEvent.MapCreatorSyncNewObject, json);
+            foreach (var target in Players.Values)
+            {
+                if (target != player)
+                    target.SendEvent(ToClientEvent.MapCreatorSyncNewObject, json);
+            }
 
             var pos = Serializer.FromClient<MapCreatorPosition>(json);
             if (pos.Type == MapCreatorPositionType.MapCenter)
@@ -86,8 +91,11 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
 
         public void SyncObjectPosition(ITDSPlayer player, string json)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player),
-                ToClientEvent.MapCreatorSyncObjectPosition, json);
+            foreach (var target in Players.Values)
+            {
+                if (target != player)
+                    target.SendEvent(ToClientEvent.MapCreatorSyncObjectPosition, json);
+            }
 
             var pos = Serializer.FromClient<MapCreatorPosData>(json);
             if (!_posById.ContainsKey(pos.Id))
@@ -104,7 +112,11 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
 
         public void SyncRemoveObject(ITDSPlayer player, int objId)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player), ToClientEvent.MapCreatorSyncObjectRemove, objId);
+            foreach (var target in Players.Values)
+            {
+                if (target != player)
+                    target.SendEvent(ToClientEvent.MapCreatorSyncObjectRemove, objId);
+            }
 
             if (!_posById.ContainsKey(objId))
                 return;
@@ -119,7 +131,11 @@ namespace TDS_Server.Entity.LobbySystem.MapCreateLobbySystem
 
         public void SyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player), ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
+            foreach (var target in Players.Values)
+            {
+                if (target != player)
+                    target.SendEvent(ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
+            }
 
             foreach (var entry in _posById)
             {

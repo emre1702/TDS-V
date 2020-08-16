@@ -54,8 +54,6 @@ namespace TDS_Server.Handler.Events
 
         public delegate void GangHouseDelegate(IGangHouse house);
 
-        public delegate void IncomingConnectionDelegate(string ip, ulong socialClubId, CancelEventArgs cancel);
-
         public delegate void LobbyDelegate(ILobby lobby);
 
         public delegate void PlayerDelegate(ITDSPlayer player);
@@ -73,8 +71,6 @@ namespace TDS_Server.Handler.Events
         public event LobbyDelegate? CustomLobbyCreated;
 
         public event LobbyDelegate? CustomLobbyRemoved;
-
-        public event EntityDelegate? EntityDeleted;
 
         public event ErrorDelegate? Error;
 
@@ -115,12 +111,6 @@ namespace TDS_Server.Handler.Events
         #endregion Events
 
         #region Methods
-
-        //Todo: Implement this for all the single entity types
-        public void OnEntityDeleted(IEntity entity)
-        {
-            EntityDeleted?.Invoke(entity);
-        }
 
         public void OnMapsLoaded()
         {
@@ -198,17 +188,17 @@ namespace TDS_Server.Handler.Events
             LoadedServerBans?.Invoke();
         }
 
-        internal void OnLobbyCreated(ILobby lobby)
+        public void OnLobbyCreated(ILobby lobby)
         {
             LobbyCreated?.Invoke(lobby);
         }
 
-        internal void OnLobbyJoin(ITDSPlayer player, ILobby lobby)
+        public void OnLobbyJoin(ITDSPlayer player, ILobby lobby)
         {
             PlayerJoinedLobby?.Invoke(player, lobby);
         }
 
-        internal void OnLobbyLeave(ITDSPlayer player, ILobby lobby)
+        public void OnLobbyLeave(ITDSPlayer player, ILobby lobby)
         {
             PlayerLeftLobby?.Invoke(player, lobby);
         }
@@ -248,12 +238,15 @@ namespace TDS_Server.Handler.Events
             {
                 if (state)
                     OnPlayerEnterColShape((ITDSColShape)colShape, player);
+                else 
+                    OnPlayerExitColShape((ITDSColShape)colShape, player);
             }
         }
 
-        private void OnPlayerDeath(IPlayer modPlayer, IEntity killer, uint weapon)
+        private void OnPlayerDeath(IPlayer modPlayer, IEntity killerEntity, uint weapon)
         {
             var player = (ITDSPlayer)modPlayer;
+            ITDSPlayer killer = killerEntity is ITDSPlayer k ? k : (killerEntity is ITDSVehicle v ? v.Driver : null) ?? player;
             player.Lobby?.OnPlayerDeath(player, killer, weapon);
         }
 
@@ -266,6 +259,13 @@ namespace TDS_Server.Handler.Events
 
         private void OnPlayerEnterColShape(ITDSColShape colShape, ITDSPlayer player)
         {
+            colShape.OnPlayerEntered(player);
+            player.Lobby?.OnPlayerEnterColShape(colShape, player);
+        }
+
+        private void OnPlayerExitColShape(ITDSColShape colShape, ITDSPlayer player)
+        {
+            colShape.OnPlayerExited(player);
             player.Lobby?.OnPlayerEnterColShape(colShape, player);
         }
 

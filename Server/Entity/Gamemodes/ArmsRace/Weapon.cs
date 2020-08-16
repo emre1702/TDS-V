@@ -1,7 +1,7 @@
 ﻿using MoreLinq;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Shared.Data.Enums;
 
@@ -9,35 +9,29 @@ namespace TDS_Server.Entity.Gamemodes.ArmsRace
 {
     partial class ArmsRace
     {
-        #region Private Fields
+        #region Fields
 
         private Dictionary<short, LobbyArmsRaceWeapons> _weapons = new Dictionary<short, LobbyArmsRaceWeapons>();
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Properties
+        #region Properties
 
         public override bool HandlesGivingWeapons => true;
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         public override void GivePlayerWeapons(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
             var weapon = GetCurrentWeapon(player);
-            player.ModPlayer.RemoveAllWeapons();
-            player.ModPlayer.GiveWeapon(weapon, 9999);
+            player.RemoveAllWeapons();
+            player.GiveWeapon((uint)weapon, 9999, false);
         }
 
         public override bool IsWeaponAllowed(WeaponHash weaponHash)
                     => Lobby.Entity.ArmsRaceWeapons.Any(w => w.WeaponHash == weaponHash);
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private WeaponHash GetCurrentWeapon(ITDSPlayer player)
         {
@@ -76,15 +70,11 @@ namespace TDS_Server.Entity.Gamemodes.ArmsRace
 
         private void GiveNextWeapon(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
-
             if (!GetNextWeapon(player, out WeaponHash? weaponHash) || !weaponHash.HasValue)
                 return;
 
-            player.ModPlayer.RemoveAllWeapons();
-            player.ModPlayer.GiveWeapon(weaponHash.Value, 9999);
-            player.ModPlayer.CurrentWeapon = weaponHash.Value;
+            player.RemoveAllWeapons();
+            player.GiveWeapon((uint)weaponHash.Value, 9999, true);
         }
 
         private void LoadWeapons()
@@ -92,6 +82,6 @@ namespace TDS_Server.Entity.Gamemodes.ArmsRace
             _weapons = Lobby.Entity.ArmsRaceWeapons.ToDictionary(a => a.AtKill, a => a);
         }
 
-        #endregion Private Methods
+        #endregion Methods
     }
 }

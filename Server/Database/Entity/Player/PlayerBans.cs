@@ -7,6 +7,21 @@ namespace TDS_Server.Database.Entity.Player
     {
         #region Public Properties
 
+        public long? __HwId { get; set; }
+        public long? __HwIdEx { get; set; }
+
+        public ulong? HwId
+        {
+            get { unchecked { return (ulong)__HwId; } }
+            set { unchecked { __HwId = (long)value; } }
+        }
+
+        public ulong? HwIdEx
+        {
+            get { unchecked { return (ulong)__HwIdEx; } }
+            set { unchecked { __HwIdEx = (long)value; } }
+        }
+
         public virtual Players Admin { get; set; }
         public int? AdminId { get; set; }
         public DateTime? EndTimestamp { get; set; }

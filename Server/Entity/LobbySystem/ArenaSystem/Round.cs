@@ -21,7 +21,7 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
     {
         public LobbyRoundSettings RoundSettings => Entity.LobbyRoundSettings;
 
-        public IGamemode? CurrentGameMode;
+        public IGamemode? CurrentGameMode { get; private set; }
 
         private TDSTimer? _nextRoundStatusTimer;
 
@@ -49,17 +49,17 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
             [RoundStatus.None] = RoundStatus.NewMapChoose
         };
 
-        private readonly Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, IGamemode>> _gameModeByMapType
-            = new Dictionary<MapType, Func<Arena, MapDto, IServiceProvider, IGamemode>>
+        private readonly Dictionary<MapType, Func<Arena, MapDto, IEntitiesByInterfaceCreator, IGamemode>> _gameModeByMapType
+            = new Dictionary<MapType, Func<Arena, MapDto, IEntitiesByInterfaceCreator, IGamemode>>
             {
-                [MapType.Normal] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<IDeathmatch>(serviceProvider, lobby, map),
-                [MapType.Bomb] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<IBomb>(serviceProvider, lobby, map),
-                [MapType.Sniper] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<ISniper>(serviceProvider, lobby, map),
-                [MapType.Gangwar] = (lobby, map, serviceProvider) => ActivatorUtilities.CreateInstance<IGangwar>(serviceProvider, lobby, map)
+                [MapType.Normal] = (lobby, map, creator) => creator.Create<IDeathmatch>(lobby, map),
+                [MapType.Bomb] = (lobby, map, creator) => creator.Create<IBomb>(lobby, map),
+                [MapType.Sniper] = (lobby, map, creator) => creator.Create<ISniper>(lobby, map),
+                [MapType.Gangwar] = (lobby, map, creator) => creator.Create<IGangwar>(lobby, map)
             };
 
-        public RoundStatus CurrentRoundStatus = RoundStatus.None;
-        public ITDSPlayer? CurrentRoundEndBecauseOfPlayer;
+        public RoundStatus CurrentRoundStatus { get; private set; } = RoundStatus.None;
+        public ITDSPlayer? CurrentRoundEndBecauseOfPlayer { get; set; }
         public bool RemoveAfterOneRound { get; set; }
         public RoundEndReason CurrentRoundEndReason { get; private set; }
         public Dictionary<ILanguage, string>? RoundEndReasonText { get; private set; }
@@ -128,7 +128,7 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
             SavePlayerLobbyStats = !nextMap.Info.IsNewMap;
             if (nextMap.Info.IsNewMap)
                 SendAllPlayerLangNotification(lang => lang.TESTING_MAP_NOTIFICATION, flashing: true);
-            CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap, _serviceProvider);
+            CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap, EntitiesByInterfaceCreator);
             CurrentGameMode?.StartMapChoose();
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
@@ -173,7 +173,7 @@ namespace TDS_Server.Entity.LobbySystem.ArenaSystem
                     {
                         player.SendEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[player.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
                         if (player.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
-                            player?.Kill();
+                            player.Kill();
                         player.Lifes = 0;
                     });
                 }

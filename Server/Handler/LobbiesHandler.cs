@@ -41,6 +41,7 @@ namespace TDS_Server.Handler
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
         private readonly IEntitiesStaticConnector _entitiesStaticConnector;
+        private readonly IEntitiesByInterfaceCreator _entitiesByInterfaceCreator;
         private IArena? _arena;
         private ICharCreateLobby? _charCreateLobby;
         private string? _customLobbyDatas;
@@ -49,7 +50,6 @@ namespace TDS_Server.Handler
         private IMapCreateLobby? _mapCreateLobby;
 
         #endregion Private Fields
-
         #region Public Constructors
 
         public LobbiesHandler(
@@ -60,7 +60,8 @@ namespace TDS_Server.Handler
             ILoggingHandler loggingHandler,
             IServiceProvider serviceProvider,
             EventsHandler eventsHandler,
-            IEntitiesStaticConnector entitiesStaticConnector) : base(dbContext, loggingHandler)
+            IEntitiesStaticConnector entitiesStaticConnector,
+            IEntitiesByInterfaceCreator entitiesByInterfaceCreator) : base(dbContext, loggingHandler)
         {
             _serializer = serializer;
             _mapsHandler = mapsHandler;
@@ -68,12 +69,14 @@ namespace TDS_Server.Handler
             _eventsHandler = eventsHandler;
             _settingsHandler = settingsHandler;
             _entitiesStaticConnector = entitiesStaticConnector;
+            _entitiesByInterfaceCreator = entitiesByInterfaceCreator;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.LobbyCreated += AddLobby;
         }
 
         #endregion Public Constructors
+
 
         #region Public Properties
 
@@ -191,7 +194,7 @@ namespace TDS_Server.Handler
 
                 var arena = await AltAsync.Do(() =>
                 {
-                    return ActivatorUtilities.CreateInstance<IArena>(_serviceProvider, entity, false);
+                    return _entitiesByInterfaceCreator.Create<IArena>(entity, false)!;
                 });
                 await arena.AddToDB();
                 await AltAsync.Do(() =>
@@ -296,20 +299,22 @@ namespace TDS_Server.Handler
             foreach (Lobbies lobbysetting in lobbies)
             {
                 LobbyType type = lobbysetting.Type;
-                ILobby lobby = type switch
+                ILobby? lobby = type switch
                 {
-                    LobbyType.FightLobby => ActivatorUtilities.CreateInstance<IFightLobby>(_serviceProvider, lobbysetting, false),
+                    LobbyType.FightLobby => _entitiesByInterfaceCreator.Create<IFightLobby>(lobbysetting, false),
 
-                    LobbyType.Arena => ActivatorUtilities.CreateInstance<IArena>(_serviceProvider, lobbysetting, false),
+                    LobbyType.Arena => _entitiesByInterfaceCreator.Create<IArena>(lobbysetting, false),
 
-                    LobbyType.MapCreateLobby => ActivatorUtilities.CreateInstance<IMapCreateLobby>(_serviceProvider, lobbysetting),
+                    LobbyType.MapCreateLobby => _entitiesByInterfaceCreator.Create<IMapCreateLobby>(lobbysetting),
 
-                    LobbyType.GangLobby => ActivatorUtilities.CreateInstance<IGangLobby>(_serviceProvider, lobbysetting),
+                    LobbyType.GangLobby => _entitiesByInterfaceCreator.Create<IGangLobby>(lobbysetting),
 
-                    LobbyType.CharCreateLobby => ActivatorUtilities.CreateInstance<ICharCreateLobby>(_serviceProvider, lobbysetting),
+                    LobbyType.CharCreateLobby => _entitiesByInterfaceCreator.Create<ICharCreateLobby>(lobbysetting),
 
-                    _ => ActivatorUtilities.CreateInstance<ILobby>(_serviceProvider, lobbysetting, false),
+                    _ => _entitiesByInterfaceCreator.Create<ILobby>(lobbysetting, false),
                 };
+                if (lobby is null)
+                    continue;
                 if (lobby is IArena arena)
                 {
                     AddMapsToArena(arena, lobbysetting);
@@ -334,13 +339,15 @@ namespace TDS_Server.Handler
 
             if (LobbiesByIndex.ContainsKey(index))
             {
-                ILobby lobby = LobbiesByIndex[index];
+                ILobby? lobby = LobbiesByIndex[index];
                 if (lobby is IMapCreateLobby)
                 {
                     if (await lobby.IsPlayerBaned(player))
                         return null;
 
-                    lobby = ActivatorUtilities.CreateInstance<IMapCreateLobby>(_serviceProvider, player);
+                    lobby = _entitiesByInterfaceCreator.Create<IMapCreateLobby>(player);
+                    if (lobby is null)
+                        return null;
                     await lobby.AddToDB();
                     _eventsHandler.OnLobbyCreated(lobby);
                 }
@@ -349,7 +356,9 @@ namespace TDS_Server.Handler
                     if (await lobby.IsPlayerBaned(player))
                         return null;
 
-                    lobby = ActivatorUtilities.CreateInstance<ICharCreateLobby>(_serviceProvider, player);
+                    lobby = _entitiesByInterfaceCreator.Create<ICharCreateLobby>(player);
+                    if (lobby is null)
+                        return null;
                     await lobby.AddToDB();
                     _eventsHandler.OnLobbyCreated(lobby);
                 }
@@ -459,7 +468,7 @@ namespace TDS_Server.Handler
                         break;
                 }
             }
-            arena.SetMapList(lobbyMapsList);
+            arena.SetMapsList(lobbyMapsList);
         }
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)

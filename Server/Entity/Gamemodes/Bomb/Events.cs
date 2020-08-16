@@ -1,6 +1,5 @@
 ﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -17,9 +16,9 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
                 DropBomb();
         }
 
-        public override void OnPlayerEnterColshape(ITDSColShape shape, ITDSPlayer character)
+        public override void OnPlayerEnterColShape(ITDSColShape shape, ITDSPlayer character)
         {
-            base.OnPlayerEnterColshape(shape, character);
+            base.OnPlayerEnterColShape(shape, character);
             if (_lobbyBombTakeCol.ContainsKey(Lobby))
             {
                 if (character.Lifes > 0 && character.Team == _terroristTeam)
@@ -46,7 +45,7 @@ namespace TDS_Server.Entity.Gamemodes.Bomb
             if (_bombDetonateTimer is null || _bomb is null)
                 return;
 
-            if (_bombDetonateTimer != null && _bomb != null)
+            if (_bombDetonateTimer is { } && _bomb is { })
                 player.SendEvent(ToClientEvent.BombPlanted,
                     Serializer.ToClient(_bomb.Position),
                     false,

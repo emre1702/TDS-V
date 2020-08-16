@@ -83,14 +83,12 @@ namespace TDS_Server.Handler.Player
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             LoggedInPlayers.Add(player);
-            player.LoggedIn = true;
         }
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
             if (player.LoggedIn)
                 LoggedInPlayers.Remove(player);
-            player.LoggedIn = false;
         }
 
         private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
@@ -139,11 +137,11 @@ namespace TDS_Server.Handler.Player
             if (player.Team is null || player.Team.IsSpectator)
                 return;
 
-            foreach (var target in player.Team.Players)
+            /*foreach (var target in player.Team.Players)
             {
                 if (!target.HasRelationTo(player, PlayerRelation.Block))
                     player.SetVoiceTo(target, true);
-            }
+            }*/
         }
 
         private void UpdatePlayers(int _)

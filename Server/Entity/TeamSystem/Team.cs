@@ -1,8 +1,9 @@
-﻿using System;
+﻿using AltV.Net;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using TDS_Server.Data.Interfaces.Entities;
+using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -16,6 +17,7 @@ namespace TDS_Server.Entity.TeamSystem
         #region Private Fields
         private readonly Serializer _serializer;
         private Teams _entity;
+        private readonly ITDSVoiceChannel _voiceChannel;
 
         #endregion Private Fields
 
@@ -41,6 +43,8 @@ namespace TDS_Server.Entity.TeamSystem
                 color: new ColorDto(Entity.ColorR, Entity.ColorG, Entity.ColorB),
                 amountPlayers: new SyncedTeamPlayerAmountDto()
             );
+
+            _voiceChannel = (ITDSVoiceChannel)Alt.CreateVoiceChannel(false, float.MaxValue);
         }
 
         #endregion Public Constructors
@@ -89,6 +93,7 @@ namespace TDS_Server.Entity.TeamSystem
         {
             Players.Add(player);
             player.SetSkin(Entity.SkinHash != 0 ? (PedHash)Entity.SkinHash : player.FreemodeSkin);
+            _voiceChannel.AddPlayer(player);
         }
 
         public override bool Equals(object? obj)
@@ -111,7 +116,7 @@ namespace TDS_Server.Entity.TeamSystem
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return HashCode.Combine(_entity.Id);
         }
 
         public void RemoveAlivePlayer(ITDSPlayer player)
@@ -126,6 +131,8 @@ namespace TDS_Server.Entity.TeamSystem
         public void RemovePlayer(ITDSPlayer player)
         {
             Players.Remove(player);
+            _voiceChannel.RemovePlayer(player);
+            
         }
 
         public void SyncAddedPlayer(ITDSPlayer player)
@@ -136,10 +143,10 @@ namespace TDS_Server.Entity.TeamSystem
                 if (target == player)
                     continue;
                 target.SendEvent(ToClientEvent.PlayerJoinedTeam, player);
-                if (!player.HasRelationTo(target, PlayerRelation.Block) && !target.IsVoiceMuted)
+                /*if (!player.HasRelationTo(target, PlayerRelation.Block) && !target.IsVoiceMuted)
                     target.SetVoiceTo(player, true);
                 if (!target.HasRelationTo(player, PlayerRelation.Block) && !player.IsVoiceMuted)
-                    player.SetVoiceTo(target, true);
+                    player.SetVoiceTo(target, true);*/
             }
         }
 
@@ -149,7 +156,7 @@ namespace TDS_Server.Entity.TeamSystem
             foreach (var player in Players)
             {
                 player.SendEvent(ToClientEvent.SyncTeamPlayers, array);
-                foreach (var target in Players)
+                /*foreach (var target in Players)
                 {
                     if (target == player)
                         continue;
@@ -157,13 +164,13 @@ namespace TDS_Server.Entity.TeamSystem
                         target.SetVoiceTo(player, true);
                     if (!target.HasRelationTo(player, PlayerRelation.Block) && !player.IsVoiceMuted)
                         player.SetVoiceTo(target, true);
-                }
+                }*/
             }
         }
 
         public void SyncRemovedPlayer(ITDSPlayer player)
         {
-            player.ResetVoiceToAndFrom();
+            //player.ResetVoiceToAndFrom();
             foreach (var target in Players)
             {
                 if (target != player)
