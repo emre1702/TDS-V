@@ -1,13 +1,13 @@
 ﻿import alt from "alt-client";
 import natives from "natives";
-import Control from "../../data/enums/input/control.enum";
-import ControlBind from "../../data/models/input/control-bind.model";
-import KeyBind from "../../data/models/input/key-bind.model";
-import Key from "../../data/enums/input/key.enum";
-import KeyPressState from "../../data/enums/input/key-press-state.enum";
 import LoggingService from "../output/logging.service";
 import { inject } from "inversify";
-import InputGroup from "../../data/enums/input/input-group.enum";
+import { Key } from "readline";
+import KeyPressState from "../../datas/enums/input/key-press-state.enum";
+import Control from "../../datas/enums/input/control.enum";
+import KeyBind from "../../datas/models/input/key-bind.model";
+import ControlBind from "../../datas/models/input/control-bind.model";
+import InputGroup from "../../datas/enums/input/input-group.enum";
 
 
 export default class BindsService {

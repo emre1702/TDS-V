@@ -31,17 +31,6 @@ namespace TDS_Client.Handler.Browser
         {
             _eventsHandler = eventsHandler;
 
-            modAPI.Chat.SafeMode = false;
-            modAPI.Chat.Show(false);
-
-            CreateBrowser();
-            Browser.MarkAsChat();
-
-            eventsHandler.InFightStatusChanged += ToggleRoundStats;
-            eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
-            eventsHandler.AngularCooldown += ShowCooldown;
-            eventsHandler.RoundEnded += _ => ResetMapVoting();
-            eventsHandler.ChatInputToggled += ToggleChatOpened;
 
             modAPI.Event.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
             modAPI.Event.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
@@ -76,11 +65,6 @@ namespace TDS_Client.Handler.Browser
         public void FromServerToBrowser(string eventName, params object[] args)
         {
             Execute(eventName, args);
-        }
-
-        public void GetHashedPasswordReturn(string hashedPassword)
-        {
-            Execute(FromBrowserEvent.GetHashedPassword, hashedPassword);
         }
 
         public void HideRankings()
@@ -154,11 +138,6 @@ namespace TDS_Client.Handler.Browser
             base.SetReady(args);
         }
 
-        public void ShowCooldown()
-        {
-            Execute(ToBrowserEvent.ShowCooldown);
-        }
-
         public void ShowRankings(string rankingsJson)
         {
             Execute(ToBrowserEvent.ShowRankings, rankingsJson);
@@ -221,11 +200,6 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.ToggleChatInput, activated, startWith);
         }
 
-        public void ToggleChatOpened(bool activated)
-        {
-            Execute(ToBrowserEvent.ToggleChatOpened, activated);
-        }
-
         public void ToggleFreeroam(bool activated)
         {
             Execute(ToBrowserEvent.ToggleFreeroam, activated);
@@ -250,12 +224,6 @@ namespace TDS_Client.Handler.Browser
         public void ToggleMapCreator(bool activated)
         {
             Execute(ToBrowserEvent.ToggleMapCreator, activated);
-        }
-
-        public void ToggleRoundStats(bool toggle)
-        {
-            Logging.LogWarning(toggle.ToString(), "AngularBrowserHandler.ToggleRoundStats");
-            Execute(ToBrowserEvent.ToggleRoundStats, toggle);
         }
 
         public void ToggleTeamChoiceMenu(bool boolean)
@@ -296,11 +264,6 @@ namespace TDS_Client.Handler.Browser
 
         #region Private Methods
 
-        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
-        {
-            ResetMapVoting();
-        }
-
         private void OnFromBrowserEventReturnMethod(object[] args)
         {
             string eventName = (string)args[0];
@@ -311,7 +274,7 @@ namespace TDS_Client.Handler.Browser
         private void OnGetHashedPassword(object[] args)
         {
             string pw = Convert.ToString(args[0]);
-            GetHashedPasswordReturn(SharedUtils.HashPWClient(pw));
+            GetHashedPasswordReturn();
         }
 
         private void OnToBrowserEventMethod(object[] args)

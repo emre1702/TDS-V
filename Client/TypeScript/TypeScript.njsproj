@@ -38,139 +38,74 @@
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\data\" />
-    <Folder Include="src\data\enums\" />
-    <Folder Include="src\data\enums\dx\" />
-    <Folder Include="src\data\enums\events\" />
-    <Folder Include="src\data\enums\data\" />
-    <Folder Include="src\data\enums\input\" />
-    <Folder Include="src\data\enums\output\" />
-    <Folder Include="src\data\enums\weapons\" />
-    <Folder Include="src\data\interfaces\events\" />
-    <Folder Include="src\data\interfaces\lobbies\" />
-    <Folder Include="src\data\interfaces\lobbies\map-creator\" />
-    <Folder Include="src\data\models\input\" />
-    <Folder Include="src\data\interfaces\players\" />
-    <Folder Include="src\data\models\" />
-    <Folder Include="src\data\interfaces\" />
-    <Folder Include="src\entity\draw\" />
-    <Folder Include="src\entity\draw\dx\" />
-    <Folder Include="src\entity\events\" />
-    <Folder Include="src\handler\" />
+    <Folder Include="src\datas\" />
+    <Folder Include="src\datas\enums\" />
+    <Folder Include="src\datas\enums\data\" />
+    <Folder Include="src\datas\enums\dx\" />
+    <Folder Include="src\datas\enums\events\" />
+    <Folder Include="src\datas\enums\gta\" />
+    <Folder Include="src\datas\enums\input\" />
+    <Folder Include="src\datas\enums\output\" />
+    <Folder Include="src\datas\interfaces\" />
+    <Folder Include="src\datas\interfaces\events\" />
+    <Folder Include="src\datas\interfaces\lobbies\" />
+    <Folder Include="src\datas\interfaces\lobbies\map-creator\" />
+    <Folder Include="src\datas\interfaces\players\" />
+    <Folder Include="src\datas\models\" />
+    <Folder Include="src\datas\models\input\" />
     <Folder Include="dist\" />
     <Folder Include="src\" />
-    <Folder Include="src\handler\appearance\" />
-    <Folder Include="src\handler\draw\" />
-    <Folder Include="src\handler\draw\dx\" />
-    <Folder Include="src\handler\events\" />
-    <Folder Include="src\handler\input\" />
-    <Folder Include="src\handler\browsers\" />
-    <Folder Include="src\handler\output\" />
-    <Folder Include="src\entity\" />
+    <Folder Include="src\entities\" />
+    <Folder Include="src\entities\draw\" />
+    <Folder Include="src\entities\draw\dx\" />
+    <Folder Include="src\entities\events\" />
+    <Folder Include="src\services\" />
+    <Folder Include="src\services\appearance\" />
+    <Folder Include="src\services\browsers\" />
+    <Folder Include="src\services\draw\" />
+    <Folder Include="src\services\draw\dx\" />
+    <Folder Include="src\services\events\" />
+    <Folder Include="src\services\input\" />
+    <Folder Include="src\services\output\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\data\constants.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\data\player-data-key.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\events\to-browser-event.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\events\to-client-event.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\events\to-server-event.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\dx\dx-type.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\dx\font.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\input\control.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\input\input-group.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\input\key-press-state.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\input\key.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\output\sound.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\enums\weapons\weapon-hash.enum.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\interfaces\events\cooldown-event-data.interface.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\models\input\control-bind.model.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\interfaces\language.interface.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\interfaces\lobbies\lobby-settings.interface.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\interfaces\lobbies\map-creator\map-creator-object.interface.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\interfaces\players\player-settings.interface.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\data\models\input\key-bind.model.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\entity\draw\dx\dx-base.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\entity\events\typed-event.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\appearance\char-creator.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\browsers\angular-browser.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\browsers\browser-service-base.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\browsers\browsers.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\dependency-injection.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\draw\dx\dx.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\events\events.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\events\remote-events-sender.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\input\binds.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\output\discord.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\output\logging.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\handler\start.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\constants.ts" />
+    <TypeScriptCompile Include="src\datas\enums\data\player-data-key.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\dx\dx-type.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\dx\font.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\events\from-browser-event.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\events\to-browser-event.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\events\to-client-event.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\events\to-server-event.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\gta\ped-hash.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\gta\weapon-hash.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\input\control.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\input\input-group.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\input\key-press-state.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\input\key.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\output\sound.enum.ts" />
+    <TypeScriptCompile Include="src\datas\interfaces\events\cooldown-event-data.interface.ts" />
+    <TypeScriptCompile Include="src\datas\interfaces\Language.interface.ts" />
+    <TypeScriptCompile Include="src\datas\interfaces\lobbies\lobby-settings.interface.ts" />
+    <TypeScriptCompile Include="src\datas\interfaces\lobbies\map-creator\map-creator-object.interface.ts" />
+    <TypeScriptCompile Include="src\datas\interfaces\players\player-settings.interface.ts" />
+    <TypeScriptCompile Include="src\datas\models\input\control-bind.model.ts" />
+    <TypeScriptCompile Include="src\datas\models\input\key-bind.model.ts" />
+    <TypeScriptCompile Include="src\datas\utils.ts" />
+    <TypeScriptCompile Include="src\entities\draw\dx\dx-base.ts" />
+    <TypeScriptCompile Include="src\entities\events\typed-event.ts" />
+    <TypeScriptCompile Include="src\services\appearance\char-creator.service.ts" />
+    <TypeScriptCompile Include="src\services\browsers\angular-browser.service.ts" />
+    <TypeScriptCompile Include="src\services\browsers\browser-service-base.ts" />
+    <TypeScriptCompile Include="src\services\browsers\browsers.service.ts" />
+    <TypeScriptCompile Include="src\services\dependency-injection.ts" />
+    <TypeScriptCompile Include="src\services\draw\dx\dx.service.ts" />
+    <TypeScriptCompile Include="src\services\events\events.service.ts" />
+    <TypeScriptCompile Include="src\services\events\remote-events-sender.service.ts" />
+    <TypeScriptCompile Include="src\services\input\binds.service.ts" />
+    <TypeScriptCompile Include="src\services\output\discord.service.ts" />
+    <TypeScriptCompile Include="src\services\output\logging.service.ts" />
+    <TypeScriptCompile Include="src\services\start.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

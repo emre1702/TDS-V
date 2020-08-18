@@ -1,15 +1,15 @@
 ﻿import { injectable, inject } from "inversify";
 import alt from "alt-client";
 import natives from "natives";
-import ToServerEvent from "../../data/enums/events/to-server-event.enum";
-import { TypedEvent } from "../../entity/events/typed-event";
-import ToClientEvent from "../../data/enums/events/to-client-event.enum";
-import PlayerDataKey from "../../data/enums/data/player-data-key.enum";
-import Language from "../../data/interfaces/Language.interface";
-import LobbySettings from "../../data/interfaces/lobbies/lobby-settings.interface";
-import MapCreatorObject from "../../data/interfaces/lobbies/map-creator/map-creator-object.interface";
-import PlayerSettings from "../../data/interfaces/players/player-settings.interface";
-import WeaponHash from "../../data/enums/weapons/weapon-hash.enum";
+import ToServerEvent from "../../datas/enums/events/to-server-event.enum";
+import { TypedEvent } from "../../entities/events/typed-event";
+import ToClientEvent from "../../datas/enums/events/to-client-event.enum";
+import PlayerDataKey from "../../datas/enums/data/player-data-key.enum";
+import Language from "../../datas/interfaces/Language.interface";
+import LobbySettings from "../../datas/interfaces/lobbies/lobby-settings.interface";
+import MapCreatorObject from "../../datas/interfaces/lobbies/map-creator/map-creator-object.interface";
+import PlayerSettings from "../../datas/interfaces/players/player-settings.interface";
+import WeaponHash from "../../datas/enums/gta/weapon-hash.enum";
 import RemoteEventsSender from "./remote-events-sender.service";
 
 @injectable()

@@ -19,12 +19,12 @@ SEPERATOR='==============================='
 
 echo -e "${SEPERATOR}"
 echo -e "Create ${LIGHTBLUE}folder ${NOCOLOR}..."
-mkdir -p /cygdrive/c/altV/server/resource/tds/client/altv 
-mkdir -p /cygdrive/c/altV/server/resource/tds/client/plainHtml
-mkdir -p /cygdrive/c/altV/server/resource/tds/client/angular/main
-mkdir -p /cygdrive/c/altV/server/resource/tds/client/angular/map-creator-object-choice
-mkdir -p /cygdrive/c/altV/server/resource/tds/client/angular/map-creator-vehicle-choice
-mkdir -p /cygdrive/c/altV/server/resource/tds/server 
+mkdir -p /cygdrive/c/altV/server/resources/tds/client/altv 
+mkdir -p /cygdrive/c/altV/server/resources/tds/client/plainHtml
+mkdir -p /cygdrive/c/altV/server/resources/tds/client/angular/main
+mkdir -p /cygdrive/c/altV/server/resources/tds/client/angular/map-creator-object-choice
+mkdir -p /cygdrive/c/altV/server/resources/tds/client/angular/map-creator-vehicle-choice
+mkdir -p /cygdrive/c/altV/server/resources/tds/server 
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}clientside JS ${NOCOLOR}files ..."

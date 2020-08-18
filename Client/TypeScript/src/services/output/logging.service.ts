@@ -1,4 +1,4 @@
-﻿import ToServerEvent from "../../data/enums/events/to-server-event.enum";
+﻿import ToServerEvent from "../../datas/enums/events/to-server-event.enum";
 import * as alt from "alt-client"
 
 export default class LoggingService {
@@ -76,4 +76,5 @@ export default class LoggingService {
 
         return data;
     }
+
 }

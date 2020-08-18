@@ -2,7 +2,7 @@
 
 import { getScreenResolution } from "natives";
 import { everyTick } from "alt-client";
-import DxBase from "../../../entity/draw/dx/dx-base";
+import DxBase from "../../../entities/draw/dx/dx-base";
 
 @injectable()
 class DxService {
@@ -14,7 +14,6 @@ class DxService {
     constructor() {
         everyTick(this.renderAll.bind(this));
         this.refreshResolution();
-        
     }
 
     add(dx: DxBase) {

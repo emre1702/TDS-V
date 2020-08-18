@@ -146,7 +146,7 @@ namespace TDS_Client.Handler.MapCreator
                 Objects.Start();
             }
             else
-                _browserHandler.Angular.ShowCooldown();
+                _eventsHandler.onAngularCooldown.emit();
         }
 
         private void OnTeleportToPositionRotationMethod(object[] args)

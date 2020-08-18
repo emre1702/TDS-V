@@ -47,6 +47,11 @@ namespace TDS_Server.Entity.TeamSystem
             _voiceChannel = (ITDSVoiceChannel)Alt.CreateVoiceChannel(false, float.MaxValue);
         }
 
+        ~Team()
+        {
+            _voiceChannel.Remove();
+        }
+
         #endregion Public Constructors
 
         #region Public Properties

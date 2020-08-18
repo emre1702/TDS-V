@@ -2,6 +2,7 @@
 import CooldownEventData from "./interfaces/events/cooldown-event-data.interface";
 import Sound from "./enums/output/sound.enum";
 import alt from "types-client"
+import PedHash from "./enums/gta/ped-hash.enum";
 
 export const cooldownEventsDict: { [key: string]: CooldownEventData } = {
     [ToServerEvent.AddRatingToMap]: { cooldownMs: 1000 },
@@ -43,33 +44,22 @@ export const gangHouseFreeBlipModel = 374;
 export const neededDistanceToBeNotAFK = 1;
 export const soundPaths: { [key: number]: string } = {
     //todo: Path is propably incorrect, change it for alt:V
-    [Sound.Hit]: "package://sounds/hit.mp3"
+    [Sound.Hit]: "http://resource/client/sounds/hit.mp3"
 }
-
-
-
-
-        public static PedHash[] TeamSpawnPedHash = new PedHash[]
-{
+export const teamSpawnPedHash: PedHash[] = [
     PedHash.Blackops02SMY, PedHash.ChiCold01GMM, PedHash.Cop01SMY, PedHash.Claude01,
-        PedHash.ExArmy01, PedHash.Famca01GMY, PedHash.FibSec01
-};
-
-        #endregion Public Fields
-
-        #region Public Properties
-
-        public static string AngularMainBrowserPath => "package://Window/angular/main/index.html";
-        public static string AngularMapCreatorObjectChoiceBrowserPath => "package://Window/angular/map-creator-object-choice/index.html";
-        public static string AngularMapCreatorVehicleChoiceBrowserPath => "package://Window/angular/map-creator-vehicle-choice/index.html";
-        public static string BombPlantPlaceHashName => "prop_mp_placement_med";
-        public static int DefaultSpectatePlayerChangeEaseTime => 1500;
-        public static string LobbyChoiceBrowserPath => "package://Window/choice/index.html";
-        public static string MainBrowserPath => "package://Window/main/index.html";
-        public static string MapCenterHashName => "prop_flagpole_1a";
-        public static uint MapLimitFasterCheckTimeMs => 100;
-        public static string MapLimitHashName => "prop_flagpole_1a";
-        public static int MaxPossibleArmor => 16959;
-        public static string RegisterLoginBrowserPath => "package://Window/registerlogin/index.html";
-        public static int ScoreboardLoadCooldown => 2000;
-        public static string TargetHashName => "v_ret_ta_skull";
+    PedHash.ExArmy01, PedHash.Famca01GMY, PedHash.FibSec01
+];
+export const angularMainBrowserPath = "http://resource/client/angular/main/index.html";
+export const angularMapCreatorObjectChoiceBrowserPath = "http://resource/client/angular/map-creator-object-choice/index.html";
+export const angularMapCreatorVehicleChoiceBrowserPath = "http://resource/client/angular/map-creator-vehicle-choice/index.html";
+export const bombPlantPlaceHashName = "prop_mp_placement_med";
+export const defaultSpectatePlayerChangeEaseTime = 1500;
+export const plainHtmlMainBrowserPath = "http://resource/client/plainHtml/main/index.html";
+export const mapCenterHashName = "prop_flagpole_1a";
+export const mapLimitFasterCheckTimeMs = 100;
+export const mapLimitHashName = "prop_flagpole_1a";
+export const maxPossibleArmor = 16959;
+export const registerLoginBrowserPath = "http://resource/client/plainHtml/registerlogin/index.html";
+export const scoreboardLoadCooldown = 2000;
+export const targetHashName = "v_ret_ta_skull";
