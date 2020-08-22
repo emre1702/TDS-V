@@ -43,8 +43,6 @@ namespace TDS_Client.Handler.Browser
 
         private void EventsHandler_LanguageChanged(ILanguage lang, bool beforeLogin)
         {
-            if (!(Angular.Browser is null))
-                Angular.LoadLanguage(lang);
             if (!(RegisterLogin.Browser is null))
                 RegisterLogin.SyncLanguage(lang);
         }

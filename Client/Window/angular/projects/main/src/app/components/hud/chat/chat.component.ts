@@ -12,15 +12,6 @@ import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { UserpanelCommandDataDto } from '../../userpanel/interfaces/userpanelCommandDataDto';
 import { LanguagePipe } from '../../../pipes/language.pipe';
 
-declare const mp: {
-    events: {
-        add(eventName: string, method: () => void): void;
-        remove(eventName: string, method: () => void): void;
-    }
-
-    trigger(eventName: string, ...args: any): void;
-    invoke(eventName: string, ...args: any): void;
-};
 declare const window: any;
 
 @Component({
@@ -109,20 +100,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
-        if (typeof (mp) !== "undefined") {
-            mp.events.add("chat:push", this.addMessage.bind(this));
-            mp.events.add("chat:clear", this.clearChat.bind(this));
-            mp.events.add("chat:activate", this.activateChat.bind(this));
-            mp.events.add("chat:show", this.showChat.bind(this));
-
-            window.chatAPI = {
-                push: this.addMessage.bind(this),
-                show: this.showChat.bind(this),
-                activate: this.activateChat.bind(this),
-                clear: this.clearChat.bind(this)
-            };
-        }
-
         this.languagePipe = new LanguagePipe();
 
         this.rageConnector.listen(DFromClientEvent.AddNameForChat, this.addNameForChat.bind(this));
@@ -130,6 +107,10 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromClientEvent.RemoveNameForChat, this.removeNameForChat.bind(this));
         this.rageConnector.listen(DFromClientEvent.ToggleChatInput, this.toggleChatInput.bind(this));
         this.rageConnector.listen(DFromServerEvent.LoadChatInfos, this.loadChatInfos.bind(this));
+        this.rageConnector.listen(DFromClientEvent.ChatOutput, this.addMessage.bind(this));
+        this.rageConnector.listen(DFromClientEvent.ChatClear, this.clearChat.bind(this));
+        this.rageConnector.listen(DFromClientEvent.ChatShow, this.showChat.bind(this));
+        this.rageConnector.listen(DFromClientEvent.ChatInputShow, this.activateChat.bind(this));
 
         this.settings.ChatSettingsChanged.on(null, this.chatSettingsChanged.bind(this));
         this.settings.CommandsDataLoaded.on(null, this.commandsDataLoaded.bind(this));
@@ -138,18 +119,23 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (typeof (mp) !== "undefined") {
+        /*if (typeof (mp) !== "undefined") {
             mp.events.remove("chat:push", this.addMessage.bind(this));
             mp.events.remove("chat:clear", this.clearChat.bind(this));
             mp.events.remove("chat:activate", this.activateChat.bind(this));
             mp.events.remove("chat:show", this.showChat.bind(this));
-        }
+        }*/
 
         this.rageConnector.remove(DFromClientEvent.AddNameForChat, this.addNameForChat.bind(this));
         this.rageConnector.remove(DFromClientEvent.LoadNamesForChat, this.loadNamesForChat.bind(this));
         this.rageConnector.remove(DFromClientEvent.RemoveNameForChat, this.removeNameForChat.bind(this));
         this.rageConnector.remove(DFromClientEvent.ToggleChatInput, this.toggleChatInput.bind(this));
         this.rageConnector.remove(DFromServerEvent.LoadChatInfos, this.loadChatInfos.bind(this));
+        this.rageConnector.remove(DFromClientEvent.ChatOutput, this.addMessage.bind(this));
+        this.rageConnector.remove(DFromClientEvent.ChatClear, this.clearChat.bind(this));
+        this.rageConnector.remove(DFromClientEvent.ChatShow, this.showChat.bind(this));
+        this.rageConnector.remove(DFromClientEvent.ChatInputShow, this.activateChat.bind(this));
+
 
         this.settings.ChatSettingsChanged.off(null, this.chatSettingsChanged.bind(this));
         this.settings.CommandsDataLoaded.off(null, this.commandsDataLoaded.bind(this));
@@ -226,9 +212,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (!this.chatActive || !this.chatInputActive)
             return;
 
-        if (typeof (mp) !== "undefined") {
-            mp.invoke("setTypingInChatState", toggle);
-        }
         this.settings.setChatInputOpen(toggle);
         this.input.value = cmd;
         this.scrollChatToBottom();

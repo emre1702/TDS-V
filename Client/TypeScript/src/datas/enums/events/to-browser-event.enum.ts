@@ -1,6 +1,6 @@
 ﻿enum ToBrowserEvent {
     AddNameForChat = "cb38",
-    AddPositionToMapCreatorBrowser = "cb3",
+    AddMapCreatorObject = "cb3",
     CloseMapMenu = "cb4",
     HideRankings = "cb5",
     InitLoadAngular = "cb6",
@@ -12,6 +12,10 @@
     LoadThemeSettings = "cb51",
     MapCreatorSyncCurrentMapToServer = "cb50",
     OpenMapMenu = "cb12",
+    ChatClear = "cb54",
+    ChatInputShow = "cb56",
+    ChatOutput = "cb53",
+    ChatShow = "cb55",
     RefreshAdminLevel = "cb13",
     RemoveNameForChat = "cb40",
     RemovePositionInMapCreatorBrowser = "cb15",

@@ -3,8 +3,11 @@ import { inject } from "inversify";
 import LobbySettings from "../../data/interfaces/lobbies/lobby-settings.interface";
 import alt from "alt-client"*/
 
+import { injectable } from "inversify";
+
 //Todo: Implement discord rich presence later
-export default class DiscordHandler {
+@injectable()
+export default class DiscordService {
 
     //private lastLobbyName = "Login/Register";
     //private lastTeamName = "Spectator";

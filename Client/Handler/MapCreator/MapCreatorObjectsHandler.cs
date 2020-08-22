@@ -1,23 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.MapObject;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Browser;
+﻿using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Data.Models.Map.Creator;
-using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.MapCreator
 {
@@ -25,7 +9,6 @@ namespace TDS_Client.Handler.MapCreator
     {
         #region Public Fields
 
-        public int IdCounter = 0;
         public MapLimit MapLimitDisplay;
 
         #endregion Public Fields

@@ -1,19 +1,28 @@
 ﻿import { injectable } from "inversify";
-import * as alt from "alt-client";
-import * as native from "natives";
+import alt from "alt-client";
+import game from "natives";
+import PedStat from "../datas/enums/gta/ped-stat.enum";
 
 @injectable()
 export default class Start {
 
     constructor() {
-        native.requestNamedPtfxAsset("scr_xs_celebration");
-        native.setWeatherTypeNowPersist("CLEAR");
-        native.setWind(0);
-        native.requestAnimDict("MP_SUICIDE");
-        native.setAudioFlag("LoadMPData", true);
-        native.setPlayerHealthRechargeMultiplier(alt.Player.local.scriptID, 0);
-        native.setPedCanRagdoll(alt.Player.local.scriptID, false);
+        game.requestNamedPtfxAsset("scr_xs_celebration");
+        game.setWeatherTypeNowPersist("CLEAR");
+        game.setWind(0);
+        game.requestAnimDict("MP_SUICIDE");
+        game.setAudioFlag("LoadMPData", true);
+        game.setPlayerHealthRechargeMultiplier(alt.Player.local.scriptID, 0);
+        game.setPedCanRagdoll(alt.Player.local.scriptID, false);
 
-        native.clearGpsCustomRoute();
+        game.clearGpsCustomRoute();
+
+        game.statSetInt(alt.hash(PedStat.Flying), 100, false);
+        game.statSetInt(alt.hash(PedStat.Lung), 100, false);
+        game.statSetInt(alt.hash(PedStat.Shooting), 100, false);
+        game.statSetInt(alt.hash(PedStat.Stamina), 100, false);
+        game.statSetInt(alt.hash(PedStat.Stealth), 100, false);
+        game.statSetInt(alt.hash(PedStat.Strength), 100, false);
+        game.statSetInt(alt.hash(PedStat.Wheelie), 100, false);
     }
 }

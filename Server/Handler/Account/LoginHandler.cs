@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
@@ -141,8 +142,11 @@ namespace TDS_Server.Handler.Account
                     angularContentsJson
                 );
 
+                player.Name = player.Entity.Name;
                 player.SetClientMetaData(PlayerDataKey.MapsBoughtCounter.ToString(), player.Entity.PlayerStats.MapsBoughtCounter);
-                player.SetClientMetaData(PlayerDataKey.Name.ToString(), player.Entity.Name);
+                player.SetSyncedMetaData(PlayerDataKey.Id.ToString(), player.Entity.Id);
+
+                player.MaxArmor = Constants.MaxPossibleArmor;
 
                 _eventsHandler.OnPlayerLogin(player);
 

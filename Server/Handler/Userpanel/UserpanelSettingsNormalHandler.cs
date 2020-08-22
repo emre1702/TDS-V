@@ -80,7 +80,7 @@ namespace TDS_Server.Handler.Userpanel
                 player.LoadTimezone();
                 player.AddToChallenge(ChallengeType.ChangeSettings);
 
-                player.SendEvent(ToClientEvent.SyncSettings, _serializer.ToBrowser(obj.General));
+                player.SendEvent(ToClientEvent.SyncSettings, obj.General);
 
                 if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId && newDiscordUserId.HasValue)
                 {

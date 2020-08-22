@@ -1,8 +1,10 @@
-﻿import ToServerEvent from "../../data/enums/events/to-server-event.enum";
-import cooldownEventsDict from "../../data/constants/events/event-cooldowns.default";
+﻿import ToServerEvent from "../../datas/enums/events/to-server-event.enum";
 import { emitServer } from "alt-client";
+import { cooldownEventsDict } from "../../datas/constants";
+import { injectable } from "inversify";
 
 
+@injectable()
 class RemoteEventsSender {
 
     send(eventName: ToServerEvent, ...args: any[]): boolean {

@@ -3,6 +3,10 @@ import CooldownEventData from "./interfaces/events/cooldown-event-data.interface
 import Sound from "./enums/output/sound.enum";
 import alt from "types-client"
 import PedHash from "./enums/gta/ped-hash.enum";
+import LanguageValue from "./enums/output/language-value.enum";
+import Language from "./interfaces/language.interface";
+import German from "./models/output/german.language";
+import English from "./models/output/english.language";
 
 export const cooldownEventsDict: { [key: string]: CooldownEventData } = {
     [ToServerEvent.AddRatingToMap]: { cooldownMs: 1000 },
@@ -59,7 +63,35 @@ export const plainHtmlMainBrowserPath = "http://resource/client/plainHtml/main/i
 export const mapCenterHashName = "prop_flagpole_1a";
 export const mapLimitFasterCheckTimeMs = 100;
 export const mapLimitHashName = "prop_flagpole_1a";
-export const maxPossibleArmor = 16959;
 export const registerLoginBrowserPath = "http://resource/client/plainHtml/registerlogin/index.html";
 export const scoreboardLoadCooldown = 2000;
 export const targetHashName = "v_ret_ta_skull";
+export const mapObjectBlipRadius = 50;
+
+export class ConstBlipSprites {
+    static bombPlantPlace = 433;
+    static mapCenter = 629;
+    static mapLimit = 441;
+    static object = 1;
+    static target = 303;
+    static teamSpawn = 491;
+    static vehicle = 523;
+    static gangHouseOccupied = 492;
+}
+
+export const screenFadeInTimeAfterSpawn = 2000;
+export const screenFadeOutTimeAfterSpawn = 2000;
+
+export const languagesDict: { [key: number]: Language } = {
+    [LanguageValue.German]: new German(),
+    [LanguageValue.English]: new English()
+}
+
+
+
+
+
+/*public const string DateTimeOffsetFormat = "dddd, MMM dd yyyy HH:mm:ss zzz";
+public const string ServerTeamSuffix = "[TDS]";
+public const int ServerTeamSuffixMinAdminLevel = 1;
+public const string TargetHashName = "v_ret_ta_skull";*/

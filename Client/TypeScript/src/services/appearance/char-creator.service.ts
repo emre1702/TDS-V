@@ -1,5 +1,5 @@
 ﻿import { injectable, inject } from "inversify";
-import LoggingService from "../output/logging.service";
+import LoggingService from "../../datas/helper/logging.helper";
 
 @injectable()
 export default class CharCreatorService {

@@ -13,7 +13,7 @@ export default class KeyBind {
         return this.onPressState == KeyPressState.Both || this.onPressState == KeyPressState.Up;
     }
 
-    constructor(method: (control: Key) => void, onPressState: KeyPressState) {
+    constructor(method: (key: Key) => void, onPressState: KeyPressState) {
         this.method = method;
         this.onPressState = onPressState;
     }

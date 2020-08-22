@@ -11,6 +11,7 @@
         public static float ArenaHeadMultiplicator = 1.7f;
         public static string GangwarTargetObjectName = "v_ret_ta_skull";
         public static int RemoveTDSPlayerMinutesAfterLoggedOut = 5;
+        public static ushort MaxPossibleArmor = 16959;
 
         #endregion Public Fields
 

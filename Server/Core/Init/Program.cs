@@ -37,8 +37,6 @@ namespace TDS_Server.Core.Init
             {
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-                
-
                 using (var dbContext = _serviceProvider.GetRequiredService<TDSDbContext>())
                 {
                     dbContext.Database.Migrate();

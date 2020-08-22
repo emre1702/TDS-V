@@ -53,7 +53,11 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
 
             await AltAsync.Do(() =>
             {
-                SendEvent(ToClientEvent.JoinSameLobby, player);
+                if (Type != LobbyType.MainMenu)
+                {
+                    SendEvent(ToClientEvent.JoinSameLobby, player);
+                }
+                
 
                 player.Lobby = this;
 
@@ -135,14 +139,20 @@ namespace TDS_Server.Entity.LobbySystem.BaseSystem
                     await Remove();
             }
 
+            if (Entity.Type != LobbyType.MainMenu)
+            {
+                await AltAsync.Do(() =>
+                {
+                    SendEvent(ToClientEvent.LeaveSameLobby, player, player.Entity?.Name ?? player.DisplayName);
+
+                    LoggingHandler?.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
+                });
+            }
             await AltAsync.Do(() =>
             {
-                SendEvent(ToClientEvent.LeaveSameLobby, player, player.Entity?.Name ?? player.DisplayName);
-                if (Entity.Type != LobbyType.MainMenu)
-                    LoggingHandler?.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
-
                 EventsHandler.OnLobbyLeave(player, this);
             });
+                
         }
 
         public virtual void SetPlayerTeam(ITDSPlayer player, ITeam? team)

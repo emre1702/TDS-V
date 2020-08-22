@@ -42,7 +42,6 @@ namespace TDS_Client.Handler.Lobby
         public void Load(IPlayer player)
         {
             PlayersSameLobby.Add(player);
-            _browserHandler.Angular.AddNameForChat(player.Name);
         }
 
         public void Remove(IPlayer player, string name)

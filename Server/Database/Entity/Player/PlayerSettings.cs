@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
 using TDS_Shared.Data.Models;
+using TDS_Shared.Data.Models.Settings;
 
 namespace TDS_Server.Database.Entity.Player
 {
-    public class PlayerSettings : SyncedPlayerSettingsDto
+    public class PlayerSettings : SyncedPlayerSettings
     {
         #region Public Properties
 

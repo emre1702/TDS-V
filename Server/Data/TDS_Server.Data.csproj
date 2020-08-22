@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AltV.Net.Async" Version="1.38.4" />
     <PackageReference Include="AutoMapper" Version="10.0.0" />
   </ItemGroup>
 

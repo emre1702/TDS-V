@@ -16,7 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AltV.Net.Async" Version="1.38.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0-preview.7.20365.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0-preview.7.20365.15">
       <PrivateAssets>all</PrivateAssets>

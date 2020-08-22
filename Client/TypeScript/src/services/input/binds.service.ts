@@ -1,15 +1,16 @@
 ﻿import alt from "alt-client";
 import natives from "natives";
-import LoggingService from "../output/logging.service";
-import { inject } from "inversify";
-import { Key } from "readline";
+import { injectable } from "inversify";
 import KeyPressState from "../../datas/enums/input/key-press-state.enum";
 import Control from "../../datas/enums/input/control.enum";
 import KeyBind from "../../datas/models/input/key-bind.model";
 import ControlBind from "../../datas/models/input/control-bind.model";
 import InputGroup from "../../datas/enums/input/input-group.enum";
+import { logError } from "../../datas/helper/logging.helper";
+import Key from "../../datas/enums/input/key.enum";
 
 
+@injectable()
 export default class BindsService {
 
     private readonly bindedControls: { control: Control, binds: ControlBind[] }[] = [];
@@ -18,9 +19,7 @@ export default class BindsService {
     private readonly lastControlPressedState: { [control: number]: boolean } = {};
 
 
-    constructor(
-        @inject(LoggingService) private loggingService: LoggingService
-    ) {
+    constructor() {
         alt.on("keydown", (key) => this.onKey(key, true));
         alt.on("keyup", (key) => this.onKey(key, false));
         alt.everyTick(this.onTick.bind(this));
@@ -97,7 +96,7 @@ export default class BindsService {
                 bind.method(key);
             }
         } catch (ex) {
-            this.loggingService.logError(ex, "Bind on key failed");
+            logError(ex, "Bind on key failed");
         }
     }
 
@@ -124,7 +123,7 @@ export default class BindsService {
                 }
             }
         } catch (ex) {
-            this.loggingService.logError(ex, "Bind on control failed");
+            logError(ex, "Bind on control failed");
         }
        
     }

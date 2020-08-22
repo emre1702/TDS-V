@@ -6,7 +6,8 @@
     IsLobbyOwner, Name,
     InFreeCam,
     GangId,
-    TeamIndex
+    TeamIndex,
+    Id
 }
 
 export default PlayerDataKey;

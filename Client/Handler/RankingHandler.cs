@@ -86,7 +86,6 @@ namespace TDS_Client.Handler
         public void Stop()
         {
             ModAPI.Event.Tick.Remove(_tickEventMethod);
-            _browserHandler.Angular.HideRankings();
             _cursorHandler.Visible = false;
         }
 

@@ -11,6 +11,8 @@ import MapCreatorObject from "../../datas/interfaces/lobbies/map-creator/map-cre
 import PlayerSettings from "../../datas/interfaces/players/player-settings.interface";
 import WeaponHash from "../../datas/enums/gta/weapon-hash.enum";
 import RemoteEventsSender from "./remote-events-sender.service";
+import DIIdentifier from "../../datas/enums/dependency-injection/di-identifier.enum";
+import MapCreatorObject from "../../entities/lobbies/map-creator/map-creator-object.entity";
 
 @injectable()
 export default class EventsService {
@@ -32,8 +34,8 @@ export default class EventsService {
     readonly onMapBorderColorChanged = new TypedEvent<alt.RGBA>();      ////////
     readonly onMapChanged = new TypedEvent<void>();       ////////
     readonly onMapCleared = new TypedEvent<void>();       ////////
-    readonly onMapCreatorObjectDeleted = new TypedEvent<void>();      ////////
-    readonly onMapCreatorSyncLatestObjectIDRequest = new TypedEvent<void>();      ////////
+    readonly onMapCreatorObjectDeleted = new TypedEvent<MapCreatorObject>();      ////////
+    readonly onMapCreatorSyncLatestObjectIDRequest = new TypedEvent<number>();      ////////
     readonly onMapCreatorSyncObjectDeleted = new TypedEvent<MapCreatorObject>();        ////////
     readonly onMapCreatorSyncTeamObjectsDeleted = new TypedEvent<{ teamNumber: number }>();     ////////
     readonly onPlayerDied = new TypedEvent<{ player: alt.Player, teamIndex: number, willRespawn: boolean }>();      ////////
@@ -51,7 +53,7 @@ export default class EventsService {
     private currentWeapon: WeaponHash = WeaponHash.Unarmed;
 
     constructor(
-        @inject(RemoteEventsSender) private remoteEventsSender: RemoteEventsSender
+        @inject(DIIdentifier.RemoteEventsSender) private remoteEventsSender: RemoteEventsSender
     ) {
         //Todo: Make this settable later
         alt.setInterval(this.check.bind(this), 100);

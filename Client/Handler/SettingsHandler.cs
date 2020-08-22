@@ -23,8 +23,7 @@ namespace TDS_Client.Handler
     {
         #region Public Fields
 
-        public readonly int ScreenFadeInTimeAfterSpawn = 2000;
-        public readonly int ScreenFadeOutTimeAfterSpawn = 2000;
+        
 
         public Color MapBorderColor;
         public Color? NametagArmorEmptyColor = null;
@@ -48,86 +47,21 @@ namespace TDS_Client.Handler
         private readonly BrowserHandler _browserHandler;
         private readonly EventsHandler _eventsHandler;
 
-        private readonly Dictionary<Language, ILanguage> _languagesDict = new Dictionary<Language, ILanguage>()
-        {
-            [TDS_Shared.Data.Enums.Language.German] = new German(),
-            [TDS_Shared.Data.Enums.Language.English] = new English()
-        };
-
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly Serializer _serializer;
-        private Language _languageEnum = TDS_Shared.Data.Enums.Language.English;
-        private bool _languageManuallyChanged;
         private SyncedLobbySettings _syncedLobbySettings;
         private SyncedServerSettingsDto _syncedServerSettings;
 
         #endregion Private Fields
 
-        #region Public Constructors
-
-        public SettingsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler,
-            BrowserHandler browserHandler, Serializer serializer)
-            : base(modAPI, loggingHandler)
-        {
-            _remoteEventsSender = remoteEventsSender;
-            _eventsHandler = eventsHandler;
-            _browserHandler = browserHandler;
-            _serializer = serializer;
-
-            Language = _languagesDict[LanguageEnum];
-
-            eventsHandler.LobbyJoined += LoadSyncedLobbySettings;
-            modAPI.Event.Add(FromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
-            modAPI.Event.Add(FromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
-            modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
-            modAPI.Event.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, SyncRegisterLoginLanguageTexts);
-            modAPI.Event.Add(FromBrowserEvent.ReloadPlayerSettings, ReloadTempChangedPlayerSettings);
-            modAPI.Event.Add(ToClientEvent.SyncPlayerCommandsSettings, LoadCommandsData);
-
-            modAPI.Nametags.Enabled = false;
-
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Flying), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Lung), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Shooting), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Stamina), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Stealth), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Strength), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Wheelie), 100, false);
-
-            modAPI.LocalPlayer.SetMaxArmour(Constants.MaxPossibleArmor);
-            LoadLanguageFromRAGE();
-        }
-
-        #endregion Public Constructors
 
         #region Public Properties
 
         public UserpanelPlayerCommandData CommandsData { get; private set; }
-        public ILanguage Language { get; private set; }
-
-        public Language LanguageEnum
-        {
-            get => _languageEnum;
-            set
-            {
-                _languageEnum = value;
-                _languageManuallyChanged = true;
-                Language = _languagesDict[_languageEnum];
-                bool beforeLogin = PlayerSettings == null;
-                _eventsHandler?.OnLanguageChanged(Language, beforeLogin);
-
-                if (!beforeLogin)
-                {
-                    PlayerSettings.Language = value;
-                    _remoteEventsSender.Send(ToServerEvent.LanguageChange, PlayerSettings.Language);
-                }
-            }
-        }
 
         public int LobbyId => _syncedLobbySettings.Id;
         public string LobbyName => _syncedLobbySettings != null ? _syncedLobbySettings.Name : "Mainmenu";
         public bool LoggedIn { get; set; }
-        public SyncedPlayerSettingsDto PlayerSettings { get; private set; }
         public int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
 
         //public uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
@@ -240,18 +174,6 @@ namespace TDS_Client.Handler
         #endregion Public Methods
 
         #region Private Methods
-
-        private void LoadLanguageFromRAGE()
-        {
-            var lang = ModAPI.Locale.GetCurrentLanguageId();
-            switch (lang)
-            {
-                case LanguageID.German:
-                    LanguageEnum = TDS_Shared.Data.Enums.Language.German;
-                    _languageManuallyChanged = false;
-                    break;
-            }
-        }
 
         private void OnColorSettingChangeMethod(object[] args)
         {

@@ -1,90 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Browser
 {
-    public class AngularBrowserHandler : BrowserHandlerBase
+    public class AngularBrowserHandler
     {
-        #region Private Fields
-
-        private readonly EventsHandler _eventsHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public AngularBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer,
-            EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler, serializer, Constants.AngularMainBrowserPath)
-        {
-            _eventsHandler = eventsHandler;
-
-
-            modAPI.Event.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
-            modAPI.Event.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
-            modAPI.Event.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
-        }
-
-        #endregion Public Constructors
-
         #region Public Methods
 
-        public void AddNameForChat(string name)
-        {
-            Execute(ToBrowserEvent.AddNameForChat, name);
-        }
 
-        public void AddPositionToMapCreatorBrowser(int id, MapCreatorPositionType type, float posX, float posY, float posZ, float rotX, float rotY, float rotZ,
-            object info, ushort ownerRemoteId)
-        {
-            Execute(ToBrowserEvent.AddPositionToMapCreatorBrowser, id, (int)type, posX, posY, posZ, rotX, rotY, rotZ, ownerRemoteId, info);
-        }
-
-        public void CloseMapMenu()
-        {
-            Execute(ToBrowserEvent.CloseMapMenu);
-        }
-
-        public void FromBrowserEventReturn(string eventName, object ret)
-        {
-            Execute(ToServerEvent.FromBrowserEvent, eventName, ret);
-        }
-
-        public void FromServerToBrowser(string eventName, params object[] args)
-        {
-            Execute(eventName, args);
-        }
-
-        public void HideRankings()
-        {
-            Execute(ToBrowserEvent.HideRankings);
-        }
-
-        public void LoadChatSettings(float width, float maxHeight, float fontSize, bool hideDirtyChat, bool hideChatInfo, float chatInfoFontSize, int chatInfoAnimationTimeMs)
-        {
-            Execute(ToBrowserEvent.LoadChatSettings, width, maxHeight, fontSize, hideDirtyChat, hideChatInfo, chatInfoFontSize, chatInfoAnimationTimeMs);
-        }
 
         public void LoadFavoriteMaps(string mapFavoritesJson)
         {
             Execute(ToBrowserEvent.LoadFavoriteMaps, mapFavoritesJson);
-        }
-
-        public void LoadLanguage(ILanguage language)
-        {
-            Execute(ToBrowserEvent.LoadLanguage, (int)language.Enum);
         }
 
         public void LoadMapForMapCreator(string json)
@@ -262,27 +196,5 @@ namespace TDS_Client.Handler.Browser
 
         #endregion Internal Methods
 
-        #region Private Methods
-
-        private void OnFromBrowserEventReturnMethod(object[] args)
-        {
-            string eventName = (string)args[0];
-            object ret = args[1];
-            FromBrowserEventReturn(eventName, ret);
-        }
-
-        private void OnGetHashedPassword(object[] args)
-        {
-            string pw = Convert.ToString(args[0]);
-            GetHashedPasswordReturn();
-        }
-
-        private void OnToBrowserEventMethod(object[] args)
-        {
-            string eventName = (string)args[0];
-            FromServerToBrowser(eventName, args.Skip(1).ToArray());
-        }
-
-        #endregion Private Methods
     }
 }
