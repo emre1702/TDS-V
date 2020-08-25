@@ -42,11 +42,6 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.OpenMapMenu, mapsListJson);
         }
 
-        public void RefreshAdminLevel(int adminLevel)
-        {
-            Execute(ToBrowserEvent.RefreshAdminLevel, adminLevel);
-        }
-
         public void RemoveNameForChat(string name)
         {
             Execute(ToBrowserEvent.RemoveNameForChat, name);
@@ -98,30 +93,15 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.SyncMapPriceData, mapBuyCounter);
         }
 
-        public void SyncMoney(int money)
-        {
-            Execute(ToBrowserEvent.SyncMoney, money);
-        }
-
         public void SyncTeamChoiceMenuData(string teamsJson, bool isRandomTeams)
         {
             ToggleTeamChoiceMenu(true);
             Execute(ToBrowserEvent.SyncTeamChoiceMenuData, teamsJson, isRandomTeams);
         }
 
-        public void SyncUsernameChange(string name)
-        {
-            Execute(ToBrowserEvent.SyncUsernameChange, name);
-        }
-
         public void ToggleCharCreator(bool toggle, string dataJson = "")
         {
             ExecuteFast(ToBrowserEvent.ToggleCharCreator, toggle, dataJson);
-        }
-
-        public void SyncGangId(int gangId)
-        {
-            ExecuteFast(ToBrowserEvent.SyncGangId, gangId);
         }
 
         public void ToggleChatInput(bool activated)
@@ -132,11 +112,6 @@ namespace TDS_Client.Handler.Browser
         public void ToggleChatInput(bool activated, string startWith)
         {
             Execute(ToBrowserEvent.ToggleChatInput, activated, startWith);
-        }
-
-        public void ToggleFreeroam(bool activated)
-        {
-            Execute(ToBrowserEvent.ToggleFreeroam, activated);
         }
 
         public void ToggleHUD(bool toggle)

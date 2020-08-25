@@ -24,29 +24,6 @@ namespace TDS_Client.Handler
 
         #endregion Private Fields
 
-        #region Public Constructors
-
-        public SpectatingHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
-            CamerasHandler camerasHandler, DeathHandler deathHandler,
-            EventsHandler eventsHandler, UtilsHandler utilsHandler) : base(modAPI, loggingHandler)
-        {
-            _remoteEventsSender = remoteEventsSender;
-            _bindsHandler = bindsHandler;
-            _camerasHandler = camerasHandler;
-            _deathHandler = deathHandler;
-            _utilsHandler = utilsHandler;
-
-            eventsHandler.LobbyLeft += _ => Stop();
-            eventsHandler.CountdownStarted += EventsHandler_CountdownStarted;
-            eventsHandler.RoundStarted += EventsHandler_RoundStarted;
-
-            modAPI.Event.Add(ToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
-            modAPI.Event.Add(ToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
-            modAPI.Event.Add(ToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
-            modAPI.Event.Add(ToClientEvent.StopSpectator, OnStopSpectatorMethod);
-        }
-
-        #endregion Public Constructors
 
         #region Public Properties
 

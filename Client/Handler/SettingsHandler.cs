@@ -25,16 +25,8 @@ namespace TDS_Client.Handler
 
         
 
-        public Color MapBorderColor;
-        public Color? NametagArmorEmptyColor = null;
-        public Color NametagArmorFullColor = Color.FromArgb(255, 255, 255, 255);
-        public Color? NametagDeadColor = Color.FromArgb(255, 0, 0, 0);
-        public Color NametagHealthEmptyColor = Color.FromArgb(255, 50, 0, 0);
-        public Color NametagHealthFullColor = Color.FromArgb(255, 0, 255, 0);
         public float NametagMaxDistance;
 
-        // This is the old MapBorderColor if we changed the color in Angular and not saved it (for display)
-        public Color? NotTempMapBorderColor;
 
         public bool ShowNametagOnlyOnAiming;
         public int StartArmor;
@@ -130,36 +122,6 @@ namespace TDS_Client.Handler
             _browserHandler.Angular.SyncThemeSettings(_serializer.ToBrowser(data));
         }
 
-        public void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
-        {
-            if (!_languageManuallyChanged || LanguageEnum == loadedSyncedSettings.Language || PlayerSettings != null)
-                LanguageEnum = loadedSyncedSettings.Language;
-            else
-            {
-                loadedSyncedSettings.Language = LanguageEnum;
-                _remoteEventsSender.Send(ToServerEvent.LanguageChange, loadedSyncedSettings.Language);
-            }
-
-            _languageManuallyChanged = false;
-            PlayerSettings = loadedSyncedSettings;
-
-            MapBorderColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor) ?? MapBorderColor;
-            NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagDeadColor);
-            NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthEmptyColor) ?? NametagHealthEmptyColor;
-            NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthFullColor) ?? NametagHealthFullColor;
-            NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorEmptyColor);
-            NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
-
-            NotTempMapBorderColor = null;
-
-            _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
-
-            _browserHandler.Angular.LoadChatSettings(loadedSyncedSettings.ChatWidth, loadedSyncedSettings.ChatMaxHeight,
-                loadedSyncedSettings.ChatFontSize, loadedSyncedSettings.HideDirtyChat, loadedSyncedSettings.HideChatInfo,
-                loadedSyncedSettings.ChatInfoFontSize, loadedSyncedSettings.ChatInfoMoveTimeMs);
-
-            _eventsHandler.OnSettingsLoaded(loadedSyncedSettings);
-        }
 
         public void RevertTempSettings()
         {
@@ -175,56 +137,6 @@ namespace TDS_Client.Handler
 
         #region Private Methods
 
-        private void OnColorSettingChangeMethod(object[] args)
-        {
-            string color = (string)args[0];
-            UserpanelSettingKey dataSetting = (UserpanelSettingKey)(Convert.ToInt32(args[1]));
-
-            switch (dataSetting)
-            {
-                case UserpanelSettingKey.MapBorderColor:
-                    MapBorderColor = SharedUtils.GetColorFromHtmlRgba(color) ?? MapBorderColor;
-                    _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
-                    break;
-
-                case UserpanelSettingKey.NametagDeadColor:
-                    NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(color);
-                    break;
-
-                case UserpanelSettingKey.NametagHealthEmptyColor:
-                    NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagHealthEmptyColor;
-                    break;
-
-                case UserpanelSettingKey.NametagHealthFullColor:
-                    NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagHealthFullColor;
-                    break;
-
-                case UserpanelSettingKey.NametagArmorEmptyColor:
-                    NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(color);
-                    break;
-
-                case UserpanelSettingKey.NametagArmorFullColor:
-                    NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagArmorFullColor;
-                    break;
-            }
-        }
-
-        private void OnLanguageChangeMethod(object[] args)
-        {
-            var languageID = Convert.ToInt32(args[0]);
-            if (!Enum.IsDefined(typeof(Language), languageID))
-                return;
-
-            LanguageEnum = (Language)languageID;
-        }
-
-        private void OnSyncSettingsMethod(object[] args)
-        {
-            string json = (string)args[0];
-            var settings = _serializer.FromServer<SyncedPlayerSettingsDto>(json);
-            LoadUserSettings(settings);
-            _browserHandler.Angular.LoadUserpanelData((int)UserpanelLoadDataType.SettingsNormal, json);
-        }
 
         private void ReloadTempChangedPlayerSettings(object[] args)
         {

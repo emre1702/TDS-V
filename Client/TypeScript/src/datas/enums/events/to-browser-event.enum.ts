@@ -10,6 +10,7 @@
     LoadMapForMapCreator = "cb43",
     LoadNamesForChat = "cb39",
     LoadThemeSettings = "cb51",
+    LoadUserpanelData = "sb13",
     MapCreatorSyncCurrentMapToServer = "cb50",
     OpenMapMenu = "cb12",
     ChatClear = "cb54",

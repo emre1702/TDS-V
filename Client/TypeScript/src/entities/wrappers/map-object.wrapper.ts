@@ -25,7 +25,7 @@ export default class MapObject {
         if (!this.handle) {
             return new alt.Vector3(0, 0, 0);
         }
-        return game.getEntityCoords(this.handle, true);
+        return game.getEntityCoords(this.handle, true) as alt.Vector3;
     }
 
     setPos(pos: alt.Vector3): void {
@@ -38,7 +38,7 @@ export default class MapObject {
         if (!this.handle) {
             return new alt.Vector3(0, 0, 0);
         }
-        return game.getEntityRotation(this.handle, 2);
+        return game.getEntityRotation(this.handle, 2) as alt.Vector3;
     }
 
     setRot(rot: alt.Vector3): void {

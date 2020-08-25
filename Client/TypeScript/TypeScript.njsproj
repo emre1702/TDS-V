@@ -46,11 +46,16 @@
     <Folder Include="src\datas\enums\gta\" />
     <Folder Include="src\datas\enums\input\" />
     <Folder Include="src\datas\enums\dependency-injection\" />
+    <Folder Include="src\datas\enums\lobbies\" />
+    <Folder Include="src\datas\enums\userpanel\" />
     <Folder Include="src\datas\enums\output\" />
+    <Folder Include="src\datas\enums\userpanel\settings\" />
     <Folder Include="src\datas\interfaces\" />
     <Folder Include="src\datas\interfaces\events\" />
     <Folder Include="src\datas\interfaces\lobbies\" />
     <Folder Include="src\datas\interfaces\lobbies\map-creator\" />
+    <Folder Include="src\datas\interfaces\lobbies\gang\" />
+    <Folder Include="src\datas\interfaces\output\" />
     <Folder Include="src\datas\interfaces\players\" />
     <Folder Include="src\datas\models\" />
     <Folder Include="src\datas\models\input\" />
@@ -76,6 +81,8 @@
     <Folder Include="src\datas\helper\" />
     <Folder Include="src\services\lobbies\" />
     <Folder Include="src\services\lobbies\map-creator\" />
+    <Folder Include="src\services\datas\" />
+    <Folder Include="src\services\lobbies\gang\" />
     <Folder Include="src\services\settings\" />
     <Folder Include="src\services\output\" />
   </ItemGroup>
@@ -90,6 +97,9 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\enums\draw\dx-type.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\draw\font.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\draw\hud-data-type.enum.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\enums\draw\scoreboard-player-sorting.enum.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -109,27 +119,65 @@
     <TypeScriptCompile Include="src\datas\enums\input\input-group.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\input\key-press-state.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\input\key.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\lobbies\lobby-type.enum.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\enums\lobbies\map-creator-pos-type.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\lobbies\map-limit-type.enum.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\enums\output\language-value.enum.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\enums\output\sound.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\userpanel\settings\userpanel-setting-key.enum.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\enums\userpanel\userpanel-load-data-type.enum.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\extensions\math.extension.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\extensions\string.extension.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\interfaces\events\cooldown-event-data.interface.ts" />
-    <TypeScriptCompile Include="src\datas\interfaces\language.interface.ts" />
     <TypeScriptCompile Include="src\datas\interfaces\lobbies\lobby-settings.interface.ts" />
     <TypeScriptCompile Include="src\datas\interfaces\lobbies\map-creator\map-creator-object-data.interface.ts" />
     <TypeScriptCompile Include="src\datas\interfaces\lobbies\map-creator\map-creator-object-pos.interface.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\interfaces\output\language.interface.ts" />
+    <TypeScriptCompile Include="src\datas\interfaces\output\login-register-texts.interface.ts" />
     <TypeScriptCompile Include="src\datas\interfaces\players\player-settings.interface.ts" />
     <TypeScriptCompile Include="src\datas\models\input\control-bind.model.ts" />
     <TypeScriptCompile Include="src\datas\models\input\key-bind.model.ts" />
+    <TypeScriptCompile Include="src\datas\interfaces\lobbies\gang\gang-house-data.model.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\models\output\english.language.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\models\output\german.language.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\extensions\vector3.extension.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\datas\data-sync.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\input\cursor.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\lobbies\freeroam.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\lobbies\gang\gang-house.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\lobbies\gang\gang-vehicles.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\services\settings\settings.service.ts">

@@ -1,10 +1,9 @@
 ﻿import ToServerEvent from "./enums/events/to-server-event.enum";
 import CooldownEventData from "./interfaces/events/cooldown-event-data.interface";
 import Sound from "./enums/output/sound.enum";
-import alt from "types-client"
 import PedHash from "./enums/gta/ped-hash.enum";
 import LanguageValue from "./enums/output/language-value.enum";
-import Language from "./interfaces/language.interface";
+import Language from "./interfaces/output/language.interface";
 import German from "./models/output/german.language";
 import English from "./models/output/english.language";
 
@@ -44,6 +43,7 @@ export const cooldownEventsDict: { [key: string]: CooldownEventData } = {
     [ToServerEvent.TryRegister]: { cooldownMs: 4000 }
 }
 
+export const gangHouseFreeBlipAlpha = 170;
 export const gangHouseFreeBlipModel = 374;
 export const neededDistanceToBeNotAFK = 1;
 export const soundPaths: { [key: number]: string } = {
@@ -86,12 +86,13 @@ export const languagesDict: { [key: number]: Language } = {
     [LanguageValue.German]: new German(),
     [LanguageValue.English]: new English()
 }
-
+export const serverTeamSuffixMinAdminLevel = 1;
+export const serverTeamSuffix = "[TDS]";
 
 
 
 
 /*public const string DateTimeOffsetFormat = "dddd, MMM dd yyyy HH:mm:ss zzz";
-public const string ServerTeamSuffix = "[TDS]";
-public const int ServerTeamSuffixMinAdminLevel = 1;
+public const string 
+
 public const string TargetHashName = "v_ret_ta_skull";*/

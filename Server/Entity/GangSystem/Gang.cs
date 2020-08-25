@@ -41,6 +41,8 @@ namespace TDS_Server.Entity.GangSystem
             Entity = entity;
             gangsHandler.Add(this);
 
+            AltV.Net.Alt.OnPlayerEnterVehicle
+
             dbContext.Attach(entity);
         }
 

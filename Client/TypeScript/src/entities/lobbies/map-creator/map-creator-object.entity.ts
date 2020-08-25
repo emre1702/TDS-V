@@ -3,13 +3,15 @@ import MapObject from "../../wrappers/map-object.wrapper";
 import ChatService from "../../../services/output/chat.service";
 import MapCreatorPosType from "../../../datas/enums/lobbies/map-creator-pos-type.enum";
 import EventsService from "../../../services/events/events.service";
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 import DIIdentifier from "../../../datas/enums/dependency-injection/di-identifier.enum";
 import MapCreatorObjectsService from "../../../services/lobbies/map-creator/map-creator-objects.service";
 import { mapObjectBlipRadius, ConstBlipSprites } from "../../../datas/constants";
 import MapCreatorObjectData from "../../../datas/interfaces/lobbies/map-creator/map-creator-object-data.interface";
 import MapCreatorObjectPos from "../../../datas/interfaces/lobbies/map-creator/map-creator-object-pos.interface";
+import SettingsService from "../../../services/settings/settings.service";
 
+@injectable()
 export default class MapCreatorObject extends MapObject {
     data: MapCreatorObjectData;
     teamNumber: number;
@@ -45,10 +47,11 @@ export default class MapCreatorObject extends MapObject {
         @inject(DIIdentifier.ChatService) chatService: ChatService,
         @inject(DIIdentifier.MapCreatorObjectsService) mapCreatorObjectsService: MapCreatorObjectsService,
         @inject(DIIdentifier.EventsService) private eventsService: EventsService,
+        @inject(DIIdentifier.SettingsService) settingsService: SettingsService,
         model: number | string, pos: alt.Vector3, rot: alt.Vector3, type: MapCreatorPosType, ownerId: number,
         teamNumber: number = undefined, objectName: string = undefined, id: number = -1
     ) {
-        super(model, pos, rot, chatService);
+        super(chatService, settingsService, model, pos, rot);
 
         this.data = {
             Type: type, OwnerId: ownerId, ObjOrVehName: objectName, PosData: { Id: id, Pos: pos, Rot: rot }

@@ -62,8 +62,6 @@ namespace TDS_Client.Handler.Deathmatch
             ModAPI.Audio.PlaySoundFrontend(-1, AudioName.BED, AudioRef.WASTEDSOUNDS);
             ModAPI.Cam.SetCamEffect(CamEffect.ZoomIn_Tilt30Deg_WobbleSlowly);
             ModAPI.Graphics.StartScreenEffect(EffectName.DEATHFAILMPIN, 0, true);
-
-            _scaleformMessageHandler.ShowWastedMessage();
         }
 
         public void PlayerSpawn()

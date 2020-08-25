@@ -30,12 +30,8 @@ namespace TDS_Client.Core.Init
 
                 var browserHandler = new BrowserHandler(modAPI, loggingHandler, eventsHandler, serializer, remoteEventsSender);
                 var settingsHandler = new SettingsHandler(modAPI, loggingHandler, remoteEventsSender, eventsHandler, browserHandler, serializer);
-                var cursorHandler = new CursorHandler(modAPI, loggingHandler, eventsHandler, bindsHandler, settingsHandler);
-                new FreeroamHandler(modAPI, loggingHandler, eventsHandler, browserHandler);
 
-                var dataSyncHandler = new DataSyncHandler(modAPI, loggingHandler, eventsHandler, browserHandler, serializer);
                 var utilsHandler = new UtilsHandler(modAPI, loggingHandler, serializer, dataSyncHandler, eventsHandler);
-                new GangHousesHandler(modAPI, loggingHandler, eventsHandler, settingsHandler, serializer);
                 new GangVehiclesHandler(modAPI, loggingHandler, dataSyncHandler, eventsHandler);
                 new GhostModeHandler(modAPI, loggingHandler, eventsHandler);
 

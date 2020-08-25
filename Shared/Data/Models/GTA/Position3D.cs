@@ -145,8 +145,10 @@ namespace TDS_Shared.Data.Models.GTA
 
         public Position3D Around(float around, bool considerZ = false)
         {
+            var obj = new Position3D(this);
+
             float addToX = SharedUtils.Rnd.NextFloat(-around, around);
-            X += addToX;
+            obj.X += addToX;
             around -= Math.Abs(addToX);
 
             if (around == 0)
@@ -154,18 +156,18 @@ namespace TDS_Shared.Data.Models.GTA
 
             if (!considerZ)
             {
-                Y += SharedUtils.GetRandom(true, false) ? around : -around;
+                obj.Y += SharedUtils.GetRandom(true, false) ? around : -around;
                 return this;
             }
 
             float addToY = SharedUtils.Rnd.NextFloat(-around, around);
-            Y += addToY;
+            obj.Y += addToY;
             around -= addToY;
 
             if (around == 0)
                 return this;
 
-            Z += SharedUtils.GetRandom(true, false) ? around : -around;
+            obj.Z += SharedUtils.GetRandom(true, false) ? around : -around;
 
             return this;
         }

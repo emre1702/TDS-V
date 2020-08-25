@@ -11,7 +11,7 @@ export function loadModelAsync(model: number | string): Promise<number> {
         }
 
         if (!game.isModelValid(model)) {
-            logErrorToServer(languagesDict[LanguageValue.English].InvalidModel.format(model), "loadModelAsync failed");
+            logErrorToServer(languagesDict[LanguageValue.English].INVALID_MODEL.format(model), "loadModelAsync failed");
             return reject("InvalidModelInfo");
         }
 

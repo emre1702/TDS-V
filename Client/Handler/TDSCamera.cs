@@ -36,21 +36,12 @@ namespace TDS_Client.Handler.Entities
 
         #endregion Public Constructors
 
-        #region Private Destructors
-
-        ~TDSCamera()
-        {
-            Cam.Destroy();
-        }
-
-        #endregion Private Destructors
 
         #region Public Properties
 
         public ICam Cam { get; set; }
         public Position Direction => _utilsHandler.GetDirectionByRotation(Rotation);
         public bool IsActive => this == _camerasHandler.ActiveCamera;
-        public string Name { get; set; }
 
         public Position Position
         {
