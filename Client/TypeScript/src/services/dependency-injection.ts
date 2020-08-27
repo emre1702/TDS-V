@@ -25,6 +25,7 @@ import ScaleformMessagesService from "./draw/scaleform-messages.service";
 import Camera from "../entities/cameras/camera.entity";
 import GangHouseService from "./lobbies/gang/gang-house.service";
 import GangVehiclesService from "./lobbies/gang/gang-vehicles.service";
+import { AFKCheckService } from "./others/afk-check.service";
 
 log("Initializing services ...");
 
@@ -51,6 +52,7 @@ container.bind(DIIdentifier.DeathService).to(DeathService);
 container.bind(DIIdentifier.ScaleformMessagesService).to(ScaleformMessagesService);
 container.bind(DIIdentifier.GangHouseService).to(GangHouseService);
 container.bind(DIIdentifier.GangVehiclesService).to(GangVehiclesService);
+container.bind(DIIdentifier.AFKCheckService).to(AFKCheckService);
 ///////////////
 
 // Factory //
@@ -80,6 +82,7 @@ try {
     container.get(DIIdentifier.ScaleformMessagesService);
     container.get(DIIdentifier.GangHouseService);
     container.get(DIIdentifier.GangVehiclesService);
+    container.get(DIIdentifier.AFKCheckService);
     ////////////////////////////
 } catch (ex) {
     logError(ex, "Services initializing failed");

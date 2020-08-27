@@ -6,6 +6,8 @@ import LanguageValue from "./enums/output/language-value.enum";
 import Language from "./interfaces/output/language.interface";
 import German from "./models/output/german.language";
 import English from "./models/output/english.language";
+import Control from "./enums/input/control.enum";
+import InputGroup from "./enums/input/input-group.enum";
 
 export const cooldownEventsDict: { [key: string]: CooldownEventData } = {
     [ToServerEvent.AddRatingToMap]: { cooldownMs: 1000 },
@@ -89,6 +91,10 @@ export const languagesDict: { [key: number]: Language } = {
 export const serverTeamSuffixMinAdminLevel = 1;
 export const serverTeamSuffix = "[TDS]";
 
+export const attackControls: Control[] = [
+    Control.Attack, Control.Attack2, Control.MeleeAttackLight, Control.MeleeAttackHeavy, Control.MeleeAttackAlternate, Control.MeleeAttack1, Control.MeleeAttack2
+];
+export const attackInputGroup = InputGroup.Look;
 
 
 

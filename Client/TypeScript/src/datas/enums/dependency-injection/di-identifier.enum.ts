@@ -1,4 +1,5 @@
 ﻿class DIIdentifier {
+    static AFKCheckService = Symbol.for("AFKCheckService");
     static BindsService = Symbol.for("BindsService");
     static BrowsersService = Symbol.for("BrowsersService");
     static CamerasService = Symbol.for("CamerasService");

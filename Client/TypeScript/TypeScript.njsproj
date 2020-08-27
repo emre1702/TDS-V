@@ -70,6 +70,7 @@
     <Folder Include="src\entities\extensions\" />
     <Folder Include="src\entities\lobbies\" />
     <Folder Include="src\entities\lobbies\map-creator\" />
+    <Folder Include="src\entities\interval\" />
     <Folder Include="src\entities\wrappers\" />
     <Folder Include="src\services\" />
     <Folder Include="src\services\appearance\" />
@@ -83,6 +84,7 @@
     <Folder Include="src\services\lobbies\map-creator\" />
     <Folder Include="src\services\datas\" />
     <Folder Include="src\services\lobbies\gang\" />
+    <Folder Include="src\services\others\" />
     <Folder Include="src\services\settings\" />
     <Folder Include="src\services\output\" />
   </ItemGroup>
@@ -165,6 +167,9 @@
     <TypeScriptCompile Include="src\entities\extensions\vector3.extension.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\interval\interval.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\services\datas\data-sync.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -178,6 +183,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\services\lobbies\gang\gang-vehicles.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\others\afk-check.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\services\settings\settings.service.ts">
