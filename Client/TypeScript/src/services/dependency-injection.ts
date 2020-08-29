@@ -26,6 +26,9 @@ import Camera from "../entities/cameras/camera.entity";
 import GangHouseService from "./lobbies/gang/gang-house.service";
 import GangVehiclesService from "./lobbies/gang/gang-vehicles.service";
 import { AFKCheckService } from "./others/afk-check.service";
+import { FightService } from "./deathmatch/fight.service";
+import { HudService } from "./draw/hud.service";
+import { FloatingDamageInfoService } from "./draw/floating-damage-info.service";
 
 log("Initializing services ...");
 
@@ -53,6 +56,9 @@ container.bind(DIIdentifier.ScaleformMessagesService).to(ScaleformMessagesServic
 container.bind(DIIdentifier.GangHouseService).to(GangHouseService);
 container.bind(DIIdentifier.GangVehiclesService).to(GangVehiclesService);
 container.bind(DIIdentifier.AFKCheckService).to(AFKCheckService);
+container.bind(DIIdentifier.FightService).to(FightService);
+container.bind(DIIdentifier.HudService).to(HudService);
+container.bind(DIIdentifier.FloatingDamageInfoService).to(FloatingDamageInfoService);
 ///////////////
 
 // Factory //
@@ -83,6 +89,9 @@ try {
     container.get(DIIdentifier.GangHouseService);
     container.get(DIIdentifier.GangVehiclesService);
     container.get(DIIdentifier.AFKCheckService);
+    container.get(DIIdentifier.FightService)
+    container.get(DIIdentifier.HudService);
+    container.get(DIIdentifier.FloatingDamageInfoService);
     ////////////////////////////
 } catch (ex) {
     logError(ex, "Services initializing failed");
