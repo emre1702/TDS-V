@@ -1,12 +1,16 @@
 ﻿import { Player } from "alt-client"
 import PlayerDataKey from "../../datas/enums/data/player-data-key.enum";
 import { serverTeamSuffixMinAdminLevel, serverTeamSuffix } from "../../datas/constants";
+import game from "natives";
 
 declare module "alt-client" {
     interface Player {
         getName(): string;
         getTDSId(): number;
         displayName(): string;
+
+        getHp(): number;
+        getArmor(): number;
     }
 }
 
@@ -26,4 +30,14 @@ Player.prototype.displayName = function () {
         name = serverTeamSuffix;
     }
     return name;
+}
+
+
+
+Player.prototype.getHp = function () {
+    return game.getEntityHealth((this as Player).scriptID);
+}
+
+Player.prototype.getArmor = function () {
+    return game.getPedArmour((this as Player).scriptID);
 }

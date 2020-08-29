@@ -40,7 +40,8 @@ export default class EventsService {
     readonly onPlayerDied = new TypedEvent<{ player: alt.Player, teamIndex: number, willRespawn: boolean }>();      ////////
     readonly onPlayerJoinedSameLobby = new TypedEvent<{ player: alt.Player }>();        ////////
     readonly onPlayerLeftSameLobby = new TypedEvent<{ player: alt.Player, name: string }>();        ////////
-    readonly onRespawned = new TypedEvent<{ inFightAgain: boolean }>();     
+    readonly onRespawned = new TypedEvent<void>();     
+    //Todo Do we really need isSpectator here?
     readonly onRoundEnded = new TypedEvent<{ isSpectator: boolean }>();     ////////
     readonly onRoundStarted = new TypedEvent<{ isSpectator: boolean }>();   ////////
     readonly onSettingsLoaded = new TypedEvent<PlayerSettings>();   ////////
@@ -59,8 +60,9 @@ export default class EventsService {
         alt.on(ToServerEvent.FromBrowserEvent, this.onFromBrowserEvent.bind(this));
 
         //Todo: Add this at server
-        alt.onServer(ToClientEvent.PlayerSpawn, this.onPlayerSpawn.bind(this))
+        alt.onServer(ToClientEvent.PlayerSpawn, () => this.onSpawned.emit())
         alt.onServer(ToClientEvent.PlayerTeamChange, (teamName) => this.onTeamChanged.emit({ newTeamName: teamName }));
+        alt.onServer(ToClientEvent.PlayerRespawned, () => this.onRespawned.emit());
     }
 
 
@@ -74,13 +76,6 @@ export default class EventsService {
         if (this.currentWeapon != weapon) {
             this.onWeaponChanged.emit({ previous: this.currentWeapon, next: weapon });
             this.currentWeapon = weapon;
-        }
-    }
-
-    private onPlayerSpawn(isRespawn: boolean, inFightAgain: boolean) {
-        this.onSpawned.emit();
-        if (isRespawn) {
-            this.onRespawned.emit({ inFightAgain: inFightAgain });
         }
     }
 
