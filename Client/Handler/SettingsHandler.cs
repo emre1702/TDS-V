@@ -153,10 +153,6 @@ namespace TDS_Client.Handler
             NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
         }
 
-        private void SyncRegisterLoginLanguageTexts(object[] args)
-        {
-            _browserHandler.RegisterLogin.SyncLanguage(Language);
-        }
 
         #endregion Private Methods
 
