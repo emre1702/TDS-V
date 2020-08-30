@@ -64,8 +64,10 @@
     <Folder Include="src\datas\models\output\" />
     <Folder Include="src\datas\extensions\" />
     <Folder Include="src\entities\" />
+    <Folder Include="src\entities\cameras\" />
     <Folder Include="src\entities\draw\" />
     <Folder Include="src\entities\draw\dx\" />
+    <Folder Include="src\entities\draw\dx\base\" />
     <Folder Include="src\entities\events\" />
     <Folder Include="src\entities\extensions\" />
     <Folder Include="src\entities\lobbies\" />
@@ -75,8 +77,8 @@
     <Folder Include="src\services\" />
     <Folder Include="src\services\appearance\" />
     <Folder Include="src\services\browsers\" />
+    <Folder Include="src\services\cameras\" />
     <Folder Include="src\services\draw\" />
-    <Folder Include="src\services\draw\dx\" />
     <Folder Include="src\services\events\" />
     <Folder Include="src\services\input\" />
     <Folder Include="src\datas\helper\" />
@@ -84,6 +86,7 @@
     <Folder Include="src\services\lobbies\map-creator\" />
     <Folder Include="src\services\datas\" />
     <Folder Include="src\services\lobbies\gang\" />
+    <Folder Include="src\services\deathmatch\" />
     <Folder Include="src\services\others\" />
     <Folder Include="src\services\settings\" />
     <Folder Include="src\services\output\" />
@@ -95,6 +98,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\enums\dependency-injection\di-identifier.enum.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\enums\draw\alignment.enum.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\enums\draw\dx-type.enum.ts" />
@@ -109,13 +115,22 @@
     <TypeScriptCompile Include="src\datas\enums\events\to-browser-event.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\events\to-client-event.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\events\to-server-event.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\gta\audio-name.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\gta\audio-ref.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\gta\blip-category.enum.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\enums\gta\cam-effect.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\gta\effect-name.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\gta\explosion-type.enum.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\enums\gta\ped-hash.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\gta\ped-stat.enum.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\enums\gta\scaleform-function.enum.ts" />
+    <TypeScriptCompile Include="src\datas\enums\gta\scaleform-name.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\gta\weapon-hash.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\input\control.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\input\input-group.enum.ts" />
@@ -152,6 +167,7 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\interfaces\output\language.interface.ts" />
     <TypeScriptCompile Include="src\datas\interfaces\output\login-register-texts.interface.ts" />
+    <TypeScriptCompile Include="src\datas\interfaces\players\player-angular-chat-settings.interface.ts" />
     <TypeScriptCompile Include="src\datas\interfaces\players\player-settings.interface.ts" />
     <TypeScriptCompile Include="src\datas\models\input\control-bind.model.ts" />
     <TypeScriptCompile Include="src\datas\models\input\key-bind.model.ts" />
@@ -164,15 +180,51 @@
     <TypeScriptCompile Include="src\datas\models\output\german.language.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\models\output\login-register.english.language.ts" />
+    <TypeScriptCompile Include="src\datas\models\output\login-register.german.language.ts" />
+    <TypeScriptCompile Include="src\entities\cameras\camera.entity.ts" />
+    <TypeScriptCompile Include="src\entities\draw\basic-scaleform.entity.ts" />
+    <TypeScriptCompile Include="src\entities\draw\dx\dx-line.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\dx\dx-progress-rectangle.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\dx\dx-rectangle.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\dx\dx-text-rectangle.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\dx\dx-text.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\floating-damage-info.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\entities\extensions\vector3.extension.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\entities\interval\interval.entity.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\cameras\cameras.service.ts" />
+    <TypeScriptCompile Include="src\services\cameras\spectate.service.ts" />
     <TypeScriptCompile Include="src\services\datas\data-sync.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\deathmatch\death.service.ts" />
+    <TypeScriptCompile Include="src\services\deathmatch\fight.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\draw\dx.service.ts" />
+    <TypeScriptCompile Include="src\services\draw\floating-damage-info.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\draw\hud.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\draw\scaleform-messages.service.ts" />
     <TypeScriptCompile Include="src\services\input\cursor.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -192,7 +244,7 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\utils.ts" />
-    <TypeScriptCompile Include="src\entities\draw\dx\dx-base.ts" />
+    <TypeScriptCompile Include="src\entities\draw\dx\base\dx-base.entity.ts" />
     <TypeScriptCompile Include="src\entities\events\typed-event.ts" />
     <TypeScriptCompile Include="src\entities\extensions\player.extension.ts">
       <SubType>Code</SubType>
@@ -206,7 +258,6 @@
     <TypeScriptCompile Include="src\services\browsers\browser-service-base.ts" />
     <TypeScriptCompile Include="src\services\browsers\browsers.service.ts" />
     <TypeScriptCompile Include="src\services\dependency-injection.ts" />
-    <TypeScriptCompile Include="src\services\draw\dx\dx.service.ts" />
     <TypeScriptCompile Include="src\services\events\events.service.ts" />
     <TypeScriptCompile Include="src\services\events\remote-events-sender.service.ts" />
     <TypeScriptCompile Include="src\datas\helper\model.helper.ts">
