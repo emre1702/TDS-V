@@ -1,12 +1,14 @@
-﻿import DxService from "../../../handler/draw/dx/dx.service";
-import { getTextScaleHeight } from "natives";
-import Font from "../../../data/enums/dx/font.enum";
-import DxType from "../../../data/enums/dx/dx-type.enum";
+﻿import { getTextScaleHeight } from "natives";
+import DxType from "../../../../datas/enums/draw/dx-type.enum";
+import DxService from "../../../../services/draw/dx.service";
+import Font from "../../../../datas/enums/draw/font.enum";
 
-abstract class DxBase {
+export abstract class DxBase {
     frontPriority: number;
     activated: boolean;
 
+    protected alphaAnim: { targetAlpha: number, startMs: number, endMs: number };
+    
     protected readonly children: DxBase[] = [];
     protected readonly dxService: DxService;
 
@@ -24,6 +26,11 @@ abstract class DxBase {
     abstract draw(): void;
     abstract getDxType(): DxType;
 
+    blendAlpha(targetAlpha: number, msToEnd: number) {
+        const currentMs = Date.now();
+        this.alphaAnim = { targetAlpha: targetAlpha, startMs: currentMs, endMs: currentMs + msToEnd };
+    }
+
     remove() {
         this.dxService.remove(this);
 
@@ -33,8 +40,8 @@ abstract class DxBase {
         this.children.length = 0;
     }
 
-    protected getBlendValue(currentTick: number, start: number, end: number, startTick: number, endTick: number): number {
-        const progress = Math.min(1, (currentTick - startTick) / (endTick - startTick));
+    protected getBlendValue(start: number, end: number, startMs: number, endMs: number): number {
+        const progress = Math.min(1, (Date.now() - startMs) / (endMs - startMs));
         return Math.floor(start + progress * (end - start));
     }
 
@@ -60,6 +67,13 @@ abstract class DxBase {
         // + 5 ... because of the margin between the lines
         textHeight = Math.floor(textHeight * lineCount + textHeight * 0.4 * (lineCount - 0.3));
         return textHeight;
+    }
+
+    protected getCurrentAlpha(initAlpha: number) {
+        if (!this.alphaAnim) {
+            return initAlpha;
+        }
+        return this.getBlendValue(initAlpha, this.alphaAnim.targetAlpha, this.alphaAnim.startMs, this.alphaAnim.endMs);
     }
 }
 
