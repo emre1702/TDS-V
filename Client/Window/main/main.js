@@ -83,6 +83,7 @@ function startBombTickSound(msToEnd, startAtMs) {
         clearTimeout(bombTickTimeout);
     bombTickTimeout = setTimeout(() => startBombTickSound(msToEnd, startAtMs + currentSpeed), currentSpeed);
 }
+alt.on("k", startBombTickSound);
 
 function stopBombTickSound() {
     if (bombTickTimeout != null) {
@@ -90,6 +91,7 @@ function stopBombTickSound() {
         bombTickTimeout = null;
     }
 }
+alt.on("l", stopBombTickSound);
 
 mp.events.add("c", () => {
     if (bloodscreentimeout) {
@@ -171,6 +173,10 @@ mp.events.add("f", (name) => {
 	if (child.length) {
 		child.remove();
 	}
+});
+
+mp.events.add("i", (msg) => {
+	alert(msg);
 });
 
 $(document).ready(() => {

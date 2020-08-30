@@ -20,11 +20,12 @@ function showRoundEndReason(reason, mapId) {
         starRating.setCurrentRating(0);
     starRating.enable();
 }
+alt.on("i", showRoundEndReason);
 
-function hideRoundEndReason() {
+alt.on("g", function() {
     roundEndReasonContainer.hide();
 }
 
-function loadMyMapRatings(str) {
+alt.on("h", function(str) {
     myMapRating = JSON.parse(str);
 }
