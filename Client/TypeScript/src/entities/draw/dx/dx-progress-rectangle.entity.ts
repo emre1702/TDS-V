@@ -27,7 +27,7 @@ export default class DxProgressRectangle extends DxBase {
     }
     private _progress: number;
 
-    constructor(private dxService: DxService,
+    constructor(dxService: DxService,
         private text: string, private x: number, private y: number,
         private width: number, private height: number,
         private textColor: alt.RGBA, private backColor: alt.RGBA, private progressColor: alt.RGBA,
@@ -88,11 +88,11 @@ export default class DxProgressRectangle extends DxBase {
     private createFrontRectangle() {
         this.frontRectOffsetX = this.relativePos ? this.getRelativeX(this.frontRectOffsetAbsoluteX, false) : this.frontRectOffsetAbsoluteX;
         const offsetY = this.relativePos ? this.getRelativeY(this.frontRectOffsetAbsoluteY, false) : this.frontRectOffsetAbsoluteY;
-        const x = this.getFrontRectX(this.x, this.width, this.alignmentX) + offsetX;
+        const x = this.getFrontRectX(this.x, this.width, this.alignmentX) + this.frontRectOffsetX;
         const y = this.getFrontRectX(this.y, this.height, this.alignmentY) + offsetY;
         const height = this.height - offsetY * 2;
 
-        this.frontRectangle = new DxRectangle(this.dxService, x, y, 0, height, this.backColor, Alignment.Start, Alignment.Center, this.relativePos, this.frontPriority + 1, false);
+        this.frontRectangle = new DxRectangle(this.dxService, x, y, 0, height, this.progressColor, Alignment.Start, Alignment.Center, this.relativePos, this.frontPriority + 1, false);
         this.children.push(this.frontRectangle);
     }
 

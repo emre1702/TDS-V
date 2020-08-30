@@ -45,24 +45,24 @@ export abstract class DxBase {
         return Math.floor(start + progress * (end - start));
     }
 
-    protected getAbsoluteX(x: number, relative: boolean, isText: boolean = false): number {
-        return Math.round(relative ? x * (isText ? 1920 : this.dxService.resX) : x * (isText ? (1920 / this.dxService.resX) : 1));
+    protected getAbsoluteX(x: number, relative: boolean): number {
+        return Math.round(relative ? x * this.dxService.resX : x);
     }
 
-    protected getAbsoluteY(y: number, relative: boolean, isText: boolean = false): number {
-        return Math.round(relative ? y * (isText ? 1080 : this.dxService.resY) : y * (isText ? (1080 / this.dxService.resY) : 1));
+    protected getAbsoluteY(y: number, relative: boolean): number {
+        return Math.round(relative ? y * this.dxService.resY : y);
     }
 
-    protected getRelativeX(x: number, relative: boolean, isText: boolean = false): number {
-        return relative ? x : x / (isText ? 1920 : this.dxService.resX);
+    protected getRelativeX(x: number, relative: boolean): number {
+        return relative ? x : x / this.dxService.resX;
     }
 
-    protected getRelativeY(y: number, relative: boolean, isText: boolean = false): number {
-        return relative ? y : y / (isText ? 1080 : this.dxService.resY);
+    protected getRelativeY(y: number, relative: boolean): number {
+        return relative ? y : y / this.dxService.resY;
     }
 
     protected getTextAbsoluteHeight(lineCount: number, scale: number, font: Font, relative: boolean): number {
-        let textHeight = this.getAbsoluteY(getTextScaleHeight(scale, font), relative, true);
+        let textHeight = this.getAbsoluteY(getTextScaleHeight(scale, font), relative);
 
         // + 5 ... because of the margin between the lines
         textHeight = Math.floor(textHeight * lineCount + textHeight * 0.4 * (lineCount - 0.3));

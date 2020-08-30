@@ -68,6 +68,7 @@
     <Folder Include="src\entities\draw\" />
     <Folder Include="src\entities\draw\dx\" />
     <Folder Include="src\entities\draw\dx\base\" />
+    <Folder Include="src\entities\draw\dx\grid\" />
     <Folder Include="src\entities\events\" />
     <Folder Include="src\entities\extensions\" />
     <Folder Include="src\entities\lobbies\" />
@@ -197,6 +198,18 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\entities\draw\dx\dx-text.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\dx\grid\dx-grid-cell.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\dx\grid\dx-grid-column.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\dx\grid\dx-grid-row.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\draw\dx\grid\dx-grid.entity.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\entities\draw\floating-damage-info.entity.ts">

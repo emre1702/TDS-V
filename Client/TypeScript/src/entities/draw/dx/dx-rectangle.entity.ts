@@ -9,7 +9,7 @@ export class DxRectangle extends DxBase {
     
 
     constructor(dxService: DxService,
-                private x: number, private y: number, private width: number, private height: number,
+                private x: number, public y: number, private width: number, private height: number,
                 private color: alt.RGBA, 
                 private alignmentX: Alignment = Alignment.Start,
                 private alignmentY: Alignment = Alignment.Start,

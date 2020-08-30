@@ -9,37 +9,59 @@ import Font from "../../../datas/enums/draw/font.enum";
 import Alignment from "../../../datas/enums/draw/alignment.enum";
 
 export default class DxTextRectangle extends DxBase {
-    private text: DxText;
+    private textDraw: DxText;
     private rectangle: DxRectangle;
+    noBackgroundNextCall: boolean;
 
     constructor(dxService: DxService,
-                text: string, private x: number, private y: number, private width: number, private height: number,
-                textColor: alt.RGBA, rectColor: alt.RGBA, private textScale: number = 1, private textFont: Font = Font.ChaletLondon,
-                textOffsetAbsoluteX: number = 0,
+                private text: string | undefined, private x: number, public y: number, private width: number, private height: number,
+                private textColor: alt.RGBA, rectColor: alt.RGBA | undefined, private textScale: number = 1, private textFont: Font = Font.ChaletLondon,
+                private textOffsetAbsoluteX: number = 0,
                 private alignmentX: Alignment = Alignment.Start, private alignmentY = Alignment.Start,
                 private textAlignmentX: Alignment = Alignment.Center, private textAlignmentY = Alignment.Center,
-                relativePos: boolean = true, frontPriority: number = 0, activated: boolean = true) {
+                private relativePos: boolean = true, frontPriority: number = 0, activated: boolean = true) {
         super(dxService, frontPriority, activated);
 
-        this.rectangle = new DxRectangle(dxService, x, y, width, height, rectColor, alignmentX, alignmentY, relativePos, frontPriority, activated);
+        if (rectColor) {
+            this.rectangle = new DxRectangle(dxService, x, y, width, height, rectColor, alignmentX, alignmentY, relativePos, frontPriority, activated);
+            this.children.push(this.rectangle);
+        }
 
-        const textOffsetX = relativePos ? this.getRelativeX(textOffsetAbsoluteX, false) : textOffsetAbsoluteX;
+        if (text) {
+            this.createTextDraw();
+        }
+    }
+
+    private createTextDraw() {
+        const textOffsetX = this.relativePos ? this.getRelativeX(this.textOffsetAbsoluteX, false) : this.textOffsetAbsoluteX;
         const textPosX = this.getTextPosX(textOffsetX);
         const textPosY = this.getTextPosY();
-        this.text = new DxText(dxService, text, textPosX, textPosY, textScale, textColor, textFont, textAlignmentX, textAlignmentY, relativePos, false, true, frontPriority + 1, false);
-        this.text.setBoundary(this.getRectangleLeftX() + textOffsetX, this.getRectangleRightX() - textOffsetX);
-
-        this.children.push(this.text);
-        this.children.push(this.rectangle);
+        this.textDraw = new DxText(this.dxService, this.text, textPosX, textPosY, this.textScale, this.textColor, this.textFont,
+            this.textAlignmentX, this.textAlignmentY, this.relativePos, false, true, this.frontPriority + 1, false);
+        this.textDraw.setBoundary(this.getRectangleLeftX() + textOffsetX, this.getRectangleRightX() - textOffsetX);
+        this.children.push(this.textDraw);
     }
 
     setText(text: string) {
-        this.text.setText(text);
+        if (!this.textDraw) {
+            this.createTextDraw();
+        } else {
+            this.textDraw.setText(text);
+        }
     }
 
     draw(): void {
-        this.text.draw();
-        this.rectangle.draw();
+        if (this.textDraw) {
+            this.textDraw.draw();
+        }
+        if (this.rectangle) {
+            if (!this.noBackgroundNextCall) {
+                this.rectangle.draw();
+            } else {
+                this.noBackgroundNextCall = false;
+            }
+            
+        }
     }
 
     getDxType(): DxType {
