@@ -1,4 +1,6 @@
-﻿export default interface Language {
+﻿import LoginRegisterTexts from "./login-register-texts.interface";
+
+export default interface Language {
     AFK_KICK_INFO: string;
     AFK_KICK_WARNING: string;
     BOMB_PLANTED: string;

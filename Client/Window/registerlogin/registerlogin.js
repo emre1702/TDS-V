@@ -120,6 +120,7 @@ function setLoginPanelData(playername, isreg, lang) {
 
     isregistered = isreg;
 }
+alt.on("b", setLoginPanelData);
 
 function loadLanguage(lang) {
     var langdata = JSON.parse(lang);
@@ -128,3 +129,4 @@ function loadLanguage(lang) {
         //$( this ).html( $( this ).attr( "data-lang" ) );
     });
 }
+alt.on("a", loadLanguage);
