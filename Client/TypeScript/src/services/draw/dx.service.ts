@@ -2,14 +2,14 @@
 
 import { getScreenResolution } from "natives";
 import { everyTick } from "alt-client";
-import DxBase from "../../entities/draw/dx/dx-base";
+import DxBase from "../../entities/draw/dx/base/dx-base.entity";
 
 @injectable()
 class DxService {
     resX: number;
     resY: number;
 
-    private readonly dxDraws: DxBase[] = [];
+    private dxDraws: DxBase[] = [];
 
     constructor() {
         everyTick(this.renderAll.bind(this));
@@ -18,6 +18,7 @@ class DxService {
 
     add(dx: DxBase) {
         this.dxDraws.push(dx);
+        this.dxDraws = this.dxDraws.sort((a, b) => a.frontPriority < b.frontPriority ? -1 : 1);
     }
 
     remove(dx: DxBase) {

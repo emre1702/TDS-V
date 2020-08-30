@@ -1,6 +1,8 @@
 ﻿enum DxType {
     Rectangle,
     Text,
+    TextRectangle,
+    ProgressRectangle,
     Line,
     Grid,
     GridRow,

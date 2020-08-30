@@ -11,9 +11,12 @@
     static DiscordService = Symbol.for("DiscordService");
     static DxService = Symbol.for("DxService");
     static EventsService = Symbol.for("EventsService");
+    static FightService = Symbol.for("FightService");
+    static FloatingDamageInfoService = Symbol.for("FloatingDamageInfoService");
     static FreeroamService = Symbol.for("FreeroamService");
     static GangHouseService = Symbol.for("GangHouseService");
     static GangVehiclesService = Symbol.for("GangVehiclesService");
+    static HudService = Symbol.for("HudService");
     static MapCreatorObject = Symbol.for("MapCreatorObject");
     static MapCreatorObjectsService = Symbol.for("MapCreatorObjectsService");
     static RemoteEventsSender = Symbol.for("RemoteEventsSender");
