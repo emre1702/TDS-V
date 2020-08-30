@@ -1,5 +1,6 @@
 ﻿import alt from "alt-client";
 import game from "natives";
+import Camera from "../entities/cameras/camera.entity";
 
 export function hashPasswordClient(password: string): string {
     return password;
@@ -177,46 +178,51 @@ export function getScreenCoordFromWorldCoord(vec: alt.Vector3): alt.Vector2 | un
 }
 
 export function getWorldCoordFromScreenCoord(pos: alt.Vector2, camera: Camera): alt.Vector3 {
-    Position camPos = camera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
-    Position camRot = camera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
-    var camForward = RotationToDirection(camRot);
-    var rotUp = camRot + new Position(1, 0, 0);
-    var rotDown = camRot + new Position(-1, 0, 0);
-    var rotLeft = camRot + new Position(0, 0, -1);
-    var rotRight = camRot + new Position(0, 0, 1);
+    const camPos = (camera && camera.position) ?? game.getGameplayCamCoord() as alt.Vector3;
+    const camRot = (camera && camera.rotation) ?? game.getGameplayCamRot(2) as alt.Vector3;
+    const camForward = rotationToDirection(camRot);
+    const rotUp = camRot.added(new alt.Vector3(1, 0, 0));
+    const rotDown = camRot.added(new alt.Vector3(-1, 0, 0));
+    const rotLeft = camRot.added(new alt.Vector3(0, 0, -1));
+    const rotRight = camRot.added(new alt.Vector3(0, 0, 1));
 
-    var camRight = RotationToDirection(rotRight) - RotationToDirection(rotLeft);
-    var camUp = RotationToDirection(rotUp) - RotationToDirection(rotDown);
+    const camRight = rotationToDirection(rotRight).substracted(rotationToDirection(rotLeft));
+    const camUp = rotationToDirection(rotUp).substracted(rotationToDirection(rotDown));
 
-    var rollRad = -DegreesToRad(camRot.Y);
+    const rollRad = -degreesToRad(camRot.y);
 
-    var camRightRoll = camRight * (float)Math.Cos(rollRad) - camUp * (float)Math.Sin(rollRad);
-    var camUpRoll = camRight * (float)Math.Sin(rollRad) + camUp * (float)Math.Cos(rollRad);
+    const camRightRoll = camRight.multiplied(Math.cos(rollRad)).substracted(camUp.multiplied(Math.sin(rollRad)));
+    const camUpRoll = camRight.multiplied(Math.sin(rollRad)).added(camUp.multiplied(Math.cos(rollRad)));
 
-    var point3D = camPos + camForward * 1.0f + camRightRoll + camUpRoll;
-    float point2DX = 0, point2DY = 0;
-    if (!ModAPI.Graphics.GetScreenCoordFromWorldCoord(point3D.X, point3D.Y, point3D.Z, ref point2DX, ref point2DY)) {
-        //forwardDirection = camForward;
-        return camPos + camForward * 1.0f;
+    const point3D = camPos.added(camForward.added(camRightRoll).added(camUpRoll));
+    const point3DZero = camPos.added(camForward);
+
+    const [point2DWorked, point2DX, point2DY] = game.getScreenCoordFromWorldCoord(point3D.x, point3D.y, point3D.z, 0, 0);
+    if (!point2DWorked) {
+        return point3DZero;
     }
 
-    var point3DZero = camPos + camForward * 1.0f;
-    float point2DZeroX = 0, point2DZeroY = 0;
-    if (!ModAPI.Graphics.GetScreenCoordFromWorldCoord(point3DZero.X, point3DZero.Y, point3DZero.Z, ref point2DZeroX, ref point2DZeroY)) {
-        //forwardDirection = camForward;
-        return camPos + camForward * 1.0f;
+    const [point2DZeroWorked, point2DZeroX, point2DZeroY] = game.getScreenCoordFromWorldCoord(point3DZero.x, point3DZero.y, point3DZero.z, 0, 0);
+    if (!point2DZeroWorked) {
+        return point3DZero;
     }
 
-    const double eps = 0.001;
-    if (Math.Abs(point2DX - point2DZeroX) < eps || Math.Abs(point2DY - point2DZeroY) < eps) {
-        //forwardDirection = camForward;
-        return camPos + camForward * 1.0f;
+    const eps = 0.001;
+    if (Math.abs(point2DX - point2DZeroX) < eps || Math.abs(point2DY - point2DZeroY) < eps) {
+        return point3DZero;
     }
-    var scaleX = (x - point2DZeroX) / (point2DX - point2DZeroX);
-    var scaleY = (y - point2DZeroY) / (point2DY - point2DZeroY);
-    var point3Dret = camPos + camForward * 1.0f + camRightRoll * scaleX + camUpRoll * scaleY;
+    const scaleX = (pos.x - point2DZeroX) / (point2DX - point2DZeroX);
+    const scaleY = (pos.y - point2DZeroY) / (point2DY - point2DZeroY);
+    const point3Dret = camPos.added(camForward).added(camRightRoll.multiplied(scaleX)).added(camUpRoll.multiplied(scaleY));
     //forwardDirection = camForward + camRightRoll * scaleX + camUpRoll * scaleY;
     return point3Dret;
+}
+
+export function rotationToDirection(rotation: alt.Vector3): alt.Vector3 {
+    const z = this.degreesToRad(rotation.z);
+    const x = this.degreesToRad(rotation.x);
+    const num = Math.abs(Math.cos(x));
+    return new alt.Vector3(-Math.sin(z) * num, Math.cos(z) * num, Math.sin(x));
 }
 
 /*
@@ -388,18 +394,7 @@ public Position GetWorldCoordFromScreenCoord(float x, float y, TDSCamera tdsCame
     return final;
 }
 
-        public Position RotationToDirection(Position rotation)
-{
-    var z = DegreesToRad(rotation.Z);
-    var x = DegreesToRad(rotation.X);
-    var num = Math.Abs(Math.Cos(x));
-    return new Position
-    {
-        X = (float)(-Math.Sin(z) * num),
-            Y = (float)(Math.Cos(z) * num),
-            Z = (float)Math.Sin(x)
-    };
-}
+
 
         #endregion Public Methods
 
