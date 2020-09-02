@@ -6,14 +6,15 @@
     <RootNamespace>TDS_Shared.Core</RootNamespace>
   </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="AltV.Net.Async" Version="1.40.1-rc" />
+        <PackageReference Include="MessagePack" Version="2.1.165" />
+        <PackageReference Include="MessagePack.Annotations" Version="2.1.165" />
+        <PackageReference Include="MessagePackAnalyzer" Version="2.1.165" />
+    </ItemGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
 </Project>

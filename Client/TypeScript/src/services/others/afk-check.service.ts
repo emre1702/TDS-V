@@ -13,6 +13,7 @@ import { Interval } from "../../entities/interval/interval.entity";
 import ChatService from "../output/chat.service";
 import RemoteEventsSender from "../events/remote-events-sender.service";
 import ToServerEvent from "../../datas/enums/events/to-server-event.enum";
+import { FightService } from "../deathmatch/fight.service";
 
 @injectable()
 export class AFKCheckService {
@@ -181,9 +182,9 @@ export class AFKCheckService {
             && !game.isPlayerFreeAiming(alt.Player.local.scriptID);
     }
 
-    private getWarning(): string {
+    /*private getWarning(): string {
         const secsLeft = this.kickInterval.remainingSecToExec;
         return this.settingsService.language.AFK_KICK_WARNING.format(secsLeft);
-    }
+    }*/
 
 }

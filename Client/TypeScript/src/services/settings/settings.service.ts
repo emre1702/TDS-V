@@ -64,9 +64,9 @@ export default class SettingsService {
         alt.on(FromBrowserEvent.LanguageChange, this.onBrowserRequestedLanguageChange.bind(this));
         alt.on(FromBrowserEvent.OnColorSettingChange, this.onColorSettingChange.bind(this));
         alt.onServer(ToClientEvent.SyncSettings, this.onSyncPlayerSettings.bind(this));
-        alt.on(FromBrowserEvent.SyncRegisterLoginLanguageTexts, this.syncRegisterLoginLanguageTexts.bind(this));
+        /*alt.on(FromBrowserEvent.SyncRegisterLoginLanguageTexts, this.syncRegisterLoginLanguageTexts.bind(this));
         alt.on(FromBrowserEvent.ReloadPlayerSettings, this.reloadTempChangedPlayerSettings.bind(this));
-        alt.onServer(ToClientEvent.SyncPlayerCommandsSettings, this.loadCommandsData.bind(this));
+        alt.onServer(ToClientEvent.SyncPlayerCommandsSettings, this.loadCommandsData.bind(this));*/
     }
 
     private loadSyncedLobbySettings(lobbySettings: LobbySettings) {
@@ -81,7 +81,7 @@ export default class SettingsService {
 
         switch (dataSetting) {
             case UserpanelSettingKey.MapBorderColor:
-                this.mapBorderColor = getRGBAFromString(color) ?? this.mapBorderColor;
+                this.mapBorderColor = getRGBAFromString(color) || this.mapBorderColor;
                 this.eventsService.onMapBorderColorChanged.emit(this.mapBorderColor);
                 break;
 
@@ -90,11 +90,11 @@ export default class SettingsService {
                 break;
 
             case UserpanelSettingKey.NametagHealthEmptyColor:
-                this.nametagColorsDict.healthEmpty = getRGBAFromString(color) ?? this.nametagColorsDict.healthEmpty;
+                this.nametagColorsDict.healthEmpty = getRGBAFromString(color) || this.nametagColorsDict.healthEmpty;
                 break;
 
             case UserpanelSettingKey.NametagHealthFullColor:
-                this.nametagColorsDict.healthFull = getRGBAFromString(color) ?? this.nametagColorsDict.healthFull;
+                this.nametagColorsDict.healthFull = getRGBAFromString(color) || this.nametagColorsDict.healthFull;
                 break;
 
             case UserpanelSettingKey.NametagArmorEmptyColor:
@@ -102,7 +102,7 @@ export default class SettingsService {
                 break;
 
             case UserpanelSettingKey.NametagArmorFullColor:
-                this.nametagColorsDict.armorFull = getRGBAFromString(color) ?? this.nametagColorsDict.armorFull;
+                this.nametagColorsDict.armorFull = getRGBAFromString(color) || this.nametagColorsDict.armorFull;
                 break;
         }
     }
@@ -123,13 +123,13 @@ export default class SettingsService {
         this.languageManuallyChanged = false;
         this.playerSettings = playerSettings;
 
-        this.mapBorderColor = getRGBAFromString(playerSettings.MapBorderColor) ?? this.mapBorderColor;
+        this.mapBorderColor = getRGBAFromString(playerSettings.MapBorderColor) || this.mapBorderColor;
         this.nametagColorsDict = {
             dead: getRGBAFromString(playerSettings.NametagDeadColor),
-            healthEmpty: getRGBAFromString(playerSettings.NametagHealthEmptyColor) ?? this.nametagColorsDict.healthEmpty,
-            healthFull: getRGBAFromString(playerSettings.NametagHealthFullColor) ?? this.nametagColorsDict.healthFull,
+            healthEmpty: getRGBAFromString(playerSettings.NametagHealthEmptyColor) || this.nametagColorsDict.healthEmpty,
+            healthFull: getRGBAFromString(playerSettings.NametagHealthFullColor) || this.nametagColorsDict.healthFull,
             armorEmpty: getRGBAFromString(playerSettings.NametagArmorEmptyColor),
-            armorFull: getRGBAFromString(playerSettings.NametagArmorFullColor) ?? this.nametagColorsDict.armorFull
+            armorFull: getRGBAFromString(playerSettings.NametagArmorFullColor) || this.nametagColorsDict.armorFull
         }
 
         this.notTempMapBorderColor = null;

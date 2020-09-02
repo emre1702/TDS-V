@@ -982,24 +982,14 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.PlayerId);
 
-                entity.HasIndex(e => e.DiscordUserId).IsUnique();
-
                 entity.Property(e => e.PlayerId)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.AllowDataTransfer);
                 entity.Property(e => e.Bloodscreen);
                 entity.Property(e => e.FloatingDamageInfo);
                 entity.Property(e => e.Hitsound);
-                entity.Property(e => e.Language).HasDefaultValue(Language.English);
                 entity.Property(e => e.VoiceVolume).HasDefaultValue(6.0);
                 entity.Property(e => e.MapBorderColor).HasDefaultValue("rgba(150,0,0,0.35)");
-                entity.Property(e => e.ShowConfettiAtRanking);
-                entity.Property(e => e.DiscordUserId).IsRequired(false);
-                entity.Property(e => e.Timezone)
-                    .HasDefaultValue("UTC");
-                entity.Property(e => e.DateTimeFormat)
-                    .HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
                 entity.Property(e => e.BloodscreenCooldownMs)
                     .HasDefaultValue(150);
                 entity.Property(e => e.HudAmmoUpdateCooldownMs)
@@ -1023,11 +1013,26 @@ namespace TDS_Server.Database.Entity
                     .IsRequired(false);
                 entity.Property(e => e.NametagArmorFullColor)
                     .HasDefaultValue("rgba(255, 255, 255, 1)");
-                entity.Property(e => e.ChatWidth).HasDefaultValue(30);
-                entity.Property(e => e.ChatMaxHeight).HasDefaultValue(35);
-                entity.Property(e => e.ChatFontSize).HasDefaultValue(1.4);
-                entity.Property(e => e.ChatInfoFontSize).HasDefaultValue(1f);
-                entity.Property(e => e.ChatInfoMoveTimeMs).HasDefaultValue(15000);
+
+                entity.OwnsOne(e => e.Chat, c => 
+                {
+                    c.Property(c => c.Width).HasDefaultValue(30);
+                    c.Property(c => c.MaxHeight).HasDefaultValue(25);
+                    c.Property(c => c.FontSize).HasDefaultValue(1.4f);
+                    c.Property(c => c.InfoFontSize).HasDefaultValue(1f);
+                    c.Property(c => c.InfoMoveTimeMs).HasDefaultValue(15000);
+                });
+
+                entity.OwnsOne(e => e.General, g =>
+                {
+                    g.HasIndex(g => g.DiscordUserId).IsUnique(true);
+
+                    g.Property(g => g.Language).HasDefaultValue(Language.English);
+                    g.Property(g => g.DiscordUserId).IsRequired(false);
+                    g.Property(g => g.Timezone).HasDefaultValue("UTC");
+                    g.Property(g => g.DateTimeFormat).HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
+                });
+
                 entity.Property(e => e.ScoreboardPlaytimeUnit).HasDefaultValue(TimeSpanUnitsOfTime.HourMinute);
 
                 entity.HasOne(d => d.Player)

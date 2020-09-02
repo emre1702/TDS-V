@@ -15,7 +15,7 @@ export class DxText extends DxBase {
     private scaleAnim: { targetScale: number, startMs: number, endMs: number };
 
     constructor(dxService: DxService, text: string, private x: number, private y: number, private scale: number, private color: alt.RGBA, private font: Font = Font.ChaletLondon,
-                private alignmentX: Alignment = Alignment.Center, alignmentY: AlignmentY = AlignmentY.Center,
+                private alignmentX: Alignment = Alignment.Center, private alignmentY: Alignment = Alignment.Center,
                 private relative: boolean = true, private dropShadow: boolean = false, private outline: boolean = false,
                 frontPriority: number = 0, activated: boolean = true) {
         super(dxService, frontPriority, activated);
@@ -42,6 +42,11 @@ export class DxText extends DxBase {
     setScale(scale: number) {
         this.scale = scale;
         this.scaleAnim = undefined;
+    }
+
+    setY(y: number, relative: boolean) {
+        this.y = this.getRelativeY(y, relative);
+        this.y += this.getAddingToYForAlignment();
     }
 
     setBoundary(left: number, right: number, relative: boolean = this.relative) {
@@ -96,5 +101,13 @@ export class DxText extends DxBase {
 
         return this.getBlendValue(this.scale, this.scaleAnim.targetScale, this.scaleAnim.startMs, this.scaleAnim.endMs);
     }
-    
+
+    //Todo Implement this
+    private getAddingToYForAlignment() {
+        switch (this.alignmentY) {
+            case Alignment.Start:
+                return 0;
+        }
+        return 0;
+    }
 }

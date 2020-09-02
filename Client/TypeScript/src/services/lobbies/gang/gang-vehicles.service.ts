@@ -3,7 +3,6 @@ import DIIdentifier from "../../../datas/enums/dependency-injection/di-identifie
 import EventsService from "../../events/events.service";
 import LobbySettings from "../../../datas/interfaces/lobbies/lobby-settings.interface";
 import LobbyType from "../../../datas/enums/lobbies/lobby-type.enum";
-import alt from "alt-client";
 
 @injectable()
 export default class GangVehiclesService {
@@ -16,7 +15,7 @@ export default class GangVehiclesService {
     }
 
     private start() {
-        alt.on()
+     
     }
 
     private stop() {

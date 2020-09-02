@@ -1,2 +1,2 @@
 ﻿import "reflect-metadata";
-import "./handler/dependency-injection";
+import "./services/dependency-injection";

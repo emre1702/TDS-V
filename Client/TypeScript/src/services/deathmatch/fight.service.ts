@@ -7,6 +7,7 @@ import SettingsService from "../settings/settings.service";
 import BrowsersService from "../browsers/browsers.service";
 import { onServer } from "alt-client";
 import ToClientEvent from "../../datas/enums/events/to-client-event.enum";
+import { FloatingDamageInfoService } from "../draw/floating-damage-info.service";
 
 @injectable()
 export class FightService {
@@ -51,7 +52,7 @@ export class FightService {
             this.browsersService.plainMain.playHitsound();
         }
         if (this.settingsService.playerSettings.FloatingDamageInfo && hitted) {
-            this.floatDamageInfoHandler.add(hitted, damage);
+            this.floatingDamageInfoService.add(hitted, damage);
         }
     }
 

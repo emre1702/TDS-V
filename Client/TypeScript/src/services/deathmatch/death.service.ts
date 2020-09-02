@@ -1,9 +1,7 @@
 ﻿import { injectable, inject } from "inversify";
 import DIIdentifier from "../../datas/enums/dependency-injection/di-identifier.enum";
 import EventsService from "../events/events.service";
-import alt from "alt-client";
 import game from "natives";
-import SettingsService from "../settings/settings.service";
 import { screenFadeInTimeAfterSpawn, screenFadeOutTimeAfterSpawn } from "../../datas/constants";
 import EffectName from "../../datas/enums/gta/effect-name.enum";
 import CamEffect from "../../datas/enums/gta/cam-effect.enum";
@@ -16,10 +14,9 @@ export default class DeathService {
     constructor(
         @inject(DIIdentifier.EventsService) eventsService: EventsService
     ) {
-        
-
+        eventsService.onLocalPlayerDied.on(this.onDeath.bind(this));
         eventsService.onSpawned.on(this.onSpawned.bind(this));
-        eventsService.onLobbyJoined.on(this.onLobbyJoined.bind(this));
+        //eventsService.onLobbyJoined.on(this.onLobbyJoined.bind(this));
     }
 
 

@@ -1,12 +1,9 @@
-﻿import { injectable, inject } from "inversify";
-import LoggingService from "../../datas/helper/logging.helper";
+﻿import { injectable } from "inversify";
 
 @injectable()
 export default class CharCreatorService {
 
-    constructor(
-        @inject(LoggingService) logging: LoggingService
-    ) {
+    constructor() {
         
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Shared.Core;

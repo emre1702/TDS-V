@@ -1,6 +1,4 @@
-﻿import { injectable, inject } from "inversify";
-import DIIdentifier from "../../datas/enums/dependency-injection/di-identifier.enum";
-import EventsService from "../events/events.service";
+﻿import EventsService from "../events/events.service";
 import alt from "alt-client";
 import ToClientEvent from "../../datas/enums/events/to-client-event.enum";
 import CamerasService from "./cameras.service";
@@ -77,7 +75,7 @@ export default class SpectateService {
         }
         this.binded = false;
 
-        this.camerasService.spectateCam.deactivate();
+        this.camerasService.spectateCam.setInactive();
 
         this.bindsService.removeKey(Key.RightArrow, this.next.bind(this));
         this.bindsService.removeKey(Key.D, this.next.bind(this));

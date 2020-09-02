@@ -18,7 +18,6 @@ import SettingsService from "./settings/settings.service";
 import CursorService from "./input/cursor.service";
 import FreeroamService from "./lobbies/freeroam.service";
 import DataSyncService from "./datas/data-sync.service";
-import SpectateService from "./cameras/spectate.service";
 import CamerasService from "./cameras/cameras.service";
 import DeathService from "./deathmatch/death.service";
 import ScaleformMessagesService from "./draw/scaleform-messages.service";
@@ -29,6 +28,7 @@ import { AFKCheckService } from "./others/afk-check.service";
 import { FightService } from "./deathmatch/fight.service";
 import { HudService } from "./draw/hud.service";
 import { FloatingDamageInfoService } from "./draw/floating-damage-info.service";
+import SpectateService from "./cameras/spectate.service";
 
 log("Initializing services ...");
 
@@ -50,7 +50,6 @@ container.bind(DIIdentifier.CursorService).to(CursorService);
 container.bind(DIIdentifier.FreeroamService).to(FreeroamService);
 container.bind(DIIdentifier.DataSyncService).to(DataSyncService);
 container.bind(DIIdentifier.CamerasService).to(CamerasService);
-container.bind(DIIdentifier.SpectateService).to(SpectateService);
 container.bind(DIIdentifier.DeathService).to(DeathService);
 container.bind(DIIdentifier.ScaleformMessagesService).to(ScaleformMessagesService);
 container.bind(DIIdentifier.GangHouseService).to(GangHouseService);
@@ -59,11 +58,16 @@ container.bind(DIIdentifier.AFKCheckService).to(AFKCheckService);
 container.bind(DIIdentifier.FightService).to(FightService);
 container.bind(DIIdentifier.HudService).to(HudService);
 container.bind(DIIdentifier.FloatingDamageInfoService).to(FloatingDamageInfoService);
+container.bind(DIIdentifier.SpectateService).to(SpectateService);
 ///////////////
 
 // Factory //
 container.bind<interfaces.Factory<MapCreatorObject>>(DIIdentifier.Factory_MapCreatorObject).toAutoFactory<MapCreatorObject>(DIIdentifier.MapCreatorObject);
-container.bind<interfaces.Factory<Camera>>(DIIdentifier.Factory_Camera).toAutoFactory<Camera>(DIIdentifier.Factory_Camera);
+container.bind<interfaces.Factory<Camera>>(DIIdentifier.Factory_Camera).toFactory<Camera>((context: interfaces.Context) => {
+    return (name: string) => {
+        return new Camera(context.container.get<CamerasService>(DIIdentifier.CamerasService), name);
+    };
+});
 /////////////
 
 try {
@@ -83,7 +87,6 @@ try {
     container.get(DIIdentifier.FreeroamService);
     container.get(DIIdentifier.DataSyncService);
     container.get(DIIdentifier.CamerasService);
-    container.get(DIIdentifier.SpectateService);
     container.get(DIIdentifier.DeathService);
     container.get(DIIdentifier.ScaleformMessagesService);
     container.get(DIIdentifier.GangHouseService);
@@ -92,6 +95,7 @@ try {
     container.get(DIIdentifier.FightService)
     container.get(DIIdentifier.HudService);
     container.get(DIIdentifier.FloatingDamageInfoService);
+    container.get(DIIdentifier.SpectateService);
     ////////////////////////////
 } catch (ex) {
     logError(ex, "Services initializing failed");

@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using MessagePack;
 
 namespace TDS_Shared.Core
 {
@@ -16,12 +16,12 @@ namespace TDS_Shared.Core
             _errorLogger = errorLogger;
         } 
 
-        public string ToClient<T>(T obj)
+        public byte[] ToClient<T>(T obj)
         {
             try
             {
                 _infoLogger?.Invoke("Start ToClient Serializer");
-                var json = JsonConvert.SerializeObject(obj);
+                var json = MessagePackSerializer.Serialize(obj);
                 _infoLogger?.Invoke("End ToClient Serializer");
 
                 return json;
@@ -29,50 +29,50 @@ namespace TDS_Shared.Core
             catch (Exception ex)
             {
                 _errorLogger?.Invoke(ex);
-                return "[]";
+                return Array.Empty<byte>();
             }
         }
 
-        public string ToServer<T>(T obj)
+        public byte[] ToServer<T>(T obj)
         {
             try
             {
                 _infoLogger?.Invoke("Start ToServer Serializer");
-                var json = JsonConvert.SerializeObject(obj);
+                var bytes = MessagePackSerializer.Serialize(obj);
                 _infoLogger?.Invoke("End ToServer Serializer");
 
-                return json;
+                return bytes;
             }
             catch (Exception ex)
             {
                 _errorLogger?.Invoke(ex);
-                return "[]";
+                return Array.Empty<byte>();
             }
         }
 
-        public string ToBrowser<T>(T obj)
+        public byte[] ToBrowser<T>(T obj)
         {
             try
             {
                 _infoLogger?.Invoke("Start ToBrowser Serializer");
-                var json = JsonConvert.SerializeObject(obj);
+                var bytes = MessagePackSerializer.Serialize(obj);
                 _infoLogger?.Invoke("End ToBrowser Serializer");
 
-                return json;
+                return bytes;
             }
             catch (Exception ex)
             {
                 _errorLogger?.Invoke(ex);
-                return "[]";
+                return Array.Empty<byte>();
             }
         }
 
-        public T FromClient<T>(string json)
+        public T FromClient<T>(byte[] bytes)
         {
             try
             {
                 _infoLogger?.Invoke("Start FromClient Serializer");
-                var obj = JsonConvert.DeserializeObject<T>(json);
+                var obj = MessagePackSerializer.Deserialize<T>(bytes);
                 _infoLogger?.Invoke("End FromClient Serializer");
 
                 return obj;
@@ -84,12 +84,12 @@ namespace TDS_Shared.Core
             }
         }
 
-        public T FromServer<T>(string json)
+        public T FromServer<T>(byte[] bytes)
         {
             try
             {
                 _infoLogger?.Invoke("Start FromServer Serializer");
-                var obj = JsonConvert.DeserializeObject<T>(json);
+                var obj = MessagePackSerializer.Deserialize<T>(bytes);
                 _infoLogger?.Invoke("End FromServer Serializer");
 
                 return obj;
@@ -101,12 +101,12 @@ namespace TDS_Shared.Core
             }
         }
 
-        public T FromBrowser<T>(string json)
+        public T FromBrowser<T>(byte[] bytes)
         {
             try
             {
                 _infoLogger?.Invoke("Start FromBrowser Serializer");
-                var obj = JsonConvert.DeserializeObject<T>(json);
+                var obj = MessagePackSerializer.Deserialize<T>(bytes);
                 _infoLogger?.Invoke("End FromBrowser Serializer");
 
                 return obj;

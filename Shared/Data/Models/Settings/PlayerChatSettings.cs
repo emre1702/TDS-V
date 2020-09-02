@@ -3,40 +3,30 @@ using TDS_Shared.Data.Extensions;
 
 namespace TDS_Shared.Data.Models.Settings
 {
-    public class SyncedPlayerAngularChatSettings : IMValueConvertible
+    public class PlayerChatSettings : IMValueConvertible
     {
-        #region Properties
-
         public float FontSize { get; set; }
-
         public bool HideInfo { get; set; }
-
         public bool HideDirty { get; set; }
-
         public float InfoFontSize { get; set; }
-
         public int InfoMoveTimeMs { get; set; }
-
         public float MaxHeight { get; set; }
-
         public float Width { get; set; }
+        public bool ShowCursorOnChatOpen { get; set; }
 
-        #endregion Properties
 
-        private readonly IMValueBaseAdapter _adapter = new SyncedPlayerAngularChatSettingsAdapter();
+        private readonly IMValueBaseAdapter _adapter = new PlayerChatSettingsAdapter();
 
-        #region Methods
 
         public IMValueBaseAdapter GetAdapter()
             => _adapter;
 
-        #endregion Methods
 
-        private class SyncedPlayerAngularChatSettingsAdapter : IMValueAdapter<SyncedPlayerAngularChatSettings>
+        private class PlayerChatSettingsAdapter : IMValueAdapter<PlayerChatSettings>
         {
-            public SyncedPlayerAngularChatSettings FromMValue(IMValueReader reader)
+            public PlayerChatSettings FromMValue(IMValueReader reader)
             {
-                var obj = new SyncedPlayerAngularChatSettings();
+                var obj = new PlayerChatSettings();
 
                 reader.BeginObject();
 
@@ -66,6 +56,9 @@ namespace TDS_Shared.Data.Models.Settings
                         case nameof(HideDirty):
                             obj.HideDirty = reader.NextBool();
                             break;
+                        case nameof(ShowCursorOnChatOpen):
+                            obj.ShowCursorOnChatOpen = reader.NextBool();
+                            break;
                     }
                 }
 
@@ -74,7 +67,7 @@ namespace TDS_Shared.Data.Models.Settings
                 return obj;
             }
 
-            public void ToMValue(SyncedPlayerAngularChatSettings value, IMValueWriter writer)
+            public void ToMValue(PlayerChatSettings value, IMValueWriter writer)
             {
                 writer.BeginObject();
 
@@ -99,12 +92,15 @@ namespace TDS_Shared.Data.Models.Settings
                 writer.Name(nameof(HideDirty));
                 writer.Value(value.HideDirty);
 
+                writer.Name(nameof(ShowCursorOnChatOpen));
+                writer.Value(value.ShowCursorOnChatOpen);
+
                 writer.EndObject();
             }
 
             public void ToMValue(object obj, IMValueWriter writer)
             {
-                if (obj is SyncedPlayerAngularChatSettings value)
+                if (obj is PlayerChatSettings value)
                     ToMValue(value, writer);
             }
 

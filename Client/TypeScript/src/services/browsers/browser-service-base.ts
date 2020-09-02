@@ -1,5 +1,5 @@
 ﻿import alt from "alt-client";
-import ToBrowserEvent from "../../data/enums/events/to-browser-event.enum";
+import ToBrowserEvent from "../../datas/enums/events/to-browser-event.enum";
 
 export default class BrowserServiceBase {
     protected browser: alt.WebView;
@@ -21,7 +21,7 @@ export default class BrowserServiceBase {
         this.browser.on("load", this.browserLoaded.bind(this));
     }
 
-    execute(eventName: ToBrowserEvent, ...args: any[]) {
+    execute(eventName: ToBrowserEvent | string, ...args: any[]) {
         if (!this.browser || !this.hasLoaded) {
             this.executeList.push(() => this.browser.emit(eventName, args));
         } else {

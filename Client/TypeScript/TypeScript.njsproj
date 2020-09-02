@@ -126,6 +126,9 @@
     <TypeScriptCompile Include="src\datas\enums\gta\explosion-type.enum.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\enums\gta\ped-bone.enum.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\enums\gta\ped-hash.enum.ts" />
     <TypeScriptCompile Include="src\datas\enums\gta\ped-stat.enum.ts">
       <SubType>Code</SubType>
@@ -158,6 +161,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\extensions\string.extension.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\datas\helper\serializer.helper.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\datas\interfaces\events\cooldown-event-data.interface.ts" />
@@ -215,10 +221,19 @@
     <TypeScriptCompile Include="src\entities\draw\floating-damage-info.entity.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\entities\extensions\entity.extension.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\entities\extensions\vector3.extension.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\entities\interval\interval.entity.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\browsers\plain-main-browser.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\services\browsers\register-login-browser.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\services\cameras\cameras.service.ts" />

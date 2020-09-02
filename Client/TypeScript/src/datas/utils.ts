@@ -21,6 +21,8 @@ export function getRGBAFromString(rgba: string): alt.RGBA | undefined {
         return undefined;
     }
 
+    alt.on()
+
     const left = rgba.indexOf("(");
     const right = rgba.indexOf(")");
 
@@ -29,13 +31,13 @@ export function getRGBAFromString(rgba: string): alt.RGBA | undefined {
     }
 
     const rgbaContent = rgba.substring(left + 1, right);
-    const [r, g, b, a] = rgbaContent.split(",");
+    let [r, g, b, a] = rgbaContent.split(",");
 
     return new alt.RGBA(
-        Number(r ?? "255"),
-        Number(g ?? "255"),
-        Number(b ?? "255"),
-        Math.min(Number(a ?? "1") * 255, 255));
+        Number(r || "255"),
+        Number(g || "255"),
+        Number(b || "255"),
+        Math.min(Number(a || "1") * 255, 255));
 
 }
 
@@ -178,8 +180,8 @@ export function getScreenCoordFromWorldCoord(vec: alt.Vector3): alt.Vector2 | un
 }
 
 export function getWorldCoordFromScreenCoord(pos: alt.Vector2, camera: Camera): alt.Vector3 {
-    const camPos = (camera && camera.position) ?? game.getGameplayCamCoord() as alt.Vector3;
-    const camRot = (camera && camera.rotation) ?? game.getGameplayCamRot(2) as alt.Vector3;
+    const camPos = (camera && camera.position) || game.getGameplayCamCoord() as alt.Vector3;
+    const camRot = (camera && camera.rotation) || game.getGameplayCamRot(2) as alt.Vector3;
     const camForward = rotationToDirection(camRot);
     const rotUp = camRot.added(new alt.Vector3(1, 0, 0));
     const rotDown = camRot.added(new alt.Vector3(-1, 0, 0));

@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AltV.Net.Async" Version="1.38.4" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Core\TDS_Shared.Core.csproj" />
   </ItemGroup>
 

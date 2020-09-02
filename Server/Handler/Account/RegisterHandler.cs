@@ -95,7 +95,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
             {
                 UseDarkTheme = true
             };
-
+          
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Players.Add(dbPlayer);

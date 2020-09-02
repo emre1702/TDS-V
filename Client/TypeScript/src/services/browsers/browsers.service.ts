@@ -12,8 +12,8 @@ import RegisterLoginBrowserService from "./register-login-browser.service";
 export default class BrowsersService {
 
     angular: AngularBrowserService;
-    mapCreatorObjectChoice: MapCreatorObjectChoiceBrowserService;
-    mapCreatorVehicleChoice: MapCreatorVehicleChoiceBrowserService;
+    //mapCreatorObjectChoice: MapCreatorObjectChoiceBrowserService;
+    //mapCreatorVehicleChoice: MapCreatorVehicleChoiceBrowserService;
     plainMain: PlainMainBrowserService;
     registerLogin: RegisterLoginBrowserService;
 

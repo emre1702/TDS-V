@@ -66,27 +66,27 @@ export default class CamerasService {
         }
     }
 
+    removeFocusArea() {
+        game.clearFocus();
+        this.focusAtPos = undefined;
+    }
+
     private createInitialCams() {
         this.betweenRoundsCam = this.cameraFactory("BetweenRoundsCam");
         this.spectateCam = this.cameraFactory("BetweenRoundsCam");
         //Freecam is not created here - it's created on demand
     }
 
-    private removeFocusArea() {
-        game.clearFocus();
-        this.focusAtPos = undefined;
-    }
-
     private renderBackToSpectate(ease: boolean = false, easeTime: number = 0) {
         game.setFocusEntity(this.spectateService.spectatingEntity.scriptID);
         this.spectateCam.spectate(this.spectateService.spectatingEntity);
-        this.spectateCam.activate();
+        this.spectateCam.setActive();
         this.spectateCam.render(true, ease, easeTime);
     }
 
     private renderBackToGameplay(ease: boolean = false, easeTime: number = 0) {
         if (this.activeCamera) {
-            this.activeCamera.deactivate();
+            this.activeCamera.setInactive();
             this.activeCamera = undefined;
         }
         this.removeFocusArea();

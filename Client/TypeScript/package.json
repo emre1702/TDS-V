@@ -23,6 +23,7 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "@msgpack/msgpack": "^1.12.2",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13"
   }

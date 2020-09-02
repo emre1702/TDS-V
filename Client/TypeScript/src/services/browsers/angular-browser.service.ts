@@ -5,13 +5,10 @@ import { inject } from "inversify";
 import ToBrowserEvent from "../../datas/enums/events/to-browser-event.enum";
 import ToClientEvent from "../../datas/enums/events/to-client-event.enum";
 import FromBrowserEvent from "../../datas/enums/events/from-browser-event.enum";
-import Utils, { hashPasswordClient } from "../../datas/utils";
+import { hashPasswordClient } from "../../datas/utils";
 import PlayerDataKey from "../../datas/enums/data/player-data-key.enum";
 import { Player, onServer } from "alt-client";
 import PlayerSettings from "../../datas/interfaces/players/player-settings.interface";
-import PlayerAngularChatSettings from "../../datas/interfaces/players/player-angular-chat-settings.interface";
-import MapCreatorObject from "../../datas/interfaces/lobbies/map-creator/map-creator-object.interface";
-import MapCreatorPosData from "../../datas/interfaces/lobbies/map-creator/map-creator-object-data.interface";
 import DIIdentifier from "../../datas/enums/dependency-injection/di-identifier.enum";
 import MapCreatorObjectData from "../../datas/interfaces/lobbies/map-creator/map-creator-object-data.interface";
 import { logError } from "../../datas/helper/logging.helper";
@@ -59,7 +56,7 @@ export default class AngularBrowserService extends BrowserServiceBase {
 
     private onGetHashedPassword(password: string) {
         const hashedPassword = hashPasswordClient(password);
-        this.execute(FromBrowserEvent.GetHashedPassword, hashedPassword);
+        this.execute(FromBrowserEvent.GetHashedPassword as unknown as ToBrowserEvent, hashedPassword);
     }
 
     private hideRankings() {
@@ -70,7 +67,8 @@ export default class AngularBrowserService extends BrowserServiceBase {
         this.execute(ToBrowserEvent.LoadChatSettings, settings.Chat)
     }
 
-    private addMapCreatorObject(objectData: MapCreatorObjectData) {
+    //Todo make this private again?
+    addMapCreatorObject(objectData: MapCreatorObjectData) {
         this.execute(ToBrowserEvent.AddMapCreatorObject, objectData);
     }
 

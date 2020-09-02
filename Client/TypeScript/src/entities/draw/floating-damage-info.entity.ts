@@ -2,6 +2,8 @@
 import game from "natives";
 import alt from "alt-client";
 import DxService from "../../services/draw/dx.service";
+import { DxText } from "./dx/dx-text.entity";
+import Alignment from "../../datas/enums/draw/alignment.enum";
 
 export class FloatingDamageInfo {
     get removeAtHandler(): boolean {
@@ -35,9 +37,9 @@ export class FloatingDamageInfo {
         const color = new alt.RGBA(220, 220, 200, 255 - (255 * percentage));
 
         if (!this.text) {
-            this.text = new DxText(this.dxService, this.damage, screenX, screenY, scale, color, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Bottom, dropShadow: false, outline: true);
+            this.text = new DxText(this.dxService, String(this.damage), screenX, screenY, scale, color, undefined, Alignment.Center, Alignment.End, undefined, false, true);
         } else {
-            this.text.setRelativeY(screenY);
+            this.text.setY(screenY, true);
         }
     }
 
