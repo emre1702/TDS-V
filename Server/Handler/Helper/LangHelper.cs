@@ -76,7 +76,7 @@ namespace TDS_Server.Handler.Helper
 
             foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
             {
-                player.SendMessage(returndict[player.Language]);
+                player.SendChatMessage(returndict[player.Language]);
             }
         }
 

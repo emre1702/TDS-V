@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
+﻿using GTANetworkAPI;
+using System;
+using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
@@ -16,8 +18,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public static void KillPlayer(ITDSPlayer player, string reason)
         {
-            player.ModPlayer?.Kill();
-            player.SendMessage(reason);
+            player.Kill();
+            player.SendChatMessage(reason);
         }
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
@@ -12,18 +14,12 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class Bomb
     {
-        #region Private Fields
-
         private readonly List<BombPlantPlaceDto> _bombPlantPlaces = new List<BombPlantPlaceDto>();
 
         private TDSTimer? _bombDetonateTimer,
                       _bombPlantDefuseTimer;
 
         private ITDSPlayer? _planter;
-
-        #endregion Private Fields
-
-        #region Public Methods
 
         public bool StartBombDefusing(ITDSPlayer player)
         {
@@ -36,11 +32,11 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                 return false;
             if (_bombPlantDefuseTimer is { })
                 return false;
-            if (player.ModPlayer!.Dead)
+            if (player!.Dead)
                 return false;
-            if (player.ModPlayer.CurrentWeapon != WeaponHash.Unarmed)
+            if (player.CurrentWeapon != WeaponHash.Unarmed)
                 return false;
-            player.ModPlayer.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(AnimationFlag.Loop));
+            player.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(AnimationFlag.Loop));
             _bombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(player), (uint)Lobby.RoundSettings.BombDefuseTimeMs);
             return true;
         }
@@ -55,12 +51,12 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                 return false;
             if (_bombPlantDefuseTimer is { })
                 return false;
-            if (player.ModPlayer!.Dead)
+            if (player.Dead)
                 return false;
-            if (player.ModPlayer.CurrentWeapon != WeaponHash.Unarmed)
+            if (player.CurrentWeapon != WeaponHash.Unarmed)
                 return false;
 
-            player.ModPlayer.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(AnimationFlag.Loop));
+            player.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)(AnimationFlag.Loop));
             _bombPlantDefuseTimer = new TDSTimer(() => PlantBomb(player), (uint)Lobby.RoundSettings.BombPlantTimeMs);
             return true;
         }
@@ -69,7 +65,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
         {
             _bombPlantDefuseTimer?.Kill();
             _bombPlantDefuseTimer = null;
-            player.ModPlayer?.StopAnimation();
+            player.StopAnimation();
         }
 
         public void StopBombPlanting(ITDSPlayer player)
@@ -77,46 +73,42 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             _bombPlantDefuseTimer?.Kill();
             _bombPlantDefuseTimer = null;
 
-            player.ModPlayer?.StopAnimation();
+            player.StopAnimation();
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private static void SendBombPlantInfos(ITDSPlayer character)
         {
-            character.SendMessage(character.Language.BOMB_PLANT_INFO);
+            character.SendChatMessage(character.Language.BOMB_PLANT_INFO);
         }
 
         private void DefuseBomb(ITDSPlayer player)
         {
             _bombPlantDefuseTimer = null;
-            if (player.ModPlayer!.Dead)
+            if (player.Dead)
                 return;
             if (_bomb is null)
                 return;
 
-            var playerpos = player.ModPlayer.Position;
+            var playerpos = player.Position;
             if (playerpos.DistanceTo(_bomb.Position) > SettingsHandler.ServerSettings.DistanceToSpotToDefuse)
                 return;
 
             if (Lobby.IsOfficial)
                 player.AddToChallenge(ChallengeType.BombDefuse);
 
-            _terroristTeam.FuncIterate((targetcharacter, team) =>
+            _terroristTeam.FuncIterate((target, team) =>
             {
-                Lobby.DmgSys.UpdateLastHitter(targetcharacter, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
-                targetcharacter.ModPlayer!.Kill();
+                Lobby.DmgSys.UpdateLastHitter(target, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
+                target.Kill();
             });
-            player.ModPlayer.StopAnimation();
+            player.StopAnimation();
 
             // COUNTER-TERROR WON //
             WinnerTeam = _counterTerroristTeam;
             Lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.BombDefused);
         }
 
-        private BombPlantPlaceDto? GetPlantPos(Position3D pos)
+        private BombPlantPlaceDto? GetPlantPos(Vector3 pos)
         {
             foreach (var place in _bombPlantPlaces)
                 if (pos.DistanceTo(place.Position) < SettingsHandler.ServerSettings.DistanceToSpotToPlant)
@@ -127,26 +119,26 @@ namespace TDS_Server.Handler.Entities.Gamemodes
         private void PlantBomb(ITDSPlayer player)
         {
             _bombPlantDefuseTimer = null;
-            if (player.ModPlayer!.Dead)
+            if (player.Dead)
                 return;
             if (_bomb is null)
                 return;
-            player.ModPlayer.StopAnimation();
+            player.StopAnimation();
 
-            Position3D playerpos = player.ModPlayer.Position;
-            var plantPlace = GetPlantPos(playerpos);
+            var playerPos = player.Position;
+            var plantPlace = GetPlantPos(playerPos);
             if (plantPlace is null)
                 return;
 
             if (Lobby.IsOfficial)
                 player.AddToChallenge(ChallengeType.BombPlant);
 
-            player.SendEvent(ToClientEvent.PlayerPlantedBomb);
+            player.TriggerEvent(ToClientEvent.PlayerPlantedBomb);
             _bomb.Detach();
-            _bomb.Position = new Position3D(playerpos.X, playerpos.Y, playerpos.Z - 0.9);
-            _bomb.Rotation = new Position3D(270, 0, 0);
+            _bomb.Position = new Vector3(playerPos.X, playerPos.Y, playerPos.Z - 0.9);
+            _bomb.Rotation = new Vector3(270, 0, 0);
             plantPlace.Object.Delete();
-            plantPlace.Object = ModAPI.MapObject.Create(-263709501, plantPlace.Position, null, 255, Lobby);
+            plantPlace.Object = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, dimension: Lobby.Dimension) as ITDSObject;
             plantPlace.Blip.Color = 49;
             plantPlace.Blip.Name = "Bomb-Plant";
             //plantPlace.Blip.Flashing = true;
@@ -157,8 +149,8 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
             Lobby.FuncIterateAllPlayers((target, team) =>
             {
-                target.SendMessage(target.Language.BOMB_PLANTED);
-                target.SendEvent(ToClientEvent.BombPlanted, Serializer.ToClient(playerpos), team == _counterTerroristTeam);
+                target.SendChatMessage(target.Language.BOMB_PLANTED);
+                target.TriggerEvent(ToClientEvent.BombPlanted, Serializer.ToClient(playerPos), team == _counterTerroristTeam);
             });
 
             SendBombDefuseInfos();
@@ -170,11 +162,9 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             {
                 foreach (string str in character.Language.DEFUSE_INFO)
                 {
-                    character.SendMessage(str);
+                    character.SendChatMessage(str);
                 }
             });
         }
-
-        #endregion Private Methods
     }
 }

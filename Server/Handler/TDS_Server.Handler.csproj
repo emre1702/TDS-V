@@ -23,6 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Reference Include="Bootstrapper">
+          <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
+        </Reference>
         <Reference Include="Newtonsoft.Json">
             <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
         </Reference>

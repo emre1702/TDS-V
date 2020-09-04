@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 
@@ -19,14 +20,13 @@ namespace TDS_Server.Handler.Entities
         private readonly TDSDbContext _dbContext;
 
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
-        private ITDSPlayer? _player;
 
         #endregion Private Fields
 
         #region Protected Constructors
 
         protected DatabaseEntityWrapper(TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            => (_dbContext, LoggingHandler, _player) = (dbContext, loggingHandler, this as ITDSPlayer);
+            => (_dbContext, LoggingHandler) = (dbContext, loggingHandler);
 
         #endregion Protected Constructors
 
@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                LoggingHandler.LogError(ex);
             }
             finally
             {
@@ -65,7 +65,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                LoggingHandler.LogError(ex);
                 return default!;
             }
             finally
@@ -84,7 +84,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                LoggingHandler.LogError(ex);
             }
             finally
             {
@@ -102,7 +102,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                LoggingHandler.LogError(ex);
                 return default!;
             }
             finally
@@ -121,7 +121,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, _player);
+                LoggingHandler.LogError(ex);
             }
             finally
             {

@@ -77,21 +77,21 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 player.LoadTimezone();
                 player.AddToChallenge(ChallengeType.ChangeSettings);
 
-                player.SendEvent(ToClientEvent.SyncSettings, _serializer.ToBrowser(obj.General));
+                player.TriggerEvent(ToClientEvent.SyncSettings, _serializer.ToBrowser(obj.General));
 
                 if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId && newDiscordUserId.HasValue)
                 {
-                    _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId.Value, (reply) =>
+                    _bonusBotConnectorClient.PrivateChat?.SendChatMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId.Value, (reply) =>
                     {
                         if (string.IsNullOrEmpty(reply.ErrorMessage))
                             return;
 
-                        player.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_SAVE_FAILED, reply.ErrorMessage));
+                        player.SendChatMessage(string.Format(player.Language.DISCORD_IDENTITY_SAVE_FAILED, reply.ErrorMessage));
                     });
                 }
             });

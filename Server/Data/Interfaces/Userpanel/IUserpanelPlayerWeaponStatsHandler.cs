@@ -1,4 +1,5 @@
 ﻿using System;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 
 namespace TDS_Server.Data.Interfaces.Userpanel
 {

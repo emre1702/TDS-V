@@ -1,15 +1,12 @@
-﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
-using TDS_Shared.Data.Enums;
+﻿using GTANetworkAPI;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Enums;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class Bomb
     {
-        #region Public Methods
-
         public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer)
         {
             base.OnPlayerDeath(player, killer);
@@ -17,7 +14,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                 DropBomb();
         }
 
-        public override void OnPlayerEnterColshape(IColShape shape, ITDSPlayer character)
+        public override void OnPlayerEnterColshape(ITDSColShape shape, ITDSPlayer character)
         {
             base.OnPlayerEnterColshape(shape, character);
             if (_lobbyBombTakeCol.ContainsKey(Lobby))
@@ -47,12 +44,10 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                 return;
 
             if (_bombDetonateTimer != null && _bomb != null)
-                player.SendEvent(ToClientEvent.BombPlanted,
+                player.TriggerEvent(ToClientEvent.BombPlanted,
                     Serializer.ToClient(_bomb.Position),
                     false,
                     _bombDetonateTimer.ExecuteAfterMs - _bombDetonateTimer.RemainingMsToExecute);
         }
-
-        #endregion Public Methods
     }
 }

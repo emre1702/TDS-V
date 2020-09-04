@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TDS_Client.Data.Enums;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.Data.Defaults

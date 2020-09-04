@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -61,8 +62,7 @@ namespace TDS_Server.Handler.GangSystem
             }
         }
 
-
-        public async void AddHouse(Position3D position, float rotation, byte neededGangLevel, int creatorId)
+        public async void AddHouse(Vector3 position, float rotation, byte neededGangLevel, int creatorId)
         {
             var entity = new GangHouses
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -55,7 +56,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
             invitationsHandler.Add(this);
 
-            target.SendBrowserEvent(ToBrowserEvent.AddInvitation, serializer.ToBrowser(Dto));
+            target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, serializer.ToBrowser(Dto));
         }
 
         #endregion Public Constructors
@@ -84,7 +85,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
         public void Resend()
         {
-            Target.SendBrowserEvent(ToBrowserEvent.AddInvitation, _serializer.ToBrowser(Dto));
+            Target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, _serializer.ToBrowser(Dto));
         }
 
         public void Withdraw()
@@ -92,7 +93,7 @@ namespace TDS_Server.Handler.Entities.Utility
             _invitationsHandler.Remove(this);
             if (!Target.LoggedIn)
                 return;
-            Target.SendBrowserEvent(ToBrowserEvent.RemoveInvitation, Dto.Id);
+            Target.TriggerBrowserEvent(ToBrowserEvent.RemoveInvitation, Dto.Id);
         }
 
         #endregion Public Methods

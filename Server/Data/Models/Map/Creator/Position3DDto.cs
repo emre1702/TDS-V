@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using GTANetworkAPI;
+using Newtonsoft.Json;
+using System;
 using System.Xml.Serialization;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -43,6 +45,9 @@ namespace TDS_Server.Data.Models.Map.Creator
         [XmlAttribute("z")]
         [JsonProperty("2")]
         public float Z { get; set; }
+
+        public Vector3 ToVector3()
+            => new Vector3(X, Y, Z);
 
         #endregion Public Properties
 

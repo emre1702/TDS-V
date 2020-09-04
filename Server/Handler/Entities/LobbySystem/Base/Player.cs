@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -49,7 +50,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             ModAPI.Thread.QueueIntoMainThread(() =>
             {
-                ModAPI.Sync.SendEvent(this, ToClientEvent.JoinSameLobby, player.RemoteId);
+                ModAPI.Sync.TriggerEvent(this, ToClientEvent.JoinSameLobby, player.RemoteId);
 
                 player.Lobby = this;
 
@@ -69,7 +70,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 DataSyncHandler.SetData(player, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, IsPlayerLobbyOwner(player));
 
-                player.SendEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Serializer.ToClient(Players.Values.Select(p => p.RemoteId).ToList()),
+                player.TriggerEvent(ToClientEvent.JoinLobby, SyncedLobbySettings.Json, Serializer.ToClient(Players.Values.Select(p => p.RemoteId).ToList()),
                                                                                      Serializer.ToClient(Teams.Select(t => t.SyncedTeamData)));
 
                 if (Entity.Type != LobbyType.MainMenu)
@@ -136,7 +137,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             ModAPI.Thread.QueueIntoMainThread(() =>
             {
-                ModAPI.Sync.SendEvent(ToClientEvent.LeaveSameLobby, player.RemoteId, player.Entity?.Name ?? player.DisplayName);
+                ModAPI.Sync.TriggerEvent(ToClientEvent.LeaveSameLobby, player.RemoteId, player.Entity?.Name ?? player.DisplayName);
                 if (Entity.Type != LobbyType.MainMenu)
                     LoggingHandler?.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
 
@@ -167,7 +168,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return;
 
             PlayerLobbyStats? stats = null;
-            await player.ExecuteForDBAsync(async (dbContext) =>
+            await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
                 stats = await dbContext.PlayerLobbyStats.FindAsync(player.Entity.Id, Entity.Id);
                 if (stats is null)

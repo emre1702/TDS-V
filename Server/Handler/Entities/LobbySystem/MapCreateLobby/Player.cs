@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
@@ -27,11 +26,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 if (Players.Count == 2)
                 {
-                    Players.Values.First(p => p != player).SendEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Id);
+                    Players.Values.First(p => p != player).TriggerEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Id);
                 }
                 else if (Players.Count > 2)
                 {
-                    player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
+                    player.TriggerEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
                 }
             });
 
@@ -84,8 +83,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SetPosition(ITDSPlayer player, float x, float y, float z, float rot)
         {
-            player.ModPlayer!.Position = new Position3D(x, y, z);
-            player.ModPlayer!.Rotation = new Position3D(0, 0, rot);
+            player.Position = new Vector3(x, y, z);
+            player.Rotation = new Vector3(0, 0, rot);
         }
 
         #endregion Public Methods

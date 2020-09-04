@@ -80,7 +80,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             await RemoveMemberFromGang(gang, memberInGangEntity);
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 _eventsHandler.OnGangLeave(player, gang);
                 if (sendInfo)

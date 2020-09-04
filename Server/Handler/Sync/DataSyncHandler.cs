@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -11,8 +12,6 @@ namespace TDS_Server.Handler.Sync
 {
     public class DataSyncHandler
     {
-        #region Private Fields
-
         private readonly Dictionary<ushort, Dictionary<EntityDataKey, object>> _entityHandleDatasAll
             = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
 
@@ -21,8 +20,6 @@ namespace TDS_Server.Handler.Sync
 
         private readonly Dictionary<ushort, Dictionary<ushort, Dictionary<EntityDataKey, object>>> _entityHandleDatasPlayer
             = new Dictionary<ushort, Dictionary<ushort, Dictionary<EntityDataKey, object>>>();
-
-        private readonly IModAPI _modAPI;
 
         private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerHandleDatasAll
                                             = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
@@ -35,14 +32,9 @@ namespace TDS_Server.Handler.Sync
 
         private readonly Serializer _serializer;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DataSyncHandler(EventsHandler eventsHandler, Serializer serializer, IModAPI modAPI)
+        public DataSyncHandler(EventsHandler eventsHandler, Serializer serializer)
         {
             _serializer = serializer;
-            _modAPI = modAPI;
 
             eventsHandler.PlayerLoggedIn += SyncPlayerAllData;
             eventsHandler.PlayerJoinedLobby += SyncPlayerLobbyData;
@@ -51,10 +43,6 @@ namespace TDS_Server.Handler.Sync
             eventsHandler.PlayerLoggedOut += PlayerLoggedOut;
             eventsHandler.EntityDeleted += EntityDeleted;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         /// <summary>
         /// Only works for default types like int, string etc.!
@@ -72,7 +60,7 @@ namespace TDS_Server.Handler.Sync
                         _playerHandleDatasAll[player.RemoteId] = new Dictionary<PlayerDataKey, object>();
                     _playerHandleDatasAll[player.RemoteId][key] = value;
 
-                    _modAPI.Sync.SendEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
+                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
                     break;
 
                 case DataSyncMode.Lobby:
@@ -85,7 +73,7 @@ namespace TDS_Server.Handler.Sync
                         _playerHandleDatasLobby[player.Lobby.Id][player.RemoteId] = new Dictionary<PlayerDataKey, object>();
                     _playerHandleDatasLobby[player.Lobby.Id][player.RemoteId][key] = value;
 
-                    _modAPI.Sync.SendEvent(player.Lobby, ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
+                    player.Lobby.TriggerEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
                     break;
 
                 case DataSyncMode.Player:
@@ -93,7 +81,7 @@ namespace TDS_Server.Handler.Sync
                         _playerHandleDatasPlayer[player.RemoteId] = new Dictionary<PlayerDataKey, object>();
                     _playerHandleDatasPlayer[player.RemoteId][key] = value;
 
-                    _modAPI.Sync.SendEvent(player, ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
+                    player.TriggerEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
                     break;
             }
         }
@@ -105,7 +93,7 @@ namespace TDS_Server.Handler.Sync
         /// <param name="key"></param>
         /// <param name="syncMode"></param>
         /// <param name="value"></param>
-        public void SetData(IEntity entity, EntityDataKey key, DataSyncMode syncMode, object value, ITDSPlayer? toPlayer = null, ILobby? toLobby = null)
+        public void SetData(Entity entity, EntityDataKey key, DataSyncMode syncMode, object value, ITDSPlayer? toPlayer = null, ILobby? toLobby = null)
         {
             switch (syncMode)
             {
@@ -114,7 +102,7 @@ namespace TDS_Server.Handler.Sync
                         _entityHandleDatasAll[entity.Id] = new Dictionary<EntityDataKey, object>();
                     _entityHandleDatasAll[entity.Id][key] = value;
 
-                    _modAPI.Sync.SendEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
                     break;
 
                 case DataSyncMode.Lobby:
@@ -127,7 +115,7 @@ namespace TDS_Server.Handler.Sync
                         _entityHandleDatasLobby[toLobby.Id][entity.Id] = new Dictionary<EntityDataKey, object>();
                     _entityHandleDatasLobby[toLobby.Id][entity.Id][key] = value;
 
-                    _modAPI.Sync.SendEvent(toLobby, ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    toLobby.TriggerEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
                     break;
 
                 case DataSyncMode.Player:
@@ -141,18 +129,14 @@ namespace TDS_Server.Handler.Sync
 
                     _entityHandleDatasPlayer[toPlayer.RemoteId][entity.Id][key] = value;
 
-                    toPlayer.SendEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    toPlayer.TriggerEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
                     break;
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void EntityDeleted(IEntity entity)
+        private void EntityDeleted(Entity entity)
         {
-            _modAPI.Sync.SendEvent(ToClientEvent.RemoveSyncedEntityDatas, entity.RemoteId);
+            NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.RemoveSyncedEntityDatas, entity.Handle.Value);
         }
 
         private void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
@@ -173,24 +157,22 @@ namespace TDS_Server.Handler.Sync
             if (_playerHandleDatasPlayer.ContainsKey(player.RemoteId))
                 _playerHandleDatasPlayer.Remove(player.RemoteId);
 
-            _modAPI.Sync.SendEvent(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId);
+            NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId);
         }
 
         private void SyncPlayerAllData(ITDSPlayer player)
         {
-            player.SendEvent(ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasAll));
-            player.SendEvent(ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasAll));
+            player.TriggerEvent(ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasAll));
+            player.TriggerEvent(ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasAll));
         }
 
         private void SyncPlayerLobbyData(ITDSPlayer player, ILobby lobby)
         {
             if (_playerHandleDatasLobby.ContainsKey(lobby.Id))
-                _modAPI.Sync.SendEvent(player, ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
+                player.TriggerEvent(ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
 
             if (_entityHandleDatasLobby.ContainsKey(lobby.Id))
-                _modAPI.Sync.SendEvent(player, ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
+                player.TriggerEvent(ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
         }
-
-        #endregion Private Methods
     }
 }

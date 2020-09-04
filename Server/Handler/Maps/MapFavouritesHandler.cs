@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
@@ -17,27 +18,15 @@ namespace TDS_Server.Handler.Maps
 {
     public class MapFavouritesHandler : DatabaseEntityWrapper
     {
-        #region Private Fields
-
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapFavouritesHandler(EventsHandler eventsHandler, Serializer serializer, TDSDbContext dbContext, ILoggingHandler loggingHandler, IModAPI modAPI)
+        public MapFavouritesHandler(EventsHandler eventsHandler, Serializer serializer, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
 
             eventsHandler.PlayerLoggedIn += LoadPlayerFavourites;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public async void LoadPlayerFavourites(ITDSPlayer player)
         {
@@ -49,7 +38,7 @@ namespace TDS_Server.Handler.Maps
                     .Where(m => m.PlayerId == player.Entity.Id)
                     .Select(m => m.MapId)
                     .ToListAsync());
-            _modAPI.Thread.QueueIntoMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, _serializer.ToBrowser(mapIDs)));
+            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, _serializer.ToBrowser(mapIDs)));
         }
 
         public async Task<object?> ToggleMapFavouriteState(ITDSPlayer player, ArraySegment<object> args)
@@ -86,7 +75,5 @@ namespace TDS_Server.Handler.Maps
             });
             return null;
         }
-
-        #endregion Public Methods
     }
 }

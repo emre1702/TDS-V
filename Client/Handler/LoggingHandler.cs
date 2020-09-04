@@ -22,13 +22,13 @@ namespace TDS_Client.Handler
 
         public void LogToServer(string msg, string source = "")
         {
-            _modAPI.Sync.SendEvent(ToServerEvent.LogMessageToServer, msg, source);
+            _modAPI.Sync.TriggerEvent(ToServerEvent.LogMessageToServer, msg, source);
         }
 
         public void LogToServer(Exception ex, string title = null)
         {
             string message = title is null ? ex.GetBaseException().Message : $"[{title}] " + ex.GetBaseException().Message;
-            _modAPI.Sync.SendEvent(ToServerEvent.LogExceptionToServer, message, ex.StackTrace, ex.GetType().Name);
+            _modAPI.Sync.TriggerEvent(ToServerEvent.LogExceptionToServer, message, ex.StackTrace, ex.GetType().Name);
         }
 
         public void LogError(Exception ex, string title = null)
@@ -63,6 +63,5 @@ namespace TDS_Client.Handler
                 source += " ";
             _modAPI.Console.Log(ConsoleVerbosity.Warning, "[W]" + source + msg + "\n", true, false);
         }
-
     }
 }

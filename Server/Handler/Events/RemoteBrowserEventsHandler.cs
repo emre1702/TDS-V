@@ -1,8 +1,11 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.ModAPI.Player;
@@ -12,6 +15,7 @@ using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Player;
+using TDS_Server.Handler.PlayerHandlers;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -20,8 +24,6 @@ namespace TDS_Server.Handler.Events
 {
     public class RemoteBrowserEventsHandler
     {
-        #region Private Fields
-
         private readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _asyncMethods;
 
         private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
@@ -32,20 +34,14 @@ namespace TDS_Server.Handler.Events
 
         private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
 
-        private readonly IModAPI _modAPI;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly EventsHandler _eventsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler, IModAPI modAPI, PlayerCharHandler playerCharHandler, ITDSPlayerHandler tdsPlayerHandler,
+            MapFavouritesHandler mapFavouritesHandler, PlayerCharHandler playerCharHandler, ITDSPlayerHandler tdsPlayerHandler,
             GangWindowHandler gangWindowHandler, EventsHandler eventsHandler)
         {
-            _modAPI = modAPI;
             _loggingHandler = loggingHandler;
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
@@ -71,7 +67,7 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.SendApplication] = userpanelHandler.ApplicationUserHandler.CreateApplication,
                 [ToServerEvent.SetSupportRequestClosed] = userpanelHandler.SupportRequestHandler.SetSupportRequestClosed,
                 [ToServerEvent.SendSupportRequest] = userpanelHandler.SupportRequestHandler.SendRequest,
-                [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendMessage,
+                [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendChatMessage,
                 [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
                 [ToServerEvent.SaveCharCreateData] = playerCharHandler.Save,
                 [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel,
@@ -104,12 +100,8 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData
             };
 
-            modAPI.ClientEvent.Add<IPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
+            NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
         }
-
-        #endregion Public Constructors
-
-        #region Public Delegates
 
         public delegate Task<object?> FromBrowserAsyncMethodDelegate(ITDSPlayer player, ArraySegment<object> args);
 
@@ -117,11 +109,7 @@ namespace TDS_Server.Handler.Events
 
         public delegate object? FromBrowserMethodDelegate(ITDSPlayer player, ref ArraySegment<object> args);
 
-        #endregion Public Delegates
-
-        #region Public Methods
-
-        public async void OnFromBrowserEvent(IPlayer modPlayer, params object[] args)
+        public async void OnFromBrowserEvent(ITDSPlayer modPlayer, params object[] args)
         {
             var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
             if (player is null)
@@ -142,7 +130,7 @@ namespace TDS_Server.Handler.Events
                     ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName);
                 }
 
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                NAPI.Task.Run(() =>
                 {
                     if (_methods.ContainsKey(eventName))
                     {
@@ -151,7 +139,7 @@ namespace TDS_Server.Handler.Events
 
                     if (ret != null)
                     {
-                        player.SendEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret);
+                        player.TriggerEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret);
                     }
                 });
             }
@@ -163,10 +151,6 @@ namespace TDS_Server.Handler.Events
                     ex.StackTrace ?? Environment.StackTrace, ex.GetType().Name + "|" + baseEx.GetType().Name, player);
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private object? BuyMap(ITDSPlayer player, ref ArraySegment<object> args)
         {
@@ -238,7 +222,5 @@ namespace TDS_Server.Handler.Events
             arena.MapVote(player, mapId.Value);
             return null;
         }
-
-        #endregion Private Methods
     }
 }

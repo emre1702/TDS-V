@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Maps
         {
             (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
             _tdsPlayerHandler = tdsPlayerHandler;
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
+            NAPI.ClientEvent.Register<IPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
         }
 
         #endregion Public Constructors

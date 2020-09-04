@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
@@ -14,19 +14,11 @@ namespace TDS_Server.Core.Manager.PlayerManager
 {
     public class DatabasePlayerHelper : DatabaseEntityWrapper
     {
-        #region Private Fields
-
         private readonly ChatHandler _chatHandler;
-        private readonly IModAPI _modAPI;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler, ChatHandler chatHandler, IModAPI modAPI)
+        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler, ChatHandler chatHandler)
             : base(dbContext, loggingHandler)
         {
-            _modAPI = modAPI;
             _chatHandler = chatHandler;
 
             ExecuteForDB(dbContext =>
@@ -40,13 +32,9 @@ namespace TDS_Server.Core.Manager.PlayerManager
             }).Wait();
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public async Task ChangePlayerMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 _chatHandler.OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
             });
@@ -64,7 +52,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
 
         public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 _chatHandler.OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
             });
@@ -123,26 +111,12 @@ namespace TDS_Server.Core.Manager.PlayerManager
                     .ConfigureAwait(false));
         }
 
-        #endregion Public Methods
-
-        #region Internal Methods
-
-        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(ITDSPlayer player)
-        {
-            if (player.ModPlayer is null)
-                return null;
-
-            return await GetPlayerIdName(player.ModPlayer);
-        }
-
-        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(IPlayer modPlayer)
+        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(ITDSPlayer modPlayer)
         {
             return await ExecuteForDBAsync(async dbContext =>
                 await dbContext.Players.Where(p => p.Name == modPlayer.Name || p.SCName == modPlayer.SocialClubName)
                     .Select(p => new DatabasePlayerIdName(p.Id, p.Name))
                     .FirstOrDefaultAsync());
         }
-
-        #endregion Internal Methods
     }
 }

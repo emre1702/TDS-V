@@ -1,12 +1,12 @@
-﻿using MoreLinq;
+﻿using GTANetworkAPI;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Entities.LobbySystem;
@@ -14,7 +14,6 @@ using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.GangSystem
 {
@@ -25,21 +24,19 @@ namespace TDS_Server.Handler.Entities.GangSystem
         private readonly GangsHandler _gangsHandler;
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly IModAPI _modAPI;
         private readonly DataSyncHandler _dataSyncHandler;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper, LobbiesHandler lobbiesHandler,
-            IModAPI modAPI, DataSyncHandler dataSyncHandler)
+        public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper,
+            LobbiesHandler lobbiesHandler, DataSyncHandler dataSyncHandler)
             : base(dbContext, loggingHandler)
         {
             _langHelper = langHelper;
             _lobbiesHandler = lobbiesHandler;
             _gangsHandler = gangsHandler;
-            _modAPI = modAPI;
             _dataSyncHandler = dataSyncHandler;
 
             Entity = entity;
@@ -85,7 +82,7 @@ namespace TDS_Server.Handler.Entities.GangSystem
             Entity.OwnerId = nextLeader.PlayerId;
 
             var onlinePlayer = PlayersOnline.FirstOrDefault(p => p.Entity?.Id == nextLeader.PlayerId);
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 onlinePlayer.SendNotification(onlinePlayer.Language.YOUVE_BECOME_GANG_LEADER);
             });
@@ -129,7 +126,7 @@ namespace TDS_Server.Handler.Entities.GangSystem
 
             foreach (var player in PlayersOnline)
             {
-                player.SendMessage(returndict[player.Language]);
+                player.SendChatMessage(returndict[player.Language]);
             }
         }
 

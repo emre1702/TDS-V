@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Models;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Core.Damagesystem
@@ -21,10 +21,7 @@ namespace TDS_Server.Core.Damagesystem
 
         public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, PedBodyPart pedBodyPart, ITDSPlayer? source)
         {
-            if (target.ModPlayer is null)
-                return;
-
-            if (target.ModPlayer.Dead)
+            if (target.Dead)
                 return;
 
             if (source is null)
@@ -47,12 +44,12 @@ namespace TDS_Server.Core.Damagesystem
 
             if (source.Entity?.PlayerSettings.FloatingDamageInfo == true)
             {
-                source.SendEvent(ToClientEvent.HitOpponent, target.RemoteId, damage);
+                source.TriggerEvent(ToClientEvent.HitOpponent, target.RemoteId, damage);
             }
 
             if (target.Health == 0 && isHeadShot)
             {
-                target.SendEvent(ToClientEvent.ExplodeHead, (uint)weapon);
+                target.TriggerEvent(ToClientEvent.ExplodeHead, (uint)weapon);
             }
         }
 

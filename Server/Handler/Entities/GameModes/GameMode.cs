@@ -1,24 +1,20 @@
-﻿using System;
+﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.Gamemodes
 {
     public abstract class Gamemode
     {
-        #region Protected Fields
-
         protected readonly InvitationsHandler InvitationsHandler;
         protected readonly LangHelper LangHelper;
 
@@ -26,44 +22,25 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
         protected readonly MapDto Map;
 
-        protected readonly IModAPI ModAPI;
-
         protected readonly Serializer Serializer;
 
         protected readonly ISettingsHandler SettingsHandler;
 
-        #endregion Protected Fields
-
-        #region Private Fields
-
         private static HashSet<WeaponHash> _allowedWeaponHashes = new HashSet<WeaponHash>();
 
-        #endregion Private Fields
-
-        #region Protected Constructors
-
-        protected Gamemode(Arena lobby, MapDto map, IModAPI modAPI, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
+        protected Gamemode(Arena lobby, MapDto map, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
         {
             Lobby = lobby;
             Map = map;
-            ModAPI = modAPI;
             Serializer = serializer;
             SettingsHandler = settingsHandler;
             LangHelper = langHelper;
             InvitationsHandler = invitationsHandler;
         }
 
-        #endregion Protected Constructors
-
-        #region Public Properties
-
         public virtual bool HandlesGivingWeapons => false;
 
         public ITeam? WinnerTeam { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public static HashSet<WeaponHash> GetAllowedWeapons() => _allowedWeaponHashes;
 
@@ -103,7 +80,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
         {
         }
 
-        public virtual void OnPlayerEnterColshape(IColShape shape, ITDSPlayer player)
+        public virtual void OnPlayerEnterColshape(ITDSColShape shape, ITDSPlayer player)
         {
         }
 
@@ -146,7 +123,5 @@ namespace TDS_Server.Handler.Entities.Gamemodes
         public virtual void StopRound()
         {
         }
-
-        #endregion Public Methods
     }
 }

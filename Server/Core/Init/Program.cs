@@ -142,7 +142,7 @@ namespace TDS_Server.Core.Init
                         _consolePlayerCache.IsConsole = true;
                     }
 
-                    _modAPI.Thread.QueueIntoMainThread(() => _commandsHandler.UseCommand(_consolePlayerCache, input));
+                    NAPI.Task.Run(() => _commandsHandler.UseCommand(_consolePlayerCache, input));
                 }
                 catch (Exception ex)
                 {

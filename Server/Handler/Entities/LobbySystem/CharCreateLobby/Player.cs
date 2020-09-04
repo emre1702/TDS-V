@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 player.ModPlayer?.SetInvincible(true);
                 player.ModPlayer?.Freeze(true);
 
-                player.SendEvent(ToClientEvent.StartCharCreator, json, Dimension);
+                player.TriggerEvent(ToClientEvent.StartCharCreator, json, Dimension);
             });
 
             return true;

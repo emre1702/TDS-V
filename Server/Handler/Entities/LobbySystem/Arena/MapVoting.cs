@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -16,17 +17,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
-        #region Private Fields
-
         //private readonly Dictionary<string, uint> _mapVotes = new Dictionary<string, uint>();
         private readonly List<MapVoteDto> _mapVotes = new List<MapVoteDto>();
 
         private readonly Dictionary<ITDSPlayer, int> _playerVotes = new Dictionary<ITDSPlayer, int>();
         private MapDto? _boughtMap = null;
-
-        #endregion Private Fields
-
-        #region Public Methods
 
         public void BuyMap(ITDSPlayer player, int mapId)
         {
@@ -63,8 +58,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _mapVotes.Clear();
             _playerVotes.Clear();
 
-            SendAllPlayerLangNotification(lang => string.Format(lang.MAP_BUY_INFO, player.DisplayName, map.BrowserSyncedData.Name));
-            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.StopMapVoting);
+            SendNotification(lang => string.Format(lang.MAP_BUY_INFO, player.DisplayName, map.BrowserSyncedData.Name));
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.StopMapVoting);
         }
 
         public void MapVote(ITDSPlayer player, int mapId)
@@ -95,27 +90,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             var mapVote = new MapVoteDto { Id = mapId, AmountVotes = 1, Name = map.Info.Name };
             _mapVotes.Add(mapVote);
             _playerVotes[player] = mapId;
-            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddMapToVoting, Serializer.ToBrowser(mapVote));
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddMapToVoting, Serializer.ToBrowser(mapVote));
         }
 
         public void SendMapsForVoting(ITDSPlayer player)
         {
             if (_mapsJson != null)
             {
-                player.SendEvent(ToClientEvent.MapsListRequest, _mapsJson);
+                player.TriggerEvent(ToClientEvent.MapsListRequest, _mapsJson);
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void AddVoteToMap(ITDSPlayer player, int mapId)
         {
             _playerVotes[player] = mapId;
             var map = _mapVotes.First(m => m.Id == mapId);
             ++map.AmountVotes;
-            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, mapId, map.AmountVotes);
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, mapId, map.AmountVotes);
         }
 
         private MapDto? GetVotedMap()
@@ -129,7 +120,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (_mapVotes.Count > 0)
             {
                 MapVoteDto wonMap = _mapVotes.MaxBy(vote => vote.AmountVotes).First();
-                SendAllPlayerLangNotification(lang =>
+                SendNotification(lang =>
                 {
                     return string.Format(lang.MAP_WON_VOTING, wonMap.Name);
                 });
@@ -151,26 +142,24 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             MapVoteDto? oldVotedMap = _mapVotes.FirstOrDefault(m => m.Id == oldVote);
             if (oldVotedMap is null)
             {
-                ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, 0);
+                ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, 0);
                 return;
             }
             if (--oldVotedMap.AmountVotes <= 0)
             {
                 _mapVotes.RemoveAll(m => m.Id == oldVote);
-                ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, 0);
+                ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, 0);
                 return;
             }
-            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, oldVotedMap.AmountVotes);
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, oldVotedMap.AmountVotes);
         }
 
         private void SyncMapVotingOnJoin(ITDSPlayer player)
         {
             if (_mapVotes.Count > 0)
             {
-                player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapVoting, Serializer.ToBrowser(_mapVotes));
+                player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapVoting, Serializer.ToBrowser(_mapVotes));
             }
         }
-
-        #endregion Private Methods
     }
 }

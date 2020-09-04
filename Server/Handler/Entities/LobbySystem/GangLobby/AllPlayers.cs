@@ -9,39 +9,39 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SendAllPlayerChatMessage(string message, bool includePlayersInActions)
         {
-            SendAllPlayerChatMessage(message);
+            SendMessage(message);
             if (includePlayersInActions)
             {
                 var lobbiesToSendTheMsg = GetAllDerivedLobbies();
                 foreach (var lobby in lobbiesToSendTheMsg)
                 {
-                    lobby.SendAllPlayerChatMessage(message);
+                    lobby.SendChatMessage(message);
                 }
             }
         }
 
         public void SendAllPlayerLangMessage(Func<ILanguage, string> langGetter, bool includePlayersInActions)
         {
-            SendAllPlayerLangMessage(langGetter);
+            SendMessage(langGetter);
             if (includePlayersInActions)
             {
                 var lobbiesToSendTheMsg = GetAllDerivedLobbies();
                 foreach (var lobby in lobbiesToSendTheMsg)
                 {
-                    lobby.SendAllPlayerLangMessage(langGetter);
+                    lobby.SendChatMessage(langGetter);
                 }
             }
         }
 
         public void SendAllPlayerLangNotification(Func<ILanguage, string> langGetter, bool includePlayersInActions)
         {
-            SendAllPlayerLangNotification(langGetter);
+            SendNotification(langGetter);
             if (includePlayersInActions)
             {
                 var lobbiesToSendTheMsg = GetAllDerivedLobbies();
                 foreach (var lobby in lobbiesToSendTheMsg)
                 {
-                    lobby.SendAllPlayerLangNotification(langGetter);
+                    lobby.SendNotification(langGetter);
                 }
             }
         }

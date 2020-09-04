@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Shared.Data.Models.PlayerCommands;
 
 namespace TDS_Server.Data.Interfaces.Userpanel

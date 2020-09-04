@@ -6,8 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Data.Interfaces.ModAPI.Vehicle;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Core;
 
@@ -172,9 +171,9 @@ namespace TDS_Server.Data.Utility
             return new DateTimeOffset(dateTime).ToString("f", enUsCulture) + " +00:00";
         }
 
-        public static uint? GetVehicleFreeSeat(IVehicle veh)
+        public static uint? GetVehicleFreeSeat(ITDSVehicle veh)
         {
-            HashSet<int> occupiedSeats = veh.Occupants.OfType<IPlayer>().Select(o => o.VehicleSeat).ToHashSet();
+            HashSet<int> occupiedSeats = veh.Occupants.OfType<ITDSPlayer>().Select(o => o.VehicleSeat).ToHashSet();
             for (int i = veh.MaxOccupants - 1; i >= 0; --i)
             {
                 if (!occupiedSeats.Contains(i))
@@ -183,7 +182,7 @@ namespace TDS_Server.Data.Utility
             return null;
         }
 
-        public static void HandleBan(IPlayer modPlayer, PlayerBans? ban)
+        public static void HandleBan(ITDSPlayer modPlayer, PlayerBans? ban)
         {
             if (ban is null)
                 return;

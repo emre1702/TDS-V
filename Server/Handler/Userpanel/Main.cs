@@ -1,14 +1,14 @@
 ﻿using BonusBotConnector_Server;
+using GTANetworkAPI;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
@@ -21,7 +21,6 @@ namespace TDS_Server.Handler.Userpanel
 
         private readonly UserpanelCommandsHandler _commandsHandler;
         private readonly UserpanelFAQsHandlers _fAQsHandlers;
-        private readonly IModAPI _modAPI;
         private readonly UserpanelPlayerGeneralStatsHandler _playerStatsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
@@ -31,9 +30,8 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer,
-            UserpanelCommandsHandler userpanelCommandsHandler, IModAPI modAPI, ITDSPlayerHandler tdsPlayerHandler)
+            UserpanelCommandsHandler userpanelCommandsHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
-            _modAPI = modAPI;
             _tdsPlayerHandler = tdsPlayerHandler;
 
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
@@ -56,7 +54,7 @@ namespace TDS_Server.Handler.Userpanel
             SupportUserHandler = new UserpanelSupportUserHandler(SupportRequestHandler);
             SupportAdminHandler = new UserpanelSupportAdminHandler(SupportRequestHandler);
 
-            modAPI.ClientEvent.Add<IPlayer, int>(ToServerEvent.LoadUserpanelData, this, OnLoadUserpanelData);
+            NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.LoadUserpanelData, this, OnLoadUserpanelData);
         }
 
         #endregion Public Constructors
@@ -78,12 +76,10 @@ namespace TDS_Server.Handler.Userpanel
 
         #region Public Methods
 
-        public void OnLoadUserpanelData(IPlayer modPlayer, int dataType)
+        public void OnLoadUserpanelData(ITDSPlayer player, int dataType)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
-
             var type = (UserpanelLoadDataType)dataType;
             PlayerLoadData(player, type);
         }
@@ -149,7 +145,7 @@ namespace TDS_Server.Handler.Userpanel
             if (json == null)
                 return;
 
-            _modAPI.Thread.QueueIntoMainThread(() => player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
+            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
         }
 
         #endregion Public Methods

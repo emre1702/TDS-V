@@ -1,17 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.Challenge;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Challenge;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Extensions;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
@@ -21,9 +21,6 @@ namespace TDS_Server.Handler.Helper
 {
     public class ChallengesHelper : DatabaseEntityWrapper
     {
-        #region Private Fields
-
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private string _challengeSettingsFrequencyColumnName = string.Empty;
@@ -34,21 +31,15 @@ namespace TDS_Server.Handler.Helper
         private string _playerChallengesFrequencyColumnName = string.Empty;
         private string _playerChallengesTableName = string.Empty;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public ChallengesHelper(
             ISettingsHandler settingsHandler,
             EventsHandler eventsHandler,
             ILoggingHandler loggingHandler,
             TDSDbContext dbContext,
-            Serializer serializer,
-            IModAPI modAPI) : base(dbContext, loggingHandler)
+            Serializer serializer) : base(dbContext, loggingHandler)
         {
             _settingsHandler = settingsHandler;
             _serializer = serializer;
-            _modAPI = modAPI;
 
             LoadPlayerChallengesTableData(dbContext);
             LoadChallengeSettingsTableData(dbContext);
@@ -56,10 +47,6 @@ namespace TDS_Server.Handler.Helper
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.PlayerRegisteredBefore += EventsHandler_PlayerRegister;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public async Task AddForeverChallenges(Players dbPlayer)
         {
@@ -136,36 +123,30 @@ namespace TDS_Server.Handler.Helper
 
         public void SyncCurrentAmount(ITDSPlayer player, PlayerChallenges challenge)
         {
-            _modAPI.Sync.SendEvent(player, ToClientEvent.ToBrowserEvent,
+            player.TriggerEvent(ToClientEvent.ToBrowserEvent,
                 ToBrowserEvent.SyncChallengeCurrentAmountChange,
                 (int)challenge.Frequency,
                 (int)challenge.Challenge,
                 challenge.CurrentAmount);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private async void EventsHandler_PlayerLoggedIn(ITDSPlayer iplayer)
+        private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            if (!(iplayer is TDSPlayer player))
-                return;
             if (player.Entity is null)
                 return;
 
             if (!player.Entity.Challenges.Any(c => c.Frequency == ChallengeFrequency.Weekly))
             {
                 await AddWeeklyChallenges(player);
-                await player.ExecuteForDBAsync(async dbContext =>
+                await player.Database.ExecuteForDBAsync(async dbContext =>
                 {
                     await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload();
                 });
             }
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 player.InitChallengesDict();
-                player.SendBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));
+                player.TriggerBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));
             });
         }
 
@@ -220,7 +201,5 @@ namespace TDS_Server.Handler.Helper
 
             _playerChallengesFrequencyColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Frequency)).GetColumnName();
         }
-
-        #endregion Private Methods
     }
 }

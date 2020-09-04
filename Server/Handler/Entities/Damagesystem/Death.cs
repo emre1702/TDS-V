@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Core.Damagesystem
@@ -19,23 +20,20 @@ namespace TDS_Server.Core.Damagesystem
             if (character.LastHitter is null)
                 return;
 
-            ITDSPlayer lastHitterCharacter = character.LastHitter;
+            ITDSPlayer lastHitter = character.LastHitter;
             character.LastHitter = null;
 
-            if (lastHitterCharacter.ModPlayer is null)
+            if (character.Lobby != lastHitter.Lobby)
                 return;
 
-            if (character.Lobby != lastHitterCharacter.Lobby)
+            if (lastHitter.Lifes == 0)
                 return;
 
-            if (lastHitterCharacter.Lifes == 0)
-                return;
-
-            if (lastHitterCharacter.CurrentRoundStats != null)
-                ++lastHitterCharacter.CurrentRoundStats.Kills;
-            KillingSpreeKill(lastHitterCharacter);
-            lastHitterCharacter.SendNotification(string.Format(lastHitterCharacter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
-            killer = lastHitterCharacter;
+            if (lastHitter.CurrentRoundStats != null)
+                ++lastHitter.CurrentRoundStats.Kills;
+            KillingSpreeKill(lastHitter);
+            lastHitter.SendNotification(string.Format(lastHitter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
+            killer = lastHitter;
         }
 
         public ITDSPlayer GetKiller(ITDSPlayer player, ITDSPlayer? possiblekiller)
@@ -60,11 +58,9 @@ namespace TDS_Server.Core.Damagesystem
         /// <param name="weapon"></param>
         public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
-            if (player.ModPlayer is null)
-                return;
             if (_deadTimer.ContainsKey(player))
                 return;
-            player.ModPlayer.Freeze(true);
+            player.Freeze(true);
 
             KillingSpreeDeath(player);
 
@@ -115,7 +111,7 @@ namespace TDS_Server.Core.Damagesystem
                 if (entry.Value >= halfarmorhp)
                 {
                     ITDSPlayer possibleAssister = entry.Key;
-                    if (possibleAssister.ModPlayer is { } && possibleAssister.Lobby == player.Lobby && possibleAssister != killer && possibleAssister.CurrentRoundStats is { })
+                    if (possibleAssister.Lobby == player.Lobby && possibleAssister != killer && possibleAssister.CurrentRoundStats is { })
                     {
                         ++possibleAssister.CurrentRoundStats.Assists;
                         possibleAssister.SendNotification(string.Format(possibleAssister.Language.GOT_ASSIST, player.DisplayName));

@@ -1,8 +1,8 @@
 ﻿using BonusBotConnector.Client;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
@@ -19,34 +19,24 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class MapCreateLobby : Lobby
     {
-        #region Private Fields
-
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
         private int _lastId;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
+        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : this(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
+            : this(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
                   eventsHandler, bonusBotConnectorClient, bansHandler)
         {
         }
 
-        public MapCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
+        public MapCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : base(entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
+            : base(entity, false, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
                   bonusBotConnectorClient, bansHandler)
         {
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void SetMap(MapCreateDataDto dto)
         {
@@ -82,7 +72,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _lastId = _posById.Keys.Max();
 
             string json = Serializer.ToBrowser(dto);
-            ModAPI.Sync.SendEvent(this, ToClientEvent.LoadMapForMapCreator, json, _lastId);
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.LoadMapForMapCreator, json, _lastId);
         }
 
         public void StartNewMap()
@@ -90,19 +80,15 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _lastId = 0;
             _currentMap = new MapCreateDataDto();
             _posById = new Dictionary<int, MapCreatorPosition>();
-            ModAPI.Sync.SendEvent(ToClientEvent.MapCreatorStartNewMap);
+            ModAPI.Sync.TriggerEvent(ToClientEvent.MapCreatorStartNewMap);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private static Lobbies CreateEntity(ITDSPlayer player, Lobbies dummy)
         {
             Lobbies entity = new Lobbies
             {
-                Name = "MapCreator-" + player.ModPlayer?.Name ?? "?",
-                Teams = new List<Teams> { new Teams { Index = 0, Name = player.ModPlayer?.Name ?? "?", ColorR = 222, ColorB = 222, ColorG = 222 } },
+                Name = "MapCreator-" + player.Name ?? "?",
+                Teams = new List<Teams> { new Teams { Index = 0, Name = player.Name ?? "?", ColorR = 222, ColorB = 222, ColorG = 222 } },
                 Type = LobbyType.MapCreateLobby,
                 OwnerId = player.Entity?.Id ?? -1,
                 IsTemporary = true,
@@ -114,7 +100,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             return entity;
         }
-
-        #endregion Private Methods
     }
 }

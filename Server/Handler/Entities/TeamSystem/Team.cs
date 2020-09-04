@@ -1,9 +1,10 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -14,20 +15,12 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 {
     public class Team : ITeam
     {
-        #region Private Fields
-
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private Teams _entity;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public Team(Serializer serializer, IModAPI modAPI, Teams entity)
+        public Team(Serializer serializer, Teams entity)
         {
             _serializer = serializer;
-            _modAPI = modAPI;
             _entity = entity;
 
             ChatColor = "!$" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "$";
@@ -46,10 +39,6 @@ namespace TDS_Server.Handler.Entities.TeamSystem
                 amountPlayers: new SyncedTeamPlayerAmountDto()
             );
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public List<ITDSPlayer>? AlivePlayers { get; set; }
 
@@ -71,10 +60,6 @@ namespace TDS_Server.Handler.Entities.TeamSystem
         public List<ITDSPlayer>? SpectateablePlayers { get; set; }
         public SyncedTeamDataDto SyncedTeamData { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public static bool operator !=(Team? a, Team? b)
         {
             return !(a == b);
@@ -92,7 +77,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
         public void AddPlayer(ITDSPlayer player)
         {
             Players.Add(player);
-            player.ModPlayer?.SetSkin(Entity.SkinHash != 0 ? (PedHash)Entity.SkinHash : player.FreemodeSkin);
+            player.SetSkin(Entity.SkinHash != 0 ? (PedHash)Entity.SkinHash : player.FreemodeSkin);
         }
 
         public override bool Equals(object? obj)
@@ -135,12 +120,12 @@ namespace TDS_Server.Handler.Entities.TeamSystem
         public void SyncAddedPlayer(ITDSPlayer player)
         {
             string json = _serializer.ToClient(Players.Select(p => p.RemoteId).ToList());
-            player.SendEvent(ToClientEvent.SyncTeamPlayers, json);
+            player.TriggerEvent(ToClientEvent.SyncTeamPlayers, json);
             foreach (var target in Players)
             {
                 if (target == player)
                     continue;
-                target.SendEvent(ToClientEvent.PlayerJoinedTeam, player.RemoteId);
+                target.TriggerEvent(ToClientEvent.PlayerJoinedTeam, player.RemoteId);
                 if (!player.HasRelationTo(target, PlayerRelation.Block) && !target.IsVoiceMuted)
                     target.SetVoiceTo(player, true);
                 if (!target.HasRelationTo(player, PlayerRelation.Block) && !player.IsVoiceMuted)
@@ -153,7 +138,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
             string json = _serializer.ToClient(Players.Select(p => p.RemoteId).ToList());
             foreach (var player in Players)
             {
-                player.SendEvent(ToClientEvent.SyncTeamPlayers, json);
+                player.TriggerEvent(ToClientEvent.SyncTeamPlayers, json);
                 foreach (var target in Players)
                 {
                     if (target == player)
@@ -169,10 +154,17 @@ namespace TDS_Server.Handler.Entities.TeamSystem
         public void SyncRemovedPlayer(ITDSPlayer player)
         {
             player.ResetVoiceToAndFrom();
-            _modAPI.Sync.SendEvent(Players.Where(p => p != player), ToClientEvent.PlayerLeftTeam, player.RemoteId);
-            player.SendEvent(ToClientEvent.ClearTeamPlayers);
+
+            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Where(p => p != player).ToArray(), ToClientEvent.PlayerLeftTeam, player.RemoteId);
+            player.TriggerEvent(ToClientEvent.ClearTeamPlayers);
         }
 
-        #endregion Public Methods
+        public void SendMessage(string message)
+        {
+            foreach (var player in Players)
+            {
+                player.SendChatMessage(message);
+            }
+        }
     }
 }

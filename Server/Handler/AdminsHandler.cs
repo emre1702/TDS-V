@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
@@ -55,12 +56,12 @@ namespace TDS_Server.Handler
 
         public void SendMessage(string msg, byte minadminlvl = 1)
         {
-            CallMethodForAdmins(player => player.SendMessage(msg), minadminlvl);
+            CallMethodForAdmins(player => player.SendChatMessage(msg), minadminlvl);
         }
 
         public void SendMessage(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)
         {
-            CallMethodForAdmins(player => player.SendMessage(propertygetter(player.Language)), minadminlvl);
+            CallMethodForAdmins(player => player.SendChatMessage(propertygetter(player.Language)), minadminlvl);
         }
 
         public void SendNotification(Func<ILanguage, string> propertygetter, byte minadminlvl = 1)

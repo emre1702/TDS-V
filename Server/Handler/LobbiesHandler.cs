@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
@@ -15,7 +16,6 @@ using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
 using TDS_Shared.Core;
@@ -28,18 +28,11 @@ namespace TDS_Server.Handler
     //Todo: Add team check for special gamemodes (e.g. ArmsRace allow only 1 team)
     public class LobbiesHandler : DatabaseEntityWrapper
     {
-        #region Public Fields
-
         public readonly Dictionary<int, ILobby> LobbiesByIndex = new Dictionary<int, ILobby>();
-
-        #endregion Public Fields
-
-        #region Private Fields
 
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
         private readonly EventsHandler _eventsHandler;
         private readonly MapsLoadingHandler _mapsHandler;
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
@@ -50,21 +43,15 @@ namespace TDS_Server.Handler
         private ILobby? _mainMenu;
         private MapCreateLobby? _mapCreateLobby;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public LobbiesHandler(
-        IModAPI modAPI,
-        TDSDbContext dbContext,
-        ISettingsHandler settingsHandler,
-        Serializer serializer,
-        MapsLoadingHandler mapsHandler,
-        ILoggingHandler loggingHandler,
-        IServiceProvider serviceProvider,
-        EventsHandler eventsHandler) : base(dbContext, loggingHandler)
+            TDSDbContext dbContext,
+            ISettingsHandler settingsHandler,
+            Serializer serializer,
+            MapsLoadingHandler mapsHandler,
+            ILoggingHandler loggingHandler,
+            IServiceProvider serviceProvider,
+            EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _mapsHandler = mapsHandler;
             _serviceProvider = serviceProvider;
@@ -74,10 +61,6 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.LobbyCreated += AddLobby;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public CharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??=
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.CharCreateLobby).Cast<CharCreateLobby>().First();
@@ -95,10 +78,6 @@ namespace TDS_Server.Handler
 
         public ILobby MainMenu => _mainMenu ??=
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MainMenu).First();
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void AddLobby(ILobby lobby)
         {
@@ -166,7 +145,7 @@ namespace TDS_Server.Handler
                         Damage = w.Damage,
                         HeadMultiplicator = w.HeadMultiplicator
                     }).ToHashSet(),
-                    ArmsRaceWeapons = data.ArmsRaceWeapons.Select(w => new LobbyArmsRaceWeapons 
+                    ArmsRaceWeapons = data.ArmsRaceWeapons.Select(w => new LobbyArmsRaceWeapons
                     {
                         WeaponHash = w.WeaponHash,
                         AtKill = w.AtKill
@@ -193,14 +172,14 @@ namespace TDS_Server.Handler
 
                 var taskCompletionSource = new TaskCompletionSource<Arena>();
 
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                NAPI.Task.Run(() =>
                 {
                     var arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
                     taskCompletionSource.TrySetResult(arena);
                 });
                 var arena = await taskCompletionSource.Task;
                 await arena.AddToDB();
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                NAPI.Task.Run(() =>
                 {
                     _eventsHandler.OnLobbyCreated(arena);
 
@@ -273,7 +252,6 @@ namespace TDS_Server.Handler
                         WeaponHash = w.WeaponHash,
                         AtKill = w.AtKill
                     }).ToList()
-                    
                 };
 
                 _customLobbyDatas = _serializer.ToBrowser(model);
@@ -372,7 +350,7 @@ namespace TDS_Server.Handler
             }
             else
             {
-                _modAPI.Thread.QueueIntoMainThread(() => player.SendMessage(player.Language.LOBBY_DOESNT_EXIST));
+                NAPI.Task.Run(() => player.SendChatMessage(player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }
@@ -388,7 +366,7 @@ namespace TDS_Server.Handler
                 ILobby lobby = LobbiesByIndex[index];
                 if (password != null && lobby.Entity.Password != password)
                 {
-                    _modAPI.Thread.QueueIntoMainThread(() => player.SendMessage(player.Language.WRONG_PASSWORD));
+                    NAPI.Task.Run(() => player.SendChatMessage(player.Language.WRONG_PASSWORD));
                     return null;
                 }
 
@@ -397,7 +375,7 @@ namespace TDS_Server.Handler
             }
             else
             {
-                _modAPI.Thread.QueueIntoMainThread(() => player.SendMessage(player.Language.LOBBY_DOESNT_EXIST));
+                NAPI.Task.Run(() => player.SendChatMessage(player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }
@@ -430,10 +408,6 @@ namespace TDS_Server.Handler
                 }
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void AddMapsToArena(Arena arena, Lobbies lobbySetting)
         {
@@ -478,9 +452,7 @@ namespace TDS_Server.Handler
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            if (!(player is TDSPlayer tdsPlayer))
-                return;
-            await MainMenu.AddPlayer(tdsPlayer, null);
+            await MainMenu.AddPlayer(player, null);
         }
 
         private bool IsCustomLobbyNameAllowed(string name)
@@ -493,7 +465,5 @@ namespace TDS_Server.Handler
 
             return true;
         }
-
-        #endregion Private Methods
     }
 }

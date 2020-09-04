@@ -1,4 +1,5 @@
-﻿using TDS_Shared.Data.Enums;
+﻿using GTANetworkAPI;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Database.Entity.GangEntities
 {

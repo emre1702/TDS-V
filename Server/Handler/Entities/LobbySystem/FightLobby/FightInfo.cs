@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -14,10 +16,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             Dictionary<ILanguage, string> killstr;
             if (killer is { } && player != killer)
             {
-                string? weaponname = System.Enum.GetName(typeof(WeaponHash), weapon);
+                string? weaponName = System.Enum.GetName(typeof(WeaponHash), weapon);
                 killstr = LangHelper.GetLangDictionary((lang) =>
                 {
-                    return string.Format(lang.DEATH_KILLED_INFO, killer?.DisplayName ?? "-", player.DisplayName, weaponname ?? "?");
+                    return string.Format(lang.DEATH_KILLED_INFO, killer?.DisplayName ?? "-", player.DisplayName, weaponName ?? "?");
                 });
             }
             else
@@ -30,7 +32,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             FuncIterateAllPlayers((targetPlayer, targetteam) =>
             {
-                targetPlayer.SendEvent(ToClientEvent.Death, player.RemoteId, player.TeamIndex, killstr[targetPlayer.Language], player.Lifes > 1);
+                targetPlayer.TriggerEvent(ToClientEvent.Death, player.RemoteId, player.TeamIndex, killstr[targetPlayer.Language], player.Lifes > 1);
             });
         }
 

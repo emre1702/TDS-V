@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Data.Enums;
@@ -48,7 +48,7 @@ namespace TDS_Server.Data.Interfaces
 
         void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true);
 
-        void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player);
+        void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player);
 
         void OnPlayerLoggedOut(ITDSPlayer tdsPlayer);
 
@@ -58,21 +58,22 @@ namespace TDS_Server.Data.Interfaces
 
         Task RemovePlayer(ITDSPlayer player);
 
-        void SendAllPlayerChatMessage(string msg, ITeam? targetTeam = null);
+        void SendMessage(string msg, ITeam? targetTeam = null);
 
-        void SendAllPlayerChatMessage(string msg, HashSet<int> blockingPlayerIds, ITeam? targetTeam = null);
+        void SendMessage(string msg, HashSet<int> blockingPlayerIds, ITeam? targetTeam = null);
 
-        void SendAllPlayerLangMessage(Func<ILanguage, string> langGetter, ITeam? targetTeam = null);
+        void SendMessage(Func<ILanguage, string> langGetter, ITeam? targetTeam = null);
 
-        void SendAllPlayerLangMessage(Dictionary<ILanguage, string> texts, ITeam? targetTeam = null);
+        void SendMessage(Dictionary<ILanguage, string> texts, ITeam? targetTeam = null);
 
-        void SendAllPlayerLangNotification(Func<ILanguage, string> langgetter, ITeam? targetTeam = null, bool flashing = false);
+        void SendNotification(Func<ILanguage, string> langgetter, ITeam? targetTeam = null, bool flashing = false);
 
         void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder);
 
         void UnbanPlayer(ITDSPlayer player, ITDSPlayer target, string reason);
 
         void UnbanPlayer(ITDSPlayer player, Players dbTarget, string reason);
+        void TriggerEvent(string eventName, params object[] args);
 
         #endregion Public Methods
     }

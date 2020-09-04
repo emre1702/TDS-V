@@ -87,7 +87,7 @@ namespace TDS_Server.Core.Manager.Utility
 
             if (amountNewEntries > 0)
             {
-                player.SendMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries));
+                player.SendChatMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries));
             }
         }
 

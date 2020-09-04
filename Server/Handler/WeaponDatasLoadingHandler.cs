@@ -2,6 +2,7 @@
 //#define reloadArenaWeaponDamages
 //#define reloadArenaWeaponHeadshots
 
+using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +15,6 @@ using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.WeaponsMeta;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Rest;
-using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Core.Manager.Utility
 {

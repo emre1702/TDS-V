@@ -1,8 +1,10 @@
 ﻿namespace TDS_Server.Core.Damagesystem
 {
+    using GTANetworkAPI;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using TDS_Server.Data.Abstracts.Entities.GTA;
     using TDS_Server.Data.Interfaces;
     using TDS_Server.Database.Entity.LobbyEntities;
     using TDS_Shared.Default;
@@ -47,7 +49,7 @@
             if (reward.HealthOrArmor.HasValue)
             {
                 player.AddHPArmor(reward.HealthOrArmor.Value);
-                player.Lobby.SendAllPlayerLangNotification(lang
+                player.Lobby.SendNotification(lang
                     => string.Format(lang.KILLING_SPREE_HEALTHARMOR, player.DisplayName, player.KillingSpree, reward.HealthOrArmor));
             }
         }
@@ -89,7 +91,7 @@
             if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.ShortTimeKillingSpree)
             {
                 short playSoundIndex = Math.Min(player.ShortTimeKillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
-                _modAPI.Sync.SendEvent(player.Lobby, ToClientEvent.PlayCustomSound, _shortTimeKillingSpreeSounds[playSoundIndex]);
+                player.Lobby?.TriggerEvent(ToClientEvent.PlayCustomSound, _shortTimeKillingSpreeSounds[playSoundIndex]);
                 //if (player.KillingSpree <= 5)
                 //    playLongTimeKillSound = false;
             }
@@ -97,7 +99,7 @@
             if (playLongTimeKillSound && _longTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree)
             {
                 short playSoundIndex = Math.Min(player.KillingSpree, _longTimeKillingSpreeSounds.Keys.Max());
-                _modAPI.Sync.SendEvent(player.Lobby, ToClientEvent.PlayCustomSound, _longTimeKillingSpreeSounds[playSoundIndex]);
+                player.Lobby?.TriggerEvent(ToClientEvent.PlayCustomSound, _longTimeKillingSpreeSounds[playSoundIndex]);
             }
         }
 

@@ -30,7 +30,7 @@ namespace TDS_Server.Handler
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
 
-            modAPI.ClientEvent.Add<IPlayer>(ToServerEvent.RequestPlayersForScoreboard, this, OnRequestPlayersForScoreboard);
+            NAPI.ClientEvent.Register<IPlayer>(ToServerEvent.RequestPlayersForScoreboard, this, OnRequestPlayersForScoreboard);
         }
 
         #endregion Public Constructors
@@ -46,7 +46,7 @@ namespace TDS_Server.Handler
             if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
             {
                 var entries = GetDataForMainmenu();
-                player.SendEvent(ToClientEvent.SyncScoreboardData, _serializer.ToClient(entries));
+                player.TriggerEvent(ToClientEvent.SyncScoreboardData, _serializer.ToClient(entries));
             }
             else
             {
@@ -54,7 +54,7 @@ namespace TDS_Server.Handler
                 if (entries is null)
                     return;
                 var lobbydata = GetDataForMainmenu().Where(d => d.Id != player.Lobby?.Id);
-                player.SendEvent(ToClientEvent.SyncScoreboardData, _serializer.ToClient(entries), _serializer.ToClient(lobbydata));
+                player.TriggerEvent(ToClientEvent.SyncScoreboardData, _serializer.ToClient(entries), _serializer.ToClient(lobbydata));
             }
         }
 

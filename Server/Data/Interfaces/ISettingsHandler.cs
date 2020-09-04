@@ -1,4 +1,5 @@
-﻿using TDS_Server.Database.Entity.Server;
+﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Database.Entity.Server;
 using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Data.Interfaces

@@ -1,21 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Command;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.Player;
-using TDS_Server.Handler.Player;
+using TDS_Server.Handler.Entities.GTA.GTAPlayer;
 using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Data.Attributes;
 using TDS_Shared.Default;
@@ -52,22 +51,18 @@ namespace TDS_Server.Handler.Commands
         private readonly ISettingsHandler _settingsHandler;
         private readonly ChatHandler _chatHandler;
         private readonly BaseCommands _baseCommands;
-        private readonly IModAPI _modAPI;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public CommandsHandler(IModAPI modAPI, TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler,
-            ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands, ITDSPlayerHandler tdsPlayerHandler)
+        public CommandsHandler(TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler, MappingHandler mappingHandler,
+            ISettingsHandler settingsHandler, ChatHandler chatHandler, BaseCommands baseCommands)
         {
-            _modAPI = modAPI;
             _mappingHandler = mappingHandler;
             _settingsHandler = settingsHandler;
             _chatHandler = chatHandler;
             _baseCommands = baseCommands;
-            _tdsPlayerHandler = tdsPlayerHandler;
 
             LoadCommands(dbContext, userpanelCommandsHandler);
 
-            modAPI.ClientEvent.Add<IPlayer, string>(ToServerEvent.CommandUsed, this, UseCommand);
+            NAPI.ClientEvent.Register<ITDSPlayer, string>(ToServerEvent.CommandUsed, this, UseCommand);
         }
 
         public void LoadCommands(TDSDbContext dbcontext, UserpanelCommandsHandler userpanelCommandsHandler)
@@ -173,14 +168,6 @@ namespace TDS_Server.Handler.Commands
             userpanelCommandsHandler.LoadCommandData(_commandDataByCommand, _commandsDict);
         }
 
-        public void UseCommand(IPlayer modPlayer, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
-        {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-            UseCommand(player, msg);
-        }
-
         public async void UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
             try
@@ -225,12 +212,12 @@ namespace TDS_Server.Handler.Commands
                     {
                         if (remainingText.Length < methoddata.RemainingTextAttribute.MinLength)
                         {
-                            player.SendMessage(player.Language.TEXT_TOO_SHORT);
+                            player.SendChatMessage(player.Language.TEXT_TOO_SHORT);
                             return;
                         }
                         if (remainingText.Length > methoddata.RemainingTextAttribute.MaxLength)
                         {
-                            player.SendMessage(player.Language.TEXT_TOO_LONG);
+                            player.SendChatMessage(player.Language.TEXT_TOO_LONG);
                             return;
                         }
                     }
@@ -247,7 +234,7 @@ namespace TDS_Server.Handler.Commands
                     //if (UseImplicitTypes)
                     //{
                     var finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
-                    _modAPI.Thread.QueueIntoMainThread(() =>
+                    NAPI.Task.Run(() =>
                         methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray()));
                     /*}
                     else
@@ -264,7 +251,7 @@ namespace TDS_Server.Handler.Commands
             }
             catch
             {
-                player.SendMessage(player.Language.COMMAND_USED_WRONG);
+                player.SendChatMessage(player.Language.COMMAND_USED_WRONG);
             }
         }
 
@@ -298,7 +285,7 @@ namespace TDS_Server.Handler.Commands
                             // string etc. instead of TDSPlayer/Player)
                             if (methodindex + 1 == amountmethodsavailable)
                             {
-                                player.SendMessage(player.Language.PLAYER_DOESNT_EXIST);
+                                player.SendChatMessage(player.Language.PLAYER_DOESNT_EXIST);
                                 return new HandleArgumentsResult();
                             }
                             return new HandleArgumentsResult { IsWrongMethod = true };
@@ -374,9 +361,9 @@ namespace TDS_Server.Handler.Commands
                     return false;
 
                 if (args.Count < requiredLength)
-                    player.SendMessage(player.Language.COMMAND_TOO_LESS_ARGUMENTS);
+                    player.SendChatMessage(player.Language.COMMAND_TOO_LESS_ARGUMENTS);
                 else
-                    player.SendMessage(player.Language.COMMAND_TOO_MANY_ARGUMENTS);
+                    player.SendChatMessage(player.Language.COMMAND_TOO_MANY_ARGUMENTS);
             }
 
             return true;
@@ -402,7 +389,7 @@ namespace TDS_Server.Handler.Commands
             if (!_commandDataByCommand.ContainsKey(cmd))
             {
                 if (_settingsHandler.ServerSettings.ErrorToPlayerOnNonExistentCommand)
-                    player.SendMessage(player.Language.COMMAND_DOESNT_EXIST);
+                    player.SendChatMessage(player.Language.COMMAND_DOESNT_EXIST);
                 if (_settingsHandler.ServerSettings.ToChatOnNonExistentCommand)
                     _chatHandler.SendLobbyMessage(player, "/" + cmd + (args != null ? " " + string.Join(' ', args) : ""), false);
                 return false;
@@ -474,7 +461,7 @@ namespace TDS_Server.Handler.Commands
             #endregion User Check
 
             if (!canuse)
-                player.SendMessage(player.Language.NOT_ALLOWED);
+                player.SendChatMessage(player.Language.NOT_ALLOWED);
 
             return canuse;
         }

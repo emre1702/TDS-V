@@ -1,18 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
@@ -30,7 +30,6 @@ namespace TDS_Server.Handler.Account
         private readonly EventsHandler _eventsHandler;
         private readonly LangHelper _langHelper;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ServerStartHandler _serverStartHandler;
         private readonly IServiceProvider _serviceProvider;
@@ -42,7 +41,6 @@ namespace TDS_Server.Handler.Account
         #region Public Constructors
 
         public LoginHandler(
-            IModAPI modAPI,
             DatabasePlayerHelper databasePlayerHandler,
             LangHelper langHelper,
             EventsHandler eventsHandler,
@@ -54,7 +52,6 @@ namespace TDS_Server.Handler.Account
             ServerStartHandler serverStartHandler,
             ITDSPlayerHandler tdsPlayerHandler)
         {
-            _modAPI = modAPI;
             _databasePlayerHandler = databasePlayerHandler;
             _langHelper = langHelper;
             _eventsHandler = eventsHandler;
@@ -68,7 +65,7 @@ namespace TDS_Server.Handler.Account
 
             _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
 
-            modAPI.ClientEvent.Add<IPlayer, string, string>(ToServerEvent.TryLogin, this, TryLogin);
+            NAPI.ClientEvent.Register<ITDSPlayer, string, string>(ToServerEvent.TryLogin, this, TryLogin);
         }
 
         #endregion Public Constructors
@@ -77,10 +74,7 @@ namespace TDS_Server.Handler.Account
 
         public async Task LoginPlayer(ITDSPlayer player, int id, string? password)
         {
-            if (player.ModPlayer is null)
-                return;
-
-            bool worked = await player.ExecuteForDBAsync(async (dbContext) =>
+            bool worked = await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
                 Players? entity = await dbContext.Players
                     .Include(p => p.PlayerStats)
@@ -108,17 +102,17 @@ namespace TDS_Server.Handler.Account
 
                 if (entity is null)
                 {
-                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
+                    NAPI.Task.Run(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
                     return false;
                 }
 
                 if (password is { } && !Utils.IsPasswordValid(password, entity.Password))
                 {
-                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.WRONG_PASSWORD));
+                    NAPI.Task.Run(() => player.SendNotification(player.Language.WRONG_PASSWORD));
                     return false;
                 }
 
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                NAPI.Task.Run(() =>
                 {
                     player.ModPlayer.Name = entity.Name;
                     //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
@@ -143,9 +137,9 @@ namespace TDS_Server.Handler.Account
             var playerThemeSettingsJson = _serializer.ToClient(player.Entity.ThemeSettings);
             var angularContentsJson = _serializer.ToBrowser(angularConstantsData);
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
-                player.SendEvent(ToClientEvent.LoginSuccessful,
+                player.TriggerEvent(ToClientEvent.LoginSuccessful,
                     syncedSettingsJson,
                     playerSettingsJson,
                     playerThemeSettingsJson,
@@ -163,12 +157,8 @@ namespace TDS_Server.Handler.Account
             });
         }
 
-        public async void TryLogin(IPlayer modPlayer, string username, string password)
+        public async void TryLogin(ITDSPlayer player, string username, string password)
         {
-            var player = _tdsPlayerHandler.GetNotLoggedIn(modPlayer);
-            if (player is null)
-                return;
-
             if (player.TryingToLoginRegister)
                 return;
             player.TryingToLoginRegister = true;
@@ -176,7 +166,7 @@ namespace TDS_Server.Handler.Account
             {
                 if (!_serverStartHandler.IsReadyForLogin)
                 {
-                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
+                    NAPI.Task.Run(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
                     return;
                 }
 
@@ -186,7 +176,7 @@ namespace TDS_Server.Handler.Account
                     await LoginPlayer(player, id, password);
                 }
                 else
-                    _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
+                    NAPI.Task.Run(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
             }
             finally
             {

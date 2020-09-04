@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Defaults;
+﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Data.Models
@@ -32,7 +33,7 @@ namespace TDS_Server.Data.Models
             set
             {
                 _assists = value;
-                _player.SendBrowserEvent(ToBrowserEvent.SetAssistsForRoundStats, value);
+                _player.TriggerBrowserEvent(ToBrowserEvent.SetAssistsForRoundStats, value);
             }
         }
 
@@ -42,7 +43,7 @@ namespace TDS_Server.Data.Models
             set
             {
                 _damage = value;
-                _player.SendBrowserEvent(ToBrowserEvent.SetDamageForRoundStats, value);
+                _player.TriggerBrowserEvent(ToBrowserEvent.SetDamageForRoundStats, value);
             }
         }
 
@@ -52,7 +53,7 @@ namespace TDS_Server.Data.Models
             set
             {
                 _kills = value;
-                _player.SendBrowserEvent(ToBrowserEvent.SetKillsForRoundStats, value);
+                _player.TriggerBrowserEvent(ToBrowserEvent.SetKillsForRoundStats, value);
             }
         }
 

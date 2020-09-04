@@ -114,7 +114,7 @@ namespace TDS_Client.Handler.MapCreator
             cam.Activate();
             cam.Render();
 
-            ModAPI.Sync.SendEvent(ToServerEvent.SetInFreecam, true);
+            ModAPI.Sync.TriggerEvent(ToServerEvent.SetInFreecam, true);
         }
 
         public void Stop()
@@ -125,7 +125,7 @@ namespace TDS_Client.Handler.MapCreator
             _camerasHandler.FreeCam?.Deactivate();
             _camerasHandler.FreeCam = null;
 
-            ModAPI.Sync.SendEvent(ToServerEvent.SetInFreecam, false);
+            ModAPI.Sync.TriggerEvent(ToServerEvent.SetInFreecam, false);
         }
 
         public void ToggleFreecam(Key _ = Key.Noname)

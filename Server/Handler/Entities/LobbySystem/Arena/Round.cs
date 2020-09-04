@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GTANetworkAPI;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
@@ -90,7 +92,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 catch (Exception ex)
                 {
                     LoggingHandler.LogError($"Could not call method for round status {status.ToString()} for lobby {Name} with Id {Id}. Exception: " + ex.Message, ex.StackTrace ?? "?");
-                    SendAllPlayerLangMessage((lang) => lang.LOBBY_ERROR_REMOVE);
+                    SendMessage((lang) => lang.LOBBY_ERROR_REMOVE);
                     if (!IsOfficial)
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         Remove();
@@ -109,7 +111,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             DeleteMapBlips();
             ClearTeamPlayersAmounts();
-            ModAPI.Sync.SendEvent(this, ToClientEvent.MapClear);
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.MapClear);
 
             CurrentGameMode?.StartMapClear();
         }
@@ -121,14 +123,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return;
             SavePlayerLobbyStats = !nextMap.Info.IsNewMap;
             if (nextMap.Info.IsNewMap)
-                SendAllPlayerLangNotification(lang => lang.TESTING_MAP_NOTIFICATION, flashing: true);
+                SendNotification(lang => lang.TESTING_MAP_NOTIFICATION, flashing: true);
             CurrentGameMode = _gameModeByMapType[nextMap.Info.Type](this, nextMap, _serviceProvider);
             CurrentGameMode?.StartMapChoose();
             CreateTeamSpawnBlips(nextMap);
             CreateMapLimitBlips(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
-            ModAPI.Sync.SendEvent(this, ToClientEvent.MapChange, nextMap.ClientSyncedDataJson);
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.MapChange, nextMap.ClientSyncedDataJson);
             _currentMap = nextMap;
             _currentMapSpectatorPosition = _currentMap.LimitInfo.Center.SwitchNamespace().AddToZ(10);
             RoundEndReasonText = null;
@@ -165,7 +167,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                     FuncIterateAllPlayers((character, team) =>
                     {
-                        character.SendEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
+                        character.TriggerEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
                         if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
                             character.ModPlayer?.Kill();
                         character.Lifes = 0;
@@ -213,33 +215,33 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 ITDSPlayer? third = _ranking.ElementAtOrDefault(2)?.Player;
 
                 //Vector3 rot = new Vector3(0, 0, 345);
-                winner.Spawn(new Position3D(-425.48, 1123.55, 325.85), 345);
-                winner.ModPlayer!.Freeze(true);
-                winner.ModPlayer.Dimension = Dimension;
+                winner.Spawn(new Vector3(-425.48, 1123.55, 325.85), 345);
+                winner.Freeze(true);
+                winner.Dimension = Dimension;
 
                 if (second is { })
                 {
-                    second.Spawn(new Position3D(-427.03, 1123.21, 325.85), 345);
-                    second.ModPlayer!.Freeze(true);
-                    second.ModPlayer.Dimension = Dimension;
+                    second.Spawn(new Vector3(-427.03, 1123.21, 325.85), 345);
+                    second.Freeze(true);
+                    second.Dimension = Dimension;
                 }
 
                 if (third is { })
                 {
-                    third.Spawn(new Position3D(-424.33, 1122.5, 325.85), 345);
-                    third.ModPlayer!.Freeze(true);
-                    third.ModPlayer.Dimension = Dimension;
+                    third.Spawn(new Vector3(-424.33, 1122.5, 325.85), 345);
+                    third.Freeze(true);
+                    third.Dimension = Dimension;
                 }
 
-                var othersPos = new Position3D(-425.48, 1123.55, 335.85);
+                var othersPos = new Vector3(-425.48, 1123.55, 335.85);
                 foreach (var player in Players.Values)
                 {
-                    if (player != winner && player != second && player != third && player.ModPlayer is { })
-                        player.ModPlayer.Position = othersPos;
+                    if (player != winner && player != second && player != third)
+                        player.Position = othersPos;
                 }
 
                 string json = Serializer.ToBrowser(_ranking);
-                ModAPI.Sync.SendEvent(this, ToClientEvent.StartRankingShowAfterRound, json, winner.RemoteId, second?.RemoteId ?? 0, third?.RemoteId ?? 0);
+                ModAPI.Sync.TriggerEvent(this, ToClientEvent.StartRankingShowAfterRound, json, winner.RemoteId, second?.RemoteId ?? 0, third?.RemoteId ?? 0);
             }
             catch (Exception ex)
             {

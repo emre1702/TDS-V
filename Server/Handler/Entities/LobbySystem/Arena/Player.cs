@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
@@ -39,7 +40,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     )
                     .ToList();
 
-                player.SendEvent(ToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
+                player.TriggerEvent(ToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
 
                 CurrentGameMode?.AddPlayer(player, teamindex);
             });
@@ -124,7 +125,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
                 else
                 {
-                    player.SendEvent(ToClientEvent.PlayerSpectateMode);
+                    player.TriggerEvent(ToClientEvent.PlayerSpectateMode);
                 }
             }
         }
@@ -161,8 +162,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return;
 
             SetPlayerReadyForRound(player);
-            player.ModPlayer.Freeze(false);
-            player.SendEvent(ToClientEvent.PlayerRespawned);
+            player.Freeze(false);
+            player.TriggerEvent(ToClientEvent.PlayerRespawned);
             CurrentGameMode?.RespawnPlayer(player);
         }
 
@@ -208,7 +209,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private void SendPlayerAmountInFightInfo(ITDSPlayer player)
         {
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
-            player.SendEvent(ToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
+            player.TriggerEvent(ToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
         }
 
         private void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
@@ -218,7 +219,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (_currentMap is { })
             {
-                player.SendEvent(ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
+                player.TriggerEvent(ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
             }
 
             SendPlayerAmountInFightInfo(player);
@@ -228,11 +229,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             switch (CurrentRoundStatus)
             {
                 case RoundStatus.Countdown:
-                    player.SendEvent(ToClientEvent.CountdownStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
+                    player.TriggerEvent(ToClientEvent.CountdownStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
                     break;
 
                 case RoundStatus.Round:
-                    player.SendEvent(ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
+                    player.TriggerEvent(ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
                     break;
             }
         }
@@ -287,7 +288,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (player.ModPlayer is null)
                 return;
-            player.SendEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
+            player.TriggerEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
             if (player.Team?.IsSpectator == false)
             {
                 SetPlayerAlive(player);

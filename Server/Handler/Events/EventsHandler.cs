@@ -1,55 +1,31 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Handler.Events
 {
     public class EventsHandler
     {
-        #region Public Fields
 
         public AsyncValueTaskEvent<ITDSPlayer>? PlayerLoggedOutBefore;
         public AsyncValueTaskEvent<(ITDSPlayer, Players)>? PlayerRegisteredBefore;
 
-        #endregion Public Fields
-
-        #region Private Fields
-
-        private readonly IModAPI _modAPI;
-
         private int _hourCounter;
-
         private int _minuteCounter;
-
         private int _secondCounter;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public EventsHandler(IModAPI modAPI)
-        {
-            _modAPI = modAPI;
-        }
-
-        #endregion Public Constructors
-
-        #region Public Delegates
 
         public delegate void CounterDelegate(int counter);
 
         public delegate void EmptyDelegate();
 
-        public delegate void EntityDelegate(IEntity entity);
+        public delegate void EntityDelegate(Entity entity);
 
         public delegate void ErrorDelegate(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true);
 
@@ -59,8 +35,6 @@ namespace TDS_Server.Handler.Events
 
         public delegate void LobbyDelegate(ILobby lobby);
 
-        public delegate void ModPlayerDelegate(IPlayer player);
-
         public delegate void PlayerDelegate(ITDSPlayer player);
         public delegate void PlayerGangDelegate(ITDSPlayer player, IGang gang);
 
@@ -68,9 +42,6 @@ namespace TDS_Server.Handler.Events
 
         public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
 
-        #endregion Public Delegates
-
-        #region Public Events
 
         public event LobbyDelegate? CustomLobbyCreated;
 
@@ -94,9 +65,9 @@ namespace TDS_Server.Handler.Events
 
         public event CounterDelegate? Minute;
 
-        public event ModPlayerDelegate? PlayerConnected;
+        public event PlayerDelegate? PlayerConnected;
 
-        public event ModPlayerDelegate? PlayerDisconnected;
+        public event PlayerDelegate? PlayerDisconnected;
 
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
 
@@ -122,11 +93,17 @@ namespace TDS_Server.Handler.Events
 
         public event EmptyDelegate? Update;
 
-        #endregion Public Events
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        public static EventsHandler Instance { get; private set; }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        #region Public Methods
+        public EventsHandler()
+        {
+            Instance = this;
+        }
 
-        public void OnEntityDeleted(IEntity entity)
+
+        public void OnEntityDeleted(Entity entity)
         {
             EntityDeleted?.Invoke(entity);
         }
@@ -146,9 +123,9 @@ namespace TDS_Server.Handler.Events
             MapsLoaded?.Invoke();
         }
 
-        public void OnPlayerConnected(IPlayer modPlayer)
+        public void OnPlayerConnected(ITDSPlayer player)
         {
-            PlayerConnected?.Invoke(modPlayer);
+            PlayerConnected?.Invoke(player);
         }
 
         public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint reason)
@@ -156,12 +133,12 @@ namespace TDS_Server.Handler.Events
             player.Lobby?.OnPlayerDeath(player, killer, reason);
         }
 
-        public void OnPlayerDisconnected(IPlayer modPlayer)
+        public void OnPlayerDisconnected(ITDSPlayer player)
         {
-            PlayerDisconnected?.Invoke(modPlayer);
+            PlayerDisconnected?.Invoke(player);
         }
 
-        public void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player)
+        public void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player)
         {
             player.Lobby?.OnPlayerEnterColshape(colshape, player);
         }
@@ -171,12 +148,12 @@ namespace TDS_Server.Handler.Events
             var task = PlayerLoggedOutBefore?.InvokeAsync(tdsPlayer);
             if (task.HasValue)
                 await task.Value;
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 PlayerLoggedOut?.Invoke(tdsPlayer);
                 tdsPlayer.Lobby?.OnPlayerLoggedOut(tdsPlayer);
             });
-            await tdsPlayer.ExecuteForDBAsync(async dbContext =>
+            await tdsPlayer.Database.ExecuteForDBAsync(async dbContext =>
             {
                 await dbContext.DisposeAsync();
             });
@@ -218,8 +195,6 @@ namespace TDS_Server.Handler.Events
         {
             Update?.Invoke();
         }
-
-        #endregion Public Methods
 
         /*public void OnPlayerEnterVehicle(ITDSPlayer tdsPlayer, ITDSVehicle vehicle, sbyte seatId)
         {

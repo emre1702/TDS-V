@@ -1,5 +1,6 @@
 ﻿using MoreLinq;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
@@ -10,14 +11,8 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class Gangwar
     {
-        #region Private Fields
-
         private ITDSPlayer? _attackLeader;
         private ITDSPlayer? _playerForcedAtTarget;
-
-        #endregion Private Fields
-
-        #region Public Methods
 
         public override void AddPlayer(ITDSPlayer player, uint? teamIndex)
         {
@@ -82,10 +77,6 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private ITDSPlayer? GetNextTargetMan()
         {
             if (TargetObject is null)
@@ -100,7 +91,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             if (Lobby.CurrentRoundStatus != RoundStatus.Round)
                 return SharedUtils.GetRandom(AttackerTeam.Players);
 
-            return AttackerTeam.Players.MinBy(p => p.ModPlayer!.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
+            return AttackerTeam.Players.MinBy(p => p.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
         }
 
         private bool HasTeamFreePlace(bool isAttacker)
@@ -127,7 +118,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
         private void SetTargetMan(ITDSPlayer? player)
         {
             if (_playerForcedAtTarget is { })
-                _playerForcedAtTarget.SendEvent(ToClientEvent.RemoveForceStayAtPosition);
+                _playerForcedAtTarget.TriggerEvent(ToClientEvent.RemoveForceStayAtPosition);
 
             _playerForcedAtTarget = player;
 
@@ -139,13 +130,11 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                 player.SendNotification(string.Format(player.Language.TARGET_PLAYER_DEFEND_INFO, _playerForcedAtTarget.DisplayName));
             });
 
-            _playerForcedAtTarget.SendEvent(ToClientEvent.SetForceStayAtPosition,
+            _playerForcedAtTarget.TriggerEvent(ToClientEvent.SetForceStayAtPosition,
                 Serializer.ToClient(TargetObject!.Position),
                 SettingsHandler.ServerSettings.GangwarTargetRadius,
                 MapLimitType.KillAfterTime,
                 SettingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds);
         }
-
-        #endregion Private Methods
     }
 }

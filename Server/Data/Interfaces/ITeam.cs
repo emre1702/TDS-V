@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Shared.Data.Models;
 
@@ -9,8 +10,6 @@ namespace TDS_Server.Data.Interfaces
 
     public interface ITeam : IEquatable<ITeam>
     {
-        #region Public Properties
-
         List<ITDSPlayer>? AlivePlayers { get; }
         string ChatColor { get; }
         Teams Entity { get; }
@@ -19,10 +18,6 @@ namespace TDS_Server.Data.Interfaces
         int SpawnCounter { get; set; }
         List<ITDSPlayer>? SpectateablePlayers { get; }
         SyncedTeamDataDto SyncedTeamData { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         void AddPlayer(ITDSPlayer tdsPlayer);
 
@@ -38,6 +33,6 @@ namespace TDS_Server.Data.Interfaces
 
         void SyncRemovedPlayer(ITDSPlayer player);
 
-        #endregion Public Methods
+        void SendMessage(string message);
     }
 }

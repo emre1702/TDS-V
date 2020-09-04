@@ -61,11 +61,11 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             Lobby.FuncIterateAllPlayers((character, team) =>
             {
                 if (team is null || team.IsSpectator)
-                    character.SendMessage(character.Language.ROUND_MISSION_BOMG_SPECTATOR);
+                    character.SendChatMessage(character.Language.ROUND_MISSION_BOMG_SPECTATOR);
                 else if (team == _terroristTeam)
-                    character.SendMessage(character.Language.ROUND_MISSION_BOMB_BAD);
+                    character.SendChatMessage(character.Language.ROUND_MISSION_BOMB_BAD);
                 else
-                    character.SendMessage(character.Language.ROUND_MISSION_BOMB_GOOD);
+                    character.SendChatMessage(character.Language.ROUND_MISSION_BOMB_GOOD);
             });
             if (_bombAtPlayer is null)
                 GiveBombToRandomTerrorist();

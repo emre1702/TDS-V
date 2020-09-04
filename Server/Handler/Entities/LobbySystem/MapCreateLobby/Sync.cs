@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
@@ -25,7 +26,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             Players.TryGetValue(tdsPlayerId, out ITDSPlayer? player);
             if (player is null)
                 return;
-            player.SendEvent(ToClientEvent.MapCreatorSyncAllObjects, json, lastId);
+            player.TriggerEvent(ToClientEvent.MapCreatorSyncAllObjects, json, lastId);
 
             _currentMap = Serializer.FromBrowser<MapCreateDataDto>(json);
             _lastId = lastId;
@@ -35,7 +36,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (_lastId >= lastId)
             {
-                player.SendEvent(ToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
+                player.TriggerEvent(ToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId);
             }
             else
             {
@@ -45,7 +46,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
         {
-            ModAPI.Sync.SendEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);
 
             switch (infoType)
             {
@@ -73,7 +74,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncNewObject(ITDSPlayer player, string json)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player).ToList(), ToClientEvent.MapCreatorSyncNewObject, json);
+            ModAPI.Sync.TriggerEvent(Players.Values.Where(p => p != player).ToList(), ToClientEvent.MapCreatorSyncNewObject, json);
 
             var pos = Serializer.FromClient<MapCreatorPosition>(json);
             if (pos.Type == MapCreatorPositionType.MapCenter)
@@ -86,7 +87,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncObjectPosition(ITDSPlayer player, string json)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player),
+            ModAPI.Sync.TriggerEvent(Players.Values.Where(p => p != player),
                 ToClientEvent.MapCreatorSyncObjectPosition, json);
 
             var pos = Serializer.FromClient<MapCreatorPosData>(json);
@@ -104,7 +105,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncRemoveObject(ITDSPlayer player, int objId)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player), ToClientEvent.MapCreatorSyncObjectRemove, objId);
+            ModAPI.Sync.TriggerEvent(Players.Values.Where(p => p != player), ToClientEvent.MapCreatorSyncObjectRemove, objId);
 
             if (!_posById.ContainsKey(objId))
                 return;
@@ -119,7 +120,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         public void SyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
         {
-            ModAPI.Sync.SendEvent(Players.Values.Where(p => p != player), ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
+            ModAPI.Sync.TriggerEvent(Players.Values.Where(p => p != player), ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
 
             foreach (var entry in _posById)
             {

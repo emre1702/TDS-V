@@ -8,7 +8,6 @@ using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Core.Manager.Timer;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database;
 using TDS_Server.Database.Entity;
@@ -19,7 +18,7 @@ using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Maps;
-using TDS_Server.Handler.Player;
+using TDS_Server.Handler.PlayerHandlers;
 using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
 using TDS_Server.Handler.Userpanel;
@@ -29,8 +28,6 @@ namespace TDS_Server.Core.Init
 {
     internal static class Services
     {
-        #region Internal Methods
-
         internal static void InitDbContextOptionsBuilder(DbContextOptionsBuilder options, AppConfigHandler appConfigHandler, ILoggerFactory? loggerFactory)
         {
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
@@ -112,9 +109,11 @@ namespace TDS_Server.Core.Init
             serviceProvider.GetRequiredService<ScoreboardHandler>();
             serviceProvider.GetRequiredService<ChatInfosHandler>();
             serviceProvider.GetRequiredService<WeaponLevelHandler>();
+            serviceProvider.GetRequiredService<DatabaseHandler>();
+            serviceProvider.GetRequiredService<WorkaroundsHandler>();
         }
 
-        internal static ServiceProvider InitServiceCollection(IModAPI modAPI)
+        internal static ServiceProvider InitServiceCollection()
         {
             var appConfigHandler = new AppConfigHandler();
 
@@ -126,8 +125,6 @@ namespace TDS_Server.Core.Init
             var serviceCollection = new ServiceCollection();
 
             serviceCollection
-               .AddSingleton(modAPI)
-
                .AddSingleton<BonusBotConnectorClient>()
                .AddSingleton<BonusBotConnectorServer>()
 
@@ -203,6 +200,8 @@ namespace TDS_Server.Core.Init
                .AddSingleton<ScoreboardHandler>()
                .AddSingleton<ChatInfosHandler>()
                .AddSingleton<WeaponLevelHandler>()
+               .AddTransient<DatabaseHandler>()
+               .AddSingleton<WorkaroundsHandler>()
 
                .AddSingleton<Serializer>()
 
@@ -210,7 +209,5 @@ namespace TDS_Server.Core.Init
 
             return serviceCollection.BuildServiceProvider();
         }
-
-        #endregion Internal Methods
     }
 }

@@ -1,18 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
@@ -59,7 +59,6 @@ namespace TDS_Server.Handler.Userpanel
     {
         #region Private Fields
 
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
@@ -71,11 +70,10 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerGeneralStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, ITDSPlayerHandler tdsPlayerHandler,
-            IModAPI modAPI)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
-            => (_modAPI, _userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler)
-            = (modAPI, userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);
+            => (_userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler)
+            = (userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);
 
         #endregion Public Constructors
 
@@ -191,17 +189,17 @@ namespace TDS_Server.Handler.Userpanel
             if (playerId == default)
                 return null;
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 var target = _tdsPlayerHandler.GetIfExists(playerId);
                 if (target is { })
                 {
-                    target.SendMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));
-                    player.SendMessage(string.Format(player.Language.SENT_APPLICATION_TO, target.DisplayName));
+                    target.SendChatMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));
+                    player.SendChatMessage(string.Format(player.Language.SENT_APPLICATION_TO, target.DisplayName));
                 }
                 else
                 {
-                    player.SendMessage(player.Language.SENT_APPLICATION);
+                    player.SendChatMessage(player.Language.SENT_APPLICATION);
                 }
             });
 

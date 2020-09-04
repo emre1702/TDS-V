@@ -1,17 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GTANetworkAPI;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Extensions;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.GangSystem;
 using TDS_Shared.Core;
 
@@ -19,39 +16,32 @@ namespace TDS_Server.Handler.Entities.Utility
 {
     public class GangwarArea : DatabaseEntityWrapper
     {
-        #region Private Fields
-
         private readonly GangsHandler _gangsHandler;
-        private readonly IModAPI _modAPI;
         private readonly ISettingsHandler _settingsHandler;
         private readonly LobbiesHandler? _lobbiesHandler;
         private TDSTimer? _checkAtTarget;
         private int _playerNotAtTargetCounter;
-        private IBlip? _blip;
+        private ITDSBlip? _blip;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public GangwarArea(GangwarArea copyFrom, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            : this(copyFrom.Map, modAPI, settingsHandler, gangsHandler, dbContext, loggingHandler)
+        public GangwarArea(GangwarArea copyFrom, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+            : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = null;
         }
 
-        public GangwarArea(MapDto map, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+        public GangwarArea(MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
             Map = map;
-            _modAPI = modAPI;
+
             _settingsHandler = settingsHandler;
             _gangsHandler = gangsHandler;
         }
 
         [ActivatorUtilitiesConstructor]
-        public GangwarArea(GangwarAreas entity, MapDto map, IModAPI modAPI, ISettingsHandler settingsHandler, GangsHandler gangsHandler,
+        public GangwarArea(GangwarAreas entity, MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler)
-            : this(map, modAPI, settingsHandler, gangsHandler, dbContext, loggingHandler)
+            : this(map, settingsHandler, gangsHandler, dbContext, loggingHandler)
         {
             Entity = entity;
             _lobbiesHandler = lobbiesHandler;
@@ -64,12 +54,7 @@ namespace TDS_Server.Handler.Entities.Utility
             dbContext.Attach(entity);
 
             CreateGangLobbyMapInfo();
-
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public IGang? Attacker { get; private set; }
         public GangwarAreas? Entity { get; private set; }
@@ -81,7 +66,7 @@ namespace TDS_Server.Handler.Entities.Utility
             {
                 if (Entity is null)
                     return;
-                if (value) 
+                if (value)
                     Entity.LastAttacked = DateTime.UtcNow;
                 else
                     Entity.LastAttacked = DateTime.UtcNow.AddMinutes(-_settingsHandler.ServerSettings.GangwarAreaAttackCooldownMinutes);
@@ -92,16 +77,8 @@ namespace TDS_Server.Handler.Entities.Utility
         public MapDto Map { get; private set; }
         public IGang? Owner { get; private set; }
 
-        #endregion Public Properties
-
-        #region Private Properties
-
         private ITeam? AttackerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.AttackerTeam : null;
         private ITeam? OwnerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.OwnerTeam : null;
-
-        #endregion Private Properties
-
-        #region Public Methods
 
         public async Task SetAttackEnded(bool conquered)
         {
@@ -120,10 +97,10 @@ namespace TDS_Server.Handler.Entities.Utility
                     await dbContext.SaveChangesAsync();
                 });
 
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                NAPI.Task.Run(() =>
                 {
                     CreateGangLobbyMapInfo();
- 
+
                     //Todo: Inform the owner
                     //Todo: Inform everyone + attacker
                 });
@@ -146,7 +123,7 @@ namespace TDS_Server.Handler.Entities.Utility
                     await dbContext.SaveChangesAsync();
                 });
 
-                _modAPI.Thread.QueueIntoMainThread(() =>
+                NAPI.Task.Run(() =>
                 {
                     //Todo: Inform everyone + attacker
                 });
@@ -168,10 +145,6 @@ namespace TDS_Server.Handler.Entities.Utility
             Owner!.InAction = true;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void ClearAttack()
         {
             if (Attacker is { })
@@ -188,9 +161,9 @@ namespace TDS_Server.Handler.Entities.Utility
             _checkAtTarget = null;
         }
 
-        private bool IsAtTarget(TDSPlayer player)
+        private bool IsAtTarget(ITDSPlayer player)
         {
-            if (player.ModPlayer is null || player.ModPlayer.Dead)
+            if (player.Dead)
                 return false;
             if (!player.LoggedIn)
                 return false;
@@ -224,7 +197,7 @@ namespace TDS_Server.Handler.Entities.Utility
              //Todo: Output to owner that no one was at target for too long
                 //OwnerTeamInGangwar?.FuncIterate((player, team) =>
                 //{
-                 //   player.SendMessage(player.Language.GANGWAR_LOST_);
+                 //   player.SendChatMessage(player.Language.GANGWAR_LOST_);
                 //});
             var lobby = InLobby;
             lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.TargetEmpty);*/
@@ -260,18 +233,16 @@ namespace TDS_Server.Handler.Entities.Utility
             if (_lobbiesHandler is null)
                 return;
 
-            _blip = _modAPI.Blip.Create(
-                sprite: 84, 
-                position: Map.Target, 
-                scale: 3f, 
-                color: Owner?.Entity.BlipColor ?? 4, 
+            _blip = NAPI.Blip.CreateBlip(
+                sprite: 84,
+                position: Map.Target.ToVector3(),
+                scale: 3f,
+                color: Owner?.Entity.BlipColor ?? 4,
                 name: Map.Info.Name,
-                alpha: (byte)(HasCooldown ? 120 : 255), 
+                alpha: (byte)(HasCooldown ? 120 : 255),
                 drawDistance: 100f,
-                shortRange: true, 
-                dimension: _lobbiesHandler.GangLobby.Dimension);
+                shortRange: true,
+                dimension: _lobbiesHandler.GangLobby.Dimension) as ITDSBlip;
         }
-
-        #endregion Private Methods
     }
 }

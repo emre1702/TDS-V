@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 var playerToPutIntoOtherTeam = teamWithMostPlayers.Players.Last();
                 SetPlayerTeam(playerToPutIntoOtherTeam, teamWithFewestPlayers);
-                SendAllPlayerLangNotification(lang => string.Format(lang.BALANCE_TEAM_INFO, playerToPutIntoOtherTeam.DisplayName));
+                SendNotification(lang => string.Format(lang.BALANCE_TEAM_INFO, playerToPutIntoOtherTeam.DisplayName));
 
                 teamWithFewestPlayers = Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
                 teamWithMostPlayers = Teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
@@ -64,7 +64,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             string str = $"[TEAM] {team.ChatColor}{character.DisplayName}: !$150|0|0$";
             team.FuncIterate((target, _) =>
             {
-                target.SendMessage(str + texts[target.Language]);
+                target.SendChatMessage(str + texts[target.Language]);
             });
         }
 

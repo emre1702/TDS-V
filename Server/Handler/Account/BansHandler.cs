@@ -1,15 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Handler.Account
 {
@@ -21,8 +20,6 @@ namespace TDS_Server.Handler.Account
 
         private readonly LobbiesHandler _lobbiesHandler;
 
-        private readonly IModAPI _modAPI;
-
         private readonly ISettingsHandler _settingsHandler;
 
         private List<PlayerBans> _cachedBans = new List<PlayerBans>();
@@ -31,17 +28,17 @@ namespace TDS_Server.Handler.Account
 
         #region Public Constructors
 
-        public BansHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler,
+        public BansHandler(TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler,
             ISettingsHandler settingsHandler)
             : base(dbContext, logger)
         {
-            _modAPI = modAPI;
             _lobbiesHandler = lobbiesHandler;
             _settingsHandler = settingsHandler;
             _eventsHandler = eventsHandler;
 
             eventsHandler.Hour += RemoveExpiredBans;
             eventsHandler.Minute += RefreshServerBansCache;
+
             eventsHandler.IncomingConnection += CheckBanOnIncomingConnection;
         }
 
@@ -157,7 +154,7 @@ namespace TDS_Server.Handler.Account
             _cachedBans = await ExecuteForDBAsync(async dbContext
                 => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
 
-            _modAPI.Thread.QueueIntoMainThread(() => _eventsHandler.OnLoadedServerBans());
+            NAPI.Task.Run(() => _eventsHandler.OnLoadedServerBans());
         }
 
         public void RemoveServerBanByPlayerId(PlayerBans ban)

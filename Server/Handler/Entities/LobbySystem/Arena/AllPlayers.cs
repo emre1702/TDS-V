@@ -96,7 +96,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                         killreward + assistreward + damagereward);
                 strbuilder.Append("#n##o#____________________");
 
-                player.SendMessage(strbuilder.ToString());
+                player.SendChatMessage(strbuilder.ToString());
                 strbuilder.Clear();
             });
         }
@@ -119,7 +119,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
                 SetPlayerReadyForRound(player);
                 player.CurrentRoundStats?.Clear();
-                player.SendEvent(ToClientEvent.CountdownStart, team is null || team.IsSpectator);
+                player.TriggerEvent(ToClientEvent.CountdownStart, team is null || team.IsSpectator);
             });
         }
 
@@ -132,7 +132,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
             string json = Serializer.ToClient(amounts);
-            ModAPI.Sync.SendEvent(this, ToClientEvent.AmountInFightSync, json);
+            ModAPI.Sync.TriggerEvent(this, ToClientEvent.AmountInFightSync, json);
         }
 
         #endregion Private Methods

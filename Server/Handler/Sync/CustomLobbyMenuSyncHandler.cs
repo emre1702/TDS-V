@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.CustomLobby;
@@ -46,7 +47,7 @@ namespace TDS_Server.Handler.Sync
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
 
-            player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, _serializer.ToBrowser(lobbyDatas));
+            player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, _serializer.ToBrowser(lobbyDatas));
         }
 
         public bool IsPlayerInCustomLobbyMenu(ITDSPlayer player)
@@ -73,7 +74,7 @@ namespace TDS_Server.Handler.Sync
                     _playersInCustomLobbyMenu.RemoveAt(i);
                     continue;
                 }
-                player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddCustomLobby, json);
+                player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddCustomLobby, json);
             }
         }
 
@@ -89,7 +90,7 @@ namespace TDS_Server.Handler.Sync
                         _playersInCustomLobbyMenu.RemoveAt(i);
                         continue;
                     }
-                    player.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.RemoveCustomLobby, lobby.Id);
+                    player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.RemoveCustomLobby, lobby.Id);
                 }
             }
         }

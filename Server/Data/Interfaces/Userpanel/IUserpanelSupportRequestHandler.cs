@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Data.Interfaces.Userpanel

@@ -213,11 +213,11 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = messageEntity.CreateTime.ToString()
             });
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 foreach (var target in _inSupportRequest[requestId])
                 {
-                    target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
+                    target.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
                 }
             });
 
@@ -433,11 +433,11 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = player.GetLocalDateTimeString(messageEntity.CreateTime)
             });
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 foreach (var target in _inSupportRequest[requestId.Value])
                 {
-                    target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
+                    target.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncNewSupportRequestMessage, requestId, messageJson);
                 }
             });
 
@@ -478,7 +478,7 @@ namespace TDS_Server.Handler.Userpanel
 
             _bonusBotConnectorClient.Support?.Create(player, requestEntity);
 
-            _modAPI.Thread.QueueIntoMainThread(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
+            NAPI.Task.Run(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
             return null;
         }
 
@@ -505,11 +505,11 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 foreach (var target in _inSupportRequestsList)
                 {
-                    target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
+                    target.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
                 }
             });
 
@@ -533,11 +533,11 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            _modAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 foreach (var target in _inSupportRequestsList)
                 {
-                    target.SendEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
+                    target.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
                 }
             });
 

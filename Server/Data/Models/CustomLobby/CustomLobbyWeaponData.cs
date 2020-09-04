@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GTANetworkAPI;
+using Newtonsoft.Json;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Data.Models.CustomLobby

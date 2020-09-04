@@ -1,4 +1,6 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using GTANetworkAPI;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -30,7 +32,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     DeathSpawnTimer[player] = new TDSTimer(() =>
                     {
                         SpectateOtherSameTeam(player);
-                        player.SendEvent(ToClientEvent.PlayerSpectateMode);
+                        player.TriggerEvent(ToClientEvent.PlayerSpectateMode);
                     }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
                 }
                 --player.Lifes;
@@ -42,7 +44,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 DeathSpawnTimer[player] = new TDSTimer(() =>
                 {
                     SpectateOtherSameTeam(player);
-                    player.SendEvent(ToClientEvent.PlayerSpectateMode);
+                    player.TriggerEvent(ToClientEvent.PlayerSpectateMode);
                 }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
             }
         }

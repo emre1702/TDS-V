@@ -1,13 +1,13 @@
-﻿using System.Linq;
+﻿using GTANetworkAPI;
+using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
@@ -16,20 +16,12 @@ namespace TDS_Server.Handler.Maps
 {
     public class MapsRatingsHandler : DatabaseEntityWrapper
     {
-        #region Private Fields
-
         private readonly MapCreatorHandler _mapsCreatingHandler;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public MapsRatingsHandler(
-            IModAPI modAPI,
             EventsHandler eventsHandler,
             Serializer serializer,
             MapsLoadingHandler mapsLoadingHandler,
@@ -39,7 +31,6 @@ namespace TDS_Server.Handler.Maps
             ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _mapsLoadingHandler = mapsLoadingHandler;
             _mapsCreatingHandler = mapsCreatorHandler;
@@ -47,17 +38,12 @@ namespace TDS_Server.Handler.Maps
 
             eventsHandler.PlayerLoggedIn += SendPlayerHisRatings;
 
-            modAPI.ClientEvent.Add<IPlayer, int, int>(ToServerEvent.SendMapRating, this, AddPlayerMapRating);
+            NAPI.ClientEvent.Register<ITDSPlayer, int, int>(ToServerEvent.SendMapRating, this, AddPlayerMapRating);
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public async void AddPlayerMapRating(IPlayer modPlayer, int mapId, int rating)
+        public async void AddPlayerMapRating(ITDSPlayer player, int mapId, int rating)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
             int playerId = player.Entity!.Id;
 
@@ -81,7 +67,7 @@ namespace TDS_Server.Handler.Maps
             map.RatingAverage = map.Ratings.Average(r => r.Rating);
 
             if (map.Info.IsNewMap)
-                _modAPI.Thread.QueueIntoMainThread(() => _mapsCreatingHandler.AddedMapRating(map));
+                NAPI.Task.Run(() => _mapsCreatingHandler.AddedMapRating(map));
         }
 
         public void SendPlayerHisRatings(ITDSPlayer player)
@@ -92,9 +78,7 @@ namespace TDS_Server.Handler.Maps
                 return;
 
             var ratingsDict = player.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
-            _modAPI.Thread.QueueIntoMainThread(() => player.SendEvent(ToClientEvent.LoadOwnMapRatings, _serializer.ToBrowser(ratingsDict)));
+            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.LoadOwnMapRatings, _serializer.ToBrowser(ratingsDict)));
         }
-
-        #endregion Public Methods
     }
 }

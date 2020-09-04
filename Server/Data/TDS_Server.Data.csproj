@@ -5,17 +5,14 @@
      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup>
     <PlatformTarget>x64</PlatformTarget>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Interfaces\ModAPI\Events\**" />
     <Compile Remove="Models\MainMenu\**" />
-    <EmbeddedResource Remove="Interfaces\ModAPI\Events\**" />
     <EmbeddedResource Remove="Models\MainMenu\**" />
-    <None Remove="Interfaces\ModAPI\Events\**" />
     <None Remove="Models\MainMenu\**" />
   </ItemGroup>
 
@@ -29,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Bootstrapper">
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>

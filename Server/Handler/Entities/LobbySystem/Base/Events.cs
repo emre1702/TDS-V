@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Shared.Core;
@@ -29,7 +30,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     DeathSpawnTimer.Remove(player);
                 }
 
-                player.ModPlayer?.Spawn(SpawnPoint.Around(Entity.AroundSpawnPoint), Entity.DefaultSpawnRotation);
+                player.Spawn(SpawnPoint.Around(Entity.AroundSpawnPoint), Entity.DefaultSpawnRotation);
             }
         }
 
@@ -37,16 +38,16 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
         }
 
-        public async void OnPlayerLoggedOut(ITDSPlayer character)
+        public async void OnPlayerLoggedOut(ITDSPlayer player)
         {
-            await RemovePlayer(character);
+            await RemovePlayer(player);
         }
 
         public virtual void OnPlayerSpawn(ITDSPlayer player)
         {
             player.Health = Entity.FightSettings?.StartHealth ?? 100;
             player.Armor = Entity.FightSettings?.StartArmor ?? 100;
-            player.ModPlayer?.SetClothes(11, 0, 0);
+            player.SetClothes(11, 0, 0);
         }
 
         #endregion Public Methods

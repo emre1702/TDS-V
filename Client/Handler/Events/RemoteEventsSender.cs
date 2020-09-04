@@ -66,7 +66,7 @@ namespace TDS_Client.Handler.Events
         {
             if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
-                ModAPI.Sync.SendEvent(eventName, args);
+                ModAPI.Sync.TriggerEvent(eventName, args);
                 return true;
             }
 
@@ -77,7 +77,7 @@ namespace TDS_Client.Handler.Events
             }
 
             entry.LastExecMs = currentTicks;
-            ModAPI.Sync.SendEvent(eventName, args);
+            ModAPI.Sync.TriggerEvent(eventName, args);
             return true;
         }
 
@@ -86,7 +86,7 @@ namespace TDS_Client.Handler.Events
             string eventName = (string)args[0];
             if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
-                ModAPI.Sync.SendEvent(ToServerEvent.FromBrowserEvent, args);
+                ModAPI.Sync.TriggerEvent(ToServerEvent.FromBrowserEvent, args);
                 return true;
             }
 
@@ -97,7 +97,7 @@ namespace TDS_Client.Handler.Events
             }
 
             entry.LastExecMs = currentTicks;
-            ModAPI.Sync.SendEvent(ToServerEvent.FromBrowserEvent, args);
+            ModAPI.Sync.TriggerEvent(ToServerEvent.FromBrowserEvent, args);
             return true;
         }
 
@@ -111,13 +111,13 @@ namespace TDS_Client.Handler.Events
         {
             if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
-                ModAPI.Sync.SendEvent(eventName, args);
+                ModAPI.Sync.TriggerEvent(eventName, args);
                 return true;
             }
 
             int currentTicks = _timerHandler.ElapsedMs;
             entry.LastExecMs = currentTicks;
-            ModAPI.Sync.SendEvent(eventName, args);
+            ModAPI.Sync.TriggerEvent(eventName, args);
             return true;
         }
 
