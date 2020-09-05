@@ -1,14 +1,15 @@
 ﻿using BonusBotConnector.Client;
 using BonusBotConnector_Server;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
@@ -117,24 +118,16 @@ namespace TDS_Server.Handler.Userpanel
 
     public class UserpanelSupportRequestHandler : DatabaseEntityWrapper, IUserpanelSupportRequestHandler
     {
-        #region Private Fields
-
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly Dictionary<int, HashSet<ITDSPlayer>> _inSupportRequest = new Dictionary<int, HashSet<ITDSPlayer>>();
         private readonly HashSet<ITDSPlayer> _inSupportRequestsList = new HashSet<ITDSPlayer>();
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
-            ISettingsHandler settingsHandler, IModAPI modAPI, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
+            ISettingsHandler settingsHandler, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
             : base(dbContext, loggingHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _settingsHandler = settingsHandler;
             _bonusBotConnectorClient = bonusBotConnectorClient;
@@ -163,10 +156,6 @@ namespace TDS_Server.Handler.Userpanel
                 }
             };
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public async Task<string?> AnswerRequestFromDiscord(ulong discordUserId, int requestId, string text)
         {
@@ -543,7 +532,5 @@ namespace TDS_Server.Handler.Userpanel
 
             return null;
         }
-
-        #endregion Public Methods
     }
 }

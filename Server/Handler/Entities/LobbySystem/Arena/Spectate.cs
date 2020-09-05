@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem

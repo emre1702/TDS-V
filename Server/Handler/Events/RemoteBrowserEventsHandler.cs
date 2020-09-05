@@ -7,14 +7,11 @@ using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
-using TDS_Server.Handler.Player;
 using TDS_Server.Handler.PlayerHandlers;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
@@ -67,7 +64,7 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.SendApplication] = userpanelHandler.ApplicationUserHandler.CreateApplication,
                 [ToServerEvent.SetSupportRequestClosed] = userpanelHandler.SupportRequestHandler.SetSupportRequestClosed,
                 [ToServerEvent.SendSupportRequest] = userpanelHandler.SupportRequestHandler.SendRequest,
-                [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendChatMessage,
+                [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendMessage,
                 [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
                 [ToServerEvent.SaveCharCreateData] = playerCharHandler.Save,
                 [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel,
@@ -109,10 +106,9 @@ namespace TDS_Server.Handler.Events
 
         public delegate object? FromBrowserMethodDelegate(ITDSPlayer player, ref ArraySegment<object> args);
 
-        public async void OnFromBrowserEvent(ITDSPlayer modPlayer, params object[] args)
+        public async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
             try
             {

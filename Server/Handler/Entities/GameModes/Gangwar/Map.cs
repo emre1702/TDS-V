@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
             TargetColShape = NAPI.ColShape.CreateSphereColShape(TargetObject.Position, (float)SettingsHandler.ServerSettings.GangwarTargetRadius, Lobby.Dimension) as ITDSColShape;
 
-            TargetColShape.PlayerEntered += PlayerEnteredTargetColShape;
+            TargetColShape!.PlayerEntered += PlayerEnteredTargetColShape;
             TargetColShape.PlayerExited += PlayerExitedTargetColShape;
         }
 

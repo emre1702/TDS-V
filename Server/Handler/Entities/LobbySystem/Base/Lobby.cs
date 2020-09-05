@@ -1,15 +1,14 @@
 ﻿using BonusBotConnector.Client;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Account;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
@@ -31,7 +30,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         protected readonly EventsHandler EventsHandler;
         protected readonly LangHelper LangHelper;
         protected readonly LobbiesHandler LobbiesHandler;
-        protected readonly IModAPI ModAPI;
         protected readonly Serializer Serializer;
         protected readonly ISettingsHandler SettingsHandler;
         protected SyncedLobbySettings SyncedLobbySettings;
@@ -47,7 +45,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             TDSDbContext dbContext,
             ILoggingHandler loggingHandler,
             Serializer serializer,
-            IModAPI modAPI,
             LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler,
             LangHelper langHelper,
@@ -57,7 +54,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             BansHandler bansHandler) : base(dbContext, loggingHandler)
         {
             Serializer = serializer;
-            ModAPI = modAPI;
             LobbiesHandler = lobbiesHandler;
             SettingsHandler = settingsHandler;
             LangHelper = langHelper;
@@ -71,7 +67,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             dbContext.Attach(entity);
 
             Dimension = lobbiesHandler.GetFreeDimension();
-            SpawnPoint = new Position3D(
+            SpawnPoint = new Vector3(
                 entity.DefaultSpawnX,
                 entity.DefaultSpawnY,
                 entity.DefaultSpawnZ
@@ -80,7 +76,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             Teams = new List<ITeam>(entity.Teams.Count);
             foreach (Teams teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
-                Team team = new Team(serializer, ModAPI, teamEntity);
+                Team team = new Team(serializer, teamEntity);
                 Teams.Add(team);
             }
 
@@ -125,7 +121,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         #region Protected Properties
 
-        protected Position3D SpawnPoint { get; }
+        protected Vector3 SpawnPoint { get; }
 
         #endregion Protected Properties
 
@@ -191,7 +187,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             LobbiesHandler.RemoveLobby(this);
 
-            foreach (TDSPlayer player in Players.Values.ToArray())
+            foreach (var player in Players.Values.ToList())
             {
                 await RemovePlayer(player);
             }

@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GTANetworkAPI;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
@@ -44,7 +46,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             var lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, CreateEntity(gangwarArea), gangwarArea, true);
 
             await lobby.AddToDB();
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await NAPI.Task.RunWait(() =>
             {
                 EventsHandler.OnLobbyCreated(lobby);
                 lobby.SetMapList(new List<MapDto> { gangwarArea.Map });

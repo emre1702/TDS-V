@@ -8,8 +8,6 @@ namespace TDS_Server.Handler.Entities.GTA.Vehicles
     {
         private readonly WorkaroundsHandler _workaroundsHandler;
 
-        public ILobby? Lobby { get; set; }
-
         public TDSVehicle(NetHandle netHandle,
             WorkaroundsHandler workaroundsHandler) : base(netHandle)
         {

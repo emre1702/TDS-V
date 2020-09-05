@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (ban is null)
                 return null;
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 if (length.HasValue)
                 {
@@ -78,7 +79,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 await dbContext.SaveChangesAsync();
             });
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 if (length.HasValue)
                 {
@@ -132,7 +133,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 {
                     duration = DateTime.UtcNow.DurationTo(ban.EndTimestamp.Value);
                 }
-                ModAPI.Thread.QueueIntoMainThread(() => character.SendChatMessage(string.Format(character.Language.GOT_LOBBY_BAN, duration, ban.Reason)));
+                NAPI.Task.Run(() => character.SendChatMessage(string.Format(character.Language.GOT_LOBBY_BAN, duration, ban.Reason)));
                 return true;
             }
             else if (ban.EndTimestamp.HasValue)
@@ -162,17 +163,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 PlayerBans? ban = await dbContext.PlayerBans.FindAsync(target.Id, Entity.Id);
                 if (ban is null)
                 {
-                    ModAPI.Thread.QueueIntoMainThread(() => admin.SendChatMessage(admin.Language.PLAYER_ISNT_BANED));
+                    NAPI.Task.Run(() => admin.SendChatMessage(admin.Language.PLAYER_ISNT_BANED));
                     return;
                 }
                 dbContext.PlayerBans.Remove(ban);
                 await dbContext.SaveChangesAsync();
 
                 if (ban.LobbyId == LobbiesHandler.MainMenu.Id)
-                    ModAPI.Thread.QueueIntoMainThread(() => BansHandler.RemoveServerBanByPlayerId(ban));
+                    NAPI.Task.Run(() => BansHandler.RemoveServerBanByPlayerId(ban));
             });
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 if (Entity.IsOfficial && Entity.Type != TDS_Shared.Data.Enums.LobbyType.MainMenu)
                     LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, target.Name, Entity.Name, admin.AdminLevelName, reason));

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
@@ -19,10 +20,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
-                player.ModPlayer?.SetInvincible(true);
-                player.ModPlayer?.Freeze(false);
+                player.SetInvincible(true);
+                player.Freeze(false);
 
                 if (Players.Count == 2)
                 {
@@ -49,23 +50,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (vehHash == default)
                 return;
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
-                var pos = player.ModPlayer!.Position;
+                var pos = player.Position;
                 if (player.FreeroamVehicle is { })
                 {
-                    if (player.ModPlayer.IsInVehicle)
-                        player.ModPlayer.WarpOutOfVehicle();
+                    if (player.IsInVehicle)
+                        player.WarpOutOfVehicle();
                     player.FreeroamVehicle.Delete();
                     player.FreeroamVehicle = null;
                 }
 
-                var vehicle = ModAPI.Vehicle.Create(vehHash, pos, player.ModPlayer.Rotation.Z, 0, 0, player.ModPlayer.Name, dimension: Dimension);
+                var vehicle = NAPI.Vehicle.CreateVehicle(vehHash, pos, player.Rotation.Z, 0, 0, player.Name, dimension: Dimension) as ITDSVehicle;
                 player.FreeroamVehicle = vehicle;
 
-                player.SetEntityInvincible(vehicle, true);
+                player.SetEntityInvincible(vehicle!, true);
 
-                player.ModPlayer.SetIntoVehicle(vehicle, 0);
+                player.SetIntoVehicle(vehicle, 0);
             });
         }
 

@@ -1,12 +1,13 @@
-﻿using MoreLinq;
+﻿using GTANetworkAPI;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Player.Char;
@@ -20,24 +21,16 @@ namespace TDS_Server.Handler.PlayerHandlers
 {
     public class PlayerCharHandler
     {
-        #region Private Fields
-
         private readonly TDSDbContext _dbContext;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public PlayerCharHandler(IModAPI modAPI, EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public PlayerCharHandler(EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
             _dbContext = dbContext;
@@ -48,10 +41,6 @@ namespace TDS_Server.Handler.PlayerHandlers
             eventsHandler.ReloadPlayerChar += LoadPlayerChar;
             eventsHandler.PlayerRegisteredBefore += InitPlayerChar;
         }
-
-        #endregion Public Constructors
-
-        #region Internal Methods
 
         internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> args)
         {
@@ -71,7 +60,7 @@ namespace TDS_Server.Handler.PlayerHandlers
 
             // By doing this we can ensure that player datas don't save while editing. Because else
             // this could result in PlayerCharDatas getting messed up for the player
-            await player.ExecuteForDB(dbContext =>
+            await player.Database.ExecuteForDB(dbContext =>
             {
                 CopyJsonValues(data.FeaturesDataSynced, player.Entity.CharDatas.FeaturesData);
                 CopyJsonValues(data.GeneralDataSynced, player.Entity.CharDatas.GeneralData);
@@ -80,7 +69,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             });
 
             await player.SaveData(true);
-            NAPI.Task.Run(() =>
+            await NAPI.Task.RunWait(() =>
             {
                 LoadPlayerChar(player);
             });
@@ -88,10 +77,6 @@ namespace TDS_Server.Handler.PlayerHandlers
             await _lobbiesHandler.MainMenu.AddPlayer(player, null);
             return null;
         }
-
-        #endregion Internal Methods
-
-        #region Private Methods
 
         private void CopyJsonValues<T, R>(List<T> originalObjList, ICollection<R> newObjList)
         {
@@ -106,7 +91,6 @@ namespace TDS_Server.Handler.PlayerHandlers
                     .Where(p => p.GetCustomAttributes(typeof(Newtonsoft.Json.JsonPropertyAttribute), false).Length > 0)
                     .ForEach(p => p.SetValue(newObj, p.GetValue(originalObj)));
             }
-            
         }
 
         private async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
@@ -180,18 +164,14 @@ namespace TDS_Server.Handler.PlayerHandlers
             data.HairAndColorsDataSynced = data.HairAndColorsData.Cast<CharCreateHairAndColorsData>().ToList();
             data.HeritageDataSynced = data.HeritageData.Cast<CharCreateHeritageData>().ToList();
 
-            if (player.ModPlayer is null)
-                return;
-
-
             var currentHairAndColor = data.HairAndColorsData.First(d => d.Slot == data.Slot);
             var currentHeritageData = data.HeritageData.First(d => d.Slot == data.Slot);
             var currentGeneralData = data.GeneralData.First(d => d.Slot == data.Slot);
             var currentAppearanceData = data.AppearanceData.First(d => d.Slot == data.Slot);
             var currentFeaturesData = data.FeaturesData.First(d => d.Slot == data.Slot);
 
-            player.ModPlayer.SetClothes(2, currentHairAndColor.Hair, 0);
-            player.ModPlayer.SetCustomization(
+            player.SetClothes(2, currentHairAndColor.Hair, 0);
+            player.SetCustomization(
                 gender: currentGeneralData.IsMale,
                 headBlend: new HeadBlend
                 {
@@ -314,7 +294,5 @@ namespace TDS_Server.Handler.PlayerHandlers
                 decorations: Array.Empty<Decoration>()
             );
         }
-
-        #endregion Private Methods
     }
 }

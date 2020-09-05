@@ -1,12 +1,12 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Server
@@ -19,7 +19,6 @@ namespace TDS_Server.Handler.Server
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly ServerStatsHandler _serverStatsHandler;
         private readonly ITDSPlayerHandler _tdsPlayersHandler;
         private bool _isFirstResourceStopCheck = true;
@@ -30,7 +29,7 @@ namespace TDS_Server.Handler.Server
         #region Public Constructors
 
         public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, ChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
-            LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
+            LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
             _langHelper = langHelper;
             _loggingHandler = loggingHandler;
@@ -38,7 +37,6 @@ namespace TDS_Server.Handler.Server
             _serverStatsHandler = serverStatsHandler;
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayersHandler = tdsPlayerHandler;
-            _modAPI = modAPI;
 
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             Console.CancelKeyPress += CurrentDomain_ProcessExit;
@@ -99,7 +97,25 @@ namespace TDS_Server.Handler.Server
 
         private void RemoveAllCreated()
         {
-            _modAPI.Pool.RemoveAll();
+            NAPI.Task.Run(() =>
+            {
+                DeleteEntityList(NAPI.Pools.GetAllBlips());
+                DeleteEntityList(NAPI.Pools.GetAllCheckpoints());
+                DeleteEntityList(NAPI.Pools.GetAllColShapes());
+                DeleteEntityList(NAPI.Pools.GetAllDummyEntities());
+                DeleteEntityList(NAPI.Pools.GetAllMarkers());
+                DeleteEntityList(NAPI.Pools.GetAllPeds());
+                DeleteEntityList(NAPI.Pools.GetAllPickups());
+                DeleteEntityList(NAPI.Pools.GetAllTextLabels());
+                DeleteEntityList(NAPI.Pools.GetAllVehicles());
+                DeleteEntityList(NAPI.Pools.GetAllObjects());
+            });
+        }
+
+        private void DeleteEntityList(IEnumerable<Entity> entities)
+        {
+            foreach (Entity entity in entities)
+                NAPI.Entity.DeleteEntity(entity);
         }
 
         private void ResourceRestartCountdown(int counter, bool isMinute)

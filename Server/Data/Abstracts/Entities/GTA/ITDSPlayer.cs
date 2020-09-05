@@ -22,6 +22,13 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract string AdminLevelName { get; }
         public virtual new int Armor { get => base.Armor; set => base.Armor = value; }
         public abstract RoundStatsDto? CurrentRoundStats { get; set; }
+
+        public new WeaponHash CurrentWeapon
+        {
+            get => base.CurrentWeapon;
+            set => NAPI.Player.SetPlayerCurrentWeapon(this, value);
+        }
+
         public abstract IDatabaseEntityWrapper Database { get; }
         public abstract string DisplayName { get; }
         public abstract Players? Entity { get; set; }

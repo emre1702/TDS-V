@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Userpanel.Command;
@@ -92,9 +93,9 @@ namespace TDS_Server.Handler.Userpanel
 
         #region Private Methods
 
-        private void EventsHandler_PlayerLoggedIn(Data.Interfaces.ITDSPlayer player)
+        private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            player.SendBrowserEvent(ToBrowserEvent.SyncCommandsData, GetData());
+            player.TriggerBrowserEvent(ToBrowserEvent.SyncCommandsData, GetData());
         }
 
         #endregion Private Methods

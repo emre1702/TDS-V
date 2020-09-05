@@ -1,4 +1,5 @@
 ﻿using System;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 
@@ -13,16 +14,16 @@ namespace TDS_Server.Handler.Helper
             return isNameCheckLevel switch
             {
                 IsNameCheckLevel.EqualsName
-                    => player.ModPlayer?.Name.Equals(input, StringComparison.CurrentCultureIgnoreCase) == true,
+                    => player.Name.Equals(input, StringComparison.CurrentCultureIgnoreCase) == true,
 
                 IsNameCheckLevel.EqualsScName
-                    => player.ModPlayer?.SocialClubName.Equals(input, StringComparison.CurrentCultureIgnoreCase) == true,
+                    => player.SocialClubName.Equals(input, StringComparison.CurrentCultureIgnoreCase) == true,
 
                 IsNameCheckLevel.ContainsName
-                    => player.ModPlayer?.Name.Contains(input, StringComparison.CurrentCultureIgnoreCase) == true,
+                    => player.Name.Contains(input, StringComparison.CurrentCultureIgnoreCase) == true,
 
                 IsNameCheckLevel.ContainsScName
-                    => player.ModPlayer?.SocialClubName.Contains(input, StringComparison.CurrentCultureIgnoreCase) == true,
+                    => player.SocialClubName.Contains(input, StringComparison.CurrentCultureIgnoreCase) == true,
 
                 _ => false
             };

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using GTANetworkAPI;
+using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Shared.Data.Enums;
@@ -23,15 +25,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (gang.Entity.Vehicles is null || gang.Entity.Vehicles.Count == 0)
                 return;
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 foreach (var dbVehicle in gang.Entity.Vehicles)
                 {
-                    var vehicle = ModAPI.Vehicle.Create(dbVehicle.Model, new Position3D(dbVehicle.SpawnPosX, dbVehicle.SpawnPosY, dbVehicle.SpawnPosZ),
-                        new Position3D(dbVehicle.SpawnRotX, dbVehicle.SpawnRotY, dbVehicle.SpawnRotZ),
-                        dbVehicle.Color1, dbVehicle.Color2, gang.Entity.Short, 255, dimension: Dimension);
-                    vehicle.Freeze(true, this);
-                    vehicle.SetInvincible(true, this);
+                    var vehicle = NAPI.Vehicle.CreateVehicle(dbVehicle.Model, new Vector3(dbVehicle.SpawnPosX, dbVehicle.SpawnPosY, dbVehicle.SpawnPosZ),
+                        new Vector3(dbVehicle.SpawnRotX, dbVehicle.SpawnRotY, dbVehicle.SpawnRotZ),
+                        dbVehicle.Color1, dbVehicle.Color2, gang.Entity.Short, 255, dimension: Dimension) as ITDSVehicle;
+                    vehicle!.Lobby = this;
+                    vehicle.Freeze(true);
+                    vehicle.SetInvincible(true);
+                    vehicle.SetCollisionsless(true);
                     DataSyncHandler.SetData(vehicle, EntityDataKey.GangId, DataSyncMode.Lobby, gang.Entity.Id, toLobby: this);
                     //Todo: Disable collision of the vehicle (maybe on clientside an EntityStreamIn?)
                 }

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
@@ -34,7 +32,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public virtual void OnPlayerEnterColshape(IColShape colshape, ITDSPlayer player)
+        public virtual void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player)
         {
         }
 

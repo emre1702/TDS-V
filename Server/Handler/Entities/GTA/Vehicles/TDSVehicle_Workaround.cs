@@ -7,35 +7,36 @@ namespace TDS_Server.Handler.Entities.GTA.Vehicles
 {
     partial class TDSVehicle
     {
-
         public override void SetInvincible(bool toggle, ITDSPlayer forPlayer)
         {
             _workaroundsHandler.SetEntityInvincible(forPlayer, this, toggle);
         }
 
-        public void SetInvincible(bool toggle, ILobby lobby)
+        public override void SetInvincible(bool toggle)
         {
-            _workaroundsHandler.SetEntityInvincible(lobby, this, toggle);
+            if (Lobby is null)
+                return;
+            _workaroundsHandler.SetEntityInvincible(Lobby, this, toggle);
         }
 
-        public void AttachTo(ITDSPlayer player, PedBone bone, Vector3? positionOffset, Vector3? rotationOffset)
+        public override void AttachTo(ITDSPlayer player, PedBone bone, Vector3? positionOffset, Vector3? rotationOffset)
         {
             _workaroundsHandler.AttachEntityToEntity(this, player, bone, positionOffset ?? new Vector3(), rotationOffset ?? new Vector3(), player.Lobby);
         }
 
-        public void Detach()
+        public override void Detach()
         {
             _workaroundsHandler.DetachEntity(this);
         }
 
-        public void Freeze(bool toggle)
+        public override void Freeze(bool toggle)
         {
             if (Lobby is null)
                 return;
             _workaroundsHandler.FreezeEntity(this, toggle, Lobby);
         }
 
-        public void SetCollisionsless(bool toggle)
+        public override void SetCollisionsless(bool toggle)
         {
             _workaroundsHandler.SetEntityCollisionless(this, toggle, Lobby);
         }

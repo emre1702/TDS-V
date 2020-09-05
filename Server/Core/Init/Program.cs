@@ -1,51 +1,48 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
-using TDS_Server.Handler.Entities.Player;
+using TDS_Server.Handler.Entities.GTA.GTAPlayer;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
-using TDS_Server.Handler.Player;
 using TDS_Server.Handler.Server;
 
 namespace TDS_Server.Core.Init
 {
-    public class Program
+    public class Program : Script
     {
         public readonly EventsHandler EventsHandler;
         public readonly RemoteBrowserEventsHandler RemoteBrowserEventsHandler;
         public readonly LobbiesHandler LobbiesHandler;
         public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
 
-        private TDSPlayer? _consolePlayerCache;
+        private ITDSPlayer? _consolePlayerCache;
 
         private readonly IServiceProvider _serviceProvider;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly CommandsHandler _commandsHandler;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public Program(IModAPI modAPI)
+        public Program()
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             try
             {
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-                _modAPI = modAPI;
-                _serviceProvider = Services.InitServiceCollection(modAPI);
+                _serviceProvider = Services.InitServiceCollection();
 
                 using (var dbContext = _serviceProvider.GetRequiredService<TDSDbContext>())
                 {
@@ -61,7 +58,7 @@ namespace TDS_Server.Core.Init
                 var codeChecker = ActivatorUtilities.CreateInstance<CodeMistakesChecker>(_serviceProvider);
                 if (codeChecker.CheckHasErrors())
                 {
-                    modAPI.Resource.StopThis();
+                    NAPI.Resource.StopResource("tds");
                     Environment.Exit(1);
                 }
 
@@ -99,18 +96,6 @@ namespace TDS_Server.Core.Init
                 Environment.Exit(1);
             }
         }
-
-        public ITDSPlayer? GetTDSPlayerIfLoggedIn(IPlayer player)
-            => _tdsPlayerHandler.GetIfLoggedIn(player);
-
-        public ITDSPlayer? GetTDSPlayerIfLoggedIn(ushort remoteId)
-            => _tdsPlayerHandler.GetIfLoggedIn(remoteId);
-
-        public ITDSPlayer GetTDSPlayer(IPlayer player)
-            => _tdsPlayerHandler.Get(player);
-
-        public ITDSPlayer GetNotLoggedInTDSPlayer(IPlayer player)
-            => _tdsPlayerHandler.GetNotLoggedIn(player);
 
         public void HandleProgramException(Exception ex, string msgBefore = "")
         {

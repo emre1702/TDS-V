@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Shared.Data.Enums;
@@ -22,7 +24,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (CurrentGameMode?.HandlesGivingWeapons == true)
                 return;
             var lastWeapon = player.LastWeaponOnHand;
-            player.ModPlayer!.RemoveAllWeapons();
+            player.RemoveAllWeapons();
             bool giveLastWeapon = false;
 
             foreach (LobbyWeapons weapon in _allRoundWeapons)
@@ -30,13 +32,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
                 //    continue;
                 WeaponHash hash = (WeaponHash)((uint)weapon.Hash);
-                player.ModPlayer.GiveWeapon(hash);
-                player.ModPlayer.SetWeaponAmmo(hash, weapon.Ammo);
+                player.GiveWeapon(hash, 0);
+                player.SetWeaponAmmo(hash, weapon.Ammo);
                 if (hash == lastWeapon)
                     giveLastWeapon = true;
             }
             if (giveLastWeapon)
-                player.ModPlayer.CurrentWeapon = lastWeapon;
+                player.CurrentWeapon = lastWeapon;
         }
 
         public override void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)

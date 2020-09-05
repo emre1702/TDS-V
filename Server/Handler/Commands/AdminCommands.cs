@@ -193,7 +193,7 @@ namespace TDS_Server.Handler.Commands
                         player.SendChatMessage(player.Language.TARGET_NOT_IN_SAME_LOBBY);
                         return;
                     }
-                    target.Lobby.SendChatMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                    target.Lobby.SendMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
                 });
             }
             await target.Lobby.RemovePlayer(target);

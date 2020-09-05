@@ -1,9 +1,10 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel;
 using TDS_Server.Data.Utility;
@@ -16,26 +17,15 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelSettingsSpecialHandler : IUserpanelSettingsSpecialHandler
     {
-        #region Private Fields
-
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, Serializer serializer, ILoggingHandler loggingHandler,
-            DataSyncHandler dataSyncHandler, IModAPI modAPI)
-            => (_modAPI, _settingsHandler, _serializer, _loggingHandler, _dataSyncHandler)
-            = (modAPI, settingsHandler, serializer, loggingHandler, dataSyncHandler);
-
-        #endregion Public Constructors
-
-        #region Public Methods
+            DataSyncHandler dataSyncHandler)
+            => (_settingsHandler, _serializer, _loggingHandler, _dataSyncHandler)
+            = (settingsHandler, serializer, loggingHandler, dataSyncHandler);
 
         public string? GetData(ITDSPlayer player)
         {
@@ -125,7 +115,7 @@ namespace TDS_Server.Handler.Userpanel
                     switch (type)
                     {
                         case UserpanelSettingsSpecialType.Username:
-                            player.ModPlayer!.Name = (string)oldValue;
+                            player.Name = (string)oldValue;
                             break;
 
                         case UserpanelSettingsSpecialType.Password:
@@ -144,14 +134,12 @@ namespace TDS_Server.Handler.Userpanel
             switch (type)
             {
                 case UserpanelSettingsSpecialType.Username:
-                    player.ModPlayer!.Name = value;
+                    player.Name = value;
                     NAPI.Task.Run(() => _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, value));
                     break;
             }
 
             return string.Empty;
         }
-
-        #endregion Public Methods
     }
 }

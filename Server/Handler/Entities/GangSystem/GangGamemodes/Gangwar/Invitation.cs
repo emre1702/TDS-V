@@ -1,4 +1,6 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using GTANetworkAPI;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Entities.Utility;
 
 namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
@@ -11,11 +13,11 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
         {
             if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
             {
-                ModAPI.Thread.QueueIntoMainThread(() => invitation?.Resend());
+                NAPI.Task.Run(() => invitation?.Resend());
                 return;
             }
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 _gangwarArea?.Owner!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO, player.DisplayName));
                 _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName));
@@ -26,22 +28,22 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
         {
             if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
             {
-                ModAPI.Thread.QueueIntoMainThread(() => invitation?.Resend());
+                NAPI.Task.Run(() => invitation?.Resend());
                 return;
             }
 
-            ModAPI.Thread.QueueIntoMainThread(() => _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName)));
+            NAPI.Task.Run(() => _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName)));
         }
 
         private async void AcceptDefendInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
         {
             if (!await Lobby.AddPlayer(player, (uint)OwnerTeam.Entity.Index))
             {
-                ModAPI.Thread.QueueIntoMainThread(() => invitation?.Resend());
+                NAPI.Task.Run(() => invitation?.Resend());
                 return;
             }
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO, player.DisplayName));
                 _gangwarArea?.Owner!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName));

@@ -4,6 +4,7 @@ using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
@@ -92,7 +93,7 @@ namespace TDS_Server.Handler.GangSystem
                 .AsNoTracking()
                 .ForEach(g =>
                 {
-                    foreach (var member in g.Members) 
+                    foreach (var member in g.Members)
                     {
                         member.RankNumber = member.Rank?.Rank;
                         member.Name = member.Player!.Name;

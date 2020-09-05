@@ -87,7 +87,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 try
                 {
                     if (_roundStatusMethod.ContainsKey(status))
-                        ModAPI.Thread.QueueIntoMainThread(_roundStatusMethod[status]);
+                        NAPI.Task.Run(_roundStatusMethod[status]);
                 }
                 catch (Exception ex)
                 {
@@ -101,8 +101,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             else if (CurrentRoundStatus != RoundStatus.RoundEnd)
             {
-                ModAPI.Thread.QueueIntoMainThread(_roundStatusMethod[RoundStatus.RoundEnd]);
-                ModAPI.Thread.QueueIntoMainThread(_roundStatusMethod[RoundStatus.MapClear]);
+                NAPI.Task.Run(() =>
+                {
+                    _roundStatusMethod[RoundStatus.RoundEnd]();
+                    _roundStatusMethod[RoundStatus.MapClear]();
+                });
                 CurrentRoundStatus = RoundStatus.None;
             }
         }
@@ -111,7 +114,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             DeleteMapBlips();
             ClearTeamPlayersAmounts();
-            ModAPI.Sync.TriggerEvent(this, ToClientEvent.MapClear);
+            TriggerEvent(ToClientEvent.MapClear);
 
             CurrentGameMode?.StartMapClear();
         }
@@ -130,7 +133,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             CreateMapLimitBlips(nextMap);
             if (RoundSettings.MixTeamsAfterRound)
                 MixTeams();
-            ModAPI.Sync.TriggerEvent(this, ToClientEvent.MapChange, nextMap.ClientSyncedDataJson);
+            TriggerEvent(ToClientEvent.MapChange, nextMap.ClientSyncedDataJson);
             _currentMap = nextMap;
             _currentMapSpectatorPosition = _currentMap.LimitInfo.Center.SwitchNamespace().AddToZ(10);
             RoundEndReasonText = null;
@@ -158,7 +161,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 return;
             }
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 if (!isEmpty)
                 {
@@ -169,7 +172,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     {
                         character.TriggerEvent(ToClientEvent.RoundEnd, team is null || team.IsSpectator, RoundEndReasonText != null ? RoundEndReasonText[character.Language] : string.Empty, _currentMap?.BrowserSyncedData.Id ?? 0);
                         if (character.Lifes > 0 && _currentRoundEndWinnerTeam != null && team != _currentRoundEndWinnerTeam && CurrentRoundEndReason != RoundEndReason.Death)
-                            character.ModPlayer?.Kill();
+                            character.Kill();
                         character.Lifes = 0;
                     });
                 }
@@ -241,7 +244,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 }
 
                 string json = Serializer.ToBrowser(_ranking);
-                ModAPI.Sync.TriggerEvent(this, ToClientEvent.StartRankingShowAfterRound, json, winner.RemoteId, second?.RemoteId ?? 0, third?.RemoteId ?? 0);
+                TriggerEvent(ToClientEvent.StartRankingShowAfterRound, json, winner.RemoteId, second?.RemoteId ?? 0, third?.RemoteId ?? 0);
             }
             catch (Exception ex)
             {

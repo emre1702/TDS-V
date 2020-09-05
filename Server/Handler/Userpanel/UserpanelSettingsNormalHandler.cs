@@ -1,16 +1,15 @@
 ﻿using BonusBotConnector.Client;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel;
 using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
@@ -19,27 +18,16 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelSettingsNormalHandler : DatabaseEntityWrapper, IUserpanelSettingsNormalHandler
     {
-        #region Private Fields
-
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public UserpanelSettingsNormalHandler(Serializer serializer, BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext,
-            ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
+            ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
-            => (_modAPI, _serializer, _bonusBotConnectorClient, _tdsPlayerHandler)
-            = (modAPI, serializer, bonusBotConnectorClient, tdsPlayerHandler);
-
-        #endregion Public Constructors
-
-        #region Public Methods
+            => (_serializer, _bonusBotConnectorClient, _tdsPlayerHandler)
+            = (serializer, bonusBotConnectorClient, tdsPlayerHandler);
 
         public async Task<string> ConfirmDiscordUserId(ulong discordUserId)
         {
@@ -70,7 +58,7 @@ namespace TDS_Server.Handler.Userpanel
             var newDiscordUserId = obj.General.DiscordUserId;
             obj.General.DiscordUserId = player.Entity!.PlayerSettings.DiscordUserId;
             obj.ThemeSettings.PlayerId = player.Id;
-            await player.ExecuteForDBAsync(async (dbContext) =>
+            await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
                 dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj.General);
                 dbContext.Entry(player.Entity.ThemeSettings).CurrentValues.SetValues(obj.ThemeSettings);
@@ -86,7 +74,7 @@ namespace TDS_Server.Handler.Userpanel
 
                 if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId && newDiscordUserId.HasValue)
                 {
-                    _bonusBotConnectorClient.PrivateChat?.SendChatMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId.Value, (reply) =>
+                    _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId.Value, (reply) =>
                     {
                         if (string.IsNullOrEmpty(reply.ErrorMessage))
                             return;
@@ -98,10 +86,6 @@ namespace TDS_Server.Handler.Userpanel
 
             return null;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private async Task SaveDiscordUserId(int userId, ulong discordUserId)
         {
@@ -119,7 +103,5 @@ namespace TDS_Server.Handler.Userpanel
             player.Entity!.PlayerSettings.DiscordUserId = discordUserId;
             await player.SaveData(true);
         }
-
-        #endregion Private Methods
     }
 }

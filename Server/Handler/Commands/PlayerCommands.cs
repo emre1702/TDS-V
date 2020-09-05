@@ -307,7 +307,7 @@ namespace TDS_Server.Handler.Commands
                     break;
             }
 
-            _modAPI.Sync.TriggerEvent(fightLobby, ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
+            fightLobby.TriggerEvent(ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
         }
 
         [TDSCommand(PlayerCommand.TeamChat)]

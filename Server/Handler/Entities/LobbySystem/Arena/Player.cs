@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using GTANetworkAPI;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
@@ -9,7 +10,6 @@ using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map.Creator;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
@@ -27,11 +27,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (!await base.AddPlayer(player, 0))
                 return false;
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
-                var pos = _currentMap?.LimitInfo?.Center.SwitchNamespace();
-                if (pos is { } && player.ModPlayer is { })
-                    player.ModPlayer.Position = pos.AddToZ(10);
+                var pos = _currentMap?.LimitInfo?.Center?.ToVector3();
+                if (pos is { })
+                    player.Position = pos.AddToZ(10);
                 SendPlayerRoundInfoOnJoin(player);
                 new TDSTimer(() => SpectateOtherAllTeams(player), 1000, 1);
 
@@ -62,7 +62,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         public override async Task RemovePlayer(ITDSPlayer player)
         {
             var lifes = player.Lifes;
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            await NAPI.Task.RunWait(() =>
             {
                 if (lifes > 0)
                 {
@@ -82,7 +82,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             await base.RemovePlayer(player);
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 switch (CurrentRoundStatus)
                 {
@@ -158,9 +158,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private void RespawnPlayer(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
-
             SetPlayerReadyForRound(player);
             player.Freeze(false);
             player.TriggerEvent(ToClientEvent.PlayerRespawned);
@@ -214,9 +211,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
-
             if (_currentMap is { })
             {
                 player.TriggerEvent(ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
@@ -251,9 +245,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private void SetPlayerReadyForRound(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
-
             if (player.Team != null && !player.Team.IsSpectator)
             {
                 if (SpawnPlayer)
@@ -261,23 +252,23 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     Position4DDto? spawndata = GetMapRandomSpawnData(player.Team);
                     if (spawndata is null)
                         return;
-                    player.Spawn(spawndata.To3D(), spawndata.Rotation);
+                    player.Spawn(spawndata.ToVector3(), spawndata.Rotation);
                 }
 
                 if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
                     player.Team.SpectateablePlayers?.Add(player);
 
-                player.ModPlayer.Freeze(FreezePlayerOnCountdown);
+                player.Freeze(FreezePlayerOnCountdown);
                 GivePlayerWeapons(player);
                 RemoveAsSpectator(player);
             }
             else
             {
                 if (SpawnPlayer)
-                    player.Spawn(_currentMapSpectatorPosition ?? SpawnPoint, 0);
+                    player.Spawn(_currentMapSpectatorPosition?.ToVector3() ?? SpawnPoint, 0);
 
-                player.ModPlayer.Freeze(true);
-                player.ModPlayer.RemoveAllWeapons();
+                player.Freeze(true);
+                player.RemoveAllWeapons();
             }
 
             if (_removeSpectatorsTimer.ContainsKey(player))
@@ -286,13 +277,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private void StartRoundForPlayer(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
             player.TriggerEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
             if (player.Team?.IsSpectator == false)
             {
                 SetPlayerAlive(player);
-                player.ModPlayer.Freeze(false);
+                player.Freeze(false);
             }
             player.LastHitter = null;
         }

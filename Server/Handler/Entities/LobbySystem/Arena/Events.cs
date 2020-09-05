@@ -1,6 +1,5 @@
-﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Enums;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
@@ -38,7 +37,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             RoundCheckForEnoughAlive();
         }
 
-        public override void OnPlayerEnterColshape(IColShape shape, ITDSPlayer player)
+        public override void OnPlayerEnterColshape(ITDSColShape shape, ITDSPlayer player)
         {
             base.OnPlayerEnterColshape(shape, player);
             CurrentGameMode?.OnPlayerEnterColshape(shape, player);

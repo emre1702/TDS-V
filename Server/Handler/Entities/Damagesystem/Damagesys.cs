@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.LobbyEntities;
 
@@ -12,16 +11,14 @@ namespace TDS_Server.Core.Damagesystem
         #region Private Fields
 
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public Damagesys(IEnumerable<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards, IModAPI modAPI, 
+        public Damagesys(IEnumerable<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards,
             ILoggingHandler loggingHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler)
         {
-            _modAPI = modAPI;
             _loggingHandler = loggingHandler;
 
             foreach (LobbyWeapons weapon in weapons)

@@ -31,4 +31,10 @@
     <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Bootstrapper">
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

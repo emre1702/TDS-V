@@ -71,7 +71,7 @@ namespace TDS_Server.Handler
         public void SendAdminChat(ITDSPlayer player, string message)
         {
             string changedMessage = "[ADMINCHAT] " + player.AdminLevel.FontColor + player.DisplayName + ": !$220|220|220$" + message;
-            _adminsHandler.SendChatMessage(changedMessage);
+            _adminsHandler.SendMessage(changedMessage);
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
@@ -139,7 +139,7 @@ namespace TDS_Server.Handler
             string changedMessage = (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message;
             if (isDirty)
                 changedMessage = "!$160|50|0$[DIRTY] " + changedMessage + "$Dirty$";
-            player.Lobby.SendChatMessage(changedMessage);
+            player.Lobby.SendMessage(changedMessage);
 
             if (player.Lobby?.IsOfficial == true && !isDirty)
                 _loggingHandler.LogChat(message, player);
@@ -161,7 +161,7 @@ namespace TDS_Server.Handler
             if (player.Team is null)
                 return;
             string changedMessage = "[TEAM] " + player.Team.ChatColor + player.DisplayName + ": !$220|220|220$" + message + "$Team$";
-            player.Team.SendChatMessage(changedMessage);
+            player.Team.SendMessage(changedMessage);
             _loggingHandler.LogChat(message, player, isTeamChat: true);
         }
 

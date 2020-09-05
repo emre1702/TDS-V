@@ -235,7 +235,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
             _blip = NAPI.Blip.CreateBlip(
                 sprite: 84,
-                position: Map.Target.ToVector3(),
+                position: Map.Target!.ToVector3(),
                 scale: 3f,
                 color: Owner?.Entity.BlipColor ?? 4,
                 name: Map.Info.Name,

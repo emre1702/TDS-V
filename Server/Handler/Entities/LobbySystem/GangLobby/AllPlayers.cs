@@ -15,7 +15,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 var lobbiesToSendTheMsg = GetAllDerivedLobbies();
                 foreach (var lobby in lobbiesToSendTheMsg)
                 {
-                    lobby.SendChatMessage(message);
+                    lobby.SendMessage(message);
                 }
             }
         }
@@ -28,7 +28,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 var lobbiesToSendTheMsg = GetAllDerivedLobbies();
                 foreach (var lobby in lobbiesToSendTheMsg)
                 {
-                    lobby.SendChatMessage(langGetter);
+                    lobby.SendMessage(langGetter);
                 }
             }
         }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel.Stats;
@@ -12,21 +14,11 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelPlayerWeaponStatsHandler : IUserpanelPlayerWeaponStatsHandler
     {
-        #region Private Fields
-
         private readonly ILoggingHandler _loggingHandler;
         private readonly Serializer _serializer;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public UserpanelPlayerWeaponStatsHandler(ILoggingHandler loggingHandler, Serializer serializer)
             => (_loggingHandler, _serializer) = (loggingHandler, serializer);
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public string? GetData(ITDSPlayer player)
         {
@@ -94,15 +86,9 @@ namespace TDS_Server.Handler.Userpanel
             return _serializer.ToBrowser(data);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private List<string> GetPlayerWeaponsUsed(ITDSPlayer player)
         {
             return player.WeaponStats.OrderBy(w => w.Value.DealtDamage).Select(w => w.Key.ToString()).ToList();
         }
-
-        #endregion Private Methods
     }
 }

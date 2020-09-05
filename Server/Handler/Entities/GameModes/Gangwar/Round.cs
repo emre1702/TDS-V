@@ -54,7 +54,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                 var playerAtTarget = GetNextTargetMan();
                 SetTargetMan(playerAtTarget);
                 if (playerAtTarget is { })
-                    playerAtTarget.ModPlayer!.Position = TargetObject.Position;
+                    playerAtTarget.Position = TargetObject.Position;
             }
         }
 

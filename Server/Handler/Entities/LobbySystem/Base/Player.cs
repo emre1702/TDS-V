@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using GTANetworkAPI;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
@@ -48,9 +49,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             Players.TryAdd(player.Id, player);
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
-                ModAPI.Sync.TriggerEvent(this, ToClientEvent.JoinSameLobby, player.RemoteId);
+                TriggerEvent(ToClientEvent.JoinSameLobby, player.RemoteId);
 
                 player.Lobby = this;
 
@@ -58,12 +59,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     || Entity.Type == LobbyType.MapCreateLobby
                     || Entity.Type == LobbyType.GangLobby
                     || Entity.Type == LobbyType.CharCreateLobby)
-                    player.ModPlayer?.SetInvincible(true);
+                    player.SetInvincible(true);
 
-                player.ModPlayer!.Dimension = Dimension;
+                player.Dimension = Dimension;
                 if (SetPositionOnPlayerAdd)
-                    player.ModPlayer.Position = SpawnPoint.Around(Entity.AroundSpawnPoint);
-                player.ModPlayer.Freeze(true);
+                    player.Position = SpawnPoint.Around(Entity.AroundSpawnPoint);
+                player.Freeze(true);
 
                 if (teamindex != null)
                     SetPlayerTeam(player, Teams[(int)teamindex.Value]);
@@ -111,16 +112,13 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.Lobby = null;
             player.PreviousLobby = this;
             await player.SetPlayerLobbyStats(null);
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 player.Lifes = 0;
                 SetPlayerTeam(player, null);
                 player.Spectates = null;
-                if (player.ModPlayer is { })
-                {
-                    player.ModPlayer.Freeze(true);
-                    player.ModPlayer.Transparency = 255;
-                }
+                player.Freeze(true);
+                player.Transparency = 255;
 
                 if (DeathSpawnTimer.ContainsKey(player))
                 {
@@ -135,9 +133,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     await Remove();
             }
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
-                ModAPI.Sync.TriggerEvent(ToClientEvent.LeaveSameLobby, player.RemoteId, player.Entity?.Name ?? player.DisplayName);
+                TriggerEvent(ToClientEvent.LeaveSameLobby, player.RemoteId, player.Entity?.Name ?? player.DisplayName);
                 if (Entity.Type != LobbyType.MainMenu)
                     LoggingHandler?.LogRest(LogType.Lobby_Leave, player, false, Entity.IsOfficial);
 

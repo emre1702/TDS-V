@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GTANetworkAPI;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
-using TDS_Server.Handler.Entities.Player;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Default;
@@ -19,31 +19,23 @@ namespace TDS_Server.Handler.PlayerHandlers
 {
     public class TDSPlayerHandler : ITDSPlayerHandler
     {
-        #region Fields
-
         private readonly ILoggingHandler _loggingHandler;
         private readonly NameCheckHelper _nameCheckHelper;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ConcurrentDictionary<IPlayer, ITDSPlayer> _tdsPlayerCache = new ConcurrentDictionary<IPlayer, ITDSPlayer>();
         private readonly ConcurrentDictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new ConcurrentDictionary<ushort, ITDSPlayer>();
-
-        #endregion Fields
-
-        #region Constructors
 
         public TDSPlayerHandler(
             NameCheckHelper nameCheckHelper,
             IServiceProvider serviceProvider,
             EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler,
-            IModAPI modAPI)
+            ILoggingHandler loggingHandler)
         {
             _nameCheckHelper = nameCheckHelper;
             _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
 
-            NAPI.ClientEvent.Register<IPlayer, int>(ToServerEvent.LanguageChange, this, OnLanguageChange);
-            NAPI.ClientEvent.Register(ToServerEvent.WeaponShot, this, OnWeaponShot);
+            NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.LanguageChange, this, OnLanguageChange);
+            NAPI.ClientEvent.Register<ITDSPlayer>(ToServerEvent.WeaponShot, this, OnWeaponShot);
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.PlayerLoggedOutBefore += EventsHandler_PlayerLoggedOutBefore;
@@ -51,62 +43,18 @@ namespace TDS_Server.Handler.PlayerHandlers
             eventsHandler.Minute += UpdatePlayers;
         }
 
-        #endregion Constructors
-
-        #region Properties
-
         public int AmountLoggedInPlayers => LoggedInPlayers.Count;
-        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerCache.Values;
-
-        #endregion Properties
-
-        #region Methods
-
-        public ITDSPlayer Get(IPlayer modPlayer)
-        {
-            if (!_tdsPlayerCache.TryGetValue(modPlayer, out ITDSPlayer? tdsPlayer))
-            {
-                tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
-                tdsPlayer.ModPlayer = modPlayer;
-                _tdsPlayerCache[modPlayer] = tdsPlayer;
-            }
-
-            return tdsPlayer;
-        }
+        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerRemoteIdCache.Values;
 
         public ITDSPlayer? GetIfExists(int playerId)
         {
-            return _tdsPlayerCache.Values.FirstOrDefault(p => p.Id == playerId);
-        }
-
-        public ITDSPlayer? GetIfLoggedIn(IPlayer modPlayer)
-        {
-            if (!_tdsPlayerCache.ContainsKey(modPlayer))
-                return null;
-
-            var player = _tdsPlayerCache[modPlayer];
-            if (!player.LoggedIn)
-                return null;
-
-            return player;
+            return _tdsPlayerRemoteIdCache.Values.FirstOrDefault(p => p.Id == playerId);
         }
 
         public ITDSPlayer? GetIfLoggedIn(ushort remoteId)
         {
             _tdsPlayerRemoteIdCache.TryGetValue(remoteId, out ITDSPlayer? player);
             return player;
-        }
-
-        public ITDSPlayer GetNotLoggedIn(IPlayer modPlayer)
-        {
-            if (!_tdsPlayerCache.TryGetValue(modPlayer, out ITDSPlayer? tdsPlayer) || tdsPlayer.LoggedIn)
-            {
-                tdsPlayer = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
-                tdsPlayer.ModPlayer = modPlayer;
-                _tdsPlayerCache[modPlayer] = tdsPlayer;
-            }
-
-            return tdsPlayer;
         }
 
         public ITDSPlayer? FindTDSPlayer(string name)
@@ -116,25 +64,25 @@ namespace TDS_Server.Handler.PlayerHandlers
                 name = name.Substring(suffix.Length);
             name = name.Trim();
 
-            foreach (var player in _tdsPlayerCache.Values)
+            foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
                 if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
                     return player;
             }
 
-            foreach (var player in _tdsPlayerCache.Values)
+            foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
                 if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
                     return player;
             }
 
-            foreach (var player in _tdsPlayerCache.Values)
+            foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
                 if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
                     return player;
             }
 
-            foreach (var player in _tdsPlayerCache.Values)
+            foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
                 if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
                     return player;
@@ -150,8 +98,6 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
-            if (player.ModPlayer is { })
-                _tdsPlayerCache.TryRemove(player.ModPlayer, out _);
             _tdsPlayerRemoteIdCache.TryRemove(player.RemoteId, out _);
         }
 
@@ -160,24 +106,17 @@ namespace TDS_Server.Handler.PlayerHandlers
             return player.SaveData(true);
         }
 
-        private void OnLanguageChange(IPlayer modPlayer, int language)
+        private void OnLanguageChange(ITDSPlayer player, int language)
         {
-            var player = GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-
             if (!Enum.IsDefined(typeof(Language), language))
                 return;
 
             player.LanguageEnum = (Language)language;
         }
 
-        private void OnWeaponShot(IPlayer player)
+        private void OnWeaponShot(ITDSPlayer player)
         {
-            var tdsPlayer = GetIfLoggedIn(player);
-            if (tdsPlayer is null)
-                return;
-            tdsPlayer.AddWeaponShot(player.CurrentWeapon, null, null, false);
+            player.AddWeaponShot(player.CurrentWeapon, null, null, false);
         }
 
         private void ReduceMuteTime(ITDSPlayer player)
@@ -232,7 +171,5 @@ namespace TDS_Server.Handler.PlayerHandlers
                 }
             }
         }
-
-        #endregion Methods
     }
 }

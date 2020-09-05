@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Handler.Entities.LobbySystem;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -14,35 +14,21 @@ namespace TDS_Server.Handler
 {
     public class ScoreboardHandler
     {
-        #region Private Fields
-
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly Serializer _serializer;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler, IModAPI modAPI, ITDSPlayerHandler tdsPlayerHandler)
+        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
             _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
 
-            NAPI.ClientEvent.Register<IPlayer>(ToServerEvent.RequestPlayersForScoreboard, this, OnRequestPlayersForScoreboard);
+            NAPI.ClientEvent.Register<ITDSPlayer>(ToServerEvent.RequestPlayersForScoreboard, this, OnRequestPlayersForScoreboard);
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void OnRequestPlayersForScoreboard(IPlayer modPlayer)
+        public void OnRequestPlayersForScoreboard(ITDSPlayer player)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
-                return;
-
             if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
             {
                 var entries = GetDataForMainmenu();
@@ -57,10 +43,6 @@ namespace TDS_Server.Handler
                 player.TriggerEvent(ToClientEvent.SyncScoreboardData, _serializer.ToClient(entries), _serializer.ToClient(lobbydata));
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private List<SyncedScoreboardLobbyDataDto>? GetDataForLobby(int lobbyId)
         {
@@ -115,7 +97,5 @@ namespace TDS_Server.Handler
 
         private bool GetShowAllLobbies(LobbyType myLobbyType)
             => myLobbyType == LobbyType.MainMenu || myLobbyType == LobbyType.CharCreateLobby;
-
-        #endregion Private Methods
     }
 }

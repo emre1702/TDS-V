@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.Utility;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
@@ -41,15 +42,9 @@ namespace TDS_Server.Handler.Userpanel
 
     public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper, IUserpanelOfflineMessagesHandler
     {
-        #region Private Fields
-
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public UserpanelOfflineMessagesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler)
@@ -59,10 +54,6 @@ namespace TDS_Server.Handler.Userpanel
 
             eventsHandler.Hour += DeleteOldMessages;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public async Task<object?> Answer(ITDSPlayer player, ArraySegment<object> args)
         {
@@ -186,7 +177,5 @@ namespace TDS_Server.Handler.Userpanel
 
             return true;
         }
-
-        #endregion Public Methods
     }
 }

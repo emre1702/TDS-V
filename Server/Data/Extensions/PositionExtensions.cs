@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Models.Map.Creator;
+﻿using GTANetworkAPI;
+using TDS_Server.Data.Models.Map.Creator;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Extensions
@@ -21,6 +22,9 @@ namespace TDS_Server.Data.Extensions
         {
             return new Position3D(pos.X, pos.Y, pos.Z);
         }
+
+        public static Vector3 ToVector3(this Position3D pos)
+            => new Vector3(pos.X, pos.Y, pos.Z);
 
         #endregion Public Methods
     }

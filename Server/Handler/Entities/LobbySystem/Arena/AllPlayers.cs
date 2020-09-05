@@ -114,8 +114,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 else
                 {
                     MakeSurePlayerSpectatesAnyone(player);
-                    if (player.Spectates is { } && player.ModPlayer is { } && player.Spectates.ModPlayer is { })
-                        player.ModPlayer.Position = (mapCenter ?? player.Spectates.ModPlayer.Position).AddToZ(10);
+                    if (player.Spectates is { })
+                        player.Position = (mapCenter?.ToVector3() ?? player.Spectates.Position).AddToZ(10);
                 }
                 SetPlayerReadyForRound(player);
                 player.CurrentRoundStats?.Clear();
@@ -132,7 +132,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
             string json = Serializer.ToClient(amounts);
-            ModAPI.Sync.TriggerEvent(this, ToClientEvent.AmountInFightSync, json);
+            TriggerEvent(ToClientEvent.AmountInFightSync, json);
         }
 
         #endregion Private Methods

@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using System.Numerics;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+﻿using GTANetworkAPI;
+using System.Globalization;
+using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
@@ -16,18 +16,15 @@ namespace TDS_Server.Handler.Server
 
         private readonly BansHandler _bansHandler;
 
-        private readonly IModAPI _modAPI;
-
         private bool _loadedServerBans;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ServerStartHandler(BansHandler bansHandler, IModAPI modAPI, EventsHandler eventsHandler)
+        public ServerStartHandler(BansHandler bansHandler, EventsHandler eventsHandler)
         {
             _bansHandler = bansHandler;
-            _modAPI = modAPI;
 
             eventsHandler.LoadedServerBans += EventsHandler_LoadedServerBans;
         }
@@ -36,8 +33,7 @@ namespace TDS_Server.Handler.Server
 
         #region Public Properties
 
-        public bool IsReadyForLogin
-                                            => _loadedServerBans;
+        public bool IsReadyForLogin => _loadedServerBans;
 
         #endregion Public Properties
 
@@ -52,7 +48,7 @@ namespace TDS_Server.Handler.Server
             KickServerBannedPlayers();
         }
 
-        private bool HandleBan(IPlayer player, PlayerBans? ban)
+        private bool HandleBan(ITDSPlayer player, PlayerBans? ban)
         {
             if (ban is null)
                 return true;
@@ -76,7 +72,7 @@ namespace TDS_Server.Handler.Server
 
         private void KickServerBannedPlayers()
         {
-            var players = _modAPI.Pool.Players.All;
+            var players = NAPI.Pools.GetAllPlayers().OfType<ITDSPlayer>();
             foreach (var player in players)
             {
                 var ban = _bansHandler.GetServerBan(null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, null, false);

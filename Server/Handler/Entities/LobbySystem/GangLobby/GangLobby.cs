@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Handler.Account;
@@ -30,11 +29,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         #region Public Constructors
 
-        public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI, LobbiesHandler lobbiesHandler,
+        public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler,
             GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, GangLevelsHandler gangLevelsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler, GangHousesHandler gangHousesHandler)
-            : base(Entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
+            : base(Entity, false, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
                   bonusBotConnectorClient, bansHandler)
         {
             _gangwarAreasHandler = gangwarAreasHandler;

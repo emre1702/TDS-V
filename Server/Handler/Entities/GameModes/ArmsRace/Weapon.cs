@@ -1,6 +1,8 @@
-﻿using MoreLinq;
+﻿using GTANetworkAPI;
+using MoreLinq;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Shared.Data.Enums;
@@ -25,11 +27,9 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
         public override void GivePlayerWeapons(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
             var weapon = GetCurrentWeapon(player);
-            player.ModPlayer.RemoveAllWeapons();
-            player.ModPlayer.GiveWeapon(weapon, 9999);
+            player.RemoveAllWeapons();
+            player.GiveWeapon(weapon, 9999);
         }
 
         public override bool IsWeaponAllowed(WeaponHash weaponHash)
@@ -76,15 +76,12 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
         private void GiveNextWeapon(ITDSPlayer player)
         {
-            if (player.ModPlayer is null)
-                return;
-
             if (!GetNextWeapon(player, out WeaponHash? weaponHash) || !weaponHash.HasValue)
                 return;
 
-            player.ModPlayer.RemoveAllWeapons();
-            player.ModPlayer.GiveWeapon(weaponHash.Value, 9999);
-            player.ModPlayer.CurrentWeapon = weaponHash.Value;
+            player.RemoveAllWeapons();
+            player.GiveWeapon(weaponHash.Value, 9999);
+            player.CurrentWeapon = weaponHash.Value;
         }
 
         private void LoadWeapons()

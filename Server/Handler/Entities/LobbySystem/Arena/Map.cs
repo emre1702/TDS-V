@@ -1,8 +1,9 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI.Blip;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Models.Map.Creator;
 using TDS_Shared.Core;
@@ -16,7 +17,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         #region Private Fields
 
-        private readonly List<IBlip> _mapBlips = new List<IBlip>();
+        private readonly List<ITDSBlip> _mapBlips = new List<ITDSBlip>();
         private MapDto? _currentMap;
         private Position3D? _currentMapSpectatorPosition;
         private List<MapDto> _maps = new List<MapDto>();
@@ -84,8 +85,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             int i = 0;
             foreach (Position3DDto edge in map.LimitInfo.Edges)
             {
-                IBlip blip = ModAPI.Blip.Create(SharedConstants.MapLimitBlipSprite, edge, name: "Limit " + ++i, dimension: Dimension);
-                _mapBlips.Add(blip);
+                var blip = NAPI.Blip.CreateBlip(SharedConstants.MapLimitBlipSprite, edge.ToVector3(), 1f, 0, name: "Limit " + ++i, dimension: Dimension) as ITDSBlip;
+                _mapBlips.Add(blip!);
             }
         }
 
@@ -101,26 +102,26 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             {
                 if (Teams.Count < teamsSpawnList.TeamID)
                     return;
-                var regions = new List<Position3D>();
+                var regions = new List<Vector3>();
                 foreach (var spawns in teamsSpawnList.Spawns)
                 {
-                    var position = spawns.To3D();
+                    var position = spawns.ToVector3();
                     if (regions.Any(pos => pos.DistanceTo2D(position) < 5))
                         continue;
                     regions.Add(position);
 
-                    ITeam team = Teams[(int)teamsSpawnList.TeamID];
-                    IBlip blip = ModAPI.Blip.Create(SharedConstants.TeamSpawnBlipSprite, position, color: team.Entity.BlipColor,
-                        name: "Spawn " + team.Entity.Name, dimension: Dimension);
+                    var team = Teams[(int)teamsSpawnList.TeamID];
+                    var blip = NAPI.Blip.CreateBlip(SharedConstants.TeamSpawnBlipSprite, position, 1f, team.Entity.BlipColor,
+                        name: "Spawn " + team.Entity.Name, dimension: Dimension) as ITDSBlip;
 
-                    _mapBlips.Add(blip);
+                    _mapBlips.Add(blip!);
                 }
             }
         }
 
         private void DeleteMapBlips()
         {
-            foreach (IBlip blip in _mapBlips)
+            foreach (ITDSBlip blip in _mapBlips)
             {
                 blip.Delete();
             }

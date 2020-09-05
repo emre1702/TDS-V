@@ -118,9 +118,10 @@ namespace TDS_Server.Handler.Commands
 
                     var argLength = parameter.ParameterType.GetCustomAttribute<TDSCommandArgLength>();
                     if (argLength is { })
-                    {
                         methoddata.MultipleArgsToOneInfos.Add(new CommandMultipleArgsToOneInfo { Index = i, Length = argLength.ArgLength });
-                    }
+
+                    if (parameter.ParameterType == typeof(Vector3))
+                        methoddata.MultipleArgsToOneInfos.Add(new CommandMultipleArgsToOneInfo { Index = i, Length = 3 });
 
                     #region Save parameters start index with default value
 

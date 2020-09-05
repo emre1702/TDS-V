@@ -98,7 +98,7 @@ namespace TDS_Server.Handler.Account
 
                    .FirstOrDefaultAsync(p => p.Id == id);
 
-                await _modAPI.Thread.RunInMainThread(() => player.Entity = entity);
+                await NAPI.Task.RunWait(() => player.Entity = entity);
 
                 if (entity is null)
                 {
@@ -114,7 +114,7 @@ namespace TDS_Server.Handler.Account
 
                 NAPI.Task.Run(() =>
                 {
-                    player.ModPlayer.Name = entity.Name;
+                    player.Name = entity.Name;
                     //Workaround.SetPlayerTeam(player, 1);  // To be able to use custom damagesystem
                 });
 

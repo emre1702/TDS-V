@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+﻿using GTANetworkAPI;
 using TDS_Server.Core.Manager.PlayerManager;
-using TDS_Server.Data;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
-using TDS_Shared.Core;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
 
@@ -19,26 +11,17 @@ namespace TDS_Server.Handler.PlayerHandlers
 {
     public class ConnectedHandler
     {
-        #region Private Fields
-
         private readonly BansHandler _bansHandler;
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly EventsHandler _eventsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly IModAPI _modAPI;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public ConnectedHandler(
             BansHandler bansHandler,
             EventsHandler eventsHandler,
             LobbiesHandler lobbiesHandler,
-            DatabasePlayerHelper databasePlayerHelper,
-            IModAPI modAPI)
+            DatabasePlayerHelper databasePlayerHelper)
         {
-            _modAPI = modAPI;
             _bansHandler = bansHandler;
             _eventsHandler = eventsHandler;
             _lobbiesHandler = lobbiesHandler;
@@ -47,33 +30,29 @@ namespace TDS_Server.Handler.PlayerHandlers
             _eventsHandler.PlayerConnected += PlayerConnected;
         }
 
-        #endregion Public Constructors
-
-        #region Private Methods
-
-        private async void PlayerConnected(IPlayer modPlayer)
+        private async void PlayerConnected(ITDSPlayer player)
         {
-            if (modPlayer is null)
+            if (player is null)
                 return;
 
-            modPlayer.Position = new Position3D(0, 0, 1000).Around(10);
-            modPlayer.Freeze(true);
+            player.Position = new Vector3(0, 0, 1000).Around(10);
+            player.Freeze(true);
 
-            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, modPlayer.Address, modPlayer.Serial, modPlayer.SocialClubName,
-                modPlayer.SocialClubId, false);
+            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, player.Address, player.Serial, player.SocialClubName,
+                player.SocialClubId, false);
 
             if (ban is { })
             {
                 NAPI.Task.Run(()
-                    => Utils.HandleBan(modPlayer, ban));
+                    => Utils.HandleBan(player, ban));
                 return;
             }
 
-            var playerIdName = await _databasePlayerHelper.GetPlayerIdName(modPlayer);
+            var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player);
             if (playerIdName is null)
             {
                 NAPI.Task.Run(()
-                    => modPlayer.TriggerEvent(ToClientEvent.StartRegisterLogin, modPlayer.SocialClubName, false));
+                    => player.TriggerEvent(ToClientEvent.StartRegisterLogin, player.SocialClubName, false));
                 return;
             }
 
@@ -81,14 +60,12 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (ban is { })
             {
                 NAPI.Task.Run(()
-                    => Utils.HandleBan(modPlayer, ban));
+                    => Utils.HandleBan(player, ban));
                 return;
             }
 
             NAPI.Task.Run(()
-                => modPlayer.TriggerEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
+                => player.TriggerEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
         }
-
-        #endregion Private Methods
     }
 }

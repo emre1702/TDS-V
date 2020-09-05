@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -20,7 +21,6 @@ namespace TDS_Server.Handler.GangSystem
         private readonly GangWindowRanksLevelsHandler _ranksLevels;
         private readonly GangWindowRanksPermissionsHandler _ranksPermissions;
         private readonly GangWindowSpecialPageHandler _specialPage;
-
 
         public GangWindowHandler(ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
         {
@@ -47,25 +47,31 @@ namespace TDS_Server.Handler.GangSystem
                     case GangWindowLoadDataType.MainMenu:
                         json = _mainMenu.GetMainData(player);
                         break;
+
                     case GangWindowLoadDataType.AllGangs:
                         break;
+
                     case GangWindowLoadDataType.GangInfo:
                         break;
+
                     case GangWindowLoadDataType.Members:
                         json = _member.GetMembers(player);
                         break;
+
                     case GangWindowLoadDataType.RanksLevels:
                         json = _ranksLevels.GetRanksJson(player);
                         break;
+
                     case GangWindowLoadDataType.RanksPermissions:
                         json = _ranksPermissions.GetPermissions(player, _ranksLevels);
                         break;
+
                     case GangWindowLoadDataType.Vehicles:
                         break;
                 }
 
                 if (json is { })
-                    player.SendBrowserEvent(ToBrowserEvent.LoadedGangWindowData, type, json);
+                    player.TriggerBrowserEvent(ToBrowserEvent.LoadedGangWindowData, type, json);
             }
             catch (Exception ex)
             {
@@ -135,7 +141,6 @@ namespace TDS_Server.Handler.GangSystem
 
             if (!player.IsGangOwner && target.Rank.Rank >= (player.GangRank?.Rank ?? 0))
                 return player.Language.TARGET_RANK_IS_HIGHER_OR_EQUAL;
-
 
             return null;
         }

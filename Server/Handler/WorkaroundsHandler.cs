@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -14,8 +12,6 @@ namespace TDS_Server.Handler
 {
     public class WorkaroundsHandler
     {
-        #region Private Fields
-
         private static readonly Dictionary<Entity, EntityAttachInfoDto> _attachedEntitiesInfos = new Dictionary<Entity, EntityAttachInfoDto>();
         private static readonly Dictionary<ILobby, List<Entity>> _attachedEntitiesPerLobby = new Dictionary<ILobby, List<Entity>>();
 
@@ -29,10 +25,6 @@ namespace TDS_Server.Handler
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly Serializer _serializer;
 
-        #endregion Private Fields
-
-        #region Internal Constructors
-
         public WorkaroundsHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler, Serializer serializer)
         {
             _serializer = serializer;
@@ -41,10 +33,6 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerJoinedLobby += PlayerJoinedLobby;
             eventsHandler.PlayerLeftLobby += PlayerLeftLobby;
         }
-
-        #endregion Internal Constructors
-
-        #region Public Methods
 
         public void AttachEntityToEntity(Entity entity, Entity entityTarget, PedBone bone, Vector3 positionOffset, Vector3 rotationOffset, ILobby? lobby = null)
         {
@@ -163,10 +151,6 @@ namespace TDS_Server.Handler
             NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerTeamWorkaround, team);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private static void PlayerJoinedLobby(ITDSPlayer player, ILobby lobby)
         {
             if (_attachedEntitiesPerLobby.ContainsKey(lobby))
@@ -218,7 +202,5 @@ namespace TDS_Server.Handler
         private void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
         {
         }
-
-        #endregion Private Methods
     }
 }

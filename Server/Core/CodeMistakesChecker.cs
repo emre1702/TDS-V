@@ -2,28 +2,16 @@
 using System.Linq;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Core
 {
     public class CodeMistakesChecker
     {
-        #region Private Fields
-
         private readonly ILoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public CodeMistakesChecker(ILoggingHandler loggingHandler, IModAPI modAPI)
-            => (_loggingHandler, _modAPI) = (loggingHandler, modAPI);
-
-        #endregion Public Constructors
-
-        #region Public Methods
+        public CodeMistakesChecker(ILoggingHandler loggingHandler)
+            => (_loggingHandler) = (loggingHandler);
 
         public bool CheckHasErrors()
         {
@@ -33,14 +21,8 @@ namespace TDS_Server.Core
             hasError |= CheckHasDuplicateValuesInEventsType(typeof(ToClientEvent));
             hasError |= CheckHasDuplicateValuesInEventsType(typeof(ToServerEvent));
 
-            hasError |= _modAPI.CheckHasErrors(_loggingHandler);
-
             return hasError;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private bool CheckHasDuplicateValuesInEventsType(Type type)
         {
@@ -60,7 +42,5 @@ namespace TDS_Server.Core
 
             return duplicateEntries.Count > 0;
         }
-
-        #endregion Private Methods
     }
 }

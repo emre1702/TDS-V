@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using GTANetworkAPI;
+using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Shared.Default;
 
@@ -6,8 +8,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class CharCreateLobby
     {
-        #region Public Methods
-
         public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
             if (player.Entity is null || player.Entity.CharDatas is null)
@@ -17,10 +17,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             var json = Serializer.ToClient(player.Entity.CharDatas);
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
-                player.ModPlayer?.SetInvincible(true);
-                player.ModPlayer?.Freeze(true);
+                player.SetInvincible(true);
+                player.Freeze(true);
 
                 player.TriggerEvent(ToClientEvent.StartCharCreator, json, Dimension);
             });
@@ -32,7 +32,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             await base.RemovePlayer(player);
         }
-
-        #endregion Public Methods
     }
 }

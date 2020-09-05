@@ -26,7 +26,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (!await base.AddPlayer(player, teamindex))
                 return false;
-            ModAPI.Thread.QueueIntoMainThread(() => player.ModPlayer?.SetInvincible(false));
+            NAPI.Task.Run(() => player.SetInvincible(false));
 
             return true;
         }
@@ -40,7 +40,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             await base.RemovePlayer(player);
 
-            ModAPI.Thread.QueueIntoMainThread(() =>
+            NAPI.Task.Run(() =>
             {
                 player.Team?.SpectateablePlayers?.Remove(player);
                 player.LastKillAt = null;

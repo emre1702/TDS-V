@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.GangSystem;
@@ -20,29 +19,20 @@ using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
-using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.GangSystem
 {
     public class GangWindowCreateHandler : DatabaseEntityWrapper
     {
-        #region Private Fields
-
-        private readonly IModAPI _modAPI;
         private readonly Serializer _serializer;
         private readonly IServiceProvider _serviceProvider;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly LobbiesHandler _lobbiesHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public GangWindowCreateHandler(IModAPI modAPI, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IServiceProvider serviceProvider,
+        public GangWindowCreateHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler, LobbiesHandler lobbiesHandler)
             : base(dbContext, loggingHandler)
         {
-            _modAPI = modAPI;
             _serializer = serializer;
             _serviceProvider = serviceProvider;
             _dataSyncHandler = dataSyncHandler;
@@ -70,7 +60,6 @@ namespace TDS_Server.Handler.GangSystem
 
             return "";
         }
-
 
         private Gangs GetGangEntity(GangCreateData data, int playerId, GangLobby lobby)
         {
@@ -109,7 +98,5 @@ namespace TDS_Server.Handler.GangSystem
                 Team = new Teams { Lobby = lobby.Id, Index = (short)(highestTeamIndex + 1), Name = data.Short, ColorR = rgbColor.R, ColorG = rgbColor.G, ColorB = rgbColor.B }
             };
         }
-
-        #endregion Public Constructors
     }
 }

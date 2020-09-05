@@ -1,7 +1,7 @@
 ﻿using BonusBotConnector.Client;
 using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
@@ -16,36 +16,30 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class CharCreateLobby : Lobby
     {
-        #region Public Constructors
-
-        public CharCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI,
+        public CharCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
 
-            : this(CreateEntity(player, lobbiesHandler.CharCreateLobbyDummy.Entity), dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
+            : this(CreateEntity(player, lobbiesHandler.CharCreateLobbyDummy.Entity), dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
                   eventsHandler, bonusBotConnectorClient, bansHandler)
         {
         }
 
-        public CharCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IModAPI modAPI,
+        public CharCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
 
-            : base(entity, false, dbContext, loggingHandler, serializer, modAPI, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
+            : base(entity, false, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
                   eventsHandler, bonusBotConnectorClient, bansHandler)
         {
         }
-
-        #endregion Public Constructors
-
-        #region Private Methods
 
         private static Lobbies CreateEntity(ITDSPlayer player, Lobbies dummy)
         {
             Lobbies entity = new Lobbies
             {
-                Name = "CharCreator-" + player.ModPlayer?.Name ?? "?",
-                Teams = new List<Teams> { new Teams { Index = 0, Name = player.ModPlayer?.Name ?? "?", ColorR = 222, ColorB = 222, ColorG = 222 } },
+                Name = "CharCreator-" + player.Name,
+                Teams = new List<Teams> { new Teams { Index = 0, Name = player.Name, ColorR = 222, ColorB = 222, ColorG = 222 } },
                 Type = LobbyType.CharCreateLobby,
                 OwnerId = player.Entity?.Id ?? -1,
                 IsTemporary = true,
@@ -57,7 +51,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             return entity;
         }
-
-        #endregion Private Methods
     }
 }

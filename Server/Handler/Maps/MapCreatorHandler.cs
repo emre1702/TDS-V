@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,18 +9,16 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
@@ -31,30 +30,18 @@ namespace TDS_Server.Handler.Maps
 {
     public class MapCreatorHandler : DatabaseEntityWrapper
     {
-        #region Private Fields
-
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly XmlHelper _xmlHelper;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler, IModAPI modAPI)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
             (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
-            _tdsPlayerHandler = tdsPlayerHandler;
-            NAPI.ClientEvent.Register<IPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
+            NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void AddedMapRating(MapDto map)
         {
@@ -90,10 +77,9 @@ namespace TDS_Server.Handler.Maps
             }
         }
 
-        public async void RemoveMap(IPlayer modPlayer, int mapId)
+        public async void RemoveMap(ITDSPlayer player, int mapId)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
 
             bool isSavedMap = true;
@@ -285,10 +271,6 @@ namespace TDS_Server.Handler.Maps
             return null;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void DisableNewMap(MapDto map)
         {
             _mapsLoadingHandler.NewCreatedMaps.Remove(map);
@@ -353,8 +335,6 @@ namespace TDS_Server.Handler.Maps
                 return (null, MapCreateError.Unknown);
             }
         }
-
-        #endregion Private Methods
 
         /*private static string GetXmlStringByMap(CreatedMap map, uint playeruid)
         {

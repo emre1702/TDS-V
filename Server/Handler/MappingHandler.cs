@@ -1,20 +1,18 @@
 ﻿using AutoMapper;
+using GTANetworkAPI;
 using System;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Converter.Mapping;
-using TDS_Server.Handler.Player;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Handler
 {
     public class MappingHandler
     {
-        #region Public Constructors
-
         public MappingHandler(ITDSPlayerHandler tdsPlayerHandler, DatabasePlayerHelper databasePlayerHelper)
         {
             var config = new MapperConfiguration(cfg =>
@@ -30,18 +28,15 @@ namespace TDS_Server.Handler
                 cfg.CreateMap<string, DateTime?>().ConvertUsing<StringToDateTimeConverter>();
                 cfg.CreateMap<string, TimeSpan?>().ConvertUsing<StringToTimeSpanConverter>();
                 cfg.CreateMap<string, Position3D?>().ConvertUsing<StringToPosition3DConverter>();
+                cfg.CreateMap<string, Vector3?>().ConvertUsing<StringToVector3Converter>();
 
                 cfg.CreateMap<string, ITDSPlayer?>().ConvertUsing(new StringNameToPlayerConverter(tdsPlayerHandler));
                 cfg.CreateMap<string, Task<Players?>>().ConvertUsing(new StringNameToDBPlayerConverter(databasePlayerHelper));
-
-                cfg.CreateMap<IPlayer, ITDSPlayer?>().ConvertUsing(new IPlayerToITDSPlayerConverter(tdsPlayerHandler));
             });
             config.AssertConfigurationIsValid();
 
             Mapper = config.CreateMapper();
         }
-
-        #endregion Public Constructors
 
         #region Public Properties
 

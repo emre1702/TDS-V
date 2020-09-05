@@ -41,7 +41,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                 return;
             _bomb.Detach();
             _bomb.SetCollisionsless(true, Lobby);
-            _bomb.AttachTo(player, PedBone.SKEL_Pelvis, new Position3D(0, 0, 0.24), new Position3D(270, 0, 0));
+            _bomb.AttachTo(player, PedBone.SKEL_Pelvis, new Vector3(0, 0, 0.24), new Vector3(270, 0, 0));
 
             if (_bombAtPlayer != player)
             {
@@ -57,7 +57,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
                 return;
             _bomb.Detach();
             _bomb.SetCollisionsless(true, Lobby);
-            _bomb.AttachTo(player, PedBone.SKEL_R_Finger01, new Position3D(0.1, 0, 0), null);
+            _bomb.AttachTo(player, PedBone.SKEL_R_Finger01, new Vector3(0.1, 0, 0), null);
 
             if (_bombAtPlayer != player)
             {
@@ -71,7 +71,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
         {
             // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL,
             // bomb.Position, 200, Dimension); use 0x172AA1B624FA1013 as Hash instead if not getting fixed
-            ModAPI.Sync.TriggerEvent(Lobby, ToClientEvent.BombDetonated);
+            Lobby.TriggerEvent(ToClientEvent.BombDetonated);
             _counterTerroristTeam.FuncIterate((player, team) =>
             {
                 if (player.Lifes == 0)
@@ -98,9 +98,9 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             _bomb.Freeze(true, Lobby);
             _bomb.Position = _bombAtPlayer.Position;
             _bombTakeMarker = NAPI.Marker.CreateMarker(0, _bomb.Position, new Vector3(), new Vector3(), 1,
-                                                        new GTANetworkAPI.Color(180, 0, 0, 180), true, Lobby);
-            ITDSColShape bombtakecol = ModAPI.ColShape.CreateSphere(_bomb.Position, 2, Lobby);
-            _lobbyBombTakeCol[Lobby] = bombtakecol;
+                                                        new GTANetworkAPI.Color(180, 0, 0, 180), true, Lobby.Dimension) as ITDSMarker;
+            var bombTakeCol = NAPI.ColShape.CreateSphereColShape(_bomb.Position, 2, Lobby.Dimension) as ITDSColShape;
+            _lobbyBombTakeCol[Lobby] = bombTakeCol!;
             _bombAtPlayer.TriggerEvent(ToClientEvent.BombNotOnHand);
             _bombAtPlayer = null;
         }

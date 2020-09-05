@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Events;
@@ -9,9 +9,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowSpecialPageHandler
     {
-        private readonly Dictionary<IGang, Dictionary<GangWindowOnlyOneEditorPage, ITDSPlayer>> _playerInWindow 
+        private readonly Dictionary<IGang, Dictionary<GangWindowOnlyOneEditorPage, ITDSPlayer>> _playerInWindow
             = new Dictionary<IGang, Dictionary<GangWindowOnlyOneEditorPage, ITDSPlayer>>();
-
 
         public GangWindowSpecialPageHandler(EventsHandler eventsHandler)
         {

@@ -1,4 +1,4 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using TDS_Server.Data.Abstracts.Entities.GTA;
 
 namespace TDS_Server.Handler.Entities.Gamemodes
 {

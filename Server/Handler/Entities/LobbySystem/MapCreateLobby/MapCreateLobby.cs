@@ -72,7 +72,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _lastId = _posById.Keys.Max();
 
             string json = Serializer.ToBrowser(dto);
-            ModAPI.Sync.TriggerEvent(this, ToClientEvent.LoadMapForMapCreator, json, _lastId);
+            TriggerEvent(ToClientEvent.LoadMapForMapCreator, json, _lastId);
         }
 
         public void StartNewMap()
@@ -80,7 +80,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _lastId = 0;
             _currentMap = new MapCreateDataDto();
             _posById = new Dictionary<int, MapCreatorPosition>();
-            ModAPI.Sync.TriggerEvent(ToClientEvent.MapCreatorStartNewMap);
+            TriggerEvent(ToClientEvent.MapCreatorStartNewMap);
         }
 
         private static Lobbies CreateEntity(ITDSPlayer player, Lobbies dummy)

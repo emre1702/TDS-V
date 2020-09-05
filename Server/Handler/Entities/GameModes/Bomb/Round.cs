@@ -1,14 +1,12 @@
-﻿using TDS_Server.Data.Interfaces.ModAPI.ColShape;
+﻿using GTANetworkAPI;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Models;
 using TDS_Shared.Data.Default;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Handler.Entities.Gamemodes
 {
     partial class Bomb
     {
-        #region Public Methods
-
         public override void StartMapChoose()
         {
             base.StartMapChoose();
@@ -17,17 +15,17 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
             foreach (var bombplace in Map.BombInfo.PlantPositions)
             {
-                var pos = new Position3D(bombplace.X, bombplace.Y, bombplace.Z);
+                var pos = new Vector3(bombplace.X, bombplace.Y, bombplace.Z);
                 BombPlantPlaceDto dto = new BombPlantPlaceDto(
-                    obj: ModAPI.MapObject.Create(-51423166, pos, null, 255, Lobby),
-                    blip: ModAPI.Blip.Create(SharedConstants.BombPlantPlaceBlipSprite, pos, name: "Bomb-Plant", dimension: Lobby.Dimension),
+                    obj: NAPI.Object.CreateObject(-51423166, pos, null, 255, Lobby.Dimension) as ITDSObject,
+                    blip: NAPI.Blip.CreateBlip(SharedConstants.BombPlantPlaceBlipSprite, pos, 1f, 0, name: "Bomb-Plant", dimension: Lobby.Dimension) as ITDSBlip,
                     pos: pos
                 );
                 _bombPlantPlaces.Add(dto);
             }
 
             var bombPos = Map.BombInfo.PlantPositions[0];
-            _bomb = ModAPI.MapObject.Create(1764669601, new Position3D(bombPos.X, bombPos.Y, bombPos.Z), null, 255, Lobby);
+            _bomb = NAPI.Object.CreateObject(1764669601, new Vector3(bombPos.X, bombPos.Y, bombPos.Z), null, 255, Lobby.Dimension) as ITDSObject;
         }
 
         public override void StartMapClear()
@@ -47,7 +45,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
             if (_lobbyBombTakeCol.ContainsKey(Lobby))
             {
-                _lobbyBombTakeCol.Remove(Lobby, out IColShape? col);
+                _lobbyBombTakeCol.Remove(Lobby, out ITDSColShape? col);
                 if (col is { })
                     col.Delete();
                 _bombTakeMarker?.Delete();
@@ -88,7 +86,5 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             _bombAtPlayer = null;
             _planter = null;
         }
-
-        #endregion Public Methods
     }
 }

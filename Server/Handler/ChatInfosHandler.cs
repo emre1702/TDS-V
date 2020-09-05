@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
@@ -36,7 +37,7 @@ namespace TDS_Server.Handler
             if (!_chatInfosJsonCache.TryGetValue(player.LanguageEnum, out string? json))
                 return;
 
-            player.SendBrowserEvent(ToBrowserEvent.LoadChatInfos, json);
+            player.TriggerBrowserEvent(ToBrowserEvent.LoadChatInfos, json);
         }
 
         #endregion Public Methods

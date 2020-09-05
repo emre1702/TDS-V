@@ -59,7 +59,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _playerVotes.Clear();
 
             SendNotification(lang => string.Format(lang.MAP_BUY_INFO, player.DisplayName, map.BrowserSyncedData.Name));
-            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.StopMapVoting);
+            TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.StopMapVoting);
         }
 
         public void MapVote(ITDSPlayer player, int mapId)
@@ -90,7 +90,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             var mapVote = new MapVoteDto { Id = mapId, AmountVotes = 1, Name = map.Info.Name };
             _mapVotes.Add(mapVote);
             _playerVotes[player] = mapId;
-            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddMapToVoting, Serializer.ToBrowser(mapVote));
+            TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddMapToVoting, Serializer.ToBrowser(mapVote));
         }
 
         public void SendMapsForVoting(ITDSPlayer player)
@@ -106,7 +106,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _playerVotes[player] = mapId;
             var map = _mapVotes.First(m => m.Id == mapId);
             ++map.AmountVotes;
-            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, mapId, map.AmountVotes);
+            TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, mapId, map.AmountVotes);
         }
 
         private MapDto? GetVotedMap()
@@ -142,16 +142,16 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             MapVoteDto? oldVotedMap = _mapVotes.FirstOrDefault(m => m.Id == oldVote);
             if (oldVotedMap is null)
             {
-                ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, 0);
+                TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, 0);
                 return;
             }
             if (--oldVotedMap.AmountVotes <= 0)
             {
                 _mapVotes.RemoveAll(m => m.Id == oldVote);
-                ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, 0);
+                TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, 0);
                 return;
             }
-            ModAPI.Sync.TriggerEvent(this, ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, oldVotedMap.AmountVotes);
+            TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, oldVotedMap.AmountVotes);
         }
 
         private void SyncMapVotingOnJoin(ITDSPlayer player)

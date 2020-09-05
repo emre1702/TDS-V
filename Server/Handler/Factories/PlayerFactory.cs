@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Handler.Entities.GTA.Players;
+using TDS_Server.Handler.Entities.GTA.GTAPlayer;
 
 namespace TDS_Server.Handler.Factories
 {

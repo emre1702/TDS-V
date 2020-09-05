@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using TDS_Shared.Data.Enums;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 
 namespace TDS_Server.Handler.Entities.Gamemodes
 {

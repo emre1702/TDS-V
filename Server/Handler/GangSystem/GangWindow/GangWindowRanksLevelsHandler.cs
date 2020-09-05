@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity.GangEntities;
@@ -60,9 +61,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                         }
 
                         player.Gang.Entity.Ranks.Remove(rank);
-
                     }
-                        
                 }
                 await dbContext.SaveChangesAsync();
 
@@ -83,7 +82,6 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
                 await dbContext.SaveChangesAsync();
             });
-
 
             return "";
         }

@@ -3,11 +3,11 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 
 namespace TDS_Server.Handler.Entities.GTA.ColShapes
 {
-    public class TDSColShape : ITDSColShape
+    public partial class TDSColShape : ITDSColShape
     {
         public TDSColShape(NetHandle netHandle) : base(netHandle)
         {
-
+            AddEvents();
         }
     }
 }

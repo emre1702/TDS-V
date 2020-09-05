@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.ModAPI;
-using TDS_Server.Data.Interfaces.ModAPI.Player;
+﻿using GTANetworkAPI;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -10,35 +10,20 @@ namespace TDS_Server.Handler.PlayerHandlers
 {
     public class PlayerFreecamHandler
     {
-        #region Private Fields
-
         private readonly DataSyncHandler _dataSyncHandler;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public PlayerFreecamHandler(IModAPI modAPI, DataSyncHandler dataSyncHandler, ITDSPlayerHandler tdsPlayerHandler)
+        public PlayerFreecamHandler(DataSyncHandler dataSyncHandler)
         {
             _dataSyncHandler = dataSyncHandler;
-            _tdsPlayerHandler = tdsPlayerHandler;
 
-            NAPI.ClientEvent.Register<IPlayer, bool>(ToServerEvent.SetInFreecam, this, OnSetInFreeCam);
+            NAPI.ClientEvent.Register<ITDSPlayer, bool>(ToServerEvent.SetInFreecam, this, OnSetInFreeCam);
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void OnSetInFreeCam(IPlayer modPlayer, bool inFreeCam)
+        public void OnSetInFreeCam(ITDSPlayer player, bool inFreeCam)
         {
-            var player = _tdsPlayerHandler.GetIfLoggedIn(modPlayer);
-            if (player is null)
+            if (!player.LoggedIn)
                 return;
             _dataSyncHandler.SetData(player, PlayerDataKey.InFreeCam, DataSyncMode.Lobby, inFreeCam);
         }
-
-        #endregion Public Methods
     }
 }
