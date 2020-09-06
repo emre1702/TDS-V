@@ -56,14 +56,15 @@ namespace TDS_Client.Core.Init
                 var scaleformMessageHandler = new ScaleformMessageHandler(loggingHandler, settingsHandler, timerHandler);
                 var deathHandler = new DeathHandler(loggingHandler, settingsHandler, scaleformMessageHandler, eventsHandler, utilsHandler, browserHandler);
                 var camerasHandler = new CamerasHandler(loggingHandler, utilsHandler, remoteEventsSender, bindsHandler, deathHandler, eventsHandler);
-                new UserpanelHandler(loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler);
+                var instructionalButtonHandler = new InstructionalButtonHandler(loggingHandler, eventsHandler, settingsHandler);
+                new UserpanelHandler(loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler, instructionalButtonHandler);
                 new CharCreatorHandler(loggingHandler, browserHandler, serializer, deathHandler, camerasHandler, eventsHandler, cursorHandler, utilsHandler);
 
                 var registerLoginHandler = new RegisterLoginHandler(loggingHandler, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, serializer, eventsHandler);
                 var voiceHandler = new VoiceHandler(loggingHandler, bindsHandler, browserHandler, utilsHandler, eventsHandler);
                 var forceStayAtPosHandler = new ForceStayAtPosHandler(loggingHandler, remoteEventsSender, settingsHandler, dxHandler, timerHandler, serializer);
                 new CrouchingHandler(loggingHandler, eventsHandler, dataSyncHandler, remoteEventsSender);
-                var instructionalButtonHandler = new InstructionalButtonHandler(loggingHandler, eventsHandler, settingsHandler);
+
                 new MidsizedMessageHandler(loggingHandler, timerHandler);
 
                 var floatingDamageInfoHandler = new FloatingDamageInfoHandler(loggingHandler, timerHandler, settingsHandler, eventsHandler, dxHandler);

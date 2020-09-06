@@ -25,8 +25,6 @@ namespace TDS_Client.Handler.Draw
 
         private readonly SettingsHandler _settingsHandler;
 
-        private readonly InstructionalButton _userpanelButton;
-
         private Color _backgroundColor;
 
         private bool _isActive = true;
@@ -41,7 +39,6 @@ namespace TDS_Client.Handler.Draw
             _scaleform = new BasicScaleform(ScaleformFunction.INSTRUCTIONAL_BUTTONS);
 
             _cursorButton = Add("Cursor", _settingsHandler.Language.END_KEY, true);
-            _userpanelButton = Add("Userpanel", "U", true);
 
             eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;

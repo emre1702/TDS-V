@@ -2,6 +2,7 @@
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Userpanel;
@@ -11,22 +12,17 @@ namespace TDS_Client.Handler
 {
     public class UserpanelHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BindsHandler _bindsHandler;
         private readonly BrowserHandler _browserHandler;
         private readonly CursorHandler _cursorHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly Serializer _serializer;
         private readonly SettingsHandler _settingsHandler;
+        private readonly InstructionalButtonHandler _instructionalButtonHandler;
         private bool _open;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public UserpanelHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler,
-            RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler)
+            RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler)
             : base(loggingHandler)
         {
             _browserHandler = browserHandler;
@@ -35,16 +31,13 @@ namespace TDS_Client.Handler
             _remoteEventsSender = remoteEventsSender;
             _serializer = serializer;
             _bindsHandler = bindsHandler;
+            _instructionalButtonHandler = instructionalButtonHandler;
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
             RAGE.Events.Add(FromBrowserEvent.CloseUserpanel, _ => Close());
             RAGE.Events.Add(ToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Close()
         {
@@ -69,13 +62,10 @@ namespace TDS_Client.Handler
                 _settingsHandler.RevertTempSettings();
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void EventsHandler_LoggedIn()
         {
             _bindsHandler.Add(Key.U, Toggle);
+            _instructionalButtonHandler.Add("Userpanel", "U", true);
         }
 
         private void OnLoadUserpanelDataBrowserMethod(object[] args)
@@ -98,7 +88,5 @@ namespace TDS_Client.Handler
 
             _settingsHandler.RevertTempSettings();
         }
-
-        #endregion Private Methods
     }
 }
