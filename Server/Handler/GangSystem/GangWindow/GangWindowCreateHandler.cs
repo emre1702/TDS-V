@@ -15,6 +15,7 @@ using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Entities.LobbySystem;
+using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -28,15 +29,17 @@ namespace TDS_Server.Handler.GangSystem
         private readonly IServiceProvider _serviceProvider;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly LobbiesHandler _lobbiesHandler;
+        private readonly EventsHandler _eventsHandler;
 
         public GangWindowCreateHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IServiceProvider serviceProvider,
-            DataSyncHandler dataSyncHandler, LobbiesHandler lobbiesHandler)
+            DataSyncHandler dataSyncHandler, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler)
             : base(dbContext, loggingHandler)
         {
             _serializer = serializer;
             _serviceProvider = serviceProvider;
             _dataSyncHandler = dataSyncHandler;
             _lobbiesHandler = lobbiesHandler;
+            _eventsHandler = eventsHandler;
         }
 
         public async Task<object?> CreateGang(ITDSPlayer player, string json)
@@ -46,15 +49,15 @@ namespace TDS_Server.Handler.GangSystem
 
             var gangCreateData = _serializer.FromBrowser<GangCreateData>(json);
 
-            var gang = GetGangEntity(gangCreateData, player, _lobbiesHandler.GangLobby);
+            var gangEntity = GetGangEntity(gangCreateData, player, _lobbiesHandler.GangLobby);
             await ExecuteForDBAsync(async dbContext =>
             {
-                dbContext.Gangs.Add(gang);
+                dbContext.Gangs.Add(gangEntity);
                 await dbContext.SaveChangesAsync();
             });
-            player.Gang = ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, gang);
-            player.GangRank = gang.Ranks.MaxBy(r => r.Rank).First();
-            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, gang.Id);
+
+            var gang = ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, gangEntity);
+            await _eventsHandler.OnGangJoin(player, gang, gangEntity.Ranks.MaxBy(r => r.Rank).First());
             // IsInGang is set to true in Angular, not needed here
             // Permissions will get synced, too - not needed here.
 
@@ -90,10 +93,7 @@ namespace TDS_Server.Handler.GangSystem
                     StartGangwar = 3,
                     SetRanks = 3
                 },
-                Members = new List<GangMembers>
-                {
-                    new GangMembers { PlayerId = player.Entity.Id, Rank = highestRank, LastLogin = player.Entity.PlayerStats.LastLoginTimestamp }
-                },
+                Members = new List<GangMembers>(),
                 Stats = new GangStats(),
                 Team = new Teams { Lobby = lobby.Id, Index = (short)(highestTeamIndex + 1), Name = data.Short, ColorR = rgbColor.R, ColorG = rgbColor.G, ColorB = rgbColor.B }
             };
