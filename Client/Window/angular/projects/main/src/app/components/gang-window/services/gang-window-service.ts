@@ -25,8 +25,8 @@ export class GangWindowService {
     gangData: GangData;
     myGangData: MyGangData;
     permissions: GangPermissionSettings;
-    ranks: GangRank[];      // Todo: Get for ranks
-    highestRank: number;    // Todo: Get for members
+    ranks: GangRank[];
+    highestRank: number;
 
     members: GangMember[];
 
