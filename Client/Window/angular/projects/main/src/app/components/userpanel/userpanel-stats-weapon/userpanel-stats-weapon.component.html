@@ -1,5 +1,5 @@
 <div id="container">
-    <mat-accordion>
+    <mat-accordion class="accordion">
         <mat-expansion-panel *ngFor="let weapon of weaponsUsed" (afterExpand)="loadWeaponData(weapon)">
             <mat-expansion-panel-header>
                 {{ weapon | language: settings.Lang }}
