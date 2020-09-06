@@ -9,10 +9,7 @@ namespace TDS_Client.Handler
         private readonly bool _outputLogInfo;
 #pragma warning restore 649
 
-        public LoggingHandler()
-        {
-            _outputLogInfo = false;
-        }
+        public LoggingHandler() => _outputLogInfo = false;
 
         public void LogToServer(string msg, string source = "")
         {

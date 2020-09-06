@@ -30,6 +30,9 @@ namespace TDS_Server.Handler.Helper
         private string _challengeSettingsTypeColumnName = string.Empty;
         private string _playerChallengesFrequencyColumnName = string.Empty;
         private string _playerChallengesTableName = string.Empty;
+        private string _playerChallengesPlayerIdColumnName = string.Empty;
+        private string _playerChallengesChallengeColumnName = string.Empty;
+        private string _playerChallengesAmountColumnName = string.Empty;
 
         public ChallengesHelper(
             ISettingsHandler settingsHandler,
@@ -57,10 +60,15 @@ namespace TDS_Server.Handler.Helper
                 string sql = $@"
                     INSERT INTO
                         ""{_playerChallengesTableName}""
+                        (
+                            {_playerChallengesPlayerIdColumnName}, 
+                            {_playerChallengesChallengeColumnName}, 
+                            {_playerChallengesFrequencyColumnName}, 
+                            {_playerChallengesAmountColumnName} )
                     SELECT
                         {dbPlayer.Id},
                         ""{_challengeSettingsTypeColumnName}"",
-                        ""{_challengeSettingsFrequencyColumnName}"",
+                        'forever',
                         ""{_challengeSettingsMaxNumberColumnName}""
                     FROM
                         ""{challengeSettingsTable}""
@@ -200,6 +208,9 @@ namespace TDS_Server.Handler.Helper
             var playerChallengesEntity = new PlayerChallenges();
 
             _playerChallengesFrequencyColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Frequency)).GetColumnName();
+            _playerChallengesPlayerIdColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.PlayerId)).GetColumnName();
+            _playerChallengesChallengeColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Challenge)).GetColumnName();
+            _playerChallengesAmountColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Amount)).GetColumnName();
         }
     }
 }

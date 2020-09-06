@@ -13,7 +13,7 @@ namespace TDS_Client.Handler
         {
             ElapsedMs = RAGE.Game.Misc.GetGameTimer();
 
-            TDSTimer.Init(RAGE.Chat.Output, () => RAGE.Game.Misc.GetGameTimer());
+            TDSTimer.Init(RAGE.Chat.Output, () => ElapsedMs);
 
             Tick += (_) => TDSTimer.OnUpdateFunc();
             Tick += RefreshElapsedMs;

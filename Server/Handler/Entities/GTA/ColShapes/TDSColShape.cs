@@ -5,9 +5,6 @@ namespace TDS_Server.Handler.Entities.GTA.ColShapes
 {
     public partial class TDSColShape : ITDSColShape
     {
-        public TDSColShape(NetHandle netHandle) : base(netHandle)
-        {
-            AddEvents();
-        }
+        public TDSColShape(NetHandle netHandle) : base(netHandle) => AddEvents();
     }
 }

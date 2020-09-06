@@ -85,10 +85,10 @@ namespace TDS_Server.Handler
 
         private void InitCache()
         {
-            Stopwatch watch = new Stopwatch();
+            var watch = new Stopwatch();
             watch.Start();
 
-            XmlSerializer _xmlSerializer = new XmlSerializer(typeof(Root));
+            var _xmlSerializer = new XmlSerializer(typeof(Root));
 
             var metaFileInfo = new FileInfo("scriptmetadata.meta");
 

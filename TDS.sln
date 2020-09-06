@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Core", "Server\Core\TDS_Server.Core.csproj", "{E05649D8-0202-4FFC-8EE9-79E98F4CC866}"
 	ProjectSection(ProjectDependencies) = postProject
+		{EC81393D-DF19-442B-87D3-BC150A823D6C} = {EC81393D-DF19-442B-87D3-BC150A823D6C}
 		{A347BAC1-8902-4403-A197-49C795598422} = {A347BAC1-8902-4403-A197-49C795598422}
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614} = {9BB400CB-EE8D-4DA8-9EDB-B5B115757614}
 		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54} = {FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}
 	EndProjectSection
 EndProject
@@ -16,8 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		TDS\DeadCode.ruleset = TDS\DeadCode.ruleset
-		global.json = global.json
+		LocalServerSync.sh = LocalServerSync.sh
 		scriptmetadata.meta = scriptmetadata.meta
+		ServerSync.sh = ServerSync.sh
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BonusBotConnector.Server", "Server\BonusBotConnector\Server\BonusBotConnector.Server.csproj", "{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}"
@@ -50,15 +53,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Data", "Client\D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Handler", "Client\Handler\TDS_Client.Handler.csproj", "{AF00FF1E-655B-46A7-B131-7E026057CED8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution files", "{1DF5C58C-C800-4C70-92F1-D51E119186BC}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		.gitignore = .gitignore
-		TDS\DeadCode.ruleset = TDS\DeadCode.ruleset
-		LocalServerSync.sh = LocalServerSync.sh
-		ServerSync.sh = ServerSync.sh
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,8 +75,8 @@ Global
 		{E05649D8-0202-4FFC-8EE9-79E98F4CC866}.Server|Any CPU.Build.0 = Debug|Any CPU
 		{E05649D8-0202-4FFC-8EE9-79E98F4CC866}.Server|x64.ActiveCfg = Debug|Any CPU
 		{E05649D8-0202-4FFC-8EE9-79E98F4CC866}.Server|x64.Build.0 = Debug|Any CPU
-		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|Any CPU.Build.0 = Debug|x64
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Debug|x64.Build.0 = Debug|Any CPU
 		{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}.Release|Any CPU.ActiveCfg = Release|Any CPU

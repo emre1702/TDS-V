@@ -42,8 +42,8 @@ namespace TDS_Server.Handler.Server
             get
             {
                 string? codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase ?? "TDS_Server.RAGEAPI.dll");
-                string path = Uri.UnescapeDataString(uri.Path);
+                var uri = new UriBuilder(codeBase ?? "TDS_Server.RAGEAPI.dll");
+                var path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path) ?? ".";
             }
         }

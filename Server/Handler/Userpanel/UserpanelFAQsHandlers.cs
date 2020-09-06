@@ -41,9 +41,7 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelFAQsHandlers(TDSDbContext dbContext, Serializer serializer)
-        {
-            LoadFAQs(dbContext, serializer);
-        }
+            => LoadFAQs(dbContext, serializer);
 
         #endregion Public Constructors
 
@@ -56,7 +54,7 @@ namespace TDS_Server.Handler.Userpanel
 
         public void LoadFAQs(TDSDbContext dbContext, Serializer serializer)
         {
-            Regex regex = new Regex("(?<=(\r\n|\r|\n))[ ]{2,}", RegexOptions.None);
+            var regex = new Regex("(?<=(\r\n|\r|\n))[ ]{2,}", RegexOptions.None);
 
             var allFAQs = dbContext.FAQs.ToList();
 

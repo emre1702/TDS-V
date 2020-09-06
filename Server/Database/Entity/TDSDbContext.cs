@@ -275,19 +275,11 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => new { e.Type, e.Frequency });
 
-                entity.Property(e => e.Type)
-                    .ValueGeneratedNever();
-
                 entity.Property(e => e.MinNumber)
-                    .IsRequired()
                     .HasDefaultValue(1);
 
                 entity.Property(e => e.MaxNumber)
-                    .IsRequired()
                     .HasDefaultValue(1);
-
-                entity.Property(e => e.Frequency)
-                    .IsRequired();
             });
 
             modelBuilder.Entity<ChatInfos>(entity =>
@@ -440,6 +432,13 @@ namespace TDS_Server.Database.Entity
                     .IsRequired()
                     .HasMaxLength(20);
 
+                entity.Property(e => e.BlipColor)
+                    .HasDefaultValue(0);
+
+                entity.Property(e => e.HouseId).IsRequired(false);
+
+                entity.Property(e => e.OwnerId).IsRequired(false);
+
                 // Not required so we can set Owner to null when Owner gets deleted
                 entity.Property(e => e.OwnerId)
                     .IsRequired(false);
@@ -573,7 +572,7 @@ namespace TDS_Server.Database.Entity
                     .IsRequired()
                     .HasMaxLength(100);
 
-                entity.Property(e => e.Password).HasMaxLength(100);
+                entity.Property(e => e.Password).IsRequired(false).HasMaxLength(100);
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.Lobbies)
@@ -687,7 +686,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
+                entity.Property(e => e.Id);
 
                 entity.Property(e => e.Reason).IsRequired();
 
@@ -701,7 +700,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
+                entity.Property(e => e.Id);
 
                 entity.Property(e => e.Message).IsRequired();
 
@@ -714,7 +713,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
+                entity.Property(e => e.Id);
 
                 entity.Property(e => e.ExceptionType).IsRequired(false);
 
@@ -727,7 +726,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
+                entity.Property(e => e.Id);
 
                 entity.Property(e => e.Timestamp)
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
@@ -738,7 +737,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).UseHiLo();
+                entity.Property(e => e.Id);
 
                 entity.Property(e => e.Serial).HasMaxLength(200);
 
@@ -847,11 +846,14 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.PlayerId);
 
-                entity.Ignore(e => e.GeneralDataSynced);
-                entity.Ignore(e => e.HeritageDataSynced);
-                entity.Ignore(e => e.FeaturesDataSynced);
-                entity.Ignore(e => e.AppearanceDataSynced);
-                entity.Ignore(e => e.HairAndColorsDataSynced);
+                entity.OwnsOne(e => e.SyncedData, e => 
+                {
+                    e.Ignore(e => e.GeneralDataSynced);
+                    e.Ignore(e => e.HeritageDataSynced);
+                    e.Ignore(e => e.FeaturesDataSynced);
+                    e.Ignore(e => e.AppearanceDataSynced);
+                    e.Ignore(e => e.HairAndColorsDataSynced);
+                });
 
                 entity.HasOne(e => e.Player)
                     .WithOne(p => p.CharDatas)
@@ -863,6 +865,8 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => new { e.PlayerId, e.Slot });
 
+                entity.OwnsOne(e => e.SyncedData);
+
                 entity.HasOne(e => e.CharDatas)
                     .WithMany(c => c.AppearanceData)
                     .HasForeignKey(e => e.PlayerId)
@@ -872,6 +876,8 @@ namespace TDS_Server.Database.Entity
             modelBuilder.Entity<PlayerCharFeaturesDatas>(entity =>
             {
                 entity.HasKey(e => new { e.PlayerId, e.Slot });
+
+                entity.OwnsOne(e => e.SyncedData);
 
                 entity.HasOne(e => e.CharDatas)
                     .WithMany(c => c.FeaturesData)
@@ -883,6 +889,8 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => new { e.PlayerId, e.Slot });
 
+                entity.OwnsOne(e => e.SyncedData);
+
                 entity.HasOne(e => e.CharDatas)
                     .WithMany(c => c.GeneralData)
                     .HasForeignKey(e => e.PlayerId)
@@ -893,6 +901,8 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => new { e.PlayerId, e.Slot });
 
+                entity.OwnsOne(e => e.SyncedData);
+
                 entity.HasOne(e => e.CharDatas)
                     .WithMany(c => c.HairAndColorsData)
                     .HasForeignKey(e => e.PlayerId)
@@ -902,6 +912,8 @@ namespace TDS_Server.Database.Entity
             modelBuilder.Entity<PlayerCharHeritageDatas>(entity =>
             {
                 entity.HasKey(e => new { e.PlayerId, e.Slot });
+
+                entity.OwnsOne(e => e.SyncedData);
 
                 entity.HasOne(e => e.CharDatas)
                     .WithMany(c => c.HeritageData)
@@ -1124,7 +1136,9 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Email).HasMaxLength(100);
+                entity.Property(e => e.Email)
+                    .IsRequired(false)
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Donation).HasDefaultValue(0);
 
@@ -1526,7 +1540,7 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<Players>().HasData(
-                new Players { Id = -1, SCName = "System", SCId = 0, Name = "System", Password = "" }
+                new Players { Id = -1, SCName = "System", SCId = 0, Name = "System", AdminLeaderId = -1 }
             );
 
             var seedLobbies = new List<Lobbies> {
@@ -1792,7 +1806,7 @@ namespace TDS_Server.Database.Entity
             modelBuilder.Entity<Teams>().HasData(seedTeams);
 
             modelBuilder.Entity<Gangs>().HasData(
-                new Gangs { Id = -1, TeamId = -5, Short = "-" }
+                new Gangs { Id = -1, TeamId = -5, Name = "System", Short = "-", Color = "rgb(255,255,255)" }
             );
 
             modelBuilder.Entity<GangRanks>().HasData(

@@ -11,26 +11,16 @@ namespace TDS_Server.Handler.Entities.Utility
 {
     public class Invitation
     {
-        #region Public Fields
-
         public readonly ITDSPlayer? Sender;
         public readonly ITDSPlayer Target;
         public InvitationDto Dto;
         public InvitationType Type;
-
-        #endregion Public Fields
-
-        #region Private Fields
 
         private static ulong _idCounter = 0;
         private readonly InvitationsHandler _invitationsHandler;
         private readonly Action<ITDSPlayer, ITDSPlayer?, Invitation>? _onAccept;
         private readonly Action<ITDSPlayer, ITDSPlayer?, Invitation>? _onReject;
         private readonly Serializer _serializer;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public Invitation(string message, ITDSPlayer target, ITDSPlayer? sender,
             Serializer serializer, InvitationsHandler invitationsHandler,
@@ -59,15 +49,7 @@ namespace TDS_Server.Handler.Entities.Utility
             target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, serializer.ToBrowser(Dto));
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public bool RemoveOnLobbyLeave { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void Accept()
         {
@@ -95,7 +77,5 @@ namespace TDS_Server.Handler.Entities.Utility
                 return;
             Target.TriggerBrowserEvent(ToBrowserEvent.RemoveInvitation, Dto.Id);
         }
-
-        #endregion Public Methods
     }
 }

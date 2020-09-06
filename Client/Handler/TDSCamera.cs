@@ -26,10 +26,7 @@ namespace TDS_Client.Handler.Entities
             _handle = Cam.CreateCam("DEFAULT_SCRIPTED_CAMERA", false);
         }
 
-        ~TDSCamera()
-        {
-            Destroy();
-        }
+        ~TDSCamera() => Destroy();
 
         public Vector3 Direction => _utilsHandler.GetDirectionByRotation(Rotation);
         public bool IsActive => this == _camerasHandler.ActiveCamera;

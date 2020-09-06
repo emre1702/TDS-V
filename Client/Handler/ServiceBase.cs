@@ -4,9 +4,6 @@
     {
         protected LoggingHandler Logging { get; }
 
-        protected ServiceBase(LoggingHandler loggingHandler)
-        {
-            Logging = loggingHandler;
-        }
+        protected ServiceBase(LoggingHandler loggingHandler) => Logging = loggingHandler;
     }
 }

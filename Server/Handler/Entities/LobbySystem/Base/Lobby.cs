@@ -76,7 +76,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             Teams = new List<ITeam>(entity.Teams.Count);
             foreach (Teams teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
-                Team team = new Team(serializer, teamEntity);
+                var team = new Team(serializer, teamEntity);
                 Teams.Add(team);
             }
 

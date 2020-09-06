@@ -27,11 +27,11 @@ namespace TDS_Client.Core.Init
             try
             {
                 loggingHandler.LogInfo("Initializing services ...", "Services.Initialize");
+                var timerHandler = new TimerHandler(loggingHandler);
 
                 new PlayerFactory();
 
                 var dxHandler = new DxHandler(loggingHandler);
-                var timerHandler = new TimerHandler(loggingHandler);
                 var remoteEventsSender = new RemoteEventsSender(loggingHandler, timerHandler);
 
                 var eventsHandler = new EventsHandler(loggingHandler, remoteEventsSender);

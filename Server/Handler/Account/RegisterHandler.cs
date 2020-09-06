@@ -55,8 +55,8 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 return;
 
             var (scId, scName) = await NAPI.Task.RunWait(() => (player.SocialClubId, player.SocialClubName));
-            
-            Players dbPlayer = new Players
+
+            var dbPlayer = new Players
             {
                 Name = username,
                 SCId = scId,
@@ -128,7 +128,7 @@ namespace TDS_Server.Core.Manager.PlayerManager
                 if (username.Length < 3 || username.Length > 20)
                     return;
                 var scName = await NAPI.Task.RunWait(() => player.SocialClubName);
-                
+
                 if (await _databasePlayerHelper.DoesPlayerWithScnameExist(scName))
                     return;
                 if (await _databasePlayerHelper.DoesPlayerWithNameExist(username))

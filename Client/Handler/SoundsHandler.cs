@@ -15,10 +15,7 @@ namespace TDS_Client.Manager.Utility
         #region Public Constructors
 
         public SoundsHandler(LoggingHandler loggingHandler, SettingsHandler settingsHandler)
-            : base(loggingHandler)
-        {
-            _settingsHandler = settingsHandler;
-        }
+            : base(loggingHandler) => _settingsHandler = settingsHandler;
 
         #endregion Public Constructors
 

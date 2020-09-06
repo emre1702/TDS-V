@@ -67,7 +67,7 @@ namespace TDS_Client.Handler.Draw.Dx
         {
             switch (_alignment)
             {
-                case RAGE.NUI.UIResText.Alignment.Centered:
+                case Alignment.Centered:
                     return _x - _width / 2;
 
                 case Alignment.Left:

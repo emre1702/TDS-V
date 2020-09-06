@@ -156,14 +156,14 @@ namespace TDS_Server.Handler.Server
         {
             try
             {
-                List<Task> tasks = new List<Task>
+                var tasks = new List<Task>
                 {
                     _loggingHandler.SaveTask(),
                     _serverStatsHandler.SaveTask(),
                     _lobbiesHandler.SaveAll(),
                 };
 
-                foreach (ITDSPlayer player in _tdsPlayersHandler.LoggedInPlayers)
+                foreach (var player in _tdsPlayersHandler.LoggedInPlayers)
                 {
                     try
                     {

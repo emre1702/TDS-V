@@ -46,10 +46,7 @@ namespace TDS_Client.Handler.Events
         private readonly TimerHandler _timerHandler;
 
         public RemoteEventsSender(LoggingHandler loggingHandler, TimerHandler timerHandler)
-            : base(loggingHandler)
-        {
-            _timerHandler = timerHandler;
-        }
+            : base(loggingHandler) => _timerHandler = timerHandler;
 
         public bool Send(string eventName, params object[] args)
         {

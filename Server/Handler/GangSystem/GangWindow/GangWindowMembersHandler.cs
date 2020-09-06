@@ -66,6 +66,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             gang.PlayersOnline.Remove(player);
 
             var memberInGangEntity = gang.Entity.Members.FirstOrDefault(m => m.PlayerId == player.Id);
+            if (memberInGangEntity is null)
+                return null;
 
             player.Gang = _gangsHandler.None;
             player.GangRank = _gangsHandler.NoneRank;

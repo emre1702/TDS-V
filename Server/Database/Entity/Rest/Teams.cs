@@ -6,16 +6,7 @@ namespace TDS_Server.Database.Entity.Rest
 {
     public partial class Teams
     {
-        #region Public Constructors
-
-        public Teams()
-        {
-            Gangs = new HashSet<Gangs>();
-        }
-
-        #endregion Public Constructors
-
-        #region Public Properties
+        public Teams() => Gangs = new HashSet<Gangs>();
 
         public byte BlipColor { get; set; }
         public short ColorB { get; set; }
@@ -29,15 +20,9 @@ namespace TDS_Server.Database.Entity.Rest
         public string Name { get; set; }
         public int SkinHash { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public Teams DeepCopy()
         {
             return (Teams)MemberwiseClone();
         }
-
-        #endregion Public Methods
     }
 }

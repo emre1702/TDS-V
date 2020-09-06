@@ -74,7 +74,7 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
         public override string DisplayName => IsConsole ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel
             ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : Name) : (Entity is { } ? Entity.Name : Name));
 
-        public override PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.ElementAt(Entity.CharDatas.Slot).IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
+        public override PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.ElementAt(Entity.CharDatas.SyncedData.Slot).SyncedData.IsMale == true ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
 
         public override ITDSVehicle? FreeroamVehicle { get; set; }
 

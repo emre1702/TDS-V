@@ -38,9 +38,7 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelRulesHandler(TDSDbContext dbContext, Serializer serializer)
-        {
-            LoadRules(dbContext, serializer);
-        }
+            => LoadRules(dbContext, serializer);
 
         #endregion Public Constructors
 

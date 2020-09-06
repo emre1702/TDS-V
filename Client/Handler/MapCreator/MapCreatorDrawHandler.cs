@@ -11,10 +11,7 @@ namespace TDS_Client.Handler.MapCreator
 
         private readonly UtilsHandler _utilsHandler;
 
-        public MapCreatorDrawHandler(UtilsHandler utilsHandler)
-        {
-            _utilsHandler = utilsHandler;
-        }
+        public MapCreatorDrawHandler(UtilsHandler utilsHandler) => _utilsHandler = utilsHandler;
 
         public void DrawSkeleton(Vector3 pos, Vector3 size, Vector3 rot)
         {

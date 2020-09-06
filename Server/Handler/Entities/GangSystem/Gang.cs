@@ -84,7 +84,7 @@ namespace TDS_Server.Handler.Entities.GangSystem
             var onlinePlayer = PlayersOnline.FirstOrDefault(p => p.Entity?.Id == nextLeader.PlayerId);
             NAPI.Task.Run(() =>
             {
-                onlinePlayer.SendNotification(onlinePlayer.Language.YOUVE_BECOME_GANG_LEADER);
+                onlinePlayer?.SendNotification(onlinePlayer.Language.YOUVE_BECOME_GANG_LEADER);
             });
         }
 
@@ -118,8 +118,8 @@ namespace TDS_Server.Handler.Entities.GangSystem
 
         public void SendMessage(Func<ILanguage, string> langgetter)
         {
-            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in _langHelper.LanguageByID.Values)
+            var returndict = new Dictionary<ILanguage, string>();
+            foreach (var lang in _langHelper.LanguageByID.Values)
             {
                 returndict[lang] = langgetter(lang);
             }

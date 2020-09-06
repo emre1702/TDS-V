@@ -15,10 +15,7 @@ namespace TDS_Client.Handler
         private readonly Dictionary<Control, bool> _lastControlPressedState = new Dictionary<Control, bool>();
         private readonly Dictionary<Key, bool> _lastKeyDownState = new Dictionary<Key, bool>();
 
-        public BindsHandler(LoggingHandler loggingHandler) : base(loggingHandler)
-        {
-            Tick += OnTick;
-        }
+        public BindsHandler(LoggingHandler loggingHandler) : base(loggingHandler) => Tick += OnTick;
 
         public void Add(Key key, Action<Key> method, KeyPressState pressState = KeyPressState.Down)
         {

@@ -10,8 +10,6 @@ namespace TDS_Server.Handler.Entities.GTA.Vehicles
 
         public TDSVehicle(NetHandle netHandle,
             WorkaroundsHandler workaroundsHandler) : base(netHandle)
-        {
-            _workaroundsHandler = workaroundsHandler;
-        }
+            => _workaroundsHandler = workaroundsHandler;
     }
 }

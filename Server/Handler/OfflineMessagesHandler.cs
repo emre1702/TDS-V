@@ -14,13 +14,7 @@ namespace TDS_Server.Core.Manager.Utility
 {
     public class OfflineMessagesHandler : DatabaseEntityWrapper
     {
-        #region Private Fields
-
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, BonusBotConnectorClient bonusBotConnectorClient)
             : base(dbContext, loggingHandler)
@@ -30,13 +24,9 @@ namespace TDS_Server.Core.Manager.Utility
             eventsHandler.PlayerLoggedIn += CheckOfflineMessages;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public async void Add(int targetId, ulong targetDiscordId, Players source, string message)
         {
-            Offlinemessages msg = new Offlinemessages()
+            var msg = new Offlinemessages()
             {
                 TargetId = targetId,
                 SourceId = source.Id,
@@ -91,7 +81,5 @@ namespace TDS_Server.Core.Manager.Utility
                 player.SendChatMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries));
             }
         }
-
-        #endregion Public Methods
     }
 }

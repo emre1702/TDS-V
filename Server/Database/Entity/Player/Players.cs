@@ -12,8 +12,6 @@ namespace TDS_Server.Database.Entity.Player
 {
     public partial class Players
     {
-        #region Public Constructors
-
         public Players()
         {
             Lobbies = new HashSet<Lobbies>();
@@ -29,10 +27,6 @@ namespace TDS_Server.Database.Entity.Player
             PlayerRelationsTarget = new HashSet<PlayerRelations>();
             SupportRequestMessages = new HashSet<SupportRequestMessages>();
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public virtual Players AdminLeader { get; set; }
         public int? AdminLeaderId { get; set; }
@@ -78,15 +72,9 @@ namespace TDS_Server.Database.Entity.Player
         public virtual ICollection<PlayerWeaponBodypartStats> WeaponBodypartStats { get; set; }
         public virtual ICollection<PlayerWeaponStats> WeaponStats { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public string GetDiscriminator()
         {
             return $"{Name} ({SCName})";
         }
-
-        #endregion Public Methods
     }
 }

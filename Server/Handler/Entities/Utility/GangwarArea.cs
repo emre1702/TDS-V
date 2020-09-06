@@ -25,9 +25,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
         public GangwarArea(GangwarArea copyFrom, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext, loggingHandler)
-        {
-            Entity = null;
-        }
+            => Entity = null;
 
         public GangwarArea(MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)

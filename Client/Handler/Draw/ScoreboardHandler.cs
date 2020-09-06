@@ -84,16 +84,16 @@ namespace TDS_Client.Handler.Draw
             if (_grid.Header != null)
                 _grid.Header.Activated = false;
 
-            Color backLobbyOfficialColor = Color.FromArgb(187, 190, 190, 190);
-            Color backLobbyColor = Color.FromArgb(187, 140, 140, 140);
+            var backLobbyOfficialColor = Color.FromArgb(187, 190, 190, 190);
+            var backLobbyColor = Color.FromArgb(187, 140, 140, 140);
 
             list.Sort((a, b) => a.Id < b.Id && a.Id != 0 ? 1 : 0);
             foreach (var entry in list)
             {
-                DxGridRow lobbynamerow = new DxGridRow(_dxHandler, _grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, text: $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: Alignment.Left, scale: 0.3f);
+                var lobbynamerow = new DxGridRow(_dxHandler, _grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, text: $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: Alignment.Left, scale: 0.3f);
                 if (entry.PlayersStr.Length > 0)
                 {
-                    DxGridRow lobbyplayersrow = new DxGridRow(_dxHandler, _grid, null, Color.DarkGray, text: entry.PlayersStr, scale: 0.25f);
+                    var lobbyplayersrow = new DxGridRow(_dxHandler, _grid, null, Color.DarkGray, text: entry.PlayersStr, scale: 0.25f);
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace TDS_Client.Handler.Draw
             foreach (var playerdata in playerlist)
             {
                 var team = _lobbyHandler.Teams.LobbyTeams[playerdata.TeamIndex];
-                DxGridRow row = new DxGridRow(_dxHandler, _grid, null, Color.FromArgb(team.Color.A, team.Color.R, team.Color.G, team.Color.B), textAlignment: Alignment.Centered, scale: 0.3f);
+                var row = new DxGridRow(_dxHandler, _grid, null, Color.FromArgb(team.Color.A, team.Color.R, team.Color.G, team.Color.B), textAlignment: Alignment.Centered, scale: 0.3f);
                 new DxGridCell(_dxHandler, _timerHandler, playerdata.Name, row, _columns[0]);
 
                 new DxGridCell(_dxHandler, _timerHandler, GetPlaytimeString(playerdata.PlaytimeMinutes), row, _columns[1]);
@@ -192,7 +192,7 @@ namespace TDS_Client.Handler.Draw
 
         private void CreateTitle()
         {
-            DxGridRow header = new DxGridRow(_dxHandler, _grid, 0.035f, Color.FromArgb(187, 20, 20, 20), textAlignment: Alignment.Centered, isHeader: true);
+            var header = new DxGridRow(_dxHandler, _grid, 0.035f, Color.FromArgb(187, 20, 20, 20), textAlignment: Alignment.Centered, isHeader: true);
             new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_NAME, header, _columns[0]);
             new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_PLAYTIME, header, _columns[1]);
             new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_KILLS, header, _columns[2]);

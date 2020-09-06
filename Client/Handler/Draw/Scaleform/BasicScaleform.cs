@@ -11,9 +11,7 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
         private int _handle;
 
         public BasicScaleform(string scaleformName)
-        {
-            _handle = RAGE.Game.Graphics.RequestScaleformMovie(scaleformName);
-        }
+            => _handle = RAGE.Game.Graphics.RequestScaleformMovie(scaleformName);
 
         private bool IsLoaded => RAGE.Game.Graphics.HasScaleformMovieLoaded(_handle);
         private bool IsValid => _handle != 0;

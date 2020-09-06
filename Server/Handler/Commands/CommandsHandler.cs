@@ -96,7 +96,7 @@ namespace TDS_Server.Handler.Commands
                     commanddata = _commandDataByCommand[cmd];
                 else
                     commanddata = new CommandDataDto();
-                CommandMethodDataDto methoddata = new CommandMethodDataDto
+                var methoddata = new CommandMethodDataDto
                 (
                     priority: attribute.Priority,
                     methodDefault: method

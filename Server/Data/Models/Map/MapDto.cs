@@ -19,22 +19,13 @@ namespace TDS_Server.Data.Models.Map
     [XmlRoot("TDSMap")]
     public class MapDto
     {
-        #region Private Fields
-
         private readonly Serializer _serializer;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public MapDto() : this(new Serializer())
         {
         }
 
-        public MapDto(Serializer serializer)
-        {
-            _serializer = serializer;
-        }
+        public MapDto(Serializer serializer) => _serializer = serializer;
 
         public MapDto(MapCreateDataDto data, Serializer serializer) : this(serializer)
         {
@@ -90,10 +81,6 @@ namespace TDS_Server.Data.Models.Map
             LoadMapObjectsDataDto();
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         [XmlElement("bomb")]
         public MapBombInfoDto? BombInfo { get; set; }
 
@@ -135,10 +122,6 @@ namespace TDS_Server.Data.Models.Map
 
         [XmlElement("vehicles")]
         public MapVehiclesListDto Vehicles { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public static bool operator !=(MapDto thisMap, MapDto otherMap)
         {
@@ -188,7 +171,5 @@ namespace TDS_Server.Data.Models.Map
             };
             ClientSyncedDataJson = _serializer.ToClient(clientSyncedDataDto);
         }
-
-        #endregion Public Methods
     }
 }

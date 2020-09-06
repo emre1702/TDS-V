@@ -46,14 +46,14 @@ namespace TDS_Server.Handler
 
         private List<SyncedScoreboardLobbyDataDto>? GetDataForLobby(int lobbyId)
         {
-            ILobby? lobby = _lobbiesHandler.Lobbies.Where(l => l.Id == lobbyId).FirstOrDefault();
+            var lobby = _lobbiesHandler.Lobbies.Where(l => l.Id == lobbyId).FirstOrDefault();
             if (lobby is null)
                 return null;
 
             var list = new List<SyncedScoreboardLobbyDataDto>();
             foreach (var player in lobby.Players.Values)
             {
-                SyncedScoreboardLobbyDataDto entry = new SyncedScoreboardLobbyDataDto
+                var entry = new SyncedScoreboardLobbyDataDto
                 (
                     name: player.DisplayName,
                     playtimeMinutes: player.PlayMinutes,

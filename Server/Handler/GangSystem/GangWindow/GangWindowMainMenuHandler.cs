@@ -9,10 +9,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
     {
         private readonly Serializer _serializer;
 
-        public GangWindowMainMenuHandler(Serializer serializer)
-        {
-            _serializer = serializer;
-        }
+        public GangWindowMainMenuHandler(Serializer serializer) => _serializer = serializer;
 
         public string? GetMainData(ITDSPlayer player)
         {

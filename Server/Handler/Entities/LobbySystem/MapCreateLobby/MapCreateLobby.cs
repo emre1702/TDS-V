@@ -85,7 +85,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         private static Lobbies CreateEntity(ITDSPlayer player, Lobbies dummy)
         {
-            Lobbies entity = new Lobbies
+            var entity = new Lobbies
             {
                 Name = "MapCreator-" + player.Name ?? "?",
                 Teams = new List<Teams> { new Teams { Index = 0, Name = player.Name ?? "?", ColorR = 222, ColorB = 222, ColorG = 222 } },

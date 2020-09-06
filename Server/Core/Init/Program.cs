@@ -13,9 +13,11 @@ using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
 using TDS_Server.Handler.Entities.GTA.GTAPlayer;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Factories;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Server;
+using ObjectFactory = TDS_Server.Handler.Factories.ObjectFactory;
 
 namespace TDS_Server.Core.Init
 {
@@ -43,6 +45,7 @@ namespace TDS_Server.Core.Init
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
                 _serviceProvider = Services.InitServiceCollection();
+                InitFactories();
 
                 using (var dbContext = _serviceProvider.GetRequiredService<TDSDbContext>())
                 {
@@ -93,7 +96,11 @@ namespace TDS_Server.Core.Init
                     _loggingHandler.LogError(ex);
                 else
                     Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
+#if RELEASE
                 Environment.Exit(1);
+#else
+                Console.ReadKey();
+#endif
             }
         }
 
@@ -134,6 +141,21 @@ namespace TDS_Server.Core.Init
                     Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
                 }
             }
+        }
+
+        private void InitFactories()
+        {
+            new BlipFactory(_serviceProvider);
+            new CheckpointFactory(_serviceProvider);
+            new ColShapeFactory(_serviceProvider);
+            new DummyEntityFactory(_serviceProvider);
+            new MarkerFactory(_serviceProvider);
+            new ObjectFactory(_serviceProvider);
+            new PedFactory(_serviceProvider);
+            new PickupFactory(_serviceProvider);
+            new PlayerFactory(_serviceProvider);
+            new TextLabelFactory(_serviceProvider);
+            new VehicleFactory(_serviceProvider);
         }
     }
 }

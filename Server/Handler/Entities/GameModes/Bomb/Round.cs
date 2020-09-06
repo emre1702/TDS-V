@@ -16,7 +16,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             foreach (var bombplace in Map.BombInfo.PlantPositions)
             {
                 var pos = new Vector3(bombplace.X, bombplace.Y, bombplace.Z);
-                BombPlantPlaceDto dto = new BombPlantPlaceDto(
+                var dto = new BombPlantPlaceDto(
                     obj: NAPI.Object.CreateObject(-51423166, pos, null, 255, Lobby.Dimension) as ITDSObject,
                     blip: NAPI.Blip.CreateBlip(SharedConstants.BombPlantPlaceBlipSprite, pos, 1f, 0, name: "Bomb-Plant", dimension: Lobby.Dimension) as ITDSBlip,
                     pos: pos

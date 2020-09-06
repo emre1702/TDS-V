@@ -99,10 +99,7 @@ namespace TDS_Server.Handler.Events
         public static EventsHandler Instance { get; private set; }
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public EventsHandler()
-        {
-            Instance = this;
-        }
+        public EventsHandler() => Instance = this;
 
         public void OnEntityDeleted(Entity entity)
         {
@@ -266,7 +263,7 @@ namespace TDS_Server.Handler.Events
             PlayerLeftLobby?.Invoke(player, lobby);
         }
 
-        internal void OnError(Exception ex, string msgBefore)
+        public void OnError(Exception ex, string msgBefore)
         {
             ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
         }

@@ -316,15 +316,15 @@ namespace TDS_Server.Handler.Maps
                 string mapPath = mapBasePath + Utils.MakeValidFileName(mapFileName);
                 mapDto.Info.FilePath = mapPath;
 
-                MemoryStream memStrm = new MemoryStream();
-                UTF8Encoding utf8e = new UTF8Encoding();
-                XmlTextWriter xmlSink = new XmlTextWriter(memStrm, utf8e);
+                var memStrm = new MemoryStream();
+                var utf8e = new UTF8Encoding();
+                var xmlSink = new XmlTextWriter(memStrm, utf8e);
                 serializer.Serialize(xmlSink, mapDto);
                 xmlSink.Dispose();
                 byte[] utf8EncodedData = memStrm.ToArray();
 
-                string mapXml = utf8e.GetString(utf8EncodedData);
-                string prettyMapXml = await _xmlHelper.GetPrettyAsync(mapXml).ConfigureAwait(true);
+                var mapXml = utf8e.GetString(utf8EncodedData);
+                var prettyMapXml = await _xmlHelper.GetPrettyAsync(mapXml).ConfigureAwait(true);
                 await File.WriteAllTextAsync(mapPath, prettyMapXml).ConfigureAwait(true);
 
                 return (mapDto, MapCreateError.MapCreatedSuccessfully);

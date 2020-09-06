@@ -195,8 +195,8 @@ namespace TDS_Client.Handler.MapCreator
 
         private void CheckClosestRotateMarker(ref float closestDist, ref AxisMarker closestMarker, ref Vector3 hitPointClosestMarker)
         {
-            Vector3 hitPoint = new Vector3();
-            Vector3 norm = new Vector3();
+            var hitPoint = new Vector3();
+            var norm = new Vector3();
             if (IsRaycasted(ref hitPoint, ref norm, _camerasHandler.ActiveCamera))
             {
                 float dist = hitPoint.DistanceTo(_camerasHandler.ActiveCamera?.Position ?? RAGE.Game.Cam.GetGameplayCamCoord());

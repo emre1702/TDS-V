@@ -10,10 +10,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
     {
         private readonly Serializer _serializer;
 
-        public GangWindowRanksPermissionsHandler(Serializer serializer)
-        {
-            _serializer = serializer;
-        }
+        public GangWindowRanksPermissionsHandler(Serializer serializer) => _serializer = serializer;
 
         public async Task<object?> Modify(ITDSPlayer player, string json)
         {

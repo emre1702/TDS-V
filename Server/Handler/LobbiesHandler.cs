@@ -102,7 +102,7 @@ namespace TDS_Server.Handler
                     return player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;
                 }
 
-                Lobbies entity = new Lobbies
+                var entity = new Lobbies
                 {
                     Name = data.Name,
                     OwnerId = player.Entity?.Id ?? 0,

@@ -7,8 +7,6 @@ namespace TDS_Server.Handler
         private readonly ILoggingHandler _loggingHandler;
 
         public WeaponLevelHandler(ILoggingHandler loggingHandler)
-        {
-            _loggingHandler = loggingHandler;
-        }
+            => _loggingHandler = loggingHandler;
     }
 }

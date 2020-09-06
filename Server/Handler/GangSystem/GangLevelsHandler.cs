@@ -18,10 +18,7 @@ namespace TDS_Server.Handler.GangSystem
 
         #region Public Constructors
 
-        public GangLevelsHandler(TDSDbContext dbContext)
-        {
-            LoadGangLevels(dbContext);
-        }
+        public GangLevelsHandler(TDSDbContext dbContext) => LoadGangLevels(dbContext);
 
         #endregion Public Constructors
 

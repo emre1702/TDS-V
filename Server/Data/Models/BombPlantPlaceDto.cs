@@ -4,19 +4,21 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Models
 {
+#nullable enable
+
     public class BombPlantPlaceDto
     {
         #region Public Fields
 
-        public ITDSBlip Blip;
-        public ITDSObject Object;
+        public ITDSBlip? Blip;
+        public ITDSObject? Object;
         public Vector3 Position;
 
         #endregion Public Fields
 
         #region Public Constructors
 
-        public BombPlantPlaceDto(ITDSObject obj, ITDSBlip blip, Vector3 pos) => (Object, Blip, Position) = (obj, blip, pos);
+        public BombPlantPlaceDto(ITDSObject? obj, ITDSBlip? blip, Vector3 pos) => (Object, Blip, Position) = (obj, blip, pos);
 
         #endregion Public Constructors
 
@@ -24,8 +26,8 @@ namespace TDS_Server.Data.Models
 
         public void Delete()
         {
-            Object.Delete();
-            Blip.Delete();
+            Object?.Delete();
+            Blip?.Delete();
         }
 
         #endregion Public Methods

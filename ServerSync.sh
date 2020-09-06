@@ -17,11 +17,11 @@ LIGHTCYAN='\033[1;36m'
 WHITE='\033[1;37m'
 SEPERATOR='==============================='
 
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/RAGEAPI/bin/Debug/netcoreapp3.1
+cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/Core/bin/Debug/netcoreapp3.1
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS_Client.*" --exclude="TDS_Server.RAGEAPI.*" --include="*/" --include='TDS_*.dll' --include='TDS_*.pdb' --include='BonusBotConnector*' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS_Client.*" --exclude="TDS_Server.Core.*" --include="*/" --include='TDS_*.dll' --include='TDS_*.pdb' --include='BonusBotConnector*' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
 
 echo -e "${SEPERATOR}"
 echo -e "Add ${LIGHTBLUE}missing ${NOCOLOR}runtimes ..."
@@ -29,7 +29,7 @@ rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --ignore-existing 
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS_Server ${NOCOLOR}..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS_Server.RAGEAPI.dll ./TDS_Server.RAGEAPI.pdb rage@185.101.94.212:/home/rage/RAGE/dotnet/resources/tds/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS_Server.Core.dll ./TDS_Server.Core.pdb rage@185.101.94.212:/home/rage/RAGE/dotnet/resources/tds/
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."

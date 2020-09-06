@@ -67,7 +67,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (Entity.LobbyRewards.MoneyPerKill == 0 && Entity.LobbyRewards.MoneyPerAssist == 0 && Entity.LobbyRewards.MoneyPerDamage == 0)
                 return;
 
-            StringBuilder strbuilder = new StringBuilder();
+            var strbuilder = new StringBuilder();
             FuncIterateAllPlayers((player, team) =>
             {
                 if (player.CurrentRoundStats is null)

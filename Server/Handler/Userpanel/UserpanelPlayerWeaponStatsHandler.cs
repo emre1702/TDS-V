@@ -88,7 +88,7 @@ namespace TDS_Server.Handler.Userpanel
 
         private List<string> GetPlayerWeaponsUsed(ITDSPlayer player)
         {
-            return player.WeaponStats.OrderBy(w => w.Value.DealtDamage).Select(w => w.Key.ToString()).ToList();
+            return player.WeaponStats?.OrderBy(w => w.Value.DealtDamage).Select(w => w.Key.ToString()).ToList() ?? new List<string>();
         }
     }
 }

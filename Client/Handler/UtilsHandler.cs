@@ -143,7 +143,7 @@ namespace TDS_Client.Handler
 
         public Vector3 GetCrossProduct(Vector3 left, Vector3 right)
         {
-            Vector3 vec = new Vector3
+            var vec = new Vector3
             {
                 X = left.Y * right.Z - left.Z * right.Y,
                 Y = left.Z * right.X - left.X * right.Z,
@@ -457,7 +457,7 @@ namespace TDS_Client.Handler
         private void HideHudOriginalComponents(List<TickNametagData> _)
         {
             Ui.HideHudComponentThisFrame((int)HudComponent.Cash);
-            Ui.HideHudComponentThisFrame((int)HudComponent.WeaponWheel);
+            Ui.HideHudComponentThisFrame((int)HudComponent.WeaponWheelStats);
             Ui.HideHudComponentThisFrame((int)HudComponent.WeaponIcon);
             Ui.HideHudComponentThisFrame((int)HudComponent.CashChange);
             Ui.HideHudComponentThisFrame((int)HudComponent.MpCash);

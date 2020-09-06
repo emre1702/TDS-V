@@ -8,8 +8,6 @@ namespace TDS_Server.Handler.Entities.GTA.Objects
         private readonly WorkaroundsHandler _workaroundsHandler;
 
         public TDSObject(NetHandle netHandle, WorkaroundsHandler workaroundsHandler) : base(netHandle)
-        {
-            _workaroundsHandler = workaroundsHandler;
-        }
+            => _workaroundsHandler = workaroundsHandler;
     }
 }

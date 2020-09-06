@@ -26,15 +26,15 @@ mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-object-choice
 mkdir -p /cygdrive/c/RAGEMP/server-files/packages/tds
 
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/RAGEAPI/bin/Debug/netcoreapp3.1
+cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/Core/bin/Debug/netcoreapp3.1
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --exclude='TDS_Server.RAGEAPI.*' --include="*.dll" --include='*.pdb' --exclude='*' . /cygdrive/c/RAGEMP/server-files/dotnet/runtime
+rsync -hmrtvzP --exclude='TDS_Server.Core.*' --include="*.dll" --include='*.pdb' --exclude='*' . /cygdrive/c/RAGEMP/server-files/dotnet/runtime
 
 echo -e "${SEPERATOR}"
-echo -e "Update ${LIGHTBLUE}TDS_Server.RAGEAPI ${NOCOLOR}..."
-rsync -hmrtvzP ./TDS_Server.RAGEAPI.dll ./TDS_Server.RAGEAPI.pdb /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.1
+echo -e "Update ${LIGHTBLUE}TDS_Server.Core ${NOCOLOR}..."
+rsync -hmrtvzP ./TDS_Server.Core.dll ./TDS_Server.Core.pdb /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.1
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."

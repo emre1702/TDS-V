@@ -2,11 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Shared.Core;
-using TDS_Shared.Data.Models;
 
 namespace TDS_Server.Handler.GangSystem.GangWindow
 {
@@ -14,10 +11,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
     {
         private readonly Serializer _serializer;
 
-        public GangWindowRanksLevelsHandler(Serializer serializer)
-        {
-            _serializer = serializer;
-        }
+        public GangWindowRanksLevelsHandler(Serializer serializer) => _serializer = serializer;
 
         public List<GangRanks>? GetRanks(ITDSPlayer player)
         {

@@ -125,7 +125,7 @@ namespace TDS_Shared.Data.Models.GTA
 
         public static Position3D RandomXY()
         {
-            Position3D v = new Position3D();
+            var v = new Position3D();
             double radian = SharedUtils.Rnd.NextDouble() * 2 * Math.PI;
 
             v.X = (float)Math.Cos(radian);

@@ -57,39 +57,39 @@ namespace TDS_Server.Handler.Helper
 
         public Dictionary<ILanguage, string> GetLangDictionary(Func<ILanguage, string> langgetter)
         {
-            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            var returnDict = new Dictionary<ILanguage, string>();
             foreach (ILanguage lang in LanguageByID.Values)
             {
-                returndict[lang] = langgetter(lang);
+                returnDict[lang] = langgetter(lang);
             }
-            return returndict;
+            return returnDict;
         }
 
         public void SendAllChatMessage(Func<ILanguage, string> langgetter)
         {
-            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            var returnDict = new Dictionary<ILanguage, string>();
             foreach (ILanguage lang in LanguageByID.Values)
             {
-                returndict[lang] = langgetter(lang);
+                returnDict[lang] = langgetter(lang);
             }
 
             foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
             {
-                player.SendChatMessage(returndict[player.Language]);
+                player.SendChatMessage(returnDict[player.Language]);
             }
         }
 
         public void SendAllNotification(Func<ILanguage, string> langgetter)
         {
-            Dictionary<ILanguage, string> returndict = new Dictionary<ILanguage, string>();
+            var returnDict = new Dictionary<ILanguage, string>();
             foreach (ILanguage lang in LanguageByID.Values)
             {
-                returndict[lang] = langgetter(lang);
+                returnDict[lang] = langgetter(lang);
             }
 
             foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
             {
-                player.SendNotification(returndict[player.Language]);
+                player.SendNotification(returnDict[player.Language]);
             }
         }
 

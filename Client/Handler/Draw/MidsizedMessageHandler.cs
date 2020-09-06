@@ -19,10 +19,7 @@ namespace TDS_Client.Handler.Draw
         #region Public Constructors
 
         public MidsizedMessageHandler(LoggingHandler loggingHandler, TimerHandler timerHandler)
-            : base(loggingHandler)
-        {
-            _timerHandler = timerHandler;
-        }
+            : base(loggingHandler) => _timerHandler = timerHandler;
 
         #endregion Public Constructors
 
