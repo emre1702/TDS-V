@@ -206,7 +206,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             await player.Gang.ExecuteForDBAsync(async dbContext =>
             {
-                player.Gang.Entity.Members.Add(new GangMembers { PlayerId = player.Entity!.Id, RankId = player.GangRank.Id });
+                player.Gang.Entity.Members.Add(new GangMembers { PlayerId = player.Entity!.Id, RankId = player.GangRank.Id, LastLogin = player.Entity.PlayerStats.LastLoginTimestamp });
                 await dbContext.SaveChangesAsync();
             });
 

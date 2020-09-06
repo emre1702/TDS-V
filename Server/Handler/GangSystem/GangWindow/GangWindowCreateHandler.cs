@@ -46,7 +46,7 @@ namespace TDS_Server.Handler.GangSystem
 
             var gangCreateData = _serializer.FromBrowser<GangCreateData>(json);
 
-            var gang = GetGangEntity(gangCreateData, player.Entity.Id, _lobbiesHandler.GangLobby);
+            var gang = GetGangEntity(gangCreateData, player, _lobbiesHandler.GangLobby);
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Gangs.Add(gang);
@@ -61,7 +61,7 @@ namespace TDS_Server.Handler.GangSystem
             return "";
         }
 
-        private Gangs GetGangEntity(GangCreateData data, int playerId, GangLobby lobby)
+        private Gangs GetGangEntity(GangCreateData data, ITDSPlayer player, GangLobby lobby)
         {
             var highestRank = new GangRanks { Rank = 3, Name = "Rank 3", Color = "rgb(255,255,255)" };
             var highestTeamIndex = lobby.Entity.Teams.Max(t => t.Index);
@@ -71,7 +71,7 @@ namespace TDS_Server.Handler.GangSystem
             {
                 Name = data.Name,
                 Short = data.Short,
-                OwnerId = playerId,
+                OwnerId = player.Entity.Id,
                 Color = data.Color,
                 BlipColor = data.BlipColor,
                 Ranks = new List<GangRanks>
@@ -92,7 +92,7 @@ namespace TDS_Server.Handler.GangSystem
                 },
                 Members = new List<GangMembers>
                 {
-                    new GangMembers { PlayerId = playerId, Rank = highestRank }
+                    new GangMembers { PlayerId = player.Entity.Id, Rank = highestRank, LastLogin = player.Entity.PlayerStats.LastLoginTimestamp }
                 },
                 Stats = new GangStats(),
                 Team = new Teams { Lobby = lobby.Id, Index = (short)(highestTeamIndex + 1), Name = data.Short, ColorR = rgbColor.R, ColorG = rgbColor.G, ColorB = rgbColor.B }
