@@ -12,14 +12,12 @@ namespace TDS_Server.Handler.Events
 {
     public class EventsHandler
     {
-
         public AsyncValueTaskEvent<ITDSPlayer>? PlayerLoggedOutBefore;
         public AsyncValueTaskEvent<(ITDSPlayer, Players)>? PlayerRegisteredBefore;
 
         private int _hourCounter;
         private int _minuteCounter;
         private int _secondCounter;
-
 
         public delegate void CounterDelegate(int counter);
 
@@ -29,6 +27,8 @@ namespace TDS_Server.Handler.Events
 
         public delegate void ErrorDelegate(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true);
 
+        public delegate void ErrorMessageDelegate(string info, string? stackTrace = null, string? exceptionType = null, ITDSPlayer? source = null, bool logToBonusBot = true);
+
         public delegate void GangHouseDelegate(GangHouse house);
 
         public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
@@ -36,12 +36,12 @@ namespace TDS_Server.Handler.Events
         public delegate void LobbyDelegate(ILobby lobby);
 
         public delegate void PlayerDelegate(ITDSPlayer player);
+
         public delegate void PlayerGangDelegate(ITDSPlayer player, IGang gang);
 
         public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
 
         public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
-
 
         public event LobbyDelegate? CustomLobbyCreated;
 
@@ -50,6 +50,8 @@ namespace TDS_Server.Handler.Events
         public event EntityDelegate? EntityDeleted;
 
         public event ErrorDelegate? Error;
+
+        public event ErrorMessageDelegate? ErrorMessage;
 
         public event GangHouseDelegate? GangHouseLoaded;
 
@@ -101,7 +103,6 @@ namespace TDS_Server.Handler.Events
         {
             Instance = this;
         }
-
 
         public void OnEntityDeleted(Entity entity)
         {
@@ -265,6 +266,11 @@ namespace TDS_Server.Handler.Events
             PlayerLeftLobby?.Invoke(player, lobby);
         }
 
+        internal void OnError(Exception ex, string msgBefore)
+        {
+            ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
+        }
+
         internal void OnMinute()
         {
             try
@@ -277,6 +283,7 @@ namespace TDS_Server.Handler.Events
             }
         }
 
+        //Todo this is not used - check why
         internal void OnReloadPlayerChar(ITDSPlayer player)
         {
             ReloadPlayerChar?.Invoke(player);

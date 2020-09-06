@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using RAGE.Game;
+using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
+using Alignment = RAGE.NUI.UIResText.Alignment;
 
 namespace TDS_Client.Handler.Draw.Dx.Grid
 {
     public class DxGridRow : DxBase
     {
-        #region Public Fields
-
         public Color BackColor;
         public List<DxGridCell> Cells = new List<DxGridCell>();
         public Font Font;
@@ -16,31 +15,23 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         public bool RelativePos;
         public float Scale;
         public string Text;
-        public AlignmentX TextAlignment;
+        public Alignment TextAlignment;
         public Color TextColor;
         public float TextHeight;
         public bool UseColorForWholeRow = true;
         public float Y;
 
-        #endregion Public Fields
-
-        #region Private Fields
-
         private readonly float? _height;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DxGridRow(DxHandler dxHandler, IModAPI modAPI, DxGrid grid, float? height, Color backColor, Color? textColor = null, string text = null, float scale = 0.4f,
-            Font font = Font.ChaletLondon, AlignmentX textAlignment = AlignmentX.Left, bool isHeader = false, bool relative = true, int frontPriority = 0)
-            : base(dxHandler, modAPI, frontPriority, false)
+        public DxGridRow(DxHandler dxHandler, DxGrid grid, float? height, Color backColor, Color? textColor = null, string text = null, float scale = 0.4f,
+            Font font = Font.ChaletLondon, Alignment textAlignment = Alignment.Left, bool isHeader = false, bool relative = true, int frontPriority = 0)
+            : base(dxHandler, frontPriority, false)
         {
-            this.Grid = grid;
-            this._height = height;
+            Grid = grid;
+            _height = height;
             BackColor = backColor;
             TextColor = textColor ?? Color.White;
-            this.Text = text;
+            Text = text;
             Scale = scale;
             Font = font;
             TextAlignment = textAlignment;
@@ -54,15 +45,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
                 grid.AddRow(this);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public float Height => _height ?? Grid.RowHeight;
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void AddCell(DxGridCell cell, bool setPriority = true)
         {
@@ -112,33 +95,27 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             return DxType.GridRow;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void DrawBackground()
         {
-            if (Grid.Alignment == AlignmentX.Left)
-                ModAPI.Graphics.DrawRect(Grid.X - Grid.Width / 2, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A);
-            else if (Grid.Alignment == AlignmentX.Center)
-                ModAPI.Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A);
+            if (Grid.Alignment == Alignment.Left)
+                RAGE.Game.Graphics.DrawRect(Grid.X - Grid.Width / 2, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
+            else if (Grid.Alignment == Alignment.Centered)
+                RAGE.Game.Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
             else
-                ModAPI.Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A);
+                RAGE.Game.Graphics.DrawRect(Grid.X, Y, Grid.Width, Height, BackColor.R, BackColor.G, BackColor.B, BackColor.A, 0);
         }
 
         private void DrawText()
         {
-            if (TextAlignment == AlignmentX.Left)
-                ModAPI.Graphics.DrawText(Text, GetAbsoluteX(Grid.X - Grid.Width / 2, true, true),
-                    GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(ModAPI.Ui.GetTextScaleHeight(Scale, Font) / 2, true, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
-            else if (TextAlignment == AlignmentX.Center)
-                ModAPI.Graphics.DrawText(Text, GetAbsoluteX(Grid.X, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(ModAPI.Ui.GetTextScaleHeight(Scale, Font) / 2, true, true) - 5,
+            if (TextAlignment == Alignment.Left)
+                RAGE.NUI.UIResText.Draw(Text, GetAbsoluteX(Grid.X - Grid.Width / 2, true, true),
+                    GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(RAGE.Game.Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
+            else if (TextAlignment == Alignment.Centered)
+                RAGE.NUI.UIResText.Draw(Text, GetAbsoluteX(Grid.X, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2, true, true) - 5,
                     Font, Scale, TextColor, TextAlignment, false, false, 999);
-            else if (TextAlignment == AlignmentX.Right)
-                ModAPI.Graphics.DrawText(Text, GetAbsoluteX(Grid.X + Grid.Width / 2, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(ModAPI.Ui.GetTextScaleHeight(Scale, Font) / 2,
+            else if (TextAlignment == Alignment.Right)
+                RAGE.NUI.UIResText.Draw(Text, GetAbsoluteX(Grid.X + Grid.Width / 2, true, true), GetAbsoluteY(Y, RelativePos, true) - GetAbsoluteY(Ui.GetTextScaleHeight(Scale, (int)Font) / 2,
                     true, true) - 5, Font, Scale, TextColor, TextAlignment, false, false, 999);
         }
-
-        #endregion Private Methods
     }
 }

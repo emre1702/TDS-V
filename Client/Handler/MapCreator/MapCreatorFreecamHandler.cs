@@ -1,26 +1,22 @@
-﻿using System;
+﻿using RAGE;
+using RAGE.Game;
+using System;
+using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorFreecamHandler : ServiceBase
     {
-        #region Public Fields
-
         public bool IsActive;
-
-        #endregion Public Fields
-
-        #region Private Fields
 
         private readonly BrowserHandler _browserHandler;
         private readonly CamerasHandler _camerasHandler;
@@ -30,20 +26,15 @@ namespace TDS_Client.Handler.MapCreator
         private readonly MapCreatorFootHandler _mapCreatorFootHandler;
         private readonly MapCreatorMarkerHandler _mapCreatorMarkerHandler;
         private readonly MapCreatorObjectPlacingHandler _mapCreatorObjectPlacingHandler;
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
         private float _currentScrollSpeed = 1f;
         private bool _isDownPressed;
         private bool _isUpPressed;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapCreatorFreecamHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler,
+        public MapCreatorFreecamHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler,
             InstructionalButtonHandler instructionalButtonHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, MapCreatorFootHandler mapCreatorFootHandler,
             MapCreatorMarkerHandler mapCreatorMarkerHandler, MapCreatorObjectPlacingHandler mapCreatorObjectPlacingHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
@@ -54,13 +45,7 @@ namespace TDS_Client.Handler.MapCreator
             _mapCreatorMarkerHandler = mapCreatorMarkerHandler;
             _mapCreatorObjectPlacingHandler = mapCreatorObjectPlacingHandler;
             _eventsHandler = eventsHandler;
-
-            _tickEventMethod = new EventMethodData<TickDelegate>(OnTick);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void KeyDown(Key key)
         {
@@ -96,36 +81,36 @@ namespace TDS_Client.Handler.MapCreator
         public void Start()
         {
             IsActive = true;
-            ModAPI.Event.Tick.Add(_tickEventMethod);
+            Tick += OnTick;
 
             if (_camerasHandler.FreeCam is null)
-                _camerasHandler.FreeCam = new TDSCamera("FreeCam", ModAPI, Logging, _camerasHandler, _utilsHandler);
+                _camerasHandler.FreeCam = new TDSCamera("FreeCam", Logging, _camerasHandler, _utilsHandler);
 
-            var player = ModAPI.LocalPlayer;
+            var player = RAGE.Elements.Player.LocalPlayer;
             player.FreezePosition(true);
-            player.SetVisible(false);
+            player.SetVisible(false, false);
             player.SetCollision(false, false);
 
             var cam = _camerasHandler.FreeCam;
-            cam.Position = ModAPI.Cam.GetGameplayCamCoord();
-            cam.Rotation = ModAPI.Cam.GetGameplayCamRot();
-            cam.SetFov(ModAPI.Cam.GetGameplayCamFov());
+            cam.Position = RAGE.Game.Cam.GetGameplayCamCoord();
+            cam.Rotation = RAGE.Game.Cam.GetGameplayCamRot(2);
+            cam.SetFov(RAGE.Game.Cam.GetGameplayCamFov());
 
             cam.Activate();
             cam.Render();
 
-            ModAPI.Sync.TriggerEvent(ToServerEvent.SetInFreecam, true);
+            RAGE.Events.CallRemote(ToServerEvent.SetInFreecam, true);
         }
 
         public void Stop()
         {
             IsActive = false;
-            ModAPI.Event.Tick.Remove(_tickEventMethod);
+            Tick -= OnTick;
 
             _camerasHandler.FreeCam?.Deactivate();
             _camerasHandler.FreeCam = null;
 
-            ModAPI.Sync.TriggerEvent(ToServerEvent.SetInFreecam, false);
+            RAGE.Events.CallRemote(ToServerEvent.SetInFreecam, false);
         }
 
         public void ToggleFreecam(Key _ = Key.Noname)
@@ -147,40 +132,36 @@ namespace TDS_Client.Handler.MapCreator
             _eventsHandler.OnFreecamToggled(IsActive);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void MoveCam()
         {
             var cam = _camerasHandler.FreeCam;
 
-            Position3D pos = cam.Position;
-            Position3D dir = cam.Direction;
-            Position3D rot = cam.Rotation;
+            var pos = cam.Position;
+            var dir = cam.Direction;
+            var rot = cam.Rotation;
 
-            float rightAxisX = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisX) * 2f;
-            float rightAxisY = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptRightAxisY) * 2f;
+            float rightAxisX = RAGE.Game.Pad.GetDisabledControlNormal((int)InputGroup.MOVE, (int)Control.ScriptRightAxisX) * 2f;
+            float rightAxisY = RAGE.Game.Pad.GetDisabledControlNormal((int)InputGroup.MOVE, (int)Control.ScriptRightAxisY) * 2f;
 
-            float leftAxisX = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptLeftAxisX);
-            float leftAxisY = ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.ScriptLeftAxisY);
+            float leftAxisX = RAGE.Game.Pad.GetDisabledControlNormal((int)InputGroup.MOVE, (int)Control.ScriptLeftAxisX);
+            float leftAxisY = RAGE.Game.Pad.GetDisabledControlNormal((int)InputGroup.MOVE, (int)Control.ScriptLeftAxisY);
 
-            float slowMult = ModAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Duck) ? 0.5f : 1f;
-            float fastMult = ModAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Sprint) ? 3f : 1f;
+            float slowMult = RAGE.Game.Pad.IsControlPressed((int)InputGroup.MOVE, (int)Control.Duck) ? 0.5f : 1f;
+            float fastMult = RAGE.Game.Pad.IsControlPressed((int)InputGroup.MOVE, (int)Control.Sprint) ? 3f : 1f;
 
-            if (ModAPI.Control.IsControlJustReleased(InputGroup.MOVE, Control.CursorScrollUp))
+            if (RAGE.Game.Pad.IsControlJustReleased((int)InputGroup.MOVE, (int)Control.CursorScrollUp))
                 _currentScrollSpeed *= 2f;
-            else if (ModAPI.Control.IsControlJustReleased(InputGroup.MOVE, Control.CursorScrollDown))
+            else if (RAGE.Game.Pad.IsControlJustReleased((int)InputGroup.MOVE, (int)Control.CursorScrollDown))
                 _currentScrollSpeed /= 2f;
 
-            Position3D vector = new Position3D
+            var vector = new Vector3
             {
                 X = dir.X * leftAxisY * slowMult * fastMult * _currentScrollSpeed,
                 Y = dir.Y * leftAxisY * slowMult * fastMult * _currentScrollSpeed,
                 Z = dir.Z * leftAxisY * slowMult * fastMult * _currentScrollSpeed
             };
-            Position3D upVector = new Position3D(0, 0, 1);
-            Position3D rightVector = _utilsHandler.GetCrossProduct(dir.Normalized, upVector.Normalized);
+            var upVector = new Vector3(0, 0, 1);
+            var rightVector = _utilsHandler.GetCrossProduct(dir.Normalized, upVector.Normalized);
 
             rightVector.X *= leftAxisX * 0.5f * slowMult * fastMult * _currentScrollSpeed;
             rightVector.Y *= leftAxisX * 0.5f * slowMult * fastMult * _currentScrollSpeed;
@@ -189,24 +170,24 @@ namespace TDS_Client.Handler.MapCreator
             float goUp = _isUpPressed ? 0.5f : 0f;
             float goDown = _isDownPressed ? 0.5f : 0f;
 
-            Position3D newPos = new Position3D(pos.X - vector.X + rightVector.X, pos.Y - vector.Y + rightVector.Y, pos.Z - vector.Z + rightVector.Z + goUp - goDown);
+            var newPos = new Vector3(pos.X - vector.X + rightVector.X, pos.Y - vector.Y + rightVector.Y, pos.Z - vector.Z + rightVector.Z + goUp - goDown);
             if (cam.Position != newPos)
             {
                 cam.SetPosition(newPos);
-                ModAPI.LocalPlayer.Position = newPos;
+                RAGE.Elements.Player.LocalPlayer.Position = newPos;
             }
-            if (ModAPI.Control.IsControlPressed(InputGroup.MOVE, Control.Aim))
+            if (RAGE.Game.Pad.IsControlPressed((int)InputGroup.MOVE, (int)Control.Aim))
             {
                 float rotX = Math.Max(Math.Min(rot.X + rightAxisY * -5f, 89), -89);
-                var newRot = new Position3D(rotX, 0.0f, rot.Z + rightAxisX * -5f);
+                var newRot = new Vector3(rotX, 0.0f, rot.Z + rightAxisX * -5f);
                 cam.Rotation = newRot;
-                ModAPI.LocalPlayer.Rotation = newRot;
+                (RAGE.Elements.Player.LocalPlayer as ITDSPlayer).Rotation = newRot;
             }
         }
 
-        private void OnTick(int _)
+        private void OnTick(List<TickNametagData> _)
         {
-            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL);
+            RAGE.Game.Ui.HideHudComponentThisFrame((int)HudComponent.WeaponWheel);
 
             if (!_cursorHandler.Visible)
                 MoveCam();
@@ -214,7 +195,5 @@ namespace TDS_Client.Handler.MapCreator
             _mapCreatorMarkerHandler.OnTick();
             _mapCreatorObjectPlacingHandler.OnTick();
         }
-
-        #endregion Private Methods
     }
 }

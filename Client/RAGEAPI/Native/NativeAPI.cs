@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Native;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Native;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.RAGEAPI.Native

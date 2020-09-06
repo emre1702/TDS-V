@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Data.Models;
 using TDS_Shared.Default;
 
@@ -7,8 +6,6 @@ namespace TDS_Client.Handler.Events
 {
     public class RemoteEventsSender : ServiceBase
     {
-        #region Private Fields
-
         private readonly Dictionary<string, CooldownEventDto> _cooldownEventsDict = new Dictionary<string, CooldownEventDto>
         {
             [ToServerEvent.AddRatingToMap] = new CooldownEventDto(1000),
@@ -48,25 +45,17 @@ namespace TDS_Client.Handler.Events
 
         private readonly TimerHandler _timerHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public RemoteEventsSender(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler)
-            : base(modAPI, loggingHandler)
+        public RemoteEventsSender(LoggingHandler loggingHandler, TimerHandler timerHandler)
+            : base(loggingHandler)
         {
             _timerHandler = timerHandler;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public bool Send(string eventName, params object[] args)
         {
             if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
-                ModAPI.Sync.TriggerEvent(eventName, args);
+                RAGE.Events.CallRemote(eventName, args);
                 return true;
             }
 
@@ -77,7 +66,7 @@ namespace TDS_Client.Handler.Events
             }
 
             entry.LastExecMs = currentTicks;
-            ModAPI.Sync.TriggerEvent(eventName, args);
+            RAGE.Events.CallRemote(eventName, args);
             return true;
         }
 
@@ -86,7 +75,7 @@ namespace TDS_Client.Handler.Events
             string eventName = (string)args[0];
             if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
-                ModAPI.Sync.TriggerEvent(ToServerEvent.FromBrowserEvent, args);
+                RAGE.Events.CallRemote(ToServerEvent.FromBrowserEvent, args);
                 return true;
             }
 
@@ -97,7 +86,7 @@ namespace TDS_Client.Handler.Events
             }
 
             entry.LastExecMs = currentTicks;
-            ModAPI.Sync.TriggerEvent(ToServerEvent.FromBrowserEvent, args);
+            RAGE.Events.CallRemote(ToServerEvent.FromBrowserEvent, args);
             return true;
         }
 
@@ -111,16 +100,14 @@ namespace TDS_Client.Handler.Events
         {
             if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
-                ModAPI.Sync.TriggerEvent(eventName, args);
+                RAGE.Events.CallRemote(eventName, args);
                 return true;
             }
 
             int currentTicks = _timerHandler.ElapsedMs;
             entry.LastExecMs = currentTicks;
-            ModAPI.Sync.TriggerEvent(eventName, args);
+            RAGE.Events.CallRemote(eventName, args);
             return true;
         }
-
-        #endregion Public Methods
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace TDS_Client.Data.Defaults
 {
-    public class AudioName
+    public struct AudioName
     {
         #region Public Properties
 

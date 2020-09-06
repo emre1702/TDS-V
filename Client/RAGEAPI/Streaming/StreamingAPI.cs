@@ -1,5 +1,5 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Streaming;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Entity;
+using TDS_Client.Data.Interfaces.RAGE.Game.Streaming;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Streaming

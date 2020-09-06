@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RAGE.Game;
+using System;
 using TDS_Client.Data.Enums;
 
 namespace TDS_Client.Data.Models

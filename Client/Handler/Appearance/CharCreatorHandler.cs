@@ -1,13 +1,13 @@
-﻿using System;
+﻿using RAGE;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Ped;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
+using TDS_Client.Handler.Entities.GTA;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -15,41 +15,33 @@ using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.CharCreator;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Appearance
 {
     public class CharCreatorHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly CamerasHandler _camerasHandler;
         private readonly CursorHandler _cursorHandler;
         private readonly DeathHandler _deathHandler;
         private readonly EventsHandler _eventsHandler;
-        private readonly IModAPI _modAPI;
+
         private readonly Serializer _serializer;
         private readonly UtilsHandler _utilsHandler;
 
         private float _currentCamAngle;
         private Position3D _currentCamOffsetPos;
         private uint _dimension;
-        private IPed _displayPed;
+        private ITDSPed _displayPed;
         private Position2D _initMovePedCursorPos;
         private float _initMovingAngle;
         private float _initMovingOffsetZ;
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public CharCreatorHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, Serializer serializer, DeathHandler deathHandler,
+        public CharCreatorHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, Serializer serializer, DeathHandler deathHandler,
             CamerasHandler camerasHandler, EventsHandler eventsHandler, CursorHandler cursorHandler, UtilsHandler utilsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
-            _modAPI = modAPI;
             _browserHandler = browserHandler;
             _serializer = serializer;
             _deathHandler = deathHandler;
@@ -58,15 +50,9 @@ namespace TDS_Client.Handler.Appearance
             _cursorHandler = cursorHandler;
             _utilsHandler = utilsHandler;
 
-            _tickEventMethod = new EventMethodData<TickDelegate>(MovePed);
-
-            ModAPI.Event.Add(ToClientEvent.StartCharCreator, Start);
-            ModAPI.Event.Add(FromBrowserEvent.CharCreatorDataChanged, CharCreatorDataChanged);
+            Add(ToClientEvent.StartCharCreator, Start);
+            Add(FromBrowserEvent.CharCreatorDataChanged, CharCreatorDataChanged);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Start(object[] args)
         {
@@ -76,10 +62,10 @@ namespace TDS_Client.Handler.Appearance
                 _dimension = Convert.ToUInt32(args[1]);
                 var data = _serializer.FromServer<CharCreateData>(json);
                 _browserHandler.Angular.ToggleCharCreator(true, json);
-                ModAPI.Chat.Show(false);
-                ModAPI.Ui.DisplayRadar(false);
+                RAGE.Chat.Show(false);
+                RAGE.Game.Ui.DisplayRadar(false);
 
-                ModAPI.LocalPlayer.Alpha = 0;
+                RAGE.Elements.Player.LocalPlayer.SetAlpha(0, true);
                 _cursorHandler.Visible = true;
 
                 _eventsHandler.LobbyLeft += Stop;
@@ -87,8 +73,7 @@ namespace TDS_Client.Handler.Appearance
                 PreparePed(data);
 
                 new TDSTimer(PrepareCamera, 1000);
-
-                _modAPI.Event.Tick.Add(_tickEventMethod);
+                Tick += MovePed;
             }
             catch (Exception ex)
             {
@@ -101,12 +86,12 @@ namespace TDS_Client.Handler.Appearance
             try
             {
                 _eventsHandler.LobbyLeft -= Stop;
-                _modAPI.Event.Tick.Remove(_tickEventMethod);
+                Tick -= MovePed;
 
-                ModAPI.LocalPlayer.Alpha = 255;
+                RAGE.Elements.Player.LocalPlayer.SetAlpha(255, true);
                 _browserHandler.Angular.ToggleCharCreator(false);
-                ModAPI.Chat.Show(true);
-                ModAPI.Ui.DisplayRadar(true);
+                Chat.Show(true);
+                RAGE.Game.Ui.DisplayRadar(true);
                 _cursorHandler.Visible = false;
 
                 _camerasHandler.BetweenRoundsCam.Deactivate(true);
@@ -120,10 +105,6 @@ namespace TDS_Client.Handler.Appearance
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void ApplyAngle(Position3D pos, float distance, float angle)
         {
@@ -199,7 +180,7 @@ namespace TDS_Client.Handler.Appearance
             }
         }
 
-        private void MovePed(int currentMs)
+        private void MovePed(List<TickNametagData> _)
         {
             try
             {
@@ -208,7 +189,7 @@ namespace TDS_Client.Handler.Appearance
                 if (_currentCamOffsetPos is null)
                     return;
 
-                if (!_modAPI.Input.IsDown(Key.RightButton))
+                if (!Input.IsDown((int)Key.RightButton))
                 {
                     _initMovePedCursorPos = null;
                     return;
@@ -254,7 +235,7 @@ namespace TDS_Client.Handler.Appearance
             {
                 _deathHandler.PlayerSpawn();
                 _initMovePedCursorPos = null;
-                ModAPI.Cam.DoScreenFadeIn(200);
+                RAGE.Game.Cam.DoScreenFadeIn(200);
 
                 if (_currentCamOffsetPos is null)
                 {
@@ -289,12 +270,12 @@ namespace TDS_Client.Handler.Appearance
                 var hairAndColorsData = data.HairAndColorsDataSynced.First(e => e.Slot == data.Slot);
 
                 var skin = generalData.IsMale ? PedHash.FreemodeMale01 : PedHash.FreemodeFemale01;
-                var pos = new Position3D(-425.48, 1123.55, 325.85);
+                var pos = new Vector3(-425.48f, 1123.55f, 325.85f);
 
                 if (!(_displayPed is null))
                     _displayPed.Destroy();
 
-                _displayPed = ModAPI.Ped.Create(skin, pos, 345, _dimension);
+                _displayPed = new TDSPed((uint)skin, pos, 345, _dimension);
                 Logging.LogWarning("PreparePed ped exists: " + (!(_displayPed is null)));
                 new TDSTimer(() => Logging.LogWarning("PreparePed ped exists: " + (!(_displayPed is null))), 2000, 1);
 
@@ -391,7 +372,5 @@ namespace TDS_Client.Handler.Appearance
                 data.ResemblancePercentage, data.SkinTonePercentage, 0,
                 false);
         }
-
-        #endregion Private Methods
     }
 }

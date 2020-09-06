@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Discord;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Discord;
 
 namespace TDS_Client.RAGEAPI.Discord
 {

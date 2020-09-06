@@ -1,7 +1,6 @@
 ﻿using System;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
@@ -26,9 +25,9 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public UserpanelHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler,
+        public UserpanelHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler,
             RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _cursorHandler = cursorHandler;
@@ -39,8 +38,8 @@ namespace TDS_Client.Handler
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
-            modAPI.Event.Add(FromBrowserEvent.CloseUserpanel, _ => Close());
-            modAPI.Event.Add(ToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
+            RAGE.Events.Add(FromBrowserEvent.CloseUserpanel, _ => Close());
+            RAGE.Events.Add(ToServerEvent.LoadUserpanelData, OnLoadUserpanelDataBrowserMethod);
         }
 
         #endregion Public Constructors

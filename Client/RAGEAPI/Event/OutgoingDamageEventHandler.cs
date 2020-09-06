@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Interfaces.RAGE.Game.Entity;
+using TDS_Client.Data.Interfaces.RAGE.Game.Event;
+using TDS_Client.Data.Interfaces.RAGE.Game.Player;
 using TDS_Client.Handler;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -40,7 +40,7 @@ namespace TDS_Client.RAGEAPI.Event
             {
                 IEntity sourceEntity = sourceEntityMod as IEntity;
                 IEntity targetEntity = targetEntityMod as IEntity;
-                IPlayer sourcePlayer = sourcePlayerMod as IPlayer;
+                ITDSPlayer sourcePlayer = sourcePlayerMod as ITDSPlayer;
 
                 var weaponHash = (WeaponHash)weaponHashMod;
                 var cancel = new CancelEventArgs();

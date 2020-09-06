@@ -1,5 +1,5 @@
 ﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Ui;
+using TDS_Client.Data.Interfaces.RAGE.Game.Ui;
 
 namespace TDS_Client.RAGEAPI.Ui
 {

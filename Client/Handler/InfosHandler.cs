@@ -1,5 +1,4 @@
 ﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models;
@@ -20,8 +19,8 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public InfosHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+        public InfosHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, EventsHandler eventsHandler)
+            : base(loggingHandler)
         {
             _angularBrowserHandler = browserHandler.Angular;
 

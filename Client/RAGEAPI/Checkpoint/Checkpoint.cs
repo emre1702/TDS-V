@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using TDS_Client.Data.Interfaces.ModAPI.Checkpoint;
+using TDS_Client.Data.Interfaces.RAGE.Game.Checkpoint;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
@@ -26,9 +26,9 @@ namespace TDS_Client.RAGEAPI.Checkpoint
 
         #region Public Events
 
-        public new event Data.Interfaces.ModAPI.Checkpoint.CheckpointEventDelegate OnEnter;
+        public new event Data.Interfaces.RAGE.Game.Checkpoint.CheckpointEventDelegate OnEnter;
 
-        public new event Data.Interfaces.ModAPI.Checkpoint.CheckpointEventDelegate OnExit;
+        public new event Data.Interfaces.RAGE.Game.Checkpoint.CheckpointEventDelegate OnExit;
 
         #endregion Public Events
 

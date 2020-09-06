@@ -1,24 +1,19 @@
-﻿using System;
+﻿using RAGE.Game;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
+using Alignment = RAGE.NUI.UIResText.Alignment;
 
 namespace TDS_Client.Handler.Draw.Dx.Grid
 {
     public class DxGrid : DxBase
     {
-        #region Public Fields
-
         public readonly List<DxGridColumn> Columns = new List<DxGridColumn>();
-        public AlignmentX Alignment;
+        public Alignment Alignment;
         public float RowHeight;
         public int ScrollIndex;
         public float X, Y, Width, BodyHeight;
-
-        #endregion Public Fields
-
-        #region Private Fields
 
         private readonly List<DxGridRow> _rows = new List<DxGridRow>();
         private Color _bodyBackColor;
@@ -26,12 +21,8 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         private float _bodyTextScale;
         private int _maxRows;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DxGrid(DxHandler dxHandler, IModAPI modAPI, float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
-            AlignmentX alignment = AlignmentX.Center, int maxRows = 25, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority)
+        public DxGrid(DxHandler dxHandler, float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
+            Alignment alignment = Alignment.Centered, int maxRows = 25, int frontPriority = 0) : base(dxHandler, frontPriority)
         {
             X = x;
             Y = y;
@@ -46,15 +37,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             RowHeight = BodyHeight / maxRows;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public DxGridRow Header { get; private set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void AddRow(DxGridRow row, bool setPriority = true)
         {
@@ -105,10 +88,6 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             Children.Add(row);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void CheckScroll()
         {
             int rowscount = _rows.Count;
@@ -118,14 +97,14 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
                 return;
             }
             int change = (int)(Math.Ceiling((double)rowscount - _maxRows) / 10);
-            if (ModAPI.Control.IsControlJustPressed(InputGroup.MOVE, Control.SelectNextWeapon))
+            if (Pad.IsControlJustPressed((int)InputGroup.MOVE, (int)Control.SelectNextWeapon))
             {
                 if (ScrollIndex + change < rowscount - _maxRows)
                     ScrollIndex += change;
                 else
                     ScrollIndex = rowscount - _maxRows;
             }
-            else if (ModAPI.Control.IsControlJustPressed(InputGroup.MOVE, Control.SelectPrevWeapon))
+            else if (Pad.IsControlJustPressed((int)InputGroup.MOVE, (int)Control.SelectPrevWeapon))
             {
                 if (ScrollIndex - change > 0)
                     ScrollIndex -= change;
@@ -133,7 +112,5 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
                     ScrollIndex = 0;
             }
         }
-
-        #endregion Private Methods
     }
 }

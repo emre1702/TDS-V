@@ -1,62 +1,49 @@
-﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.MapObject;
-using TDS_Client.Data.Models;
+﻿using RAGE;
+using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Handler.Browser;
+using TDS_Client.Handler.Entities.GTA;
 using TDS_Shared.Data.Models.GTA;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorObjectsPreviewHandler
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly CamerasHandler _camerasHandler;
-        private readonly IModAPI _modAPI;
+
         private readonly ObjectsLoadingHelper _objectLoadingHelper;
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
-        private IMapObject _object;
-        private Position3D _objectRotation;
+        private ITDSObject _object;
+        private Vector3 _objectRotation;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapCreatorObjectsPreviewHandler(IModAPI modAPI, ObjectsLoadingHelper objectLoadingHelper, CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
+        public MapCreatorObjectsPreviewHandler(ObjectsLoadingHelper objectLoadingHelper, CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
         {
-            _modAPI = modAPI;
             _objectLoadingHelper = objectLoadingHelper;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
             _browserHandler = browserHandler;
 
-            _tickEventMethod = new EventMethodData<TickDelegate>(RenderObjectInFrontOfCam);
-
-            modAPI.Event.Add(FromBrowserEvent.MapCreatorStartObjectChoice, Start);
-            modAPI.Event.Add(FromBrowserEvent.MapCreatorShowObject, args => ShowObject((string)args[0]));
-            modAPI.Event.Add(FromBrowserEvent.MapCreatorStopObjectPreview, _ => Stop());
+            RAGE.Events.Add(FromBrowserEvent.MapCreatorStartObjectChoice, Start);
+            RAGE.Events.Add(FromBrowserEvent.MapCreatorShowObject, args => ShowObject((string)args[0]));
+            RAGE.Events.Add(FromBrowserEvent.MapCreatorStopObjectPreview, _ => Stop());
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void ShowObject(string objectName)
         {
-            var hash = _modAPI.Misc.GetHashKey(objectName);
+            var hash = RAGE.Game.Misc.GetHashKey(objectName);
             if (!_objectLoadingHelper.LoadObjectHash(hash))
                 return;
 
             if (_object == null)
-                _modAPI.Event.Tick.Add(_tickEventMethod);
+                Tick += RenderObjectInFrontOfCam;
             else
                 _object.Destroy();
 
-            _objectRotation = new Position3D();
-            _object = _modAPI.MapObject.Create(hash, _modAPI.LocalPlayer.Position, _objectRotation, dimension: _modAPI.LocalPlayer.Dimension);
+            _objectRotation = new Vector3();
+            _object = new TDSObject(hash, RAGE.Elements.Player.LocalPlayer.Position, _objectRotation, dimension: RAGE.Elements.Player.LocalPlayer.Dimension);
             _object.SetCollision(false, false);
             _object.SetInvincible(true);
         }
@@ -68,23 +55,20 @@ namespace TDS_Client.Handler.MapCreator
                 _object.Destroy();
                 _object = null;
                 _objectRotation = null;
-                _modAPI.Event.Tick.Remove(_tickEventMethod);
+                Tick -= RenderObjectInFrontOfCam;
             }
             _browserHandler.MapCreatorObjectChoice.Stop();
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void RenderObjectInFrontOfCam(int currentMs)
+        private void RenderObjectInFrontOfCam(List<TickNametagData> _)
         {
-            var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
-            var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(_modAPI.Cam.GetGameplayCamRot());
+            var camPos = _camerasHandler.ActiveCamera?.Position ?? RAGE.Game.Cam.GetGameplayCamCoord();
+            var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(RAGE.Game.Cam.GetGameplayCamRot(2));
 
-            Position3D a = new Position3D();
-            Position3D b = new Position3D();
-            _object.GetModelDimensions(a, b);
+            var a = new Vector3();
+            var b = new Vector3(9999f, 9999f, 9999f);
+            RAGE.Game.Misc.GetModelDimensions(_object.Model, a, b);
+
             var objSize = b - a;
             var position = camPos + camDirection * (3 + objSize.Length());
             _object.Position = position;
@@ -99,7 +83,7 @@ namespace TDS_Client.Handler.MapCreator
             if (_objectRotation.Z >= 360)
                 _objectRotation.Z -= 360;
 
-            _object.Rotation = _objectRotation;
+            _object.SetRotation(_objectRotation.X, _objectRotation.Y, _objectRotation.Z, 2, true);
         }
 
         private void Start(object[] args)
@@ -107,7 +91,5 @@ namespace TDS_Client.Handler.MapCreator
             _browserHandler.MapCreatorObjectChoice.CreateBrowser();
             _browserHandler.MapCreatorObjectChoice.SetReady();
         }
-
-        #endregion Private Methods
     }
 }

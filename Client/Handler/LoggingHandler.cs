@@ -1,7 +1,4 @@
-﻿using System;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Handler.Events;
+﻿using RAGE.Ui;
 using TDS_Shared.Default;
 
 namespace TDS_Client.Handler
@@ -12,33 +9,30 @@ namespace TDS_Client.Handler
         private readonly bool _outputLogInfo;
 #pragma warning restore 649
 
-        private readonly IModAPI _modAPI;
-
-        public LoggingHandler(IModAPI modAPI)
+        public LoggingHandler()
         {
-            _modAPI = modAPI;
             _outputLogInfo = false;
         }
 
         public void LogToServer(string msg, string source = "")
         {
-            _modAPI.Sync.TriggerEvent(ToServerEvent.LogMessageToServer, msg, source);
+            RAGE.Events.CallRemote(ToServerEvent.LogMessageToServer, msg, source);
         }
 
-        public void LogToServer(Exception ex, string title = null)
+        public void LogToServer(System.Exception ex, string title = null)
         {
             string message = title is null ? ex.GetBaseException().Message : $"[{title}] " + ex.GetBaseException().Message;
-            _modAPI.Sync.TriggerEvent(ToServerEvent.LogExceptionToServer, message, ex.StackTrace, ex.GetType().Name);
+            RAGE.Events.CallRemote(ToServerEvent.LogExceptionToServer, message, ex.StackTrace, ex.GetType().Name);
         }
 
-        public void LogError(Exception ex, string title = null)
+        public void LogError(System.Exception ex, string title = null)
         {
             if (title != null)
-                _modAPI.Console.Log(ConsoleVerbosity.Error, title + "\n", true, false);
+                Console.Log(ConsoleVerbosity.Error, title + "\n", true, false);
             else
-                _modAPI.Console.Log(ConsoleVerbosity.Error, "Exception occured" + "\n");
-            _modAPI.Console.Log(ConsoleVerbosity.Error, ex.GetBaseException().Message + "\n", true, false);
-            _modAPI.Console.Log(ConsoleVerbosity.Error, ex.StackTrace + "\n", true, false);
+                Console.Log(ConsoleVerbosity.Error, "Exception occured" + "\n");
+            Console.Log(ConsoleVerbosity.Error, ex.GetBaseException().Message + "\n", true, false);
+            Console.Log(ConsoleVerbosity.Error, ex.StackTrace + "\n", true, false);
         }
 
         public void LogInfo(string msg, string source = "", bool isEnd = false)
@@ -52,7 +46,7 @@ namespace TDS_Client.Handler
                 source += "[END] ";
             else
                 source += " ";
-            _modAPI.Console.Log(ConsoleVerbosity.Info, "[I] " + source + msg + "\n", true, false);
+            Console.Log(ConsoleVerbosity.Info, "[I] " + source + msg + "\n", true, false);
         }
 
         public void LogWarning(string msg, string source = "")
@@ -61,7 +55,7 @@ namespace TDS_Client.Handler
                 source = "[" + source + "] ";
             else
                 source += " ";
-            _modAPI.Console.Log(ConsoleVerbosity.Warning, "[W]" + source + msg + "\n", true, false);
+            Console.Log(ConsoleVerbosity.Warning, "[W]" + source + msg + "\n", true, false);
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+﻿using RAGE.Game;
+using System.Linq;
+using TDS_Client.Data.Abstracts.Entities.GTA;
+using TDS_Client.Data.Enums;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models;
@@ -9,22 +10,16 @@ namespace TDS_Client.Handler
 {
     public class VoiceHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BindsHandler _bindsHandler;
         private readonly BrowserHandler _browserHandler;
         private readonly UtilsHandler _utilsHandler;
         private SyncedPlayerSettingsDto _syncedPlayerSettingsDto;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public VoiceHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, BrowserHandler browserHandler,
+        public VoiceHandler(LoggingHandler loggingHandler, BindsHandler bindsHandler, BrowserHandler browserHandler,
             UtilsHandler utilsHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
-            if (!modAPI.Voice.Allowed)
+            if (!RAGE.Voice.Allowed)
                 return;
 
             _browserHandler = browserHandler;
@@ -36,10 +31,6 @@ namespace TDS_Client.Handler
             eventsHandler.PlayerJoinedSameLobby += SetForPlayer;
         }
 
-        #endregion Public Constructors
-
-        #region Private Methods
-
         private void EventsHandler_LoggedIn()
         {
             _bindsHandler.Add(Control.PushToTalk, Start, KeyPressState.Down);
@@ -50,15 +41,15 @@ namespace TDS_Client.Handler
         {
             _syncedPlayerSettingsDto = settings;
 
-            foreach (var player in ModAPI.Pool.Players.All)
+            foreach (var player in RAGE.Elements.Entities.Players.All.OfType<ITDSPlayer>())
             {
                 SetForPlayer(player);
             }
         }
 
-        private void SetForPlayer(IPlayer player)
+        private void SetForPlayer(ITDSPlayer player)
         {
-            if (!ModAPI.Voice.Allowed)
+            if (!RAGE.Voice.Allowed)
                 return;
             if (_syncedPlayerSettingsDto is null)
                 return;
@@ -71,22 +62,20 @@ namespace TDS_Client.Handler
 
         private void Start(Control _)
         {
-            if (!ModAPI.Voice.Allowed)
+            if (!RAGE.Voice.Allowed)
                 return;
 
             if (_browserHandler.InInput)
                 return;
 
-            ModAPI.Voice.Muted = false;
-            _browserHandler.PlainMain.StartPlayerTalking(_utilsHandler.GetDisplayName(ModAPI.LocalPlayer));
+            RAGE.Voice.Muted = false;
+            _browserHandler.PlainMain.StartPlayerTalking(_utilsHandler.GetDisplayName(RAGE.Elements.Player.LocalPlayer as ITDSPlayer));
         }
 
         private void Stop(Control _)
         {
-            ModAPI.Voice.Muted = true;
-            _browserHandler.PlainMain.StopPlayerTalking(_utilsHandler.GetDisplayName(ModAPI.LocalPlayer));
+            RAGE.Voice.Muted = true;
+            _browserHandler.PlainMain.StopPlayerTalking(_utilsHandler.GetDisplayName(RAGE.Elements.Player.LocalPlayer as ITDSPlayer));
         }
-
-        #endregion Private Methods
     }
 }

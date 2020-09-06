@@ -1,5 +1,5 @@
 ﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Console;
+using TDS_Client.Data.Interfaces.RAGE.Ui.Console;
 
 namespace TDS_Client.RAGEAPI.Console
 {

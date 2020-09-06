@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Interfaces.RAGE.Game.Event;
+using TDS_Client.Data.Interfaces.RAGE.Game.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Player;
@@ -45,7 +45,7 @@ namespace TDS_Client.RAGEAPI.Event
                             continue;
                         newNametags.Add(new TickNametagData
                         {
-                            Player = nametag.Player as IPlayer,
+                            Player = nametag.Player as ITDSPlayer,
                             ScreenX = nametag.ScreenX,
                             ScreenY = nametag.ScreenY,
                             Distance = nametag.Distance

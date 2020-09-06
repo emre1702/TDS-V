@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Audio;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Audio;
 
 namespace TDS_Client.RAGEAPI.Audio
 {

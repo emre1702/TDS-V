@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using RAGE;
+using RAGE.Game;
+using System.Collections.Generic;
 using System.Drawing;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
+using TDS_Client.Data.Extensions;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
@@ -57,12 +60,12 @@ namespace TDS_Client.Handler.MapCreator
         private readonly TimerHandler _timerHandler;
         private readonly ClickedMarkerStorer _clickedMarkerStorer;
 
-        public MapCreatorObjectPlacingHandler(IModAPI modAPI, LoggingHandler loggingHandler, MapCreatorDrawHandler mapCreatorDrawHandler,
+        public MapCreatorObjectPlacingHandler(LoggingHandler loggingHandler, MapCreatorDrawHandler mapCreatorDrawHandler,
             MapCreatorObjectsHandler mapCreatorObjectsHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler,
             SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, CamerasHandler camerasHandler, InstructionalButtonHandler instructionalButtonHandler,
             UtilsHandler utilsHandler, MapCreatorObjectsPreviewHandler mapCreatorObjectsPreviewHandler, MapCreatorVehiclesPreviewHandler mapCreatorVehiclesPreviewHandler,
             MapCreatorSyncHandler mapCreatorSyncHandler, EventsHandler eventsHandler, DxHandler dxHandler, TimerHandler timerHandler, ClickedMarkerStorer clickedMarkerStorer)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _mapCreatorDrawHandler = mapCreatorDrawHandler;
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
@@ -83,9 +86,9 @@ namespace TDS_Client.Handler.MapCreator
 
             eventsHandler.MapCreatorObjectDeleted += CheckObjectDeleted;
 
-            modAPI.Event.Add(FromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
-            modAPI.Event.Add(FromBrowserEvent.MapCreatorHighlightPos, args => HighlightObjectWithId((int)args[0]));
-            modAPI.Event.Add(FromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
+            RAGE.Events.Add(FromBrowserEvent.HoldMapCreatorObject, OnHoldMapCreatorObjectMethod);
+            RAGE.Events.Add(FromBrowserEvent.MapCreatorHighlightPos, args => HighlightObjectWithId((int)args[0]));
+            RAGE.Events.Add(FromBrowserEvent.StartMapCreatorPosPlacing, OnStartMapCreatorPosPlacingMethod);
         }
 
         public void OnTick()
@@ -105,7 +108,7 @@ namespace TDS_Client.Handler.MapCreator
         public void StartNewPlacing(MapCreatorPositionType type, object editingTeamIndexOrObjectName)
         {
             MapCreatorObject obj = _mapCreatorObjectsHandler.CreateMapCreatorObject(type, editingTeamIndexOrObjectName,
-                ModAPI.LocalPlayer.RemoteId, ModAPI.LocalPlayer.Position, ModAPI.LocalPlayer.Rotation);
+                RAGE.Elements.Player.LocalPlayer.RemoteId, RAGE.Elements.Player.LocalPlayer.Position, (RAGE.Elements.Player.LocalPlayer as ITDSPlayer).Rotation);
             if (obj == null)
                 return;
             if (type == MapCreatorPositionType.Object)
@@ -205,8 +208,8 @@ namespace TDS_Client.Handler.MapCreator
 
         private void ReleaseObject()
         {
-            HoldingObject.Position = new Position3D(HoldingObject.MovingPosition);
-            HoldingObject.Rotation = new Position3D(HoldingObject.MovingRotation);
+            HoldingObject.Position = HoldingObject.MovingPosition.Copy();
+            HoldingObject.Rotation = HoldingObject.MovingRotation.Copy();
             var obj = HoldingObject;
             HoldingObject = null;
             object info = null;
@@ -232,8 +235,8 @@ namespace TDS_Client.Handler.MapCreator
             {
                 if (_mapCreatorObjectsHandler.MapLimitDisplay == null)
                 {
-                    _mapCreatorObjectsHandler.MapLimitDisplay = new MapLimit(new List<Position3D>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor,
-                        ModAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
+                    _mapCreatorObjectsHandler.MapLimitDisplay = new MapLimit(new List<Vector3>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor,
+                        _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
                     _mapCreatorObjectsHandler.MapLimitDisplay.Start();
                 }
                 _mapCreatorObjectsHandler.RefreshMapLimitDisplay();
@@ -259,13 +262,13 @@ namespace TDS_Client.Handler.MapCreator
 
         private void MoveHoldingObjectWithCursor()
         {
-            if (ModAPI.Control.IsDisabledControlJustPressed(InputGroup.MOVE, Control.CursorScrollUp))
+            if (RAGE.Game.Pad.IsDisabledControlJustPressed((int)InputGroup.MOVE, (int)Control.CursorScrollUp))
             {
                 _clampDistance += 5f;
                 if (_clampDistance > 500f)
                     _clampDistance = 500f;
             }
-            else if (ModAPI.Control.IsDisabledControlJustReleased(InputGroup.MOVE, Control.CursorScrollDown))
+            else if (RAGE.Game.Pad.IsDisabledControlJustReleased((int)InputGroup.MOVE, (int)Control.CursorScrollDown))
             {
                 _clampDistance -= 5f;
                 if (_clampDistance < 5f)
@@ -326,19 +329,19 @@ namespace TDS_Client.Handler.MapCreator
             if (obj == null)
                 return;
             obj.LoadEntityData();
-            obj.Entity.Alpha = 180;
+            obj.Entity.SetAlpha(180, true);
         }
 
         private void RemoveHightlightObject(MapCreatorObject obj)
         {
             if (obj == null)
                 return;
-            obj.Entity.Alpha = 255;
+            obj.Entity.SetAlpha(255, true);
         }
 
         private MapCreatorObject GetHighlightingObject()
         {
-            var hit = GetCursorHit(300, ModAPI.LocalPlayer.Handle, 2 | 8 | 16).Item1;
+            var hit = GetCursorHit(300, RAGE.Elements.Player.LocalPlayer.Handle, 2 | 8 | 16).Item1;
             if (!hit.Hit)
                 return null;
             if (hit.EntityHit == 0)
@@ -365,54 +368,54 @@ namespace TDS_Client.Handler.MapCreator
             _instructionalButtonHandler.Add(_placeOnGround ? _settingsHandler.Language.LET_IT_FLOAT : _settingsHandler.Language.PUT_ON_GROUND, "F");
         }
 
-        private (RaycastHit, Position3D) GetCursorHit(float toDistance, int ignoreHandle, int flags)
+        private (RaycastHit, Vector3) GetCursorHit(float toDistance, int ignoreHandle, int flags)
         {
-            Position3D camPos = _camerasHandler.FreeCam.Position;
-            Position3D cursorPos = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), _camerasHandler.FreeCam);
-            Position3D difference = cursorPos - camPos;
-            Position3D from = camPos + difference * 0.05f;
-            Position3D to = camPos + difference * toDistance;
+            var camPos = _camerasHandler.FreeCam.Position;
+            var cursorPos = _utilsHandler.GetWorldCoordFromScreenCoord(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY(), _camerasHandler.FreeCam);
+            var difference = cursorPos - camPos;
+            var from = camPos + difference * 0.05f;
+            var to = camPos + difference * toDistance;
 
-            Position3D t = to - from;
+            var t = to - from;
             t.Normalize();
             t *= _clampDistance;
-            Position3D v = camPos + t;
+            var v = camPos + t;
 
             return (_utilsHandler.RaycastFromTo(from, to, ignoreHandle, flags), v);
         }
 
-        private (RaycastHit, Position3D) GetCameraHit(float toDistance, int ignoreHandle, int flags)
+        private (RaycastHit, Vector3) GetCameraHit(float toDistance, int ignoreHandle, int flags)
         {
-            Position3D camPos = _camerasHandler.FreeCam.Position;
-            Position3D lookingAtPos = _utilsHandler.GetWorldCoordFromScreenCoord(0.5f, 0.5f, _camerasHandler.FreeCam);
-            Position3D difference = lookingAtPos - camPos;
-            Position3D from = camPos + difference * 0.05f;
-            Position3D to = camPos + difference * toDistance;
+            var camPos = _camerasHandler.FreeCam.Position;
+            var lookingAtPos = _utilsHandler.GetWorldCoordFromScreenCoord(0.5f, 0.5f, _camerasHandler.FreeCam);
+            var difference = lookingAtPos - camPos;
+            var from = camPos + difference * 0.05f;
+            var to = camPos + difference * toDistance;
 
-            Position3D t = to - from;
+            var t = to - from;
             t.Normalize();
             t *= _clampDistance;
-            Position3D v = camPos + t;
+            var v = camPos + t;
 
             return (_utilsHandler.RaycastFromTo(from, to, ignoreHandle, flags), v);
         }
 
         private void PlaceOnGround(MapCreatorObject obj)
         {
-            switch (obj.Entity.Type)
+            switch ((EntityType)obj.Entity.Type)
             {
                 case EntityType.Object:
-                    ModAPI.MapObject.PlaceObjectOnGroundProperly(obj.Entity.Handle);
+                    RAGE.Game.Object.PlaceObjectOnGroundProperly(obj.Entity.Handle);
                     break;
 
                 case EntityType.Vehicle:
-                    ModAPI.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle);
+                    RAGE.Game.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle, 5);
                     obj.MovingPosition = obj.Entity.Position;
                     break;
 
                 case EntityType.Ped:
-                    float heightAboveGround = ModAPI.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
-                    obj.MovingPosition = new Position3D(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + 1f);
+                    float heightAboveGround = RAGE.Game.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
+                    obj.MovingPosition = new Vector3(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + 1f);
                     break;
             }
         }

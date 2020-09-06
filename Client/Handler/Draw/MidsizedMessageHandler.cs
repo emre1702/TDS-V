@@ -1,5 +1,4 @@
 ﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Entities.Draw.Scaleform;
 
 namespace TDS_Client.Handler.Draw
@@ -19,8 +18,8 @@ namespace TDS_Client.Handler.Draw
 
         #region Public Constructors
 
-        public MidsizedMessageHandler(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler)
-            : base(modAPI, loggingHandler)
+        public MidsizedMessageHandler(LoggingHandler loggingHandler, TimerHandler timerHandler)
+            : base(loggingHandler)
         {
             _timerHandler = timerHandler;
         }
@@ -34,7 +33,7 @@ namespace TDS_Client.Handler.Draw
             get
             {
                 if (_midsizedScaleform == null)
-                    _midsizedScaleform = new BasicScaleform(ScaleformName.MIDSIZED_MESSAGE, ModAPI);
+                    _midsizedScaleform = new BasicScaleform(ScaleformName.MIDSIZED_MESSAGE);
                 return _midsizedScaleform;
             }
         }

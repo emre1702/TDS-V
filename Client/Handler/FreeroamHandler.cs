@@ -1,5 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Handler.Browser;
+﻿using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -10,9 +9,8 @@ namespace TDS_Client.Handler
     {
         private readonly BrowserHandler _browserHandler;
 
-
-        public FreeroamHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, BrowserHandler browserHandler)
-            : base(modAPI, loggingHandler)
+        public FreeroamHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, BrowserHandler browserHandler)
+            : base(loggingHandler)
         {
             _browserHandler = browserHandler;
 

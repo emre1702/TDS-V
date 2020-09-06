@@ -1,6 +1,6 @@
 ﻿using System;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Input;
+using TDS_Client.Data.Interfaces.RAGE.Game.Input;
 
 namespace TDS_Client.RAGEAPI.Input
 {

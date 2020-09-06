@@ -1,22 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using RAGE.Game;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Entities.Draw.Scaleform;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Draw
 {
     public class InstructionalButtonHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly List<InstructionalButton> _allButtons = new List<InstructionalButton>();
 
         private readonly List<InstructionalButton> _buttons = new List<InstructionalButton>();
@@ -37,21 +33,15 @@ namespace TDS_Client.Handler.Draw
 
         private bool _isLayoutPositive;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public InstructionalButtonHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler)
-            : base(modAPI, loggingHandler)
+        public InstructionalButtonHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler)
+            : base(loggingHandler)
         {
             _settingsHandler = settingsHandler;
 
-            _scaleform = new BasicScaleform(ScaleformFunction.INSTRUCTIONAL_BUTTONS, modAPI);
+            _scaleform = new BasicScaleform(ScaleformFunction.INSTRUCTIONAL_BUTTONS);
 
             _cursorButton = Add("Cursor", _settingsHandler.Language.END_KEY, true);
             _userpanelButton = Add("Userpanel", "U", true);
-
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => IsActive));
 
             eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
@@ -59,10 +49,6 @@ namespace TDS_Client.Handler.Draw
 
             Reset();
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public Color BackgroundColor
         {
@@ -77,7 +63,12 @@ namespace TDS_Client.Handler.Draw
             {
                 _isActive = value;
                 if (value)
+                {
                     Redraw();
+                    Tick += OnTick;
+                }
+                else
+                    Tick -= OnTick;
             }
         }
 
@@ -89,10 +80,6 @@ namespace TDS_Client.Handler.Draw
             get => _isLayoutPositive;
             set => SetLayout(value);
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public InstructionalButton Add(string title, string control, bool persistent = false)
         {
@@ -204,10 +191,6 @@ namespace TDS_Client.Handler.Draw
             _isLayoutPositive = positive;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void EventsHandler_LanguageChanged(ILanguage lang, bool beforeLogin)
         {
         }
@@ -218,11 +201,9 @@ namespace TDS_Client.Handler.Draw
                 Add("Map-Voting", "F3");
         }
 
-        private void OnTick(int currentMs)
+        private void OnTick(List<TickNametagData> _)
         {
             _scaleform.RenderFullscreen();
         }
-
-        #endregion Private Methods
     }
 }

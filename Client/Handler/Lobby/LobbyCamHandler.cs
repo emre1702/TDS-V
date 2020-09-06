@@ -1,5 +1,6 @@
-﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI;
+﻿using RAGE;
+using System;
+using TDS_Client.Data.Extensions;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
@@ -19,8 +20,8 @@ namespace TDS_Client.Handler.Lobby
 
         #region Public Constructors
 
-        public LobbyCamHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+        public LobbyCamHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
+            : base(loggingHandler)
         {
             _camerasHandler = camerasHandler;
             _settingsHandler = settingsHandler;
@@ -49,15 +50,15 @@ namespace TDS_Client.Handler.Lobby
             Logging.LogInfo("", "LobbyCamHandler.SetTimerTowardsPlayer", true);
         }
 
-        public void SetToMapCenter(Position3D mapcenter)
+        public void SetToMapCenter(Vector3 mapCenter)
         {
             try
             {
                 Logging.LogInfo("", "LobbyCamHandler.SetToMapCenter");
                 var cam = _camerasHandler.BetweenRoundsCam;
-                cam.PointCamAtCoord(mapcenter);
+                cam.PointCamAtCoord(mapCenter);
                 cam.Activate();
-                var mapCenterHighPos = mapcenter.AddToZ(110);
+                var mapCenterHighPos = mapCenter.AddToZ(110);
                 cam.RenderToPosition(mapCenterHighPos);
                 Logging.LogInfo("", "LobbyCamHandler.SetToMapCenter", true);
             }

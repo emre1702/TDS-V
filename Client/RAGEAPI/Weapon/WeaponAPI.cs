@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Weapon;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Weapon;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Client.RAGEAPI.Weapon

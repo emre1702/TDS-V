@@ -1,5 +1,5 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Misc;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Misc;
+using TDS_Client.Data.Interfaces.RAGE.Game.Player;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Models.GTA;
 
@@ -63,21 +63,20 @@ namespace TDS_Client.RAGEAPI.Misc
             RAGE.Game.Misc.SetWind(speed);
         }
 
-        public void SetGravityLevel(int level) 
+        public void SetGravityLevel(int level)
             => RAGE.Game.Misc.SetGravityLevel(level);
 
-        public void SetExplosiveAmmoThisFrame(IPlayer player)
+        public void SetExplosiveAmmoThisFrame(ITDSPlayer player)
             => RAGE.Game.Misc.SetExplosiveAmmoThisFrame(player.Handle);
 
-        public void SetExplosiveMeleeThisFrame(IPlayer player)
+        public void SetExplosiveMeleeThisFrame(ITDSPlayer player)
             => RAGE.Game.Misc.SetExplosiveMeleeThisFrame(player.Handle);
 
-        public void SetFireAmmoThisFrame(IPlayer player)
+        public void SetFireAmmoThisFrame(ITDSPlayer player)
             => RAGE.Game.Misc.SetFireAmmoThisFrame(player.Handle);
 
-        public void SetSuperJumpThisFrame(IPlayer player)
+        public void SetSuperJumpThisFrame(ITDSPlayer player)
             => RAGE.Game.Misc.SetSuperJumpThisFrame(player.Handle);
-
 
         #endregion Public Methods
     }

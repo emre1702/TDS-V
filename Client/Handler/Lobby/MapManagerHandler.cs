@@ -1,7 +1,5 @@
 ﻿using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Sync;
@@ -13,28 +11,21 @@ namespace TDS_Client.Handler.Lobby
 {
     public class MapManagerHandler
     {
-        #region Private Fields
-
         private readonly BindsHandler _bindsHandler;
         private readonly BrowserHandler _browserHandler;
         private readonly CursorHandler _cursorHandler;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
-        private readonly IModAPI ModAPI;
+
         private string _lastMapsJson;
         private int _lobbyIdAtLastLoad;
         private bool _mapBuyDataSynced;
         private bool _open;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapManagerHandler(EventsHandler eventsHandler, IModAPI modAPI, BrowserHandler browserHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler,
+        public MapManagerHandler(EventsHandler eventsHandler, BrowserHandler browserHandler, SettingsHandler settingsHandler, CursorHandler cursorHandler,
             RemoteEventsSender remoteEventsSender, DataSyncHandler dataSyncHandler, BindsHandler bindsHandler)
         {
-            ModAPI = modAPI;
             _browserHandler = browserHandler;
             _settingsHandler = settingsHandler;
             _cursorHandler = cursorHandler;
@@ -46,13 +37,9 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
-            modAPI.Event.Add(FromBrowserEvent.CloseMapVotingMenu, _ => CloseMenu(false));
-            modAPI.Event.Add(ToClientEvent.MapsListRequest, OnMapListRequestMethod);
+            RAGE.Events.Add(FromBrowserEvent.CloseMapVotingMenu, _ => CloseMenu(false));
+            RAGE.Events.Add(ToClientEvent.MapsListRequest, OnMapListRequestMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void CloseMenu(bool sendToBrowser = true)
         {
@@ -73,7 +60,7 @@ namespace TDS_Client.Handler.Lobby
             _lobbyIdAtLastLoad = _settingsHandler.LobbyId;
             if (!_mapBuyDataSynced)
             {
-                OnMapsBoughtCounterChanged(ModAPI.LocalPlayer, PlayerDataKey.MapsBoughtCounter, _dataSyncHandler.GetData(PlayerDataKey.MapsBoughtCounter, 1));
+                OnMapsBoughtCounterChanged(RAGE.Elements.Player.LocalPlayer, PlayerDataKey.MapsBoughtCounter, _dataSyncHandler.GetData(PlayerDataKey.MapsBoughtCounter, 1));
             }
             _browserHandler.Angular.OpenMapMenu(mapjson);
         }
@@ -95,10 +82,6 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             CloseMenu();
@@ -114,9 +97,9 @@ namespace TDS_Client.Handler.Lobby
             LoadMapList((string)args[0]);
         }
 
-        private void OnMapsBoughtCounterChanged(IPlayer player, PlayerDataKey key, object data)
+        private void OnMapsBoughtCounterChanged(RAGE.Elements.Player player, PlayerDataKey key, object data)
         {
-            if (player != ModAPI.LocalPlayer)
+            if (player != RAGE.Elements.Player.LocalPlayer)
                 return;
             if (key != PlayerDataKey.MapsBoughtCounter)
                 return;
@@ -137,7 +120,5 @@ namespace TDS_Client.Handler.Lobby
 
             _remoteEventsSender.Send(ToServerEvent.MapsListRequest);
         }
-
-        #endregion Private Methods
     }
 }

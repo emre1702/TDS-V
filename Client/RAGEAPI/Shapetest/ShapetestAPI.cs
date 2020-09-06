@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Shapetest;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Shapetest;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Models.GTA;
 

@@ -1,35 +1,20 @@
-﻿using System.Drawing;
+﻿using RAGE;
+using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.MapCreator
 {
     public class Marker
     {
-        #region Public Fields
-
         public Color Color;
-        public Position3D Direction;
-        public Position3D Position;
-        public Position3D Rotation;
-        public Position3D Scale;
+        public Vector3 Direction;
+        public Vector3 Position;
+        public Vector3 Rotation;
+        public Vector3 Scale;
         public MarkerType Type;
 
-        #endregion Public Fields
-
-        #region Private Fields
-
-        private readonly IModAPI _modAPI;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public Marker(IModAPI modAPI, MarkerType type, Position3D pos, Position3D dir, Position3D rot, Position3D scale, Color col)
+        public Marker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color col)
         {
-            _modAPI = modAPI;
-
             Type = type;
             Position = pos;
             Direction = dir;
@@ -38,22 +23,16 @@ namespace TDS_Client.Handler.MapCreator
             Scale = scale;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public void Draw()
         {
-            /*_modAPI.Graphics.DrawMarker(Type, Position.X, Position.Y, Position.Z,
+            /*_RAGE.Game.Graphics.DrawMarker(Type, Position.X, Position.Y, Position.Z,
                 Direction.X, Direction.Y, Direction.Z, Rotation.X, Rotation.Y, Rotation.Z, Scale.X, Scale.Y, Scale.Z,
                 Color.R, Color.G, Color.B, Color.A,
                 false, false, false, "", "", false);*/
-            _modAPI.Event.CallLocal("drawMarker", Type, Position.X, Position.Y, Position.Z,
+            RAGE.Events.CallLocal("drawMarker", Type, Position.X, Position.Y, Position.Z,
                 Direction.X, Direction.Y, Direction.Z, Rotation.X, Rotation.Y, Rotation.Z, Scale.X, Scale.Y, Scale.Z,
                 Color.R, Color.G, Color.B, Color.A,
                 false, false, 2, false, "", "", false);
         }
-
-        #endregion Public Methods
     }
 }

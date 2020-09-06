@@ -1,11 +1,14 @@
-﻿using System;
+﻿using RAGE;
+using RAGE.Elements;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
+using TDS_Client.Data.Extensions;
 using TDS_Client.Handler.Draw.Dx;
+using TDS_Client.Handler.Entities.GTA;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Map;
 using TDS_Shared.Core;
@@ -14,30 +17,25 @@ using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Models.Map;
 using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Default;
+using static RAGE.NUI.UIResText;
 
 namespace TDS_Client.Handler.Lobby
 {
     public class LobbyMapDatasHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly DxHandler _dxHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly LobbyCamHandler _lobbyCamHandler;
         private readonly MapLimitHandler _mapLimitHandler;
-        private readonly List<IEntityBase> _objects = new List<IEntityBase>();
+        private readonly List<GameEntityBase> _objects = new List<GameEntityBase>();
         private readonly Serializer _serializer;
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
         private DxText _mapInfo;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public LobbyMapDatasHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler,
+        public LobbyMapDatasHandler(LoggingHandler loggingHandler, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler,
             LobbyCamHandler lobbyCamHandler, MapLimitHandler mapLimitHandler, Serializer serializer, SettingsHandler settingsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
@@ -49,19 +47,11 @@ namespace TDS_Client.Handler.Lobby
 
             eventsHandler.LobbyLeft += CustomEventManager_OnLobbyLeave;
 
-            modAPI.Event.Add(ToClientEvent.MapChange, OnMapChangeMethod);
-            modAPI.Event.Add(ToClientEvent.MapClear, OnMapClearMethod);
+            RAGE.Events.Add(ToClientEvent.MapChange, OnMapChangeMethod);
+            RAGE.Events.Add(ToClientEvent.MapClear, OnMapClearMethod);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public ClientSyncedDataDto MapDatas { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void RemoveMapInfo()
         {
@@ -77,19 +67,19 @@ namespace TDS_Client.Handler.Lobby
                 MapDatas = mapData;
 
                 if (_mapInfo == null)
-                    _mapInfo = new DxText(_dxHandler, ModAPI, _timerHandler, MapDatas.Name, 0.01f, 0.995f, 0.2f, Color.White, alignmentX: AlignmentX.Left, alignmentY: AlignmentY.Bottom);
+                    _mapInfo = new DxText(_dxHandler, _timerHandler, MapDatas.Name, 0.01f, 0.995f, 0.2f, Color.White, Alignment: Alignment.Left, alignmentY: AlignmentY.Bottom);
                 else
                     _mapInfo.Text = MapDatas.Name;
 
                 LoadMap(mapData);
 
                 if (mapData.Target != null)
-                    _lobbyCamHandler.SetToMapCenter(mapData.Target);
+                    _lobbyCamHandler.SetToMapCenter(mapData.Target.ToVector3());
                 else if (mapData.Center != null)
-                    _lobbyCamHandler.SetToMapCenter(mapData.Center);
+                    _lobbyCamHandler.SetToMapCenter(mapData.Center.ToVector3());
 
                 if (mapData.MapEdges != null && mapData.MapEdges.Count > 0)
-                    _mapLimitHandler.Load(mapData.MapEdges);
+                    _mapLimitHandler.Load(mapData.MapEdges.Select(e => e.ToVector3()).ToList());
                 Logging.LogInfo("", "LobbyMapDatasHandler.SetMapData", true);
             }
             catch (Exception ex)
@@ -98,10 +88,6 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void CustomEventManager_OnLobbyLeave(SyncedLobbySettings settings)
         {
             OnMapClearMethod(Array.Empty<object>());
@@ -109,14 +95,14 @@ namespace TDS_Client.Handler.Lobby
             RemoveMapInfo();
         }
 
-        private Position3D GetPos(MapCreatorPosition pos)
+        private Vector3 GetPos(MapCreatorPosition pos)
         {
-            return new Position3D(pos.PosX, pos.PosY, pos.PosZ);
+            return new Vector3(pos.PosX, pos.PosY, pos.PosZ);
         }
 
-        private Position3D GetRot(MapCreatorPosition pos)
+        private Vector3 GetRot(MapCreatorPosition pos)
         {
-            return new Position3D(pos.RotX, pos.RotY, pos.RotZ);
+            return new Vector3(pos.RotX, pos.RotY, pos.RotZ);
         }
 
         private void LoadMap(ClientSyncedDataDto map)
@@ -127,7 +113,7 @@ namespace TDS_Client.Handler.Lobby
 
                 if (map.Target != null)
                 {
-                    var obj = ModAPI.MapObject.Create(ModAPI.Misc.GetHashKey(Constants.TargetHashName), map.Target, new Position3D(), dimension: ModAPI.LocalPlayer.Dimension);
+                    var obj = new TDSObject(RAGE.Game.Misc.GetHashKey(Constants.TargetHashName), map.Target.ToVector3(), new RAGE.Vector3(), dimension: Player.LocalPlayer.Dimension);
                     obj.FreezePosition(true);
                     //obj.SetCollision(false, true);
                     obj.SetInvincible(true);
@@ -139,8 +125,8 @@ namespace TDS_Client.Handler.Lobby
                     foreach (var data in map.Objects)
                     {
                         string objName = Convert.ToString(data.Info);
-                        uint objectHash = ModAPI.Misc.GetHashKey(objName);
-                        var obj = ModAPI.MapObject.Create(objectHash, GetPos(data), GetRot(data), dimension: ModAPI.LocalPlayer.Dimension);
+                        uint objectHash = RAGE.Game.Misc.GetHashKey(objName);
+                        var obj = new TDSObject(objectHash, GetPos(data), GetRot(data), dimension: Player.LocalPlayer.Dimension);
                         obj.FreezePosition(true);
                         obj.SetInvincible(true);
                         _objects.Add(obj);
@@ -151,8 +137,8 @@ namespace TDS_Client.Handler.Lobby
                 {
                     foreach (var data in map.BombPlaces)
                     {
-                        var bombPlantHash = ModAPI.Misc.GetHashKey(Constants.BombPlantPlaceHashName);
-                        var obj = ModAPI.MapObject.Create(bombPlantHash, data, new Position3D(), dimension: ModAPI.LocalPlayer.Dimension);
+                        var bombPlantHash = RAGE.Game.Misc.GetHashKey(Constants.BombPlantPlaceHashName);
+                        var obj = new TDSObject(bombPlantHash, data.ToVector3(), new Vector3(), dimension: Player.LocalPlayer.Dimension);
                         obj.FreezePosition(true);
                         obj.SetInvincible(true);
                         _objects.Add(obj);
@@ -164,8 +150,8 @@ namespace TDS_Client.Handler.Lobby
                     foreach (var data in map.Vehicles)
                     {
                         string vehName = Convert.ToString(data.Info);
-                        uint vehHash = ModAPI.Misc.GetHashKey(vehName);
-                        var veh = ModAPI.Vehicle.Create(vehHash, GetPos(data), GetRot(data), map.Name, locked: true, dimension: ModAPI.LocalPlayer.Dimension);
+                        uint vehHash = RAGE.Game.Misc.GetHashKey(vehName);
+                        var veh = new TDSVehicle(vehHash, GetPos(data), data.RotZ, map.Name, locked: true, dimension: Player.LocalPlayer.Dimension);
                         veh.FreezePosition(true);
                         veh.SetInvincible(true);
                         _objects.Add(veh);
@@ -188,9 +174,9 @@ namespace TDS_Client.Handler.Lobby
                     SetMapData(mapData);
                 }
 
-                ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
-                ModAPI.Cam.SetCamEffect(0);
-                ModAPI.Cam.DoScreenFadeIn(_settingsHandler.MapChooseTime);
+                RAGE.Game.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
+                RAGE.Game.Cam.SetCamEffect(0);
+                RAGE.Game.Cam.DoScreenFadeIn(_settingsHandler.MapChooseTime);
 
                 _eventsHandler.OnMapChanged();
             }
@@ -217,7 +203,5 @@ namespace TDS_Client.Handler.Lobby
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Private Methods
     }
 }

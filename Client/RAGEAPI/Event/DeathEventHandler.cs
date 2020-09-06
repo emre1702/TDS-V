@@ -1,6 +1,6 @@
 ﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Interfaces.RAGE.Game.Event;
+using TDS_Client.Data.Interfaces.RAGE.Game.Player;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Player;
 using TDS_Shared.Data.Models;
@@ -35,8 +35,8 @@ namespace TDS_Client.RAGEAPI.Event
 
             try
             {
-                var player = modPlayer as IPlayer;
-                var killer = modKiller as IPlayer;
+                var player = modPlayer as ITDSPlayer;
+                var killer = modKiller as ITDSPlayer;
                 var cancel = new CancelEventArgs();
 
                 for (int i = Actions.Count - 1; i >= 0; --i)

@@ -1,34 +1,24 @@
-﻿using System;
+﻿using RAGE.Game;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler
 {
     public class BindsHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly List<(Control, List<ControlBindDto>)> _bindedControls = new List<(Control, List<ControlBindDto>)>();
         private readonly List<(Key, List<KeyBindDto>)> _bindedKeys = new List<(Key, List<KeyBindDto>)>();
         private readonly Dictionary<Control, bool> _lastControlPressedState = new Dictionary<Control, bool>();
         private readonly Dictionary<Key, bool> _lastKeyDownState = new Dictionary<Key, bool>();
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public BindsHandler(IModAPI modAPI, LoggingHandler loggingHandler) : base(modAPI, loggingHandler)
+        public BindsHandler(LoggingHandler loggingHandler) : base(loggingHandler)
         {
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => ModAPI.Windows.Focused));
+            Tick += OnTick;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Add(Key key, Action<Key> method, KeyPressState pressState = KeyPressState.Down)
         {
@@ -82,18 +72,16 @@ namespace TDS_Client.Handler
                 _bindedControls.Remove(controlEntry);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void OnTick(int currentMs)
+        private void OnTick(List<TickNametagData> _)
         {
+            if (!RAGE.Ui.Windows.Focused)
+                return;
             try
             {
                 for (int i = _bindedKeys.Count - 1; i >= 0; --i)
                 {
                     var keyEntry = _bindedKeys[i];
-                    bool isDown = ModAPI.Input.IsDown(keyEntry.Item1);
+                    bool isDown = RAGE.Input.IsDown((int)keyEntry.Item1);
                     if (_lastKeyDownState.ContainsKey(keyEntry.Item1))
                         if (_lastKeyDownState[keyEntry.Item1] == isDown)
                             continue;
@@ -110,8 +98,8 @@ namespace TDS_Client.Handler
                 for (int i = _bindedControls.Count - 1; i >= 0; --i)
                 {
                     var controlEntry = _bindedControls[i];
-                    bool isDownEnabled = ModAPI.Control.IsControlPressed(InputGroup.MOVE, controlEntry.Item1);
-                    bool isDownDisabled = ModAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, controlEntry.Item1);
+                    bool isDownEnabled = RAGE.Game.Pad.IsControlPressed((int)InputGroup.MOVE, (int)controlEntry.Item1);
+                    bool isDownDisabled = RAGE.Game.Pad.IsDisabledControlPressed((int)InputGroup.MOVE, (int)controlEntry.Item1);
 
                     if (_lastControlPressedState.ContainsKey(controlEntry.Item1))
                         if (_lastControlPressedState[controlEntry.Item1] == (isDownEnabled || isDownDisabled))
@@ -132,7 +120,5 @@ namespace TDS_Client.Handler
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Private Methods
     }
 }

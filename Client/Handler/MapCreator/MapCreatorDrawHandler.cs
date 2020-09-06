@@ -1,48 +1,32 @@
-﻿using System.Drawing;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Shared.Data.Models.GTA;
+﻿using RAGE;
+using RAGE.Game;
+using System.Drawing;
 
 namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorDrawHandler
     {
-        #region Public Fields
-
         public Color HighlightColor_Edge = Color.FromArgb(255, 255, 255, 255);
         public Color HighlightColor_Full = Color.FromArgb(35, 255, 255, 255);
 
-        #endregion Public Fields
-
-        #region Private Fields
-
         private readonly UtilsHandler _utilsHandler;
-        private readonly IModAPI ModAPI;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapCreatorDrawHandler(IModAPI modAPI, UtilsHandler utilsHandler)
+        public MapCreatorDrawHandler(UtilsHandler utilsHandler)
         {
-            ModAPI = modAPI;
             _utilsHandler = utilsHandler;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void DrawSkeleton(Position3D pos, Position3D size, Position3D rot)
+        public void DrawSkeleton(Vector3 pos, Vector3 size, Vector3 rot)
         {
-            Position3D p1 = pos + new Position3D(size.X / 2, size.Y / 2, size.Z / 2);
-            Position3D p2 = pos + new Position3D(size.X / 2, -size.Y / 2, size.Z / 2);
-            Position3D p3 = pos + new Position3D(size.X / 2, -size.Y / 2, -size.Z / 2);
-            Position3D p4 = pos + new Position3D(size.X / 2, size.Y / 2, -size.Z / 2);
+            var p1 = pos + new Vector3(size.X / 2, size.Y / 2, size.Z / 2);
+            var p2 = pos + new Vector3(size.X / 2, -size.Y / 2, size.Z / 2);
+            var p3 = pos + new Vector3(size.X / 2, -size.Y / 2, -size.Z / 2);
+            var p4 = pos + new Vector3(size.X / 2, size.Y / 2, -size.Z / 2);
 
-            Position3D p5 = pos + new Position3D(-size.X / 2, size.Y / 2, size.Z / 2);
-            Position3D p6 = pos + new Position3D(-size.X / 2, -size.Y / 2, size.Z / 2);
-            Position3D p7 = pos + new Position3D(-size.X / 2, -size.Y / 2, -size.Z / 2);
-            Position3D p8 = pos + new Position3D(-size.X / 2, size.Y / 2, -size.Z / 2);
+            var p5 = pos + new Vector3(-size.X / 2, size.Y / 2, size.Z / 2);
+            var p6 = pos + new Vector3(-size.X / 2, -size.Y / 2, size.Z / 2);
+            var p7 = pos + new Vector3(-size.X / 2, -size.Y / 2, -size.Z / 2);
+            var p8 = pos + new Vector3(-size.X / 2, size.Y / 2, -size.Z / 2);
 
             p1 -= pos;
             p1 = _utilsHandler.RotateY(p1, rot.Y);
@@ -92,40 +76,48 @@ namespace TDS_Client.Handler.MapCreator
             p8 = _utilsHandler.RotateZ(p8, rot.Z);
             p8 += pos;
 
-            ModAPI.Graphics.DrawLine(p1, p2, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p2, p3, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p3, p4, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p4, p1, HighlightColor_Edge);
+            DrawLine(p1, p2, HighlightColor_Edge);
+            DrawLine(p2, p3, HighlightColor_Edge);
+            DrawLine(p3, p4, HighlightColor_Edge);
+            DrawLine(p4, p1, HighlightColor_Edge);
 
-            ModAPI.Graphics.DrawPoly(p3, p4, p1, HighlightColor_Full);
-            ModAPI.Graphics.DrawPoly(p2, p3, p1, HighlightColor_Full);
+            DrawPoly(p3, p4, p1, HighlightColor_Full);
+            DrawPoly(p2, p3, p1, HighlightColor_Full);
 
-            ModAPI.Graphics.DrawLine(p5, p6, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p6, p7, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p7, p8, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p8, p5, HighlightColor_Edge);
+            DrawLine(p5, p6, HighlightColor_Edge);
+            DrawLine(p6, p7, HighlightColor_Edge);
+            DrawLine(p7, p8, HighlightColor_Edge);
+            DrawLine(p8, p5, HighlightColor_Edge);
 
-            ModAPI.Graphics.DrawPoly(p8, p7, p5, HighlightColor_Full);
-            ModAPI.Graphics.DrawPoly(p7, p6, p5, HighlightColor_Full);
+            DrawPoly(p8, p7, p5, HighlightColor_Full);
+            DrawPoly(p7, p6, p5, HighlightColor_Full);
 
-            ModAPI.Graphics.DrawLine(p1, p5, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p2, p6, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p3, p7, HighlightColor_Edge);
-            ModAPI.Graphics.DrawLine(p4, p8, HighlightColor_Edge);
+            DrawLine(p1, p5, HighlightColor_Edge);
+            DrawLine(p2, p6, HighlightColor_Edge);
+            DrawLine(p3, p7, HighlightColor_Edge);
+            DrawLine(p4, p8, HighlightColor_Edge);
 
-            ModAPI.Graphics.DrawPoly(p1, p4, p5, HighlightColor_Full);
-            ModAPI.Graphics.DrawPoly(p5, p4, p8, HighlightColor_Full);
+            DrawPoly(p1, p4, p5, HighlightColor_Full);
+            DrawPoly(p5, p4, p8, HighlightColor_Full);
 
-            ModAPI.Graphics.DrawPoly(p2, p5, p6, HighlightColor_Full);
-            ModAPI.Graphics.DrawPoly(p2, p1, p5, HighlightColor_Full);
+            DrawPoly(p2, p5, p6, HighlightColor_Full);
+            DrawPoly(p2, p1, p5, HighlightColor_Full);
 
-            ModAPI.Graphics.DrawPoly(p3, p2, p6, HighlightColor_Full);
-            ModAPI.Graphics.DrawPoly(p3, p6, p7, HighlightColor_Full);
+            DrawPoly(p3, p2, p6, HighlightColor_Full);
+            DrawPoly(p3, p6, p7, HighlightColor_Full);
 
-            ModAPI.Graphics.DrawPoly(p3, p7, p8, HighlightColor_Full);
-            ModAPI.Graphics.DrawPoly(p8, p4, p3, HighlightColor_Full);
+            DrawPoly(p3, p7, p8, HighlightColor_Full);
+            DrawPoly(p8, p4, p3, HighlightColor_Full);
         }
 
-        #endregion Public Methods
+        private void DrawLine(Vector3 pos1, Vector3 pos2, Color color)
+        {
+            Graphics.DrawLine(pos1.X, pos1.Y, pos1.Z, pos2.X, pos2.Y, pos2.Z, color.R, color.G, color.B, color.A);
+        }
+
+        private void DrawPoly(Vector3 pos1, Vector3 pos2, Vector3 pos3, Color color)
+        {
+            Graphics.DrawPoly(pos1.X, pos1.Y, pos1.Z, pos2.X, pos2.Y, pos2.Z, pos3.X, pos3.Y, pos3.Z, color.R, color.G, color.B, color.A);
+        }
     }
 }

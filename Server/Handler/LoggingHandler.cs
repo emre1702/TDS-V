@@ -35,6 +35,7 @@ namespace TDS_Server.Handler
 
             eventsHandler.Minute += Save;
             eventsHandler.Error += LogError;
+            eventsHandler.ErrorMessage += LogError;
 
             if (_bonusBotConnectorClient.ChannelChat is { })
             {

@@ -1,6 +1,7 @@
 ﻿using GTANetworkMethods;
 using System;
 using System.Reflection;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 
 namespace TDS_Server.Data.Extensions
 {
@@ -9,7 +10,7 @@ namespace TDS_Server.Data.Extensions
         public static void Register(this ClientEvent clientEvent, string eventName, object classInstance, Action action)
             => clientEvent.Register(eventName, classInstance, action.Method);
 
-        public static void Register(this ClientEvent clientEvent, string eventName, object classInstance, Action<IPlayer> action)
+        public static void Register(this ClientEvent clientEvent, string eventName, object classInstance, Action<ITDSPlayer> action)
            => clientEvent.Register(eventName, classInstance, action.Method);
 
         public static void Register<T>(this ClientEvent clientEvent, string eventName, object classInstance, Action<T> action)

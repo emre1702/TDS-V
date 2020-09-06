@@ -12,4 +12,10 @@
     <ProjectReference Include="..\Data\TDS_Client.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="rage-sharpN">
+      <HintPath>C:\RAGEMP\dotnet\rage-sharpN.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

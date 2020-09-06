@@ -1,5 +1,5 @@
 ﻿using RAGE.Ui;
-using TDS_Client.Data.Interfaces.ModAPI.Browser;
+using TDS_Client.Data.Interfaces.RAGE.Game.Browser;
 
 namespace TDS_Client.RAGEAPI.Browser
 {

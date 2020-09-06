@@ -1,9 +1,7 @@
-﻿using System;
+﻿using RAGE.Elements;
+using System;
 using System.Drawing;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
@@ -19,18 +17,12 @@ namespace TDS_Client.Handler.Appearance
     /// </summary>
     public class ShirtTeamColorsHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly LobbyHandler _lobbyHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public ShirtTeamColorsHandler(IModAPI modAPI, LoggingHandler loggingHandler, LobbyHandler lobbyHandler,
+        public ShirtTeamColorsHandler(LoggingHandler loggingHandler, LobbyHandler lobbyHandler,
             DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _lobbyHandler = lobbyHandler;
             _dataSyncHandler = dataSyncHandler;
@@ -38,14 +30,10 @@ namespace TDS_Client.Handler.Appearance
             eventsHandler.Spawn += OnSpawn;
             eventsHandler.DataChanged += EventsHandler_DataChanged;
 
-            modAPI.Event.EntityStreamIn.Add(new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn));
+            RAGE.Events.OnEntityStreamIn += OnEntityStreamIn;
         }
 
-        #endregion Public Constructors
-
-        #region Private Methods
-
-        private void EventsHandler_DataChanged(IPlayer player, PlayerDataKey key, object data)
+        private void EventsHandler_DataChanged(RAGE.Elements.Player player, PlayerDataKey key, object data)
         {
             if (key == PlayerDataKey.TeamIndex)
                 OnEntityStreamIn(player);
@@ -55,7 +43,7 @@ namespace TDS_Client.Handler.Appearance
         {
             try
             {
-                var myTeamIndex = _dataSyncHandler.GetData(ModAPI.LocalPlayer, PlayerDataKey.TeamIndex, -1);
+                var myTeamIndex = _dataSyncHandler.GetData(Player.LocalPlayer as ITDSPlayer, PlayerDataKey.TeamIndex, -1);
                 if (myTeamIndex == -1)
                     return Color.FromArgb(255, 255, 255);
 
@@ -68,11 +56,11 @@ namespace TDS_Client.Handler.Appearance
             }
         }
 
-        private void OnEntityStreamIn(IEntity entity)
+        private void OnEntityStreamIn(Entity entity)
         {
             try
             {
-                if (!(entity is IPlayer player))
+                if (!(entity is ITDSPlayer player))
                     return;
 
                 var teamIndex = _dataSyncHandler.GetData(player, PlayerDataKey.TeamIndex, -1);
@@ -100,9 +88,7 @@ namespace TDS_Client.Handler.Appearance
 
         private void OnSpawn()
         {
-            OnEntityStreamIn(ModAPI.LocalPlayer);
+            OnEntityStreamIn(RAGE.Elements.Player.LocalPlayer);
         }
-
-        #endregion Private Methods
     }
 }

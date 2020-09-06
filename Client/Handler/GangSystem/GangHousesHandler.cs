@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Blip;
+using TDS_Client.Data.Extensions;
+using TDS_Client.Handler.Entities.GTA;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -14,17 +15,15 @@ namespace TDS_Client.Handler.GangSystem
     {
         #region Private Fields
 
-        private readonly List<IBlip> _blips = new List<IBlip>();
+        private readonly List<ITDSBlip> _blips = new List<ITDSBlip>();
 
         private readonly Serializer _serializer;
         private readonly SettingsHandler _settingsHandler;
 
         #endregion Private Fields
 
-        #region Public Constructors
-
-        public GangHousesHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, Serializer serializer)
-            : base(modAPI, loggingHandler)
+        public GangHousesHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, Serializer serializer)
+            : base(loggingHandler)
         {
             _settingsHandler = settingsHandler;
             _serializer = serializer;
@@ -32,12 +31,8 @@ namespace TDS_Client.Handler.GangSystem
             eventsHandler.LobbyLeft += LobbyLeft;
 
             //Todo: Add house blips on request
-            modAPI.Event.Add(ToClientEvent.CreateFreeGangHousesForLevel, CreateFreeGangHousesForLevel);
+            RAGE.Events.Add(ToClientEvent.CreateFreeGangHousesForLevel, CreateFreeGangHousesForLevel);
         }
-
-        #endregion Public Constructors
-
-        #region Private Methods
 
         private void CreateFreeGangHousesForLevel(object[] args)
         {
@@ -46,9 +41,9 @@ namespace TDS_Client.Handler.GangSystem
 
             foreach (var blipData in gangHouseBlipDatas)
             {
-                var blip = ModAPI.Blip.Create(Constants.GangHouseFreeBlipModel, blipData.Position,
+                var blip = new TDSBlip(Constants.GangHouseFreeBlipModel, blipData.Position.ToVector3(),
                     string.Format(_settingsHandler.Language.GANG_LOBBY_FREE_HOUSE_DESCRIPTION, blipData.Level), shortRange: true,
-                    alpha: 170, dimension: ModAPI.LocalPlayer.Dimension);
+                    alpha: 170, dimension: RAGE.Elements.Player.LocalPlayer.Dimension);
                 _blips.Add(blip);
             }
         }
@@ -64,7 +59,5 @@ namespace TDS_Client.Handler.GangSystem
             }
             _blips.Clear();
         }
-
-        #endregion Private Methods
     }
 }

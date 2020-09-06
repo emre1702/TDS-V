@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Enums;
+﻿using RAGE.Game;
 using TDS_Client.Handler.Draw;
 
 namespace TDS_Client.Handler.Entities.Draw.Scaleform
@@ -60,8 +60,6 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
 
         #endregion Private Constructors
 
-        #region Public Properties
-
         public Control ControlEnum
         {
             get => _controlEnum;
@@ -87,10 +85,6 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             get => _title;
             set => SetTitle(value);
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void SetControl(Control control)
         {
@@ -125,7 +119,5 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             else
                 _instructionalButtonHandler.SetDataSlot(_slot, _controlEnum, _title);
         }
-
-        #endregion Public Methods
     }
 }

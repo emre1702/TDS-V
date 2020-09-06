@@ -1,10 +1,10 @@
-﻿using System;
+﻿using RAGE;
+using RAGE.Game;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
@@ -12,38 +12,28 @@ using TDS_Client.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Data.Utility;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler
 {
     public class UtilsHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly Serializer _serializer;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public UtilsHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+        public UtilsHandler(LoggingHandler loggingHandler, Serializer serializer, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
+            : base(loggingHandler)
         {
             _serializer = serializer;
             _dataSyncHandler = dataSyncHandler;
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableControlActions));
+            Tick += DisableControlActions;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public Tuple<Position3D, Position3D> ClosestDistanceBetweenLines(Position3D a0, Position3D a1, Position3D b0, Position3D b1)
+        public Tuple<Vector3, Vector3> ClosestDistanceBetweenLines(Vector3 a0, Vector3 a1, Vector3 b0, Vector3 b1)
         {
             var A = a1 - a0;
             var B = b1 - b0;
@@ -56,7 +46,7 @@ namespace TDS_Client.Handler
             var cross = GetCrossProduct(_A, _B);
             var denom = cross.Length() * cross.Length();
 
-            Position3D closest1, closest2;
+            Vector3 closest1, closest2;
             if (denom == 0)
             {
                 var d0 = GetDotProduct(_A, (b0 - a0));
@@ -67,11 +57,11 @@ namespace TDS_Client.Handler
                     {
                         closest1 = a0;
                         closest2 = b0;
-                        return new Tuple<Position3D, Position3D>(closest1, closest2);
+                        return new Tuple<Vector3, Vector3>(closest1, closest2);
                     }
                     closest1 = a0;
                     closest2 = b1;
-                    return new Tuple<Position3D, Position3D>(closest1, closest2);
+                    return new Tuple<Vector3, Vector3>(closest1, closest2);
                 }
                 else if (d0 >= magA && magA <= d1)
                 {
@@ -80,14 +70,14 @@ namespace TDS_Client.Handler
                     {
                         closest1 = a1;
                         closest2 = b0;
-                        return new Tuple<Position3D, Position3D>(closest1, closest2);
+                        return new Tuple<Vector3, Vector3>(closest1, closest2);
                     }
                     closest1 = a1;
                     closest2 = b1;
-                    return new Tuple<Position3D, Position3D>(closest1, closest2);
+                    return new Tuple<Vector3, Vector3>(closest1, closest2);
                 }
 
-                return new Tuple<Position3D, Position3D>(new Position3D(), new Position3D());
+                return new Tuple<Vector3, Vector3>(new Vector3(), new Vector3());
             }
 
             var t = (b0 - a0);
@@ -133,7 +123,7 @@ namespace TDS_Client.Handler
 
             closest1 = pA;
             closest2 = pB;
-            return new Tuple<Position3D, Position3D>(closest1, closest2);
+            return new Tuple<Vector3, Vector3>(closest1, closest2);
         }
 
         public float DegreesToRad(float deg)
@@ -141,19 +131,19 @@ namespace TDS_Client.Handler
             return MathF.PI * deg / 180.0f;
         }
 
-        public float Determinent(Position3D a, Position3D b, Position3D c)
+        public float Determinent(Vector3 a, Vector3 b, Vector3 c)
         {
             return a.X * b.Y * c.Z + a.Y * b.Z * c.X + a.Z * b.X * c.Y - c.X * b.Y * a.Z - c.Y * b.Z * a.X - c.Z * b.X * a.Y;
         }
 
-        public float GetAngleBetweenVectors(Position3D v1, Position3D v2)
+        public float GetAngleBetweenVectors(Vector3 v1, Vector3 v2)
         {
             return MathF.Acos(GetDotProduct(GetNormalizedVector(v1), GetNormalizedVector(v2)));
         }
 
-        public Position3D GetCrossProduct(Position3D left, Position3D right)
+        public Vector3 GetCrossProduct(Vector3 left, Vector3 right)
         {
-            Position3D vec = new Position3D
+            Vector3 vec = new Vector3
             {
                 X = left.Y * right.Z - left.Z * right.Y,
                 Y = left.Z * right.X - left.X * right.Z,
@@ -164,23 +154,23 @@ namespace TDS_Client.Handler
 
         public float GetCursorX()
         {
-            return ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.CursorX);
+            return Pad.GetDisabledControlNormal((int)InputGroup.MOVE, (int)Control.CursorX);
         }
 
         public float GetCursorY()
         {
-            return ModAPI.Control.GetDisabledControlNormal(InputGroup.MOVE, Control.CursorY);
+            return Pad.GetDisabledControlNormal((int)InputGroup.MOVE, (int)Control.CursorY);
         }
 
-        public Position3D GetDirectionByRotation(Position3D rotation)
+        public Vector3 GetDirectionByRotation(Vector3 rotation)
         {
             float num = rotation.Z * 0.0174532924f;
             float num2 = rotation.X * 0.0174532924f;
             float num3 = MathF.Abs(MathF.Cos(num2));
-            return new Position3D { X = -MathF.Sin(num) * num3, Y = MathF.Cos(num) * num3, Z = MathF.Sin(num2) };
+            return new Vector3 { X = -MathF.Sin(num) * num3, Y = MathF.Cos(num) * num3, Z = MathF.Sin(num2) };
         }
 
-        public string GetDisplayName(IPlayer player)
+        public string GetDisplayName(ITDSPlayer player)
         {
             string name = player.Name;
             int adminLevel = Convert.ToInt32(_dataSyncHandler.GetData(player, PlayerDataKey.AdminLevel));
@@ -189,20 +179,20 @@ namespace TDS_Client.Handler
             return name;
         }
 
-        public float GetDotProduct(Position3D v1, Position3D v2)
+        public float GetDotProduct(Vector3 v1, Vector3 v2)
         {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
         }
 
-        public Position3D GetNormalizedVector(Position3D vec)
+        public Vector3 GetNormalizedVector(Vector3 vec)
         {
             float mag = MathF.Sqrt(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
-            return new Position3D(vec.X / mag, vec.Y / mag, vec.Z / mag);
+            return new Vector3(vec.X / mag, vec.Y / mag, vec.Z / mag);
         }
 
-        public IPlayer GetPlayerByHandleValue(ushort handleValue)
+        public ITDSPlayer GetPlayerByHandleValue(ushort handleValue)
         {
-            return ModAPI.Pool.Players.GetAtRemote(handleValue);
+            return RAGE.Elements.Entities.Players.GetAtRemote(handleValue) as ITDSPlayer;
         }
 
         public Color GetRandomColor()
@@ -210,20 +200,20 @@ namespace TDS_Client.Handler
             return Color.FromArgb(255, SharedUtils.Rnd.Next(255), SharedUtils.Rnd.Next(255), SharedUtils.Rnd.Next(255));
         }
 
-        public Position3D GetScreenCoordFromWorldCoord(Position3D vec)
+        public Vector3 GetScreenCoordFromWorldCoord(Vector3 vec)
         {
             float x = 0;
             float y = 0;
-            if (ModAPI.Graphics.GetScreenCoordFromWorldCoord(vec.X, vec.Y, vec.Z, ref x, ref y))
-                return new Position3D(x, y, 0f);
+            if (Graphics.GetScreenCoordFromWorldCoord(vec.X, vec.Y, vec.Z, ref x, ref y))
+                return new Vector3(x, y, 0f);
             else
                 return null;
         }
 
-        public List<IPlayer> GetTriggeredPlayersList(string objStr)
+        public List<ITDSPlayer> GetTriggeredPlayersList(string objStr)
         {
             var list = _serializer.FromServer<List<ushort>>(objStr);
-            var newList = new List<IPlayer>();
+            var newList = new List<ITDSPlayer>();
 
             foreach (var handleValue in list)
             {
@@ -236,15 +226,15 @@ namespace TDS_Client.Handler
             return newList;
         }
 
-        public Position3D GetWorldCoordFromScreenCoord(float x, float y, TDSCamera tdsCamera = null)
+        public Vector3 GetWorldCoordFromScreenCoord(float x, float y, TDSCamera tdsCamera = null)
         {
-            Position3D camPos = tdsCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
-            Position3D camRot = tdsCamera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
+            var camPos = tdsCamera?.Position ?? Cam.GetGameplayCamCoord();
+            var camRot = tdsCamera?.Rotation ?? Cam.GetGameplayCamRot(2);
             var camForward = RotationToDirection(camRot);
-            var rotUp = camRot + new Position3D(1, 0, 0);
-            var rotDown = camRot + new Position3D(-1, 0, 0);
-            var rotLeft = camRot + new Position3D(0, 0, -1);
-            var rotRight = camRot + new Position3D(0, 0, 1);
+            var rotUp = camRot + new Vector3(1, 0, 0);
+            var rotDown = camRot + new Vector3(-1, 0, 0);
+            var rotLeft = camRot + new Vector3(0, 0, -1);
+            var rotRight = camRot + new Vector3(0, 0, 1);
 
             var camRight = RotationToDirection(rotRight) - RotationToDirection(rotLeft);
             var camUp = RotationToDirection(rotUp) - RotationToDirection(rotDown);
@@ -256,7 +246,7 @@ namespace TDS_Client.Handler
 
             var point3D = camPos + camForward * 1.0f + camRightRoll + camUpRoll;
             float point2DX = 0, point2DY = 0;
-            if (!ModAPI.Graphics.GetScreenCoordFromWorldCoord(point3D.X, point3D.Y, point3D.Z, ref point2DX, ref point2DY))
+            if (!Graphics.GetScreenCoordFromWorldCoord(point3D.X, point3D.Y, point3D.Z, ref point2DX, ref point2DY))
             {
                 //forwardDirection = camForward;
                 return camPos + camForward * 1.0f;
@@ -264,7 +254,7 @@ namespace TDS_Client.Handler
 
             var point3DZero = camPos + camForward * 1.0f;
             float point2DZeroX = 0, point2DZeroY = 0;
-            if (!ModAPI.Graphics.GetScreenCoordFromWorldCoord(point3DZero.X, point3DZero.Y, point3DZero.Z, ref point2DZeroX, ref point2DZeroY))
+            if (!Graphics.GetScreenCoordFromWorldCoord(point3DZero.X, point3DZero.Y, point3DZero.Z, ref point2DZeroX, ref point2DZeroY))
             {
                 //forwardDirection = camForward;
                 return camPos + camForward * 1.0f;
@@ -283,10 +273,10 @@ namespace TDS_Client.Handler
             return point3Dret;
         }
 
-        public bool LineIntersectingCircle(Position3D CircleCenter, Position3D CircleRotation, float CircleRadius, Position3D LineStart, Position3D LineEnd, ref Position3D HitPosition, float threshold, ref Position3D planeNorm)
+        public bool LineIntersectingCircle(Vector3 CircleCenter, Vector3 CircleRotation, float CircleRadius, Vector3 LineStart, Vector3 LineEnd, ref Vector3 HitPosition, float threshold, ref Vector3 planeNorm)
         {
-            Position3D v2 = new Position3D(CircleCenter.X, CircleCenter.Y, CircleCenter.Z + CircleRadius);
-            Position3D v3 = new Position3D(CircleCenter.X - CircleRadius, CircleCenter.Y, CircleCenter.Z);
+            Vector3 v2 = new Vector3(CircleCenter.X, CircleCenter.Y, CircleCenter.Z + CircleRadius);
+            Vector3 v3 = new Vector3(CircleCenter.X - CircleRadius, CircleCenter.Y, CircleCenter.Z);
 
             v2 -= CircleCenter;
             v2 = RotateZ(v2, CircleRotation.Z);
@@ -312,13 +302,13 @@ namespace TDS_Client.Handler
             v3 = RotateY(v3, CircleRotation.Y);
             v3 += CircleCenter;
 
-            //RAGE.Game.Graphics.DrawPoly(CircleCenter.X, CircleCenter.Y, CircleCenter.Z, v2.X, v2.Y, v2.Z, v3.X, v3.Y, v3.Z, 0, 255, 0, 255);
+            //Graphics.DrawPoly(CircleCenter.X, CircleCenter.Y, CircleCenter.Z, v2.X, v2.Y, v2.Z, v3.X, v3.Y, v3.Z, 0, 255, 0, 255);
 
-            Position3D four = v2 - CircleCenter;
-            Position3D five = v3 - CircleCenter;
+            Vector3 four = v2 - CircleCenter;
+            Vector3 five = v3 - CircleCenter;
 
-            Position3D cross = GetCrossProduct(four, five);
-            planeNorm = new Position3D(cross.X, cross.Y, cross.Z);
+            Vector3 cross = GetCrossProduct(four, five);
+            planeNorm = new Vector3(cross.X, cross.Y, cross.Z);
             cross.Normalize();
             bool hit = LineIntersectingPlane(cross, CircleCenter, LineStart, LineEnd, ref HitPosition);
             if (hit)
@@ -331,13 +321,13 @@ namespace TDS_Client.Handler
             return false;
         }
 
-        public bool LineIntersectingPlane(Position3D PlaneNorm, Position3D PlanePoint, Position3D LineStart, Position3D LineEnd, ref Position3D HitPosition)
+        public bool LineIntersectingPlane(Vector3 PlaneNorm, Vector3 PlanePoint, Vector3 LineStart, Vector3 LineEnd, ref Vector3 HitPosition)
         {
-            Position3D u = LineEnd - LineStart;
+            Vector3 u = LineEnd - LineStart;
             float dot = GetDotProduct(PlaneNorm, u);
             if (MathF.Abs(dot) > float.Epsilon)
             {
-                Position3D w = LineStart - PlanePoint;
+                Vector3 w = LineStart - PlanePoint;
                 float fac = -GetDotProduct(PlaneNorm, w) / dot;
                 u *= fac;
                 HitPosition = LineStart + u;
@@ -346,10 +336,10 @@ namespace TDS_Client.Handler
             return false;
         }
 
-        public bool LineIntersectingSphere(Position3D StartLine, Position3D LineEnd, Position3D SphereCenter, float SphereRadius)
+        public bool LineIntersectingSphere(Vector3 StartLine, Vector3 LineEnd, Vector3 SphereCenter, float SphereRadius)
         {
-            Position3D d = LineEnd - StartLine;
-            Position3D f = StartLine - SphereCenter;
+            Vector3 d = LineEnd - StartLine;
+            Vector3 f = StartLine - SphereCenter;
 
             float c = GetDotProduct(f, f) - SphereRadius * SphereRadius;
             if (c <= 0f)
@@ -368,9 +358,9 @@ namespace TDS_Client.Handler
 
         public void Notify(string msg)
         {
-            ModAPI.Ui.SetNotificationTextEntry("STRING");
-            ModAPI.Ui.AddTextComponentSubstringPlayerName(msg);
-            ModAPI.Ui.DrawNotification(false);
+            Ui.SetNotificationTextEntry("STRING");
+            Ui.AddTextComponentSubstringPlayerName(msg);
+            Ui.DrawNotification(false, false);
         }
 
         public float RadToDegrees(float rad)
@@ -378,23 +368,23 @@ namespace TDS_Client.Handler
             return rad * (180f / MathF.PI);
         }
 
-        public RaycastHit RaycastFromTo(Position3D from, Position3D to, int ignoreEntity, int flags)
+        public RaycastHit RaycastFromTo(Vector3 from, Vector3 to, int ignoreEntity, int flags)
         {
-            int ray = ModAPI.Shapetest.StartShapeTestRay(from.X, from.Y, from.Z, to.X, to.Y, to.Z, flags, ignoreEntity, 0);
+            int ray = Shapetest.StartShapeTestRay(from.X, from.Y, from.Z, to.X, to.Y, to.Z, flags, ignoreEntity, 0);
             RaycastHit cast = new RaycastHit();
             int curtemp = 0;
-            cast.ShapeResult = ModAPI.Shapetest.GetShapeTestResult(ray, ref curtemp, cast.EndCoords, cast.SurfaceNormal, ref cast.EntityHit);
+            cast.ShapeResult = Shapetest.GetShapeTestResult(ray, ref curtemp, cast.EndCoords, cast.SurfaceNormal, ref cast.EntityHit);
             cast.Hit = Convert.ToBoolean(curtemp);
             return cast;
         }
 
-        public Position3D RotateX(Position3D point, float angle)
+        public Vector3 RotateX(Vector3 point, float angle)
         {
-            Position3D f1 = new Position3D(1, 0, 0);
-            Position3D f2 = new Position3D(0, MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)));
-            Position3D f3 = new Position3D(0, MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)));
+            Vector3 f1 = new Vector3(1, 0, 0);
+            Vector3 f2 = new Vector3(0, MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)));
+            Vector3 f3 = new Vector3(0, MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)));
 
-            Position3D final = new Position3D
+            Vector3 final = new Vector3
             {
                 X = (f1.X * point.X + f1.Y * point.Y + f1.Z * point.Z),
                 Y = (f2.X * point.X + f2.Y * point.Y + f2.Z * point.Z),
@@ -404,13 +394,13 @@ namespace TDS_Client.Handler
             return final;
         }
 
-        public Position3D RotateY(Position3D point, float angle)
+        public Vector3 RotateY(Vector3 point, float angle)
         {
-            Position3D f4 = new Position3D(MathF.Cos(DegreesToRad(angle)), 0, MathF.Sin(DegreesToRad(angle)));
-            Position3D f5 = new Position3D(0, 1, 0);
-            Position3D f6 = new Position3D(-MathF.Sin(DegreesToRad(angle)), 0, MathF.Cos(DegreesToRad(angle)));
+            Vector3 f4 = new Vector3(MathF.Cos(DegreesToRad(angle)), 0, MathF.Sin(DegreesToRad(angle)));
+            Vector3 f5 = new Vector3(0, 1, 0);
+            Vector3 f6 = new Vector3(-MathF.Sin(DegreesToRad(angle)), 0, MathF.Cos(DegreesToRad(angle)));
 
-            Position3D final = new Position3D
+            Vector3 final = new Vector3
             {
                 X = (f4.X * point.X + f4.Y * point.Y + f4.Z * point.Z),
                 Y = (f5.X * point.X + f5.Y * point.Y + f5.Z * point.Z),
@@ -419,13 +409,13 @@ namespace TDS_Client.Handler
             return final;
         }
 
-        public Position3D RotateZ(Position3D point, float angle)
+        public Vector3 RotateZ(Vector3 point, float angle)
         {
-            Position3D f7 = new Position3D(MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)), 0);
-            Position3D f8 = new Position3D(MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)), 0);
-            Position3D f9 = new Position3D(0, 0, 1);
+            Vector3 f7 = new Vector3(MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)), 0);
+            Vector3 f8 = new Vector3(MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)), 0);
+            Vector3 f9 = new Vector3(0, 0, 1);
 
-            Position3D final = new Position3D
+            Vector3 final = new Vector3
             {
                 X = (f7.X * point.X + f7.Y * point.Y + f7.Z * point.Z),
                 Y = (f8.X * point.X + f8.Y * point.Y + f8.Z * point.Z),
@@ -434,12 +424,12 @@ namespace TDS_Client.Handler
             return final;
         }
 
-        public Position3D RotationToDirection(Position3D rotation)
+        public Vector3 RotationToDirection(Vector3 rotation)
         {
             var z = DegreesToRad(rotation.Z);
             var x = DegreesToRad(rotation.X);
             var num = Math.Abs(Math.Cos(x));
-            return new Position3D
+            return new Vector3
             {
                 X = (float)(-Math.Sin(z) * num),
                 Y = (float)(Math.Cos(z) * num),
@@ -447,36 +437,30 @@ namespace TDS_Client.Handler
             };
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void DisableControlActions(int _)
+        private void DisableControlActions(List<TickNametagData> _)
         {
-            ModAPI.Control.DisableControlAction(InputGroup.WHEEL, Control.EnterCheatCode);
+            Pad.DisableControlAction((int)InputGroup.WHEEL, (int)Control.EnterCheatCode, true);
 
-            if (ModAPI.LocalPlayer.IsArmed(ArmedType.AllExceptMelee))
+            if (RAGE.Elements.Player.LocalPlayer.IsArmed((int)ArmedType.AllExceptMelee))
             {
-                ModAPI.Control.DisableControlAction(InputGroup.MOVE, Control.MeleeAttackLight);
-                ModAPI.Control.DisableControlAction(InputGroup.MOVE, Control.MeleeAttackHeavy);
-                ModAPI.Control.DisableControlAction(InputGroup.MOVE, Control.MeleeAttackAlternate);
+                Pad.DisableControlAction((int)InputGroup.MOVE, (int)Control.MeleeAttackLight, true);
+                Pad.DisableControlAction((int)InputGroup.MOVE, (int)Control.MeleeAttackHeavy, true);
+                Pad.DisableControlAction((int)InputGroup.MOVE, (int)Control.MeleeAttackAlternate, true);
             }
         }
 
         private void EventsHandler_LoggedIn()
         {
-            ModAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(HideHudOriginalComponents));
+            Tick += HideHudOriginalComponents;
         }
 
-        private void HideHudOriginalComponents(int _)
+        private void HideHudOriginalComponents(List<TickNametagData> _)
         {
-            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_CASH);
-            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_WHEEL_STATS);
-            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_WEAPON_ICON);
-            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_CASH_CHANGE);
-            ModAPI.Ui.HideHudComponentThisFrame(HudComponent.HUD_MP_CASH);
+            Ui.HideHudComponentThisFrame((int)HudComponent.Cash);
+            Ui.HideHudComponentThisFrame((int)HudComponent.WeaponWheel);
+            Ui.HideHudComponentThisFrame((int)HudComponent.WeaponIcon);
+            Ui.HideHudComponentThisFrame((int)HudComponent.CashChange);
+            Ui.HideHudComponentThisFrame((int)HudComponent.MpCash);
         }
-
-        #endregion Private Methods
     }
 }

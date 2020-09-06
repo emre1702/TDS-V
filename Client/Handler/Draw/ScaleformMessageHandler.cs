@@ -1,15 +1,14 @@
-﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
+﻿using System;
+using System.Collections.Generic;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Entities.Draw.Scaleform;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Draw
 {
     public class ScaleformMessageHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
         private bool _animatedOut;
@@ -17,38 +16,25 @@ namespace TDS_Client.Handler.Draw
         private int _msgDurationMs;
         private BasicScaleform _scaleform;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public ScaleformMessageHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, TimerHandler timerHandler)
-            : base(modAPI, loggingHandler)
+        public ScaleformMessageHandler(LoggingHandler loggingHandler, SettingsHandler settingsHandler, TimerHandler timerHandler)
+            : base(loggingHandler)
         {
             _settingsHandler = settingsHandler;
             _timerHandler = timerHandler;
-
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(Render));
+            Tick += Render;
         }
-
-        #endregion Public Constructors
-
-        #region Private Properties
 
         private BasicScaleform Scaleform
         {
             get
             {
                 if (_scaleform == null)
-                    _scaleform = new BasicScaleform(ScaleformName.MP_BIG_MESSAGE_FREEMODE, ModAPI);
+                    _scaleform = new BasicScaleform(ScaleformName.MP_BIG_MESSAGE_FREEMODE);
                 return _scaleform;
             }
         }
 
-        #endregion Private Properties
-
-        #region Public Methods
-
-        public void Render(int currentMs)
+        public void Render(List<TickNametagData> _)
         {
             if (_scaleform == null)
                 return;
@@ -56,6 +42,7 @@ namespace TDS_Client.Handler.Draw
                 return;
 
             _scaleform.RenderFullscreen();
+            var currentMs = _timerHandler.ElapsedMs;
             if (currentMs - _initTimeMs > _msgDurationMs)
             {
                 if (!_animatedOut)
@@ -97,17 +84,11 @@ namespace TDS_Client.Handler.Draw
             InitCommonSettings(time);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void InitCommonSettings(int time)
         {
             _initTimeMs = _timerHandler.ElapsedMs;
             _msgDurationMs = time;
             _animatedOut = false;
         }
-
-        #endregion Private Methods
     }
 }

@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
+using Alignment = RAGE.NUI.UIResText.Alignment;
 
 namespace TDS_Client.Handler.Lobby
 {
     public class CountdownHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly string[] _countdownSounds = new string[] { "go", "1", "2", "3" };
         private readonly DxHandler _dxHandler;
@@ -25,13 +23,9 @@ namespace TDS_Client.Handler.Lobby
         private int _currentCountdownTime;
         private DxText _text;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public CountdownHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
+        public CountdownHandler(LoggingHandler loggingHandler, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
             BrowserHandler browserHandler, EventsHandler eventsHandler, LobbyCamHandler lobbyCamHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _settingsHandler = settingsHandler;
             _dxHandler = dxHandler;
@@ -45,12 +39,8 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.RoundStarted += _ => End();
             eventsHandler.RoundEnded += _ => Stop();
 
-            modAPI.Event.Add(ToClientEvent.CountdownStart, OnCountdownStartMethod);
+            RAGE.Events.Add(ToClientEvent.CountdownStart, OnCountdownStartMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void End()
         {
@@ -61,7 +51,7 @@ namespace TDS_Client.Handler.Lobby
                 {
                     _countdownTimer?.Kill();
                     if (_text == null)
-                        _text = new DxText(_dxHandler, ModAPI, _timerHandler, "GO", 0.5f, 0.2f, 2f, Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Center);
+                        _text = new DxText(_dxHandler, _timerHandler, "GO", 0.5f, 0.2f, 2f, Color.White, Alignment: Alignment.Centered, alignmentY: AlignmentY.Center);
                     else
                     {
                         _text.Text = "GO";
@@ -91,7 +81,7 @@ namespace TDS_Client.Handler.Lobby
                 _countdownTimer?.Kill();
                 _currentCountdownTime = _settingsHandler.CountdownTime;
                 _countdownTimer = new TDSTimer(Refresh, 1000, (uint)_currentCountdownTime + 1);
-                _text = new DxText(_dxHandler, ModAPI, _timerHandler, _currentCountdownTime.ToString(), 0.5f, 0.1f, 2f, Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Center);
+                _text = new DxText(_dxHandler, _timerHandler, _currentCountdownTime.ToString(), 0.5f, 0.1f, 2f, Color.White, Alignment: Alignment.Centered, alignmentY: AlignmentY.Center);
                 Refresh();
                 Logging.LogInfo("", "CountdownHandler.Start", true);
             }
@@ -114,7 +104,7 @@ namespace TDS_Client.Handler.Lobby
                         _countdownTimer = new TDSTimer(Refresh, 1000, (uint)(_currentCountdownTime));
                     Refresh();
                 }, (uint)(_currentCountdownTime - timeremainingms), 1);
-                _text = new DxText(_dxHandler, ModAPI, _timerHandler, _currentCountdownTime.ToString(), 0.5f, 0.1f, 2f, Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Center);
+                _text = new DxText(_dxHandler, _timerHandler, _currentCountdownTime.ToString(), 0.5f, 0.1f, 2f, Color.White, Alignment: Alignment.Centered, alignmentY: AlignmentY.Center);
                 Refresh();
                 Logging.LogInfo("", "CountdownHandler.StartAfterwards", true);
             }
@@ -140,10 +130,6 @@ namespace TDS_Client.Handler.Lobby
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void OnCountdownStartMethod(object[] args)
         {
@@ -221,7 +207,5 @@ namespace TDS_Client.Handler.Lobby
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Private Methods
     }
 }

@@ -1,7 +1,6 @@
-﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+﻿using RAGE.Elements;
+using TDS_Client.Data.Abstracts.Entities.GTA;
+using TDS_Client.Data.Enums;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Sync;
 using TDS_Shared.Data.Enums;
@@ -11,20 +10,14 @@ namespace TDS_Client.Handler
 {
     public class CrouchingHandler : ServiceBase
     {
-        #region Private Fields
-
         private const float _clipSetSwitchTime = 0.25f;
         private const string _movementClipSet = "move_ped_crouched";
         private const string _strafeClipSet = "move_ped_crouched_strafing";
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public CrouchingHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, DataSyncHandler dataSyncHandler, RemoteEventsSender remoteEventsSender)
-            : base(modAPI, loggingHandler)
+        public CrouchingHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, DataSyncHandler dataSyncHandler, RemoteEventsSender remoteEventsSender)
+            : base(loggingHandler)
         {
             _dataSyncHandler = dataSyncHandler;
             _remoteEventsSender = remoteEventsSender;
@@ -32,16 +25,12 @@ namespace TDS_Client.Handler
             // Do that on loggedin BindManager.Add(Enum.EKey.LCtrl, ToggleCrouch, Enum.EKeyPressState.Up);
             eventsHandler.DataChanged += PlayerDataSync_OnDataChanged;
 
-            // modAPI.Event.EntityStreamIn.Add(new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn));
+            // RAGE.Game.Event.EntityStreamIn.Add(new EventMethodData<EntityStreamInDelegate>(OnEntityStreamIn));
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void OnEntityStreamIn(IEntityBase entity)
+        public void OnEntityStreamIn(Entity entity)
         {
-            if (!(entity is IPlayer player))
+            if (!(entity is ITDSPlayer player))
                 return;
 
             bool isCrouched = _dataSyncHandler.GetData<bool>(player, PlayerDataKey.Crouched);
@@ -52,11 +41,7 @@ namespace TDS_Client.Handler
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void PlayerDataSync_OnDataChanged(IPlayer player, PlayerDataKey key, object data)
+        private void PlayerDataSync_OnDataChanged(ITDSPlayer player, PlayerDataKey key, object data)
         {
             if (key != PlayerDataKey.Crouched)
                 return;
@@ -76,7 +61,5 @@ namespace TDS_Client.Handler
         {
             _remoteEventsSender.Send(ToServerEvent.ToggleCrouch);
         }
-
-        #endregion Private Methods
     }
 }

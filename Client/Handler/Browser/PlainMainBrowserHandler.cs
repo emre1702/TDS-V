@@ -1,29 +1,22 @@
-﻿using System;
+﻿using RAGE.Elements;
+using System;
 using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Browser
 {
     public class PlainMainBrowserHandler : BrowserHandlerBase
     {
-        #region Private Fields
-
         private readonly RemoteEventsSender _remoteEventsSender;
         private bool _roundEndReasonShowing;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public PlainMainBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler, serializer, Constants.MainBrowserPath)
+        public PlainMainBrowserHandler(LoggingHandler loggingHandler, Serializer serializer, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
+            : base(loggingHandler, serializer, Constants.MainBrowserPath)
         {
             _remoteEventsSender = remoteEventsSender;
 
@@ -35,17 +28,13 @@ namespace TDS_Client.Handler.Browser
             eventsHandler.RoundStarted += _ => HideRoundEndReason();
             eventsHandler.CountdownStarted += _ => HideRoundEndReason();
 
-            modAPI.Event.Add(FromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
-            modAPI.Event.Add(ToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
-            modAPI.Event.Add(ToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
+            Add(FromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
+            Add(ToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
+            Add(ToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
 
-            modAPI.Event.PlayerStartTalking.Add(new EventMethodData<PlayerDelegate>(EventHandler_PlayerStartTalking));
-            modAPI.Event.PlayerStopTalking.Add(new EventMethodData<PlayerDelegate>(EventHandler_PlayerStopTalking));
+            OnPlayerStartTalking += EventHandler_PlayerStartTalking;
+            OnPlayerStopTalking += EventHandler_PlayerStopTalking;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void AddKillMessage(string msg)
         {
@@ -118,16 +107,12 @@ namespace TDS_Client.Handler.Browser
             ExecuteFast("f", name);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void EventHandler_PlayerStartTalking(IPlayer player)
+        private void EventHandler_PlayerStartTalking(Player player)
         {
             StartPlayerTalking(player.Name);
         }
 
-        private void EventHandler_PlayerStopTalking(IPlayer player)
+        private void EventHandler_PlayerStopTalking(Player player)
         {
             StopPlayerTalking(player.Name);
         }
@@ -155,7 +140,5 @@ namespace TDS_Client.Handler.Browser
             string soundName = (string)args[0];
             PlaySound(soundName);
         }
-
-        #endregion Private Methods
     }
 }

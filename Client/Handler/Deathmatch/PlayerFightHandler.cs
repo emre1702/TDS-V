@@ -1,28 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Deathmatch
 {
     public class PlayerFightHandler : ServiceBase
     {
-        #region Public Fields
-
         public int CurrentArmor;
 
         public int CurrentHp;
-
-        #endregion Public Fields
-
-        #region Private Fields
 
         private readonly BrowserHandler _browserHandler;
 
@@ -35,6 +28,8 @@ namespace TDS_Client.Handler.Deathmatch
         private readonly SettingsHandler _settingsHandler;
 
         private readonly UtilsHandler _utilsHandler;
+
+        private readonly TimerHandler _timerHandler;
 
         private WeaponHash _currentWeapon;
 
@@ -54,14 +49,10 @@ namespace TDS_Client.Handler.Deathmatch
 
         private int _lastHudUpdateTotalAmmo;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public PlayerFightHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler,
+        public PlayerFightHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, BrowserHandler browserHandler,
             FloatingDamageInfoHandler floatingDamageInfoHandler,
-            UtilsHandler utilsHandler, CamerasHandler camerasHandler)
-            : base(modAPI, loggingHandler)
+            UtilsHandler utilsHandler, CamerasHandler camerasHandler, TimerHandler timerHandler)
+            : base(loggingHandler)
         {
             _eventsHandler = eventsHandler;
             _settingsHandler = settingsHandler;
@@ -69,6 +60,7 @@ namespace TDS_Client.Handler.Deathmatch
             _floatingDamageInfoHandler = floatingDamageInfoHandler;
             _utilsHandler = utilsHandler;
             _camerasHandler = camerasHandler;
+            _timerHandler = timerHandler;
 
             eventsHandler.WeaponChanged += WeaponChanged;
             eventsHandler.LobbyLeft += _ => SetNotInFight();
@@ -78,15 +70,9 @@ namespace TDS_Client.Handler.Deathmatch
             eventsHandler.RoundStarted += EventsHandler_RoundStarted;
             eventsHandler.RoundEnded += _ => SetNotInFight();
 
-            modAPI.Event.Add(ToClientEvent.HitOpponent, OnHitOpponentMethod);
-            modAPI.Event.Add(ToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
-
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick, () => InFight));
+            RAGE.Events.Add(ToClientEvent.HitOpponent, OnHitOpponentMethod);
+            RAGE.Events.Add(ToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public bool InFight
         {
@@ -101,13 +87,14 @@ namespace TDS_Client.Handler.Deathmatch
                 if (value)
                 {
                     Reset();
+                    Tick += OnTick;
+                }
+                else
+                {
+                    Tick -= OnTick;
                 }
             }
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void HittedOpponent()
         {
@@ -115,31 +102,31 @@ namespace TDS_Client.Handler.Deathmatch
                 _browserHandler.PlainMain.PlayHitsound();
         }
 
-        public void HittedOpponent(IPlayer hitted, int damage)
+        public void HittedOpponent(ITDSPlayer hitted, int damage)
         {
             if (_settingsHandler.PlayerSettings.FloatingDamageInfo && hitted != null)
                 _floatingDamageInfoHandler.Add(hitted, damage);
         }
 
-        public void OnTick(int currentMs)
+        public void OnTick(List<TickNametagData> _)
         {
             int previousArmor = CurrentArmor;
             int previousHp = CurrentHp;
-            CurrentArmor = ModAPI.LocalPlayer.Armor;
-            CurrentHp = Math.Max(ModAPI.LocalPlayer.Health - 100, 0);
+            CurrentArmor = RAGE.Elements.Player.LocalPlayer.GetArmour();
+            CurrentHp = Math.Max(RAGE.Elements.Player.LocalPlayer.GetHealth() - 100, 0);
 
             int healthLost = previousArmor + previousHp - CurrentArmor - CurrentHp;
             //Damagesys.CheckDamage(healthLost);
 
             if (healthLost != 0)
             {
-                if (healthLost > 0 && (int)(currentMs - _lastBloodscreenUpdateTick) >= _settingsHandler.PlayerSettings.BloodscreenCooldownMs)
+                if (healthLost > 0 && (int)(_timerHandler.ElapsedMs - _lastBloodscreenUpdateTick) >= _settingsHandler.PlayerSettings.BloodscreenCooldownMs)
                 {
                     //MainBrowser.ShowBloodscreen();
-                    _lastBloodscreenUpdateTick = currentMs;
+                    _lastBloodscreenUpdateTick = _timerHandler.ElapsedMs;
                 }
 
-                if ((int)(currentMs - _lastHudHealthUpdateTick) >= _settingsHandler.PlayerSettings.HudHealthUpdateCooldownMs)
+                if ((int)(_timerHandler.ElapsedMs - _lastHudHealthUpdateTick) >= _settingsHandler.PlayerSettings.HudHealthUpdateCooldownMs)
                 {
                     if (CurrentArmor != _lastHudUpdateArmor)
                     {
@@ -151,27 +138,28 @@ namespace TDS_Client.Handler.Deathmatch
                         _browserHandler.Angular.SyncHudDataChange(HudDataType.HP, CurrentHp);
                         _lastHudUpdateHp = CurrentHp;
                     }
-                    _lastHudHealthUpdateTick = currentMs;
+                    _lastHudHealthUpdateTick = _timerHandler.ElapsedMs;
                 }
             }
 
-            if ((int)(currentMs - _lastHudAmmoUpdateMs) >= _settingsHandler.PlayerSettings.HudAmmoUpdateCooldownMs)
+            if ((int)(_timerHandler.ElapsedMs - _lastHudAmmoUpdateMs) >= _settingsHandler.PlayerSettings.HudAmmoUpdateCooldownMs)
             {
-                int ammoInClip = ModAPI.LocalPlayer.GetAmmoInClip(_currentWeapon);
+                int ammoInClip = 0;
+                RAGE.Elements.Player.LocalPlayer.GetAmmoInClip((uint)_currentWeapon, ref ammoInClip);
                 if (ammoInClip != _lastHudUpdateAmmoInClip)
                 {
                     _browserHandler.Angular.SyncHudDataChange(HudDataType.AmmoInClip, ammoInClip);
                     _lastHudUpdateAmmoInClip = ammoInClip;
                 }
 
-                int totalAmmo = ModAPI.LocalPlayer.GetAmmoInWeapon(_currentWeapon) - ammoInClip;
+                int totalAmmo = RAGE.Elements.Player.LocalPlayer.GetAmmoInWeapon((uint)_currentWeapon) - ammoInClip;
                 if (totalAmmo != _lastHudUpdateTotalAmmo)
                 {
                     _browserHandler.Angular.SyncHudDataChange(HudDataType.AmmoTotal, totalAmmo);
                     _lastHudUpdateTotalAmmo = totalAmmo;
                 }
 
-                _lastHudAmmoUpdateMs = currentMs;
+                _lastHudAmmoUpdateMs = _timerHandler.ElapsedMs;
             }
         }
 
@@ -186,21 +174,17 @@ namespace TDS_Client.Handler.Deathmatch
             _lastHudHealthUpdateTick = default;
             _lastHudAmmoUpdateMs = default;
 
-            CurrentArmor = ModAPI.LocalPlayer.Armor;
-            CurrentHp = Math.Max(ModAPI.LocalPlayer.Health - 100, 0);
+            CurrentArmor = RAGE.Elements.Player.LocalPlayer.GetArmour();
+            CurrentHp = Math.Max(RAGE.Elements.Player.LocalPlayer.GetHealth() - 100, 0);
             _browserHandler.Angular.SyncHudDataChange(HudDataType.Armor, CurrentArmor);
             _browserHandler.Angular.SyncHudDataChange(HudDataType.HP, CurrentHp);
 
-            ModAPI.LocalPlayer.ClearLastDamageBone();
-            ModAPI.LocalPlayer.ClearLastDamageEntity();
-            ModAPI.LocalPlayer.ClearLastWeaponDamage();
-            ModAPI.LocalPlayer.ResetVisibleDamage();
-            ModAPI.LocalPlayer.ClearBloodDamage();
+            RAGE.Elements.Player.LocalPlayer.ClearLastDamageBone();
+            RAGE.Elements.Player.LocalPlayer.ClearLastDamageEntity();
+            RAGE.Elements.Player.LocalPlayer.ClearLastWeaponDamage();
+            RAGE.Elements.Player.LocalPlayer.ResetVisibleDamage();
+            RAGE.Elements.Player.LocalPlayer.ClearBloodDamage();
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void EventsHandler_RoundStarted(bool isSpectator)
         {
@@ -211,7 +195,7 @@ namespace TDS_Client.Handler.Deathmatch
         {
             ushort targetHandle = Convert.ToUInt16(args[0]);
             int damage = (int)args[1];
-            IPlayer target = _utilsHandler.GetPlayerByHandleValue(targetHandle);
+            var target = _utilsHandler.GetPlayerByHandleValue(targetHandle) as ITDSPlayer;
 
             HittedOpponent(target, damage);
         }
@@ -236,7 +220,5 @@ namespace TDS_Client.Handler.Deathmatch
 
             _currentWeapon = newWeaponHash;
         }
-
-        #endregion Private Methods
     }
 }

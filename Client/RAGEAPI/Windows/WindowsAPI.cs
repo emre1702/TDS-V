@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Windows;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Windows;
 
 namespace TDS_Client.RAGEAPI.Windows
 {

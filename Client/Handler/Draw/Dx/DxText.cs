@@ -1,21 +1,16 @@
-﻿using System.Drawing;
+﻿using RAGE.Game;
+using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Shared.Data.Enums;
+using Alignment = RAGE.NUI.UIResText.Alignment;
 
 namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxText : DxBase
     {
-        #region Public Fields
-
         public string Text;
 
-        #endregion Public Fields
-
-        #region Private Fields
-
-        private readonly AlignmentX _alignmentX;
+        private readonly Alignment _Alignment;
         private readonly AlignmentY _alignmentY;
         private readonly int _amountLines;
         private readonly Color _color;
@@ -35,13 +30,9 @@ namespace TDS_Client.Handler.Draw.Dx
         private int _x;
         private int _y;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DxText(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
-            AlignmentX alignmentX = AlignmentX.Left, AlignmentY alignmentY = AlignmentY.Top, bool relative = true,
-            bool dropShadow = false, bool outline = false, int wordWrap = 999, int amountLines = 0, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority: frontPriority)
+        public DxText(DxHandler dxHandler, TimerHandler timerHandler, string text, float x, float y, float scale, Color color, Font font = Font.ChaletLondon,
+            Alignment Alignment = Alignment.Left, AlignmentY alignmentY = AlignmentY.Top, bool relative = true,
+            bool dropShadow = false, bool outline = false, int wordWrap = 999, int amountLines = 0, int frontPriority = 0) : base(dxHandler, frontPriority: frontPriority)
         {
             _timerHandler = timerHandler;
 
@@ -51,7 +42,7 @@ namespace TDS_Client.Handler.Draw.Dx
             _scale = scale;
             _color = color;
             _font = font;
-            _alignmentX = alignmentX;
+            _Alignment = Alignment;
             _alignmentY = alignmentY;
             _relative = relative;
             _dropShadow = dropShadow;
@@ -61,10 +52,6 @@ namespace TDS_Client.Handler.Draw.Dx
 
             ApplyTextAlignmentY();
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void BlendAlpha(int endAlpha, int msToEnd)
         {
@@ -101,7 +88,7 @@ namespace TDS_Client.Handler.Draw.Dx
                     scale = GetBlendValue(elapsedMs, this._scale, _endScale.Value, _endScaleStartTick, _endScaleEndTick);
             }
 
-            ModAPI.Graphics.DrawText(Text, _x, _y, _font, scale, theColor, _alignmentX, _dropShadow, _outline, _wordWrap);
+            RAGE.NUI.UIResText.Draw(Text, _x, _y, _font, scale, theColor, _Alignment, _dropShadow, _outline, _wordWrap);
         }
 
         public override DxType GetDxType()
@@ -136,10 +123,6 @@ namespace TDS_Client.Handler.Draw.Dx
             this._scale = scale;
             this._endScale = null;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void ApplyTextAlignmentY()
         {
@@ -179,11 +162,9 @@ namespace TDS_Client.Handler.Draw.Dx
 
         private int GetLineCount()
         {
-            ModAPI.Native.Invoke(NativeHash._BEGIN_TEXT_COMMAND_LINE_COUNT, "STRING");
-            ModAPI.Native.Invoke(NativeHash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Text);
-            return ModAPI.Native.Invoke<int>(NativeHash._GET_TEXT_SCREEN_LINE_COUNT, _x, _y);
+            RAGE.Game.Invoker.Invoke((ulong)NativeHash._BEGIN_TEXT_COMMAND_LINE_COUNT, "STRING");
+            RAGE.Game.Invoker.Invoke((ulong)NativeHash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Text);
+            return RAGE.Game.Invoker.Invoke<int>((ulong)NativeHash._GET_TEXT_SCREEN_LINE_COUNT, _x, _y);
         }
-
-        #endregion Private Methods
     }
 }

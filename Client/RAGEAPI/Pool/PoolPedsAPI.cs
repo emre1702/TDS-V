@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Data.Interfaces.ModAPI.Ped;
-using TDS_Client.Data.Interfaces.ModAPI.Pool;
+using TDS_Client.Data.Interfaces.RAGE.Game.Ped;
+using TDS_Client.Data.Interfaces.RAGE.Game.Pool;
 
 namespace TDS_Client.RAGEAPI.Pool
 {

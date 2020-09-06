@@ -1,7 +1,7 @@
-﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+﻿using RAGE;
+using System;
+using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
@@ -10,6 +10,7 @@ using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler
 {
@@ -23,23 +24,20 @@ namespace TDS_Client.Handler
         private readonly DeathHandler _deathHandler;
         private readonly NametagsHandler _nametagsHandler;
         private readonly SettingsHandler _settingsHandler;
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly UtilsHandler _utilsHandler;
-        private int _confettiShownLastMs = 0;
-        private IPlayer _second = null;
-        private IPlayer _third = null;
-        private IPlayer _winner = null;
+        private readonly TimerHandler _timerHandler;
+        private long _confettiShownLastMs = 0;
+        private ITDSPlayer _second = null;
+        private ITDSPlayer _third = null;
+        private ITDSPlayer _winner = null;
 
         #endregion Private Fields
 
-        #region Public Constructors
-
-        public RankingHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler,
-            CursorHandler cursorHandler, BrowserHandler browserHandler, NametagsHandler nametagsHandler, DeathHandler deathHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+        public RankingHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler,
+            CursorHandler cursorHandler, BrowserHandler browserHandler, NametagsHandler nametagsHandler, DeathHandler deathHandler, EventsHandler eventsHandler,
+            TimerHandler timerHandler)
+            : base(loggingHandler)
         {
-            _tickEventMethod = new EventMethodData<TickDelegate>(OnRender);
-
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
             _settingsHandler = settingsHandler;
@@ -47,24 +45,21 @@ namespace TDS_Client.Handler
             _browserHandler = browserHandler;
             _nametagsHandler = nametagsHandler;
             _deathHandler = deathHandler;
+            _timerHandler = timerHandler;
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.CountdownStarted += _ => Stop();
 
-            modAPI.Event.Add(ToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
+            Add(ToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Start(string rankingsJson, ushort winnerHandle, ushort secondHandle, ushort thirdHandle)
         {
             _deathHandler.PlayerSpawn();
 
             var cam = _camerasHandler.BetweenRoundsCam;
-            cam.Position = new Position3D(-425.2233f, 1126.9731f, 326.8f);
-            cam.PointCamAtCoord(new Position3D(-427.03f, 1123.21f, 325.85f));
+            cam.Position = new Vector3(-425.2233f, 1126.9731f, 326.8f);
+            cam.PointCamAtCoord(new Vector3(-427.03f, 1123.21f, 325.85f));
             cam.Activate(true);
             // Cam-pos:
             //X: -425,2233
@@ -72,8 +67,8 @@ namespace TDS_Client.Handler
             //Z: 326.8
             //Rot: 160
 
-            ModAPI.Cam.DoScreenFadeIn(200);
-            ModAPI.Event.Tick.Add(_tickEventMethod);
+            RAGE.Game.Cam.DoScreenFadeIn(200);
+            Tick += OnRender;
 
             _winner = _utilsHandler.GetPlayerByHandleValue(winnerHandle);
             _second = secondHandle != 0 ? _utilsHandler.GetPlayerByHandleValue(secondHandle) : null;
@@ -85,12 +80,10 @@ namespace TDS_Client.Handler
 
         public void Stop()
         {
-            ModAPI.Event.Tick.Remove(_tickEventMethod);
+            Tick -= OnRender;
             _browserHandler.Angular.HideRankings();
             _cursorHandler.Visible = false;
         }
-
-        #endregion Public Methods
 
         #region Private Methods
 
@@ -99,11 +92,11 @@ namespace TDS_Client.Handler
             Stop();
         }
 
-        private void OnRender(int currentMs)
+        private void OnRender(List<TickNametagData> _)
         {
             //StartParticleFx("scr_xs_money_rain", -425.48f, 1123.55f, 325.85f, 1f);
             //StartParticleFx("scr_xs_money_rain_celeb", 427.03f, 1123.21f, 325.85f, 1f);
-
+            var currentMs = _timerHandler.ElapsedMs;
             if (_settingsHandler.PlayerSettings.ShowConfettiAtRanking && currentMs - _confettiShownLastMs > 400)
             {
                 _confettiShownLastMs = currentMs;
@@ -135,8 +128,8 @@ namespace TDS_Client.Handler
 
         private int StartParticleFx(string effectName, string effectDict, float x, float y, float z, float scale)
         {
-            ModAPI.Graphics.UseParticleFxAssetNextCall(effectDict);
-            return ModAPI.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
+            RAGE.Game.Graphics.UseParticleFxAssetNextCall(effectDict);
+            return RAGE.Game.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
         }
 
         #endregion Private Methods

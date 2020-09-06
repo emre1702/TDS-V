@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Nametags;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Nametags;
 
 namespace TDS_Client.RAGEAPI.Nametags
 {

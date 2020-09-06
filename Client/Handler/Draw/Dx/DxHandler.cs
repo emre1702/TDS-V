@@ -1,37 +1,25 @@
-﻿using System;
+﻿using RAGE;
+using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
+using TDS_Shared.Core;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Draw.Dx
 {
     public class DxHandler : ServiceBase
     {
-        #region Public Fields
-
         public int ResX;
         public int ResY;
 
-        #endregion Public Fields
-
-        #region Private Fields
-
         private readonly List<DxBase> _dxDraws = new List<DxBase>();
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DxHandler(IModAPI modAPI, LoggingHandler loggingHandler) : base(modAPI, loggingHandler)
+        public DxHandler(LoggingHandler loggingHandler) : base(loggingHandler)
         {
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(RenderAll));
+            Tick += RenderAll;
             RefreshResolution();
+            new TDSTimer(RefreshResolution, 10000, 0);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Add(DxBase dx)
         {
@@ -41,7 +29,7 @@ namespace TDS_Client.Handler.Draw.Dx
 
         public void RefreshResolution()
         {
-            ModAPI.Graphics.GetScreenResolution(ref ResX, ref ResY);
+            RAGE.Game.Graphics.GetScreenResolution(ref ResX, ref ResY);
         }
 
         public void Remove(DxBase dxBase)
@@ -49,7 +37,7 @@ namespace TDS_Client.Handler.Draw.Dx
             _dxDraws.Remove(dxBase);
         }
 
-        public void RenderAll(int currentMs)
+        public void RenderAll(List<TickNametagData> _)
         {
             try
             {
@@ -64,7 +52,5 @@ namespace TDS_Client.Handler.Draw.Dx
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Public Methods
     }
 }

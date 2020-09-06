@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Stats;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Stats;
 
 namespace TDS_Client.RAGEAPI.Stats
 {

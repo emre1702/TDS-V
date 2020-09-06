@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using TDS_Client.Data.Interfaces.ModAPI.Checkpoint;
+using TDS_Client.Data.Interfaces.RAGE.Game.Checkpoint;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Checkpoint

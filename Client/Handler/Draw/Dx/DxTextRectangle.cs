@@ -1,14 +1,14 @@
-﻿using System.Drawing;
+﻿using RAGE.Game;
+using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
+using static RAGE.NUI.UIResText;
+using Alignment = RAGE.NUI.UIResText.Alignment;
 
 namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxTextRectangle : DxBase
     {
-        #region Private Fields
-
-        private readonly AlignmentX _alignmentX;
+        private readonly Alignment _alignment;
         private readonly AlignmentY _alignmentY;
         private readonly float _height;
         private readonly bool _relativePos;
@@ -18,19 +18,15 @@ namespace TDS_Client.Handler.Draw.Dx
         private DxRectangle _rect;
         private DxText _text;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DxTextRectangle(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, float x, float y, float width, float height,
+        public DxTextRectangle(DxHandler dxHandler, TimerHandler timerHandler, string text, float x, float y, float width, float height,
             Color textColor, Color rectColor, float textScale = 1.0f, Font textFont = Font.ChaletLondon,
             int textOffsetAbsoluteX = 0,
-            AlignmentX alignmentX = AlignmentX.Left, AlignmentY alignmentY = AlignmentY.Top,
-            AlignmentX textAlignmentX = AlignmentX.Center, AlignmentY textAlignmentY = AlignmentY.Center,
+            Alignment alignment = RAGE.NUI.UIResText.Alignment.Left, AlignmentY alignmentY = AlignmentY.Top,
+            Alignment textAlignment = Alignment.Centered, AlignmentY textAlignmentY = AlignmentY.Center,
             bool relativePos = true,
-            int amountLines = 0, bool activated = true, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority, activated)
+            int amountLines = 0, bool activated = true, int frontPriority = 0) : base(dxHandler, frontPriority, activated)
         {
-            _rect = new DxRectangle(dxHandler, modAPI, x, y, width, height, rectColor, alignmentX, alignmentY, relativePos)
+            _rect = new DxRectangle(dxHandler, x, y, width, height, rectColor, alignment, alignmentY, relativePos)
             {
                 Activated = false
             };
@@ -41,12 +37,12 @@ namespace TDS_Client.Handler.Draw.Dx
             this._height = height;
             this._relativePos = relativePos;
 
-            this._alignmentX = alignmentX;
+            this._alignment = alignment;
             this._alignmentY = alignmentY;
 
-            float textX = relativePos ? GetTextRelativePosX(textOffsetAbsoluteX, textAlignmentX) : GetTextAbsolutePosX(textOffsetAbsoluteX, textAlignmentX);
+            float textX = relativePos ? GetTextRelativePosX(textOffsetAbsoluteX, textAlignment) : GetTextAbsolutePosX(textOffsetAbsoluteX, textAlignment);
             float textY = relativePos ? GetTextRelativePosY(textAlignmentY) : GetTextAbsolutePosY(textAlignmentY);
-            this._text = new DxText(dxHandler, modAPI, timerHandler, text, textX, textY, textScale, textColor, textFont, textAlignmentX, textAlignmentY, relativePos, amountLines: amountLines)
+            this._text = new DxText(dxHandler, timerHandler, text, textX, textY, textScale, textColor, textFont, textAlignment, textAlignmentY, relativePos, amountLines: amountLines)
             {
                 Activated = false
             };
@@ -54,10 +50,6 @@ namespace TDS_Client.Handler.Draw.Dx
             Children.Add(this._text);
             Children.Add(_rect);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public override void Draw()
         {
@@ -71,21 +63,17 @@ namespace TDS_Client.Handler.Draw.Dx
             //this._text.SetAbsoluteY(GetAbsoluteY(_relativePos ? GetTextRelativePosY() : GetTextAbsolutePosY(), _relativePos));
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private float GetRectangleLeftX()
         {
-            switch (_alignmentX)
+            switch (_alignment)
             {
-                case AlignmentX.Center:
+                case RAGE.NUI.UIResText.Alignment.Centered:
                     return _x - _width / 2;
 
-                case AlignmentX.Left:
+                case Alignment.Left:
                     return _x;
 
-                case AlignmentX.Right:
+                case Alignment.Right:
                     return _x - _width;
             }
             return _x;
@@ -107,19 +95,19 @@ namespace TDS_Client.Handler.Draw.Dx
             return _y;
         }
 
-        private float GetTextAbsolutePosX(float offsetX, AlignmentX alignX)
+        private float GetTextAbsolutePosX(float offsetX, Alignment alignX)
         {
             float rectLeftX = GetRectangleLeftX();
 
             switch (alignX)
             {
-                case AlignmentX.Center:
+                case Alignment.Centered:
                     return GetAbsoluteX(rectLeftX + _width / 2, _relativePos);
 
-                case AlignmentX.Left:
+                case Alignment.Left:
                     return GetAbsoluteX(rectLeftX, _relativePos) + offsetX;
 
-                case AlignmentX.Right:
+                case Alignment.Right:
                     return GetAbsoluteX(rectLeftX + _width, _relativePos) - offsetX;
             }
             return _x;
@@ -148,7 +136,7 @@ namespace TDS_Client.Handler.Draw.Dx
             //return _y + _height / 2 - 5;
         }
 
-        private float GetTextRelativePosX(float offsetX, AlignmentX alignX)
+        private float GetTextRelativePosX(float offsetX, Alignment alignX)
         {
             if (_relativePos)
                 offsetX = GetRelativeX(offsetX, false);
@@ -156,13 +144,13 @@ namespace TDS_Client.Handler.Draw.Dx
 
             switch (alignX)
             {
-                case AlignmentX.Center:
+                case Alignment.Centered:
                     return GetRelativeX(rectLeftX + _width / 2, _relativePos);
 
-                case AlignmentX.Left:
+                case Alignment.Left:
                     return GetRelativeX(rectLeftX + offsetX, _relativePos);
 
-                case AlignmentX.Right:
+                case Alignment.Right:
                     return GetRelativeX(rectLeftX + _width - offsetX, _relativePos);
             }
             return _x;
@@ -190,7 +178,5 @@ namespace TDS_Client.Handler.Draw.Dx
             //return y + height / 2 - Ui.GetTextScaleHeight(scale, (int)font) / 2 * amountlines;            // - GetRelativeY(5, false);
             //return _y + _height / 2 - GetRelativeY(5, false);
         }
-
-        #endregion Private Methods
     }
 }

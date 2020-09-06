@@ -1,47 +1,38 @@
-﻿using System;
+﻿using RAGE;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using TDS_Client.Data.Abstracts.Entities.GTA;
+using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.MapCreator;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Events
 {
     public class EventsHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly RemoteEventsSender _remoteEventsSender;
 
         private WeaponHash _lastWeaponHash;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public EventsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender)
-            : base(modAPI, loggingHandler)
+        public EventsHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender)
+            : base(loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
+            Tick += OnTick;
 
-            ModAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick));
-            ModAPI.Event.Add(ToServerEvent.FromBrowserEvent, OnFromBrowserEventMethod);
+            Add(ToServerEvent.FromBrowserEvent, OnFromBrowserEventMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Delegates
 
         public delegate void BoolDelegate(bool boolean);
 
         public delegate void ColorDelegate(Color color);
 
-        public delegate void DataChangedDelegate(IPlayer player, PlayerDataKey key, object data);
+        public delegate void DataChangedDelegate(ITDSPlayer player, PlayerDataKey key, object data);
 
         public delegate void EmptyDelegate();
 
@@ -53,11 +44,11 @@ namespace TDS_Client.Handler.Events
 
         public delegate void MapCreatorSyncTeamObjectsDeletedDelegate(int teamNumber);
 
-        public delegate void PlayerAndNameDelegate(IPlayer player, string name);
+        public delegate void PlayerAndNameDelegate(ITDSPlayer player, string name);
 
-        public delegate void PlayerDelegate(IPlayer player);
+        public delegate void PlayerDelegate(ITDSPlayer player);
 
-        public delegate void PlayerDiedDelegate(IPlayer player, int teamIndex, bool willRespawn);
+        public delegate void PlayerDiedDelegate(ITDSPlayer player, int teamIndex, bool willRespawn);
 
         public delegate void RespawnedDelegate(bool inFightAgain);
 
@@ -68,10 +59,6 @@ namespace TDS_Client.Handler.Events
         public delegate void TeamChangedDelegate(string currentTeamName);
 
         public delegate void WeaponChangedDelegate(WeaponHash previousWeapon, WeaponHash currentHash);
-
-        #endregion Public Delegates
-
-        #region Public Events
 
         public event EmptyDelegate AngularCooldown;
 
@@ -137,10 +124,6 @@ namespace TDS_Client.Handler.Events
 
         public event WeaponChangedDelegate WeaponChanged;
 
-        #endregion Public Events
-
-        #region Public Methods
-
         public void OnLobbyJoined(SyncedLobbySettings newSettings)
         {
             try
@@ -168,10 +151,6 @@ namespace TDS_Client.Handler.Events
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Public Methods
-
-        #region Internal Methods
 
         internal void OnChatInputToggled(bool value)
         {
@@ -229,7 +208,7 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnDataChanged(IPlayer player, PlayerDataKey key, object data)
+        internal void OnDataChanged(ITDSPlayer player, PlayerDataKey key, object data)
         {
             try
             {
@@ -425,7 +404,7 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnPlayerDied(IPlayer player, int teamIndex, bool willRespawn)
+        internal void OnPlayerDied(ITDSPlayer player, int teamIndex, bool willRespawn)
         {
             try
             {
@@ -439,7 +418,7 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnPlayerJoinedSameLobby(IPlayer player)
+        internal void OnPlayerJoinedSameLobby(ITDSPlayer player)
         {
             try
             {
@@ -453,7 +432,7 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnPlayerLeftSameLobby(IPlayer player, string name)
+        internal void OnPlayerLeftSameLobby(ITDSPlayer player, string name)
         {
             try
             {
@@ -565,13 +544,9 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        #endregion Internal Methods
-
-        #region Private Methods
-
         private void CheckNewWeapon()
         {
-            var currentWeapon = ModAPI.LocalPlayer.GetSelectedWeapon();
+            var currentWeapon = (WeaponHash)RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();
             if (currentWeapon != _lastWeaponHash)
             {
                 WeaponChanged?.Invoke(_lastWeaponHash, currentWeapon);
@@ -585,11 +560,9 @@ namespace TDS_Client.Handler.Events
                 AngularCooldown?.Invoke();
         }
 
-        private void OnTick(int _)
+        private void OnTick(List<TickNametagData> _)
         {
             CheckNewWeapon();
         }
-
-        #endregion Private Methods
     }
 }

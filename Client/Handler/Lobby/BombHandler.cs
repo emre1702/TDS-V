@@ -1,8 +1,9 @@
-﻿using System;
+﻿using RAGE;
+using RAGE.Game;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw.Dx;
@@ -12,13 +13,14 @@ using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
+using static RAGE.Events;
+using static RAGE.NUI.UIResText;
+using Alignment = RAGE.NUI.UIResText.Alignment;
 
 namespace TDS_Client.Handler.Lobby
 {
     public class BombHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
 
         private readonly DxHandler _dxHandler;
@@ -35,8 +37,6 @@ namespace TDS_Client.Handler.Lobby
 
         private readonly SettingsHandler _settingsHandler;
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
-
         private readonly TimerHandler _timerHandler;
 
         private readonly UtilsHandler _utilsHandler;
@@ -44,7 +44,6 @@ namespace TDS_Client.Handler.Lobby
         private bool _bombPlanted;
 
         //private int _plantDefuseStartTick;
-        private bool _dataChanged;
 
         private bool _gotBomb;
 
@@ -54,13 +53,9 @@ namespace TDS_Client.Handler.Lobby
 
         private DxProgressRectangle _progressRect;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public BombHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, RoundInfosHandler roundInfosHandler, SettingsHandler settingsHandler,
+        public BombHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, RoundInfosHandler roundInfosHandler, SettingsHandler settingsHandler,
             UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler,
-            LobbyMapDatasHandler lobbyMapDatasHandler, Serializer serializer) : base(modAPI, loggingHandler)
+            LobbyMapDatasHandler lobbyMapDatasHandler, Serializer serializer) : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _roundInfosHandler = roundInfosHandler;
@@ -73,50 +68,38 @@ namespace TDS_Client.Handler.Lobby
             _serializer = serializer;
             _eventsHandler = eventsHandler;
 
-            _tickEventMethod = new EventMethodData<TickDelegate>(CheckPlantDefuse, () => CheckPlantDefuseOnTick);
-
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.RoundEnded += _ => Stop();
 
-            modAPI.Event.Add(ToClientEvent.PlayerGotBomb, OnPlayerGotBombMethod);
-            modAPI.Event.Add(ToClientEvent.PlayerPlantedBomb, OnPlayerPlantedBombMethod);
-            modAPI.Event.Add(ToClientEvent.BombPlanted, OnBombPlantedMethod);
-            modAPI.Event.Add(ToClientEvent.BombNotOnHand, OnBombNotOnHandMethod);
-            modAPI.Event.Add(ToClientEvent.BombOnHand, OnBombOnHandMethod);
-            modAPI.Event.Add(ToClientEvent.BombDetonated, OnBombDetonatedMethod);
-            modAPI.Event.Add(ToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
+            Add(ToClientEvent.PlayerGotBomb, OnPlayerGotBombMethod);
+            Add(ToClientEvent.PlayerPlantedBomb, OnPlayerPlantedBombMethod);
+            Add(ToClientEvent.BombPlanted, OnBombPlantedMethod);
+            Add(ToClientEvent.BombNotOnHand, OnBombNotOnHandMethod);
+            Add(ToClientEvent.BombOnHand, OnBombOnHandMethod);
+            Add(ToClientEvent.BombDetonated, OnBombDetonatedMethod);
+            Add(ToClientEvent.StopBombPlantDefuse, OnStopBombPlantDefuseMethod);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
+        private bool _checkPlantDefuseOnTick;
+        private bool _dataChanged;
         public bool BombOnHand { get; set; }
 
-        public bool CheckPlantDefuseOnTick { get; private set; }
-
-        public bool DataChanged
+        public bool CheckPlantDefuseOnTick
         {
-            get => _dataChanged;
+            get => _checkPlantDefuseOnTick;
             set
             {
-                if (_dataChanged == value)
-                    return;
-                _dataChanged = value;
+                _checkPlantDefuseOnTick = value;
                 if (value)
-                    ModAPI.Event.Tick.Add(_tickEventMethod);
+                    Tick += CheckPlantDefuse;
                 else
-                    ModAPI.Event.Tick.Remove(_tickEventMethod);
+                    Tick -= CheckPlantDefuse;
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public void BombPlanted(Position3D pos, bool candefuse, int? startAtMs)
         {
-            DataChanged = true;
+            _dataChanged = true;
             if (candefuse)
             {
                 _plantedPos = pos;
@@ -137,7 +120,7 @@ namespace TDS_Client.Handler.Lobby
             _utilsHandler.Notify(_settingsHandler.Language.BOMB_PLANTED);
         }
 
-        public void CheckPlantDefuse(int currentMs)
+        public void CheckPlantDefuse(List<TickNametagData> _)
         {
             if (_playerStatus == PlantDefuseStatus.None)
                 CheckPlantDefuseStart();
@@ -147,14 +130,14 @@ namespace TDS_Client.Handler.Lobby
 
         public void Detonate()
         {
-            ModAPI.Cam.ShakeGameplayCam(CamShakeName.LARGE_EXPLOSION_SHAKE, 1.0f);
-            new TDSTimer(ModAPI.Cam.StopGameplayCamShaking, 4000, 1);
+            RAGE.Game.Cam.ShakeGameplayCam(CamShakeName.LARGE_EXPLOSION_SHAKE, 1.0f);
+            new TDSTimer(() => RAGE.Game.Cam.StopGameplayCamShaking(true), 4000, 1);
             _browserHandler.PlainMain.StopBombTick();
         }
 
         public void LocalPlayerGotBomb()
         {
-            DataChanged = true;
+            _dataChanged = true;
             _gotBomb = true;
             CheckPlantDefuseOnTick = true;
         }
@@ -184,9 +167,9 @@ namespace TDS_Client.Handler.Lobby
             {
                 Logging.LogInfo("", "BombHandler.Stop");
                 SetBombNotOnHand();
-                if (!DataChanged)
+                if (!_dataChanged)
                     return;
-                DataChanged = false;
+                _dataChanged = false;
                 CheckPlantDefuseOnTick = false;
                 _gotBomb = false;
                 _playerStatus = PlantDefuseStatus.None;
@@ -212,18 +195,14 @@ namespace TDS_Client.Handler.Lobby
             Logging.LogInfo("", "BombHandler.StopRequestByServer", true);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void CheckDefuseStart()
         {
             if (!IsOnDefuseSpot())
                 return;
             //_plantDefuseStartTick = TimerManager.ElapsedTicks;
             _playerStatus = PlantDefuseStatus.Defusing;
-            _progressRect = new DxProgressRectangle(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.DEFUSING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen,
-                textScale: 0.7f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Center, frontPriority: 900);
+            _progressRect = new DxProgressRectangle(_dxHandler, _timerHandler, _settingsHandler.Language.DEFUSING, 0.5f, 0.71f, 0.12f, 0.05f, Color.White, Color.Black, Color.ForestGreen,
+                textScale: 0.7f, alignmentX: Alignment.Centered, alignmentY: AlignmentY.Center, frontPriority: 900);
             int defuseTime = _settingsHandler.GetPlantOrDefuseTime(_playerStatus);
             _progressRect.SetAutomatic(defuseTime);
             _remoteEventsSender.Send(ToServerEvent.StartDefusing);
@@ -260,8 +239,8 @@ namespace TDS_Client.Handler.Lobby
                 return;
             //_plantDefuseStartTick = TimerManager.ElapsedTicks;
             _playerStatus = PlantDefuseStatus.Planting;
-            _progressRect = new DxProgressRectangle(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.PLANTING, 0.5f, 0.71f, 0.2f, 0.08f, Color.White, Color.Black, Color.ForestGreen,
-                textScale: 0.7f, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Center, frontPriority: 900);
+            _progressRect = new DxProgressRectangle(_dxHandler, _timerHandler, _settingsHandler.Language.PLANTING, 0.5f, 0.71f, 0.2f, 0.08f, Color.White, Color.Black, Color.ForestGreen,
+                textScale: 0.7f, alignmentX: Alignment.Centered, alignmentY: AlignmentY.Center, frontPriority: 900);
             int plantTime = _settingsHandler.GetPlantOrDefuseTime(_playerStatus);
             _progressRect.SetAutomatic(plantTime);
             _remoteEventsSender.Send(ToServerEvent.StartPlanting);
@@ -279,18 +258,18 @@ namespace TDS_Client.Handler.Lobby
         {
             if (_plantedPos == null)
                 return false;
-            Position3D playerpos = ModAPI.LocalPlayer.Position;
-            return ModAPI.Misc.GetDistanceBetweenCoords(playerpos, _plantedPos, true) <= _settingsHandler.DistanceToSpotToDefuse;
+            Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
+            return RAGE.Game.Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, _plantedPos.X, _plantedPos.Y, _plantedPos.Z, true) <= _settingsHandler.DistanceToSpotToDefuse;
         }
 
         private bool IsOnPlantSpot()
         {
             if (_lobbyMapDatasHandler.MapDatas is null || _lobbyMapDatasHandler.MapDatas.BombPlaces is null || _lobbyMapDatasHandler.MapDatas.BombPlaces.Count == 0)
                 return false;
-            Position3D playerpos = ModAPI.LocalPlayer.Position;
-            foreach (Position3D pos in _lobbyMapDatasHandler.MapDatas.BombPlaces)
+            Vector3 playerpos = RAGE.Elements.Player.LocalPlayer.Position;
+            foreach (var pos in _lobbyMapDatasHandler.MapDatas.BombPlaces)
             {
-                if (ModAPI.Misc.GetDistanceBetweenCoords(playerpos, pos, pos.Z != 0) <= _settingsHandler.DistanceToSpotToPlant)
+                if (RAGE.Game.Misc.GetDistanceBetweenCoords(playerpos.X, playerpos.Y, playerpos.Z, pos.X, pos.Y, pos.Z, pos.Z != 0) <= _settingsHandler.DistanceToSpotToPlant)
                     return true;
             }
             return false;
@@ -334,16 +313,14 @@ namespace TDS_Client.Handler.Lobby
 
         private bool ShouldPlantDefuseStop()
         {
-            var weaponHash = ModAPI.LocalPlayer.GetSelectedWeapon();
-            if (weaponHash != WeaponHash.Unarmed)
+            var weaponHash = RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();
+            if (weaponHash != (uint)WeaponHash.Unarmed)
                 return true;
-            if (!ModAPI.Control.IsDisabledControlPressed(InputGroup.MOVE, Control.Attack))
+            if (!RAGE.Game.Pad.IsDisabledControlPressed((int)InputGroup.MOVE, (int)Control.Attack))
                 return true;
-            if (ModAPI.LocalPlayer.IsDeadOrDying())
+            if (RAGE.Elements.Player.LocalPlayer.IsDeadOrDying(true))
                 return true;
             return false;
         }
-
-        #endregion Private Methods
     }
 }

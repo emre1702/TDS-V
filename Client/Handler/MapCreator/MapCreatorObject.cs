@@ -1,7 +1,8 @@
-﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Blip;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
+﻿using RAGE;
+using RAGE.Elements;
+using System;
+using TDS_Client.Data.Abstracts.Entities.GTA;
+using TDS_Client.Handler.Entities.GTA;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
@@ -12,28 +13,17 @@ namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorObject
     {
-        #region Public Fields
-
-        public Position3D Position;
-        public Position3D Rotation;
-
-        #endregion Public Fields
-
-        #region Private Fields
+        public Vector3 Position;
+        public Vector3 Rotation;
 
         private readonly EventsHandler _eventsHandler;
-        private readonly IModAPI _modAPI;
-        private Position3D _movingPosition;
-        private Position3D _movingRotation;
 
-        #endregion Private Fields
+        private Vector3 _movingPosition;
+        private Vector3 _movingRotation;
 
-        #region Public Constructors
-
-        public MapCreatorObject(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, IEntityBase entity, MapCreatorPositionType type,
-            ushort ownerRemoteId, Position3D pos, Position3D rot, int? teamNumber = null, string objectName = null, int id = -1)
+        public MapCreatorObject(MapCreatorObjectsHandler mapCreatorObjectsHandler, EventsHandler eventsHandler, GameEntityBase entity, MapCreatorPositionType type,
+            ushort ownerRemoteId, Vector3 pos, Vector3 rot, int? teamNumber = null, string objectName = null, int id = -1)
         {
-            _modAPI = modAPI;
             _eventsHandler = eventsHandler;
 
             Entity = entity;
@@ -42,9 +32,9 @@ namespace TDS_Client.Handler.MapCreator
             TeamNumber = teamNumber;
             ObjOrVehName = objectName;
 
-            Position3D a = new Position3D();
-            Position3D b = new Position3D();
-            Entity.GetModelDimensions(a, b);
+            var a = new Vector3();
+            var b = new Vector3(9999f, 9999f, 9999f);
+            RAGE.Game.Misc.GetModelDimensions(Entity.Model, a, b);
             Size = b - a;
 
             Position = pos;
@@ -67,17 +57,13 @@ namespace TDS_Client.Handler.MapCreator
             Entity.FreezePosition(true);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        public IBlip Blip { get; }
+        public ITDSBlip Blip { get; }
         public bool Deleted { get; private set; }
-        public IEntityBase Entity { get; }
+        public GameEntityBase Entity { get; }
         public int ID { get; set; }
         public bool IsSynced { get; set; }
 
-        public Position3D MovingPosition
+        public Vector3 MovingPosition
         {
             get => _movingPosition;
             set
@@ -88,26 +74,22 @@ namespace TDS_Client.Handler.MapCreator
             }
         }
 
-        public Position3D MovingRotation
+        public Vector3 MovingRotation
         {
             get => _movingRotation;
             set
             {
                 _movingRotation = value;
-                Entity.Rotation = value;
-                Blip.Rotation = (int)value.Z;
+                Entity.SetRotation(value.X, value.Y, value.Z, 2, true);
+                Blip.SetRotation((int)value.Z);
             }
         }
 
         public string ObjOrVehName { get; }
         public ushort OwnerRemoteId { get; }
-        public Position3D Size { get; }
+        public Vector3 Size { get; }
         public int? TeamNumber { get; }
         public MapCreatorPositionType Type { get; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void ActivatePhysics()
         {
@@ -165,42 +147,42 @@ namespace TDS_Client.Handler.MapCreator
         }
 
         public bool IsMine()
-            => _modAPI.LocalPlayer.RemoteId == OwnerRemoteId;
+            => Player.LocalPlayer.RemoteId == OwnerRemoteId;
 
         public void LoadEntityData()
         {
             Position = Entity.Position;
-            _movingPosition = new Position3D(Position.X, Position.Y, Position.Z);
-            Rotation = Entity.Rotation;
-            _movingRotation = new Position3D(Rotation.X, Rotation.Y, Rotation.Z);
+            _movingPosition = new Vector3(Position.X, Position.Y, Position.Z);
+            Rotation = Entity.GetRotation(2);
+            _movingRotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z);
         }
 
         public void LoadPos(MapCreatorPosition pos)
         {
-            MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-            Position = new Position3D(MovingPosition);
+            MovingPosition = new Vector3(pos.PosX, pos.PosY, pos.PosZ);
+            Position = new Vector3(MovingPosition.X, MovingPosition.Y, MovingPosition.Z);
 
-            MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
-            Rotation = new Position3D(MovingRotation);
+            MovingRotation = new Vector3(pos.RotX, pos.RotY, pos.RotZ);
+            Rotation = new Vector3(MovingRotation.X, MovingRotation.Y, MovingRotation.Z);
         }
 
         public void LoadPos(MapCreatorPosData pos)
         {
-            MovingPosition = new Position3D(pos.PosX, pos.PosY, pos.PosZ);
-            Position = new Position3D(MovingPosition);
+            MovingPosition = new Vector3(pos.PosX, pos.PosY, pos.PosZ);
+            Position = new Vector3(MovingPosition.X, MovingPosition.Y, MovingPosition.Z);
 
-            MovingRotation = new Position3D(pos.RotX, pos.RotY, pos.RotZ);
-            Rotation = new Position3D(MovingRotation);
+            MovingRotation = new Vector3(pos.RotX, pos.RotY, pos.RotZ);
+            Rotation = new Vector3(MovingRotation.X, MovingRotation.Y, MovingRotation.Z);
         }
 
         public void ResetObjectPosition()
         {
             Entity.Position = Position;
-            Entity.Rotation = Rotation;
+            Entity.SetRotation(Rotation.X, Rotation.Y, Rotation.Z, 2, true);
             LoadEntityData();
 
             Blip.Position = Position;
-            Blip.Rotation = (int)Rotation.Z;
+            Blip.SetRotation((int)Rotation.Z);
         }
 
         public void SetCollision(bool toggle, bool keepPhysics)
@@ -208,39 +190,34 @@ namespace TDS_Client.Handler.MapCreator
             Entity.SetCollision(toggle, keepPhysics);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private IBlip CreateBlip()
+        private ITDSBlip CreateBlip()
         {
+            var dimension = Player.LocalPlayer.Dimension;
             switch (Type)
             {
                 case MapCreatorPositionType.TeamSpawn:
-                    return _modAPI.Blip.Create(SharedConstants.TeamSpawnBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return new TDSBlip(SharedConstants.TeamSpawnBlipSprite, Position, name: ID.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.MapLimit:
-                    return _modAPI.Blip.Create(SharedConstants.MapLimitBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return new TDSBlip(SharedConstants.MapLimitBlipSprite, Position, name: ID.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.BombPlantPlace:
-                    return _modAPI.Blip.Create(SharedConstants.BombPlantPlaceBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return new TDSBlip(SharedConstants.BombPlantPlaceBlipSprite, Position, name: ID.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.MapCenter:
-                    return _modAPI.Blip.Create(SharedConstants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return new TDSBlip(SharedConstants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.Target:
-                    return _modAPI.Blip.Create(SharedConstants.TargetBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return new TDSBlip(SharedConstants.TargetBlipSprite, Position, name: ID.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.Object:
-                    return _modAPI.Blip.Create(SharedConstants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return new TDSBlip(SharedConstants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.Vehicle:
-                    return _modAPI.Blip.Create(SharedConstants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: _modAPI.LocalPlayer.Dimension);
+                    return new TDSBlip(SharedConstants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: dimension);
             }
 
             return null;
         }
-
-        #endregion Private Methods
     }
 }

@@ -1,14 +1,11 @@
-﻿using TDS_Client.Data.Defaults;
+﻿using RAGE.Game;
+using System.Collections.Generic;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Lobby;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler
 {
@@ -24,39 +21,35 @@ namespace TDS_Client.Handler
                 _isOpen = value;
                 _eventsHandler.OnChatInputToggled(value);
                 if (value)
-                    ModAPI.Event.Tick.Add(_tickEventMethod);
+                    Tick += OnUpdate;
                 else
-                    ModAPI.Event.Tick.Remove(_tickEventMethod);
+                    Tick -= OnUpdate;
             }
         }
 
         private bool _isOpen;
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
-
         private readonly BrowserHandler _browserHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly EventsHandler _eventsHandler;
 
-        public ChatHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler,
+        public ChatHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler,
             RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _remoteEventsSender = remoteEventsSender;
             _eventsHandler = eventsHandler;
 
-            _tickEventMethod = new EventMethodData<TickDelegate>(OnUpdate);
-
-            modAPI.Chat.Show(false);
+            RAGE.Chat.Show(false);
 
             bindsHandler.Add(Control.MpTextChatAll, OpenLobbyChatInput);
             bindsHandler.Add(Control.MpTextChatTeam, OpenTeamChatInput);
 
             bindsHandler.Add(Key.Escape, (_) => CloseChatInput());
 
-            modAPI.Event.Add(FromBrowserEvent.CloseChat, _ => CloseChatInput());
-            modAPI.Event.Add(FromBrowserEvent.ChatUsed, OnChatUsedMethod);
+            RAGE.Events.Add(FromBrowserEvent.CloseChat, _ => CloseChatInput());
+            RAGE.Events.Add(FromBrowserEvent.ChatUsed, OnChatUsedMethod);
         }
 
         public void CloseChatInput(bool force = false)
@@ -67,11 +60,11 @@ namespace TDS_Client.Handler
             _browserHandler.Angular.ToggleChatInput(false);
         }
 
-        private void OnUpdate(int _)
+        private void OnUpdate(List<TickNametagData> _)
         {
-            ModAPI.Control.DisableAllControlActions(InputGroup.LOOK);
-            ModAPI.Control.DisableAllControlActions(InputGroup.MOVE);
-            ModAPI.Control.DisableAllControlActions(InputGroup.SUB);
+            RAGE.Game.Pad.DisableAllControlActions((int)InputGroup.LOOK);
+            RAGE.Game.Pad.DisableAllControlActions((int)InputGroup.MOVE);
+            RAGE.Game.Pad.DisableAllControlActions((int)InputGroup.SUB);
         }
 
         private void OpenLobbyChatInput(Control _)

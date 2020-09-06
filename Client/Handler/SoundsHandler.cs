@@ -1,5 +1,4 @@
 ﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler;
 using TDS_Shared.Data.Enums;
 
@@ -15,8 +14,8 @@ namespace TDS_Client.Manager.Utility
 
         #region Public Constructors
 
-        public SoundsHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler)
-            : base(modAPI, loggingHandler)
+        public SoundsHandler(LoggingHandler loggingHandler, SettingsHandler settingsHandler)
+            : base(loggingHandler)
         {
             _settingsHandler = settingsHandler;
         }
@@ -29,7 +28,7 @@ namespace TDS_Client.Manager.Utility
         {
             if (!Constants.SoundPaths.TryGetValue(sound, out string path))
             {
-                ModAPI.Chat.Output(string.Format(_settingsHandler.Language.ERROR, "PlaySound: " + sound.ToString()));
+                RAGE.Chat.Output(string.Format(_settingsHandler.Language.ERROR, "PlaySound: " + sound.ToString()));
                 return;
             }
 

@@ -1,5 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Handler.Events;
+﻿using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -16,8 +15,8 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public GhostModeHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+        public GhostModeHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler)
+            : base(loggingHandler)
         {
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
@@ -47,7 +46,7 @@ namespace TDS_Client.Handler
 
         private void Handle()
         {
-            if (ModAPI.LocalPlayer.Vehicle is null)
+            if (RAGE.Elements.Player.LocalPlayer.Vehicle is null)
                 HandleWhileOnFoot();
             else
                 HandleWhileInVehicle();
@@ -55,32 +54,32 @@ namespace TDS_Client.Handler
 
         private void HandleWhileInVehicle()
         {
-            var myVehicle = ModAPI.LocalPlayer.Vehicle;
-            foreach (var vehicle in ModAPI.Pool.Vehicles.Streamed)
+            var myVehicle = RAGE.Elements.Player.LocalPlayer.Vehicle;
+            foreach (var vehicle in RAGE.Elements.Entities.Vehicles.Streamed)
             {
                 if (vehicle == myVehicle)
                     continue;
-                if (vehicle.IsSeatFree(VehicleSeat.DriverLeftFront))
+                if (vehicle.IsSeatFree((int)VehicleSeat.DriverLeftFront - 1, 1))
                     continue;
-                vehicle.SetNoCollisionEntity(myVehicle.Handle);
+                vehicle.SetNoCollisionEntity(myVehicle.Handle, true);
                 //Todo: Is this enough or do I need to do it for localplayer vehicle, too?
             }
 
-            foreach (var otherPlayer in ModAPI.Pool.Players.Streamed)
+            foreach (var otherPlayer in RAGE.Elements.Entities.Players.Streamed)
             {
-                if (otherPlayer == ModAPI.LocalPlayer)
+                if (otherPlayer == RAGE.Elements.Player.LocalPlayer)
                     continue;
-                myVehicle.SetNoCollisionEntity(otherPlayer.Handle);
+                myVehicle.SetNoCollisionEntity(otherPlayer.Handle, true);
             }
         }
 
         private void HandleWhileOnFoot()
         {
-            foreach (var vehicle in ModAPI.Pool.Vehicles.Streamed)
+            foreach (var vehicle in RAGE.Elements.Entities.Vehicles.Streamed)
             {
-                if (vehicle.IsSeatFree(VehicleSeat.DriverLeftFront))
+                if (vehicle.IsSeatFree((int)VehicleSeat.DriverLeftFront - 1, 1))
                     continue;
-                vehicle.SetNoCollisionEntity(ModAPI.LocalPlayer.Handle);
+                vehicle.SetNoCollisionEntity(RAGE.Elements.Player.LocalPlayer.Handle, true);
                 //Todo: Is this enough or do I need to do it for localplayer, too?
             }
         }

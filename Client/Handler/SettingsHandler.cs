@@ -4,8 +4,6 @@ using System.Drawing;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Entities.Languages;
 using TDS_Client.Handler.Events;
@@ -65,9 +63,9 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public SettingsHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler,
+        public SettingsHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler,
             BrowserHandler browserHandler, Serializer serializer)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
             _eventsHandler = eventsHandler;
@@ -77,24 +75,24 @@ namespace TDS_Client.Handler
             Language = _languagesDict[LanguageEnum];
 
             eventsHandler.LobbyJoined += LoadSyncedLobbySettings;
-            modAPI.Event.Add(FromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
-            modAPI.Event.Add(FromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
-            modAPI.Event.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
-            modAPI.Event.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, SyncRegisterLoginLanguageTexts);
-            modAPI.Event.Add(FromBrowserEvent.ReloadPlayerSettings, ReloadTempChangedPlayerSettings);
-            modAPI.Event.Add(ToClientEvent.SyncPlayerCommandsSettings, LoadCommandsData);
+            RAGE.Events.Add(FromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
+            RAGE.Events.Add(FromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
+            RAGE.Events.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
+            RAGE.Events.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, SyncRegisterLoginLanguageTexts);
+            RAGE.Events.Add(FromBrowserEvent.ReloadPlayerSettings, ReloadTempChangedPlayerSettings);
+            RAGE.Events.Add(ToClientEvent.SyncPlayerCommandsSettings, LoadCommandsData);
 
-            modAPI.Nametags.Enabled = false;
+            RAGE.Nametags.Enabled = false;
 
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Flying), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Lung), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Shooting), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Stamina), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Stealth), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Strength), 100, false);
-            modAPI.Stats.StatSetInt(modAPI.Misc.GetHashKey(PedStat.Wheelie), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Flying), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Lung), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Shooting), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Stamina), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Stealth), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Strength), 100, false);
+            RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Wheelie), 100, false);
 
-            modAPI.LocalPlayer.SetMaxArmour(Constants.MaxPossibleArmor);
+            RAGE.Game.Player.SetPlayerMaxArmour(Constants.MaxPossibleArmor);
             LoadLanguageFromRAGE();
         }
 
@@ -243,7 +241,7 @@ namespace TDS_Client.Handler
 
         private void LoadLanguageFromRAGE()
         {
-            var lang = ModAPI.Locale.GetCurrentLanguageId();
+            var lang = (LanguageID)RAGE.Game.Locale.GetCurrentLanguageId();
             switch (lang)
             {
                 case LanguageID.German:

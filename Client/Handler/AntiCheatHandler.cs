@@ -1,47 +1,34 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
+﻿using System.Collections.Generic;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Deathmatch;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler
 {
     public class AntiCheatHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly PlayerFightHandler _playerFightHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public AntiCheatHandler(IModAPI modAPI, LoggingHandler loggingHandler, PlayerFightHandler playerFightHandler)
-            : base(modAPI, loggingHandler)
+        public AntiCheatHandler(LoggingHandler loggingHandler, PlayerFightHandler playerFightHandler)
+            : base(loggingHandler)
         {
             _playerFightHandler = playerFightHandler;
-
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnTick));
+            Tick += OnTick;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void OnTick(int currentMs)
+        public void OnTick(List<TickNametagData> _)
         {
-            ModAPI.Player.SetPlayerTargetingMode(0);
-            ModAPI.Player.SetPlayerLockon(false);
+            RAGE.Game.Player.SetPlayerTargetingMode(0);
+            RAGE.Game.Player.SetPlayerLockon(false);
 
             if (_playerFightHandler.InFight)
             {
-                if (ModAPI.Player.GetPlayerInvincible())
+                if (RAGE.Game.Player.GetPlayerInvincible())
                 {
                     Logging.LogToServer("Player is invincible, but shouldn't be.", "AntiCheatHandler");
-                    ModAPI.Player.SetPlayerInvincible(false);
+                    RAGE.Game.Player.SetPlayerInvincible(false);
                 }
             }
         }
-
-        #endregion Public Methods
     }
 }

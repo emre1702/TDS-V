@@ -1,10 +1,7 @@
 ﻿using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Lobby;
-using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 
@@ -24,9 +21,9 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public GangWindowHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, 
+        public GangWindowHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler,
             EventsHandler eventsHandler, BindsHandler bindsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _cursorHandler = cursorHandler;
@@ -35,7 +32,7 @@ namespace TDS_Client.Handler
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
 
-            modAPI.Event.Add(FromBrowserEvent.CloseGangWindow, _ => Close());
+            RAGE.Events.Add(FromBrowserEvent.CloseGangWindow, _ => Close());
         }
 
         #endregion Public Constructors
@@ -49,7 +46,6 @@ namespace TDS_Client.Handler
 
         public void Toggle(Key key)
         {
-
             if (key != Key.Noname)
             {
                 if (_browserHandler.InInput)
@@ -78,7 +74,6 @@ namespace TDS_Client.Handler
             if (settings.Type == LobbyType.GangLobby)
                 _bindsHandler.Remove(Key.F3, Toggle);
         }
-
 
         #endregion Private Methods
     }

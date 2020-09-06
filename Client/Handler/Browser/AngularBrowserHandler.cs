@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -17,22 +16,16 @@ namespace TDS_Client.Handler.Browser
 {
     public class AngularBrowserHandler : BrowserHandlerBase
     {
-        #region Private Fields
-
         private readonly EventsHandler _eventsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public AngularBrowserHandler(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer,
+        public AngularBrowserHandler(LoggingHandler loggingHandler, Serializer serializer,
             EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler, serializer, Constants.AngularMainBrowserPath)
+            : base(loggingHandler, serializer, Constants.AngularMainBrowserPath)
         {
             _eventsHandler = eventsHandler;
 
-            modAPI.Chat.SafeMode = false;
-            modAPI.Chat.Show(false);
+            RAGE.Chat.SafeMode = false;
+            RAGE.Chat.Show(false);
 
             CreateBrowser();
             Browser.MarkAsChat();
@@ -43,14 +36,10 @@ namespace TDS_Client.Handler.Browser
             eventsHandler.RoundEnded += _ => ResetMapVoting();
             eventsHandler.ChatInputToggled += ToggleChatOpened;
 
-            modAPI.Event.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
-            modAPI.Event.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
-            modAPI.Event.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
+            RAGE.Events.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
+            RAGE.Events.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
+            RAGE.Events.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void AddNameForChat(string name)
         {
@@ -108,7 +97,7 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.LoadMapForMapCreator, json);
         }
 
-        public void LoadNamesForChat(List<IPlayer> players)
+        public void LoadNamesForChat(List<ITDSPlayer> players)
         {
             IEnumerable<string> names = players.Select(p => p.Name);
             Execute(ToBrowserEvent.LoadNamesForChat, Serializer.ToBrowser(names));
@@ -278,10 +267,6 @@ namespace TDS_Client.Handler.Browser
             Execute(ToBrowserEvent.ToggleGangWindow, boolean);
         }
 
-        #endregion Public Methods
-
-        #region Internal Methods
-
         internal void MapCreatorSyncCurrentMapToServer(int tdsPlayerId, int idCounter)
         {
             Execute(ToBrowserEvent.MapCreatorSyncCurrentMapToServer, tdsPlayerId, idCounter);
@@ -291,10 +276,6 @@ namespace TDS_Client.Handler.Browser
         {
             Execute(ToBrowserEvent.LoadThemeSettings, dataJson);
         }
-
-        #endregion Internal Methods
-
-        #region Private Methods
 
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
@@ -319,7 +300,5 @@ namespace TDS_Client.Handler.Browser
             string eventName = (string)args[0];
             FromServerToBrowser(eventName, args.Skip(1).ToArray());
         }
-
-        #endregion Private Methods
     }
 }

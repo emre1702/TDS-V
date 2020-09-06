@@ -1,20 +1,15 @@
-﻿using System.Drawing;
+﻿using RAGE.Game;
+using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
+using Alignment = RAGE.NUI.UIResText.Alignment;
 
 namespace TDS_Client.Handler.Draw.Dx.Grid
 {
     public class DxGridCell : DxBase
     {
-        #region Public Fields
-
         public DxGridRow Row;
 
-        #endregion Public Fields
-
-        #region Private Fields
-
-        private readonly AlignmentX _alignmentX;
+        private readonly Alignment _Alignment;
         private Color? _backColor;
         private DxGridColumn _column;
         private DxText _dxText;
@@ -23,13 +18,9 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         private string _text;
         private Color? _textColor;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DxGridCell(DxHandler dxHandler, IModAPI modAPI, TimerHandler timerHandler, string text, DxGridRow row, DxGridColumn column, Color? backColor = null,
+        public DxGridCell(DxHandler dxHandler, TimerHandler timerHandler, string text, DxGridRow row, DxGridColumn column, Color? backColor = null,
             Color? textColor = null, float? scale = null, Font? font = null,
-            AlignmentX? alignment = null, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority, false)
+            Alignment? alignment = null, int frontPriority = 0) : base(dxHandler, frontPriority, false)
         {
             this._text = text;
             this.Row = row;
@@ -38,9 +29,9 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             this._textColor = textColor;
             this._scale = scale;
             this._font = font;
-            _alignmentX = alignment ?? row.TextAlignment;
+            _Alignment = alignment ?? row.TextAlignment;
 
-            _dxText = new DxText(dxHandler, modAPI, timerHandler, text, column.X, Row.Y, scale ?? Row.Scale, textColor ?? Row.TextColor, font ?? Row.Font,
+            _dxText = new DxText(dxHandler, timerHandler, text, column.X, Row.Y, scale ?? Row.Scale, textColor ?? Row.TextColor, font ?? Row.Font,
                 alignment ?? Row.TextAlignment, AlignmentY.Center, _column.RelativePos, false, true, amountLines: 1, frontPriority: 99)
             {
                 Activated = false
@@ -48,10 +39,6 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
 
             row.AddCell(this);
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public Color BackColor
         {
@@ -64,10 +51,6 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
                     Row.CheckUseColorForWholeRow();
             }
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public override void Draw()
         {
@@ -87,7 +70,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         public void DrawBackground()
         {
             Color backcolor = BackColor;
-            ModAPI.Graphics.DrawRect(_column.X, Row.Y, _column.Width, Row.Height, backcolor.R, backcolor.G, backcolor.B, backcolor.A);
+            RAGE.Game.Graphics.DrawRect(_column.X, Row.Y, _column.Width, Row.Height, backcolor.R, backcolor.G, backcolor.B, backcolor.A, 0);
         }
 
         public override DxType GetDxType()
@@ -107,26 +90,20 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             this._text = text;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private float GetXPos()
         {
-            switch (_alignmentX)
+            switch (_Alignment)
             {
-                case AlignmentX.Left:
+                case Alignment.Left:
                     return _column.X;
 
-                case AlignmentX.Center:
+                case Alignment.Centered:
                     return _column.X + _column.Width / 2;
 
-                case AlignmentX.Right:
+                case Alignment.Right:
                     return _column.X + _column.Width;
             }
             return 0;
         }
-
-        #endregion Private Methods
     }
 }

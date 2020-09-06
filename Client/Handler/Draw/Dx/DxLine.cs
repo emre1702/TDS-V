@@ -1,13 +1,10 @@
 ﻿using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
 
 namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxLine : DxBase
     {
-        #region Private Fields
-
         //private readonly bool _relative;
         //private bool is3D;
         private readonly CamerasHandler _camerasHandler;
@@ -23,13 +20,9 @@ namespace TDS_Client.Handler.Draw.Dx
 
         private readonly UtilsHandler _utilsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DxLine(DxHandler dxHandler, IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, float startX, float startY, float? startZ, float endX, float endY, float? endZ,
+        public DxLine(DxHandler dxHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, float startX, float startY, float? startZ, float endX, float endY, float? endZ,
             Color color, bool relative = true, int frontPriority = 0)
-            : base(dxHandler, modAPI, frontPriority: frontPriority)
+            : base(dxHandler, frontPriority: frontPriority)
         {
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
@@ -60,20 +53,14 @@ namespace TDS_Client.Handler.Draw.Dx
             //this._relative = relative;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public override void Draw()
         {
-            ModAPI.Graphics.DrawLine(_startX, _startY, _startZ, _endX, _endY, _endZ, _color.R, _color.G, _color.B, _color.A);
+            RAGE.Game.Graphics.DrawLine(_startX, _startY, _startZ, _endX, _endY, _endZ, _color.R, _color.G, _color.B, _color.A);
         }
 
         public override DxType GetDxType()
         {
             return DxType.Line;
         }
-
-        #endregion Public Methods
     }
 }

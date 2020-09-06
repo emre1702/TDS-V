@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using RAGE;
+using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
@@ -10,21 +10,15 @@ namespace TDS_Client.Handler.Map
 {
     public class MapLimitHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly DxHandler _dxHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
         private MapLimit _currentMapLimit;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapLimitHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHander,
+        public MapLimitHandler(LoggingHandler loggingHandler, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHander,
             DxHandler dxHandler, TimerHandler timerHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _settingsHandler = settingsHandler;
             _remoteEventsSender = remoteEventsSender;
@@ -41,14 +35,10 @@ namespace TDS_Client.Handler.Map
             eventsHander.RoundStarted += Start;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void Load(List<Position3D> edges)
+        public void Load(List<Vector3> edges)
         {
             _currentMapLimit?.Stop();
-            _currentMapLimit = new MapLimit(edges, _settingsHandler.MapLimitType, _settingsHandler.MapLimitTime, _settingsHandler.MapBorderColor, ModAPI, _remoteEventsSender, _settingsHandler,
+            _currentMapLimit = new MapLimit(edges, _settingsHandler.MapLimitType, _settingsHandler.MapLimitTime, _settingsHandler.MapBorderColor, _remoteEventsSender, _settingsHandler,
                 _dxHandler, _timerHandler);
         }
 
@@ -62,10 +52,6 @@ namespace TDS_Client.Handler.Map
         {
             _currentMapLimit?.Stop();
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void EventsHander_InFightStatusChanged(bool inFight)
         {
@@ -85,7 +71,5 @@ namespace TDS_Client.Handler.Map
         {
             Start(!inFightAgain);
         }
-
-        #endregion Private Methods
     }
 }

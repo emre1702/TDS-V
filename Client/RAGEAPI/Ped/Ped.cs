@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Ped;
+using TDS_Client.Data.Interfaces.RAGE.Game.Entity;
+using TDS_Client.Data.Interfaces.RAGE.Game.Ped;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;

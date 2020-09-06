@@ -1,6 +1,6 @@
 ﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
+using TDS_Client.Data.Interfaces.RAGE.Game.Event;
+using TDS_Client.Data.Interfaces.RAGE.Game.Vehicle;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Entity;
 using TDS_Shared.Data.Enums;

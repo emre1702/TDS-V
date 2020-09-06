@@ -1,9 +1,8 @@
-﻿using System;
+﻿using RAGE.Game;
+using System;
 using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
@@ -21,8 +20,6 @@ namespace TDS_Client.Handler.Lobby
 {
     public class LobbyHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
 
         private readonly EventsHandler _eventsHandler;
@@ -45,16 +42,12 @@ namespace TDS_Client.Handler.Lobby
 
         private bool _isLobbyOwner;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public LobbyHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, PlayerFightHandler playerFightHandler,
+        public LobbyHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, PlayerFightHandler playerFightHandler,
             InstructionalButtonHandler instructionalButtonHandler,
             EventsHandler eventsHandler, SettingsHandler settingsHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender, DxHandler dxHandler,
             TimerHandler timerHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, DataSyncHandler dataSyncHandler,
             MapLimitHandler mapLimitHandler, Serializer serializer)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _playerFightHandler = playerFightHandler;
@@ -65,31 +58,28 @@ namespace TDS_Client.Handler.Lobby
             _serializer = serializer;
             _utilsHandler = utilsHandler;
 
-            Camera = new LobbyCamHandler(modAPI, loggingHandler, camerasHandler, settingsHandler, eventsHandler);
-            Countdown = new CountdownHandler(modAPI, loggingHandler, settingsHandler, dxHandler, timerHandler, browserHandler, eventsHandler, Camera);
-            Choice = new LobbyChoiceHandler(modAPI, remoteEventsSender, settingsHandler);
-            MapDatas = new LobbyMapDatasHandler(modAPI, loggingHandler, dxHandler, timerHandler, eventsHandler, Camera, mapLimitHandler, serializer, settingsHandler);
-            MapManager = new MapManagerHandler(eventsHandler, modAPI, browserHandler, settingsHandler, cursorHandler, remoteEventsSender, dataSyncHandler, bindsHandler);
+            Camera = new LobbyCamHandler(loggingHandler, camerasHandler, settingsHandler, eventsHandler);
+            Countdown = new CountdownHandler(loggingHandler, settingsHandler, dxHandler, timerHandler, browserHandler, eventsHandler, Camera);
+            Choice = new LobbyChoiceHandler(remoteEventsSender, settingsHandler);
+            MapDatas = new LobbyMapDatasHandler(loggingHandler, dxHandler, timerHandler, eventsHandler, Camera, mapLimitHandler, serializer, settingsHandler);
+            MapManager = new MapManagerHandler(eventsHandler, browserHandler, settingsHandler, cursorHandler, remoteEventsSender, dataSyncHandler, bindsHandler);
             MainMenu = new MainMenuHandler(eventsHandler, browserHandler);
             Players = new LobbyPlayersHandler(browserHandler, eventsHandler);
-            Teams = new TeamsHandler(modAPI, loggingHandler, browserHandler, bindsHandler, this, remoteEventsSender, cursorHandler, eventsHandler, utilsHandler);
-            RoundInfos = new RoundInfosHandler(modAPI, loggingHandler, Teams, timerHandler, dxHandler, settingsHandler, eventsHandler, serializer);
-            Round = new RoundHandler(modAPI, loggingHandler, eventsHandler, RoundInfos, settingsHandler, browserHandler);
-            Bomb = new BombHandler(modAPI, loggingHandler, browserHandler, RoundInfos, settingsHandler, utilsHandler, remoteEventsSender, dxHandler, timerHandler, eventsHandler,
+            Teams = new TeamsHandler(loggingHandler, browserHandler, bindsHandler, this, remoteEventsSender, cursorHandler, eventsHandler, utilsHandler);
+            RoundInfos = new RoundInfosHandler(loggingHandler, Teams, timerHandler, dxHandler, settingsHandler, eventsHandler, serializer);
+            Round = new RoundHandler(loggingHandler, eventsHandler, RoundInfos, settingsHandler, browserHandler);
+            Bomb = new BombHandler(loggingHandler, browserHandler, RoundInfos, settingsHandler, utilsHandler, remoteEventsSender, dxHandler, timerHandler, eventsHandler,
                 MapDatas, serializer);
 
             eventsHandler.DataChanged += EventsHandler_DataChanged;
 
-            ModAPI.Event.Add(ToClientEvent.JoinLobby, Join);
-            ModAPI.Event.Add(ToServerEvent.LeaveLobby, Leave);
-            ModAPI.Event.Add(ToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
-            ModAPI.Event.Add(ToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
-            ModAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(DisableAttack, () => Bomb.BombOnHand || !playerFightHandler.InFight));
+            RAGE.Events.Add(ToClientEvent.JoinLobby, Join);
+            RAGE.Events.Add(ToServerEvent.LeaveLobby, Leave);
+            RAGE.Events.Add(ToClientEvent.JoinSameLobby, OnJoinSameLobbyMethod);
+            RAGE.Events.Add(ToClientEvent.LeaveSameLobby, OnLeaveSameLobbyMethod);
+
+            RAGE.Events.Tick += DisableAttack;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public BombHandler Bomb { get; }
 
@@ -132,10 +122,6 @@ namespace TDS_Client.Handler.Lobby
         public RoundInfosHandler RoundInfos { get; }
         public TeamsHandler Teams { get; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public void Join(object[] args)
         {
             try
@@ -157,7 +143,7 @@ namespace TDS_Client.Handler.Lobby
         {
             try
             {
-                ModAPI.LocalPlayer.ResetAlpha();
+                RAGE.Elements.Player.LocalPlayer.ResetAlpha();
 
                 if (oldSettings != null)
                     _eventsHandler.OnLobbyLeft(oldSettings);
@@ -183,28 +169,27 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void DisableAttack(int _)
+        private void DisableAttack(List<RAGE.Events.TickNametagData> _)
         {
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.Attack2);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackLight);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackHeavy);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttackAlternate);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack1);
-            ModAPI.Control.DisableControlAction(InputGroup.LOOK, Control.MeleeAttack2);
+            if (Bomb.BombOnHand || !_playerFightHandler.InFight)
+            {
+                RAGE.Game.Pad.DisableControlAction((int)InputGroup.LOOK, (int)Control.Attack, true);
+                RAGE.Game.Pad.DisableControlAction((int)InputGroup.LOOK, (int)Control.Attack2, true);
+                RAGE.Game.Pad.DisableControlAction((int)InputGroup.LOOK, (int)Control.MeleeAttackLight, true);
+                RAGE.Game.Pad.DisableControlAction((int)InputGroup.LOOK, (int)Control.MeleeAttackHeavy, true);
+                RAGE.Game.Pad.DisableControlAction((int)InputGroup.LOOK, (int)Control.MeleeAttackAlternate, true);
+                RAGE.Game.Pad.DisableControlAction((int)InputGroup.LOOK, (int)Control.MeleeAttack1, true);
+                RAGE.Game.Pad.DisableControlAction((int)InputGroup.LOOK, (int)Control.MeleeAttack2, true);
+            }
         }
 
-        private void EventsHandler_DataChanged(IPlayer player, PlayerDataKey key, object data)
+        private void EventsHandler_DataChanged(ITDSPlayer player, PlayerDataKey key, object data)
         {
             try
             {
                 if (key != PlayerDataKey.IsLobbyOwner)
                     return;
-                if (player != ModAPI.LocalPlayer)
+                if (player != RAGE.Elements.Player.LocalPlayer)
                     return;
                 IsLobbyOwner = (bool)data;
             }
@@ -233,7 +218,7 @@ namespace TDS_Client.Handler.Lobby
             try
             {
                 ushort handleValue = Convert.ToUInt16(args[0]);
-                IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
+                ITDSPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
                 _eventsHandler.OnPlayerJoinedSameLobby(player);
             }
             catch (Exception ex)
@@ -247,7 +232,7 @@ namespace TDS_Client.Handler.Lobby
             try
             {
                 ushort handleValue = Convert.ToUInt16(args[0]);
-                IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
+                ITDSPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
                 string name = (string)args[1];
                 _eventsHandler.OnPlayerLeftSameLobby(player, name);
             }
@@ -256,7 +241,5 @@ namespace TDS_Client.Handler.Lobby
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Private Methods
     }
 }

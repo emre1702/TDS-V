@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 
@@ -9,7 +9,7 @@ namespace TDS_Client.Handler.Lobby
     {
         #region Public Fields
 
-        public List<IPlayer> PlayersSameLobby = new List<IPlayer>();
+        public List<ITDSPlayer> PlayersSameLobby = new List<ITDSPlayer>();
 
         #endregion Public Fields
 
@@ -33,19 +33,19 @@ namespace TDS_Client.Handler.Lobby
 
         #region Public Methods
 
-        public void Load(List<IPlayer> players)
+        public void Load(List<ITDSPlayer> players)
         {
             PlayersSameLobby = players;
             _browserHandler.Angular.LoadNamesForChat(players);
         }
 
-        public void Load(IPlayer player)
+        public void Load(ITDSPlayer player)
         {
             PlayersSameLobby.Add(player);
             _browserHandler.Angular.AddNameForChat(player.Name);
         }
 
-        public void Remove(IPlayer player, string name)
+        public void Remove(ITDSPlayer player, string name)
         {
             PlayersSameLobby.Remove(player);
             _browserHandler.Angular.RemoveNameForChat(name);

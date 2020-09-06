@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
@@ -16,7 +15,7 @@ namespace TDS_Client.Handler.Lobby
     {
         #region Public Fields
 
-        public readonly HashSet<IPlayer> SameTeamPlayers = new HashSet<IPlayer>();
+        public readonly HashSet<ITDSPlayer> SameTeamPlayers = new HashSet<ITDSPlayer>();
 
         #endregion Public Fields
 
@@ -44,9 +43,9 @@ namespace TDS_Client.Handler.Lobby
 
         #region Public Constructors
 
-        public TeamsHandler(IModAPI modAPI, LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler, LobbyHandler lobbyHandler,
+        public TeamsHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler, LobbyHandler lobbyHandler,
             RemoteEventsSender remoteEventsSender, CursorHandler cursorHandler, EventsHandler eventsHandler, UtilsHandler utilsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _lobbyHandler = lobbyHandler;
@@ -58,14 +57,14 @@ namespace TDS_Client.Handler.Lobby
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
-            modAPI.Event.Add(ToServerEvent.ChooseTeam, ChooseTeam);
-            modAPI.Event.Add(ToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
-            modAPI.Event.Add(ToClientEvent.PlayerJoinedTeam, OnPlayerJoinedTeamMethod);
-            modAPI.Event.Add(ToClientEvent.PlayerLeftTeam, OnPlayerLeftTeamMethod);
-            modAPI.Event.Add(ToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
-            modAPI.Event.Add(ToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
-            modAPI.Event.Add(ToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
-            modAPI.Event.Add(ToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
+            RAGE.Events.Add(ToServerEvent.ChooseTeam, ChooseTeam);
+            RAGE.Events.Add(ToClientEvent.ClearTeamPlayers, OnClearTeamPlayersMethod);
+            RAGE.Events.Add(ToClientEvent.PlayerJoinedTeam, OnPlayerJoinedTeamMethod);
+            RAGE.Events.Add(ToClientEvent.PlayerLeftTeam, OnPlayerLeftTeamMethod);
+            RAGE.Events.Add(ToClientEvent.PlayerTeamChange, OnPlayerTeamChangeMethod);
+            RAGE.Events.Add(ToClientEvent.SyncTeamChoiceMenuData, OnSyncTeamChoiceMenuDataMethod);
+            RAGE.Events.Add(ToClientEvent.SyncTeamPlayers, OnSyncTeamPlayersMethod);
+            RAGE.Events.Add(ToClientEvent.ToggleTeamChoiceMenu, OnToggleTeamChoiceMenuMethod);
         }
 
         #endregion Public Constructors
@@ -86,11 +85,11 @@ namespace TDS_Client.Handler.Lobby
                 {
                     if (_LobbyTeams.Count == 1)
                     {
-                        ModAPI.LocalPlayer.SetCanAttackFriendly(true);
+                        RAGE.Elements.Player.LocalPlayer.SetCanAttackFriendly(true, false);
                     }
                     else
                     {
-                        ModAPI.LocalPlayer.SetCanAttackFriendly(false);
+                        RAGE.Elements.Player.LocalPlayer.SetCanAttackFriendly(false, false);
                     }
                 }
             }
@@ -100,7 +99,7 @@ namespace TDS_Client.Handler.Lobby
 
         #region Public Methods
 
-        public void AddSameTeam(IPlayer player)
+        public void AddSameTeam(ITDSPlayer player)
         {
             try
             {
@@ -112,7 +111,7 @@ namespace TDS_Client.Handler.Lobby
                 if (prevBlipHandle != 0)
                 {
                     var blip = player.AddBlipFor();
-                    ModAPI.Ui.SetBlipAsFriendly(blip, true);
+                    RAGE.Game.Ui.SetBlipAsFriendly(blip, true);
                 }
                 Logging.LogInfo("", "TeamsHandler.AddSameTeam", true);
             }
@@ -130,8 +129,8 @@ namespace TDS_Client.Handler.Lobby
                 foreach (var player in SameTeamPlayers)
                 {
                     var blip = player.GetBlipFrom();
-                    if (ModAPI.Ui.DoesBlipExist(blip))
-                        ModAPI.Ui.RemoveBlip(ref blip);
+                    if (RAGE.Game.Ui.DoesBlipExist(blip))
+                        RAGE.Game.Ui.RemoveBlip(ref blip);
                 }
                 SameTeamPlayers.Clear();
                 Logging.LogInfo("", "TeamsHandler.ClearSameTeam", true);
@@ -142,18 +141,18 @@ namespace TDS_Client.Handler.Lobby
             }
         }
 
-        public bool IsInSameTeam(IPlayer player)
+        public bool IsInSameTeam(ITDSPlayer player)
         {
             return SameTeamPlayers.Contains(player);
         }
 
-        public void RemoveSameTeam(IPlayer player)
+        public void RemoveSameTeam(ITDSPlayer player)
         {
             Logging.LogInfo("", "TeamsHandler.RemoveSameTeam");
             SameTeamPlayers.Remove(player);
             var prevBlipHandle = player.GetBlipFrom();
-            if (ModAPI.Ui.DoesBlipExist(prevBlipHandle))
-                ModAPI.Ui.RemoveBlip(ref prevBlipHandle);
+            if (RAGE.Game.Ui.DoesBlipExist(prevBlipHandle))
+                RAGE.Game.Ui.RemoveBlip(ref prevBlipHandle);
             Logging.LogInfo("", "TeamsHandler.RemoveSameTeam", true);
         }
 
@@ -241,7 +240,7 @@ namespace TDS_Client.Handler.Lobby
             {
                 Logging.LogInfo("", "TeamsHandler.OnPlayerJoinedTeamMethod");
                 ushort handleValue = Convert.ToUInt16(args[0]);
-                IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
+                ITDSPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
                 AddSameTeam(player);
                 Logging.LogInfo("", "TeamsHandler.OnPlayerJoinedTeamMethod", true);
             }
@@ -257,7 +256,7 @@ namespace TDS_Client.Handler.Lobby
             {
                 Logging.LogInfo("", "TeamsHandler.OnPlayerLeftTeamMethod");
                 ushort handleValue = Convert.ToUInt16(args[0]);
-                IPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
+                ITDSPlayer player = _utilsHandler.GetPlayerByHandleValue(handleValue);
                 if (player is null)
                     RemoveSameTeam(handleValue);
                 else

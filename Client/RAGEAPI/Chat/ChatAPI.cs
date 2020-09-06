@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Chat;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Chat;
 
 namespace TDS_Client.RAGEAPI.Chat
 {

@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
+using TDS_Client.Data.Interfaces.RAGE.Game.Entity;
+using TDS_Client.Data.Interfaces.RAGE.Game.Player;
+using TDS_Client.Data.Interfaces.RAGE.Game.Vehicle;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -10,7 +10,7 @@ using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Player
 {
-    internal class Player : RAGE.Elements.Player, IPlayer
+    internal class Player : RAGE.Elements.Player, ITDSPlayer
     {
         #region Public Constructors
 

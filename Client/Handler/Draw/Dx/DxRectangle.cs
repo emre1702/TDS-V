@@ -1,29 +1,24 @@
-﻿using System.Drawing;
+﻿using RAGE;
+using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
+using static RAGE.NUI.UIResText;
 
 namespace TDS_Client.Handler.Draw.Dx
 {
     internal class DxRectangle : DxBase
     {
-        #region Private Fields
-
         private readonly Color _color;
 
-        private AlignmentX _alignmentX;
+        private Alignment _Alignment;
 
         private float _xPos,
                             _yPos,
             _sizeX,
             _sizeY;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DxRectangle(DxHandler dxHandler, IModAPI modAPI, float x, float y, float width, float height, Color color,
-            AlignmentX alignmentX = AlignmentX.Left, AlignmentY alignmentY = AlignmentY.Top,
-            bool relativePos = true, int frontPriority = 0) : base(dxHandler, modAPI, frontPriority: frontPriority)
+        public DxRectangle(DxHandler dxHandler, float x, float y, float width, float height, Color color,
+            Alignment alignmentX = Alignment.Left, AlignmentY alignmentY = AlignmentY.Top,
+            bool relativePos = true, int frontPriority = 0) : base(dxHandler, frontPriority: frontPriority)
         {
             _xPos = GetRelativeX(x, relativePos);
             _yPos = GetRelativeY(y, relativePos);
@@ -31,11 +26,11 @@ namespace TDS_Client.Handler.Draw.Dx
             _sizeY = GetRelativeY(height, relativePos);
 
             this._color = color;
-            this._alignmentX = alignmentX;
+            this._Alignment = alignmentX;
 
-            if (alignmentX == AlignmentX.Left)
+            if (alignmentX == Alignment.Left)
                 _xPos += _sizeX / 2;
-            else if (alignmentX == AlignmentX.Right)
+            else if (alignmentX == Alignment.Right)
                 _xPos -= _sizeX / 2;
 
             if (alignmentY == AlignmentY.Top)
@@ -44,30 +39,26 @@ namespace TDS_Client.Handler.Draw.Dx
                 _yPos -= _sizeY / 2;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public override void Draw()
         {
-            ModAPI.Graphics.DrawRect(_xPos, _yPos, _sizeX, _sizeY, _color.R, _color.G, _color.B, _color.A);
+            RAGE.Game.Graphics.DrawRect(_xPos, _yPos, _sizeX, _sizeY, _color.R, _color.G, _color.B, _color.A, 0);
         }
 
-        public void SetAlignment(AlignmentX newalignmentX)
+        public void SetAlignment(Alignment newAlignment)
         {
             // convert old back
-            if (_alignmentX == AlignmentX.Left)
+            if (_Alignment == Alignment.Left)
                 _xPos -= _sizeX / 2;
-            else if (_alignmentX == AlignmentX.Right)
+            else if (_Alignment == Alignment.Right)
                 _xPos += _sizeX / 2;
 
             // align new
-            if (newalignmentX == AlignmentX.Left)
+            if (newAlignment == Alignment.Left)
                 _xPos += _sizeX / 2;
-            else if (newalignmentX == AlignmentX.Right)
+            else if (newAlignment == Alignment.Right)
                 _xPos -= _sizeX / 2;
 
-            _alignmentX = newalignmentX;
+            _Alignment = newAlignment;
         }
 
         public void SetHeight(float height)
@@ -79,12 +70,10 @@ namespace TDS_Client.Handler.Draw.Dx
 
         public void SetWidth(float width, bool relativePos)
         {
-            AlignmentX currentalignment = _alignmentX;
-            SetAlignment(AlignmentX.Center);
+            Alignment currentalignment = _Alignment;
+            SetAlignment(Alignment.Centered);
             _sizeX = GetRelativeX(width, relativePos);
             SetAlignment(currentalignment);
         }
-
-        #endregion Public Methods
     }
 }

@@ -1,80 +1,84 @@
-﻿using System.Collections.Generic;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Models;
+﻿using System;
+using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Entities.Draw;
 using TDS_Client.Handler.Events;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Draw
 {
     public class FloatingDamageInfoHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly DxHandler _dxHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
-        private List<FloatingDamageInfo> _damageInfos = new List<FloatingDamageInfo>();
 
-        #endregion Private Fields
+        private readonly List<FloatingDamageInfo> _damageInfos = new List<FloatingDamageInfo>();
 
-        #region Public Constructors
-
-        public FloatingDamageInfoHandler(IModAPI modAPI, LoggingHandler loggingHandler, TimerHandler timerHandler, SettingsHandler settingsHandler,
+        public FloatingDamageInfoHandler(LoggingHandler loggingHandler, TimerHandler timerHandler, SettingsHandler settingsHandler,
             EventsHandler eventsHandler, DxHandler dxHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _timerHandler = timerHandler;
             _settingsHandler = settingsHandler;
             _dxHandler = dxHandler;
 
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(UpdateAllPositions, () => _damageInfos.Count > 0));
-
             eventsHandler.InFightStatusChanged += EventsHandler_InFightStatusChanged;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void Add(IPlayer target, float damage)
+        public void Add(ITDSPlayer target, float damage)
         {
-            var info = new FloatingDamageInfo(target, damage, _timerHandler.ElapsedMs, ModAPI, _settingsHandler, _dxHandler, _timerHandler);
+            var info = new FloatingDamageInfo(target, damage, _timerHandler.ElapsedMs, _settingsHandler, _dxHandler, _timerHandler);
             _damageInfos.Add(info);
+            CheckAddEvent(true);
         }
 
         public void Clear()
         {
+            if (_damageInfos.Count == 0)
+                return;
+
             foreach (var info in _damageInfos)
             {
                 info.Remove();
             }
             _damageInfos.Clear();
+            CheckAddEvent(false);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void EventsHandler_InFightStatusChanged(bool inFight)
         {
             if (inFight)
-                UpdateAllPositions(0);
+                UpdateAllPositions(null);
             else
                 Clear();
         }
 
-        private void UpdateAllPositions(int currentMs)
+        private void UpdateAllPositions(List<TickNametagData> _)
         {
+            if (_damageInfos.Count == 0)
+                return;
+
+            var currentMs = _timerHandler.ElapsedMs;
             _damageInfos.RemoveAll(x => x.RemoveAtHandler);
             foreach (var damageInfo in _damageInfos)
             {
                 damageInfo.UpdatePosition(currentMs);
             }
+            CheckAddEvent(false);
         }
 
-        #endregion Private Methods
+        private void CheckAddEvent(bool added)
+        {
+            if (added && _damageInfos.Count == 1)
+            {
+                Tick += UpdateAllPositions;
+            }
+            else if (!added && _damageInfos.Count == 0)
+            {
+                Tick -= UpdateAllPositions;
+            }
+        }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Interfaces.ModAPI.Pool;
-using TDS_Client.RAGEAPI.Entity;
 
 namespace TDS_Client.RAGEAPI.Pool
 {
@@ -19,22 +16,22 @@ namespace TDS_Client.RAGEAPI.Pool
 
         #region Public Properties
 
-        public List<IPlayer> All => RAGE.Elements.Entities.Players.All.OfType<IPlayer>().ToList();
+        public List<ITDSPlayer> All => RAGE.Elements.Entities.Players.All.OfType<ITDSPlayer>().ToList();
 
-        public List<IPlayer> Streamed => RAGE.Elements.Entities.Players.Streamed.OfType<IPlayer>().ToList();
+        public List<ITDSPlayer> Streamed => RAGE.Elements.Entities.Players.Streamed.OfType<ITDSPlayer>().ToList();
 
         #endregion Public Properties
 
         #region Public Methods
 
-        public IPlayer GetAt(ushort id)
-            => RAGE.Elements.Entities.Players.GetAt(id) as IPlayer;
+        public ITDSPlayer GetAt(ushort id)
+            => RAGE.Elements.Entities.Players.GetAt(id) as ITDSPlayer;
 
-        public IPlayer GetAtHandle(int handle)
-                    => RAGE.Elements.Entities.Players.GetAtHandle(handle) as IPlayer;
+        public ITDSPlayer GetAtHandle(int handle)
+                    => RAGE.Elements.Entities.Players.GetAtHandle(handle) as ITDSPlayer;
 
-        public IPlayer GetAtRemote(ushort handleValue)
-            => RAGE.Elements.Entities.Players.GetAtRemote(handleValue) as IPlayer;
+        public ITDSPlayer GetAtRemote(ushort handleValue)
+            => RAGE.Elements.Entities.Players.GetAtRemote(handleValue) as ITDSPlayer;
 
         #endregion Public Methods
     }

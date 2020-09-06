@@ -1,9 +1,7 @@
-﻿using System;
+﻿using RAGE.Elements;
+using System;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Default;
@@ -15,7 +13,7 @@ namespace TDS_Client.Handler
         #region Private Fields
 
         private static bool _binded;
-        private static IEntityBase _spectatingEntity;
+        private static GameEntityBase _spectatingEntity;
         private readonly BindsHandler _bindsHandler;
         private readonly CamerasHandler _camerasHandler;
         private readonly DeathHandler _deathHandler;
@@ -24,11 +22,9 @@ namespace TDS_Client.Handler
 
         #endregion Private Fields
 
-        #region Public Constructors
-
-        public SpectatingHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
+        public SpectatingHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
             CamerasHandler camerasHandler, DeathHandler deathHandler,
-            EventsHandler eventsHandler, UtilsHandler utilsHandler) : base(modAPI, loggingHandler)
+            EventsHandler eventsHandler, UtilsHandler utilsHandler) : base(loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
             _bindsHandler = bindsHandler;
@@ -40,19 +36,17 @@ namespace TDS_Client.Handler
             eventsHandler.CountdownStarted += EventsHandler_CountdownStarted;
             eventsHandler.RoundStarted += EventsHandler_RoundStarted;
 
-            modAPI.Event.Add(ToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
-            modAPI.Event.Add(ToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
-            modAPI.Event.Add(ToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
-            modAPI.Event.Add(ToClientEvent.StopSpectator, OnStopSpectatorMethod);
+            RAGE.Events.Add(ToClientEvent.SpectatorReattachCam, OnSpectatorReattachCamMethod);
+            RAGE.Events.Add(ToClientEvent.PlayerSpectateMode, OnPlayerSpectateModeMethod);
+            RAGE.Events.Add(ToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
+            RAGE.Events.Add(ToClientEvent.StopSpectator, OnStopSpectatorMethod);
         }
-
-        #endregion Public Constructors
 
         #region Public Properties
 
         public bool IsSpectator { get; set; }
 
-        public IEntityBase SpectatingEntity
+        public GameEntityBase SpectatingEntity
         {
             get => _spectatingEntity;
             set
@@ -143,7 +137,7 @@ namespace TDS_Client.Handler
 
         private void OnSetPlayerToSpectatePlayerMethod(object[] args)
         {
-            IPlayer target = _utilsHandler.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
+            var target = _utilsHandler.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
             if (target != null)
             {
                 SpectatingEntity = target;

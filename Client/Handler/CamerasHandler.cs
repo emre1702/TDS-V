@@ -1,56 +1,45 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
+﻿using RAGE;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler
 {
     public class CamerasHandler : ServiceBase
     {
-        #region Public Constructors
-
-        public CamerasHandler(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
+        public CamerasHandler(LoggingHandler loggingHandler, UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
             DeathHandler deathHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
-            Spectating = new SpectatingHandler(modAPI, loggingHandler, remoteEventsSender, bindsHandler, this, deathHandler, eventsHandler, utilsHandler);
+            Spectating = new SpectatingHandler(loggingHandler, remoteEventsSender, bindsHandler, this, deathHandler, eventsHandler, utilsHandler);
 
-            modAPI.Cam.Render(false, false, 0);
-            modAPI.Cam.DestroyAllCams();
+            RAGE.Game.Cam.RenderScriptCams(false, false, 0, true, false, 0);
+            RAGE.Game.Cam.DestroyAllCams(false);
 
-            BetweenRoundsCam = new TDSCamera(nameof(BetweenRoundsCam), modAPI, loggingHandler, this, utilsHandler);
-            SpectateCam = new TDSCamera(nameof(SpectateCam), modAPI, loggingHandler, this, utilsHandler);
+            BetweenRoundsCam = new TDSCamera(nameof(BetweenRoundsCam), loggingHandler, this, utilsHandler);
+            SpectateCam = new TDSCamera(nameof(SpectateCam), loggingHandler, this, utilsHandler);
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public TDSCamera ActiveCamera { get; set; }
         public TDSCamera BetweenRoundsCam { get; set; }
-        public Position3D FocusAtPos { get; set; }
+        public Vector3 FocusAtPos { get; set; }
         public TDSCamera FreeCam { get; set; }
         public TDSCamera SpectateCam { get; set; }
         public SpectatingHandler Spectating { get; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
-        public Position3D GetCurrentCamPos()
+        public Vector3 GetCurrentCamPos()
         {
-            return ActiveCamera?.Position ?? ModAPI.Cam.GetGameplayCamCoord();
+            return ActiveCamera?.Position ?? RAGE.Game.Cam.GetGameplayCamCoord();
         }
 
-        public Position3D GetCurrentCamRot()
+        public Vector3 GetCurrentCamRot()
         {
-            return ActiveCamera?.Rotation ?? ModAPI.Cam.GetGameplayCamRot();
+            return ActiveCamera?.Rotation ?? RAGE.Game.Cam.GetGameplayCamRot(2);
         }
 
         public void RemoveFocusArea()
         {
-            ModAPI.Streaming.ClearFocus();
+            RAGE.Game.Streaming.ClearFocus();
             FocusAtPos = null;
         }
 
@@ -59,7 +48,7 @@ namespace TDS_Client.Handler
             var spectatingEntity = Spectating.SpectatingEntity;
             if (spectatingEntity != null)
             {
-                ModAPI.Streaming.SetFocusEntity(spectatingEntity);
+                RAGE.Game.Streaming.SetFocusEntity(spectatingEntity.Handle);
                 SpectateCam.Spectate(spectatingEntity);
                 SpectateCam.Activate();
                 SpectateCam.Render(ease, easeTime);
@@ -68,20 +57,18 @@ namespace TDS_Client.Handler
             {
                 ActiveCamera?.Deactivate();
                 RemoveFocusArea();
-                ModAPI.Cam.Render(false, ease, easeTime);
+                RAGE.Game.Cam.RenderScriptCams(false, ease, easeTime, true, false, 0);
                 ActiveCamera = null;
             }
         }
 
-        public void SetFocusArea(Position3D pos)
+        public void SetFocusArea(Vector3 pos)
         {
             if (FocusAtPos is null || FocusAtPos.DistanceTo(pos) >= 50)
             {
-                ModAPI.Streaming.SetFocusArea(pos, 0, 0, 0);
+                RAGE.Game.Streaming.SetFocusArea(pos.X, pos.Y, pos.Z, 0, 0, 0);
                 FocusAtPos = pos;
             }
         }
-
-        #endregion Public Methods
     }
 }

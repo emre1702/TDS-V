@@ -1,7 +1,7 @@
-﻿using System;
+﻿using RAGE;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Entities;
 using TDS_Client.Handler.Events;
@@ -27,9 +27,9 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public ForceStayAtPosHandler(IModAPI modAPI, LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
+        public ForceStayAtPosHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
             Serializer serializer)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
             _settingsHandler = settingsHandler;
@@ -37,8 +37,8 @@ namespace TDS_Client.Handler
             _timerHandler = timerHandler;
             _serializer = serializer;
 
-            modAPI.Event.Add(ToClientEvent.SetForceStayAtPosition, OnSetForceStayAtPositionMethod);
-            modAPI.Event.Add(ToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
+            RAGE.Events.Add(ToClientEvent.SetForceStayAtPosition, OnSetForceStayAtPositionMethod);
+            RAGE.Events.Add(ToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
         }
 
         #endregion Public Constructors
@@ -49,18 +49,18 @@ namespace TDS_Client.Handler
         {
             _mapLimit?.Stop();
 
-            var edges = new List<Position3D>
+            var edges = new List<Vector3>
             {
-                new Position3D { X = pos.X - radius, Y = pos.Y, Z = pos.Z },  // left
-                new Position3D { X = pos.X - radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // left top
-                new Position3D { X = pos.X, Y = pos.Y - radius, Z = pos.Z },  // top
-                new Position3D { X = pos.X + radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // top right
-                new Position3D { X = pos.X + radius, Y = pos.Y, Z = pos.Z },  // right
-                new Position3D { X = pos.X + radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // right bottom
-                new Position3D { X = pos.X, Y = pos.Y + radius, Z = pos.Z },  // bottom
-                new Position3D { X = pos.X - radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // bottom left
+                new Vector3 { X = pos.X - radius, Y = pos.Y, Z = pos.Z },  // left
+                new Vector3 { X = pos.X - radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // left top
+                new Vector3 { X = pos.X, Y = pos.Y - radius, Z = pos.Z },  // top
+                new Vector3 { X = pos.X + radius/2, Y = pos.Y - radius/2, Z = pos.Z },  // top right
+                new Vector3 { X = pos.X + radius, Y = pos.Y, Z = pos.Z },  // right
+                new Vector3 { X = pos.X + radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // right bottom
+                new Vector3 { X = pos.X, Y = pos.Y + radius, Z = pos.Z },  // bottom
+                new Vector3 { X = pos.X - radius/2, Y = pos.Y + radius/2, Z = pos.Z },  // bottom left
             };
-            _mapLimit = new MapLimit(edges, type, allowedTimeOut, Color.FromArgb(30, 255, 255, 255), ModAPI, _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
+            _mapLimit = new MapLimit(edges, type, allowedTimeOut, Color.FromArgb(30, 255, 255, 255), _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
             _mapLimit.Start();
         }
 

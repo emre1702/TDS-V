@@ -8,8 +8,8 @@ namespace TDS_Client.RAGEAPI
 
         public Init()
         {
-            var modAPI = new BaseAPI();
-            new Program(modAPI);
+            var RAGE.Game = new BaseAPI();
+            new Program(RAGE.Game);
         }
 
         #endregion Public Constructors

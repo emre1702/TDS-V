@@ -1,25 +1,22 @@
-﻿using System;
+﻿using RAGE.Game;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler
 {
     public class CommandsHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly CamerasHandler _camerasHandler;
         private readonly ChatHandler _chatHandler;
         private readonly LobbyHandler _lobbyHandler;
@@ -30,14 +27,10 @@ namespace TDS_Client.Handler
 
         private PedBone _nextPedBone = PedBone.SKEL_ROOT;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public CommandsHandler(IModAPI modAPI, LoggingHandler loggingHandler, ChatHandler chatHandler, SettingsHandler settingsHandler,
+        public CommandsHandler(LoggingHandler loggingHandler, ChatHandler chatHandler, SettingsHandler settingsHandler,
                     LobbyHandler lobbyHandler, PlayerFightHandler playerFightHandler, CamerasHandler camerasHandler, RemoteEventsSender remoteEventsSender,
             UtilsHandler utilsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _chatHandler = chatHandler;
             _lobbyHandler = lobbyHandler;
@@ -47,30 +40,26 @@ namespace TDS_Client.Handler
             _settingsHandler = settingsHandler;
             _utilsHandler = utilsHandler;
 
-            modAPI.Event.Add(FromBrowserEvent.CommandUsed, OnCommandUsedMethod);
+            Add(FromBrowserEvent.CommandUsed, OnCommandUsedMethod);
         }
 
-        #endregion Public Constructors
-
-        #region Private Methods
-
-        private void DrawBone(int currentMs)
+        private void DrawBone(List<TickNametagData> _)
         {
-            var pedId = ModAPI.LocalPlayer.PlayerPedId();
-            var coords = ModAPI.Ped.GetPedBoneCoords(pedId, (int)_nextPedBone);
+            var coords = Ped.GetPedBoneCoords(RAGE.Elements.Player.LocalPlayer.Handle, (int)_nextPedBone, 0, 0, 0);
             if (coords is null)
                 return;
 
             var screenCoords = _utilsHandler.GetScreenCoordFromWorldCoord(coords);
-            ModAPI.Graphics.DrawText(_nextPedBone.ToString(), (int)(screenCoords.X * 1920f), (int)(screenCoords.Y * 1080f), Data.Enums.Font.Monospace, 1f, Color.Red, AlignmentX.Center, true, true, 999);
+            RAGE.NUI.UIResText.Draw(_nextPedBone.ToString(), (int)(screenCoords.X * 1920f), (int)(screenCoords.Y * 1080f), Font.Monospace, 1f, Color.Red, RAGE.NUI.UIResText.Alignment.Centered, true, true, 999);
         }
 
+        private bool _superJumpOn;
+        private bool _moveOverrideOn;
+        private bool _explosiveAmmoOn;
+        private bool _explosiveMeleeOn;
+        private bool _fireAmmoOn;
 
-        private EventMethodData<TickDelegate> _moveOverride;
-        private EventMethodData<TickDelegate> _explosiveAmmo;
-        private EventMethodData<TickDelegate> _explosiveMelee;
-        private EventMethodData<TickDelegate> _fireAmmo;
-        private EventMethodData<TickDelegate> _superJump;
+        private float _moveOverrideValue;
 
         private void OnCommandUsedMethod(object[] args)
         {
@@ -82,29 +71,29 @@ namespace TDS_Client.Handler
             if (cmd == "checkshoot")
             {
                 if (_lobbyHandler.Bomb.BombOnHand || !_playerFightHandler.InFight)
-                    ModAPI.Chat.Output("Shooting is blocked. Reason: " + (_playerFightHandler.InFight ? "bomb" : (!_lobbyHandler.Bomb.BombOnHand ? "round" : "both")));
+                    RAGE.Chat.Output("Shooting is blocked. Reason: " + (_playerFightHandler.InFight ? "bomb" : (!_lobbyHandler.Bomb.BombOnHand ? "round" : "both")));
                 else
-                    ModAPI.Chat.Output("Shooting is not blocked.");
+                    RAGE.Chat.Output("Shooting is not blocked.");
                 return;
             }
             else if (cmd == "activecam" || cmd == "activecamera")
             {
                 Logging.LogWarning((_camerasHandler.ActiveCamera?.Name ?? "No camera") + " | " + (_camerasHandler.ActiveCamera?.SpectatingEntity is null ? "no spectating" : "spectating"), "ChatHandler.Command");
-                Logging.LogWarning((_camerasHandler.Spectating.IsSpectator ? "Is spectator" : "Is not spectator") + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + ((IPlayer)_camerasHandler.Spectating.SpectatingEntity).Name : "not spectating entity"), "ChatHandler.Command");
+                Logging.LogWarning((_camerasHandler.Spectating.IsSpectator ? "Is spectator" : "Is not spectator") + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + ((ITDSPlayer)_camerasHandler.Spectating.SpectatingEntity).Name : "not spectating entity"), "ChatHandler.Command");
                 Logging.LogWarning(_camerasHandler.SpectateCam.Position.ToString() + " | " + (_camerasHandler.Spectating.SpectatingEntity != null ? "spectating " + _camerasHandler.Spectating.SpectatingEntity.Position.ToString() : "not spectating entity"), "ChatHandler.Command");
                 return;
             }
             else if (cmd == "campos" || cmd == "camerapos")
             {
-                ModAPI.Chat.Output("Position: " + _camerasHandler.ActiveCamera.Position.ToString());
-                ModAPI.Chat.Output("Rotation: " + _camerasHandler.ActiveCamera.Rotation.ToString());
+                RAGE.Chat.Output("Position: " + _camerasHandler.ActiveCamera.Position.ToString());
+                RAGE.Chat.Output("Rotation: " + _camerasHandler.ActiveCamera.Rotation.ToString());
                 return;
             }
             else if (cmd == "boneindex")
             {
                 foreach (var boneId in Enum.GetValues(typeof(PedBone)).Cast<PedBone>())
                 {
-                    var boneIndex = ModAPI.Ped.GetPedBoneIndex(ModAPI.LocalPlayer.Handle, (int)boneId);
+                    var boneIndex = Ped.GetPedBoneIndex(RAGE.Elements.Player.LocalPlayer.Handle, (int)boneId);
                     Logging.LogWarning("Bone id: " + boneId + " | Bone index: " + boneIndex);
                 }
             }
@@ -113,7 +102,7 @@ namespace TDS_Client.Handler
                 string input = msg.Split(' ')[1];
                 if (input == "start")
                 {
-                    ModAPI.Event.Tick.Add(new Data.Models.EventMethodData<Data.Interfaces.ModAPI.Event.TickDelegate>(DrawBone));
+                    Tick += DrawBone;
                 }
                 else
                 {
@@ -122,7 +111,7 @@ namespace TDS_Client.Handler
                     {
                         string m = "Wrong position for " + _nextPedBone.ToString() + ". Input: " + input + " - Expected: " + bodyPart.ToString();
                         Logging.LogWarning(m);
-                        ModAPI.Chat.Output(m);
+                        RAGE.Chat.Output(m);
                     }
                     _nextPedBone = Enum.GetValues(typeof(PedBone)).Cast<PedBone>().Concat(new[] { default(PedBone) }).SkipWhile(e => !_nextPedBone.Equals(e)).Skip(1).First();
                 }
@@ -135,138 +124,108 @@ namespace TDS_Client.Handler
                 switch (type)
                 {
                     case "stun":
-                        ModAPI.LocalPlayer.SetMinGroundTimeForStungun(int.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetMinGroundTimeForStungun(int.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "move":
-                        if (_moveOverride is null)
-                        {
-                            _moveOverride = new EventMethodData<TickDelegate>(ms => MoveOverride(float.Parse(msg.Split(' ')[2])));
-                            ModAPI.Event.Tick.Add(_moveOverride);
-                        }
+                        if (_moveOverrideOn)
+                            Tick -= MoveOverride;
                         else
-                        {
-                            ModAPI.Event.Tick.Remove(_moveOverride);
-                            _moveOverride = null;
-                        }
+                            Tick += MoveOverride;
+                        _moveOverrideOn = !_moveOverrideOn;
+                        _moveOverrideValue = float.Parse(msg.Split(' ')[2]);
                         break;
 
                     case "run":
-                        ModAPI.LocalPlayer.SetRunSprintMultiplier(float.Parse(msg.Split(' ')[2]));
+                        Player.SetRunSprintMultiplierForPlayer(float.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "swim":
-                        ModAPI.LocalPlayer.SetSwimMultiplier(float.Parse(msg.Split(' ')[2]));
+                        Player.SetSwimMultiplierForPlayer(float.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "airdrag":
-                        ModAPI.LocalPlayer.SetAirDragMultiplierForVehicle(float.Parse(msg.Split(' ')[2]));
+                        Player.SetAirDragMultiplierForPlayersVehicle(float.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "accuracy":
-                        ModAPI.LocalPlayer.SetAccuracy(int.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetAccuracy(int.Parse(msg.Split(' ')[2]));
                         break;
 
-                    
-
                     case "shootrate":
-                        ModAPI.LocalPlayer.SetShootRate(int.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetShootRate(int.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "gravity":
-                        ModAPI.LocalPlayer.SetGravity(bool.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetGravity(bool.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "hasgravity":
-                        ModAPI.LocalPlayer.SetHasGravity(bool.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetHasGravity(bool.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "health":
-                        ModAPI.LocalPlayer.SetHealth(int.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetHealth(int.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "maxhealth":
-                        ModAPI.LocalPlayer.SetMaxHealth(int.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetMaxHealth(int.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "rechargehealth":
-                        ModAPI.LocalPlayer.SetHealthRechargeMultiplier(float.Parse(msg.Split(' ')[2]));
+                        Player.SetPlayerHealthRechargeMultiplier(int.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "knocked":
-                        ModAPI.LocalPlayer.SetCanBeKnockedOffVehicle(bool.Parse(msg.Split(' ')[2]) ? 1 : 0);
+                        RAGE.Elements.Player.LocalPlayer.SetCanBeKnockedOffVehicle(bool.Parse(msg.Split(' ')[2]) ? 1 : 0);
                         break;
 
                     case "ragdoll":
-                        ModAPI.LocalPlayer.SetCanRagdoll(bool.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetCanRagdoll(bool.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "gravitylevel":
-                        ModAPI.Misc.SetGravityLevel(int.Parse(msg.Split(' ')[2]));
+                        Misc.SetGravityLevel(int.Parse(msg.Split(' ')[2]));
                         break;
 
                     case "explosiveammo":
-                        if (_explosiveAmmo is null)
-                        {
-                            _explosiveAmmo = new EventMethodData<TickDelegate>(ExplosiveAmmo);
-                            ModAPI.Event.Tick.Add(_explosiveAmmo);
-                        }
+                        if (_explosiveAmmoOn)
+                            Tick -= ExplosiveAmmo;
                         else
-                        {
-                            ModAPI.Event.Tick.Remove(_explosiveAmmo);
-                            _explosiveAmmo = null;
-                        }
-                            
+                            Tick += ExplosiveAmmo;
+                        _explosiveAmmoOn = !_explosiveAmmoOn;
                         break;
 
                     case "explosivemelee":
-                        if (_explosiveMelee is null)
-                        {
-                            _explosiveMelee = new EventMethodData<TickDelegate>(ExplosiveMelee);
-                            ModAPI.Event.Tick.Add(_explosiveMelee);
-                        }
+                        if (_explosiveMeleeOn)
+                            Tick -= ExplosiveMelee;
                         else
-                        {
-                            ModAPI.Event.Tick.Remove(_explosiveMelee);
-                            _explosiveMelee = null;
-                        }
-
+                            Tick += ExplosiveMelee;
+                        _explosiveMeleeOn = !_explosiveMeleeOn;
                         break;
 
                     case "fireammo":
-                        if (_fireAmmo is null)
-                        {
-                            _fireAmmo = new EventMethodData<TickDelegate>(FireAmmo);
-                            ModAPI.Event.Tick.Add(_fireAmmo);
-                        }
+                        if (_fireAmmoOn)
+                            Tick -= FireAmmo;
                         else
-                        {
-                            ModAPI.Event.Tick.Remove(_fireAmmo);
-                            _fireAmmo = null;
-                        }
-
+                            Tick += FireAmmo;
+                        _fireAmmoOn = !_fireAmmoOn;
                         break;
 
                     case "superjump":
-                        if (_superJump is null)
-                        {
-                            _superJump = new EventMethodData<TickDelegate>(SuperJump);
-                            ModAPI.Event.Tick.Add(_superJump);
-                        }
+                        if (_superJumpOn)
+                            Tick -= SuperJump;
                         else
-                        {
-                            ModAPI.Event.Tick.Remove(_superJump);
-                            _superJump = null;
-                        }
-
+                            Tick += SuperJump;
+                        _superJumpOn = !_superJumpOn;
                         break;
 
                     case "infiniteammo":
-                        ModAPI.LocalPlayer.SetInfiniteAmmo(bool.Parse(msg.Split(' ')[2]), ModAPI.LocalPlayer.GetSelectedWeapon());
+                        RAGE.Elements.Player.LocalPlayer.SetInfiniteAmmo(bool.Parse(msg.Split(' ')[2]), RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon());
                         break;
 
                     case "infiniteammoclip":
-                        ModAPI.LocalPlayer.SetInfiniteAmmoClip(bool.Parse(msg.Split(' ')[2]));
+                        RAGE.Elements.Player.LocalPlayer.SetInfiniteAmmoClip(bool.Parse(msg.Split(' ')[2]));
                         break;
                 }
 
@@ -274,19 +233,18 @@ namespace TDS_Client.Handler
             }
             /*else if (cmd == "cutscene")
             {
-                
-                ModAPI.Cutscene.RequestCutscene(Enum.Parse<CutsceneType>(msg.Split(' ')[1]));
-                ModAPI.Native.Invoke(NativeHash.SET_NETWORK_CUTSCENE_ENTITIES, true);
-                ModAPI.Native.Invoke(NativeHash.NETWORK_SET_IN_MP_CUTSCENE, true, true);
-                ModAPI.Native.Invoke(NativeHash.SET_LOCAL_PLAYER_VISIBLE_IN_CUTSCENE, true, false);
-                ModAPI.Native.Invoke(NativeHash.SET_ENTITY_VISIBLE_IN_CUTSCENE, ModAPI.LocalPlayer.Handle, true, true);
-                ModAPI.Cutscene.RegisterEntityForCutscene(ModAPI.LocalPlayer, "MP_1", 0, 0, 64);
-                ModAPI.Native.Invoke(NativeHash.SET_CUTSCENE_ENTITY_STREAMING_FLAGS, "MP_1", 0, 1);
-                ModAPI.Native.Invoke((NativeHash)17876293797489278094, 2);
-                ModAPI.Native.Invoke((NativeHash)11413602432665415843, true);
-                ModAPI.Native.Invoke((NativeHash)18165510258038530118, true);
-                ModAPI.Native.Invoke((NativeHash)2361794840612055679, true);
-                ModAPI.Cutscene.StartCutscene(0);
+                RAGE.Game.Cutscene.RequestCutscene(Enum.Parse<CutsceneType>(msg.Split(' ')[1]));
+                RAGE.Game.Invoker.Invoke(NativeHash.SET_NETWORK_CUTSCENE_ENTITIES, true);
+                RAGE.Game.Invoker.Invoke(NativeHash.NETWORK_SET_IN_MP_CUTSCENE, true, true);
+                RAGE.Game.Invoker.Invoke(NativeHash.SET_LOCAL_PLAYER_VISIBLE_IN_CUTSCENE, true, false);
+                RAGE.Game.Invoker.Invoke(NativeHash.SET_ENTITY_VISIBLE_IN_CUTSCENE, RAGE.Elements.Player.LocalPlayer.Handle, true, true);
+                RAGE.Game.Cutscene.RegisterEntityForCutscene(RAGE.Elements.Player.LocalPlayer, "MP_1", 0, 0, 64);
+                RAGE.Game.Invoker.Invoke(NativeHash.SET_CUTSCENE_ENTITY_STREAMING_FLAGS, "MP_1", 0, 1);
+                RAGE.Game.Invoker.Invoke((NativeHash)17876293797489278094, 2);
+                RAGE.Game.Invoker.Invoke((NativeHash)11413602432665415843, true);
+                RAGE.Game.Invoker.Invoke((NativeHash)18165510258038530118, true);
+                RAGE.Game.Invoker.Invoke((NativeHash)2361794840612055679, true);
+                RAGE.Game.Cutscene.StartCutscene(0);
                 return;
             }*/
 
@@ -304,31 +262,29 @@ namespace TDS_Client.Handler
             _remoteEventsSender.Send(ToServerEvent.CommandUsed, msg);
         }
 
-        private void MoveOverride(float value)
+        private void MoveOverride(List<TickNametagData> _)
         {
-            ModAPI.LocalPlayer.SetMoveRateOverride(value);
+            RAGE.Elements.Player.LocalPlayer.SetMoveRateOverride(_moveOverrideValue);
         }
 
-        private void ExplosiveAmmo(int currentMs)
+        private void ExplosiveAmmo(List<TickNametagData> _)
         {
-            ModAPI.Misc.SetExplosiveAmmoThisFrame(ModAPI.LocalPlayer);
+            RAGE.Game.Misc.SetExplosiveAmmoThisFrame(RAGE.Elements.Player.LocalPlayer.Handle);
         }
 
-        private void ExplosiveMelee(int currentMs)
+        private void ExplosiveMelee(List<TickNametagData> _)
         {
-            ModAPI.Misc.SetExplosiveMeleeThisFrame(ModAPI.LocalPlayer);
+            RAGE.Game.Misc.SetExplosiveMeleeThisFrame(RAGE.Elements.Player.LocalPlayer.Handle);
         }
 
-        private void FireAmmo(int currentMs)
+        private void FireAmmo(List<TickNametagData> _)
         {
-            ModAPI.Misc.SetFireAmmoThisFrame(ModAPI.LocalPlayer);
+            RAGE.Game.Misc.SetFireAmmoThisFrame(RAGE.Elements.Player.LocalPlayer.Handle);
         }
 
-        private void SuperJump(int currentMs)
+        private void SuperJump(List<TickNametagData> _)
         {
-            ModAPI.Misc.SetSuperJumpThisFrame(ModAPI.LocalPlayer);
+            RAGE.Game.Misc.SetSuperJumpThisFrame(RAGE.Elements.Player.LocalPlayer.Handle);
         }
-
-        #endregion Private Methods
     }
 }

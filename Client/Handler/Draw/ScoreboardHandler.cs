@@ -1,12 +1,10 @@
-﻿using System;
+﻿using RAGE.Game;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Interfaces;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Draw.Dx.Grid;
 using TDS_Client.Handler.Events;
@@ -15,6 +13,8 @@ using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
+using static RAGE.Events;
+using Alignment = RAGE.NUI.UIResText.Alignment;
 
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 
@@ -30,9 +30,9 @@ namespace TDS_Client.Handler.Draw
                 _isActivated = value;
                 _grid.Activated = value;
                 if (value)
-                    ModAPI.Event.Tick.Add(_tickEventMethod);
+                    Tick += OnTick;
                 else
-                    ModAPI.Event.Tick.Remove(_tickEventMethod);
+                    Tick -= OnTick;
             }
         }
 
@@ -43,8 +43,6 @@ namespace TDS_Client.Handler.Draw
 
         private readonly DxGridColumn[] _columns = new DxGridColumn[6];
 
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
-
         private readonly DxHandler _dxHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly LobbyHandler _lobbyHandler;
@@ -53,12 +51,10 @@ namespace TDS_Client.Handler.Draw
         private readonly BindsHandler _bindsHandler;
         private readonly Serializer _serializer;
 
-        public ScoreboardHandler(IModAPI modAPI, LoggingHandler loggingHandler, DxHandler dxHandler, SettingsHandler settingsHandler, LobbyHandler lobbyHandler,
+        public ScoreboardHandler(LoggingHandler loggingHandler, DxHandler dxHandler, SettingsHandler settingsHandler, LobbyHandler lobbyHandler,
             TimerHandler timerHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, BindsHandler bindsHandler, Serializer serializer)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
-            _tickEventMethod = new EventMethodData<TickDelegate>(OnTick);
-
             _dxHandler = dxHandler;
             _settingsHandler = settingsHandler;
             _lobbyHandler = lobbyHandler;
@@ -73,14 +69,14 @@ namespace TDS_Client.Handler.Draw
             eventsHandler.ShowScoreboard += () => PressedScoreboardKey();
             eventsHandler.HideScoreboard += () => ReleasedScoreboardKey();
 
-            _grid = new DxGrid(dxHandler, modAPI, 0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15);
+            _grid = new DxGrid(dxHandler, 0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15);
             _grid.Activated = false;
             CreateColumns();
             CreateTitle();
             CreateBody();
             CreateFooter();
 
-            modAPI.Event.Add(ToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
+            RAGE.Events.Add(ToClientEvent.SyncScoreboardData, OnSyncScoreboardDataMethod);
         }
 
         public void AddMainmenuData(List<SyncedScoreboardMainmenuLobbyDataDto> list)
@@ -94,10 +90,10 @@ namespace TDS_Client.Handler.Draw
             list.Sort((a, b) => a.Id < b.Id && a.Id != 0 ? 1 : 0);
             foreach (var entry in list)
             {
-                DxGridRow lobbynamerow = new DxGridRow(_dxHandler, ModAPI, _grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, text: $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: AlignmentX.Left, scale: 0.3f);
+                DxGridRow lobbynamerow = new DxGridRow(_dxHandler, _grid, null, entry.IsOfficial ? backLobbyOfficialColor : backLobbyOfficialColor, text: $"{entry.LobbyName} ({entry.PlayersCount})", textAlignment: Alignment.Left, scale: 0.3f);
                 if (entry.PlayersStr.Length > 0)
                 {
-                    DxGridRow lobbyplayersrow = new DxGridRow(_dxHandler, ModAPI, _grid, null, Color.DarkGray, text: entry.PlayersStr, scale: 0.25f);
+                    DxGridRow lobbyplayersrow = new DxGridRow(_dxHandler, _grid, null, Color.DarkGray, text: entry.PlayersStr, scale: 0.25f);
                 }
             }
         }
@@ -109,14 +105,14 @@ namespace TDS_Client.Handler.Draw
             foreach (var playerdata in playerlist)
             {
                 var team = _lobbyHandler.Teams.LobbyTeams[playerdata.TeamIndex];
-                DxGridRow row = new DxGridRow(_dxHandler, ModAPI, _grid, null, Color.FromArgb(team.Color.A, team.Color.R, team.Color.G, team.Color.B), textAlignment: AlignmentX.Center, scale: 0.3f);
-                new DxGridCell(_dxHandler, ModAPI, _timerHandler, playerdata.Name, row, _columns[0]);
+                DxGridRow row = new DxGridRow(_dxHandler, _grid, null, Color.FromArgb(team.Color.A, team.Color.R, team.Color.G, team.Color.B), textAlignment: Alignment.Centered, scale: 0.3f);
+                new DxGridCell(_dxHandler, _timerHandler, playerdata.Name, row, _columns[0]);
 
-                new DxGridCell(_dxHandler, ModAPI, _timerHandler, GetPlaytimeString(playerdata.PlaytimeMinutes), row, _columns[1]);
-                new DxGridCell(_dxHandler, ModAPI, _timerHandler, playerdata.Kills.ToString(), row, _columns[2]);
-                new DxGridCell(_dxHandler, ModAPI, _timerHandler, playerdata.Assists.ToString(), row, _columns[3]);
-                new DxGridCell(_dxHandler, ModAPI, _timerHandler, playerdata.Deaths.ToString(), row, _columns[4]);
-                new DxGridCell(_dxHandler, ModAPI, _timerHandler, team.Name, row, _columns[5]);
+                new DxGridCell(_dxHandler, _timerHandler, GetPlaytimeString(playerdata.PlaytimeMinutes), row, _columns[1]);
+                new DxGridCell(_dxHandler, _timerHandler, playerdata.Kills.ToString(), row, _columns[2]);
+                new DxGridCell(_dxHandler, _timerHandler, playerdata.Assists.ToString(), row, _columns[3]);
+                new DxGridCell(_dxHandler, _timerHandler, playerdata.Deaths.ToString(), row, _columns[4]);
+                new DxGridCell(_dxHandler, _timerHandler, team.Name, row, _columns[5]);
             }
 
             AddMainmenuData(lobbylist);
@@ -178,31 +174,31 @@ namespace TDS_Client.Handler.Draw
             _grid.ClearRows();
         }
 
-        private void OnTick(int _)
+        private void OnTick(List<TickNametagData> _)
         {
-            ModAPI.Control.DisableControlAction(InputGroup.MOVE, Control.SelectNextWeapon, true);
-            ModAPI.Control.DisableControlAction(InputGroup.MOVE, Control.SelectPrevWeapon, true);
+            RAGE.Game.Pad.DisableControlAction((int)InputGroup.MOVE, (int)Control.SelectNextWeapon, true);
+            RAGE.Game.Pad.DisableControlAction((int)InputGroup.MOVE, (int)Control.SelectPrevWeapon, true);
         }
 
         private void CreateColumns()
         {
-            _columns[0] = new DxGridColumn(_dxHandler, ModAPI, 0.3f, _grid);
-            _columns[1] = new DxGridColumn(_dxHandler, ModAPI, 0.15f, _grid);
-            _columns[2] = new DxGridColumn(_dxHandler, ModAPI, 0.1f, _grid);
-            _columns[3] = new DxGridColumn(_dxHandler, ModAPI, 0.1f, _grid);
-            _columns[4] = new DxGridColumn(_dxHandler, ModAPI, 0.1f, _grid);
-            _columns[5] = new DxGridColumn(_dxHandler, ModAPI, 0.25f, _grid);
+            _columns[0] = new DxGridColumn(_dxHandler, 0.3f, _grid);
+            _columns[1] = new DxGridColumn(_dxHandler, 0.15f, _grid);
+            _columns[2] = new DxGridColumn(_dxHandler, 0.1f, _grid);
+            _columns[3] = new DxGridColumn(_dxHandler, 0.1f, _grid);
+            _columns[4] = new DxGridColumn(_dxHandler, 0.1f, _grid);
+            _columns[5] = new DxGridColumn(_dxHandler, 0.25f, _grid);
         }
 
         private void CreateTitle()
         {
-            DxGridRow header = new DxGridRow(_dxHandler, ModAPI, _grid, 0.035f, Color.FromArgb(187, 20, 20, 20), textAlignment: AlignmentX.Center, isHeader: true);
-            new DxGridCell(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.SCOREBOARD_NAME, header, _columns[0]);
-            new DxGridCell(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.SCOREBOARD_PLAYTIME, header, _columns[1]);
-            new DxGridCell(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.SCOREBOARD_KILLS, header, _columns[2]);
-            new DxGridCell(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.SCOREBOARD_ASSISTS, header, _columns[3]);
-            new DxGridCell(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.SCOREBOARD_DEATHS, header, _columns[4]);
-            new DxGridCell(_dxHandler, ModAPI, _timerHandler, _settingsHandler.Language.SCOREBOARD_TEAM, header, _columns[5]);
+            DxGridRow header = new DxGridRow(_dxHandler, _grid, 0.035f, Color.FromArgb(187, 20, 20, 20), textAlignment: Alignment.Centered, isHeader: true);
+            new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_NAME, header, _columns[0]);
+            new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_PLAYTIME, header, _columns[1]);
+            new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_KILLS, header, _columns[2]);
+            new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_ASSISTS, header, _columns[3]);
+            new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_DEATHS, header, _columns[4]);
+            new DxGridCell(_dxHandler, _timerHandler, _settingsHandler.Language.SCOREBOARD_TEAM, header, _columns[5]);
         }
 
         private void CreateBody()

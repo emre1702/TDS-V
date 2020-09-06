@@ -1,5 +1,4 @@
 ﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Default;
@@ -19,17 +18,17 @@ namespace TDS_Client.Handler.Lobby
 
         #region Public Constructors
 
-        public RoundHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, RoundInfosHandler roundInfosHandler,
+        public RoundHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, RoundInfosHandler roundInfosHandler,
             SettingsHandler settingsHandler, BrowserHandler browserHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _eventsHandler = eventsHandler;
             _roundInfosHandler = roundInfosHandler;
             _settingsHandler = settingsHandler;
             _browserHandler = browserHandler;
 
-            modAPI.Event.Add(ToClientEvent.RoundStart, OnRoundStartMethod);
-            modAPI.Event.Add(ToClientEvent.RoundEnd, OnRoundEndMethod);
+            RAGE.Events.Add(ToClientEvent.RoundStart, OnRoundStartMethod);
+            RAGE.Events.Add(ToClientEvent.RoundEnd, OnRoundEndMethod);
         }
 
         #endregion Public Constructors
@@ -41,7 +40,7 @@ namespace TDS_Client.Handler.Lobby
             bool isSpectator = (bool)args[0];
             _eventsHandler.OnRoundEnded(isSpectator);
 
-            ModAPI.Cam.DoScreenFadeOut(_settingsHandler.RoundEndTime / 2);
+            RAGE.Game.Cam.DoScreenFadeOut(_settingsHandler.RoundEndTime / 2);
 
             string reason = (string)args[1];
             int mapId = (int)args[2];
@@ -55,7 +54,7 @@ namespace TDS_Client.Handler.Lobby
                 bool isSpectator = Convert.ToBoolean(args[0]);
                 _eventsHandler.OnRoundStarted(isSpectator);
 
-                ModAPI.Cam.DoScreenFadeIn(50);
+                RAGE.Game.Cam.DoScreenFadeIn(50);
                 _roundInfosHandler.Start(args.Length >= 2 ? Convert.ToInt32(args[1]) : 0);
             }
             catch (Exception ex)

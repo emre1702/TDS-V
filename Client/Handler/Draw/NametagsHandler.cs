@@ -1,40 +1,30 @@
-﻿using System;
+﻿using RAGE.Game;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Extensions;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Models;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Draw
 {
     public class NametagsHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly CamerasHandler _camerasHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly UtilsHandler _utilsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public NametagsHandler(IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler)
-            : base(modAPI, loggingHandler)
+        public NametagsHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler)
+            : base(loggingHandler)
         {
             _camerasHandler = camerasHandler;
             _settingsHandler = settingsHandler;
             _utilsHandler = utilsHandler;
 
-            modAPI.Event.TickNametag.Add(new EventMethodData<TickNametagDelegate>(Draw));
+            Tick += Draw;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Draw(List<TickNametagData> nametags)
         {
@@ -47,47 +37,43 @@ namespace TDS_Client.Handler.Draw
         public void DrawNametag(int handle, string name, float distance)
         {
             float scale = Math.Max(distance / _settingsHandler.NametagMaxDistance, 0.5f);
-            var position = ModAPI.Entity.GetEntityCoords(handle, true);
+            var position = RAGE.Game.Entity.GetEntityCoords(handle, true);
             position.Z += 0.9f + distance / _settingsHandler.NametagMaxDistance;
 
             float screenX = 0;
             float screenY = 0;
-            ModAPI.Graphics.GetScreenCoordFromWorldCoord(position.X, position.Y, position.Z, ref screenX, ref screenY);
+            RAGE.Game.Graphics.GetScreenCoordFromWorldCoord(position.X, position.Y, position.Z, ref screenX, ref screenY);
 
-            float textheight = ModAPI.Ui.GetTextScaleHeight(scale, Font.ChaletLondon);
+            float textheight = RAGE.Game.Ui.GetTextScaleHeight(scale, (int)Font.ChaletLondon);
             screenY -= textheight;
 
-            ModAPI.Graphics.DrawText(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
-                AlignmentX.Center, true, true, 0);
+            RAGE.NUI.UIResText.Draw(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
+                RAGE.NUI.UIResText.Alignment.Centered, true, true, 0);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void DrawAtAim()
         {
             int targetEntity = 0;
-            if (!ModAPI.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
+            if (!RAGE.Game.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
                 return;
 
-            if (ModAPI.Entity.GetEntityType(targetEntity) != EntityType.Ped)
+            if (Entity.GetEntityType(targetEntity) != (int)EntityType.Ped)
                 return;
 
-            var myPos = _camerasHandler.ActiveCamera?.Position ?? ModAPI.LocalPlayer.Position;
-            var hisPos = ModAPI.Entity.GetEntityCoords(targetEntity, true);
+            var myPos = _camerasHandler.ActiveCamera?.Position ?? RAGE.Elements.Player.LocalPlayer.Position;
+            var hisPos = RAGE.Game.Entity.GetEntityCoords(targetEntity, true);
             var distance = myPos.DistanceTo(hisPos);
 
             if (distance > _settingsHandler.NametagMaxDistance)
                 return;
 
             string name = "Ped";
-            var player = ModAPI.Pool.Players.GetAtHandle(targetEntity);
+            var player = RAGE.Elements.Entities.Players.GetAtHandle(targetEntity) as ITDSPlayer;
             if (!(player is null))
                 name = _utilsHandler.GetDisplayName(player);
 
             if (player is null)
-                Logging.LogWarning("GetAtHandle did not work. TargetEntity: " + targetEntity + " | Linq: " + (ModAPI.Pool.Players.All.Any(p => p.Handle == targetEntity)), "NametagsHandler.DrawAtAim");
+                Logging.LogWarning("GetAtHandle did not work. TargetEntity: " + targetEntity + " | Linq: " + (RAGE.Elements.Entities.Players.All.Any(p => p.Handle == targetEntity)), "NametagsHandler.DrawAtAim");
 
             DrawNametag(targetEntity, name, distance);
         }
@@ -101,7 +87,7 @@ namespace TDS_Client.Handler.Draw
                 if (nametag.Distance > _settingsHandler.NametagMaxDistance)
                     continue;
 
-                DrawNametag(nametag.Player.Handle, _utilsHandler.GetDisplayName(nametag.Player), nametag.Distance);
+                DrawNametag(nametag.Player.Handle, _utilsHandler.GetDisplayName(nametag.Player as ITDSPlayer), nametag.Distance);
             }
         }
 
@@ -123,8 +109,8 @@ namespace TDS_Client.Handler.Draw
 
         private Color GetHealthColor(int handle)
         {
-            var hp = Math.Max(ModAPI.Entity.GetEntityHealth(handle) - 100, 0);
-            var armor = ModAPI.Ped.GetPedArmor(handle);
+            var hp = Math.Max(Entity.GetEntityHealth(handle) - 100, 0);
+            var armor = Ped.GetPedArmour(handle);
 
             //RAGE.Chat.Output($"HP: {hp} - Armor: {armor} - HP orig: {Entity.GetEntityHealth(handle)}");
             return GetHealthColor(hp, armor);
@@ -162,7 +148,5 @@ namespace TDS_Client.Handler.Draw
         {
             return _settingsHandler.NametagHealthFullColor.GetBetween(_settingsHandler.NametagHealthEmptyColor, hp / _settingsHandler.StartHealth);
         }
-
-        #endregion Private Methods
     }
 }

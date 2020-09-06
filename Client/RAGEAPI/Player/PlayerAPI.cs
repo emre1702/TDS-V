@@ -1,8 +1,8 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Player;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Player;
 
 namespace TDS_Client.RAGEAPI.Player
 {
-    internal class PlayerAPI : IPlayerAPI
+    internal class PlayerAPI : ITDSPlayerAPI
     {
         #region Public Methods
 

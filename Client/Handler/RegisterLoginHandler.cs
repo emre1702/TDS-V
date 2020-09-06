@@ -1,11 +1,9 @@
 ﻿using System;
 using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Models.PlayerCommands;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
@@ -13,9 +11,6 @@ namespace TDS_Client.Handler
 {
     public class RegisterLoginHandler : ServiceBase
     {
-        #region Private Fields
-
-        private readonly IModAPI _modAPI;
         private readonly BrowserHandler _browserHandler;
         private readonly CursorHandler _cursorHandler;
         private readonly EventsHandler _eventsHandler;
@@ -23,15 +18,10 @@ namespace TDS_Client.Handler
         private readonly Serializer _serializer;
         private readonly SettingsHandler _settingsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public RegisterLoginHandler(IModAPI modAPI, LoggingHandler loggingHandler, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender,
+        public RegisterLoginHandler(LoggingHandler loggingHandler, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender,
             BrowserHandler browserHandler, SettingsHandler settingsHandler, Serializer serializer, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
-            _modAPI = modAPI;
             _cursorHandler = cursorHandler;
             _remoteEventsSender = remoteEventsSender;
             _browserHandler = browserHandler;
@@ -39,15 +29,11 @@ namespace TDS_Client.Handler
             _serializer = serializer;
             _eventsHandler = eventsHandler;
 
-            modAPI.Event.Add(FromBrowserEvent.TryLogin, TryLogin);
-            modAPI.Event.Add(FromBrowserEvent.TryRegister, TryRegister);
-            modAPI.Event.Add(ToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
-            modAPI.Event.Add(ToClientEvent.LoginSuccessful, OnLoginSuccessfulMethod);
+            RAGE.Events.Add(FromBrowserEvent.TryLogin, TryLogin);
+            RAGE.Events.Add(FromBrowserEvent.TryRegister, TryRegister);
+            RAGE.Events.Add(ToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
+            RAGE.Events.Add(ToClientEvent.LoginSuccessful, OnLoginSuccessfulMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Start(string name, bool isRegistered)
         {
@@ -62,7 +48,7 @@ namespace TDS_Client.Handler
         {
             _browserHandler.RegisterLogin.Stop();
             _cursorHandler.Visible = false;
-            _modAPI.Chat.Show(true);
+            RAGE.Chat.Show(true);
         }
 
         public void TryLogin(object[] args)
@@ -79,10 +65,6 @@ namespace TDS_Client.Handler
             string email = (string)args[2];
             _remoteEventsSender.Send(ToServerEvent.TryRegister, username, SharedUtils.HashPWClient(password), email ?? string.Empty, (int)_settingsHandler.LanguageEnum);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void OnLoginSuccessfulMethod(object[] args)
         {
@@ -108,11 +90,9 @@ namespace TDS_Client.Handler
 
         private void SendWelcomeMessage()
         {
-            ModAPI.Chat.Output("#o#__________________________________________");
-            ModAPI.Chat.Output(string.Join("#n#", _settingsHandler.Language.WELCOME_MESSAGE));
-            ModAPI.Chat.Output("#o#__________________________________________");
+            RAGE.Chat.Output("#o#__________________________________________");
+            RAGE.Chat.Output(string.Join("#n#", _settingsHandler.Language.WELCOME_MESSAGE));
+            RAGE.Chat.Output("#o#__________________________________________");
         }
-
-        #endregion Private Methods
     }
 }

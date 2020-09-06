@@ -1,37 +1,37 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Audio;
-using TDS_Client.Data.Interfaces.ModAPI.Blip;
-using TDS_Client.Data.Interfaces.ModAPI.Browser;
-using TDS_Client.Data.Interfaces.ModAPI.Cam;
-using TDS_Client.Data.Interfaces.ModAPI.Chat;
-using TDS_Client.Data.Interfaces.ModAPI.Checkpoint;
-using TDS_Client.Data.Interfaces.ModAPI.Console;
-using TDS_Client.Data.Interfaces.ModAPI.Control;
-using TDS_Client.Data.Interfaces.ModAPI.Cursor;
-using TDS_Client.Data.Interfaces.ModAPI.Cutscene;
-using TDS_Client.Data.Interfaces.ModAPI.Discord;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Graphics;
-using TDS_Client.Data.Interfaces.ModAPI.Input;
-using TDS_Client.Data.Interfaces.ModAPI.Locale;
-using TDS_Client.Data.Interfaces.ModAPI.MapObject;
-using TDS_Client.Data.Interfaces.ModAPI.Misc;
-using TDS_Client.Data.Interfaces.ModAPI.Nametags;
-using TDS_Client.Data.Interfaces.ModAPI.Native;
-using TDS_Client.Data.Interfaces.ModAPI.Ped;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Interfaces.ModAPI.Pool;
-using TDS_Client.Data.Interfaces.ModAPI.Shapetest;
-using TDS_Client.Data.Interfaces.ModAPI.Stats;
-using TDS_Client.Data.Interfaces.ModAPI.Streaming;
-using TDS_Client.Data.Interfaces.ModAPI.Sync;
-using TDS_Client.Data.Interfaces.ModAPI.Ui;
-using TDS_Client.Data.Interfaces.ModAPI.Utils;
-using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
-using TDS_Client.Data.Interfaces.ModAPI.Voice;
-using TDS_Client.Data.Interfaces.ModAPI.Weapon;
-using TDS_Client.Data.Interfaces.ModAPI.Windows;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game;
+using TDS_Client.Data.Interfaces.RAGE.Game.Audio;
+using TDS_Client.Data.Interfaces.RAGE.Game.Blip;
+using TDS_Client.Data.Interfaces.RAGE.Game.Browser;
+using TDS_Client.Data.Interfaces.RAGE.Game.Cam;
+using TDS_Client.Data.Interfaces.RAGE.Game.Chat;
+using TDS_Client.Data.Interfaces.RAGE.Game.Checkpoint;
+using TDS_Client.Data.Interfaces.RAGE.Ui.Console;
+using TDS_Client.Data.Interfaces.RAGE.Game.Control;
+using TDS_Client.Data.Interfaces.RAGE.Game.Cursor;
+using TDS_Client.Data.Interfaces.RAGE.Game.Cutscene;
+using TDS_Client.Data.Interfaces.RAGE.Game.Discord;
+using TDS_Client.Data.Interfaces.RAGE.Game.Entity;
+using TDS_Client.Data.Interfaces.RAGE.Game.Event;
+using TDS_Client.Data.Interfaces.RAGE.Game.Graphics;
+using TDS_Client.Data.Interfaces.RAGE.Game.Input;
+using TDS_Client.Data.Interfaces.RAGE.Game.Locale;
+using TDS_Client.Data.Interfaces.RAGE.Game.MapObject;
+using TDS_Client.Data.Interfaces.RAGE.Game.Misc;
+using TDS_Client.Data.Interfaces.RAGE.Game.Nametags;
+using TDS_Client.Data.Interfaces.RAGE.Game.Native;
+using TDS_Client.Data.Interfaces.RAGE.Game.Ped;
+using TDS_Client.Data.Interfaces.RAGE.Game.Player;
+using TDS_Client.Data.Interfaces.RAGE.Game.Pool;
+using TDS_Client.Data.Interfaces.RAGE.Game.Shapetest;
+using TDS_Client.Data.Interfaces.RAGE.Game.Stats;
+using TDS_Client.Data.Interfaces.RAGE.Game.Streaming;
+using TDS_Client.Data.Interfaces.RAGE.Game.Sync;
+using TDS_Client.Data.Interfaces.RAGE.Game.Ui;
+using TDS_Client.Data.Interfaces.RAGE.Game.Utils;
+using TDS_Client.Data.Interfaces.RAGE.Game.Vehicle;
+using TDS_Client.Data.Interfaces.RAGE.Game.Voice;
+using TDS_Client.Data.Interfaces.RAGE.Game.Weapon;
+using TDS_Client.Data.Interfaces.RAGE.Game.Windows;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Audio;
 using TDS_Client.RAGEAPI.Blip;
@@ -69,7 +69,7 @@ using TDS_Client.RAGEAPI.Windows;
 
 namespace TDS_Client.RAGEAPI
 {
-    internal class BaseAPI : IModAPI
+    internal class BaseAPI : IRAGE.Game
     {
         #region Public Constructors
 
@@ -78,7 +78,7 @@ namespace TDS_Client.RAGEAPI
             Pool = new PoolAPI();
 
             RAGE.Elements.Player.RecreateLocal();
-            LocalPlayer = RAGE.Elements.Player.LocalPlayer as IPlayer;
+            LocalPlayer = RAGE.Elements.Player.LocalPlayer as ITDSPlayer;
 
             Console = new ConsoleAPI();
             var loggingHandler = new LoggingHandler(this);
@@ -137,13 +137,13 @@ namespace TDS_Client.RAGEAPI
         public IGraphicsAPI Graphics { get; }
         public IInputAPI Input { get; }
         public ILocaleAPI Locale { get; }
-        public IPlayer LocalPlayer { get; }
+        public ITDSPlayer LocalPlayer { get; }
         public IMapObjectAPI MapObject { get; }
         public IMiscAPI Misc { get; }
         public INametagsAPI Nametags { get; }
         public INativeAPI Native { get; }
         public IPedAPI Ped { get; }
-        public IPlayerAPI Player { get; }
+        public ITDSPlayerAPI Player { get; }
         public IPoolAPI Pool { get; }
         public IShapetestAPI Shapetest { get; }
         public IStatsAPI Stats { get; }

@@ -1,7 +1,7 @@
 ﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Cutscene;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Ped;
+using TDS_Client.Data.Interfaces.RAGE.Game.Cutscene;
+using TDS_Client.Data.Interfaces.RAGE.Game.Entity;
+using TDS_Client.Data.Interfaces.RAGE.Game.Ped;
 
 namespace TDS_Client.RAGEAPI.Cutscene
 {

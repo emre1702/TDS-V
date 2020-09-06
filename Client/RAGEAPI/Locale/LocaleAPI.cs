@@ -1,5 +1,5 @@
 ﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Locale;
+using TDS_Client.Data.Interfaces.RAGE.Game.Locale;
 
 namespace TDS_Client.RAGEAPI.Locale
 {

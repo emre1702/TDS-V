@@ -1,4 +1,5 @@
-﻿using TDS_Client.Data.Enums;
+﻿using RAGE.Game;
+using TDS_Client.Data.Enums;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
 

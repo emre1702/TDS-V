@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Ped;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Ped;
 using TDS_Client.RAGEAPI.Entity;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Enums;

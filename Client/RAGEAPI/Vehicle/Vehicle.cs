@@ -1,8 +1,8 @@
 ﻿using RAGE;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
-using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
+using TDS_Client.Data.Interfaces.RAGE.Game.Entity;
+using TDS_Client.Data.Interfaces.RAGE.Game.Player;
+using TDS_Client.Data.Interfaces.RAGE.Game.Vehicle;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
@@ -54,7 +54,7 @@ namespace TDS_Client.RAGEAPI.Vehicle
             set => SetRotation(value.X, value.Y, value.Z, 2, true);
         }
 
-        public new IPlayer Controller => base.Controller as IPlayer;
+        public new ITDSPlayer Controller => base.Controller as ITDSPlayer;
         public new EntityType Type => (EntityType)base.Type;
 
         #endregion Public Properties

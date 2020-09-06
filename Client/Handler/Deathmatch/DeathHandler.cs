@@ -1,9 +1,8 @@
-﻿using System;
+﻿using RAGE.Elements;
+using System;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
@@ -11,26 +10,21 @@ using TDS_Client.Handler.Events;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Deathmatch
 {
     public class DeathHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly ScaleformMessageHandler _scaleformMessageHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly UtilsHandler _utilsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DeathHandler(IModAPI modAPI, LoggingHandler loggingHandler, SettingsHandler settingsHandler, ScaleformMessageHandler scaleformMessageHandler,
+        public DeathHandler(LoggingHandler loggingHandler, SettingsHandler settingsHandler, ScaleformMessageHandler scaleformMessageHandler,
             EventsHandler eventsHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
-           : base(modAPI, loggingHandler)
+           : base(loggingHandler)
         {
             _settingsHandler = settingsHandler;
             _scaleformMessageHandler = scaleformMessageHandler;
@@ -38,47 +32,39 @@ namespace TDS_Client.Handler.Deathmatch
             _eventsHandler = eventsHandler;
             _browserHandler = browserHandler;
 
-            modAPI.Event.Spawn.Add(new EventMethodData<SpawnDelegate>(_ => PlayerSpawn()));
-            modAPI.Event.Death.Add(new EventMethodData<DeathDelegate>(PlayerDeath));
+            OnPlayerSpawn += PlayerSpawn;
+            OnPlayerDeath += PlayerDeath;
 
-            modAPI.Event.Add(ToClientEvent.Death, OnDeathMethod);
-            modAPI.Event.Add(ToClientEvent.ExplodeHead, OnExplodeHeadMethod);
+            Add(ToClientEvent.Death, OnDeathMethod);
+            Add(ToClientEvent.ExplodeHead, OnExplodeHeadMethod);
 
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void PlayerDeath(IPlayer player, uint reason, IPlayer killer, CancelEventArgs cancel)
+        public void PlayerDeath(Player player, uint reason, Player killer, CancelEventArgs cancel)
         {
-            if (player != ModAPI.LocalPlayer)
+            if (player != Player.LocalPlayer)
                 return;
             Logging.LogWarning("", "DeathHandler.PlayerDeath");
-            ModAPI.Cam.DoScreenFadeOut(_settingsHandler.ScreenFadeOutTimeAfterSpawn);
-            ModAPI.Misc.IgnoreNextRestart(true);
-            ModAPI.Misc.SetFadeOutAfterDeath(false);
-            ModAPI.Audio.PlaySoundFrontend(-1, AudioName.BED, AudioRef.WASTEDSOUNDS);
-            ModAPI.Cam.SetCamEffect(CamEffect.ZoomIn_Tilt30Deg_WobbleSlowly);
-            ModAPI.Graphics.StartScreenEffect(EffectName.DEATHFAILMPIN, 0, true);
+            RAGE.Game.Cam.DoScreenFadeOut(_settingsHandler.ScreenFadeOutTimeAfterSpawn);
+            RAGE.Game.Misc.IgnoreNextRestart(true);
+            RAGE.Game.Misc.SetFadeOutAfterDeath(false);
+            RAGE.Game.Audio.PlaySoundFrontend(-1, AudioName.BED, AudioRef.WASTEDSOUNDS, true);
+            RAGE.Game.Cam.SetCamEffect((int)CamEffect.ZoomIn_Tilt30Deg_WobbleSlowly);
+            RAGE.Game.Graphics.StartScreenEffect(EffectName.DEATHFAILMPIN, 0, true);
 
             _scaleformMessageHandler.ShowWastedMessage();
         }
 
-        public void PlayerSpawn()
+        public void PlayerSpawn(CancelEventArgs _ = null)
         {
             Logging.LogWarning("", "DeathHandler.PlayerSpawn");
-            ModAPI.Cam.DoScreenFadeIn(_settingsHandler.ScreenFadeInTimeAfterSpawn);
-            ModAPI.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
-            ModAPI.Cam.SetCamEffect(0);
+            RAGE.Game.Cam.DoScreenFadeIn(_settingsHandler.ScreenFadeInTimeAfterSpawn);
+            RAGE.Game.Graphics.StopScreenEffect(EffectName.DEATHFAILMPIN);
+            RAGE.Game.Cam.SetCamEffect(0);
 
             _eventsHandler.OnSpawn();
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
@@ -90,9 +76,9 @@ namespace TDS_Client.Handler.Deathmatch
 
         private void OnDeathMethod(object[] args)
         {
-            IPlayer player = _utilsHandler.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
+            var player = _utilsHandler.GetPlayerByHandleValue(Convert.ToUInt16(args[0]));
             bool willRespawn = Convert.ToBoolean(args[3]);
-            if (player == ModAPI.LocalPlayer)
+            if (player == RAGE.Elements.Player.LocalPlayer)
             {
                 _eventsHandler.OnLocalPlayerDied();
             }
@@ -105,10 +91,8 @@ namespace TDS_Client.Handler.Deathmatch
 
         private void OnExplodeHeadMethod(object[] args)
         {
-            var weaponHash = (WeaponHash)Convert.ToUInt32(args[0]);
-            ModAPI.LocalPlayer.ExplodeHead(weaponHash);
+            var weaponHash = Convert.ToUInt32(args[0]);
+            RAGE.Elements.Player.LocalPlayer.ExplodeHead(weaponHash);
         }
-
-        #endregion Private Methods
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
+using TDS_Client.Data.Interfaces.RAGE.Game.Event;
 using TDS_Client.Handler;
 using TDS_Shared.Data.Models;
 

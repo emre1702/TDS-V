@@ -1,9 +1,8 @@
-﻿using System;
+﻿using RAGE.Elements;
+using System;
 using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
@@ -14,8 +13,6 @@ namespace TDS_Client.Handler.Sync
 {
     public class DataSyncHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
 
         private readonly Dictionary<ushort, Dictionary<EntityDataKey, object>> _entityRemoteIdDatas
@@ -29,12 +26,8 @@ namespace TDS_Client.Handler.Sync
         private readonly Serializer _serializer;
         private bool _nameSyncedWithAngular;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public DataSyncHandler(IModAPI modAPI, LoggingHandler loggingHandler, EventsHandler eventsHandler, BrowserHandler angularHandler, Serializer serializer)
-                    : base(modAPI, loggingHandler)
+        public DataSyncHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, BrowserHandler angularHandler, Serializer serializer)
+                    : base(loggingHandler)
         {
             _browserHandler = angularHandler;
             _serializer = serializer;
@@ -42,20 +35,16 @@ namespace TDS_Client.Handler.Sync
 
             eventsHandler.DataChanged += OnLocalPlayerDataChange;
 
-            modAPI.Event.Add(ToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
-            modAPI.Event.Add(ToClientEvent.RemoveSyncedPlayerDatas, OnRemoveSyncedPlayerDatasMethod);
-            modAPI.Event.Add(ToClientEvent.SyncPlayerData, OnSyncPlayerDataMethod);
+            RAGE.Events.Add(ToClientEvent.SetPlayerData, OnSetPlayerDataMethod);
+            RAGE.Events.Add(ToClientEvent.RemoveSyncedPlayerDatas, OnRemoveSyncedPlayerDatasMethod);
+            RAGE.Events.Add(ToClientEvent.SyncPlayerData, OnSyncPlayerDataMethod);
 
-            modAPI.Event.Add(ToClientEvent.SetEntityData, OnSetEntityDataMethod);
-            modAPI.Event.Add(ToClientEvent.RemoveSyncedEntityDatas, OnRemoveSyncedEntityDatasMethod);
-            modAPI.Event.Add(ToClientEvent.SyncEntityData, OnSyncEntityDataMethod);
+            RAGE.Events.Add(ToClientEvent.SetEntityData, OnSetEntityDataMethod);
+            RAGE.Events.Add(ToClientEvent.RemoveSyncedEntityDatas, OnRemoveSyncedEntityDatasMethod);
+            RAGE.Events.Add(ToClientEvent.SyncEntityData, OnSyncEntityDataMethod);
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public T GetData<T>(IPlayer player, PlayerDataKey key, T returnOnEmpty = default)
+        public T GetData<T>(ITDSPlayer player, PlayerDataKey key, T returnOnEmpty = default)
         {
             try
             {
@@ -73,7 +62,7 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
-        public T GetData<T>(IEntity entity, EntityDataKey key, T returnOnEmpty = default)
+        public T GetData<T>(Entity entity, EntityDataKey key, T returnOnEmpty = default)
         {
             try
             {
@@ -91,7 +80,7 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
-        public object GetData(IPlayer player, PlayerDataKey key)
+        public object GetData(ITDSPlayer player, PlayerDataKey key)
         {
             try
             {
@@ -109,7 +98,7 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
-        public object GetData(IEntity entity, EntityDataKey key)
+        public object GetData(Entity entity, EntityDataKey key)
         {
             try
             {
@@ -131,7 +120,7 @@ namespace TDS_Client.Handler.Sync
         {
             try
             {
-                return GetData(ModAPI.LocalPlayer, key, returnOnEmpty);
+                return GetData(Player.LocalPlayer as ITDSPlayer, key, returnOnEmpty);
             }
             catch (Exception ex)
             {
@@ -144,7 +133,7 @@ namespace TDS_Client.Handler.Sync
         {
             try
             {
-                return GetData(ModAPI.LocalPlayer, key);
+                return GetData(Player.LocalPlayer as ITDSPlayer, key);
             }
             catch (Exception ex)
             {
@@ -153,15 +142,11 @@ namespace TDS_Client.Handler.Sync
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void OnLocalPlayerDataChange(IPlayer player, PlayerDataKey key, object obj)
+        private void OnLocalPlayerDataChange(ITDSPlayer player, PlayerDataKey key, object obj)
         {
             try
             {
-                if (player != ModAPI.LocalPlayer)
+                if (player != Player.LocalPlayer)
                     return;
                 switch (key)
                 {
@@ -251,7 +236,7 @@ namespace TDS_Client.Handler.Sync
                     _playerRemoteIdDatas[playerRemoteId] = new Dictionary<PlayerDataKey, object>();
                 _playerRemoteIdDatas[playerRemoteId][key] = value;
 
-                var player = ModAPI.Pool.Players.GetAtRemote(playerRemoteId);
+                var player = RAGE.Elements.Entities.Players.GetAtRemote(playerRemoteId) as ITDSPlayer;
                 if (player != null)
                 {
                     _eventsHandler.OnDataChanged(player, key, value);
@@ -293,7 +278,7 @@ namespace TDS_Client.Handler.Sync
                 var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
                 foreach (var entry in dict)
                 {
-                    var player = ModAPI.Pool.Players.GetAtRemote(entry.Key);
+                    var player = RAGE.Elements.Entities.Players.GetAtRemote(entry.Key) as ITDSPlayer;
                     if (!_playerRemoteIdDatas.ContainsKey(entry.Key))
                         _playerRemoteIdDatas[entry.Key] = new Dictionary<PlayerDataKey, object>();
                     foreach (var dataEntry in entry.Value)
@@ -311,7 +296,5 @@ namespace TDS_Client.Handler.Sync
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Private Methods
     }
 }

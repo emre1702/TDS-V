@@ -1,5 +1,5 @@
 ﻿using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Cam;
+using TDS_Client.Data.Interfaces.RAGE.Game.Cam;
 using TDS_Client.RAGEAPI.Extensions;
 using TDS_Shared.Data.Models.GTA;
 

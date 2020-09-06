@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI.Graphics;
+using TDS_Client.Data.Interfaces.RAGE.Game.Graphics;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.RAGEAPI.Graphics
@@ -73,9 +73,9 @@ namespace TDS_Client.RAGEAPI.Graphics
             RAGE.Game.Graphics.DrawSprite(textureDict, textureName, screenX, screenY, width, height, heading, r, g, b, a, 0);
         }
 
-        public void DrawText(string text, int screenX, int screenY, Font font, float scale, Color color, AlignmentX alignmentX, bool dropShadow, bool outline, int wordWrap)
+        public void DrawText(string text, int screenX, int screenY, Font font, float scale, Color color, Alignment Alignment, bool dropShadow, bool outline, int wordWrap)
         {
-            RAGE.NUI.UIResText.Draw(text, screenX, screenY, (RAGE.Game.Font)font, scale, color, (RAGE.NUI.UIResText.Alignment)alignmentX, dropShadow, outline, wordWrap);
+            RAGE.NUI.UIResText.Draw(text, screenX, screenY, (RAGE.Game.Font)font, scale, color, (RAGE.NUI.UIResText.Alignment)Alignment, dropShadow, outline, wordWrap);
         }
 
         public bool GetScreenCoordFromWorldCoord(float worldX, float worldY, float worldZ, ref float screenX, ref float screenY)

@@ -1,39 +1,25 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
+﻿using RAGE.Elements;
 using TDS_Client.Data.Models;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.GangSystem
 {
     public class GangVehiclesHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly DataSyncHandler _dataSyncHandler;
-        private readonly EventMethodData<PlayerStartEnterVehicleDelegate> _vehicleStartEnterEventMethod;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public GangVehiclesHandler(IModAPI modAPI, LoggingHandler loggingHandler, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
-            : base(modAPI, loggingHandler)
+        public GangVehiclesHandler(LoggingHandler loggingHandler, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
+            : base(loggingHandler)
         {
             _dataSyncHandler = dataSyncHandler;
-
-            _vehicleStartEnterEventMethod = new EventMethodData<PlayerStartEnterVehicleDelegate>(HandleDriverOnlyGangMembers);
 
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
         }
-
-        #endregion Public Constructors
-
-        #region Private Methods
 
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
@@ -49,24 +35,22 @@ namespace TDS_Client.Handler.GangSystem
             Stop();
         }
 
-        private void HandleDriverOnlyGangMembers(IVehicle vehicle, VehicleSeat seat, CancelEventArgs cancel)
+        private void HandleDriverOnlyGangMembers(Vehicle vehicle, int seatId, CancelEventArgs cancel)
         {
             //Todo: Prevent stealing other vehicles when gang Id -1 if it's not mine
-            if (seat == VehicleSeat.DriverLeftFront
+            if (seatId == (int)VehicleSeat.DriverLeftFront
                 && _dataSyncHandler.GetData(vehicle, EntityDataKey.GangId, -2) != _dataSyncHandler.GetData(PlayerDataKey.GangId, -1))
                 cancel.Cancel = true;
         }
 
         private void Start()
         {
-            ModAPI.Event.PlayerStartEnterVehicle.Add(_vehicleStartEnterEventMethod);
+            OnPlayerStartEnterVehicle += HandleDriverOnlyGangMembers;
         }
 
         private void Stop()
         {
-            ModAPI.Event.PlayerStartEnterVehicle.Remove(_vehicleStartEnterEventMethod);
+            OnPlayerStartEnterVehicle -= HandleDriverOnlyGangMembers;
         }
-
-        #endregion Private Methods
     }
 }

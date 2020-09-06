@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Sync;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Sync;
 
 namespace TDS_Client.RAGEAPI.Sync
 {

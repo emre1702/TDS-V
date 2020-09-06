@@ -1,6 +1,6 @@
 ﻿using System;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Player;
+using TDS_Client.Data.Interfaces.RAGE.Game.Event;
+using TDS_Client.Data.Interfaces.RAGE.Game.Player;
 using TDS_Client.Handler;
 using TDS_Client.RAGEAPI.Player;
 
@@ -35,7 +35,7 @@ namespace TDS_Client.RAGEAPI.Event
 
             try
             {
-                IPlayer player = playerMod as IPlayer;
+                ITDSPlayer player = playerMod as ITDSPlayer;
 
                 for (int i = Actions.Count - 1; i >= 0; --i)
                 {

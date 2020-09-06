@@ -1,52 +1,33 @@
-﻿using System;
+﻿using RAGE.Ui;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Browser;
 using TDS_Shared.Core;
 
 namespace TDS_Client.Handler.Browser
 {
     public class BrowserHandlerBase : ServiceBase
     {
-        #region Protected Fields
-
         protected readonly Serializer Serializer;
-
-        #endregion Protected Fields
-
-        #region Private Fields
 
         private readonly LinkedList<Action> _executeList = new LinkedList<Action>();
         private readonly StringBuilder _stringBuilder = new StringBuilder();
         private readonly string _url;
 
-        #endregion Private Fields
-
-        #region Protected Constructors
-
-        protected BrowserHandlerBase(IModAPI modAPI, LoggingHandler loggingHandler, Serializer serializer, string url)
-            : base(modAPI, loggingHandler)
+        protected BrowserHandlerBase(LoggingHandler loggingHandler, Serializer serializer, string url)
+            : base(loggingHandler)
         {
             Serializer = serializer;
             _url = url;
         }
 
-        #endregion Protected Constructors
-
-        #region Public Properties
-
-        public IBrowser Browser { get; private set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
+        public HtmlWindow Browser { get; private set; }
 
         public void CreateBrowser()
         {
-            Browser = ModAPI.Browser.Create(_url);
+            Browser = new HtmlWindow(_url);
             ProcessExecuteList();
         }
 
@@ -63,10 +44,6 @@ namespace TDS_Client.Handler.Browser
             Browser = null;
             _executeList.Clear();
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         protected void Execute(string eventName, params object[] args)
         {
@@ -147,7 +124,5 @@ namespace TDS_Client.Handler.Browser
             }
             _executeList.Clear();
         }
-
-        #endregion Protected Methods
     }
 }

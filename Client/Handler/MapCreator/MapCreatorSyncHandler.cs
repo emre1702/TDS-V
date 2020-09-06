@@ -1,8 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Lobby;
@@ -11,27 +9,21 @@ using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Default;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorSyncHandler
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly LobbyHandler _lobbyHandler;
         private readonly MapCreatorObjectsHandler _mapCreatorObjectsHandler;
-        private readonly IModAPI _modAPI;
+
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly Serializer _serializer;
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapCreatorSyncHandler(IModAPI modAPI, MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer,
+        public MapCreatorSyncHandler(MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer,
             EventsHandler eventsHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler, DataSyncHandler dataSyncHandler)
         {
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
@@ -40,43 +32,32 @@ namespace TDS_Client.Handler.MapCreator
             _browserHandler = browserHandler;
             _lobbyHandler = lobbyHandler;
             _dataSyncHandler = dataSyncHandler;
-            _modAPI = modAPI;
-
-            _tickEventMethod = new EventMethodData<TickDelegate>(SyncOtherPlayers);
 
             eventsHandler.MapCreatorSyncLatestObjectID += SyncLatestIdToServer;
             eventsHandler.MapCreatorSyncObjectDeleted += SyncObjectRemoveToLobby;
             eventsHandler.MapCreatorSyncTeamObjectsDeleted += SyncTeamObjectsRemoveToLobby;
 
-            modAPI.Event.Add(FromBrowserEvent.MapCreatorStartNew, SyncStartNewMap);
-            modAPI.Event.Add(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, OnMapCreatorRequestAllObjectsForPlayerMethod);
-            modAPI.Event.Add(ToClientEvent.MapCreatorSyncAllObjects, OnMapCreatorSyncAllObjectsMethod);
-            modAPI.Event.Add(ToClientEvent.MapCreatorSyncFixLastId, OnMapCreatorSyncFixLastIdMethod);
-            modAPI.Event.Add(ToClientEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObjectMethod);
-            modAPI.Event.Add(ToClientEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPositionMethod);
-            modAPI.Event.Add(ToClientEvent.MapCreatorSyncObjectRemove, MapCreatorSyncObjectRemoveMethod);
-            modAPI.Event.Add(ToClientEvent.MapCreatorSyncTeamObjectsRemove, MapCreatorSyncTeamObjectsRemoveMethod);
+            Add(FromBrowserEvent.MapCreatorStartNew, SyncStartNewMap);
+            Add(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, OnMapCreatorRequestAllObjectsForPlayerMethod);
+            Add(ToClientEvent.MapCreatorSyncAllObjects, OnMapCreatorSyncAllObjectsMethod);
+            Add(ToClientEvent.MapCreatorSyncFixLastId, OnMapCreatorSyncFixLastIdMethod);
+            Add(ToClientEvent.MapCreatorSyncNewObject, OnMapCreatorSyncNewObjectMethod);
+            Add(ToClientEvent.MapCreatorSyncObjectPosition, OnMapCreatorSyncObjectPositionMethod);
+            Add(ToClientEvent.MapCreatorSyncObjectRemove, MapCreatorSyncObjectRemoveMethod);
+            Add(ToClientEvent.MapCreatorSyncTeamObjectsRemove, MapCreatorSyncTeamObjectsRemoveMethod);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public bool HasToSync => true;
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         // => Team.AmountPlayersSameTeam > 1;
         public void Start()
         {
-            _modAPI.Event.Tick.Add(_tickEventMethod);
+            Tick += SyncOtherPlayers;
         }
 
         public void Stop()
         {
-            _modAPI.Event.Tick.Remove(_tickEventMethod);
+            Tick -= SyncOtherPlayers;
         }
 
         public void SyncAllObjectsToPlayer(int tdsPlayerId)
@@ -184,10 +165,6 @@ namespace TDS_Client.Handler.MapCreator
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveTeamObjects, teamNumber);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void MapCreatorSyncObjectRemoveMethod(object[] args)
         {
             int objId = Convert.ToInt32(args[0]);
@@ -235,11 +212,11 @@ namespace TDS_Client.Handler.MapCreator
             SyncObjectPositionFromLobby(dto);
         }
 
-        private void SyncOtherPlayers(int currentMs)
+        private void SyncOtherPlayers(List<TickNametagData> _)
         {
             foreach (var player in _lobbyHandler.Teams.SameTeamPlayers)
             {
-                if (player == _modAPI.LocalPlayer)
+                if (player == RAGE.Elements.Player.LocalPlayer)
                     continue;
                 if (_dataSyncHandler.GetData(PlayerDataKey.InFreeCam, false))
                 {
@@ -253,7 +230,5 @@ namespace TDS_Client.Handler.MapCreator
                 }
             }
         }
-
-        #endregion Private Methods
     }
 }

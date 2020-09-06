@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Voice;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Voice;
 
 namespace TDS_Client.RAGEAPI.Voice
 {

@@ -1,63 +1,49 @@
-﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Vehicle;
-using TDS_Client.Data.Models;
+﻿using RAGE;
+using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
+using TDS_Client.Data.Defaults;
 using TDS_Client.Handler.Browser;
-using TDS_Shared.Data.Models.GTA;
+using TDS_Client.Handler.Entities.GTA;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.MapCreator
 {
     public class MapCreatorVehiclesPreviewHandler
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly CamerasHandler _camerasHandler;
-        private readonly IModAPI _modAPI;
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
+
         private readonly UtilsHandler _utilsHandler;
-        private IVehicle _vehicle;
-        private Position3D _vehicleRotation;
+        private ITDSVehicle _vehicle;
+        private Vector3 _vehicleRotation;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapCreatorVehiclesPreviewHandler(IModAPI modAPI, CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
+        public MapCreatorVehiclesPreviewHandler(CamerasHandler camerasHandler, UtilsHandler utilsHandler, BrowserHandler browserHandler)
         {
-            _modAPI = modAPI;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
             _browserHandler = browserHandler;
 
-            _tickEventMethod = new EventMethodData<TickDelegate>(RenderVehicleInFrontOfCam);
-
-            modAPI.Event.Add(FromBrowserEvent.MapCreatorStartVehicleChoice, Start);
-            modAPI.Event.Add(FromBrowserEvent.MapCreatorShowVehicle, args => ShowVehicle((string)args[0]));
-            modAPI.Event.Add(FromBrowserEvent.MapCreatorStopVehiclePreview, _ => Stop());
+            Add(FromBrowserEvent.MapCreatorStartVehicleChoice, Start);
+            Add(FromBrowserEvent.MapCreatorShowVehicle, args => ShowVehicle((string)args[0]));
+            Add(FromBrowserEvent.MapCreatorStopVehiclePreview, _ => Stop());
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void ShowVehicle(string vehicleName)
         {
-            var hash = _modAPI.Misc.GetHashKey(vehicleName);
+            var hash = RAGE.Game.Misc.GetHashKey(vehicleName);
             if (hash == default)
                 return;
 
-            _vehicleRotation = new Position3D();
+            _vehicleRotation = new Vector3();
             if (_vehicle == null)
-                _modAPI.Event.Tick.Add(_tickEventMethod);
+                Tick += RenderVehicleInFrontOfCam;
             else
                 _vehicle.Destroy();
 
-            _vehicle = _modAPI.Vehicle.Create(hash, _modAPI.LocalPlayer.Position, _vehicleRotation, dimension: _modAPI.LocalPlayer.Dimension);
+            _vehicle = new TDSVehicle(hash, RAGE.Elements.Player.LocalPlayer.Position, heading: _vehicleRotation.Z, dimension: RAGE.Elements.Player.LocalPlayer.Dimension);
             _vehicle.SetCollision(false, false);
             _vehicle.SetInvincible(true);
-            _vehicle.Rotation = _vehicleRotation;
+            _vehicle.SetRotation(_vehicleRotation.X, _vehicleRotation.Y, _vehicleRotation.Z, 2, true);
         }
 
         public void Stop()
@@ -67,25 +53,22 @@ namespace TDS_Client.Handler.MapCreator
                 _vehicle.Destroy();
                 _vehicle = null;
                 _vehicleRotation = null;
-                _modAPI.Event.Tick.Remove(_tickEventMethod);
+                Tick -= RenderVehicleInFrontOfCam;
             }
             _browserHandler.MapCreatorVehicleChoice.Stop();
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void RenderVehicleInFrontOfCam(int currentMs)
+        private void RenderVehicleInFrontOfCam(List<TickNametagData> _)
         {
             if (_vehicle is null)
                 return;
-            var camPos = _camerasHandler.ActiveCamera?.Position ?? _modAPI.Cam.GetGameplayCamCoord();
-            var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(_modAPI.Cam.GetGameplayCamRot());
+            var camPos = _camerasHandler.ActiveCamera?.Position ?? RAGE.Game.Cam.GetGameplayCamCoord();
+            var camDirection = _camerasHandler.ActiveCamera?.Direction ?? _utilsHandler.GetDirectionByRotation(RAGE.Game.Cam.GetGameplayCamRot(2));
 
-            Position3D a = new Position3D();
-            Position3D b = new Position3D();
-            _vehicle.GetModelDimensions(a, b);
+            var a = new Vector3();
+            var b = new Vector3(9999f, 9999f, 9999f);
+            RAGE.Game.Misc.GetModelDimensions(_vehicle.Model, a, b);
+
             var objSize = b - a;
             var position = camPos + camDirection * (3 + objSize.Length());
             _vehicle.Position = position;
@@ -100,7 +83,7 @@ namespace TDS_Client.Handler.MapCreator
             if (_vehicleRotation.Z >= 360)
                 _vehicleRotation.Z -= 360;
 
-            _vehicle.Rotation = _vehicleRotation;
+            _vehicle.SetRotation(_vehicleRotation.X, _vehicleRotation.Y, _vehicleRotation.Z, 2, true);
         }
 
         private void Start(object[] args)
@@ -108,7 +91,5 @@ namespace TDS_Client.Handler.MapCreator
             _browserHandler.MapCreatorVehicleChoice.CreateBrowser();
             _browserHandler.MapCreatorVehicleChoice.SetReady();
         }
-
-        #endregion Private Methods
     }
 }

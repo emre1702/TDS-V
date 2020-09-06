@@ -1,63 +1,50 @@
-﻿using System;
+﻿using RAGE;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TDS_Client.Data.Defaults;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.GTA;
 using TDS_Shared.Default;
+using static RAGE.Events;
+using static RAGE.NUI.UIResText;
 
 namespace TDS_Client.Handler.Entities
 {
     public class MapLimit
     {
-        #region Public Fields
-
         public Color MapBorderColor;
-
-        #endregion Public Fields
-
-        #region Private Fields
 
         private readonly DxHandler _dxHandler;
         private readonly Dictionary<MapLimitType, Action> _mapLimitTypeMethod = new Dictionary<MapLimitType, Action> { };
         private readonly int _maxOutsideCounter;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly SettingsHandler _settingsHandler;
-        private readonly EventMethodData<TickDelegate> _tickEventMethod;
         private readonly TimerHandler _timerHandler;
         private readonly HashSet<MapLimitType> _typeToCheckFaster = new HashSet<MapLimitType> { MapLimitType.Block };
-        private readonly IModAPI ModAPI;
+
         private TDSTimer _checkTimer;
         private TDSTimer _checkTimerFaster;
         private bool _createdGpsRoutes;
-        private List<Position3D> _edges;
+        private List<Vector3> _edges;
         private float _edgesMaxTop = -1;
         private DxText _info;
-        private Position3D _lastPosInMap;
+        private Vector3 _lastPosInMap;
         private float _lastRotInMap;
         private float _minX, _minY, _maxX, _maxY;
         private int _outsideCounter;
         private bool _started;
         private MapLimitType _type;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapLimit(List<Position3D> edges, MapLimitType type, int maxOutsideCounter, Color mapBorderColor, IModAPI modAPI, RemoteEventsSender remoteEventsSender,
+        public MapLimit(List<Vector3> edges, MapLimitType type, int maxOutsideCounter, Color mapBorderColor, RemoteEventsSender remoteEventsSender,
             SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler)
         {
-            ModAPI = modAPI;
             _remoteEventsSender = remoteEventsSender;
-            _tickEventMethod = new EventMethodData<TickDelegate>(Draw);
             _settingsHandler = settingsHandler;
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
@@ -73,15 +60,7 @@ namespace TDS_Client.Handler.Entities
             _mapLimitTypeMethod[MapLimitType.Block] = IsOutsideBlock;
         }
 
-        #endregion Public Constructors
-
-        #region Private Properties
-
         private bool SavePosition => _edges != null && (_type == MapLimitType.Block || _type == MapLimitType.TeleportBackAfterTime);
-
-        #endregion Private Properties
-
-        #region Public Methods
 
         public void CheckFaster()
         {
@@ -98,7 +77,7 @@ namespace TDS_Client.Handler.Entities
                 _mapLimitTypeMethod[_type]();
         }
 
-        public void SetEdges(List<Position3D> edges)
+        public void SetEdges(List<Vector3> edges)
         {
             if (_type != MapLimitType.Display)
             {
@@ -111,7 +90,7 @@ namespace TDS_Client.Handler.Entities
             foreach (var edge in edges)
             {
                 float edgeZ = 0;
-                if (ModAPI.Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ))
+                if (RAGE.Game.Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ, false))
                     edge.Z = edgeZ;
             }
 
@@ -154,7 +133,7 @@ namespace TDS_Client.Handler.Entities
                 Stop();
             Reset();
             SetType(_type, true);
-            ModAPI.Event.Tick.Add(_tickEventMethod);
+            Tick += Draw;
             DrawGpsRoutes();
             _started = true;
         }
@@ -170,14 +149,10 @@ namespace TDS_Client.Handler.Entities
             _info?.Remove();
             _info = null;
             _outsideCounter = _maxOutsideCounter;
-            ModAPI.Event.Tick.Remove(_tickEventMethod);
+            Tick -= Draw;
             ClearGpsRoutes();
             _started = false;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void Check()
         {
@@ -200,12 +175,12 @@ namespace TDS_Client.Handler.Entities
             if (!_createdGpsRoutes)
                 return;
 
-            ModAPI.Native.Invoke(NativeHash.CLEAR_GPS_CUSTOM_ROUTE);
+            RAGE.Game.Invoker.Invoke((ulong)NativeHash.CLEAR_GPS_CUSTOM_ROUTE);
 
             _createdGpsRoutes = false;
         }
 
-        private void Draw(int _)
+        private void Draw(List<TickNametagData> _)
         {
             float totalMaxTop = -1;
             for (int i = 0; i < _edges.Count; ++i)
@@ -214,8 +189,8 @@ namespace TDS_Client.Handler.Entities
                 var edgeTarget = i == _edges.Count - 1 ? _edges[0] : _edges[i + 1];
                 float edgeStartZ = 0;
                 float edgeTargetZ = 0;
-                ModAPI.Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, ModAPI.LocalPlayer.Position.Z, ref edgeStartZ);
-                ModAPI.Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, ModAPI.LocalPlayer.Position.Z, ref edgeTargetZ);
+                RAGE.Game.Misc.GetGroundZFor3dCoord(edgeStart.X, edgeStart.Y, RAGE.Elements.Player.LocalPlayer.Position.Z, ref edgeStartZ, false);
+                RAGE.Game.Misc.GetGroundZFor3dCoord(edgeTarget.X, edgeTarget.Y, RAGE.Elements.Player.LocalPlayer.Position.Z, ref edgeTargetZ, false);
 
                 //var textureRes = Graphics.GetTextureResolution("commonmenu", "gradient_bgd");
                 //Graphics.Draw  .DrawSprite("commonmenu", "gradient_bgd", )
@@ -225,11 +200,11 @@ namespace TDS_Client.Handler.Entities
                 totalMaxTop = Math.Max(totalMaxTop, maxTop);
                 if (_edgesMaxTop != -1)
                     maxTop = _edgesMaxTop;
-                ModAPI.Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, maxTop, edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeStart.X, edgeStart.Y, edgeStartZ, color.R, color.G, color.B, color.A);
-                ModAPI.Graphics.DrawPoly(edgeStart.X, edgeStart.Y, edgeStartZ, edgeStart.X, edgeStart.Y, maxTop, edgeTarget.X, edgeTarget.Y, maxTop, color.R, color.G, color.B, color.A);
+                RAGE.Game.Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, maxTop, edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeStart.X, edgeStart.Y, edgeStartZ, color.R, color.G, color.B, color.A);
+                RAGE.Game.Graphics.DrawPoly(edgeStart.X, edgeStart.Y, edgeStartZ, edgeStart.X, edgeStart.Y, maxTop, edgeTarget.X, edgeTarget.Y, maxTop, color.R, color.G, color.B, color.A);
 
-                ModAPI.Graphics.DrawPoly(edgeStart.X, edgeStart.Y, maxTop, edgeStart.X, edgeStart.Y, edgeStartZ, edgeTarget.X, edgeTarget.Y, edgeTargetZ, color.R, color.G, color.B, color.A);
-                ModAPI.Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeTarget.X, edgeTarget.Y, maxTop, edgeStart.X, edgeStart.Y, maxTop, color.R, color.G, color.B, color.A);
+                RAGE.Game.Graphics.DrawPoly(edgeStart.X, edgeStart.Y, maxTop, edgeStart.X, edgeStart.Y, edgeStartZ, edgeTarget.X, edgeTarget.Y, edgeTargetZ, color.R, color.G, color.B, color.A);
+                RAGE.Game.Graphics.DrawPoly(edgeTarget.X, edgeTarget.Y, edgeTargetZ, edgeTarget.X, edgeTarget.Y, maxTop, edgeStart.X, edgeStart.Y, maxTop, color.R, color.G, color.B, color.A);
 
                 /*Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ - 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ - 0.5f, 150, 0, 0, 255);
                 Graphics.DrawLine(edgeStart.X, edgeStart.Y, edgeStartZ + 0.5f, edgeTarget.X, edgeTarget.Y, edgeTargetZ + 0.5f, 150, 0, 0, 255);
@@ -265,8 +240,8 @@ namespace TDS_Client.Handler.Entities
 
         private void IsOutsideBlock()
         {
-            ModAPI.LocalPlayer.Position = _lastPosInMap;
-            ModAPI.LocalPlayer.Heading = (_lastRotInMap + 180) % 360;
+            RAGE.Elements.Player.LocalPlayer.Position = _lastPosInMap;
+            RAGE.Elements.Player.LocalPlayer.SetRotation(0, 0, (_lastRotInMap + 180) % 360, 2, true);
         }
 
         private void IsOutsideKillAfterTime()
@@ -286,14 +261,14 @@ namespace TDS_Client.Handler.Entities
                 RefreshInfoTeleportAfterTime();
             else
             {
-                ModAPI.LocalPlayer.Position = _lastPosInMap;
+                RAGE.Elements.Player.LocalPlayer.Position = _lastPosInMap;
                 Reset();
             }
         }
 
-        private bool IsWithin() => IsWithin(ModAPI.LocalPlayer.Position);
+        private bool IsWithin() => IsWithin(RAGE.Elements.Player.LocalPlayer.Position);
 
-        private bool IsWithin(Position3D point)
+        private bool IsWithin(Vector3 point)
         {
             if (point.X < _minX || point.Y < _minY || point.X > _maxX || point.Y > _maxY)
                 return false;
@@ -301,8 +276,8 @@ namespace TDS_Client.Handler.Entities
             bool inside = false;
             for (int i = 0, j = _edges.Count - 1; i < _edges.Count; j = i++)
             {
-                Position3D iPoint = _edges[i];
-                Position3D jPoint = _edges[j];
+                var iPoint = _edges[i];
+                var jPoint = _edges[j];
                 bool intersect = ((iPoint.Y > point.Y) != (jPoint.Y > point.Y))
                         && (point.X < (jPoint.X - iPoint.X) * (point.Y - iPoint.Y) / (jPoint.Y - iPoint.Y) + iPoint.X);
                 if (intersect)
@@ -314,8 +289,8 @@ namespace TDS_Client.Handler.Entities
         private void RefreshInfoKillAfterTime()
         {
             if (_info == null)
-                _info = new DxText(_dxHandler, ModAPI, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f,
-                    Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
+                _info = new DxText(_dxHandler, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f,
+                    Color.White, Alignment: Alignment.Centered, alignmentY: AlignmentY.Top);
             else
                 _info.Text = string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_KILL_AFTER_TIME, _outsideCounter.ToString());
         }
@@ -323,8 +298,8 @@ namespace TDS_Client.Handler.Entities
         private void RefreshInfoTeleportAfterTime()
         {
             if (_info == null)
-                _info = new DxText(_dxHandler, ModAPI, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f,
-                    Color.White, alignmentX: AlignmentX.Center, alignmentY: AlignmentY.Top);
+                _info = new DxText(_dxHandler, _timerHandler, string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString()), 0.5f, 0.1f, 1f,
+                    Color.White, Alignment: Alignment.Centered, alignmentY: AlignmentY.Top);
             else
                 _info.Text = string.Format(_settingsHandler.Language.OUTSIDE_MAP_LIMIT_TELEPORT_AFTER_TIME, _outsideCounter.ToString());
         }
@@ -333,8 +308,8 @@ namespace TDS_Client.Handler.Entities
         {
             if (SavePosition)
             {
-                _lastPosInMap = ModAPI.LocalPlayer.Position;
-                _lastRotInMap = ModAPI.LocalPlayer.Heading;
+                _lastPosInMap = RAGE.Elements.Player.LocalPlayer.Position;
+                _lastRotInMap = RAGE.Elements.Player.LocalPlayer.GetHeading();
             }
             if (_outsideCounter == _maxOutsideCounter)
                 return;
@@ -342,7 +317,5 @@ namespace TDS_Client.Handler.Entities
             _info = null;
             _outsideCounter = _maxOutsideCounter;
         }
-
-        #endregion Private Methods
     }
 }

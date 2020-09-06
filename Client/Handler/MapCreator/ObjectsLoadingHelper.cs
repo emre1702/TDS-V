@@ -1,6 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
-
-namespace TDS_Client.Handler.MapCreator
+﻿namespace TDS_Client.Handler.MapCreator
 {
     public class ObjectsLoadingHelper : ServiceBase
     {
@@ -13,8 +11,8 @@ namespace TDS_Client.Handler.MapCreator
 
         #region Public Constructors
 
-        public ObjectsLoadingHelper(IModAPI modAPI, LoggingHandler loggingHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler)
-            : base(modAPI, loggingHandler)
+        public ObjectsLoadingHelper(LoggingHandler loggingHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler)
+            : base(loggingHandler)
         {
             _utilsHandler = utilsHandler;
             _settingsHandler = settingsHandler;
@@ -26,7 +24,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public bool LoadObjectHash(uint hash)
         {
-            if (!ModAPI.Streaming.IsModelInCdimage(hash) || !ModAPI.Streaming.IsModelValid(hash))
+            if (!RAGE.Game.Streaming.IsModelInCdimage(hash) || !RAGE.Game.Streaming.IsModelValid(hash))
             {
                 _utilsHandler.Notify(_settingsHandler.Language.OBJECT_MODEL_INVALID);
                 return false;
@@ -45,22 +43,22 @@ namespace TDS_Client.Handler.MapCreator
 
         private bool LoadObjectModel(uint hash)
         {
-            //ModAPI.Utils.Settimera(0);
-            ModAPI.Streaming.RequestModel(hash);
-            /*while (!ModAPI.Streaming.HasModelLoaded(hash))
+            //RAGE.Game.Utils.Settimera(0);
+            RAGE.Game.Streaming.RequestModel(hash);
+            /*while (!RAGE.Game.Streaming.HasModelLoaded(hash))
             {
-                ModAPI.Utils.Wait(0);
-                ModAPI.Ui.HideHudAndRadarThisFrame();
-                ModAPI.Ui.BeginTextCommandDisplayText("STRING");
-                ModAPI.Ui.AddTextComponentSubstringPlayerName("Loading...");
-                ModAPI.Ui.SetTextScale(0.45f);
-                ModAPI.Ui.SetTextColour(255, 255, 255, 255);
-                ModAPI.Ui.SetTextCentre(true);
-                ModAPI.Ui.SetTextJustification(0);
-                ModAPI.Ui.SetTextFont(0);
-                ModAPI.Ui.SetTextDropShadow();
-                ModAPI.Ui.EndTextCommandDisplayText(0.5f, 0.9f);
-                if (ModAPI.Utils.Timera() > 1000)
+                RAGE.Game.Utils.Wait(0);
+                RAGE.Game.Ui.HideHudAndRadarThisFrame();
+                RAGE.Game.Ui.BeginTextCommandDisplayText("STRING");
+                RAGE.Game.Ui.AddTextComponentSubstringPlayerName("Loading...");
+                RAGE.Game.Ui.SetTextScale(0.45f);
+                RAGE.Game.Ui.SetTextColour(255, 255, 255, 255);
+                RAGE.Game.Ui.SetTextCentre(true);
+                RAGE.Game.Ui.SetTextJustification(0);
+                RAGE.Game.Ui.SetTextFont(0);
+                RAGE.Game.Ui.SetTextDropShadow();
+                RAGE.Game.Ui.EndTextCommandDisplayText(0.5f, 0.9f);
+                if (RAGE.Game.Utils.Timera() > 1000)
                     return false;
             }*/
             return true;

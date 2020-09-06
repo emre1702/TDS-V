@@ -1,4 +1,4 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI.Pool;
+﻿using TDS_Client.Data.Interfaces.RAGE.Game.Pool;
 using TDS_Client.RAGEAPI.Entity;
 
 namespace TDS_Client.RAGEAPI.Pool

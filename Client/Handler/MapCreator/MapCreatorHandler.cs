@@ -1,6 +1,6 @@
-﻿using System;
+﻿using RAGE;
+using System;
 using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
 using TDS_Client.Handler.Draw;
@@ -29,42 +29,42 @@ namespace TDS_Client.Handler.MapCreator
 
         #region Public Constructors
 
-        public MapCreatorHandler(IModAPI modAPI, LoggingHandler loggingHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler,
+        public MapCreatorHandler(LoggingHandler loggingHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler,
             SettingsHandler settingsHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, BrowserHandler browserHandler,
             DxHandler dxHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, LobbyHandler lobbyHandler,
             TimerHandler timerHandler, DataSyncHandler dataSyncHandler, DeathHandler deathHandler)
-            : base(modAPI, loggingHandler)
+            : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
             _remoteEventsSender = remoteEventsSender;
             _camerasHandler = camerasHandler;
 
-            Draw = new MapCreatorDrawHandler(modAPI, utilsHandler);
-            Foot = new MapCreatorFootHandler(modAPI, camerasHandler, instructionalButtonHandler, settingsHandler, deathHandler);
+            Draw = new MapCreatorDrawHandler(utilsHandler);
+            Foot = new MapCreatorFootHandler(camerasHandler, instructionalButtonHandler, settingsHandler, deathHandler);
 
             var clickedMarkerStorer = new ClickedMarkerStorer();
 
-            Objects = new MapCreatorObjectsHandler(modAPI, loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler, serializer);
-            Sync = new MapCreatorSyncHandler(modAPI, Objects, remoteEventsSender, serializer, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
-            ObjectsLoading = new ObjectsLoadingHelper(modAPI, loggingHandler, utilsHandler, settingsHandler);
-            ObjectsPreview = new MapCreatorObjectsPreviewHandler(modAPI, ObjectsLoading, camerasHandler, utilsHandler, browserHandler);
-            VehiclePreview = new MapCreatorVehiclesPreviewHandler(modAPI, camerasHandler, utilsHandler, browserHandler);
-            ObjectPlacing = new MapCreatorObjectPlacingHandler(modAPI, loggingHandler, Draw, Objects, cursorHandler, browserHandler, lobbyHandler, settingsHandler,
+            Objects = new MapCreatorObjectsHandler(loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler, serializer);
+            Sync = new MapCreatorSyncHandler(Objects, remoteEventsSender, serializer, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
+            ObjectsLoading = new ObjectsLoadingHelper(loggingHandler, utilsHandler, settingsHandler);
+            ObjectsPreview = new MapCreatorObjectsPreviewHandler(ObjectsLoading, camerasHandler, utilsHandler, browserHandler);
+            VehiclePreview = new MapCreatorVehiclesPreviewHandler(camerasHandler, utilsHandler, browserHandler);
+            ObjectPlacing = new MapCreatorObjectPlacingHandler(loggingHandler, Draw, Objects, cursorHandler, browserHandler, lobbyHandler, settingsHandler,
                 remoteEventsSender, camerasHandler,
                 instructionalButtonHandler, utilsHandler, ObjectsPreview, VehiclePreview, Sync, eventsHandler, dxHandler, timerHandler, clickedMarkerStorer);
-            Marker = new MapCreatorMarkerHandler(modAPI, loggingHandler, utilsHandler, dxHandler, camerasHandler, browserHandler, Draw, ObjectPlacing, Sync, clickedMarkerStorer);
-            Freecam = new MapCreatorFreecamHandler(modAPI, loggingHandler, camerasHandler, utilsHandler, instructionalButtonHandler, cursorHandler, browserHandler,
+            Marker = new MapCreatorMarkerHandler(loggingHandler, utilsHandler, dxHandler, camerasHandler, browserHandler, Draw, ObjectPlacing, Sync, clickedMarkerStorer);
+            Freecam = new MapCreatorFreecamHandler(loggingHandler, camerasHandler, utilsHandler, instructionalButtonHandler, cursorHandler, browserHandler,
                 Foot, Marker, ObjectPlacing, eventsHandler);
             Binds = new MapCreatorBindsHandler(bindsHandler, instructionalButtonHandler, settingsHandler, Freecam, ObjectPlacing, eventsHandler);
 
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
 
-            ModAPI.Event.Add(ToServerEvent.RemoveMap, OnRemoveMapMethod);
-            ModAPI.Event.Add(ToClientEvent.MapCreatorStartNewMap, _ => StartNewMap());
-            ModAPI.Event.Add(FromBrowserEvent.TeleportToXY, OnTeleportToXYMethod);
-            ModAPI.Event.Add(FromBrowserEvent.TeleportToPositionRotation, OnTeleportToPositionRotationMethod);
+            RAGE.Events.Add(ToServerEvent.RemoveMap, OnRemoveMapMethod);
+            RAGE.Events.Add(ToClientEvent.MapCreatorStartNewMap, _ => StartNewMap());
+            RAGE.Events.Add(FromBrowserEvent.TeleportToXY, OnTeleportToXYMethod);
+            RAGE.Events.Add(FromBrowserEvent.TeleportToPositionRotation, OnTeleportToPositionRotationMethod);
         }
 
         #endregion Public Constructors
@@ -89,7 +89,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public void Start()
         {
-            ModAPI.Cam.DoScreenFadeIn(100);
+            RAGE.Game.Cam.DoScreenFadeIn(100);
             _browserHandler.Angular.ToggleMapCreator(true);
             Freecam.ToggleFreecam();
             Objects.Start();
@@ -157,11 +157,11 @@ namespace TDS_Client.Handler.MapCreator
             float rot = Convert.ToSingle(args[3]);
             if (_camerasHandler.ActiveCamera != null)
             {
-                _camerasHandler.ActiveCamera.Position = new Position3D(x, y, z);
-                _camerasHandler.ActiveCamera.Rotation = new Position3D(0, 0, rot);
+                _camerasHandler.ActiveCamera.Position = new Vector3(x, y, z);
+                _camerasHandler.ActiveCamera.Rotation = new Vector3(0, 0, rot);
             }
-            ModAPI.LocalPlayer.Position = new Position3D(x, y, z);
-            ModAPI.LocalPlayer.Heading = rot;
+            RAGE.Elements.Player.LocalPlayer.Position = new Vector3(x, y, z);
+            RAGE.Elements.Player.LocalPlayer.SetHeading(rot);
         }
 
         private void OnTeleportToXYMethod(object[] args)
@@ -169,8 +169,8 @@ namespace TDS_Client.Handler.MapCreator
             float x = Convert.ToSingle(args[0]);
             float y = Convert.ToSingle(args[1]);
             float z = 0;
-            ModAPI.Misc.GetGroundZFor3dCoord(x, y, 9000, ref z);
-            ModAPI.LocalPlayer.Position = new Position3D(x, y, z + 0.3f);
+            RAGE.Game.Misc.GetGroundZFor3dCoord(x, y, 9000, ref z, false);
+            RAGE.Elements.Player.LocalPlayer.Position = new Vector3(x, y, z + 0.3f);
         }
 
         #endregion Private Methods

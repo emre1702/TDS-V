@@ -1,74 +1,64 @@
-﻿using TDS_Client.Data.Interfaces.ModAPI;
-using TDS_Client.Data.Interfaces.ModAPI.Cam;
-using TDS_Client.Data.Interfaces.ModAPI.Entity;
-using TDS_Client.Data.Interfaces.ModAPI.Event;
-using TDS_Client.Data.Interfaces.ModAPI.Ped;
-using TDS_Client.Data.Models;
+﻿using RAGE;
+using RAGE.Elements;
+using RAGE.Game;
+using System.Collections.Generic;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
+using static RAGE.Events;
 
 namespace TDS_Client.Handler.Entities
 {
     public class TDSCamera
     {
-        #region Private Fields
-
         private readonly CamerasHandler _camerasHandler;
+        private readonly int _handle;
         private readonly LoggingHandler _loggingHandler;
-        private readonly IModAPI _modAPI;
+
         private readonly UtilsHandler _utilsHandler;
+        private GameEntityBase _spectatingEntity;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public TDSCamera(string name, IModAPI modAPI, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler)
+        public TDSCamera(string name, LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler)
         {
-            _modAPI = modAPI;
             _loggingHandler = loggingHandler;
             _camerasHandler = camerasHandler;
             _utilsHandler = utilsHandler;
 
             Name = name;
-            Cam = modAPI.Cam.Create();
-            modAPI.Event.Tick.Add(new EventMethodData<TickDelegate>(OnUpdate, () => SpectatingEntity != null));
+            _handle = Cam.CreateCam("DEFAULT_SCRIPTED_CAMERA", false);
         }
-
-        #endregion Public Constructors
-
-        #region Private Destructors
 
         ~TDSCamera()
         {
-            Cam.Destroy();
+            Destroy();
         }
 
-        #endregion Private Destructors
-
-        #region Public Properties
-
-        public ICam Cam { get; set; }
-        public Position3D Direction => _utilsHandler.GetDirectionByRotation(Rotation);
+        public Vector3 Direction => _utilsHandler.GetDirectionByRotation(Rotation);
         public bool IsActive => this == _camerasHandler.ActiveCamera;
         public string Name { get; set; }
 
-        public Position3D Position
+        public Vector3 Position
         {
-            get => Cam.Position;
+            get => Cam.GetCamCoord(_handle);
             set => SetPosition(value);
         }
 
-        public Position3D Rotation
+        public Vector3 Rotation
         {
-            get => Cam.Rotation;
-            set => Cam.Rotation = value;
+            get => Cam.GetCamRot(_handle, 2);
+            set => Cam.SetCamRot(_handle, value.X, value.Y, value.Z, 2);
         }
 
-        public IEntityBase SpectatingEntity { get; private set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
+        public GameEntityBase SpectatingEntity
+        {
+            get => _spectatingEntity;
+            private set
+            {
+                _spectatingEntity = value;
+                if (value is null)
+                    RAGE.Events.Tick -= OnUpdate;
+                else
+                    RAGE.Events.Tick += OnUpdate;
+            }
+        }
 
         public void Activate(bool instantly = false)
         {
@@ -76,67 +66,73 @@ namespace TDS_Client.Handler.Entities
                 return;
             if (!(_camerasHandler.ActiveCamera is null))
                 _camerasHandler.ActiveCamera.Deactivate();
-            Cam.SetActive(true);
+            Cam.SetCamActive(_handle, true);
             _camerasHandler.ActiveCamera = this;
             if (instantly)
             {
-                Cam.Render(true, false, 0);
+                Cam.RenderScriptCams(true, false, 0, true, false, 0);
             }
         }
 
-        public void Attach(IEntityBase ped, PedBone bone, int x, float y, float z, bool heading)
+        public void Attach(PedBase ped, PedBone bone, int x, float y, float z, bool heading)
         {
-            Cam.AttachTo(ped, bone, x, y, z, heading);
+            Cam.AttachCamToPedBone(_handle, ped.Handle, (int)bone, x, y, z, heading);
         }
 
         public void Deactivate(bool instantly = false)
         {
             if (SpectatingEntity != null)
-                Cam.Detach();
-            Cam.SetActive(false);
+                Cam.DetachCam(_handle);
+            Cam.SetCamActive(_handle, false);
             _camerasHandler.ActiveCamera = null;
             if (instantly)
             {
                 _camerasHandler.RemoveFocusArea();
-                Cam.Render(false, false, 0);
+                Cam.RenderScriptCams(false, false, 0, true, false, 0);
             }
+        }
+
+        public void Destroy()
+        {
+            Cam.DestroyCam(_handle, false);
         }
 
         public void Detach()
         {
-            Cam.Detach();
+            Cam.DetachCam(_handle);
             SpectatingEntity = null;
         }
 
-        public void LookAt(IPedBase ped, PedBone bone, float posOffsetX, float posOffsetY, float posOffsetZ,
+        public void LookAt(PedBase ped, PedBone bone, float posOffsetX, float posOffsetY, float posOffsetZ,
             float lookAtOffsetX, float lookAtOffsetZ)
         {
-            Cam.Position = ped.GetBoneCoords(bone, posOffsetZ, posOffsetY, posOffsetX);
-            Cam.PointAtCoord(ped.GetBoneCoords(bone, lookAtOffsetX, 0, lookAtOffsetZ));
+            var pos = ped.GetBoneCoords((int)bone, posOffsetZ, posOffsetY, posOffsetX);
+            Cam.SetCamCoord(_handle, pos.X, pos.Y, pos.Z);
+            var pointAt = ped.GetBoneCoords((int)bone, lookAtOffsetX, 0, lookAtOffsetZ);
+            Cam.PointCamAtCoord(_handle, pointAt.X, pointAt.Y, pointAt.Z);
 
-            _modAPI.Streaming.SetFocusEntity(ped);
+            Streaming.SetFocusEntity(ped.Handle);
             _camerasHandler.FocusAtPos = null;
         }
 
-        public void OnUpdate(int currentMs)
+        public void OnUpdate(List<TickNametagData> _)
         {
             if (!(SpectatingEntity is null))
-                Rotation = SpectatingEntity.Rotation;
+                Rotation = SpectatingEntity.GetRotation(2);
         }
 
-        public void PointCamAtCoord(Position3D pos)
+        public void PointCamAtCoord(Vector3 pos)
         {
-            Cam.PointAtCoord(pos);
-
+            Cam.PointCamAtCoord(_handle, pos.X, pos.Y, pos.Z);
             _camerasHandler.SetFocusArea(pos);
         }
 
         public void Render(bool ease = false, int easeTime = 0)
         {
-            Cam.Render(true, ease, easeTime);
+            Cam.RenderScriptCams(true, ease, easeTime, true, false, 0);
         }
 
-        public void RenderToPosition(Position3D pos, bool ease = false, int easeTime = 0)
+        public void RenderToPosition(Vector3 pos, bool ease = false, int easeTime = 0)
         {
             _loggingHandler.LogInfo("", "TDSCamera.RenderToPosition");
             SetPosition(pos);
@@ -146,42 +142,40 @@ namespace TDS_Client.Handler.Entities
 
         public void SetFov(float fov)
         {
-            Cam.SetFov(fov);
+            Cam.SetCamFov(_handle, fov);
         }
 
-        public void SetPosition(Position3D position, bool instantly = false)
+        public void SetPosition(Vector3 position, bool instantly = false)
         {
             _loggingHandler.LogInfo("", "TDSCamera.SetPosition");
-            Cam.Position = position;
+            Cam.SetCamCoord(_handle, position.X, position.Y, position.Z);
 
             if (instantly)
             {
-                Cam.Render(true, false, 0);
+                Cam.RenderScriptCams(true, false, 0, true, false, 0);
             }
             _loggingHandler.LogInfo("", "TDSCamera.SetPosition", true);
         }
 
-        public void Spectate(IEntityBase entity)
+        public void Spectate(GameEntityBase entity)
         {
             //Todo
-            if (entity is IPedBase ped)
+            if (entity is PedBase ped)
                 Spectate(ped);
         }
 
-        public void Spectate(IPedBase ped)
+        public void Spectate(PedBase ped)
         {
             if (SpectatingEntity != null)
             {
-                Cam.Detach();
+                Cam.DetachCam(_handle);
             }
 
             SpectatingEntity = ped;
-            Cam.AttachTo(ped, PedBone.SKEL_Head, 0, -2f, 0.3f, true);
+            Cam.AttachCamToPedBone(_handle, ped.Handle, (int)PedBone.SKEL_Head, 0, -2f, 0.3f, true);
 
-            _modAPI.Streaming.SetFocusEntity(ped);
+            RAGE.Game.Streaming.SetFocusEntity(ped.Handle);
             _camerasHandler.FocusAtPos = null;
         }
-
-        #endregion Public Methods
     }
 }

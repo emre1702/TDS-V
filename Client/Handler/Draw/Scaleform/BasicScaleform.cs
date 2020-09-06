@@ -1,40 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Interfaces.ModAPI;
 using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Client.Handler.Entities.Draw.Scaleform
 {
     internal class BasicScaleform : IDisposable
     {
-        #region Private Fields
-
-        private readonly IModAPI ModAPI;
         private bool _disposedValue = false;
         private Queue<(string, object[])> _functionQueue = new Queue<(string, object[])>();
         private int _handle;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public BasicScaleform(string scaleformName, IModAPI modAPI)
+        public BasicScaleform(string scaleformName)
         {
-            ModAPI = modAPI;
-
-            _handle = modAPI.Graphics.RequestScaleformMovie(scaleformName);
+            _handle = RAGE.Game.Graphics.RequestScaleformMovie(scaleformName);
         }
 
-        #endregion Public Constructors
-
-        #region Private Properties
-
-        private bool IsLoaded => ModAPI.Graphics.HasScaleformMovieLoaded(_handle);
+        private bool IsLoaded => RAGE.Game.Graphics.HasScaleformMovieLoaded(_handle);
         private bool IsValid => _handle != 0;
-
-        #endregion Private Properties
-
-        #region Public Methods
 
         public void Call(string functionName, params object[] args)
         {
@@ -43,19 +25,19 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
                 _functionQueue.Enqueue((functionName, args));
                 return;
             }
-            ModAPI.Graphics.PushScaleformMovieFunction(_handle, functionName);
+            RAGE.Game.Graphics.PushScaleformMovieFunction(_handle, functionName);
             foreach (object arg in args)
             {
-                if (arg is string)
-                    ModAPI.Graphics.PushScaleformMovieFunctionParameterString((string)arg);
-                else if (arg is bool)
-                    ModAPI.Graphics.PushScaleformMovieFunctionParameterBool((bool)arg);
-                else if (arg is int)
-                    ModAPI.Graphics.PushScaleformMovieFunctionParameterInt((int)arg);
-                else if (arg is float)
-                    ModAPI.Graphics.PushScaleformMovieFunctionParameterFloat((float)arg);
+                if (arg is string @string)
+                    RAGE.Game.Graphics.PushScaleformMovieFunctionParameterString(@string);
+                else if (arg is bool @bool)
+                    RAGE.Game.Graphics.PushScaleformMovieFunctionParameterBool(@bool);
+                else if (arg is int @int)
+                    RAGE.Game.Graphics.PushScaleformMovieFunctionParameterInt(@int);
+                else if (arg is float @float)
+                    RAGE.Game.Graphics.PushScaleformMovieFunctionParameterFloat(@float);
             }
-            ModAPI.Graphics.PopScaleformMovieFunctionVoid();
+            RAGE.Game.Graphics.PopScaleformMovieFunctionVoid();
         }
 
         public void Dispose()
@@ -67,33 +49,29 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                ModAPI.Graphics.DrawScaleformMovie(_handle, x, y, width, height, 255, 255, 255, 255);
+                RAGE.Game.Graphics.DrawScaleformMovie(_handle, x, y, width, height, 255, 255, 255, 255, 0);
         }
 
         public void Render3D(Position3D position, Position3D rotation, Position3D scale)
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                ModAPI.Graphics.DrawScaleformMovie3dNonAdditive(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
+                RAGE.Game.Graphics.DrawScaleformMovie3dNonAdditive(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
         }
 
         public void Render3DAdditive(Position3D position, Position3D rotation, Position3D scale)
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                ModAPI.Graphics.DrawScaleformMovie3d(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
+                RAGE.Game.Graphics.DrawScaleformMovie3d(_handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2, 2, 1, scale.X, scale.Z, scale.Z, 2);
         }
 
         public void RenderFullscreen()
         {
             OnUpdate();
             if (IsLoaded && IsValid)
-                ModAPI.Graphics.DrawScaleformMovieFullscreen(_handle, 255, 255, 255, 255);
+                RAGE.Game.Graphics.DrawScaleformMovieFullscreen(_handle, 255, 255, 255, 255, 0);
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         protected virtual void Dispose(bool disposing)
         {
@@ -101,17 +79,13 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             {
                 if (disposing)
                 {
-                    ModAPI.Graphics.SetScaleformMovieAsNoLongerNeeded(ref _handle);
+                    RAGE.Game.Graphics.SetScaleformMovieAsNoLongerNeeded(ref _handle);
                     _functionQueue = null;
                 }
 
                 _disposedValue = true;
             }
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private void OnUpdate()
         {
@@ -123,7 +97,5 @@ namespace TDS_Client.Handler.Entities.Draw.Scaleform
             }
             _functionQueue.Clear();
         }
-
-        #endregion Private Methods
     }
 }
