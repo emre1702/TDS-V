@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 
 @Component({
@@ -7,9 +7,17 @@ import { SettingsService } from '../../../services/settings.service';
     styleUrls: ['./info.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InfoComponent {
+export class InfoComponent implements OnInit, OnDestroy {
 
     @Input() messageKey: string;
 
-    constructor(public settings: SettingsService) { }
+    constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }
+
+    ngOnInit(): void {
+        this.settings.LanguageChanged.on(null, this.changeDetector.detectChanges.bind(this));
+    }
+
+    ngOnDestroy(): void {
+        this.settings.LanguageChanged.off(null, this.changeDetector.detectChanges.bind(this));
+    }
 }
