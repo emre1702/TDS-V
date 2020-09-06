@@ -71,7 +71,7 @@ namespace TDS_Server.Handler.GangSystem
             {
                 Name = data.Name,
                 Short = data.Short,
-                OwnerId = player.Entity.Id,
+                OwnerId = player.Entity!.Id,
                 Color = data.Color,
                 BlipColor = data.BlipColor,
                 Ranks = new List<GangRanks>

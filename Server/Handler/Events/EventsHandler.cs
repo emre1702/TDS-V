@@ -1,9 +1,10 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Utility;
+using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Entities.LobbySystem;
@@ -18,6 +19,8 @@ namespace TDS_Server.Handler.Events
         private int _hourCounter;
         private int _minuteCounter;
         private int _secondCounter;
+
+        public EventsHandler() => Instance = this;
 
         public delegate void CounterDelegate(int counter);
 
@@ -38,6 +41,8 @@ namespace TDS_Server.Handler.Events
         public delegate void PlayerDelegate(ITDSPlayer player);
 
         public delegate void PlayerGangDelegate(ITDSPlayer player, IGang gang);
+
+        public delegate void PlayerJoinedGangDelegate(ITDSPlayer player, IGang gang, GangRanks rank);
 
         public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
 
@@ -73,6 +78,8 @@ namespace TDS_Server.Handler.Events
 
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
 
+        public AsyncValueTaskEvent<(ITDSPlayer player, IGang gang, GangRanks rank)>? PlayerJoinedGang;
+
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
 
         public event PlayerDelegate? PlayerLeftCustomMenuLobby;
@@ -99,16 +106,9 @@ namespace TDS_Server.Handler.Events
         public static EventsHandler Instance { get; private set; }
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public EventsHandler() => Instance = this;
-
         public void OnEntityDeleted(Entity entity)
         {
             EntityDeleted?.Invoke(entity);
-        }
-
-        internal void OnGangHouseLoaded(GangHouse house)
-        {
-            GangHouseLoaded?.Invoke(house);
         }
 
         public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
@@ -194,6 +194,11 @@ namespace TDS_Server.Handler.Events
             Update?.Invoke();
         }
 
+        internal void OnGangHouseLoaded(GangHouse house)
+        {
+            GangHouseLoaded?.Invoke(house);
+        }
+
         /*public void OnPlayerEnterVehicle(ITDSPlayer tdsPlayer, ITDSVehicle vehicle, sbyte seatId)
         {
             tdsPlayer.Lobby?.OnPlayerEnterVehicle(tdsPlayer, vehicle, seatId);
@@ -205,6 +210,11 @@ namespace TDS_Server.Handler.Events
         }*/
 
         #region Internal Methods
+
+        public void OnError(Exception ex, string msgBefore)
+        {
+            ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
+        }
 
         internal void OnCustomLobbyCreated(ILobby lobby)
         {
@@ -224,6 +234,18 @@ namespace TDS_Server.Handler.Events
         internal void OnCustomLobbyRemoved(ILobby lobby)
         {
             CustomLobbyRemoved?.Invoke(lobby);
+        }
+
+        internal async Task OnGangJoin(ITDSPlayer player, IGang gang, GangRanks rank)
+        {
+            var task = PlayerJoinedGang?.InvokeAsync((player, gang, rank));
+            if (task.HasValue)
+                await task.Value;
+        }
+
+        internal void OnGangLeave(ITDSPlayer player, IGang gang)
+        {
+            PlayerLeftGang?.Invoke(player, gang);
         }
 
         internal void OnHour()
@@ -253,19 +275,9 @@ namespace TDS_Server.Handler.Events
             PlayerJoinedLobby?.Invoke(player, lobby);
         }
 
-        internal void OnGangLeave(ITDSPlayer player, IGang gang)
-        {
-            PlayerLeftGang?.Invoke(player, gang);
-        }
-
         internal void OnLobbyLeave(ITDSPlayer player, ILobby lobby)
         {
             PlayerLeftLobby?.Invoke(player, lobby);
-        }
-
-        public void OnError(Exception ex, string msgBefore)
-        {
-            ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
         }
 
         internal void OnMinute()

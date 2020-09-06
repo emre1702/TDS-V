@@ -200,15 +200,9 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                 return;
             }
 
-            player.Gang = sender.Gang;
-            player.GangRank = sender.Gang.Entity.Ranks.First(r => r.Rank == 0);
-            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
+            var gangRank = sender.Gang.Entity.Ranks.First(r => r.Rank == 0);
 
-            await player.Gang.ExecuteForDBAsync(async dbContext =>
-            {
-                player.Gang.Entity.Members.Add(new GangMembers { PlayerId = player.Entity!.Id, RankId = player.GangRank.Id, LastLogin = player.Entity.PlayerStats.LastLoginTimestamp });
-                await dbContext.SaveChangesAsync();
-            });
+            await _eventsHandler.OnGangJoin(player, sender.Gang, gangRank);
 
             if (player.Lobby is GangLobby)
             {
