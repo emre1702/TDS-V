@@ -781,6 +781,11 @@ export interface Language {
     ArmsRaceWeaponsFirstWeaponError: string;
     ArmsRaceWeaponsWinError: string;
     ArmsRaceWeaponsWinNotLastError: string;
+    RankNameHint: string;
+    RankColorHint: string;
+    AddRankAfter: string;
+    DeleteThisRank: string;
+    SaveRanks: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

@@ -816,6 +816,11 @@ You need to set the target for this mode.`;
     ArmsRaceWeaponsFirstWeaponError = "The first weapon with 'At kill' = 0 is missing.";
     ArmsRaceWeaponsWinError = "The win condition was missing and has been added.\nModify the 'At kill' value of it if you want.";
     ArmsRaceWeaponsWinNotLastError = "The win condition has to be the end.\nThe 'At kill' value got fixed, modify it if you want.";
+    RankNameHint = "Name of the rank.";
+    RankColorHint = "Color of the rank (for e.g. chat)";
+    AddRankAfter = "Add rank +1";
+    DeleteThisRank = "Delete this rank";
+    SaveRanks = "Save ranks";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

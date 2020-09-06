@@ -759,6 +759,11 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     ArmsRaceWeaponsFirstWeaponError = "Die erste Waffe mit 'Bei Mord' = 0 fehlt.";
     ArmsRaceWeaponsWinError = "Die Sieg-Bedingung hat gefehlt und wurde hinzugefügt.\nÄndere den 'Bei Mord' Wert, falls du möchtest.";
     ArmsRaceWeaponsWinNotLastError = "Die Sieg-Bedingung muss das Ende sein.\nDer 'Bei Mord' Wert wurde angepasst, ändere ihn, falls du möchtest.";
+    RankNameHint = "Name vom Rang.";
+    RankColorHint = "Farbe vom Rang (für z.B. Chat)";
+    AddRankAfter = "Rang +1 hinzufügen";
+    DeleteThisRank = "Entferne diesen Rang";
+    SaveRanks = "Speichere die Ränge";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";
