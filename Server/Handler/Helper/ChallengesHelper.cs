@@ -60,11 +60,10 @@ namespace TDS_Server.Handler.Helper
                 string sql = $@"
                     INSERT INTO
                         ""{_playerChallengesTableName}""
-                        (
-                            {_playerChallengesPlayerIdColumnName}, 
-                            {_playerChallengesChallengeColumnName}, 
-                            {_playerChallengesFrequencyColumnName}, 
-                            {_playerChallengesAmountColumnName} )
+                        ( {_playerChallengesPlayerIdColumnName},
+                        {_playerChallengesChallengeColumnName},
+                        {_playerChallengesFrequencyColumnName},
+                        {_playerChallengesAmountColumnName} )
                     SELECT
                         {dbPlayer.Id},
                         ""{_challengeSettingsTypeColumnName}"",
@@ -86,10 +85,14 @@ namespace TDS_Server.Handler.Helper
                 string sql = @$"
                 INSERT INTO
                     ""{_playerChallengesTableName}""
+                    ( {_playerChallengesPlayerIdColumnName},
+                    {_playerChallengesChallengeColumnName},
+                    {_playerChallengesFrequencyColumnName},
+                    {_playerChallengesAmountColumnName} )
                 SELECT
                     {player.Id},
                     ""{_challengeSettingsTypeColumnName}"",
-                    ""{_challengeSettingsFrequencyColumnName}"",
+                    'weekly',
                     floor(random() * (""{_challengeSettingsMaxNumberColumnName}"" - ""{_challengeSettingsMinNumberColumnName}"" + 1) + ""{_challengeSettingsMinNumberColumnName}"")
                 FROM
                     ""{_challengeSettingsTableName}""
