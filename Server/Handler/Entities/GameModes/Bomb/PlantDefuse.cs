@@ -137,10 +137,14 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             _bomb.Detach();
             _bomb.Position = new Vector3(playerPos.X, playerPos.Y, playerPos.Z - 0.9);
             _bomb.Rotation = new Vector3(270, 0, 0);
-            plantPlace.Object.Delete();
+            plantPlace.Object?.Delete();
             plantPlace.Object = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, dimension: Lobby.Dimension) as ITDSObject;
-            plantPlace.Blip.Color = 49;
-            plantPlace.Blip.Name = "Bomb-Plant";
+            if (plantPlace.Blip is { })
+            {
+                plantPlace.Blip.Color = 49;
+                plantPlace.Blip.Name = "Bomb-Plant";
+            }
+
             //plantPlace.Blip.Flashing = true;
             //Todo Implement after new Bridge version
             _bombAtPlayer = null;

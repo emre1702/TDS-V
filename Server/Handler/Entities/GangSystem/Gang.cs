@@ -19,16 +19,10 @@ namespace TDS_Server.Handler.Entities.GangSystem
 {
     public class Gang : DatabaseEntityWrapper, IGang
     {
-        #region Private Fields
-
         private readonly GangsHandler _gangsHandler;
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly DataSyncHandler _dataSyncHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper,
             LobbiesHandler lobbiesHandler, DataSyncHandler dataSyncHandler)
@@ -45,10 +39,6 @@ namespace TDS_Server.Handler.Entities.GangSystem
             dbContext.Attach(entity);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public Gangs Entity { get; set; }
 
         // This can't be null! If it's null, we got serious problems in the code! Every gang needs a
@@ -63,10 +53,6 @@ namespace TDS_Server.Handler.Entities.GangSystem
         public bool InAction { get; set; }
         public bool Initialized { get; set; }
         public List<ITDSPlayer> PlayersOnline { get; } = new List<ITDSPlayer>();
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void AppointNextSuitableLeader()
         {
@@ -163,10 +149,6 @@ namespace TDS_Server.Handler.Entities.GangSystem
             };
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private GangMembers? GetNextSuitableLeaderAlsoInactive()
         {
             var rankHighestMembers = Entity.Members.MaxBy(m => m.Rank);
@@ -194,7 +176,5 @@ namespace TDS_Server.Handler.Entities.GangSystem
 
             return rankHighestMembers.MaxBy(m => (DateTime.UtcNow - m.JoinTime).TotalSeconds).FirstOrDefault();
         }
-
-        #endregion Private Methods
     }
 }
