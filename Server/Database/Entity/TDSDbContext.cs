@@ -846,7 +846,7 @@ namespace TDS_Server.Database.Entity
             {
                 entity.HasKey(e => e.PlayerId);
 
-                entity.OwnsOne(e => e.SyncedData, e => 
+                entity.OwnsOne(e => e.SyncedData, e =>
                 {
                     e.Ignore(e => e.GeneralDataSynced);
                     e.Ignore(e => e.HeritageDataSynced);
@@ -1540,29 +1540,29 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<Players>().HasData(
-                new Players { Id = -1, SCName = "System", SCId = 0, Name = "System", AdminLeaderId = -1 }
+                new Players { Id = -1, SCName = "System", SCId = 0, Name = "System", AdminLeaderId = -1, Password = "" }
             );
 
             var seedLobbies = new List<Lobbies> {
                 new Lobbies { Id = -4, OwnerId = -1, Type = LobbyType.MainMenu, Name = "MainMenu", IsTemporary = false, IsOfficial = true },
                 new Lobbies { Id = -1, OwnerId = -1, Type = LobbyType.Arena, Name = "Arena", IsTemporary = false, IsOfficial = true },
 
-                new Lobbies 
-                { 
+                new Lobbies
+                {
                     Id = -2, OwnerId = -1, Type = LobbyType.GangLobby, Name = "GangLobby", IsTemporary = false, IsOfficial = true,
                     DefaultSpawnX =  -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f
                 },
 
                 // only for map-creator ban & spawn
-                new Lobbies 
-                { 
-                    Id = -3, OwnerId = -1, Type = LobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true, 
-                    DefaultSpawnX =  -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f 
+                new Lobbies
+                {
+                    Id = -3, OwnerId = -1, Type = LobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true,
+                    DefaultSpawnX =  -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f
                 },
 
                 // only for char-creator ban & spawn
-                new Lobbies 
-                { 
+                new Lobbies
+                {
                     Id = -5, OwnerId = -1, Type = LobbyType.CharCreateLobby, Name = "CharCreateLobby", IsTemporary = false, IsOfficial = true,
                     DefaultSpawnX = -425.2233f, DefaultSpawnY = 1126.9731f, DefaultSpawnZ = 326.8f, DefaultSpawnRotation = 0f
                 }
