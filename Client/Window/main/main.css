@@ -13,6 +13,7 @@
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     user-select: none;
+	z-index: -10;
 }
 
 @keyframes BloodscreenAnim {
