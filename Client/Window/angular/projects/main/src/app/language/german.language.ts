@@ -764,6 +764,10 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     AddRankAfter = "Rang +1 hinzufügen";
     DeleteThisRank = "Entferne diesen Rang";
     SaveRanks = "Speichere die Ränge";
+    LobbyLeaveInfo = "Du kannst /leave zum Verlassen der Lobby nutzen.";
+    CursorVisibleInfo = `Dein Cursor ist aktiviert.
+    Du wirst einige Steuerungen nicht nutzen können.`;
+    SettingSavedSuccessfully = "Die Einstellungen wurden erfolgreich gespeichert.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

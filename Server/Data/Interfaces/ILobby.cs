@@ -50,8 +50,6 @@ namespace TDS_Server.Data.Interfaces
 
         void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player);
 
-        void OnPlayerLoggedOut(ITDSPlayer tdsPlayer);
-
         void OnPlayerSpawn(ITDSPlayer player);
 
         void PlaySound(string soundName);
@@ -73,6 +71,7 @@ namespace TDS_Server.Data.Interfaces
         void UnbanPlayer(ITDSPlayer player, ITDSPlayer target, string reason);
 
         void UnbanPlayer(ITDSPlayer player, Players dbTarget, string reason);
+
         void TriggerEvent(string eventName, params object[] args);
 
         #endregion Public Methods

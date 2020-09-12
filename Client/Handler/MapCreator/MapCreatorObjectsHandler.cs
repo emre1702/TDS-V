@@ -213,20 +213,20 @@ namespace TDS_Client.Handler.MapCreator
             var alreadyCached = GetByHandle(handle);
             if (alreadyCached != null)
                 return alreadyCached;
-            var entityType = (EntityType)RAGE.Game.Entity.GetEntityType(handle);
+            var entityType = (EntityTypeInGetEntityType)RAGE.Game.Entity.GetEntityType(handle);
 
             GameEntityBase entity;
             switch (entityType)
             {
-                case EntityType.Ped:
+                case EntityTypeInGetEntityType.Ped:
                     entity = RAGE.Elements.Entities.Peds.GetAtHandle(handle);
                     break;
 
-                case EntityType.Vehicle:
+                case EntityTypeInGetEntityType.Vehicle:
                     entity = RAGE.Elements.Entities.Vehicles.GetAtHandle(handle);
                     break;
 
-                case EntityType.Object:
+                case EntityTypeInGetEntityType.Object:
                     entity = RAGE.Elements.Entities.Objects.GetAtHandle(handle);
                     break;
 
@@ -236,17 +236,17 @@ namespace TDS_Client.Handler.MapCreator
 
             if (!type.HasValue)
             {
-                switch ((EntityType)RAGE.Game.Entity.GetEntityType(handle))
+                switch ((EntityTypeInGetEntityType)RAGE.Game.Entity.GetEntityType(handle))
                 {
-                    case EntityType.Ped:
+                    case EntityTypeInGetEntityType.Ped:
                         type = MapCreatorPositionType.TeamSpawn;
                         break;
 
-                    case EntityType.Object:
+                    case EntityTypeInGetEntityType.Object:
                         type = MapCreatorPositionType.Object;
                         break;
 
-                    case EntityType.Vehicle:
+                    case EntityTypeInGetEntityType.Vehicle:
                         type = MapCreatorPositionType.Vehicle;
                         break;
 

@@ -108,7 +108,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (team is null)
                 return;
 
-            if (CurrentRoundStatus == RoundStatus.Countdown || CurrentGameMode?.CanJoinDuringRound(player, team) == true)
+            if (CurrentRoundStatus == RoundStatus.Countdown || CurrentGameMode?.CanJoinDuringRound(player, team) == true && CurrentRoundStatus == RoundStatus.Round)
             {
                 SetPlayerReadyForRound(player);
             }
@@ -152,12 +152,17 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _removeSpectatorsTimer[player] = new TDSTimer(() =>
             {
                 PlayerCantBeSpectatedAnymore(player);
-                SpectateOtherSameTeam(player);
+                player.SetInvisible(true);
+                SpectateOtherSameTeam(player, ignoreSource: true);
+                if (player.Spectates is null || player.Spectates == player)
+                    SpectateOtherAllTeams(player);
             }, (uint)Entity.FightSettings.SpawnAgainAfterDeathMs);
         }
 
         private void RespawnPlayer(ITDSPlayer player)
         {
+            if (CurrentRoundStatus != RoundStatus.Round)
+                return;
             SetPlayerReadyForRound(player);
             player.Freeze(false);
             player.TriggerEvent(ToClientEvent.PlayerRespawned);
@@ -261,6 +266,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 player.Freeze(FreezePlayerOnCountdown);
                 GivePlayerWeapons(player);
                 RemoveAsSpectator(player);
+                player.SetInvisible(false);
             }
             else
             {
@@ -269,6 +275,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
                 player.Freeze(true);
                 player.RemoveAllWeapons();
+                player.SetInvisible(true);
             }
 
             if (_removeSpectatorsTimer.ContainsKey(player))

@@ -49,21 +49,19 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         /// </summary>
         /// <param name="start"></param>
         /// <returns></returns>
-        protected virtual void SpectateOtherSameTeam(ITDSPlayer character, bool spectateNext = true)
+        protected virtual void SpectateOtherSameTeam(ITDSPlayer player, bool spectateNext = true, bool ignoreSource = false)
         {
-            ITDSPlayer currentlySpectating = character.Spectates ?? character;
+            var currentlySpectating = player.Spectates ?? player;
             ITDSPlayer? nextPlayer;
             if (spectateNext)
                 nextPlayer = GetNextSpectatePlayerInSameTeam(currentlySpectating);
             else
                 nextPlayer = GetPreviousSpectatePlayerInSameTeam(currentlySpectating);
-            nextPlayer ??= character;
+            nextPlayer ??= player;
 
-            character.Spectates = nextPlayer;
-            if (nextPlayer != null)
-            {
-                character.Spectates = nextPlayer;
-            }
+            if (ignoreSource && player == nextPlayer)
+                return;
+            player.Spectates = nextPlayer;
         }
 
         #endregion Protected Methods

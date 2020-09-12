@@ -178,7 +178,6 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
             }
         }
 
-
         return true;
     }
 

@@ -16,8 +16,6 @@ namespace TDS_Client.Handler
 {
     public class RankingHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly CamerasHandler _camerasHandler;
         private readonly CursorHandler _cursorHandler;
@@ -30,8 +28,6 @@ namespace TDS_Client.Handler
         private ITDSPlayer _second = null;
         private ITDSPlayer _third = null;
         private ITDSPlayer _winner = null;
-
-        #endregion Private Fields
 
         public RankingHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler,
             CursorHandler cursorHandler, BrowserHandler browserHandler, NametagsHandler nametagsHandler, DeathHandler deathHandler, EventsHandler eventsHandler,
@@ -47,7 +43,7 @@ namespace TDS_Client.Handler
             _deathHandler = deathHandler;
             _timerHandler = timerHandler;
 
-            eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
+            eventsHandler.LobbyLeft += _ => Stop();
             eventsHandler.CountdownStarted += _ => Stop();
 
             Add(ToClientEvent.StartRankingShowAfterRound, OnStartRankingShowAfterRoundMethod);
@@ -68,6 +64,7 @@ namespace TDS_Client.Handler
             //Rot: 160
 
             RAGE.Game.Cam.DoScreenFadeIn(200);
+            Tick -= OnRender;
             Tick += OnRender;
 
             _winner = _utilsHandler.GetPlayerByHandleValue(winnerHandle);
@@ -83,13 +80,6 @@ namespace TDS_Client.Handler
             Tick -= OnRender;
             _browserHandler.Angular.HideRankings();
             _cursorHandler.Visible = false;
-        }
-
-        #region Private Methods
-
-        private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
-        {
-            Stop();
         }
 
         private void OnRender(List<TickNametagData> _)
@@ -131,7 +121,5 @@ namespace TDS_Client.Handler
             RAGE.Game.Graphics.UseParticleFxAssetNextCall(effectDict);
             return RAGE.Game.Graphics.StartParticleFxNonLoopedAtCoord(effectName, x, y, z, 0, 0, 0, scale, false, false, false);
         }
-
-        #endregion Private Methods
     }
 }

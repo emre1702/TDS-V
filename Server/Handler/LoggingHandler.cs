@@ -72,7 +72,7 @@ namespace TDS_Server.Handler
                 Source = player.Id,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
+            Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
@@ -90,7 +90,7 @@ namespace TDS_Server.Handler
                 Source = player.Id,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
+            Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
@@ -132,7 +132,7 @@ namespace TDS_Server.Handler
                 Source = source?.Id,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
+            Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
@@ -151,7 +151,7 @@ namespace TDS_Server.Handler
                 Source = source?.Id,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
+            Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
@@ -171,7 +171,7 @@ namespace TDS_Server.Handler
                 Source = -1,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine($"{log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
+            Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));
@@ -190,7 +190,7 @@ namespace TDS_Server.Handler
                 Source = -1,
                 Timestamp = DateTime.UtcNow
             };
-            Console.WriteLine(info + "\n" + stacktrace);
+            Console.WriteLine($"[{DateTime.Now}] " + info + "\n" + stacktrace);
 
             await ExecuteForDB(dbContext =>
                 dbContext.LogErrors.Add(log));

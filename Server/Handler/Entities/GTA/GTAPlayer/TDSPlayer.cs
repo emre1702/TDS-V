@@ -12,8 +12,6 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 {
     public partial class TDSPlayer : ITDSPlayer
     {
-        #region Private Fields
-
         private readonly AdminsHandler _adminsHandler;
         private readonly ChallengesHelper _challengesHandler;
         private readonly ChatHandler _chatHandler;
@@ -25,10 +23,6 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
         private readonly SpectateHandler _spectateHandler;
         private readonly WorkaroundsHandler _workaroundsHandler;
         private readonly ILoggingHandler _loggingHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public TDSPlayer(
             NetHandle netHandle,
@@ -67,10 +61,6 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             eventsHandler.PlayerLeftLobby += EventsHandler_PlayerLeftLobby;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public override string DisplayName => IsConsole ? "Console" : (AdminLevel.Level >= SharedConstants.ServerTeamSuffixMinAdminLevel
             ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : Name) : (Entity is { } ? Entity.Name : Name));
 
@@ -86,17 +76,23 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 
         public override bool IsConsole { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Methods
+        public override void SetInvisible(bool toggle)
+        {
+            if (toggle)
+            {
+                Transparency = 0;
+                SetCollisionsless(true);
+            }
+            else
+            {
+                Transparency = 255;
+                SetCollisionsless(false);
+            }
+        }
 
         public void Logout()
         {
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void EventsHandler_PlayerJoinedLobby(ITDSPlayer player, ILobby lobby)
         {
@@ -117,7 +113,5 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
         {
             RemovePlayerFromOnlineFriend(player);
         }
-
-        #endregion Private Methods
     }
 }

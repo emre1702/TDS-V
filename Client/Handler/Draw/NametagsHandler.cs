@@ -29,7 +29,10 @@ namespace TDS_Client.Handler.Draw
         public void Draw(List<TickNametagData> nametags)
         {
             if (_settingsHandler.ShowNametagOnlyOnAiming)
+            {
                 DrawAtAim();
+                DrawSpectatedNametag();
+            }
             else
                 DrawAtSight(nametags);
         }
@@ -57,11 +60,11 @@ namespace TDS_Client.Handler.Draw
             if (!RAGE.Game.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
                 return;
 
-            if (Entity.GetEntityType(targetEntity) != (int)EntityType.Ped)
+            if (Entity.GetEntityType(targetEntity) != (int)EntityTypeInGetEntityType.Ped)
                 return;
 
             var myPos = _camerasHandler.ActiveCamera?.Position ?? RAGE.Elements.Player.LocalPlayer.Position;
-            var hisPos = RAGE.Game.Entity.GetEntityCoords(targetEntity, true);
+            var hisPos = Entity.GetEntityCoords(targetEntity, true);
             var distance = myPos.DistanceTo(hisPos);
 
             if (distance > _settingsHandler.NametagMaxDistance)
@@ -89,6 +92,17 @@ namespace TDS_Client.Handler.Draw
 
                 DrawNametag(nametag.Player.Handle, _utilsHandler.GetDisplayName(nametag.Player as ITDSPlayer), nametag.Distance);
             }
+        }
+
+        private void DrawSpectatedNametag()
+        {
+            if (!(_camerasHandler.Spectating.SpectatingEntity is ITDSPlayer target))
+                return;
+
+            var myPos = _camerasHandler.ActiveCamera.Position;
+            var distance = target.Position.DistanceTo(myPos);
+
+            DrawNametag(target.Handle, target.Name, distance);
         }
 
         private Color GetArmorColor(int armor)

@@ -56,23 +56,25 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (player.Entity is null)
                 return null;
 
-            var data = _serializer.FromBrowser<PlayerCharDatas>((string)args[0]);
+            var data = _serializer.FromBrowser<CharCreateData>((string)args[0]);
 
             // By doing this we can ensure that player datas don't save while editing. Because else
             // this could result in PlayerCharDatas getting messed up for the player
             await player.Database.ExecuteForDB(dbContext =>
             {
-                CopyJsonValues(data.SyncedData.FeaturesDataSynced, player.Entity.CharDatas.FeaturesData);
-                CopyJsonValues(data.SyncedData.GeneralDataSynced, player.Entity.CharDatas.GeneralData);
-                CopyJsonValues(data.SyncedData.HairAndColorsDataSynced, player.Entity.CharDatas.HairAndColorsData);
-                CopyJsonValues(data.SyncedData.HeritageDataSynced, player.Entity.CharDatas.HeritageData);
+                player.Entity.CharDatas.Slot = data.Slot;
+                for (int i = 0; i < player.Entity.CharDatas.FeaturesData.Count; ++i)
+                {
+                    player.Entity.CharDatas.FeaturesData.ElementAt(i).SyncedData = data.FeaturesDataSynced[i];
+                    player.Entity.CharDatas.GeneralData.ElementAt(i).SyncedData = data.GeneralDataSynced[i];
+                    player.Entity.CharDatas.HairAndColorsData.ElementAt(i).SyncedData = data.HairAndColorsDataSynced[i];
+                    player.Entity.CharDatas.HeritageData.ElementAt(i).SyncedData = data.HeritageDataSynced[i];
+                    player.Entity.CharDatas.AppearanceData.ElementAt(i).SyncedData = data.AppearanceDataSynced[i];
+                }
             });
 
             await player.SaveData(true);
-            await NAPI.Task.RunWait(() =>
-            {
-                LoadPlayerChar(player);
-            });
+            LoadPlayerChar(player);
 
             await _lobbiesHandler.MainMenu.AddPlayer(player, null);
             return null;
@@ -145,7 +147,6 @@ namespace TDS_Server.Handler.PlayerHandlers
                     ResemblancePercentage = isMale ? 1 : 0,
                     SkinTonePercentage = isMale ? 1 : 0
                 }
-                
             });
             charDatas.FeaturesData.Add(new PlayerCharFeaturesDatas { Slot = slot, SyncedData = new CharCreateFeaturesData { Slot = slot } });
             charDatas.AppearanceData.Add(new PlayerCharAppearanceDatas { Slot = slot, SyncedData = new CharCreateAppearanceData { Slot = slot } });
@@ -163,11 +164,15 @@ namespace TDS_Server.Handler.PlayerHandlers
                 AddCharSlot(data, (byte)data.AppearanceData.Count);
             }
 
-            data.SyncedData.AppearanceDataSynced = data.AppearanceData.Select(d => d.SyncedData).ToList();
-            data.SyncedData.FeaturesDataSynced = data.FeaturesData.Select(d => d.SyncedData).ToList();
-            data.SyncedData.GeneralDataSynced = data.GeneralData.Select(d => d.SyncedData).ToList();
-            data.SyncedData.HairAndColorsDataSynced = data.HairAndColorsData.Select(d => d.SyncedData).ToList();
-            data.SyncedData.HeritageDataSynced = data.HeritageData.Select(d => d.SyncedData).ToList();
+            data.SyncedData = new CharCreateData
+            {
+                AppearanceDataSynced = data.AppearanceData.Select(d => d.SyncedData).ToList(),
+                FeaturesDataSynced = data.FeaturesData.Select(d => d.SyncedData).ToList(),
+                GeneralDataSynced = data.GeneralData.Select(d => d.SyncedData).ToList(),
+                HairAndColorsDataSynced = data.HairAndColorsData.Select(d => d.SyncedData).ToList(),
+                HeritageDataSynced = data.HeritageData.Select(d => d.SyncedData).ToList(),
+                Slot = data.Slot
+            };
 
             var currentHairAndColor = data.HairAndColorsData.First(d => d.SyncedData.Slot == data.SyncedData.Slot);
             var currentHeritageData = data.HeritageData.First(d => d.SyncedData.Slot == data.SyncedData.Slot);
@@ -175,130 +180,133 @@ namespace TDS_Server.Handler.PlayerHandlers
             var currentAppearanceData = data.AppearanceData.First(d => d.SyncedData.Slot == data.SyncedData.Slot);
             var currentFeaturesData = data.FeaturesData.First(d => d.SyncedData.Slot == data.SyncedData.Slot);
 
-            player.SetClothes(2, currentHairAndColor.SyncedData.Hair, 0);
-            player.SetCustomization(
-                gender: currentGeneralData.SyncedData.IsMale,
-                headBlend: new HeadBlend
-                {
-                    ShapeFirst = (byte)currentHeritageData.SyncedData.MotherIndex,
-                    ShapeSecond = (byte)currentHeritageData.SyncedData.FatherIndex,
-                    ShapeThird = 0,
-                    SkinFirst = (byte)currentHeritageData.SyncedData.MotherIndex,
-                    SkinSecond = (byte)currentHeritageData.SyncedData.FatherIndex,
-                    SkinThird = 0,
-                    ShapeMix = currentHeritageData.SyncedData.ResemblancePercentage,
-                    SkinMix = currentHeritageData.SyncedData.SkinTonePercentage,
-                    ThirdMix = 0
-                },
-                eyeColor: (byte)currentHairAndColor.SyncedData.EyeColor,
-                hairColor: (byte)currentHairAndColor.SyncedData.HairColor,
-                highlightColor: (byte)currentHairAndColor.SyncedData.HairHighlightColor,
-                faceFeatures: new float[] {
+            NAPI.Task.Run(() =>
+            {
+                player.SetClothes(2, currentHairAndColor.SyncedData.Hair, 0);
+                player.SetCustomization(
+                    gender: currentGeneralData.SyncedData.IsMale,
+                    headBlend: new HeadBlend
+                    {
+                        ShapeFirst = (byte)currentHeritageData.SyncedData.MotherIndex,
+                        ShapeSecond = (byte)currentHeritageData.SyncedData.FatherIndex,
+                        ShapeThird = 0,
+                        SkinFirst = (byte)currentHeritageData.SyncedData.MotherIndex,
+                        SkinSecond = (byte)currentHeritageData.SyncedData.FatherIndex,
+                        SkinThird = 0,
+                        ShapeMix = currentHeritageData.SyncedData.ResemblancePercentage,
+                        SkinMix = currentHeritageData.SyncedData.SkinTonePercentage,
+                        ThirdMix = 0
+                    },
+                    eyeColor: (byte)currentHairAndColor.SyncedData.EyeColor,
+                    hairColor: (byte)currentHairAndColor.SyncedData.HairColor,
+                    highlightColor: (byte)currentHairAndColor.SyncedData.HairHighlightColor,
+                    faceFeatures: new float[] {
                     currentFeaturesData.SyncedData.NoseWidth, currentFeaturesData.SyncedData.NoseHeight, currentFeaturesData.SyncedData.NoseLength, currentFeaturesData.SyncedData.NoseBridge,
                     currentFeaturesData.SyncedData.NoseTip, currentFeaturesData.SyncedData.NoseBridgeShift,
                     currentFeaturesData.SyncedData.BrowHeight, currentFeaturesData.SyncedData.BrowWidth, currentFeaturesData.SyncedData.CheekboneHeight, currentFeaturesData.SyncedData.CheekboneWidth,
                     currentFeaturesData.SyncedData.CheeksWidth,
                     currentFeaturesData.SyncedData.Eyes, currentFeaturesData.SyncedData.Lips,
-                    currentFeaturesData.SyncedData.JawWidth, currentFeaturesData.SyncedData.ChinLength, currentFeaturesData.SyncedData.ChinPosition, 
+                    currentFeaturesData.SyncedData.JawWidth, currentFeaturesData.SyncedData.ChinLength, currentFeaturesData.SyncedData.ChinPosition,
                     currentFeaturesData.SyncedData.ChinWidth, currentFeaturesData.SyncedData.ChinShape,
                     currentFeaturesData.SyncedData.NeckWidth
-                },
-                headOverlays: new Dictionary<int, HeadOverlay>
-                {
-                    [0] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.Blemishes,
-                        Opacity = currentAppearanceData.SyncedData.BlemishesOpacity,
-                        Color = 0,
-                        SecondaryColor = 0
                     },
-                    [1] = new HeadOverlay
+                    headOverlays: new Dictionary<int, HeadOverlay>
                     {
-                        Index = (byte)currentAppearanceData.SyncedData.FacialHair,
-                        Opacity = currentAppearanceData.SyncedData.FacialHairOpacity,
-                        Color = (byte)currentHairAndColor.SyncedData.FacialHairColor,
-                        SecondaryColor = 0
+                        [0] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.Blemishes,
+                            Opacity = currentAppearanceData.SyncedData.BlemishesOpacity,
+                            Color = 0,
+                            SecondaryColor = 0
+                        },
+                        [1] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.FacialHair,
+                            Opacity = currentAppearanceData.SyncedData.FacialHairOpacity,
+                            Color = (byte)currentHairAndColor.SyncedData.FacialHairColor,
+                            SecondaryColor = 0
+                        },
+                        [2] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.Eyebrows,
+                            Opacity = currentAppearanceData.SyncedData.EyebrowsOpacity,
+                            Color = (byte)currentHairAndColor.SyncedData.EyebrowColor,
+                            SecondaryColor = 0
+                        },
+                        [3] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.Ageing,
+                            Opacity = currentAppearanceData.SyncedData.AgeingOpacity,
+                            Color = 0,
+                            SecondaryColor = 0
+                        },
+                        [4] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.Makeup,
+                            Opacity = currentAppearanceData.SyncedData.MakeupOpacity,
+                            Color = 0,
+                            SecondaryColor = 0
+                        },
+                        [5] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.Blush,
+                            Opacity = currentAppearanceData.SyncedData.BlushOpacity,
+                            Color = (byte)currentHairAndColor.SyncedData.BlushColor,
+                            SecondaryColor = 0
+                        },
+                        [6] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.Complexion,
+                            Opacity = currentAppearanceData.SyncedData.ComplexionOpacity,
+                            Color = 0,
+                            SecondaryColor = 0
+                        },
+                        [7] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.SunDamage,
+                            Opacity = currentAppearanceData.SyncedData.SunDamageOpacity,
+                            Color = 0,
+                            SecondaryColor = 0
+                        },
+                        [8] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.Lipstick,
+                            Opacity = currentAppearanceData.SyncedData.LipstickOpacity,
+                            Color = (byte)currentHairAndColor.SyncedData.LipstickColor,
+                            SecondaryColor = 0
+                        },
+                        [9] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.MolesAndFreckles,
+                            Opacity = currentAppearanceData.SyncedData.MolesAndFrecklesOpacity,
+                            Color = 0,
+                            SecondaryColor = 0
+                        },
+                        [10] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.ChestHair,
+                            Opacity = currentAppearanceData.SyncedData.ChestHairOpacity,
+                            Color = (byte)currentHairAndColor.SyncedData.ChestHairColor,
+                            SecondaryColor = 0
+                        },
+                        [11] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.BodyBlemishes,
+                            Opacity = currentAppearanceData.SyncedData.BodyBlemishesOpacity,
+                            Color = 0,
+                            SecondaryColor = 0
+                        },
+                        [12] = new HeadOverlay
+                        {
+                            Index = (byte)currentAppearanceData.SyncedData.AddBodyBlemishes,
+                            Opacity = currentAppearanceData.SyncedData.AddBodyBlemishesOpacity,
+                            Color = 0,
+                            SecondaryColor = 0
+                        },
                     },
-                    [2] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.Eyebrows,
-                        Opacity = currentAppearanceData.SyncedData.EyebrowsOpacity,
-                        Color = (byte)currentHairAndColor.SyncedData.EyebrowColor,
-                        SecondaryColor = 0
-                    },
-                    [3] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.Ageing,
-                        Opacity = currentAppearanceData.SyncedData.AgeingOpacity,
-                        Color = 0,
-                        SecondaryColor = 0
-                    },
-                    [4] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.Makeup,
-                        Opacity = currentAppearanceData.SyncedData.MakeupOpacity,
-                        Color = 0,
-                        SecondaryColor = 0
-                    },
-                    [5] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.Blush,
-                        Opacity = currentAppearanceData.SyncedData.BlushOpacity,
-                        Color = (byte)currentHairAndColor.SyncedData.BlushColor,
-                        SecondaryColor = 0
-                    },
-                    [6] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.Complexion,
-                        Opacity = currentAppearanceData.SyncedData.ComplexionOpacity,
-                        Color = 0,
-                        SecondaryColor = 0
-                    },
-                    [7] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.SunDamage,
-                        Opacity = currentAppearanceData.SyncedData.SunDamageOpacity,
-                        Color = 0,
-                        SecondaryColor = 0
-                    },
-                    [8] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.Lipstick,
-                        Opacity = currentAppearanceData.SyncedData.LipstickOpacity,
-                        Color = (byte)currentHairAndColor.SyncedData.LipstickColor,
-                        SecondaryColor = 0
-                    },
-                    [9] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.MolesAndFreckles,
-                        Opacity = currentAppearanceData.SyncedData.MolesAndFrecklesOpacity,
-                        Color = 0,
-                        SecondaryColor = 0
-                    },
-                    [10] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.ChestHair,
-                        Opacity = currentAppearanceData.SyncedData.ChestHairOpacity,
-                        Color = (byte)currentHairAndColor.SyncedData.ChestHairColor,
-                        SecondaryColor = 0
-                    },
-                    [11] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.BodyBlemishes,
-                        Opacity = currentAppearanceData.SyncedData.BodyBlemishesOpacity,
-                        Color = 0,
-                        SecondaryColor = 0
-                    },
-                    [12] = new HeadOverlay
-                    {
-                        Index = (byte)currentAppearanceData.SyncedData.AddBodyBlemishes,
-                        Opacity = currentAppearanceData.SyncedData.AddBodyBlemishesOpacity,
-                        Color = 0,
-                        SecondaryColor = 0
-                    },
-                },
-                decorations: Array.Empty<Decoration>()
-            );
+                    decorations: Array.Empty<Decoration>()
+                );
+            });
         }
     }
 }

@@ -49,7 +49,7 @@ namespace TDS_Client.Handler.Draw.Dx
             Dispose(true);
         }
 
-        protected static int GetBlendValue(int currenttick, int start, int end, int starttick, int endtick)
+        protected static int GetBlendValueInt(int currenttick, int start, int end, int starttick, int endtick)
         {
             float progress = (currenttick - starttick) / (endtick - starttick);
             if (progress > 1)
@@ -57,12 +57,12 @@ namespace TDS_Client.Handler.Draw.Dx
             return (int)Math.Floor(start + progress * (end - start));
         }
 
-        protected static float GetBlendValue(int currenttick, float start, float end, int starttick, int endtick)
+        protected static float GetBlendValue(float currentTick, float start, float end, float startTick, float endTick)
         {
-            float progress = (currenttick - starttick) / (endtick - starttick);
+            float progress = (currentTick - startTick) / (endTick - startTick);
             if (progress > 1)
                 progress = 1;
-            return (float)Math.Floor(start + progress * (end - start));
+            return start + progress * (end - start);
         }
 
         // To detect redundant calls

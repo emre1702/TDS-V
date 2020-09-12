@@ -10,15 +10,9 @@ namespace TDS_Client.Handler.Lobby
 {
     public class LobbyCamHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly CamerasHandler _camerasHandler;
         private readonly SettingsHandler _settingsHandler;
         private TDSTimer _timer;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public LobbyCamHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
             : base(loggingHandler)
@@ -31,10 +25,6 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.RoundStarted += _ => StopCountdown();
             eventsHandler.RoundEnded += _ => StopCountdown();
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void SetGoTowardsPlayer(int? time = null)
         {
@@ -81,15 +71,9 @@ namespace TDS_Client.Handler.Lobby
             Logging.LogInfo("", "LobbyCamHandler.StopCountdown", true);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             Stop();
         }
-
-        #endregion Private Methods
     }
 }

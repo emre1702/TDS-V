@@ -1,4 +1,5 @@
-﻿using Grpc.Net.Client;
+﻿using Grpc.Core;
+using Grpc.Net.Client;
 using System;
 using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
@@ -13,15 +14,9 @@ namespace BonusBotConnector.Client.Requests
 {
     public class ChannelChat
     {
-        #region Private Fields
-
         private readonly MessageToChannelClient _client;
 
         private readonly BonusbotSettings _settings;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public ChannelChat(GrpcChannel channel, BonusbotSettings settings)
         {
@@ -29,17 +24,9 @@ namespace BonusBotConnector.Client.Requests
             _settings = settings;
         }
 
-        #endregion Public Constructors
-
-        #region Public Events
-
         public event ErrorLogDelegate? Error;
 
         public event ErrorStringLogDelegate? ErrorString;
-
-        #endregion Public Events
-
-        #region Public Methods
 
         public void SendActionStartInfo(IGangGamemode gamemode)
         {
@@ -121,10 +108,6 @@ namespace BonusBotConnector.Client.Requests
             SendRequest(info, _settings.SupportRequestsChannelId);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void HandleResult(MessageToChannelRequestReply result)
         {
             if (string.IsNullOrEmpty(result.ErrorMessage))
@@ -138,7 +121,7 @@ namespace BonusBotConnector.Client.Requests
                 return;
             try
             {
-                var result = await _client.SendAsync(new MessageToChannelRequest { GuildId = _settings.GuildId!.Value, ChannelId = channelId.Value, Text = text });
+                var result = await _client.SendAsync(new MessageToChannelRequest { GuildId = _settings.GuildId!.Value, ChannelId = channelId.Value, Text = text }, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
             }
             catch (Exception ex)
@@ -155,7 +138,7 @@ namespace BonusBotConnector.Client.Requests
             {
                 request.GuildId = _settings.GuildId!.Value;
                 request.ChannelId = channelId.Value;
-                var result = await _client.SendEmbedAsync(request);
+                var result = await _client.SendEmbedAsync(request, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
             }
             catch (Exception ex)
@@ -163,7 +146,5 @@ namespace BonusBotConnector.Client.Requests
                 Error?.Invoke(ex, logToBonusBotOnError);
             }
         }
-
-        #endregion Private Methods
     }
 }

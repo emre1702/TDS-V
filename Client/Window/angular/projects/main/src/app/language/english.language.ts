@@ -821,6 +821,7 @@ You need to set the target for this mode.`;
     AddRankAfter = "Add rank +1";
     DeleteThisRank = "Delete this rank";
     SaveRanks = "Save ranks";
+    SettingSavedSuccessfully = "The settings were saved successfully.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

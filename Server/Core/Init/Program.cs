@@ -23,15 +23,9 @@ namespace TDS_Server.Core.Init
 {
     public class Program : Script
     {
-        public readonly EventsHandler EventsHandler;
-        public readonly RemoteBrowserEventsHandler RemoteBrowserEventsHandler;
-        public readonly LobbiesHandler LobbiesHandler;
-        public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerHandler.LoggedInPlayers;
-
         private ITDSPlayer? _consolePlayerCache;
 
         private readonly IServiceProvider _serviceProvider;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly CommandsHandler _commandsHandler;
 
@@ -65,11 +59,10 @@ namespace TDS_Server.Core.Init
                     Environment.Exit(1);
                 }
 
-                EventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
                 _serviceProvider.GetRequiredService<ServerStartHandler>();
 
-                LobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
-                LobbiesHandler.LoadLobbies();
+                var lobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
+                lobbiesHandler.LoadLobbies();
 
                 var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
                 var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
@@ -78,17 +71,19 @@ namespace TDS_Server.Core.Init
                 var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
                 gangsHandler.LoadAll();
 
-                RemoteBrowserEventsHandler = _serviceProvider.GetRequiredService<RemoteBrowserEventsHandler>();
-                _tdsPlayerHandler = _serviceProvider.GetRequiredService<ITDSPlayerHandler>();
+                var tdsPlayerHandler = _serviceProvider.GetRequiredService<ITDSPlayerHandler>();
                 _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
 
                 Services.InitializeSingletons(_serviceProvider);
 
                 var loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
-                loggingHandler.SetTDSPlayerHandler(_tdsPlayerHandler);
+                loggingHandler.SetTDSPlayerHandler(tdsPlayerHandler);
 
                 Task.Run(ReadInput);
+
+                var eventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
+                InitRAGE(eventsHandler);
             }
             catch (Exception ex)
             {
@@ -102,6 +97,21 @@ namespace TDS_Server.Core.Init
                 Console.ReadKey();
 #endif
             }
+        }
+
+        private void InitRAGE(EventsHandler eventsHandler)
+        {
+            NAPI.Server.SetAutoRespawnAfterDeath(false);
+            NAPI.Server.SetGlobalServerChat(false);
+
+            var date = DateTime.UtcNow;
+            NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
+
+            eventsHandler.Minute += (_) =>
+            {
+                date = DateTime.UtcNow;
+                NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
+            };
         }
 
         public void HandleProgramException(Exception ex, string msgBefore = "")

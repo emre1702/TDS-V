@@ -51,7 +51,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             int index = startIndex;
             do
             {
-                if (++index >= Teams.Count - 1)
+                if (++index > Teams.Count - 1)
                     index = 0;
             } while (Teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
 

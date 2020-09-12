@@ -2,6 +2,7 @@
 using RAGE.Elements;
 using RAGE.Game;
 using System.Collections.Generic;
+using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Shared.Data.Enums;
 using static RAGE.Events;
 
@@ -73,6 +74,7 @@ namespace TDS_Client.Handler.Entities
 
         public void Attach(PedBase ped, PedBone bone, int x, float y, float z, bool heading)
         {
+            _loggingHandler.LogInfo("Attach at " + (ped is ITDSPlayer player ? player.Name : "Ped"), "TDSCamera.Attach " + Name);
             Cam.AttachCamToPedBone(_handle, ped.Handle, (int)bone, x, y, z, heading);
         }
 
@@ -120,6 +122,7 @@ namespace TDS_Client.Handler.Entities
 
         public void PointCamAtCoord(Vector3 pos)
         {
+            _loggingHandler.LogInfo("", "TDSCamera.PointCamAtCoord " + Name);
             Cam.PointCamAtCoord(_handle, pos.X, pos.Y, pos.Z);
             _camerasHandler.SetFocusArea(pos);
         }
@@ -131,10 +134,10 @@ namespace TDS_Client.Handler.Entities
 
         public void RenderToPosition(Vector3 pos, bool ease = false, int easeTime = 0)
         {
-            _loggingHandler.LogInfo("", "TDSCamera.RenderToPosition");
+            _loggingHandler.LogInfo("", "TDSCamera.RenderToPosition " + Name);
             SetPosition(pos);
             Render(ease, easeTime);
-            _loggingHandler.LogInfo("", "TDSCamera.RenderToPosition", true);
+            _loggingHandler.LogInfo("", "TDSCamera.RenderToPosition " + Name, true);
         }
 
         public void SetFov(float fov)
@@ -144,14 +147,14 @@ namespace TDS_Client.Handler.Entities
 
         public void SetPosition(Vector3 position, bool instantly = false)
         {
-            _loggingHandler.LogInfo("", "TDSCamera.SetPosition");
+            _loggingHandler.LogInfo("", "TDSCamera.SetPosition " + Name);
             Cam.SetCamCoord(_handle, position.X, position.Y, position.Z);
 
             if (instantly)
             {
                 Cam.RenderScriptCams(true, false, 0, true, false, 0);
             }
-            _loggingHandler.LogInfo("", "TDSCamera.SetPosition", true);
+            _loggingHandler.LogInfo("", "TDSCamera.SetPosition " + Name, true);
         }
 
         public void Spectate(GameEntityBase entity)
@@ -163,6 +166,7 @@ namespace TDS_Client.Handler.Entities
 
         public void Spectate(PedBase ped)
         {
+            _loggingHandler.LogInfo("Spectate " + (ped is ITDSPlayer player ? player.Name : "Ped"), "TDSCamera.Spectate " + Name);
             if (SpectatingEntity != null)
             {
                 Cam.DetachCam(_handle);

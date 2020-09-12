@@ -58,9 +58,9 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             if (Map.Target is null)
                 return;
 
-            TargetObject = NAPI.Object.CreateObject(NAPI.Util.GetHashKey(SharedConstants.TargetHashName), Map.Target.ToVector3(), null, 120, Lobby.Dimension) as ITDSObject;
-            TargetObject!.Freeze(true, Lobby);
-            TargetObject.SetCollisionsless(true, Lobby);
+            TargetObject = NAPI.Object.CreateObject(NAPI.Util.GetHashKey(SharedConstants.TargetHashName), Map.Target.ToVector3(), new Vector3(), 120, Lobby.Dimension) as ITDSObject;
+            TargetObject?.Freeze(true, Lobby);
+            TargetObject?.SetCollisionsless(true, Lobby);
         }
 
         private void CreateTargetTextLabel()

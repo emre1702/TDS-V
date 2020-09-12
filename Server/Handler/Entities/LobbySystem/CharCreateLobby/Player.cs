@@ -15,7 +15,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (!await base.AddPlayer(player, 0))
                 return false;
 
-            var json = Serializer.ToClient(player.Entity.CharDatas);
+            var json = Serializer.ToClient(player.Entity.CharDatas.SyncedData);
 
             NAPI.Task.Run(() =>
             {

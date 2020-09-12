@@ -73,7 +73,7 @@ namespace TDS_Client.Handler.Draw.Dx
 
             Color theColor = _color;
             if (_endAlpha.HasValue)
-                theColor = Color.FromArgb(GetBlendValue(elapsedMs, _color.A, _endAlpha.Value, _endAlphaStartTick, _endAlphaEndTick), _color);
+                theColor = Color.FromArgb(GetBlendValueInt(elapsedMs, _color.A, _endAlpha.Value, _endAlphaStartTick, _endAlphaEndTick), _color);
 
             float scale = this._scale;
             if (_endScale.HasValue)

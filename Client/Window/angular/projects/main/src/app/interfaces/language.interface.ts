@@ -786,6 +786,7 @@ export interface Language {
     AddRankAfter: string;
     DeleteThisRank: string;
     SaveRanks: string;
+    SettingSavedSuccessfully: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

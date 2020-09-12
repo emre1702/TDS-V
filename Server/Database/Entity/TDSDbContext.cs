@@ -50,6 +50,7 @@ namespace TDS_Server.Database.Entity
         public TDSDbContext(DbContextOptions<TDSDbContext> options)
                     : base(options)
         {
+            this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
         #endregion Public Constructors
@@ -267,6 +268,8 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.BansInfoChannelId).IsRequired(false);
 
                 entity.Property(e => e.ErrorLogsChannelId).IsRequired(false);
+
+                entity.Ignore(e => e.GrpcDeadline);
 
                 entity.Property(e => e.RefreshServerStatsFrequencySec).IsRequired().HasDefaultValue(60);
             });

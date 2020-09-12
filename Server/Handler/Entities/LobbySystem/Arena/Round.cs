@@ -240,7 +240,12 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 foreach (var player in Players.Values)
                 {
                     if (player != winner && player != second && player != third)
+                    {
                         player.Position = othersPos;
+                        player.SetInvisible(true);
+                    }
+                    else
+                        player.SetInvisible(false);
                 }
 
                 string json = Serializer.ToBrowser(_ranking);

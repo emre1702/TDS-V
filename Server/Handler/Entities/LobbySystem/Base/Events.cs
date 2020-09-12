@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Shared.Core;
 
@@ -36,10 +37,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
         }
 
-        public async void OnPlayerLoggedOut(ITDSPlayer player)
-        {
-            await RemovePlayer(player);
-        }
+        public ValueTask OnPlayerLoggedOut(ITDSPlayer player)
+            => new ValueTask(RemovePlayer(player));
 
         public virtual void OnPlayerSpawn(ITDSPlayer player)
         {

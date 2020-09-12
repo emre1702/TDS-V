@@ -350,11 +350,8 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.rageConnector.callCallbackServer(DToServerEvent.LoadDatasForCustomLobby, [], (json: string) => {
             this.createLobbyDatas = JSON.parse(json);
 
-            if (menuType == CustomLobbyMenuType.Weapons) {
-                this.setSelectedLobbyWeapons(this.createLobbyDatas[1]);
-            } else if (menuType == CustomLobbyMenuType.ArmsRaceWeapons) {
-                this.setSelectedLobbyArmsRaceWeapons(this.createLobbyDatas[2]);
-            }
+            this.setSelectedLobbyWeapons(this.createLobbyDatas[1]);
+            this.setSelectedLobbyArmsRaceWeapons(this.createLobbyDatas[2]);
 
             this.inMenu = menuType;
             this.loadingData = false;

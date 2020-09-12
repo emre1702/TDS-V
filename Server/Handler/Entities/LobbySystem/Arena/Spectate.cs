@@ -16,16 +16,16 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         #region Protected Methods
 
-        protected override void SpectateOtherAllTeams(ITDSPlayer character, bool next = true)
+        protected override void SpectateOtherAllTeams(ITDSPlayer player, bool next = true)
         {
             if (CurrentRoundStatus == RoundStatus.Countdown || CurrentRoundStatus == RoundStatus.Round)
-                base.SpectateOtherAllTeams(character, next);
+                base.SpectateOtherAllTeams(player, next);
         }
 
-        protected override void SpectateOtherSameTeam(ITDSPlayer character, bool next = true)
+        protected override void SpectateOtherSameTeam(ITDSPlayer player, bool next = true, bool ignoreSource = false)
         {
             if (CurrentRoundStatus == RoundStatus.Countdown || CurrentRoundStatus == RoundStatus.Round)
-                base.SpectateOtherSameTeam(character, next);
+                base.SpectateOtherSameTeam(player, next, ignoreSource);
         }
 
         #endregion Protected Methods

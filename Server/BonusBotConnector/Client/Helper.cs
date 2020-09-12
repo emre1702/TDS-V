@@ -5,8 +5,6 @@ namespace BonusBotConnector.Client
 {
     public class Helper
     {
-        #region Public Methods
-
         public List<EmbedField> GetBanEmbedFields(PlayerBans ban)
         {
             var list = new List<EmbedField>
@@ -20,7 +18,5 @@ namespace BonusBotConnector.Client
 
             return list;
         }
-
-        #endregion Public Methods
     }
 }

@@ -149,6 +149,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public abstract void SetInvincible(bool toggle);
 
+        public abstract void SetInvisible(bool toggle);
+
         public abstract Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats);
 
         public abstract void SetRelation(ITDSPlayer target, PlayerRelation relation);

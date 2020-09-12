@@ -13,15 +13,9 @@ namespace BonusBotConnector.Client.Requests
 {
     public class Support
     {
-        #region Private Fields
-
         private readonly SupportRequestClient _client;
 
         private readonly BonusbotSettings _settings;
-
-        #endregion Private Fields
-
-        #region Internal Constructors
 
         internal Support(GrpcChannel channel, BonusbotSettings settings)
         {
@@ -29,17 +23,9 @@ namespace BonusBotConnector.Client.Requests
             _settings = settings;
         }
 
-        #endregion Internal Constructors
-
-        #region Public Events
-
         public event ErrorLogDelegate? Error;
 
         public event ErrorStringLogDelegate? ErrorString;
-
-        #endregion Public Events
-
-        #region Public Methods
 
         public async void Answer(ITDSPlayer player, SupportRequestMessages messageEntity)
         {
@@ -56,7 +42,7 @@ namespace BonusBotConnector.Client.Requests
                     Text = messageEntity.Text
                 };
 
-                var result = await _client.AnswerAsync(request);
+                var result = await _client.AnswerAsync(request, deadline: _settings.GrpcDeadline);
 
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
@@ -92,7 +78,7 @@ namespace BonusBotConnector.Client.Requests
                     UserId = player.Entity.PlayerSettings.DiscordUserId ?? 0
                 };
 
-                var result = await _client.CreateAsync(request);
+                var result = await _client.CreateAsync(request, deadline: _settings.GrpcDeadline);
 
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
@@ -117,7 +103,7 @@ namespace BonusBotConnector.Client.Requests
                 };
                 request.SupportRequestIds.AddRange(requestIds);
 
-                var result = await _client.DeleteAsync(request);
+                var result = await _client.DeleteAsync(request, deadline: _settings.GrpcDeadline);
 
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
@@ -144,7 +130,7 @@ namespace BonusBotConnector.Client.Requests
                     RequesterName = player.DisplayName
                 };
 
-                var result = await _client.ToggleClosedAsync(request);
+                var result = await _client.ToggleClosedAsync(request, deadline: _settings.GrpcDeadline);
 
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
@@ -155,7 +141,5 @@ namespace BonusBotConnector.Client.Requests
                 Error?.Invoke(ex);
             }
         }
-
-        #endregion Public Methods
     }
 }

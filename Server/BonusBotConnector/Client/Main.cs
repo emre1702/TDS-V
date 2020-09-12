@@ -8,8 +8,6 @@ namespace BonusBotConnector.Client
 {
     public class BonusBotConnectorClient
     {
-        #region Public Constructors
-
         public BonusBotConnectorClient(TDSDbContext dbContext)
         {
             if (System.Diagnostics.Debugger.IsAttached)
@@ -34,25 +32,15 @@ namespace BonusBotConnector.Client
             Support = new Support(channel, settings);
         }
 
-        #endregion Public Constructors
-
-        #region Public Delegates
-
         //public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);
         public delegate void ErrorLogDelegate(Exception ex, bool logToBonusBot = true);
 
         public delegate void ErrorStringLogDelegate(string message, string stackTrace, string exceptionType, bool logToBonusBot = true);
-
-        #endregion Public Delegates
-
-        #region Public Properties
 
         public ChannelChat? ChannelChat { get; }
         public Helper? Helper { get; }
         public PrivateChat? PrivateChat { get; }
         public ServerInfos? ServerInfos { get; }
         public Support? Support { get; }
-
-        #endregion Public Properties
     }
 }

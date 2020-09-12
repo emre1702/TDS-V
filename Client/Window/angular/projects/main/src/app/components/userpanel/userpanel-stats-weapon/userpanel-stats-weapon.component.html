@@ -1,5 +1,5 @@
 <div id="container">
-    <mat-accordion class="accordion">
+    <mat-accordion>
         <mat-expansion-panel *ngFor="let weapon of weaponsUsed" (afterExpand)="loadWeaponData(weapon)">
             <mat-expansion-panel-header>
                 {{ weapon | language: settings.Lang }}
@@ -11,6 +11,7 @@
             <div class="stats-list" *ngIf="weaponStatsData[weapon]">
                 <div class="stat-row" *ngFor="let key of getWeaponStatKeys()">
                     <span>{{ key | language: settings.Lang }}: </span>
+                    <div class="placeholder"></div>
                     <span>{{ weaponStatsData[weapon][UserpanelWeaponStats[key]] }}</span>
                 </div>
 
@@ -24,6 +25,7 @@
                         <div class="stats-list">
                             <div class="stat-row" *ngFor="let key of getWeaponBodypartStatKeys()">
                                 <span>{{ key | language: settings.Lang }}: </span>
+                                <div class="placeholder"></div>
                                 <span>{{ bodyPartData[UserpanelWeaponBodypartStats[key]] }}</span>
                             </div>
                         </div>

@@ -11,7 +11,7 @@
     <app-userpanel *ngIf="settings.UserpanelOpened"></app-userpanel>
     <app-ranking *ngIf="showRankings" [rankings]="rankings"></app-ranking>
     <app-hud *ngIf="showHUD" [rankingShowing]="showRankings"></app-hud>
-    <app-char-creator *ngIf="showCharCreator" ></app-char-creator>
+    <app-char-creator *ngIf="showCharCreator" [data]="charCreateData"></app-char-creator>
     <app-infos-handler></app-infos-handler>
     <app-gang-window *ngIf="showGangWindow"></app-gang-window>
 </ng-container>

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Abstracts.Entities.GTA;
@@ -80,25 +81,10 @@ namespace TDS_Server.Handler.Account
                     .Include(p => p.PlayerStats)
                     .Include(p => p.PlayerTotalStats)
                     .Include(p => p.PlayerSettings)
-                    .Include(p => p.OfflinemessagesTarget)
-                    .Include(p => p.PlayerMapRatings)
-                    .Include(p => p.PlayerMapFavourites)
-                    .Include(p => p.PlayerRelationsTarget)
                     .Include(p => p.PlayerClothes)
-                    .Include(p => p.Challenges)
-                    .Include(p => p.CharDatas)
-                    .Include(p => p.CharDatas.GeneralData)
-                    .Include(p => p.CharDatas.HeritageData)
-                    .Include(p => p.CharDatas.FeaturesData)
-                    .Include(p => p.CharDatas.AppearanceData)
-                    .Include(p => p.CharDatas.HairAndColorsData)
                     .Include(p => p.ThemeSettings)
-                    .Include(p => p.WeaponStats)
-                    .Include(p => p.WeaponBodypartStats)
 
                    .FirstOrDefaultAsync(p => p.Id == id);
-
-                await NAPI.Task.RunWait(() => player.Entity = entity);
 
                 if (entity is null)
                 {
@@ -124,6 +110,24 @@ namespace TDS_Server.Handler.Account
                 if (entity.ThemeSettings is null)
                     entity.ThemeSettings = new PlayerThemeSettings() { UseDarkTheme = true };
                 await dbContext.SaveChangesAsync();
+
+                await dbContext.Entry(entity).Reference(e => e.CharDatas).LoadAsync();
+                await dbContext.Entry(entity.CharDatas).Collection(e => e.AppearanceData).LoadAsync();
+                await dbContext.Entry(entity.CharDatas).Collection(e => e.FeaturesData).LoadAsync();
+                await dbContext.Entry(entity.CharDatas).Collection(e => e.GeneralData).LoadAsync();
+                await dbContext.Entry(entity.CharDatas).Collection(e => e.HairAndColorsData).LoadAsync();
+                await dbContext.Entry(entity.CharDatas).Collection(e => e.HeritageData).LoadAsync();
+
+                await dbContext.Entry(entity).Collection(e => e.OfflinemessagesTarget).LoadAsync();
+                await dbContext.Entry(entity).Collection(e => e.PlayerMapRatings).LoadAsync();
+                await dbContext.Entry(entity).Collection(e => e.PlayerMapFavourites).LoadAsync();
+                await dbContext.Entry(entity).Collection(e => e.PlayerRelationsTarget).LoadAsync();
+                await dbContext.Entry(entity).Collection(e => e.Challenges).LoadAsync();
+                await dbContext.Entry(entity).Collection(e => e.WeaponStats).LoadAsync();
+                await dbContext.Entry(entity).Collection(e => e.WeaponBodypartStats).LoadAsync();
+
+                await NAPI.Task.RunWait(() => player.Entity = entity);
+
                 return true;
             });
 

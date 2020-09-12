@@ -10,15 +10,9 @@ namespace BonusBotConnector.Client.Requests
 {
     public class PrivateChat
     {
-        #region Private Fields
-
         private readonly MessageToUserClient _client;
 
         private readonly BonusbotSettings _settings;
-
-        #endregion Private Fields
-
-        #region Internal Constructors
 
         internal PrivateChat(GrpcChannel channel, BonusbotSettings settings)
         {
@@ -26,17 +20,9 @@ namespace BonusBotConnector.Client.Requests
             _settings = settings;
         }
 
-        #endregion Internal Constructors
-
-        #region Public Events
-
         public event ErrorLogDelegate? Error;
 
         public event ErrorStringLogDelegate? ErrorString;
-
-        #endregion Public Events
-
-        #region Public Methods
 
         public void SendBanMessage(ulong userId, PlayerBans ban, List<EmbedField> fields)
         {
@@ -80,10 +66,6 @@ namespace BonusBotConnector.Client.Requests
             SendRequest($"You got an offline message from '{author}':{Environment.NewLine}{text}", userId);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void HandleResult(MessageToUserRequestReply result)
         {
             if (string.IsNullOrEmpty(result.ErrorMessage))
@@ -97,7 +79,7 @@ namespace BonusBotConnector.Client.Requests
                 return;
             try
             {
-                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = _settings.GuildId!.Value, UserId = userId, Text = text });
+                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = _settings.GuildId!.Value, UserId = userId, Text = text }, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
             }
             catch (Exception ex)
@@ -111,7 +93,7 @@ namespace BonusBotConnector.Client.Requests
             try
             {
                 request.GuildId = _settings.GuildId!.Value;
-                var result = await _client.SendEmbedAsync(request);
+                var result = await _client.SendEmbedAsync(request, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
             }
             catch (Exception ex)
@@ -126,7 +108,7 @@ namespace BonusBotConnector.Client.Requests
                 return;
             try
             {
-                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = _settings.GuildId!.Value, UserId = userId, Text = text });
+                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = _settings.GuildId!.Value, UserId = userId, Text = text }, deadline: _settings.GrpcDeadline);
                 replyHandler(result);
             }
             catch (Exception ex)
@@ -134,7 +116,5 @@ namespace BonusBotConnector.Client.Requests
                 Error?.Invoke(ex, logToBonusBotOnError);
             }
         }
-
-        #endregion Private Methods
     }
 }

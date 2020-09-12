@@ -67,6 +67,7 @@ namespace TDS_Client.Handler
                     _camerasHandler.SpectateCam.Detach();
                 }
 
+                _camerasHandler.SpectateCam.Activate();
                 _camerasHandler.SpectateCam.Render(true, Constants.DefaultSpectatePlayerChangeEaseTime);
                 Logging.LogInfo("", "SpectatingHandler.SpectatingEntity", true);
             }

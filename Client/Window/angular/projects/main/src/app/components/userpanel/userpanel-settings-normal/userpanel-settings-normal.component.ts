@@ -14,9 +14,10 @@ import { TimezoneEnum } from '../enums/timezone.enum';
 import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 import { TimeSpanUnitsOfTime } from '../enums/timespan-units-of-time.enum';
 import { ScoreboardPlayerSorting } from '../enums/scoreboard-player-sorting';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatInput } from '@angular/material';
+import { MatInput, MatSnackBar } from '@angular/material';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
+import { UserpanelSettingsSpecialType } from '../enums/userpanel-settings-special-type.enum';
 
 @Component({
     selector: 'app-userpanel-settings-normal',
@@ -346,7 +347,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         private userpanelService: UserpanelService,
         public changeDetector: ChangeDetectorRef,
         private rageConnector: RageConnectorService,
-        private sanitizer: DomSanitizer) { }
+        private sanitizer: DomSanitizer,
+        private snackBar: MatSnackBar) { }
 
     ngOnInit() {
         this.userpanelService.settingsNormalLoaded.on(null, this.loadSettings.bind(this));
@@ -417,7 +419,13 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             ["1"]: this.getNormalThemeSettings()
         };
         const json = JSON.stringify(data);
-        this.rageConnector.callServer(DToServerEvent.SaveSettings, json);
+        this.rageConnector.callCallbackServer(DToServerEvent.SaveSettings, [json], (err: string) => {
+            if (err.length) {
+                this.showSaveError(err);
+            } else {
+                this.showSaveSuccess();
+            }
+        });
 
         this.userpanelService.myStatsGeneralLoadingCooldownEnded();
     }
@@ -536,4 +544,13 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
     private getNormalGeneralSettings() { return this.userpanelService.allSettingsNormal; }
     private getNormalThemeSettings() { return this.settings.ThemeSettings; }
+
+    private showSaveError(err: string) {
+        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: err, duration: undefined });
+    }
+
+    private showSaveSuccess() {
+        this.snackBar.openFromComponent(CustomMatSnackBarComponent,
+            { data: this.settings.Lang.SettingSavedSuccessfully, duration: 3000 });
+    }
 }

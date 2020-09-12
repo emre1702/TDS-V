@@ -5,6 +5,10 @@ tdswindow {
     width: 25vw;
     display: flex;
     flex-direction: column;
+
+    > * {
+        height: 100%;
+    }
 }
 
 .glowing-button {

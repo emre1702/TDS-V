@@ -149,7 +149,6 @@ namespace TDS_Server.Handler.Events
             NAPI.Task.Run(() =>
             {
                 PlayerLoggedOut?.Invoke(tdsPlayer);
-                tdsPlayer.Lobby?.OnPlayerLoggedOut(tdsPlayer);
             });
             await tdsPlayer.Database.ExecuteForDBAsync(async dbContext =>
             {

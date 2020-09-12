@@ -99,6 +99,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 StartArmor: entity.FightSettings?.StartArmor ?? 100,
                 IsGangActionLobby: IsGangActionLobby
             );
+
+            eventsHandler.PlayerLoggedOutBefore += OnPlayerLoggedOut;
         }
 
         #endregion Public Constructors

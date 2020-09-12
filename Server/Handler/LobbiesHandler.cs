@@ -145,11 +145,11 @@ namespace TDS_Server.Handler
                         Damage = w.Damage,
                         HeadMultiplicator = w.HeadMultiplicator
                     }).ToHashSet(),
-                    ArmsRaceWeapons = data.ArmsRaceWeapons.Select(w => new LobbyArmsRaceWeapons
+                    ArmsRaceWeapons = data.ArmsRaceWeapons?.Select(w => new LobbyArmsRaceWeapons
                     {
                         WeaponHash = w.WeaponHash,
                         AtKill = w.AtKill
-                    }).ToHashSet(),
+                    })?.ToHashSet(),
                     Password = data.Password,
                     //Todo: Add ArmsRaceWeapons (first in Angular)
                     Teams = data.Teams.Select((t, index) =>

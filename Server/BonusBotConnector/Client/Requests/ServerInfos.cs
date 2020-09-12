@@ -9,17 +9,11 @@ namespace BonusBotConnector.Client.Requests
 {
     public class ServerInfos
     {
-        #region Private Fields
-
         private readonly RAGEServerStatsClient _client;
 
         private readonly string _ipAddress = "?";
 
         private readonly BonusbotSettings _settings;
-
-        #endregion Private Fields
-
-        #region Internal Constructors
 
         internal ServerInfos(GrpcChannel channel, BonusbotSettings settings)
         {
@@ -29,17 +23,9 @@ namespace BonusBotConnector.Client.Requests
             _ipAddress = new WebClient().DownloadString("https://www.l2.io/ip");
         }
 
-        #endregion Internal Constructors
-
-        #region Public Events
-
         public event ErrorLogDelegate? Error;
 
         public event ErrorStringLogDelegate? ErrorString;
-
-        #endregion Public Events
-
-        #region Public Methods
 
         public async void Refresh(RAGEServerStatsRequest request)
         {
@@ -48,7 +34,7 @@ namespace BonusBotConnector.Client.Requests
                 request.GuildId = _settings.GuildId!.Value;
                 request.ChannelId = _settings.ServerInfosChannelId!.Value;
                 request.ServerAddress = _ipAddress;
-                var result = await _client.SendAsync(request);
+                var result = await _client.SendAsync(request, deadline: _settings.GrpcDeadline);
 
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
@@ -59,7 +45,5 @@ namespace BonusBotConnector.Client.Requests
                 Error?.Invoke(ex);
             }
         }
-
-        #endregion Public Methods
     }
 }

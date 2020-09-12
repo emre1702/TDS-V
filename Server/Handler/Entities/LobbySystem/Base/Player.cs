@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Data.Enums;
@@ -112,13 +113,14 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.Lobby = null;
             player.PreviousLobby = this;
             await player.SetPlayerLobbyStats(null);
-            NAPI.Task.Run(() =>
+            await NAPI.Task.RunWait(() =>
             {
                 player.Lifes = 0;
                 SetPlayerTeam(player, null);
                 player.Spectates = null;
                 player.Freeze(true);
-                player.Transparency = 255;
+                player.SetInvisible(false);
+                player.RemoveAllWeapons();
 
                 if (DeathSpawnTimer.ContainsKey(player))
                 {
