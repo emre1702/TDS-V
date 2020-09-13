@@ -31,16 +31,16 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (targetTeam is null)
             {
-                FuncIterateAllPlayers((character, teamID) =>
+                FuncIterateAllPlayers((player, teamID) =>
                 {
-                    character.SendChatMessage(msg);
+                    player.SendChatMessage(msg);
                 });
             }
             else
             {
-                targetTeam.FuncIterate((character, teamID) =>
+                targetTeam.FuncIterate((player, teamID) =>
                 {
-                    character.SendChatMessage(msg);
+                    player.SendChatMessage(msg);
                 });
             }
         }
@@ -49,27 +49,27 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
             if (targetTeam is null)
             {
-                FuncIterateAllPlayers((character, teamID) =>
+                FuncIterateAllPlayers((player, teamID) =>
                 {
-                    if (blockingPlayerIds.Contains(character.Entity?.Id ?? 0))
+                    if (blockingPlayerIds.Contains(player.Entity?.Id ?? 0))
                         return;
-                    character.SendChatMessage(msg);
+                    player.SendChatMessage(msg);
                 });
             }
             else
             {
-                targetTeam.FuncIterate((character, teamID) =>
+                targetTeam.FuncIterate((player, teamID) =>
                 {
-                    if (blockingPlayerIds.Contains(character.Entity?.Id ?? 0))
+                    if (blockingPlayerIds.Contains(player.Entity?.Id ?? 0))
                         return;
-                    character.SendChatMessage(msg);
+                    player.SendChatMessage(msg);
                 });
             }
         }
 
-        public void SendMessage(Func<ILanguage, string> langgetter, ITeam? targetTeam = null)
+        public void SendMessage(Func<ILanguage, string> langGetter, ITeam? targetTeam = null)
         {
-            Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(langgetter);
+            Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(langGetter);
             if (targetTeam is null)
                 FuncIterateAllPlayers((player, team) =>
                 {
@@ -96,28 +96,28 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 });
         }
 
-        public void SendNotification(Func<ILanguage, string> langgetter, ITeam? targetTeam = null, bool flashing = false)
+        public void SendNotification(Func<ILanguage, string> langGetter, ITeam? targetTeam = null, bool flashing = false)
         {
-            Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(langgetter);
+            Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(langGetter);
             if (targetTeam is null)
             {
-                FuncIterateAllPlayers((character, teamID) =>
+                FuncIterateAllPlayers((player, teamID) =>
                 {
-                    character.SendNotification(texts[character.Language], flashing);
+                    player.SendNotification(texts[player.Language], flashing);
                 });
             }
             else
             {
-                targetTeam.FuncIterate((character, teamID) =>
+                targetTeam.FuncIterate((player, teamID) =>
                 {
-                    character.SendNotification(texts[character.Language], flashing);
+                    player.SendNotification(texts[player.Language], flashing);
                 });
             }
         }
 
         public void TriggerEvent(string eventName, params object[] args)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers(Players.Values.Cast<Player>().ToArray(), eventName, args);
+            NAPI.ClientEvent.TriggerClientEventInDimension(Dimension, eventName, args);
         }
 
         public void SendNative(NativeHash nativeHash, params object[] args)

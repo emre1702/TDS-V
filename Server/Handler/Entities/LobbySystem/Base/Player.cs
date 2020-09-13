@@ -14,16 +14,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        #region Public Properties
-
         public bool FreezePlayerOnCountdown => SetPositionOnPlayerAdd;
         public bool SavePlayerLobbyStats { get; set; } = true;
         public bool SetPositionOnPlayerAdd => !IsGangActionLobby && !(this is GangLobby);
         public bool SpawnPlayer => SetPositionOnPlayerAdd;
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public virtual async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex)
         {
@@ -33,13 +27,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     return false;
             }
 
-            #region Remove from old lobby
-
             ILobby? oldlobby = player.Lobby;
             if (oldlobby is { })
                 await oldlobby.RemovePlayer(player);
-
-            #endregion Remove from old lobby
 
             if (Entity.Type != LobbyType.MainMenu
                 && Entity.Type != LobbyType.MapCreateLobby
@@ -158,10 +148,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             team?.SyncAddedPlayer(player);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private async Task AddPlayerLobbyStats(ITDSPlayer player)
         {
             if (player.Entity is null)
@@ -180,7 +166,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }).ConfigureAwait(false);
             await player.SetPlayerLobbyStats(stats);
         }
-
-        #endregion Private Methods
     }
 }

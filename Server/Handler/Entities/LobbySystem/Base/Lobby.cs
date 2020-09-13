@@ -22,8 +22,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class Lobby : DatabaseEntityWrapper, ILobby
     {
-        #region Protected Fields
-
         protected readonly BansHandler BansHandler;
         protected readonly BonusBotConnectorClient BonusBotConnectorClient;
         protected readonly DataSyncHandler DataSyncHandler;
@@ -33,10 +31,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         protected readonly Serializer Serializer;
         protected readonly ISettingsHandler SettingsHandler;
         protected SyncedLobbySettings SyncedLobbySettings;
-
-        #endregion Protected Fields
-
-        #region Public Constructors
 
         public Lobby(
             Lobbies entity,
@@ -103,10 +97,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             eventsHandler.PlayerLoggedOutBefore += OnPlayerLoggedOut;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public string CreatorName => Entity.Owner?.Name ?? "?";
         public uint Dimension { get; }
         public Lobbies Entity { get; }
@@ -119,15 +109,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         public string Name => Entity.Name;
         public LobbyType Type => Entity.Type;
 
-        #endregion Public Properties
-
-        #region Protected Properties
-
         protected Vector3 SpawnPoint { get; }
-
-        #endregion Protected Properties
-
-        #region Public Methods
 
         /// <summary>
         /// Call this on lobby create.
@@ -176,10 +158,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         {
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         protected bool IsEmpty()
         {
             return Players.Count == 0;
@@ -200,7 +178,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 await dbContext.SaveChangesAsync();
             });
         }
-
-        #endregion Protected Methods
     }
 }
