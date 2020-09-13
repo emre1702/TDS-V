@@ -9,22 +9,26 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.PlayerHandlers;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Core.Handler
 {
     public class OfflineMessagesHandler : DatabaseEntityWrapper
     {
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, BonusBotConnectorClient bonusBotConnectorClient)
+        public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, BonusBotConnectorClient bonusBotConnectorClient,
+            ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
             _bonusBotConnectorClient = bonusBotConnectorClient;
+            _tdsPlayerHandler = tdsPlayerHandler;
 
             eventsHandler.PlayerLoggedIn += CheckOfflineMessages;
         }
 
-        public async void Add(int targetId, ulong targetDiscordId, Players source, string message)
+        public async void Add(int targetId, ulong? targetDiscordId, Players source, string message)
         {
             var msg = new Offlinemessages()
             {
@@ -39,10 +43,13 @@ namespace TDS_Server.Core.Manager.Utility
                 await dbContext.SaveChangesAsync();
             });
 
-            _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId);
+            if (targetDiscordId.HasValue)
+                _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId.Value);
+
+            InformIfPlayerIsOnline(targetId, msg);
         }
 
-        public async void AddOfflineMessage(Players target, Players source, string message)
+        public async void Add(Players target, Players source, string message)
         {
             Offlinemessages msg = new Offlinemessages()
             {
@@ -59,6 +66,8 @@ namespace TDS_Server.Core.Manager.Utility
 
             if (target.PlayerSettings.DiscordUserId.HasValue)
                 _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId.Value);
+
+            InformIfPlayerIsOnline(target.Id, msg);
         }
 
         public async void CheckOfflineMessages(ITDSPlayer player)
@@ -80,6 +89,13 @@ namespace TDS_Server.Core.Manager.Utility
             {
                 player.SendChatMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries));
             }
+        }
+
+        private void InformIfPlayerIsOnline(int playerId, Offlinemessages msg)
+        {
+            var player = _tdsPlayerHandler.Get(playerId);
+            if (player is { })
+                player.SendNotification(player.Language.NEW_OFFLINE_MESSAGE);
         }
     }
 }

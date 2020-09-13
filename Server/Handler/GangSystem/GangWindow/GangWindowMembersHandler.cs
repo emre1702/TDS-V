@@ -1,6 +1,7 @@
-﻿using GTANetworkAPI;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using GTANetworkAPI;
+using TDS_Server.Core.Handler;
 using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
@@ -110,7 +111,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (player.Entity is null)
                 return "?";
 
-            var target = _tdsPlayerHandler.GetIfExists(gangMember.PlayerId);
+            var target = _tdsPlayerHandler.Get(gangMember.PlayerId);
             if (target is { })
             {
                 await LeaveGang(target, false);
@@ -119,7 +120,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             else
             {
                 await RemoveMemberFromGang(player.Gang, gangMember);
-                _offlineMessagesHandler.AddOfflineMessage(gangMember.Player, player.Entity,
+                _offlineMessagesHandler.Add(gangMember.Player, player.Entity,
                     string.Format(_langHelper.GetLang(Language.English).YOU_GOT_KICKED_OUT_OF_THE_GANG_BY, player.DisplayName, player.Gang.Entity.Name));
             }
 
@@ -137,14 +138,14 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (msg is { })
                 return msg;
 
-            var target = _tdsPlayerHandler.GetIfExists(gangMember.PlayerId);
+            var target = _tdsPlayerHandler.Get(gangMember.PlayerId);
             if (target is { })
             {
                 target.SendNotification(string.Format(target.Language.YOU_GOT_RANK_DOWN_BY, player.DisplayName, oldRank, oldRank - 1));
             }
             else
             {
-                _offlineMessagesHandler.AddOfflineMessage(gangMember.Player, player.Entity!,
+                _offlineMessagesHandler.Add(gangMember.Player, player.Entity!,
                     string.Format(_langHelper.GetLang(Language.English).YOU_GOT_RANK_DOWN_BY, player.DisplayName, oldRank, oldRank - 1));
             }
             return "";
@@ -160,14 +161,14 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (msg is { })
                 return msg;
 
-            var target = _tdsPlayerHandler.GetIfExists(gangMember.PlayerId);
+            var target = _tdsPlayerHandler.Get(gangMember.PlayerId);
             if (target is { })
             {
                 target.SendNotification(string.Format(target.Language.YOU_GOT_RANK_UP, player.DisplayName, oldRank, oldRank + 1));
             }
             else
             {
-                _offlineMessagesHandler.AddOfflineMessage(gangMember.Player, player.Entity!,
+                _offlineMessagesHandler.Add(gangMember.Player, player.Entity!,
                     string.Format(_langHelper.GetLang(Language.English).YOU_GOT_RANK_UP, player.DisplayName, oldRank, oldRank + 1));
             }
             return "";

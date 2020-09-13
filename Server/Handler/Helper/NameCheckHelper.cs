@@ -14,16 +14,16 @@ namespace TDS_Server.Handler.Helper
             return isNameCheckLevel switch
             {
                 IsNameCheckLevel.EqualsName
-                    => player.Name.Equals(input, StringComparison.CurrentCultureIgnoreCase) == true,
+                    => player.Name.Equals(input, StringComparison.CurrentCultureIgnoreCase),
 
                 IsNameCheckLevel.EqualsScName
-                    => player.SocialClubName.Equals(input, StringComparison.CurrentCultureIgnoreCase) == true,
+                    => player.SocialClubName.Equals(input, StringComparison.CurrentCultureIgnoreCase),
 
                 IsNameCheckLevel.ContainsName
-                    => player.Name.Contains(input, StringComparison.CurrentCultureIgnoreCase) == true,
+                    => player.Name.Contains(input, StringComparison.CurrentCultureIgnoreCase),
 
                 IsNameCheckLevel.ContainsScName
-                    => player.SocialClubName.Contains(input, StringComparison.CurrentCultureIgnoreCase) == true,
+                    => player.SocialClubName.Contains(input, StringComparison.CurrentCultureIgnoreCase),
 
                 _ => false
             };

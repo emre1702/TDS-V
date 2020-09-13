@@ -92,6 +92,7 @@ namespace TDS_Server.Data.Languages
         public override string MUTE_EXPIRED => "Dein Chat Mute ist abgelaufen. Du darfst wieder schreiben.";
         public override string MUTETIME_INVALID => "Die Mute-Zeit ist ungültig. Erlaubt sind -1, 0 und höher.";
 
+        public override string NEW_OFFLINE_MESSAGE => "Du hast eine neue Offline-Nachricht bekommen.";
         public override string NOT_ALLOWED => "Du bist dazu nicht befugt.";
         public override string NOT_ENOUGH_MONEY => "Du hast nicht genug Geld.";
         public override string NOT_IN_PRIVATE_CHAT => "Du bist nicht in einem Privatchat.";

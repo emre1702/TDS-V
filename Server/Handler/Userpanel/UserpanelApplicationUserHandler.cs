@@ -171,7 +171,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 player.SendChatMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
 
-                ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
+                ITDSPlayer? admin = _tdsPlayerHandler.Get(invitation.AdminId);
                 if (admin != null)
                 {
                     admin.SendChatMessage(string.Format(admin.Language.PLAYER_ACCEPTED_YOUR_INVITATION, player.DisplayName));
@@ -322,7 +322,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 player.SendChatMessage(string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
 
-                ITDSPlayer? admin = _tdsPlayerHandler.GetIfExists(invitation.AdminId);
+                ITDSPlayer? admin = _tdsPlayerHandler.Get(invitation.AdminId);
                 if (admin != null)
                 {
                     admin.SendChatMessage(string.Format(admin.Language.PLAYER_REJECTED_YOUR_INVITATION, player.DisplayName));

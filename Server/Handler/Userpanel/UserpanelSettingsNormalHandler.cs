@@ -36,7 +36,7 @@ namespace TDS_Server.Handler.Userpanel
 
             try
             {
-                var player = _tdsPlayerHandler.GetIfExists(userId);
+                var player = _tdsPlayerHandler.Get(userId);
                 if (player is { })
                     await SaveDiscordUserId(player, discordUserId);
                 else

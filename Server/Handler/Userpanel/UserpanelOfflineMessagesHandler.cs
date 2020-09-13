@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Core.Manager.Utility;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using TDS_Server.Core.Handler;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
@@ -73,7 +73,7 @@ namespace TDS_Server.Handler.Userpanel
             if (offlineMessage is null)
                 return null;
 
-            _offlineMessagesHandler.AddOfflineMessage(offlineMessage.Source, player.Entity!, message);
+            _offlineMessagesHandler.Add(offlineMessage.Source, player.Entity!, message);
 
             return null;
         }
@@ -152,7 +152,7 @@ namespace TDS_Server.Handler.Userpanel
             if (playerName is null)
                 return false;
             int? targetId;
-            if (!(targetId = Utils.GetInt(args[1])).HasValue)
+            if (!(targetId = Utils.GetInt(args[0])).HasValue)
             {
                 targetId = await ExecuteForDBAsync(async dbContext
                     => await dbContext.Players.Where(p => p.Name == playerName || p.SCName == playerName).Select(p => p.Id).FirstOrDefaultAsync());
@@ -172,8 +172,7 @@ namespace TDS_Server.Handler.Userpanel
                     .Where(p => p.PlayerId == targetId.Value)
                     .Select(p => p.DiscordUserId)
                     .FirstOrDefaultAsync());
-            if (discordUserId.HasValue)
-                _offlineMessagesHandler.Add(targetId.Value, discordUserId.Value, player.Entity!, message);
+            _offlineMessagesHandler.Add(targetId.Value, discordUserId, player.Entity!, message);
 
             return true;
         }

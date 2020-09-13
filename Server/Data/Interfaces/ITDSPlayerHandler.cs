@@ -8,7 +8,7 @@ namespace TDS_Server.Data.Interfaces
     {
         int AmountLoggedInPlayers { get; }
         ICollection<ITDSPlayer> LoggedInPlayers { get; }
-        ITDSPlayer? GetIfExists(int playerId);
+        ITDSPlayer? Get(int playerId);
         ITDSPlayer? GetIfLoggedIn(ushort remoteId);
         ITDSPlayer? FindTDSPlayer(string name);
     }

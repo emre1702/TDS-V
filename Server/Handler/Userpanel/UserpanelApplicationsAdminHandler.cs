@@ -191,7 +191,7 @@ namespace TDS_Server.Handler.Userpanel
 
             NAPI.Task.Run(() =>
             {
-                var target = _tdsPlayerHandler.GetIfExists(playerId);
+                var target = _tdsPlayerHandler.Get(playerId);
                 if (target is { })
                 {
                     target.SendChatMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));

@@ -46,7 +46,7 @@ namespace TDS_Server.Handler.PlayerHandlers
         public int AmountLoggedInPlayers => LoggedInPlayers.Count;
         public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerRemoteIdCache.Values;
 
-        public ITDSPlayer? GetIfExists(int playerId)
+        public ITDSPlayer? Get(int playerId)
         {
             return _tdsPlayerRemoteIdCache.Values.FirstOrDefault(p => p.Id == playerId);
         }

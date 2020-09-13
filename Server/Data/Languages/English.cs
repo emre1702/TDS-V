@@ -91,6 +91,7 @@ namespace TDS_Server.Data.Languages
         public virtual string MUTE_EXPIRED => "The chat mute has expired. You can write again.";
         public virtual string MUTETIME_INVALID => "The mute time is invalid. Allowed are -1, 0 and higher.";
 
+        public virtual string NEW_OFFLINE_MESSAGE => "You have received a new offline message.";
         public virtual string NOT_ALLOWED => "You are not allowed to do that.";
         public virtual string NOT_ENOUGH_MONEY => "You don't have enough money.";
         public virtual string NOT_IN_PRIVATE_CHAT => "You are not in a private chat.";

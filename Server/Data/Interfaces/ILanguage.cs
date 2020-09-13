@@ -81,6 +81,7 @@
         string MUTE_EXPIRED { get; }
         string MUTETIME_INVALID { get; }
 
+        string NEW_OFFLINE_MESSAGE { get; }
         string NOT_ALLOWED { get; }
         string NOT_ENOUGH_MONEY { get; }
         string NOT_IN_PRIVATE_CHAT { get; }
