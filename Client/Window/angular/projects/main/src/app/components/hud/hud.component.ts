@@ -15,8 +15,10 @@ export class HudComponent implements OnInit, OnDestroy {
 
     showRoundStats = true;
 
+    hpRectPercentage = 0;
+    armorRectPercentage = 0;
+
     armor = 0;
-    armorExtra = 0;
     hp = 0;
     money = 0;
     ammoInClip = 0;
@@ -50,11 +52,12 @@ export class HudComponent implements OnInit, OnDestroy {
     private hudDataChange(type: HUDDataType, value: number) {
         switch (type) {
             case HUDDataType.Armor:
-                this.armor = Math.min(value, 100);
-                this.armorExtra = Math.max(value - this.armor, 0);
+                this.armor = value;
+                this.armorRectPercentage = Math.min(value, 100);
                 break;
             case HUDDataType.HP:
                 this.hp = value;
+                this.hpRectPercentage = Math.min(100, value);
                 break;
             case HUDDataType.Money:
                 this.money = value;
