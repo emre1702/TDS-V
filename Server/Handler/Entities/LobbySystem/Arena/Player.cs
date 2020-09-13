@@ -27,18 +27,19 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             if (!await base.AddPlayer(player, 0))
                 return false;
+
+            var pos = _currentMap?.LimitInfo?.Center?.ToVector3();
+            if (pos is { })
+                player.Position = pos.AddToZ(10);
+
+            var teams = Teams.Select(t =>
+                        new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)
+                    ).ToList();
+
             NAPI.Task.Run(() =>
             {
-                var pos = _currentMap?.LimitInfo?.Center?.ToVector3();
-                if (pos is { })
-                    player.Position = pos.AddToZ(10);
                 SendPlayerRoundInfoOnJoin(player);
                 new TDSTimer(() => SpectateOtherAllTeams(player), 1000, 1);
-
-                var teams = Teams.Select(t =>
-                        new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)
-                    )
-                    .ToList();
 
                 player.TriggerEvent(ToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
 
