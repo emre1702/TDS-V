@@ -80,11 +80,11 @@ namespace TDS_Client.Handler.Draw.Dx
                 Progress = progressMs / _msToEnd.Value;
             }
 
-            float width = _width - _frontRectOffsetAbsoluteX * 2;
+            float width = GetAbsoluteX(_width, _relativePos) - _frontRectOffsetAbsoluteX * 2;
             if (_filling)
-                _frontRect.SetWidth(_progress * width, _relativePos);
+                _frontRect.SetWidth(_progress * width, false);
             else
-                _frontRect.SetWidth(width - width * _progress, _relativePos);
+                _frontRect.SetWidth(width - width * _progress, false);
         }
 
         public void SetAutomatic(int msToEnd, bool restart = true)
