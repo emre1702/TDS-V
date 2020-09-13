@@ -6,6 +6,7 @@ using System.Linq;
 using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Extensions;
+using TDS_Client.Handler.Deathmatch;
 using static RAGE.Events;
 
 namespace TDS_Client.Handler.Draw
@@ -15,20 +16,23 @@ namespace TDS_Client.Handler.Draw
         private readonly CamerasHandler _camerasHandler;
         private readonly SettingsHandler _settingsHandler;
         private readonly UtilsHandler _utilsHandler;
+        private readonly PlayerFightHandler _playerFightHandler;
 
-        public NametagsHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler)
+        public NametagsHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler,
+            PlayerFightHandler playerFightHandler)
             : base(loggingHandler)
         {
             _camerasHandler = camerasHandler;
             _settingsHandler = settingsHandler;
             _utilsHandler = utilsHandler;
+            _playerFightHandler = playerFightHandler;
 
             Tick += Draw;
         }
 
         public void Draw(List<TickNametagData> nametags)
         {
-            if (_settingsHandler.ShowNametagOnlyOnAiming)
+            if (!GetShowOnlyAtAim())
             {
                 DrawAtAim();
                 DrawSpectatedNametag();
@@ -36,6 +40,9 @@ namespace TDS_Client.Handler.Draw
             else
                 DrawAtSight(nametags);
         }
+
+        private bool GetShowOnlyAtAim()
+            => _playerFightHandler.InFight && _settingsHandler.ShowNametagOnlyOnAiming;
 
         public void DrawNametag(int handle, string name, float distance)
         {

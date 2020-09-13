@@ -16,6 +16,6 @@ namespace TDS_Server.Database.Entity.Bonusbot
         public ulong? ServerInfosChannelId { get; set; }
         public ulong? SupportRequestsChannelId { get; set; }
 
-        public DateTime GrpcDeadline => DateTime.Now.AddMinutes(10);
+        public DateTime GrpcDeadline => DateTime.UtcNow.AddMinutes(10);
     }
 }

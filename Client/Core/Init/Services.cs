@@ -84,7 +84,7 @@ namespace TDS_Client.Core.Init
                 var workaroundsHandler = new WorkaroundsHandler(loggingHandler, serializer, utilsHandler);
                 new AFKCheckHandler(loggingHandler, eventsHandler, settingsHandler, remoteEventsSender, playerFightHandler, timerHandler, dxHandler);
 
-                var nametagsHandler = new NametagsHandler(loggingHandler, camerasHandler, settingsHandler, utilsHandler);
+                var nametagsHandler = new NametagsHandler(loggingHandler, camerasHandler, settingsHandler, utilsHandler, playerFightHandler);
 
                 new RankingHandler(loggingHandler, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler, timerHandler);
                 new MapCreatorHandler(loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler,
