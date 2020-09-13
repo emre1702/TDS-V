@@ -19,9 +19,14 @@ namespace TDS_Server.Handler
 {
     public class LoggingHandler : DatabaseEntityWrapper, ILoggingHandler
     {
+        private static long _currentIdAdmins;
+        private static long _currentIdChats;
+        private static long _currentIdErrors;
+        private static long _currentIdKills;
+        private static long _currentIdRests;
+
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly ISettingsHandler _settingsHandler;
-        private ITDSPlayerHandler? _tdsPlayerHandler;
 
         public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler,
             ISettingsHandler settingsHandler)
@@ -32,6 +37,12 @@ namespace TDS_Server.Handler
             _bonusBotConnectorClient = bonusBotConnectorClient;
             _settingsHandler = settingsHandler;
             LoggingHandler = this;
+
+            _currentIdAdmins = dbContext.LogAdmins.Max(a => a.Id);
+            _currentIdChats = dbContext.LogChats.Max(a => a.Id);
+            _currentIdErrors = dbContext.LogErrors.Max(a => a.Id);
+            _currentIdKills = dbContext.LogKills.Max(a => a.Id);
+            _currentIdRests = dbContext.LogRests.Max(a => a.Id);
 
             eventsHandler.Minute += Save;
             eventsHandler.Error += LogError;
@@ -57,15 +68,11 @@ namespace TDS_Server.Handler
             NAPI.ClientEvent.Register<ITDSPlayer, string, string, string>(ToServerEvent.LogExceptionToServer, this, LogExceptionFromClient);
         }
 
-        public void SetTDSPlayerHandler(ITDSPlayerHandler tdsPlayerHandler)
-        {
-            _tdsPlayerHandler = tdsPlayerHandler;
-        }
-
         private async void LogExceptionFromClient(ITDSPlayer player, string message, string stackTrace, string typeName)
         {
             var log = new LogErrors
             {
+                Id = ++_currentIdErrors,
                 ExceptionType = typeName,
                 Info = message,
                 StackTrace = player.Name + " // " + player.SocialClubName + " // " + (stackTrace ?? Environment.StackTrace),
@@ -84,6 +91,7 @@ namespace TDS_Server.Handler
         {
             var log = new LogErrors
             {
+                Id = ++_currentIdErrors,
                 ExceptionType = "Message",
                 Info = message,
                 StackTrace = player.Name + " // " + player.SocialClubName + " // " + source,
@@ -126,6 +134,7 @@ namespace TDS_Server.Handler
             ex = ex.GetBaseException();
             var log = new LogErrors
             {
+                Id = ++_currentIdErrors,
                 ExceptionType = ex.GetType().Name,
                 Info = ex.Message,
                 StackTrace = ex.StackTrace ?? Environment.StackTrace,
@@ -145,6 +154,7 @@ namespace TDS_Server.Handler
         {
             var log = new LogErrors
             {
+                Id = ++_currentIdErrors,
                 ExceptionType = exceptionType,
                 Info = info,
                 StackTrace = stackTrace ?? Environment.StackTrace,
@@ -165,6 +175,7 @@ namespace TDS_Server.Handler
             ex = ex.GetBaseException();
             var log = new LogErrors
             {
+                Id = ++_currentIdErrors,
                 ExceptionType = ex.GetType().Name,
                 Info = ex.Message,
                 StackTrace = ex.StackTrace ?? Environment.StackTrace,
@@ -184,6 +195,7 @@ namespace TDS_Server.Handler
         {
             var log = new LogErrors
             {
+                Id = ++_currentIdErrors,
                 ExceptionType = exceptionType,
                 Info = info,
                 StackTrace = stacktrace,
@@ -239,6 +251,7 @@ namespace TDS_Server.Handler
         {
             var log = new LogChats
             {
+                Id = ++_currentIdChats,
                 Source = source.Entity?.Id ?? -1,
                 Target = target?.Entity?.Id ?? null,
                 Message = chat,
@@ -260,6 +273,7 @@ namespace TDS_Server.Handler
         {
             var log = new LogAdmins
             {
+                Id = ++_currentIdAdmins,
                 Source = source?.Entity?.Id ?? -1,
                 Target = target?.Entity?.Id ?? null,
                 Type = cmd,
@@ -279,6 +293,7 @@ namespace TDS_Server.Handler
         {
             var log = new LogAdmins
             {
+                Id = ++_currentIdAdmins,
                 Source = source?.Entity?.Id ?? -1,
                 Target = targetid,
                 Type = cmd,
@@ -302,6 +317,7 @@ namespace TDS_Server.Handler
         {
             var log = new LogKills
             {
+                Id = ++_currentIdKills,
                 KillerId = killer.Id,
                 DeadId = player.Id,
                 WeaponId = weapon
@@ -320,6 +336,7 @@ namespace TDS_Server.Handler
             bool ipAddressParseWorked = IPAddress.TryParse(source?.IPAddress ?? "-", out IPAddress? address);
             var log = new LogRests
             {
+                Id = ++_currentIdRests,
                 Type = type,
                 Source = source?.Id ?? 0,
                 Ip = saveipserial && ipAddressParseWorked ? address : null,

@@ -77,9 +77,6 @@ namespace TDS_Server.Core.Init
 
                 Services.InitializeSingletons(_serviceProvider);
 
-                var loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
-                loggingHandler.SetTDSPlayerHandler(tdsPlayerHandler);
-
                 Task.Run(ReadInput);
 
                 var eventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
