@@ -1,12 +1,9 @@
-﻿using BonusBotConnector.Client;
+﻿using System;
+using BonusBotConnector.Client;
 using BonusBotConnector_Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using TDS_Server.Core.Manager.PlayerManager;
-using TDS_Server.Core.Manager.Timer;
-using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Database;

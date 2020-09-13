@@ -1,7 +1,7 @@
-﻿using BonusBotConnector.Client;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
+using BonusBotConnector.Client;
+using Microsoft.EntityFrameworkCore;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
@@ -9,9 +9,8 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
-using TDS_Server.Handler.PlayerHandlers;
 
-namespace TDS_Server.Core.Handler
+namespace TDS_Server.Handler
 {
     public class OfflineMessagesHandler : DatabaseEntityWrapper
     {

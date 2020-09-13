@@ -1,8 +1,7 @@
-﻿using BonusBotConnector.Client;
-using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Core.Manager.Utility;
+using BonusBotConnector.Client;
+using GTANetworkAPI;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;

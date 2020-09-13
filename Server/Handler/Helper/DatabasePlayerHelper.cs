@@ -10,7 +10,7 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Entities;
 
-namespace TDS_Server.Core.Manager.PlayerManager
+namespace TDS_Server.Handler.Helper
 {
     public class DatabasePlayerHelper : DatabaseEntityWrapper
     {

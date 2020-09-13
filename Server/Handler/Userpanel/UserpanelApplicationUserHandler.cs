@@ -1,12 +1,11 @@
-﻿using BonusBotConnector.Client;
-using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Core.Manager.Utility;
+using BonusBotConnector.Client;
+using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
@@ -22,8 +21,6 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class AdminQuestionData
     {
-        #region Public Properties
-
         [JsonProperty("2")]
         public UserpanelAdminQuestionAnswerType AnswerType { get; set; }
 
@@ -32,27 +29,19 @@ namespace TDS_Server.Handler.Userpanel
 
         [JsonProperty("1")]
         public string Question { get; set; } = string.Empty;
-
-        #endregion Public Properties
     }
 
     public class AdminQuestionsData
     {
-        #region Public Properties
-
         [JsonProperty("0")]
         public string AdminName { get; set; } = string.Empty;
 
         [JsonProperty("1")]
         public IEnumerable<AdminQuestionData>? Questions { get; set; }
-
-        #endregion Public Properties
     }
 
     public class ApplicationUserData
     {
-        #region Public Properties
-
         [JsonProperty("2")]
         public string AdminQuestions { get; set; } = string.Empty;
 
@@ -64,14 +53,10 @@ namespace TDS_Server.Handler.Userpanel
 
         [JsonProperty("1")]
         public IEnumerable<ApplicationUserInvitationData>? Invitations { get; set; }
-
-        #endregion Public Properties
     }
 
     public class ApplicationUserInvitationData
     {
-        #region Public Properties
-
         [JsonProperty("1")]
         public string? AdminName { get; set; }
 
@@ -83,23 +68,15 @@ namespace TDS_Server.Handler.Userpanel
 
         [JsonProperty("3")]
         public string? Message { get; set; }
-
-        #endregion Public Properties
     }
 
     public class UserpanelApplicationUserHandler : DatabaseEntityWrapper, IUserpanelApplicationUserHandler
     {
-        #region Private Fields
-
         private readonly BonusBotConnectorClient _bonusbotConnectorClient;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public UserpanelApplicationUserHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, ITDSPlayerHandler tdsPlayerHandler,
@@ -116,15 +93,7 @@ namespace TDS_Server.Handler.Userpanel
             eventsHandler.Hour += DeleteTooLongClosedApplications;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public string AdminQuestions { get; set; } = string.Empty;
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public async Task<object?> AcceptInvitation(ITDSPlayer player, ArraySegment<object> args)
         {
@@ -178,7 +147,7 @@ namespace TDS_Server.Handler.Userpanel
                 }
                 else
                 {
-                    _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I've accepted your team application.");
+                    _offlineMessagesHandler.Add(invitation.Admin, player.Entity, "I've accepted your team application.");
                 }
             });
 
@@ -329,16 +298,12 @@ namespace TDS_Server.Handler.Userpanel
                 }
                 else
                 {
-                    _offlineMessagesHandler.AddOfflineMessage(invitation.Admin, player.Entity, "I rejected your team application.");
+                    _offlineMessagesHandler.Add(invitation.Admin, player.Entity, "I rejected your team application.");
                 }
             });
 
             return null;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private async void LoadAdminQuestions()
         {
@@ -363,7 +328,5 @@ namespace TDS_Server.Handler.Userpanel
 
             AdminQuestions = _serializer.ToBrowser(list);
         }
-
-        #endregion Private Methods
     }
 }

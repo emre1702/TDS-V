@@ -63,8 +63,6 @@ namespace TDS_Client.Handler.Draw.Dx
             Children.Add(_text);
         }
 
-        #region Public Properties
-
         /// <summary>
         /// The progress between 0 and 1
         /// </summary>
@@ -74,23 +72,19 @@ namespace TDS_Client.Handler.Draw.Dx
             set => _progress = Math.Min(1, Math.Max(0, value));
         }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public override void Draw()
         {
             if (_msToEnd.HasValue)
             {
-                float msWasted = _timerHandler.ElapsedMs - _startTime;
-                Progress = msWasted / _msToEnd.Value;
+                float progressMs = _timerHandler.ElapsedMs - _startTime;
+                Progress = progressMs / _msToEnd.Value;
             }
 
             float width = _width - _frontRectOffsetAbsoluteX * 2;
             if (_filling)
                 _frontRect.SetWidth(_progress * width, _relativePos);
             else
-                _frontRect.SetWidth(_width - _width * _progress, _relativePos);
+                _frontRect.SetWidth(width - width * _progress, _relativePos);
         }
 
         public void SetAutomatic(int msToEnd, bool restart = true)
@@ -105,10 +99,6 @@ namespace TDS_Client.Handler.Draw.Dx
                 _startTime -= progressMs;
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private float GetFrontRectX(float x, float width, Alignment alignment, bool relativePos)
         {
@@ -139,7 +129,5 @@ namespace TDS_Client.Handler.Draw.Dx
             else
                 return y - height / 2;
         }
-
-        #endregion Private Methods
     }
 }

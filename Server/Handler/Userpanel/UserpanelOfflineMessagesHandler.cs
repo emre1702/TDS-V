@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using TDS_Server.Core.Handler;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
@@ -17,8 +16,6 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class OfflineMessage
     {
-        #region Public Properties
-
         [JsonProperty("2")]
         public string CreateTime { get; set; } = string.Empty;
 
@@ -36,8 +33,6 @@ namespace TDS_Server.Handler.Userpanel
 
         [JsonProperty("3")]
         public string Text { get; set; } = string.Empty;
-
-        #endregion Public Properties
     }
 
     public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper, IUserpanelOfflineMessagesHandler

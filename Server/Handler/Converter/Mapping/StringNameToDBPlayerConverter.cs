@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using System.Threading.Tasks;
-using TDS_Server.Core.Manager.PlayerManager;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Helper;
 
 namespace TDS_Server.Handler.Converter.Mapping
 {

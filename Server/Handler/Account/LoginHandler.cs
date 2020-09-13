@@ -1,10 +1,8 @@
-﻿using GTANetworkAPI;
+﻿using System;
+using System.Threading.Tasks;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;

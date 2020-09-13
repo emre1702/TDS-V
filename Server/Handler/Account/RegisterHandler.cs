@@ -16,7 +16,7 @@ using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
-namespace TDS_Server.Core.Manager.PlayerManager
+namespace TDS_Server.Handler.Account
 {
     public class RegisterHandler : DatabaseEntityWrapper
     {

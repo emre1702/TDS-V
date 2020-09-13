@@ -7,7 +7,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Handler
 {
     public class InvitationsHandler
     {

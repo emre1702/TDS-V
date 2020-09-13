@@ -16,7 +16,7 @@ using TDS_Server.Data.Models.WeaponsMeta;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Rest;
 
-namespace TDS_Server.Core.Manager.Utility
+namespace TDS_Server.Handler
 {
     public class WeaponDatasLoadingHandler
     {

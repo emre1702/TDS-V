@@ -1,7 +1,6 @@
-﻿using BonusBotConnector.Client;
+﻿using System;
+using BonusBotConnector.Client;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;

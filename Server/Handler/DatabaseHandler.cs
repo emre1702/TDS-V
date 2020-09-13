@@ -9,14 +9,12 @@ namespace TDS_Server.Handler
 {
     public class DatabaseHandler : IDatabaseEntityWrapper
     {
-
         protected ILoggingHandler LoggingHandler;
 
         private readonly TDSDbContext _dbContext;
 
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
         private ITDSPlayer? _player;
-
 
         public DatabaseHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler)
             => (_dbContext, LoggingHandler) = (dbContext, loggingHandler);

@@ -3,7 +3,7 @@ using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 
-namespace TDS_Server.Core.Manager.Timer
+namespace TDS_Server.Handler
 {
     public class TimerHandler
     {

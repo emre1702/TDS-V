@@ -1,10 +1,9 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Core.Manager.PlayerManager;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
-using TDS_Shared.Data.Models.GTA;
+using TDS_Server.Handler.Helper;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.PlayerHandlers

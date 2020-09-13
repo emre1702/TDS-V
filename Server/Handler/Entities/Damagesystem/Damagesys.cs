@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.Core.Manager.Utility;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Handler;
 
 namespace TDS_Server.Core.Damagesystem
 {
