@@ -84,7 +84,7 @@ namespace TDS_Server.Handler.Userpanel
                 }
             });
 
-            return null;
+            return "";
         }
 
         private async Task SaveDiscordUserId(int userId, ulong discordUserId)
