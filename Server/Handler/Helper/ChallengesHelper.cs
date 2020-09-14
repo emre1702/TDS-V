@@ -108,7 +108,7 @@ namespace TDS_Server.Handler.Helper
         {
             ExecuteForDB(dbContext =>
             {
-                string sql = $"DELETE FROM \"{_playerChallengesTableName}\" WHERE {_playerChallengesFrequencyColumnName} = 'weekly'";
+                string sql = $"DELETE FROM \"{_playerChallengesTableName}\" WHERE \"{_playerChallengesFrequencyColumnName}\" = 'weekly'";
                 dbContext.Database.ExecuteSqlRaw(sql);
             }).Wait();
         }
