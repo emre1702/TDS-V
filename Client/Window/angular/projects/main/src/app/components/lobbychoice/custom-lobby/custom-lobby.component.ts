@@ -92,7 +92,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             title: "Player", rows: [
                 {
                     type: SettingType.number, dataSettingIndex: LobbySetting.StartHealth, defaultValue: 100,
-                    formControl: new FormControl(100, [Validators.required, Validators.max(100), Validators.min(1)]), onlyInt: true
+                    formControl: new FormControl(100, [Validators.required, Validators.max(Constants.MAX_POSSIBLE_HEALTH), Validators.min(1)]), onlyInt: true
                 },
                 {
                     type: SettingType.number, dataSettingIndex: LobbySetting.StartArmor, defaultValue: 100,
@@ -211,6 +211,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.rageConnector.callServer(DToServerEvent.JoinedCustomLobbiesMenu);
 
 
         // DEBUG //
@@ -235,6 +236,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.rageConnector.callServer(DToServerEvent.LeftCustomLobbiesMenu);
     }
 
     private addCustomLobby(customLobbyDataJson: string) {
@@ -246,7 +248,11 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         const lobbyIndex = this.lobbyDatas.findIndex(l => l[0] == lobbyId);
         if (lobbyIndex >= 0) {
             this.lobbyDatas.splice(lobbyIndex, 1);
-            this.changeDetector.detectChanges();
+            if (this.isSelectedLobby(lobbyId)) {
+                this.showLobbyCreating();
+            } else {
+                this.changeDetector.detectChanges();
+            }
         }
     }
 
@@ -361,7 +367,6 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
 
     goBack() {
         this.settings.InUserLobbiesMenu = false;
-        this.rageConnector.callServer(DToServerEvent.LeftCustomLobbiesMenu);
         this.changeDetector.detectChanges();
     }
 
@@ -488,5 +493,11 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             .find(p => p.title === "Weapons").rows
             .find(p => p.dataSettingIndex === LobbySetting.ArmsRaceWeapons).formControl.setValue(weapons);
         this.changeDetector.detectChanges();
+    }
+
+    private isSelectedLobby(lobbyId: number): boolean {
+        const selectedLobbyName = this.settingPanel[0].rows[0].formControl.value;
+        const lobbyData = this.lobbyDatas.find(l => l[0] == lobbyId);
+        return lobbyData && lobbyData[1] == selectedLobbyName;
     }
 }

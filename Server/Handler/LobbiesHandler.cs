@@ -185,7 +185,6 @@ namespace TDS_Server.Handler
 
                     AddMapsToArena(arena, entity);
 
-                    _eventsHandler.OnCustomLobbyMenuLeave(player);
                     _eventsHandler.OnCustomLobbyCreated(arena);
                 });
 

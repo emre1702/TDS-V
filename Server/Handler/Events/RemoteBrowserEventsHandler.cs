@@ -22,25 +22,20 @@ namespace TDS_Server.Handler.Events
     {
         private readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _asyncMethods;
 
-        private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
-
         private readonly ILoggingHandler _loggingHandler;
 
         private readonly Dictionary<string, FromBrowserMaybeAsyncMethodDelegate> _maybeAsyncMethods;
 
         private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
 
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly EventsHandler _eventsHandler;
 
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
-            ILoggingHandler loggingHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, MapCreatorHandler mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler, PlayerCharHandler playerCharHandler, ITDSPlayerHandler tdsPlayerHandler,
+            ILoggingHandler loggingHandler, MapCreatorHandler mapCreatorHandler,
+            MapFavouritesHandler mapFavouritesHandler, PlayerCharHandler playerCharHandler,
             GangWindowHandler gangWindowHandler, EventsHandler eventsHandler)
         {
             _loggingHandler = loggingHandler;
-            _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
-            _tdsPlayerHandler = tdsPlayerHandler;
             _eventsHandler = eventsHandler;
 
             _asyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
@@ -178,14 +173,13 @@ namespace TDS_Server.Handler.Events
 
         private object? JoinedCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            _customLobbyMenuSyncHandler.AddPlayer(player);
             _eventsHandler.OnCustomLobbyMenuJoin(player);
             return null;
         }
 
         private object? LeftCustomLobbiesMenu(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            _customLobbyMenuSyncHandler.RemovePlayer(player);
+            _eventsHandler.OnCustomLobbyMenuLeave(player);
             return null;
         }
 

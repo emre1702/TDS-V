@@ -115,7 +115,6 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
 
     showUserLobbies() {
         this.settings.InUserLobbiesMenu = true;
-        this.rageConnector.callServer(DToServerEvent.JoinedCustomLobbiesMenu);
         this.changeDetector.detectChanges();
     }
 
