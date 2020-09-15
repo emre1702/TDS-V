@@ -13,16 +13,10 @@ namespace TDS_Server.Handler.Sync
 {
     public class CustomLobbyMenuSyncHandler
     {
-        #region Private Fields
-
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly List<ITDSPlayer> _playersInCustomLobbyMenu = new List<ITDSPlayer>();
 
         private readonly Serializer _serializer;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public CustomLobbyMenuSyncHandler(EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler)
         {
@@ -35,10 +29,6 @@ namespace TDS_Server.Handler.Sync
             eventsHandler.CustomLobbyCreated += SyncLobbyAdded;
             eventsHandler.CustomLobbyRemoved += SyncLobbyRemoved;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void AddPlayer(ITDSPlayer player)
         {
@@ -95,10 +85,6 @@ namespace TDS_Server.Handler.Sync
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private CustomLobbyData GetCustomLobbyData(ILobby lobby)
         {
             return new CustomLobbyData
@@ -142,7 +128,5 @@ namespace TDS_Server.Handler.Sync
                 }).ToList()
             };
         }
-
-        #endregion Private Methods
     }
 }
