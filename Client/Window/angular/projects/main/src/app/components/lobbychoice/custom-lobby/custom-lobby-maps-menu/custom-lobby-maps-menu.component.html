@@ -103,7 +103,7 @@
                 </button>
             </div> -->
         </div>
-        <button mat-raised-button color="primary" id="back-button" (click)="backButtonClicked()" [disabled]="selectedMaps.length == 0">
+        <button mat-raised-button color="primary" class="save-button" (click)="backButtonClicked()" [disabled]="selectedMaps.length == 0">
             {{ 'Back' | language: settings.Lang }}
         </button>
     </tdswindow>

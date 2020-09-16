@@ -11,37 +11,31 @@
     flex-direction: row;
     justify-content: space-between;
 
-    .container {
+    tdswindow {
         width: 45%;
         display: flex;
         flex-direction: column;
         height: auto !important;
         max-height: calc(100%-20px);
+        max-height: calc(90vh - 40px - 30px);
 
-        .table-container {
-            max-height: calc(90vh - 40px - 30px);
-            width: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
+        .mat-table {
+            width: 100% !important;
+            display: table;
+            border-collapse: collapse;
+            background: transparent;
+            table-layout: auto;
 
-            .mat-table {
-                width: 100% !important;
-                display: table;
-                border-collapse: collapse;
-                background: transparent;
-                table-layout: auto;
+            td.mat-cell,
+            th.mat-header-cell {
+                padding-left: 5px;
+                padding-right: 5px;
 
-                td.mat-cell,
-                th.mat-header-cell {
-                    padding-left: 5px;
-                    padding-right: 5px;
-
-                    ::ng-deep .mat-icon {
-                        vertical-align: middle;
-                        height: 22px !important;
-                        width: 22px !important;
-                        font-size: 22px !important;
-                    }
+                ::ng-deep .mat-icon {
+                    vertical-align: middle;
+                    height: 22px !important;
+                    width: 22px !important;
+                    font-size: 22px !important;
                 }
             }
         }
@@ -62,7 +56,7 @@
     top: 10px;
     right: 10px;
 
-    #back-button {
+    .save-button {
         align-self: flex-end;
         position: relative;
         margin-top: 10px;
