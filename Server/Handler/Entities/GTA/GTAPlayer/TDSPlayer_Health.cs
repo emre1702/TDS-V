@@ -13,7 +13,7 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             set
             {
                 _armor = value;
-                base.Armor = value;
+                NAPI.Player.SetPlayerArmor(this, value);
             }
         }
 
@@ -23,7 +23,7 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             set
             {
                 _health = value;
-                base.Health = value;
+                NAPI.Player.SetPlayerHealth(this, value);
             }
         }
     }

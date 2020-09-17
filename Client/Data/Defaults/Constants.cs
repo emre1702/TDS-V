@@ -37,6 +37,7 @@ namespace TDS_Client.Data.Defaults
         public static uint MapLimitFasterCheckTimeMs => 100;
         public static string MapLimitHashName => "prop_flagpole_1a";
         public static int MaxPossibleArmor => 16959;
+        public static int MaxPossibleHealth => 16959;  //Todo: Find out max health & refresh in Angular
         public static string RegisterLoginBrowserPath => "package://Window/registerlogin/index.html";
         public static int ScoreboardLoadCooldown => 2000;
         public static string TargetHashName => "v_ret_ta_skull";

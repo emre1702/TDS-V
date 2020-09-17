@@ -8,6 +8,7 @@ export class Constants {
     public static MAX_MAP_CREATE_NAME_LENGTH = 100;
 
     public static MAX_POSSIBLE_ARMOR = 16959;
+    public static MAX_POSSIBLE_HEALTH = 16959;
 
     public static MIN_TEAMS_PER_TYPE = {
         [MapType.Normal]: 2,
