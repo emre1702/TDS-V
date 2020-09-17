@@ -10,8 +10,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Lobby
     {
-        #region Private Fields
-
         private static readonly Dictionary<TeamOrder, Func<ILanguage, string>> teamOrderDict = new Dictionary<TeamOrder, Func<ILanguage, string>>
         {
             [TeamOrder.Attack] = lang => lang.ORDER_ATTACK,
@@ -20,20 +18,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             [TeamOrder.SpreadOut] = lang => lang.ORDER_SPREAD_OUT,
         };
 
-        #endregion Private Fields
-
-        #region Public Properties
-
-        public List<ITeam> Teams { get; set; }
-
-        #endregion Public Properties
-
         /*private int GetAmountTeamsWithPlayers()
         {
             return this.TeamPlayers.Values.Count(list => list.Count > 0);
         }*/
-
-        #region Public Methods
 
         public void BalanceCurrentTeams()
         {
@@ -68,10 +56,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 target.SendChatMessage(str + texts[target.Language]);
             });
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         protected void ClearTeamPlayersAmounts()
         {
@@ -110,10 +94,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        #endregion Protected Methods
-
-        #region Private Methods
-
         private void ClearTeamPlayersLists()
         {
             foreach (var entry in Teams)
@@ -123,7 +103,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 entry.SpectateablePlayers?.Clear();
             }
         }
-
-        #endregion Private Methods
     }
 }

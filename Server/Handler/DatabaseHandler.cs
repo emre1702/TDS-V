@@ -101,6 +101,24 @@ namespace TDS_Server.Handler
             }
         }
 
+        public async void ExecuteForDBWithoutWait(Action<TDSDbContext> action)
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite);
+
+            try
+            {
+                action(_dbContext);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex, _player);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
         public async void ExecuteForDBAsyncWithoutWait(Func<TDSDbContext, Task> action)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite);

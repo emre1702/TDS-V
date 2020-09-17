@@ -15,12 +15,10 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 {
     public class Team : ITeam
     {
-        private readonly Serializer _serializer;
         private Teams _entity;
 
-        public Team(Serializer serializer, Teams entity)
+        public Team(Teams entity)
         {
-            _serializer = serializer;
             _entity = entity;
 
             ChatColor = "!$" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "$";

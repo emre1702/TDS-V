@@ -32,6 +32,7 @@
     <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
     <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
     <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
+    <ProjectReference Include="..\Lobby\TDS_Server.LobbySystem.csproj" />
   </ItemGroup>
 
   <ItemGroup>

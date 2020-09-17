@@ -207,14 +207,6 @@ namespace TDS_Server.Handler
                 _ => Deathmatch.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
             };
 
-        public uint GetFreeDimension()
-        {
-            uint tryid = 0;
-            while (_dimensionsUsed.Contains(tryid))
-                ++tryid;
-            return tryid;
-        }
-
         public ILobby? GetLobby(int id)
         {
             LobbiesByIndex.TryGetValue(id, out ILobby? lobby);

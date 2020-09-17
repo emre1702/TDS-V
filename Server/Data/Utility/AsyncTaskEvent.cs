@@ -8,27 +8,17 @@ namespace TDS_Server.Data.Utility
 
     public class AsyncTaskEvent<T>
     {
-        #region Private Fields
-
-        private readonly List<Func<object, T, Task>> _invocationList;
+        private readonly List<Func<T, Task>> _invocationList;
         private readonly object _locker;
-
-        #endregion Private Fields
-
-        #region Private Constructors
 
         private AsyncTaskEvent()
         {
-            _invocationList = new List<Func<object, T, Task>>();
+            _invocationList = new List<Func<T, Task>>();
             _locker = new object();
         }
 
-        #endregion Private Constructors
-
-        #region Public Methods
-
-        public static AsyncTaskEvent<T>? operator -(
-            AsyncTaskEvent<T> e, Func<object, T, Task> callback)
+        public static AsyncTaskEvent<T> operator -(
+            AsyncTaskEvent<T> e, Func<T, Task> callback)
         {
             if (callback == null) throw new NullReferenceException("callback is null");
             if (e == null) return null;
@@ -40,11 +30,9 @@ namespace TDS_Server.Data.Utility
             return e;
         }
 
-        public static AsyncTaskEvent<T>? operator +(
-                    AsyncTaskEvent<T> e, Func<object, T, Task> callback)
+        public static AsyncTaskEvent<T> operator +(
+                    AsyncTaskEvent<T>? e, Func<T, Task> callback)
         {
-            if (callback == null) throw new NullReferenceException("callback is null");
-
             if (e == null) e = new AsyncTaskEvent<T>();
 
             lock (e._locker)
@@ -54,21 +42,19 @@ namespace TDS_Server.Data.Utility
             return e;
         }
 
-        public async Task InvokeAsync(object sender, T eventArgs)
+        public async Task InvokeAsync(T arg)
         {
-            List<Func<object, T, Task>> tmpInvocationList;
+            List<Func<T, Task>> tmpInvocationList;
             lock (_locker)
             {
-                tmpInvocationList = new List<Func<object, T, Task>>(_invocationList);
+                tmpInvocationList = new List<Func<T, Task>>(_invocationList);
             }
 
             foreach (var callback in tmpInvocationList)
             {
                 //Assuming we want a serial invocation, for a parallel invocation we can use Task.WhenAll instead
-                await callback(sender, eventArgs);
+                await callback(arg);
             }
         }
-
-        #endregion Public Methods
     }
 }
