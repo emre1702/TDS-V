@@ -17,8 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		Server\conf.json = Server\conf.json
 		TDS\DeadCode.ruleset = TDS\DeadCode.ruleset
 		LocalServerSync.sh = LocalServerSync.sh
+		Server\meta.xml = Server\meta.xml
 		scriptmetadata.meta = scriptmetadata.meta
 		ServerSync.sh = ServerSync.sh
 	EndProjectSection
@@ -30,10 +32,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{9BBD6AEC-65B3-487B-A601-033600378583}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{CA8EEB00-F61C-4E60-BC8E-1C031008A505}"
-	ProjectSection(SolutionItems) = preProject
-		Server\conf.json = Server\conf.json
-		Server\meta.xml = Server\meta.xml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{FA035891-A7AB-4B85-A8B2-7139631E3997}"
 EndProject
@@ -52,6 +50,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Data", "Client\Data\TDS_Client.Data.csproj", "{3B39E1D8-F25A-415D-9087-DDA1EB84B2EF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Handler", "Client\Handler\TDS_Client.Handler.csproj", "{AF00FF1E-655B-46A7-B131-7E026057CED8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS_Server.Test", "Server\Test\TDS_Server.Test.csproj", "{682E88FB-AF64-4645-9010-7C1B61F77290}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,6 +195,18 @@ Global
 		{AF00FF1E-655B-46A7-B131-7E026057CED8}.Server|Any CPU.Build.0 = Debug|Any CPU
 		{AF00FF1E-655B-46A7-B131-7E026057CED8}.Server|x64.ActiveCfg = Debug|Any CPU
 		{AF00FF1E-655B-46A7-B131-7E026057CED8}.Server|x64.Build.0 = Debug|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Debug|x64.Build.0 = Debug|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Release|Any CPU.Build.0 = Release|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Release|x64.ActiveCfg = Release|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Release|x64.Build.0 = Release|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Server|Any CPU.ActiveCfg = Release|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Server|Any CPU.Build.0 = Release|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Server|x64.ActiveCfg = Release|Any CPU
+		{682E88FB-AF64-4645-9010-7C1B61F77290}.Server|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -212,6 +224,7 @@ Global
 		{06BD8C09-1138-464C-B0AF-22C0EEC2B92F} = {9BBD6AEC-65B3-487B-A601-033600378583}
 		{3B39E1D8-F25A-415D-9087-DDA1EB84B2EF} = {9BBD6AEC-65B3-487B-A601-033600378583}
 		{AF00FF1E-655B-46A7-B131-7E026057CED8} = {9BBD6AEC-65B3-487B-A601-033600378583}
+		{682E88FB-AF64-4645-9010-7C1B61F77290} = {CA8EEB00-F61C-4E60-BC8E-1C031008A505}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CEB846EC-4F41-4917-84C6-D0332E61A49C}
