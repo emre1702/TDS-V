@@ -1,10 +1,11 @@
-﻿using GTANetworkAPI;
+﻿using System;
+using System.Threading.Tasks;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using TDS_Server.Core.Init.Services;
+using TDS_Server.Core.Init.Services.Creators;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
@@ -25,7 +26,7 @@ namespace TDS_Server.Core.Init
     {
         private ITDSPlayer? _consolePlayerCache;
 
-        private readonly IServiceProvider _serviceProvider;
+        private readonly CustomServiceProvider _serviceProvider;
         private readonly ILoggingHandler _loggingHandler;
         private readonly CommandsHandler _commandsHandler;
 
@@ -38,7 +39,7 @@ namespace TDS_Server.Core.Init
             {
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-                _serviceProvider = Services.InitServiceCollection();
+                _serviceProvider = ServiceProviderCreator.Create();
                 InitFactories();
 
                 using (var dbContext = _serviceProvider.GetRequiredService<TDSDbContext>())
@@ -75,7 +76,7 @@ namespace TDS_Server.Core.Init
                 _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
 
-                Services.InitializeSingletons(_serviceProvider);
+                _serviceProvider.InitAllSingletons();
 
                 Task.Run(ReadInput);
 
