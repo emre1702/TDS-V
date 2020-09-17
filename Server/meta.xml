@@ -1,5 +1,5 @@
-<meta>
-  <info name="TDS-V" description="TDS-V-Gamemode" author="Bonus" type="gamemode" shadowcopy="true" />
+﻿<meta>
+    <info name="TDS-V" description="TDS-V" author="Bonus" type="gamemode" shadowcopy="true" />
 
-  <script src="netcoreapp2.2/TDS_Server.dll" />
+    <script src="netcoreapp3.1/TDS_Server.dll" />
 </meta>
