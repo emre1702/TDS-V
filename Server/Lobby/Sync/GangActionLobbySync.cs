@@ -1,11 +1,12 @@
-﻿using TDS_Server.LobbySystem.EventsHandlers;
+﻿using System;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Sync
 {
     public class GangActionLobbySync : ArenaLobbySync
     {
-        public GangActionLobbySync(LobbyDb entity, BaseLobbyEventsHandler events) : base(entity, events)
+        public GangActionLobbySync(LobbyDb entity, IBaseLobbyEventsHandler events, Func<uint> dimensionProvider) : base(entity, events, dimensionProvider)
         {
         }
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
 using TDS_Server.Handler.Entities;
@@ -47,6 +48,7 @@ namespace TDS_Server.Handler
             eventsHandler.Minute += Save;
             eventsHandler.Error += LogError;
             eventsHandler.ErrorMessage += LogError;
+            eventsHandler.PlayerLeftLobbyNew += EventsHandler_PlayerLeftLobbyNew;
 
             if (_bonusBotConnectorClient.ChannelChat is { })
             {
@@ -350,5 +352,16 @@ namespace TDS_Server.Handler
         }
 
         #endregion Rest
+
+        private void EventsHandler_PlayerLeftLobbyNew(ITDSPlayer player, IBaseLobby lobby)
+        {
+            if (lobby.Type == LobbyType.MainMenu)
+                return;
+
+            if (lobby.IsRemoved)
+                return;
+
+            LoggingHandler?.LogRest(LogType.Lobby_Leave, player, false, lobby.IsOfficial);
+        }
     }
 }

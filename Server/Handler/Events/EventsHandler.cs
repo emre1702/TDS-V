@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Player;
@@ -46,6 +47,8 @@ namespace TDS_Server.Handler.Events
 
         public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
 
+        public delegate void PlayerLobbyDelegateNew(ITDSPlayer player, IBaseLobby lobby);
+
         public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
 
         public event LobbyDelegate? CustomLobbyCreated;
@@ -87,6 +90,8 @@ namespace TDS_Server.Handler.Events
         public event PlayerGangDelegate? PlayerLeftGang;
 
         public event PlayerLobbyDelegate? PlayerLeftLobby;
+
+        public event PlayerLobbyDelegateNew? PlayerLeftLobbyNew;
 
         public event PlayerDelegate? PlayerLoggedIn;
 
@@ -277,6 +282,11 @@ namespace TDS_Server.Handler.Events
         internal void OnLobbyLeave(ITDSPlayer player, ILobby lobby)
         {
             PlayerLeftLobby?.Invoke(player, lobby);
+        }
+
+        public void OnLobbyLeaveNew(ITDSPlayer player, IBaseLobby lobby)
+        {
+            PlayerLeftLobbyNew?.Invoke(player, lobby);
         }
 
         internal void OnMinute()

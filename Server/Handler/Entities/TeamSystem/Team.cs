@@ -88,11 +88,11 @@ namespace TDS_Server.Handler.Entities.TeamSystem
             return _entity.Id == other?.Entity.Id;
         }
 
-        public void FuncIterate(Action<ITDSPlayer, ITeam> func)
+        public void FuncIterate(Action<ITDSPlayer> func)
         {
             foreach (var player in Players)
             {
-                func(player, this);
+                func(player);
             }
         }
 

@@ -21,7 +21,7 @@ namespace TDS_Server.Data.Interfaces
 
         void AddPlayer(ITDSPlayer tdsPlayer);
 
-        void FuncIterate(Action<ITDSPlayer, ITeam> func);
+        void FuncIterate(Action<ITDSPlayer> func);
 
         void RemoveAlivePlayer(ITDSPlayer player);
 

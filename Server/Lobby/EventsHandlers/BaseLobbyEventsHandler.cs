@@ -1,34 +1,37 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Utility;
-using TDS_Server.LobbySystem.Lobbies;
+using TDS_Server.Handler.Events;
+using static TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers.IBaseLobbyEventsHandler;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.EventsHandlers
 {
-    public class BaseLobbyEventsHandler
+    public class BaseLobbyEventsHandler : IBaseLobbyEventsHandler
     {
-        public delegate void LobbyCreatedAfterDelegate(LobbyDb entity);
-
-        public delegate void LobbyDelegate(BaseLobby lobby);
-
-        public delegate void PlayerDelegate(ITDSPlayer player);
-
-        public AsyncTaskEvent<LobbyDb>? LobbyCreated;
+        public AsyncTaskEvent<LobbyDb>? LobbyCreated { get; set; }
 
         public event LobbyCreatedAfterDelegate? LobbyCreatedAfter;
 
-        public AsyncTaskEvent<BaseLobby>? LobbyRemove;
+        public AsyncTaskEvent<IBaseLobby>? LobbyRemove { get; set; }
 
         public event LobbyDelegate? LobbyRemoveAfter;
 
-        public AsyncValueTaskEvent<ITDSPlayer>? PlayerLeftLobby;
+        public AsyncValueTaskEvent<ITDSPlayer>? PlayerLeftLobby { get; set; }
 
         public event PlayerDelegate? PlayerLeftLobbyAfter;
 
         public event PlayerDelegate? PlayerJoinedLobby;
 
-        public bool LobbyRemoved { get; internal set; }
+        public bool IsRemoved { get; private set; }
+
+        private readonly EventsHandler _eventsHandler;
+        private readonly IBaseLobby _lobby;
+
+        public BaseLobbyEventsHandler(EventsHandler eventsHandler, IBaseLobby lobby)
+            => (_eventsHandler, _lobby) = (eventsHandler, lobby);
 
         public async Task TriggerLobbyCreated(LobbyDb entity)
         {
@@ -38,9 +41,9 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             LobbyCreatedAfter?.Invoke(entity);
         }
 
-        public async Task TriggerLobbyRemove(BaseLobby lobby)
+        public async Task TriggerLobbyRemove(IBaseLobby lobby)
         {
-            LobbyRemoved = true;
+            IsRemoved = true;
             var task = LobbyRemove?.InvokeAsync(lobby);
             if (task is { })
                 await task;
@@ -53,6 +56,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             if (task.HasValue)
                 await task.Value;
             PlayerLeftLobbyAfter?.Invoke(player);
+            _eventsHandler.OnLobbyLeaveNew(player, _lobby);
         }
 
         public void TriggerPlayerJoinedLobby(ITDSPlayer player)

@@ -38,7 +38,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             else
             {
-                targetTeam.FuncIterate((player, teamID) =>
+                targetTeam.FuncIterate(player =>
                 {
                     player.SendChatMessage(msg);
                 });
@@ -58,7 +58,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             else
             {
-                targetTeam.FuncIterate((player, teamID) =>
+                targetTeam.FuncIterate(player =>
                 {
                     if (blockingPlayerIds.Contains(player.Entity?.Id ?? 0))
                         return;
@@ -76,7 +76,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     player.SendChatMessage(texts[player.Language]);
                 });
             else
-                targetTeam.FuncIterate((player, team) =>
+                targetTeam.FuncIterate(player =>
                 {
                     player.SendChatMessage(texts[player.Language]);
                 });
@@ -90,7 +90,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                     player.SendChatMessage(texts[player.Language]);
                 });
             else
-                targetTeam.FuncIterate((player, team) =>
+                targetTeam.FuncIterate(player =>
                 {
                     player.SendChatMessage(texts[player.Language]);
                 });
@@ -108,7 +108,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             else
             {
-                targetTeam.FuncIterate((player, teamID) =>
+                targetTeam.FuncIterate(player =>
                 {
                     player.SendNotification(texts[player.Language], flashing);
                 });

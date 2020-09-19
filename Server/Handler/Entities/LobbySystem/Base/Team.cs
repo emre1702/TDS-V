@@ -52,18 +52,18 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public void SendTeamOrder(ITDSPlayer character, TeamOrder teamOrder)
+        public void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder)
         {
             if (!teamOrderDict.ContainsKey(teamOrder))
                 return;
-            if (character.Team is null)
+            if (player.Team is null)
                 return;
 
-            ITeam team = character.Team;
+            ITeam team = player.Team;
             Dictionary<ILanguage, string> texts = LangHelper.GetLangDictionary(teamOrderDict[teamOrder]);
 
-            string str = $"[TEAM] {team.ChatColor}{character.DisplayName}: !$150|0|0$";
-            team.FuncIterate((target, _) =>
+            string str = $"[TEAM] {team.ChatColor}{player.DisplayName}: !$150|0|0$";
+            team.FuncIterate(target =>
             {
                 target.SendChatMessage(str + texts[target.Language]);
             });

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using GTANetworkAPI;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.MapHandlers
 {
-    public class BaseLobbyMapHandler
+    public class BaseLobbyMapHandler : IBaseLobbyEventsHandler
     {
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint>();
 
