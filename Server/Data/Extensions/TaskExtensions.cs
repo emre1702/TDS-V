@@ -8,18 +8,18 @@ namespace TDS_Server.Data.Extensions
         [ThreadStatic]
         public static bool IsMainThread = false;
 
-        public static void Run(this GTANetworkMethods.Task task, Action action)
+        public static void RunCustom(this GTANetworkMethods.Task task, Action action, int delayTime = 0)
         {
             if (IsMainThread)
                 action();
             else
-                task.Run(action);
+                task.Run(action, delayTime);
         }
 
         public static async Task RunWait(this GTANetworkMethods.Task task, Action action)
         {
             var taskCompletionSource = new TaskCompletionSource<bool>();
-            Run(task, () =>
+            RunCustom(task, () =>
             {
                 action();
                 taskCompletionSource.SetResult(true);
@@ -30,7 +30,7 @@ namespace TDS_Server.Data.Extensions
         public static Task<T> RunWait<T>(this GTANetworkMethods.Task task, Func<T> action)
         {
             var taskCompletionSource = new TaskCompletionSource<T>();
-            Run(task, () =>
+            RunCustom(task, () =>
             {
                 var result = action();
                 taskCompletionSource.SetResult(result);

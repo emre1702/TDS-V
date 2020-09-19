@@ -13,17 +13,14 @@ namespace TDS_Server.LobbySystem.Database
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public BaseLobbyDatabase(DatabaseHandler dbHandler, BaseLobbyEventsHandler eventsHandler)
+        public BaseLobbyDatabase(BaseLobby lobby, DatabaseHandler dbHandler, BaseLobbyEventsHandler eventsHandler)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             DbHandler = dbHandler;
 
-            eventsHandler.LobbyCreated += AddCreatedToDatabase;
-        }
-
-        public void SetLobby(BaseLobby lobby)
-        {
             DbHandler.ExecuteForDBWithoutWait(dbContext => dbContext.Attach(lobby.Entity));
+
+            eventsHandler.LobbyCreated += AddCreatedToDatabase;
         }
 
         private async Task AddCreatedToDatabase(LobbyDb entity)
