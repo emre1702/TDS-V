@@ -19,10 +19,10 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly GangwarArea _gangwarArea;
 
-        public GangGangwar(Arena lobby, MapDto map, Serializer serializer, ISettingsHandler settingsHandler, IServiceProvider serviceProvider,
+        public GangGangwar(Arena lobby, MapDto map, ISettingsHandler settingsHandler, IServiceProvider serviceProvider,
             GangwarAreasHandler gangwarAreasHandler, GangsHandler gangsHandler, ILoggingHandler loggingHandler, LangHelper langHelper, InvitationsHandler invitationsHandler,
             BonusBotConnectorClient bonusBotConnectorClient)
-            : base(lobby, map, serializer, settingsHandler, langHelper, invitationsHandler)
+            : base(lobby, map, settingsHandler, langHelper, invitationsHandler)
         {
             _bonusBotConnectorClient = bonusBotConnectorClient;
 

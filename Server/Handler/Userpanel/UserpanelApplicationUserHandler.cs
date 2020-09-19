@@ -74,15 +74,14 @@ namespace TDS_Server.Handler.Userpanel
     {
         private readonly BonusBotConnectorClient _bonusbotConnectorClient;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
-        private readonly Serializer _serializer;
+
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public UserpanelApplicationUserHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
+        public UserpanelApplicationUserHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, ITDSPlayerHandler tdsPlayerHandler,
             OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
         {
-            _serializer = serializer;
             _settingsHandler = settingsHandler;
             _bonusbotConnectorClient = bonusbotConnectorClient;
             _tdsPlayerHandler = tdsPlayerHandler;
@@ -157,7 +156,7 @@ namespace TDS_Server.Handler.Userpanel
         public async Task<object?> CreateApplication(ITDSPlayer player, ArraySegment<object> args)
         {
             string answersJson = (string)args[0];
-            var answers = _serializer.FromBrowser<Dictionary<int, string>>(answersJson);
+            var answers = Serializer.FromBrowser<Dictionary<int, string>>(answersJson);
 
             var application = new Applications
             {
@@ -208,7 +207,7 @@ namespace TDS_Server.Handler.Userpanel
 
             if (application == null)
             {
-                return _serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
+                return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
 
             if (application.CreateTime.AddDays(_settingsHandler.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
@@ -219,7 +218,7 @@ namespace TDS_Server.Handler.Userpanel
                     await dbContext.SaveChangesAsync();
                 });
 
-                return _serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
+                return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
 
             var applicationData = await player.Database.ExecuteForDBAsync(async (dbContext) =>
@@ -242,10 +241,10 @@ namespace TDS_Server.Handler.Userpanel
 
             if (applicationData == default)
             {
-                return _serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
+                return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
 
-            return _serializer.ToBrowser(new ApplicationUserData { CreateTime = player.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
+            return Serializer.ToBrowser(new ApplicationUserData { CreateTime = player.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
         }
 
         public async Task<object?> RejectInvitation(ITDSPlayer player, ArraySegment<object> args)
@@ -326,7 +325,7 @@ namespace TDS_Server.Handler.Userpanel
                 })
             }));
 
-            AdminQuestions = _serializer.ToBrowser(list);
+            AdminQuestions = Serializer.ToBrowser(list);
         }
     }
 }

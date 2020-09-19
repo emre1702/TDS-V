@@ -13,11 +13,11 @@ namespace TDS_Server.Data.Extensions
     {
         #region Public Methods
 
-        public static void CreateJsons(this MapDto map, Serializer serializer)
+        public static void CreateJsons(this MapDto map)
         {
             if (map.BombInfo != null)
-                map.BombInfo.PlantPositionsJson = serializer.ToBrowser(map.BombInfo.PlantPositions);
-            map.LimitInfo.EdgesJson = serializer.ToBrowser(map.LimitInfo.Edges);
+                map.BombInfo.PlantPositionsJson = Serializer.ToBrowser(map.BombInfo.PlantPositions);
+            map.LimitInfo.EdgesJson = Serializer.ToBrowser(map.LimitInfo.Edges);
             map.LoadMapObjectsDataDto();
         }
 

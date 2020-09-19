@@ -10,16 +10,13 @@ namespace TDS_Client.Handler.Browser
 {
     public class BrowserHandlerBase : ServiceBase
     {
-        protected readonly Serializer Serializer;
-
         private readonly LinkedList<Action> _executeList = new LinkedList<Action>();
         private readonly StringBuilder _stringBuilder = new StringBuilder();
         private readonly string _url;
 
-        protected BrowserHandlerBase(LoggingHandler loggingHandler, Serializer serializer, string url)
+        protected BrowserHandlerBase(LoggingHandler loggingHandler, string url)
             : base(loggingHandler)
         {
-            Serializer = serializer;
             _url = url;
         }
 

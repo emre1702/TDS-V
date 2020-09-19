@@ -9,8 +9,8 @@ namespace TDS_Server.Handler.Entities.Gamemodes
     partial class ArmsRace : Gamemode
     {
         public ArmsRace(
-            Arena lobby, MapDto map, Serializer serializer, ISettingsHandler settingsHandler,
+            Arena lobby, MapDto map, ISettingsHandler settingsHandler,
             LangHelper langHelper, InvitationsHandler invitationsHandler)
-            : base(lobby, map, serializer, settingsHandler, langHelper, invitationsHandler) => LoadWeapons();
+            : base(lobby, map, settingsHandler, langHelper, invitationsHandler) => LoadWeapons();
     }
 }

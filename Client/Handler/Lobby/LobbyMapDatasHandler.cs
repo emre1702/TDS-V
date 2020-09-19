@@ -28,20 +28,20 @@ namespace TDS_Client.Handler.Lobby
         private readonly LobbyCamHandler _lobbyCamHandler;
         private readonly MapLimitHandler _mapLimitHandler;
         private readonly List<GameEntityBase> _objects = new List<GameEntityBase>();
-        private readonly Serializer _serializer;
+
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
         private DxText _mapInfo;
 
         public LobbyMapDatasHandler(LoggingHandler loggingHandler, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler,
-            LobbyCamHandler lobbyCamHandler, MapLimitHandler mapLimitHandler, Serializer serializer, SettingsHandler settingsHandler)
+            LobbyCamHandler lobbyCamHandler, MapLimitHandler mapLimitHandler, SettingsHandler settingsHandler)
             : base(loggingHandler)
         {
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
             _lobbyCamHandler = lobbyCamHandler;
             _mapLimitHandler = mapLimitHandler;
-            _serializer = serializer;
+
             _settingsHandler = settingsHandler;
             _eventsHandler = eventsHandler;
 
@@ -170,7 +170,7 @@ namespace TDS_Client.Handler.Lobby
             {
                 if (args.Length > 0)
                 {
-                    var mapData = _serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
+                    var mapData = Serializer.FromServer<ClientSyncedDataDto>((string)args[0]);
                     SetMapData(mapData);
                 }
 

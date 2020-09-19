@@ -8,34 +8,49 @@ namespace TDS_Shared.Data.Models
     {
         [JsonProperty("0")]
         public int Id;
+
         [JsonProperty("1")]
         public string Name;
+
         [JsonProperty("2")]
         public LobbyType Type;
+
         [JsonProperty("3")]
         public bool IsOfficial;
+
         [JsonProperty("4")]
         public int? SpawnAgainAfterDeathMs;
+
         [JsonProperty("5")]
         public int? BombDefuseTimeMs;
+
         [JsonProperty("6")]
         public int? BombPlantTimeMs;
+
         [JsonProperty("7")]
         public int? CountdownTime;
+
         [JsonProperty("8")]
         public int? RoundTime;
+
         [JsonProperty("9")]
         public int? BombDetonateTimeMs;
+
         [JsonProperty("10")]
         public int? MapLimitTime;
+
         [JsonProperty("11")]
         public bool InLobbyWithMaps;
+
         [JsonProperty("12")]
         public MapLimitType? MapLimitType;
+
         [JsonProperty("13")]
         public int StartHealth;
+
         [JsonProperty("14")]
         public int StartArmor;
+
         [JsonProperty("15")]
         public bool IsGangActionLobby;
 
@@ -66,7 +81,7 @@ namespace TDS_Shared.Data.Models
             this.StartArmor = StartArmor;
             this.IsGangActionLobby = IsGangActionLobby;
 
-            this.Json = new Serializer().ToClient(this);
+            this.Json = Serializer.ToClient(this);
         }
     }
 }

@@ -120,7 +120,6 @@ namespace TDS_Server.Handler.Commands
                     _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName),
                         target: target,
                         sender: player,
-                        serializer: _serializer,
                         invitationsHandler: _invitationsHandler,
                         onAccept: async (target, sender, invitation) =>
                         {

@@ -18,7 +18,8 @@ namespace TDS_Server.LobbySystem.Lobbies
         protected override void InitDependencies(LobbyDb entity, BaseLobbyEventsHandler eventsHandler,
             BaseLobbyMapHandler? mapHandler = null, BaseLobbySync? sync = null)
         {
-            base.InitDependencies(entity, eventsHandler, sync: new ArenaLobbySync(entity));
+            base.InitDependencies(entity, eventsHandler,
+                sync: new ArenaLobbySync(entity, eventsHandler));
         }
     }
 }

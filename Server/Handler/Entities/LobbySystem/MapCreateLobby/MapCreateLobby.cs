@@ -22,18 +22,18 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
         private int _lastId;
 
-        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public MapCreateLobby(ITDSPlayer player, TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : this(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
+            : this(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), dbContext, loggingHandler, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler,
                   eventsHandler, bonusBotConnectorClient, bansHandler)
         {
         }
 
-        public MapCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public MapCreateLobby(Lobbies entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : base(entity, false, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
+            : base(entity, false, dbContext, loggingHandler, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
                   bonusBotConnectorClient, bansHandler)
         {
         }

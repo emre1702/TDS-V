@@ -7,10 +7,6 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowMainMenuHandler
     {
-        private readonly Serializer _serializer;
-
-        public GangWindowMainMenuHandler(Serializer serializer) => _serializer = serializer;
-
         public string? GetMainData(ITDSPlayer player)
         {
             if (!player.IsInGang || player.GangRank is null)
@@ -37,7 +33,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                 HighestRank = gangEntity.Ranks.Max(r => r.Rank)
             };
 
-            return _serializer.ToBrowser(data);
+            return Serializer.ToBrowser(data);
         }
     }
 }

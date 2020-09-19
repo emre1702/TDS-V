@@ -18,13 +18,9 @@ namespace TDS_Server.Handler.Maps
 {
     public class MapFavouritesHandler : DatabaseEntityWrapper
     {
-        private readonly Serializer _serializer;
-
-        public MapFavouritesHandler(EventsHandler eventsHandler, Serializer serializer, TDSDbContext dbContext, ILoggingHandler loggingHandler)
+        public MapFavouritesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
-            _serializer = serializer;
-
             eventsHandler.PlayerLoggedIn += LoadPlayerFavourites;
         }
 
@@ -38,7 +34,7 @@ namespace TDS_Server.Handler.Maps
                     .Where(m => m.PlayerId == player.Entity.Id)
                     .Select(m => m.MapId)
                     .ToListAsync());
-            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, _serializer.ToBrowser(mapIDs)));
+            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, Serializer.ToBrowser(mapIDs)));
         }
 
         public async Task<object?> ToggleMapFavouriteState(ITDSPlayer player, ArraySegment<object> args)

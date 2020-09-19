@@ -31,15 +31,14 @@ namespace TDS_Server.Handler.Maps
     public class MapCreatorHandler : DatabaseEntityWrapper
     {
         private readonly MapsLoadingHandler _mapsLoadingHandler;
-        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private readonly XmlHelper _xmlHelper;
 
-        public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
+        public MapCreatorHandler(MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
-            (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
+            (_mapsLoadingHandler, _xmlHelper, _settingsHandler) = (mapsLoadingHandler, xmlHelper, settingsHandler);
             NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
         }
 
@@ -255,7 +254,7 @@ namespace TDS_Server.Handler.Maps
                 });
             }
 
-            return _serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
+            return Serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
         }
 
         public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
@@ -290,7 +289,7 @@ namespace TDS_Server.Handler.Maps
                 MapCreateDataDto mapCreateData;
                 try
                 {
-                    mapCreateData = _serializer.FromBrowser<MapCreateDataDto>(mapJson);
+                    mapCreateData = Serializer.FromBrowser<MapCreateDataDto>(mapJson);
                     if (mapCreateData is null)
                         return (null, MapCreateError.CouldNotDeserialize);
                 }
@@ -305,7 +304,7 @@ namespace TDS_Server.Handler.Maps
                 //foreach (var bombPlace in mapCreateData.BombPlaces)
                 //    bombPlace.PosZ -= 1;
 
-                var mapDto = new MapDto(mapCreateData, _serializer);
+                var mapDto = new MapDto(mapCreateData);
                 mapDto.Info.IsNewMap = true;
                 mapDto.Info.CreatorId = creator.Entity.Id;
 

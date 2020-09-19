@@ -49,10 +49,9 @@ namespace TDS_Client.Handler.Draw
         private readonly TimerHandler _timerHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly BindsHandler _bindsHandler;
-        private readonly Serializer _serializer;
 
         public ScoreboardHandler(LoggingHandler loggingHandler, DxHandler dxHandler, SettingsHandler settingsHandler, LobbyHandler lobbyHandler,
-            TimerHandler timerHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, BindsHandler bindsHandler, Serializer serializer)
+            TimerHandler timerHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, BindsHandler bindsHandler)
             : base(loggingHandler)
         {
             _dxHandler = dxHandler;
@@ -61,7 +60,6 @@ namespace TDS_Client.Handler.Draw
             _timerHandler = timerHandler;
             _remoteEventsSender = remoteEventsSender;
             _bindsHandler = bindsHandler;
-            _serializer = serializer;
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
             eventsHandler.LanguageChanged += (lang, _) => LoadLanguage(lang);
@@ -285,14 +283,14 @@ namespace TDS_Client.Handler.Draw
             bool inmainmenu = args.Length == 1;
             if (inmainmenu)
             {
-                var list = _serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[0]);
+                var list = Serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[0]);
                 ClearRows();
                 AddMainmenuData(list);
             }
             else
             {
-                var playerlist = _serializer.FromServer<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
-                var lobbylist = _serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
+                var playerlist = Serializer.FromServer<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
+                var lobbylist = Serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
                 ClearRows();
                 AddLobbyData(playerlist, lobbylist);
             }

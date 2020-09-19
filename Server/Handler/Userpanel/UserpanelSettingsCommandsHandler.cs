@@ -19,28 +19,16 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelSettingsCommandsHandler : DatabaseEntityWrapper, IUserpanelPlayerCommandsHandler
     {
-        #region Private Fields
-
-        private readonly Serializer _serializer;
         private readonly UserpanelCommandsHandler _userpanelCommandsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public UserpanelSettingsCommandsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, UserpanelCommandsHandler userpanelCommandsHandler,
-            Serializer serializer, EventsHandler eventsHandler)
+            EventsHandler eventsHandler)
             : base(dbContext, loggingHandler)
         {
             _userpanelCommandsHandler = userpanelCommandsHandler;
-            _serializer = serializer;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public async Task<UserpanelPlayerCommandData?> GetData(ITDSPlayer player)
         {
@@ -84,7 +72,7 @@ namespace TDS_Server.Handler.Userpanel
         {
             string datasJson = (string)args[0];
 
-            var datas = _serializer.FromBrowser<List<UserpanelPlayerConfiguredCommandData>>(datasJson);
+            var datas = Serializer.FromBrowser<List<UserpanelPlayerConfiguredCommandData>>(datasJson);
             if (datas.Count == 0)
                 return null;
 
@@ -122,24 +110,18 @@ namespace TDS_Server.Handler.Userpanel
             });
 
             var newData = await GetData(player);
-            player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, _serializer.ToClient(newData));
+            player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, Serializer.ToClient(newData));
 
             return null;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             var data = await GetData(player);
             NAPI.Task.Run(() =>
             {
-                player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, _serializer.ToClient(data));
+                player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, Serializer.ToClient(data));
             });
         }
-
-        #endregion Private Methods
     }
 }

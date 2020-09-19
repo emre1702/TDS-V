@@ -150,8 +150,7 @@ namespace TDS_Server.Core.Init.Services.Creators
                .AddSingleton<ChatInfosHandler>()
                .AddSingleton<WeaponLevelHandler>()
                .AddTransient<DatabaseHandler>()
-               .AddSingleton<WorkaroundsHandler>()
-               .AddSingleton<Serializer>();
+               .AddSingleton<WorkaroundsHandler>();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
 
             _gangwarArea?.Attacker!.FuncIterate(player =>
             {
-                _ = new Invitation(player.Language.GANGWAR_ATTACK_INVITATION, player, null, Serializer, InvitationsHandler, onAccept: AcceptAttackInvitation)
+                _ = new Invitation(player.Language.GANGWAR_ATTACK_INVITATION, player, null, InvitationsHandler, onAccept: AcceptAttackInvitation)
                 {
                     RemoveOnLobbyLeave = true
                 };
@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
             _gangwarArea?.Owner!.SendMessage(lang => string.Format(lang.GANGWAR_OWNER_STARTED_INFO, _gangwarArea.Map.BrowserSyncedData.Name, AttackerTeam.Entity.Name));
             _gangwarArea?.Owner!.FuncIterate(player =>
             {
-                _ = new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, Serializer, InvitationsHandler, onAccept: AcceptDefendInvitation)
+                _ = new Invitation(player.Language.GANGWAR_DEFEND_INVITATION, player, null, InvitationsHandler, onAccept: AcceptDefendInvitation)
                 {
                     RemoveOnLobbyLeave = true
                 };
@@ -62,7 +62,7 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
 
             _gangwarArea?.Attacker.FuncIterate(player =>
             {
-                _ = new Invitation(player.Language.GANGWAR_ATTACK_PREPARATION_INVITATION, player, null, Serializer, InvitationsHandler, onAccept: AcceptAttackPreparationInvitation)
+                _ = new Invitation(player.Language.GANGWAR_ATTACK_PREPARATION_INVITATION, player, null, InvitationsHandler, onAccept: AcceptAttackPreparationInvitation)
                 {
                     RemoveOnLobbyLeave = true
                 };

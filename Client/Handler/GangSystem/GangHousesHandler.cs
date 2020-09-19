@@ -17,16 +17,14 @@ namespace TDS_Client.Handler.GangSystem
 
         private readonly List<ITDSBlip> _blips = new List<ITDSBlip>();
 
-        private readonly Serializer _serializer;
         private readonly SettingsHandler _settingsHandler;
 
         #endregion Private Fields
 
-        public GangHousesHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler, Serializer serializer)
+        public GangHousesHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler)
             : base(loggingHandler)
         {
             _settingsHandler = settingsHandler;
-            _serializer = serializer;
 
             eventsHandler.LobbyLeft += LobbyLeft;
 
@@ -37,7 +35,7 @@ namespace TDS_Client.Handler.GangSystem
         private void CreateFreeGangHousesForLevel(object[] args)
         {
             string json = (string)args[0];
-            var gangHouseBlipDatas = _serializer.FromServer<List<GangHouseClientsideData>>(json);
+            var gangHouseBlipDatas = Serializer.FromServer<List<GangHouseClientsideData>>(json);
 
             foreach (var blipData in gangHouseBlipDatas)
             {

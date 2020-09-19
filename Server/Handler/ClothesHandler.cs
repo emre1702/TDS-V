@@ -16,8 +16,6 @@ namespace TDS_Server.Handler
 {
     public class ClothesHandler
     {
-        #region Private Fields
-
         private readonly List<GenderOutfits> _femaleOutfits = new List<GenderOutfits>();
 
         private readonly ILoggingHandler _loggingHandler;
@@ -25,20 +23,14 @@ namespace TDS_Server.Handler
         // https://rage.mp/files/file/50-gtao-outfits/
         private readonly List<GenderOutfits> _maleOutfits = new List<GenderOutfits>();
 
-        private readonly Serializer _serializer;
         private List<PropertyInfo>? _drawableProperties;
         private List<PropertyInfo>? _propIndexProperties;
         private List<PropertyInfo>? _propTextureProperties;
         private List<PropertyInfo>? _textureProperties;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public ClothesHandler(ILoggingHandler loggingHandler, Serializer serializer, EventsHandler eventsHandler)
+        public ClothesHandler(ILoggingHandler loggingHandler, EventsHandler eventsHandler)
         {
             _loggingHandler = loggingHandler;
-            _serializer = serializer;
 
             if (!File.Exists("scriptmetadata.meta"))
             {
@@ -51,10 +43,6 @@ namespace TDS_Server.Handler
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
-
-        #endregion Public Constructors
-
-        #region Private Methods
 
         private bool DoesCacheExist()
         {
@@ -106,8 +94,8 @@ namespace TDS_Server.Handler
             ProcessItems(clothesData.Outfits.OutfitsDataFemale.OutfitsData.Items, _femaleOutfits);
 
             Directory.CreateDirectory("cache");
-            File.WriteAllText("cache/maleClothes.json", _serializer.ToClient(_maleOutfits));
-            File.WriteAllText("cache/femaleClothes.json", _serializer.ToClient(_femaleOutfits));
+            File.WriteAllText("cache/maleClothes.json", Serializer.ToClient(_maleOutfits));
+            File.WriteAllText("cache/femaleClothes.json", Serializer.ToClient(_femaleOutfits));
 
             var fileSize = metaFileInfo.Length;
             File.WriteAllText("cache/clothesSizeCache.json", fileSize.ToString());
@@ -168,33 +156,19 @@ namespace TDS_Server.Handler
             }
         }
 
-        #endregion Private Methods
-
 #nullable disable
-
-        #region Private Classes
 
         private class GenderOutfits
         {
-            #region Public Fields
-
             public List<OutfitData> Components;
             public List<OutfitData> Props;
-
-            #endregion Public Fields
         }
 
         private class OutfitData
         {
-            #region Public Fields
-
             public int Drawable;
             public int Texture;
-
-            #endregion Public Fields
         }
-
-        #endregion Private Classes
 
 #nullable restore
     }

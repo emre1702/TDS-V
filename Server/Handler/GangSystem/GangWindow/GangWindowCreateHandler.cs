@@ -25,17 +25,15 @@ namespace TDS_Server.Handler.GangSystem
 {
     public class GangWindowCreateHandler : DatabaseEntityWrapper
     {
-        private readonly Serializer _serializer;
         private readonly IServiceProvider _serviceProvider;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly EventsHandler _eventsHandler;
 
-        public GangWindowCreateHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, IServiceProvider serviceProvider,
+        public GangWindowCreateHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler)
             : base(dbContext, loggingHandler)
         {
-            _serializer = serializer;
             _serviceProvider = serviceProvider;
             _dataSyncHandler = dataSyncHandler;
             _lobbiesHandler = lobbiesHandler;
@@ -47,7 +45,7 @@ namespace TDS_Server.Handler.GangSystem
             if (player.Entity is null)
                 return "";
 
-            var gangCreateData = _serializer.FromBrowser<GangCreateData>(json);
+            var gangCreateData = Serializer.FromBrowser<GangCreateData>(json);
 
             var gangEntity = GetGangEntity(gangCreateData, player, _lobbiesHandler.GangLobby);
             await ExecuteForDBAsync(async dbContext =>

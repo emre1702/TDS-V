@@ -55,8 +55,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract ITDSPlayer? LastHitter { get; set; }
         public abstract DateTime? LastKillAt { get; set; }
         public abstract WeaponHash LastWeaponOnHand { get; set; }
-        public abstract short Lifes { get; set; }
-        public abstract ILobby? Lobby { get; set; }
+        public short Lifes { get; set; } = 0;
+        public ILobby? Lobby { get; set; }
         public abstract PlayerLobbyStats? LobbyStats { get; set; }
         public abstract bool LoggedIn { get; }
         public abstract int Money { get; set; }
@@ -66,8 +66,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public ushort RemoteId => Handle.Value;
         public abstract ITDSPlayer? SentPrivateChatRequestTo { get; set; }
         public abstract short ShortTimeKillingSpree { get; }
-        public abstract ITDSPlayer? Spectates { get; set; }
-        public abstract HashSet<ITDSPlayer> Spectators { get; }
+        public ITDSPlayer? Spectates { get; set; }
         public abstract ITeam? Team { get; }
         public abstract int TeamIndex { get; }
         public abstract PlayerTotalStats? TotalStats { get; }
@@ -88,6 +87,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract void AddHPArmor(int healtharmor);
 
         public abstract void AddToChallenge(ChallengeType challengeType, int amount = 1, bool setTheValue = false);
+
+        public abstract void AddSpectator(ITDSPlayer spectator);
 
         public abstract void AddWeaponShot(WeaponHash weaponHash, PedBodyPart? pedBodyPart, int? damage, bool killed);
 
@@ -117,11 +118,15 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public abstract PlayerRelation GetRelationTo(ITDSPlayer target);
 
+        public abstract List<ITDSPlayer> GetSpectators();
+
         public abstract void GiveMoney(uint money);
 
         public abstract void GiveMoney(int money);
 
         public abstract bool HasRelationTo(ITDSPlayer target, PlayerRelation block);
+
+        public abstract bool HasSpectators();
 
         public abstract void InitChallengesDict();
 
@@ -130,6 +135,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract void OnPlayerWeaponSwitch(WeaponHash previousWeapon, WeaponHash newWeapon);
 
         public abstract void RemovePlayerFromOnlineFriend(ITDSPlayer otherPlayer, bool outputInfo = true);
+
+        public abstract void RemoveSpectator(ITDSPlayer spectator);
 
         public abstract void ResetVoiceToAndFrom();
 
@@ -150,6 +157,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract void SetInvincible(bool toggle);
 
         public abstract void SetInvisible(bool toggle);
+
+        public abstract void SetSpectates(ITDSPlayer? target);
 
         public abstract Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats);
 

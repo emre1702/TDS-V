@@ -13,8 +13,6 @@ namespace TDS_Server.Data.Interfaces
 
     public interface ILobby : IDatabaseEntityWrapper, IEquatable<ILobby>
     {
-        #region Public Properties
-
         uint Dimension { get; }
         Lobbies Entity { get; }
         int Id { get; }
@@ -27,10 +25,6 @@ namespace TDS_Server.Data.Interfaces
         int StartTotalHP { get; }
         List<ITeam> Teams { get; set; }
         LobbyType Type { get; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         Task<bool> AddPlayer(ITDSPlayer iTDSPlayer, uint? teamIndex);
 
@@ -73,7 +67,5 @@ namespace TDS_Server.Data.Interfaces
         void UnbanPlayer(ITDSPlayer player, Players dbTarget, string reason);
 
         void TriggerEvent(string eventName, params object[] args);
-
-        #endregion Public Methods
     }
 }

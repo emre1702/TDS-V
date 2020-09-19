@@ -16,20 +16,20 @@ namespace TDS_Client.Handler
         private readonly BrowserHandler _browserHandler;
         private readonly CursorHandler _cursorHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly Serializer _serializer;
+
         private readonly SettingsHandler _settingsHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
         private bool _open;
 
         public UserpanelHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, CursorHandler cursorHandler, SettingsHandler settingsHandler,
-            RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler)
+            RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler)
             : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _cursorHandler = cursorHandler;
             _settingsHandler = settingsHandler;
             _remoteEventsSender = remoteEventsSender;
-            _serializer = serializer;
+
             _bindsHandler = bindsHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
 
@@ -74,11 +74,11 @@ namespace TDS_Client.Handler
             switch (type)
             {
                 case UserpanelLoadDataType.SettingsNormal:
-                    _browserHandler.Angular.LoadUserpanelData((int)type, _serializer.ToBrowser(_settingsHandler.PlayerSettings));
+                    _browserHandler.Angular.LoadUserpanelData((int)type, Serializer.ToBrowser(_settingsHandler.PlayerSettings));
                     break;
 
                 case UserpanelLoadDataType.SettingsCommands:
-                    _browserHandler.Angular.LoadUserpanelData((int)type, _serializer.ToBrowser(_settingsHandler.CommandsData));
+                    _browserHandler.Angular.LoadUserpanelData((int)type, Serializer.ToBrowser(_settingsHandler.CommandsData));
                     break;
 
                 default:

@@ -1,26 +1,42 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 
 namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 {
     partial class TDSPlayer
     {
-        private ITDSPlayer? _spectates;
+        private readonly HashSet<ITDSPlayer> _spectators = new HashSet<ITDSPlayer>();
 
-        #region Public Properties
-
-        public override ITDSPlayer? Spectates
+        public override void SetSpectates(ITDSPlayer? target)
         {
-            get => _spectates;
-            set
-            {
-                _spectateHandler.SetPlayerToSpectatePlayer(this, value);
-                _spectates = value;
-            }
+            _spectateHandler.SetPlayerToSpectatePlayer(this, target);
+            Spectates = target;
         }
 
-        public override HashSet<ITDSPlayer> Spectators { get; } = new HashSet<ITDSPlayer>();
+        public override void AddSpectator(ITDSPlayer spectator)
+        {
+            lock (_spectators)
+                _spectators.Add(spectator);
+        }
 
-        #endregion Public Properties
+        public override void RemoveSpectator(ITDSPlayer spectator)
+        {
+            lock (_spectators)
+                _spectators.Remove(spectator);
+        }
+
+        public override bool HasSpectators()
+        {
+            lock (_spectators)
+                return _spectators.Any();
+        }
+
+        public override List<ITDSPlayer> GetSpectators()
+        {
+            lock (_spectators)
+                return _spectators.ToList();
+        }
     }
 }

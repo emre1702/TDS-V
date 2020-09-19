@@ -21,17 +21,15 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
         protected readonly MapDto Map;
 
-        protected readonly Serializer Serializer;
-
         protected readonly ISettingsHandler SettingsHandler;
 
         private static HashSet<WeaponHash> _allowedWeaponHashes = new HashSet<WeaponHash>();
 
-        protected Gamemode(Arena lobby, MapDto map, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
+        protected Gamemode(Arena lobby, MapDto map, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
         {
             Lobby = lobby;
             Map = map;
-            Serializer = serializer;
+
             SettingsHandler = settingsHandler;
             LangHelper = langHelper;
             InvitationsHandler = invitationsHandler;

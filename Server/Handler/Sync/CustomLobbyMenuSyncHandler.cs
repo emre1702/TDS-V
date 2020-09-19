@@ -16,11 +16,8 @@ namespace TDS_Server.Handler.Sync
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly List<ITDSPlayer> _playersInCustomLobbyMenu = new List<ITDSPlayer>();
 
-        private readonly Serializer _serializer;
-
-        public CustomLobbyMenuSyncHandler(EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler)
+        public CustomLobbyMenuSyncHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler)
         {
-            _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
 
             eventsHandler.PlayerLoggedOut += RemovePlayer;
@@ -37,7 +34,7 @@ namespace TDS_Server.Handler.Sync
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
 
-            player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, _serializer.ToBrowser(lobbyDatas));
+            player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, Serializer.ToBrowser(lobbyDatas));
         }
 
         public bool IsPlayerInCustomLobbyMenu(ITDSPlayer player)
@@ -55,7 +52,7 @@ namespace TDS_Server.Handler.Sync
             if (lobby.IsOfficial || lobby.Entity.Type == LobbyType.MapCreateLobby)
                 return;
 
-            string json = _serializer.ToBrowser(GetCustomLobbyData(lobby));
+            string json = Serializer.ToBrowser(GetCustomLobbyData(lobby));
             for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
             {
                 ITDSPlayer player = _playersInCustomLobbyMenu[i];

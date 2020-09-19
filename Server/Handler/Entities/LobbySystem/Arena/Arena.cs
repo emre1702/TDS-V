@@ -24,11 +24,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
         private readonly IServiceProvider _serviceProvider;
         private bool _dontRemove;
 
-        public Arena(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public Arena(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
             IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
+            : base(entity, isGangActionLobby, dbContext, loggingHandler, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
                   weaponDatasLoadingHandler, bonusBotConnectorClient, bansHandler)
         {
             _serviceProvider = serviceProvider;
@@ -51,11 +51,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
+        public Arena(Lobbies entity, GangwarArea gangwarArea, bool removeAfterOneRound, TDSDbContext dbContext, ILoggingHandler loggingHandler,
             LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, MapsLoadingHandler mapsLoadingHandler,
             EventsHandler eventsHandler, IServiceProvider serviceProvider, ServerStatsHandler serverStatsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : this(entity, true, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, mapsLoadingHandler, eventsHandler,
+            : this(entity, true, dbContext, loggingHandler, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, mapsLoadingHandler, eventsHandler,
                   serviceProvider, serverStatsHandler, weaponDatasLoadingHandler, bonusBotConnectorClient, bansHandler)
         {
             IsGangActionLobby = true;

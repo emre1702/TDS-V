@@ -18,9 +18,9 @@ namespace TDS_Client.Handler.Browser
     {
         private readonly EventsHandler _eventsHandler;
 
-        public AngularBrowserHandler(LoggingHandler loggingHandler, Serializer serializer,
+        public AngularBrowserHandler(LoggingHandler loggingHandler,
             EventsHandler eventsHandler)
-            : base(loggingHandler, serializer, Constants.AngularMainBrowserPath)
+            : base(loggingHandler, Constants.AngularMainBrowserPath)
         {
             _eventsHandler = eventsHandler;
 

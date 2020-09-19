@@ -10,10 +10,8 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
     {
         public override RoundStatsDto? CurrentRoundStats { get; set; }
         public override bool IsLobbyOwner => Lobby?.IsPlayerLobbyOwner(this) ?? false;
-        public override ILobby? Lobby { get; set; }
         public override PlayerLobbyStats? LobbyStats { get; set; }
         public override ILobby? PreviousLobby { get; set; }
-
 
         public override async Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats)
         {

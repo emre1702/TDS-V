@@ -30,12 +30,8 @@ namespace TDS_Server.Handler.Sync
         private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerHandleDatasPlayer
             = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
 
-        private readonly Serializer _serializer;
-
-        public DataSyncHandler(EventsHandler eventsHandler, Serializer serializer)
+        public DataSyncHandler(EventsHandler eventsHandler)
         {
-            _serializer = serializer;
-
             eventsHandler.PlayerLoggedIn += SyncPlayerAllData;
             eventsHandler.PlayerJoinedLobby += SyncPlayerLobbyData;
 
@@ -162,17 +158,17 @@ namespace TDS_Server.Handler.Sync
 
         private void SyncPlayerAllData(ITDSPlayer player)
         {
-            player.TriggerEvent(ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasAll));
-            player.TriggerEvent(ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasAll));
+            player.TriggerEvent(ToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasAll));
+            player.TriggerEvent(ToClientEvent.SyncEntityData, Serializer.ToClient(_entityHandleDatasAll));
         }
 
         private void SyncPlayerLobbyData(ITDSPlayer player, ILobby lobby)
         {
             if (_playerHandleDatasLobby.ContainsKey(lobby.Id))
-                player.TriggerEvent(ToClientEvent.SyncPlayerData, _serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
+                player.TriggerEvent(ToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
 
             if (_entityHandleDatasLobby.ContainsKey(lobby.Id))
-                player.TriggerEvent(ToClientEvent.SyncEntityData, _serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
+                player.TriggerEvent(ToClientEvent.SyncEntityData, Serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
         }
     }
 }

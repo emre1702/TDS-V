@@ -26,7 +26,7 @@ using MapType = TDS_Server.Data.Enums.MapType;
 namespace TDS_Server.Handler
 {
     //Todo: Add team check for special gamemodes (e.g. ArmsRace allow only 1 team)
-    public class LobbiesHandler : DatabaseEntityWrapper
+    public class LobbiesHandlerNew : DatabaseEntityWrapper
     {
         public readonly Dictionary<int, ILobby> LobbiesByIndex = new Dictionary<int, ILobby>();
 
@@ -42,7 +42,7 @@ namespace TDS_Server.Handler
         private ILobby? _mainMenu;
         private MapCreateLobby? _mapCreateLobby;
 
-        public LobbiesHandler(
+        public LobbiesHandlerNew(
             TDSDbContext dbContext,
             ISettingsHandler settingsHandler,
             MapsLoadingHandler mapsHandler,
@@ -204,14 +204,6 @@ namespace TDS_Server.Handler
                 _ => Deathmatch.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
             };
 
-        public uint GetFreeDimension()
-        {
-            uint tryid = 0;
-            while (_dimensionsUsed.Contains(tryid))
-                ++tryid;
-            return tryid;
-        }
-
         public ILobby? GetLobby(int id)
         {
             LobbiesByIndex.TryGetValue(id, out ILobby? lobby);
@@ -302,6 +294,7 @@ namespace TDS_Server.Handler
                     AddMapsToArena(arena, lobbysetting);
                 }
                 _eventsHandler.OnLobbyCreated(lobby);
+                //lobby.Events.LobbyRemoveAfter += RemoveLobby;
             }
 
             _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
@@ -383,8 +376,9 @@ namespace TDS_Server.Handler
             Lobbies.Remove(lobby);
             _dimensionsUsed.Remove(lobby.Dimension);
 
-            if (!lobby.IsOfficial)
-                _eventsHandler.OnCustomLobbyRemoved(lobby);
+            //Todo: How to do that? Put it in Lobby? check it on event handlers?
+            //if (!lobby.IsOfficial)
+            //    _eventsHandler.OnCustomLobbyRemoved(lobby);
         }
 
         public async Task SaveAll()

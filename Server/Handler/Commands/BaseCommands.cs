@@ -18,13 +18,12 @@ namespace TDS_Server.Handler.Commands
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private readonly GangLevelsHandler _gangLevelsHandler;
         private readonly GangHousesHandler _gangHousesHandler;
 
         public BaseCommands(CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler, ChatHandler chatHandler,
-            ISettingsHandler settingsHandler, Serializer serializer, InvitationsHandler invitationsHandler, ILoggingHandler loggingHandler, LangHelper langHelper,
+            ISettingsHandler settingsHandler, InvitationsHandler invitationsHandler, ILoggingHandler loggingHandler, LangHelper langHelper,
             DatabasePlayerHelper databasePlayerHelper, BansHandler bansHandler, DataSyncHandler dataSyncHandler, GangLevelsHandler gangLevelsHandler,
             GangHousesHandler gangHousesHandler)
         {
@@ -32,7 +31,7 @@ namespace TDS_Server.Handler.Commands
             _lobbiesHandler = lobbiesHandler;
             _chatHandler = chatHandler;
             _settingsHandler = settingsHandler;
-            _serializer = serializer;
+
             _invitationsHandler = invitationsHandler;
             _loggingHandler = loggingHandler;
             _langHelper = langHelper;

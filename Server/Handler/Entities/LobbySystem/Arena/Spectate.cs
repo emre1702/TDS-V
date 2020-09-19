@@ -46,9 +46,9 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 _removeSpectatorsTimer.Remove(player);
             player.Team?.SpectateablePlayers?.Remove(player);
 
-            if (player.Spectators.Any())
+            if (player.HasSpectators())
             {
-                foreach (ITDSPlayer spectator in player.Spectators.ToList())  // ToList because the list gets changed in both methods
+                foreach (ITDSPlayer spectator in player.GetSpectators())  // ToList because the list gets changed in both methods
                 {
                     SpectateNext(spectator, true);
                 }

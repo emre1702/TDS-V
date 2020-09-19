@@ -18,8 +18,6 @@ namespace TDS_Server.Handler.Userpanel
 
     public class PlayerUserpanelAdminTargetHistoryDataDto
     {
-        #region Public Properties
-
         [JsonProperty("0")]
         public string Admin { get; internal set; }
 
@@ -55,14 +53,10 @@ namespace TDS_Server.Handler.Userpanel
 
         [JsonProperty("2")]
         public string Type { get; internal set; }
-
-        #endregion Public Properties
     }
 
     public class PlayerUserpanelGeneralStatsDataDto
     {
-        #region Public Properties
-
         [JsonProperty("4")]
         public short AdminLvl { get; internal set; }
 
@@ -131,14 +125,10 @@ namespace TDS_Server.Handler.Userpanel
 
         [JsonProperty("11")]
         public int? VoiceMuteTime { get; internal set; }
-
-        #endregion Public Properties
     }
 
     public class PlayerUserpanelLobbyStats
     {
-        #region Public Constructors
-
         public PlayerUserpanelLobbyStats(PlayerLobbyStats stats)
         {
             Lobby = stats.Lobby.Name;
@@ -158,10 +148,6 @@ namespace TDS_Server.Handler.Userpanel
             MostDamageInARound = stats.MostDamageInARound;
             MostAssistsInARound = stats.MostAssistsInARound;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         [JsonProperty("2")]
         public int Assists { get; set; }
@@ -204,29 +190,16 @@ namespace TDS_Server.Handler.Userpanel
 
         [JsonProperty("9")]
         public int TotalRounds { get; set; }
-
-        #endregion Public Properties
     }
 
 #nullable restore
 
     public class UserpanelPlayerGeneralStatsHandler : DatabaseEntityWrapper
     {
-        #region Private Fields
-
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly Serializer _serializer;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public UserpanelPlayerGeneralStatsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler)
-            => (_serializer, _lobbiesHandler) = (serializer, lobbiesHandler);
-
-        #endregion Public Constructors
-
-        #region Public Methods
+        public UserpanelPlayerGeneralStatsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler)
+            => (_lobbiesHandler) = (lobbiesHandler);
 
         public async Task<string?> GetData(ITDSPlayer player)
         {
@@ -235,7 +208,7 @@ namespace TDS_Server.Handler.Userpanel
                 if (player.Entity is null)
                     return null;
                 var stats = await GetPlayerGeneralStats(player.Entity.Id, true, player);
-                return _serializer.ToBrowser(stats);
+                return Serializer.ToBrowser(stats);
             }
             catch (Exception ex)
             {
@@ -347,7 +320,5 @@ namespace TDS_Server.Handler.Userpanel
 
             return data;
         }
-
-        #endregion Public Methods
     }
 }

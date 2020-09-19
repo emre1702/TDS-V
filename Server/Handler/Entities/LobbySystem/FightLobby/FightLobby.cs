@@ -15,10 +15,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
     {
         public readonly Damagesys DmgSys;
 
-        public FightLobby(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public FightLobby(Lobbies entity, bool isGangActionLobby, TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler)
-            : base(entity, isGangActionLobby, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper,
+            : base(entity, isGangActionLobby, dbContext, loggingHandler, lobbiesHandler, settingsHandler, langHelper,
                   dataSyncHandler, eventsHandler, bonusBotConnectorClient, bansHandler)
         {
             AmountLifes = Entity.FightSettings?.AmountLifes ?? 0;

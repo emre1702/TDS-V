@@ -5,6 +5,7 @@ using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Default;
@@ -13,13 +14,7 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class MapCreateLobby
     {
-        #region Private Fields
-
         private Dictionary<int, MapCreatorPosition> _posById = new Dictionary<int, MapCreatorPosition>();
-
-        #endregion Private Fields
-
-        #region Public Methods
 
         public void SyncCurrentMapToPlayer(string json, int tdsPlayerId, int lastId)
         {
@@ -134,10 +129,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private List<MapCreatorPosition>? GetListInCurrentMapForMapType(MapCreatorPositionType type, object? info)
         {
             switch (type)
@@ -173,7 +164,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             return null;
         }
-
-        #endregion Private Methods
     }
 }

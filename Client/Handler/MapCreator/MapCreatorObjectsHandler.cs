@@ -35,17 +35,14 @@ namespace TDS_Client.Handler.MapCreator
         //private readonly EventMethodData<EntityStreamOutDelegate> _entityStreamOutEventMethod;
         private readonly LobbyHandler _lobbyHandler;
 
-        private readonly Serializer _serializer;
-
         public MapCreatorObjectsHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, LobbyHandler lobbyHandler,
-            EventsHandler eventsHandler, BrowserHandler browserHandler, Serializer serializer)
+            EventsHandler eventsHandler, BrowserHandler browserHandler)
             : base(loggingHandler)
         {
             _camerasHandler = camerasHandler;
             _lobbyHandler = lobbyHandler;
             _eventsHandler = eventsHandler;
             _browserHandler = browserHandler;
-            _serializer = serializer;
 
             //_entityStreamOutEventMethod = new EventMethodData<EntityStreamOutDelegate>(OnEntityStreamOut);
 
@@ -443,7 +440,7 @@ namespace TDS_Client.Handler.MapCreator
             _browserHandler.Angular.LoadMapForMapCreator(json);
 
             int lastId = (int)args[1];
-            var mapCreatorData = _serializer.FromServer<MapCreateDataDto>(json);
+            var mapCreatorData = Serializer.FromServer<MapCreateDataDto>(json);
             LoadMap(mapCreatorData, lastId);
         }
 

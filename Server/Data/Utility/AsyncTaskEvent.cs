@@ -17,7 +17,7 @@ namespace TDS_Server.Data.Utility
             _locker = new object();
         }
 
-        public static AsyncTaskEvent<T> operator -(
+        public static AsyncTaskEvent<T>? operator -(
             AsyncTaskEvent<T> e, Func<T, Task> callback)
         {
             if (callback == null) throw new NullReferenceException("callback is null");

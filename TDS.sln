@@ -51,9 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Data", "Client\D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Handler", "Client\Handler\TDS_Client.Handler.csproj", "{AF00FF1E-655B-46A7-B131-7E026057CED8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Test", "Server\Test\TDS_Server.Test.csproj", "{682E88FB-AF64-4645-9010-7C1B61F77290}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Tests", "Server\Test\TDS_Server.Tests.csproj", "{682E88FB-AF64-4645-9010-7C1B61F77290}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS_Server.LobbySystem", "Server\Lobby\TDS_Server.LobbySystem.csproj", "{5D276406-7249-4125-9236-D904DAC033D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.LobbySystem", "Server\Lobby\TDS_Server.LobbySystem.csproj", "{5D276406-7249-4125-9236-D904DAC033D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

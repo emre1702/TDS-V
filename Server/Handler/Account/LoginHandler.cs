@@ -22,28 +22,20 @@ namespace TDS_Server.Handler.Account
 {
     public class LoginHandler
     {
-        #region Private Fields
-
         private readonly DatabasePlayerHelper _databasePlayerHandler;
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly LangHelper _langHelper;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly Serializer _serializer;
         private readonly ServerStartHandler _serverStartHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public LoginHandler(
             DatabasePlayerHelper databasePlayerHandler,
             LangHelper langHelper,
             EventsHandler eventsHandler,
-            Serializer serializer,
             ISettingsHandler settingsHandler,
             IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler,
@@ -54,7 +46,6 @@ namespace TDS_Server.Handler.Account
             _databasePlayerHandler = databasePlayerHandler;
             _langHelper = langHelper;
             _eventsHandler = eventsHandler;
-            _serializer = serializer;
             _settingsHandler = settingsHandler;
             _serviceProvider = serviceProvider;
             _dataSyncHandler = dataSyncHandler;
@@ -66,10 +57,6 @@ namespace TDS_Server.Handler.Account
 
             NAPI.ClientEvent.Register<ITDSPlayer, string, string>(ToServerEvent.TryLogin, this, TryLogin);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public async Task LoginPlayer(ITDSPlayer player, int id, string? password)
         {
@@ -134,10 +121,10 @@ namespace TDS_Server.Handler.Account
 
             var angularConstantsData = ActivatorUtilities.CreateInstance<AngularConstantsDataDto>(_serviceProvider, player);
 
-            var syncedSettingsJson = _serializer.ToClient(_settingsHandler.SyncedSettings);
-            var playerSettingsJson = _serializer.ToClient(player.Entity.PlayerSettings);
-            var playerThemeSettingsJson = _serializer.ToClient(player.Entity.ThemeSettings);
-            var angularContentsJson = _serializer.ToBrowser(angularConstantsData);
+            var syncedSettingsJson = Serializer.ToClient(_settingsHandler.SyncedSettings);
+            var playerSettingsJson = Serializer.ToClient(player.Entity.PlayerSettings);
+            var playerThemeSettingsJson = Serializer.ToClient(player.Entity.ThemeSettings);
+            var angularContentsJson = Serializer.ToBrowser(angularConstantsData);
 
             NAPI.Task.Run(() =>
             {
@@ -186,15 +173,9 @@ namespace TDS_Server.Handler.Account
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private async void EventsHandler_PlayerRegistered(ITDSPlayer player, Players dbPlayer)
         {
             await LoginPlayer(player, dbPlayer.Id, null);
         }
-
-        #endregion Private Methods
     }
 }

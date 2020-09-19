@@ -10,8 +10,6 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class RuleData
     {
-        #region Public Properties
-
         [JsonProperty("3")]
         public RuleCategory Category { get; set; }
 
@@ -23,37 +21,21 @@ namespace TDS_Server.Handler.Userpanel
 
         [JsonProperty("1")]
         public Dictionary<int, string>? Texts { get; set; }
-
-        #endregion Public Properties
     }
 
     internal class UserpanelRulesHandler
     {
-        #region Private Fields
-
         private string _rulesJson = string.Empty;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public UserpanelRulesHandler(TDSDbContext dbContext, Serializer serializer)
-            => LoadRules(dbContext, serializer);
-
-        #endregion Public Constructors
-
-        #region Public Methods
+        public UserpanelRulesHandler(TDSDbContext dbContext)
+            => LoadRules(dbContext);
 
         public string GetData()
         {
             return _rulesJson;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void LoadRules(TDSDbContext context, Serializer serializer)
+        private void LoadRules(TDSDbContext context)
         {
             var rules = context.Rules.Include(r => r.RuleTexts).ToList();
             var sendRules = rules.Select(r => new RuleData
@@ -63,9 +45,7 @@ namespace TDS_Server.Handler.Userpanel
                 Target = r.Target,
                 Category = r.Category
             }).ToList();
-            _rulesJson = serializer.ToBrowser(sendRules);
+            _rulesJson = Serializer.ToBrowser(sendRules);
         }
-
-        #endregion Private Methods
     }
 }

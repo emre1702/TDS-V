@@ -23,11 +23,9 @@ namespace TDS_Server.Handler
         private static readonly Dictionary<ILobby, List<Entity>> _invincibleEntityPerLobby = new Dictionary<ILobby, List<Entity>>();
 
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly Serializer _serializer;
 
-        public WorkaroundsHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler, Serializer serializer)
+        public WorkaroundsHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler)
         {
-            _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
 
             eventsHandler.PlayerJoinedLobby += PlayerJoinedLobby;
@@ -49,7 +47,7 @@ namespace TDS_Server.Handler
                 RotationOffsetZ: rotationOffset.Z,
                 LobbyId: lobby?.Id
             );
-            infoDto.Json = _serializer.ToClient(infoDto);
+            infoDto.Json = Serializer.ToClient(infoDto);
             _attachedEntitiesInfos[entity] = infoDto;
 
             if (lobby is null)
@@ -112,7 +110,7 @@ namespace TDS_Server.Handler
                 entityValue: entity.Value,
                 collisionless: collisionless
             );
-            info.Json = _serializer.ToClient(info);
+            info.Json = Serializer.ToClient(info);
             _collisionslessEntitiesInfos[entity] = info;
 
             if (lobby is null)

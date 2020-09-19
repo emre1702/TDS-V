@@ -13,8 +13,8 @@ namespace TDS_Server.Handler.Entities.Gamemodes
     {
         #region Public Constructors
 
-        public Sniper(Arena lobby, MapDto map, Serializer serializer, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
-            : base(lobby, map, serializer, settingsHandler, langHelper, invitationsHandler) { }
+        public Sniper(Arena lobby, MapDto map, ISettingsHandler settingsHandler, LangHelper langHelper, InvitationsHandler invitationsHandler)
+            : base(lobby, map, settingsHandler, langHelper, invitationsHandler) { }
 
         #endregion Public Constructors
 

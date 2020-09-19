@@ -40,8 +40,8 @@ namespace TDS_Server.Handler.Userpanel
 
         #region Public Constructors
 
-        public UserpanelFAQsHandlers(TDSDbContext dbContext, Serializer serializer)
-            => LoadFAQs(dbContext, serializer);
+        public UserpanelFAQsHandlers(TDSDbContext dbContext)
+            => LoadFAQs(dbContext);
 
         #endregion Public Constructors
 
@@ -52,7 +52,7 @@ namespace TDS_Server.Handler.Userpanel
             return _faqsJsonByLanguage[player.LanguageEnum];
         }
 
-        public void LoadFAQs(TDSDbContext dbContext, Serializer serializer)
+        public void LoadFAQs(TDSDbContext dbContext)
         {
             var regex = new Regex("(?<=(\r\n|\r|\n))[ ]{2,}", RegexOptions.None);
 
@@ -68,7 +68,7 @@ namespace TDS_Server.Handler.Userpanel
                         Question = regex.Replace(f.Question, ""),
                         Answer = regex.Replace(f.Answer, "")
                     });
-                _faqsJsonByLanguage[entry.Key] = serializer.ToBrowser(faqs);
+                _faqsJsonByLanguage[entry.Key] = Serializer.ToBrowser(faqs);
             }
         }
 

@@ -20,12 +20,10 @@ namespace TDS_Client.Handler
     public class UtilsHandler : ServiceBase
     {
         private readonly DataSyncHandler _dataSyncHandler;
-        private readonly Serializer _serializer;
 
-        public UtilsHandler(LoggingHandler loggingHandler, Serializer serializer, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
+        public UtilsHandler(LoggingHandler loggingHandler, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
             : base(loggingHandler)
         {
-            _serializer = serializer;
             _dataSyncHandler = dataSyncHandler;
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
@@ -212,7 +210,7 @@ namespace TDS_Client.Handler
 
         public List<ITDSPlayer> GetTriggeredPlayersList(string objStr)
         {
-            var list = _serializer.FromServer<List<ushort>>(objStr);
+            var list = Serializer.FromServer<List<ushort>>(objStr);
             var newList = new List<ITDSPlayer>();
 
             foreach (var handleValue in list)

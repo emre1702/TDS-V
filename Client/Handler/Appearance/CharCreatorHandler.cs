@@ -27,7 +27,6 @@ namespace TDS_Client.Handler.Appearance
         private readonly DeathHandler _deathHandler;
         private readonly EventsHandler _eventsHandler;
 
-        private readonly Serializer _serializer;
         private readonly UtilsHandler _utilsHandler;
 
         private float _currentCamAngle;
@@ -38,12 +37,12 @@ namespace TDS_Client.Handler.Appearance
         private float _initMovingAngle;
         private float _initMovingOffsetZ;
 
-        public CharCreatorHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, Serializer serializer, DeathHandler deathHandler,
+        public CharCreatorHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, DeathHandler deathHandler,
             CamerasHandler camerasHandler, EventsHandler eventsHandler, CursorHandler cursorHandler, UtilsHandler utilsHandler)
             : base(loggingHandler)
         {
             _browserHandler = browserHandler;
-            _serializer = serializer;
+
             _deathHandler = deathHandler;
             _camerasHandler = camerasHandler;
             _eventsHandler = eventsHandler;
@@ -60,7 +59,7 @@ namespace TDS_Client.Handler.Appearance
             {
                 string json = (string)args[0];
                 _dimension = Convert.ToUInt32(args[1]);
-                var data = _serializer.FromServer<CharCreateData>(json);
+                var data = Serializer.FromServer<CharCreateData>(json);
                 _browserHandler.Angular.ToggleCharCreator(true, json);
                 RAGE.Chat.Show(false);
                 RAGE.Game.Ui.DisplayRadar(false);
@@ -124,12 +123,12 @@ namespace TDS_Client.Handler.Appearance
                 switch (key)
                 {
                     case CharCreatorDataKey.IsMale:
-                        PreparePed(_serializer.FromBrowser<CharCreateData>((string)args[1]));
+                        PreparePed(Serializer.FromBrowser<CharCreateData>((string)args[1]));
                         new TDSTimer(PrepareCamera, 1000);
                         break;
 
                     case CharCreatorDataKey.Heritage:
-                        var heritageData = _serializer.FromBrowser<CharCreateHeritageData>((string)args[1]);
+                        var heritageData = Serializer.FromBrowser<CharCreateHeritageData>((string)args[1]);
                         UpdateHeritage(heritageData);
                         break;
 

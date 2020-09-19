@@ -25,13 +25,12 @@ namespace TDS_Server.Handler.PlayerHandlers
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
-        private readonly Serializer _serializer;
+
         private readonly ISettingsHandler _settingsHandler;
 
-        public PlayerCharHandler(EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public PlayerCharHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
         {
-            _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
             _dbContext = dbContext;
             _loggingHandler = loggingHandler;
@@ -56,7 +55,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (player.Entity is null)
                 return null;
 
-            var data = _serializer.FromBrowser<CharCreateData>((string)args[0]);
+            var data = Serializer.FromBrowser<CharCreateData>((string)args[0]);
 
             // By doing this we can ensure that player datas don't save while editing. Because else
             // this could result in PlayerCharDatas getting messed up for the player

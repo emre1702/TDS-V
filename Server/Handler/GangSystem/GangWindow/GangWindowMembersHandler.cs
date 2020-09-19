@@ -18,7 +18,6 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowMembersHandler
     {
-        private readonly Serializer _serializer;
         private readonly GangsHandler _gangsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
@@ -28,11 +27,10 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         private readonly LangHelper _langHelper;
         private readonly DataSyncHandler _dataSyncHandler;
 
-        public GangWindowMembersHandler(Serializer serializer, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
+        public GangWindowMembersHandler(GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
             InvitationsHandler invitationsHandler, EventsHandler eventsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper,
             DataSyncHandler dataSyncHandler)
         {
-            _serializer = serializer;
             _gangsHandler = gangsHandler;
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
@@ -52,7 +50,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             var data = player.Gang.Entity.Members.Select(m => new SyncedGangMember(player, m));
 
-            return _serializer.ToBrowser(data);
+            return Serializer.ToBrowser(data);
         }
 
         public async Task<object?> LeaveGang(ITDSPlayer player, bool sendInfo = true)
@@ -100,7 +98,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (invitation is { })
                 return player.Language.YOU_ALREADY_INVITED_TARGET;
 
-            new Invitation(player.Language.GANG_INVITATION_INFO, target, player, _serializer, _invitationsHandler, AcceptedInvitation, RejectedInvitation, InvitationType.Gang);
+            new Invitation(player.Language.GANG_INVITATION_INFO, target, player, _invitationsHandler, AcceptedInvitation, RejectedInvitation, InvitationType.Gang);
             return "";
         }
 

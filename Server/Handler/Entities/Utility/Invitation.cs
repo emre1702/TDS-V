@@ -18,15 +18,13 @@ namespace TDS_Server.Handler.Entities.Utility
         private readonly InvitationsHandler _invitationsHandler;
         private readonly Action<ITDSPlayer, ITDSPlayer?, Invitation>? _onAccept;
         private readonly Action<ITDSPlayer, ITDSPlayer?, Invitation>? _onReject;
-        private readonly Serializer _serializer;
 
         public Invitation(string message, ITDSPlayer target, ITDSPlayer? sender,
-            Serializer serializer, InvitationsHandler invitationsHandler,
+            InvitationsHandler invitationsHandler,
             Action<ITDSPlayer, ITDSPlayer?, Invitation>? onAccept = null,
             Action<ITDSPlayer, ITDSPlayer?, Invitation>? onReject = null,
             InvitationType type = InvitationType.None)
         {
-            _serializer = serializer;
             _invitationsHandler = invitationsHandler;
 
             Dto = new InvitationDto
@@ -44,7 +42,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
             invitationsHandler.Add(this);
 
-            target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, serializer.ToBrowser(Dto));
+            target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
         }
 
         public bool RemoveOnLobbyLeave { get; set; }
@@ -65,7 +63,7 @@ namespace TDS_Server.Handler.Entities.Utility
 
         public void Resend()
         {
-            Target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, _serializer.ToBrowser(Dto));
+            Target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
         }
 
         public void Withdraw()

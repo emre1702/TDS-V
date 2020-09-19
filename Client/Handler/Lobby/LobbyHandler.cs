@@ -30,8 +30,6 @@ namespace TDS_Client.Handler.Lobby
 
         private readonly RemoteEventsSender _remoteEventsSender;
 
-        private readonly Serializer _serializer;
-
         private readonly SettingsHandler _settingsHandler;
 
         private readonly UtilsHandler _utilsHandler;
@@ -46,7 +44,7 @@ namespace TDS_Client.Handler.Lobby
             InstructionalButtonHandler instructionalButtonHandler,
             EventsHandler eventsHandler, SettingsHandler settingsHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender, DxHandler dxHandler,
             TimerHandler timerHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, DataSyncHandler dataSyncHandler,
-            MapLimitHandler mapLimitHandler, Serializer serializer)
+            MapLimitHandler mapLimitHandler)
             : base(loggingHandler)
         {
             _browserHandler = browserHandler;
@@ -55,21 +53,21 @@ namespace TDS_Client.Handler.Lobby
             _eventsHandler = eventsHandler;
             _settingsHandler = settingsHandler;
             _remoteEventsSender = remoteEventsSender;
-            _serializer = serializer;
+
             _utilsHandler = utilsHandler;
 
             Camera = new LobbyCamHandler(loggingHandler, camerasHandler, settingsHandler, eventsHandler);
             Countdown = new CountdownHandler(loggingHandler, settingsHandler, dxHandler, timerHandler, browserHandler, eventsHandler, Camera);
             Choice = new LobbyChoiceHandler(remoteEventsSender, settingsHandler);
-            MapDatas = new LobbyMapDatasHandler(loggingHandler, dxHandler, timerHandler, eventsHandler, Camera, mapLimitHandler, serializer, settingsHandler);
+            MapDatas = new LobbyMapDatasHandler(loggingHandler, dxHandler, timerHandler, eventsHandler, Camera, mapLimitHandler, settingsHandler);
             MapManager = new MapManagerHandler(eventsHandler, browserHandler, settingsHandler, cursorHandler, remoteEventsSender, dataSyncHandler, bindsHandler);
             MainMenu = new MainMenuHandler(eventsHandler, browserHandler);
             Players = new LobbyPlayersHandler(browserHandler, eventsHandler);
             Teams = new TeamsHandler(loggingHandler, browserHandler, bindsHandler, this, remoteEventsSender, cursorHandler, eventsHandler, utilsHandler);
-            RoundInfos = new RoundInfosHandler(loggingHandler, Teams, timerHandler, dxHandler, settingsHandler, eventsHandler, serializer);
+            RoundInfos = new RoundInfosHandler(loggingHandler, Teams, timerHandler, dxHandler, settingsHandler, eventsHandler);
             Round = new RoundHandler(loggingHandler, eventsHandler, RoundInfos, settingsHandler, browserHandler);
             Bomb = new BombHandler(loggingHandler, browserHandler, RoundInfos, settingsHandler, utilsHandler, remoteEventsSender, dxHandler, timerHandler, eventsHandler,
-                MapDatas, serializer);
+                MapDatas);
 
             eventsHandler.DataChanged += EventsHandler_DataChanged;
 
@@ -127,10 +125,10 @@ namespace TDS_Client.Handler.Lobby
             try
             {
                 var oldSettings = _settingsHandler.GetSyncedLobbySettings();
-                SyncedLobbySettings settings = _serializer.FromServer<SyncedLobbySettings>((string)args[0]);
+                SyncedLobbySettings settings = Serializer.FromServer<SyncedLobbySettings>((string)args[0]);
 
                 Players.Load(_utilsHandler.GetTriggeredPlayersList((string)args[1]));
-                Teams.LobbyTeams = _serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
+                Teams.LobbyTeams = Serializer.FromServer<List<SyncedTeamDataDto>>((string)args[2]);
                 Joined(oldSettings, settings);
             }
             catch (Exception ex)

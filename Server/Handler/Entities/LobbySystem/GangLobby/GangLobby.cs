@@ -29,11 +29,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
         #region Public Constructors
 
-        public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler,
             GangwarAreasHandler gangwarAreasHandler, IServiceProvider serviceProvider, GangLevelsHandler gangLevelsHandler,
             BonusBotConnectorClient bonusBotConnectorClient, BansHandler bansHandler, GangHousesHandler gangHousesHandler)
-            : base(Entity, false, dbContext, loggingHandler, serializer, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
+            : base(Entity, false, dbContext, loggingHandler, lobbiesHandler, settingsHandler, langHelper, dataSyncHandler, eventsHandler,
                   bonusBotConnectorClient, bansHandler)
         {
             _gangwarAreasHandler = gangwarAreasHandler;

@@ -15,12 +15,11 @@ namespace TDS_Server.Handler
     public class ScoreboardHandler
     {
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly Serializer _serializer;
+
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public ScoreboardHandler(Serializer serializer, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
+        public ScoreboardHandler(LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
-            _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
 
@@ -32,7 +31,7 @@ namespace TDS_Server.Handler
             if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
             {
                 var entries = GetDataForMainmenu();
-                player.TriggerEvent(ToClientEvent.SyncScoreboardData, _serializer.ToClient(entries));
+                player.TriggerEvent(ToClientEvent.SyncScoreboardData, Serializer.ToClient(entries));
             }
             else
             {
@@ -40,7 +39,7 @@ namespace TDS_Server.Handler
                 if (entries is null)
                     return;
                 var lobbydata = GetDataForMainmenu().Where(d => d.Id != player.Lobby?.Id);
-                player.TriggerEvent(ToClientEvent.SyncScoreboardData, _serializer.ToClient(entries), _serializer.ToClient(lobbydata));
+                player.TriggerEvent(ToClientEvent.SyncScoreboardData, Serializer.ToClient(entries), Serializer.ToClient(lobbydata));
             }
         }
 

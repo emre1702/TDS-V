@@ -6,8 +6,8 @@ namespace TDS_Client.Handler.Browser
 {
     public class RegisterLoginBrowserHandler : BrowserHandlerBase
     {
-        public RegisterLoginBrowserHandler(LoggingHandler loggingHandler, Serializer serializer)
-            : base(loggingHandler, serializer, Constants.RegisterLoginBrowserPath)
+        public RegisterLoginBrowserHandler(LoggingHandler loggingHandler)
+            : base(loggingHandler, Constants.RegisterLoginBrowserPath)
         { }
 
         public void SendDataToBrowser(string name, bool isRegistered, ILanguage lang)
