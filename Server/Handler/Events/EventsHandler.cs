@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using BonusBotConnector.Client;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
@@ -21,7 +22,15 @@ namespace TDS_Server.Handler.Events
         private int _minuteCounter;
         private int _secondCounter;
 
-        public EventsHandler() => Instance = this;
+        private readonly BonusBotConnectorClient _bonusBotConnectorClient;
+
+        public EventsHandler(BonusBotConnectorClient bonusBotConnectorClient)
+        {
+            Instance = this;
+            _bonusBotConnectorClient = bonusBotConnectorClient;
+        }
+
+        public delegate void ColshapePlayerDelegate(ITDSColShape colshape, ITDSPlayer player);
 
         public delegate void CounterDelegate(int counter);
 
@@ -38,6 +47,10 @@ namespace TDS_Server.Handler.Events
         public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
 
         public delegate void LobbyDelegate(ILobby lobby);
+
+        public delegate void NewBanDelegate(PlayerBans ban, bool inOfficialLobby);
+
+        public delegate void PlayerDeathDelegate(ITDSPlayer player, ITDSPlayer killer, uint reason);
 
         public delegate void PlayerDelegate(ITDSPlayer player);
 
@@ -75,15 +88,23 @@ namespace TDS_Server.Handler.Events
 
         public event CounterDelegate? Minute;
 
+        public event NewBanDelegate? NewBan;
+
         public event PlayerDelegate? PlayerConnected;
 
+        public event PlayerDeathDelegate? PlayerDeath;
+
         public event PlayerDelegate? PlayerDisconnected;
+
+        public event ColshapePlayerDelegate? PlayerEnteredColshape;
 
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
 
         public AsyncValueTaskEvent<(ITDSPlayer player, IGang gang, GangRanks rank)>? PlayerJoinedGang;
 
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
+
+        public event PlayerLobbyDelegateNew? PlayerJoinedLobbyNew;
 
         public event PlayerDelegate? PlayerLeftCustomMenuLobby;
 
@@ -98,6 +119,8 @@ namespace TDS_Server.Handler.Events
         public event PlayerDelegate? PlayerLoggedOut;
 
         public event TDSDbPlayerDelegate? PlayerRegistered;
+
+        public event PlayerDelegate? PlayerSpawned;
 
         public event PlayerDelegate? ReloadPlayerChar;
 
@@ -134,6 +157,7 @@ namespace TDS_Server.Handler.Events
         public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint reason)
         {
             player.Lobby?.OnPlayerDeath(player, killer, reason);
+            PlayerDeath?.Invoke(player, killer, reason);
         }
 
         public void OnPlayerDisconnected(ITDSPlayer player)
@@ -144,6 +168,7 @@ namespace TDS_Server.Handler.Events
         public void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player)
         {
             player.Lobby?.OnPlayerEnterColshape(colshape, player);
+            PlayerEnteredColshape?.Invoke(colshape, player);
         }
 
         public async Task OnPlayerLoggedOut(ITDSPlayer tdsPlayer)
@@ -177,6 +202,7 @@ namespace TDS_Server.Handler.Events
         public void OnPlayerSpawn(ITDSPlayer player)
         {
             player.Lobby?.OnPlayerSpawn(player);
+            PlayerSpawned?.Invoke(player);
         }
 
         public void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash previousWeapon, WeaponHash newWeapon)
@@ -203,6 +229,13 @@ namespace TDS_Server.Handler.Events
             GangHouseLoaded?.Invoke(house);
         }
 
+        public void OnNewBan(PlayerBans ban, bool isOfficial, ulong? targetDiscordUserId)
+        {
+            NewBan?.Invoke(ban, isOfficial);
+            if (isOfficial)
+                _bonusBotConnectorClient.OnNewOfficialBan(ban, targetDiscordUserId);
+        }
+
         /*public void OnPlayerEnterVehicle(ITDSPlayer tdsPlayer, ITDSVehicle vehicle, sbyte seatId)
         {
             tdsPlayer.Lobby?.OnPlayerEnterVehicle(tdsPlayer, vehicle, seatId);
@@ -212,8 +245,6 @@ namespace TDS_Server.Handler.Events
         {
             tdsPlayer.Lobby?.OnPlayerExitVehicle(tdsPlayer, vehicle);
         }*/
-
-        #region Internal Methods
 
         public void OnError(Exception ex, string msgBefore)
         {
@@ -289,6 +320,11 @@ namespace TDS_Server.Handler.Events
             PlayerLeftLobbyNew?.Invoke(player, lobby);
         }
 
+        public void OnLobbyJoinedNew(ITDSPlayer player, IBaseLobby lobby)
+        {
+            PlayerJoinedLobbyNew?.Invoke(player, lobby);
+        }
+
         internal void OnMinute()
         {
             try
@@ -318,7 +354,5 @@ namespace TDS_Server.Handler.Events
                 Error?.Invoke(ex);
             }
         }
-
-        #endregion Internal Methods
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.Players;
@@ -8,17 +9,17 @@ namespace TDS_Server.LobbySystem.Chats
 {
     public class BaseLobbyChat
     {
-        private readonly BaseLobbyPlayers _players;
+        private readonly Action<Action<ITDSPlayer>> _doForPlayersActionProvider;
         private readonly LangHelper _langHelper;
 
-        public BaseLobbyChat(BaseLobbyPlayers players, LangHelper langHelper)
-            => (_players, _langHelper) = (players, langHelper);
+        public BaseLobbyChat(Action<Action<ITDSPlayer>> doForPlayersActionProvider, LangHelper langHelper)
+            => (_doForPlayersActionProvider, _langHelper) = (doForPlayersActionProvider, langHelper);
 
         public void Send(string msg, ITeam? targetTeam = null)
         {
             if (targetTeam is null)
             {
-                _players.Do(player =>
+                _doForPlayersActionProvider(player =>
                 {
                     player.SendChatMessage(msg);
                 });
@@ -36,7 +37,7 @@ namespace TDS_Server.LobbySystem.Chats
         {
             if (targetTeam is null)
             {
-                _players.Do(player =>
+                _doForPlayersActionProvider(player =>
                 {
                     if (blockingPlayerIds.Contains(player.Entity?.Id ?? 0))
                         return;
@@ -58,7 +59,7 @@ namespace TDS_Server.LobbySystem.Chats
         {
             Dictionary<ILanguage, string> texts = _langHelper.GetLangDictionary(langGetter);
             if (targetTeam is null)
-                _players.Do(player =>
+                _doForPlayersActionProvider(player =>
                 {
                     player.SendChatMessage(texts[player.Language]);
                 });
@@ -72,7 +73,7 @@ namespace TDS_Server.LobbySystem.Chats
         public void Send(Dictionary<ILanguage, string> texts, ITeam? targetTeam = null)
         {
             if (targetTeam is null)
-                _players.Do(player =>
+                _doForPlayersActionProvider(player =>
                 {
                     player.SendChatMessage(texts[player.Language]);
                 });

@@ -19,10 +19,14 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             {
                 Team?.RemovePlayer(this);
                 team?.AddPlayer(this);
-                TriggerEvent(ToClientEvent.PlayerTeamChange, team?.Entity.Name ?? "-");
 
                 _team = team;
-                _dataSyncHandler.SetData(this, PlayerDataKey.TeamIndex, DataSyncMode.Lobby, team?.Entity.Index ?? -1);
+
+                NAPI.Task.Run(() =>
+                {
+                    TriggerEvent(ToClientEvent.PlayerTeamChange, team?.Entity.Name ?? "-");
+                    _dataSyncHandler.SetData(this, PlayerDataKey.TeamIndex, DataSyncMode.Lobby, team?.Entity.Index ?? -1);
+                });
             }
         }
     }

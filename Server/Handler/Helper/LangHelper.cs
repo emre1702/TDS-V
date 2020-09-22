@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GTANetworkAPI;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Languages;
 using TDS_Shared.Data.Enums;
@@ -59,10 +60,13 @@ namespace TDS_Server.Handler.Helper
                 returnDict[lang] = langgetter(lang);
             }
 
-            foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+            NAPI.Task.Run(() =>
             {
-                player.SendChatMessage(returnDict[player.Language]);
-            }
+                foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+                {
+                    player.SendChatMessage(returnDict[player.Language]);
+                }
+            });
         }
 
         public void SendAllNotification(Func<ILanguage, string> langgetter)
@@ -73,10 +77,13 @@ namespace TDS_Server.Handler.Helper
                 returnDict[lang] = langgetter(lang);
             }
 
-            foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+            NAPI.Task.Run(() =>
             {
-                player.SendNotification(returnDict[player.Language]);
-            }
+                foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+                {
+                    player.SendNotification(returnDict[player.Language]);
+                }
+            });
         }
     }
 }

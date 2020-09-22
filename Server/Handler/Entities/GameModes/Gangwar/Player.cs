@@ -126,7 +126,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             if (_playerForcedAtTarget is null)
                 return;
 
-            AttackerTeam.FuncIterate((player, team) =>
+            AttackerTeam.FuncIterate(player =>
             {
                 player.SendNotification(string.Format(player.Language.TARGET_PLAYER_DEFEND_INFO, _playerForcedAtTarget.DisplayName));
             });

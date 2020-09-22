@@ -157,6 +157,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (player.Entity is null || player.Entity.CharDatas is null)
                 return;
 
+            player.SetClothes(11, 0, 0);
             var data = player.Entity.CharDatas;
             while (data.AppearanceData.Count < _settingsHandler.ServerSettings.AmountCharSlots)
             {

@@ -1,6 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
 using TDS_Server.LobbySystem.Lobbies;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
@@ -10,20 +15,22 @@ namespace TDS_Server.LobbySystem.Database
     public class BaseLobbyDatabase
     {
         protected DatabaseHandler DbHandler { get; }
+        private readonly IBaseLobby _lobby;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public BaseLobbyDatabase(BaseLobby lobby, DatabaseHandler dbHandler, IBaseLobbyEventsHandler eventsHandler)
+        public BaseLobbyDatabase(IBaseLobby lobby, DatabaseHandler dbHandler, IBaseLobbyEventsHandler events)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
+            _lobby = lobby;
             DbHandler = dbHandler;
 
             DbHandler.ExecuteForDBWithoutWait(dbContext => dbContext.Attach(lobby.Entity));
 
-            eventsHandler.LobbyCreated += AddCreatedToDatabase;
+            events.Created += AddCreatedDatabaseToDatabase;
         }
 
-        private async Task AddCreatedToDatabase(LobbyDb entity)
+        private async Task AddCreatedDatabaseToDatabase(LobbyDb entity)
         {
             await DbHandler.ExecuteForDBAsync(async (dbContext) =>
             {
@@ -39,6 +46,49 @@ namespace TDS_Server.LobbySystem.Database
                     .Query()
                     .Include(e => e.Map)
                     .LoadAsync();
+            });
+        }
+
+        internal async Task<PlayerBans?> GetBan(int? playerId)
+        {
+            if (!playerId.HasValue)
+                return null;
+            return await DbHandler.ExecuteForDBAsync(async (dbContext) => await dbContext.PlayerBans.FindAsync(playerId, _lobby.Entity.Id));
+        }
+
+        internal Task<string?> GetLastUsedSerial(int playerId)
+        {
+            return DbHandler.ExecuteForDBAsync(async (dbContext)
+                => (string?)await dbContext.LogRests
+                                        .Where(l => l.Source == playerId)
+                                        .OrderByDescending(l => l.Id)
+                                        .Select(l => l.Serial)
+                                        .FirstOrDefaultAsync());
+        }
+
+        internal Task AddBanEntity(PlayerBans ban)
+        {
+            return DbHandler.ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.PlayerBans.Add(ban);
+                await dbContext.SaveChangesAsync();
+            });
+        }
+
+        internal Task Remove<T>(object obj)
+        {
+            return DbHandler.ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.Remove(obj);
+                await dbContext.SaveChangesAsync();
+            });
+        }
+
+        internal Task Save()
+        {
+            return DbHandler.ExecuteForDBAsync(async dbContext =>
+            {
+                await dbContext.SaveChangesAsync();
             });
         }
     }

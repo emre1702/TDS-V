@@ -1,9 +1,9 @@
-﻿using GTANetworkAPI;
-using MoreLinq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GTANetworkAPI;
+using MoreLinq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
@@ -19,6 +19,23 @@ namespace TDS_Server.Handler.Entities.GangSystem
 {
     public class Gang : DatabaseEntityWrapper, IGang
     {
+        public Gangs Entity { get; set; }
+
+        // This can't be null! If it's null, we got serious problems in the code! Every gang needs a
+        // team in GangLobby! Even "None" gang (spectator team)!
+#nullable disable
+        public ITeam GangLobbyTeam { get; set; }
+#nullable restore
+
+        //Todo: Don't forget to use this when buying, selling or losing the house
+        public IGangHouse? House { get; set; }
+
+        public bool InAction { get; set; }
+        public bool Initialized { get; set; }
+        public List<ITDSPlayer> PlayersOnline { get; } = new List<ITDSPlayer>();
+        public Vector3? SpawnPosition => House?.Position;
+        public float? SpawnHeading => House?.SpawnRotation;
+
         private readonly GangsHandler _gangsHandler;
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
@@ -38,21 +55,6 @@ namespace TDS_Server.Handler.Entities.GangSystem
 
             dbContext.Attach(entity);
         }
-
-        public Gangs Entity { get; set; }
-
-        // This can't be null! If it's null, we got serious problems in the code! Every gang needs a
-        // team in GangLobby! Even "None" gang (spectator team)!
-#nullable disable
-        public ITeam GangLobbyTeam { get; set; }
-#nullable restore
-
-        //Todo: Don't forget to use this when buying, selling or losing the house
-        public IGangHouse? House { get; set; }
-
-        public bool InAction { get; set; }
-        public bool Initialized { get; set; }
-        public List<ITDSPlayer> PlayersOnline { get; } = new List<ITDSPlayer>();
 
         public void AppointNextSuitableLeader()
         {

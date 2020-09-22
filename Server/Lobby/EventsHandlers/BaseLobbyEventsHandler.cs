@@ -3,6 +3,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Utility;
+using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Events;
 using static TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers.IBaseLobbyEventsHandler;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
@@ -11,19 +12,21 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 {
     public class BaseLobbyEventsHandler : IBaseLobbyEventsHandler
     {
-        public AsyncTaskEvent<LobbyDb>? LobbyCreated { get; set; }
+        public AsyncTaskEvent<LobbyDb>? Created { get; set; }
 
-        public event LobbyCreatedAfterDelegate? LobbyCreatedAfter;
+        public event LobbyCreatedAfterDelegate? CreatedAfter;
 
-        public AsyncTaskEvent<IBaseLobby>? LobbyRemove { get; set; }
+        public AsyncTaskEvent<IBaseLobby>? Remove { get; set; }
 
-        public event LobbyDelegate? LobbyRemoveAfter;
+        public event LobbyDelegate? RemoveAfter;
 
-        public AsyncValueTaskEvent<ITDSPlayer>? PlayerLeftLobby { get; set; }
+        public AsyncValueTaskEvent<ITDSPlayer>? PlayerLeft { get; set; }
 
-        public event PlayerDelegate? PlayerLeftLobbyAfter;
+        public event PlayerDelegate? PlayerLeftAfter;
 
-        public event PlayerDelegate? PlayerJoinedLobby;
+        public event PlayerJoinedDelegate? PlayerJoined;
+
+        public event BanDelegate? NewBan;
 
         public bool IsRemoved { get; private set; }
 
@@ -33,35 +36,42 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         public BaseLobbyEventsHandler(EventsHandler eventsHandler, IBaseLobby lobby)
             => (_eventsHandler, _lobby) = (eventsHandler, lobby);
 
-        public async Task TriggerLobbyCreated(LobbyDb entity)
+        public async Task TriggerCreated(LobbyDb entity)
         {
-            var task = LobbyCreated?.InvokeAsync(entity);
+            var task = Created?.InvokeAsync(entity);
             if (task is { })
                 await task;
-            LobbyCreatedAfter?.Invoke(entity);
+            CreatedAfter?.Invoke(entity);
         }
 
-        public async Task TriggerLobbyRemove(IBaseLobby lobby)
+        public async Task TriggerRemove(IBaseLobby lobby)
         {
             IsRemoved = true;
-            var task = LobbyRemove?.InvokeAsync(lobby);
+            var task = Remove?.InvokeAsync(lobby);
             if (task is { })
                 await task;
-            LobbyRemoveAfter?.Invoke(lobby);
+            RemoveAfter?.Invoke(lobby);
         }
 
-        public async ValueTask TriggerPlayerLeftLobby(ITDSPlayer player)
+        public async ValueTask TriggerPlayerLeft(ITDSPlayer player)
         {
-            var task = PlayerLeftLobby?.InvokeAsync(player);
+            var task = PlayerLeft?.InvokeAsync(player);
             if (task.HasValue)
                 await task.Value;
-            PlayerLeftLobbyAfter?.Invoke(player);
+            PlayerLeftAfter?.Invoke(player);
             _eventsHandler.OnLobbyLeaveNew(player, _lobby);
         }
 
-        public void TriggerPlayerJoinedLobby(ITDSPlayer player)
+        public void TriggerPlayerJoined(ITDSPlayer player, int teamIndex)
         {
-            PlayerJoinedLobby?.Invoke(player);
+            PlayerJoined?.Invoke(player, teamIndex);
+            _eventsHandler.OnLobbyJoinedNew(player, _lobby);
+        }
+
+        public void TriggerNewBan(PlayerBans ban, ulong? targetDiscordUserId)
+        {
+            NewBan?.Invoke(ban);
+            _eventsHandler.OnNewBan(ban, _lobby.Entity.IsOfficial, targetDiscordUserId);
         }
     }
 }

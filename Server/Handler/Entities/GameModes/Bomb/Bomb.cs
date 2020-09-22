@@ -72,7 +72,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL,
             // bomb.Position, 200, Dimension); use 0x172AA1B624FA1013 as Hash instead if not getting fixed
             Lobby.TriggerEvent(ToClientEvent.BombDetonated);
-            _counterTerroristTeam.FuncIterate((player, team) =>
+            _counterTerroristTeam.FuncIterate(player =>
             {
                 if (player.Lifes == 0)
                     return;

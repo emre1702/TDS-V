@@ -1,17 +1,35 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Shared.Core;
 
 namespace TDS_Server.LobbySystem.Deathmatch
 {
-    public class BaseLobbyDeathmatch
+    public class BaseLobbyDeathmatch : IBaseLobbyDeathmatch
     {
-        private Dictionary<ITDSPlayer, TDSTimer> _afterDeathSpawnTimer = new Dictionary<ITDSPlayer, TDSTimer>();
+        private readonly Dictionary<ITDSPlayer, TDSTimer> _afterDeathSpawnTimer = new Dictionary<ITDSPlayer, TDSTimer>();
+        protected readonly IBaseLobby Lobby;
 
-        public BaseLobbyDeathmatch(BaseLobbyEventsHandler events)
+        public BaseLobbyDeathmatch(IBaseLobbyEventsHandler events, IBaseLobby lobby)
         {
-            events.PlayerLeftLobbyAfter += ResetPlayer;
+            Lobby = lobby;
+
+            events.PlayerLeftAfter += ResetPlayer;
+        }
+
+        public virtual void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
+        {
+            RemoveAfterDeathSpawnTimer(player);
+        }
+
+        public virtual void OnPlayerSpawned(ITDSPlayer player)
+        {
+            RemoveAfterDeathSpawnTimer(player);
+            player.Health = Lobby.Entity.FightSettings?.StartHealth ?? 100;
+            player.Armor = Lobby.Entity.FightSettings?.StartArmor ?? 100;
+            player.SetClothes(11, 0, 0);
         }
 
         protected virtual void ResetPlayer(ITDSPlayer player)
@@ -23,9 +41,9 @@ namespace TDS_Server.LobbySystem.Deathmatch
         {
             lock (_afterDeathSpawnTimer)
             {
-                if (_afterDeathSpawnTimer.ContainsKey(player))
+                if (_afterDeathSpawnTimer.TryGetValue(player, out var timer))
                 {
-                    _afterDeathSpawnTimer[player].Kill();
+                    timer.Kill();
                     _afterDeathSpawnTimer.Remove(player);
                 }
             }

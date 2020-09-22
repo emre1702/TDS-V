@@ -2,6 +2,7 @@
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Utility;
+using TDS_Server.Database.Entity.Player;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
@@ -16,25 +17,33 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         public delegate void PlayerDelegate(ITDSPlayer player);
 
+        public delegate void PlayerJoinedDelegate(ITDSPlayer player, int teamIndex);
+
+        public delegate void BanDelegate(PlayerBans ban);
+
         bool IsRemoved { get; }
-        AsyncTaskEvent<LobbyDb>? LobbyCreated { get; set; }
-        AsyncTaskEvent<IBaseLobby>? LobbyRemove { get; set; }
-        AsyncValueTaskEvent<ITDSPlayer>? PlayerLeftLobby { get; set; }
+        AsyncTaskEvent<LobbyDb>? Created { get; set; }
+        AsyncTaskEvent<IBaseLobby>? Remove { get; set; }
+        AsyncValueTaskEvent<ITDSPlayer>? PlayerLeft { get; set; }
 
-        event LobbyCreatedAfterDelegate? LobbyCreatedAfter;
+        event LobbyCreatedAfterDelegate? CreatedAfter;
 
-        event LobbyDelegate? LobbyRemoveAfter;
+        event LobbyDelegate? RemoveAfter;
 
-        event PlayerDelegate? PlayerJoinedLobby;
+        event PlayerJoinedDelegate? PlayerJoined;
 
-        event PlayerDelegate? PlayerLeftLobbyAfter;
+        event PlayerDelegate? PlayerLeftAfter;
 
-        Task TriggerLobbyCreated(LobbyDb entity);
+        event BanDelegate? NewBan;
 
-        Task TriggerLobbyRemove(IBaseLobby lobby);
+        Task TriggerCreated(LobbyDb entity);
 
-        void TriggerPlayerJoinedLobby(ITDSPlayer player);
+        Task TriggerRemove(IBaseLobby lobby);
 
-        ValueTask TriggerPlayerLeftLobby(ITDSPlayer player);
+        void TriggerPlayerJoined(ITDSPlayer player, int teamIndex);
+
+        ValueTask TriggerPlayerLeft(ITDSPlayer player);
+
+        void TriggerNewBan(PlayerBans ban, ulong? targetDiscordUserId);
     }
 }

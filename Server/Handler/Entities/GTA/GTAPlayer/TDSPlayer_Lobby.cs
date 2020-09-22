@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.Player;
+using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 {
@@ -22,6 +26,12 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 
             if (playerLobbyStats != null)
                 await Database.ExecuteForDB(dbContext => dbContext.Attach(LobbyStats));
+        }
+
+        public override void SetLobby(IBaseLobby lobby)
+        {
+            LobbyNew = lobby;
+            NAPI.Task.Run(() => _dataSyncHandler.SetData(this, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, lobby.Players.IsLobbyOwner(this)));
         }
     }
 }

@@ -96,7 +96,7 @@ namespace TDS_Server.Handler.Entities.Gamemodes
             if (Lobby.IsOfficial)
                 player.AddToChallenge(ChallengeType.BombDefuse);
 
-            _terroristTeam.FuncIterate((target, team) =>
+            _terroristTeam.FuncIterate(target =>
             {
                 Lobby.DmgSys.UpdateLastHitter(target, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
                 target.Kill();
@@ -162,11 +162,11 @@ namespace TDS_Server.Handler.Entities.Gamemodes
 
         private void SendBombDefuseInfos()
         {
-            _counterTerroristTeam.FuncIterate((character, team) =>
+            _counterTerroristTeam.FuncIterate(player =>
             {
-                foreach (string str in character.Language.DEFUSE_INFO)
+                foreach (string str in player.Language.DEFUSE_INFO)
                 {
-                    character.SendChatMessage(str);
+                    player.SendChatMessage(str);
                 }
             });
         }
