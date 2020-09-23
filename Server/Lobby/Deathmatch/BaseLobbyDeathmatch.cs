@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
@@ -19,9 +20,10 @@ namespace TDS_Server.LobbySystem.Deathmatch
             events.PlayerLeftAfter += ResetPlayer;
         }
 
-        public virtual void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
+        public virtual Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
             RemoveAfterDeathSpawnTimer(player);
+            return Task.CompletedTask;
         }
 
         public virtual void OnPlayerSpawned(ITDSPlayer player)

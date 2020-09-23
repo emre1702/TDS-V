@@ -1,19 +1,28 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+﻿using System.Collections;
+using System.Collections.Generic;
+using GTANetworkAPI;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Database.Entity.LobbyEntities;
+using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.Handler.Entities.LobbySystem
+namespace TDS_Server.LobbySystem.Weapons
 {
-    partial class FightLobby
+    public class FightLobbyWeapons
     {
+        private readonly LobbyDb _entity;
+
+        public FightLobbyWeapons(LobbyDb entity)
+        {
+            _entity = entity;
+        }
+
         public virtual void GivePlayerWeapons(ITDSPlayer player)
         {
             var lastWeapon = player.LastWeaponOnHand;
             player.RemoveAllWeapons();
             bool giveLastWeapon = false;
-            foreach (LobbyWeapons weapon in Entity.LobbyWeapons)
+            foreach (var weapon in GetAllWeapons())
             {
-                //if (!System.Enum.IsDefined(typeof(WeaponHash), (uint) weapon.Hash))
-                //    continue;
                 player.GiveWeapon(weapon.Hash, 0);
                 player.SetWeaponAmmo(weapon.Hash, weapon.Ammo);
                 if (weapon.Hash == lastWeapon)
@@ -22,5 +31,8 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             if (giveLastWeapon)
                 player.CurrentWeapon = lastWeapon;
         }
+
+        internal virtual IEnumerable<LobbyWeapons> GetAllWeapons()
+            => _entity.LobbyWeapons;
     }
 }

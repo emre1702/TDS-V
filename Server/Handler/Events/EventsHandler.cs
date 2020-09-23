@@ -62,6 +62,8 @@ namespace TDS_Server.Handler.Events
 
         public delegate void PlayerLobbyDelegateNew(ITDSPlayer player, IBaseLobby lobby);
 
+        public delegate void PlayerWeaponSwitchDelegate(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon);
+
         public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
 
         public event LobbyDelegate? CustomLobbyCreated;
@@ -121,6 +123,8 @@ namespace TDS_Server.Handler.Events
         public event TDSDbPlayerDelegate? PlayerRegistered;
 
         public event PlayerDelegate? PlayerSpawned;
+
+        public event PlayerWeaponSwitchDelegate? PlayerWeaponSwitch;
 
         public event PlayerDelegate? ReloadPlayerChar;
 
@@ -212,6 +216,7 @@ namespace TDS_Server.Handler.Events
 
             player.OnPlayerWeaponSwitch(previousWeapon, newWeapon);
             fightLobby.OnPlayerWeaponSwitch(player, previousWeapon, newWeapon);
+            PlayerWeaponSwitch?.Invoke(player, previousWeapon, newWeapon);
         }
 
         public void OnResourceStop()

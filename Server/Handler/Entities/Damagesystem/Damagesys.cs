@@ -8,13 +8,8 @@ namespace TDS_Server.Core.Damagesystem
 {
     public partial class Damagesys
     {
-        #region Private Fields
-
         private readonly ILoggingHandler _loggingHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
+        private readonly WeaponDatasLoadingHandler _weaponDatasLoadingHandler;
 
         public Damagesys(IEnumerable<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards,
             ILoggingHandler loggingHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler)
@@ -31,21 +26,29 @@ namespace TDS_Server.Core.Damagesystem
             InitKillingSpreeRewards(killingspreeRewards);
         }
 
-        #endregion Public Constructors
+        public Damagesys(ILoggingHandler loggingHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler)
+        {
+            _loggingHandler = loggingHandler;
+            _weaponDatasLoadingHandler = weaponDatasLoadingHandler;
+        }
 
-        #region Public Properties
+        public void Init(IEnumerable<LobbyWeapons> weapons, ICollection<LobbyKillingspreeRewards> killingspreeRewards)
+        {
+            foreach (var weapon in weapons)
+            {
+                if (!weapon.Damage.HasValue && !weapon.HeadMultiplicator.HasValue)
+                    _damagesDict[weapon.Hash] = _weaponDatasLoadingHandler.DefaultDamages[weapon.Hash];
+                else
+                    _damagesDict[weapon.Hash] = new DamageDto(weapon);
+            }
+            InitKillingSpreeRewards(killingspreeRewards);
+        }
 
         public bool DamageDealtThisRound => _allHitters.Count > 0;
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void Clear()
         {
             _allHitters.Clear();
         }
-
-        #endregion Public Methods
     }
 }

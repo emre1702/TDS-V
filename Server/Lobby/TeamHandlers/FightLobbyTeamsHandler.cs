@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
@@ -92,6 +93,76 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 entry.AlivePlayers?.Clear();
                 entry.SpectateablePlayers?.Clear();
             }
+        }
+
+        internal Task<ITeam?> GetNextNonSpectatorTeamWithPlayers(ITeam? start)
+            => GetNextNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
+
+        internal Task<ITeam?> GetNextNonSpectatorTeamWithPlayers(short startIndex)
+        {
+            return Do(teams =>
+            {
+                if (teams.Count <= 1)
+                    return null;
+
+                var index = startIndex;
+                do
+                {
+                    if (++index > teams.Count - 1)
+                        index = 0;
+                } while (teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
+
+                var team = teams[index];
+                if (team.SpectateablePlayers?.Any() != true)
+                    return null;
+
+                return team;
+            });
+        }
+
+        internal Task<ITeam> GetNextNonSpectatorTeam(ITeam start)
+        {
+            return GetNextNonSpectatorTeam(start.Entity.Index);
+        }
+
+        private Task<ITeam> GetNextNonSpectatorTeam(short startIndex)
+        {
+            var startIndexToIterate = startIndex;
+            return Do(teams =>
+            {
+                do
+                {
+                    if (++startIndexToIterate == teams.Count - 1)
+                        startIndexToIterate = 0;
+                } while (teams[startIndex].IsSpectator && startIndexToIterate != startIndex);
+
+                return teams[startIndexToIterate];
+            });
+        }
+
+        internal Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(ITeam? start)
+           => GetPreviousNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
+
+        internal Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(short startIndex)
+        {
+            return Do(teams =>
+            {
+                if (teams.Count <= 1)
+                    return null;
+
+                var index = (int)startIndex;
+                do
+                {
+                    if (--index < 0)
+                        index = teams.Count - 1;
+                } while (teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
+
+                var team = teams[index];
+                if (team.SpectateablePlayers?.Any() != true)
+                    return null;
+
+                return team;
+            });
         }
     }
 }

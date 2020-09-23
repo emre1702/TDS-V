@@ -4,7 +4,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.Lobbies;
+using TDS_Server.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.LobbySystem.TeamHandlers;
 
 namespace TDS_Server.LobbySystem.Players
@@ -16,7 +16,7 @@ namespace TDS_Server.LobbySystem.Players
         {
         }
 
-        public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamIndex)
+        public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex)
         {
             var worked = await base.AddPlayer(player, teamIndex);
             if (!worked)
@@ -29,6 +29,18 @@ namespace TDS_Server.LobbySystem.Players
                 player.SetInvincible(false);
             });
 
+            return true;
+        }
+
+        public override async Task<bool> RemovePlayer(ITDSPlayer player)
+        {
+            var worked = await base.RemovePlayer(player);
+            if (!worked)
+                return false;
+
+            player.Team?.SpectateablePlayers?.Remove(player);
+            player.LastKillAt = null;
+            player.KillingSpree = 0;
             return true;
         }
 
@@ -46,6 +58,15 @@ namespace TDS_Server.LobbySystem.Players
                 }
             }).ConfigureAwait(false);
             await player.SetPlayerLobbyStats(stats);
+        }
+
+        public void Kill(ITDSPlayer player, string reason)
+        {
+            NAPI.Task.Run(() =>
+            {
+                player.Kill();
+                player.SendChatMessage(reason);
+            });
         }
     }
 }

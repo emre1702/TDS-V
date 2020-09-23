@@ -68,7 +68,13 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         public Task Do(Action<List<ITeam>> action)
             => _teamsSemaphore.Do(() => action(_teams));
 
+        public Task<T> Do<T>(Func<List<ITeam>, T> func)
+            => _teamsSemaphore.Do(() => func(_teams));
+
         public List<ITeam> GetTeams() => _teams.ToList();
+
+        public Task<ITeam> GetTeam(short teamIndex)
+            => _teamsSemaphore.Do(() => _teams[teamIndex]);
 
         internal ITeam GetTeamWithFewestPlayer(List<ITeam> teams)
             => _teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().First();

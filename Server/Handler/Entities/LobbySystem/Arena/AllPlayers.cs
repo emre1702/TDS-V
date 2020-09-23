@@ -11,8 +11,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
-        #region Protected Methods
-
         protected void SaveAllPlayerRoundStats()
         {
             FuncIterateAllPlayers((player, team) =>
@@ -22,10 +20,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
                 SavePlayerRoundStats(player);
             });
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private List<RoundPlayerRankingStat>? GetOrderedRoundRanking()
         {
@@ -135,7 +129,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             string json = Serializer.ToClient(amounts);
             TriggerEvent(ToClientEvent.AmountInFightSync, json);
         }
-
-        #endregion Private Methods
     }
 }

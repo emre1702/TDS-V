@@ -9,8 +9,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class FightLobby
     {
-        #region Public Methods
-
         public override void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon, bool spawnPlayer = true)
         {
             if (player.Team is null || player.Team.IsSpectator)
@@ -54,7 +52,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             // NAPI.ClientEvent.TriggerClientEvent(player.Player, ToClientEvent.PlayerWeaponChange,
             // (uint)newWeapon /*, DmgSys.GetDamage((WeaponHash)newWeapon)*/);
         }
-
-        #endregion Public Methods
     }
 }

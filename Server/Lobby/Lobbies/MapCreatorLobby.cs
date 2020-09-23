@@ -7,6 +7,7 @@ using TDS_Server.LobbySystem.BansHandlers;
 using TDS_Server.LobbySystem.Chats;
 using TDS_Server.LobbySystem.Database;
 using TDS_Server.LobbySystem.EventsHandlers;
+using TDS_Server.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.LobbySystem.Models;
 using TDS_Server.LobbySystem.Players;
 using TDS_Server.LobbySystem.TeamHandlers;
@@ -14,7 +15,7 @@ using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Lobbies
 {
-    public class MapCreatorLobby : BaseLobby
+    public class MapCreatorLobby : FreeroamLobby
     {
         public MapCreatorLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler)
             : base(entity, databaseHandler, langHelper, eventsHandler)

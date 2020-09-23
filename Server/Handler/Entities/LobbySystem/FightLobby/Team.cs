@@ -38,11 +38,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             return Teams[startindextoiterate];
         }
 
-        private ITeam? GetNextNonSpectatorTeamWithPlayers(ITeam? start)
-        {
-            return GetNextNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
-        }
-
         private ITeam? GetNextNonSpectatorTeamWithPlayers(short startIndex)
         {
             if (Teams.Count <= 1)

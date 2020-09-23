@@ -11,12 +11,15 @@ using TDS_Server.LobbySystem.EventsHandlers;
 using TDS_Server.LobbySystem.Models;
 using TDS_Server.LobbySystem.Players;
 using TDS_Server.LobbySystem.TeamHandlers;
+using TDS_Server.LobbySystem.Weapons;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.Lobbies
+namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 {
     public abstract class FightLobby : BaseLobby
     {
+        public FightLobbyWeapons Weapons { get; set; }
+
         public FightLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler)
             : base(entity, databaseHandler, langHelper, eventsHandler)
         {

@@ -26,7 +26,7 @@ using TDS_Server.LobbySystem.Sync;
 using TDS_Server.LobbySystem.TeamHandlers;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.Lobbies
+namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 {
     public abstract class BaseLobby : IBaseLobby
     {
