@@ -3,7 +3,6 @@ using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.LobbySystem.Lobbies.Abstracts;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Weapons
 {
@@ -21,7 +20,7 @@ namespace TDS_Server.LobbySystem.Weapons
         {
             if (_allRoundWeapons is null)
                 return;
-            if (_lobby.Round.CurrentGamemode?.HandlesGivingWeapons == true)
+            if (_lobby.Gamemodes.CurrentGamemode?.HandlesGivingWeapons == true)
                 return;
             base.GivePlayerWeapons(player);
         }
@@ -34,7 +33,7 @@ namespace TDS_Server.LobbySystem.Weapons
 
         public virtual void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-            _lobby.Round.CurrentGamemode?.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
+            _lobby.Gamemodes.CurrentGamemode?.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
         }
     }
 }

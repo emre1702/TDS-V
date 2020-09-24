@@ -22,4 +22,12 @@
         <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
       </Reference>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Gamemodes\CaptureTheFlag\" />
+      <Folder Include="Gamemodes\Domination\" />
+      <Folder Include="Gamemodes\InstaGib\" />
+      <Folder Include="Gamemodes\JailBreak\" />
+      <Folder Include="Gamemodes\KingOfTheHill\" />
+    </ItemGroup>
 </Project>
