@@ -5,7 +5,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
     public class RoundClear : RoundState
     {
-        public override int Duration => 1 * 1000;
+        public override int Duration => 500;
 
         public RoundClear(IRoundFightLobby lobby) : base(lobby)
         {

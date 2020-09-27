@@ -14,7 +14,10 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
     {
         public LinkedList<RoundState> List = new LinkedList<RoundState>();
         public LinkedListNode<RoundState> Current;
+        public IRoundState CurrentState => Current.Value;
         public LinkedListNode<RoundState> Next => Current == List.Last ? List.First! : Current.Next!;
+        public int TimeToNextStateMs => (int?)_nextTimer?.RemainingMsToExecute ?? 0;
+        public int TimeInStateMs => (int?)_nextTimer?.ElapsedMsSinceLastExecOrCreate ?? 0;
 
         public IRoundEndReason CurrentRoundEndReason { get; protected set; } = new TimeRoundEndReason(null);
 

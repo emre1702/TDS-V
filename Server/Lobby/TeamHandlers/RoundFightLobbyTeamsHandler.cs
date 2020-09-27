@@ -1,16 +1,17 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
+using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Handler.Helper;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
 {
-    public class RoundFightLobbyTeamsHandler : FightLobbyTeamsHandler
+    public class RoundFightLobbyTeamsHandler : FightLobbyTeamsHandler, IRoundFightLobbyTeamsHandler
     {
-        public RoundFightLobbyTeamsHandler(LobbyDb entity, IRoundFightLobbyEventsHandler events, LangHelper langHelper, IBaseLobbyPlayers players)
-            : base(entity, events, langHelper, players)
+        public RoundFightLobbyTeamsHandler(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, LangHelper langHelper)
+            : base(lobby, events, langHelper)
         {
             events.RoundClear += RoundClear;
             events.RoundEnd += RoundEnd;
@@ -45,7 +46,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 return -1;
             int teamHp = 0;
             foreach (var player in team.AlivePlayers)
-                teamHp += player.Health + player.Armor + ((player.Lifes - 1) * (Entity.FightSettings.StartArmor + Entity.FightSettings.StartHealth));
+                teamHp += player.Health + player.Armor + ((player.Lifes - 1) * (Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth));
             return teamHp;
         }
 

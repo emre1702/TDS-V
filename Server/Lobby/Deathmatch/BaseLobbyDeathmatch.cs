@@ -13,7 +13,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
         private readonly Dictionary<ITDSPlayer, TDSTimer> _afterDeathSpawnTimer = new Dictionary<ITDSPlayer, TDSTimer>();
         protected readonly IBaseLobby Lobby;
 
-        public BaseLobbyDeathmatch(IBaseLobbyEventsHandler events, IBaseLobby lobby)
+        public BaseLobbyDeathmatch(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
             Lobby = lobby;
 

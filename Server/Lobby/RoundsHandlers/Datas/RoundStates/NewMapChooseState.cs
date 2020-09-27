@@ -5,7 +5,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
     public class NewMapChooseState : RoundState
     {
-        public override int Duration => 2 * 1000;
+        public override int Duration => 500;
 
         public NewMapChooseState(IRoundFightLobby lobby) : base(lobby)
         {

@@ -8,9 +8,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.Spectator;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
 
@@ -18,23 +16,19 @@ namespace TDS_Server.LobbySystem.Deathmatch
 {
     public class FightLobbyDeathmatch : BaseLobbyDeathmatch, IFightLobbyDeathmatch
     {
-        private readonly LangHelper _langHelper;
-        private readonly IBaseLobbyPlayers _players;
-        private readonly FightLobbySpectator _spectator;
-
-        internal Damagesys Damage { get; set; }
-
         public int AmountLifes { get; set; }
 
-        public FightLobbyDeathmatch(IBaseLobbyEventsHandler events, IFightLobby fightLobby, Damagesys damage, LangHelper langHelper, IBaseLobbyPlayers players, FightLobbySpectator spectator)
-            : base(events, fightLobby)
+        private readonly LangHelper _langHelper;
+        internal Damagesys Damage { get; set; }
+        protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
+
+        public FightLobbyDeathmatch(IFightLobby lobby, IBaseLobbyEventsHandler events, Damagesys damage, LangHelper langHelper)
+            : base(lobby, events)
         {
             Damage = damage;
             _langHelper = langHelper;
-            _players = players;
-            _spectator = spectator;
-            damage.Init(fightLobby.Entity.LobbyWeapons, fightLobby.Entity.LobbyKillingspreeRewards);
-            AmountLifes = fightLobby.Entity.FightSettings.AmountLifes;
+            damage.Init(lobby.Entity.LobbyWeapons, lobby.Entity.LobbyKillingspreeRewards);
+            AmountLifes = lobby.Entity.FightSettings.AmountLifes;
         }
 
         protected override void ResetPlayer(ITDSPlayer player)
@@ -51,7 +45,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
             if (player.Team is null || player.Team.IsSpectator)
             {
-                await _spectator.SpectateOtherAllTeams(player);
+                await Lobby.Spectator.SpectateOtherAllTeams(player);
             }
 
             Damage.OnPlayerDeath(player, killer, weapon);
@@ -73,7 +67,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
         {
             var deathSpawnTimer = new TDSTimer(() =>
             {
-                _spectator.SpectateOtherSameTeam(player);
+                Lobby.Spectator.SpectateOtherSameTeam(player);
                 player.TriggerEvent(ToClientEvent.PlayerSpectateMode);
             }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);
         }
@@ -91,7 +85,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
                 killstr = _langHelper.GetLangDictionary(lang => string.Format(lang.DEATH_DIED_INFO, player.DisplayName));
             }
 
-            _players.DoInMain(target =>
+            Lobby.Players.DoInMain(target =>
             {
                 target.TriggerEvent(ToClientEvent.Death, player.RemoteId, player.TeamIndex, killstr[target.Language], player.Lifes > 1);
             });

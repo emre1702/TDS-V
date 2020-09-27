@@ -1,36 +1,50 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.EventsHandlers;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MoreLinq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS_Server.Handler.Helper;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
 {
-    public class ArenaTeamsHandler : RoundFightLobbyTeamsHandler
+    public class ArenaTeamsHandler : RoundFightLobbyTeamsHandler, IArenaTeamsHandler
     {
-        public ArenaTeamsHandler(LobbyDb entity, IRoundFightLobbyEventsHandler events) : base(entity, events)
+        public ArenaTeamsHandler(IArena lobby, IRoundFightLobbyEventsHandler events, LangHelper langHelper)
+            : base(lobby, events, langHelper)
         {
             events.TeamPreparation += Events_TeamPreparation;
         }
 
-        public void BalanceCurrentTeams()
+        public async Task BalanceCurrentTeams()
         {
-            var teamWithFewestPlayers = Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
-            var teamWithMostPlayers = Teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+            var playersToPutIntoOtherTeam = new List<ITDSPlayer>();
 
-            while (teamWithFewestPlayers is { } && teamWithMostPlayers is { }
-                && teamWithMostPlayers.Players.Count - teamWithFewestPlayers.Players.Count > 1)
+            await Do(teams =>
             {
-                var playerToPutIntoOtherTeam = teamWithMostPlayers.Players.Last();
-                SetPlayerTeam(playerToPutIntoOtherTeam, teamWithFewestPlayers);
-                SendNotification(lang => string.Format(lang.BALANCE_TEAM_INFO, playerToPutIntoOtherTeam.DisplayName));
+                var teamWithFewestPlayers = teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+                var teamWithMostPlayers = teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
 
-                teamWithFewestPlayers = Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
-                teamWithMostPlayers = Teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
-            }
+                while (teamWithFewestPlayers is { } && teamWithMostPlayers is { }
+                    && teamWithMostPlayers.Players.Count - teamWithFewestPlayers.Players.Count > 1)
+                {
+                    var playerToPutIntoOtherTeam = teamWithMostPlayers.Players.Last();
+                    SetPlayerTeam(playerToPutIntoOtherTeam, teamWithFewestPlayers);
+
+                    teamWithFewestPlayers = teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+                    teamWithMostPlayers = teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
+                }
+            });
+
+            foreach (var player in playersToPutIntoOtherTeam)
+                Lobby.Notifications.Send(lang => string.Format(lang.BALANCE_TEAM_INFO, player.DisplayName));
         }
 
         private void Events_TeamPreparation()
         {
-            if (Entity.LobbyRoundSettings.MixTeamsAfterRound)
+            if (Lobby.Entity.LobbyRoundSettings.MixTeamsAfterRound)
                 MixTeams();
         }
     }

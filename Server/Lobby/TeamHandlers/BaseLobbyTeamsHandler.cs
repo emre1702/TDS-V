@@ -9,23 +9,24 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Handler.Entities.TeamSystem;
 using TDS_Shared.Data.Utility;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
 {
-    public class BaseLobbyTeamsHandler
+    public class BaseLobbyTeamsHandler : IBaseLobbyTeamsHandler
     {
-        protected readonly LobbyDb Entity;
-
-        private List<ITeam> _teams = new List<ITeam>(3);
+        protected readonly IBaseLobby Lobby;
+        private readonly List<ITeam> _teams = new List<ITeam>(3);
         private readonly SemaphoreSlim _teamsSemaphore = new SemaphoreSlim(1, 1);
 
-        public BaseLobbyTeamsHandler(LobbyDb entity, IBaseLobbyEventsHandler events)
+        public BaseLobbyTeamsHandler(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
-            Entity = entity;
-            InitTeams(entity);
+            Lobby = lobby;
+            InitTeams(Lobby.Entity);
 
             events.PlayerJoined += Events_PlayerJoined;
         }

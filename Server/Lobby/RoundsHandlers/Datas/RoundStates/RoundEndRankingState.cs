@@ -12,9 +12,6 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
         }
 
         public override ValueTask SetCurrent()
-        {
-            Lobby.Events.TriggerRoundEndRanking();
-            return default;
-        }
+            => Lobby.Events.TriggerRoundEndRanking();
     }
 }

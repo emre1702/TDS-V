@@ -7,35 +7,24 @@ using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.TeamHandlers;
-using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 
 namespace TDS_Server.LobbySystem.Players
 {
     public class BaseLobbyPlayers : IBaseLobbyPlayers
     {
-        protected IBaseLobbyEventsHandler Events { get; }
-
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private readonly List<ITDSPlayer> _players = new List<ITDSPlayer>();
 
-        private readonly BaseLobbyTeamsHandler _teams;
         protected readonly IBaseLobby Lobby;
-        private readonly BaseLobbyBansHandler _bans;
 
-        public BaseLobbyPlayers(IBaseLobby lobby, IBaseLobbyEventsHandler events, BaseLobbyTeamsHandler teams, BaseLobbyBansHandler bans)
+        public BaseLobbyPlayers(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
-            Events = events;
-            _teams = teams;
             Lobby = lobby;
-            _bans = bans;
 
             events.Remove += async _ => await RemoveAllPlayers();
             events.NewBan += Events_NewBan;
@@ -49,13 +38,13 @@ namespace TDS_Server.LobbySystem.Players
         /// <returns></returns>
         public virtual async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex = 0)
         {
-            if (await _bans.CheckIsBanned(player))
+            if (await Lobby.Bans.CheckIsBanned(player))
                 return false;
 
             player.Lobby?.RemovePlayer(player);
             await _semaphore.Do(() => _players.Add(player));
 
-            Events.TriggerPlayerJoined(player, teamIndex);
+            Lobby.Events.TriggerPlayerJoined(player, teamIndex);
             player.SetLobby(Lobby);
             InformAboutHowToLeaveLobby(player);
 
@@ -80,10 +69,10 @@ namespace TDS_Server.LobbySystem.Players
             player.PreviousLobby = null;
             await player.SetPlayerLobbyStats(null);
             player.Lifes = 0;
-            _teams.SetPlayerTeam(player, null);
+            Lobby.Teams.SetPlayerTeam(player, null);
             player.SetSpectates(null);
 
-            await Events.TriggerPlayerLeft(player);
+            await Lobby.Events.TriggerPlayerLeft(player);
 
             return true;
         }

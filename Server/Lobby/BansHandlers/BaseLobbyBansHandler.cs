@@ -3,31 +3,26 @@ using System.Threading.Tasks;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.Chats;
-using TDS_Server.LobbySystem.Database;
 using PlayerDb = TDS_Server.Database.Entity.Player.Players;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.BansHandlers
 {
-    public class BaseLobbyBansHandler
+    public class BaseLobbyBansHandler : IBaseLobbyBansHandler
     {
-        private readonly BaseLobbyDatabase _database;
-        private readonly IBaseLobbyEventsHandler _events;
-        protected readonly LobbyDb Entity;
-        private readonly BaseLobbyChat _chat;
+        protected readonly IBaseLobby Lobby;
         protected readonly LangHelper LangHelper;
 
-        public BaseLobbyBansHandler(BaseLobbyDatabase database, IBaseLobbyEventsHandler events, LangHelper langHelper, BaseLobbyChat chat, LobbyDb entity)
-            => (_database, _events, LangHelper, _chat, Entity) = (database, events, langHelper, chat, entity);
+        public BaseLobbyBansHandler(IBaseLobby lobby, LangHelper langHelper)
+            => (Lobby, LangHelper) = (lobby, langHelper);
 
         public virtual async ValueTask<bool> CheckIsBanned(ITDSPlayer player)
         {
-            var ban = await _database.GetBan(player.Entity?.Id);
+            var ban = await Lobby.Database.GetBan(player.Entity?.Id);
             if (ban is null)
                 return false;
             if (await CheckHasExpired(ban))
@@ -45,7 +40,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
             if (ban.EndTimestamp.Value > DateTime.UtcNow)
                 return false;
 
-            await _database.Remove<PlayerBans>(ban);
+            await Lobby.Database.Remove<PlayerBans>(ban);
 
             return true;
         }
@@ -65,21 +60,21 @@ namespace TDS_Server.LobbySystem.BansHandlers
         {
             int targetId = target.Id;
             if (serial is null)
-                serial = await _database.GetLastUsedSerial(targetId);
+                serial = await Lobby.Database.GetLastUsedSerial(targetId);
 
-            var ban = await _database.GetBan(targetId);
+            var ban = await Lobby.Database.GetBan(targetId);
             if (ban is { })
             {
                 UpdateBanEntity(ban, admin.Entity?.Id, length, reason, serial);
-                await _database.Save();
+                await Lobby.Database.Save();
             }
             else
             {
                 ban = CreateBanEntity(admin.Entity?.Id, target.Id, length, reason, serial);
-                await _database.AddBanEntity(ban);
+                await Lobby.Database.AddBanEntity(ban);
             }
             OutputNewBanInfo(ban, admin, target.Name);
-            _events.TriggerNewBan(ban, target.PlayerSettings?.DiscordUserId);
+            Lobby.Events.TriggerNewBan(ban, target.PlayerSettings?.DiscordUserId);
 
             return ban;
         }
@@ -109,34 +104,34 @@ namespace TDS_Server.LobbySystem.BansHandlers
         protected virtual void OutputNewTempBanInfo(PlayerBans ban, ITDSPlayer admin, string targetName)
         {
             var lengthHours = (ban.EndTimestamp!.Value - ban.StartTimestamp).TotalMinutes / 60;
-            string msgProvider(ILanguage lang) => string.Format(lang.TIMEBAN_LOBBY_INFO, targetName, lengthHours, Entity.Name, admin.DisplayName, ban.Reason);
-            if (Entity.IsOfficial)
+            string msgProvider(ILanguage lang) => string.Format(lang.TIMEBAN_LOBBY_INFO, targetName, lengthHours, Lobby.Entity.Name, admin.DisplayName, ban.Reason);
+            if (Lobby.Entity.IsOfficial)
                 LangHelper.SendAllChatMessage(msgProvider);
             else
-                _chat.Send(msgProvider);
+                Lobby.Chat.Send(msgProvider);
         }
 
         protected virtual void OutputTempBanInfoToTarget(ITDSPlayer target, PlayerBans ban, ITDSPlayer admin)
         {
             var lengthHours = (ban.EndTimestamp!.Value - ban.StartTimestamp).TotalMinutes / 60;
             NAPI.Task.Run(() =>
-                target.SendChatMessage(string.Format(target.Language.TIMEBAN_LOBBY_YOU_INFO, lengthHours, Entity.Name, admin.DisplayName, ban.Reason)));
+                target.SendChatMessage(string.Format(target.Language.TIMEBAN_LOBBY_YOU_INFO, lengthHours, Lobby.Entity.Name, admin.DisplayName, ban.Reason)));
         }
 
         protected virtual void OutputPermBanInfoToTarget(ITDSPlayer target, PlayerBans ban, ITDSPlayer admin)
         {
             var lengthHours = (ban.EndTimestamp!.Value - ban.StartTimestamp).TotalMinutes / 60;
             NAPI.Task.Run(() =>
-                target.SendChatMessage(string.Format(target.Language.PERMABAN_LOBBY_YOU_INFO, Entity.Name, admin.DisplayName, ban.Reason)));
+                target.SendChatMessage(string.Format(target.Language.PERMABAN_LOBBY_YOU_INFO, Lobby.Entity.Name, admin.DisplayName, ban.Reason)));
         }
 
         protected virtual void OutputNewPermBanInfo(PlayerBans ban, ITDSPlayer admin, string targetName)
         {
-            string msgProvider(ILanguage lang) => string.Format(lang.PERMABAN_LOBBY_INFO, targetName, Entity.Name, admin.DisplayName, ban.Reason);
-            if (Entity.IsOfficial)
+            string msgProvider(ILanguage lang) => string.Format(lang.PERMABAN_LOBBY_INFO, targetName, Lobby.Entity.Name, admin.DisplayName, ban.Reason);
+            if (Lobby.Entity.IsOfficial)
                 LangHelper.SendAllChatMessage(msgProvider);
             else
-                _chat.Send(msgProvider);
+                Lobby.Chat.Send(msgProvider);
         }
 
         private void UpdateBanEntity(PlayerBans ban, int? adminId, TimeSpan? length, string reason, string? serial)
@@ -153,7 +148,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
             return new PlayerBans()
             {
                 PlayerId = targetId,
-                LobbyId = Entity.Id,
+                LobbyId = Lobby.Entity.Id,
                 Serial = serial,
                 AdminId = adminId ?? -1,
                 EndTimestamp = DateTime.UtcNow + length,
@@ -164,18 +159,18 @@ namespace TDS_Server.LobbySystem.BansHandlers
         public virtual async Task Unban(ITDSPlayer admin, ITDSPlayer target, string reason)
         {
             await Unban(admin, target.Entity!, reason);
-            target.SendChatMessage(string.Format(target.Language.UNBAN_YOU_LOBBY_INFO, Entity.Name, admin.DisplayName, reason));
+            target.SendChatMessage(string.Format(target.Language.UNBAN_YOU_LOBBY_INFO, Lobby.Entity.Name, admin.DisplayName, reason));
         }
 
         public virtual async Task<PlayerBans?> Unban(ITDSPlayer admin, PlayerDb target, string reason)
         {
-            var ban = await _database.GetBan(target.Id);
+            var ban = await Lobby.Database.GetBan(target.Id);
             if (ban is null)
             {
                 NAPI.Task.Run(() => admin.SendChatMessage(admin.Language.PLAYER_ISNT_BANED));
                 return null;
             }
-            await _database.Remove<PlayerBans>(ban);
+            await Lobby.Database.Remove<PlayerBans>(ban);
             OutputUnbanMessage(admin, target.Name, reason);
 
             return ban;
@@ -183,10 +178,10 @@ namespace TDS_Server.LobbySystem.BansHandlers
 
         protected virtual void OutputUnbanMessage(ITDSPlayer admin, string targetName, string reason)
         {
-            if (Entity.IsOfficial)
-                LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, targetName, Entity.Name, admin.AdminLevelName, reason));
+            if (Lobby.Entity.IsOfficial)
+                LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, targetName, Lobby.Entity.Name, admin.AdminLevelName, reason));
             else
-                _chat.Send(lang => string.Format(lang.UNBAN_LOBBY_INFO, targetName, Entity.Name, admin.AdminLevelName, reason));
+                Lobby.Chat.Send(lang => string.Format(lang.UNBAN_LOBBY_INFO, targetName, Lobby.Entity.Name, admin.AdminLevelName, reason));
         }
     }
 }

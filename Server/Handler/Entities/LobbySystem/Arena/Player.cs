@@ -1,65 +1,18 @@
-﻿using GTANetworkAPI;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
-using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map.Creator;
-using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Core;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class Arena
     {
-        #region Public Methods
-
-        public override async Task<bool> AddPlayer(ITDSPlayer player, uint? teamindex = null)
-        {
-            if (CurrentGameMode?.CanJoinLobby(player, teamindex) == false)
-                return false;
-
-            if (!await base.AddPlayer(player, 0))
-                return false;
-
-            var pos = _currentMap?.LimitInfo?.Center?.ToVector3();
-            if (pos is { })
-                player.Position = pos.AddToZ(10);
-
-            var teams = Teams.Select(t =>
-                        new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)
-                    ).ToList();
-
-            NAPI.Task.Run(() =>
-            {
-                SendPlayerRoundInfoOnJoin(player);
-                new TDSTimer(() => SpectateOtherAllTeams(player), 1000, 1);
-
-                player.TriggerEvent(ToClientEvent.SyncTeamChoiceMenuData, Serializer.ToBrowser(teams), RoundSettings.MixTeamsAfterRound);
-
-                CurrentGameMode?.AddPlayer(player, teamindex);
-            });
-
-            return true;
-        }
-
-        public void ChooseTeam(ITDSPlayer player, int teamIndex)
-        {
-            player.CurrentRoundStats = new RoundStatsDto(player);
-
-            if (teamIndex != 0)
-            {
-                SpectateOtherSameTeam(player);
-                AddPlayerAsPlayer(player, teamIndex);
-            }
-        }
-
         public override async Task RemovePlayer(ITDSPlayer player)
         {
             var lifes = player.Lifes;
@@ -131,16 +84,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void AddPlayerAsPlayer(ITDSPlayer player, int teamIndex)
-        {
-            var team = Entity.LobbyRoundSettings.MixTeamsAfterRound ? GetTeamWithFewestPlayer() : Teams[teamIndex];
-            SetPlayerTeam(player, team);
-        }
-
         private void RemovePlayerFromAlive(ITDSPlayer player)
         {
             if (player.Team != null)
@@ -168,74 +111,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             player.Freeze(false);
             player.TriggerEvent(ToClientEvent.PlayerRespawned);
             CurrentGameMode?.RespawnPlayer(player);
-        }
-
-        private void SavePlayerRoundStats(ITDSPlayer player)
-        {
-            if (!SavePlayerLobbyStats)
-                return;
-            if (player.LobbyStats is null)
-                return;
-
-            PlayerLobbyStats? to = player.LobbyStats;
-            RoundStatsDto? from = player.CurrentRoundStats;
-            if (to is null || from is null)
-                return;
-            to.Kills += from.Kills;
-            to.Assists += from.Assists;
-            to.Damage += from.Damage;
-            to.TotalKills += from.Kills;
-            to.TotalAssists += from.Assists;
-            to.TotalDamage += from.Damage;
-
-            ++to.TotalRounds;
-            if (from.Kills > to.MostKillsInARound)
-                to.MostKillsInARound = from.Kills;
-            if (from.Damage > to.MostDamageInARound)
-                to.MostDamageInARound = from.Damage;
-            if (from.Assists > to.MostAssistsInARound)
-                to.MostAssistsInARound = from.Assists;
-
-            if (IsOfficial && from.Damage > 0)
-            {
-                if (from.Kills > 0)
-                    player.AddToChallenge(ChallengeType.Kills, from.Kills);
-                if (from.Assists > 0)
-                    player.AddToChallenge(ChallengeType.Assists, from.Assists);
-                player.AddToChallenge(ChallengeType.Damage, from.Damage);
-                player.AddToChallenge(ChallengeType.RoundPlayed);
-            }
-
-            from.Clear();
-        }
-
-        private void SendPlayerAmountInFightInfo(ITDSPlayer player)
-        {
-            SyncedTeamPlayerAmountDto[] amounts = Teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers).ToArray();
-            player.TriggerEvent(ToClientEvent.AmountInFightSync, Serializer.ToClient(amounts));
-        }
-
-        private void SendPlayerRoundInfoOnJoin(ITDSPlayer player)
-        {
-            if (_currentMap is { })
-            {
-                player.TriggerEvent(ToClientEvent.MapChange, _currentMap.ClientSyncedDataJson);
-            }
-
-            SendPlayerAmountInFightInfo(player);
-            SyncMapVotingOnJoin(player);
-            CurrentGameMode?.SendPlayerRoundInfoOnJoin(player);
-
-            switch (CurrentRoundStatus)
-            {
-                case RoundStatus.Countdown:
-                    player.TriggerEvent(ToClientEvent.CountdownStart, true, _nextRoundStatusTimer?.RemainingMsToExecute ?? 0);
-                    break;
-
-                case RoundStatus.Round:
-                    player.TriggerEvent(ToClientEvent.RoundStart, true, (int)(_nextRoundStatusTimer?.ElapsedMsSinceLastExecOrCreate ?? 0));
-                    break;
-            }
         }
 
         private void SetPlayerAlive(ITDSPlayer player)
@@ -293,7 +168,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             }
             player.LastHitter = null;
         }
-
-        #endregion Private Methods
     }
 }

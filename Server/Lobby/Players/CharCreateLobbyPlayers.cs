@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.LobbySystem.BansHandlers;
 using TDS_Server.LobbySystem.Lobbies;
-using TDS_Server.LobbySystem.TeamHandlers;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
 
@@ -16,8 +10,8 @@ namespace TDS_Server.LobbySystem.Players
 {
     internal class CharCreateLobbyPlayers : BaseLobbyPlayers
     {
-        public CharCreateLobbyPlayers(CharCreateLobby lobby, IBaseLobbyEventsHandler events, BaseLobbyTeamsHandler teams, BaseLobbyBansHandler bans)
-            : base(lobby, events, teams, bans)
+        public CharCreateLobbyPlayers(CharCreateLobby lobby, IBaseLobbyEventsHandler events)
+            : base(lobby, events)
         {
         }
 

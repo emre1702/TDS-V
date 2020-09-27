@@ -2,6 +2,7 @@
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
@@ -14,19 +15,19 @@ namespace TDS_Server.LobbySystem.MapHandlers
         public uint Dimension { get; }
         public Vector3 SpawnPoint { get; }
         public float SpawnRotation { get; }
-        protected readonly LobbyDb Entity;
+        protected IBaseLobby Lobby { get; }
 
-        public BaseLobbyMapHandler(LobbyDb entity, IBaseLobbyEventsHandler events)
+        public BaseLobbyMapHandler(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
-            Entity = entity;
+            Lobby = lobby;
             Dimension = GetFreeDimension();
 
             SpawnPoint = new Vector3(
-                entity.DefaultSpawnX,
-                entity.DefaultSpawnY,
-                entity.DefaultSpawnZ
+                lobby.Entity.DefaultSpawnX,
+                lobby.Entity.DefaultSpawnY,
+                lobby.Entity.DefaultSpawnZ
             );
-            SpawnRotation = entity.DefaultSpawnRotation;
+            SpawnRotation = lobby.Entity.DefaultSpawnRotation;
 
             events.PlayerJoined += Events_PlayerJoined;
         }

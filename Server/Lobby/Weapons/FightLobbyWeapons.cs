@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.LobbyEntities;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Weapons
 {
     public class FightLobbyWeapons
     {
-        private readonly LobbyDb _entity;
+        protected readonly IFightLobby Lobby;
 
-        public FightLobbyWeapons(LobbyDb entity)
+        public FightLobbyWeapons(IFightLobby lobby)
         {
-            _entity = entity;
+            Lobby = lobby;
         }
 
         public virtual void GivePlayerWeapons(ITDSPlayer player)
@@ -31,6 +31,6 @@ namespace TDS_Server.LobbySystem.Weapons
         }
 
         internal virtual IEnumerable<LobbyWeapons> GetAllWeapons()
-            => _entity.LobbyWeapons;
+            => Lobby.Entity.LobbyWeapons;
     }
 }

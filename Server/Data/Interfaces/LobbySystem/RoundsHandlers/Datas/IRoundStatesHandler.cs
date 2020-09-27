@@ -4,7 +4,10 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
 {
     public interface IRoundStatesHandler
     {
-        public IRoundEndReason CurrentRoundEndReason { get; }
+        IRoundEndReason CurrentRoundEndReason { get; }
+        IRoundState CurrentState { get; }
+        int TimeToNextStateMs { get; }
+        int TimeInStateMs { get; }
 
         void EndRound(IRoundEndReason roundEndReason);
 

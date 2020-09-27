@@ -5,7 +5,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
     public class PlayerPreparationState : RoundState
     {
-        public override int Duration => 1000;
+        public override int Duration => 2 * 1000;
 
         public PlayerPreparationState(IRoundFightLobby lobby) : base(lobby)
         {

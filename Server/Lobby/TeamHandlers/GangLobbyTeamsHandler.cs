@@ -1,12 +1,12 @@
 ﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.LobbySystem.EventsHandlers;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.LobbySystem.Lobbies;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
 {
     public class GangLobbyTeamsHandler : BaseLobbyTeamsHandler
     {
-        public GangLobbyTeamsHandler(LobbyDb entity, BaseLobbyEventsHandler events) : base(entity, events)
+        public GangLobbyTeamsHandler(GangLobby lobby, IBaseLobbyEventsHandler events) : base(lobby, events)
         {
         }
 

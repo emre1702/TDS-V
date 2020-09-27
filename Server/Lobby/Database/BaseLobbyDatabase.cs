@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Database;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
-using TDS_Server.LobbySystem.Lobbies;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Database
@@ -16,14 +13,14 @@ namespace TDS_Server.LobbySystem.Database
     public class BaseLobbyDatabase : IBaseLobbyDatabase
     {
         protected DatabaseHandler DbHandler { get; }
-        private readonly IBaseLobby _lobby;
+        protected readonly IBaseLobby Lobby;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public BaseLobbyDatabase(IBaseLobby lobby, DatabaseHandler dbHandler, IBaseLobbyEventsHandler events)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
-            _lobby = lobby;
+            Lobby = lobby;
             DbHandler = dbHandler;
 
             DbHandler.ExecuteForDBWithoutWait(dbContext => dbContext.Attach(lobby.Entity));
@@ -54,7 +51,7 @@ namespace TDS_Server.LobbySystem.Database
         {
             if (!playerId.HasValue)
                 return null;
-            return await DbHandler.ExecuteForDBAsync(async (dbContext) => await dbContext.PlayerBans.FindAsync(playerId, _lobby.Entity.Id));
+            return await DbHandler.ExecuteForDBAsync(async (dbContext) => await dbContext.PlayerBans.FindAsync(playerId, Lobby.Entity.Id));
         }
 
         public Task<string?> GetLastUsedSerial(int playerId)

@@ -2,13 +2,10 @@
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.Chats;
-using TDS_Server.LobbySystem.Database;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 using PlayerDb = TDS_Server.Database.Entity.Player.Players;
 
 namespace TDS_Server.LobbySystem.BansHandlers
@@ -17,8 +14,8 @@ namespace TDS_Server.LobbySystem.BansHandlers
     {
         private readonly BansHandler _globalBansHandler;
 
-        public MainMenuBansHandler(BaseLobbyDatabase database, IBaseLobbyEventsHandler events, LangHelper langHelper, BansHandler globalBansHandler, BaseLobbyChat chat, LobbyDb entity)
-            : base(database, events, langHelper, chat, entity)
+        public MainMenuBansHandler(IBaseLobby lobby, LangHelper langHelper, BansHandler globalBansHandler)
+            : base(lobby, langHelper)
         {
             _globalBansHandler = globalBansHandler;
         }

@@ -1,12 +1,13 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.LobbySystem.TeamHandlers;
 
 namespace TDS_Server.LobbySystem.Spectator
 {
-    public class RoundFightLobbySpectator : FightLobbySpectator
+    public class RoundFightLobbySpectator : FightLobbySpectator, IRoundFightLobbySpectator
     {
         private Vector3 _currentMapSpectatorPosition = new Vector3();
 

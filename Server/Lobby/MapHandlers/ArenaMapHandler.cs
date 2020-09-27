@@ -1,14 +1,14 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.Map;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.MapHandlers
 {
     public class ArenaMapHandler : BaseLobbyMapHandler
     {
-        public ArenaMapHandler(LobbyDb entity, IRoundFightLobbyEventsHandler events) : base(entity, events)
+        public ArenaMapHandler(IArena lobby, IRoundFightLobbyEventsHandler events) : base(lobby, events)
         {
             events.InitNewMap += CreateTeamSpawnBlips;
         }
@@ -17,7 +17,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
         {
             NAPI.Task.Run(() =>
             {
-                player.Spawn(SpawnPoint.Around(Entity.AroundSpawnPoint), SpawnRotation);
+                player.Spawn(SpawnPoint.Around(Lobby.Entity.AroundSpawnPoint), SpawnRotation);
                 player.Freeze(true);
             });
         }

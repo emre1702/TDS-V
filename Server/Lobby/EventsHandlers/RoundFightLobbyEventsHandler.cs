@@ -28,7 +28,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public AsyncValueTaskEvent? RoundEndStats { get; set; }
 
-        public event RoundStateChangedDelegate? RoundEndRanking;
+        public AsyncValueTaskEvent? RoundEndRanking { get; set; }
 
         public AsyncValueTaskEvent? RoundClear { get; set; }
 
@@ -70,8 +70,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         public ValueTask TriggerRoundEnd()
             => RoundEnd?.InvokeAsync() ?? default;
 
-        public void TriggerRoundEndRanking()
-            => RoundEndRanking?.Invoke();
+        public ValueTask TriggerRoundEndRanking()
+            => RoundEndRanking?.InvokeAsync() ?? default;
 
         public ValueTask TriggerRoundEndStats()
             => RoundEndStats?.InvokeAsync() ?? default;

@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
+using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.EventsHandlers;
 using TDS_Shared.Data.Enums;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
 {
-    public class FightLobbyTeamsHandler : BaseLobbyTeamsHandler
+    public class FightLobbyTeamsHandler : BaseLobbyTeamsHandler, IFightLobbyTeamsHandler
     {
         private static readonly Dictionary<TeamOrder, Func<ILanguage, string>> _teamOrdersDict = new Dictionary<TeamOrder, Func<ILanguage, string>>
         {
@@ -24,13 +24,11 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         };
 
         private readonly LangHelper _langHelper;
-        private readonly IBaseLobbyPlayers _players;
 
-        public FightLobbyTeamsHandler(LobbyDb entity, IBaseLobbyEventsHandler events, LangHelper langHelper, IBaseLobbyPlayers players)
-            : base(entity, events)
+        public FightLobbyTeamsHandler(IFightLobby lobby, IBaseLobbyEventsHandler events, LangHelper langHelper)
+            : base(lobby, events)
         {
             _langHelper = langHelper;
-            _players = players;
         }
 
         public void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder)
@@ -67,7 +65,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         {
             return Do(teams =>
             {
-                var oldPlayersList = _players.GetPlayers();
+                var oldPlayersList = Lobby.Players.GetPlayers();
                 ClearTeamPlayersLists(teams);
                 foreach (var player in oldPlayersList)
                 {

@@ -32,7 +32,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         AsyncValueTaskEvent? RoundEndStats { get; set; }
 
-        event RoundStateChangedDelegate? RoundEndRanking;
+        AsyncValueTaskEvent? RoundEndRanking { get; set; }
 
         AsyncValueTaskEvent? RoundClear { get; set; }
 
@@ -50,7 +50,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         ValueTask TriggerRoundEnd();
 
-        void TriggerRoundEndRanking();
+        ValueTask TriggerRoundEndRanking();
 
         ValueTask TriggerRoundClear();
 

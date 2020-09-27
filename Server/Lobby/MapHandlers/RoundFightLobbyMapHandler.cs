@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using TDS_Server.Data.Models.Map;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.MapHandlers
 {
@@ -10,8 +10,8 @@ namespace TDS_Server.LobbySystem.MapHandlers
     {
         public MapDto? CurrentMap { get; private set; }
 
-        public RoundFightLobbyMapHandler(LobbyDb entity, IRoundFightLobbyEventsHandler events)
-            : base(entity, events)
+        public RoundFightLobbyMapHandler(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events)
+            : base(lobby, events)
         {
             events.RoundClear += RoundClear;
             events.RequestNewMap += GetNextMap;

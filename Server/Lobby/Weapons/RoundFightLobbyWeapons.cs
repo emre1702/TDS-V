@@ -2,29 +2,29 @@
 using System.Linq;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Weapons;
 using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.LobbySystem.Lobbies.Abstracts;
 
 namespace TDS_Server.LobbySystem.Weapons
 {
     public class RoundFightLobbyWeapons : FightLobbyWeapons, IRoundFightLobbyWeapons
     {
         private List<LobbyWeapons> _allRoundWeapons = new List<LobbyWeapons>();
-        private readonly RoundFightLobby _lobby;
 
-        public RoundFightLobbyWeapons(RoundFightLobby lobby) : base(lobby.Entity)
+        protected new IRoundFightLobby Lobby => (IRoundFightLobby)base.Lobby;
+
+        public RoundFightLobbyWeapons(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events) : base(lobby)
         {
-            _lobby = lobby;
-
-            lobby.Events.WeaponsLoading += Events_WeaponsLoading;
+            events.WeaponsLoading += Events_WeaponsLoading;
         }
 
         public override void GivePlayerWeapons(ITDSPlayer player)
         {
             if (_allRoundWeapons is null)
                 return;
-            if (_lobby.Gamemodes.CurrentGamemode?.HandlesGivingWeapons == true)
+            if (Lobby.Gamemodes.CurrentGamemode?.HandlesGivingWeapons == true)
                 return;
             base.GivePlayerWeapons(player);
         }
@@ -37,13 +37,13 @@ namespace TDS_Server.LobbySystem.Weapons
 
         public virtual void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-            _lobby.Gamemodes.CurrentGamemode?.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
+            Lobby.Gamemodes.CurrentGamemode?.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
         }
 
         private void Events_WeaponsLoading()
         {
-            _allRoundWeapons = _lobby.Entity.LobbyWeapons
-                .Where(w => _lobby.Rounds.CurrentGamemode?.IsWeaponAllowed(w.Hash) != false)
+            _allRoundWeapons = Lobby.Entity.LobbyWeapons
+                .Where(w => Lobby.Rounds.CurrentGamemode?.IsWeaponAllowed(w.Hash) != false)
                 .ToList();
         }
     }

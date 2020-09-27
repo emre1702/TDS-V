@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
 using TDS_Server.LobbySystem.TeamHandlers;
 
 namespace TDS_Server.LobbySystem.Spectator
 {
-    public class FightLobbySpectator
+    public class FightLobbySpectator : IFightLobbySpectator
     {
         private readonly FightLobbyTeamsHandler _teams;
 
@@ -25,7 +26,7 @@ namespace TDS_Server.LobbySystem.Spectator
                 SpectateOtherSameTeam(player, forward);
         }
 
-        internal virtual async Task SpectateOtherAllTeams(ITDSPlayer player, bool spectateNext = true)
+        public virtual async Task SpectateOtherAllTeams(ITDSPlayer player, bool spectateNext = true)
         {
             var currentlySpectating = player.Spectates ?? player;
             ITDSPlayer? nextPlayer;
@@ -38,7 +39,7 @@ namespace TDS_Server.LobbySystem.Spectator
             player.Spectates = nextPlayer;
         }
 
-        internal virtual void SpectateOtherSameTeam(ITDSPlayer player, bool spectateNext = true, bool ignoreSource = false)
+        public virtual void SpectateOtherSameTeam(ITDSPlayer player, bool spectateNext = true, bool ignoreSource = false)
         {
             var currentlySpectating = player.Spectates ?? player;
             ITDSPlayer? nextPlayer;

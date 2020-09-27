@@ -4,7 +4,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.MapHandlers
 {
 #nullable enable
 
-    public interface IRoundFightLobbyMapHandler
+    public interface IRoundFightLobbyMapHandler : IBaseLobbyMapHandler
     {
         MapDto? CurrentMap { get; }
     }
