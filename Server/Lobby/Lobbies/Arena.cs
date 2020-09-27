@@ -21,6 +21,7 @@ namespace TDS_Server.LobbySystem.Lobbies
     {
         protected new ArenaDatabase Database => (ArenaDatabase)base.Database;
         protected new ArenaLobbySync Sync => (ArenaLobbySync)base.Sync;
+        public new ArenaTeamsHandler Teams => (ArenaTeamsHandler)base.Teams;
 
         public Arena(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler)
             : base(entity, databaseHandler, langHelper, eventsHandler)

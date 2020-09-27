@@ -1,12 +1,14 @@
-﻿using TDS_Server.LobbySystem.EventsHandlers;
+﻿using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.LobbySystem.EventsHandlers;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
 {
-    public class ArenaTeamsHandler : FightLobbyTeamsHandler
+    public class ArenaTeamsHandler : RoundFightLobbyTeamsHandler
     {
-        public ArenaTeamsHandler(LobbyDb entity, BaseLobbyEventsHandler events) : base(entity, events)
+        public ArenaTeamsHandler(LobbyDb entity, IRoundFightLobbyEventsHandler events) : base(entity, events)
         {
+            events.TeamPreparation += Events_TeamPreparation;
         }
 
         public void BalanceCurrentTeams()
@@ -24,6 +26,12 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 teamWithFewestPlayers = Teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().FirstOrDefault();
                 teamWithMostPlayers = Teams.Skip(1).MaxBy(t => t.Players.Count).Shuffle().FirstOrDefault();
             }
+        }
+
+        private void Events_TeamPreparation()
+        {
+            if (Entity.LobbyRoundSettings.MixTeamsAfterRound)
+                MixTeams();
         }
     }
 }

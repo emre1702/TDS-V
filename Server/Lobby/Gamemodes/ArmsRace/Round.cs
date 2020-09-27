@@ -12,12 +12,12 @@ namespace TDS_Server.LobbySystem.Gamemodes
 
         public override void StartRoundCountdown()
         {
-            Lobby.AmountLifes = short.MaxValue;
+            Lobby.Deathmatch.AmountLifes = short.MaxValue;
         }
 
         public override void StopRound()
         {
-            Lobby.AmountLifes = (Lobby.Entity.FightSettings?.AmountLifes ?? 0);
+            Lobby.Deathmatch.AmountLifes = (Lobby.Entity.FightSettings?.AmountLifes ?? 0);
         }
 
         private bool CheckRoundEnd(ITDSPlayer killer)
@@ -29,8 +29,8 @@ namespace TDS_Server.LobbySystem.Gamemodes
             if (weaponHash.HasValue)
                 return false;
 
-            Lobby.CurrentRoundEndBecauseOfPlayer = killer;
-            Lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.PlayerWon);
+            Lobby.Rounds.CurrentRoundEndBecauseOfPlayer = killer;
+            Lobby.Rounds.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.PlayerWon);
             return true;
         }
     }

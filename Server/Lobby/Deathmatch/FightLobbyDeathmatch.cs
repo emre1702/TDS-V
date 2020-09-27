@@ -5,35 +5,36 @@ using TDS_Server.Core.Damagesystem;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.LobbySystem.Spectator;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Deathmatch
 {
-    public class FightLobbyDeathmatch : BaseLobbyDeathmatch
+    public class FightLobbyDeathmatch : BaseLobbyDeathmatch, IFightLobbyDeathmatch
     {
         private readonly LangHelper _langHelper;
         private readonly IBaseLobbyPlayers _players;
         private readonly FightLobbySpectator _spectator;
-        private readonly LobbyDb _entity;
 
         internal Damagesys Damage { get; set; }
 
-        public FightLobbyDeathmatch(IBaseLobbyEventsHandler events, FightLobby fightLobby, Damagesys damage, LangHelper langHelper, IBaseLobbyPlayers players, FightLobbySpectator spectator, LobbyDb entity)
+        public int AmountLifes { get; set; }
+
+        public FightLobbyDeathmatch(IBaseLobbyEventsHandler events, IFightLobby fightLobby, Damagesys damage, LangHelper langHelper, IBaseLobbyPlayers players, FightLobbySpectator spectator)
             : base(events, fightLobby)
         {
             Damage = damage;
             _langHelper = langHelper;
             _players = players;
             _spectator = spectator;
-            _entity = entity;
             damage.Init(fightLobby.Entity.LobbyWeapons, fightLobby.Entity.LobbyKillingspreeRewards);
+            AmountLifes = fightLobby.Entity.FightSettings.AmountLifes;
         }
 
         protected override void ResetPlayer(ITDSPlayer player)
@@ -74,7 +75,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
             {
                 _spectator.SpectateOtherSameTeam(player);
                 player.TriggerEvent(ToClientEvent.PlayerSpectateMode);
-            }, (uint)_entity.FightSettings.SpawnAgainAfterDeathMs);
+            }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);
         }
 
         protected void DeathInfoSync(ITDSPlayer player, ITDSPlayer? killer, uint weapon)

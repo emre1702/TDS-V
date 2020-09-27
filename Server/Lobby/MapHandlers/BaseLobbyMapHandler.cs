@@ -35,6 +35,10 @@ namespace TDS_Server.LobbySystem.MapHandlers
         {
         }
 
+        public virtual void DeleteMapBlips()
+        {
+        }
+
         private static uint GetFreeDimension()
         {
             uint tryid = 1;

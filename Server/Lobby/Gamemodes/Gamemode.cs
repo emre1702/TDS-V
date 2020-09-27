@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities.Gamemodes;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
@@ -18,7 +19,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
         protected readonly InvitationsHandler InvitationsHandler;
         protected readonly LangHelper LangHelper;
 
-        protected IBaseLobby Lobby;
+        protected IRoundFightLobby Lobby;
 
         protected MapDto Map;
 
@@ -36,10 +37,24 @@ namespace TDS_Server.LobbySystem.Gamemodes
             InvitationsHandler = invitationsHandler;
         }
 
-        public void Init(IBaseLobby lobby, MapDto map)
+        public void Init(IRoundFightLobby lobby, MapDto map)
         {
             Lobby = lobby;
             Map = map;
+
+            AddEvents();
+        }
+
+        protected virtual void AddEvents()
+        {
+            Lobby.Events.RoundClear += StartMapClear;
+            //Todo: Add all round events like MapClear
+        }
+
+        protected virtual void RemoveEvents()
+        {
+            if (Lobby.Events.RoundClear is { })
+                Lobby.Events.RoundClear -= StartMapClear;
         }
 
         public virtual bool HandlesGivingWeapons => false;
@@ -112,8 +127,10 @@ namespace TDS_Server.LobbySystem.Gamemodes
         {
         }
 
-        public virtual void StartMapClear()
+        public virtual ValueTask StartMapClear()
         {
+            RemoveEvents();
+            return default;
         }
 
         public virtual void StartRound()

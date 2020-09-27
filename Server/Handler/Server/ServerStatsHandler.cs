@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Server;
@@ -33,6 +35,7 @@ namespace TDS_Server.Handler.Server
             _eventsHandler.PlayerLoggedIn += PlayerLoggedIn;
             _eventsHandler.PlayerLoggedOut += CheckPlayerPeak;
             _eventsHandler.PlayerRegistered += PlayerRegistered;
+            _eventsHandler.LobbyCreatedNew += EventsHandler_LobbyCreatedNew;
 
             // Only to remove nullable warning
             DailyStats = new ServerDailyStats();
@@ -52,6 +55,12 @@ namespace TDS_Server.Handler.Server
             }).Wait();
 
             _eventsHandler.Minute += Save;
+        }
+
+        private void EventsHandler_LobbyCreatedNew(IBaseLobby lobby)
+        {
+            if (lobby is IArena arena)
+                arena.Events.RoundEndStats += () => CheckAddArenaRoundNew(arena);
         }
 
         #endregion Public Constructors
@@ -74,6 +83,23 @@ namespace TDS_Server.Handler.Server
                 return;
             await CheckNewDay();
             if (isOfficial)
+            {
+                ++DailyStats.ArenaRoundsPlayed;
+                ++TotalStats.ArenaRoundsPlayed;
+            }
+            else
+            {
+                ++DailyStats.CustomArenaRoundsPlayed;
+                ++TotalStats.CustomArenaRoundsPlayed;
+            }
+        }
+
+        public async ValueTask CheckAddArenaRoundNew(IArena lobby)
+        {
+            if (!lobby.CurrentRoundEndReason.AddToServerStats)
+                return;
+            await CheckNewDay();
+            if (lobby.IsOfficial)
             {
                 ++DailyStats.ArenaRoundsPlayed;
                 ++TotalStats.ArenaRoundsPlayed;

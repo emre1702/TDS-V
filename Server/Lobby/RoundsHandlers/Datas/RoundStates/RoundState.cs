@@ -1,5 +1,5 @@
-﻿using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.LobbySystem.Lobbies.Abstracts;
+﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
@@ -7,15 +7,15 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
     {
         public abstract int Duration { get; }
 
-        protected readonly RoundFightLobby Lobby;
+        protected readonly IRoundFightLobby Lobby;
 
-        public RoundState(RoundFightLobby lobby)
+        public RoundState(IRoundFightLobby lobby)
         {
             Lobby = lobby;
             LoadSettings();
         }
 
-        public abstract void SetCurrent();
+        public abstract ValueTask SetCurrent();
 
         public virtual void LoadSettings()
         {

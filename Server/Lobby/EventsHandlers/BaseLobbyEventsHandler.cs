@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Events;
@@ -32,9 +33,10 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         private readonly EventsHandler _eventsHandler;
         private readonly IBaseLobby _lobby;
+        protected readonly ILoggingHandler Logging;
 
-        public BaseLobbyEventsHandler(EventsHandler eventsHandler, IBaseLobby lobby)
-            => (_eventsHandler, _lobby) = (eventsHandler, lobby);
+        public BaseLobbyEventsHandler(EventsHandler eventsHandler, IBaseLobby lobby, ILoggingHandler logging)
+            => (_eventsHandler, _lobby, Logging) = (eventsHandler, lobby, logging);
 
         public async Task TriggerCreated(LobbyDb entity)
         {
@@ -44,13 +46,13 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             CreatedAfter?.Invoke(entity);
         }
 
-        public async Task TriggerRemove(IBaseLobby lobby)
+        public async Task TriggerRemove()
         {
             IsRemoved = true;
-            var task = Remove?.InvokeAsync(lobby);
+            var task = Remove?.InvokeAsync(_lobby);
             if (task is { })
                 await task;
-            RemoveAfter?.Invoke(lobby);
+            RemoveAfter?.Invoke(_lobby);
         }
 
         public async ValueTask TriggerPlayerLeft(ITDSPlayer player)

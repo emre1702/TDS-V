@@ -1,4 +1,5 @@
-﻿using TDS_Server.LobbySystem.Lobbies.Abstracts;
+﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
@@ -6,13 +7,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
     {
         public override int Duration => 10 * 1000;
 
-        public RoundEndRankingState(RoundFightLobby lobby) : base(lobby)
+        public RoundEndRankingState(IRoundFightLobby lobby) : base(lobby)
         {
         }
 
-        public override void SetCurrent()
+        public override ValueTask SetCurrent()
         {
-            Lobby.Rounds.RoundEndRanking();
+            Lobby.Events.TriggerRoundEndRanking();
+            return default;
         }
     }
 }

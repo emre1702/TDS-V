@@ -2,6 +2,7 @@
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.LobbySystem.BansHandlers;
 using TDS_Server.LobbySystem.Lobbies.Abstracts;
@@ -11,7 +12,7 @@ namespace TDS_Server.LobbySystem.Players
 {
     public class FightLobbyPlayers : BaseLobbyPlayers
     {
-        public FightLobbyPlayers(FightLobby lobby, IBaseLobbyEventsHandler events, BaseLobbyTeamsHandler teams, BaseLobbyBansHandler bans)
+        public FightLobbyPlayers(IFightLobby lobby, IBaseLobbyEventsHandler events, BaseLobbyTeamsHandler teams, BaseLobbyBansHandler bans)
             : base(lobby, events, teams, bans)
         {
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.EventsHandlers;
@@ -25,7 +26,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         private readonly LangHelper _langHelper;
         private readonly IBaseLobbyPlayers _players;
 
-        public FightLobbyTeamsHandler(LobbyDb entity, BaseLobbyEventsHandler events, LangHelper langHelper, IBaseLobbyPlayers players)
+        public FightLobbyTeamsHandler(LobbyDb entity, IBaseLobbyEventsHandler events, LangHelper langHelper, IBaseLobbyPlayers players)
             : base(entity, events)
         {
             _langHelper = langHelper;
@@ -49,12 +50,13 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             });
         }
 
-        protected void ClearTeamPlayersAmounts()
+        protected Task ClearTeamPlayersAmounts()
         {
-            Do(teams =>
+            return Do(teams =>
             {
                 foreach (var team in teams)
                 {
+                    team.AlivePlayers?.Clear();
                     team.SyncedTeamData.AmountPlayers.AmountAlive = 0;
                     team.SyncedTeamData.AmountPlayers.Amount = 0;
                 }

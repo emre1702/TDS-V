@@ -1,5 +1,5 @@
-﻿using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.LobbySystem.Lobbies.Abstracts;
+﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
@@ -9,7 +9,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 
         public override int Duration => _duration;
 
-        public CountdownState(RoundFightLobby lobby) : base(lobby)
+        public CountdownState(IRoundFightLobby lobby) : base(lobby)
         {
         }
 
@@ -18,9 +18,10 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
             _duration = Lobby.Entity.LobbyRoundSettings.CountdownTime;
         }
 
-        public override void SetCurrent()
+        public override ValueTask SetCurrent()
         {
-            Lobby.Rounds.Countdown();
+            Lobby.Events.TriggerCountdown();
+            return default;
         }
     }
 }

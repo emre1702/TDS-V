@@ -1,18 +1,17 @@
-﻿using TDS_Server.LobbySystem.Lobbies.Abstracts;
+﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
     public class RoundEndState : RoundState
     {
-        public override int Duration => 1 * 1000;
+        public override int Duration => 500;
 
-        public RoundEndState(RoundFightLobby lobby) : base(lobby)
+        public RoundEndState(IRoundFightLobby lobby) : base(lobby)
         {
         }
 
-        public override void SetCurrent()
-        {
-            Lobby.Rounds.RoundEnd();
-        }
+        public override ValueTask SetCurrent()
+            => Lobby.Events.TriggerRoundEnd();
     }
 }

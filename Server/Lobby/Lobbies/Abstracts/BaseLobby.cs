@@ -2,9 +2,10 @@
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Colshapes;
+using TDS_Server.Data.Interfaces.LobbySystem.Database;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Handler;
@@ -35,7 +36,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
         protected BaseLobbyBansHandler Bans { get; private set; }
         protected BaseLobbyChat Chat { get; private set; }
         public IBaseLobbyColshapesHandler ColshapesHandler { get; private set; }
-        protected BaseLobbyDatabase Database { get; private set; }
+        public IBaseLobbyDatabase Database { get; private set; }
         public IBaseLobbyDeathmatch Deathmatch { get; private set; }
         protected DatabaseHandler GlobalDatabaseHandler { get; }
         public IBaseLobbyEventsHandler Events { get; private set; }
@@ -45,7 +46,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
         protected BaseLobbyNatives Natives { get; private set; }
         protected BaseLobbyNotifications Notifications { get; private set; }
         public IBaseLobbyPlayers Players { get; private set; }
-        protected BaseLobbyTeamsHandler Teams { get; private set; }
+        public BaseLobbyTeamsHandler Teams { get; private set; }
         protected BaseLobbySoundsHandler Sounds { get; private set; }
         protected BaseLobbySync Sync { get; private set; }
 
@@ -110,8 +111,11 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             if (await Players.Any())
                 return;
 
-            await Events.TriggerRemove(this);
+            await Remove();
         }
+
+        internal virtual async Task Remove()
+            => await Events.TriggerRemove();
 
         #region Operators
 

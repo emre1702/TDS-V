@@ -114,7 +114,8 @@ namespace TDS_Server.LobbySystem.Sync
 
         public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
         {
-            TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data);
+            NAPI.Task.Run(() =>
+                TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data));
 
             switch (infoType)
             {

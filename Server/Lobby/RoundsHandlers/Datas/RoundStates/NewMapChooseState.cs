@@ -1,18 +1,20 @@
-﻿using TDS_Server.LobbySystem.Lobbies.Abstracts;
+﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
     public class NewMapChooseState : RoundState
     {
-        public override int Duration => 4 * 1000;
+        public override int Duration => 2 * 1000;
 
-        public NewMapChooseState(RoundFightLobby lobby) : base(lobby)
+        public NewMapChooseState(IRoundFightLobby lobby) : base(lobby)
         {
         }
 
-        public override void SetCurrent()
+        public override ValueTask SetCurrent()
         {
-            Lobby.Rounds.NewMapChoose();
+            Lobby.Events.TriggerNewMapChoose();
+            return default;
         }
     }
 }

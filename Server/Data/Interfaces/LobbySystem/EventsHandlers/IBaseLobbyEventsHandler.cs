@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
@@ -38,7 +38,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         Task TriggerCreated(LobbyDb entity);
 
-        Task TriggerRemove(IBaseLobby lobby);
+        Task TriggerRemove();
 
         void TriggerPlayerJoined(ITDSPlayer player, int teamIndex);
 

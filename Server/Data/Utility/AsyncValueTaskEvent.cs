@@ -8,14 +8,8 @@ namespace TDS_Server.Data.Utility
 
     public class AsyncValueTaskEvent<T>
     {
-        #region Private Fields
-
         private readonly List<Func<T, ValueTask>> _invocationList;
         private readonly object _locker;
-
-        #endregion Private Fields
-
-        #region Private Constructors
 
         private AsyncValueTaskEvent()
         {
@@ -23,16 +17,9 @@ namespace TDS_Server.Data.Utility
             _locker = new object();
         }
 
-        #endregion Private Constructors
-
-        #region Public Methods
-
-        public static AsyncValueTaskEvent<T>? operator -(
+        public static AsyncValueTaskEvent<T> operator -(
             AsyncValueTaskEvent<T> e, Func<T, ValueTask> callback)
         {
-            if (callback is null) return null;
-            if (e is null) return null;
-
             lock (e._locker)
             {
                 e._invocationList.Remove(callback);
@@ -62,11 +49,56 @@ namespace TDS_Server.Data.Utility
 
             foreach (var callback in tmpInvocationList)
             {
-                //Assuming we want a serial invocation, for a parallel invocation we can use Task.WhenAll instead
                 await callback(arg);
             }
         }
+    }
 
-        #endregion Public Methods
+    public class AsyncValueTaskEvent
+    {
+        private readonly List<Func<ValueTask>> _invocationList;
+        private readonly object _locker;
+
+        private AsyncValueTaskEvent()
+        {
+            _invocationList = new List<Func<ValueTask>>();
+            _locker = new object();
+        }
+
+        public static AsyncValueTaskEvent operator -(
+            AsyncValueTaskEvent e, Func<ValueTask> callback)
+        {
+            lock (e._locker)
+            {
+                e._invocationList.Remove(callback);
+            }
+            return e;
+        }
+
+        public static AsyncValueTaskEvent operator +(
+                    AsyncValueTaskEvent? e, Func<ValueTask> callback)
+        {
+            if (e is null) e = new AsyncValueTaskEvent();
+
+            lock (e._locker)
+            {
+                e._invocationList.Add(callback);
+            }
+            return e;
+        }
+
+        public async ValueTask InvokeAsync()
+        {
+            List<Func<ValueTask>> tmpInvocationList;
+            lock (_locker)
+            {
+                tmpInvocationList = new List<Func<ValueTask>>(_invocationList);
+            }
+
+            foreach (var callback in tmpInvocationList)
+            {
+                await callback();
+            }
+        }
     }
 }

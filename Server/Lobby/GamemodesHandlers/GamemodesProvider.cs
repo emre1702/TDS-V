@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using TDS_Server.Data.Interfaces.Entities.Gamemodes;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.Map;
 using TDS_Shared.Data.Enums;
 
@@ -9,10 +9,10 @@ namespace TDS_Server.LobbySystem.GamemodesHandlers
 {
     internal class GamemodesProvider
     {
-        private readonly IBaseLobby _lobby;
+        private readonly IRoundFightLobby _lobby;
         private readonly IServiceProvider _serviceProvider;
 
-        public GamemodesProvider(IBaseLobby lobby, IServiceProvider serviceProvider)
+        public GamemodesProvider(IRoundFightLobby lobby, IServiceProvider serviceProvider)
         {
             _lobby = lobby;
             _serviceProvider = serviceProvider;

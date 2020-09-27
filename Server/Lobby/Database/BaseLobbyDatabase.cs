@@ -3,8 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.LobbySystem.Database;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
 using TDS_Server.LobbySystem.Lobbies;
@@ -12,7 +13,7 @@ using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Database
 {
-    public class BaseLobbyDatabase
+    public class BaseLobbyDatabase : IBaseLobbyDatabase
     {
         protected DatabaseHandler DbHandler { get; }
         private readonly IBaseLobby _lobby;
@@ -49,14 +50,14 @@ namespace TDS_Server.LobbySystem.Database
             });
         }
 
-        internal async Task<PlayerBans?> GetBan(int? playerId)
+        public async Task<PlayerBans?> GetBan(int? playerId)
         {
             if (!playerId.HasValue)
                 return null;
             return await DbHandler.ExecuteForDBAsync(async (dbContext) => await dbContext.PlayerBans.FindAsync(playerId, _lobby.Entity.Id));
         }
 
-        internal Task<string?> GetLastUsedSerial(int playerId)
+        public Task<string?> GetLastUsedSerial(int playerId)
         {
             return DbHandler.ExecuteForDBAsync(async (dbContext)
                 => (string?)await dbContext.LogRests
@@ -66,7 +67,7 @@ namespace TDS_Server.LobbySystem.Database
                                         .FirstOrDefaultAsync());
         }
 
-        internal Task AddBanEntity(PlayerBans ban)
+        public Task AddBanEntity(PlayerBans ban)
         {
             return DbHandler.ExecuteForDBAsync(async dbContext =>
             {
@@ -75,7 +76,7 @@ namespace TDS_Server.LobbySystem.Database
             });
         }
 
-        internal Task Remove<T>(object obj)
+        public Task Remove<T>(object obj)
         {
             return DbHandler.ExecuteForDBAsync(async dbContext =>
             {
@@ -84,7 +85,7 @@ namespace TDS_Server.LobbySystem.Database
             });
         }
 
-        internal Task Save()
+        public Task Save()
         {
             return DbHandler.ExecuteForDBAsync(async dbContext =>
             {

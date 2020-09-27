@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.Players;
 
 namespace TDS_Server.LobbySystem.Notifications
 {

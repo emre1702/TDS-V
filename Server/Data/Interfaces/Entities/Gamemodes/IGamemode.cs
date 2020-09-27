@@ -1,14 +1,14 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.Map;
 
 namespace TDS_Server.Data.Interfaces.Entities.Gamemodes
 {
     public interface IGamemode
     {
-        void Init(IBaseLobby lobby, MapDto map);
+        void Init(IRoundFightLobby lobby, MapDto map);
 
         ITeam WinnerTeam { get; }
         bool HandlesGivingWeapons { get; }

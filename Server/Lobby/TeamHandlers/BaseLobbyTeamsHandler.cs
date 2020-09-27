@@ -8,8 +8,8 @@ using MoreLinq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Handler.Entities.TeamSystem;
-using TDS_Server.LobbySystem.EventsHandlers;
 using TDS_Shared.Data.Utility;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
@@ -17,11 +17,14 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 {
     public class BaseLobbyTeamsHandler
     {
+        protected readonly LobbyDb Entity;
+
         private List<ITeam> _teams = new List<ITeam>(3);
         private readonly SemaphoreSlim _teamsSemaphore = new SemaphoreSlim(1, 1);
 
-        public BaseLobbyTeamsHandler(LobbyDb entity, BaseLobbyEventsHandler events)
+        public BaseLobbyTeamsHandler(LobbyDb entity, IBaseLobbyEventsHandler events)
         {
+            Entity = entity;
             InitTeams(entity);
 
             events.PlayerJoined += Events_PlayerJoined;

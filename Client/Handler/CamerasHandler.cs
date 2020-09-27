@@ -40,6 +40,7 @@ namespace TDS_Client.Handler
         public void RemoveFocusArea()
         {
             RAGE.Game.Streaming.ClearFocus();
+            RAGE.Game.Streaming.ClearHdArea();
             FocusAtPos = null;
         }
 
@@ -67,6 +68,7 @@ namespace TDS_Client.Handler
             if (FocusAtPos is null || FocusAtPos.DistanceTo(pos) >= 50)
             {
                 RAGE.Game.Streaming.SetFocusArea(pos.X, pos.Y, pos.Z, 0, 0, 0);
+                RAGE.Game.Streaming.SetHdArea(pos.X, pos.Y, pos.Z, 30f);
                 FocusAtPos = pos;
             }
         }

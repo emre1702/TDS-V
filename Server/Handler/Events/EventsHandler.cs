@@ -4,7 +4,7 @@ using BonusBotConnector.Client;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Player;
@@ -48,6 +48,8 @@ namespace TDS_Server.Handler.Events
 
         public delegate void LobbyDelegate(ILobby lobby);
 
+        public delegate void LobbyDelegateNew(IBaseLobby lobby);
+
         public delegate void NewBanDelegate(PlayerBans ban, bool inOfficialLobby);
 
         public delegate void PlayerDeathDelegate(ITDSPlayer player, ITDSPlayer killer, uint reason);
@@ -85,6 +87,8 @@ namespace TDS_Server.Handler.Events
         public event EmptyDelegate? LoadedServerBans;
 
         public event LobbyDelegate? LobbyCreated;
+
+        public event LobbyDelegateNew? LobbyCreatedNew;
 
         public event EmptyDelegate? MapsLoaded;
 
@@ -259,6 +263,11 @@ namespace TDS_Server.Handler.Events
         internal void OnCustomLobbyCreated(ILobby lobby)
         {
             CustomLobbyCreated?.Invoke(lobby);
+        }
+
+        public void OnLobbyCreateNew(IBaseLobby lobby)
+        {
+            LobbyCreatedNew?.Invoke(lobby);
         }
 
         internal void OnCustomLobbyMenuJoin(ITDSPlayer player)
