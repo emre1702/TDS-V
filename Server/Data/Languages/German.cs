@@ -151,7 +151,7 @@ namespace TDS_Server.Data.Languages
         public override string ROUND_END_TIME_INFO => "Zeit um!<br>Team {0} gewinnt mit den meisten HP übrig!";
         public override string ROUND_END_TIME_TIE_INFO => "Zeit um!<br>Unentschieden!";
         public override string ROUND_MISSION_BOMB_BAD => "Ziel: Lass die Bombe an einem der Punkte explodieren oder töte alle Gegner!";
-        public override string ROUND_MISSION_BOMB_GOOD => "Ziel: Verhinde die Bomben-Explosion oder töte alle Gegner!";
+        public override string ROUND_MISSION_BOMB_GOOD => "Ziel: Verhindere die Bomben-Explosion oder töte alle Gegner!";
         public override string ROUND_MISSION_BOMG_SPECTATOR => "Ziel: Bombe legen & verteidigen oder entschärfen - oder alle Gegner töten.";
         public override string ROUND_MISSION_NORMAL => "Ziel: Alle Gegner müssen getötet werden.";
         public override string ROUND_REWARD_INFO => "#w#Runden-Belohnung:#n#Kills: #g#${0}#n##w#Assists: #g#${1}#n##w#Damage: #g#${2}#n##o#Insgesamt: #g#${3}";
