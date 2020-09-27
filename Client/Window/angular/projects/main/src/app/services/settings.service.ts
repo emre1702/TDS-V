@@ -57,9 +57,8 @@ export class SettingsService {
 
         this.LangValue = lang;
         this.Lang = SettingsService.langByLangValue[lang];
-        this.LanguageChanged.emit(null);
-
         this.loadChallenges();
+        this.LanguageChanged.emit(null);
     }
     ////////////////////////////////////////////////////
 
