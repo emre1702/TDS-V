@@ -31,25 +31,22 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             events.PlayerJoined += Events_PlayerJoined;
         }
 
-        private async void InitTeams(LobbyDb entity)
+        private void InitTeams(LobbyDb entity)
         {
-            await _teamsSemaphore.Do(() =>
+            _teams.Capacity = entity.Teams.Count;
+            foreach (var teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
-                _teams.Capacity = entity.Teams.Count;
-                foreach (var teamEntity in entity.Teams.OrderBy(t => t.Index))
-                {
-                    var team = new Team(teamEntity);
-                    _teams.Add(team);
-                }
-            });
+                var team = new Team(teamEntity);
+                _teams.Add(team);
+            }
         }
 
-        public virtual void SetPlayerTeam(ITDSPlayer player, ITeam? team)
+        public virtual Task SetPlayerTeam(ITDSPlayer player, ITeam? team)
         {
             if (player.Team == team)
-                return;
+                return Task.CompletedTask;
 
-            NAPI.Task.Run(() =>
+            return NAPI.Task.RunWait(() =>
             {
                 player.Team?.SyncRemovedPlayer(player);
                 player.SetTeam(team, true);
@@ -57,16 +54,16 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             });
         }
 
-        protected virtual async void Events_PlayerJoined(ITDSPlayer player, int teamIndex)
+        protected virtual async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
             var team = await _teamsSemaphore.Do(() =>
             {
-                if (teamIndex < 0)
-                    teamIndex = SharedUtils.Rnd.Next(1, _teams.Count);
-                return _teams[teamIndex];
+                if (data.TeamIndex < 0)
+                    data.TeamIndex = SharedUtils.Rnd.Next(1, _teams.Count);
+                return _teams[data.TeamIndex];
             });
 
-            SetPlayerTeam(player, team);
+            await SetPlayerTeam(data.Player, team);
         }
 
         public Task Do(Action<List<ITeam>> action)
@@ -80,7 +77,10 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         public Task<ITeam> GetTeam(short teamIndex)
             => _teamsSemaphore.Do(() => _teams[teamIndex]);
 
-        internal ITeam GetTeamWithFewestPlayer(List<ITeam> teams)
-            => _teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().First();
+        public Task<ITeam> GetTeamWithFewestPlayer()
+            => _teamsSemaphore.Do(() => GetTeamWithFewestPlayer(_teams));
+
+        public ITeam GetTeamWithFewestPlayer(List<ITeam> teams)
+            => teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().First();
     }
 }

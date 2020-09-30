@@ -8,7 +8,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.Utility;
+using TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
 

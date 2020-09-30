@@ -1,25 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
-using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.MapVotings;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
-using TDS_Server.LobbySystem.TeamHandlers;
-using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
 
 namespace TDS_Server.LobbySystem.Players
 {
-    public class RoundFightLobbyPlayers : FightLobbyPlayers
+    public class RoundFightLobbyPlayers : FightLobbyPlayers, IRoundFightLobbyPlayers
     {
         protected new IRoundFightLobby Lobby => (IRoundFightLobby)base.Lobby;
 
@@ -34,17 +29,25 @@ namespace TDS_Server.LobbySystem.Players
             events.InitNewMap += Events_InitNewMap;
             events.PlayersPreparation += Events_PlayersPreparation;
             events.InRound += Events_InRound;
-            events.RoundEnd += Events_RoundEnd;
             events.RoundEndStats += Events_RoundEndStats;
             events.Countdown += Events_Countdown;
         }
 
-        public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex)
+        public override async Task<bool> RemovePlayer(ITDSPlayer player)
         {
-            var worked = await base.AddPlayer(player, teamIndex);
+            var lifes = player.Lifes;
+            var worked = await base.RemovePlayer(player);
             if (!worked)
                 return false;
-            await SendPlayerRoundInfoOnJoin(player);
+
+            if (lifes > 0)
+                await Lobby.Deathmatch.RemovePlayerFromAlive(player);
+            else
+            {
+                SavePlayerRoundStats(player);
+                player.SetSpectates(null);
+            }
+
             return true;
         }
 
@@ -52,32 +55,29 @@ namespace TDS_Server.LobbySystem.Players
         {
         }
 
-        private void Events_InRound()
+        private async ValueTask Events_InRound()
         {
-            //Todo: Implement this
-            //StartRoundForAllPlayer();
+            var teamPlayerAmountsJson = await Lobby.Teams.GetAmountInFightSyncDataJson();
+
+            await Do(player =>
+            {
+                Lobby.Rounds.StartRoundForPlayer(player);
+            });
+            Lobby.Sync.TriggerEvent(ToClientEvent.AmountInFightSync, teamPlayerAmountsJson);
         }
 
         protected virtual void Events_PlayersPreparation()
         {
+            Do(player =>
+            {
+                Lobby.Rounds.SetPlayerReadyForRound(player, true);
+                player.CurrentRoundStats?.Clear();
+            });
         }
 
         private void Events_InitNewMap(MapDto mapDto)
         {
             SavePlayerLobbyStats = !mapDto.Info.IsNewMap && Lobby.IsOfficial;
-        }
-
-        protected virtual async ValueTask Events_RoundEnd()
-        {
-            var mapId = Lobby.CurrentMap?.BrowserSyncedData.Id ?? 0;
-            await DoInMain(player =>
-            {
-                var noTeamOrSpectator = player.Team is null || player.Team.IsSpectator;
-                var roundEndReasonText = Lobby.CurrentRoundEndReason.MessageProvider(player.Language);
-
-                player.TriggerEvent(ToClientEvent.RoundEnd, noTeamOrSpectator, roundEndReasonText, mapId);
-                player.Lifes = 0;
-            });
         }
 
         private async ValueTask Events_RoundEndStats()
@@ -89,7 +89,7 @@ namespace TDS_Server.LobbySystem.Players
                 await DoInMain(player =>
                 {
                     if (playerRewards.TryGetValue(player, out var reward))
-                        RewardPlayerForRound(player, reward);
+                        Lobby.Rounds.RewardPlayerForRound(player, reward);
                 });
             }
         }
@@ -106,7 +106,7 @@ namespace TDS_Server.LobbySystem.Players
                     var model = new RoundPlayerRewardsData();
                     if (!AddPlayerRoundRewards(player, model))
                         return;
-                    AddRoundRewardsMessage(player, strBuilder, model);
+                    Lobby.Rounds.AddRoundRewardsMessage(player, strBuilder, model);
                     playerRewards.Add(player, model);
                 }
             });
@@ -169,42 +169,24 @@ namespace TDS_Server.LobbySystem.Players
             return true;
         }
 
-        private void AddRoundRewardsMessage(ITDSPlayer player, StringBuilder useStringBuilder, RoundPlayerRewardsData toModel)
+        public void SetPlayerDataAlive(ITDSPlayer player)
         {
-            useStringBuilder.Append("#o#____________________#n#");
-            useStringBuilder.AppendFormat(player.Language.ROUND_REWARD_INFO,
-                    toModel.KillsReward == 0 ? "-" : toModel.KillsReward.ToString(),
-                    toModel.AssistsReward == 0 ? "-" : toModel.AssistsReward.ToString(),
-                    toModel.DamageReward == 0 ? "-" : toModel.DamageReward.ToString(),
-                    toModel.KillsReward + toModel.AssistsReward + toModel.DamageReward);
-            useStringBuilder.Append("#n##o#____________________");
-
-            toModel.Message = useStringBuilder.ToString();
-            useStringBuilder.Clear();
+            if (player.Team is null || player.Team.AlivePlayers is null)
+                return;
+            player.Lifes = (short)Lobby.Deathmatch.AmountLifes;
+            player.Team.AlivePlayers.Add(player);
+            var teamAmountData = player.Team.SyncedTeamData.AmountPlayers;
+            ++teamAmountData.Amount;
+            ++teamAmountData.AmountAlive;
         }
 
-        private void RewardPlayerForRound(ITDSPlayer player, RoundPlayerRewardsData rewardsData)
+        public void RespawnPlayer(ITDSPlayer player)
         {
-            player.GiveMoney(rewardsData.KillsReward + rewardsData.AssistsReward + rewardsData.DamageReward);
-            player.SendChatMessage(rewardsData.Message);
-        }
-
-        protected virtual async Task SendPlayerRoundInfoOnJoin(ITDSPlayer player)
-        {
-            var teamPlayerAmounts = await Lobby.Teams.Do(teams => teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers));
-            var teamPlayerAmountsJson = Serializer.ToClient(teamPlayerAmounts);
-
-            NAPI.Task.Run(() =>
-            {
-                if (Lobby.CurrentMap is { } map)
-                    player.TriggerEvent(ToClientEvent.MapChange, map.ClientSyncedDataJson);
-                player.TriggerEvent(ToClientEvent.AmountInFightSync, teamPlayerAmountsJson);
-
-                if (Lobby.Rounds.RoundStates.CurrentState is CountdownState)
-                    player.TriggerEvent(ToClientEvent.CountdownStart, true, Lobby.Rounds.RoundStates.TimeToNextStateMs);
-                else if (Lobby.Rounds.RoundStates.CurrentState is InRoundState)
-                    player.TriggerEvent(ToClientEvent.RoundStart, true, Lobby.Rounds.RoundStates.TimeInStateMs);
-            });
+            if (!(Lobby.Rounds.RoundStates.CurrentState is InRoundState))
+                return;
+            Lobby.Rounds.SetPlayerReadyForRound(player, false);
+            Lobby.Rounds.StartRoundForPlayer(player);
+            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.PlayerRespawned));
         }
     }
 }

@@ -5,6 +5,7 @@ using TDS_Server.Core.Damagesystem;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
@@ -19,7 +20,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
         public int AmountLifes { get; set; }
 
         private readonly LangHelper _langHelper;
-        internal Damagesys Damage { get; set; }
+        public IDamagesys Damage { get; }
         protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
 
         public FightLobbyDeathmatch(IFightLobby lobby, IBaseLobbyEventsHandler events, Damagesys damage, LangHelper langHelper)
@@ -67,12 +68,11 @@ namespace TDS_Server.LobbySystem.Deathmatch
         {
             var deathSpawnTimer = new TDSTimer(() =>
             {
-                Lobby.Spectator.SpectateOtherSameTeam(player);
-                player.TriggerEvent(ToClientEvent.PlayerSpectateMode);
+                Lobby.Spectator.SetPlayerInSpectateMode(player);
             }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);
         }
 
-        protected void DeathInfoSync(ITDSPlayer player, ITDSPlayer? killer, uint weapon)
+        public void DeathInfoSync(ITDSPlayer player, ITDSPlayer? killer, uint weapon)
         {
             Dictionary<ILanguage, string> killstr;
             if (killer is { } && player != killer)

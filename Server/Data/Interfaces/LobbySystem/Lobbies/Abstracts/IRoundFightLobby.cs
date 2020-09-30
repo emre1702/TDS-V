@@ -3,9 +3,11 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.GamemodesHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
+using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
 using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
+using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Weapons;
 using TDS_Server.Data.Models.Map;
 
@@ -13,13 +15,15 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
 {
     public interface IRoundFightLobby : IFightLobby
     {
-        new IFightLobbyDeathmatch Deathmatch { get; }
+        new IRoundFightLobbyDeathmatch Deathmatch { get; }
         new IRoundFightLobbyEventsHandler Events { get; }
-        IRoundFightLobbyGamemodesHandler Gamemodes { get; set; }
+        IRoundFightLobbyGamemodesHandler Gamemodes { get; }
         new IRoundFightLobbyMapHandler MapHandler { get; }
         new IRoundFightLobbyNotifications Notifications { get; }
-        IRoundFightLobbyRoundsHandler Rounds { get; set; }
-        IRoundFightLobbySpectator Spectator { get; set; }
+        new IRoundFightLobbyPlayers Players { get; }
+        IRoundFightLobbyRoundsHandler Rounds { get; }
+        new IRoundFightLobbySpectator Spectator { get; }
+        new IRoundFightLobbyTeamsHandler Teams { get; }
         IRoundFightLobbyWeapons Weapons { get; }
 
         MapDto CurrentMap => MapHandler.CurrentMap;

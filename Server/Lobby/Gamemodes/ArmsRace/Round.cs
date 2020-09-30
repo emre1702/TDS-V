@@ -8,7 +8,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
 {
     partial class ArmsRace
     {
-        public override bool CanJoinDuringRound(ITDSPlayer player, ITeam team) => true;
+        public override bool CanJoinDuringRound() => true;
 
         public override void StartRoundCountdown()
         {

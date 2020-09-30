@@ -1,14 +1,24 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using GTANetworkAPI;
+using Microsoft.AspNetCore.Mvc;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities.Gamemodes;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
+using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Data.RoundEndReasons;
 using TDS_Server.LobbySystem.GamemodesHandlers;
-using TDS_Server.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas;
+using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS_Shared.Core;
+using TDS_Shared.Default;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers
 {
@@ -19,13 +29,16 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         protected readonly IRoundFightLobby Lobby;
         private readonly GamemodesProvider _gamemodesProvider;
 
-        public RoundFightLobbyRoundsHandler(IRoundFightLobby lobby, IServiceProvider serviceProvider)
+        public RoundFightLobbyRoundsHandler(IRoundFightLobby lobby, IServiceProvider serviceProvider, IRoundFightLobbyEventsHandler events)
         {
             Lobby = lobby;
             RoundStates = new RoundFightLobbyRoundStates(lobby);
             _gamemodesProvider = new GamemodesProvider(lobby, serviceProvider);
 
-            lobby.Events.InitNewMap += Events_InitNewMap;
+            events.InitNewMap += Events_InitNewMap;
+            events.RoundEnd += Events_RoundEnd;
+            events.PlayerJoined += Events_PlayerJoined;
+            events.PlayerLeftAfter += Events_PlayerLeftAfter;
         }
 
         private void Events_InitNewMap(MapDto map)
@@ -33,83 +46,174 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             CurrentGamemode = _gamemodesProvider.Get(map);
         }
 
+        protected virtual async ValueTask Events_RoundEnd()
+        {
+            var mapId = Lobby.CurrentMap?.BrowserSyncedData.Id ?? 0;
+            await Lobby.Players.DoInMain(player =>
+            {
+                var noTeamOrSpectator = player.Team is null || player.Team.IsSpectator;
+                var roundEndReasonText = Lobby.CurrentRoundEndReason.MessageProvider(player.Language);
+
+                player.TriggerEvent(ToClientEvent.RoundEnd, noTeamOrSpectator, roundEndReasonText, mapId);
+                player.Lifes = 0;
+            });
+        }
+
+        private async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
+        {
+            await SendPlayerRoundInfoOnJoin(data.Player);
+        }
+
+        protected virtual async ValueTask Events_PlayerLeftAfter((ITDSPlayer Player, int HadLifes) data)
+        {
+            switch (RoundStates.CurrentState)
+            {
+                case InRoundState _:
+                    if (data.HadLifes > 0)
+                        await CheckForEnoughAliveAfterLeave();
+                    break;
+            }
+        }
+
+        protected virtual async Task SendPlayerRoundInfoOnJoin(ITDSPlayer player)
+        {
+            var teamPlayerAmountsJson = await Lobby.Teams.GetAmountInFightSyncDataJson();
+
+            NAPI.Task.Run(() =>
+            {
+                if (Lobby.CurrentMap is { } map)
+                    player.TriggerEvent(ToClientEvent.MapChange, map.ClientSyncedDataJson);
+                player.TriggerEvent(ToClientEvent.AmountInFightSync, teamPlayerAmountsJson);
+
+                if (Lobby.Rounds.RoundStates.CurrentState is CountdownState)
+                    player.TriggerEvent(ToClientEvent.CountdownStart, true, Lobby.Rounds.RoundStates.TimeToNextStateMs);
+                else if (Lobby.Rounds.RoundStates.CurrentState is InRoundState)
+                    player.TriggerEvent(ToClientEvent.RoundStart, true, Lobby.Rounds.RoundStates.TimeInStateMs);
+            });
+        }
+
+        public void RewardPlayerForRound(ITDSPlayer player, RoundPlayerRewardsData rewardsData)
+        {
+            player.GiveMoney(rewardsData.KillsReward + rewardsData.AssistsReward + rewardsData.DamageReward);
+            player.SendChatMessage(rewardsData.Message);
+        }
+
+        public void AddRoundRewardsMessage(ITDSPlayer player, StringBuilder useStringBuilder, RoundPlayerRewardsData toModel)
+        {
+            useStringBuilder.Append("#o#____________________#n#");
+            useStringBuilder.AppendFormat(player.Language.ROUND_REWARD_INFO,
+                    toModel.KillsReward == 0 ? "-" : toModel.KillsReward.ToString(),
+                    toModel.AssistsReward == 0 ? "-" : toModel.AssistsReward.ToString(),
+                    toModel.DamageReward == 0 ? "-" : toModel.DamageReward.ToString(),
+                    toModel.KillsReward + toModel.AssistsReward + toModel.DamageReward);
+            useStringBuilder.Append("#n##o#____________________");
+
+            toModel.Message = useStringBuilder.ToString();
+            useStringBuilder.Clear();
+        }
+
+        protected virtual async Task CheckForEnoughAliveAfterLeave()
+        {
+            (int teamAmountWithAlive, int teamAmount) = await Lobby.Teams.Do(teams =>
+                (teams.Count(t => t.AlivePlayers?.Count > 0),
+                teams.Count(t => !t.IsSpectator)));
+
+            switch ((teamAmountWithAlive, teamAmount))
+            {
+                // 2+ teams, <= 1 in round  ->  end
+                case var (amount, amountAlive) when amount > 1 && amountAlive <= 1:
+                    var winnerTeam = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count >= 1));
+                    Lobby.Rounds.RoundStates.EndRound(new DeathRoundEndReason(winnerTeam));
+                    break;
+
+                // 1 team, 0 in round  ->  end
+                case (1, 0):
+                    Lobby.Rounds.RoundStates.EndRound(new DeathRoundEndReason(null));
+                    break;
+
+                // 1 team, 1 in round  ->  check for amount of players, if <= 1   ->  end
+                case (1, 1):
+                    var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count > 0)?.AlivePlayers?.Count);
+                    if (amountPlayers <= 1)
+                        Lobby.Rounds.RoundStates.EndRound(new DeathRoundEndReason(null));
+                    break;
+            }
+        }
+
+        protected virtual async Task<bool> CheckForEnoughAliveAfterJoin()
+        {
+            var endRound = false;
+
+            using (RoundStates.GetContext())
+            {
+                if (!(RoundStates.CurrentState is CountdownState || RoundStates.CurrentState is InRoundState))
+                    return true;
+
+                (int teamAmountWithAlive, int teamAmount) = await Lobby.Teams.Do(teams =>
+                    (teams.Count(t => t.AlivePlayers?.Count > 0),
+                    teams.Count(t => !t.IsSpectator)));
+
+                switch ((teamAmountWithAlive, teamAmount))
+                {
+                    // 2+ teams, <= 1 in round  ->  end
+                    case var (amount, amountAlive) when amount > 1 && amountAlive <= 1:
+                    // 1 team, 0 in round  ->  end
+                    case (1, 0):
+                        endRound = true;
+
+                        break;
+
+                    // 1 team, 1 in round  ->  check for amount of players, if <= 1   ->  end
+                    case (1, 1):
+                        var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count > 0)?.AlivePlayers?.Count);
+                        if (amountPlayers <= 1)
+                            endRound = true;
+                        break;
+                }
+            }
+
+            if (endRound)
+                RoundStates.EndRound(new NewPlayerRoundEndReason());
+            return !endRound;
+        }
+
+        public virtual void SetPlayerReadyForRound(ITDSPlayer player, bool freeze)
+        {
+            Lobby.Players.SetPlayerDataAlive(player);
+            player.LastHitter = null;
+
+            if (player.Team != null && !player.Team.IsSpectator)
+            {
+                if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
+                    player.Team.SpectateablePlayers?.Add(player);
+
+                NAPI.Task.Run(() =>
+                {
+                    player.SetSpectates(null);
+                    player.Freeze(freeze);
+                    Lobby.Weapons.GivePlayerWeapons(player);
+                    player.SetInvisible(false);
+                });
+            }
+            else
+            {
+                NAPI.Task.Run(() =>
+                {
+                    player.Freeze(true);
+                    player.RemoveAllWeapons();
+                    player.SetInvisible(true);
+                });
+                Lobby.Spectator.SetPlayerInSpectateMode(player);
+            }
+        }
+
+        public virtual void StartRoundForPlayer(ITDSPlayer player)
+        {
+            NAPI.Task.Run(() =>
+                player.TriggerEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator));
+        }
+
         public virtual ValueTask<ITeam?> GetTimesUpWinnerTeam()
-            => new ValueTask<ITeam?>((ITeam?)null);
+            => new ValueTask<ITeam?>(Lobby.Teams.GetTeamWithHighestHp());
     }
 }
-
-/*
-
-        private void ShowRoundRanking()
-        {
-            if (_ranking is null || _ranking.Count == 0)
-                return;
-
-            try
-            {
-                ITDSPlayer winner = _ranking.First().Player;
-                ITDSPlayer? second = _ranking.ElementAtOrDefault(1)?.Player;
-                ITDSPlayer? third = _ranking.ElementAtOrDefault(2)?.Player;
-
-                //Vector3 rot = new Vector3(0, 0, 345);
-                winner.Spawn(new Vector3(-425.48, 1123.55, 325.85), 345);
-                winner.Freeze(true);
-                winner.Dimension = Dimension;
-
-                if (second is { })
-                {
-                    second.Spawn(new Vector3(-427.03, 1123.21, 325.85), 345);
-                    second.Freeze(true);
-                    second.Dimension = Dimension;
-                }
-
-                if (third is { })
-                {
-                    third.Spawn(new Vector3(-424.33, 1122.5, 325.85), 345);
-                    third.Freeze(true);
-                    third.Dimension = Dimension;
-                }
-
-                var othersPos = new Vector3(-425.48, 1123.55, 335.85);
-                foreach (var player in Players.Values)
-                {
-                    if (player != winner && player != second && player != third)
-                    {
-                        player.Position = othersPos;
-                        player.SetInvisible(true);
-                    }
-                    else
-                        player.SetInvisible(false);
-                }
-
-                string json = Serializer.ToBrowser(_ranking);
-                TriggerEvent(ToClientEvent.StartRankingShowAfterRound, json, winner.RemoteId, second?.RemoteId ?? 0, third?.RemoteId ?? 0);
-            }
-            catch (Exception ex)
-            {
-                LoggingHandler.LogError("Error occured: " + ex.GetBaseException().Message, ex.StackTrace ?? Environment.StackTrace);
-            }
-        }
-
-        private void RoundCheckForEnoughAlive()
-        {
-            int teamsInRound = GetTeamAmountStillInRound();
-            if (teamsInRound <= 1 && CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
-            {
-                SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.Death);
-            }
-        }
-
-        private ITeam? GetRoundWinnerTeam()
-        {
-            if (CurrentGameMode?.WinnerTeam is { })
-                return CurrentGameMode.WinnerTeam;
-            return CurrentRoundEndReason switch
-            {
-                RoundEndReason.Death => GetTeamStillInRound(),
-                RoundEndReason.Time => GetTeamWithHighestHP(),
-                _ => null,
-            };
-        }
-
-*/

@@ -7,9 +7,9 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Player;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Abstracts.Entities.GTA
 {
@@ -76,6 +76,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract int? VoiceMuteTime { get; set; }
         public abstract Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>>? WeaponBodyPartsStats { get; set; }
         public abstract Dictionary<WeaponHash, PlayerWeaponStats>? WeaponStats { get; set; }
+        public TDSTimer? DeathSpawnTimer { get; set; }
 
         public ITDSPlayer(NetHandle netHandle) : base(netHandle)
         {

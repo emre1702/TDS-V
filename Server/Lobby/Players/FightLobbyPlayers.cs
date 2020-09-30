@@ -3,12 +3,16 @@ using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.Players;
+using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.Player;
 
 namespace TDS_Server.LobbySystem.Players
 {
-    public class FightLobbyPlayers : BaseLobbyPlayers
+    public class FightLobbyPlayers : BaseLobbyPlayers, IFightLobbyPlayers
     {
+        protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
+
         public FightLobbyPlayers(IFightLobby lobby, IBaseLobbyEventsHandler events)
             : base(lobby, events)
         {
@@ -32,6 +36,7 @@ namespace TDS_Server.LobbySystem.Players
 
         public override async Task<bool> RemovePlayer(ITDSPlayer player)
         {
+            var lifes = player.Lifes;
             var worked = await base.RemovePlayer(player);
             if (!worked)
                 return false;
@@ -39,11 +44,20 @@ namespace TDS_Server.LobbySystem.Players
             player.Team?.SpectateablePlayers?.Remove(player);
             player.LastKillAt = null;
             player.KillingSpree = 0;
+            player.CurrentRoundStats = null;
+
+            if (lifes > 0)
+            {
+                Lobby.Deathmatch.Damage.RewardLastHitter(player, out var killer);
+                Lobby.Deathmatch.DeathInfoSync(player, killer, (uint)WeaponHash.Unarmed);
+            }
+
             return true;
         }
 
         private async Task AddPlayerLobbyStats(ITDSPlayer player)
         {
+            player.CurrentRoundStats = new RoundStatsDto(player);
             PlayerLobbyStats? stats = null;
             await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {

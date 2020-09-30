@@ -1,21 +1,47 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
 using TDS_Server.LobbySystem.TeamHandlers;
+using TDS_Shared.Core;
+using TDS_Shared.Default;
 
 namespace TDS_Server.LobbySystem.Spectator
 {
     public class FightLobbySpectator : IFightLobbySpectator
     {
-        private readonly FightLobbyTeamsHandler _teams;
+        protected IFightLobby Lobby { get; }
 
-        public FightLobbySpectator(FightLobbyTeamsHandler teams)
+        public FightLobbySpectator(IFightLobby lobby)
         {
-            _teams = teams;
+            Lobby = lobby;
         }
 
-        public async Task SpectateNext(ITDSPlayer player, bool forward)
+        public void SetPlayerInSpectateMode(ITDSPlayer player)
+        {
+            player.DeathSpawnTimer?.Kill();
+            player.DeathSpawnTimer = new TDSTimer(async () =>
+            {
+                NAPI.Task.Run(() =>
+                    player.TriggerEvent(ToClientEvent.PlayerSpectateMode));
+                await EnsurePlayerSpectatesAnyone(player);
+            }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);
+        }
+
+        public async Task EnsurePlayerSpectatesAnyone(ITDSPlayer player)
+        {
+            if (player.Spectates is { } && player.Spectates != player)
+                return;
+
+            await SpectateNext(player, true);
+
+            if (player.Spectates is null || player.Spectates == player)
+                await SpectateOtherAllTeams(player);
+        }
+
+        public async ValueTask SpectateNext(ITDSPlayer player, bool forward)
         {
             if (player.Lifes > 0)
                 return;
@@ -59,13 +85,13 @@ namespace TDS_Server.LobbySystem.Spectator
             var teamIndex = start.Team?.Entity.Index ?? 0;
             if (teamIndex == 0)
                 ++teamIndex;
-            var teamlist = (await _teams.GetTeam(teamIndex)).SpectateablePlayers;
+            var teamlist = (await Lobby.Teams.GetTeam(teamIndex)).SpectateablePlayers;
             if (teamlist is null)
                 return null;
             var charIndex = teamlist.IndexOf(start) + 1;
             if (teamlist.Count == 0 || charIndex >= teamlist.Count - 1)
             {
-                var team = await _teams.GetNextNonSpectatorTeamWithPlayers(start.Team);
+                var team = await Lobby.Teams.GetNextNonSpectatorTeamWithPlayers(start.Team);
                 if (team is null)
                     return null;
                 teamlist = team.SpectateablePlayers;
@@ -90,7 +116,7 @@ namespace TDS_Server.LobbySystem.Spectator
         private async Task<ITDSPlayer?> GetPreviousSpectatePlayerInAllTeams(ITDSPlayer start)
         {
             var teamIndex = (int?)start.Team?.Entity.Index ?? 0;
-            var teamlist = await _teams.Do(teams =>
+            var teamlist = await Lobby.Teams.Do(teams =>
             {
                 if (teamIndex == 0)
                     teamIndex = teams.Count - 1;
@@ -102,7 +128,7 @@ namespace TDS_Server.LobbySystem.Spectator
             var charIndex = teamlist.IndexOf(start) - 1;
             if (teamlist.Count == 0 || charIndex < 0)
             {
-                var team = await _teams.GetPreviousNonSpectatorTeamWithPlayers(start.Team);
+                var team = await Lobby.Teams.GetPreviousNonSpectatorTeamWithPlayers(start.Team);
                 if (team is null)
                     return null;
                 teamlist = team.SpectateablePlayers;

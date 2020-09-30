@@ -17,17 +17,11 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 {
     public partial class GangLobby : Lobby
     {
-        #region Private Fields
-
         private readonly GangHousesHandler _gangHousesHandler;
         private readonly GangLevelsHandler _gangLevelsHandler;
         private readonly GangsHandler _gangsHandler;
         private readonly GangwarAreasHandler _gangwarAreasHandler;
         private readonly IServiceProvider _serviceProvider;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public GangLobby(Lobbies Entity, TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
             ISettingsHandler settingsHandler, LangHelper langHelper, DataSyncHandler dataSyncHandler, GangsHandler gangsHandler, EventsHandler eventsHandler,
@@ -48,16 +42,10 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             LoadHouses();
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public IEnumerable<GangLobby> GetAllDerivedLobbies()
         {
             //Todo: Use GangActionLobby instead of GangLobby
             return LobbiesHandler.Lobbies.Where(l => l is GangLobby && l.Type != LobbyType.GangLobby).Cast<GangLobby>();
         }
-
-        #endregion Public Methods
     }
 }

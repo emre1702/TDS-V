@@ -17,22 +17,20 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         public delegate void PlayerDelegate(ITDSPlayer player);
 
-        public delegate void PlayerJoinedDelegate(ITDSPlayer player, int teamIndex);
-
         public delegate void BanDelegate(PlayerBans ban);
 
         bool IsRemoved { get; }
         AsyncTaskEvent<LobbyDb>? Created { get; set; }
         AsyncTaskEvent<IBaseLobby>? Remove { get; set; }
-        AsyncValueTaskEvent<ITDSPlayer>? PlayerLeft { get; set; }
+        AsyncValueTaskEvent<(ITDSPlayer player, int HadLifes)>? PlayerLeft { get; set; }
 
         event LobbyCreatedAfterDelegate? CreatedAfter;
 
         event LobbyDelegate? RemoveAfter;
 
-        event PlayerJoinedDelegate? PlayerJoined;
+        AsyncValueTaskEvent<(ITDSPlayer Player, int TeamIndex)>? PlayerJoined { get; set; }
 
-        event PlayerDelegate? PlayerLeftAfter;
+        AsyncValueTaskEvent<(ITDSPlayer Player, int HadLifes)>? PlayerLeftAfter { get; set; }
 
         event BanDelegate? NewBan;
 
@@ -40,9 +38,9 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         Task TriggerRemove();
 
-        void TriggerPlayerJoined(ITDSPlayer player, int teamIndex);
+        ValueTask TriggerPlayerJoined(ITDSPlayer player, int teamIndex);
 
-        ValueTask TriggerPlayerLeft(ITDSPlayer player);
+        ValueTask TriggerPlayerLeft(ITDSPlayer player, int hadLifes);
 
         void TriggerNewBan(PlayerBans ban, ulong? targetDiscordUserId);
     }

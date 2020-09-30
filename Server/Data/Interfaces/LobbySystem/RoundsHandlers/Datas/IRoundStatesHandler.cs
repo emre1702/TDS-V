@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
 {
@@ -11,10 +12,16 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
 
         void EndRound(IRoundEndReason roundEndReason);
 
-        ValueTask SetNext();
+        void SetNext();
 
         void Start();
 
         void Stop();
+
+        Task<IDisposable> GetContext();
+
+        bool IsCurrentStateBeforeRoundEnd();
+
+        Task<bool> IsCurrentStateBeforeRoundEndBlocked();
     }
 }

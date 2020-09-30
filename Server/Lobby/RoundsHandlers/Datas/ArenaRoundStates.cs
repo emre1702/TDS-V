@@ -12,7 +12,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
         public ArenaRoundStates(Arena arena) : base(arena)
             => _arena = arena;
 
-        public override async ValueTask SetNext()
+        public override async void SetNext()
         {
             if (Next.Value is RoundEndState)
             {
@@ -20,7 +20,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
                 CurrentRoundEndReason = new TimeRoundEndReason(winnerTeam);
             }
 
-            await base.SetNext();
+            base.SetNext();
         }
     }
 }

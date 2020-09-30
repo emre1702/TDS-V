@@ -39,7 +39,7 @@ namespace TDS_Server.Data.Interfaces.Entities.Gamemodes
 
         void RemovePlayer(ITDSPlayer player);
 
-        bool CanJoinDuringRound(ITDSPlayer player, ITeam team);
+        bool CanJoinDuringRound();
 
         void RespawnPlayer(ITDSPlayer player);
 

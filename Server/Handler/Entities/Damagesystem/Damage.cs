@@ -10,14 +10,8 @@ namespace TDS_Server.Core.Damagesystem
 {
     partial class Damagesys
     {
-        #region Private Fields
-
         private readonly Dictionary<ITDSPlayer, Dictionary<ITDSPlayer, int>> _allHitters = new Dictionary<ITDSPlayer, Dictionary<ITDSPlayer, int>>();
         private readonly Dictionary<WeaponHash, DamageDto> _damagesDict = new Dictionary<WeaponHash, DamageDto>();
-
-        #endregion Private Fields
-
-        #region Public Methods
 
         public void DamagePlayer(ITDSPlayer target, WeaponHash weapon, PedBodyPart pedBodyPart, ITDSPlayer? source)
         {
@@ -76,7 +70,5 @@ namespace TDS_Server.Core.Damagesystem
             lasthitterdict[source] = currentDamage + damage;
             target.LastHitter = source;
         }
-
-        #endregion Public Methods
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
+using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.LobbySystem.TeamHandlers;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
@@ -12,7 +14,7 @@ using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Sync
 {
-    public class BaseLobbySync
+    public class BaseLobbySync : IBaseLobbySync
     {
         protected SyncedLobbySettings SyncedSettings { get; private set; }
 
@@ -59,24 +61,26 @@ namespace TDS_Server.LobbySystem.Sync
             );
         }
 
-        private void Events_PlayerLeftLobbyAfter(ITDSPlayer player)
+        private ValueTask Events_PlayerLeftLobbyAfter((ITDSPlayer Player, int HadLifes) data)
         {
             NAPI.Task.Run(() =>
             {
-                TriggerEvent(ToClientEvent.LeaveSameLobby, player.RemoteId, player.Entity?.Name ?? player.DisplayName);
+                TriggerEvent(ToClientEvent.LeaveSameLobby, data.Player.RemoteId, data.Player.Entity?.Name ?? data.Player.DisplayName);
             });
+            return default;
         }
 
-        private void Events_PlayerJoined(ITDSPlayer player, int teamIndex)
+        private ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
             var playerRemoteIdsJson = Serializer.ToClient(Players.GetPlayers().Select(p => p.RemoteId));
             var syncedTeamDataJson = Serializer.ToClient(_teams.GetTeams().Select(t => t.SyncedTeamData));
 
             NAPI.Task.Run(() =>
             {
-                TriggerEvent(ToClientEvent.JoinSameLobby, player.RemoteId);
-                player.TriggerEvent(ToClientEvent.JoinLobby, SyncedSettings.Json, playerRemoteIdsJson, syncedTeamDataJson);
+                TriggerEvent(ToClientEvent.JoinSameLobby, data.Player.RemoteId);
+                data.Player.TriggerEvent(ToClientEvent.JoinLobby, SyncedSettings.Json, playerRemoteIdsJson, syncedTeamDataJson);
             });
+            return default;
         }
 
         public void TriggerEvent(string eventName, params object[] args)

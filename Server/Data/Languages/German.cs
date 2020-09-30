@@ -53,6 +53,7 @@ namespace TDS_Server.Data.Languages
         public override string GANG_INVITATION_WAS_REMOVED => "Die Einladung wurde bereits zurückgezogen!";
         public override string GANG_LEVEL_MAX_ALLOWED => "Als Gang-Level ist höchstens {0} erlaubt.";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
+        public override string GANGACTION_CANT_JOIN_AGAIN => "Du darfst der Gang-Aktion nicht erneut beitreten.";
         public override string GANGWAR_ATTACK_INVITATION => "Deine Gang greift ein Gebiet an!\n(Nimm an oder nutze /angreifen)";
         public override string GANGWAR_ATTACK_PREPARATION_INVITATION => "Deine Gang bereitet einen Gangwar vor!\n(Nimm an oder nutze /angreifen)";
         public override string GANGWAR_ATTACKER_PREPARATION_INFO => "Ihr bereitet im Gebiet '{0}' einen Angriff gegen '{1}' vor.";
@@ -62,7 +63,6 @@ namespace TDS_Server.Data.Languages
         public override string GANGWAR_OWNER_STARTED_INFO => "Euer Gebiet '{0}' wird von der Gang '{1}' angegriffen.";
         public override string GANGWAR_PREPARATION_INFO => "Die Gang '{0}' bereitet einen Gangwar vor.";
         public override string GANGWAR_STARTED_INFO => "Die Gang '{0}' greift das Gebiet '{1}' von '{2}' an.";
-        public override string GANGWAR_TEAM_ALREADY_FULL_INFO => "Dein Team ist bereits voll. Warte darauf, dass ein Gegner beitritt, und versuche es dann erneut.";
         public override string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO => "{0} has joined the enemy gang in the gangwar.";
         public override string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO => "{0} has joined your team in the gangwar.";
         public override string GIVE_MONEY_NEED_FEE => "Du brauchst ${0} mit ${1} Gebühr inklusive.";
@@ -176,6 +176,7 @@ namespace TDS_Server.Data.Languages
         public override string TARGET_RANK_IS_HIGHER_OR_EQUAL => "Der Rang des Ziels ist höher als oder gleichwertig wie dein Rang.";
         public override string TARGET_REJECTED_INVITATION => "{0} hat deine Einladung abgelehnt.";
         public override string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "Der Spieler {0} ist nicht mehr dein Freund und wurde nun geblockt.";
+        public override string TEAM_ALREADY_FULL_INFO => "Dein Team ist bereits voll. Warte darauf, dass ein Gegner beitritt, und versuche es dann erneut.";
         public override string TESTING_MAP_NOTIFICATION => "Das ist eine neu erstellste Karte, die Runden-Statistiken werden nicht gespeichert werden.";
         public override string TEXT_TOO_LONG => "Der Text ist zu lang.";
         public override string TEXT_TOO_SHORT => "Der Text ist zu kurz.";

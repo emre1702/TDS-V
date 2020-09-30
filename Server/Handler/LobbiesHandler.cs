@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
@@ -30,17 +30,29 @@ namespace TDS_Server.Handler
     {
         public readonly Dictionary<int, ILobby> LobbiesByIndex = new Dictionary<int, ILobby>();
 
+        public List<ILobby> Lobbies { get; } = new List<ILobby>();
+
+        public ICharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??= (ICharCreateLobby)Lobbies.Where(l => l.IsOfficial && l is ICharCreateLobby).First();
+
+        public IMapCreateLobby MapCreateLobbyDummy => _mapCreateLobby ??= (IMapCreateLobby)Lobbies.Where(l => l.IsOfficial && l is IMapCreateLobby).First();
+
+        public IArena Arena => _arena ??= (IArena)Lobbies.Where(l => l.IsOfficial && l is IArena).First();
+
+        public IGangLobby GangLobby => _gangLobby ??= (IGangLobby)Lobbies.Where(l => l.IsOfficial && l is IGangLobby).First();
+
+        public IMainMenu MainMenu => _mainMenu ??= (IMainMenu)Lobbies.Where(l => l.IsOfficial && l is IMainMenu).First();
+
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
         private readonly EventsHandler _eventsHandler;
         private readonly MapsLoadingHandler _mapsHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
-        private Arena? _arena;
-        private CharCreateLobby? _charCreateLobby;
+        private IArena? _arena;
+        private ICharCreateLobby? _charCreateLobby;
         private string? _customLobbyDatas;
-        private GangLobby? _gangLobby;
-        private ILobby? _mainMenu;
-        private MapCreateLobby? _mapCreateLobby;
+        private IGangLobby? _gangLobby;
+        private IMainMenu? _mainMenu;
+        private IMapCreateLobby? _mapCreateLobby;
 
         public LobbiesHandler(
             TDSDbContext dbContext,
@@ -58,23 +70,6 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.LobbyCreated += AddLobby;
         }
-
-        public CharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??=
-            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.CharCreateLobby).Cast<CharCreateLobby>().First();
-
-        public List<ILobby> Lobbies { get; } = new List<ILobby>();
-
-        public MapCreateLobby MapCreateLobbyDummy => _mapCreateLobby ??=
-            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MapCreateLobby).Cast<MapCreateLobby>().First();
-
-        public Arena Arena => _arena ??=
-            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.Arena && !l.IsGangActionLobby).Cast<Arena>().First();
-
-        public GangLobby GangLobby => _gangLobby ??=
-            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.GangLobby).Cast<GangLobby>().First();
-
-        public ILobby MainMenu => _mainMenu ??=
-            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MainMenu).First();
 
         public void AddLobby(ILobby lobby)
         {

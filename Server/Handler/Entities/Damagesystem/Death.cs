@@ -6,24 +6,18 @@ namespace TDS_Server.Core.Damagesystem
 {
     partial class Damagesys
     {
-        #region Private Fields
-
         private readonly Dictionary<ITDSPlayer, ITDSPlayer> _deadTimer = new Dictionary<ITDSPlayer, ITDSPlayer>();
 
-        #endregion Private Fields
-
-        #region Public Methods
-
-        public void CheckLastHitter(ITDSPlayer character, out ITDSPlayer? killer)
+        public void RewardLastHitter(ITDSPlayer player, out ITDSPlayer? killer)
         {
             killer = null;
-            if (character.LastHitter is null)
+            if (player.LastHitter is null)
                 return;
 
-            ITDSPlayer lastHitter = character.LastHitter;
-            character.LastHitter = null;
+            ITDSPlayer lastHitter = player.LastHitter;
+            player.LastHitter = null;
 
-            if (character.Lobby != lastHitter.Lobby)
+            if (player.Lobby != lastHitter.Lobby)
                 return;
 
             if (lastHitter.Lifes == 0)
@@ -32,7 +26,7 @@ namespace TDS_Server.Core.Damagesystem
             if (lastHitter.CurrentRoundStats != null)
                 ++lastHitter.CurrentRoundStats.Kills;
             KillingSpreeKill(lastHitter);
-            lastHitter.SendNotification(string.Format(lastHitter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
+            lastHitter.SendNotification(string.Format(lastHitter.Language.GOT_LAST_HITTED_KILL, player.DisplayName));
             killer = lastHitter;
         }
 
@@ -96,10 +90,6 @@ namespace TDS_Server.Core.Damagesystem
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void CheckForAssist(ITDSPlayer player, ITDSPlayer killer)
         {
             if (!_allHitters.ContainsKey(player))
@@ -124,7 +114,5 @@ namespace TDS_Server.Core.Damagesystem
                 }
             }
         }
-
-        #endregion Private Methods
     }
 }

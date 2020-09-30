@@ -128,22 +128,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             _mapBlips.Clear();
         }
 
-        private Position4DDto? GetMapRandomSpawnData(ITeam? team)
-        {
-            if (_currentMap is null)
-                return null;
-            if (team is null)
-                return null;
-            int index = team.SpawnCounter++;
-            var teamSpawns = _currentMap.TeamSpawnsList.TeamSpawns[team.Entity.Index - 1].Spawns;
-            if (index >= teamSpawns.Length)
-            {
-                index = 0;
-                team.SpawnCounter = 0;
-            }
-            return teamSpawns[index];
-        }
-
         private MapDto? GetNextMap()
         {
             MapDto? map = GetVotedMap();

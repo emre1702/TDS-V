@@ -2,8 +2,6 @@
 {
     public interface ILanguage
     {
-        #region Public Properties
-
         string ACCOUNT_DOESNT_EXIST { get; }
         string ADDED_THE_GANG_HOUSE_SUCCESSFULLY { get; }
         string ALREADY_IN_PRIVATE_CHAT_WITH { get; }
@@ -41,6 +39,7 @@
         string GANG_INVITATION_INFO { get; }
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
+        string GANGACTION_CANT_JOIN_AGAIN { get; }
         string GANGWAR_ATTACK_INVITATION { get; }
         string GANGWAR_ATTACK_PREPARATION_INVITATION { get; }
         string GANGWAR_ATTACKER_PREPARATION_INFO { get; }
@@ -50,7 +49,7 @@
         string GANGWAR_OWNER_STARTED_INFO { get; }
         string GANGWAR_PREPARATION_INFO { get; }
         string GANGWAR_STARTED_INFO { get; }
-        string GANGWAR_TEAM_ALREADY_FULL_INFO { get; }
+        string TEAM_ALREADY_FULL_INFO { get; }
         string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO { get; }
         string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO { get; }
         string GIVE_MONEY_NEED_FEE { get; }
@@ -212,7 +211,5 @@
         string YOU_UNBLOCKED { get; }
         string YOUVE_BECOME_GANG_LEADER { get; }
         string YOUVE_LEFT_THE_GANG { get; }
-
-        #endregion Public Properties
     }
 }

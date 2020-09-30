@@ -79,10 +79,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
             return true;
         }
 
-        public virtual bool CanJoinDuringRound(ITDSPlayer player, ITeam team)
-        {
-            return false;
-        }
+        public virtual bool CanJoinDuringRound(ITDSPlayer player, ITeam team) => false;
 
         public virtual bool CanJoinLobby(ITDSPlayer player, uint? teamIndex)
         {

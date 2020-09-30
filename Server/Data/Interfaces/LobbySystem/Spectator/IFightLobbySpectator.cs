@@ -5,7 +5,11 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Spectator
 {
     public interface IFightLobbySpectator
     {
-        Task SpectateNext(ITDSPlayer player, bool forward);
+        void SetPlayerInSpectateMode(ITDSPlayer player);
+
+        Task EnsurePlayerSpectatesAnyone(ITDSPlayer player);
+
+        ValueTask SpectateNext(ITDSPlayer player, bool forward);
 
         Task SpectateOtherAllTeams(ITDSPlayer player, bool spectateNext = true);
 

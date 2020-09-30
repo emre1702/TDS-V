@@ -4,17 +4,18 @@ using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.GangSystem.GangGamemodes;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Shared.Core;
 
-namespace TDS_Server.Handler.Entities.Utility
+namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
 {
-    public class GangwarArea : DatabaseEntityWrapper
+    public class GangwarArea : DatabaseEntityWrapper, IGangArea
     {
         private readonly GangsHandler _gangsHandler;
         private readonly ISettingsHandler _settingsHandler;
@@ -71,12 +72,12 @@ namespace TDS_Server.Handler.Entities.Utility
             }
         }
 
-        public Arena? InLobby { get; set; }
+        public IGangActionLobby? InLobby { get; set; }
         public MapDto Map { get; private set; }
         public IGang? Owner { get; private set; }
 
-        private ITeam? AttackerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.AttackerTeam : null;
-        private ITeam? OwnerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.OwnerTeam : null;
+        private ITeam? AttackerTeamInGangwar => InLobby?.Rounds.CurrentGamemode is Gangwar gangwar ? gangwar.AttackerTeam : null;
+        private ITeam? OwnerTeamInGangwar => InLobby?.Rounds.CurrentGamemode is Gangwar gangwar ? gangwar.OwnerTeam : null;
 
         public async Task SetAttackEnded(bool conquered)
         {
@@ -180,7 +181,7 @@ namespace TDS_Server.Handler.Entities.Utility
             if (InLobby is null)
                 return;
 
-            if (!(InLobby.CurrentGameMode is Gangwar gangwar))
+            if (!(InLobby.Rounds.CurrentGamemode is Gangwar gangwar))
                 return;
 
             if (gangwar.TargetObject is null)
@@ -240,7 +241,7 @@ namespace TDS_Server.Handler.Entities.Utility
                 alpha: (byte)(HasCooldown ? 120 : 255),
                 drawDistance: 100f,
                 shortRange: true,
-                dimension: _lobbiesHandler.GangLobby.Dimension) as ITDSBlip;
+                dimension: _lobbiesHandler.GangLobby.MapHandler.Dimension) as ITDSBlip;
         }
     }
 }

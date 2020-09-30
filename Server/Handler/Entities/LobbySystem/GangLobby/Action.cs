@@ -10,15 +10,13 @@ using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler.Entities.Utility;
+using TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.LobbySystem
 {
     partial class GangLobby
     {
-        #region Public Methods
-
         public async Task StartGangwar(ITDSPlayer attacker, int gangwarAreaId)
         {
             var gangwarArea = _gangwarAreasHandler.GetById(gangwarAreaId);
@@ -57,10 +55,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             await lobby.AddPlayer(attacker, 1);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private bool CheckCanStartAction(ITDSPlayer attacker, GangwarArea gangwarArea)
         {
@@ -177,7 +171,5 @@ namespace TDS_Server.Handler.Entities.LobbySystem
 
             return lobby;
         }
-
-        #endregion Private Methods
     }
 }

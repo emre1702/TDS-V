@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
+﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Chat;
 using TDS_Server.Data.Interfaces.LobbySystem.Colshapes;
 using TDS_Server.Data.Interfaces.LobbySystem.Database;
@@ -7,6 +8,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
+using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Shared.Data.Enums;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
@@ -30,6 +32,9 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
         IBaseLobbyMapHandler MapHandler { get; }
         IBaseLobbyNotifications Notifications { get; }
         IBaseLobbyPlayers Players { get; }
+        IBaseLobbySync Sync { get; }
         IBaseLobbyTeamsHandler Teams { get; }
+
+        Task Remove();
     }
 }

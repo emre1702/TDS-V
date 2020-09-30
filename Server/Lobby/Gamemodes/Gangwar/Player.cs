@@ -23,15 +23,8 @@ namespace TDS_Server.LobbySystem.Gamemodes
                 SetAttackLeader(player);
         }
 
-        public override bool CanJoinDuringRound(ITDSPlayer player, ITeam team)
-        {
-            if (!Lobby.IsGangActionLobby)
-                return false;
-            if (Lobby.DmgSys.DamageDealtThisRound)
-                return false;
-
-            return true;
-        }
+        // In GangAction lobby this isn't checked //
+        public override bool CanJoinDuringRound() => false;
 
         public override bool CanJoinLobby(ITDSPlayer player, uint? teamIndex)
         {
@@ -43,7 +36,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
             bool isAttacker = AttackerTeam.Entity.Index == teamIndex;
             if (!HasTeamFreePlace(isAttacker))
             {
-                player.SendNotification(player.Language.GANGWAR_TEAM_ALREADY_FULL_INFO);
+                player.SendNotification(player.Language.TEAM_ALREADY_FULL_INFO);
                 return false;
             }
 
@@ -86,27 +79,13 @@ namespace TDS_Server.LobbySystem.Gamemodes
             if (AttackerTeam.Players.Count == 0)
                 return null;
 
-            if (Lobby.CurrentRoundStatus == RoundStatus.Round && AttackerTeam.AlivePlayers!.Count == 0)
+            if (Lobby.Roun.CurrentRoundStatus == RoundStatus.Round && AttackerTeam.AlivePlayers!.Count == 0)
                 return null;
 
             if (Lobby.CurrentRoundStatus != RoundStatus.Round)
                 return SharedUtils.GetRandom(AttackerTeam.Players);
 
             return AttackerTeam.Players.MinBy(p => p.Position.DistanceTo(TargetObject.Position)).FirstOrDefault();
-        }
-
-        private bool HasTeamFreePlace(bool isAttacker)
-        {
-            if (isAttacker)
-            {
-                return AttackerTeam.Players.Count < SettingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
-                    || AttackerTeam.Players.Count < OwnerTeam.Players.Count + (SettingsHandler.ServerSettings.GangwarAttackerCanBeMore ? 1 : 0);
-            }
-            else
-            {
-                return OwnerTeam.Players.Count < SettingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
-                    || OwnerTeam.Players.Count < AttackerTeam.Players.Count + (SettingsHandler.ServerSettings.GangwarOwnerCanBeMore ? 1 : 0);
-            }
         }
 
         private void SetAttackLeader(ITDSPlayer attackLeader)

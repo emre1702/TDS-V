@@ -6,9 +6,9 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Handler.Helper;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
@@ -95,10 +95,10 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             }
         }
 
-        internal Task<ITeam?> GetNextNonSpectatorTeamWithPlayers(ITeam? start)
+        public Task<ITeam?> GetNextNonSpectatorTeamWithPlayers(ITeam? start)
             => GetNextNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
 
-        internal Task<ITeam?> GetNextNonSpectatorTeamWithPlayers(short startIndex)
+        public Task<ITeam?> GetNextNonSpectatorTeamWithPlayers(short startIndex)
         {
             return Do(teams =>
             {
@@ -120,12 +120,12 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             });
         }
 
-        internal Task<ITeam> GetNextNonSpectatorTeam(ITeam start)
+        public Task<ITeam> GetNextNonSpectatorTeam(ITeam start)
         {
             return GetNextNonSpectatorTeam(start.Entity.Index);
         }
 
-        private Task<ITeam> GetNextNonSpectatorTeam(short startIndex)
+        public Task<ITeam> GetNextNonSpectatorTeam(short startIndex)
         {
             var startIndexToIterate = startIndex;
             return Do(teams =>
@@ -140,10 +140,10 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             });
         }
 
-        internal Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(ITeam? start)
+        public Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(ITeam? start)
            => GetPreviousNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
 
-        internal Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(short startIndex)
+        public Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(short startIndex)
         {
             return Do(teams =>
             {
@@ -163,6 +163,12 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
                 return team;
             });
+        }
+
+        public async Task<string> GetAmountInFightSyncDataJson()
+        {
+            var teamPlayerAmounts = await Lobby.Teams.Do(teams => teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers));
+            return Serializer.ToClient(teamPlayerAmounts);
         }
     }
 }

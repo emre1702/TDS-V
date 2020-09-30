@@ -29,6 +29,8 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 
         public override void Spawn(Vector3 pos, float heading = 0)
         {
+            DeathSpawnTimer?.Kill();
+            DeathSpawnTimer = null;
             NAPI.Player.SpawnPlayer(this, pos, heading);
             if (LobbyNew is { })
                 Dimension = LobbyNew.MapHandler.Dimension;

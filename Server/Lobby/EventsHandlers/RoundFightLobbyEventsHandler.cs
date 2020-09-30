@@ -22,7 +22,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public event RoundStateChangedDelegate? Countdown;
 
-        public event RoundStateChangedDelegate? InRound;
+        public AsyncValueTaskEvent? InRound;
 
         public AsyncValueTaskEvent? RoundEnd { get; set; }
 
@@ -61,8 +61,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         public void TriggerCountdown()
             => Countdown?.Invoke();
 
-        public void TriggerInRound()
-            => InRound?.Invoke();
+        public ValueTask TriggerInRound()
+            => InRound?.InvokeAsync() ?? default;
 
         public ValueTask TriggerRoundClear()
             => RoundClear?.InvokeAsync() ?? default;

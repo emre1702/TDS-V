@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.GangSystem.GangGamemodes;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
@@ -17,11 +20,15 @@ using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Lobbies
 {
-    public class GangActionLobby : RoundFightLobby
+    public class GangActionLobby : RoundFightLobby, IGangActionLobby
     {
-        public GangActionLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler)
+        public IGangArea GangArea { get; }
+
+        public GangActionLobby(LobbyDb entity, IGangArea gangArea, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler)
             : base(entity, databaseHandler, langHelper, eventsHandler)
         {
+            GangArea = gangArea;
+            gangArea.InLobby = this;
         }
 
         protected override void InitDependencies(LobbyDependencies? lobbyDependencies = null)
@@ -41,6 +48,14 @@ namespace TDS_Server.LobbySystem.Lobbies
             lobbyDependencies.Players ??= new BaseLobbyPlayers(Entity, lobbyDependencies.Events, lobbyDependencies.Teams, lobbyDependencies.Bans);
 
             base.InitDependencies(lobbyDependencies);
+        }
+
+        public override async Task Remove()
+        {
+            await base.Remove();
+
+            if (GangArea is { })
+                GangArea.InLobby = null;
         }
     }
 }

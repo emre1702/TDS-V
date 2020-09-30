@@ -33,22 +33,22 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
     {
         public LobbyDb Entity { get; }
 
-        protected BaseLobbyBansHandler Bans { get; private set; }
-        protected BaseLobbyChat Chat { get; private set; }
+        public BaseLobbyBansHandler Bans { get; private set; }
+        public BaseLobbyChat Chat { get; private set; }
         public IBaseLobbyColshapesHandler ColshapesHandler { get; private set; }
         public IBaseLobbyDatabase Database { get; private set; }
         public IBaseLobbyDeathmatch Deathmatch { get; private set; }
-        protected DatabaseHandler GlobalDatabaseHandler { get; }
+        public DatabaseHandler GlobalDatabaseHandler { get; }
         public IBaseLobbyEventsHandler Events { get; private set; }
-        protected EventsHandler GlobalEventsHandler { get; }
-        protected LangHelper LangHelper { get; }
+        public EventsHandler GlobalEventsHandler { get; }
+        public LangHelper LangHelper { get; }
         public IBaseLobbyMapHandler MapHandler { get; private set; }
-        protected BaseLobbyNatives Natives { get; private set; }
-        protected BaseLobbyNotifications Notifications { get; private set; }
+        public BaseLobbyNatives Natives { get; private set; }
+        public BaseLobbyNotifications Notifications { get; private set; }
         public IBaseLobbyPlayers Players { get; private set; }
         public BaseLobbyTeamsHandler Teams { get; private set; }
-        protected BaseLobbySoundsHandler Sounds { get; private set; }
-        protected BaseLobbySync Sync { get; private set; }
+        public BaseLobbySoundsHandler Sounds { get; private set; }
+        public BaseLobbySync Sync { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
@@ -114,7 +114,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             await Remove();
         }
 
-        internal virtual async Task Remove()
+        public virtual async Task Remove()
             => await Events.TriggerRemove();
 
         #region Operators
