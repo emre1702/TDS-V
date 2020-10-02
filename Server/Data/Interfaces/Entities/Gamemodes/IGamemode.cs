@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Data.RoundEndReasons;
 
 namespace TDS_Server.Data.Interfaces.Entities.Gamemodes
 {
@@ -13,7 +13,7 @@ namespace TDS_Server.Data.Interfaces.Entities.Gamemodes
         ITeam WinnerTeam { get; }
         bool HandlesGivingWeapons { get; }
 
-        bool CanEndRound(RoundEndReason newPlayer);
+        bool CanEndRound(RoundEndReason roundEndReason);
 
         void StartMapClear();
 

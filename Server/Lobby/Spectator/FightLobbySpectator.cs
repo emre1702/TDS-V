@@ -119,7 +119,7 @@ namespace TDS_Server.LobbySystem.Spectator
             var teamlist = await Lobby.Teams.Do(teams =>
             {
                 if (teamIndex == 0)
-                    teamIndex = teams.Count - 1;
+                    teamIndex = teams.Length - 1;
                 return teams[teamIndex].SpectateablePlayers;
             });
 

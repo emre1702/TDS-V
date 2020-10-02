@@ -7,6 +7,7 @@ namespace TDS_Server.Data.Languages
     {
         #region Public Properties
 
+        public virtual string A_MAP_WAS_ALREADY_BOUGHT => "A map has already been purchased/set.";
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
         public virtual string ADDED_THE_GANG_HOUSE_SUCCESSFULLY => "The gang house was successfully added.";
         public virtual string ALREADY_IN_PRIVATE_CHAT_WITH => "You are already in a private chat with {0}.";
@@ -204,6 +205,7 @@ namespace TDS_Server.Data.Languages
         public virtual string YOU_ALREADY_INVITED_TARGET => "You've already invited the target.";
         public virtual string YOU_ARE_ALREADY_IN_A_GANG => "You are already in a gang.";
         public virtual string YOU_ARE_NOT_IN_A_GANG => "You are not in a gang.";
+        public virtual string YOU_CANT_BUY_A_MAP_IN_CUSTOM_LOBBY => "You can't buy a map in a custom lobby.";
         public virtual string YOU_GAVE_MONEY_TO_WITH_FEE => "You gave ${0} (${1} fee) to {2}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
         public virtual string YOU_GOT_INVITATION_BY => "You got an invitation to join the team from {0}.";

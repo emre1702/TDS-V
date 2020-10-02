@@ -2,6 +2,7 @@
 {
     public interface ILanguage
     {
+        string A_MAP_WAS_ALREADY_BOUGHT { get; }
         string ACCOUNT_DOESNT_EXIST { get; }
         string ADDED_THE_GANG_HOUSE_SUCCESSFULLY { get; }
         string ALREADY_IN_PRIVATE_CHAT_WITH { get; }
@@ -195,6 +196,7 @@
         string YOU_ALREADY_INVITED_TARGET { get; }
         string YOU_ARE_ALREADY_IN_A_GANG { get; }
         string YOU_ARE_NOT_IN_A_GANG { get; }
+        string YOU_CANT_BUY_A_MAP_IN_CUSTOM_LOBBY { get; }
         string YOU_GAVE_MONEY_TO_WITH_FEE { get; }
         string YOU_GOT_BLOCKED_BY { get; }
         string YOU_GOT_INVITATION_BY { get; }

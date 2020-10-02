@@ -6,8 +6,10 @@ using TDS_Server.Data.Interfaces.LobbySystem.Database;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Natives;
 using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
+using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Shared.Data.Enums;
@@ -29,9 +31,12 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
         IBaseLobbyDatabase Database { get; }
         IBaseLobbyDeathmatch Deathmatch { get; }
         IBaseLobbyEventsHandler Events { get; }
+        ILoggingHandler LoggingHandler { get; }
         IBaseLobbyMapHandler MapHandler { get; }
+        IBaseLobbyNatives Natives { get; }
         IBaseLobbyNotifications Notifications { get; }
         IBaseLobbyPlayers Players { get; }
+        IBaseLobbySoundsHandler Sounds { get; }
         IBaseLobbySync Sync { get; }
         IBaseLobbyTeamsHandler Teams { get; }
 

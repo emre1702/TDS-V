@@ -6,6 +6,6 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Notifications
 
     public interface IBaseLobbyNotifications
     {
-        void Send(Func<ILanguage, string> langGetter, ITeam? targetTeam = null, bool flashing = false);
+        void Send(Func<ILanguage, string> langGetter, bool flashing = false);
     }
 }

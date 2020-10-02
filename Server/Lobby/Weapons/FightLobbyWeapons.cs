@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.Weapons;
 using TDS_Server.Database.Entity.LobbyEntities;
 
 namespace TDS_Server.LobbySystem.Weapons
 {
-    public class FightLobbyWeapons
+    public class FightLobbyWeapons : IFightLobbyWeapons
     {
         protected readonly IFightLobby Lobby;
 

@@ -9,29 +9,19 @@ namespace TDS_Server.LobbySystem.Notifications
 {
     public class BaseLobbyNotifications : IBaseLobbyNotifications
     {
-        private readonly IBaseLobby _lobby;
+        protected IBaseLobby Lobby { get; }
         private readonly LangHelper _langHelper;
 
         public BaseLobbyNotifications(IBaseLobby lobby, LangHelper langHelper)
-            => (_lobby, _langHelper) = (lobby, langHelper);
+            => (Lobby, _langHelper) = (lobby, langHelper);
 
-        public void Send(Func<ILanguage, string> langGetter, ITeam? targetTeam = null, bool flashing = false)
+        public virtual void Send(Func<ILanguage, string> langGetter, bool flashing = false)
         {
             Dictionary<ILanguage, string> texts = _langHelper.GetLangDictionary(langGetter);
-            if (targetTeam is null)
+            Lobby.Players.DoInMain(player =>
             {
-                _lobby.Players.Do(player =>
-                {
-                    player.SendNotification(texts[player.Language], flashing);
-                });
-            }
-            else
-            {
-                targetTeam.FuncIterate(player =>
-                {
-                    player.SendNotification(texts[player.Language], flashing);
-                });
-            }
+                player.SendNotification(texts[player.Language], flashing);
+            });
         }
     }
 }

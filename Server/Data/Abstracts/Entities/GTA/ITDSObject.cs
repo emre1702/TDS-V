@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Data.Abstracts.Entities.GTA
@@ -16,8 +17,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public abstract void Detach();
 
-        public abstract void Freeze(bool toggle, ILobby lobby);
+        public abstract void Freeze(bool toggle, IBaseLobby lobby);
 
-        public abstract void SetCollisionsless(bool toggle, ILobby lobby);
+        public abstract void SetCollisionsless(bool toggle, IBaseLobby lobby);
     }
 }

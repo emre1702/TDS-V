@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -89,7 +90,7 @@ namespace TDS_Server.Handler.Sync
         /// <param name="key"></param>
         /// <param name="syncMode"></param>
         /// <param name="value"></param>
-        public void SetData(Entity entity, EntityDataKey key, DataSyncMode syncMode, object value, ITDSPlayer? toPlayer = null, ILobby? toLobby = null)
+        public void SetData(Entity entity, EntityDataKey key, DataSyncMode syncMode, object value, ITDSPlayer? toPlayer = null, IBaseLobby? toLobby = null)
         {
             switch (syncMode)
             {
@@ -105,13 +106,13 @@ namespace TDS_Server.Handler.Sync
                     if (toLobby is null)
                         return;
 
-                    if (!_entityHandleDatasLobby.ContainsKey(toLobby.Id))
-                        _entityHandleDatasLobby[toLobby.Id] = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
-                    if (!_entityHandleDatasLobby[toLobby.Id].ContainsKey(entity.Id))
-                        _entityHandleDatasLobby[toLobby.Id][entity.Id] = new Dictionary<EntityDataKey, object>();
-                    _entityHandleDatasLobby[toLobby.Id][entity.Id][key] = value;
+                    if (!_entityHandleDatasLobby.ContainsKey(toLobby.Entity.Id))
+                        _entityHandleDatasLobby[toLobby.Entity.Id] = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
+                    if (!_entityHandleDatasLobby[toLobby.Entity.Id].ContainsKey(entity.Id))
+                        _entityHandleDatasLobby[toLobby.Entity.Id][entity.Id] = new Dictionary<EntityDataKey, object>();
+                    _entityHandleDatasLobby[toLobby.Entity.Id][entity.Id][key] = value;
 
-                    toLobby.TriggerEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    toLobby.Sync.TriggerEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
                     break;
 
                 case DataSyncMode.Player:

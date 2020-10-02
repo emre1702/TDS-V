@@ -9,13 +9,13 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Maps;
 using TDS_Shared.Core;
@@ -28,9 +28,9 @@ namespace TDS_Server.Handler
     //Todo: Add team check for special gamemodes (e.g. ArmsRace allow only 1 team)
     public class LobbiesHandler : DatabaseEntityWrapper
     {
-        public readonly Dictionary<int, ILobby> LobbiesByIndex = new Dictionary<int, ILobby>();
+        public readonly Dictionary<int, IBaseLobby> LobbiesByIndex = new Dictionary<int, IBaseLobby>();
 
-        public List<ILobby> Lobbies { get; } = new List<ILobby>();
+        public List<IBaseLobby> Lobbies { get; } = new List<IBaseLobby>();
 
         public ICharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??= (ICharCreateLobby)Lobbies.Where(l => l.IsOfficial && l is ICharCreateLobby).First();
 
@@ -71,11 +71,11 @@ namespace TDS_Server.Handler
             eventsHandler.LobbyCreated += AddLobby;
         }
 
-        public void AddLobby(ILobby lobby)
+        public void AddLobby(IBaseLobby lobby)
         {
             Lobbies.Add(lobby);
-            LobbiesByIndex[lobby.Id] = lobby;
-            _dimensionsUsed.Add(lobby.Dimension);
+            LobbiesByIndex[lobby.Entity.Id] = lobby;
+            _dimensionsUsed.Add(lobby.MapHandler.Dimension);
         }
 
         public async Task<object?> CreateCustomLobby(ITDSPlayer player, ArraySegment<object> args)
@@ -88,7 +88,7 @@ namespace TDS_Server.Handler
                 {
                     return player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR;
                 }
-                bool nameAlreadyInUse = Lobbies.Any(lobby => lobby.Name.Equals(data.Name, StringComparison.CurrentCultureIgnoreCase));
+                bool nameAlreadyInUse = Lobbies.Any(lobby => lobby.Entity.Name.Equals(data.Name, StringComparison.CurrentCultureIgnoreCase));
                 if (nameAlreadyInUse)
                 {
                     return player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;
@@ -207,9 +207,9 @@ namespace TDS_Server.Handler
             return tryid;
         }
 
-        public ILobby? GetLobby(int id)
+        public IBaseLobby? GetLobby(int id)
         {
-            LobbiesByIndex.TryGetValue(id, out ILobby? lobby);
+            LobbiesByIndex.TryGetValue(id, out IBaseLobby? lobby);
             return lobby;
         }
 
@@ -317,26 +317,26 @@ namespace TDS_Server.Handler
 
             if (LobbiesByIndex.ContainsKey(index))
             {
-                ILobby lobby = LobbiesByIndex[index];
-                if (lobby is MapCreateLobby)
+                var lobby = LobbiesByIndex[index];
+                if (lobby is IMapCreateLobby)
                 {
-                    if (await lobby.IsPlayerBaned(player))
+                    if (await lobby.Bans.CheckIsBanned(player))
                         return null;
 
                     lobby = ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
                     await lobby.AddToDB();
                     _eventsHandler.OnLobbyCreated(lobby);
                 }
-                else if (lobby is CharCreateLobby)
+                else if (lobby is ICharCreateLobby)
                 {
-                    if (await lobby.IsPlayerBaned(player))
+                    if (await lobby.Bans.CheckIsBanned(player))
                         return null;
 
                     lobby = ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, player);
                     await lobby.AddToDB();
                     _eventsHandler.OnLobbyCreated(lobby);
                 }
-                await lobby.AddPlayer(player, null);
+                await lobby.Players.AddPlayer(player, 0);
                 return null;
             }
             else
@@ -354,14 +354,14 @@ namespace TDS_Server.Handler
 
             if (LobbiesByIndex.ContainsKey(index))
             {
-                ILobby lobby = LobbiesByIndex[index];
+                var lobby = LobbiesByIndex[index];
                 if (password != null && lobby.Entity.Password != password)
                 {
                     NAPI.Task.Run(() => player.SendChatMessage(player.Language.WRONG_PASSWORD));
                     return null;
                 }
 
-                await lobby.AddPlayer(player, null);
+                await lobby.Players.AddPlayer(player, 0);
                 return null;
             }
             else
@@ -372,11 +372,11 @@ namespace TDS_Server.Handler
             }
         }
 
-        public void RemoveLobby(Lobby lobby)
+        public void RemoveLobby(IBaseLobby lobby)
         {
             LobbiesByIndex.Remove(lobby.Entity.Id);
             Lobbies.Remove(lobby);
-            _dimensionsUsed.Remove(lobby.Dimension);
+            _dimensionsUsed.Remove(lobby.MapHandler.Dimension);
 
             if (!lobby.IsOfficial)
                 _eventsHandler.OnCustomLobbyRemoved(lobby);
@@ -388,10 +388,7 @@ namespace TDS_Server.Handler
             {
                 try
                 {
-                    await lobby.ExecuteForDBAsync(async dbContext =>
-                    {
-                        await dbContext.SaveChangesAsync();
-                    });
+                    await lobby.Database.Save();
                 }
                 catch (Exception ex)
                 {
@@ -443,7 +440,7 @@ namespace TDS_Server.Handler
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            await MainMenu.AddPlayer(player, null);
+            await MainMenu.Players.AddPlayer(player, 0);
         }
 
         private bool IsCustomLobbyNameAllowed(string name)

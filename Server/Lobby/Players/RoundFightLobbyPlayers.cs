@@ -9,6 +9,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
 
@@ -182,11 +183,20 @@ namespace TDS_Server.LobbySystem.Players
 
         public void RespawnPlayer(ITDSPlayer player)
         {
+            player.DeathSpawnTimer?.Kill();
+
             if (!(Lobby.Rounds.RoundStates.CurrentState is InRoundState))
+            {
+                player.DeathSpawnTimer = null;
                 return;
-            Lobby.Rounds.SetPlayerReadyForRound(player, false);
-            Lobby.Rounds.StartRoundForPlayer(player);
-            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.PlayerRespawned));
+            }
+
+            player.DeathSpawnTimer = new TDSTimer(() =>
+            {
+                Lobby.Rounds.SetPlayerReadyForRound(player, false);
+                Lobby.Rounds.StartRoundForPlayer(player);
+                NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.PlayerRespawned));
+            }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);
         }
     }
 }

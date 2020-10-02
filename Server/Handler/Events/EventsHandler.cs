@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using BonusBotConnector.Client;
+﻿using BonusBotConnector.Client;
 using GTANetworkAPI;
+using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
@@ -9,7 +9,6 @@ using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.GangSystem;
-using TDS_Server.Handler.Entities.LobbySystem;
 
 namespace TDS_Server.Handler.Events
 {
@@ -46,9 +45,7 @@ namespace TDS_Server.Handler.Events
 
         public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
 
-        public delegate void LobbyDelegate(ILobby lobby);
-
-        public delegate void LobbyDelegateNew(IBaseLobby lobby);
+        public delegate void LobbyDelegate(IBaseLobby lobby);
 
         public delegate void NewBanDelegate(PlayerBans ban, bool inOfficialLobby);
 
@@ -60,7 +57,7 @@ namespace TDS_Server.Handler.Events
 
         public delegate void PlayerJoinedGangDelegate(ITDSPlayer player, IGang gang, GangRanks rank);
 
-        public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
+        public delegate void PlayerLobbyDelegate(ITDSPlayer player, IBaseLobby lobby);
 
         public delegate void PlayerLobbyDelegateNew(ITDSPlayer player, IBaseLobby lobby);
 
@@ -87,8 +84,6 @@ namespace TDS_Server.Handler.Events
         public event EmptyDelegate? LoadedServerBans;
 
         public event LobbyDelegate? LobbyCreated;
-
-        public event LobbyDelegateNew? LobbyCreatedNew;
 
         public event EmptyDelegate? MapsLoaded;
 
@@ -215,7 +210,7 @@ namespace TDS_Server.Handler.Events
 
         public void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash previousWeapon, WeaponHash newWeapon)
         {
-            if (!(player.Lobby is FightLobby fightLobby))
+            if (!(player.Lobby is IFightLobby fightLobby))
                 return;
 
             player.OnPlayerWeaponSwitch(previousWeapon, newWeapon);
@@ -260,14 +255,14 @@ namespace TDS_Server.Handler.Events
             ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
         }
 
-        internal void OnCustomLobbyCreated(ILobby lobby)
+        internal void OnCustomLobbyCreated(IBaseLobby lobby)
         {
             CustomLobbyCreated?.Invoke(lobby);
         }
 
         public void OnLobbyCreateNew(IBaseLobby lobby)
         {
-            LobbyCreatedNew?.Invoke(lobby);
+            LobbyCreated?.Invoke(lobby);
         }
 
         internal void OnCustomLobbyMenuJoin(ITDSPlayer player)
@@ -280,7 +275,7 @@ namespace TDS_Server.Handler.Events
             PlayerLeftCustomMenuLobby?.Invoke(player);
         }
 
-        internal void OnCustomLobbyRemoved(ILobby lobby)
+        internal void OnCustomLobbyRemoved(IBaseLobby lobby)
         {
             CustomLobbyRemoved?.Invoke(lobby);
         }
@@ -314,17 +309,17 @@ namespace TDS_Server.Handler.Events
             LoadedServerBans?.Invoke();
         }
 
-        internal void OnLobbyCreated(ILobby lobby)
+        internal void OnLobbyCreated(IBaseLobby lobby)
         {
             LobbyCreated?.Invoke(lobby);
         }
 
-        internal void OnLobbyJoin(ITDSPlayer player, ILobby lobby)
+        internal void OnLobbyJoin(ITDSPlayer player, IBaseLobby lobby)
         {
             PlayerJoinedLobby?.Invoke(player, lobby);
         }
 
-        internal void OnLobbyLeave(ITDSPlayer player, ILobby lobby)
+        internal void OnLobbyLeave(ITDSPlayer player, IBaseLobby lobby)
         {
             PlayerLeftLobby?.Invoke(player, lobby);
         }

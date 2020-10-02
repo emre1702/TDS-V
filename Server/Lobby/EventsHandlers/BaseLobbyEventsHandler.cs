@@ -21,11 +21,12 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public event LobbyDelegate? RemoveAfter;
 
-        public AsyncValueTaskEvent<(ITDSPlayer player, int HadLifes)>? PlayerLeft { get; set; }
+        public AsyncValueTaskEvent<(ITDSPlayer Player, int HadLifes)>? PlayerLeft { get; set; }
 
-        public AsyncValueTaskEvent<(ITDSPlayer player, int HadLifes)>? PlayerLeftAfter { get; set; }
+        public AsyncValueTaskEvent<(ITDSPlayer Player, int HadLifes)>? PlayerLeftAfter { get; set; }
 
         public AsyncValueTaskEvent<(ITDSPlayer Player, int TeamIndex)>? PlayerJoined { get; set; }
+        public AsyncValueTaskEvent<(ITDSPlayer Player, int TeamIndex)>? PlayerJoinedAfter { get; set; }
 
         public event BanDelegate? NewBan;
 
@@ -35,8 +36,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         private readonly IBaseLobby _lobby;
         protected readonly ILoggingHandler Logging;
 
-        public BaseLobbyEventsHandler(EventsHandler eventsHandler, IBaseLobby lobby, ILoggingHandler logging)
-            => (_eventsHandler, _lobby, Logging) = (eventsHandler, lobby, logging);
+        public BaseLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler, ILoggingHandler logging)
+            => (_lobby, _eventsHandler, Logging) = (lobby, eventsHandler, logging);
 
         public async Task TriggerCreated(LobbyDb entity)
         {
@@ -69,6 +70,9 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         public async ValueTask TriggerPlayerJoined(ITDSPlayer player, int teamIndex)
         {
             var task = PlayerJoined?.InvokeAsync((player, teamIndex));
+            if (task.HasValue)
+                await task.Value;
+            task = PlayerJoinedAfter?.InvokeAsync((player, teamIndex));
             if (task.HasValue)
                 await task.Value;
             _eventsHandler.OnLobbyJoinedNew(player, _lobby);

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.MapHandlers
 {
@@ -16,6 +16,8 @@ namespace TDS_Server.LobbySystem.MapHandlers
         public Vector3 SpawnPoint { get; }
         public float SpawnRotation { get; }
         protected IBaseLobby Lobby { get; }
+
+        private readonly List<ITDSBlip> _mapBlips = new List<ITDSBlip>();
 
         public BaseLobbyMapHandler(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
@@ -32,12 +34,27 @@ namespace TDS_Server.LobbySystem.MapHandlers
             events.PlayerJoined += Events_PlayerJoined;
         }
 
-        protected virtual void Events_PlayerJoined(ITDSPlayer player, int _)
+        protected virtual ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
+            return default;
         }
 
-        public virtual void DeleteMapBlips()
+        public void AddMapBlip(ITDSBlip blip)
         {
+            lock (_mapBlips)
+            {
+                _mapBlips.Add(blip);
+            }
+        }
+
+        public void DeleteMapBlips()
+        {
+            lock (_mapBlips)
+            {
+                foreach (var blip in _mapBlips)
+                    blip.Delete();
+                _mapBlips.Clear();
+            }
         }
 
         private static uint GetFreeDimension()

@@ -22,7 +22,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             await Lobby.Remove();
         }
 
-        protected override Task CheckForEnoughAliveAfterLeave()
+        public override Task CheckForEnoughAlive()
         {
             // if owner is alive only the target should be able to end the round
             // if attacker is alive we need to check if owner is alive or could still join

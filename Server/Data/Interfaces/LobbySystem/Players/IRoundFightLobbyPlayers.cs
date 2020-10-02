@@ -5,5 +5,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Players
     public interface IRoundFightLobbyPlayers : IFightLobbyPlayers
     {
         void SetPlayerDataAlive(ITDSPlayer player);
+
+        void RespawnPlayer(ITDSPlayer player);
     }
 }

@@ -1,23 +1,11 @@
-﻿using GTANetworkAPI;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar;
-using TDS_Shared.Data.Enums;
+﻿using TDS_Server.Data.Interfaces.LobbySystem.Actions;
 
-namespace TDS_Server.Handler.Entities.LobbySystem
+namespace TDS_Server.LobbySystem.Actions
 {
-    partial class GangLobby
+    public class GangLobbyActions : IGangLobbyActions
     {
-        public async Task StartGangwar(ITDSPlayer attacker, int gangwarAreaId)
+        /*
+         *  public async Task StartGangwar(ITDSPlayer attacker, int gangwarAreaId)
         {
             var gangwarArea = _gangwarAreasHandler.GetById(gangwarAreaId);
             if (gangwarArea is null)
@@ -170,6 +158,6 @@ namespace TDS_Server.Handler.Entities.LobbySystem
             };
 
             return lobby;
-        }
+        }*/
     }
 }

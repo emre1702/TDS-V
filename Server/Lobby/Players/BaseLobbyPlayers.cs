@@ -44,7 +44,7 @@ namespace TDS_Server.LobbySystem.Players
             player.Lobby?.RemovePlayer(player);
             await _semaphore.Do(() => _players.Add(player));
 
-            Lobby.Events.TriggerPlayerJoined(player, teamIndex);
+            await Lobby.Events.TriggerPlayerJoined(player, teamIndex);
             player.SetLobby(Lobby);
             InformAboutHowToLeaveLobby(player);
 
@@ -68,11 +68,12 @@ namespace TDS_Server.LobbySystem.Players
             player.Lobby = null;
             player.PreviousLobby = null;
             await player.SetPlayerLobbyStats(null);
+            var lifes = player.Lifes;
             player.Lifes = 0;
-            Lobby.Teams.SetPlayerTeam(player, null);
+            await Lobby.Teams.SetPlayerTeam(player, null);
             player.SetSpectates(null);
 
-            await Lobby.Events.TriggerPlayerLeft(player);
+            await Lobby.Events.TriggerPlayerLeft(player, lifes);
 
             return true;
         }

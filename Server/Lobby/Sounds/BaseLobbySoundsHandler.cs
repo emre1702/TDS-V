@@ -1,18 +1,19 @@
-﻿using TDS_Server.LobbySystem.Sync;
+﻿using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
 using TDS_Shared.Default;
 
 namespace TDS_Server.LobbySystem.Sounds
 {
-    public class BaseLobbySoundsHandler
+    public class BaseLobbySoundsHandler : IBaseLobbySoundsHandler
     {
-        private readonly BaseLobbySync _sync;
+        private readonly IBaseLobby _lobby;
 
-        public BaseLobbySoundsHandler(BaseLobbySync sync)
-            => _sync = sync;
+        public BaseLobbySoundsHandler(IBaseLobby lobby)
+            => _lobby = lobby;
 
         public void PlaySound(string soundName)
         {
-            _sync.TriggerEvent(ToClientEvent.PlayCustomSound, soundName);
+            _lobby.Sync.TriggerEvent(ToClientEvent.PlayCustomSound, soundName);
         }
     }
 }

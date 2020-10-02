@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
@@ -34,9 +35,10 @@ namespace TDS_Server.LobbySystem.Deathmatch
             player.SetClothes(11, 0, 0);
         }
 
-        protected virtual void ResetPlayer(ITDSPlayer player)
+        protected virtual ValueTask ResetPlayer((ITDSPlayer Player, int HadLifes) data)
         {
-            RemoveAfterDeathSpawnTimer(player);
+            RemoveAfterDeathSpawnTimer(data.Player);
+            return default;
         }
 
         private void RemoveAfterDeathSpawnTimer(ITDSPlayer player)

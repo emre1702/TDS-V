@@ -23,5 +23,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers
         void SetPlayerReadyForRound(ITDSPlayer player, bool freeze);
 
         void StartRoundForPlayer(ITDSPlayer player);
+
+        Task CheckForEnoughAlive();
     }
 }

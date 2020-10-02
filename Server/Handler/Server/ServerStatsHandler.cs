@@ -35,7 +35,7 @@ namespace TDS_Server.Handler.Server
             _eventsHandler.PlayerLoggedIn += PlayerLoggedIn;
             _eventsHandler.PlayerLoggedOut += CheckPlayerPeak;
             _eventsHandler.PlayerRegistered += PlayerRegistered;
-            _eventsHandler.LobbyCreatedNew += EventsHandler_LobbyCreatedNew;
+            _eventsHandler.LobbyCreated += EventsHandler_LobbyCreatedNew;
 
             // Only to remove nullable warning
             DailyStats = new ServerDailyStats();

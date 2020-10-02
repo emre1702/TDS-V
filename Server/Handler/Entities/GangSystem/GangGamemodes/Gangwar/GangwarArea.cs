@@ -4,12 +4,13 @@ using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities.Gamemodes;
 using TDS_Server.Data.Interfaces.GangSystem.GangGamemodes;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Shared.Core;
 
@@ -76,8 +77,8 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
         public MapDto Map { get; private set; }
         public IGang? Owner { get; private set; }
 
-        private ITeam? AttackerTeamInGangwar => InLobby?.Rounds.CurrentGamemode is Gangwar gangwar ? gangwar.AttackerTeam : null;
-        private ITeam? OwnerTeamInGangwar => InLobby?.Rounds.CurrentGamemode is Gangwar gangwar ? gangwar.OwnerTeam : null;
+        private ITeam? AttackerTeamInGangwar => InLobby?.Rounds.CurrentGamemode is IGangwar gangwar ? gangwar.AttackerTeam : null;
+        private ITeam? OwnerTeamInGangwar => InLobby?.Rounds.CurrentGamemode is IGangwar gangwar ? gangwar.OwnerTeam : null;
 
         public async Task SetAttackEnded(bool conquered)
         {
@@ -168,9 +169,11 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
                 return false;
             if (player.Lobby is null)
                 return false;
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IRoundFightLobby roundFightLobby))
                 return false;
-            if (arena.GangwarArea != this)
+            if (!(roundFightLobby.Rounds.CurrentGamemode is IGangwar gangwar))
+                return false;
+            if (gangwar.Area != this)
                 return false;
 
             return true;

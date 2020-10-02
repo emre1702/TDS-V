@@ -9,9 +9,11 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers
 
     public interface IBaseLobbyTeamsHandler
     {
-        Task Do(Action<List<ITeam>> action);
+        int Count { get; }
 
-        Task<T> Do<T>(Func<List<ITeam>, T> func);
+        Task Do(Action<ITeam[]> action);
+
+        Task<T> Do<T>(Func<ITeam[], T> func);
 
         Task<ITeam> GetTeam(short teamIndex);
 
@@ -21,6 +23,6 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers
 
         Task<ITeam> GetTeamWithFewestPlayer();
 
-        ITeam GetTeamWithFewestPlayer(List<ITeam> teams);
+        ITeam GetTeamWithFewestPlayer(ITeam[] teams);
     }
 }

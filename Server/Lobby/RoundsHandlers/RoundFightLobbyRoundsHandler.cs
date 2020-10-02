@@ -1,9 +1,8 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GTANetworkAPI;
-using Microsoft.AspNetCore.Mvc;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities.Gamemodes;
@@ -17,7 +16,6 @@ using TDS_Server.Data.RoundEndReasons;
 using TDS_Server.LobbySystem.GamemodesHandlers;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
-using TDS_Shared.Core;
 using TDS_Shared.Default;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers
@@ -70,7 +68,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             {
                 case InRoundState _:
                     if (data.HadLifes > 0)
-                        await CheckForEnoughAliveAfterLeave();
+                        await CheckForEnoughAlive();
                     break;
             }
         }
@@ -112,7 +110,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             useStringBuilder.Clear();
         }
 
-        protected virtual async Task CheckForEnoughAliveAfterLeave()
+        public virtual async Task CheckForEnoughAlive()
         {
             (int teamAmountWithAlive, int teamAmount) = await Lobby.Teams.Do(teams =>
                 (teams.Count(t => t.AlivePlayers?.Count > 0),

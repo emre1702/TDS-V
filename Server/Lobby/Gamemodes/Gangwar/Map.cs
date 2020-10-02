@@ -29,7 +29,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
             if (Map.Target is null)
                 return;
 
-            _targetBlip = NAPI.Blip.CreateBlip(SharedConstants.TargetBlipSprite, Map.Target.ToVector3(), 1f, 0, name: "Target", dimension: Lobby.Dimension) as ITDSBlip;
+            _targetBlip = NAPI.Blip.CreateBlip(SharedConstants.TargetBlipSprite, Map.Target.ToVector3(), 1f, 0, name: "Target", dimension: Lobby.MapHandler.Dimension) as ITDSBlip;
         }
 
         private void CreateTargetColShape()
@@ -37,7 +37,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
             if (TargetObject is null)
                 return;
 
-            TargetColShape = NAPI.ColShape.CreateSphereColShape(TargetObject.Position, (float)SettingsHandler.ServerSettings.GangwarTargetRadius, Lobby.Dimension) as ITDSColShape;
+            TargetColShape = NAPI.ColShape.CreateSphereColShape(TargetObject.Position, (float)SettingsHandler.ServerSettings.GangwarTargetRadius, Lobby.MapHandler.Dimension) as ITDSColShape;
 
             TargetColShape!.PlayerEntered += PlayerEnteredTargetColShape;
             TargetColShape.PlayerExited += PlayerExitedTargetColShape;
@@ -48,7 +48,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
             if (Map.Target is null)
                 return;
 
-            TargetObject = NAPI.Object.CreateObject(NAPI.Util.GetHashKey(SharedConstants.TargetHashName), Map.Target.ToVector3(), new Vector3(), 120, Lobby.Dimension) as ITDSObject;
+            TargetObject = NAPI.Object.CreateObject(NAPI.Util.GetHashKey(SharedConstants.TargetHashName), Map.Target.ToVector3(), new Vector3(), 120, Lobby.MapHandler.Dimension) as ITDSObject;
             TargetObject?.Freeze(true, Lobby);
             TargetObject?.SetCollisionsless(true, Lobby);
         }
@@ -59,7 +59,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
                 return;
 
             _targetTextLabel = NAPI.TextLabel.CreateTextLabel("Target", TargetObject.Position,
-                (float)SettingsHandler.ServerSettings.GangwarTargetRadius, 7f, 0, new Color(220, 220, 220), true, Lobby.Dimension) as ITDSTextLabel;
+                (float)SettingsHandler.ServerSettings.GangwarTargetRadius, 7f, 0, new Color(220, 220, 220), true, Lobby.MapHandler.Dimension) as ITDSTextLabel;
         }
     }
 }

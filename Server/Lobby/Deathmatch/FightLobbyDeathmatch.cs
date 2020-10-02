@@ -32,12 +32,13 @@ namespace TDS_Server.LobbySystem.Deathmatch
             AmountLifes = lobby.Entity.FightSettings.AmountLifes;
         }
 
-        protected override void ResetPlayer(ITDSPlayer player)
+        protected override ValueTask ResetPlayer((ITDSPlayer Player, int HadLifes) data)
         {
-            NAPI.Task.RunCustom(() =>
+            NAPI.Task.Run(() =>
             {
-                player.RemoveAllWeapons();
+                data.Player.RemoveAllWeapons();
             });
+            return default;
         }
 
         public override async Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)

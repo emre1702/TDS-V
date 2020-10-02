@@ -16,26 +16,17 @@ namespace TDS_Server.Handler.GangSystem
 {
     public class GangHousesHandler : DatabaseEntityWrapper
     {
-        #region Public Fields
-
         public List<GangHouse> Houses = new List<GangHouse>();
-
-        #endregion Public Fields
-
-        #region Private Fields
 
         private readonly Dictionary<int, List<GangHouse>> _levelFreeHouses = new Dictionary<int, List<GangHouse>>();
         private readonly List<GangHouse> _occupiedHouses = new List<GangHouse>();
+
         private List<GangHouses> _houseEntities = new List<GangHouses>();
 
         private readonly GangLevelsHandler _gangLevelsHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly GangsHandler _gangsHandler;
         private readonly EventsHandler _eventsHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public GangHousesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, GangLevelsHandler gangLevelsHandler, GangsHandler gangsHandler,
             IServiceProvider serviceProvider, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
@@ -48,10 +39,6 @@ namespace TDS_Server.Handler.GangSystem
             LoadHouses(dbContext);
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public void LoadHouses(TDSDbContext dbContext)
         {
             _houseEntities = dbContext.GangHouses.Include(gh => gh.OwnerGang).AsNoTracking().ToList();
@@ -59,6 +46,14 @@ namespace TDS_Server.Handler.GangSystem
             foreach (var houseEntity in _houseEntities)
             {
                 LoadHouse(houseEntity);
+            }
+        }
+
+        public List<GangHouse> GetLoadedHouses()
+        {
+            lock (Houses)
+            {
+                return Houses.ToList();
             }
         }
 
@@ -87,7 +82,7 @@ namespace TDS_Server.Handler.GangSystem
         {
             int cost = _gangLevelsHandler.Levels.TryGetValue(entity.NeededGangLevel, out GangLevelSettings? level) ? level.HousePrice : int.MaxValue;
             var house = ActivatorUtilities.CreateInstance<GangHouse>(_serviceProvider, entity, cost);
-            Houses.Add(house);
+            lock (Houses) { Houses.Add(house); }
 
             if (house.Entity.OwnerGang is null)
             {
@@ -108,7 +103,5 @@ namespace TDS_Server.Handler.GangSystem
 
             _eventsHandler.OnGangHouseLoaded(house);
         }
-
-        #endregion Public Methods
     }
 }

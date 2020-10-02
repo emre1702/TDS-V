@@ -148,6 +148,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public virtual new void SendNotification(string msg, bool flashing = false)
             => base.SendNotification(msg, flashing);
 
+        public abstract void SetBoughtMap(int price);
+
         public abstract void SetCollisionsless(bool toggle);
 
         public abstract void SetEntityInvincible(ITDSVehicle vehicle, bool invincible);

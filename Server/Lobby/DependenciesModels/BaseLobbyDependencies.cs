@@ -1,33 +1,33 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.Chat;
+﻿using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Chat;
 using TDS_Server.Data.Interfaces.LobbySystem.Colshapes;
 using TDS_Server.Data.Interfaces.LobbySystem.Database;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Natives;
 using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.Natives;
-using TDS_Server.LobbySystem.Sounds;
-using TDS_Server.LobbySystem.Sync;
-using TDS_Server.LobbySystem.TeamHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
+using TDS_Server.Data.Interfaces.LobbySystem.Sync;
+using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 
-namespace TDS_Server.LobbySystem.Models
+namespace TDS_Server.LobbySystem.DependenciesModels
 {
-    public class LobbyDependencies
+    public class BaseLobbyDependencies
     {
-        public BaseLobbyBansHandler? Bans { get; set; }
+        public IBaseLobbyBansHandler? Bans { get; set; }
         public IBaseLobbyChat? Chat { get; set; }
         public IBaseLobbyColshapesHandler? ColshapesHandler { get; set; }
         public IBaseLobbyDatabase? Database { get; set; }
         public IBaseLobbyDeathmatch? Deathmatch { get; set; }
         public IBaseLobbyEventsHandler? Events { get; set; }
         public IBaseLobbyMapHandler? MapHandler { get; set; }
-        public BaseLobbyNatives? Natives { get; set; }
+        public IBaseLobbyNatives? Natives { get; set; }
         public IBaseLobbyNotifications? Notifications { get; set; }
         public IBaseLobbyPlayers? Players { get; set; }
-        public BaseLobbySoundsHandler? Sounds { get; set; }
-        public BaseLobbySync? Sync { get; set; }
-        public BaseLobbyTeamsHandler? Teams { get; set; }
+        public IBaseLobbySoundsHandler? Sounds { get; set; }
+        public IBaseLobbySync? Sync { get; set; }
+        public IBaseLobbyTeamsHandler? Teams { get; set; }
     }
 }

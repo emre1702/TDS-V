@@ -1,12 +1,13 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.LobbySystem.Freeroam;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.LobbySystem.Freeroam
 {
-    public class FreeroamLobbyFreeroam
+    public class FreeroamLobbyFreeroam : IFreeroamLobbyFreeroam
     {
         private readonly FreeroamDataHandler _freeroamDataHandler;
         private readonly IBaseLobby _lobby;

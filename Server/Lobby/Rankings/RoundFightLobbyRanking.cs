@@ -7,6 +7,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Rankings;
 using TDS_Server.Data.Models;
 using TDS_Server.LobbySystem.Players;
 using TDS_Server.LobbySystem.Sync;
@@ -15,7 +16,7 @@ using TDS_Shared.Default;
 
 namespace TDS_Server.LobbySystem.Rankings
 {
-    public class RoundFightLobbyRanking
+    public class RoundFightLobbyRanking : IRoundFightLobbyRanking
     {
         private readonly ISettingsHandler _settingsHandler;
         private readonly RoundFightLobbyPlayers _players;

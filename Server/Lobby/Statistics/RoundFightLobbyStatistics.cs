@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.Statistics;
 
 namespace TDS_Server.LobbySystem.Statistics
 {
-    public class RoundFightLobbyStatistics
+    public class RoundFightLobbyStatistics : IRoundFightLobbyStatistics
     {
         protected IRoundFightLobby Lobby { get; }
 

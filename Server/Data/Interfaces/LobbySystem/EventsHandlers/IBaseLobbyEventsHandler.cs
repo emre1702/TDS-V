@@ -22,13 +22,14 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
         bool IsRemoved { get; }
         AsyncTaskEvent<LobbyDb>? Created { get; set; }
         AsyncTaskEvent<IBaseLobby>? Remove { get; set; }
-        AsyncValueTaskEvent<(ITDSPlayer player, int HadLifes)>? PlayerLeft { get; set; }
+        AsyncValueTaskEvent<(ITDSPlayer Player, int HadLifes)>? PlayerLeft { get; set; }
 
         event LobbyCreatedAfterDelegate? CreatedAfter;
 
         event LobbyDelegate? RemoveAfter;
 
         AsyncValueTaskEvent<(ITDSPlayer Player, int TeamIndex)>? PlayerJoined { get; set; }
+        AsyncValueTaskEvent<(ITDSPlayer Player, int TeamIndex)>? PlayerJoinedAfter { get; set; }
 
         AsyncValueTaskEvent<(ITDSPlayer Player, int HadLifes)>? PlayerLeftAfter { get; set; }
 

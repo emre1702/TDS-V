@@ -24,7 +24,7 @@ namespace TDS_Server.LobbySystem.Gamemodes
         }
 
         // In GangAction lobby this isn't checked //
-        public override bool CanJoinDuringRound() => false;
+        public override bool CanJoinDuringRound(ITDSPlayer player, ITeam team) => false;
 
         public override bool CanJoinLobby(ITDSPlayer player, uint? teamIndex)
         {

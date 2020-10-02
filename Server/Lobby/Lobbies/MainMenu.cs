@@ -7,9 +7,9 @@ using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.BansHandlers;
 using TDS_Server.LobbySystem.Chats;
 using TDS_Server.LobbySystem.Database;
+using TDS_Server.LobbySystem.DependenciesModels;
 using TDS_Server.LobbySystem.EventsHandlers;
 using TDS_Server.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.LobbySystem.Models;
 using TDS_Server.LobbySystem.Players;
 using TDS_Server.LobbySystem.TeamHandlers;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
@@ -26,11 +26,11 @@ namespace TDS_Server.LobbySystem.Lobbies
             _globalBansHandler = globalBansHandler;
         }
 
-        protected override void InitDependencies(LobbyDependencies? lobbyDependencies = null)
+        protected override void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
         {
             void doForPlayersInMainThreadFuncProvider(Action<ITDSPlayer> action) => Players.DoInMain(action);
 
-            lobbyDependencies ??= new LobbyDependencies();
+            lobbyDependencies ??= new BaseLobbyDependencies();
             lobbyDependencies.Events ??= new BaseLobbyEventsHandler(GlobalEventsHandler, this);
             lobbyDependencies.Teams ??= new BaseLobbyTeamsHandler(Entity);
             lobbyDependencies.Chat ??= new BaseLobbyChat(doForPlayersInMainThreadFuncProvider, LangHelper);

@@ -29,5 +29,19 @@ namespace TDS_Server.LobbySystem.Deathmatch
             Damage.Clear();
             return default;
         }
+
+        public override async Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
+        {
+            var lifes = player.Lifes;
+            await base.OnPlayerDeath(player, killer, weapon);
+
+            if (lifes == 1 && player.Lifes == 0)
+            {
+                await RemovePlayerFromAlive(player);
+                await Lobby.Rounds.CheckForEnoughAlive();
+            }
+            else if (lifes > 0)
+                Lobby.Players.RespawnPlayer(player);
+        }
     }
 }

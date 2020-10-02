@@ -5,8 +5,7 @@ namespace TDS_Server.Data.Languages
 {
     public class German : English, ILanguage
     {
-        #region Public Properties
-
+        public override string A_MAP_WAS_ALREADY_BOUGHT => "Eine Karte wurde bereits gekauft/gesetzt.";
         public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
         public override string ADDED_THE_GANG_HOUSE_SUCCESSFULLY => "Das Gang-Haus wurde erfolgreich hinzugefügt.";
         public override string ALREADY_IN_PRIVATE_CHAT_WITH => "Du bist bereits in einem Privatchat mit {0}.";
@@ -205,6 +204,7 @@ namespace TDS_Server.Data.Languages
         public override string YOU_ALREADY_INVITED_TARGET => "Du hast das Ziel bereits eingeladen.";
         public override string YOU_ARE_ALREADY_IN_A_GANG => "Du bist bereits in einer Gang.";
         public override string YOU_ARE_NOT_IN_A_GANG => "Du bist nicht in einer Gang.";
+        public override string YOU_CANT_BUY_A_MAP_IN_CUSTOM_LOBBY => "Du kannst keine Karte in einer Benutzer-Lobby kaufen.";
         public override string YOU_GAVE_MONEY_TO_WITH_FEE => "Du hast {2} ${0} (${1} Gebühr) gegeben.";
         public override string YOU_GOT_BLOCKED_BY => "Du wurdest von {0} geblockt.";
         public override string YOU_GOT_INVITATION_BY => "Du hast von {0} eine Einladung ins Team bekommen.";
@@ -221,7 +221,5 @@ namespace TDS_Server.Data.Languages
         public override string YOU_UNBLOCKED => "Du hast {0} nicht mehr blockiert.";
         public override string YOUVE_BECOME_GANG_LEADER => "Du wurdest zum Gang-Besitzer.";
         public override string YOUVE_LEFT_THE_GANG => "Du hast die Gang verlassen.";
-
-        #endregion Public Properties
     }
 }

@@ -19,8 +19,10 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 {
     public class BaseLobbyTeamsHandler : IBaseLobbyTeamsHandler
     {
+        public int Count => _teams.Length;
+
         protected readonly IBaseLobby Lobby;
-        private readonly List<ITeam> _teams = new List<ITeam>(3);
+        private ITeam[] _teams = Array.Empty<ITeam>();
         private readonly SemaphoreSlim _teamsSemaphore = new SemaphoreSlim(1, 1);
 
         public BaseLobbyTeamsHandler(IBaseLobby lobby, IBaseLobbyEventsHandler events)
@@ -33,11 +35,11 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         private void InitTeams(LobbyDb entity)
         {
-            _teams.Capacity = entity.Teams.Count;
+            _teams = new ITeam[entity.Teams.Max(t => t.Index + 1)];
             foreach (var teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
                 var team = new Team(teamEntity);
-                _teams.Add(team);
+                _teams[team.Entity.Index] = team;
             }
         }
 
@@ -59,17 +61,17 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             var team = await _teamsSemaphore.Do(() =>
             {
                 if (data.TeamIndex < 0)
-                    data.TeamIndex = SharedUtils.Rnd.Next(1, _teams.Count);
+                    data.TeamIndex = SharedUtils.Rnd.Next(1, _teams.Length);
                 return _teams[data.TeamIndex];
             });
 
             await SetPlayerTeam(data.Player, team);
         }
 
-        public Task Do(Action<List<ITeam>> action)
+        public Task Do(Action<ITeam[]> action)
             => _teamsSemaphore.Do(() => action(_teams));
 
-        public Task<T> Do<T>(Func<List<ITeam>, T> func)
+        public Task<T> Do<T>(Func<ITeam[], T> func)
             => _teamsSemaphore.Do(() => func(_teams));
 
         public List<ITeam> GetTeams() => _teams.ToList();
@@ -80,7 +82,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         public Task<ITeam> GetTeamWithFewestPlayer()
             => _teamsSemaphore.Do(() => GetTeamWithFewestPlayer(_teams));
 
-        public ITeam GetTeamWithFewestPlayer(List<ITeam> teams)
+        public ITeam GetTeamWithFewestPlayer(ITeam[] teams)
             => teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().First();
     }
 }

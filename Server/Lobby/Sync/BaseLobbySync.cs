@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.LobbySystem.TeamHandlers;
@@ -16,31 +17,22 @@ namespace TDS_Server.LobbySystem.Sync
 {
     public class BaseLobbySync : IBaseLobbySync
     {
+        protected IBaseLobby Lobby { get; }
         protected SyncedLobbySettings SyncedSettings { get; private set; }
 
-        private readonly Func<uint> _dimensionProvider;
-        protected readonly IBaseLobbyPlayers Players;
-        private readonly BaseLobbyTeamsHandler _teams;
-
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-
-        public BaseLobbySync(LobbyDb entity, IBaseLobbyEventsHandler events, Func<uint> dimensionProvider, IBaseLobbyPlayers players, BaseLobbyTeamsHandler teams)
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        public BaseLobbySync(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
-            _dimensionProvider = dimensionProvider;
-            Players = players;
-            _teams = teams;
+            Lobby = lobby;
+            SyncedSettings = GetSyncedSettings(lobby.Entity);
 
-            InitSyncedSettings(entity);
-
-            events.CreatedAfter += InitSyncedSettings;
+            events.CreatedAfter += entity => SyncedSettings = GetSyncedSettings(entity);
             events.PlayerLeftAfter += Events_PlayerLeftLobbyAfter;
             events.PlayerJoined += Events_PlayerJoined;
         }
 
-        protected virtual void InitSyncedSettings(LobbyDb entity)
+        protected virtual SyncedLobbySettings GetSyncedSettings(LobbyDb entity)
         {
-            SyncedSettings = new SyncedLobbySettings
+            return new SyncedLobbySettings
             (
                 Id: entity.Id,
                 Name: entity.Name,
@@ -72,8 +64,8 @@ namespace TDS_Server.LobbySystem.Sync
 
         private ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            var playerRemoteIdsJson = Serializer.ToClient(Players.GetPlayers().Select(p => p.RemoteId));
-            var syncedTeamDataJson = Serializer.ToClient(_teams.GetTeams().Select(t => t.SyncedTeamData));
+            var playerRemoteIdsJson = Serializer.ToClient(Lobby.Players.GetPlayers().Select(p => p.RemoteId));
+            var syncedTeamDataJson = Serializer.ToClient(Lobby.Teams.GetTeams().Select(t => t.SyncedTeamData));
 
             NAPI.Task.Run(() =>
             {
@@ -85,7 +77,7 @@ namespace TDS_Server.LobbySystem.Sync
 
         public void TriggerEvent(string eventName, params object[] args)
         {
-            NAPI.ClientEvent.TriggerClientEventInDimension(_dimensionProvider(), eventName, args);
+            NAPI.ClientEvent.TriggerClientEventInDimension(Lobby.MapHandler.Dimension, eventName, args);
         }
     }
 }
