@@ -13,11 +13,11 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -194,7 +194,7 @@ namespace TDS_Server.Handler.Maps
                 }
             };
 
-            ((MapCreateLobby)player.Lobby!).SetMap(mapCreatorData);
+            ((IMapCreatorLobby)player.Lobby!).Sync.SetMap(mapCreatorData);
             return null;
         }
 
@@ -259,14 +259,14 @@ namespace TDS_Server.Handler.Maps
 
         public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreatorLobby lobby))
                 return null;
 
             string json = (string)args[0];
             int tdsPlayerId = Convert.ToInt32(args[1]);
             int idCounter = Convert.ToInt32(args[2]);
 
-            lobby.SyncCurrentMapToPlayer(json, tdsPlayerId, idCounter);
+            lobby.Sync.SetSyncedMapAndSyncToPlayer(json, tdsPlayerId, idCounter);
             return null;
         }
 

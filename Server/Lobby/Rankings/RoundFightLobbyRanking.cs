@@ -1,16 +1,15 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Rankings;
 using TDS_Server.Data.Models;
-using TDS_Server.LobbySystem.Players;
-using TDS_Server.LobbySystem.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
 
@@ -18,15 +17,14 @@ namespace TDS_Server.LobbySystem.Rankings
 {
     public class RoundFightLobbyRanking : IRoundFightLobbyRanking
     {
+        protected IRoundFightLobby Lobby { get; private set; }
         private readonly ISettingsHandler _settingsHandler;
-        private readonly RoundFightLobbyPlayers _players;
-        private readonly RoundFightLobbySync _sync;
 
-        public RoundFightLobbyRanking(IRoundFightLobbyEventsHandler events, RoundFightLobbyPlayers players, RoundFightLobbySync sync, ISettingsHandler settingsHandler)
+        public RoundFightLobbyRanking(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, ISettingsHandler settingsHandler)
         {
+            Lobby = lobby;
             _settingsHandler = settingsHandler;
-            _players = players;
-            _sync = sync;
+
             events.RoundEndRanking += Events_RoundEndRanking;
         }
 
@@ -39,7 +37,7 @@ namespace TDS_Server.LobbySystem.Rankings
 
         private List<RoundPlayerRankingStat>? GetOrderedRoundRanking()
         {
-            var list = _players.GetPlayers()
+            var list = Lobby.Players.GetPlayers()
                 .Where(p => p.CurrentRoundStats is { } && p.Team is { } && !p.Team.IsSpectator)
                 .Select(p => new RoundPlayerRankingStat(p))
                 .ToList();
@@ -70,9 +68,9 @@ namespace TDS_Server.LobbySystem.Rankings
                 return;
 
             var rankingPositions = GetPlayerRankingPositions(rankingStats);
-            var rankingRemoteIds = GetPlayerRankingRemoteIds(rankingStats);
+            var (WinnerRemoteId, SecondRemoteId, ThirdRemoteId) = GetPlayerRankingRemoteIds(rankingStats);
 
-            await _players.DoInMain(player =>
+            await Lobby.Players.DoInMain(player =>
             {
                 if (rankingPositions.TryGetValue(player, out var posData))
                 {
@@ -89,8 +87,8 @@ namespace TDS_Server.LobbySystem.Rankings
             });
 
             var json = Serializer.ToBrowser(rankingStats);
-            _sync.TriggerEvent(ToClientEvent.StartRankingShowAfterRound, json,
-                rankingRemoteIds.WinnerRemoteId, rankingRemoteIds.SecondRemoteId, rankingRemoteIds.ThirdRemoteId);
+            Lobby.Sync.TriggerEvent(ToClientEvent.StartRankingShowAfterRound, json,
+                WinnerRemoteId, SecondRemoteId, ThirdRemoteId);
         }
 
         private Dictionary<ITDSPlayer, (Vector3 Pos, float Rot)> GetPlayerRankingPositions(List<RoundPlayerRankingStat> rankingStats)
@@ -116,9 +114,9 @@ namespace TDS_Server.LobbySystem.Rankings
             if (rankingStats is null)
                 return (0, 0, 0);
 
-            var winnerRemoteId = rankingStats.ElementAtOrDefault(0).Player?.RemoteId ?? 0;
-            var secondRemoteId = rankingStats.ElementAtOrDefault(1).Player?.RemoteId ?? 0;
-            var thirdRemoteId = rankingStats.ElementAtOrDefault(2).Player?.RemoteId ?? 0;
+            var winnerRemoteId = rankingStats.ElementAtOrDefault(0)?.Player.RemoteId ?? 0;
+            var secondRemoteId = rankingStats.ElementAtOrDefault(1)?.Player.RemoteId ?? 0;
+            var thirdRemoteId = rankingStats.ElementAtOrDefault(2)?.Player.RemoteId ?? 0;
 
             return (winnerRemoteId, secondRemoteId, thirdRemoteId);
         }

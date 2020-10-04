@@ -70,19 +70,23 @@ namespace TDS_Server.LobbySystem.MapHandlers
                     if (teams.Length < teamsSpawnList.TeamID)
                         return;
                     var regions = new List<Vector3>();
-                    foreach (var spawns in teamsSpawnList.Spawns)
+                    NAPI.Task.Run(() =>
                     {
-                        var position = spawns.ToVector3();
-                        if (regions.Any(pos => pos.DistanceTo2D(position) < 5))
-                            continue;
-                        regions.Add(position);
+                        foreach (var spawns in teamsSpawnList.Spawns)
+                        {
+                            var position = spawns.ToVector3();
+                            if (regions.Any(pos => pos.DistanceTo2D(position) < 5))
+                                continue;
+                            regions.Add(position);
 
-                        var team = teams[(int)teamsSpawnList.TeamID];
-                        var blip = NAPI.Blip.CreateBlip(SharedConstants.TeamSpawnBlipSprite, position, 1f, team.Entity.BlipColor,
-                            name: "Spawn " + team.Entity.Name, dimension: Dimension) as ITDSBlip;
+                            var team = teams[(int)teamsSpawnList.TeamID];
 
-                        AddMapBlip(blip!);
-                    }
+                            var blip = NAPI.Blip.CreateBlip(SharedConstants.TeamSpawnBlipSprite, position, 1f, team.Entity.BlipColor,
+                                name: "Spawn " + team.Entity.Name, dimension: Dimension) as ITDSBlip;
+
+                            AddMapBlip(blip!);
+                        }
+                    });
                 }
             });
         }

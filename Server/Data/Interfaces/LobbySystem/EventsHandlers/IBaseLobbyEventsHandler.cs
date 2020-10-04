@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using GTANetworkAPI;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
@@ -19,6 +20,8 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         public delegate void BanDelegate(PlayerBans ban);
 
+        public delegate void PlayerColshapeDelegate(ITDSColshape colshape, ITDSPlayer player);
+
         bool IsRemoved { get; }
         AsyncTaskEvent<LobbyDb>? Created { get; set; }
         AsyncTaskEvent<IBaseLobby>? Remove { get; set; }
@@ -35,6 +38,8 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         event BanDelegate? NewBan;
 
+        event PlayerColshapeDelegate? PlayerEnteredColshape;
+
         Task TriggerCreated(LobbyDb entity);
 
         Task TriggerRemove();
@@ -44,5 +49,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
         ValueTask TriggerPlayerLeft(ITDSPlayer player, int hadLifes);
 
         void TriggerNewBan(PlayerBans ban, ulong? targetDiscordUserId);
+
+        void TriggerPlayerEnteredColshape(ITDSColshape colshape, ITDSPlayer player);
     }
 }

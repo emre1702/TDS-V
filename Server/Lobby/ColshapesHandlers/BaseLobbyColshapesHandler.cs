@@ -5,7 +5,7 @@ namespace TDS_Server.LobbySystem.ColshapesHandlers
 {
     public class BaseLobbyColshapesHandler : IBaseLobbyColshapesHandler
     {
-        public virtual void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player)
+        public virtual void OnPlayerEnterColshape(ITDSColshape colshape, ITDSPlayer player)
         {
         }
     }

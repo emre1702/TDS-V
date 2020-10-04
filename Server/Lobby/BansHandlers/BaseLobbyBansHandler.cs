@@ -14,10 +14,10 @@ namespace TDS_Server.LobbySystem.BansHandlers
 {
     public class BaseLobbyBansHandler : IBaseLobbyBansHandler
     {
-        protected readonly IBaseLobby Lobby;
+        protected readonly Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby Lobby;
         protected readonly LangHelper LangHelper;
 
-        public BaseLobbyBansHandler(IBaseLobby lobby, LangHelper langHelper)
+        public BaseLobbyBansHandler(Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby lobby, LangHelper langHelper)
             => (Lobby, LangHelper) = (lobby, langHelper);
 
         public virtual async ValueTask<bool> CheckIsBanned(ITDSPlayer player)

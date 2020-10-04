@@ -6,19 +6,17 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Entities.GangSystem;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 
 namespace TDS_Server.Handler.GangSystem
@@ -26,16 +24,14 @@ namespace TDS_Server.Handler.GangSystem
     public class GangWindowCreateHandler : DatabaseEntityWrapper
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly DataSyncHandler _dataSyncHandler;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly EventsHandler _eventsHandler;
 
         public GangWindowCreateHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, IServiceProvider serviceProvider,
-            DataSyncHandler dataSyncHandler, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler)
+            LobbiesHandler lobbiesHandler, EventsHandler eventsHandler)
             : base(dbContext, loggingHandler)
         {
             _serviceProvider = serviceProvider;
-            _dataSyncHandler = dataSyncHandler;
             _lobbiesHandler = lobbiesHandler;
             _eventsHandler = eventsHandler;
         }
@@ -62,7 +58,7 @@ namespace TDS_Server.Handler.GangSystem
             return "";
         }
 
-        private Gangs GetGangEntity(GangCreateData data, ITDSPlayer player, GangLobby lobby)
+        private Gangs GetGangEntity(GangCreateData data, ITDSPlayer player, IGangLobby lobby)
         {
             var highestRank = new GangRanks { Rank = 3, Name = "Rank 3", Color = "rgb(255,255,255)" };
             var highestTeamIndex = lobby.Entity.Teams.Max(t => t.Index);
@@ -93,7 +89,7 @@ namespace TDS_Server.Handler.GangSystem
                 },
                 Members = new List<GangMembers>(),
                 Stats = new GangStats(),
-                Team = new Teams { Lobby = lobby.Id, Index = (short)(highestTeamIndex + 1), Name = data.Short, ColorR = rgbColor.R, ColorG = rgbColor.G, ColorB = rgbColor.B }
+                Team = new Teams { Lobby = lobby.Entity.Id, Index = (short)(highestTeamIndex + 1), Name = data.Short, ColorR = rgbColor.R, ColorG = rgbColor.G, ColorB = rgbColor.B }
             };
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 
@@ -100,7 +101,7 @@ namespace TDS_Server.Handler
             return _invitationById.Values.Where(i => i.Target == target);
         }
 
-        private void RemoveSendersLobbyInvitations(ITDSPlayer player, ILobby lobby)
+        private void RemoveSendersLobbyInvitations(ITDSPlayer player, IBaseLobby lobby)
         {
             var invitations = GetBySender(player, InvitationType.Lobby);
             foreach (var invitation in invitations)

@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Helper;
@@ -14,7 +14,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
     {
         private readonly BansHandler _globalBansHandler;
 
-        public MainMenuBansHandler(IBaseLobby lobby, LangHelper langHelper, BansHandler globalBansHandler)
+        public MainMenuBansHandler(IMainMenu lobby, LangHelper langHelper, BansHandler globalBansHandler)
             : base(lobby, langHelper)
         {
             _globalBansHandler = globalBansHandler;

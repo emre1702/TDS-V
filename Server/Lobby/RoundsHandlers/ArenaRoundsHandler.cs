@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.GamemodesSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
@@ -16,8 +17,8 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
     {
         protected new IArena Lobby => (IArena)base.Lobby;
 
-        public ArenaRoundsHandler(IArena lobby, IServiceProvider serviceProvider, IRoundFightLobbyEventsHandler events)
-            : base(lobby, serviceProvider, events)
+        public ArenaRoundsHandler(IArena lobby, IRoundFightLobbyEventsHandler events, IGamemodesProvider gamemodesProvider)
+            : base(lobby, events, gamemodesProvider)
         {
         }
 
@@ -74,8 +75,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             if (player.Team is null)
                 return false;
 
+            if (!RoundStates.Started)
+            {
+                RoundStates.Start();
+                return true;
+            }
+
             using var _ = await RoundStates.GetContext();
-            var joinInRound = CurrentGamemode?.CanJoinDuringRound() == true && RoundStates.CurrentState is InRoundState;
+            var joinInRound = CurrentGamemode?.Rounds.CanJoinDuringRound(player, player.Team) == true && RoundStates.CurrentState is InRoundState;
             if (RoundStates.CurrentState is CountdownState || joinInRound)
             {
                 bool freeze = !joinInRound;

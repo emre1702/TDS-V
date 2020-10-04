@@ -71,14 +71,5 @@ namespace TDS_Server.LobbySystem.Players
             }).ConfigureAwait(false);
             await player.SetPlayerLobbyStats(stats);
         }
-
-        public void Kill(ITDSPlayer player, string reason)
-        {
-            NAPI.Task.Run(() =>
-            {
-                player.Kill();
-                player.SendChatMessage(reason);
-            });
-        }
     }
 }

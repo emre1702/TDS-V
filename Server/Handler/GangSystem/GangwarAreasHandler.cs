@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar;
@@ -16,18 +15,13 @@ namespace TDS_Server.Handler.GangSystem
 {
     public class GangwarAreasHandler
     {
-        #region Private Fields
-
         private readonly TDSDbContext _dbContext;
         private readonly ILoggingHandler _loggingHandler;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly IServiceProvider _serviceProvider;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler, ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
+        public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
+            ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
         {
             _dbContext = dbContext;
             _mapsLoadingHandler = mapsLoadingHandler;
@@ -37,15 +31,7 @@ namespace TDS_Server.Handler.GangSystem
             eventsHandler.MapsLoaded += LoadGangwarAreas;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public List<GangwarArea> GangwarAreas { get; set; } = new List<GangwarArea>();
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         /// <summary>
         /// Returns the Gangwar area by Id / MapId. MapId is used as Id!
@@ -56,10 +42,6 @@ namespace TDS_Server.Handler.GangSystem
         {
             return GangwarAreas.FirstOrDefault(a => a.Entity?.MapId == id);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void LoadGangwarAreas()
         {
@@ -105,7 +87,5 @@ namespace TDS_Server.Handler.GangSystem
                 _dbContext.Entry(entity).Reference(e => e.Map).Load();
             }
         }
-
-        #endregion Private Methods
     }
 }

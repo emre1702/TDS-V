@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.GamemodesSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.RoundEndReasons;
@@ -11,8 +12,8 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
     {
         protected new IGangActionLobby Lobby => (IGangActionLobby)base.Lobby;
 
-        public GangActionLobbyRoundsHandler(IGangActionLobby lobby, IServiceProvider serviceProvider, IRoundFightLobbyEventsHandler events)
-            : base(lobby, serviceProvider, events)
+        public GangActionLobbyRoundsHandler(IGangActionLobby lobby, IRoundFightLobbyEventsHandler events, IGamemodesProvider gamemodesProvider)
+            : base(lobby, events, gamemodesProvider)
         {
             lobby.Events.RoundClear += RoundClear;
         }

@@ -19,7 +19,7 @@ namespace TDS_Server.LobbySystem.Players
     {
         protected new IRoundFightLobby Lobby => (IRoundFightLobby)base.Lobby;
 
-        protected bool SavePlayerLobbyStats { get; private set; }
+        public bool SavePlayerLobbyStats { get; private set; }
 
         protected bool ShouldRewardPlayerForRound => Lobby.Entity.LobbyRewards is { } rewards &&
             (rewards.MoneyPerAssist != 0 || rewards.MoneyPerDamage != 0 || rewards.MoneyPerKill != 0);

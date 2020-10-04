@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 
 namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
 {
@@ -7,6 +8,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
     {
         IRoundEndReason CurrentRoundEndReason { get; }
         IRoundState CurrentState { get; }
+        bool Started { get; }
         int TimeToNextStateMs { get; }
         int TimeInStateMs { get; }
 
@@ -23,5 +25,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
         bool IsCurrentStateBeforeRoundEnd();
 
         Task<bool> IsCurrentStateBeforeRoundEndBlocked();
+
+        bool IsCurrentStateAfterRound();
     }
 }

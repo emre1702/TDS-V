@@ -1,18 +1,14 @@
-﻿namespace TDS_Server.Core.Damagesystem
-{
-    using GTANetworkAPI;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using TDS_Server.Data.Abstracts.Entities.GTA;
-    using TDS_Server.Data.Interfaces;
-    using TDS_Server.Database.Entity.LobbyEntities;
-    using TDS_Shared.Default;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Shared.Default;
 
+namespace TDS_Server.Core.Damagesystem
+{
     partial class Damagesys
     {
-        #region Private Fields
-
         private static readonly Dictionary<short, string> _longTimeKillingSpreeSounds = new Dictionary<short, string>
         {
             [3] = CustomSound.KillingSpree,
@@ -35,10 +31,6 @@
 
         private Dictionary<short, LobbyKillingspreeRewards> _killingSpreeRewards = new Dictionary<short, LobbyKillingspreeRewards>();
 
-        #endregion Private Fields
-
-        #region Private Methods
-
         private void GiveKillingSpreeReward(ITDSPlayer player)
         {
             if (player.Lobby is null)
@@ -49,7 +41,7 @@
             if (reward.HealthOrArmor.HasValue)
             {
                 player.AddHPArmor(reward.HealthOrArmor.Value);
-                player.Lobby.SendNotification(lang
+                player.Lobby.Notifications.Send(lang
                     => string.Format(lang.KILLING_SPREE_HEALTHARMOR, player.DisplayName, player.KillingSpree, reward.HealthOrArmor));
             }
         }
@@ -91,7 +83,7 @@
             if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.ShortTimeKillingSpree)
             {
                 short playSoundIndex = Math.Min(player.ShortTimeKillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
-                player.Lobby?.TriggerEvent(ToClientEvent.PlayCustomSound, _shortTimeKillingSpreeSounds[playSoundIndex]);
+                player.Lobby?.Sync.TriggerEvent(ToClientEvent.PlayCustomSound, _shortTimeKillingSpreeSounds[playSoundIndex]);
                 //if (player.KillingSpree <= 5)
                 //    playLongTimeKillSound = false;
             }
@@ -99,10 +91,8 @@
             if (playLongTimeKillSound && _longTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree)
             {
                 short playSoundIndex = Math.Min(player.KillingSpree, _longTimeKillingSpreeSounds.Keys.Max());
-                player.Lobby?.TriggerEvent(ToClientEvent.PlayCustomSound, _longTimeKillingSpreeSounds[playSoundIndex]);
+                player.Lobby?.Sync.TriggerEvent(ToClientEvent.PlayCustomSound, _longTimeKillingSpreeSounds[playSoundIndex]);
             }
         }
-
-        #endregion Private Methods
     }
 }

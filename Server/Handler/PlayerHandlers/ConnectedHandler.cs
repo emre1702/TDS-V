@@ -37,7 +37,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             player.Position = new Vector3(0, 0, 1000).Around(10);
             player.Freeze(true);
 
-            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, null, player.Address, player.Serial, player.SocialClubName,
+            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, null, player.Address, player.Serial, player.SocialClubName,
                 player.SocialClubId, false);
 
             if (ban is { })
@@ -55,7 +55,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                 return;
             }
 
-            ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Id, playerIdName.Id);
+            ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, playerIdName.Id);
             if (ban is { })
             {
                 NAPI.Task.Run(()

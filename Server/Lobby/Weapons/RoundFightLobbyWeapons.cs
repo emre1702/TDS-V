@@ -18,13 +18,14 @@ namespace TDS_Server.LobbySystem.Weapons
         public RoundFightLobbyWeapons(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events) : base(lobby)
         {
             events.WeaponsLoading += Events_WeaponsLoading;
+            events.PlayerWeaponSwitch += OnPlayerWeaponSwitch;
         }
 
         public override void GivePlayerWeapons(ITDSPlayer player)
         {
             if (_allRoundWeapons is null)
                 return;
-            if (Lobby.Gamemodes.CurrentGamemode?.HandlesGivingWeapons == true)
+            if (Lobby.Gamemodes.CurrentGamemode?.Weapons.HandlesGivingWeapons == true)
                 return;
             base.GivePlayerWeapons(player);
         }
@@ -37,13 +38,12 @@ namespace TDS_Server.LobbySystem.Weapons
 
         public virtual void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-            Lobby.Gamemodes.CurrentGamemode?.OnPlayerWeaponSwitch(player, oldWeapon, newWeapon);
         }
 
         private void Events_WeaponsLoading()
         {
             _allRoundWeapons = Lobby.Entity.LobbyWeapons
-                .Where(w => Lobby.Rounds.CurrentGamemode?.IsWeaponAllowed(w.Hash) != false)
+                .Where(w => Lobby.Rounds.CurrentGamemode?.Weapons.IsWeaponAllowed(w.Hash) != false)
                 .ToList();
         }
     }

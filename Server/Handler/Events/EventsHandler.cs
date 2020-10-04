@@ -29,7 +29,7 @@ namespace TDS_Server.Handler.Events
             _bonusBotConnectorClient = bonusBotConnectorClient;
         }
 
-        public delegate void ColshapePlayerDelegate(ITDSColShape colshape, ITDSPlayer player);
+        public delegate void ColshapePlayerDelegate(ITDSColshape colshape, ITDSPlayer player);
 
         public delegate void CounterDelegate(int counter);
 
@@ -159,7 +159,6 @@ namespace TDS_Server.Handler.Events
 
         public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint reason)
         {
-            player.Lobby?.OnPlayerDeath(player, killer, reason);
             PlayerDeath?.Invoke(player, killer, reason);
         }
 
@@ -168,9 +167,8 @@ namespace TDS_Server.Handler.Events
             PlayerDisconnected?.Invoke(player);
         }
 
-        public void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player)
+        public void OnPlayerEnterColshape(ITDSColshape colshape, ITDSPlayer player)
         {
-            player.Lobby?.OnPlayerEnterColshape(colshape, player);
             PlayerEnteredColshape?.Invoke(colshape, player);
         }
 
@@ -204,7 +202,6 @@ namespace TDS_Server.Handler.Events
 
         public void OnPlayerSpawn(ITDSPlayer player)
         {
-            player.Lobby?.OnPlayerSpawn(player);
             PlayerSpawned?.Invoke(player);
         }
 
@@ -214,7 +211,6 @@ namespace TDS_Server.Handler.Events
                 return;
 
             player.OnPlayerWeaponSwitch(previousWeapon, newWeapon);
-            fightLobby.OnPlayerWeaponSwitch(player, previousWeapon, newWeapon);
             PlayerWeaponSwitch?.Invoke(player, previousWeapon, newWeapon);
         }
 

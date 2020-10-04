@@ -9,10 +9,10 @@ namespace TDS_Server.LobbySystem.Notifications
 {
     public class BaseLobbyNotifications : IBaseLobbyNotifications
     {
-        protected IBaseLobby Lobby { get; }
+        protected Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby Lobby { get; }
         private readonly LangHelper _langHelper;
 
-        public BaseLobbyNotifications(IBaseLobby lobby, LangHelper langHelper)
+        public BaseLobbyNotifications(Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby lobby, LangHelper langHelper)
             => (Lobby, _langHelper) = (lobby, langHelper);
 
         public virtual void Send(Func<ILanguage, string> langGetter, bool flashing = false)

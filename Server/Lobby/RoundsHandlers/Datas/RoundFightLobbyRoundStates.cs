@@ -1,12 +1,15 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
+using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.RoundEndReasons;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
@@ -22,6 +25,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
         public LinkedListNode<RoundState> Next => Current == List.Last ? List.First! : Current.Next!;
         public int TimeToNextStateMs => (int?)_nextTimer?.RemainingMsToExecute ?? 0;
         public int TimeInStateMs => (int?)_nextTimer?.ElapsedMsSinceLastExecOrCreate ?? 0;
+        public bool Started { get; private set; }
 
         public IRoundEndReason CurrentRoundEndReason { get; protected set; } = new TimeRoundEndReason(null);
 
@@ -30,7 +34,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
         private bool _lobbyRemoved;
         private readonly SemaphoreSlim _roundWaitSemaphore = new SemaphoreSlim(1, 1);
 
-        public RoundFightLobbyRoundStates(IRoundFightLobby lobby)
+        public RoundFightLobbyRoundStates(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events)
         {
             _lobby = lobby;
 
@@ -49,8 +53,9 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
 
             Current = List.Last!;
 
-            lobby.Events.PlayerLeft += Events_PlayerLeft;
-            lobby.Events.RemoveAfter += Events_RemoveAfter;
+            events.PlayerJoinedAfter += Events_PlayerJoinedAfter;
+            events.PlayerLeft += Events_PlayerLeft;
+            events.RemoveAfter += Events_RemoveAfter;
         }
 
         public virtual async void SetNext()
@@ -65,10 +70,18 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
         }
 
         public void Start()
-            => Task.Run(SetNext);
+        {
+            if (Started)
+                return;
+            Started = true;
+            Task.Run(SetNext);
+        }
 
         public async void Stop()
         {
+            if (!Started)
+                return;
+            Started = false;
             await _roundWaitSemaphore.Do(() =>
             {
                 _nextTimer?.Kill();
@@ -112,6 +125,15 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             return List.Find(roundState)!;
         }
 
+        private ValueTask Events_PlayerJoinedAfter((ITDSPlayer Player, int TeamIndex) data)
+        {
+            if (data.TeamIndex == 0)
+                return default;
+            if (_lobby.Players.Count == 1)
+                Start();
+            return default;
+        }
+
         private async ValueTask Events_PlayerLeft((ITDSPlayer Player, int HadLifes) _)
         {
             if (!await _lobby.Players.Any())
@@ -136,6 +158,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             while (node is { } && !(node.Value is RoundEndState))
                 node = node.Next;
             return node is { };
+        }
+
+        public bool IsCurrentStateAfterRound()
+        {
+            var node = Current;
+            while (node is { } && !(node.Value is InRoundState))
+                node = node.Previous;
+            return node is null;
         }
 
         public Task<bool> IsCurrentStateBeforeRoundEndBlocked()

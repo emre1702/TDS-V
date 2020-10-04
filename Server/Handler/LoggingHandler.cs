@@ -258,7 +258,7 @@ namespace TDS_Server.Handler
                 Source = source.Entity?.Id ?? -1,
                 Target = target?.Entity?.Id ?? null,
                 Message = chat,
-                Lobby = isGlobal ? null : source?.Lobby?.Id,
+                Lobby = isGlobal ? null : source?.Lobby?.Entity.Id,
                 IsAdminChat = isAdminChat,
                 IsTeamChat = isTeamChat,
                 Timestamp = DateTime.UtcNow
@@ -280,7 +280,7 @@ namespace TDS_Server.Handler
                 Source = source?.Entity?.Id ?? -1,
                 Target = target?.Entity?.Id ?? null,
                 Type = cmd,
-                Lobby = target?.Lobby?.Id ?? source?.Lobby?.Id,
+                Lobby = target?.Lobby?.Entity.Id ?? source?.Lobby?.Entity.Id,
                 AsDonator = asdonator,
                 AsVip = asvip,
                 Reason = reason,
@@ -300,7 +300,7 @@ namespace TDS_Server.Handler
                 Source = source?.Entity?.Id ?? -1,
                 Target = targetid,
                 Type = cmd,
-                Lobby = source?.Lobby?.Id,
+                Lobby = source?.Lobby?.Entity.Id,
                 AsDonator = asdonator,
                 AsVip = asvip,
                 Reason = reason,
@@ -344,7 +344,7 @@ namespace TDS_Server.Handler
                 Source = source?.Id ?? 0,
                 Ip = saveipserial && ipAddressParseWorked ? address : null,
                 Serial = saveipserial ? source?.Serial ?? null : null,
-                Lobby = savelobby ? source?.Lobby?.Id : null,
+                Lobby = savelobby ? source?.Lobby?.Entity.Id : null,
                 Timestamp = DateTime.UtcNow
             };
 

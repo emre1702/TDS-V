@@ -114,7 +114,7 @@ namespace TDS_Server.Handler.Account
         public PlayerBans? GetServerBan(int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
             bool? preventConnection = null, bool andConnection = false)
         {
-            int lobbyId = _lobbiesHandler.MainMenu.Id;
+            int lobbyId = _lobbiesHandler.MainMenu.Entity.Id;
             lock (_cachedBans)
             {
                 return (playerId, ip, serial, socialClubName, socialClubId, andConnection) switch
@@ -154,7 +154,7 @@ namespace TDS_Server.Handler.Account
             if (counter % _settingsHandler.ServerSettings.ReloadServerBansEveryMinutes != 0)
                 return;
 
-            int lobbyId = _lobbiesHandler.MainMenu.Id;
+            int lobbyId = _lobbiesHandler.MainMenu.Entity.Id;
             var entries = await ExecuteForDBAsync(async dbContext
                 => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
             lock (_cachedBans)

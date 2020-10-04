@@ -1,14 +1,14 @@
-﻿using System.Threading.Tasks;
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 
 namespace TDS_Server.LobbySystem.Deathmatch
 {
     public class MainMenuDeathmatch : BaseLobbyDeathmatch
     {
-        public MainMenuDeathmatch(MainMenu lobby, IBaseLobbyEventsHandler events) : base(lobby, events)
+        public MainMenuDeathmatch(IMainMenu lobby, IBaseLobbyEventsHandler events) : base(lobby, events)
         {
         }
 

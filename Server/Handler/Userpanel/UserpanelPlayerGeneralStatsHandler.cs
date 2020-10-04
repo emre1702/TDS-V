@@ -290,7 +290,7 @@ namespace TDS_Server.Handler.Userpanel
                     .Where(p => p.Id == adminTarget.SourceId)
                     .Select(p => p.Name)
                     .FirstOrDefaultAsync());
-                adminTarget.Lobby = adminTarget.LobbyId.HasValue ? _lobbiesHandler.GetLobby(adminTarget.LobbyId.Value)?.Name : null;
+                adminTarget.Lobby = adminTarget.LobbyId.HasValue ? _lobbiesHandler.GetLobby(adminTarget.LobbyId.Value)?.Entity.Name : null;
             }
 
             if (forPlayer != null)

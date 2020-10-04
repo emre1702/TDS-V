@@ -139,7 +139,7 @@ namespace TDS_Server.Handler
             string changedMessage = (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message;
             if (isDirty)
                 changedMessage = "!$160|50|0$[DIRTY] " + changedMessage + "$Dirty$";
-            player.Lobby.SendMessage(changedMessage);
+            player.Lobby.Chat.Send(changedMessage);
 
             if (player.Lobby?.IsOfficial == true && !isDirty)
                 _loggingHandler.LogChat(message, player);

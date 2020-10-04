@@ -8,7 +8,7 @@ using static TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers.IRoundFightLo
 
 namespace TDS_Server.LobbySystem.EventsHandlers
 {
-    public class RoundFightLobbyEventsHandler : BaseLobbyEventsHandler, IRoundFightLobbyEventsHandler
+    public class RoundFightLobbyEventsHandler : FightLobbyEventsHandler, IRoundFightLobbyEventsHandler
     {
         public event RequestNewMapDelegate? RequestNewMap;
 
@@ -22,7 +22,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public event RoundStateChangedDelegate? Countdown;
 
-        public AsyncValueTaskEvent? InRound;
+        public AsyncValueTaskEvent? InRound { get; set; }
 
         public AsyncValueTaskEvent? RoundEnd { get; set; }
 
@@ -32,8 +32,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public AsyncValueTaskEvent? RoundClear { get; set; }
 
-        public RoundFightLobbyEventsHandler(EventsHandler eventsHandler, IRoundFightLobby lobby, ILoggingHandler logging)
-            : base(eventsHandler, lobby, logging)
+        public RoundFightLobbyEventsHandler(IRoundFightLobby lobby, EventsHandler eventsHandler, ILoggingHandler logging)
+            : base(lobby, eventsHandler, logging)
         {
         }
 

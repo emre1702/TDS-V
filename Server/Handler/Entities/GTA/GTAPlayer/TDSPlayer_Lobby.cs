@@ -12,11 +12,6 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 {
     partial class TDSPlayer
     {
-        public override RoundStatsDto? CurrentRoundStats { get; set; }
-        public override bool IsLobbyOwner => Lobby?.IsPlayerLobbyOwner(this) ?? false;
-        public override PlayerLobbyStats? LobbyStats { get; set; }
-        public override ILobby? PreviousLobby { get; set; }
-
         public override async Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats)
         {
             if (LobbyStats != null)
@@ -30,7 +25,7 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 
         public override void SetLobby(IBaseLobby lobby)
         {
-            LobbyNew = lobby;
+            Lobby = lobby;
             NAPI.Task.Run(() => _dataSyncHandler.SetData(this, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, lobby.Players.IsLobbyOwner(this)));
         }
     }

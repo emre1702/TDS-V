@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using GTANetworkAPI;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
@@ -29,6 +30,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         public AsyncValueTaskEvent<(ITDSPlayer Player, int TeamIndex)>? PlayerJoinedAfter { get; set; }
 
         public event BanDelegate? NewBan;
+
+        public event PlayerColshapeDelegate? PlayerEnteredColshape;
 
         public bool IsRemoved { get; private set; }
 
@@ -82,6 +85,11 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         {
             NewBan?.Invoke(ban);
             _eventsHandler.OnNewBan(ban, _lobby.Entity.IsOfficial, targetDiscordUserId);
+        }
+
+        public void TriggerPlayerEnteredColshape(ITDSColshape colshape, ITDSPlayer player)
+        {
+            PlayerEnteredColshape?.Invoke(colshape, player);
         }
     }
 }

@@ -1,16 +1,22 @@
-﻿using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using TDS_Server.Core.Damagesystem;
+using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.Players;
+using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
+using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Weapons;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.Chats;
-using TDS_Server.LobbySystem.Database;
 using TDS_Server.LobbySystem.Deathmatch;
 using TDS_Server.LobbySystem.DependenciesModels;
 using TDS_Server.LobbySystem.EventsHandlers;
 using TDS_Server.LobbySystem.Players;
+using TDS_Server.LobbySystem.Spectator;
 using TDS_Server.LobbySystem.TeamHandlers;
 using TDS_Server.LobbySystem.Weapons;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
@@ -19,26 +25,38 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 {
     public abstract class FightLobby : BaseLobby, IFightLobby
     {
-        public FightLobbyWeapons Weapons { get; set; }
+        public new IFightLobbyDeathmatch Deathmatch => (IFightLobbyDeathmatch)base.Deathmatch;
+        public new IFightLobbyEventsHandler Events => (IFightLobbyEventsHandler)base.Events;
+        public new IFightLobbyPlayers Players => (IFightLobbyPlayers)base.Players;
+        public IFightLobbySpectator Spectator { get; private set; }
+        public new IFightLobbyTeamsHandler Teams => (IFightLobbyTeamsHandler)base.Teams;
+        public IFightLobbyWeapons Weapons { get; set; }
 
-        public FightLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler)
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+
+        public FightLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
+            ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider)
         {
         }
 
         protected override void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
         {
-            void doForPlayersInMainThreadFuncProvider(Action<ITDSPlayer> action) => Players.DoInMain(action);
+            var weaponDatasLoadingHandler = ServiceProvider.GetRequiredService<WeaponDatasLoadingHandler>();
+            var damageSys = new Damagesys(LoggingHandler, weaponDatasLoadingHandler);
 
-            lobbyDependencies ??= new BaseLobbyDependencies();
+            lobbyDependencies ??= new FightLobbyDependencies();
 
-            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(GlobalEventsHandler, this);
-            lobbyDependencies.Deathmatch ??= new FightLobbyDeathmatch(lobbyDependencies.Events);
-            lobbyDependencies.Teams ??= new BaseLobbyTeamsHandler(Entity);
-            lobbyDependencies.Database ??= new BaseLobbyDatabase(this, GlobalDatabaseHandler, lobbyDependencies.Events);
-            lobbyDependencies.Chat ??= new BaseLobbyChat(doForPlayersInMainThreadFuncProvider, LangHelper);
-            lobbyDependencies.Bans ??= new BaseLobbyBansHandler(lobbyDependencies.Database, lobbyDependencies.Events, LangHelper, lobbyDependencies.Chat, Entity);
-            lobbyDependencies.Players ??= new FightLobbyPlayers(this, lobbyDependencies.Events, lobbyDependencies.Teams, lobbyDependencies.Bans);
+            ((FightLobbyDependencies)lobbyDependencies).Spectator ??= new FightLobbySpectator(this);
+            ((FightLobbyDependencies)lobbyDependencies).Weapons ??= new FightLobbyWeapons(this);
+            lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            lobbyDependencies.Deathmatch ??= new FightLobbyDeathmatch(this, lobbyDependencies.Events, damageSys, LangHelper);
+            lobbyDependencies.Players ??= new FightLobbyPlayers(this, lobbyDependencies.Events);
+            lobbyDependencies.Teams ??= new FightLobbyTeamsHandler(this, lobbyDependencies.Events, LangHelper);
+
+            Spectator = ((FightLobbyDependencies)lobbyDependencies).Spectator!;
+            Weapons = ((FightLobbyDependencies)lobbyDependencies).Weapons!;
 
             base.InitDependencies(lobbyDependencies);
         }

@@ -24,7 +24,7 @@ namespace TDS_Server.Database.Migrations
                 .HasAnnotation("Npgsql:Enum:challenge_type", "kills,assists,damage,play_time,round_played,bomb_defuse,bomb_plant,killstreak,buy_maps,review_maps,read_the_rules,read_the_faq,change_settings,join_discord_server,write_helpful_issue,creator_of_accepted_map,be_helpful_enough")
                 .HasAnnotation("Npgsql:Enum:freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .HasAnnotation("Npgsql:Enum:language", "german,english")
-                .HasAnnotation("Npgsql:Enum:lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,char_create_lobby")
+                .HasAnnotation("Npgsql:Enum:lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,char_create_lobby,gang_action_lobby")
                 .HasAnnotation("Npgsql:Enum:log_type", "kick,ban,mute,next,login,register,lobby_join,lobby_leave,lobby_kick,lobby_ban,goto,remove_map,voice_mute")
                 .HasAnnotation("Npgsql:Enum:map_limit_type", "kill_after_time,teleport_back_after_time,block,display")
                 .HasAnnotation("Npgsql:Enum:ped_body_part", "head,neck,torso,genital_region,arm,hand,leg,foot")
@@ -1960,7 +1960,6 @@ namespace TDS_Server.Database.Migrations
                             IsTemporary = false,
                             Name = "MainMenu",
                             OwnerId = -1,
-                            Password = "",
                             Type = LobbyType.MainMenu
                         },
                         new
@@ -1976,7 +1975,6 @@ namespace TDS_Server.Database.Migrations
                             IsTemporary = false,
                             Name = "Arena",
                             OwnerId = -1,
-                            Password = "",
                             Type = LobbyType.Arena
                         },
                         new
@@ -3844,7 +3842,6 @@ namespace TDS_Server.Database.Migrations
                             AdminLeaderId = -1,
                             AdminLvl = (short)0,
                             Donation = (short)0,
-                            Email = "",
                             IsVip = false,
                             Name = "System",
                             Password = "",

@@ -1,34 +1,33 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.Players;
-using TDS_Server.LobbySystem.TeamHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models.Map.Creator;
 using TDS_Shared.Default;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Sync
 {
-    public class MapCreatorLobbySync : BaseLobbySync
+    public class MapCreatorLobbySync : BaseLobbySync, IMapCreatorLobbySync
     {
         private int _lastId;
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
         private Dictionary<int, MapCreatorPosition> _posById = new Dictionary<int, MapCreatorPosition>();
         private readonly SemaphoreSlim _posDictSemaphore = new SemaphoreSlim(1, 1);
 
-        protected new MapCreatorLobbyPlayers Players => (MapCreatorLobbyPlayers)base.Players;
+        protected new IMapCreatorLobby Lobby => (IMapCreatorLobby)base.Lobby;
 
-        public MapCreatorLobbySync(LobbyDb entity, IBaseLobbyEventsHandler events, Func<uint> dimensionProvider, MapCreatorLobbyPlayers players, BaseLobbyTeamsHandler teams)
-            : base(entity, events, dimensionProvider, players, teams)
+        public MapCreatorLobbySync(IMapCreatorLobby lobby, IBaseLobbyEventsHandler events)
+            : base(lobby, events)
         {
             events.PlayerJoined += Events_PlayerJoined;
         }
@@ -88,11 +87,11 @@ namespace TDS_Server.LobbySystem.Sync
         internal Task DoForDictionary(Action<Dictionary<int, MapCreatorPosition>> action)
             => _posDictSemaphore.Do(() => action(_posById));
 
-        internal async Task SetSyncedMapAndSyncToPlayer(string json, int tdsPlayerId, int lastId)
+        public async Task SetSyncedMapAndSyncToPlayer(string json, int tdsPlayerId, int lastId)
         {
             _currentMap = Serializer.FromBrowser<MapCreateDataDto>(json);
             _lastId = lastId;
-            var player = await Players.GetById(tdsPlayerId);
+            var player = await Lobby.Players.GetById(tdsPlayerId);
             if (player is null)
                 return;
             NAPI.Task.Run(() =>
@@ -143,7 +142,7 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncNewObject(ITDSPlayer player, string json)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers((await Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncNewObject, json);
+            NAPI.ClientEvent.TriggerClientEventToPlayers((await Lobby.Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncNewObject, json);
 
             var pos = Serializer.FromClient<MapCreatorPosition>(json);
             if (pos.Type == MapCreatorPositionType.MapCenter)
@@ -156,7 +155,7 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncObjectPosition(ITDSPlayer player, string json)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers((await Players.GetExcept(player)).ToArray(),
+            NAPI.ClientEvent.TriggerClientEventToPlayers((await Lobby.Players.GetExcept(player)).ToArray(),
                 ToClientEvent.MapCreatorSyncObjectPosition, json);
 
             var pos = Serializer.FromClient<MapCreatorPosData>(json);
@@ -182,7 +181,7 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncRemoveObject(ITDSPlayer player, int objId)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers((await Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncObjectRemove, objId);
+            NAPI.ClientEvent.TriggerClientEventToPlayers((await Lobby.Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncObjectRemove, objId);
 
             if (!_posById.ContainsKey(objId))
                 return;
@@ -197,7 +196,7 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers((await Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
+            NAPI.ClientEvent.TriggerClientEventToPlayers((await Lobby.Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
 
             foreach (var entry in _posById)
             {
@@ -246,15 +245,15 @@ namespace TDS_Server.LobbySystem.Sync
             return null;
         }
 
-        private async void Events_PlayerJoined(ITDSPlayer player, int teamIndex)
+        private async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            var firstPlayer = await Players.GetFirst(player);
+            var firstPlayer = await Lobby.Players.GetFirst(data.Player);
             NAPI.Task.Run(() =>
             {
-                if (Players.Count == 2)
-                    firstPlayer?.TriggerEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, player.Id);
-                else if (Players.Count > 2)
-                    player.TriggerEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
+                if (Lobby.Players.Count == 2)
+                    firstPlayer?.TriggerEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, data.Player.Id);
+                else if (Lobby.Players.Count > 2)
+                    data.Player.TriggerEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
             });
         }
     }

@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities.Gamemodes;
+using TDS_Server.Data.Interfaces.GamemodesSystem;
+using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
@@ -13,7 +14,6 @@ using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.RoundEndReasons;
-using TDS_Server.LobbySystem.GamemodesHandlers;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
 using TDS_Shared.Default;
@@ -23,15 +23,15 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
     public class RoundFightLobbyRoundsHandler : IRoundFightLobbyRoundsHandler
     {
         public IRoundStatesHandler RoundStates { get; }
-        public IGamemode? CurrentGamemode { get; private set; }
+        public IBaseGamemode? CurrentGamemode { get; private set; }
         protected readonly IRoundFightLobby Lobby;
-        private readonly GamemodesProvider _gamemodesProvider;
+        private readonly IGamemodesProvider _gamemodesProvider;
 
-        public RoundFightLobbyRoundsHandler(IRoundFightLobby lobby, IServiceProvider serviceProvider, IRoundFightLobbyEventsHandler events)
+        public RoundFightLobbyRoundsHandler(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, IGamemodesProvider gamemodesProvider)
         {
             Lobby = lobby;
-            RoundStates = new RoundFightLobbyRoundStates(lobby);
-            _gamemodesProvider = new GamemodesProvider(lobby, serviceProvider);
+            RoundStates = new RoundFightLobbyRoundStates(lobby, events);
+            _gamemodesProvider = gamemodesProvider;
 
             events.InitNewMap += Events_InitNewMap;
             events.RoundEnd += Events_RoundEnd;
@@ -41,7 +41,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
         private void Events_InitNewMap(MapDto map)
         {
-            CurrentGamemode = _gamemodesProvider.Get(map);
+            CurrentGamemode = _gamemodesProvider.Get(Lobby, map);
         }
 
         protected virtual async ValueTask Events_RoundEnd()
@@ -142,7 +142,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         {
             var endRound = false;
 
-            using (RoundStates.GetContext())
+            using (await RoundStates.GetContext())
             {
                 if (!(RoundStates.CurrentState is CountdownState || RoundStates.CurrentState is InRoundState))
                     return true;

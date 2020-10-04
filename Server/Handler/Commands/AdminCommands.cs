@@ -1,19 +1,17 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Data;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models;
+using TDS_Server.Data.RoundEndReasons;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Handler.Commands
 {
@@ -38,11 +36,11 @@ namespace TDS_Server.Handler.Commands
         {
             PlayerBans? ban = null;
             if (length == TimeSpan.MinValue)
-                NAPI.Task.Run(() => _lobbiesHandler.MainMenu.UnbanPlayer(player, target, reason));
+                await _lobbiesHandler.MainMenu.Bans.Unban(player, target, reason);
             else if (length == TimeSpan.MaxValue)
-                ban = await _lobbiesHandler.MainMenu.BanPlayer(player, target, null, reason);
+                ban = await _lobbiesHandler.MainMenu.Bans.Ban(player, target, null, reason);
             else
-                ban = await _lobbiesHandler.MainMenu.BanPlayer(player, target, length, reason);
+                ban = await _lobbiesHandler.MainMenu.Bans.Ban(player, target, length, reason);
 
             if (ban is { })
                 NAPI.Task.Run(() => Utils.HandleBan(target, ban));
@@ -55,11 +53,11 @@ namespace TDS_Server.Handler.Commands
         public async void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == TimeSpan.MinValue)
-                _lobbiesHandler.MainMenu.UnbanPlayer(player, dbTarget, reason);
+                await _lobbiesHandler.MainMenu.Bans.Unban(player, dbTarget, reason);
             else if (length == TimeSpan.MaxValue)
-                await _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, null, reason);
+                await _lobbiesHandler.MainMenu.Bans.Ban(player, dbTarget, null, reason);
             else
-                await _lobbiesHandler.MainMenu.BanPlayer(player, dbTarget, length, reason);
+                await _lobbiesHandler.MainMenu.Bans.Ban(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 NAPI.Task.Run(() => _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
@@ -130,7 +128,7 @@ namespace TDS_Server.Handler.Commands
         [TDSCommand(AdminCommand.LobbyBan, 1)]
         public void LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
+            if (player.Lobby is null || player.Lobby is IMainMenu)
                 return;
             var lobby = player.Lobby;
             if (lobby.Type == LobbyType.MapCreateLobby)
@@ -138,11 +136,11 @@ namespace TDS_Server.Handler.Commands
             if (!lobby.IsOfficial && !cmdinfos.AsLobbyOwner)
                 return;
             if (length == TimeSpan.MinValue)
-                lobby.UnbanPlayer(player, target, reason);
+                lobby.Bans.Unban(player, target, reason);
             else if (length == TimeSpan.MaxValue)
-                lobby.BanPlayer(player, target, null, reason);
+                lobby.Bans.Ban(player, target, null, reason);
             else
-                lobby.BanPlayer(player, target, length, reason);
+                lobby.Bans.Ban(player, target, length, reason);
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Lobby_Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
@@ -159,11 +157,11 @@ namespace TDS_Server.Handler.Commands
                 return;
 
             if (length == TimeSpan.MinValue)
-                lobby.UnbanPlayer(player, dbTarget, reason);
+                lobby.Bans.Unban(player, dbTarget, reason);
             else if (length == TimeSpan.MaxValue)
-                lobby.BanPlayer(player, dbTarget, null, reason);
+                lobby.Bans.Ban(player, dbTarget, null, reason);
             else
-                lobby.BanPlayer(player, dbTarget, length, reason);
+                lobby.Bans.Ban(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Lobby_Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -193,11 +191,11 @@ namespace TDS_Server.Handler.Commands
                         player.SendChatMessage(player.Language.TARGET_NOT_IN_SAME_LOBBY);
                         return;
                     }
-                    target.Lobby.SendMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
+                    target.Lobby.Chat.Send(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
                 });
             }
-            await target.Lobby.RemovePlayer(target);
-            await _lobbiesHandler.MainMenu.AddPlayer(target, 0).ConfigureAwait(false);
+            await target.Lobby.Players.RemovePlayer(target);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(target, 0).ConfigureAwait(false);
         }
 
         [TDSCommand(AdminCommand.Mute, 1)]
@@ -227,15 +225,12 @@ namespace TDS_Server.Handler.Commands
         [TDSCommand(AdminCommand.NextMap)]
         public void NextMap(ITDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText(MinLength = 4)] string reason)
         {
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IArena arena))
                 return;
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Next, player, reason, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);
-            if (arena.CurrentGameMode?.CanEndRound(RoundEndReason.NewPlayer) != false)
-            {
-                arena.CurrentRoundEndBecauseOfPlayer = player;
-                arena.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.Command);
-            }
+
+            arena.Rounds.RoundStates.EndRound(new CommandRoundEndReason(player));
         }
 
         [TDSCommand(AdminCommand.Test)]
@@ -312,7 +307,7 @@ namespace TDS_Server.Handler.Commands
             if (player is null || player.Entity is null)
                 return;
 
-            if (!(player.Lobby is GangLobby))
+            if (!(player.Lobby is IGangLobby))
             {
                 player.SendNotification(player.Language.ONLY_ALLOWED_IN_GANG_LOBBY);
                 return;

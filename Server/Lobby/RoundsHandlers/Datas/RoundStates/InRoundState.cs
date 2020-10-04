@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
-    public class InRoundState : RoundState
+    public class InRoundState : RoundState, IInRoundState
     {
         private int _duration = 4 * 60 * 1000;
 
@@ -15,7 +16,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 
         public override void LoadSettings()
         {
-            _duration = Lobby.Entity.LobbyRoundSettings.RoundTime;
+            _duration = Lobby.Entity.LobbyRoundSettings.RoundTime * 1000;
         }
 
         public override ValueTask SetCurrent()

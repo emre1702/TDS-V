@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Players;
 
 namespace TDS_Server.Core.Damagesystem
 {
@@ -63,8 +63,10 @@ namespace TDS_Server.Core.Damagesystem
 
             killer = GetKiller(player, killer);
 
+            var lobbyPlayersHandler = player.Lobby?.Players as IRoundFightLobbyPlayers;
+
             // Death //
-            if (player.LobbyStats != null && player.Lobby?.SavePlayerLobbyStats == true)
+            if (player.LobbyStats != null && lobbyPlayersHandler?.SavePlayerLobbyStats == true)
             {
                 ++player.LobbyStats.Deaths;
                 ++player.LobbyStats.TotalDeaths;
@@ -84,7 +86,7 @@ namespace TDS_Server.Core.Damagesystem
                 CheckForAssist(player, killer);
             }
 
-            if (player.Lobby?.SavePlayerLobbyStats == true && player.Lobby?.IsOfficial == true)
+            if (lobbyPlayersHandler?.SavePlayerLobbyStats == true && player.Lobby?.IsOfficial == true)
             {
                 _loggingHandler.LogKill(player, killer, weapon);
             }
@@ -95,7 +97,7 @@ namespace TDS_Server.Core.Damagesystem
             if (!_allHitters.ContainsKey(player))
                 return;
 
-            int halfarmorhp = player.Lobby!.StartTotalHP / 2;
+            int halfarmorhp = (player.Lobby!.Entity.FightSettings.StartArmor + player.Lobby!.Entity.FightSettings.StartHealth) / 2;
             foreach (KeyValuePair<ITDSPlayer, int> entry in _allHitters[player])
             {
                 if (entry.Value >= halfarmorhp)

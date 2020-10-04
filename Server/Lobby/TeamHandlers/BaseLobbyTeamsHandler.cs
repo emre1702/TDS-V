@@ -35,7 +35,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         private void InitTeams(LobbyDb entity)
         {
-            _teams = new ITeam[entity.Teams.Max(t => t.Index + 1)];
+            _teams = entity.Teams.Any() ? new ITeam[entity.Teams.Max(t => t.Index + 1)] : Array.Empty<ITeam>();
             foreach (var teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
                 var team = new Team(teamEntity);

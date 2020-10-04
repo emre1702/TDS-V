@@ -1,12 +1,12 @@
-﻿using System.Linq;
+﻿using GTANetworkAPI;
+using System.Linq;
 using System.Threading.Tasks;
-using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
@@ -70,8 +70,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             player.GangRank = _gangsHandler.NoneRank;
             _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
 
-            if (player.Lobby is GangLobby || player.Lobby?.IsGangActionLobby == true)
-                await _lobbiesHandler.MainMenu.AddPlayer(player, null);
+            if (player.Lobby is IGangLobby || player.Lobby is IGangActionLobby)
+                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
 
             await RemoveMemberFromGang(gang, memberInGangEntity);
 
@@ -201,10 +201,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             await _eventsHandler.OnGangJoin(player, sender.Gang, gangRank);
 
-            if (player.Lobby is GangLobby)
-            {
-                await _lobbiesHandler.MainMenu.AddPlayer(player, null);
-            }
+            if (player.Lobby is IGangLobby)
+                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
 
             player.SendNotification(string.Format(player.Language.YOU_JOINED_THE_GANG, player.Gang.Entity.Name));
             player.Gang.SendNotification(lang => string.Format(lang.PLAYER_JOINED_YOUR_GANG, player.DisplayName));

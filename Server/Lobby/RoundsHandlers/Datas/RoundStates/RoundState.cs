@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
+using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {

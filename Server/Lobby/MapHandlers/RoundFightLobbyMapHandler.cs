@@ -48,11 +48,14 @@ namespace TDS_Server.LobbySystem.MapHandlers
             if (map.LimitInfo.Edges is null)
                 return;
             int i = 0;
-            foreach (var edge in map.LimitInfo.Edges)
+            NAPI.Task.Run(() =>
             {
-                var blip = NAPI.Blip.CreateBlip(SharedConstants.MapLimitBlipSprite, edge.ToVector3(), 1f, 0, name: "Limit " + ++i, dimension: Dimension) as ITDSBlip;
-                AddMapBlip(blip!);
-            }
+                foreach (var edge in map.LimitInfo.Edges)
+                {
+                    var blip = NAPI.Blip.CreateBlip(SharedConstants.MapLimitBlipSprite, edge.ToVector3(), 1f, 0, name: "Limit " + ++i, dimension: Dimension) as ITDSBlip;
+                    AddMapBlip(blip!);
+                }
+            });
         }
 
         protected virtual void Events_InitNewMap(MapDto map)
@@ -63,6 +66,8 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
         public virtual MapDto? GetNextMap()
             => GetRandomMap();
+
+        public string GetMapsJson() => _mapsJson;
 
         private MapDto? GetRandomMap()
         {

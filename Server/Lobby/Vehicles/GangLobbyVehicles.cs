@@ -10,7 +10,7 @@ using TDS_Server.Database.Entity.GangEntities;
 
 namespace TDS_Server.LobbySystem.Vehicles
 {
-    public class GangLobbyVehicles
+    public class GangLobbyVehicles : BaseLobbyVehicles
     {
         private readonly IGangLobby _lobby;
 

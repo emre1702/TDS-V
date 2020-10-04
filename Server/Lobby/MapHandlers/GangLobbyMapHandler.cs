@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
-using TDS_Server.LobbySystem.Lobbies;
 using TDS_Shared.Data.Default;
 
 namespace TDS_Server.LobbySystem.MapHandlers
 {
     public class GangLobbyMapHandler : BaseLobbyMapHandler
     {
-        public GangLobbyMapHandler(GangLobby lobby, IBaseLobbyEventsHandler events, EventsHandler globalEventsHandler, GangHousesHandler gangHousesHandler)
+        public GangLobbyMapHandler(IGangLobby lobby, IBaseLobbyEventsHandler events, EventsHandler globalEventsHandler, GangHousesHandler gangHousesHandler)
             : base(lobby, events)
         {
             globalEventsHandler.GangHouseLoaded += LoadHouse;
@@ -54,21 +54,24 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
         private void SetHouseOwner(GangHouse house, IGang? owner)
         {
-            if (owner is null)
+            NAPI.Task.Run(() =>
             {
-                house.Blip?.Delete();
-                house.Blip = null;
-            }
-            else
-            {
-                house.Blip = NAPI.Blip.CreateBlip(
-                    SharedConstants.GangHouseOccupiedBlipModel,
-                    house.Position, 1f, dimension: Dimension, color: house.Entity.OwnerGang is null ? (byte)1 : house.Entity.OwnerGang.BlipColor,
-                    shortRange: true, alpha: house.Entity.OwnerGang is null ? (byte)180 : (byte)255,
-                    name: $"[{house.Entity.NeededGangLevel}] " + (house.Entity.OwnerGang is null ? "-" : house.Entity.OwnerGang.Name)) as ITDSBlip;
-            }
-            if (house.TextLabel is { })
-                house.TextLabel.Text = house.GetTextLabelText();
+                if (owner is null)
+                {
+                    house.Blip?.Delete();
+                    house.Blip = null;
+                }
+                else
+                {
+                    house.Blip = NAPI.Blip.CreateBlip(
+                        SharedConstants.GangHouseOccupiedBlipModel,
+                        house.Position, 1f, dimension: Dimension, color: house.Entity.OwnerGang is null ? (byte)1 : house.Entity.OwnerGang.BlipColor,
+                        shortRange: true, alpha: house.Entity.OwnerGang is null ? (byte)180 : (byte)255,
+                        name: $"[{house.Entity.NeededGangLevel}] " + (house.Entity.OwnerGang is null ? "-" : house.Entity.OwnerGang.Name)) as ITDSBlip;
+                }
+                if (house.TextLabel is { })
+                    house.TextLabel.Text = house.GetTextLabelText();
+            });
         }
 
         private ITDSBlip GetHouseWithOwnerBlip(GangHouse house)

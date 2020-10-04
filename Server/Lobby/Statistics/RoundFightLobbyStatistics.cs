@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Statistics;
 
@@ -8,10 +9,10 @@ namespace TDS_Server.LobbySystem.Statistics
     {
         protected IRoundFightLobby Lobby { get; }
 
-        public RoundFightLobbyStatistics(IRoundFightLobby lobby)
+        public RoundFightLobbyStatistics(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events)
         {
             Lobby = lobby;
-            lobby.Events.RoundEndStats += RoundEndStats;
+            events.RoundEndStats += RoundEndStats;
         }
 
         private async ValueTask RoundEndStats()

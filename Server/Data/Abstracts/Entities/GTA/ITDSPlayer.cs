@@ -20,7 +20,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract AdminLevelDto AdminLevel { get; }
         public abstract string AdminLevelName { get; }
         public virtual new int Armor { get => base.Armor; set => base.Armor = value; }
-        public abstract RoundStatsDto? CurrentRoundStats { get; set; }
+        public RoundStatsDto? CurrentRoundStats { get; set; }
 
         public new WeaponHash CurrentWeapon
         {
@@ -43,7 +43,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract bool IsCrouched { get; set; }
         public abstract bool IsGangOwner { get; }
         public abstract bool IsInGang { get; }
-        public abstract bool IsLobbyOwner { get; }
+        public bool IsLobbyOwner => Lobby?.Players.IsLobbyOwner(this) == true;
 
         public abstract bool IsMuted { get; }
         public abstract bool IsPermamuted { get; }
@@ -56,14 +56,13 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract DateTime? LastKillAt { get; set; }
         public abstract WeaponHash LastWeaponOnHand { get; set; }
         public short Lifes { get; set; } = 0;
-        public ILobby? Lobby { get; set; }
-        public IBaseLobby? LobbyNew { get; set; }
-        public abstract PlayerLobbyStats? LobbyStats { get; set; }
+        public IBaseLobby? Lobby { get; set; }
+        public PlayerLobbyStats? LobbyStats { get; set; }
         public abstract bool LoggedIn { get; }
         public abstract int Money { get; set; }
         public abstract int? MuteTime { get; set; }
         public abstract int PlayMinutes { get; set; }
-        public abstract ILobby? PreviousLobby { get; set; }
+        public IBaseLobby? PreviousLobby { get; set; }
         public ushort RemoteId => Handle.Value;
         public abstract ITDSPlayer? SentPrivateChatRequestTo { get; set; }
         public abstract short ShortTimeKillingSpree { get; }
@@ -158,7 +157,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public abstract void SetInvisible(bool toggle);
 
-        public abstract void SetLobby(IBaseLobby lobby);
+        public abstract void SetLobby(Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby lobby);
 
         public abstract void SetSpectates(ITDSPlayer? target);
 

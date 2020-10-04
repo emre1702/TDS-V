@@ -1,16 +1,13 @@
-﻿using System;
-using BonusBotConnector.Client;
+﻿/*using BonusBotConnector.Client;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Entities.Gamemodes;
 using TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
-using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
 {
@@ -37,3 +34,4 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
         public GangActionType Type => GangActionType.Gangwar;
     }
 }
+*/

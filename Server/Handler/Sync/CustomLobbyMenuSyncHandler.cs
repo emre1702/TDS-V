@@ -3,6 +3,7 @@ using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
@@ -30,7 +31,7 @@ namespace TDS_Server.Handler.Sync
         public void AddPlayer(ITDSPlayer player)
         {
             _playersInCustomLobbyMenu.Add(player);
-            List<CustomLobbyData> lobbyDatas = _lobbiesHandler.Lobbies.Where(l => !l.IsOfficial && l.Entity.Type != LobbyType.MapCreateLobby)
+            var lobbyDatas = _lobbiesHandler.Lobbies.Where(l => !l.IsOfficial && l.Entity.Type != LobbyType.MapCreateLobby)
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
 
@@ -47,7 +48,7 @@ namespace TDS_Server.Handler.Sync
             _playersInCustomLobbyMenu.Remove(player);
         }
 
-        public void SyncLobbyAdded(ILobby lobby)
+        public void SyncLobbyAdded(IBaseLobby lobby)
         {
             if (lobby.IsOfficial || lobby.Entity.Type == LobbyType.MapCreateLobby)
                 return;
@@ -65,24 +66,24 @@ namespace TDS_Server.Handler.Sync
             }
         }
 
-        public void SyncLobbyRemoved(ILobby lobby)
+        public void SyncLobbyRemoved(IBaseLobby lobby)
         {
             if (!lobby.IsOfficial && lobby.Entity.Type != LobbyType.MapCreateLobby)
             {
                 for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
-                    ITDSPlayer player = _playersInCustomLobbyMenu[i];
+                    var player = _playersInCustomLobbyMenu[i];
                     if (!player.LoggedIn)
                     {
                         _playersInCustomLobbyMenu.RemoveAt(i);
                         continue;
                     }
-                    player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.RemoveCustomLobby, lobby.Id);
+                    player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.RemoveCustomLobby, lobby.Entity.Id);
                 }
             }
         }
 
-        private CustomLobbyData GetCustomLobbyData(ILobby lobby)
+        private CustomLobbyData GetCustomLobbyData(IBaseLobby lobby)
         {
             return new CustomLobbyData
             {
@@ -90,7 +91,7 @@ namespace TDS_Server.Handler.Sync
 
                 LobbyId = lobby.Entity.Id,
                 Name = lobby.Entity.Name,
-                OwnerName = lobby.OwnerName,
+                OwnerName = lobby.Entity.Owner?.Name ?? "?",
                 Password = lobby.Entity.Password,
                 ShowRanking = lobby.Entity.LobbyRoundSettings.ShowRanking,
                 SpawnAgainAfterDeathMs = lobby.Entity.FightSettings?.SpawnAgainAfterDeathMs ?? 400,

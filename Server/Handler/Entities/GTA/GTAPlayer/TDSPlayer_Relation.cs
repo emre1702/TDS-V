@@ -2,6 +2,7 @@
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
@@ -10,14 +11,8 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
     {
         // Todo: Add more messages for e.g. joined gang, is now supporter etc.
 
-        #region Private Fields
-
         private readonly HashSet<ITDSPlayer> _friendsOnline = new HashSet<ITDSPlayer>();
         private Dictionary<int, PlayerRelation> _relationsToUsersDict = new Dictionary<int, PlayerRelation>();
-
-        #endregion Private Fields
-
-        #region Public Methods
 
         public override void CheckPlayerOnlineIsFriend(ITDSPlayer otherPlayer, bool outputInfo = true)
         {
@@ -55,11 +50,7 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             _relationsToUsersDict[target.Id] = relation;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void CheckFriendPlayerJoinedLobby(ITDSPlayer otherPlayer, ILobby lobby)
+        private void CheckFriendPlayerJoinedLobby(ITDSPlayer otherPlayer, IBaseLobby lobby)
         {
             if (!_friendsOnline.Contains(otherPlayer))
                 return;
@@ -70,7 +61,7 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             SendNotification(string.Format(Language.FRIEND_JOINED_LOBBY_INFO, otherPlayer.DisplayName, lobby.Entity.Name));
         }
 
-        private void CheckFriendPlayerLeftLobby(ITDSPlayer otherPlayer, ILobby lobby)
+        private void CheckFriendPlayerLeftLobby(ITDSPlayer otherPlayer, IBaseLobby lobby)
         {
             if (!_friendsOnline.Contains(otherPlayer))
                 return;
@@ -88,7 +79,5 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 
             _relationsToUsersDict = _entity.PlayerRelationsPlayer.ToDictionary(r => r.TargetId, r => r.Relation);
         }
-
-        #endregion Private Methods
     }
 }

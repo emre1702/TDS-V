@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 
@@ -36,5 +37,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Players
         Task OnPlayerLoggedOut(ITDSPlayer player);
 
         Task<bool> RemovePlayer(ITDSPlayer player);
+
+        Task<IOrderedEnumerable<string>> GetOrderedNames();
     }
 }

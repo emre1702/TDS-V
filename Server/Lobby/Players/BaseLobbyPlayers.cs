@@ -41,7 +41,7 @@ namespace TDS_Server.LobbySystem.Players
             if (await Lobby.Bans.CheckIsBanned(player))
                 return false;
 
-            player.Lobby?.RemovePlayer(player);
+            player.Lobby?.Players.RemovePlayer(player);
             await _semaphore.Do(() => _players.Add(player));
 
             await Lobby.Events.TriggerPlayerJoined(player, teamIndex);
@@ -137,6 +137,9 @@ namespace TDS_Server.LobbySystem.Players
 
         public Task<IEnumerable<ITDSPlayer>> GetExcept(ITDSPlayer player)
             => _semaphore.Do(() => _players.Where(p => p != player));
+
+        public Task<IOrderedEnumerable<string>> GetOrderedNames()
+            => _semaphore.Do(() => _players.Select(p => p.DisplayName).OrderBy(n => n));
 
         private async Task RemoveAllPlayers()
         {

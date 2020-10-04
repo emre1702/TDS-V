@@ -8,7 +8,9 @@ namespace TDS_Server.Core.Init.Services.Creators
         {
             var serviceCollection = new ServiceCollection()
                 .WithDatabase()
-                .WithHandlers();
+                .WithHandlers()
+                .WithLobby()
+                .WithGamemode();
 
             var provider = new CustomServiceProvider(serviceCollection);
             return provider;

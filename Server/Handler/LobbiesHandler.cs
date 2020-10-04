@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.CustomLobby;
@@ -30,46 +31,51 @@ namespace TDS_Server.Handler
     {
         public readonly Dictionary<int, IBaseLobby> LobbiesByIndex = new Dictionary<int, IBaseLobby>();
 
-        public List<IBaseLobby> Lobbies { get; } = new List<IBaseLobby>();
-
-        public ICharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??= (ICharCreateLobby)Lobbies.Where(l => l.IsOfficial && l is ICharCreateLobby).First();
-
-        public IMapCreateLobby MapCreateLobbyDummy => _mapCreateLobby ??= (IMapCreateLobby)Lobbies.Where(l => l.IsOfficial && l is IMapCreateLobby).First();
-
-        public IArena Arena => _arena ??= (IArena)Lobbies.Where(l => l.IsOfficial && l is IArena).First();
-
-        public IGangLobby GangLobby => _gangLobby ??= (IGangLobby)Lobbies.Where(l => l.IsOfficial && l is IGangLobby).First();
-
-        public IMainMenu MainMenu => _mainMenu ??= (IMainMenu)Lobbies.Where(l => l.IsOfficial && l is IMainMenu).First();
-
         private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
         private readonly EventsHandler _eventsHandler;
         private readonly MapsLoadingHandler _mapsHandler;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly ILobbiesProvider _lobbiesProvider;
         private IArena? _arena;
         private ICharCreateLobby? _charCreateLobby;
         private string? _customLobbyDatas;
         private IGangLobby? _gangLobby;
-        private IMainMenu? _mainMenu;
-        private IMapCreateLobby? _mapCreateLobby;
+        private IBaseLobby? _mainMenu;
+        private IMapCreatorLobby? _mapCreateLobby;
 
         public LobbiesHandler(
             TDSDbContext dbContext,
             ISettingsHandler settingsHandler,
             MapsLoadingHandler mapsHandler,
             ILoggingHandler loggingHandler,
-            IServiceProvider serviceProvider,
-            EventsHandler eventsHandler) : base(dbContext, loggingHandler)
+            EventsHandler eventsHandler,
+            ILobbiesProvider lobbiesProvider) : base(dbContext, loggingHandler)
         {
             _mapsHandler = mapsHandler;
-            _serviceProvider = serviceProvider;
             _eventsHandler = eventsHandler;
             _settingsHandler = settingsHandler;
+            _lobbiesProvider = lobbiesProvider;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.LobbyCreated += AddLobby;
         }
+
+        public ICharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.CharCreateLobby).Cast<ICharCreateLobby>().First();
+
+        public List<IBaseLobby> Lobbies { get; } = new List<IBaseLobby>();
+
+        public IMapCreatorLobby MapCreateLobbyDummy => _mapCreateLobby ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MapCreateLobby).Cast<IMapCreatorLobby>().First();
+
+        public IArena Arena => _arena ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.Arena).Cast<IArena>().First();
+
+        public IGangLobby GangLobby => _gangLobby ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.GangLobby).Cast<IGangLobby>().First();
+
+        public IBaseLobby MainMenu => _mainMenu ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.MainMenu).First();
 
         public void AddLobby(IBaseLobby lobby)
         {
@@ -162,49 +168,22 @@ namespace TDS_Server.Handler
                 };
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
-                var taskCompletionSource = new TaskCompletionSource<Arena>();
+                var arena = _lobbiesProvider.Get<IArena>(entity);
+                await arena.Events.TriggerCreated(entity);
 
-                NAPI.Task.Run(() =>
-                {
-                    var arena = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity, false);
-                    taskCompletionSource.TrySetResult(arena);
-                });
-                var arena = await taskCompletionSource.Task;
-                await arena.AddToDB();
-                NAPI.Task.Run(() =>
-                {
-                    _eventsHandler.OnLobbyCreated(arena);
+                _eventsHandler.OnLobbyCreated(arena);
 
-                    AddMapsToArena(arena, entity);
+                AddMapsToArena(arena, entity);
 
-                    _eventsHandler.OnCustomLobbyCreated(arena);
-                });
+                _eventsHandler.OnCustomLobbyCreated(arena);
 
-                await arena.AddPlayer(player, null);
+                await arena.Players.AddPlayer(player, 0);
                 return null;
             }
             catch
             {
                 return player.Language.CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR;
             }
-        }
-
-        public HashSet<LobbyWeapons> GetAllPossibleLobbyWeapons(MapType type)
-            => type switch
-            {
-                MapType.Bomb => Bomb.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
-                MapType.Sniper => Sniper.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
-                MapType.Gangwar => Gangwar.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
-                MapType.ArmsRace => Gangwar.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
-                _ => Deathmatch.GetAllowedWeapons().Select(w => new LobbyWeapons { Hash = w, Ammo = 9999, Damage = 0 }).ToHashSet(),
-            };
-
-        public uint GetFreeDimension()
-        {
-            uint tryid = 0;
-            while (_dimensionsUsed.Contains(tryid))
-                ++tryid;
-            return tryid;
         }
 
         public IBaseLobby? GetLobby(int id)
@@ -275,40 +254,21 @@ namespace TDS_Server.Handler
                     .ToList();
             }).Result;
 
-            foreach (Lobbies lobbysetting in lobbies)
+            foreach (Lobbies lobbyEntity in lobbies)
             {
-                LobbyType type = lobbysetting.Type;
-                var lobby = type switch
-                {
-                    LobbyType.FightLobby => ActivatorUtilities.CreateInstance<FightLobby>(_serviceProvider, lobbysetting, false),
+                var lobby = _lobbiesProvider.Get(lobbyEntity.Type, lobbyEntity);
 
-                    LobbyType.Arena => ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, lobbysetting, false),
+                if (lobby is IArena arena)
+                    AddMapsToArena(arena, lobbyEntity);
 
-                    LobbyType.MapCreateLobby => ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, lobbysetting),
-
-                    LobbyType.GangLobby => ActivatorUtilities.CreateInstance<GangLobby>(_serviceProvider, lobbysetting),
-
-                    LobbyType.CharCreateLobby => ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, lobbysetting),
-
-                    _ => ActivatorUtilities.CreateInstance<Lobby>(_serviceProvider, lobbysetting, false),
-                };
-                if (lobby is Arena arena)
-                {
-                    AddMapsToArena(arena, lobbysetting);
-                }
                 _eventsHandler.OnLobbyCreated(lobby);
+                //lobby.Events.LobbyRemoveAfter += RemoveLobby;
             }
 
-            _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Id;
-            _settingsHandler.SyncedSettings.CharCreatorLobbyId = CharCreateLobbyDummy.Id;
-            _settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Id;
-            _settingsHandler.SyncedSettings.GangLobbyLobbyId = GangLobby.Id;
-
-            ExecuteForDB(dbContext =>
-            {
-                Gamemode.Init(dbContext);
-                Sniper.Init(dbContext);
-            }).Wait();
+            _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Entity.Id;
+            _settingsHandler.SyncedSettings.CharCreatorLobbyId = CharCreateLobbyDummy.Entity.Id;
+            _settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Entity.Id;
+            _settingsHandler.SyncedSettings.GangLobbyLobbyId = GangLobby.Entity.Id;
         }
 
         public async Task<object?> OnJoinLobby(ITDSPlayer player, ArraySegment<object> args)
@@ -317,14 +277,14 @@ namespace TDS_Server.Handler
 
             if (LobbiesByIndex.ContainsKey(index))
             {
-                var lobby = LobbiesByIndex[index];
-                if (lobby is IMapCreateLobby)
+                IBaseLobby lobby = LobbiesByIndex[index];
+                if (lobby is IMapCreatorLobby)
                 {
                     if (await lobby.Bans.CheckIsBanned(player))
                         return null;
 
-                    lobby = ActivatorUtilities.CreateInstance<MapCreateLobby>(_serviceProvider, player);
-                    await lobby.AddToDB();
+                    lobby = _lobbiesProvider.Get<IMapCreatorLobby>(player);
+                    await lobby.Events.TriggerCreated(lobby.Entity);
                     _eventsHandler.OnLobbyCreated(lobby);
                 }
                 else if (lobby is ICharCreateLobby)
@@ -332,8 +292,8 @@ namespace TDS_Server.Handler
                     if (await lobby.Bans.CheckIsBanned(player))
                         return null;
 
-                    lobby = ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, player);
-                    await lobby.AddToDB();
+                    lobby = _lobbiesProvider.Get<ICharCreateLobby>(player);
+                    await lobby.Events.TriggerCreated(lobby.Entity);
                     _eventsHandler.OnLobbyCreated(lobby);
                 }
                 await lobby.Players.AddPlayer(player, 0);
@@ -354,7 +314,7 @@ namespace TDS_Server.Handler
 
             if (LobbiesByIndex.ContainsKey(index))
             {
-                var lobby = LobbiesByIndex[index];
+                IBaseLobby lobby = LobbiesByIndex[index];
                 if (password != null && lobby.Entity.Password != password)
                 {
                     NAPI.Task.Run(() => player.SendChatMessage(player.Language.WRONG_PASSWORD));
@@ -378,8 +338,9 @@ namespace TDS_Server.Handler
             Lobbies.Remove(lobby);
             _dimensionsUsed.Remove(lobby.MapHandler.Dimension);
 
-            if (!lobby.IsOfficial)
-                _eventsHandler.OnCustomLobbyRemoved(lobby);
+            //Todo: How to do that? Put it in Lobby? check it on event handlers?
+            //if (!lobby.IsOfficial)
+            //    _eventsHandler.OnCustomLobbyRemoved(lobby);
         }
 
         public async Task SaveAll()
@@ -397,7 +358,7 @@ namespace TDS_Server.Handler
             }
         }
 
-        private void AddMapsToArena(Arena arena, Lobbies lobbySetting)
+        private void AddMapsToArena(IArena arena, Lobbies lobbySetting)
         {
             List<MapDto> lobbyMapsList = new List<MapDto>();
             foreach (var mapAssignment in lobbySetting.LobbyMaps)
@@ -435,7 +396,7 @@ namespace TDS_Server.Handler
                         break;
                 }
             }
-            arena.SetMapList(lobbyMapsList);
+            arena.MapHandler.SetMapList(lobbyMapsList);
         }
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)

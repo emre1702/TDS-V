@@ -85,7 +85,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             });
         }
 
-        private void ClearTeamPlayersLists(List<ITeam> teams)
+        private void ClearTeamPlayersLists(ITeam[] teams)
         {
             foreach (var entry in teams)
             {
@@ -102,13 +102,13 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         {
             return Do(teams =>
             {
-                if (teams.Count <= 1)
+                if (teams.Length <= 1)
                     return null;
 
                 var index = startIndex;
                 do
                 {
-                    if (++index > teams.Count - 1)
+                    if (++index > teams.Length - 1)
                         index = 0;
                 } while (teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
 
@@ -132,7 +132,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             {
                 do
                 {
-                    if (++startIndexToIterate == teams.Count - 1)
+                    if (++startIndexToIterate == teams.Length - 1)
                         startIndexToIterate = 0;
                 } while (teams[startIndex].IsSpectator && startIndexToIterate != startIndex);
 
@@ -147,14 +147,14 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         {
             return Do(teams =>
             {
-                if (teams.Count <= 1)
+                if (teams.Length <= 1)
                     return null;
 
                 var index = (int)startIndex;
                 do
                 {
                     if (--index < 0)
-                        index = teams.Count - 1;
+                        index = teams.Length - 1;
                 } while (teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
 
                 var team = teams[index];

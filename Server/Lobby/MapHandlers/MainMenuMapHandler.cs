@@ -1,23 +1,25 @@
 ﻿using GTANetworkAPI;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 
 namespace TDS_Server.LobbySystem.MapHandlers
 {
     public class MainMenuMapHandler : BaseLobbyMapHandler
     {
-        public MainMenuMapHandler(MainMenu lobby, IBaseLobbyEventsHandler events) : base(lobby, events)
+        public MainMenuMapHandler(IMainMenu lobby, IBaseLobbyEventsHandler events) : base(lobby, events)
         {
         }
 
-        protected override void Events_PlayerJoined(ITDSPlayer player, int _)
+        protected override ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
             NAPI.Task.Run(() =>
             {
-                player.Spawn(SpawnPoint.Around(Lobby.Entity.AroundSpawnPoint), SpawnRotation);
-                player.Freeze(true);
+                data.Player.Spawn(SpawnPoint.Around(Lobby.Entity.AroundSpawnPoint), SpawnRotation);
+                data.Player.Freeze(true);
             });
+            return default;
         }
     }
 }

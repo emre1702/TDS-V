@@ -64,13 +64,13 @@ namespace TDS_Server.Handler.Sync
                     if (player.Lobby is null)
                         return;
 
-                    if (!_playerHandleDatasLobby.ContainsKey(player.Lobby.Id))
-                        _playerHandleDatasLobby[player.Lobby.Id] = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
-                    if (!_playerHandleDatasLobby[player.Lobby.Id].ContainsKey(player.RemoteId))
-                        _playerHandleDatasLobby[player.Lobby.Id][player.RemoteId] = new Dictionary<PlayerDataKey, object>();
-                    _playerHandleDatasLobby[player.Lobby.Id][player.RemoteId][key] = value;
+                    if (!_playerHandleDatasLobby.ContainsKey(player.Lobby.Entity.Id))
+                        _playerHandleDatasLobby[player.Lobby.Entity.Id] = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
+                    if (!_playerHandleDatasLobby[player.Lobby.Entity.Id].ContainsKey(player.RemoteId))
+                        _playerHandleDatasLobby[player.Lobby.Entity.Id][player.RemoteId] = new Dictionary<PlayerDataKey, object>();
+                    _playerHandleDatasLobby[player.Lobby.Entity.Id][player.RemoteId][key] = value;
 
-                    player.Lobby.TriggerEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
+                    player.Lobby.Sync.TriggerEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
                     break;
 
                 case DataSyncMode.Player:
@@ -90,7 +90,7 @@ namespace TDS_Server.Handler.Sync
         /// <param name="key"></param>
         /// <param name="syncMode"></param>
         /// <param name="value"></param>
-        public void SetData(Entity entity, EntityDataKey key, DataSyncMode syncMode, object value, ITDSPlayer? toPlayer = null, IBaseLobby? toLobby = null)
+        public void SetData(Entity entity, EntityDataKey key, DataSyncMode syncMode, object value, ITDSPlayer? toPlayer = null, Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby? toLobby = null)
         {
             switch (syncMode)
             {
@@ -136,14 +136,14 @@ namespace TDS_Server.Handler.Sync
             NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.RemoveSyncedEntityDatas, entity.Handle.Value);
         }
 
-        private void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
+        private void PlayerLeftLobby(ITDSPlayer player, IBaseLobby lobby)
         {
-            if (!_playerHandleDatasLobby.ContainsKey(lobby.Id))
+            if (!_playerHandleDatasLobby.ContainsKey(lobby.Entity.Id))
                 return;
-            if (!_playerHandleDatasLobby[lobby.Id].ContainsKey(player.RemoteId))
+            if (!_playerHandleDatasLobby[lobby.Entity.Id].ContainsKey(player.RemoteId))
                 return;
 
-            _playerHandleDatasLobby[lobby.Id].Remove(player.RemoteId);
+            _playerHandleDatasLobby[lobby.Entity.Id].Remove(player.RemoteId);
         }
 
         private void PlayerLoggedOut(ITDSPlayer player)
@@ -163,13 +163,13 @@ namespace TDS_Server.Handler.Sync
             player.TriggerEvent(ToClientEvent.SyncEntityData, Serializer.ToClient(_entityHandleDatasAll));
         }
 
-        private void SyncPlayerLobbyData(ITDSPlayer player, ILobby lobby)
+        private void SyncPlayerLobbyData(ITDSPlayer player, IBaseLobby lobby)
         {
-            if (_playerHandleDatasLobby.ContainsKey(lobby.Id))
-                player.TriggerEvent(ToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasLobby[lobby.Id]));
+            if (_playerHandleDatasLobby.ContainsKey(lobby.Entity.Id))
+                player.TriggerEvent(ToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasLobby[lobby.Entity.Id]));
 
-            if (_entityHandleDatasLobby.ContainsKey(lobby.Id))
-                player.TriggerEvent(ToClientEvent.SyncEntityData, Serializer.ToClient(_entityHandleDatasLobby[lobby.Id]));
+            if (_entityHandleDatasLobby.ContainsKey(lobby.Entity.Id))
+                player.TriggerEvent(ToClientEvent.SyncEntityData, Serializer.ToClient(_entityHandleDatasLobby[lobby.Entity.Id]));
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
 
@@ -10,7 +10,7 @@ namespace TDS_Server.LobbySystem.Players
 {
     internal class CharCreateLobbyPlayers : BaseLobbyPlayers
     {
-        public CharCreateLobbyPlayers(CharCreateLobby lobby, IBaseLobbyEventsHandler events)
+        public CharCreateLobbyPlayers(ICharCreateLobby lobby, IBaseLobbyEventsHandler events)
             : base(lobby, events)
         {
         }

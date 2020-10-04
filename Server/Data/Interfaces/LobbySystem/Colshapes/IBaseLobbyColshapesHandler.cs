@@ -4,6 +4,6 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Colshapes
 {
     public interface IBaseLobbyColshapesHandler
     {
-        void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player);
+        void OnPlayerEnterColshape(ITDSColshape colshape, ITDSPlayer player);
     }
 }

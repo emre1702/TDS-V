@@ -6,7 +6,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 {
 #nullable enable
 
-    public interface IRoundFightLobbyEventsHandler : IBaseLobbyEventsHandler
+    public interface IRoundFightLobbyEventsHandler : IFightLobbyEventsHandler
     {
         public delegate void RoundStateChangedDelegate();
 

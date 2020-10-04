@@ -4,6 +4,6 @@ namespace TDS_Server.LobbySystem.DependenciesModels
 {
     internal class ArenaDependencies : RoundFightLobbyDependencies
     {
-        public IArenaMapVoting? ArenaMapVoting { get; set; }
+        public IArenaMapVoting? MapVoting { get; set; }
     }
 }

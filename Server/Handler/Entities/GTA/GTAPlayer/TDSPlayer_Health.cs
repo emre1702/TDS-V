@@ -32,8 +32,8 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             DeathSpawnTimer?.Kill();
             DeathSpawnTimer = null;
             NAPI.Player.SpawnPlayer(this, pos, heading);
-            if (LobbyNew is { })
-                Dimension = LobbyNew.MapHandler.Dimension;
+            if (Lobby is { })
+                Dimension = Lobby.MapHandler.Dimension;
         }
     }
 }

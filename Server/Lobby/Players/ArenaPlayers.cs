@@ -23,7 +23,7 @@ namespace TDS_Server.LobbySystem.Players
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex)
         {
-            var worked = await base.AddPlayer(player, teamIndex);
+            var worked = await base.AddPlayer(player, 0);
             if (!worked)
                 return false;
 

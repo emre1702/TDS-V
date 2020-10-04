@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using TDS_Server.Data.Models.Map.Creator;
 

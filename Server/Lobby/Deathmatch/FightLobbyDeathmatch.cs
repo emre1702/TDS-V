@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using GTANetworkAPI;
-using TDS_Server.Core.Damagesystem;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
@@ -23,7 +21,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
         public IDamagesys Damage { get; }
         protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
 
-        public FightLobbyDeathmatch(IFightLobby lobby, IBaseLobbyEventsHandler events, Damagesys damage, LangHelper langHelper)
+        public FightLobbyDeathmatch(IFightLobby lobby, IBaseLobbyEventsHandler events, IDamagesys damage, LangHelper langHelper)
             : base(lobby, events)
         {
             Damage = damage;
@@ -52,10 +50,13 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
             Damage.OnPlayerDeath(player, killer, weapon);
 
+            var hadLifes = player.Lifes;
             if (player.Lifes > 0)
                 PlayerDiedInFight(player, killer, weapon);
             else
                 SetPlayerDeadCompletely(player);
+
+            Lobby.Events.TriggerPlayerDied(player, killer, weapon, hadLifes);
         }
 
         private void PlayerDiedInFight(ITDSPlayer player, ITDSPlayer killer, uint weapon)
@@ -89,6 +90,15 @@ namespace TDS_Server.LobbySystem.Deathmatch
             Lobby.Players.DoInMain(target =>
             {
                 target.TriggerEvent(ToClientEvent.Death, player.RemoteId, player.TeamIndex, killstr[target.Language], player.Lifes > 1);
+            });
+        }
+
+        public void Kill(ITDSPlayer player, string reason)
+        {
+            NAPI.Task.Run(() =>
+            {
+                player.Kill();
+                player.SendChatMessage(reason);
             });
         }
     }

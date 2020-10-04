@@ -6,12 +6,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Player.Char;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.CharCreator;
@@ -43,10 +42,10 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> args)
         {
-            if (!(player.Lobby is CharCreateLobby))
+            if (!(player.Lobby is ICharCreateLobby))
                 return null;
 
-            await _lobbiesHandler.MainMenu.AddPlayer(player, null);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
             return null;
         }
 
@@ -75,7 +74,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             await player.SaveData(true);
             LoadPlayerChar(player);
 
-            await _lobbiesHandler.MainMenu.AddPlayer(player, null);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
             return null;
         }
 

@@ -11,6 +11,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS_Server.LobbySystem.Vehicles;
 
 namespace TDS_Server.LobbySystem.DependenciesModels
 {
@@ -29,5 +30,6 @@ namespace TDS_Server.LobbySystem.DependenciesModels
         public IBaseLobbySoundsHandler? Sounds { get; set; }
         public IBaseLobbySync? Sync { get; set; }
         public IBaseLobbyTeamsHandler? Teams { get; set; }
+        public BaseLobbyVehicles? Vehicles { get; set; }
     }
 }
