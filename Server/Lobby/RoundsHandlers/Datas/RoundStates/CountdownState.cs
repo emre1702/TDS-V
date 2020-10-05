@@ -15,7 +15,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 
         public override void LoadSettings()
         {
-            _duration = Lobby.Entity.LobbyRoundSettings.CountdownTime;
+            _duration = Lobby.Entity.LobbyRoundSettings.CountdownTime * 1000;
         }
 
         public override ValueTask SetCurrent()
