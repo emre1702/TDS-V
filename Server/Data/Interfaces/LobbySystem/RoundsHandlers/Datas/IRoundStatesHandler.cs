@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 
@@ -20,7 +21,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
 
         void Stop();
 
-        Task<IDisposable> GetContext();
+        Task<IDisposable> GetContext([CallerMemberName] string calledFrom = "");
 
         bool IsCurrentStateBeforeRoundEnd();
 

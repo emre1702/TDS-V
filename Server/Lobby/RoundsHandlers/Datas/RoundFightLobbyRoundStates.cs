@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
@@ -93,18 +94,15 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
 
         public async void EndRound(IRoundEndReason roundEndReason)
         {
-            await _roundWaitSemaphore.Do(() =>
+            if (CurrentState is RoundEndState)
+                return;
+            if (_lobbyRemoved)
+                Stop();
+            else
             {
-                if (CurrentState is RoundEndState)
-                    return;
-                if (_lobbyRemoved)
-                    Stop();
-                else
-                {
-                    CurrentRoundEndReason = roundEndReason;
-                    SetState<RoundState>();
-                }
-            });
+                CurrentRoundEndReason = roundEndReason;
+                SetState<RoundState>();
+            }
         }
 
         private void SetState<T>() where T : RoundState
@@ -143,12 +141,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
         private void Events_RemoveAfter(IBaseLobby lobby)
             => _lobbyRemoved = true;
 
-        public async Task<IDisposable> GetContext()
+        public async Task<IDisposable> GetContext([CallerMemberName] string calledFrom = "")
         {
             await _roundWaitSemaphore.WaitAsync();
+            Console.WriteLine($"Semaphore started from: {calledFrom}");
             return new WaitDisposable(() =>
             {
                 _roundWaitSemaphore.Release();
+                Console.WriteLine($"Semaphore ended from: {calledFrom}");
             });
         }
 
