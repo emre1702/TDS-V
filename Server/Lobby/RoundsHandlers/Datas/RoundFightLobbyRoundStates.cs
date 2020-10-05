@@ -92,7 +92,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             });
         }
 
-        public async void EndRound(IRoundEndReason roundEndReason)
+        public void EndRound(IRoundEndReason roundEndReason)
         {
             if (CurrentState is RoundEndState)
                 return;
