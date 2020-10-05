@@ -142,7 +142,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         {
             var endRound = false;
 
-            using (await RoundStates.GetContext())
+            using (await RoundStates.GetContext("CheckForEnoughAliveAfterJoin"))
             {
                 if (!(RoundStates.CurrentState is CountdownState || RoundStates.CurrentState is InRoundState))
                     return true;
@@ -208,7 +208,10 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         public virtual void StartRoundForPlayer(ITDSPlayer player)
         {
             NAPI.Task.Run(() =>
-                player.TriggerEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator));
+            {
+                player.Freeze(false);
+                player.TriggerEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);
+            });
         }
 
         public virtual ValueTask<ITeam?> GetTimesUpWinnerTeam()

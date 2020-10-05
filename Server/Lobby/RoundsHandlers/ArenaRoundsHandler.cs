@@ -81,15 +81,17 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                 return true;
             }
 
-            using var _ = await RoundStates.GetContext();
-            var joinInRound = CurrentGamemode?.Rounds.CanJoinDuringRound(player, player.Team) == true && RoundStates.CurrentState is InRoundState;
-            if (RoundStates.CurrentState is CountdownState || joinInRound)
+            using (await RoundStates.GetContext())
             {
-                bool freeze = !joinInRound;
-                SetPlayerReadyForRound(player, freeze);
-                if (joinInRound)
-                    StartRoundForPlayer(player);
-                return true;
+                var joinInRound = CurrentGamemode?.Rounds.CanJoinDuringRound(player, player.Team) == true && RoundStates.CurrentState is InRoundState;
+                if (RoundStates.CurrentState is CountdownState || joinInRound)
+                {
+                    bool freeze = !joinInRound;
+                    SetPlayerReadyForRound(player, freeze);
+                    if (joinInRound)
+                        StartRoundForPlayer(player);
+                    return true;
+                }
             }
 
             return !(await CheckForEnoughAliveAfterJoin());
