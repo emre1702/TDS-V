@@ -105,6 +105,8 @@ namespace TDS_Client.Handler.Draw
         {
             if (!(_camerasHandler.Spectating.SpectatingEntity is ITDSPlayer target))
                 return;
+            if (_camerasHandler.ActiveCamera is null)
+                return;
 
             var myPos = _camerasHandler.ActiveCamera.Position;
             var distance = target.Position.DistanceTo(myPos);

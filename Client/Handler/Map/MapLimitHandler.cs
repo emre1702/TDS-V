@@ -56,9 +56,9 @@ namespace TDS_Client.Handler.Map
         private void EventsHander_InFightStatusChanged(bool inFight)
         {
             if (inFight)
-                _currentMapLimit.SetType(_settingsHandler.MapLimitType, false);
+                _currentMapLimit?.SetType(_settingsHandler.MapLimitType, false);
             else
-                _currentMapLimit.SetType(TDS_Shared.Data.Enums.MapLimitType.Display, false);
+                _currentMapLimit?.SetType(TDS_Shared.Data.Enums.MapLimitType.Display, false);
         }
 
         private void EventsHander_MapBorderColorChanged(Color color)

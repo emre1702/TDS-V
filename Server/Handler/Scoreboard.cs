@@ -27,7 +27,7 @@ namespace TDS_Server.Handler
         {
             if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
             {
-                var entries = GetDataForMainmenu();
+                var entries = await GetDataForMainmenu();
                 var entriesJson = Serializer.ToClient(entries);
                 NAPI.Task.Run(() =>
                     player.TriggerEvent(ToClientEvent.SyncScoreboardData, entriesJson));
