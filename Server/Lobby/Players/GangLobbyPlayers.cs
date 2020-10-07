@@ -16,7 +16,7 @@ namespace TDS_Server.LobbySystem.Players
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex = 0)
         {
             var team = player.Gang.GangLobbyTeam;
-            var worked = await base.AddPlayer(player, team.Entity.Index);
+            var worked = await base.AddPlayer(player, team.Entity.Index).ConfigureAwait(false);
             if (!worked)
                 return false;
 

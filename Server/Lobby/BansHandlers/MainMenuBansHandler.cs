@@ -59,7 +59,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
 
         public override async Task<PlayerBans?> Unban(ITDSPlayer admin, PlayerDb target, string reason)
         {
-            var oldBan = await base.Unban(admin, target, reason);
+            var oldBan = await base.Unban(admin, target, reason).ConfigureAwait(false);
             if (oldBan is { })
                 _globalBansHandler.RemoveServerBan(oldBan);
             return oldBan;

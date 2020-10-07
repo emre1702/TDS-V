@@ -21,6 +21,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
         public MapDto? CurrentMap { get; private set; }
         public List<MapDto> Maps { get; private set; } = new List<MapDto>();
 
+        protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
         private readonly ISettingsHandler _settingsHandler;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private string _mapsJson = string.Empty;
@@ -34,6 +35,16 @@ namespace TDS_Server.LobbySystem.MapHandlers
             events.RoundClear += RoundClear;
             events.RequestNewMap += GetNextMap;
             events.InitNewMap += Events_InitNewMap;
+        }
+
+        protected override void RemoveEvents(IBaseLobby lobby)
+        {
+            base.RemoveEvents(lobby);
+
+            if (Events.RoundClear is { })
+                Events.RoundClear -= RoundClear;
+            Events.RequestNewMap -= GetNextMap;
+            Events.InitNewMap -= Events_InitNewMap;
         }
 
         public void SetMapList(IEnumerable<MapDto> maps, string? syncjson = null)

@@ -8,16 +8,27 @@ namespace TDS_Server.LobbySystem.Statistics
     public class RoundFightLobbyStatistics : IRoundFightLobbyStatistics
     {
         protected IRoundFightLobby Lobby { get; }
+        private readonly IRoundFightLobbyEventsHandler _events;
 
         public RoundFightLobbyStatistics(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events)
         {
             Lobby = lobby;
+            _events = events;
+
             events.RoundEndStats += RoundEndStats;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        private void RemoveEvents(IBaseLobby lobby)
+        {
+            if (_events.RoundEndStats is { })
+                _events.RoundEndStats -= RoundEndStats;
+            _events.RemoveAfter -= RemoveEvents;
         }
 
         private async ValueTask RoundEndStats()
         {
-            await Lobby.Database.Save();
+            await Lobby.Database.Save().ConfigureAwait(false);
         }
     }
 }

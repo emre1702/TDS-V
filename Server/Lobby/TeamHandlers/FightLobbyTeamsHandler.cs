@@ -167,7 +167,8 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         public async Task<string> GetAmountInFightSyncDataJson()
         {
-            var teamPlayerAmounts = await Lobby.Teams.Do(teams => teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers));
+            var teamPlayerAmounts = await Lobby.Teams.Do(teams => teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers))
+                .ConfigureAwait(false);
             return Serializer.ToClient(teamPlayerAmounts);
         }
     }

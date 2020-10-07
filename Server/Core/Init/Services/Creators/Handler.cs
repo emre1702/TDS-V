@@ -65,6 +65,7 @@ namespace TDS_Server.Core.Init.Services.Creators
         {
             return serviceCollection
                .AddSingleton<EventsHandler>()
+               .AddSingleton<AllLobbiesEventsHandler>()
                .AddSingleton<AllLobbiesRemoteEventsHandler>()
                .AddSingleton<RemoteBrowserEventsHandler>();
         }

@@ -19,7 +19,7 @@ namespace TDS_Server.Database.Entity.Log
 
         public override string ToString()
         {
-            return $"[{Timestamp.ToString()}] {ExceptionType} error (source = {Source?.ToString() ?? "?"}) :{Environment.NewLine}{Info}{Environment.NewLine}{StackTrace}";
+            return $"[{Timestamp}] {ExceptionType} error (source = {Source?.ToString() ?? "?"}) :{Environment.NewLine}{Info}{Environment.NewLine}{StackTrace}";
         }
 
         #endregion Public Methods

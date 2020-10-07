@@ -61,7 +61,7 @@ namespace TDS_Server.LobbySystem.Lobbies
 
         public override async Task Remove()
         {
-            await base.Remove();
+            await base.Remove().ConfigureAwait(false);
 
             if (GangArea is { })
                 GangArea.InLobby = null;

@@ -72,7 +72,7 @@ namespace TDS_Client.Core.Init
                 new AntiCheatHandler(loggingHandler, playerFightHandler);
                 var mapLimitHandler = new MapLimitHandler(loggingHandler, settingsHandler, remoteEventsSender, eventsHandler, dxHandler, timerHandler);
 
-                var lobbyHandler = new LobbyHandler(loggingHandler, browserHandler, playerFightHandler, instructionalButtonHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
+                var lobbyHandler = new LobbyHandler(loggingHandler, browserHandler, playerFightHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
                     timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler);
                 new GangWindowHandler(loggingHandler, browserHandler, cursorHandler, eventsHandler, bindsHandler);
                 new DamageHandler(browserHandler, remoteEventsSender, playerFightHandler, lobbyHandler, eventsHandler);

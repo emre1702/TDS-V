@@ -15,7 +15,7 @@ namespace TDS_Server.LobbySystem.Players
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex)
         {
-            var worked = await base.AddPlayer(player, teamIndex);
+            var worked = await base.AddPlayer(player, teamIndex).ConfigureAwait(false);
             if (!worked)
                 return false;
 
@@ -30,12 +30,12 @@ namespace TDS_Server.LobbySystem.Players
         public override async Task<bool> RemovePlayer(ITDSPlayer player)
         {
             bool isLobbyOwner = IsLobbyOwner(player);
-            var worked = await base.RemovePlayer(player);
+            var worked = await base.RemovePlayer(player).ConfigureAwait(false);
             if (!worked)
                 return false;
 
-            if (isLobbyOwner && await Any())
-                await SetNewRandomLobbyOwner();
+            if (isLobbyOwner && await Any().ConfigureAwait(false))
+                await SetNewRandomLobbyOwner().ConfigureAwait(false);
 
             return true;
         }

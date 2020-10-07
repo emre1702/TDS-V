@@ -1,5 +1,7 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Threading.Tasks;
+using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Chat;
@@ -73,7 +75,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
             InitDependencies();
 
-            Events.PlayerLeft += async _ => await CheckRemoveLobby();
+            Events.PlayerLeft += PlayerLeft;
         }
 
         protected virtual void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
@@ -115,14 +117,23 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             if (!Entity.IsTemporary)
                 return;
 
-            if (await Players.Any())
+            if (await Players.Any().ConfigureAwait(false))
                 return;
 
-            await Remove();
+            await Remove().ConfigureAwait(false);
         }
 
         public virtual async Task Remove()
-            => await Events.TriggerRemove();
+        {
+            if (Events.PlayerLeft is { })
+                Events.PlayerLeft -= PlayerLeft;
+            await Events.TriggerRemove().ConfigureAwait(false);
+        }
+
+        private async ValueTask PlayerLeft((ITDSPlayer Player, int HadLifes) data)
+        {
+            await CheckRemoveLobby().ConfigureAwait(false);
+        }
 
         #region Operators
 

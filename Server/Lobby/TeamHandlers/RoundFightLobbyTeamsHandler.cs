@@ -2,7 +2,6 @@
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Handler.Helper;
 
@@ -10,11 +9,23 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 {
     public class RoundFightLobbyTeamsHandler : FightLobbyTeamsHandler, IRoundFightLobbyTeamsHandler
     {
+        protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
+
         public RoundFightLobbyTeamsHandler(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, LangHelper langHelper)
             : base(lobby, events, langHelper)
         {
             events.RoundClear += RoundClear;
             events.RoundEnd += RoundEnd;
+        }
+
+        protected override void RemoveEvents(IBaseLobby lobby)
+        {
+            base.RemoveEvents(lobby);
+
+            if (Events.RoundClear is { })
+                Events.RoundClear -= RoundClear;
+            if (Events.RoundEnd is { })
+                Events.RoundEnd -= RoundEnd;
         }
 
         public Task<ITeam?> GetTeamWithHighestHp()

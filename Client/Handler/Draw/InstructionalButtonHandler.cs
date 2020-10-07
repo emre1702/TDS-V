@@ -17,8 +17,6 @@ namespace TDS_Client.Handler.Draw
 
         private readonly List<InstructionalButton> _buttons = new List<InstructionalButton>();
 
-        private readonly InstructionalButton _cursorButton;
-
         private readonly List<InstructionalButton> _persistentButtons = new List<InstructionalButton>();
 
         private readonly BasicScaleform _scaleform;
@@ -38,7 +36,7 @@ namespace TDS_Client.Handler.Draw
 
             _scaleform = new BasicScaleform(ScaleformFunction.INSTRUCTIONAL_BUTTONS);
 
-            _cursorButton = Add("Cursor", _settingsHandler.Language.END_KEY, true);
+            Add("Cursor", _settingsHandler.Language.END_KEY, true);
 
             eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
             eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;

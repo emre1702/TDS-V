@@ -13,10 +13,20 @@ namespace TDS_Server.LobbySystem.Spectator
     public class RoundFightLobbySpectator : FightLobbySpectator, IRoundFightLobbySpectator
     {
         public Vector3 CurrentMapSpectatorPosition { get; private set; } = new Vector3();
+        private readonly IRoundFightLobbyEventsHandler _events;
 
         public RoundFightLobbySpectator(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events) : base(lobby)
         {
+            _events = events;
+
             events.InitNewMap += Events_InitNewMap;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        private void RemoveEvents(IBaseLobby lobby)
+        {
+            _events.InitNewMap -= Events_InitNewMap;
+            _events.RemoveAfter -= RemoveEvents;
         }
 
         private void Events_InitNewMap(MapDto map)
@@ -32,7 +42,7 @@ namespace TDS_Server.LobbySystem.Spectator
             {
                 // ToList because the list gets changed in both methods
                 foreach (var spectator in player.GetSpectators())
-                    await SpectateNext(spectator, true);
+                    await SpectateNext(spectator, true).ConfigureAwait(false);
             }
         }
     }

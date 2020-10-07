@@ -6,6 +6,7 @@ using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.Lobbies;
@@ -57,9 +58,16 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             Owner = teams[(int)GangActionLobbyTeamIndex.Owner];
         }
 
+        protected override void RemoveEvents(IBaseLobby lobby)
+        {
+            base.RemoveEvents(lobby);
+            if (Events.PlayerLeftAfter is { })
+                Events.PlayerLeftAfter -= Events_PlayerLeftAfter;
+        }
+
         protected override async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            await base.Events_PlayerJoined(data);
+            await base.Events_PlayerJoined(data).ConfigureAwait(false);
 
             if (data.TeamIndex == (int)GangActionLobbyTeamIndex.Attacker)
                 lock (_attackerPlayerIds) { _attackerPlayerIds.Add(data.Player.Id); }

@@ -17,6 +17,7 @@ namespace TDS_Server.LobbySystem.Players
 {
     public class RoundFightLobbyPlayers : FightLobbyPlayers, IRoundFightLobbyPlayers
     {
+        protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
         protected new IRoundFightLobby Lobby => (IRoundFightLobby)base.Lobby;
 
         public bool SavePlayerLobbyStats { get; private set; }
@@ -34,15 +35,28 @@ namespace TDS_Server.LobbySystem.Players
             events.Countdown += Events_Countdown;
         }
 
+        protected override void RemoveEvents(IBaseLobby lobby)
+        {
+            base.RemoveEvents(lobby);
+
+            Events.InitNewMap -= Events_InitNewMap;
+            Events.PlayersPreparation -= Events_PlayersPreparation;
+            if (Events.InRound is { })
+                Events.InRound -= Events_InRound;
+            if (Events.RoundEndStats is { })
+                Events.RoundEndStats -= Events_RoundEndStats;
+            Events.Countdown -= Events_Countdown;
+        }
+
         public override async Task<bool> RemovePlayer(ITDSPlayer player)
         {
             var lifes = player.Lifes;
-            var worked = await base.RemovePlayer(player);
+            var worked = await base.RemovePlayer(player).ConfigureAwait(false);
             if (!worked)
                 return false;
 
             if (lifes > 0)
-                await Lobby.Deathmatch.RemovePlayerFromAlive(player);
+                await Lobby.Deathmatch.RemovePlayerFromAlive(player).ConfigureAwait(false);
             else
             {
                 SavePlayerRoundStats(player);
@@ -58,12 +72,12 @@ namespace TDS_Server.LobbySystem.Players
 
         private async ValueTask Events_InRound()
         {
-            var teamPlayerAmountsJson = await Lobby.Teams.GetAmountInFightSyncDataJson();
+            var teamPlayerAmountsJson = await Lobby.Teams.GetAmountInFightSyncDataJson().ConfigureAwait(false);
 
             await Do(player =>
             {
                 Lobby.Rounds.StartRoundForPlayer(player);
-            });
+            }).ConfigureAwait(false);
             Lobby.Sync.TriggerEvent(ToClientEvent.AmountInFightSync, teamPlayerAmountsJson);
         }
 
@@ -85,13 +99,13 @@ namespace TDS_Server.LobbySystem.Players
         {
             if (SavePlayerLobbyStats)
             {
-                var playerRewards = await GetRewardsDatas();
+                var playerRewards = await GetRewardsDatas().ConfigureAwait(false);
 
                 await DoInMain(player =>
                 {
                     if (playerRewards.TryGetValue(player, out var reward))
                         Lobby.Rounds.RewardPlayerForRound(player, reward);
-                });
+                }).ConfigureAwait(false);
             }
         }
 
@@ -110,7 +124,7 @@ namespace TDS_Server.LobbySystem.Players
                     Lobby.Rounds.AddRoundRewardsMessage(player, strBuilder, model);
                     playerRewards.Add(player, model);
                 }
-            });
+            }).ConfigureAwait(false);
             return playerRewards;
         }
 

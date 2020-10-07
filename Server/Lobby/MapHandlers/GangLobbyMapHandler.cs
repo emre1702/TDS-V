@@ -5,6 +5,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
@@ -14,11 +15,21 @@ namespace TDS_Server.LobbySystem.MapHandlers
 {
     public class GangLobbyMapHandler : BaseLobbyMapHandler
     {
+        private readonly EventsHandler _globalEventsHandler;
+
         public GangLobbyMapHandler(IGangLobby lobby, IBaseLobbyEventsHandler events, EventsHandler globalEventsHandler, GangHousesHandler gangHousesHandler)
             : base(lobby, events)
         {
+            _globalEventsHandler = globalEventsHandler;
+
             globalEventsHandler.GangHouseLoaded += LoadHouse;
             LoadAlreadyLoadedHouses(gangHousesHandler.GetLoadedHouses());
+        }
+
+        protected override void RemoveEvents(IBaseLobby lobby)
+        {
+            base.RemoveEvents(lobby);
+            _globalEventsHandler.GangHouseLoaded -= LoadHouse;
         }
 
         protected override ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)

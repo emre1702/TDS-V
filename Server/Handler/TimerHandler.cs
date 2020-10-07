@@ -7,16 +7,7 @@ namespace TDS_Server.Handler
 {
     public class TimerHandler
     {
-        #region Private Fields
-
-        private EventsHandler _eventsHandler;
-        private TDSTimer _hourTimer;
-        private TDSTimer _minuteTimer;
-        private TDSTimer _secondTimer;
-
-        #endregion Private Fields
-
-        #region Public Constructors
+        private readonly EventsHandler _eventsHandler;
 
         public TimerHandler(EventsHandler eventsHandler)
         {
@@ -26,33 +17,27 @@ namespace TDS_Server.Handler
 
             _eventsHandler.Update += TDSTimer.OnUpdateFunc;
 
-            _hourTimer = new TDSTimer(OnHour, 60 * 1000, 1);
-            _minuteTimer = new TDSTimer(OnMinute, Utils.GetMsToNextMinute(), 1);
-            _secondTimer = new TDSTimer(OnSecond, Utils.GetMsToNextSecond(), 1);
+            new TDSTimer(OnHour, 60 * 1000, 1);
+            new TDSTimer(OnMinute, Utils.GetMsToNextMinute(), 1);
+            new TDSTimer(OnSecond, Utils.GetMsToNextSecond(), 1);
         }
-
-        #endregion Public Constructors
-
-        #region Private Methods
 
         private void OnHour()
         {
-            _hourTimer = new TDSTimer(OnHour, Utils.GetMsToNextHour(), 1);
+            new TDSTimer(OnHour, Utils.GetMsToNextHour(), 1);
             _eventsHandler.OnHour();
         }
 
         private void OnMinute()
         {
-            _hourTimer = new TDSTimer(OnMinute, Utils.GetMsToNextMinute(), 1);
+            new TDSTimer(OnMinute, Utils.GetMsToNextMinute(), 1);
             _eventsHandler.OnMinute();
         }
 
         private void OnSecond()
         {
-            _hourTimer = new TDSTimer(OnSecond, Utils.GetMsToNextSecond(), 1);
+            new TDSTimer(OnSecond, Utils.GetMsToNextSecond(), 1);
             _eventsHandler.OnSecond();
         }
-
-        #endregion Private Methods
     }
 }

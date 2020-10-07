@@ -192,7 +192,10 @@ namespace TDS_Server.Handler
             return lobby;
         }
 
-        public async ValueTask<object?> LoadDatas(ITDSPlayer player, ArraySegment<object> args)
+#pragma warning disable IDE0060 // Remove unused parameter
+
+        public async ValueTask<object?> LoadDatas(ITDSPlayer player, ArraySegment<object> _)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             if (_customLobbyDatas is null)
             {

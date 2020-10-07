@@ -22,15 +22,25 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         public int Count => _teams.Length;
 
         protected readonly IBaseLobby Lobby;
+        protected readonly IBaseLobbyEventsHandler Events;
         private ITeam[] _teams = Array.Empty<ITeam>();
         private readonly SemaphoreSlim _teamsSemaphore = new SemaphoreSlim(1, 1);
 
         public BaseLobbyTeamsHandler(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
             Lobby = lobby;
+            Events = events;
             InitTeams(Lobby.Entity);
 
             events.PlayerJoined += Events_PlayerJoined;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        protected virtual void RemoveEvents(IBaseLobby lobby)
+        {
+            if (Events.PlayerJoined is { })
+                Events.PlayerJoined -= Events_PlayerJoined;
+            Events.RemoveAfter -= RemoveEvents;
         }
 
         private void InitTeams(LobbyDb entity)
@@ -63,9 +73,9 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 if (data.TeamIndex < 0)
                     data.TeamIndex = SharedUtils.Rnd.Next(1, _teams.Length);
                 return _teams[data.TeamIndex];
-            });
+            }).ConfigureAwait(false);
 
-            await SetPlayerTeam(data.Player, team);
+            await SetPlayerTeam(data.Player, team).ConfigureAwait(false);
         }
 
         public Task Do(Action<ITeam[]> action)

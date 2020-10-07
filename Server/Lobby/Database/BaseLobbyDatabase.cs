@@ -14,6 +14,7 @@ namespace TDS_Server.LobbySystem.Database
     {
         protected DatabaseHandler DbHandler { get; }
         protected readonly IBaseLobby Lobby;
+        protected readonly IBaseLobbyEventsHandler Events;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
@@ -22,10 +23,19 @@ namespace TDS_Server.LobbySystem.Database
         {
             Lobby = lobby;
             DbHandler = dbHandler;
+            Events = events;
 
             DbHandler.ExecuteForDBWithoutWait(dbContext => dbContext.Attach(lobby.Entity));
 
             events.Created += AddCreatedDatabaseToDatabase;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        protected virtual void RemoveEvents(IBaseLobby lobby)
+        {
+            if (Events.Created is { })
+                Events.Created -= AddCreatedDatabaseToDatabase;
+            Events.RemoveAfter -= RemoveEvents;
         }
 
         private async Task AddCreatedDatabaseToDatabase(LobbyDb entity)
@@ -33,25 +43,31 @@ namespace TDS_Server.LobbySystem.Database
             await DbHandler.ExecuteForDBAsync(async (dbContext) =>
             {
                 dbContext.Add(entity);
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                 await dbContext.Entry(entity)
                     .Reference(e => e.Owner)
-                    .LoadAsync();
+                    .LoadAsync()
+                    .ConfigureAwait(false);
 
                 await dbContext.Entry(entity)
                     .Collection(e => e.LobbyMaps)
                     .Query()
                     .Include(e => e.Map)
-                    .LoadAsync();
-            });
+                    .LoadAsync()
+                    .ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
 
         public async Task<PlayerBans?> GetBan(int? playerId)
         {
             if (!playerId.HasValue)
                 return null;
-            return await DbHandler.ExecuteForDBAsync(async (dbContext) => await dbContext.PlayerBans.FindAsync(playerId, Lobby.Entity.Id));
+            return await DbHandler
+                .ExecuteForDBAsync(async (dbContext)
+                    => await dbContext.PlayerBans.FindAsync(playerId, Lobby.Entity.Id)
+                        .ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
 
         public Task<string?> GetLastUsedSerial(int playerId)
@@ -61,7 +77,8 @@ namespace TDS_Server.LobbySystem.Database
                                         .Where(l => l.Source == playerId)
                                         .OrderByDescending(l => l.Id)
                                         .Select(l => l.Serial)
-                                        .FirstOrDefaultAsync());
+                                        .FirstOrDefaultAsync()
+                                        .ConfigureAwait(false));
         }
 
         public Task AddBanEntity(PlayerBans ban)
@@ -69,7 +86,7 @@ namespace TDS_Server.LobbySystem.Database
             return DbHandler.ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.PlayerBans.Add(ban);
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
             });
         }
 
@@ -78,7 +95,7 @@ namespace TDS_Server.LobbySystem.Database
             return DbHandler.ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Remove(obj);
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
             });
         }
 
@@ -86,7 +103,7 @@ namespace TDS_Server.LobbySystem.Database
         {
             return DbHandler.ExecuteForDBAsync(async dbContext =>
             {
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
             });
         }
     }

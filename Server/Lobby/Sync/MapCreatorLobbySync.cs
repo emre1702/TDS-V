@@ -9,6 +9,7 @@ using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -32,6 +33,14 @@ namespace TDS_Server.LobbySystem.Sync
             events.PlayerJoined += Events_PlayerJoined;
         }
 
+        protected override void RemoveEvents(IBaseLobby lobby)
+        {
+            base.RemoveEvents(lobby);
+
+            if (Events.PlayerJoined is { })
+                Events.PlayerJoined -= Events_PlayerJoined;
+        }
+
         public async void StartNewMap()
         {
             _currentMap = new MapCreateDataDto();
@@ -39,7 +48,7 @@ namespace TDS_Server.LobbySystem.Sync
             await _posDictSemaphore.Do(() =>
             {
                 _posById = new Dictionary<int, MapCreatorPosition>();
-            });
+            }).ConfigureAwait(false);
             NAPI.Task.Run(()
                 => TriggerEvent(ToClientEvent.MapCreatorStartNewMap));
         }
@@ -77,7 +86,7 @@ namespace TDS_Server.LobbySystem.Sync
                     dict[dto.Target.Id] = dto.Target;
 
                 _lastId = dict.Keys.Max();
-            });
+            }).ConfigureAwait(false);
 
             string json = Serializer.ToBrowser(dto);
             NAPI.Task.Run(()
@@ -91,7 +100,7 @@ namespace TDS_Server.LobbySystem.Sync
         {
             _currentMap = Serializer.FromBrowser<MapCreateDataDto>(json);
             _lastId = lastId;
-            var player = await Lobby.Players.GetById(tdsPlayerId);
+            var player = await Lobby.Players.GetById(tdsPlayerId).ConfigureAwait(false);
             if (player is null)
                 return;
             NAPI.Task.Run(() =>
@@ -142,7 +151,9 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncNewObject(ITDSPlayer player, string json)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers((await Lobby.Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncNewObject, json);
+            var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
+            NAPI.Task.Run(() =>
+                NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncNewObject, json));
 
             var pos = Serializer.FromClient<MapCreatorPosition>(json);
             if (pos.Type == MapCreatorPositionType.MapCenter)
@@ -155,12 +166,13 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncObjectPosition(ITDSPlayer player, string json)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers((await Lobby.Players.GetExcept(player)).ToArray(),
-                ToClientEvent.MapCreatorSyncObjectPosition, json);
+            var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
+            NAPI.Task.Run(() =>
+                NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectPosition, json));
 
             var pos = Serializer.FromClient<MapCreatorPosData>(json);
 
-            var data = await GetPosById(pos.Id);
+            var data = await GetPosById(pos.Id).ConfigureAwait(false);
             if (data is null)
                 return;
 
@@ -181,7 +193,9 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncRemoveObject(ITDSPlayer player, int objId)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers((await Lobby.Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncObjectRemove, objId);
+            var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
+            NAPI.Task.Run(() =>
+                NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectRemove, objId));
 
             if (!_posById.ContainsKey(objId))
                 return;
@@ -196,7 +210,9 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
         {
-            NAPI.ClientEvent.TriggerClientEventToPlayers((await Lobby.Players.GetExcept(player)).ToArray(), ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber);
+            var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
+            NAPI.Task.Run(() =>
+                NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber));
 
             foreach (var entry in _posById)
             {
@@ -247,7 +263,7 @@ namespace TDS_Server.LobbySystem.Sync
 
         private async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            var firstPlayer = await Lobby.Players.GetFirst(data.Player);
+            var firstPlayer = await Lobby.Players.GetFirst(data.Player).ConfigureAwait(false);
             NAPI.Task.Run(() =>
             {
                 if (Lobby.Players.Count == 2)

@@ -30,7 +30,6 @@ namespace TDS_Server.Handler.Account
         private readonly ServerStartHandler _serverStartHandler;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsHandler _settingsHandler;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         public LoginHandler(
             DatabasePlayerHelper databasePlayerHandler,
@@ -40,8 +39,7 @@ namespace TDS_Server.Handler.Account
             IServiceProvider serviceProvider,
             DataSyncHandler dataSyncHandler,
             ILoggingHandler loggingHandler,
-            ServerStartHandler serverStartHandler,
-            ITDSPlayerHandler tdsPlayerHandler)
+            ServerStartHandler serverStartHandler)
         {
             _databasePlayerHandler = databasePlayerHandler;
             _langHelper = langHelper;
@@ -51,7 +49,6 @@ namespace TDS_Server.Handler.Account
             _dataSyncHandler = dataSyncHandler;
             _loggingHandler = loggingHandler;
             _serverStartHandler = serverStartHandler;
-            _tdsPlayerHandler = tdsPlayerHandler;
 
             _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
 

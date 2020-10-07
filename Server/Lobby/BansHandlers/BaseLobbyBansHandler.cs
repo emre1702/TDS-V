@@ -14,18 +14,18 @@ namespace TDS_Server.LobbySystem.BansHandlers
 {
     public class BaseLobbyBansHandler : IBaseLobbyBansHandler
     {
-        protected readonly Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby Lobby;
+        protected readonly IBaseLobby Lobby;
         protected readonly LangHelper LangHelper;
 
-        public BaseLobbyBansHandler(Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby lobby, LangHelper langHelper)
+        public BaseLobbyBansHandler(IBaseLobby lobby, LangHelper langHelper)
             => (Lobby, LangHelper) = (lobby, langHelper);
 
         public virtual async ValueTask<bool> CheckIsBanned(ITDSPlayer player)
         {
-            var ban = await Lobby.Database.GetBan(player.Entity?.Id);
+            var ban = await Lobby.Database.GetBan(player.Entity?.Id).ConfigureAwait(false);
             if (ban is null)
                 return false;
-            if (await CheckHasExpired(ban))
+            if (await CheckHasExpired(ban).ConfigureAwait(false))
                 return false;
 
             OutputBanInfos(player, ban);
@@ -40,7 +40,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
             if (ban.EndTimestamp.Value > DateTime.UtcNow)
                 return false;
 
-            await Lobby.Database.Remove<PlayerBans>(ban);
+            await Lobby.Database.Remove<PlayerBans>(ban).ConfigureAwait(false);
 
             return true;
         }
@@ -60,18 +60,18 @@ namespace TDS_Server.LobbySystem.BansHandlers
         {
             int targetId = target.Id;
             if (serial is null)
-                serial = await Lobby.Database.GetLastUsedSerial(targetId);
+                serial = await Lobby.Database.GetLastUsedSerial(targetId).ConfigureAwait(false);
 
             var ban = await Lobby.Database.GetBan(targetId);
             if (ban is { })
             {
                 UpdateBanEntity(ban, admin.Entity?.Id, length, reason, serial);
-                await Lobby.Database.Save();
+                await Lobby.Database.Save().ConfigureAwait(false);
             }
             else
             {
                 ban = CreateBanEntity(admin.Entity?.Id, target.Id, length, reason, serial);
-                await Lobby.Database.AddBanEntity(ban);
+                await Lobby.Database.AddBanEntity(ban).ConfigureAwait(false);
             }
             OutputNewBanInfo(ban, admin, target.Name);
             Lobby.Events.TriggerNewBan(ban, target.PlayerSettings?.DiscordUserId);
@@ -81,7 +81,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
 
         public async Task<PlayerBans?> Ban(ITDSPlayer admin, ITDSPlayer target, TimeSpan? length, string reason)
         {
-            var ban = await Ban(admin, target.Entity!, length, reason, target.Serial);
+            var ban = await Ban(admin, target.Entity!, length, reason, target.Serial).ConfigureAwait(false);
             if (ban is null)
                 return null;
 
@@ -158,19 +158,19 @@ namespace TDS_Server.LobbySystem.BansHandlers
 
         public virtual async Task Unban(ITDSPlayer admin, ITDSPlayer target, string reason)
         {
-            await Unban(admin, target.Entity!, reason);
+            await Unban(admin, target.Entity!, reason).ConfigureAwait(false);
             target.SendChatMessage(string.Format(target.Language.UNBAN_YOU_LOBBY_INFO, Lobby.Entity.Name, admin.DisplayName, reason));
         }
 
         public virtual async Task<PlayerBans?> Unban(ITDSPlayer admin, PlayerDb target, string reason)
         {
-            var ban = await Lobby.Database.GetBan(target.Id);
+            var ban = await Lobby.Database.GetBan(target.Id).ConfigureAwait(false);
             if (ban is null)
             {
                 NAPI.Task.Run(() => admin.SendChatMessage(admin.Language.PLAYER_ISNT_BANED));
                 return null;
             }
-            await Lobby.Database.Remove<PlayerBans>(ban);
+            await Lobby.Database.Remove<PlayerBans>(ban).ConfigureAwait(false);
             OutputUnbanMessage(admin, target.Name, reason);
 
             return ban;

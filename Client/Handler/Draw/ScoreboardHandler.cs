@@ -36,7 +36,7 @@ namespace TDS_Client.Handler.Draw
             }
         }
 
-        private DxGrid _grid;
+        private readonly DxGrid _grid;
         private bool _isActivated;
         private int _lastLoadedTick;
         private bool _isManualToggleDisabled;
@@ -67,8 +67,10 @@ namespace TDS_Client.Handler.Draw
             eventsHandler.ShowScoreboard += () => PressedScoreboardKey();
             eventsHandler.HideScoreboard += () => ReleasedScoreboardKey();
 
-            _grid = new DxGrid(dxHandler, 0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15);
-            _grid.Activated = false;
+            _grid = new DxGrid(dxHandler, 0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15)
+            {
+                Activated = false
+            };
             CreateColumns();
             CreateTitle();
             CreateBody();

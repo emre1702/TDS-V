@@ -20,7 +20,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
         public virtual async ValueTask RoundClear()
         {
-            await Lobby.Remove();
+            await Lobby.Remove().ConfigureAwait(false);
         }
 
         public override Task CheckForEnoughAlive()

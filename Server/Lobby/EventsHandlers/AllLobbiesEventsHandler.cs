@@ -20,7 +20,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         {
             var task = player.Lobby?.Deathmatch.OnPlayerDeath(player, killer, reason);
             if (task is { })
-                await task;
+                await task.ConfigureAwait(false);
         }
 
         private void EventsHandler_PlayerEnteredColshape(ITDSColshape colshape, ITDSPlayer player)

@@ -21,13 +21,29 @@ namespace TDS_Server.LobbySystem.Players
         private readonly List<ITDSPlayer> _players = new List<ITDSPlayer>();
 
         protected readonly IBaseLobby Lobby;
+        protected readonly IBaseLobbyEventsHandler Events;
 
         public BaseLobbyPlayers(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
             Lobby = lobby;
+            Events = events;
 
-            events.Remove += async _ => await RemoveAllPlayers();
+            events.Remove += OnLobbyRemove;
             events.NewBan += Events_NewBan;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        protected virtual void RemoveEvents(IBaseLobby lobby)
+        {
+            if (Events.Remove is { })
+                Events.Remove -= OnLobbyRemove;
+            Events.NewBan -= Events_NewBan;
+            Events.RemoveAfter -= RemoveEvents;
+        }
+
+        private async Task OnLobbyRemove(IBaseLobby lobby)
+        {
+            await RemoveAllPlayers().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -38,13 +54,13 @@ namespace TDS_Server.LobbySystem.Players
         /// <returns></returns>
         public virtual async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex = 0)
         {
-            if (await Lobby.Bans.CheckIsBanned(player))
+            if (await Lobby.Bans.CheckIsBanned(player).ConfigureAwait(false))
                 return false;
 
-            await (player.Lobby?.Players.RemovePlayer(player) ?? Task.CompletedTask);
-            await _semaphore.Do(() => _players.Add(player));
+            await (player.Lobby?.Players.RemovePlayer(player) ?? Task.CompletedTask).ConfigureAwait(false);
+            await _semaphore.Do(() => _players.Add(player)).ConfigureAwait(false);
 
-            await Lobby.Events.TriggerPlayerJoined(player, teamIndex);
+            await Lobby.Events.TriggerPlayerJoined(player, teamIndex).ConfigureAwait(false);
             player.SetLobby(Lobby);
             InformAboutHowToLeaveLobby(player);
 
@@ -61,19 +77,19 @@ namespace TDS_Server.LobbySystem.Players
 
         public virtual async Task<bool> RemovePlayer(ITDSPlayer player)
         {
-            var playerHasBeenInLobby = await _semaphore.Do(() => _players.Remove(player));
+            var playerHasBeenInLobby = await _semaphore.Do(() => _players.Remove(player)).ConfigureAwait(false);
             if (!playerHasBeenInLobby)
                 return false;
 
             player.Lobby = null;
             player.PreviousLobby = null;
-            await player.SetPlayerLobbyStats(null);
+            await player.SetPlayerLobbyStats(null).ConfigureAwait(false);
             var lifes = player.Lifes;
             player.Lifes = 0;
-            await Lobby.Teams.SetPlayerTeam(player, null);
+            await Lobby.Teams.SetPlayerTeam(player, null).ConfigureAwait(false);
             player.SetSpectates(null);
 
-            await Lobby.Events.TriggerPlayerLeft(player, lifes);
+            await Lobby.Events.TriggerPlayerLeft(player, lifes).ConfigureAwait(false);
 
             return true;
         }
@@ -125,7 +141,7 @@ namespace TDS_Server.LobbySystem.Players
                     {
                         func(player);
                     }
-                });
+                }).ConfigureAwait(false);
             });
         }
 
@@ -144,12 +160,12 @@ namespace TDS_Server.LobbySystem.Players
         private async Task RemoveAllPlayers()
         {
             foreach (var player in _players.ToList())
-                await RemovePlayer(player);
+                await RemovePlayer(player).ConfigureAwait(false);
         }
 
         protected async Task SetNewRandomLobbyOwner()
         {
-            var newOwner = await _semaphore.Do(() => SharedUtils.GetRandom(_players.Where(p => p.Entity is { })));
+            var newOwner = await _semaphore.Do(() => SharedUtils.GetRandom(_players.Where(p => p.Entity is { }))).ConfigureAwait(false);
             Lobby.Entity.OwnerId = newOwner.Entity!.Id;
             newOwner.SetLobby(Lobby);
         }
@@ -161,7 +177,7 @@ namespace TDS_Server.LobbySystem.Players
                 var index = _players.FindIndex(p => p.Entity?.Id == ban.PlayerId);
                 if (index >= 0)
                     _players.RemoveAt(index);
-            });
+            }).ConfigureAwait(false);
         }
     }
 }

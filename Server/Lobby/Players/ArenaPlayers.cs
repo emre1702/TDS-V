@@ -23,13 +23,14 @@ namespace TDS_Server.LobbySystem.Players
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex)
         {
-            var worked = await base.AddPlayer(player, 0);
+            var worked = await base.AddPlayer(player, 0).ConfigureAwait(false);
             if (!worked)
                 return false;
 
             var spawnPos = Lobby.CurrentMap?.LimitInfo?.Center?.ToVector3()?.AddToZ(10) ?? Lobby.MapHandler.SpawnPoint;
             var teamChoiceData = await Lobby.Teams.Do(teams =>
-                teams.Select(t => new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)));
+                teams.Select(t => new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)))
+                .ConfigureAwait(false);
             var teamChoiceDataJson = Serializer.ToBrowser(teamChoiceData);
             Lobby.Spectator.SetPlayerInSpectateMode(player);
 
@@ -50,10 +51,10 @@ namespace TDS_Server.LobbySystem.Players
             if (teamIndex != 0)
             {
                 var team = Lobby.Entity.LobbyRoundSettings.MixTeamsAfterRound
-                    ? await Lobby.Teams.GetTeamWithFewestPlayer()
-                    : await Lobby.Teams.GetTeam((short)teamIndex);
-                await Lobby.Teams.SetPlayerTeam(player, team);
-                bool hasBeenSetInRound = await Lobby.Rounds.PlayerJoinedRound(player);
+                    ? await Lobby.Teams.GetTeamWithFewestPlayer().ConfigureAwait(false)
+                    : await Lobby.Teams.GetTeam((short)teamIndex).ConfigureAwait(false);
+                await Lobby.Teams.SetPlayerTeam(player, team).ConfigureAwait(false);
+                bool hasBeenSetInRound = await Lobby.Rounds.PlayerJoinedRound(player).ConfigureAwait(false);
                 if (!hasBeenSetInRound)
                     Lobby.Spectator.SetPlayerInSpectateMode(player);
             }

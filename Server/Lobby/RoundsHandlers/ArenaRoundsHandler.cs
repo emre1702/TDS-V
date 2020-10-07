@@ -24,7 +24,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
         protected override async ValueTask Events_RoundEnd()
         {
-            await base.Events_RoundEnd();
+            await base.Events_RoundEnd().ConfigureAwait(false);
 
             if (Lobby.CurrentRoundEndReason.KillLoserTeam && Lobby.CurrentRoundEndReason.WinnerTeam is { })
             {
@@ -33,28 +33,28 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                 {
                     if (ShouldDieAtRoundEnd(player, winnerTeam))
                         player.Kill();
-                });
+                }).ConfigureAwait(false);
             }
         }
 
         protected override async ValueTask Events_PlayerLeftAfter((ITDSPlayer Player, int HadLifes) data)
         {
-            await base.Events_PlayerLeftAfter(data);
+            await base.Events_PlayerLeftAfter(data).ConfigureAwait(false);
 
-            using var _ = await RoundStates.GetContext();
+            using var _ = await RoundStates.GetContext().ConfigureAwait(false);
             switch (RoundStates.CurrentState)
             {
                 case NewMapChooseState _:
                 case CountdownState _:
                     if (Lobby.Entity.LobbyRoundSettings.MixTeamsAfterRound)
-                        await Lobby.Teams.BalanceCurrentTeams();
+                        await Lobby.Teams.BalanceCurrentTeams().ConfigureAwait(false);
                     break;
             }
         }
 
         protected override async Task SendPlayerRoundInfoOnJoin(ITDSPlayer player)
         {
-            await base.SendPlayerRoundInfoOnJoin(player);
+            await base.SendPlayerRoundInfoOnJoin(player).ConfigureAwait(false);
 
             var mapVotingDataJson = Lobby.MapVoting.GetJson();
             NAPI.Task.Run(() =>
@@ -81,7 +81,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                 return true;
             }
 
-            using (await RoundStates.GetContext())
+            using (await RoundStates.GetContext().ConfigureAwait(false))
             {
                 var joinInRound = CurrentGamemode?.Rounds.CanJoinDuringRound(player, player.Team) == true && RoundStates.CurrentState is InRoundState;
                 if (RoundStates.CurrentState is CountdownState || joinInRound)
@@ -94,7 +94,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                 }
             }
 
-            return !(await CheckForEnoughAliveAfterJoin());
+            return !await CheckForEnoughAliveAfterJoin().ConfigureAwait(false);
         }
 
         public override void SetPlayerReadyForRound(ITDSPlayer player, bool freeze)

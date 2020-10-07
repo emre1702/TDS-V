@@ -16,7 +16,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
         {
             if (Next.Value is RoundEndState)
             {
-                var winnerTeam = await _arena.Rounds.GetTimesUpWinnerTeam();
+                var winnerTeam = await _arena.Rounds.GetTimesUpWinnerTeam().ConfigureAwait(false);
                 CurrentRoundEndReason = new TimeRoundEndReason(winnerTeam);
             }
 

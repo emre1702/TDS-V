@@ -235,8 +235,7 @@ namespace TDS_Client.Handler.Sync
                     _playerRemoteIdDatas[playerRemoteId] = new Dictionary<PlayerDataKey, object>();
                 _playerRemoteIdDatas[playerRemoteId][key] = value;
 
-                var player = RAGE.Elements.Entities.Players.GetAtRemote(playerRemoteId) as ITDSPlayer;
-                if (player != null)
+                if (RAGE.Elements.Entities.Players.GetAtRemote(playerRemoteId) is ITDSPlayer player)
                 {
                     _eventsHandler.OnDataChanged(player, key, value);
                 }
@@ -277,13 +276,12 @@ namespace TDS_Client.Handler.Sync
                 var dict = Serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
                 foreach (var entry in dict)
                 {
-                    var player = RAGE.Elements.Entities.Players.GetAtRemote(entry.Key) as ITDSPlayer;
                     if (!_playerRemoteIdDatas.ContainsKey(entry.Key))
                         _playerRemoteIdDatas[entry.Key] = new Dictionary<PlayerDataKey, object>();
                     foreach (var dataEntry in entry.Value)
                     {
                         _playerRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
-                        if (player != null)
+                        if (RAGE.Elements.Entities.Players.GetAtRemote(entry.Key) is ITDSPlayer player)
                         {
                             _eventsHandler.OnDataChanged(player, dataEntry.Key, dataEntry.Value);
                         }

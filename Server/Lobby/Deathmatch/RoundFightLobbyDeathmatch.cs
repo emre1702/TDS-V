@@ -11,6 +11,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
     public class RoundFightLobbyDeathmatch : FightLobbyDeathmatch, IRoundFightLobbyDeathmatch
     {
         protected new IRoundFightLobby Lobby => (IRoundFightLobby)base.Lobby;
+        protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
 
         public RoundFightLobbyDeathmatch(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, IDamagesys damage, LangHelper langHelper)
             : base(lobby, events, damage, langHelper)
@@ -18,10 +19,17 @@ namespace TDS_Server.LobbySystem.Deathmatch
             events.RoundClear += RoundClear;
         }
 
+        protected override void RemoveEvents(IBaseLobby lobby)
+        {
+            base.RemoveEvents(lobby);
+            if (Events.RoundClear is { })
+                Events.RoundClear -= RoundClear;
+        }
+
         public async Task RemovePlayerFromAlive(ITDSPlayer player)
         {
             player.Team?.RemoveAlivePlayer(player);
-            await Lobby.Spectator.SetPlayerCantBeSpectatedAnymore(player);
+            await Lobby.Spectator.SetPlayerCantBeSpectatedAnymore(player).ConfigureAwait(false);
         }
 
         private ValueTask RoundClear()
@@ -33,12 +41,12 @@ namespace TDS_Server.LobbySystem.Deathmatch
         public override async Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
             var lifes = player.Lifes;
-            await base.OnPlayerDeath(player, killer, weapon);
+            await base.OnPlayerDeath(player, killer, weapon).ConfigureAwait(false);
 
             if (lifes == 1 && player.Lifes == 0)
             {
-                await RemovePlayerFromAlive(player);
-                await Lobby.Rounds.CheckForEnoughAlive();
+                await RemovePlayerFromAlive(player).ConfigureAwait(false);
+                await Lobby.Rounds.CheckForEnoughAlive().ConfigureAwait(false);
             }
             else if (lifes > 0)
                 Lobby.Players.RespawnPlayer(player);

@@ -11,6 +11,7 @@ using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Entities.Draw.Scaleform;
 using TDS_Client.Handler.Events;
 using static RAGE.Events;
+using Player = RAGE.Game.Player;
 
 namespace TDS_Client.Handler.Deathmatch
 {
@@ -43,53 +44,53 @@ namespace TDS_Client.Handler.Deathmatch
         private bool _ignoreCurrentWeapon;
         private InstructionalButton _instructionalButton;
         private bool _isActive;
-        private Dictionary<WeaponHash, FiringMode> _lastFiringModeByWeapon = new Dictionary<WeaponHash, FiringMode>();
+        private readonly Dictionary<WeaponHash, FiringMode> _lastFiringModeByWeapon = new Dictionary<WeaponHash, FiringMode>();
 
         public FiringModeHandler(BrowserHandler browserHandler, BindsHandler bindsHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler,
             InstructionalButtonHandler instructionalButtonHandler)
         {
             _ignoredWeaponGroups = new HashSet<uint>
             {
-                RAGE.Game.Misc.GetHashKey("GROUP_UNARMED"),
-                RAGE.Game.Misc.GetHashKey("GROUP_MELEE"),
-                RAGE.Game.Misc.GetHashKey("GROUP_FIREEXTINGUISHER"),
-                RAGE.Game.Misc.GetHashKey("GROUP_PARACHUTE"),
-                RAGE.Game.Misc.GetHashKey("GROUP_STUNGUN"),
-                RAGE.Game.Misc.GetHashKey("GROUP_THROWN"),
-                RAGE.Game.Misc.GetHashKey("GROUP_PETROLCAN"),
-                RAGE.Game.Misc.GetHashKey("GROUP_DIGISCANNER"),
-                RAGE.Game.Misc.GetHashKey("GROUP_HEAVY")
+                Misc.GetHashKey("GROUP_UNARMED"),
+                Misc.GetHashKey("GROUP_MELEE"),
+                Misc.GetHashKey("GROUP_FIREEXTINGUISHER"),
+                Misc.GetHashKey("GROUP_PARACHUTE"),
+                Misc.GetHashKey("GROUP_STUNGUN"),
+                Misc.GetHashKey("GROUP_THROWN"),
+                Misc.GetHashKey("GROUP_PETROLCAN"),
+                Misc.GetHashKey("GROUP_DIGISCANNER"),
+                Misc.GetHashKey("GROUP_HEAVY")
             };
 
             _burstFireAllowedWeapons = new HashSet<WeaponHash>
             {
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_APPISTOL"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_APPISTOL"),
             };
 
             _burstFireAllowedGroups = new HashSet<uint>
             {
-                RAGE.Game.Misc.GetHashKey("GROUP_SMG"),
-                RAGE.Game.Misc.GetHashKey("GROUP_MG"),
-                RAGE.Game.Misc.GetHashKey("GROUP_RIFLE")
+                Misc.GetHashKey("GROUP_SMG"),
+                Misc.GetHashKey("GROUP_MG"),
+                Misc.GetHashKey("GROUP_RIFLE")
             };
 
             _singleFireBlacklist = new HashSet<WeaponHash>
             {
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_STUNGUN"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_FLAREGUN"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_MARKSMANPISTOL"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_REVOLVER"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_REVOLVER_MK2"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_DOUBLEACTION"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_PUMPSHOTGUN"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_PUMPSHOTGUN_MK2"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_SAWNOFFSHOTGUN"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_BULLPUPSHOTGUN"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_MUSKET"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_DBSHOTGUN"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_SNIPERRIFLE"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_HEAVYSNIPER"),
-                (WeaponHash)RAGE.Game.Misc.GetHashKey("WEAPON_HEAVYSNIPER_MK2"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_STUNGUN"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_FLAREGUN"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_MARKSMANPISTOL"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_REVOLVER"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_REVOLVER_MK2"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_DOUBLEACTION"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_PUMPSHOTGUN"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_PUMPSHOTGUN_MK2"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_SAWNOFFSHOTGUN"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_BULLPUPSHOTGUN"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_MUSKET"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_DBSHOTGUN"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_SNIPERRIFLE"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_HEAVYSNIPER"),
+                (WeaponHash)Misc.GetHashKey("WEAPON_HEAVYSNIPER_MK2"),
             };
 
             _browserHandler = browserHandler;
@@ -101,15 +102,11 @@ namespace TDS_Client.Handler.Deathmatch
             _eventsHandler.InFightStatusChanged += EventsHandler_InFightStatusChanged;
         }
 
-        private FiringMode CurrentFiringMode
+        private void SetCurrentFiringMode(FiringMode value)
         {
-            get => _currentFiringMode;
-            set
-            {
-                if (_currentFiringMode != value)
-                    _browserHandler.Angular.SyncHudDataChange(HudDataType.FiringMode, (int)value);
-                _currentFiringMode = value;
-            }
+            if (_currentFiringMode != value)
+                _browserHandler.Angular.SyncHudDataChange(HudDataType.FiringMode, (int)value);
+            _currentFiringMode = value;
         }
 
         public void Start()
@@ -144,7 +141,7 @@ namespace TDS_Client.Handler.Deathmatch
 
         private bool CanWeaponUseBurstFire(WeaponHash weaponHash)
         {
-            return _burstFireAllowedGroups.Contains(RAGE.Game.Weapon.GetWeapontypeGroup((uint)weaponHash)) || _burstFireAllowedWeapons.Contains(weaponHash);
+            return _burstFireAllowedGroups.Contains(Weapon.GetWeapontypeGroup((uint)weaponHash)) || _burstFireAllowedWeapons.Contains(weaponHash);
         }
 
         private bool CanWeaponUseSingleFire(WeaponHash weaponHash)
@@ -163,11 +160,11 @@ namespace TDS_Client.Handler.Deathmatch
             _ignoreCurrentWeapon = IsWeaponIgnored(newWeaponHash);
             if (_lastFiringModeByWeapon.TryGetValue(newWeaponHash, out FiringMode newFiringMode))
             {
-                CurrentFiringMode = newFiringMode;
+                SetCurrentFiringMode(newFiringMode);
             }
             else
             {
-                CurrentFiringMode = FiringMode.Auto;
+                SetCurrentFiringMode(FiringMode.Auto);
             }
             _currentBurstShots = 0;
         }
@@ -182,7 +179,7 @@ namespace TDS_Client.Handler.Deathmatch
 
         private bool IsWeaponIgnored(WeaponHash weaponHash)
         {
-            uint group = RAGE.Game.Weapon.GetWeapontypeGroup((uint)weaponHash);
+            uint group = Weapon.GetWeapontypeGroup((uint)weaponHash);
             return _ignoredWeaponGroups.Contains(group);
         }
 
@@ -198,18 +195,18 @@ namespace TDS_Client.Handler.Deathmatch
 
                 case FiringMode.Burst:
                     if (_currentBurstShots > 0 && _currentBurstShots < 3)
-                        RAGE.Game.Pad.SetControlNormal((int)InputGroup.MOVE, (int)Control.Attack, 1f);
+                        Pad.SetControlNormal((int)InputGroup.MOVE, (int)Control.Attack, 1f);
                     else if (_currentBurstShots == 3)
                     {
-                        RAGE.Game.Player.DisablePlayerFiring(false);
-                        if (RAGE.Game.Pad.IsDisabledControlJustReleased((int)InputGroup.MOVE, (int)Control.Attack))
+                        Player.DisablePlayerFiring(false);
+                        if (Pad.IsDisabledControlJustReleased((int)InputGroup.MOVE, (int)Control.Attack))
                             _currentBurstShots = 0;
                     }
                     break;
 
                 case FiringMode.Single:
-                    if (RAGE.Game.Pad.IsDisabledControlPressed((int)InputGroup.MOVE, (int)Control.Attack))
-                        RAGE.Game.Player.DisablePlayerFiring(false);
+                    if (Pad.IsDisabledControlPressed((int)InputGroup.MOVE, (int)Control.Attack))
+                        Player.DisablePlayerFiring(false);
                     break;
                     /* case FiringMode.Safe:
                          Player.DisablePlayerFiring(false);
@@ -255,10 +252,10 @@ namespace TDS_Client.Handler.Deathmatch
 
             if (newFiringMode != _currentFiringMode)
             {
-                CurrentFiringMode = newFiringMode;
+                SetCurrentFiringMode(newFiringMode);
                 _currentBurstShots = 0;
 
-                RAGE.Game.Audio.PlaySoundFrontend(-1, AudioName.FASTER_CLICK, AudioRef.RESPAWN_ONLINE_SOUNDSET, true);
+                Audio.PlaySoundFrontend(-1, AudioName.FASTER_CLICK, AudioRef.RESPAWN_ONLINE_SOUNDSET, true);
                 _lastFiringModeByWeapon[_currentWeapon] = _currentFiringMode;
             }
         }

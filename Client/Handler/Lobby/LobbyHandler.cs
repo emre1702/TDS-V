@@ -24,8 +24,6 @@ namespace TDS_Client.Handler.Lobby
 
         private readonly EventsHandler _eventsHandler;
 
-        private readonly InstructionalButtonHandler _instructionalButtonHandler;
-
         private readonly PlayerFightHandler _playerFightHandler;
 
         private readonly RemoteEventsSender _remoteEventsSender;
@@ -41,7 +39,6 @@ namespace TDS_Client.Handler.Lobby
         private bool _isLobbyOwner;
 
         public LobbyHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, PlayerFightHandler playerFightHandler,
-            InstructionalButtonHandler instructionalButtonHandler,
             EventsHandler eventsHandler, SettingsHandler settingsHandler, BindsHandler bindsHandler, RemoteEventsSender remoteEventsSender, DxHandler dxHandler,
             TimerHandler timerHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, DataSyncHandler dataSyncHandler,
             MapLimitHandler mapLimitHandler)
@@ -49,7 +46,6 @@ namespace TDS_Client.Handler.Lobby
         {
             _browserHandler = browserHandler;
             _playerFightHandler = playerFightHandler;
-            _instructionalButtonHandler = instructionalButtonHandler;
             _eventsHandler = eventsHandler;
             _settingsHandler = settingsHandler;
             _remoteEventsSender = remoteEventsSender;

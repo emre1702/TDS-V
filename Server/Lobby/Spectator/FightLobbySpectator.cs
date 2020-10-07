@@ -26,7 +26,7 @@ namespace TDS_Server.LobbySystem.Spectator
             {
                 NAPI.Task.Run(() =>
                     player.TriggerEvent(ToClientEvent.PlayerSpectateMode));
-                await EnsurePlayerSpectatesAnyone(player);
+                await EnsurePlayerSpectatesAnyone(player).ConfigureAwait(false);
             }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);
         }
 
@@ -35,10 +35,10 @@ namespace TDS_Server.LobbySystem.Spectator
             if (player.Spectates is { } && player.Spectates != player)
                 return;
 
-            await SpectateNext(player, true);
+            await SpectateNext(player, true).ConfigureAwait(false);
 
             if (player.Spectates is null || player.Spectates == player)
-                await SpectateOtherAllTeams(player);
+                await SpectateOtherAllTeams(player).ConfigureAwait(false);
         }
 
         public async ValueTask SpectateNext(ITDSPlayer player, bool forward)
@@ -47,7 +47,7 @@ namespace TDS_Server.LobbySystem.Spectator
                 return;
 
             if (player.Team is null || player.Team.IsSpectator)
-                await SpectateOtherAllTeams(player, forward);
+                await SpectateOtherAllTeams(player, forward).ConfigureAwait(false);
             else
                 SpectateOtherSameTeam(player, forward);
         }
@@ -57,9 +57,9 @@ namespace TDS_Server.LobbySystem.Spectator
             var currentlySpectating = player.Spectates ?? player;
             ITDSPlayer? nextPlayer;
             if (spectateNext)
-                nextPlayer = await GetNextSpectatePlayerInAllTeams(currentlySpectating);
+                nextPlayer = await GetNextSpectatePlayerInAllTeams(currentlySpectating).ConfigureAwait(false);
             else
-                nextPlayer = await GetPreviousSpectatePlayerInAllTeams(currentlySpectating);
+                nextPlayer = await GetPreviousSpectatePlayerInAllTeams(currentlySpectating).ConfigureAwait(false);
             nextPlayer ??= currentlySpectating;
 
             player.Spectates = nextPlayer;
@@ -85,13 +85,13 @@ namespace TDS_Server.LobbySystem.Spectator
             var teamIndex = start.Team?.Entity.Index ?? 0;
             if (teamIndex == 0)
                 ++teamIndex;
-            var teamlist = (await Lobby.Teams.GetTeam(teamIndex)).SpectateablePlayers;
+            var teamlist = (await Lobby.Teams.GetTeam(teamIndex).ConfigureAwait(false)).SpectateablePlayers;
             if (teamlist is null)
                 return null;
             var charIndex = teamlist.IndexOf(start) + 1;
             if (teamlist.Count == 0 || charIndex >= teamlist.Count - 1)
             {
-                var team = await Lobby.Teams.GetNextNonSpectatorTeamWithPlayers(start.Team);
+                var team = await Lobby.Teams.GetNextNonSpectatorTeamWithPlayers(start.Team).ConfigureAwait(false);
                 if (team is null)
                     return null;
                 teamlist = team.SpectateablePlayers;
@@ -121,14 +121,14 @@ namespace TDS_Server.LobbySystem.Spectator
                 if (teamIndex == 0)
                     teamIndex = teams.Length - 1;
                 return teams[teamIndex].SpectateablePlayers;
-            });
+            }).ConfigureAwait(false);
 
             if (teamlist is null)
                 return null;
             var charIndex = teamlist.IndexOf(start) - 1;
             if (teamlist.Count == 0 || charIndex < 0)
             {
-                var team = await Lobby.Teams.GetPreviousNonSpectatorTeamWithPlayers(start.Team);
+                var team = await Lobby.Teams.GetPreviousNonSpectatorTeamWithPlayers(start.Team).ConfigureAwait(false);
                 if (team is null)
                     return null;
                 teamlist = team.SpectateablePlayers;

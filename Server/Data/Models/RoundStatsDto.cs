@@ -1,31 +1,20 @@
 ﻿using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Data.Models
 {
     public class RoundStatsDto
     {
-        #region Private Fields
-
         private int _assists;
         private int _damage;
         private int _kills;
-        private ITDSPlayer _player;
-
-        #endregion Private Fields
-
-        #region Public Constructors
+        private readonly ITDSPlayer _player;
 
         public RoundStatsDto(ITDSPlayer player)
         {
             _player = player;
             Clear();  // to sync it
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public int Assists
         {
@@ -57,17 +46,11 @@ namespace TDS_Server.Data.Models
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public void Clear()
         {
             Kills = 0;
             Assists = 0;
             Damage = 0;
         }
-
-        #endregion Public Methods
     }
 }

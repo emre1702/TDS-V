@@ -14,7 +14,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
         public override async Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
-            await base.OnPlayerDeath(player, killer, weapon);
+            await base.OnPlayerDeath(player, killer, weapon).ConfigureAwait(false);
 
             NAPI.Task.Run(() =>
             {

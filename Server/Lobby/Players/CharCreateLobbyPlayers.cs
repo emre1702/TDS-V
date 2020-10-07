@@ -19,7 +19,7 @@ namespace TDS_Server.LobbySystem.Players
         {
             if (player.Entity?.CharDatas is null)
                 return false;
-            var worked = await base.AddPlayer(player, teamIndex);
+            var worked = await base.AddPlayer(player, teamIndex).ConfigureAwait(false);
             if (!worked)
                 return false;
 

@@ -18,7 +18,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         protected override async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            await SetPlayerTeam(data.Player, data.Player.Gang.GangLobbyTeam);
+            await SetPlayerTeam(data.Player, data.Player.Gang.GangLobbyTeam).ConfigureAwait(false);
         }
 
         private void LoadGangTeams()

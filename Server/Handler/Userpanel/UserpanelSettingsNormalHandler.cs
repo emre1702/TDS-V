@@ -20,7 +20,7 @@ namespace TDS_Server.Handler.Userpanel
     {
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
-        private Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
+        private readonly Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 
         public UserpanelSettingsNormalHandler(BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext,
             ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler)

@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,20 +20,30 @@ namespace TDS_Server.LobbySystem.Rankings
     {
         protected IRoundFightLobby Lobby { get; private set; }
         private readonly ISettingsHandler _settingsHandler;
+        private readonly IRoundFightLobbyEventsHandler _events;
 
         public RoundFightLobbyRanking(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, ISettingsHandler settingsHandler)
         {
             Lobby = lobby;
             _settingsHandler = settingsHandler;
+            _events = events;
 
             events.RoundEndRanking += Events_RoundEndRanking;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        private void RemoveEvents(IBaseLobby lobby)
+        {
+            if (_events.RoundEndRanking is { })
+                _events.RoundEndRanking -= Events_RoundEndRanking;
+            _events.RemoveAfter -= RemoveEvents;
         }
 
         private async ValueTask Events_RoundEndRanking()
         {
             var rankingStats = GetOrderedRoundRanking();
             if (rankingStats is { })
-                await ShowRoundRanking(rankingStats);
+                await ShowRoundRanking(rankingStats).ConfigureAwait(false);
         }
 
         private List<RoundPlayerRankingStat>? GetOrderedRoundRanking()
@@ -84,7 +95,7 @@ namespace TDS_Server.LobbySystem.Rankings
                 }
 
                 player.Freeze(true);
-            });
+            }).ConfigureAwait(false);
 
             var json = Serializer.ToBrowser(rankingStats);
             Lobby.Sync.TriggerEvent(ToClientEvent.StartRankingShowAfterRound, json,

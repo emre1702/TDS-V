@@ -53,7 +53,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
             if (!(player.Lobby?.Players is ArenaPlayers players))
                 return;
-            await players.ChooseTeam(player, index);
+            await players.ChooseTeam(player, index).ConfigureAwait(false);
         }
 
         public void OnGotHit(ITDSPlayer player, int damage)
@@ -93,8 +93,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             if (player.Lobby is null)
                 return;
 
-            await player.Lobby.Players.RemovePlayer(player);
-            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
+            await player.Lobby.Players.RemovePlayer(player).ConfigureAwait(false);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
         }
 
         public void OnMapCreatorStartNewMap(ITDSPlayer player)

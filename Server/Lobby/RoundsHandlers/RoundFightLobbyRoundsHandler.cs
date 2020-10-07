@@ -25,18 +25,33 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         public IRoundStatesHandler RoundStates { get; }
         public IBaseGamemode? CurrentGamemode { get; private set; }
         protected readonly IRoundFightLobby Lobby;
+        protected readonly IRoundFightLobbyEventsHandler Events;
         private readonly IGamemodesProvider _gamemodesProvider;
 
         public RoundFightLobbyRoundsHandler(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, IGamemodesProvider gamemodesProvider)
         {
             Lobby = lobby;
             RoundStates = new RoundFightLobbyRoundStates(lobby, events);
+            Events = events;
             _gamemodesProvider = gamemodesProvider;
 
             events.InitNewMap += Events_InitNewMap;
             events.RoundEnd += Events_RoundEnd;
             events.PlayerJoined += Events_PlayerJoined;
             events.PlayerLeftAfter += Events_PlayerLeftAfter;
+            Events.RemoveAfter += RemoveEvents;
+        }
+
+        protected virtual void RemoveEvents(IBaseLobby lobby)
+        {
+            Events.InitNewMap -= Events_InitNewMap;
+            if (Events.RoundEnd is { })
+                Events.RoundEnd -= Events_RoundEnd;
+            if (Events.PlayerJoined is { })
+                Events.PlayerJoined -= Events_PlayerJoined;
+            if (Events.PlayerLeftAfter is { })
+                Events.PlayerLeftAfter -= Events_PlayerLeftAfter;
+            Events.RemoveAfter -= RemoveEvents;
         }
 
         private void Events_InitNewMap(MapDto map)
@@ -54,12 +69,12 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
                 player.TriggerEvent(ToClientEvent.RoundEnd, noTeamOrSpectator, roundEndReasonText, mapId);
                 player.Lifes = 0;
-            });
+            }).ConfigureAwait(false);
         }
 
         private async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            await SendPlayerRoundInfoOnJoin(data.Player);
+            await SendPlayerRoundInfoOnJoin(data.Player).ConfigureAwait(false);
         }
 
         protected virtual async ValueTask Events_PlayerLeftAfter((ITDSPlayer Player, int HadLifes) data)
@@ -68,14 +83,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             {
                 case InRoundState _:
                     if (data.HadLifes > 0)
-                        await CheckForEnoughAlive();
+                        await CheckForEnoughAlive().ConfigureAwait(false);
                     break;
             }
         }
 
         protected virtual async Task SendPlayerRoundInfoOnJoin(ITDSPlayer player)
         {
-            var teamPlayerAmountsJson = await Lobby.Teams.GetAmountInFightSyncDataJson();
+            var teamPlayerAmountsJson = await Lobby.Teams.GetAmountInFightSyncDataJson().ConfigureAwait(false);
 
             NAPI.Task.Run(() =>
             {
@@ -114,13 +129,13 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         {
             (int teamAmountWithAlive, int teamAmount) = await Lobby.Teams.Do(teams =>
                 (teams.Count(t => t.AlivePlayers?.Count > 0),
-                teams.Count(t => !t.IsSpectator)));
+                teams.Count(t => !t.IsSpectator))).ConfigureAwait(false);
 
             switch ((teamAmountWithAlive, teamAmount))
             {
                 // 2+ teams, <= 1 in round  ->  end
                 case var (amount, amountAlive) when amount > 1 && amountAlive <= 1:
-                    var winnerTeam = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count >= 1));
+                    var winnerTeam = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count >= 1)).ConfigureAwait(false);
                     Lobby.Rounds.RoundStates.EndRound(new DeathRoundEndReason(winnerTeam));
                     break;
 
@@ -131,7 +146,8 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
                 // 1 team, 1 in round  ->  check for amount of players, if <= 1   ->  end
                 case (1, 1):
-                    var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count > 0)?.AlivePlayers?.Count);
+                    var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count > 0)?.AlivePlayers?.Count)
+                        .ConfigureAwait(false);
                     if (amountPlayers <= 1)
                         Lobby.Rounds.RoundStates.EndRound(new DeathRoundEndReason(null));
                     break;
@@ -142,14 +158,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         {
             var endRound = false;
 
-            using (await RoundStates.GetContext("CheckForEnoughAliveAfterJoin"))
+            using (await RoundStates.GetContext("CheckForEnoughAliveAfterJoin").ConfigureAwait(false))
             {
                 if (!(RoundStates.CurrentState is CountdownState || RoundStates.CurrentState is InRoundState))
                     return true;
 
                 (int teamAmountWithAlive, int teamAmount) = await Lobby.Teams.Do(teams =>
                     (teams.Count(t => t.AlivePlayers?.Count > 0),
-                    teams.Count(t => !t.IsSpectator)));
+                    teams.Count(t => !t.IsSpectator))).ConfigureAwait(false);
 
                 switch ((teamAmount, teamAmountWithAlive))
                 {
@@ -163,7 +179,8 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
                     // 1 team, 1 in round  ->  check for amount of players, if <= 1   ->  end
                     case (1, 1):
-                        var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count > 0)?.AlivePlayers?.Count);
+                        var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count > 0)?.AlivePlayers?.Count)
+                            .ConfigureAwait(false);
                         if (amountPlayers <= 1)
                             endRound = true;
                         break;

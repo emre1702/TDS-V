@@ -40,7 +40,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             eventsHandler.PlayerRegisteredBefore += InitPlayerChar;
         }
 
-        internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> args)
+        internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> _)
         {
             if (!(player.Lobby is ICharCreateLobby))
                 return null;
@@ -78,7 +78,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             return null;
         }
 
-        private void CopyJsonValues<T, R>(List<T> originalObjList, ICollection<R> newObjList)
+        /*private void CopyJsonValues<T, R>(List<T> originalObjList, ICollection<R> newObjList)
         {
             for (int i = 0; i < originalObjList.Count; ++i)
             {
@@ -91,7 +91,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                     .Where(p => p.GetCustomAttributes(typeof(Newtonsoft.Json.JsonPropertyAttribute), false).Length > 0)
                     .ForEach(p => p.SetValue(newObj, p.GetValue(originalObj)));
             }
-        }
+        }*/
 
         private async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
         {

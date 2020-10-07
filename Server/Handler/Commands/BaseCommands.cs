@@ -9,7 +9,6 @@ namespace TDS_Server.Handler.Commands
 {
     public partial class BaseCommands
     {
-        private readonly BansHandler _bansHandler;
         private readonly ChatHandler _chatHandler;
         private readonly CustomLobbyMenuSyncHandler _customLobbyMenuSyncHandler;
         private readonly DatabasePlayerHelper _databasePlayerHelper;
@@ -24,7 +23,7 @@ namespace TDS_Server.Handler.Commands
 
         public BaseCommands(CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler, ChatHandler chatHandler,
             ISettingsHandler settingsHandler, InvitationsHandler invitationsHandler, ILoggingHandler loggingHandler, LangHelper langHelper,
-            DatabasePlayerHelper databasePlayerHelper, BansHandler bansHandler, DataSyncHandler dataSyncHandler, GangLevelsHandler gangLevelsHandler,
+            DatabasePlayerHelper databasePlayerHelper, DataSyncHandler dataSyncHandler, GangLevelsHandler gangLevelsHandler,
             GangHousesHandler gangHousesHandler)
         {
             _customLobbyMenuSyncHandler = customLobbyMenuSyncHandler;
@@ -36,7 +35,6 @@ namespace TDS_Server.Handler.Commands
             _loggingHandler = loggingHandler;
             _langHelper = langHelper;
             _databasePlayerHelper = databasePlayerHelper;
-            _bansHandler = bansHandler;
             _dataSyncHandler = dataSyncHandler;
             _gangLevelsHandler = gangLevelsHandler;
             _gangHousesHandler = gangHousesHandler;

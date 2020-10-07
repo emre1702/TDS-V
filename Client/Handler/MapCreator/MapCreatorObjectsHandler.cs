@@ -252,7 +252,7 @@ namespace TDS_Client.Handler.MapCreator
                 }
             }
 
-            var obj = new MapCreatorObject(this, _eventsHandler, entity, type.Value, RAGE.Elements.Player.LocalPlayer.RemoteId, entity.Position, entity.GetRotation(2));
+            var obj = new MapCreatorObject(this, _eventsHandler, entity, type.Value, Player.LocalPlayer.RemoteId, entity.Position, entity.GetRotation(2));
             _cacheMapEditorObjects[entity] = obj;
             return obj;
         }
@@ -299,27 +299,27 @@ namespace TDS_Client.Handler.MapCreator
 
             if (map.MapCenter != null)
             {
-                var obj = GetMapCenter(map.MapCenter.OwnerRemoteId, new Vector3().GetPosFrom(map.MapCenter), new Vector3().GetRotFrom(map.MapCenter), map.MapCenter.Id);
+                GetMapCenter(map.MapCenter.OwnerRemoteId, new Vector3().GetPosFrom(map.MapCenter), new Vector3().GetRotFrom(map.MapCenter), map.MapCenter.Id);
                 if (_camerasHandler.ActiveCamera != null)
                     _camerasHandler.ActiveCamera.Position = new Vector3().GetPosFrom(map.MapCenter);
                 else
-                    RAGE.Elements.Player.LocalPlayer.Position = new Vector3().GetPosFrom(map.MapCenter);
+                    Player.LocalPlayer.Position = new Vector3().GetPosFrom(map.MapCenter);
             }
 
             if (map.Target != null)
             {
-                var obj = GetTarget(map.Target.OwnerRemoteId, new Vector3().GetPosFrom(map.Target), new Vector3().GetRotFrom(map.Target), map.Target.Id);
+                GetTarget(map.Target.OwnerRemoteId, new Vector3().GetPosFrom(map.Target), new Vector3().GetRotFrom(map.Target), map.Target.Id);
                 if (_camerasHandler.ActiveCamera != null)
                     _camerasHandler.ActiveCamera.Position = new Vector3().GetPosFrom(map.Target);
                 else
-                    RAGE.Elements.Player.LocalPlayer.Position = new Vector3().GetPosFrom(map.Target);
+                    Player.LocalPlayer.Position = new Vector3().GetPosFrom(map.Target);
             }
 
             if (map.BombPlaces != null)
             {
                 foreach (var bombPlace in map.BombPlaces)
                 {
-                    var obj = GetBombPlantPlace(bombPlace.OwnerRemoteId, new Vector3().GetPosFrom(bombPlace), new Vector3().GetRotFrom(bombPlace), bombPlace.Id);
+                    GetBombPlantPlace(bombPlace.OwnerRemoteId, new Vector3().GetPosFrom(bombPlace), new Vector3().GetRotFrom(bombPlace), bombPlace.Id);
                 }
             }
 
@@ -327,7 +327,7 @@ namespace TDS_Client.Handler.MapCreator
             {
                 foreach (var mapEdge in map.MapEdges)
                 {
-                    var obj = GetMapLimit(mapEdge.OwnerRemoteId, new Vector3().GetPosFrom(mapEdge), new Vector3().GetRotFrom(mapEdge), mapEdge.Id);
+                    GetMapLimit(mapEdge.OwnerRemoteId, new Vector3().GetPosFrom(mapEdge), new Vector3().GetRotFrom(mapEdge), mapEdge.Id);
                 }
             }
 
@@ -336,7 +336,7 @@ namespace TDS_Client.Handler.MapCreator
                 foreach (var objPos in map.Objects)
                 {
                     string objName = Convert.ToString(objPos.Info);
-                    var obj = GetObject(objName, MapCreatorPositionType.Object, objPos.OwnerRemoteId,
+                    GetObject(objName, MapCreatorPositionType.Object, objPos.OwnerRemoteId,
                         new Vector3().GetPosFrom(objPos), new Vector3().GetRotFrom(objPos), objName, objPos.Id);
                 }
             }
@@ -356,7 +356,7 @@ namespace TDS_Client.Handler.MapCreator
                 {
                     foreach (var spawnPos in teamSpawns)
                     {
-                        var obj = GetTeamSpawn(Convert.ToInt32(spawnPos.Info), spawnPos.OwnerRemoteId,
+                        GetTeamSpawn(Convert.ToInt32(spawnPos.Info), spawnPos.OwnerRemoteId,
                             new Vector3().GetPosFrom(spawnPos), new Vector3().GetRotFrom(spawnPos), spawnPos.Id);
                     }
                 }

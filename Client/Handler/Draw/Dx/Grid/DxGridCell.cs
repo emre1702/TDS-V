@@ -10,25 +10,17 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         public DxGridRow Row;
 
         private readonly Alignment _Alignment;
-        private Color? _backColor;
-        private DxGridColumn _column;
+        private readonly Color? _backColor;
+        private readonly DxGridColumn _column;
         private DxText _dxText;
-        private Font? _font;
-        private float? _scale;
-        private string _text;
-        private Color? _textColor;
 
         public DxGridCell(DxHandler dxHandler, TimerHandler timerHandler, string text, DxGridRow row, DxGridColumn column, Color? backColor = null,
             Color? textColor = null, float? scale = null, Font? font = null,
             Alignment? alignment = null, int frontPriority = 0) : base(dxHandler, frontPriority, false)
         {
-            this._text = text;
-            this.Row = row;
-            this._column = column;
-            this._backColor = backColor;
-            this._textColor = textColor;
-            this._scale = scale;
-            this._font = font;
+            Row = row;
+            _column = column;
+            _backColor = backColor;
             _Alignment = alignment ?? row.TextAlignment;
 
             _dxText = new DxText(dxHandler, timerHandler, text, column.X, Row.Y, scale ?? Row.Scale, textColor ?? Row.TextColor, font ?? Row.Font,
@@ -87,7 +79,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
 
         public void SetText(string text)
         {
-            this._text = text;
+            _dxText.Text = text;
         }
 
         private float GetXPos()

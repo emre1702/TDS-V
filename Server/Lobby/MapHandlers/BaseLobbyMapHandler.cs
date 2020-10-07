@@ -16,6 +16,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
         public Vector3 SpawnPoint { get; }
         public float SpawnRotation { get; }
         protected IBaseLobby Lobby { get; }
+        protected IBaseLobbyEventsHandler Events { get; }
 
         private readonly List<ITDSBlip> _mapBlips = new List<ITDSBlip>();
 
@@ -23,6 +24,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
         {
             Lobby = lobby;
             Dimension = GetFreeDimension();
+            Events = events;
 
             SpawnPoint = new Vector3(
                 lobby.Entity.DefaultSpawnX,
@@ -32,6 +34,14 @@ namespace TDS_Server.LobbySystem.MapHandlers
             SpawnRotation = lobby.Entity.DefaultSpawnRotation;
 
             events.PlayerJoined += Events_PlayerJoined;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        protected virtual void RemoveEvents(IBaseLobby lobby)
+        {
+            if (Events.PlayerJoined is { })
+                Events.PlayerJoined -= Events_PlayerJoined;
+            Events.RemoveAfter -= RemoveEvents;
         }
 
         protected virtual ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)

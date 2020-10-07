@@ -41,11 +41,11 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
         public override async Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
         {
-            await base.OnPlayerDeath(player, killer, weapon);
+            await base.OnPlayerDeath(player, killer, weapon).ConfigureAwait(false);
 
             if (player.Team is null || player.Team.IsSpectator)
             {
-                await Lobby.Spectator.SpectateOtherAllTeams(player);
+                await Lobby.Spectator.SpectateOtherAllTeams(player).ConfigureAwait(false);
             }
 
             Damage.OnPlayerDeath(player, killer, weapon);

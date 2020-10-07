@@ -13,12 +13,22 @@ namespace TDS_Server.LobbySystem.Deathmatch
     {
         private readonly Dictionary<ITDSPlayer, TDSTimer> _afterDeathSpawnTimer = new Dictionary<ITDSPlayer, TDSTimer>();
         protected readonly IBaseLobby Lobby;
+        protected readonly IBaseLobbyEventsHandler Events;
 
         public BaseLobbyDeathmatch(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
             Lobby = lobby;
+            Events = events;
 
             events.PlayerLeftAfter += ResetPlayer;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        protected virtual void RemoveEvents(IBaseLobby lobby)
+        {
+            if (Events.PlayerLeftAfter is { })
+                Events.PlayerLeftAfter -= ResetPlayer;
+            Events.RemoveAfter -= RemoveEvents;
         }
 
         public virtual Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)

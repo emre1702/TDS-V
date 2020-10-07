@@ -15,8 +15,8 @@ namespace TDS_Client.Handler.Draw.Dx
         private readonly float _width;
         private readonly float _x;
         private readonly float _y;
-        private DxRectangle _rect;
-        private DxText _text;
+        private readonly DxRectangle _rect;
+        private readonly DxText _text;
 
         public DxTextRectangle(DxHandler dxHandler, TimerHandler timerHandler, string text, float x, float y, float width, float height,
             Color textColor, Color rectColor, float textScale = 1.0f, Font textFont = Font.ChaletLondon,

@@ -46,7 +46,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         {
             var task = Created?.InvokeAsync(entity);
             if (task is { })
-                await task;
+                await task.ConfigureAwait(false);
             CreatedAfter?.Invoke(entity);
         }
 
@@ -55,7 +55,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             IsRemoved = true;
             var task = Remove?.InvokeAsync(_lobby);
             if (task is { })
-                await task;
+                await task.ConfigureAwait(false);
             RemoveAfter?.Invoke(_lobby);
         }
 
@@ -63,10 +63,10 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         {
             var task = PlayerLeft?.InvokeAsync((player, hadLifes));
             if (task.HasValue)
-                await task.Value;
+                await task.Value.ConfigureAwait(false);
             task = PlayerLeftAfter?.InvokeAsync((player, hadLifes));
             if (task.HasValue)
-                await task.Value;
+                await task.Value.ConfigureAwait(false);
             _eventsHandler.OnLobbyLeaveNew(player, _lobby);
         }
 
@@ -74,10 +74,10 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         {
             var task = PlayerJoined?.InvokeAsync((player, teamIndex));
             if (task.HasValue)
-                await task.Value;
+                await task.Value.ConfigureAwait(false);
             task = PlayerJoinedAfter?.InvokeAsync((player, teamIndex));
             if (task.HasValue)
-                await task.Value;
+                await task.Value.ConfigureAwait(false);
             _eventsHandler.OnLobbyJoinedNew(player, _lobby);
         }
 

@@ -32,12 +32,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
 
         private TDSTimer? _nextTimer;
         private readonly IRoundFightLobby _lobby;
+        private readonly IRoundFightLobbyEventsHandler _events;
         private bool _lobbyRemoved;
         private readonly SemaphoreSlim _roundWaitSemaphore = new SemaphoreSlim(1, 1);
 
         public RoundFightLobbyRoundStates(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events)
         {
             _lobby = lobby;
+            _events = events;
 
             var node = List.AddFirst(new NewMapChooseState(lobby));
             node = List.AddAfter(node, new TeamPreparationState(lobby));
@@ -59,6 +61,15 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             events.RemoveAfter += Events_RemoveAfter;
         }
 
+        protected virtual void RemoveEvents()
+        {
+            if (_events.PlayerJoinedAfter is { })
+                _events.PlayerJoinedAfter -= Events_PlayerJoinedAfter;
+            if (_events.PlayerLeft is { })
+                _events.PlayerLeft -= Events_PlayerLeft;
+            _events.RemoveAfter -= Events_RemoveAfter;
+        }
+
         public virtual async void SetNext()
         {
             await _roundWaitSemaphore.Do(() =>
@@ -67,7 +78,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
                     Stop();
                 else
                     SetState(Next);
-            });
+            }).ConfigureAwait(false);
         }
 
         public void Start()
@@ -89,7 +100,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
                 if (Current != List.Last)
                     List.Last!.Value.SetCurrent();
                 Current = List.Last!;
-            });
+            }).ConfigureAwait(false);
         }
 
         public void EndRound(IRoundEndReason roundEndReason)
@@ -134,16 +145,19 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
 
         private async ValueTask Events_PlayerLeft((ITDSPlayer Player, int HadLifes) _)
         {
-            if (!await _lobby.Players.Any())
+            if (!await _lobby.Players.Any().ConfigureAwait(false))
                 Stop();
         }
 
         private void Events_RemoveAfter(IBaseLobby lobby)
-            => _lobbyRemoved = true;
+        {
+            _lobbyRemoved = true;
+            RemoveEvents();
+        }
 
         public async Task<IDisposable> GetContext([CallerMemberName] string calledFrom = "")
         {
-            await _roundWaitSemaphore.WaitAsync();
+            await _roundWaitSemaphore.WaitAsync().ConfigureAwait(false);
             Console.WriteLine($"Semaphore started from: {calledFrom}");
             return new WaitDisposable(() =>
             {

@@ -6,6 +6,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.GangEntities;
 
 namespace TDS_Server.LobbySystem.Vehicles
@@ -13,12 +14,22 @@ namespace TDS_Server.LobbySystem.Vehicles
     public class GangLobbyVehicles : BaseLobbyVehicles
     {
         private readonly IGangLobby _lobby;
+        private readonly IBaseLobbyEventsHandler _events;
 
         public GangLobbyVehicles(IGangLobby lobby, IBaseLobbyEventsHandler events)
         {
             _lobby = lobby;
+            _events = events;
 
             events.PlayerJoinedAfter += Events_PlayerJoinedAfter;
+            events.RemoveAfter += RemoveEvents;
+        }
+
+        private void RemoveEvents(IBaseLobby _)
+        {
+            if (_events.PlayerJoinedAfter is { })
+                _events.PlayerJoinedAfter -= Events_PlayerJoinedAfter;
+            _events.RemoveAfter -= RemoveEvents;
         }
 
         private void CreateGangVehicle(GangVehicles vehicleDb, IGang gang)
@@ -41,8 +52,8 @@ namespace TDS_Server.LobbySystem.Vehicles
 
             await gang.ExecuteForDBAsync(async dbContext =>
             {
-                await dbContext.Entry(gang.Entity).Collection(e => e.Vehicles).LoadAsync();
-            });
+                await dbContext.Entry(gang.Entity).Collection(e => e.Vehicles).LoadAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             if (gang.Entity.Vehicles is null || gang.Entity.Vehicles.Count == 0)
                 return;
@@ -58,7 +69,7 @@ namespace TDS_Server.LobbySystem.Vehicles
         {
             if (!data.Player.Gang.Initialized)
             {
-                await LoadGangVehiclesFirstTime(data.Player.Gang);
+                await LoadGangVehiclesFirstTime(data.Player.Gang).ConfigureAwait(false);
                 data.Player.Gang.Initialized = true;
             }
         }

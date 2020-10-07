@@ -20,11 +20,11 @@ namespace TDS_Server.LobbySystem.Players
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex)
         {
-            var worked = await base.AddPlayer(player, teamIndex);
+            var worked = await base.AddPlayer(player, teamIndex).ConfigureAwait(false);
             if (!worked)
                 return false;
 
-            await AddPlayerLobbyStats(player);
+            await AddPlayerLobbyStats(player).ConfigureAwait(false);
 
             NAPI.Task.Run(() =>
             {
@@ -37,7 +37,7 @@ namespace TDS_Server.LobbySystem.Players
         public override async Task<bool> RemovePlayer(ITDSPlayer player)
         {
             var lifes = player.Lifes;
-            var worked = await base.RemovePlayer(player);
+            var worked = await base.RemovePlayer(player).ConfigureAwait(false);
             if (!worked)
                 return false;
 
@@ -61,15 +61,15 @@ namespace TDS_Server.LobbySystem.Players
             PlayerLobbyStats? stats = null;
             await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
-                stats = await dbContext.PlayerLobbyStats.FindAsync(player.Entity!.Id, Lobby.Entity.Id);
+                stats = await dbContext.PlayerLobbyStats.FindAsync(player.Entity!.Id, Lobby.Entity.Id).ConfigureAwait(false);
                 if (stats is null)
                 {
                     stats = new PlayerLobbyStats { LobbyId = Lobby.Entity.Id };
                     player.Entity.PlayerLobbyStats.Add(stats);
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 }
             }).ConfigureAwait(false);
-            await player.SetPlayerLobbyStats(stats);
+            await player.SetPlayerLobbyStats(stats).ConfigureAwait(false);
         }
     }
 }

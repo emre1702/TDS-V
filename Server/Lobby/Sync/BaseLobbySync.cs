@@ -19,15 +19,28 @@ namespace TDS_Server.LobbySystem.Sync
     {
         protected IBaseLobby Lobby { get; }
         protected SyncedLobbySettings SyncedSettings { get; private set; }
+        protected IBaseLobbyEventsHandler Events { get; }
 
         public BaseLobbySync(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
             Lobby = lobby;
             SyncedSettings = GetSyncedSettings(lobby.Entity);
+            Events = events;
 
-            events.CreatedAfter += entity => SyncedSettings = GetSyncedSettings(entity);
+            events.CreatedAfter += Events_CreatedAfter;
             events.PlayerLeftAfter += Events_PlayerLeftLobbyAfter;
             events.PlayerJoined += Events_PlayerJoined;
+            Events.RemoveAfter += RemoveEvents;
+        }
+
+        protected virtual void RemoveEvents(IBaseLobby lobby)
+        {
+            Events.CreatedAfter -= Events_CreatedAfter;
+            if (Events.PlayerLeftAfter is { })
+                Events.PlayerLeftAfter -= Events_PlayerLeftLobbyAfter;
+            if (Events.PlayerJoined is { })
+                Events.PlayerJoined -= Events_PlayerJoined;
+            Events.RemoveAfter -= RemoveEvents;
         }
 
         protected virtual SyncedLobbySettings GetSyncedSettings(LobbyDb entity)
@@ -51,6 +64,11 @@ namespace TDS_Server.LobbySystem.Sync
                 StartArmor: entity.FightSettings?.StartArmor ?? 100,
                 IsGangActionLobby: false
             );
+        }
+
+        private void Events_CreatedAfter(LobbyDb entity)
+        {
+            SyncedSettings = GetSyncedSettings(entity);
         }
 
         private ValueTask Events_PlayerLeftLobbyAfter((ITDSPlayer Player, int HadLifes) data)
