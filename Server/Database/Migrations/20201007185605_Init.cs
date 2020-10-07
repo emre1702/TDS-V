@@ -18,7 +18,7 @@ namespace TDS_Server.Database.Migrations
                 .Annotation("Npgsql:Enum:challenge_type", "kills,assists,damage,play_time,round_played,bomb_defuse,bomb_plant,killstreak,buy_maps,review_maps,read_the_rules,read_the_faq,change_settings,join_discord_server,write_helpful_issue,creator_of_accepted_map,be_helpful_enough")
                 .Annotation("Npgsql:Enum:freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .Annotation("Npgsql:Enum:language", "german,english")
-                .Annotation("Npgsql:Enum:lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,char_create_lobby")
+                .Annotation("Npgsql:Enum:lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,char_create_lobby,gang_action_lobby")
                 .Annotation("Npgsql:Enum:log_type", "kick,ban,mute,next,login,register,lobby_join,lobby_leave,lobby_kick,lobby_ban,goto,remove_map,voice_mute")
                 .Annotation("Npgsql:Enum:map_limit_type", "kill_after_time,teleport_back_after_time,block,display")
                 .Annotation("Npgsql:Enum:ped_body_part", "head,neck,torso,genital_region,arm,hand,leg,foot")
@@ -524,7 +524,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.AdminId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -545,7 +546,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -570,7 +572,9 @@ namespace TDS_Server.Database.Migrations
                         name: "FK_GangHouses_Players_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "Players",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetDefault,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -600,7 +604,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.OwnerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -621,7 +626,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -644,13 +650,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.SourceId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Offlinemessages_Players_TargetId",
                         column: x => x.TargetId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -671,7 +679,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -690,7 +699,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -707,7 +717,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -728,13 +739,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.CommandId,
                         principalTable: "Commands",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerCommands_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -753,13 +766,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerRelations_Players_TargetId",
                         column: x => x.TargetId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -815,7 +830,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -841,7 +857,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -865,7 +882,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -883,7 +901,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -908,13 +927,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerWeaponBodypartStats_Weapons_WeaponHash",
                         column: x => x.WeaponHash,
                         principalTable: "Weapons",
                         principalColumn: "Hash",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -942,13 +963,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerWeaponStats_Weapons_WeaponHash",
                         column: x => x.WeaponHash,
                         principalTable: "Weapons",
                         principalColumn: "Hash",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -972,7 +995,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.AuthorId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -991,13 +1015,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ApplicationAnswers_ApplicationQuestions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "ApplicationQuestions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1018,13 +1044,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.AdminId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ApplicationInvitations_Applications_ApplicationId",
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1043,7 +1071,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1062,13 +1091,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LobbyArmsRaceWeapons_Weapons_WeaponHash",
                         column: x => x.WeaponHash,
                         principalTable: "Weapons",
                         principalColumn: "Hash",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1089,7 +1120,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1108,7 +1140,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1128,7 +1161,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1152,7 +1186,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1173,13 +1208,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.Hash,
                         principalTable: "Weapons",
                         principalColumn: "Hash",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LobbyWeapons_Lobbies_Lobby",
                         column: x => x.Lobby,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1206,19 +1243,22 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.AdminId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerBans_Lobbies_LobbyId",
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerBans_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1249,13 +1289,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerLobbyStats_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1281,7 +1323,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.Lobby,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1299,13 +1342,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.LobbyId,
                         principalTable: "Lobbies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LobbyMaps_Maps_MapId",
                         column: x => x.MapId,
                         principalTable: "Maps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1323,13 +1368,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.MapId,
                         principalTable: "Maps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerMapFavourites_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1348,13 +1395,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.MapId,
                         principalTable: "Maps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlayerMapRatings_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1399,7 +1448,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "PlayerCharDatas",
                         principalColumn: "PlayerId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1438,7 +1488,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "PlayerCharDatas",
                         principalColumn: "PlayerId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1458,7 +1509,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "PlayerCharDatas",
                         principalColumn: "PlayerId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1486,7 +1538,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "PlayerCharDatas",
                         principalColumn: "PlayerId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1509,7 +1562,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.PlayerId,
                         principalTable: "PlayerCharDatas",
                         principalColumn: "PlayerId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1530,13 +1584,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.AuthorId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SupportRequestMessages_SupportRequests_RequestId",
                         column: x => x.RequestId,
                         principalTable: "SupportRequests",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1562,19 +1618,22 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.HouseId,
                         principalTable: "GangHouses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Gangs_Players_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Gangs_Teams_TeamId",
                         column: x => x.TeamId,
                         principalTable: "Teams",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1597,7 +1656,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.GangId,
                         principalTable: "Gangs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1619,7 +1679,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.GangId,
                         principalTable: "Gangs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1645,7 +1706,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.GangId,
                         principalTable: "Gangs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1673,7 +1735,8 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.GangId,
                         principalTable: "Gangs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1694,13 +1757,15 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.MapId,
                         principalTable: "Maps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GangwarAreas_Gangs_OwnerGangId",
                         column: x => x.OwnerGangId,
                         principalTable: "Gangs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.SetNull,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1720,19 +1785,22 @@ namespace TDS_Server.Database.Migrations
                         column: x => x.GangId,
                         principalTable: "Gangs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GangMembers_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GangMembers_GangRanks_RankId",
                         column: x => x.RankId,
                         principalTable: "GangRanks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -2194,7 +2262,7 @@ namespace TDS_Server.Database.Migrations
             migrationBuilder.InsertData(
                 table: "Players",
                 columns: new[] { "Id", "AdminLeaderId", "AdminLvl", "Email", "IsVip", "Name", "Password", "SCId", "SCName" },
-                values: new object[] { -1, -1, (short)0, "", false, "System", "", 0m, "System" });
+                values: new object[] { -1, -1, (short)0, null, false, "System", "", 0m, "System" });
 
             migrationBuilder.InsertData(
                 table: "RuleTexts",
@@ -2327,7 +2395,7 @@ namespace TDS_Server.Database.Migrations
             migrationBuilder.InsertData(
                 table: "Lobbies",
                 columns: new[] { "Id", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "Type" },
-                values: new object[] { -1, true, false, "Arena", -1, "", LobbyType.Arena });
+                values: new object[] { -1, true, false, "Arena", -1, null, LobbyType.Arena });
 
             migrationBuilder.InsertData(
                 table: "Lobbies",
@@ -2342,7 +2410,7 @@ namespace TDS_Server.Database.Migrations
             migrationBuilder.InsertData(
                 table: "Lobbies",
                 columns: new[] { "Id", "IsOfficial", "IsTemporary", "Name", "OwnerId", "Password", "Type" },
-                values: new object[] { -4, true, false, "MainMenu", -1, "", LobbyType.MainMenu });
+                values: new object[] { -4, true, false, "MainMenu", -1, null, LobbyType.MainMenu });
 
             migrationBuilder.InsertData(
                 table: "Maps",
