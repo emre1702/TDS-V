@@ -39,11 +39,11 @@ namespace TDS_Server.Handler
             _settingsHandler = settingsHandler;
             LoggingHandler = this;
 
-            _currentIdAdmins = dbContext.LogAdmins.Max(a => a.Id);
-            _currentIdChats = dbContext.LogChats.Max(a => a.Id);
-            _currentIdErrors = dbContext.LogErrors.Max(a => a.Id);
-            _currentIdKills = dbContext.LogKills.Max(a => a.Id);
-            _currentIdRests = dbContext.LogRests.Max(a => a.Id);
+            _currentIdAdmins = dbContext.LogAdmins.Any() ? dbContext.LogAdmins.Max(a => a.Id) : 0;
+            _currentIdChats = dbContext.LogChats.Any() ? dbContext.LogChats.Max(a => a.Id) : 0;
+            _currentIdErrors = dbContext.LogErrors.Any() ? dbContext.LogErrors.Max(a => a.Id) : 0;
+            _currentIdKills = dbContext.LogKills.Any() ? dbContext.LogKills.Max(a => a.Id) : 0;
+            _currentIdRests = dbContext.LogRests.Any() ? dbContext.LogRests.Max(a => a.Id) : 0;
 
             eventsHandler.Minute += Save;
             eventsHandler.Error += LogError;
