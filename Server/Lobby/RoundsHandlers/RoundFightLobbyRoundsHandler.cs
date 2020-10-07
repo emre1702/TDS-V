@@ -131,7 +131,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                 (teams.Count(t => t.AlivePlayers?.Count > 0),
                 teams.Count(t => !t.IsSpectator))).ConfigureAwait(false);
 
-            switch ((teamAmountWithAlive, teamAmount))
+            switch ((teamAmount, teamAmountWithAlive))
             {
                 // 2+ teams, <= 1 in round  ->  end
                 case var (amount, amountAlive) when amount > 1 && amountAlive <= 1:

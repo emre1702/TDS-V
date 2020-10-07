@@ -112,7 +112,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             else
             {
                 CurrentRoundEndReason = roundEndReason;
-                SetState<RoundState>();
+                SetState<RoundEndState>();
             }
         }
 
