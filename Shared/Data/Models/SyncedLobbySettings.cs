@@ -80,8 +80,6 @@ namespace TDS_Shared.Data.Models
             this.StartHealth = StartHealth;
             this.StartArmor = StartArmor;
             this.IsGangActionLobby = IsGangActionLobby;
-
-            this.Json = Serializer.ToClient(this);
         }
     }
 }

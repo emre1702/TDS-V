@@ -25,6 +25,7 @@ namespace TDS_Server.LobbySystem.Sync
         {
             Lobby = lobby;
             SyncedSettings = GetSyncedSettings(lobby.Entity);
+            SyncedSettings.Json = Serializer.ToClient(SyncedSettings);
             Events = events;
 
             events.CreatedAfter += Events_CreatedAfter;
