@@ -124,6 +124,7 @@ namespace TDS_Server.LobbySystem.Players
                     Lobby.Rounds.AddRoundRewardsMessage(player, strBuilder, model);
                     playerRewards.Add(player, model);
                 }
+                player.CurrentRoundStats?.Clear();
             }).ConfigureAwait(false);
             return playerRewards;
         }
@@ -161,8 +162,6 @@ namespace TDS_Server.LobbySystem.Players
                 player.AddToChallenge(ChallengeType.Damage, from.Damage);
                 player.AddToChallenge(ChallengeType.RoundPlayed);
             }
-
-            from.Clear();
         }
 
         private bool AddPlayerRoundRewards(ITDSPlayer player, RoundPlayerRewardsData toModel)
