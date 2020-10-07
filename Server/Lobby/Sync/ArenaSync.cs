@@ -5,7 +5,7 @@ using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
 namespace TDS_Server.LobbySystem.Sync
 {
-    public class ArenaSync : BaseLobbySync
+    public class ArenaSync : RoundFightLobbySync
     {
         public ArenaSync(IArena lobby, IRoundFightLobbyEventsHandler events)
             : base(lobby, events)

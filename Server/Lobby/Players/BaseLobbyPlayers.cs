@@ -41,7 +41,7 @@ namespace TDS_Server.LobbySystem.Players
             if (await Lobby.Bans.CheckIsBanned(player))
                 return false;
 
-            player.Lobby?.Players.RemovePlayer(player);
+            await (player.Lobby?.Players.RemovePlayer(player) ?? Task.CompletedTask);
             await _semaphore.Do(() => _players.Add(player));
 
             await Lobby.Events.TriggerPlayerJoined(player, teamIndex);

@@ -91,7 +91,8 @@ namespace TDS_Client.Handler
             RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Strength), 100, false);
             RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Wheelie), 100, false);
 
-            RAGE.Game.Player.SetPlayerMaxArmour(Constants.MaxPossibleArmor);
+            //Todo: This line bugged, use Constants.MaxPossibleArmor after bug fix by RAGE
+            RAGE.Game.Player.SetPlayerMaxArmour(100);
             LoadLanguageFromRAGE();
         }
 
