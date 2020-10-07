@@ -38,6 +38,7 @@ namespace TDS_Client.Handler
         public void Start(string name, bool isRegistered)
         {
             _browserHandler.RegisterLogin.CreateBrowser();
+            _browserHandler.Angular.CreateAngularBrowser();
             //_browserHandler.RegisterLogin.SetReady(); only for Angular browser
 
             _cursorHandler.Visible = true;
