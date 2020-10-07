@@ -19,29 +19,37 @@ namespace TDS_Server.LobbySystem
 
         public TLobby Get<TLobby>(LobbyDb entity) where TLobby : IBaseLobby
         {
-            IBaseLobby lobby = typeof(TLobby) switch
-            {
-                IArena _ => ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity),
-                ICharCreateLobby _ => ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, entity),
-                IGangActionLobby _ => ActivatorUtilities.CreateInstance<GangActionLobby>(_serviceProvider, entity),
-                IGangLobby _ => ActivatorUtilities.CreateInstance<GangLobby>(_serviceProvider, entity),
-                IMainMenu _ => ActivatorUtilities.CreateInstance<MainMenu>(_serviceProvider, entity),
-                IMapCreatorLobby _ => ActivatorUtilities.CreateInstance<MapCreatorLobby>(_serviceProvider, entity),
+            IBaseLobby lobby;
+            var type = typeof(TLobby);
+            if (type == typeof(IArena))
+                lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, entity);
+            else if (type == typeof(ICharCreateLobby))
+                lobby = ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, entity);
+            else if (type == typeof(IGangActionLobby))
+                lobby = ActivatorUtilities.CreateInstance<GangActionLobby>(_serviceProvider, entity);
+            else if (type == typeof(IGangLobby))
+                lobby = ActivatorUtilities.CreateInstance<GangLobby>(_serviceProvider, entity);
+            else if (type == typeof(IMainMenu))
+                lobby = ActivatorUtilities.CreateInstance<MainMenu>(_serviceProvider, entity);
+            else if (type == typeof(IMapCreatorLobby))
+                lobby = ActivatorUtilities.CreateInstance<MapCreatorLobby>(_serviceProvider, entity);
+            else
+                throw new ArgumentException($"LobbiesProvider doesn't create lobby with Lobby entity for type '{typeof(TLobby).FullName}'.");
 
-                _ => throw new ArgumentException($"LobbiesProvider doesn't create lobby with Lobby entity for type '{typeof(TLobby).FullName}'.")
-            };
             return (TLobby)lobby;
         }
 
         public TLobby Get<TLobby>(ITDSPlayer owner) where TLobby : IBaseLobby
         {
-            IBaseLobby lobby = typeof(TLobby) switch
-            {
-                ICharCreateLobby _ => ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, owner),
-                IMapCreatorLobby _ => ActivatorUtilities.CreateInstance<MapCreatorLobby>(_serviceProvider, owner),
+            IBaseLobby lobby;
+            var type = typeof(TLobby);
+            if (type == typeof(ICharCreateLobby))
+                lobby = ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, owner);
+            else if (type == typeof(IMapCreatorLobby))
+                lobby = ActivatorUtilities.CreateInstance<MapCreatorLobby>(_serviceProvider, owner);
+            else
+                throw new ArgumentException($"LobbiesProvider doesn't create lobby with Player for type '{typeof(TLobby).FullName}'.");
 
-                _ => throw new ArgumentException($"LobbiesProvider doesn't create lobby with Player for type '{typeof(TLobby).FullName}'.")
-            };
             return (TLobby)lobby;
         }
 
