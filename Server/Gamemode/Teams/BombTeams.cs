@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Teams;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Shared.Data.Utility;
 
 namespace TDS_Server.GamemodesSystem.Teams
 {
@@ -13,9 +13,8 @@ namespace TDS_Server.GamemodesSystem.Teams
         public BombTeams(IRoundFightLobby lobby)
         {
             var teams = lobby.Teams.GetTeams();
-            var terroristsIndex = SharedUtils.GetRandom(1, 2);
-            Terrorists = teams[terroristsIndex];
-            CounterTerrorists = teams[terroristsIndex == 1 ? 2 : 1];
+            Terrorists = teams[(int)GamemodeTeamTypeIndex.Terrorists];
+            CounterTerrorists = teams[(int)GamemodeTeamTypeIndex.CounterTerrorists];
         }
     }
 }
