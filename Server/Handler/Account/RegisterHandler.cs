@@ -51,8 +51,7 @@ namespace TDS_Server.Handler.Account
                 SCName = scName,
                 Password = Utils.HashPasswordServer(password),
                 Email = email,
-                IsVip = false,
-                AdminLvl = SharedUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
+                IsVip = false
             };
             if (dbPlayer is null)
                 return;
