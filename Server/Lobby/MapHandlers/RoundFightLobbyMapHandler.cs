@@ -135,7 +135,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
         private List<MapDto> GetMapsForCurrentPlayerAmount()
         {
             var currentPlayersCount = Lobby.Players.Count;
-            return Maps.Where(m => m.Info.MinPlayers >= currentPlayersCount && m.Info.MaxPlayers <= currentPlayersCount).ToList();
+            return Maps.Where(m => currentPlayersCount >= m.Info.MinPlayers && currentPlayersCount <= m.Info.MaxPlayers).ToList();
         }
     }
 }
