@@ -1,41 +1,30 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
-import { InfoType } from './enums/info-type.enum';
+import { InfosHandlerService } from './services/infos-handler.service';
+import { SettingsService } from '../../services/settings.service';
+import { rightToLeftItemsEnterAnimation } from '../../animations/rightToLeftItemsEnter.animation';
 
 @Component({
     selector: 'app-infos-handler',
     templateUrl: './infos-handler.component.html',
     styleUrls: ['./infos-handler.component.scss'],
+    animations: [rightToLeftItemsEnterAnimation],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InfosHandlerComponent implements OnInit, OnDestroy {
-
-    showCursorInfo: boolean;
-    showLobbyLeaveInfo: boolean;
-
     constructor(
-        private rageConnector: RageConnectorService,
-        private changeDetector: ChangeDetectorRef) { }
+        private changeDetector: ChangeDetectorRef,
+        public infosHandler: InfosHandlerService,
+        public settings: SettingsService) { }
 
     ngOnInit(): void {
-        this.rageConnector.listen(DFromClientEvent.ToggleInfo, this.toggleInfo.bind(this));
+        this.infosHandler.infosChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromClientEvent.ToggleInfo, this.toggleInfo.bind(this));
+        this.infosHandler.infosChanged.off(null, this.detectChanges.bind(this));
     }
 
-    private toggleInfo(type: InfoType, toggle: boolean) {
-        switch (type) {
-            case InfoType.Cursor:
-                this.showCursorInfo = toggle;
-                break;
-            case InfoType.LobbyLeave:
-                this.showLobbyLeaveInfo = toggle;
-                break;
-        }
+    private detectChanges() {
         this.changeDetector.detectChanges();
     }
-
 }

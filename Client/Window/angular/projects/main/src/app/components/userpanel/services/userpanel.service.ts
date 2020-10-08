@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UserpanelCommandDataDto } from '../interfaces/userpanelCommandDataDto';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { EventEmitter } from 'events';
@@ -13,15 +12,9 @@ import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuesti
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { UserpanelSettingSpecialDataDto } from '../interfaces/userpanelSettingSpecialDataDto';
-import { LanguageEnum } from '../../../enums/language.enum';
-import { TimezoneEnum } from '../enums/timezone.enum';
-import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
-import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 import { UserpanelSupportRequestListData } from '../interfaces/userpanelSupportRequestListData';
 import { UserpanelSettingCommandDataDto } from '../interfaces/settings-commands/userpanelSettingCommandDataDto';
-import { ScoreboardPlayerSorting } from '../enums/scoreboard-player-sorting';
-import { TimeSpanUnitsOfTime } from '../enums/timespan-units-of-time.enum';
 
 @Injectable({
     providedIn: 'root'

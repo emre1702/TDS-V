@@ -99,26 +99,6 @@ mat-toolbar > h1 {
   text-align: center;
 }
 
-#votings-container {
-  position: absolute;
-  vertical-align: bottom;
-  text-align: right;
-  right: 0.5%;
-  color: white;
-  text-shadow: 2px 2px 2px black !important;
-  bottom: 10%;
-  font-size: 1.6em;
-
-  .voting-row {
-      padding: 5px 10px 5px 10px;
-  }
-}
-
-.mapvoting_selected {
-  font-size: 1.7em;
-  border-color: green;
-}
-
 .red-color {
   color: red;
 }

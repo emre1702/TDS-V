@@ -6,58 +6,68 @@ import { EventEmitter } from 'events';
 import { OrderByPipe } from '../../../pipes/orderby.pipe';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { InfosHandlerService } from '../../infos-handler/services/infos-handler.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class MapVotingService {
-  public mapsInVoting: MapVoteDto[] = [];
-  public votedForMapId: number;
+    public mapsInVoting: MapVoteDto[] = [];
+    public votedForMapId: number;
 
-  public mapsInVotingChanged = new EventEmitter();
+    public mapsInVotingChanged = new EventEmitter();
 
-  public voteForMapId(id: number) {
-    this.votedForMapId = id;
-    this.rageConnector.callServer(DToServerEvent.MapVote, id);
-  }
-
-  private addMapToVoting(mapVoteJson: string) {
-    this.mapsInVoting.push(JSON.parse(mapVoteJson));
-    this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-2", "1"]);
-    this.mapsInVotingChanged.emit(null);
-  }
-
-  private loadMapVoting(mapVoteJson: string) {
-    this.mapsInVoting = this.orderByPipe.transform(JSON.parse(mapVoteJson), ["-2", "1"]);
-    this.mapsInVotingChanged.emit(null);
-  }
-
-  private resetMapVoting() {
-    this.mapsInVoting = [];
-    this.votedForMapId = undefined;
-    this.mapsInVotingChanged.emit(null);
-  }
-
-  private setMapVotes(mapId: number, amountVotes: number) {
-    const index = this.mapsInVoting.findIndex(m => m[0] == mapId);
-    if (index < 0)
-      return;
-    if (amountVotes <= 0) {
-      this.mapsInVoting.splice(index, 1);
-    } else {
-      this.mapsInVoting[index][2] = amountVotes;
+    public voteForMapId(id: number) {
+        this.votedForMapId = id;
+        this.rageConnector.callServer(DToServerEvent.MapVote, id);
+        this.infosHandler.setVotedMapInfo(this.mapsInVoting.find(m => m[0] == this.votedForMapId));
     }
-    this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-2", "1"]);
-    this.mapsInVotingChanged.emit(null);
-  }
+
+    private addMapToVoting(mapVoteJson: string) {
+        const mapVote: MapVoteDto = JSON.parse(mapVoteJson);
+        this.mapsInVoting.push(mapVote);
+        this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-2", "1"]);
+        this.mapsInVotingChanged.emit(null);
+        this.infosHandler.addMapVotingInfo(mapVote);
+    }
+
+    private loadMapVoting(mapVoteJson: string) {
+        this.mapsInVoting = this.orderByPipe.transform(JSON.parse(mapVoteJson), ["-2", "1"]);
+        this.mapsInVotingChanged.emit(null);
+        this.infosHandler.loadMapVotingInfos([...this.mapsInVoting]);
+    }
+
+    private resetMapVoting() {
+        this.mapsInVoting = [];
+        this.votedForMapId = undefined;
+        this.mapsInVotingChanged.emit(null);
+        this.infosHandler.resetMapVotingInfos();
+    }
+
+    private setMapVotes(mapId: number, amountVotes: number) {
+        const index = this.mapsInVoting.findIndex(m => m[0] == mapId);
+        if (index < 0)
+            return;
+        if (amountVotes <= 0) {
+            this.mapsInVoting.splice(index, 1);
+        } else {
+            this.mapsInVoting[index][2] = amountVotes;
+        }
+        this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-2", "1"]);
+        this.infosHandler.loadMapVotingInfos([...this.mapsInVoting]);
+        this.mapsInVotingChanged.emit(null);
+    }
 
 
-  constructor(private rageConnector: RageConnectorService, private orderByPipe: OrderByPipe) {
-    console.log("Map voting listener started.");
-    rageConnector.listen(DFromServerEvent.LoadMapVoting, this.loadMapVoting.bind(this));
-    rageConnector.listen(DFromClientEvent.ResetMapVoting, this.resetMapVoting.bind(this));
-    rageConnector.listen(DFromServerEvent.StopMapVoting, this.resetMapVoting.bind(this));
-    rageConnector.listen(DFromServerEvent.AddMapToVoting, this.addMapToVoting.bind(this));
-    rageConnector.listen(DFromServerEvent.SetMapVotes, this.setMapVotes.bind(this));
-  }
+    constructor(
+        private rageConnector: RageConnectorService,
+        private orderByPipe: OrderByPipe,
+        private infosHandler: InfosHandlerService) {
+        console.log("Map voting listener started.");
+        rageConnector.listen(DFromServerEvent.LoadMapVoting, this.loadMapVoting.bind(this));
+        rageConnector.listen(DFromClientEvent.ResetMapVoting, this.resetMapVoting.bind(this));
+        rageConnector.listen(DFromServerEvent.StopMapVoting, this.resetMapVoting.bind(this));
+        rageConnector.listen(DFromServerEvent.AddMapToVoting, this.addMapToVoting.bind(this));
+        rageConnector.listen(DFromServerEvent.SetMapVotes, this.setMapVotes.bind(this));
+    }
 }

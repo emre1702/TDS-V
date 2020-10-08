@@ -1,4 +1,4 @@
-<tdswindow [title]="title" *ngIf="active" (close)="deactivate(true)" (sideNavClick)="toggleSnav()" [@hideShowAnimation]>
+<tdswindow [title]="title" *ngIf="active" (close)="deactivate(true)" (sideNavClick)="toggleSnav()" [@bottomToTopEnter]>
 	<mat-sidenav-container>
 		<mat-sidenav #snav mode="push" role="directory" class="mat-app-background">
 			<mat-nav-list>
@@ -47,10 +47,3 @@
 		</mat-sidenav-content>
 	</mat-sidenav-container>
 </tdswindow>
-
-<div id="votings-container" *ngIf="voting.mapsInVoting.length && !settings.InTeamOrderModus && settings.InFightLobby">
-	<div class="voting-row mat-app-background" [@hideShowAnimation] [class.mapvoting_selected]="voting.votedForMapId == mapvote[0]"
-			*ngFor="let mapvote of voting.mapsInVoting; let i = index">
-		{{ i + 1 }}. {{ mapvote[1] }} ({{ mapvote[2] }})
-	</div>
-</div>

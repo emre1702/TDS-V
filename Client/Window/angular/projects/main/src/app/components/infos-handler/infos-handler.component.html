@@ -1,5 +1,11 @@
-<div class="container">
-    <app-info *ngIf="showCursorInfo" messageKey="CursorVisibleInfo"></app-info>
-    <app-info *ngIf="showLobbyLeaveInfo" messageKey="LobbyLeaveInfo"></app-info>
+<div class="container" [@rightToLeftItemsEnter]="2 + infosHandler.mapVotingInfos.length">
+    <app-info *ngIf="infosHandler.showCursorInfo" messageKey="CursorVisibleInfo"></app-info>
+    <app-info *ngIf="infosHandler.showLobbyLeaveInfo" messageKey="LobbyLeaveInfo"></app-info>
+    <ng-container>
+        <!--*ngIf="!settings.InTeamOrderModus && settings.InFightLobby"-->
+        <div class="voting-row mat-app-background" [class.mapvoting_selected]="infosHandler.votedMapInfo == mapvote"
+            *ngFor="let mapvote of infosHandler.mapVotingInfos; let i = index">
+            {{ i + 1 }}. {{ mapvote[1] }} ({{ mapvote[2] }})
+        </div>
+    </ng-container>
 </div>
-

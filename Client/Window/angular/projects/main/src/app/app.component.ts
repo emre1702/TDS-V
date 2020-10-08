@@ -8,7 +8,6 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CharCreateData } from './components/char-creator/interfaces/charCreateData';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { UserpanelSettingKey } from './components/userpanel/enums/userpanel-setting-key.enum';
 import { ThemeSettings } from './interfaces/theme-settings';
@@ -66,7 +65,6 @@ export class AppComponent {
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer,
         private materialCssVarsService: MaterialCssVarsService) {
-
         this.loadSvgIcons();
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
@@ -182,7 +180,6 @@ export class AppComponent {
             event.preventDefault();
         }
     }
-
 
     private loadSvgIcons() {
         this.iconRegistry.addSvgIcon("man", this.sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));

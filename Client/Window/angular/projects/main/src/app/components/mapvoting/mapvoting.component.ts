@@ -5,32 +5,15 @@ import { MapNav } from './enums/mapnav.enum';
 import { MapVotingService } from './services/mapvoting.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
-import { transition, animate, style, trigger } from '@angular/animations';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 import { MatSidenav } from '@angular/material';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { LanguagePipe } from '../../pipes/language.pipe';
+import { bottomToTopEnterAnimation } from '../../animations/bottomToUpEnter.animation';
 
 @Component({
     selector: 'app-mapvoting',
-    animations: [
-        trigger(
-            'hideShowAnimation',
-            [
-                transition(
-                    ':enter', [
-                    style({ transform: 'translateY(100%)', opacity: 0 }),
-                    animate('500ms', style({ transform: 'translateY(0)', opacity: 0.9 }))
-                ]
-                ),
-                transition(
-                    ':leave', [
-                    animate('500ms', style({ transform: 'translateY(100%)', opacity: 0 })),
-                ]
-                )
-            ]
-        )
-    ],
+    animations: [bottomToTopEnterAnimation],
     templateUrl: './mapvoting.component.html',
     styleUrls: ['./mapvoting.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
