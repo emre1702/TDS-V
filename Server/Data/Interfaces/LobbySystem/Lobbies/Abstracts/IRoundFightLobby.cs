@@ -1,6 +1,5 @@
 ﻿using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.GamemodesHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
@@ -19,7 +18,6 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
     {
         new IRoundFightLobbyDeathmatch Deathmatch { get; }
         new IRoundFightLobbyEventsHandler Events { get; }
-        IRoundFightLobbyGamemodesHandler Gamemodes { get; }
         new IRoundFightLobbyMapHandler MapHandler { get; }
         new IRoundFightLobbyNotifications Notifications { get; }
         new IRoundFightLobbyPlayers Players { get; }

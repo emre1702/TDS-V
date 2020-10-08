@@ -198,7 +198,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
             if (!(player.Lobby is IRoundFightLobby roundFightLobby))
                 return;
-            if (!(roundFightLobby.Gamemodes.CurrentGamemode is IBombGamemode bombMode))
+            if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
                 return;
             if (!bombMode.Specials.StartBombDefusing(player))
                 player.TriggerEvent(ToClientEvent.StopBombPlantDefuse);
@@ -210,7 +210,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
             if (!(player.Lobby is IRoundFightLobby roundFightLobby))
                 return;
-            if (!(roundFightLobby.Gamemodes.CurrentGamemode is IBombGamemode bombMode))
+            if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
                 return;
             if (!bombMode.Specials.StartBombPlanting(player))
                 player.TriggerEvent(ToClientEvent.StopBombPlantDefuse);
@@ -222,7 +222,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
             if (!(player.Lobby is IRoundFightLobby roundFightLobby))
                 return;
-            if (!(roundFightLobby.Gamemodes.CurrentGamemode is IBombGamemode bombMode))
+            if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
                 return;
             bombMode.Specials.StopBombDefusing(player);
         }
@@ -233,7 +233,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
             if (!(player.Lobby is IRoundFightLobby roundFightLobby))
                 return;
-            if (!(roundFightLobby.Gamemodes.CurrentGamemode is IBombGamemode bombMode))
+            if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
                 return;
             bombMode.Specials.StopBombPlanting(player);
         }

@@ -5,7 +5,6 @@ using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.GamemodesSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.GamemodesHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
@@ -23,7 +22,6 @@ using TDS_Server.Handler.Maps;
 using TDS_Server.LobbySystem.Deathmatch;
 using TDS_Server.LobbySystem.DependenciesModels;
 using TDS_Server.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.GamemodesHandlers;
 using TDS_Server.LobbySystem.MapHandlers;
 using TDS_Server.LobbySystem.Notifications;
 using TDS_Server.LobbySystem.Players;
@@ -42,7 +40,6 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
     {
         public new IRoundFightLobbyDeathmatch Deathmatch => (IRoundFightLobbyDeathmatch)base.Deathmatch;
         public new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
-        public IRoundFightLobbyGamemodesHandler Gamemodes { get; set; }
         public new IRoundFightLobbyMapHandler MapHandler => (IRoundFightLobbyMapHandler)base.MapHandler;
         public new IRoundFightLobbyNotifications Notifications => (IRoundFightLobbyNotifications)base.Notifications;
         public new IRoundFightLobbyPlayers Players => (IRoundFightLobbyPlayers)base.Players;
@@ -73,7 +70,6 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
             lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.Deathmatch ??= new RoundFightLobbyDeathmatch(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, damageSys, LangHelper);
-            ((RoundFightLobbyDependencies)lobbyDependencies).GamemodesHandler ??= new RoundFightLobbyGamemodesHandler();
             lobbyDependencies.MapHandler ??= new RoundFightLobbyMapHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, settingsHandler, mapsLoadingHandler);
             lobbyDependencies.Notifications ??= new RoundFightLobbyNotifications(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, LangHelper);
             lobbyDependencies.Players ??= new RoundFightLobbyPlayers(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);
@@ -86,7 +82,6 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             lobbyDependencies.Teams ??= new RoundFightLobbyTeamsHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, LangHelper);
             ((RoundFightLobbyDependencies)lobbyDependencies).Weapons ??= new RoundFightLobbyWeapons(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);
 
-            Gamemodes = ((RoundFightLobbyDependencies)lobbyDependencies).GamemodesHandler!;
             Ranking = ((RoundFightLobbyDependencies)lobbyDependencies).Ranking!;
             Rounds = ((RoundFightLobbyDependencies)lobbyDependencies).Rounds!;
             Statistics = ((RoundFightLobbyDependencies)lobbyDependencies).Statistics!;

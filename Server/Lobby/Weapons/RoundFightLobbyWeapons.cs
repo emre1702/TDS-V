@@ -36,7 +36,7 @@ namespace TDS_Server.LobbySystem.Weapons
         {
             if (_allRoundWeapons is null)
                 return;
-            if (Lobby.Gamemodes.CurrentGamemode?.Weapons.HandlesGivingWeapons == true)
+            if (Lobby.Rounds.CurrentGamemode?.Weapons.HandlesGivingWeapons == true)
                 return;
             base.GivePlayerWeapons(player);
         }
