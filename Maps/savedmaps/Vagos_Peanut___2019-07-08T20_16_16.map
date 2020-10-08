@@ -1,0 +1,16 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="Vagos_Peanut" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>2</creatorid>
+  </map>
+  <description>
+    <english>Vagos map from </english>
+    <german>Vagos Map von ehrenbruder Peanut</german>
+  </description>
+  <teamspawns>
+    <team />
+  </teamspawns>
+  <limit>
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>

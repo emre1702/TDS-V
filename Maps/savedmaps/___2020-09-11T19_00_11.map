@@ -1,0 +1,14 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <bomb />
+  <description>
+    <english />
+    <german />
+  </description>
+  <map maxplayers="999" minplayers="0" name="" type="normal">
+    <creatorid>3</creatorid>
+  </map>
+  <limit />
+  <objects />
+  <teamspawns />
+  <vehicles />
+</TDSMap>

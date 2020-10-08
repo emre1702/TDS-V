@@ -1,0 +1,44 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="PEANUT-Camp" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>3</creatorid>
+  </map>
+  <description>
+    <english />
+    <german>Rocker camping Platz</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="67.06" y="3628.06" z="39.61" rot="357.71" />
+      <spawn x="68.84" y="3628.11" z="39.5" rot="2.24" />
+      <spawn x="67.89" y="3631.02" z="39.51" rot="5.17" />
+      <spawn x="66.11" y="3625.69" z="39.75" rot="348.37" />
+      <spawn x="67.73" y="3625.46" z="39.68" rot="351.91" />
+      <spawn x="69.4" y="3625.38" z="39.61" rot="358.61" />
+      <spawn x="65.23" y="3623.62" z="39.73" rot="345.74" />
+      <spawn x="66.87" y="3623.48" z="39.68" rot="356.04" />
+      <spawn x="69.43" y="3623.73" z="39.59" rot="357.69" />
+      <spawn x="71.18" y="3623.8" z="39.55" rot="5.63" />
+    </team>
+    <team>
+      <spawn x="80.21" y="3747.57" z="39.56" rot="185.1" />
+      <spawn x="81.64" y="3747.6" z="39.56" rot="157.5" />
+      <spawn x="83.12" y="3747.2" z="39.54" rot="167.86" />
+      <spawn x="84.77" y="3746.72" z="39.56" rot="168.49" />
+      <spawn x="85.22" y="3748.53" z="39.71" rot="168.97" />
+      <spawn x="83.46" y="3748.84" z="39.68" rot="168.48" />
+      <spawn x="81.51" y="3749.15" z="39.69" rot="171.17" />
+      <spawn x="79.98" y="3749.3" z="39.7" rot="185.69" />
+      <spawn x="81.64" y="3751.34" z="39.74" rot="179.81" />
+      <spawn x="83.67" y="3751.21" z="39.74" rot="169.88" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="-13.26" y="3620.9" z="42.9" />
+    <pos x="105.19" y="3589.06" z="39.61" />
+    <pos x="150.23" y="3763.99" z="30.96" />
+    <pos x="75.7" y="3805.31" z="31.34" />
+    <pos x="-22.69" y="3761.43" z="31.45" />
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>

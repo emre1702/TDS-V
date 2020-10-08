@@ -1,0 +1,31 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="Würfelpark PEANUT" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>2</creatorid>
+  </map>
+  <description>
+    <english>Peanutpark</english>
+    <german>Würfelpark PEANUT</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="238.54" y="-869.54" z="29.61" rot="164.36" />
+	  <spawn x="237.54" y="-866.54" z="29.61" rot="164.36" />
+      <spawn x="235.77" y="-862.53" z="29.7" rot="188.35" />
+      <spawn x="244.83" y="-865.5" z="29.48" rot="169.87" />
+    </team>
+    <team>
+	  <spawn x="155.49" y="-998.08" z="28.66" rot="337.5" />
+      <spawn x="157.71" y="-997.59" z="28.68" rot="337.5" />
+      <spawn x="153.36" y="-995.12" z="29.22" rot="359.8" />
+      <spawn x="163.61" y="-1001.69" z="29.21" rot="338.91" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="127.28" y="-993.18" z="29.08" />
+    <pos x="212.14" y="-1026.93" z="29.22" />
+    <pos x="269.47" y="-867.28" z="28.99" />
+    <pos x="180.09" y="-836.57" z="30.96" />
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>

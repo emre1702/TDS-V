@@ -1,0 +1,45 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="Dignity-Peanut-Village" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>3</creatorid>
+  </map>
+  <description>
+    <english>good map</english>
+    <german>gute Karte zum ballern</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="1550.34" y="6327.09" z="24.08" rot="65.84" />
+      <spawn x="1551.46" y="6328.22" z="24.08" rot="63.14" />
+      <spawn x="1552.15" y="6329.73" z="24.08" rot="59.41" />
+      <spawn x="1552.9" y="6331.17" z="24.08" rot="60.22" />
+      <spawn x="1553.65" y="6332.64" z="24.07" rot="59.62" />
+      <spawn x="1556.08" y="6331.05" z="23.94" rot="55.31" />
+      <spawn x="1555.26" y="6330.11" z="24" rot="62.65" />
+      <spawn x="1554.52" y="6328.95" z="24.06" rot="62.32" />
+      <spawn x="1553.72" y="6327.86" z="24.08" rot="57.31" />
+      <spawn x="1552.84" y="6326.65" z="24.08" rot="83.62" />
+      <spawn x="1552.02" y="6325.61" z="24.08" rot="76.53" />
+    </team>
+    <team>
+      <spawn x="1415.64" y="6352.24" z="24.3" rot="246.95" />
+      <spawn x="1417.19" y="6351.59" z="24.32" rot="246.95" />
+      <spawn x="1416.54" y="6350.28" z="24.28" rot="249.28" />
+      <spawn x="1418.19" y="6349.59" z="24.25" rot="249.47" />
+      <spawn x="1418.77" y="6350.69" z="24.25" rot="247.49" />
+      <spawn x="1419.41" y="6349.06" z="24.23" rot="232.08" />
+      <spawn x="1420.06" y="6350.23" z="24.22" rot="246.37" />
+      <spawn x="1419.28" y="6347.64" z="23.98" rot="246.79" />
+      <spawn x="1419.17" y="6346.26" z="23.99" rot="271.94" />
+      <spawn x="1420.8" y="6351.49" z="23.98" rot="259.47" />
+      <spawn x="1420.95" y="6352.84" z="23.98" rot="284.14" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="1571.1" y="6353.26" z="32.09" />
+    <pos x="1558.36" y="6309.14" z="36.24" />
+    <pos x="1401.9" y="6312.86" z="32.45" />
+    <pos x="1421.82" y="6398.25" z="31.45" />
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>

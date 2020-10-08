@@ -1,0 +1,31 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="Leuchtturm-PEANUT" type="normal" minplayers="0" maxplayers="10">
+    <creatorid>3</creatorid>
+  </map>
+  <description>
+    <english>small map, good for 1vs1</english>
+    <german>Kleine Map, gut für 1vs1</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="3331.49" y="5152.59" z="18.28" rot="49.22" />
+      <spawn x="3332.84" y="5154.38" z="18.28" rot="50.54" />
+      <spawn x="3333.46" y="5156.14" z="18.28" rot="36.89" />
+      <spawn x="3330.31" y="5155.88" z="18.3" rot="56.62" />
+    </team>
+    <team>
+      <spawn x="3280.13" y="5193.06" z="18.69" rot="229.19" />
+      <spawn x="3278.85" y="5195.72" z="18.82" rot="228.57" />
+      <spawn x="3277.72" y="5194.28" z="18.95" rot="233.41" />
+      <spawn x="3277.03" y="5193.17" z="19.04" rot="234.08" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="3307.25" y="5218.43" z="16.62" />
+    <pos x="3259.01" y="5183.73" z="19.6" />
+    <pos x="3327.48" y="5137.37" z="17.22" />
+    <pos x="3350.13" y="5180.11" z="14.13" />
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>
