@@ -7,6 +7,9 @@
                     <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
                         <mat-icon color="accent">arrow_back</mat-icon>
                     </button>
+                     <button *ngIf="sideNavClick.observers.length" mat-button (click)="sideNavClick.emit()">
+                        <mat-icon color="accent">menu</mat-icon>
+                    </button>
                     <button *ngIf="navMenu" mat-button id="menu-navigation" [matMenuTriggerFor]="navMenu" cdkFocusInitial
                     [class.glowing-button]="navGlow">
                         <mat-icon color="accent">menu</mat-icon>

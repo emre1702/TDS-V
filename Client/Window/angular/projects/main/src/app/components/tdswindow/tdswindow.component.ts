@@ -125,6 +125,7 @@ export class TDSWindowComponent implements OnInit, OnDestroy {
     @Output() close = new EventEmitter();
     @Output() back = new EventEmitter();
     @Output() save = new EventEmitter();
+    @Output() sideNavClick = new EventEmitter();
 
     @ViewChild('toolbar1') toolbar1: TemplateRef<any>;
     @ViewChild('toolbar2') toolbar2: TemplateRef<any>;

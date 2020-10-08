@@ -1,16 +1,6 @@
-<div class="container mat-elevation-z24" cdkDrag *ngIf="active" [@hideShowAnimation]>
-	<mat-toolbar color="primary" cdkDragHandle>
-		<button mat-icon-button (click)="toggleSnav()">
-			<mat-icon color="accent">menu</mat-icon>
-		</button>
-		<h1>{{ 'MapVoting' | language: settings.Lang }} {{ selectedMap ? " - " + selectedMap[1] : "" }}</h1>
-		<button mat-icon-button (click)="deactivate(true)">
-			<mat-icon color="accent">close</mat-icon>
-		</button>
-	</mat-toolbar>
-
+<tdswindow [title]="title" *ngIf="active" (close)="deactivate(true)" (sideNavClick)="toggleSnav()" [@hideShowAnimation]>
 	<mat-sidenav-container>
-		<mat-sidenav #snav mode="push" role="directory">
+		<mat-sidenav #snav mode="push" role="directory" class="mat-app-background">
 			<mat-nav-list>
 				<mat-list-item (click)="changeToNav(nav)" *ngFor="let nav of getNavs()">{{ nav | language: settings.Lang }}</mat-list-item>
 			</mat-nav-list>
@@ -21,31 +11,34 @@
         <mat-form-field class="filter" color="accent">
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
         </mat-form-field>
-				<mat-action-list>
-					<mat-list-item (click)="changeSelectedMap(map)" class="map-item mat-body" *ngFor="let map of data | mapVotingNav: selectedNav:mapSearchFilter">
-						{{ map[1] }}
-					</mat-list-item>
-				</mat-action-list>
-			</div>
-			<mat-divider vertical class="vertical-divider-color"></mat-divider>
+            <mat-action-list>
+                <mat-list-item (click)="changeSelectedMap(map)" class="map-item mat-body" *ngFor="let map of data | mapVotingNav: selectedNav:mapSearchFilter">
+                    {{ map[1] }}
+                </mat-list-item>
+            </mat-action-list>
+        </div>
+        <mat-divider vertical class="vertical-divider-color"></mat-divider>
 			<div id="right-content" *ngIf="selectedMap">
 				<!-- <div id="map-title-row">
 						<div id="map-title" class="mat-title">{{ selectedMap[1] }}</div>
-				</div>-->
-				<div id="map-description" class="mat-body-1">
-					{{ selectedMap[3][settings.LangValue] }}
-				</div>
+                </div>-->
+                <div id="map-description" class="mat-body-1">
+                    {{ selectedMap[3][settings.LangValue] }}
+                </div>
+
 				<div id="map-action-row">
+                    <div id="map-creator-hint" *ngIf="selectedMap[4]">
+                        {{ "Creator" | language: settings.Lang }}: {{ selectedMap[4] }}
+                    </div>
 					<button mat-icon-button (click)="toggleMapIdToFavorite(selectedMap[0])">
 						<mat-icon color="accent" id="favorite-heart" [class.red-color]="settings.isInFavorites(selectedMap[0])">
 							favorite
 						</mat-icon>
 					</button>
-                    <div id="map-creator-hint" *ngIf="selectedMap[4]">{{ "Creator" | language: settings.Lang }}: {{ selectedMap[4] }}</div>
-                    <button class="background-color-accent" mat-button (click)="buyMap(selectedMap[0])" [disabled]="!canBuyMap()">
+                    <button class="add-button" mat-button (click)="buyMap(selectedMap[0])" [disabled]="!canBuyMap()">
                         {{ settings.IsLobbyOwner ? 'Choose' : 'Buy' | language: settings.Lang }}
                     </button>
-					<button id="vote-button" class="background-color-primary" mat-button (click)="voteForMapId(selectedMap[0])"
+					<button id="vote-button" class="save-button" mat-button (click)="voteForMapId(selectedMap[0])"
 							[disabled]="voting.votedForMapId == selectedMap[0]">
 						{{ 'Vote' | language: settings.Lang }}
 					</button>
@@ -53,7 +46,7 @@
 			</div>
 		</mat-sidenav-content>
 	</mat-sidenav-container>
-</div>
+</tdswindow>
 
 <div id="votings-container" *ngIf="voting.mapsInVoting.length && !settings.InTeamOrderModus && settings.InFightLobby">
 	<div class="voting-row mat-app-background" [@hideShowAnimation] [class.mapvoting_selected]="voting.votedForMapId == mapvote[0]"

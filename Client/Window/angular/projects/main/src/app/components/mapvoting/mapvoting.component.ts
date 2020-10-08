@@ -9,6 +9,7 @@ import { transition, animate, style, trigger } from '@angular/animations';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 import { MatSidenav } from '@angular/material';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
+import { LanguagePipe } from '../../pipes/language.pipe';
 
 @Component({
     selector: 'app-mapvoting',
@@ -43,6 +44,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     selectedNav: string;
     selectedMap: MapDataDto;
     mapSearchFilter = "";
+    title: string;
 
     @ViewChild('snav') snav: MatSidenav;
 
@@ -65,6 +67,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
 
         this.mapSearchFilter = "";
+        this.refreshTitle();
     }
 
     ngOnDestroy(): void {
@@ -88,6 +91,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.selectedNav = "All";
         this.selectedMap = undefined;
         this.active = true;
+        this.refreshTitle();
         this.changeDetector.detectChanges();
     }
 
@@ -101,12 +105,14 @@ export class MapVotingComponent implements OnInit, OnDestroy {
 
     changeSelectedMap(map: MapDataDto) {
         this.selectedMap = map;
+        this.refreshTitle();
         this.changeDetector.detectChanges();
     }
 
     changeToNav(nav: string) {
         this.selectedNav = nav;
         this.selectedMap = undefined;
+        this.refreshTitle();
         this.changeDetector.detectChanges();
     }
 
@@ -155,6 +161,13 @@ export class MapVotingComponent implements OnInit, OnDestroy {
 
     private getMapBuyPrice() {
         return Math.ceil(this.settings.Constants[4] + this.settings.Constants[5] * this.settings.MapsBoughtCounter);
+    }
+
+    private refreshTitle() {
+        this.title = new LanguagePipe().transform('MapVoting', this.settings.Lang);
+        if (this.selectedMap) {
+            this.title += " - " +  this.selectedMap[1];
+        }
     }
 
     @HostListener("document:keyup", ["$event"])
