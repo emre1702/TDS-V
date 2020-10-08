@@ -4,14 +4,13 @@ import { InfoType } from '../enums/info-type.enum';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { EventEmitter } from 'events';
 import { MapVoteDto } from '../../mapvoting/models/mapVoteDto';
-import { interval } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class InfosHandlerService {
-    showCursorInfo: boolean = true;
-    showLobbyLeaveInfo: boolean = true;
+    showCursorInfo: boolean;
+    showLobbyLeaveInfo: boolean;
     mapVotingInfos: MapVoteDto[] = [];
     votedMapInfo: MapVoteDto;
 
