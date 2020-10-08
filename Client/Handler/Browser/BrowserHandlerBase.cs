@@ -25,6 +25,7 @@ namespace TDS_Client.Handler.Browser
         public void CreateBrowser()
         {
             Browser = new HtmlWindow(_url);
+            RAGE.Ui.Console.Log(ConsoleVerbosity.Info, $"Browser for URL {_url} loaded: {(!(Browser is null))} | Active: {Browser.Active} | Id: {Browser.Id}");
             ProcessExecuteList();
         }
 
