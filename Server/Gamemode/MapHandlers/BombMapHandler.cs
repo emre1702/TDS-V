@@ -25,12 +25,13 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
         {
             _lobby = lobby;
             _gamemode = gamemode;
+
+            InitNewMap(lobby.CurrentMap);
         }
 
         internal override void AddEvents(IRoundFightLobbyEventsHandler events)
         {
             base.AddEvents(events);
-            events.InitNewMap += Events_InitNewMap;
             events.RoundClear += RoundClear;
             events.PlayerEnteredColshape += OnPlayerEnterColshape;
         }
@@ -38,7 +39,6 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
         internal override void RemoveEvents(IRoundFightLobbyEventsHandler events)
         {
             base.RemoveEvents(events);
-            events.InitNewMap -= Events_InitNewMap;
             if (events.RoundClear is { })
                 events.RoundClear -= RoundClear;
             events.PlayerEnteredColshape -= OnPlayerEnterColshape;
@@ -46,21 +46,27 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
 
         public void CreateBombTakeMarker(ITDSObject bomb)
         {
-            _bombTakeMarker = NAPI.Marker.CreateMarker(0, bomb.Position, new Vector3(), new Vector3(), 1,
+            NAPI.Task.Run(() =>
+            {
+                _bombTakeMarker = NAPI.Marker.CreateMarker(0, bomb.Position, new Vector3(), new Vector3(), 1,
                                                         new Color(180, 0, 0, 180), true, _lobby.MapHandler.Dimension) as ITDSMarker;
-            var bombTakeCol = NAPI.ColShape.CreateSphereColShape(bomb.Position, 2, _lobby.MapHandler.Dimension) as ITDSColshape;
-            _lobbyBombTakeCol = bombTakeCol;
+                var bombTakeCol = NAPI.ColShape.CreateSphereColShape(bomb.Position, 2, _lobby.MapHandler.Dimension) as ITDSColshape;
+                _lobbyBombTakeCol = bombTakeCol;
+            });
         }
 
         public void DeleteBombTakeMarker()
         {
-            _bombTakeMarker?.Delete();
-            _bombTakeMarker = null;
-            _lobbyBombTakeCol?.Delete();
-            _lobbyBombTakeCol = null;
+            NAPI.Task.Run(() =>
+            {
+                _bombTakeMarker?.Delete();
+                _bombTakeMarker = null;
+                _lobbyBombTakeCol?.Delete();
+                _lobbyBombTakeCol = null;
+            });
         }
 
-        private void Events_InitNewMap(MapDto map)
+        private void InitNewMap(MapDto map)
         {
             if (map.BombInfo is null)
                 return;
@@ -82,10 +88,13 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
 
         private ValueTask RoundClear()
         {
-            foreach (var bombPlantPlace in BombPlantPlaces)
-                bombPlantPlace?.Delete();
-            BombPlantPlaces.Clear();
-            DeleteBombTakeMarker();
+            NAPI.Task.Run(() =>
+            {
+                foreach (var bombPlantPlace in BombPlantPlaces)
+                    bombPlantPlace?.Delete();
+                BombPlantPlaces.Clear();
+                DeleteBombTakeMarker();
+            });
 
             return default;
         }
