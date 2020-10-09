@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Database.Entity.Rest;
@@ -22,6 +23,8 @@ namespace TDS_Server.Data.Interfaces
         void AddPlayer(ITDSPlayer tdsPlayer);
 
         void FuncIterate(Action<ITDSPlayer> func);
+
+        ITDSPlayer? GetNearestPlayer(Vector3 position);
 
         void RemoveAlivePlayer(ITDSPlayer player);
 

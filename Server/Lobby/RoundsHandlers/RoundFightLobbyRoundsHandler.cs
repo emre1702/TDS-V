@@ -35,7 +35,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             Events = events;
             _gamemodesProvider = gamemodesProvider;
 
-            events.InitNewMap += Events_InitNewMap;
+            events.RequestGamemode += Events_RequestGamemode;
             events.RoundEnd += Events_RoundEnd;
             events.PlayerJoined += Events_PlayerJoined;
             events.PlayerLeftAfter += Events_PlayerLeftAfter;
@@ -44,7 +44,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
         protected virtual void RemoveEvents(IBaseLobby lobby)
         {
-            Events.InitNewMap -= Events_InitNewMap;
+            Events.RequestGamemode -= Events_RequestGamemode;
             if (Events.RoundEnd is { })
                 Events.RoundEnd -= Events_RoundEnd;
             if (Events.PlayerJoined is { })
@@ -54,7 +54,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             Events.RemoveAfter -= RemoveEvents;
         }
 
-        private void Events_InitNewMap(MapDto map)
+        private void Events_RequestGamemode(MapDto map)
         {
             CurrentGamemode = _gamemodesProvider.Get(Lobby, map);
         }

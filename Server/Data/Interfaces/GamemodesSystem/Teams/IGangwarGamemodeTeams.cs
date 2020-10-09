@@ -4,7 +4,7 @@
 
     public interface IGangwarGamemodeTeams : IBaseGamemodeTeams
     {
-        ITeam? Attacker { get; }
-        ITeam? Owner { get; }
+        ITeam Attacker { get; }
+        ITeam Owner { get; }
     }
 }

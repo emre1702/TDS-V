@@ -18,7 +18,7 @@ namespace TDS_Server.Core.Init.Services.Creators
                 //.AddTransient<IArmsRace, ArmsRace>()
                 .AddTransient<IBombGamemode, BombGamemode>()
                 .AddTransient<IDeathmatchGamemode, DeathmatchGamemode>()
-                //.AddTransient<IGangwar, Gangwar>()
+                .AddTransient<IGangwarGamemode, GangwarGamemode>()
                 .AddTransient<ISniperGamemode, SniperGamemode>();
     }
 }

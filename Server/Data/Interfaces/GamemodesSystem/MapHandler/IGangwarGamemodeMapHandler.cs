@@ -1,5 +1,4 @@
 ﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.Entities.Gangs;
 
 namespace TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler
 {
@@ -7,7 +6,6 @@ namespace TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler
 
     public interface IGangwarGamemodeMapHandler
     {
-        IGangwarArea Area { get; }
         ITDSObject? TargetObject { get; }
     }
 }

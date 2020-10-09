@@ -25,6 +25,7 @@ namespace TDS_Server.GamemodesSystem.Rounds
 
         public virtual bool CanEndRound(IRoundEndReason roundEndReason) => true;
 
+        /// <summary>In GangAction lobby this isn't checked</summary> ///
         public virtual bool CanJoinDuringRound(ITDSPlayer player, ITeam team) => false;
 
         public virtual void SendPlayerRoundInfoOnJoin(ITDSPlayer player)

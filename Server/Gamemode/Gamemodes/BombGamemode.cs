@@ -22,22 +22,19 @@ namespace TDS_Server.GamemodesSystem.Gamemodes
         public new IBombGamemodeSpecials Specials => (IBombGamemodeSpecials)base.Specials;
         public new IBombGamemodeTeams Teams => (IBombGamemodeTeams)base.Teams;
 
-        private readonly ISettingsHandler _settingsHandler;
-
-        public BombGamemode(ISettingsHandler settingsHandler)
+        public BombGamemode(ISettingsHandler settingsHandler) : base(settingsHandler)
         {
-            _settingsHandler = settingsHandler;
         }
 
         protected override void InitDependencies(BaseGamemodeDependencies? d = null)
         {
-            d ??= new BombDependencies();
+            d ??= new BaseGamemodeDependencies();
 
             d.Deathmatch ??= new BombDeathmatch(this);
             d.MapHandler ??= new BombMapHandler(Lobby, this);
             d.Players ??= new BombPlayers(this);
             d.Rounds ??= new BombRounds(Lobby, this);
-            d.Specials ??= new BombSpecials(Lobby, this, _settingsHandler);
+            d.Specials ??= new BombSpecials(Lobby, this, SettingsHandler);
             d.Teams ??= new BombTeams(Lobby);
             d.Weapons ??= new BombWeapons(this);
 

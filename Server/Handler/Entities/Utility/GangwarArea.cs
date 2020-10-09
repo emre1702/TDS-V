@@ -161,6 +161,7 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
             _checkAtTarget = null;
         }
 
+        //Todo: Implement this
         private bool IsAtTarget(ITDSPlayer player)
         {
             if (player.Dead)
@@ -173,8 +174,8 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
                 return false;
             if (!(roundFightLobby.Rounds.CurrentGamemode is IGangwarGamemode gangwar))
                 return false;
-            if (gangwar.MapHandler.Area != this)
-                return false;
+            //if (gangwar.MapHandler.Area != this)
+            //    return false;
 
             return true;
         }

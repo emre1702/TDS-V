@@ -12,6 +12,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
     {
         public event RequestNewMapDelegate? RequestNewMap;
 
+        public event InitNewMapDelegate? RequestGamemode;
+
         public event InitNewMapDelegate? InitNewMap;
 
         public event RoundStateChangedDelegate? TeamPreparation;
@@ -46,6 +48,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
             }
 
+            RequestGamemode?.Invoke(mapDto);
             InitNewMap?.Invoke(mapDto);
         }
 

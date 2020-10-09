@@ -16,6 +16,8 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         event RequestNewMapDelegate? RequestNewMap;
 
+        event InitNewMapDelegate? RequestGamemode;
+
         event InitNewMapDelegate? InitNewMap;
 
         event RoundStateChangedDelegate? TeamPreparation;

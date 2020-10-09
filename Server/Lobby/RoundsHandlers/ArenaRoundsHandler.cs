@@ -83,12 +83,10 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
             using (await RoundStates.GetContext().ConfigureAwait(false))
             {
-                var joinInRound = CurrentGamemode?.Rounds.CanJoinDuringRound(player, player.Team) == true && RoundStates.CurrentState is InRoundState;
-                if (RoundStates.CurrentState is CountdownState || joinInRound)
+                if (CanJoinRound(player, out var freeze))
                 {
-                    bool freeze = !joinInRound;
                     SetPlayerReadyForRound(player, freeze);
-                    if (joinInRound)
+                    if (!(RoundStates.CurrentState is CountdownState))
                         StartRoundForPlayer(player);
                     return true;
                 }
@@ -112,6 +110,13 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             }
 
             base.SetPlayerReadyForRound(player, freeze);
+        }
+
+        private bool CanJoinRound(ITDSPlayer player, out bool freeze)
+        {
+            var joinInRound = CurrentGamemode?.Rounds.CanJoinDuringRound(player, player.Team) == true && RoundStates.CurrentState is InRoundState;
+            freeze = !joinInRound;
+            return RoundStates.CurrentState is CountdownState || joinInRound;
         }
     }
 }

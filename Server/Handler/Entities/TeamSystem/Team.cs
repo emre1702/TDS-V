@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -164,5 +165,8 @@ namespace TDS_Server.Handler.Entities.TeamSystem
                 player.SendChatMessage(message);
             }
         }
+
+        public ITDSPlayer? GetNearestPlayer(Vector3 position)
+            => Players.MinBy(p => p.Position.DistanceTo(position)).FirstOrDefault();
     }
 }
