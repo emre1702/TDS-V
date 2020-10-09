@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
@@ -24,8 +25,8 @@ namespace TDS_Server.Handler.Sync
             eventsHandler.PlayerLoggedOut += RemovePlayer;
             eventsHandler.PlayerJoinedCustomMenuLobby += AddPlayer;
             eventsHandler.PlayerLeftCustomMenuLobby += RemovePlayer;
-            eventsHandler.CustomLobbyCreated += SyncLobbyAdded;
-            eventsHandler.CustomLobbyRemoved += SyncLobbyRemoved;
+            eventsHandler.LobbyCreated += SyncLobbyAdded;
+            eventsHandler.LobbyRemoved += SyncLobbyRemoved;
         }
 
         public void AddPlayer(ITDSPlayer player)
@@ -34,8 +35,9 @@ namespace TDS_Server.Handler.Sync
             var lobbyDatas = _lobbiesHandler.Lobbies.Where(l => !l.IsOfficial && l.Entity.Type != LobbyType.MapCreateLobby)
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
-
-            player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, Serializer.ToBrowser(lobbyDatas));
+            var lobbyDatasJson = Serializer.ToBrowser(lobbyDatas);
+            NAPI.Task.Run(() =>
+                player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, lobbyDatasJson));
         }
 
         public bool IsPlayerInCustomLobbyMenu(ITDSPlayer player)
@@ -50,25 +52,31 @@ namespace TDS_Server.Handler.Sync
 
         public void SyncLobbyAdded(IBaseLobby lobby)
         {
-            if (lobby.IsOfficial || lobby.Entity.Type == LobbyType.MapCreateLobby)
+            if (!IsLobbyToSync(lobby))
                 return;
 
             string json = Serializer.ToBrowser(GetCustomLobbyData(lobby));
-            for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
+            NAPI.Task.Run(() =>
             {
-                ITDSPlayer player = _playersInCustomLobbyMenu[i];
-                if (!player.LoggedIn)
+                for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
-                    _playersInCustomLobbyMenu.RemoveAt(i);
-                    continue;
+                    ITDSPlayer player = _playersInCustomLobbyMenu[i];
+                    if (!player.LoggedIn)
+                    {
+                        _playersInCustomLobbyMenu.RemoveAt(i);
+                        continue;
+                    }
+                    player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddCustomLobby, json);
                 }
-                player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.AddCustomLobby, json);
-            }
+            });
         }
 
         public void SyncLobbyRemoved(IBaseLobby lobby)
         {
-            if (!lobby.IsOfficial && lobby.Entity.Type != LobbyType.MapCreateLobby)
+            if (!IsLobbyToSync(lobby))
+                return;
+
+            NAPI.Task.Run(() =>
             {
                 for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
@@ -80,7 +88,7 @@ namespace TDS_Server.Handler.Sync
                     }
                     player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.RemoveCustomLobby, lobby.Entity.Id);
                 }
-            }
+            });
         }
 
         private CustomLobbyData GetCustomLobbyData(IBaseLobby lobby)
@@ -126,5 +134,11 @@ namespace TDS_Server.Handler.Sync
                 }).ToList()
             };
         }
+
+        private bool IsLobbyToSync(IBaseLobby lobby)
+            => !(lobby.IsOfficial
+                || lobby.Entity.Type == LobbyType.MapCreateLobby
+                || lobby.Entity.Type == LobbyType.CharCreateLobby
+                || lobby.Entity.Type == LobbyType.GangActionLobby);
     }
 }

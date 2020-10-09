@@ -65,10 +65,6 @@ namespace TDS_Server.Handler.Events
 
         public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
 
-        public event LobbyDelegate? CustomLobbyCreated;
-
-        public event LobbyDelegate? CustomLobbyRemoved;
-
         public event EntityDelegate? EntityDeleted;
 
         public event ErrorDelegate? Error;
@@ -84,6 +80,8 @@ namespace TDS_Server.Handler.Events
         public event EmptyDelegate? LoadedServerBans;
 
         public event LobbyDelegate? LobbyCreated;
+
+        public event LobbyDelegate? LobbyRemoved;
 
         public event EmptyDelegate? MapsLoaded;
 
@@ -251,14 +249,14 @@ namespace TDS_Server.Handler.Events
             ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
         }
 
-        internal void OnCustomLobbyCreated(IBaseLobby lobby)
-        {
-            CustomLobbyCreated?.Invoke(lobby);
-        }
-
-        public void OnLobbyCreateNew(IBaseLobby lobby)
+        public void OnLobbyCreated(IBaseLobby lobby)
         {
             LobbyCreated?.Invoke(lobby);
+        }
+
+        public void OnLobbyRemoved(IBaseLobby lobby)
+        {
+            LobbyRemoved?.Invoke(lobby);
         }
 
         internal void OnCustomLobbyMenuJoin(ITDSPlayer player)
@@ -269,11 +267,6 @@ namespace TDS_Server.Handler.Events
         internal void OnCustomLobbyMenuLeave(ITDSPlayer player)
         {
             PlayerLeftCustomMenuLobby?.Invoke(player);
-        }
-
-        internal void OnCustomLobbyRemoved(IBaseLobby lobby)
-        {
-            CustomLobbyRemoved?.Invoke(lobby);
         }
 
         internal async Task OnGangJoin(ITDSPlayer player, IGang gang, GangRanks rank)
@@ -303,11 +296,6 @@ namespace TDS_Server.Handler.Events
         internal void OnLoadedServerBans()
         {
             LoadedServerBans?.Invoke();
-        }
-
-        internal void OnLobbyCreated(IBaseLobby lobby)
-        {
-            LobbyCreated?.Invoke(lobby);
         }
 
         internal void OnLobbyJoin(ITDSPlayer player, IBaseLobby lobby)

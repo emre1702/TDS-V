@@ -104,8 +104,6 @@ namespace TDS_Client.Handler.Lobby
             try
             {
                 Logging.LogInfo("", "TeamsHandler.AddSameTeam");
-                //Todo: If the server crashes after a teammate dies, it could be because of the blip.
-                // Then try removing the blip on death
                 SameTeamPlayers.Add(player);
                 var prevBlipHandle = player.GetBlipFrom();
                 if (prevBlipHandle != 0)

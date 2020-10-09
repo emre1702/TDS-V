@@ -31,7 +31,6 @@ namespace TDS_Server.Handler
     {
         public readonly Dictionary<int, IBaseLobby> LobbiesByIndex = new Dictionary<int, IBaseLobby>();
 
-        private static readonly HashSet<uint> _dimensionsUsed = new HashSet<uint> { 0 };
         private readonly EventsHandler _eventsHandler;
         private readonly MapsLoadingHandler _mapsHandler;
         private readonly ISettingsHandler _settingsHandler;
@@ -58,6 +57,7 @@ namespace TDS_Server.Handler
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.LobbyCreated += AddLobby;
+            eventsHandler.LobbyRemoved += RemoveLobby;
         }
 
         public ICharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??=
@@ -81,7 +81,6 @@ namespace TDS_Server.Handler
         {
             Lobbies.Add(lobby);
             LobbiesByIndex[lobby.Entity.Id] = lobby;
-            _dimensionsUsed.Add(lobby.MapHandler.Dimension);
         }
 
         public async Task<object?> CreateCustomLobby(ITDSPlayer player, ArraySegment<object> args)
@@ -174,8 +173,6 @@ namespace TDS_Server.Handler
                 _eventsHandler.OnLobbyCreated(arena);
 
                 AddMapsToArena(arena, entity);
-
-                _eventsHandler.OnCustomLobbyCreated(arena);
 
                 await arena.Players.AddPlayer(player, 0);
                 return null;
@@ -339,7 +336,6 @@ namespace TDS_Server.Handler
         {
             LobbiesByIndex.Remove(lobby.Entity.Id);
             Lobbies.Remove(lobby);
-            _dimensionsUsed.Remove(lobby.MapHandler.Dimension);
 
             //Todo: How to do that? Put it in Lobby? check it on event handlers?
             //if (!lobby.IsOfficial)
