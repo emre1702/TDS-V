@@ -29,6 +29,7 @@ namespace TDS_Server.LobbySystem.Players
             {
                 player.SetInvincible(true);
                 player.Freeze(true);
+                player.SetInvisible(true);
 
                 player.TriggerEvent(ToClientEvent.StartCharCreator, charDatasJson, Lobby.MapHandler.Dimension);
             });

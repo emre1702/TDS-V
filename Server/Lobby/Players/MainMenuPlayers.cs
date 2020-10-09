@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
 namespace TDS_Server.LobbySystem.Players
 {
@@ -23,6 +22,7 @@ namespace TDS_Server.LobbySystem.Players
             NAPI.Task.Run(() =>
             {
                 player.SetInvincible(true);
+                player.SetInvisible(true);
             });
             return true;
         }

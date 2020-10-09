@@ -28,6 +28,7 @@ namespace TDS_Server.LobbySystem.Players
                 player.Spawn(spawnPoint, spawnRotation);
                 player.Freeze(false);
                 player.SetInvincible(true);
+                player.SetInvisible(false);
             });
 
             return true;

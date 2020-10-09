@@ -22,6 +22,7 @@ namespace TDS_Server.LobbySystem.Players
             NAPI.Task.Run(() =>
             {
                 player.SetInvincible(true);
+                player.SetInvisible(false);
                 player.Freeze(false);
             });
             return true;
