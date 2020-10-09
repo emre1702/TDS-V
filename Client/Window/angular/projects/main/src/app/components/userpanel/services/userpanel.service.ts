@@ -147,9 +147,7 @@ export class UserpanelService {
     loadSettingsNormal() {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsNormal);
 
-        /*this.settings.Constants = [
-            1, 1, 10000, 60, 12, 23, [[1, "asd"]], "Bonus", "Bonus"
-        ];
+        /*
         this.allSettingsNormal = {
             0: 0, 1: LanguageEnum.English, 2: true, 3: true, 4: TimezoneEnum["(UTC) Coordinated Universal Time"],
             5: 1, 6: true, 7: true, 8: true, 9: true, 10: true, 11: 0, 12: "asd", 13: DateTimeFormatEnum["dd'-'MM'-'yyyy HH':'mm':'ss"],

@@ -7,12 +7,13 @@ import { OrderByPipe } from '../../../pipes/orderby.pipe';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { InfosHandlerService } from '../../infos-handler/services/infos-handler.service';
+import { InitialDatas } from '../../../services/test-datas';
 
 @Injectable({
     providedIn: 'root'
 })
 export class MapVotingService {
-    public mapsInVoting: MapVoteDto[] = [];
+    public mapsInVoting: MapVoteDto[] = InitialDatas.getMapsInVoting();
     public votedForMapId: number;
 
     public mapsInVotingChanged = new EventEmitter();

@@ -10,6 +10,7 @@ import { MatSidenav } from '@angular/material';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { LanguagePipe } from '../../pipes/language.pipe';
 import { bottomToTopEnterAnimation } from '../../animations/bottomToUpEnter.animation';
+import { InitialDatas } from '../../services/test-datas';
 
 @Component({
     selector: 'app-mapvoting',
@@ -22,8 +23,8 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     private static readonly Numpad1KeyCode = 97;
     private static readonly Numpad9KeyCode = 105;
 
-    active = false;
-    data: MapDataDto[] = [];
+    active = InitialDatas.isMapVotingActive;
+    data: MapDataDto[] = InitialDatas.getMapsForVoting();
     selectedNav: string;
     selectedMap: MapDataDto;
     mapSearchFilter = "";

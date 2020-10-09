@@ -14,6 +14,7 @@ import { ThemeSettings } from './interfaces/theme-settings';
 import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
 import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
+import { InitialDatas } from './services/test-datas';
 
 @Component({
     selector: 'app-root',
@@ -41,7 +42,7 @@ import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
     ],
 })
 export class AppComponent {
-    started = false;
+    started = InitialDatas.started;
 
     showMapCreator = false;
     showFreeroam = false;

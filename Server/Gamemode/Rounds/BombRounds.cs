@@ -41,21 +41,21 @@ namespace TDS_Server.GamemodesSystem.Rounds
             _gamemode.Specials.GiveBombToRandomTerrorist();
         }
 
-        private ValueTask InRound()
+        private async ValueTask InRound()
         {
-            _lobby.Players.DoInMain(player =>
-            {
-                if (player.Team is null || player.Team.IsSpectator)
-                    player.SendChatMessage(player.Language.ROUND_MISSION_BOMG_SPECTATOR);
-                else if (player.Team == _gamemode.Teams.Terrorists)
-                    player.SendChatMessage(player.Language.ROUND_MISSION_BOMB_BAD);
-                else
-                    player.SendChatMessage(player.Language.ROUND_MISSION_BOMB_GOOD);
-            });
+            await _lobby.Players.DoInMain(player =>
+             {
+                 if (player.Team is null || player.Team.IsSpectator)
+                     player.SendChatMessage(player.Language.ROUND_MISSION_BOMG_SPECTATOR);
+                 else if (player.Team == _gamemode.Teams.Terrorists)
+                     player.SendChatMessage(player.Language.ROUND_MISSION_BOMB_BAD);
+                 else
+                     player.SendChatMessage(player.Language.ROUND_MISSION_BOMB_GOOD);
+             }).ConfigureAwait(false);
+
+            await NAPI.Task.WaitForMainThread().ConfigureAwait(false);
             if (_gamemode.Players.BombAtPlayer is null)
                 _gamemode.Specials.GiveBombToRandomTerrorist();
-
-            return default;
         }
 
         private ValueTask PlayerJoinedAfter((ITDSPlayer Player, int TeamIndex) data)
