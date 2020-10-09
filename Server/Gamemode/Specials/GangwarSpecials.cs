@@ -33,6 +33,8 @@ namespace TDS_Server.GamemodesSystem.Specials
 
             events.PlayerDied += PlayerDied;
             events.PlayerLeftAfter += PlayerLeftAfter;
+            events.InRound += InRound;
+            events.RoundClear += RoundClear;
         }
 
         internal override void RemoveEvents(IRoundFightLobbyEventsHandler events)
@@ -42,6 +44,10 @@ namespace TDS_Server.GamemodesSystem.Specials
             events.PlayerDied -= PlayerDied;
             if (events.PlayerLeftAfter is { })
                 events.PlayerLeftAfter -= PlayerLeftAfter;
+            if (events.InRound is { })
+                events.InRound -= InRound;
+            if (events.RoundClear is { })
+                events.RoundClear -= RoundClear;
         }
 
         public void PlayerEnteredTargetColShape(ITDSPlayer player)
@@ -63,13 +69,34 @@ namespace TDS_Server.GamemodesSystem.Specials
             return default;
         }
 
+        public virtual ValueTask InRound()
+        {
+            if (_gamemode.MapHandler.TargetObject is null)
+                return default;
+
+            ReplaceTargetMan();
+            if (_playerForcedAtTarget is { })
+                _playerForcedAtTarget.Position = _gamemode.MapHandler.TargetObject.Position;
+
+            return default;
+        }
+
+        private ValueTask RoundClear()
+        {
+            RemoveTargetMan();
+            return default;
+        }
+
         private void ReplaceTargetManIfIsPlayer(ITDSPlayer player)
         {
             if (player == _playerForcedAtTarget)
-            {
-                var nextTargetMan = GetNextTargetMan();
-                SetTargetMan(nextTargetMan);
-            }
+                ReplaceTargetMan();
+        }
+
+        private void ReplaceTargetMan()
+        {
+            var nextTargetMan = GetNextTargetMan();
+            SetTargetMan(nextTargetMan);
         }
 
         private ITDSPlayer? GetNextTargetMan()

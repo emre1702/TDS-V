@@ -23,50 +23,6 @@ namespace TDS_Server.LobbySystem.Gamemodes
                 _ => true
             };
         }
-
-        public override void StartMapChoose()
-        {
-            base.StartMapChoose();
-
-            CreateTargetBlip();
-            CreateTargetObject();
-            CreateTargetTextLabel();
-            CreateTargetColShape();
-        }
-
-        public override void StartMapClear()
-        {
-            base.StartMapClear();
-
-            ClearMapFromTarget();
-        }
-
-        public override void StartRound()
-        {
-            base.StartRound();
-
-            // Do we need to force someone to stay at target? If yes, force him! Kill him if he
-            // doesn't want to stay there!
-            if (!Lobby.IsGangActionLobby && TargetObject is { })
-            {
-                var playerAtTarget = GetNextTargetMan();
-                SetTargetMan(playerAtTarget);
-                if (playerAtTarget is { })
-                    playerAtTarget.Position = TargetObject.Position;
-            }
-        }
-
-        public override void StartRoundCountdown()
-        {
-            base.StartRoundCountdown();
-        }
-
-        public override void StopRound()
-        {
-            base.StopRound();
-
-            SetTargetMan(null);
-        }
     }
 }
 */
