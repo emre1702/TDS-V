@@ -67,7 +67,8 @@ namespace TDS_Server.GamemodesSystem.Specials
         private void CreateBomb(MapDto map)
         {
             var bombPos = map.BombInfo!.PlantPositions[0];
-            Bomb = NAPI.Object.CreateObject(1764669601, new Vector3(bombPos.X, bombPos.Y, bombPos.Z), new Vector3(), 255, Lobby.MapHandler.Dimension) as ITDSObject;
+            NAPI.Task.Run(() => 
+                Bomb = NAPI.Object.CreateObject(1764669601, new Vector3(bombPos.X, bombPos.Y, bombPos.Z), new Vector3(), 255, Lobby.MapHandler.Dimension) as ITDSObject);
         }
 
         private ValueTask RoundClear()
