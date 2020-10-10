@@ -206,7 +206,6 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                 {
                     player.SetSpectates(null);
                     player.Freeze(freeze);
-                    Lobby.Weapons.GivePlayerWeapons(player);
                     player.SetInvisible(false);
                 });
             }
@@ -215,7 +214,6 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                 NAPI.Task.Run(() =>
                 {
                     player.Freeze(true);
-                    player.RemoveAllWeapons();
                     player.SetInvisible(true);
                 });
                 Lobby.Spectator.SetPlayerInSpectateMode(player);

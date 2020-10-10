@@ -14,12 +14,10 @@ namespace TDS_Server.LobbySystem.Weapons
         private List<LobbyWeapons> _allRoundWeapons = new List<LobbyWeapons>();
 
         protected new IRoundFightLobby Lobby => (IRoundFightLobby)base.Lobby;
-        private readonly IRoundFightLobbyEventsHandler _events;
+        protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
 
-        public RoundFightLobbyWeapons(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events) : base(lobby)
+        public RoundFightLobbyWeapons(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events) : base(lobby, events)
         {
-            _events = events;
-
             events.WeaponsLoading += Events_WeaponsLoading;
             events.PlayerWeaponSwitch += OnPlayerWeaponSwitch;
             events.RemoveAfter += RemoveEvents;
@@ -27,9 +25,9 @@ namespace TDS_Server.LobbySystem.Weapons
 
         private void RemoveEvents(IBaseLobby _)
         {
-            _events.WeaponsLoading -= Events_WeaponsLoading;
-            _events.PlayerWeaponSwitch -= OnPlayerWeaponSwitch;
-            _events.RemoveAfter -= RemoveEvents;
+            Events.WeaponsLoading -= Events_WeaponsLoading;
+            Events.PlayerWeaponSwitch -= OnPlayerWeaponSwitch;
+            Events.RemoveAfter -= RemoveEvents;
         }
 
         public override void GivePlayerWeapons(ITDSPlayer player)

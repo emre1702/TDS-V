@@ -21,7 +21,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
         public IDamagesys Damage { get; }
         protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
 
-        public FightLobbyDeathmatch(IFightLobby lobby, IBaseLobbyEventsHandler events, IDamagesys damage, LangHelper langHelper)
+        public FightLobbyDeathmatch(IFightLobby lobby, IFightLobbyEventsHandler events, IDamagesys damage, LangHelper langHelper)
             : base(lobby, events)
         {
             Damage = damage;

@@ -25,7 +25,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         private readonly LangHelper _langHelper;
 
-        public FightLobbyTeamsHandler(IFightLobby lobby, IBaseLobbyEventsHandler events, LangHelper langHelper)
+        public FightLobbyTeamsHandler(IFightLobby lobby, IFightLobbyEventsHandler events, LangHelper langHelper)
             : base(lobby, events)
         {
             _langHelper = langHelper;

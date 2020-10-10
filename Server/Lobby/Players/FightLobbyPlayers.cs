@@ -13,7 +13,7 @@ namespace TDS_Server.LobbySystem.Players
     {
         protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
 
-        public FightLobbyPlayers(IFightLobby lobby, IBaseLobbyEventsHandler events)
+        public FightLobbyPlayers(IFightLobby lobby, IFightLobbyEventsHandler events)
             : base(lobby, events)
         {
         }

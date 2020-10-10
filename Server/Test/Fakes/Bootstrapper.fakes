@@ -1,4 +1,0 @@
-﻿<Fakes xmlns="http://schemas.microsoft.com/fakes/2011/">
-    <Assembly Name="Bootstrapper" Version="1.1.0.0" />
-    <StubGeneration Disable="true" />
-</Fakes>

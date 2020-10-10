@@ -48,12 +48,12 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
             lobbyDependencies ??= new FightLobbyDependencies();
 
-            ((FightLobbyDependencies)lobbyDependencies).Spectator ??= new FightLobbySpectator(this);
-            ((FightLobbyDependencies)lobbyDependencies).Weapons ??= new FightLobbyWeapons(this);
             lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
-            lobbyDependencies.Deathmatch ??= new FightLobbyDeathmatch(this, lobbyDependencies.Events, damageSys, LangHelper);
-            lobbyDependencies.Players ??= new FightLobbyPlayers(this, lobbyDependencies.Events);
-            lobbyDependencies.Teams ??= new FightLobbyTeamsHandler(this, lobbyDependencies.Events, LangHelper);
+            ((FightLobbyDependencies)lobbyDependencies).Spectator ??= new FightLobbySpectator(this);
+            ((FightLobbyDependencies)lobbyDependencies).Weapons ??= new FightLobbyWeapons(this, (IFightLobbyEventsHandler)lobbyDependencies.Events);
+            lobbyDependencies.Deathmatch ??= new FightLobbyDeathmatch(this, (IFightLobbyEventsHandler)lobbyDependencies.Events, damageSys, LangHelper);
+            lobbyDependencies.Players ??= new FightLobbyPlayers(this, (IFightLobbyEventsHandler)lobbyDependencies.Events);
+            lobbyDependencies.Teams ??= new FightLobbyTeamsHandler(this, (IFightLobbyEventsHandler)lobbyDependencies.Events, LangHelper);
 
             Spectator = ((FightLobbyDependencies)lobbyDependencies).Spectator!;
             Weapons = ((FightLobbyDependencies)lobbyDependencies).Weapons!;
