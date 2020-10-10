@@ -1,48 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-      <Nullable>enable</Nullable>
-      <ApplicationIcon />
-      <OutputType>Library</OutputType>
-      <StartupObject />
-      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-      <StartupObject />
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ApplicationIcon />
+        <OutputType>Library</OutputType>
+        <StartupObject />
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <StartupObject />
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="10.0.0" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Core\TDS_Shared.Core.csproj" />
-    <ProjectReference Include="..\..\Shared\Data\TDS_Shared.Data.csproj" />
-    <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
-    <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
-    <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
-    <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
-    <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
-    <ProjectReference Include="..\Lobby\TDS_Server.LobbySystem.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Shared\Core\TDS_Shared.Core.csproj" />
+        <ProjectReference Include="..\..\Shared\Data\TDS_Shared.Data.csproj" />
+        <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
+        <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
+        <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
+        <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+        <ProjectReference Include="..\Gamemode\TDS_Server.GamemodesSystem.csproj" />
+        <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
+        <ProjectReference Include="..\Lobby\TDS_Server.LobbySystem.csproj" />
+        <ProjectReference Include="..\TeamsSystem\TDS_Server.TeamsSystem.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Bootstrapper">
-      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Bootstrapper">
+            <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <Exec Command="B:\cygwin64\bin\dos2unix.exe B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh&#xD;&#xA;B:\cygwin64\bin\dos2unix.exe B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\ServerSync.sh&#xD;&#xA;B:\cygwin64\bin\bash.exe 'B:\Users\EmreKara\Desktop\Tools\GitHub\TDS-V\LocalServerSync.sh'" />
     </Target>
-
 </Project>

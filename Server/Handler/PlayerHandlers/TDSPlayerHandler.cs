@@ -140,16 +140,16 @@ namespace TDS_Server.Handler.PlayerHandlers
                 return;
 
             player.VoiceMuteTime = null;
-            player.SendNotification(player.Language.VOICE_MUTE_EXPIRED);
+            NAPI.Task.Run(() => player.SendNotification(player.Language.VOICE_MUTE_EXPIRED));
 
             if (player.Team is null || player.Team.IsSpectator)
                 return;
 
-            foreach (var target in player.Team.Players)
+            player.Team.Players.DoInMain(target =>
             {
                 if (!target.HasRelationTo(player, PlayerRelation.Block))
                     player.SetVoiceTo(target, true);
-            }
+            });
         }
 
         private void UpdatePlayers(int _)

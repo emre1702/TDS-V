@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -25,8 +26,8 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         private readonly LangHelper _langHelper;
 
-        public FightLobbyTeamsHandler(IFightLobby lobby, IFightLobbyEventsHandler events, LangHelper langHelper)
-            : base(lobby, events)
+        public FightLobbyTeamsHandler(IFightLobby lobby, IFightLobbyEventsHandler events, LangHelper langHelper, ITeamsProvider teamsProvider)
+            : base(lobby, events, teamsProvider)
         {
             _langHelper = langHelper;
         }
@@ -41,11 +42,8 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             var team = player.Team;
             Dictionary<ILanguage, string> texts = _langHelper.GetLangDictionary(_teamOrdersDict[teamOrder]);
 
-            string str = $"[TEAM] {team.ChatColor}{player.DisplayName}: !$150|0|0$";
-            team.FuncIterate(target =>
-            {
-                target.SendChatMessage(str + texts[target.Language]);
-            });
+            string str = $"[TEAM] {team.Chat.Color}{player.DisplayName}: !$150|0|0$";
+            team.Chat.Send(lang => str + texts[lang]);
         }
 
         protected Task ClearTeamPlayersAmounts()
@@ -53,11 +51,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             return Do(teams =>
             {
                 foreach (var team in teams)
-                {
-                    team.AlivePlayers?.Clear();
-                    team.SyncedTeamData.AmountPlayers.AmountAlive = 0;
-                    team.SyncedTeamData.AmountPlayers.Amount = 0;
-                }
+                    team.Players.ClearRound();
             });
         }
 
@@ -80,25 +74,21 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
                 foreach (var team in teams)
                 {
-                    team.SyncAllPlayers();
+                    team.Sync.SyncAllPlayers();
                 }
             });
         }
 
         private void ClearTeamPlayersLists(ITeam[] teams)
         {
-            foreach (var entry in teams)
-            {
-                entry.Players.Clear();
-                entry.AlivePlayers?.Clear();
-                entry.SpectateablePlayers?.Clear();
-            }
+            foreach (var team in teams)
+                team.Players.ClearLists();
         }
 
-        public Task<ITeam?> GetNextNonSpectatorTeamWithPlayers(ITeam? start)
-            => GetNextNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
+        public Task<ITeam?> GetNextTeamWithSpectatablePlayers(ITeam? start)
+            => GetNextTeamWithSpectatablePlayers(start?.Entity.Index ?? 0);
 
-        public Task<ITeam?> GetNextNonSpectatorTeamWithPlayers(short startIndex)
+        public Task<ITeam?> GetNextTeamWithSpectatablePlayers(short startIndex)
         {
             return Do(teams =>
             {
@@ -110,10 +100,10 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 {
                     if (++index > teams.Length - 1)
                         index = 0;
-                } while (teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
+                } while (teams[index].Players.HasAnySpectatable && index != startIndex);
 
                 var team = teams[index];
-                if (team.SpectateablePlayers?.Any() != true)
+                if (team.Players.HasAnySpectatable)
                     return null;
 
                 return team;
@@ -140,7 +130,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             });
         }
 
-        public Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(ITeam? start)
+        public Task<ITeam?> GetPreviousTeamWithSpectatablePlayers(ITeam? start)
            => GetPreviousNonSpectatorTeamWithPlayers(start?.Entity.Index ?? 0);
 
         public Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(short startIndex)
@@ -155,10 +145,10 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 {
                     if (--index < 0)
                         index = teams.Length - 1;
-                } while (teams[index].SpectateablePlayers?.Any() != true && index != startIndex);
+                } while (teams[index].Players.HasAnySpectatable && index != startIndex);
 
                 var team = teams[index];
-                if (team.SpectateablePlayers?.Any() != true)
+                if (team.Players.HasAnySpectatable)
                     return null;
 
                 return team;
@@ -167,7 +157,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         public async Task<string> GetAmountInFightSyncDataJson()
         {
-            var teamPlayerAmounts = await Lobby.Teams.Do(teams => teams.Skip(1).Select(t => t.SyncedTeamData).Select(t => t.AmountPlayers))
+            var teamPlayerAmounts = await Lobby.Teams.Do(teams => teams.Skip(1).Select(t => t.SyncedData).Select(t => t.AmountPlayers))
                 .ConfigureAwait(false);
             return Serializer.ToClient(teamPlayerAmounts);
         }

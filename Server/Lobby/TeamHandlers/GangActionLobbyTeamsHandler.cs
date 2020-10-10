@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.Lobbies;
 
@@ -46,8 +47,9 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         protected new IGangActionLobby Lobby => (IGangActionLobby)base.Lobby;
         private readonly ISettingsHandler _settingsHandler;
 
-        public GangActionLobbyTeamsHandler(GangActionLobby lobby, IRoundFightLobbyEventsHandler events, LangHelper langHelper, ISettingsHandler settingsHandler)
-            : base(lobby, events, langHelper)
+        public GangActionLobbyTeamsHandler(GangActionLobby lobby, IRoundFightLobbyEventsHandler events, LangHelper langHelper, ISettingsHandler settingsHandler,
+            ITeamsProvider teamsProvider)
+            : base(lobby, events, langHelper, teamsProvider)
         {
             _settingsHandler = settingsHandler;
 

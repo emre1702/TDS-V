@@ -71,26 +71,30 @@ namespace TDS_Server.Handler
         public void SendAdminChat(ITDSPlayer player, string message)
         {
             string changedMessage = "[ADMINCHAT] " + player.AdminLevel.FontColor + player.DisplayName + ": !$220|220|220$" + message;
-            _adminsHandler.SendMessage(changedMessage);
+            NAPI.Task.Run(() => _adminsHandler.SendMessage(changedMessage));
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
         public void SendAdminMessage(ITDSPlayer player, string message)
         {
             string changedMessage = player.AdminLevel.FontColor + "[" + player.AdminLevelName + "] !$255|255|255$" + player.DisplayName + ": !$220|220|220$" + message;
-            NAPI.Chat.SendChatMessageToAll(changedMessage);
+            NAPI.Task.Run(() => NAPI.Chat.SendChatMessageToAll(changedMessage));
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
         public void SendGlobalMessage(ITDSPlayer player, string message)
         {
-            string changedmessage = "[GLOBAL] " + (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message + "$Global$";
-            foreach (var target in _tdsPlayerHandler.LoggedInPlayers)
+            string changedMessage = "[GLOBAL] " + (player.Team?.Chat.Color ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message + "$Global$";
+            NAPI.Task.Run(() =>
             {
-                if (target.HasRelationTo(player, TDS_Shared.Data.Enums.PlayerRelation.Block))
-                    continue;
-                target.SendChatMessage(changedmessage);
-            }
+                foreach (var target in _tdsPlayerHandler.LoggedInPlayers)
+                {
+                    if (target.HasRelationTo(player, TDS_Shared.Data.Enums.PlayerRelation.Block))
+                        continue;
+                    target.SendChatMessage(changedMessage);
+                }
+            });
+
             _loggingHandler.LogChat(message, player, isGlobal: true);
         }
 
@@ -98,12 +102,12 @@ namespace TDS_Server.Handler
         {
             if (player.IsPermamuted)
             {
-                player.SendNotification(player.Language.STILL_PERMAMUTED);
+                NAPI.Task.Run(() => player.SendNotification(player.Language.STILL_PERMAMUTED));
                 return;
             }
             if (player.IsMuted)
             {
-                player.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime?.ToString() ?? "?"));
+                NAPI.Task.Run(() => player.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime?.ToString() ?? "?")));
                 return;
             }
 
@@ -136,7 +140,7 @@ namespace TDS_Server.Handler
                 return;
 
             //if (!character.MuteTime.HasValue)
-            string changedMessage = (player.Team?.ChatColor ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message;
+            string changedMessage = (player.Team?.Chat.Color ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message;
             if (isDirty)
                 changedMessage = "!$160|50|0$[DIRTY] " + changedMessage + "$Dirty$";
             player.Lobby.Chat.Send(changedMessage);
@@ -152,7 +156,8 @@ namespace TDS_Server.Handler
         public void SendPrivateMessage(ITDSPlayer player, ITDSPlayer target, string message)
         {
             string changedMessage = "[PM] !$253|132|85$" + player.DisplayName + ": !$220|220|220$" + message;
-            target.SendChatMessage(changedMessage);
+            NAPI.Task.Run(() =>
+                target.SendChatMessage(changedMessage));
             _loggingHandler.LogChat(message, player, target: target);
         }
 
@@ -160,8 +165,8 @@ namespace TDS_Server.Handler
         {
             if (player.Team is null)
                 return;
-            string changedMessage = "[TEAM] " + player.Team.ChatColor + player.DisplayName + ": !$220|220|220$" + message + "$Team$";
-            player.Team.SendMessage(changedMessage);
+            string changedMessage = "[TEAM] " + player.Team.Chat.Color + player.DisplayName + ": !$220|220|220$" + message + "$Team$";
+            player.Team.Chat.Send(changedMessage);
             _loggingHandler.LogChat(message, player, isTeamChat: true);
         }
 

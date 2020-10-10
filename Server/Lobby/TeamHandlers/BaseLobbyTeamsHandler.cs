@@ -7,11 +7,10 @@ using GTANetworkAPI;
 using MoreLinq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Handler.Entities.TeamSystem;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Shared.Data.Utility;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
@@ -23,13 +22,16 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         protected readonly IBaseLobby Lobby;
         protected readonly IBaseLobbyEventsHandler Events;
+        private readonly ITeamsProvider _teamsProvider;
+
         private ITeam[] _teams = Array.Empty<ITeam>();
         private readonly SemaphoreSlim _teamsSemaphore = new SemaphoreSlim(1, 1);
 
-        public BaseLobbyTeamsHandler(IBaseLobby lobby, IBaseLobbyEventsHandler events)
+        public BaseLobbyTeamsHandler(IBaseLobby lobby, IBaseLobbyEventsHandler events, ITeamsProvider teamsProvider)
         {
             Lobby = lobby;
             Events = events;
+            _teamsProvider = teamsProvider;
             InitTeams(Lobby.Entity);
 
             events.PlayerJoined += Events_PlayerJoined;
@@ -48,7 +50,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             _teams = entity.Teams.Any() ? new ITeam[entity.Teams.Max(t => t.Index + 1)] : Array.Empty<ITeam>();
             foreach (var teamEntity in entity.Teams.OrderBy(t => t.Index))
             {
-                var team = new Team(teamEntity);
+                var team = _teamsProvider.Create(teamEntity);
                 _teams[team.Entity.Index] = team;
             }
         }
@@ -60,9 +62,9 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
             return NAPI.Task.RunWait(() =>
             {
-                player.Team?.SyncRemovedPlayer(player);
+                player.Team?.Sync.SyncRemovedPlayer(player);
                 player.SetTeam(team, true);
-                team?.SyncAddedPlayer(player);
+                team?.Sync.SyncAddedPlayer(player);
             });
         }
 
@@ -93,6 +95,6 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             => _teamsSemaphore.Do(() => GetTeamWithFewestPlayer(_teams));
 
         public ITeam GetTeamWithFewestPlayer(ITeam[] teams)
-            => teams.Skip(1).MinBy(t => t.Players.Count).Shuffle().First();
+            => teams.Skip(1).MinBy(t => t.Players.Amount).Shuffle().First();
     }
 }

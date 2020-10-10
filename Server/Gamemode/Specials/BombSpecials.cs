@@ -67,7 +67,7 @@ namespace TDS_Server.GamemodesSystem.Specials
         private void CreateBomb(MapDto map)
         {
             var bombPos = map.BombInfo!.PlantPositions[0];
-            NAPI.Task.Run(() => 
+            NAPI.Task.Run(() =>
                 Bomb = NAPI.Object.CreateObject(1764669601, new Vector3(bombPos.X, bombPos.Y, bombPos.Z), new Vector3(), 255, Lobby.MapHandler.Dimension) as ITDSObject);
         }
 
@@ -130,7 +130,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL,
             // bomb.Position, 200, Dimension); use 0x172AA1B624FA1013 as Hash instead if not getting fixed
             Lobby.Sync.TriggerEvent(ToClientEvent.BombDetonated);
-            _gamemode.Teams.CounterTerrorists.FuncIterate(player =>
+            _gamemode.Teams.CounterTerrorists.Players.Do(player =>
             {
                 if (player.Lifes == 0)
                     return;
@@ -165,11 +165,11 @@ namespace TDS_Server.GamemodesSystem.Specials
 
         public void GiveBombToRandomTerrorist()
         {
-            int amount = _gamemode.Teams.Terrorists.Players.Count;
+            int amount = _gamemode.Teams.Terrorists.Players.Amount;
             if (amount == 0)
                 return;
 
-            ITDSPlayer player = SharedUtils.GetRandom(_gamemode.Teams.Terrorists.Players);
+            ITDSPlayer player = _gamemode.Teams.Terrorists.Players.GetRandom();
             NAPI.Task.Run(() =>
             {
                 if (player.CurrentWeapon == WeaponHash.Unarmed)
@@ -259,7 +259,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             if (Lobby.IsOfficial)
                 player.AddToChallenge(ChallengeType.BombDefuse);
 
-            _gamemode.Teams.Terrorists.FuncIterate(target =>
+            _gamemode.Teams.Terrorists.Players.Do(target =>
             {
                 Lobby.Deathmatch.Damage.UpdateLastHitter(target, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
                 NAPI.Task.Run(() => target.Kill());
@@ -327,15 +327,12 @@ namespace TDS_Server.GamemodesSystem.Specials
 
         private void SendBombDefuseInfos()
         {
-            NAPI.Task.Run(() =>
+            _gamemode.Teams.CounterTerrorists.Players.DoInMain(player =>
             {
-                _gamemode.Teams.CounterTerrorists.FuncIterate(player =>
+                foreach (string str in player.Language.DEFUSE_INFO)
                 {
-                    foreach (string str in player.Language.DEFUSE_INFO)
-                    {
-                        player.SendChatMessage(str);
-                    }
-                });
+                    player.SendChatMessage(str);
+                }
             });
         }
 

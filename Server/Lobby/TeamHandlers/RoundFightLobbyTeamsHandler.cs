@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Handler.Helper;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
@@ -11,8 +11,8 @@ namespace TDS_Server.LobbySystem.TeamHandlers
     {
         protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
 
-        public RoundFightLobbyTeamsHandler(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, LangHelper langHelper)
-            : base(lobby, events, langHelper)
+        public RoundFightLobbyTeamsHandler(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, LangHelper langHelper, ITeamsProvider teamsProvider)
+            : base(lobby, events, langHelper, teamsProvider)
         {
             events.RoundClear += RoundClear;
             events.RoundEnd += RoundEnd;
@@ -37,7 +37,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
                 foreach (ITeam team in teams)
                 {
-                    var teamHp = GetTeamHp(team);
+                    var teamHp = team.Players.GetAlivesHealth(Lobby.Entity.FightSettings.StartArmor, Lobby.Entity.FightSettings.StartHealth);
                     if (teamHp > highestHp)
                     {
                         teamWithHighestHp = team;
@@ -51,22 +51,12 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             });
         }
 
-        private int GetTeamHp(ITeam team)
-        {
-            if (team.AlivePlayers is null)
-                return -1;
-            int teamHp = 0;
-            foreach (var player in team.AlivePlayers)
-                teamHp += player.Health + player.Armor + ((player.Lifes - 1) * (Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth));
-            return teamHp;
-        }
-
         private ValueTask RoundEnd()
         {
             return new ValueTask(Do(teams =>
             {
                 foreach (var team in teams)
-                    team.AlivePlayers?.Clear();
+                    team.Players.ClearAlive();
             }));
         }
 

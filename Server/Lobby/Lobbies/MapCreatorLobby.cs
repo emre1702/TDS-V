@@ -4,20 +4,18 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.Chats;
-using TDS_Server.LobbySystem.Database;
 using TDS_Server.LobbySystem.DependenciesModels;
 using TDS_Server.LobbySystem.EventsHandlers;
 using TDS_Server.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.LobbySystem.MapHandlers;
 using TDS_Server.LobbySystem.Players;
 using TDS_Server.LobbySystem.Sync;
-using TDS_Server.LobbySystem.TeamHandlers;
 using TDS_Shared.Data.Enums;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
@@ -28,14 +26,15 @@ namespace TDS_Server.LobbySystem.Lobbies
         public new IMapCreatorLobbySync Sync => (IMapCreatorLobbySync)base.Sync;
 
         public MapCreatorLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider)
+            ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
         {
         }
 
         public MapCreatorLobby(ITDSPlayer player, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            LobbiesHandler lobbiesHandler, ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
-            : base(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider)
+            LobbiesHandler lobbiesHandler, ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            : base(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler,
+                  loggingHandler, serviceProvider, teamsProvider)
         {
         }
 

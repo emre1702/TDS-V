@@ -16,6 +16,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
@@ -59,11 +60,12 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
         public IBaseLobbySoundsHandler Sounds { get; private set; }
         public IBaseLobbySync Sync { get; private set; }
         public IBaseLobbyTeamsHandler Teams { get; private set; }
+        public ITeamsProvider TeamsProvider { get; }
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public BaseLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
+            ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             Entity = entity;
@@ -72,6 +74,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             GlobalDatabaseHandler = databaseHandler;
             LoggingHandler = loggingHandler;
             ServiceProvider = serviceProvider;
+            TeamsProvider = teamsProvider;
 
             InitDependencies();
 
@@ -86,7 +89,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             lobbyDependencies.Bans ??= new BaseLobbyBansHandler(this, LangHelper);
             lobbyDependencies.Chat ??= new BaseLobbyChat(this, LangHelper);
             lobbyDependencies.ColshapesHandler ??= new BaseLobbyColshapesHandler();
-            lobbyDependencies.Teams ??= new BaseLobbyTeamsHandler(this, lobbyDependencies.Events);
+            lobbyDependencies.Teams ??= new BaseLobbyTeamsHandler(this, lobbyDependencies.Events, TeamsProvider);
             lobbyDependencies.Database ??= new BaseLobbyDatabase(this, GlobalDatabaseHandler, lobbyDependencies.Events);
             lobbyDependencies.Deathmatch ??= new BaseLobbyDeathmatch(this, lobbyDependencies.Events);
             lobbyDependencies.MapHandler ??= new BaseLobbyMapHandler(this, lobbyDependencies.Events);

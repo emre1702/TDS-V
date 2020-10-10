@@ -3,6 +3,7 @@ using System;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
@@ -24,8 +25,8 @@ namespace TDS_Server.LobbySystem.Lobbies
     public class MainMenu : BaseLobby, IMainMenu
     {
         public MainMenu(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler, ILoggingHandler loggingHandler,
-            IServiceProvider serviceProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
         {
         }
 

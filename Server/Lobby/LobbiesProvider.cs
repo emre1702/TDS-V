@@ -17,7 +17,7 @@ namespace TDS_Server.LobbySystem
         public LobbiesProvider(IServiceProvider serviceProvider)
             => _serviceProvider = serviceProvider;
 
-        public TLobby Get<TLobby>(LobbyDb entity) where TLobby : IBaseLobby
+        public TLobby Create<TLobby>(LobbyDb entity) where TLobby : IBaseLobby
         {
             IBaseLobby lobby;
             var type = typeof(TLobby);
@@ -39,7 +39,7 @@ namespace TDS_Server.LobbySystem
             return (TLobby)lobby;
         }
 
-        public TLobby Get<TLobby>(ITDSPlayer owner) where TLobby : IBaseLobby
+        public TLobby Create<TLobby>(ITDSPlayer owner) where TLobby : IBaseLobby
         {
             IBaseLobby lobby;
             var type = typeof(TLobby);
@@ -53,7 +53,7 @@ namespace TDS_Server.LobbySystem
             return (TLobby)lobby;
         }
 
-        public IBaseLobby Get(LobbyType lobbyType, LobbyDb entity)
+        public IBaseLobby Create(LobbyType lobbyType, LobbyDb entity)
         {
             IBaseLobby lobby = lobbyType switch
             {

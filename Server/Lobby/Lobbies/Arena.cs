@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.MapVotings;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
@@ -36,8 +37,8 @@ namespace TDS_Server.LobbySystem.Lobbies
 
         public Arena(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider)
+            ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
         {
         }
 
@@ -56,7 +57,7 @@ namespace TDS_Server.LobbySystem.Lobbies
             ((ArenaDependencies)lobbyDependencies).Rounds ??= new ArenaRoundsHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, gamemodesProvider);
             ((ArenaDependencies)lobbyDependencies).Statistics ??= new ArenaStatistics(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);
             ((ArenaDependencies)lobbyDependencies).Sync ??= new ArenaSync(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);
-            lobbyDependencies.Teams ??= new ArenaTeamsHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, LangHelper);
+            lobbyDependencies.Teams ??= new ArenaTeamsHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, LangHelper, TeamsProvider);
 
             MapVoting = ((ArenaDependencies)lobbyDependencies).MapVoting!;
 

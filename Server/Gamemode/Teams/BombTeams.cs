@@ -1,7 +1,7 @@
 ﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Teams;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 
 namespace TDS_Server.GamemodesSystem.Teams
 {

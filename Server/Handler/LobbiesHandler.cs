@@ -167,7 +167,7 @@ namespace TDS_Server.Handler
                 };
                 //entity.LobbyMaps.Add(new LobbyMaps { MapId = -1 });
 
-                var arena = _lobbiesProvider.Get<IArena>(entity);
+                var arena = _lobbiesProvider.Create<IArena>(entity);
                 await arena.Events.TriggerCreated(entity);
 
                 _eventsHandler.OnLobbyCreated(arena);
@@ -256,7 +256,7 @@ namespace TDS_Server.Handler
 
             foreach (Lobbies lobbyEntity in lobbies)
             {
-                var lobby = _lobbiesProvider.Get(lobbyEntity.Type, lobbyEntity);
+                var lobby = _lobbiesProvider.Create(lobbyEntity.Type, lobbyEntity);
 
                 if (lobby is IArena arena)
                     AddMapsToArena(arena, lobbyEntity);
@@ -283,7 +283,7 @@ namespace TDS_Server.Handler
                     if (await lobby.Bans.CheckIsBanned(player))
                         return null;
 
-                    lobby = _lobbiesProvider.Get<IMapCreatorLobby>(player);
+                    lobby = _lobbiesProvider.Create<IMapCreatorLobby>(player);
                     await lobby.Events.TriggerCreated(lobby.Entity);
                     _eventsHandler.OnLobbyCreated(lobby);
                 }
@@ -292,7 +292,7 @@ namespace TDS_Server.Handler
                     if (await lobby.Bans.CheckIsBanned(player))
                         return null;
 
-                    lobby = _lobbiesProvider.Get<ICharCreateLobby>(player);
+                    lobby = _lobbiesProvider.Create<ICharCreateLobby>(player);
                     await lobby.Events.TriggerCreated(lobby.Entity);
                     _eventsHandler.OnLobbyCreated(lobby);
                 }

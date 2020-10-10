@@ -1,4 +1,6 @@
-﻿namespace TDS_Server.Data.Interfaces.GamemodesSystem.Teams
+﻿using TDS_Server.Data.Interfaces.TeamsSystem;
+
+namespace TDS_Server.Data.Interfaces.GamemodesSystem.Teams
 {
 #nullable enable
 

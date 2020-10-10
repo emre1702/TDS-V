@@ -41,7 +41,6 @@ namespace TDS_Server.LobbySystem.Players
             if (!worked)
                 return false;
 
-            player.Team?.SpectateablePlayers?.Remove(player);
             player.LastKillAt = null;
             player.KillingSpree = 0;
             player.CurrentRoundStats = null;

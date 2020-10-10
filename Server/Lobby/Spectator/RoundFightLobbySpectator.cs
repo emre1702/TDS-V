@@ -36,7 +36,7 @@ namespace TDS_Server.LobbySystem.Spectator
 
         public async ValueTask SetPlayerCantBeSpectatedAnymore(ITDSPlayer player)
         {
-            player.Team?.SpectateablePlayers?.Remove(player);
+            player.Team?.Players.RemoveSpectatable(player);
 
             if (player.HasSpectators())
             {

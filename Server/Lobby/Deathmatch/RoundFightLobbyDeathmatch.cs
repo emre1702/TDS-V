@@ -28,7 +28,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
         public async Task RemovePlayerFromAlive(ITDSPlayer player)
         {
-            player.Team?.RemoveAlivePlayer(player);
+            player.Team?.Players.RemoveAlive(player);
             await Lobby.Spectator.SetPlayerCantBeSpectatedAnymore(player).ConfigureAwait(false);
         }
 

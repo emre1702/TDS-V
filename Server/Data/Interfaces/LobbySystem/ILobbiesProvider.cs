@@ -7,10 +7,10 @@ namespace TDS_Server.Data.Interfaces.LobbySystem
 {
     public interface ILobbiesProvider
     {
-        TLobby Get<TLobby>(ITDSPlayer owner) where TLobby : IBaseLobby;
+        TLobby Create<TLobby>(ITDSPlayer owner) where TLobby : IBaseLobby;
 
-        TLobby Get<TLobby>(LobbyDb entity) where TLobby : IBaseLobby;
+        TLobby Create<TLobby>(LobbyDb entity) where TLobby : IBaseLobby;
 
-        IBaseLobby Get(LobbyType lobbyType, LobbyDb entity);
+        IBaseLobby Create(LobbyType lobbyType, LobbyDb entity);
     }
 }

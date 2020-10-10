@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GamemodesSystem;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.RoundEndReasons;
@@ -56,7 +56,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
         private void Events_RequestGamemode(MapDto map)
         {
-            CurrentGamemode = _gamemodesProvider.Get(Lobby, map);
+            CurrentGamemode = _gamemodesProvider.Create(Lobby, map);
         }
 
         protected virtual async ValueTask Events_RoundEnd()
@@ -128,14 +128,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         public virtual async Task CheckForEnoughAlive()
         {
             (int teamAmountWithAlive, int teamAmount) = await Lobby.Teams.Do(teams =>
-                (teams.Count(t => t.AlivePlayers?.Count > 0),
+                (teams.Count(t => t.Players.AmountAlive > 0),
                 teams.Count(t => !t.IsSpectator))).ConfigureAwait(false);
 
             switch ((teamAmount, teamAmountWithAlive))
             {
                 // 2+ teams, <= 1 in round  ->  end
                 case var (amount, amountAlive) when amount > 1 && amountAlive <= 1:
-                    var winnerTeam = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count >= 1)).ConfigureAwait(false);
+                    var winnerTeam = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.Players.AmountAlive >= 1)).ConfigureAwait(false);
                     Lobby.Rounds.RoundStates.EndRound(new DeathRoundEndReason(winnerTeam));
                     break;
 
@@ -146,7 +146,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
                 // 1 team, 1 in round  ->  check for amount of players, if <= 1   ->  end
                 case (1, 1):
-                    var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count > 0)?.AlivePlayers?.Count)
+                    var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.Players.AmountAlive > 0)?.Players.AmountAlive)
                         .ConfigureAwait(false);
                     if (amountPlayers <= 1)
                         Lobby.Rounds.RoundStates.EndRound(new DeathRoundEndReason(null));
@@ -164,7 +164,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                     return true;
 
                 (int teamAmountWithAlive, int teamAmount) = await Lobby.Teams.Do(teams =>
-                    (teams.Count(t => t.AlivePlayers?.Count > 0),
+                    (teams.Count(t => t.Players.AmountAlive > 0),
                     teams.Count(t => !t.IsSpectator))).ConfigureAwait(false);
 
                 switch ((teamAmount, teamAmountWithAlive))
@@ -179,7 +179,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
                     // 1 team, 1 in round  ->  check for amount of players, if <= 1   ->  end
                     case (1, 1):
-                        var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.AlivePlayers?.Count > 0)?.AlivePlayers?.Count)
+                        var amountPlayers = await Lobby.Teams.Do(teams => teams.FirstOrDefault(t => t.Players.AmountAlive > 0)?.Players.AmountAlive)
                             .ConfigureAwait(false);
                         if (amountPlayers <= 1)
                             endRound = true;
@@ -199,8 +199,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
             if (player.Team != null && !player.Team.IsSpectator)
             {
-                if (player.Team.SpectateablePlayers != null && !player.Team.SpectateablePlayers.Contains(player))
-                    player.Team.SpectateablePlayers?.Add(player);
+                player.Team.Players.AddToSpectatable(player);
 
                 NAPI.Task.Run(() =>
                 {

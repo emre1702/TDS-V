@@ -9,10 +9,10 @@ namespace TDS_Server.LobbySystem.Chats
 {
     public class BaseLobbyChat : IBaseLobbyChat
     {
-        protected Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby Lobby { get; }
+        protected IBaseLobby Lobby { get; }
         private readonly LangHelper _langHelper;
 
-        public BaseLobbyChat(Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby lobby, LangHelper langHelper)
+        public BaseLobbyChat(IBaseLobby lobby, LangHelper langHelper)
             => (Lobby, _langHelper) = (lobby, langHelper);
 
         public virtual void Send(string msg)

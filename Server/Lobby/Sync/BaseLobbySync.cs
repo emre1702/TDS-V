@@ -84,7 +84,7 @@ namespace TDS_Server.LobbySystem.Sync
         private ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
             var playerRemoteIdsJson = Serializer.ToClient(Lobby.Players.GetPlayers().Select(p => p.RemoteId));
-            var syncedTeamDataJson = Serializer.ToClient(Lobby.Teams.GetTeams().Select(t => t.SyncedTeamData));
+            var syncedTeamDataJson = Serializer.ToClient(Lobby.Teams.GetTeams().Select(t => t.SyncedData));
 
             NAPI.Task.Run(() =>
             {

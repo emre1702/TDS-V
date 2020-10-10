@@ -21,7 +21,7 @@ namespace TDS_Server.GamemodesSystem
             SniperGamemode.Init(dbContext);
         }
 
-        public TGamemode Get<TGamemode>(IRoundFightLobby lobby, MapDto map) where TGamemode : IBaseGamemode
+        public TGamemode Create<TGamemode>(IRoundFightLobby lobby, MapDto map) where TGamemode : IBaseGamemode
         {
             var gamemode = _serviceProvider.GetService<TGamemode>();
             if (gamemode is null)
@@ -32,7 +32,7 @@ namespace TDS_Server.GamemodesSystem
             return gamemode;
         }
 
-        public IBaseGamemode Get(IRoundFightLobby lobby, MapDto map)
+        public IBaseGamemode Create(IRoundFightLobby lobby, MapDto map)
         {
             IBaseGamemode gamemode = map.BrowserSyncedData.Type switch
             {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GamemodesSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Data.RoundEndReasons;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers
@@ -28,7 +28,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             // if owner is alive only the target should be able to end the round
             // if attacker is alive we need to check if owner is alive or could still join
 
-            if (Lobby.Teams.Owner.AlivePlayers!.Count > 0)
+            if (Lobby.Teams.Owner.Players.HasAnyAlive)
                 return Task.CompletedTask;
 
             if (!OwnerCanJoin())

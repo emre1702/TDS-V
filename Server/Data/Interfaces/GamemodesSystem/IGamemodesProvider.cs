@@ -6,8 +6,8 @@ namespace TDS_Server.Data.Interfaces.GamemodesSystem
 {
     public interface IGamemodesProvider
     {
-        IBaseGamemode Get(IRoundFightLobby lobby, MapDto map);
+        IBaseGamemode Create(IRoundFightLobby lobby, MapDto map);
 
-        TGamemode Get<TGamemode>(IRoundFightLobby lobby, MapDto map) where TGamemode : IBaseGamemode;
+        TGamemode Create<TGamemode>(IRoundFightLobby lobby, MapDto map) where TGamemode : IBaseGamemode;
     }
 }

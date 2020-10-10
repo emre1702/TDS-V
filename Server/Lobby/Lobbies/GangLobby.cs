@@ -5,6 +5,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Actions;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
@@ -34,8 +35,8 @@ namespace TDS_Server.LobbySystem.Lobbies
 
         public GangLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider)
+            ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
         {
         }
 
@@ -53,7 +54,7 @@ namespace TDS_Server.LobbySystem.Lobbies
             lobbyDependencies.MapHandler ??= new GangLobbyMapHandler(this, lobbyDependencies.Events, GlobalEventsHandler, gangHousesHandler);
             lobbyDependencies.Notifications ??= new GangLobbyNotifications(this, LangHelper);
             lobbyDependencies.Players ??= new GangLobbyPlayers(this, lobbyDependencies.Events);
-            lobbyDependencies.Teams ??= new GangLobbyTeamsHandler(this, lobbyDependencies.Events, gangsHandler);
+            lobbyDependencies.Teams ??= new GangLobbyTeamsHandler(this, lobbyDependencies.Events, gangsHandler, TeamsProvider);
             ((GangLobbyDependencies)lobbyDependencies).Vehicles ??= new GangLobbyVehicles(this, lobbyDependencies.Events);
 
             Actions = ((GangLobbyDependencies)lobbyDependencies).Actions!;

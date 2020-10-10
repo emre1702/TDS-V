@@ -185,13 +185,10 @@ namespace TDS_Server.LobbySystem.Players
 
         public void SetPlayerDataAlive(ITDSPlayer player)
         {
-            if (player.Team is null || player.Team.AlivePlayers is null)
+            if (player.Team is null)
                 return;
             player.Lifes = (short)Lobby.Deathmatch.AmountLifes;
-            player.Team.AlivePlayers.Add(player);
-            var teamAmountData = player.Team.SyncedTeamData.AmountPlayers;
-            ++teamAmountData.Amount;
-            ++teamAmountData.AmountAlive;
+            player.Team.Players.AddAlive(player);
         }
 
         public void RespawnPlayer(ITDSPlayer player)

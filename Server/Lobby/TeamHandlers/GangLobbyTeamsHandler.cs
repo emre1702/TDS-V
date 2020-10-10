@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.LobbySystem.Lobbies;
 
@@ -10,7 +11,8 @@ namespace TDS_Server.LobbySystem.TeamHandlers
     {
         private readonly GangsHandler _gangsHandler;
 
-        public GangLobbyTeamsHandler(GangLobby lobby, IBaseLobbyEventsHandler events, GangsHandler gangsHandler) : base(lobby, events)
+        public GangLobbyTeamsHandler(GangLobby lobby, IBaseLobbyEventsHandler events, GangsHandler gangsHandler, ITeamsProvider teamsProvider)
+            : base(lobby, events, teamsProvider)
         {
             _gangsHandler = gangsHandler;
             LoadGangTeams();

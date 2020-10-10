@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -17,8 +17,8 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
         {
             if (team != Team || forceIsNew)
             {
-                Team?.RemovePlayer(this);
-                team?.AddPlayer(this);
+                Team?.Players.Remove(this);
+                team?.Players.Add(this);
 
                 _team = team;
 

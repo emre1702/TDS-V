@@ -39,7 +39,6 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             }
         }
 
-
         public override void ChangeMuteTime(ITDSPlayer admin, int minutes, string reason)
         {
             if (Entity is null)
@@ -57,10 +56,10 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 
             if (VoiceMuteTime is { } && Team is { })
             {
-                foreach (var player in Team.Players)
+                Team.Players.DoInMain(player =>
                 {
                     SetVoiceTo(player, false);
-                }
+                });
             }
         }
     }

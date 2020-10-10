@@ -82,72 +82,66 @@ namespace TDS_Server.LobbySystem.Spectator
 
         private async Task<ITDSPlayer?> GetNextSpectatePlayerInAllTeams(ITDSPlayer start)
         {
-            var teamIndex = start.Team?.Entity.Index ?? 0;
-            if (teamIndex == 0)
-                ++teamIndex;
-            var teamlist = (await Lobby.Teams.GetTeam(teamIndex).ConfigureAwait(false)).SpectateablePlayers;
-            if (teamlist is null)
-                return null;
-            var charIndex = teamlist.IndexOf(start) + 1;
-            if (teamlist.Count == 0 || charIndex >= teamlist.Count - 1)
-            {
-                var team = await Lobby.Teams.GetNextNonSpectatorTeamWithPlayers(start.Team).ConfigureAwait(false);
-                if (team is null)
-                    return null;
-                teamlist = team.SpectateablePlayers;
-                if (teamlist is null)
-                    return null;
-                charIndex = 0;
-            }
-            return teamlist[charIndex];
+            var nextIndexInSameTeam = GetNextSpectatePlayerIndexInSameTeam(start);
+            // nextIndexInSameTeam == 0   =>   there is no next player in same team, only previous players
+            // But then we should have to use next team instead.
+            if (nextIndexInSameTeam.HasValue && nextIndexInSameTeam != 0)
+                return start.Team?.Players.GetSpectatableAtIndex(nextIndexInSameTeam.Value);
+
+            var nextTeam = await Lobby.Teams.GetNextTeamWithSpectatablePlayers(start.Team).ConfigureAwait(false);
+            return nextTeam?.Players.GetSpectatableAtIndex(0);
         }
 
         private ITDSPlayer? GetNextSpectatePlayerInSameTeam(ITDSPlayer start)
         {
-            var teamlist = start.Team?.SpectateablePlayers;
-            if (teamlist is null || teamlist.Count == 0)
+            var nextIndex = GetNextSpectatePlayerIndexInSameTeam(start);
+            if (nextIndex is null)
                 return null;
-            int startindex = teamlist.IndexOf(start) + 1;
-            if (startindex >= teamlist.Count - 1)
-                startindex = 0;
-            return teamlist[startindex];
+            return start.Team?.Players.GetSpectatableAtIndex(nextIndex.Value);
+        }
+
+        private int? GetNextSpectatePlayerIndexInSameTeam(ITDSPlayer start)
+        {
+            if (start.Team is null || start.Team.IsSpectator)
+                return null;
+            if (start.Team.Players.AmountSpectatable == 0)
+                return null;
+            var playerIndexToTake = start.Team.Players.GetSpectatableIndex(start) + 1;
+            if (playerIndexToTake >= start.Team.Players.AmountSpectatable)
+                playerIndexToTake = 0;
+            return playerIndexToTake;
         }
 
         private async Task<ITDSPlayer?> GetPreviousSpectatePlayerInAllTeams(ITDSPlayer start)
         {
-            var teamIndex = (int?)start.Team?.Entity.Index ?? 0;
-            var teamlist = await Lobby.Teams.Do(teams =>
-            {
-                if (teamIndex == 0)
-                    teamIndex = teams.Length - 1;
-                return teams[teamIndex].SpectateablePlayers;
-            }).ConfigureAwait(false);
+            var previousIndexInSameTeam = GetPreviousSpectatePlayerIndexInSameTeam(start);
+            // nextIndexInSameTeam == endIndex   =>   there is no previous player in same team, only next players
+            // But then we should have to use previous team instead.
+            if (previousIndexInSameTeam.HasValue && previousIndexInSameTeam != start.Team!.Players.AmountSpectatable - 1)
+                return start.Team.Players.GetSpectatableAtIndex(previousIndexInSameTeam.Value);
 
-            if (teamlist is null)
-                return null;
-            var charIndex = teamlist.IndexOf(start) - 1;
-            if (teamlist.Count == 0 || charIndex < 0)
-            {
-                var team = await Lobby.Teams.GetPreviousNonSpectatorTeamWithPlayers(start.Team).ConfigureAwait(false);
-                if (team is null)
-                    return null;
-                teamlist = team.SpectateablePlayers;
-                if (teamlist is null)
-                    return null;
-                charIndex = teamlist.Count - 1;
-            }
-            return teamlist[charIndex];
+            var nextTeam = await Lobby.Teams.GetPreviousTeamWithSpectatablePlayers(start.Team).ConfigureAwait(false);
+            return nextTeam?.Players.GetSpectatableAtIndex(0);
         }
 
         private ITDSPlayer? GetPreviousSpectatePlayerInSameTeam(ITDSPlayer start)
         {
-            var teamlist = start.Team?.SpectateablePlayers;
-            if (teamlist is null || teamlist.Count == 0)
+            var previousIndex = GetPreviousSpectatePlayerIndexInSameTeam(start);
+            if (previousIndex is null)
                 return null;
-            var startindex = teamlist.IndexOf(start) - 1;
-            if (startindex < 0)
-                startindex = teamlist.Count - 1;
-            return teamlist[startindex];
+            return start.Team?.Players.GetSpectatableAtIndex(previousIndex.Value);
+        }
+
+        private int? GetPreviousSpectatePlayerIndexInSameTeam(ITDSPlayer start)
+        {
+            if (start.Team is null || start.Team.IsSpectator)
+                return null;
+            if (start.Team.Players.AmountSpectatable == 0)
+                return null;
+            var playerIndexToTake = start.Team.Players.GetSpectatableIndex(start) - 1;
+            if (playerIndexToTake < 0)
+                playerIndexToTake = start.Team.Players.AmountSpectatable - 1;
+            return playerIndexToTake;
         }
     }
 }

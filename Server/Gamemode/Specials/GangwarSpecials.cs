@@ -102,12 +102,12 @@ namespace TDS_Server.GamemodesSystem.Specials
         private ITDSPlayer? GetNextTargetMan()
         {
             if (Lobby.Rounds.RoundStates.CurrentState is IInRoundState)
-                return SharedUtils.GetRandom(_gamemode.Teams.Attacker.Players);
+                return _gamemode.Teams.Attacker.Players.GetRandom();
 
             if (_gamemode.MapHandler.TargetObject is null)
                 return null;
 
-            return _gamemode.Teams.Attacker.GetNearestPlayer(_gamemode.MapHandler.TargetObject.Position);
+            return _gamemode.Teams.Attacker.Players.GetNearestPlayer(_gamemode.MapHandler.TargetObject.Position);
         }
 
         private void SetTargetMan(ITDSPlayer? player)
@@ -117,7 +117,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 return;
 
             _playerForcedAtTarget = player;
-            _gamemode.Teams.Attacker.FuncIterate(player =>
+            _gamemode.Teams.Attacker.Players.DoInMain(player =>
                 player.SendNotification(string.Format(player.Language.TARGET_PLAYER_DEFEND_INFO, _playerForcedAtTarget.DisplayName)));
 
             var targetObjectPositionJson = Serializer.ToClient(_gamemode.MapHandler.TargetObject!.Position);
