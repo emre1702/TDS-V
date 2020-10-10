@@ -33,6 +33,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public event PlayerColshapeDelegate? PlayerEnteredColshape;
 
+        public event PlayerDelegate? PlayerSpawned;
+
         public bool IsRemoved { get; private set; }
 
         private readonly EventsHandler _eventsHandler;
@@ -90,6 +92,11 @@ namespace TDS_Server.LobbySystem.EventsHandlers
         public void TriggerPlayerEnteredColshape(ITDSColshape colshape, ITDSPlayer player)
         {
             PlayerEnteredColshape?.Invoke(colshape, player);
+        }
+
+        public void TriggerPlayerSpawned(ITDSPlayer player)
+        {
+            PlayerSpawned?.Invoke(player);
         }
     }
 }

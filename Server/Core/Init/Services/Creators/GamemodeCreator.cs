@@ -15,7 +15,7 @@ namespace TDS_Server.Core.Init.Services.Creators
 
         internal static IServiceCollection WithGamemodeTypes(this IServiceCollection serviceCollection)
             => serviceCollection
-                //.AddTransient<IArmsRace, ArmsRace>()
+                .AddTransient<IArmsRaceGamemode, ArmsRaceGamemode>()
                 .AddTransient<IBombGamemode, BombGamemode>()
                 .AddTransient<IDeathmatchGamemode, DeathmatchGamemode>()
                 .AddTransient<IGangwarGamemode, GangwarGamemode>()

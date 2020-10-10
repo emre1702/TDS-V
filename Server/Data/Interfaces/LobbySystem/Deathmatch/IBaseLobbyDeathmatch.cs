@@ -6,7 +6,5 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Deathmatch
     public interface IBaseLobbyDeathmatch
     {
         Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon);
-
-        void OnPlayerSpawned(ITDSPlayer player);
     }
 }

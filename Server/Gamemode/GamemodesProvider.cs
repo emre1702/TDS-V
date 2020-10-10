@@ -40,7 +40,7 @@ namespace TDS_Server.GamemodesSystem
                 MapType.Bomb => _serviceProvider.GetRequiredService<IBombGamemode>(),
                 MapType.Sniper => _serviceProvider.GetRequiredService<ISniperGamemode>(),
                 MapType.Gangwar => _serviceProvider.GetRequiredService<IGangwarGamemode>(),
-                //MapType.ArmsRace => _serviceProvider.GetRequiredService<IArmsRace>(),
+                MapType.ArmsRace => _serviceProvider.GetRequiredService<IArmsRaceGamemode>(),
 
                 _ => throw new ArgumentException($"LobbiesProvider doesn't create lobby with map for map type '{map.BrowserSyncedData.Type}'.")
             };

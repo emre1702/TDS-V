@@ -40,6 +40,8 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
 
         event PlayerColshapeDelegate? PlayerEnteredColshape;
 
+        event PlayerDelegate? PlayerSpawned;
+
         Task TriggerCreated(LobbyDb entity);
 
         Task TriggerRemove();
@@ -51,5 +53,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
         void TriggerNewBan(PlayerBans ban, ulong? targetDiscordUserId);
 
         void TriggerPlayerEnteredColshape(ITDSColshape colshape, ITDSPlayer player);
+
+        void TriggerPlayerSpawned(ITDSPlayer player);
     }
 }

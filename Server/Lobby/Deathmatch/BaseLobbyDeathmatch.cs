@@ -22,6 +22,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
             events.PlayerLeftAfter += ResetPlayer;
             events.RemoveAfter += RemoveEvents;
+            events.PlayerSpawned += OnPlayerSpawned;
         }
 
         protected virtual void RemoveEvents(IBaseLobby lobby)
@@ -29,6 +30,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
             if (Events.PlayerLeftAfter is { })
                 Events.PlayerLeftAfter -= ResetPlayer;
             Events.RemoveAfter -= RemoveEvents;
+            Events.PlayerSpawned -= OnPlayerSpawned;
         }
 
         public virtual Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
@@ -37,8 +39,9 @@ namespace TDS_Server.LobbySystem.Deathmatch
             return Task.CompletedTask;
         }
 
-        public virtual void OnPlayerSpawned(ITDSPlayer player)
+        protected virtual void OnPlayerSpawned(ITDSPlayer player)
         {
+            // Add weapons here
             RemoveAfterDeathSpawnTimer(player);
             player.Health = Lobby.Entity.FightSettings?.StartHealth ?? 100;
             player.Armor = Lobby.Entity.FightSettings?.StartArmor ?? 100;

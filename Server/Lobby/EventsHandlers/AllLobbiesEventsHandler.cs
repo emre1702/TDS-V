@@ -18,6 +18,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         private async void EventsHandler_PlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint reason)
         {
+            // Triggering the event for lobby events handler is handled in Deathmatch.OnPlayerDeath
             var task = player.Lobby?.Deathmatch.OnPlayerDeath(player, killer, reason);
             if (task is { })
                 await task.ConfigureAwait(false);
@@ -30,7 +31,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             => new ValueTask(player.Lobby?.Players.OnPlayerLoggedOut(player) ?? Task.CompletedTask);
 
         private void EventsHandler_PlayerSpawned(ITDSPlayer player)
-            => player.Lobby?.Deathmatch.OnPlayerSpawned(player);
+            => player.Lobby?.Events.TriggerPlayerSpawned(player);
 
         private void EventsHandler_PlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
