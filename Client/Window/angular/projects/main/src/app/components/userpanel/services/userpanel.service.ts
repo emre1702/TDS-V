@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UserpanelCommandDataDto } from '../interfaces/userpanelCommandDataDto';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { EventEmitter } from 'events';
@@ -13,15 +12,9 @@ import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuesti
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { UserpanelSettingSpecialDataDto } from '../interfaces/userpanelSettingSpecialDataDto';
-import { LanguageEnum } from '../../../enums/language.enum';
-import { TimezoneEnum } from '../enums/timezone.enum';
-import { DateTimeFormatEnum } from '../enums/datetime-format.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
-import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 import { UserpanelSupportRequestListData } from '../interfaces/userpanelSupportRequestListData';
 import { UserpanelSettingCommandDataDto } from '../interfaces/settings-commands/userpanelSettingCommandDataDto';
-import { ScoreboardPlayerSorting } from '../enums/scoreboard-player-sorting';
-import { TimeSpanUnitsOfTime } from '../enums/timespan-units-of-time.enum';
 
 @Injectable({
     providedIn: 'root'
@@ -154,9 +147,7 @@ export class UserpanelService {
     loadSettingsNormal() {
         this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsNormal);
 
-        /*this.settings.Constants = [
-            1, 1, 10000, 60, 12, 23, [[1, "asd"]], "Bonus", "Bonus"
-        ];
+        /*
         this.allSettingsNormal = {
             0: 0, 1: LanguageEnum.English, 2: true, 3: true, 4: TimezoneEnum["(UTC) Coordinated Universal Time"],
             5: 1, 6: true, 7: true, 8: true, 9: true, 10: true, 11: 0, 12: "asd", 13: DateTimeFormatEnum["dd'-'MM'-'yyyy HH':'mm':'ss"],

@@ -53,7 +53,7 @@ namespace TDS_Client.Handler
         };
 
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly Serializer _serializer;
+
         private Language _languageEnum = TDS_Shared.Data.Enums.Language.English;
         private bool _languageManuallyChanged;
         private SyncedLobbySettings _syncedLobbySettings;
@@ -64,13 +64,12 @@ namespace TDS_Client.Handler
         #region Public Constructors
 
         public SettingsHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler,
-            BrowserHandler browserHandler, Serializer serializer)
+            BrowserHandler browserHandler)
             : base(loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
             _eventsHandler = eventsHandler;
             _browserHandler = browserHandler;
-            _serializer = serializer;
 
             Language = _languagesDict[LanguageEnum];
 
@@ -92,7 +91,8 @@ namespace TDS_Client.Handler
             RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Strength), 100, false);
             RAGE.Game.Stats.StatSetInt(RAGE.Game.Misc.GetHashKey(PedStat.Wheelie), 100, false);
 
-            RAGE.Game.Player.SetPlayerMaxArmour(Constants.MaxPossibleArmor);
+            //Todo: This line bugged, use Constants.MaxPossibleArmor after bug fix by RAGE
+            RAGE.Game.Player.SetPlayerMaxArmour(100);
             LoadLanguageFromRAGE();
         }
 
@@ -170,7 +170,7 @@ namespace TDS_Client.Handler
 
         public void LoadCommandsData(object[] args)
         {
-            CommandsData = _serializer.FromServer<UserpanelPlayerCommandData>((string)args[0]);
+            CommandsData = Serializer.FromServer<UserpanelPlayerCommandData>((string)args[0]);
         }
 
         public void LoadSyncedLobbySettings(SyncedLobbySettings loadedSyncedLobbySettings)
@@ -191,7 +191,7 @@ namespace TDS_Client.Handler
 
         public void LoadThemeSettings(SyncedPlayerThemeSettings data)
         {
-            _browserHandler.Angular.SyncThemeSettings(_serializer.ToBrowser(data));
+            _browserHandler.Angular.SyncThemeSettings(Serializer.ToBrowser(data));
         }
 
         public void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
@@ -297,7 +297,7 @@ namespace TDS_Client.Handler
         private void OnSyncSettingsMethod(object[] args)
         {
             string json = (string)args[0];
-            var settings = _serializer.FromServer<SyncedPlayerSettingsDto>(json);
+            var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
             LoadUserSettings(settings);
             _browserHandler.Angular.LoadUserpanelData((int)UserpanelLoadDataType.SettingsNormal, json);
         }

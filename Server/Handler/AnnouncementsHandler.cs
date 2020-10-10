@@ -11,7 +11,7 @@ namespace TDS_Server.Handler
     {
         #region Public Constructors
 
-        public AnnouncementsHandler(TDSDbContext dbContext, Serializer serializer)
+        public AnnouncementsHandler(TDSDbContext dbContext)
         {
             var data = dbContext.Announcements
                 .OrderByDescending(a => a.Id)
@@ -23,7 +23,7 @@ namespace TDS_Server.Handler
                 })
                 .ToList();
 
-            Json = serializer.ToBrowser(data);
+            Json = Serializer.ToBrowser(data);
         }
 
         #endregion Public Constructors

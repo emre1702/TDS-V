@@ -84,7 +84,7 @@ namespace TDS_Server.Handler
                             var weaponDbInfo = _dbContext.Weapons.Where(w => w.Hash == weaponHash).Select(w => new { w.Hash, w.Type }).FirstOrDefault();
                             if (weaponDbInfo is null)
                             {
-                                Log($"Weapon entry in DB missing for '{weaponsData.Name}' with hash '{weaponHash.ToString()}' ({(uint)weaponHash.Value})", LogType.Warning);
+                                Log($"Weapon entry in DB missing for '{weaponsData.Name}' with hash '{weaponHash}' ({(uint)weaponHash.Value})", LogType.Warning);
                                 continue;
                             }
 

@@ -1,7 +1,9 @@
 ﻿using BonusBotConnector.Client;
 using BonusBotConnector_Server;
 using Microsoft.Extensions.DependencyInjection;
+using TDS_Server.Core.Damagesystem;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
@@ -14,7 +16,7 @@ using TDS_Server.Handler.PlayerHandlers;
 using TDS_Server.Handler.Server;
 using TDS_Server.Handler.Sync;
 using TDS_Server.Handler.Userpanel;
-using TDS_Shared.Core;
+using TDS_Server.LobbySystem.EventsHandlers;
 
 namespace TDS_Server.Core.Init.Services.Creators
 {
@@ -63,7 +65,8 @@ namespace TDS_Server.Core.Init.Services.Creators
         {
             return serviceCollection
                .AddSingleton<EventsHandler>()
-               .AddSingleton<LobbyEventsHandler>()
+               .AddSingleton<AllLobbiesEventsHandler>()
+               .AddSingleton<AllLobbiesRemoteEventsHandler>()
                .AddSingleton<RemoteBrowserEventsHandler>();
         }
 
@@ -151,7 +154,8 @@ namespace TDS_Server.Core.Init.Services.Creators
                .AddSingleton<WeaponLevelHandler>()
                .AddTransient<DatabaseHandler>()
                .AddSingleton<WorkaroundsHandler>()
-               .AddSingleton<Serializer>();
+               .AddSingleton<FreeroamDataHandler>()
+               .AddTransient<IDamagesys, Damagesys>();
         }
     }
 }

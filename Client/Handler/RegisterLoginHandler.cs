@@ -15,18 +15,18 @@ namespace TDS_Client.Handler
         private readonly CursorHandler _cursorHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly Serializer _serializer;
+
         private readonly SettingsHandler _settingsHandler;
 
         public RegisterLoginHandler(LoggingHandler loggingHandler, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender,
-            BrowserHandler browserHandler, SettingsHandler settingsHandler, Serializer serializer, EventsHandler eventsHandler)
+            BrowserHandler browserHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
             : base(loggingHandler)
         {
             _cursorHandler = cursorHandler;
             _remoteEventsSender = remoteEventsSender;
             _browserHandler = browserHandler;
             _settingsHandler = settingsHandler;
-            _serializer = serializer;
+
             _eventsHandler = eventsHandler;
 
             RAGE.Events.Add(FromBrowserEvent.TryLogin, TryLogin);
@@ -38,6 +38,7 @@ namespace TDS_Client.Handler
         public void Start(string name, bool isRegistered)
         {
             _browserHandler.RegisterLogin.CreateBrowser();
+            _browserHandler.Angular.CreateAngularBrowser();
             //_browserHandler.RegisterLogin.SetReady(); only for Angular browser
 
             _cursorHandler.Visible = true;
@@ -69,9 +70,9 @@ namespace TDS_Client.Handler
         private void OnLoginSuccessfulMethod(object[] args)
         {
             Stop();
-            _settingsHandler.LoadSyncedSettings(_serializer.FromServer<SyncedServerSettingsDto>(args[0].ToString()));
-            _settingsHandler.LoadUserSettings(_serializer.FromServer<SyncedPlayerSettingsDto>(args[1].ToString()));
-            _settingsHandler.LoadThemeSettings(_serializer.FromServer<SyncedPlayerThemeSettings>(args[2].ToString()));
+            _settingsHandler.LoadSyncedSettings(Serializer.FromServer<SyncedServerSettingsDto>(args[0].ToString()));
+            _settingsHandler.LoadUserSettings(Serializer.FromServer<SyncedPlayerSettingsDto>(args[1].ToString()));
+            _settingsHandler.LoadThemeSettings(Serializer.FromServer<SyncedPlayerThemeSettings>(args[2].ToString()));
             _settingsHandler.LoggedIn = true;
 
             _browserHandler.Angular.SetReady((string)args[3]);

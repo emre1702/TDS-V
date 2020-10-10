@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -15,12 +16,10 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 {
     public class Team : ITeam
     {
-        private readonly Serializer _serializer;
         private Teams _entity;
 
-        public Team(Serializer serializer, Teams entity)
+        public Team(Teams entity)
         {
-            _serializer = serializer;
             _entity = entity;
 
             ChatColor = "!$" + Entity.ColorR + "|" + Entity.ColorG + "|" + Entity.ColorB + "$";
@@ -90,11 +89,11 @@ namespace TDS_Server.Handler.Entities.TeamSystem
             return _entity.Id == other?.Entity.Id;
         }
 
-        public void FuncIterate(Action<ITDSPlayer, ITeam> func)
+        public void FuncIterate(Action<ITDSPlayer> func)
         {
             foreach (var player in Players)
             {
-                func(player, this);
+                func(player);
             }
         }
 
@@ -119,7 +118,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
         public void SyncAddedPlayer(ITDSPlayer player)
         {
-            string json = _serializer.ToClient(Players.Select(p => p.RemoteId).ToList());
+            string json = Serializer.ToClient(Players.Select(p => p.RemoteId).ToList());
             player.TriggerEvent(ToClientEvent.SyncTeamPlayers, json);
             foreach (var target in Players)
             {
@@ -135,7 +134,7 @@ namespace TDS_Server.Handler.Entities.TeamSystem
 
         public void SyncAllPlayers()
         {
-            string json = _serializer.ToClient(Players.Select(p => p.RemoteId).ToList());
+            string json = Serializer.ToClient(Players.Select(p => p.RemoteId).ToList());
             foreach (var player in Players)
             {
                 player.TriggerEvent(ToClientEvent.SyncTeamPlayers, json);
@@ -166,5 +165,8 @@ namespace TDS_Server.Handler.Entities.TeamSystem
                 player.SendChatMessage(message);
             }
         }
+
+        public ITDSPlayer? GetNearestPlayer(Vector3 position)
+            => Players.MinBy(p => p.Position.DistanceTo(position)).FirstOrDefault();
     }
 }

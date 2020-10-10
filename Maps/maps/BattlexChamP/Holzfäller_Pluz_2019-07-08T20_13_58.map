@@ -1,0 +1,31 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="Holzfäller Pluz." type="normal" minplayers="8" maxplayers="999">
+    <creatorid>2</creatorid>
+  </map>
+  <description>
+    <english>Lumberjake</english>
+    <german>Holzfäller geeignet für 8 Spieler</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="-492.44" y="5385.84" z="77.37" rot="171.37" />
+      <spawn x="-495.26" y="5388.79" z="77.07" rot="250.63" />
+      <spawn x="-489.34" y="5390.29" z="77.8" rot="231.97" />
+      <spawn x="-493.29" y="5391.48" z="77.32" rot="168.71" />
+    </team>
+    <team>
+      <spawn x="-513.81" y="5189.09" z="89.38" rot="2.2" />
+      <spawn x="-516.15" y="5186.86" z="89.65" rot="5.46" />
+      <spawn x="-509.4" y="5190.35" z="89.06" rot="22.77" />
+      <spawn x="-510.65" y="5183.13" z="89.14" rot="18.31" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="-458.69" y="5158.94" z="98.5" />
+    <pos x="-664.91" y="5238.9" z="76.91" />
+    <pos x="-602.8" y="5453.21" z="57.96" />
+    <pos x="-376.22" y="5440.73" z="92.25" />
+    <center x="-522.5" y="5320.77" z="91.99" />
+  </limit>
+  <bomb />
+</TDSMap>

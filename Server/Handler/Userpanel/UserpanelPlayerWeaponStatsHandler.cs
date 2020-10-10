@@ -15,10 +15,9 @@ namespace TDS_Server.Handler.Userpanel
     public class UserpanelPlayerWeaponStatsHandler : IUserpanelPlayerWeaponStatsHandler
     {
         private readonly ILoggingHandler _loggingHandler;
-        private readonly Serializer _serializer;
 
-        public UserpanelPlayerWeaponStatsHandler(ILoggingHandler loggingHandler, Serializer serializer)
-            => (_loggingHandler, _serializer) = (loggingHandler, serializer);
+        public UserpanelPlayerWeaponStatsHandler(ILoggingHandler loggingHandler)
+            => (_loggingHandler) = (loggingHandler);
 
         public string? GetData(ITDSPlayer player)
         {
@@ -27,7 +26,7 @@ namespace TDS_Server.Handler.Userpanel
                 if (player.Entity is null)
                     return null;
                 var weaponHashes = GetPlayerWeaponsUsed(player);
-                return _serializer.ToBrowser(weaponHashes);
+                return Serializer.ToBrowser(weaponHashes);
             }
             catch (Exception ex)
             {
@@ -83,7 +82,7 @@ namespace TDS_Server.Handler.Userpanel
                 }
             }
 
-            return _serializer.ToBrowser(data);
+            return Serializer.ToBrowser(data);
         }
 
         private List<string> GetPlayerWeaponsUsed(ITDSPlayer player)

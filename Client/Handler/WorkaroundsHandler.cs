@@ -8,13 +8,11 @@ namespace TDS_Client.Handler
 {
     public class WorkaroundsHandler : ServiceBase
     {
-        private readonly Serializer _serializer;
         private readonly UtilsHandler _utilsHandler;
 
-        public WorkaroundsHandler(LoggingHandler loggingHandler, Serializer serializer, UtilsHandler utilsHandler)
+        public WorkaroundsHandler(LoggingHandler loggingHandler, UtilsHandler utilsHandler)
             : base(loggingHandler)
         {
-            _serializer = serializer;
             _utilsHandler = utilsHandler;
 
             RAGE.Events.Add(ToClientEvent.AttachEntityToEntityWorkaround, AttachEntityToEntityWorkaroundMethod);
@@ -29,7 +27,7 @@ namespace TDS_Client.Handler
 
         public void AttachEntityToEntityWorkaroundMethod(object[] args)
         {
-            EntityAttachInfoDto info = _serializer.FromServer<EntityAttachInfoDto>(args[0].ToString());
+            EntityAttachInfoDto info = Serializer.FromServer<EntityAttachInfoDto>(args[0].ToString());
             info.EntityValue = RAGE.Elements.Entities.Objects.GetAtRemote((ushort)info.EntityValue).Handle;
             info.TargetValue = RAGE.Elements.Entities.Players.GetAtRemote((ushort)info.TargetValue).Handle;
             RAGE.Game.Entity.AttachEntityToEntity(info.EntityValue, info.TargetValue, RAGE.Game.Ped.GetPedBoneIndex(info.TargetValue, info.Bone),
@@ -64,7 +62,7 @@ namespace TDS_Client.Handler
 
         public void SetEntityCollisionlessWorkaroundMethod(object[] args)
         {
-            EntityCollisionlessInfoDto info = _serializer.FromServer<EntityCollisionlessInfoDto>(args[0].ToString());
+            EntityCollisionlessInfoDto info = Serializer.FromServer<EntityCollisionlessInfoDto>(args[0].ToString());
             GameEntityBase entity = RAGE.Elements.Entities.Objects.GetAtRemote((ushort)info.EntityValue);
             if (entity == null)
             {

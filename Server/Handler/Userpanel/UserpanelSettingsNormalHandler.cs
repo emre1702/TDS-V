@@ -19,15 +19,14 @@ namespace TDS_Server.Handler.Userpanel
     public class UserpanelSettingsNormalHandler : DatabaseEntityWrapper, IUserpanelSettingsNormalHandler
     {
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
-        private readonly Serializer _serializer;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
-        private Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
+        private readonly Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 
-        public UserpanelSettingsNormalHandler(Serializer serializer, BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext,
+        public UserpanelSettingsNormalHandler(BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext,
             ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
-            => (_serializer, _bonusBotConnectorClient, _tdsPlayerHandler)
-            = (serializer, bonusBotConnectorClient, tdsPlayerHandler);
+            => (_bonusBotConnectorClient, _tdsPlayerHandler)
+            = (bonusBotConnectorClient, tdsPlayerHandler);
 
         public async Task<string> ConfirmDiscordUserId(ulong discordUserId)
         {
@@ -53,7 +52,7 @@ namespace TDS_Server.Handler.Userpanel
         public async Task<object?> SaveSettings(ITDSPlayer player, ArraySegment<object> args)
         {
             string json = (string)args[0];
-            var obj = _serializer.FromBrowser<UserpanelSettingsNormalDataDto>(json);
+            var obj = Serializer.FromBrowser<UserpanelSettingsNormalDataDto>(json);
 
             var newDiscordUserId = obj.General.DiscordUserId;
             obj.General.DiscordUserId = player.Entity!.PlayerSettings.DiscordUserId;
@@ -70,7 +69,7 @@ namespace TDS_Server.Handler.Userpanel
                 player.LoadTimezone();
                 player.AddToChallenge(ChallengeType.ChangeSettings);
 
-                player.TriggerEvent(ToClientEvent.SyncSettings, _serializer.ToBrowser(obj.General));
+                player.TriggerEvent(ToClientEvent.SyncSettings, Serializer.ToBrowser(obj.General));
 
                 if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId && newDiscordUserId.HasValue)
                 {

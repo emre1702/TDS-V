@@ -17,8 +17,6 @@ namespace TDS_Client.Handler.Lobby
     {
         private readonly DxHandler _dxHandler;
 
-        private readonly Serializer _serializer;
-
         private readonly SettingsHandler _settingsHandler;
 
         private readonly TeamsHandler _teamsHandler;
@@ -34,14 +32,13 @@ namespace TDS_Client.Handler.Lobby
         private DxTextRectangle _timeDisplay;
 
         public RoundInfosHandler(LoggingHandler loggingHandler, TeamsHandler teamsHandler, TimerHandler timerHandler, DxHandler dxHandler,
-            SettingsHandler settingsHandler, EventsHandler eventsHandler, Serializer serializer)
+            SettingsHandler settingsHandler, EventsHandler eventsHandler)
             : base(loggingHandler)
         {
             _teamsHandler = teamsHandler;
             _timerHandler = timerHandler;
             _dxHandler = dxHandler;
             _settingsHandler = settingsHandler;
-            _serializer = serializer;
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.PlayerDied += EventsHandler_PlayerDied;
@@ -237,7 +234,7 @@ namespace TDS_Client.Handler.Lobby
         {
             try
             {
-                SyncedTeamPlayerAmountDto[] list = _serializer.FromServer<SyncedTeamPlayerAmountDto[]>((string)args[0]);
+                SyncedTeamPlayerAmountDto[] list = Serializer.FromServer<SyncedTeamPlayerAmountDto[]>((string)args[0]);
                 foreach (var team in _teamsHandler.LobbyTeams)
                 {
                     if (!team.IsSpectator)

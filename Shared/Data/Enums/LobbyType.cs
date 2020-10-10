@@ -7,6 +7,7 @@
         Arena = 2,
         GangLobby = 3,
         MapCreateLobby = 4,
-        CharCreateLobby = 5
+        CharCreateLobby = 5,
+        GangActionLobby = 6
     }
 }

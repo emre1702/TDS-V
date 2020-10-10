@@ -19,15 +19,11 @@ namespace TDS_Server.Data.Models.Map
     [XmlRoot("TDSMap")]
     public class MapDto
     {
-        private readonly Serializer _serializer;
-
-        public MapDto() : this(new Serializer())
+        public MapDto()
         {
         }
 
-        public MapDto(Serializer serializer) => _serializer = serializer;
-
-        public MapDto(MapCreateDataDto data, Serializer serializer) : this(serializer)
+        public MapDto(MapCreateDataDto data) : this()
         {
             Info = new MapInfoDto
             {
@@ -54,7 +50,7 @@ namespace TDS_Server.Data.Models.Map
             {
                 Center = data.MapCenter != null ? new Position3DDto(data.MapCenter) : null,
                 Edges = data.MapEdges.Select(pos => new Position3DDto(pos)).ToArray(),
-                EdgesJson = serializer.ToClient(data.MapEdges)
+                EdgesJson = Serializer.ToClient(data.MapEdges)
             };
 
             Objects = new MapObjectsListDto
@@ -75,7 +71,7 @@ namespace TDS_Server.Data.Models.Map
                 {
                     PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
                 };
-                BombInfo.PlantPositionsJson = serializer.ToClient(BombInfo.PlantPositions);
+                BombInfo.PlantPositionsJson = Serializer.ToClient(BombInfo.PlantPositions);
             }
 
             LoadMapObjectsDataDto();
@@ -169,7 +165,7 @@ namespace TDS_Server.Data.Models.Map
                 Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Vehicle)).ToList(),
                 Center = Target is null ? LimitInfo?.Center?.SwitchNamespace() : null
             };
-            ClientSyncedDataJson = _serializer.ToClient(clientSyncedDataDto);
+            ClientSyncedDataJson = Serializer.ToClient(clientSyncedDataDto);
         }
     }
 }

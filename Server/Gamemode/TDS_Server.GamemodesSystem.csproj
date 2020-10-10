@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
+    <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GamemodesOld\CaptureTheFlag\" />
+    <Folder Include="GamemodesOld\Domination\" />
+    <Folder Include="GamemodesOld\InstaGib\" />
+    <Folder Include="GamemodesOld\JailBreak\" />
+    <Folder Include="GamemodesOld\KingOfTheHill\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="morelinq" Version="3.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Bootstrapper">
+      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

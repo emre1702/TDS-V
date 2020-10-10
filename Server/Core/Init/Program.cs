@@ -18,6 +18,7 @@ using TDS_Server.Handler.Factories;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Server;
+using TDS_Shared.Core;
 using ObjectFactory = TDS_Server.Handler.Factories.ObjectFactory;
 
 namespace TDS_Server.Core.Init
@@ -37,6 +38,7 @@ namespace TDS_Server.Core.Init
         {
             try
             {
+                Data.Extensions.TaskExtensions.IsMainThread = true;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
                 _serviceProvider = ServiceProviderCreator.Create();

@@ -15,8 +15,8 @@ namespace TDS_Client.Handler.Browser
         private readonly RemoteEventsSender _remoteEventsSender;
         private bool _roundEndReasonShowing;
 
-        public PlainMainBrowserHandler(LoggingHandler loggingHandler, Serializer serializer, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
-            : base(loggingHandler, serializer, Constants.MainBrowserPath)
+        public PlainMainBrowserHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
+            : base(loggingHandler, Constants.MainBrowserPath)
         {
             _remoteEventsSender = remoteEventsSender;
 

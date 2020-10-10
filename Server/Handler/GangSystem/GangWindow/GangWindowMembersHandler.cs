@@ -1,12 +1,12 @@
-﻿using System.Linq;
+﻿using GTANetworkAPI;
+using System.Linq;
 using System.Threading.Tasks;
-using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
@@ -18,7 +18,6 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowMembersHandler
     {
-        private readonly Serializer _serializer;
         private readonly GangsHandler _gangsHandler;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
@@ -28,11 +27,10 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         private readonly LangHelper _langHelper;
         private readonly DataSyncHandler _dataSyncHandler;
 
-        public GangWindowMembersHandler(Serializer serializer, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
+        public GangWindowMembersHandler(GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
             InvitationsHandler invitationsHandler, EventsHandler eventsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper,
             DataSyncHandler dataSyncHandler)
         {
-            _serializer = serializer;
             _gangsHandler = gangsHandler;
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
@@ -52,7 +50,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             var data = player.Gang.Entity.Members.Select(m => new SyncedGangMember(player, m));
 
-            return _serializer.ToBrowser(data);
+            return Serializer.ToBrowser(data);
         }
 
         public async Task<object?> LeaveGang(ITDSPlayer player, bool sendInfo = true)
@@ -72,8 +70,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             player.GangRank = _gangsHandler.NoneRank;
             _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
 
-            if (player.Lobby is GangLobby || player.Lobby?.IsGangActionLobby == true)
-                await _lobbiesHandler.MainMenu.AddPlayer(player, null);
+            if (player.Lobby is IGangLobby || player.Lobby is IGangActionLobby)
+                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
 
             await RemoveMemberFromGang(gang, memberInGangEntity);
 
@@ -100,7 +98,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (invitation is { })
                 return player.Language.YOU_ALREADY_INVITED_TARGET;
 
-            new Invitation(player.Language.GANG_INVITATION_INFO, target, player, _serializer, _invitationsHandler, AcceptedInvitation, RejectedInvitation, InvitationType.Gang);
+            new Invitation(player.Language.GANG_INVITATION_INFO, target, player, _invitationsHandler, AcceptedInvitation, RejectedInvitation, InvitationType.Gang);
             return "";
         }
 
@@ -203,10 +201,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             await _eventsHandler.OnGangJoin(player, sender.Gang, gangRank);
 
-            if (player.Lobby is GangLobby)
-            {
-                await _lobbiesHandler.MainMenu.AddPlayer(player, null);
-            }
+            if (player.Lobby is IGangLobby)
+                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
 
             player.SendNotification(string.Format(player.Language.YOU_JOINED_THE_GANG, player.Gang.Entity.Name));
             player.Gang.SendNotification(lang => string.Format(lang.PLAYER_JOINED_YOUR_GANG, player.DisplayName));

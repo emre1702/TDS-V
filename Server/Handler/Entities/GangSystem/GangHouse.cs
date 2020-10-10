@@ -7,13 +7,7 @@ namespace TDS_Server.Handler.Entities.GangSystem
 {
     public class GangHouse : IGangHouse
     {
-        #region Private Fields
-
         private readonly int _cost;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public GangHouse(GangHouses entity, int cost)
         {
@@ -23,19 +17,12 @@ namespace TDS_Server.Handler.Entities.GangSystem
             Position = new Vector3(entity.PosX, entity.PosY, entity.PosZ);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public ITDSBlip? Blip { get; set; }
         public GangHouses Entity { get; }
         public Vector3 Position { get; }
         public float SpawnRotation => Entity.Rot;
         public ITDSTextLabel? TextLabel { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
+        public bool LoadedInGangLobby { get; set; }
 
         public string GetTextLabelText()
             => Entity.OwnerGang switch
@@ -43,7 +30,5 @@ namespace TDS_Server.Handler.Entities.GangSystem
                 { } => $"{Entity.OwnerGang}",
                 null => $"-\nLevel {Entity.NeededGangLevel}\n${_cost}"
             };
-
-        #endregion Public Methods
     }
 }

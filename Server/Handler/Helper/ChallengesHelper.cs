@@ -21,7 +21,6 @@ namespace TDS_Server.Handler.Helper
 {
     public class ChallengesHelper : DatabaseEntityWrapper
     {
-        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private string _challengeSettingsFrequencyColumnName = string.Empty;
         private string _challengeSettingsMaxNumberColumnName = string.Empty;
@@ -38,11 +37,9 @@ namespace TDS_Server.Handler.Helper
             ISettingsHandler settingsHandler,
             EventsHandler eventsHandler,
             ILoggingHandler loggingHandler,
-            TDSDbContext dbContext,
-            Serializer serializer) : base(dbContext, loggingHandler)
+            TDSDbContext dbContext) : base(dbContext, loggingHandler)
         {
             _settingsHandler = settingsHandler;
-            _serializer = serializer;
 
             LoadPlayerChallengesTableData(dbContext);
             LoadChallengeSettingsTableData(dbContext);
@@ -129,7 +126,7 @@ namespace TDS_Server.Handler.Helper
                 })
                 .OrderBy(e => e.Frequency);
 
-            return _serializer.ToBrowser(result);
+            return Serializer.ToBrowser(result);
         }
 
         public void SyncCurrentAmount(ITDSPlayer player, PlayerChallenges challenge)

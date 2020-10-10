@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GTANetworkAPI;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Languages;
 using TDS_Shared.Data.Enums;
@@ -8,30 +9,16 @@ namespace TDS_Server.Handler.Helper
 {
     public class LangHelper
     {
-        #region Public Fields
-
         public readonly Dictionary<Language, ILanguage> LanguageByID = new Dictionary<Language, ILanguage>
         {
             [Language.German] = new German(),
             [Language.English] = new English()
         };
 
-        #endregion Public Fields
-
-        #region Private Fields
-
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public LangHelper(ITDSPlayerHandler tdsPlayerHandler)
             => _tdsPlayerHandler = tdsPlayerHandler;
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public ILanguage GetLang(Type language)
         {
@@ -73,10 +60,13 @@ namespace TDS_Server.Handler.Helper
                 returnDict[lang] = langgetter(lang);
             }
 
-            foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+            NAPI.Task.Run(() =>
             {
-                player.SendChatMessage(returnDict[player.Language]);
-            }
+                foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+                {
+                    player.SendChatMessage(returnDict[player.Language]);
+                }
+            });
         }
 
         public void SendAllNotification(Func<ILanguage, string> langgetter)
@@ -87,12 +77,13 @@ namespace TDS_Server.Handler.Helper
                 returnDict[lang] = langgetter(lang);
             }
 
-            foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+            NAPI.Task.Run(() =>
             {
-                player.SendNotification(returnDict[player.Language]);
-            }
+                foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
+                {
+                    player.SendNotification(returnDict[player.Language]);
+                }
+            });
         }
-
-        #endregion Public Methods
     }
 }

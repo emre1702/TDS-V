@@ -3,20 +3,18 @@ using System;
 
 namespace TDS_Shared.Core
 {
-    public class Serializer
+    public static class Serializer
     {
-        private readonly Action<string> _infoLogger;
-        private readonly Action<Exception> _errorLogger;
+        private static Action<string> _infoLogger;
+        private static Action<Exception> _errorLogger;
 
-        public Serializer() { }
-
-        public Serializer(Action<string> infoLogger, Action<Exception> errorLogger)
+        public static void Init(Action<string> infoLogger, Action<Exception> errorLogger)
         {
             _infoLogger = infoLogger;
             _errorLogger = errorLogger;
-        } 
+        }
 
-        public string ToClient<T>(T obj)
+        public static string ToClient<T>(T obj)
         {
             try
             {
@@ -33,7 +31,7 @@ namespace TDS_Shared.Core
             }
         }
 
-        public string ToServer<T>(T obj)
+        public static string ToServer<T>(T obj)
         {
             try
             {
@@ -50,7 +48,7 @@ namespace TDS_Shared.Core
             }
         }
 
-        public string ToBrowser<T>(T obj)
+        public static string ToBrowser<T>(T obj)
         {
             try
             {
@@ -67,7 +65,7 @@ namespace TDS_Shared.Core
             }
         }
 
-        public T FromClient<T>(string json)
+        public static T FromClient<T>(string json)
         {
             try
             {
@@ -84,7 +82,7 @@ namespace TDS_Shared.Core
             }
         }
 
-        public T FromServer<T>(string json)
+        public static T FromServer<T>(string json)
         {
             try
             {
@@ -101,7 +99,7 @@ namespace TDS_Shared.Core
             }
         }
 
-        public T FromBrowser<T>(string json)
+        public static T FromBrowser<T>(string json)
         {
             try
             {

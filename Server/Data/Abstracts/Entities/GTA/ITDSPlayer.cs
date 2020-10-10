@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Player;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Models.GTA;
 
 namespace TDS_Server.Data.Abstracts.Entities.GTA
 {
@@ -16,12 +17,10 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
     public abstract class ITDSPlayer : Player, IEquatable<ITDSPlayer>
     {
-        #region Public Properties
-
         public abstract AdminLevelDto AdminLevel { get; }
         public abstract string AdminLevelName { get; }
         public virtual new int Armor { get => base.Armor; set => base.Armor = value; }
-        public abstract RoundStatsDto? CurrentRoundStats { get; set; }
+        public RoundStatsDto? CurrentRoundStats { get; set; }
 
         public new WeaponHash CurrentWeapon
         {
@@ -44,7 +43,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract bool IsCrouched { get; set; }
         public abstract bool IsGangOwner { get; }
         public abstract bool IsInGang { get; }
-        public abstract bool IsLobbyOwner { get; }
+        public bool IsLobbyOwner => Lobby?.Players.IsLobbyOwner(this) == true;
+
         public abstract bool IsMuted { get; }
         public abstract bool IsPermamuted { get; }
         public abstract bool IsVip { get; }
@@ -55,19 +55,18 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract ITDSPlayer? LastHitter { get; set; }
         public abstract DateTime? LastKillAt { get; set; }
         public abstract WeaponHash LastWeaponOnHand { get; set; }
-        public abstract short Lifes { get; set; }
-        public abstract ILobby? Lobby { get; set; }
-        public abstract PlayerLobbyStats? LobbyStats { get; set; }
+        public short Lifes { get; set; } = 0;
+        public IBaseLobby? Lobby { get; set; }
+        public PlayerLobbyStats? LobbyStats { get; set; }
         public abstract bool LoggedIn { get; }
         public abstract int Money { get; set; }
         public abstract int? MuteTime { get; set; }
         public abstract int PlayMinutes { get; set; }
-        public abstract ILobby? PreviousLobby { get; set; }
+        public IBaseLobby? PreviousLobby { get; set; }
         public ushort RemoteId => Handle.Value;
         public abstract ITDSPlayer? SentPrivateChatRequestTo { get; set; }
         public abstract short ShortTimeKillingSpree { get; }
-        public abstract ITDSPlayer? Spectates { get; set; }
-        public abstract HashSet<ITDSPlayer> Spectators { get; }
+        public ITDSPlayer? Spectates { get; set; }
         public abstract ITeam? Team { get; }
         public abstract int TeamIndex { get; }
         public abstract PlayerTotalStats? TotalStats { get; }
@@ -76,18 +75,17 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract int? VoiceMuteTime { get; set; }
         public abstract Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>>? WeaponBodyPartsStats { get; set; }
         public abstract Dictionary<WeaponHash, PlayerWeaponStats>? WeaponStats { get; set; }
-
-        #endregion Public Properties
+        public TDSTimer? DeathSpawnTimer { get; set; }
 
         public ITDSPlayer(NetHandle netHandle) : base(netHandle)
         {
         }
 
-        #region Public Methods
-
         public abstract void AddHPArmor(int healtharmor);
 
         public abstract void AddToChallenge(ChallengeType challengeType, int amount = 1, bool setTheValue = false);
+
+        public abstract void AddSpectator(ITDSPlayer spectator);
 
         public abstract void AddWeaponShot(WeaponHash weaponHash, PedBodyPart? pedBodyPart, int? damage, bool killed);
 
@@ -117,11 +115,15 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public abstract PlayerRelation GetRelationTo(ITDSPlayer target);
 
+        public abstract List<ITDSPlayer> GetSpectators();
+
         public abstract void GiveMoney(uint money);
 
         public abstract void GiveMoney(int money);
 
         public abstract bool HasRelationTo(ITDSPlayer target, PlayerRelation block);
+
+        public abstract bool HasSpectators();
 
         public abstract void InitChallengesDict();
 
@@ -130,6 +132,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract void OnPlayerWeaponSwitch(WeaponHash previousWeapon, WeaponHash newWeapon);
 
         public abstract void RemovePlayerFromOnlineFriend(ITDSPlayer otherPlayer, bool outputInfo = true);
+
+        public abstract void RemoveSpectator(ITDSPlayer spectator);
 
         public abstract void ResetVoiceToAndFrom();
 
@@ -143,6 +147,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public virtual new void SendNotification(string msg, bool flashing = false)
             => base.SendNotification(msg, flashing);
 
+        public abstract void SetBoughtMap(int price);
+
         public abstract void SetCollisionsless(bool toggle);
 
         public abstract void SetEntityInvincible(ITDSVehicle vehicle, bool invincible);
@@ -150,6 +156,10 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract void SetInvincible(bool toggle);
 
         public abstract void SetInvisible(bool toggle);
+
+        public abstract void SetLobby(Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby lobby);
+
+        public abstract void SetSpectates(ITDSPlayer? target);
 
         public abstract Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats);
 
@@ -165,8 +175,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
                 base.DisableVoiceTo(target);
         }
 
-        public void Spawn(Vector3 pos, float heading = 0)
-            => NAPI.Player.SpawnPlayer(this, pos, heading);
+        public abstract void Spawn(Vector3 pos, float heading = 0);
 
         protected new void DisableVoiceTo(Player _)
         {
@@ -175,8 +184,6 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         protected new void EnableVoiceTo(Player _)
         {
         }
-
-        #endregion Public Methods
 
         public bool Equals(ITDSPlayer? other)
         {

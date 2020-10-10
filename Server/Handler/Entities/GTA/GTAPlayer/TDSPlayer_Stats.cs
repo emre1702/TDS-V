@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using TDS_Server.Data.Enums;
 using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Data.Enums;
@@ -16,7 +17,7 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
                 if (Entity is null)
                     return;
                 Entity.PlayerStats.Money = value;
-                _dataSyncHandler.SetData(this, PlayerDataKey.Money, DataSyncMode.Player, value);
+                NAPI.Task.Run(() => _dataSyncHandler.SetData(this, PlayerDataKey.Money, DataSyncMode.Player, value));
             }
         }
 
@@ -36,7 +37,6 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
 
         public override PlayerTotalStats? TotalStats => Entity?.PlayerTotalStats;
 
-
         public override void CheckReduceMapBoughtCounter()
         {
             if (Entity is null)
@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
             {
                 Entity.PlayerStats.LastMapsBoughtCounterReduce = DateTime.UtcNow;
                 --Entity.PlayerStats.MapsBoughtCounter;
-                _dataSyncHandler.SetData(this, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter);
+                NAPI.Task.Run(() => _dataSyncHandler.SetData(this, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, Entity.PlayerStats.MapsBoughtCounter));
             }
         }
 

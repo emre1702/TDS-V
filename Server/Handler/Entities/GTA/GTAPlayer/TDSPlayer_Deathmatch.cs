@@ -37,7 +37,6 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
         public override ITDSPlayer? LastHitter { get; set; }
         public override DateTime? LastKillAt { get; set; }
         public override WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
-        public override short Lifes { get; set; } = 0;
 
         public override short ShortTimeKillingSpree
         {

@@ -1,0 +1,43 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="PEANUT-Farm" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>3</creatorid>
+  </map>
+  <description>
+    <english />
+    <german />
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="1346.89" y="1151.3" z="113.65" rot="266.6" />
+      <spawn x="1346.37" y="1149.54" z="113.65" rot="263.94" />
+      <spawn x="1346.03" y="1147.4" z="113.61" rot="266.64" />
+      <spawn x="1345.98" y="1145.29" z="113.59" rot="277.59" />
+      <spawn x="1346.25" y="1143.13" z="113.52" rot="279.65" />
+      <spawn x="1342.15" y="1151.23" z="113.17" rot="276.13" />
+      <spawn x="1342.3" y="1148.59" z="113.21" rot="271.42" />
+      <spawn x="1342.37" y="1146.23" z="113.15" rot="275.46" />
+      <spawn x="1342.51" y="1144.26" z="113.11" rot="277.29" />
+      <spawn x="1342.75" y="1142.12" z="112.98" rot="279.7" />
+    </team>
+    <team>
+      <spawn x="1513.3" y="1112.97" z="114.19" rot="94.78" />
+      <spawn x="1513.16" y="1114.88" z="114.19" rot="89.86" />
+      <spawn x="1513.05" y="1117.11" z="114.19" rot="94.42" />
+      <spawn x="1512.94" y="1119.29" z="114.18" rot="94.18" />
+      <spawn x="1512.89" y="1121.32" z="114.13" rot="94.34" />
+      <spawn x="1515.64" y="1114.07" z="114.11" rot="99.76" />
+      <spawn x="1515.39" y="1115.81" z="114.11" rot="100.43" />
+      <spawn x="1515.03" y="1118.04" z="114.07" rot="100.34" />
+      <spawn x="1514.76" y="1119.99" z="114.05" rot="92.97" />
+      <spawn x="1514.67" y="1122.05" z="114.06" rot="91.53" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="1518.28" y="1029.43" z="111.08" />
+    <pos x="1516.59" y="1189.93" z="110.01" />
+    <pos x="1337.92" y="1201.36" z="107.47" />
+    <pos x="1333.88" y="1027.42" z="115.9" />
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>

@@ -1494,7 +1494,7 @@ namespace TDS_Server.Database.Entity
                     MinMapRatingForNewMaps = 3f,
                     GiveMoneyFee = 0.05f,
                     GiveMoneyMinAmount = 100,
-                    NametagMaxDistance = 80,
+                    NametagMaxDistance = 1000,
                     ShowNametagOnlyOnAiming = true,
                     MultiplierRankingKills = 75f,
                     MultiplierRankingAssists = 25f,

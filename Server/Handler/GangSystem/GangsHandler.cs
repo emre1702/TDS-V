@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Entities.GangSystem;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
@@ -37,7 +38,6 @@ namespace TDS_Server.Handler.GangSystem
 
             eventsHandler.PlayerLoggedIn += SetPlayerIntoHisGang;
             eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
-            eventsHandler.PlayerJoinedLobby += EventsHandler_PlayerJoinedLobby;
             eventsHandler.PlayerJoinedGang += EventsHandler_PlayerJoinedGang;
         }
 
@@ -93,15 +93,6 @@ namespace TDS_Server.Handler.GangSystem
 
                     ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, g);
                 });
-        }
-
-        private void EventsHandler_PlayerJoinedLobby(ITDSPlayer player, ILobby lobby)
-        {
-            if (!(lobby is GangLobby gangLobby))
-                return;
-
-            if (!player.Gang.Initialized)
-                InitGangForFirstTimeToday(player.Gang, gangLobby);
         }
 
         private async ValueTask EventsHandler_PlayerJoinedGang((ITDSPlayer player, IGang gang, GangRanks rank) args)
@@ -165,11 +156,6 @@ namespace TDS_Server.Handler.GangSystem
                     return gangMember.Rank;
 
             return NoneRank;
-        }
-
-        private async void InitGangForFirstTimeToday(IGang gang, GangLobby gangLobby)
-        {
-            await gangLobby.LoadGangVehicles(gang);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RAGE.Ui;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Client.Data.Abstracts.Entities.GTA;
@@ -18,17 +19,14 @@ namespace TDS_Client.Handler.Browser
     {
         private readonly EventsHandler _eventsHandler;
 
-        public AngularBrowserHandler(LoggingHandler loggingHandler, Serializer serializer,
+        public AngularBrowserHandler(LoggingHandler loggingHandler,
             EventsHandler eventsHandler)
-            : base(loggingHandler, serializer, Constants.AngularMainBrowserPath)
+            : base(loggingHandler, Constants.AngularMainBrowserPath)
         {
             _eventsHandler = eventsHandler;
 
             RAGE.Chat.SafeMode = false;
             RAGE.Chat.Show(false);
-
-            CreateBrowser();
-            Browser.MarkAsChat();
 
             eventsHandler.InFightStatusChanged += ToggleRoundStats;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
@@ -39,6 +37,12 @@ namespace TDS_Client.Handler.Browser
             RAGE.Events.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
             RAGE.Events.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
             RAGE.Events.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
+        }
+
+        public void CreateAngularBrowser()
+        {
+            CreateBrowser();
+            Browser.MarkAsChat();
         }
 
         public void AddNameForChat(string name)

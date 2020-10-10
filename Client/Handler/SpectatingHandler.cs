@@ -10,8 +10,6 @@ namespace TDS_Client.Handler
 {
     public class SpectatingHandler : ServiceBase
     {
-        #region Private Fields
-
         private static bool _binded;
         private static GameEntityBase _spectatingEntity;
         private readonly BindsHandler _bindsHandler;
@@ -19,8 +17,6 @@ namespace TDS_Client.Handler
         private readonly DeathHandler _deathHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly UtilsHandler _utilsHandler;
-
-        #endregion Private Fields
 
         public SpectatingHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, BindsHandler bindsHandler,
             CamerasHandler camerasHandler, DeathHandler deathHandler,
@@ -41,8 +37,6 @@ namespace TDS_Client.Handler
             RAGE.Events.Add(ToClientEvent.SetPlayerToSpectatePlayer, OnSetPlayerToSpectatePlayerMethod);
             RAGE.Events.Add(ToClientEvent.StopSpectator, OnStopSpectatorMethod);
         }
-
-        #region Public Properties
 
         public bool IsSpectator { get; set; }
 
@@ -72,10 +66,6 @@ namespace TDS_Client.Handler
                 Logging.LogInfo("", "SpectatingHandler.SpectatingEntity", true);
             }
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void Start()
         {
@@ -109,10 +99,6 @@ namespace TDS_Client.Handler
 
             IsSpectator = false;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void EventsHandler_CountdownStarted(bool isSpectator)
         {
@@ -162,7 +148,5 @@ namespace TDS_Client.Handler
         {
             _remoteEventsSender.Send(ToServerEvent.SpectateNext, false);
         }
-
-        #endregion Private Methods
     }
 }

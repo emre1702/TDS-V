@@ -3,6 +3,7 @@ using Grpc.Net.Client;
 using System;
 using System.Linq;
 using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Player;
 
 namespace BonusBotConnector.Client
 {
@@ -42,5 +43,16 @@ namespace BonusBotConnector.Client
         public PrivateChat? PrivateChat { get; }
         public ServerInfos? ServerInfos { get; }
         public Support? Support { get; }
+
+        public void OnNewOfficialBan(PlayerBans ban, ulong? playerDiscordUserId)
+        {
+            var embedFields = Helper?.GetBanEmbedFields(ban);
+            if (embedFields is { })
+            {
+                ChannelChat?.SendBanInfo(ban, embedFields);
+                if (playerDiscordUserId.HasValue)
+                    PrivateChat?.SendBanMessage(playerDiscordUserId.Value, ban, embedFields);
+            }
+        }
     }
 }

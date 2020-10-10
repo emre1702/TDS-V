@@ -8,14 +8,14 @@ namespace TDS_Client.Handler.Browser
     public class BrowserHandler : ServiceBase
     {
         public BrowserHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler,
-            Serializer serializer, RemoteEventsSender remoteEventsSender)
+            RemoteEventsSender remoteEventsSender)
             : base(loggingHandler)
         {
-            Angular = new AngularBrowserHandler(loggingHandler, serializer, eventsHandler);
-            RegisterLogin = new RegisterLoginBrowserHandler(loggingHandler, serializer);
-            MapCreatorObjectChoice = new MapCreatorObjectChoiceBrowserHandler(loggingHandler, serializer);
-            MapCreatorVehicleChoice = new MapCreatorVehicleChoiceBrowserHandler(loggingHandler, serializer);
-            PlainMain = new PlainMainBrowserHandler(loggingHandler, serializer, remoteEventsSender, eventsHandler);
+            Angular = new AngularBrowserHandler(loggingHandler, eventsHandler);
+            RegisterLogin = new RegisterLoginBrowserHandler(loggingHandler);
+            MapCreatorObjectChoice = new MapCreatorObjectChoiceBrowserHandler(loggingHandler);
+            MapCreatorVehicleChoice = new MapCreatorVehicleChoiceBrowserHandler(loggingHandler);
+            PlainMain = new PlainMainBrowserHandler(loggingHandler, remoteEventsSender, eventsHandler);
 
             eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
 

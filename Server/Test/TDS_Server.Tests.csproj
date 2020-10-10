@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="FakesAssemblies\**" />
+      <EmbeddedResource Remove="FakesAssemblies\**" />
+      <None Remove="FakesAssemblies\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.QualityTools.Testing.Fakes" Version="16.7.4-beta.20330.2" />
+        <PackageReference Include="NSubstitute" Version="4.2.2" />
+        <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.13" />
+        <PackageReference Include="NUnit" Version="3.12.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Core\" />
+      <Folder Include="Database\" />
+      <Folder Include="Handler\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Core\TDS_Server.Core.csproj" />
+      <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
+      <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+      <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
+      <ProjectReference Include="..\Lobby\TDS_Server.LobbySystem.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Bootstrapper">
+        <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalDesignTimeBuildInput Remove="FakesAssemblies\**" />
+    </ItemGroup>
+</Project>

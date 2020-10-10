@@ -20,33 +20,20 @@ namespace TDS_Server.Handler.Account
 {
     public class RegisterHandler : DatabaseEntityWrapper
     {
-        #region Private Fields
-
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly EventsHandler _eventsHandler;
         private readonly LangHelper _langHelper;
         private readonly ServerStartHandler _serverStartHandler;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public RegisterHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler,
-            DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler, LangHelper langHelper,
-            ITDSPlayerHandler tdsPlayerHandler)
+            DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler, LangHelper langHelper)
             : base(dbContext, loggingHandler)
         {
             (_eventsHandler, _databasePlayerHelper, _serverStartHandler) = (eventsHandler, databasePlayerHelper, serverStartHandler);
             _langHelper = langHelper;
-            _tdsPlayerHandler = tdsPlayerHandler;
 
             NAPI.ClientEvent.Register<ITDSPlayer, string, string, string, int>(ToServerEvent.TryRegister, this, TryRegister);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language)
         {
@@ -64,8 +51,7 @@ namespace TDS_Server.Handler.Account
                 SCName = scName,
                 Password = Utils.HashPasswordServer(password),
                 Email = email,
-                IsVip = false,
-                AdminLvl = SharedUtils.GetRandom<short>(0, 1, 2, 3)        // DEBUG
+                IsVip = false
             };
             if (dbPlayer is null)
                 return;
@@ -151,7 +137,5 @@ namespace TDS_Server.Handler.Account
                 player.TryingToLoginRegister = false;
             }
         }
-
-        #endregion Public Methods
     }
 }

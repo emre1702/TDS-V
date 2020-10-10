@@ -9,10 +9,6 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowRanksLevelsHandler
     {
-        private readonly Serializer _serializer;
-
-        public GangWindowRanksLevelsHandler(Serializer serializer) => _serializer = serializer;
-
         public List<GangRanks>? GetRanks(ITDSPlayer player)
         {
             if (player.Entity is null)
@@ -30,12 +26,12 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             var data = GetRanks(player);
             if (data is null)
                 return null;
-            return _serializer.ToBrowser(data);
+            return Serializer.ToBrowser(data);
         }
 
         public async Task<object?> Modify(ITDSPlayer player, string json)
         {
-            var fromList = _serializer.FromBrowser<List<GangRanks>>(json);
+            var fromList = Serializer.FromBrowser<List<GangRanks>>(json);
 
             await player.Gang.ExecuteForDBAsync(async dbContext =>
             {

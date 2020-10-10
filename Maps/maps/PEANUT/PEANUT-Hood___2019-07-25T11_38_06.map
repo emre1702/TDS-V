@@ -1,0 +1,43 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="PEANUT-Hood" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>3</creatorid>
+  </map>
+  <description>
+    <english>vallah good map</english>
+    <german>mashallah diese</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="1288.06" y="-1581.5" z="51.27" rot="119.76" />
+      <spawn x="1286.99" y="-1579.59" z="51.18" rot="121.24" />
+      <spawn x="1285.79" y="-1577.66" z="51.02" rot="122.43" />
+      <spawn x="1284.47" y="-1575.63" z="50.81" rot="104.91" />
+      <spawn x="1282.94" y="-1573.7" z="51.08" rot="103.79" />
+      <spawn x="1285.01" y="-1572.08" z="50.95" rot="126.53" />
+      <spawn x="1286.43" y="-1573.94" z="50.79" rot="122.81" />
+      <spawn x="1287.81" y="-1576.24" z="51.04" rot="122.88" />
+      <spawn x="1289.12" y="-1578.4" z="51.28" rot="135.97" />
+      <spawn x="1290.21" y="-1580.33" z="51.42" rot="177.69" />
+    </team>
+    <team>
+      <spawn x="1169.71" y="-1675.27" z="36.36" rot="329.68" />
+      <spawn x="1168.01" y="-1674.21" z="36.42" rot="355.27" />
+      <spawn x="1166.22" y="-1672.95" z="36.44" rot="347.28" />
+      <spawn x="1164.65" y="-1671.79" z="36.34" rot="321.93" />
+      <spawn x="1162.88" y="-1670.05" z="36.21" rot="13.77" />
+      <spawn x="1164.84" y="-1667.62" z="36.34" rot="321.51" />
+      <spawn x="1166.47" y="-1668.74" z="36.5" rot="268" />
+      <spawn x="1168.41" y="-1669.99" z="36.6" rot="283.71" />
+      <spawn x="1170.39" y="-1670.89" z="36.55" rot="315.34" />
+      <spawn x="1171.66" y="-1671.89" z="36.49" rot="283.87" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="1145.34" y="-1707.15" z="35.48" />
+    <pos x="1326.08" y="-1614.86" z="52.31" />
+    <pos x="1278.43" y="-1536.48" z="45.46" />
+    <pos x="1116.3" y="-1638.58" z="31.81" />
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>

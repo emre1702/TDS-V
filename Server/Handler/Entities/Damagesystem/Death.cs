@@ -1,29 +1,23 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Players;
 
 namespace TDS_Server.Core.Damagesystem
 {
     partial class Damagesys
     {
-        #region Private Fields
-
         private readonly Dictionary<ITDSPlayer, ITDSPlayer> _deadTimer = new Dictionary<ITDSPlayer, ITDSPlayer>();
 
-        #endregion Private Fields
-
-        #region Public Methods
-
-        public void CheckLastHitter(ITDSPlayer character, out ITDSPlayer? killer)
+        public void RewardLastHitter(ITDSPlayer player, out ITDSPlayer? killer)
         {
             killer = null;
-            if (character.LastHitter is null)
+            if (player.LastHitter is null)
                 return;
 
-            ITDSPlayer lastHitter = character.LastHitter;
-            character.LastHitter = null;
+            ITDSPlayer lastHitter = player.LastHitter;
+            player.LastHitter = null;
 
-            if (character.Lobby != lastHitter.Lobby)
+            if (player.Lobby != lastHitter.Lobby)
                 return;
 
             if (lastHitter.Lifes == 0)
@@ -32,7 +26,7 @@ namespace TDS_Server.Core.Damagesystem
             if (lastHitter.CurrentRoundStats != null)
                 ++lastHitter.CurrentRoundStats.Kills;
             KillingSpreeKill(lastHitter);
-            lastHitter.SendNotification(string.Format(lastHitter.Language.GOT_LAST_HITTED_KILL, character.DisplayName));
+            lastHitter.SendNotification(string.Format(lastHitter.Language.GOT_LAST_HITTED_KILL, player.DisplayName));
             killer = lastHitter;
         }
 
@@ -69,8 +63,10 @@ namespace TDS_Server.Core.Damagesystem
 
             killer = GetKiller(player, killer);
 
+            var lobbyPlayersHandler = player.Lobby?.Players as IRoundFightLobbyPlayers;
+
             // Death //
-            if (player.LobbyStats != null && player.Lobby?.SavePlayerLobbyStats == true)
+            if (player.LobbyStats != null && lobbyPlayersHandler?.SavePlayerLobbyStats == true)
             {
                 ++player.LobbyStats.Deaths;
                 ++player.LobbyStats.TotalDeaths;
@@ -90,22 +86,18 @@ namespace TDS_Server.Core.Damagesystem
                 CheckForAssist(player, killer);
             }
 
-            if (player.Lobby?.SavePlayerLobbyStats == true && player.Lobby?.IsOfficial == true)
+            if (lobbyPlayersHandler?.SavePlayerLobbyStats == true && player.Lobby?.IsOfficial == true)
             {
                 _loggingHandler.LogKill(player, killer, weapon);
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void CheckForAssist(ITDSPlayer player, ITDSPlayer killer)
         {
             if (!_allHitters.ContainsKey(player))
                 return;
 
-            int halfarmorhp = player.Lobby!.StartTotalHP / 2;
+            int halfarmorhp = (player.Lobby!.Entity.FightSettings.StartArmor + player.Lobby!.Entity.FightSettings.StartHealth) / 2;
             foreach (KeyValuePair<ITDSPlayer, int> entry in _allHitters[player])
             {
                 if (entry.Value >= halfarmorhp)
@@ -124,7 +116,5 @@ namespace TDS_Server.Core.Damagesystem
                 }
             }
         }
-
-        #endregion Private Methods
     }
 }

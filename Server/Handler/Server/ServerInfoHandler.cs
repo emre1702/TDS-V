@@ -3,10 +3,10 @@ using GTANetworkAPI;
 using System;
 using System.Linq;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Bonusbot;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 
 namespace TDS_Server.Handler.Server
@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Server
                 {
                     PlayerAmountInArena = _lobbiesHandler.Arena.Players.Count,
                     PlayerAmountInCustomLobby = _lobbiesHandler.Lobbies.Where(p => !p.IsOfficial).Sum(l => l.Players.Count),
-                    PlayerAmountInGangLobby = _lobbiesHandler.Lobbies.Where(p => p is GangLobby || (p is Arena arena && arena.IsGangActionLobby)).Sum(l => l.Players.Count),
+                    PlayerAmountInGangLobby = _lobbiesHandler.Lobbies.Where(p => p is IGangLobby || p is IGangActionLobby).Sum(l => l.Players.Count),
                     PlayerAmountInMainMenu = _tdsPlayerHandler.LoggedInPlayers.Where(p => p.Lobby is null || p.Lobby.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu).Count(),
                     PlayerAmountOnline = _tdsPlayerHandler.AmountLoggedInPlayers,
                     ServerPort = NAPI.Server.GetServerPort(),

@@ -2,6 +2,7 @@
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
@@ -94,12 +95,12 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
         {
         }
 
-        private void EventsHandler_PlayerJoinedLobby(ITDSPlayer player, ILobby lobby)
+        private void EventsHandler_PlayerJoinedLobby(ITDSPlayer player, IBaseLobby lobby)
         {
             CheckFriendPlayerJoinedLobby(player, lobby);
         }
 
-        private void EventsHandler_PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
+        private void EventsHandler_PlayerLeftLobby(ITDSPlayer player, IBaseLobby lobby)
         {
             CheckFriendPlayerLeftLobby(player, lobby);
         }

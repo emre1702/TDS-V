@@ -8,13 +8,9 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowRanksPermissionsHandler
     {
-        private readonly Serializer _serializer;
-
-        public GangWindowRanksPermissionsHandler(Serializer serializer) => _serializer = serializer;
-
         public async Task<object?> Modify(ITDSPlayer player, string json)
         {
-            var from = _serializer.FromBrowser<SyncedGangPermissions>(json);
+            var from = Serializer.FromBrowser<SyncedGangPermissions>(json);
 
             var to = player.Gang.Entity.RankPermissions;
             to.InviteMembers = from.InviteMembers;
@@ -39,7 +35,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                 Permissions = player.Gang.Entity.RankPermissions,
                 Ranks = ranksLevels.GetRanks(player)
             };
-            return _serializer.ToBrowser(data);
+            return Serializer.ToBrowser(data);
         }
     }
 }

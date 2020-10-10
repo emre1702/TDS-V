@@ -14,7 +14,7 @@
     left: 20vw;
     width: 60vw;
     border-color: transparent;
-    font-size: 5em;
+    font-size: 4em;
     color: floralwhite;
     z-index: 1000;
     user-select: none; 
@@ -27,5 +27,5 @@
     top: 70vh;
     width: 100vw;
     color: #FFD700;
-    font-size: 6em !important;
+    font-size: 5em !important;
 }

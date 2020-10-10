@@ -23,8 +23,6 @@ namespace TDS_Server.Handler.Maps
 {
     public class MapsLoadingHandler
     {
-        #region Public Fields
-
         /// <summary>
         /// Former: AllMaps
         /// </summary>
@@ -34,40 +32,23 @@ namespace TDS_Server.Handler.Maps
         public List<MapDto> NewCreatedMaps = new List<MapDto>();
         public List<MapDto> SavedMaps = new List<MapDto>();
 
-        #endregion Public Fields
-
-        #region Private Fields
-
         private readonly TDSDbContext _dbContext;
         private readonly EventsHandler _eventsHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, Serializer serializer, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
-            => (_dbContext, _eventsHandler, _serializer, _loggingHandler, _settingsHandler) = (dbContext, eventsHandler, serializer, loggingHandler, settingsHandler);
-
-        #endregion Public Constructors
-
-        #region Public Properties
+        public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
+            => (_dbContext, _eventsHandler, _loggingHandler, _settingsHandler) = (dbContext, eventsHandler, loggingHandler, settingsHandler);
 
         public IEnumerable<MapDto> AllCreatingMaps => NewCreatedMaps.Union(NeedCheckMaps);
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         // .Union(_savedMaps)
         public object? GetAllMapsForCustomLobby(ITDSPlayer player, ref ArraySegment<object> args)
         {
             var allMapsSyncData = DefaultMaps.Union(NewCreatedMaps).Union(NeedCheckMaps).Select(m => m.BrowserSyncedData);
 
-            return _serializer.ToBrowser(allMapsSyncData);
+            return Serializer.ToBrowser(allMapsSyncData);
         }
 
         public MapDto? GetMapById(int id)
@@ -120,10 +101,6 @@ namespace TDS_Server.Handler.Maps
             _eventsHandler.OnMapsLoaded();
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private static void LoadMapsDBInfos(List<MapDto> maps, List<DB.Rest.Maps> allDbMap)
         {
             foreach (var map in maps)
@@ -172,7 +149,7 @@ namespace TDS_Server.Handler.Maps
                 mapTeamSpawns.TeamID = ++teamId;
             }
 
-            map.CreateJsons(_serializer);
+            map.CreateJsons();
             map.LoadSyncedData();
             return map;
         }
@@ -228,7 +205,5 @@ namespace TDS_Server.Handler.Maps
             _dbContext.SaveChanges();
             _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
-
-        #endregion Private Methods
     }
 }

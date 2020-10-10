@@ -7,16 +7,10 @@ namespace TDS_Client.Handler.Lobby
 {
     public class RoundHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly RoundInfosHandler _roundInfosHandler;
         private readonly SettingsHandler _settingsHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public RoundHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, RoundInfosHandler roundInfosHandler,
             SettingsHandler settingsHandler, BrowserHandler browserHandler)
@@ -30,10 +24,6 @@ namespace TDS_Client.Handler.Lobby
             RAGE.Events.Add(ToClientEvent.RoundStart, OnRoundStartMethod);
             RAGE.Events.Add(ToClientEvent.RoundEnd, OnRoundEndMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Private Methods
 
         private void OnRoundEndMethod(object[] args)
         {
@@ -62,7 +52,5 @@ namespace TDS_Client.Handler.Lobby
                 Logging.LogError(ex);
             }
         }
-
-        #endregion Private Methods
     }
 }

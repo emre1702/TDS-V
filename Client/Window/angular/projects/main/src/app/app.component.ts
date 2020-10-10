@@ -8,13 +8,13 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CharCreateData } from './components/char-creator/interfaces/charCreateData';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { UserpanelSettingKey } from './components/userpanel/enums/userpanel-setting-key.enum';
 import { ThemeSettings } from './interfaces/theme-settings';
 import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
 import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
+import { InitialDatas } from './services/test-datas';
 
 @Component({
     selector: 'app-root',
@@ -42,7 +42,7 @@ import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
     ],
 })
 export class AppComponent {
-    started = false;
+    started = InitialDatas.started;
 
     showMapCreator = false;
     showFreeroam = false;
@@ -66,7 +66,6 @@ export class AppComponent {
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer,
         private materialCssVarsService: MaterialCssVarsService) {
-
         this.loadSvgIcons();
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
@@ -182,7 +181,6 @@ export class AppComponent {
             event.preventDefault();
         }
     }
-
 
     private loadSvgIcons() {
         this.iconRegistry.addSvgIcon("man", this.sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));

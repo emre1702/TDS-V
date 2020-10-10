@@ -1,9 +1,6 @@
 ﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Entities.GTA.Objects
@@ -20,12 +17,12 @@ namespace TDS_Server.Handler.Entities.GTA.Objects
             _workaroundsHandler.DetachEntity(this);
         }
 
-        public override void Freeze(bool toggle, ILobby lobby)
+        public override void Freeze(bool toggle, IBaseLobby lobby)
         {
             _workaroundsHandler.FreezeEntity(this, toggle, lobby);
         }
 
-        public override void SetCollisionsless(bool toggle, ILobby lobby)
+        public override void SetCollisionsless(bool toggle, IBaseLobby lobby)
         {
             _workaroundsHandler.SetEntityCollisionless(this, toggle, lobby);
         }

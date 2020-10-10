@@ -1,0 +1,45 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="LCN-Anwesen" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>3</creatorid>
+  </map>
+  <description>
+    <english>GVMP LCN Villa</english>
+    <german>GVMP LCN Anwesen</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="-1611.08" y="79.89" z="61.59" rot="356.45" />
+      <spawn x="-1613.28" y="80.17" z="61.6" rot="339.78" />
+      <spawn x="-1614.87" y="80.79" z="61.62" rot="357.55" />
+      <spawn x="-1615.1" y="83.39" z="61.73" rot="10.54" />
+      <spawn x="-1613.77" y="83.98" z="61.68" rot="18.93" />
+      <spawn x="-1611.8" y="84.65" z="61.68" rot="16.85" />
+      <spawn x="-1616.65" y="86.34" z="61.77" rot="43.22" />
+      <spawn x="-1614.64" y="86.75" z="61.74" rot="37.9" />
+      <spawn x="-1613.6" y="87.66" z="61.75" rot="35.91" />
+      <spawn x="-1616.55" y="88.64" z="61.81" rot="51.32" />
+    </team>
+    <team>
+      <spawn x="-1473.08" y="166.24" z="55.87" rot="148.05" />
+      <spawn x="-1473.91" y="167.62" z="55.89" rot="129.88" />
+      <spawn x="-1474.49" y="169.98" z="55.9" rot="128.93" />
+      <spawn x="-1474.78" y="172.32" z="55.91" rot="131.67" />
+      <spawn x="-1474.56" y="174.27" z="55.92" rot="65.92" />
+      <spawn x="-1470.34" y="165.92" z="55.9" rot="144.16" />
+      <spawn x="-1467.52" y="165.92" z="55.9" rot="146.21" />
+      <spawn x="-1464.9" y="166.29" z="55.9" rot="155.15" />
+      <spawn x="-1463" y="166.6" z="55.9" rot="159.75" />
+      <spawn x="-1461.22" y="168.1" z="55.91" rot="163.24" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="-1448.76" y="61.17" z="52.12" />
+    <pos x="-1407.35" y="208.65" z="58.41" />
+    <pos x="-1455.1" y="261.03" z="61.09" />
+    <pos x="-1679.24" y="109.3" z="63.74" />
+    <pos x="-1601.72" y="52.2" z="60.52" />
+    <pos x="-1525.8" y="41.68" z="55.9" />
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>

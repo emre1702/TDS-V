@@ -4,17 +4,19 @@ using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities.Gangs;
+using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.Gamemodes;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Shared.Core;
 
-namespace TDS_Server.Handler.Entities.Utility
+namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
 {
-    public class GangwarArea : DatabaseEntityWrapper
+    public class GangwarArea : DatabaseEntityWrapper, IGangwarArea
     {
         private readonly GangsHandler _gangsHandler;
         private readonly ISettingsHandler _settingsHandler;
@@ -71,12 +73,12 @@ namespace TDS_Server.Handler.Entities.Utility
             }
         }
 
-        public Arena? InLobby { get; set; }
+        public IGangActionLobby? InLobby { get; set; }
         public MapDto Map { get; private set; }
         public IGang? Owner { get; private set; }
 
-        private ITeam? AttackerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.AttackerTeam : null;
-        private ITeam? OwnerTeamInGangwar => InLobby?.CurrentGameMode is Gangwar gangwar ? gangwar.OwnerTeam : null;
+        private ITeam? AttackerTeamInGangwar => InLobby?.Rounds.CurrentGamemode is IGangwarGamemode gangwar ? gangwar.Teams.Attacker : null;
+        private ITeam? OwnerTeamInGangwar => InLobby?.Rounds.CurrentGamemode is IGangwarGamemode gangwar ? gangwar.Teams.Owner : null;
 
         public async Task SetAttackEnded(bool conquered)
         {
@@ -159,6 +161,7 @@ namespace TDS_Server.Handler.Entities.Utility
             _checkAtTarget = null;
         }
 
+        //Todo: Implement this
         private bool IsAtTarget(ITDSPlayer player)
         {
             if (player.Dead)
@@ -167,10 +170,12 @@ namespace TDS_Server.Handler.Entities.Utility
                 return false;
             if (player.Lobby is null)
                 return false;
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IRoundFightLobby roundFightLobby))
                 return false;
-            if (arena.GangwarArea != this)
+            if (!(roundFightLobby.Rounds.CurrentGamemode is IGangwarGamemode gangwar))
                 return false;
+            //if (gangwar.MapHandler.Area != this)
+            //    return false;
 
             return true;
         }
@@ -180,10 +185,10 @@ namespace TDS_Server.Handler.Entities.Utility
             if (InLobby is null)
                 return;
 
-            if (!(InLobby.CurrentGameMode is Gangwar gangwar))
+            if (!(InLobby.Rounds.CurrentGamemode is IGangwarGamemode gangwar))
                 return;
 
-            if (gangwar.TargetObject is null)
+            if (gangwar.MapHandler.TargetObject is null)
                 return;
 
             if (++_playerNotAtTargetCounter < _settingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds)
@@ -191,14 +196,14 @@ namespace TDS_Server.Handler.Entities.Utility
                 //Todo: Output to owner that they have xx seconds left to go back to target
             }
 
-            /*else
-             //Todo: Output to owner that no one was at target for too long
-                //OwnerTeamInGangwar?.FuncIterate((player, team) =>
-                //{
-                 //   player.SendChatMessage(player.Language.GANGWAR_LOST_);
-                //});
-            var lobby = InLobby;
-            lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.TargetEmpty);*/
+            //else
+            // //Todo: Output to owner that no one was at target for too long
+            //    //OwnerTeamInGangwar?.FuncIterate((player, team) =>
+            //    //{
+            //     //   player.SendChatMessage(player.Language.GANGWAR_LOST_);
+            //    //});
+            //var lobby = InLobby;
+            //lobby.SetRoundStatus(RoundStatus.RoundEnd, RoundEndReason.TargetEmpty);
         }
 
         private void SetConquered(TDSDbContext dbContext)
@@ -231,16 +236,19 @@ namespace TDS_Server.Handler.Entities.Utility
             if (_lobbiesHandler is null)
                 return;
 
-            _blip = NAPI.Blip.CreateBlip(
-                sprite: 84,
-                position: Map.Target!.ToVector3(),
-                scale: 3f,
-                color: Owner?.Entity.BlipColor ?? 4,
-                name: Map.Info.Name,
-                alpha: (byte)(HasCooldown ? 120 : 255),
-                drawDistance: 100f,
-                shortRange: true,
-                dimension: _lobbiesHandler.GangLobby.Dimension) as ITDSBlip;
+            NAPI.Task.Run(() =>
+            {
+                _blip = NAPI.Blip.CreateBlip(
+                    sprite: 84,
+                    position: Map.Target!.ToVector3(),
+                    scale: 3f,
+                    color: Owner?.Entity.BlipColor ?? 4,
+                    name: Map.Info.Name,
+                    alpha: (byte)(HasCooldown ? 120 : 255),
+                    drawDistance: 100f,
+                    shortRange: true,
+                    dimension: _lobbiesHandler.GangLobby.MapHandler.Dimension) as ITDSBlip;
+            });
         }
     }
 }

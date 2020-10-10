@@ -1,0 +1,43 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="Schrottplatz-PEANUT" type="normal" minplayers="0" maxplayers="999">
+    <creatorid>3</creatorid>
+  </map>
+  <description>
+    <english>mashallah good map</english>
+    <german>mashallah gute map</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="2430.66" y="3124.46" z="48.19" rot="353.68" />
+      <spawn x="2428.65" y="3124.72" z="48.13" rot="12.18" />
+      <spawn x="2427.04" y="3124.85" z="48.14" rot="3.18" />
+      <spawn x="2426.34" y="3125.04" z="48.19" rot="75.1" />
+      <spawn x="2424.89" y="3125.71" z="48.15" rot="351.77" />
+      <spawn x="2422.95" y="3125.32" z="48.16" rot="355.27" />
+      <spawn x="2432.15" y="3128.72" z="48.15" rot="334.89" />
+      <spawn x="2430.8" y="3127.6" z="48.14" rot="8.41" />
+      <spawn x="2428.92" y="3127.44" z="48.17" rot="358.46" />
+      <spawn x="2426.85" y="3128.03" z="48.16" rot="35.54" />
+    </team>
+    <team>
+      <spawn x="2330.37" y="3045.09" z="48.15" rot="263.75" />
+      <spawn x="2330.64" y="3046.92" z="48.15" rot="271.9" />
+      <spawn x="2330.09" y="3048.77" z="48.15" rot="266.8" />
+      <spawn x="2330.46" y="3050.68" z="48.15" rot="268.92" />
+      <spawn x="2330.63" y="3052.58" z="48.15" rot="277.06" />
+      <spawn x="2332.58" y="3052.67" z="48.15" rot="270.97" />
+      <spawn x="2333.02" y="3051.69" z="48.18" rot="189.49" />
+      <spawn x="2333.26" y="3049.12" z="49.36" rot="268.19" />
+      <spawn x="2333.44" y="3047.31" z="49.04" rot="277.16" />
+      <spawn x="2333.61" y="3045.78" z="48.15" rot="251.7" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="2322.94" y="3020.98" z="45.75" />
+    <pos x="2437.33" y="3020.3" z="46.3" />
+    <pos x="2437.72" y="3162.95" z="48.16" />
+    <pos x="2311.86" y="3164.19" z="47.24" />
+    <center x="0" y="0" z="0" />
+  </limit>
+  <bomb />
+</TDSMap>

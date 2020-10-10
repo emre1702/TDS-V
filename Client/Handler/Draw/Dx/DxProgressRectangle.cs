@@ -23,7 +23,7 @@ namespace TDS_Client.Handler.Draw.Dx
 
         private readonly float _width;
 
-        private int _frontRectOffsetAbsoluteX;
+        private readonly int _frontRectOffsetAbsoluteX;
 
         private int? _msToEnd;
 

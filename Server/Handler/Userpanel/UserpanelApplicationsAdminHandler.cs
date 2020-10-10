@@ -59,7 +59,6 @@ namespace TDS_Server.Handler.Userpanel
     {
         #region Private Fields
 
-        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
@@ -70,10 +69,10 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerGeneralStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, Serializer serializer, ITDSPlayerHandler tdsPlayerHandler)
+            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
-            => (_userpanelPlayerStatsHandler, _settingsHandler, _serializer, _tdsPlayerHandler, _userpanelApplicationUserHandler)
-            = (userpanelPlayerStatsHandler, settingsHandler, serializer, tdsPlayerHandler, userpanelApplicationUserHandler);
+            => (_userpanelPlayerStatsHandler, _settingsHandler, _tdsPlayerHandler, _userpanelApplicationUserHandler)
+            = (userpanelPlayerStatsHandler, settingsHandler, tdsPlayerHandler, userpanelApplicationUserHandler);
 
         #endregion Public Constructors
 
@@ -105,7 +104,7 @@ namespace TDS_Server.Handler.Userpanel
                     PlayerName = a.PlayerName
                 });
 
-                return _serializer.ToBrowser(appsToSend);
+                return Serializer.ToBrowser(appsToSend);
             }
             catch (Exception ex)
             {
@@ -145,7 +144,7 @@ namespace TDS_Server.Handler.Userpanel
                     .AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == player.Entity!.Id)
                     .ConfigureAwait(false));
 
-            string json = _serializer.ToBrowser(new ApplicationData
+            string json = Serializer.ToBrowser(new ApplicationData
             {
                 ApplicationID = applicationId,
                 Answers = answers,

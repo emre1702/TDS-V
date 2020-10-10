@@ -20,6 +20,7 @@ import { UserpanelCommandDataDto } from '../components/userpanel/interfaces/user
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { UserpanelSettingKey } from '../components/userpanel/enums/userpanel-setting-key.enum';
 import { ThemeSettings } from '../interfaces/theme-settings';
+import { InitialDatas } from './test-datas';
 
 // tslint:disable: member-ordering
 
@@ -120,7 +121,7 @@ export class SettingsService {
     public ChatInfoAnimationTimeMs = 15000;
     public ChatSettingsChanged = new EventEmitter();
 
-    public Constants: ConstantsData;
+    public Constants: ConstantsData = InitialDatas.getSettingsConstants();
     public ChallengeGroups: ChallengeGroup[] /* = [
         [ChallengeFrequency.Weekly, [
             [ ChallengeType.Assists, 5, 3 ],

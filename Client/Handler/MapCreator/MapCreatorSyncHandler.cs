@@ -21,14 +21,13 @@ namespace TDS_Client.Handler.MapCreator
         private readonly MapCreatorObjectsHandler _mapCreatorObjectsHandler;
 
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly Serializer _serializer;
 
-        public MapCreatorSyncHandler(MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender, Serializer serializer,
+        public MapCreatorSyncHandler(MapCreatorObjectsHandler mapCreatorObjectsHandler, RemoteEventsSender remoteEventsSender,
             EventsHandler eventsHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler, DataSyncHandler dataSyncHandler)
         {
             _mapCreatorObjectsHandler = mapCreatorObjectsHandler;
             _remoteEventsSender = remoteEventsSender;
-            _serializer = serializer;
+
             _browserHandler = browserHandler;
             _lobbyHandler = lobbyHandler;
             _dataSyncHandler = dataSyncHandler;
@@ -109,7 +108,7 @@ namespace TDS_Client.Handler.MapCreator
                 return;
             obj.IsSynced = true;
             var dto = obj.GetDto();
-            var json = _serializer.ToServer(dto);
+            var json = Serializer.ToServer(dto);
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncNewObject, json);
         }
 
@@ -126,7 +125,7 @@ namespace TDS_Client.Handler.MapCreator
             if (!HasToSync)
                 return;
             var posDto = obj.GetPosDto();
-            var json = _serializer.ToServer(posDto);
+            var json = Serializer.ToServer(posDto);
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncObjectPosition, json);
         }
 
@@ -186,7 +185,7 @@ namespace TDS_Client.Handler.MapCreator
         private void OnMapCreatorSyncAllObjectsMethod(object[] args)
         {
             string json = Convert.ToString(args[0]);
-            var data = _serializer.FromServer<MapCreateDataDto>(json);
+            var data = Serializer.FromServer<MapCreateDataDto>(json);
             _mapCreatorObjectsHandler.LoadMap(data, (int)args[1]);
             _browserHandler.Angular.LoadMapForMapCreator(json);
         }
@@ -201,14 +200,14 @@ namespace TDS_Client.Handler.MapCreator
         private void OnMapCreatorSyncNewObjectMethod(object[] args)
         {
             string json = Convert.ToString(args[0]);
-            var dto = _serializer.FromServer<MapCreatorPosition>(json);
+            var dto = Serializer.FromServer<MapCreatorPosition>(json);
             SyncNewObjectFromLobby(dto);
         }
 
         private void OnMapCreatorSyncObjectPositionMethod(object[] args)
         {
             string json = Convert.ToString(args[0]);
-            var dto = _serializer.FromServer<MapCreatorPosData>(json);
+            var dto = Serializer.FromServer<MapCreatorPosData>(json);
             SyncObjectPositionFromLobby(dto);
         }
 

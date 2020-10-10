@@ -4,7 +4,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 {
 #nullable enable
 
-    public abstract class ITDSColShape : ColShape
+    public abstract class ITDSColshape : ColShape
     {
         public delegate void PlayerEnteredExitedColShape(ITDSPlayer player);
 
@@ -12,7 +12,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public abstract event PlayerEnteredExitedColShape? PlayerExited;
 
-        public ITDSColShape(NetHandle netHandle) : base(netHandle)
+        public ITDSColshape(NetHandle netHandle) : base(netHandle)
         {
         }
     }

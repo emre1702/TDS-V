@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Log;
 using TDS_Server.Handler.Entities;
@@ -38,15 +39,17 @@ namespace TDS_Server.Handler
             _settingsHandler = settingsHandler;
             LoggingHandler = this;
 
-            _currentIdAdmins = dbContext.LogAdmins.Max(a => a.Id);
-            _currentIdChats = dbContext.LogChats.Max(a => a.Id);
-            _currentIdErrors = dbContext.LogErrors.Max(a => a.Id);
-            _currentIdKills = dbContext.LogKills.Max(a => a.Id);
-            _currentIdRests = dbContext.LogRests.Max(a => a.Id);
+            _currentIdAdmins = dbContext.LogAdmins.Any() ? dbContext.LogAdmins.Max(a => a.Id) : 0;
+            _currentIdChats = dbContext.LogChats.Any() ? dbContext.LogChats.Max(a => a.Id) : 0;
+            _currentIdErrors = dbContext.LogErrors.Any() ? dbContext.LogErrors.Max(a => a.Id) : 0;
+            _currentIdKills = dbContext.LogKills.Any() ? dbContext.LogKills.Max(a => a.Id) : 0;
+            _currentIdRests = dbContext.LogRests.Any() ? dbContext.LogRests.Max(a => a.Id) : 0;
 
             eventsHandler.Minute += Save;
             eventsHandler.Error += LogError;
             eventsHandler.ErrorMessage += LogError;
+            eventsHandler.PlayerLeftLobbyNew += EventsHandler_PlayerLeftLobbyNew;
+            eventsHandler.PlayerJoinedLobbyNew += EventsHandler_PlayerJoinedLobbyNew;
 
             if (_bonusBotConnectorClient.ChannelChat is { })
             {
@@ -255,7 +258,7 @@ namespace TDS_Server.Handler
                 Source = source.Entity?.Id ?? -1,
                 Target = target?.Entity?.Id ?? null,
                 Message = chat,
-                Lobby = isGlobal ? null : source?.Lobby?.Id,
+                Lobby = isGlobal ? null : source?.Lobby?.Entity.Id,
                 IsAdminChat = isAdminChat,
                 IsTeamChat = isTeamChat,
                 Timestamp = DateTime.UtcNow
@@ -277,7 +280,7 @@ namespace TDS_Server.Handler
                 Source = source?.Entity?.Id ?? -1,
                 Target = target?.Entity?.Id ?? null,
                 Type = cmd,
-                Lobby = target?.Lobby?.Id ?? source?.Lobby?.Id,
+                Lobby = target?.Lobby?.Entity.Id ?? source?.Lobby?.Entity.Id,
                 AsDonator = asdonator,
                 AsVip = asvip,
                 Reason = reason,
@@ -297,7 +300,7 @@ namespace TDS_Server.Handler
                 Source = source?.Entity?.Id ?? -1,
                 Target = targetid,
                 Type = cmd,
-                Lobby = source?.Lobby?.Id,
+                Lobby = source?.Lobby?.Entity.Id,
                 AsDonator = asdonator,
                 AsVip = asvip,
                 Reason = reason,
@@ -341,7 +344,7 @@ namespace TDS_Server.Handler
                 Source = source?.Id ?? 0,
                 Ip = saveipserial && ipAddressParseWorked ? address : null,
                 Serial = saveipserial ? source?.Serial ?? null : null,
-                Lobby = savelobby ? source?.Lobby?.Id : null,
+                Lobby = savelobby ? source?.Lobby?.Entity.Id : null,
                 Timestamp = DateTime.UtcNow
             };
 
@@ -350,5 +353,24 @@ namespace TDS_Server.Handler
         }
 
         #endregion Rest
+
+        private void EventsHandler_PlayerLeftLobbyNew(ITDSPlayer player, IBaseLobby lobby)
+        {
+            if (lobby.Type == LobbyType.MainMenu)
+                return;
+
+            if (lobby.IsRemoved)
+                return;
+
+            LogRest(LogType.Lobby_Leave, player, false, lobby.IsOfficial);
+        }
+
+        private void EventsHandler_PlayerJoinedLobbyNew(ITDSPlayer player, IBaseLobby lobby)
+        {
+            if (lobby.Type == LobbyType.MainMenu)
+                return;
+
+            LogRest(LogType.Lobby_Join, player, false, lobby.IsOfficial);
+        }
     }
 }

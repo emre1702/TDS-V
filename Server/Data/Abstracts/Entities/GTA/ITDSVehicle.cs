@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Data.Abstracts.Entities.GTA
@@ -8,7 +9,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
     public abstract class ITDSVehicle : Vehicle
     {
-        public ILobby? Lobby { get; set; }
+        public IBaseLobby? Lobby { get; set; }
 
         public ITDSVehicle(NetHandle netHandle) : base(netHandle)
         {
@@ -25,5 +26,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public abstract void SetInvincible(bool toggle, ITDSPlayer forPlayer);
 
         public abstract void SetInvincible(bool toggle);
+
+        public abstract void SetGang(IGang gang);
     }
 }

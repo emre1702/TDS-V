@@ -38,14 +38,13 @@ namespace TDS_Server.Handler.Userpanel
     public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper, IUserpanelOfflineMessagesHandler
     {
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
-        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
 
-        public UserpanelOfflineMessagesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
+        public UserpanelOfflineMessagesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler,
             ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler)
             : base(dbContext, loggingHandler)
         {
-            (_serializer, _settingsHandler, _offlineMessagesHandler) = (serializer, settingsHandler, offlineMessagesHandler);
+            (_settingsHandler, _offlineMessagesHandler) = (settingsHandler, offlineMessagesHandler);
 
             eventsHandler.Hour += DeleteOldMessages;
         }
@@ -124,7 +123,7 @@ namespace TDS_Server.Handler.Userpanel
                 message.CreateTime = player.GetLocalDateTimeString(message.CreateTimeDate);
             }
 
-            string json = _serializer.ToBrowser(offlineMessages);
+            string json = Serializer.ToBrowser(offlineMessages);
 
             if (offlineMessages.Any(m => !m.Seen))
             {

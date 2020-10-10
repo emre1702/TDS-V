@@ -1,18 +1,18 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Utility;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.PlayerHandlers;
-using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -146,19 +146,19 @@ namespace TDS_Server.Handler.Events
         {
             if (player.Lobby is null)
                 return null;
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IArena arena))
                 return null;
             int? mapId;
             if ((mapId = Utils.GetInt(args[0])) == null)
                 return null;
 
-            arena.BuyMap(player, mapId.Value);
+            arena.MapVoting.BuyMap(player, mapId.Value);
             return null;
         }
 
         private object? GiveVehicle(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (player.Lobby is null || !(player.Lobby is MapCreateLobby lobby))
+            if (player.Lobby is null || !(player.Lobby is IFreeroamLobby lobby))
                 return null;
 
             if (args.Count == 0)
@@ -167,7 +167,7 @@ namespace TDS_Server.Handler.Events
             if (!Enum.TryParse(args[0].ToString(), out FreeroamVehicleType vehType))
                 return null;
 
-            lobby.GiveVehicle(player, vehType);
+            lobby.Freeroam.GiveVehicle(player, vehType);
             return null;
         }
 
@@ -187,18 +187,18 @@ namespace TDS_Server.Handler.Events
         {
             if (player.Lobby is null)
                 return null;
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreatorLobby lobby))
                 return null;
             var infoType = (MapCreatorInfoType)Convert.ToInt32(args[0]);
             var data = args[1];
 
-            lobby.SyncMapInfoChange(infoType, data);
+            lobby.Sync.SyncMapInfoChange(infoType, data);
             return null;
         }
 
         private object? MapVote(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (!(player.Lobby is Arena arena))
+            if (!(player.Lobby is IArena arena))
                 return null;
 
             if (args.Count == 0)
@@ -208,7 +208,7 @@ namespace TDS_Server.Handler.Events
             if ((mapId = Utils.GetInt(args[0])) == null)
                 return null;
 
-            arena.MapVote(player, mapId.Value);
+            arena.MapVoting.VoteForMap(player, mapId.Value);
             return null;
         }
     }

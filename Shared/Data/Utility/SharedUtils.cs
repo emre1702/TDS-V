@@ -232,8 +232,17 @@ namespace TDS_Shared.Data.Utility
 
         public static T GetRandom<T>(List<T> collection)
         {
+            if (collection.Count == 0)
+                return default;
+
             var rndIndex = Rnd.Next(collection.Count);
             return collection[rndIndex];
+        }
+
+        public static T GetRandom<T>(IEnumerable<T> collection)
+        {
+            var rndIndex = Rnd.Next(collection.Count());
+            return collection.ElementAt(rndIndex);
         }
 
         public static T GetRandom<T>(HashSet<T> collection)

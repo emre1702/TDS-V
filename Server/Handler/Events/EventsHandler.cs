@@ -1,13 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using BonusBotConnector.Client;
 using GTANetworkAPI;
+using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities.GangSystem;
-using TDS_Server.Handler.Entities.LobbySystem;
 
 namespace TDS_Server.Handler.Events
 {
@@ -20,7 +21,15 @@ namespace TDS_Server.Handler.Events
         private int _minuteCounter;
         private int _secondCounter;
 
-        public EventsHandler() => Instance = this;
+        private readonly BonusBotConnectorClient _bonusBotConnectorClient;
+
+        public EventsHandler(BonusBotConnectorClient bonusBotConnectorClient)
+        {
+            Instance = this;
+            _bonusBotConnectorClient = bonusBotConnectorClient;
+        }
+
+        public delegate void ColshapePlayerDelegate(ITDSColshape colshape, ITDSPlayer player);
 
         public delegate void CounterDelegate(int counter);
 
@@ -36,7 +45,11 @@ namespace TDS_Server.Handler.Events
 
         public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
 
-        public delegate void LobbyDelegate(ILobby lobby);
+        public delegate void LobbyDelegate(IBaseLobby lobby);
+
+        public delegate void NewBanDelegate(PlayerBans ban, bool inOfficialLobby);
+
+        public delegate void PlayerDeathDelegate(ITDSPlayer player, ITDSPlayer killer, uint reason);
 
         public delegate void PlayerDelegate(ITDSPlayer player);
 
@@ -44,13 +57,13 @@ namespace TDS_Server.Handler.Events
 
         public delegate void PlayerJoinedGangDelegate(ITDSPlayer player, IGang gang, GangRanks rank);
 
-        public delegate void PlayerLobbyDelegate(ITDSPlayer player, ILobby lobby);
+        public delegate void PlayerLobbyDelegate(ITDSPlayer player, IBaseLobby lobby);
+
+        public delegate void PlayerLobbyDelegateNew(ITDSPlayer player, IBaseLobby lobby);
+
+        public delegate void PlayerWeaponSwitchDelegate(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon);
 
         public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
-
-        public event LobbyDelegate? CustomLobbyCreated;
-
-        public event LobbyDelegate? CustomLobbyRemoved;
 
         public event EntityDelegate? EntityDeleted;
 
@@ -68,13 +81,21 @@ namespace TDS_Server.Handler.Events
 
         public event LobbyDelegate? LobbyCreated;
 
+        public event LobbyDelegate? LobbyRemoved;
+
         public event EmptyDelegate? MapsLoaded;
 
         public event CounterDelegate? Minute;
 
+        public event NewBanDelegate? NewBan;
+
         public event PlayerDelegate? PlayerConnected;
 
+        public event PlayerDeathDelegate? PlayerDeath;
+
         public event PlayerDelegate? PlayerDisconnected;
+
+        public event ColshapePlayerDelegate? PlayerEnteredColshape;
 
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
 
@@ -82,17 +103,25 @@ namespace TDS_Server.Handler.Events
 
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
 
+        public event PlayerLobbyDelegateNew? PlayerJoinedLobbyNew;
+
         public event PlayerDelegate? PlayerLeftCustomMenuLobby;
 
         public event PlayerGangDelegate? PlayerLeftGang;
 
         public event PlayerLobbyDelegate? PlayerLeftLobby;
 
+        public event PlayerLobbyDelegateNew? PlayerLeftLobbyNew;
+
         public event PlayerDelegate? PlayerLoggedIn;
 
         public event PlayerDelegate? PlayerLoggedOut;
 
         public event TDSDbPlayerDelegate? PlayerRegistered;
+
+        public event PlayerDelegate? PlayerSpawned;
+
+        public event PlayerWeaponSwitchDelegate? PlayerWeaponSwitch;
 
         public event PlayerDelegate? ReloadPlayerChar;
 
@@ -128,7 +157,7 @@ namespace TDS_Server.Handler.Events
 
         public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint reason)
         {
-            player.Lobby?.OnPlayerDeath(player, killer, reason);
+            PlayerDeath?.Invoke(player, killer, reason);
         }
 
         public void OnPlayerDisconnected(ITDSPlayer player)
@@ -136,9 +165,9 @@ namespace TDS_Server.Handler.Events
             PlayerDisconnected?.Invoke(player);
         }
 
-        public void OnPlayerEnterColshape(ITDSColShape colshape, ITDSPlayer player)
+        public void OnPlayerEnterColshape(ITDSColshape colshape, ITDSPlayer player)
         {
-            player.Lobby?.OnPlayerEnterColshape(colshape, player);
+            PlayerEnteredColshape?.Invoke(colshape, player);
         }
 
         public async Task OnPlayerLoggedOut(ITDSPlayer tdsPlayer)
@@ -171,16 +200,16 @@ namespace TDS_Server.Handler.Events
 
         public void OnPlayerSpawn(ITDSPlayer player)
         {
-            player.Lobby?.OnPlayerSpawn(player);
+            PlayerSpawned?.Invoke(player);
         }
 
         public void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash previousWeapon, WeaponHash newWeapon)
         {
-            if (!(player.Lobby is FightLobby fightLobby))
+            if (!(player.Lobby is IFightLobby fightLobby))
                 return;
 
             player.OnPlayerWeaponSwitch(previousWeapon, newWeapon);
-            fightLobby.OnPlayerWeaponSwitch(player, previousWeapon, newWeapon);
+            PlayerWeaponSwitch?.Invoke(player, previousWeapon, newWeapon);
         }
 
         public void OnResourceStop()
@@ -198,6 +227,13 @@ namespace TDS_Server.Handler.Events
             GangHouseLoaded?.Invoke(house);
         }
 
+        public void OnNewBan(PlayerBans ban, bool isOfficial, ulong? targetDiscordUserId)
+        {
+            NewBan?.Invoke(ban, isOfficial);
+            if (isOfficial)
+                _bonusBotConnectorClient.OnNewOfficialBan(ban, targetDiscordUserId);
+        }
+
         /*public void OnPlayerEnterVehicle(ITDSPlayer tdsPlayer, ITDSVehicle vehicle, sbyte seatId)
         {
             tdsPlayer.Lobby?.OnPlayerEnterVehicle(tdsPlayer, vehicle, seatId);
@@ -208,16 +244,19 @@ namespace TDS_Server.Handler.Events
             tdsPlayer.Lobby?.OnPlayerExitVehicle(tdsPlayer, vehicle);
         }*/
 
-        #region Internal Methods
-
         public void OnError(Exception ex, string msgBefore)
         {
             ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
         }
 
-        internal void OnCustomLobbyCreated(ILobby lobby)
+        public void OnLobbyCreated(IBaseLobby lobby)
         {
-            CustomLobbyCreated?.Invoke(lobby);
+            LobbyCreated?.Invoke(lobby);
+        }
+
+        public void OnLobbyRemoved(IBaseLobby lobby)
+        {
+            LobbyRemoved?.Invoke(lobby);
         }
 
         internal void OnCustomLobbyMenuJoin(ITDSPlayer player)
@@ -228,11 +267,6 @@ namespace TDS_Server.Handler.Events
         internal void OnCustomLobbyMenuLeave(ITDSPlayer player)
         {
             PlayerLeftCustomMenuLobby?.Invoke(player);
-        }
-
-        internal void OnCustomLobbyRemoved(ILobby lobby)
-        {
-            CustomLobbyRemoved?.Invoke(lobby);
         }
 
         internal async Task OnGangJoin(ITDSPlayer player, IGang gang, GangRanks rank)
@@ -264,19 +298,24 @@ namespace TDS_Server.Handler.Events
             LoadedServerBans?.Invoke();
         }
 
-        internal void OnLobbyCreated(ILobby lobby)
-        {
-            LobbyCreated?.Invoke(lobby);
-        }
-
-        internal void OnLobbyJoin(ITDSPlayer player, ILobby lobby)
+        internal void OnLobbyJoin(ITDSPlayer player, IBaseLobby lobby)
         {
             PlayerJoinedLobby?.Invoke(player, lobby);
         }
 
-        internal void OnLobbyLeave(ITDSPlayer player, ILobby lobby)
+        internal void OnLobbyLeave(ITDSPlayer player, IBaseLobby lobby)
         {
             PlayerLeftLobby?.Invoke(player, lobby);
+        }
+
+        public void OnLobbyLeaveNew(ITDSPlayer player, IBaseLobby lobby)
+        {
+            PlayerLeftLobbyNew?.Invoke(player, lobby);
+        }
+
+        public void OnLobbyJoinedNew(ITDSPlayer player, IBaseLobby lobby)
+        {
+            PlayerJoinedLobbyNew?.Invoke(player, lobby);
         }
 
         internal void OnMinute()
@@ -308,7 +347,5 @@ namespace TDS_Server.Handler.Events
                 Error?.Invoke(ex);
             }
         }
-
-        #endregion Internal Methods
     }
 }

@@ -7,6 +7,7 @@ namespace TDS_Server.Data.Languages
     {
         #region Public Properties
 
+        public virtual string A_MAP_WAS_ALREADY_BOUGHT => "A map has already been purchased/set.";
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
         public virtual string ADDED_THE_GANG_HOUSE_SUCCESSFULLY => "The gang house was successfully added.";
         public virtual string ALREADY_IN_PRIVATE_CHAT_WITH => "You are already in a private chat with {0}.";
@@ -52,6 +53,7 @@ namespace TDS_Server.Data.Languages
         public virtual string GANG_INVITATION_WAS_REMOVED => "The invitation already got removed!";
         public virtual string GANG_LEVEL_MAX_ALLOWED => "A maximum of {0} is allowed as gang level.";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
+        public virtual string GANGACTION_CANT_JOIN_AGAIN => "You are not allowed to join the gang action again.";
         public virtual string GANGWAR_ATTACK_INVITATION => "Your gang is attacking an area!\n(Accept or use /attack)";
         public virtual string GANGWAR_ATTACK_PREPARATION_INVITATION => "Your gang is preparing a gangwar!\n(Accept or use /attack)";
         public virtual string GANGWAR_ATTACKER_PREPARATION_INFO => "You are preparing an attack against '{1}' in the area '{0}'.";
@@ -61,7 +63,6 @@ namespace TDS_Server.Data.Languages
         public virtual string GANGWAR_OWNER_STARTED_INFO => "Your area '{0}' is being attacked by the gang '{1}'.";
         public virtual string GANGWAR_PREPARATION_INFO => "Die Gang '{0}' bereitet einen Gangwar vor.";
         public virtual string GANGWAR_STARTED_INFO => "The gang '{0}' is preparing a gangwar.";
-        public virtual string GANGWAR_TEAM_ALREADY_FULL_INFO => "Your team is already full. Wait for a opponent to join and try again.";
         public virtual string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO => "{0} ist bei den Gegnern in den Gangwar beigetreten.";
         public virtual string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO => "{0} ist bei euch in den Gangwar beigetreten.";
         public virtual string GIVE_MONEY_NEED_FEE => "You need ${0} with ${1} fee included.";
@@ -175,6 +176,7 @@ namespace TDS_Server.Data.Languages
         public virtual string TARGET_RANK_IS_HIGHER_OR_EQUAL => "The target's rank is higher or equal to yours.";
         public virtual string TARGET_REJECTED_INVITATION => "{0} turned down your invitation.";
         public virtual string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "The player {0} is not your friend anymore and got blocked now.";
+        public virtual string TEAM_ALREADY_FULL_INFO => "Your team is already full. Wait for a opponent to join and try again.";
         public virtual string TESTING_MAP_NOTIFICATION => "This is a newly created map, the round-stats will not be saved.";
         public virtual string TEXT_TOO_LONG => "The text is too long.";
         public virtual string TEXT_TOO_SHORT => "The text is too short.";
@@ -203,6 +205,7 @@ namespace TDS_Server.Data.Languages
         public virtual string YOU_ALREADY_INVITED_TARGET => "You've already invited the target.";
         public virtual string YOU_ARE_ALREADY_IN_A_GANG => "You are already in a gang.";
         public virtual string YOU_ARE_NOT_IN_A_GANG => "You are not in a gang.";
+        public virtual string YOU_CANT_BUY_A_MAP_IN_CUSTOM_LOBBY => "You can't buy a map in a custom lobby.";
         public virtual string YOU_GAVE_MONEY_TO_WITH_FEE => "You gave ${0} (${1} fee) to {2}.";
         public virtual string YOU_GOT_BLOCKED_BY => "You got blocked by {0}.";
         public virtual string YOU_GOT_INVITATION_BY => "You got an invitation to join the team from {0}.";

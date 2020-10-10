@@ -19,13 +19,13 @@ namespace TDS_Server.Handler.Userpanel
     {
         private readonly DataSyncHandler _dataSyncHandler;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly Serializer _serializer;
+
         private readonly ISettingsHandler _settingsHandler;
 
-        public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, Serializer serializer, ILoggingHandler loggingHandler,
+        public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, ILoggingHandler loggingHandler,
             DataSyncHandler dataSyncHandler)
-            => (_settingsHandler, _serializer, _loggingHandler, _dataSyncHandler)
-            = (settingsHandler, serializer, loggingHandler, dataSyncHandler);
+            => (_settingsHandler, _loggingHandler, _dataSyncHandler)
+            = (settingsHandler, loggingHandler, dataSyncHandler);
 
         public string? GetData(ITDSPlayer player)
         {
@@ -39,7 +39,7 @@ namespace TDS_Server.Handler.Userpanel
                 Email = player.Entity.Email,
                 UsernameBuyInCooldown = lastUsernameChange.HasValue && lastUsernameChange.Value.AddDays(_settingsHandler.ServerSettings.UsernameChangeCooldownDays) > DateTime.UtcNow
             };
-            return _serializer.ToBrowser(data);
+            return Serializer.ToBrowser(data);
         }
 
         public async Task<object?> SetData(ITDSPlayer player, ArraySegment<object> args)

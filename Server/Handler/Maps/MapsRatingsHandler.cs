@@ -18,12 +18,10 @@ namespace TDS_Server.Handler.Maps
     {
         private readonly MapCreatorHandler _mapsCreatingHandler;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
-        private readonly Serializer _serializer;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
         public MapsRatingsHandler(
             EventsHandler eventsHandler,
-            Serializer serializer,
+
             MapsLoadingHandler mapsLoadingHandler,
             MapCreatorHandler mapsCreatorHandler,
             TDSDbContext dbContext,
@@ -31,10 +29,8 @@ namespace TDS_Server.Handler.Maps
             ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext, loggingHandler)
         {
-            _serializer = serializer;
             _mapsLoadingHandler = mapsLoadingHandler;
             _mapsCreatingHandler = mapsCreatorHandler;
-            _tdsPlayerHandler = tdsPlayerHandler;
 
             eventsHandler.PlayerLoggedIn += SendPlayerHisRatings;
 
@@ -78,7 +74,7 @@ namespace TDS_Server.Handler.Maps
                 return;
 
             var ratingsDict = player.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
-            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.LoadOwnMapRatings, _serializer.ToBrowser(ratingsDict)));
+            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.LoadOwnMapRatings, Serializer.ToBrowser(ratingsDict)));
         }
     }
 }

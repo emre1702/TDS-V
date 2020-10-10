@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Server;
@@ -15,14 +18,8 @@ namespace TDS_Server.Handler.Server
 {
     public class ServerStatsHandler : DatabaseEntityWrapper
     {
-        #region Private Fields
-
         private readonly EventsHandler _eventsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public ServerStatsHandler(EventsHandler eventsHandler, ITDSPlayerHandler tdsPlayerHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
@@ -33,6 +30,7 @@ namespace TDS_Server.Handler.Server
             _eventsHandler.PlayerLoggedIn += PlayerLoggedIn;
             _eventsHandler.PlayerLoggedOut += CheckPlayerPeak;
             _eventsHandler.PlayerRegistered += PlayerRegistered;
+            _eventsHandler.LobbyCreated += EventsHandler_LobbyCreatedNew;
 
             // Only to remove nullable warning
             DailyStats = new ServerDailyStats();
@@ -54,26 +52,21 @@ namespace TDS_Server.Handler.Server
             _eventsHandler.Minute += Save;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
+        private void EventsHandler_LobbyCreatedNew(IBaseLobby lobby)
+        {
+            if (lobby is IArena arena)
+                arena.Events.RoundEndStats += () => CheckAddArenaRound(arena);
+        }
 
         public ServerDailyStats DailyStats { get; private set; }
         public ServerTotalStats TotalStats { get; private set; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
-        public async void AddArenaRound(RoundEndReason roundEndReason, bool isOfficial)
+        public async ValueTask CheckAddArenaRound(IArena lobby)
         {
-            if (roundEndReason == RoundEndReason.Command
-                || roundEndReason == RoundEndReason.Empty
-                || roundEndReason == RoundEndReason.NewPlayer
-                || roundEndReason == RoundEndReason.Error)
+            if (!lobby.CurrentRoundEndReason.AddToServerStats)
                 return;
             await CheckNewDay();
-            if (isOfficial)
+            if (lobby.IsOfficial)
             {
                 ++DailyStats.ArenaRoundsPlayed;
                 ++TotalStats.ArenaRoundsPlayed;
@@ -99,10 +92,6 @@ namespace TDS_Server.Handler.Server
 
             await CheckNewDay();
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private async ValueTask CheckNewDay()
         {
@@ -146,7 +135,5 @@ namespace TDS_Server.Handler.Server
             await CheckNewDay();
             ++DailyStats.AmountRegistrations;
         }
-
-        #endregion Private Methods
     }
 }

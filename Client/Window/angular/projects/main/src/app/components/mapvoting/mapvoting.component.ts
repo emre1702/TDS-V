@@ -5,31 +5,16 @@ import { MapNav } from './enums/mapnav.enum';
 import { MapVotingService } from './services/mapvoting.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
-import { transition, animate, style, trigger } from '@angular/animations';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 import { MatSidenav } from '@angular/material';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
+import { LanguagePipe } from '../../pipes/language.pipe';
+import { bottomToTopEnterAnimation } from '../../animations/bottomToUpEnter.animation';
+import { InitialDatas } from '../../services/test-datas';
 
 @Component({
     selector: 'app-mapvoting',
-    animations: [
-        trigger(
-            'hideShowAnimation',
-            [
-                transition(
-                    ':enter', [
-                    style({ transform: 'translateY(100%)', opacity: 0 }),
-                    animate('500ms', style({ transform: 'translateY(0)', opacity: 0.9 }))
-                ]
-                ),
-                transition(
-                    ':leave', [
-                    animate('500ms', style({ transform: 'translateY(100%)', opacity: 0 })),
-                ]
-                )
-            ]
-        )
-    ],
+    animations: [bottomToTopEnterAnimation],
     templateUrl: './mapvoting.component.html',
     styleUrls: ['./mapvoting.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -38,11 +23,12 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     private static readonly Numpad1KeyCode = 97;
     private static readonly Numpad9KeyCode = 105;
 
-    active = false;
-    data: MapDataDto[] = [];
+    active = InitialDatas.isMapVotingActive;
+    data: MapDataDto[] = InitialDatas.getMapsForVoting();
     selectedNav: string;
     selectedMap: MapDataDto;
     mapSearchFilter = "";
+    title: string;
 
     @ViewChild('snav') snav: MatSidenav;
 
@@ -65,6 +51,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
 
         this.mapSearchFilter = "";
+        this.refreshTitle();
     }
 
     ngOnDestroy(): void {
@@ -88,6 +75,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.selectedNav = "All";
         this.selectedMap = undefined;
         this.active = true;
+        this.refreshTitle();
         this.changeDetector.detectChanges();
     }
 
@@ -101,12 +89,14 @@ export class MapVotingComponent implements OnInit, OnDestroy {
 
     changeSelectedMap(map: MapDataDto) {
         this.selectedMap = map;
+        this.refreshTitle();
         this.changeDetector.detectChanges();
     }
 
     changeToNav(nav: string) {
         this.selectedNav = nav;
         this.selectedMap = undefined;
+        this.refreshTitle();
         this.changeDetector.detectChanges();
     }
 
@@ -155,6 +145,13 @@ export class MapVotingComponent implements OnInit, OnDestroy {
 
     private getMapBuyPrice() {
         return Math.ceil(this.settings.Constants[4] + this.settings.Constants[5] * this.settings.MapsBoughtCounter);
+    }
+
+    private refreshTitle() {
+        this.title = new LanguagePipe().transform('MapVoting', this.settings.Lang);
+        if (this.selectedMap) {
+            this.title += " - " +  this.selectedMap[1];
+        }
     }
 
     @HostListener("document:keyup", ["$event"])

@@ -13,11 +13,11 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -31,15 +31,14 @@ namespace TDS_Server.Handler.Maps
     public class MapCreatorHandler : DatabaseEntityWrapper
     {
         private readonly MapsLoadingHandler _mapsLoadingHandler;
-        private readonly Serializer _serializer;
         private readonly ISettingsHandler _settingsHandler;
         private readonly XmlHelper _xmlHelper;
 
-        public MapCreatorHandler(Serializer serializer, MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
+        public MapCreatorHandler(MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler)
             : base(dbContext, loggingHandler)
         {
-            (_serializer, _mapsLoadingHandler, _xmlHelper, _settingsHandler) = (serializer, mapsLoadingHandler, xmlHelper, settingsHandler);
+            (_mapsLoadingHandler, _xmlHelper, _settingsHandler) = (mapsLoadingHandler, xmlHelper, settingsHandler);
             NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
         }
 
@@ -195,7 +194,7 @@ namespace TDS_Server.Handler.Maps
                 }
             };
 
-            ((MapCreateLobby)player.Lobby!).SetMap(mapCreatorData);
+            ((IMapCreatorLobby)player.Lobby!).Sync.SetMap(mapCreatorData);
             return null;
         }
 
@@ -255,19 +254,19 @@ namespace TDS_Server.Handler.Maps
                 });
             }
 
-            return _serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
+            return Serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
         }
 
         public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (!(player.Lobby is MapCreateLobby lobby))
+            if (!(player.Lobby is IMapCreatorLobby lobby))
                 return null;
 
             string json = (string)args[0];
             int tdsPlayerId = Convert.ToInt32(args[1]);
             int idCounter = Convert.ToInt32(args[2]);
 
-            lobby.SyncCurrentMapToPlayer(json, tdsPlayerId, idCounter);
+            lobby.Sync.SetSyncedMapAndSyncToPlayer(json, tdsPlayerId, idCounter);
             return null;
         }
 
@@ -290,7 +289,7 @@ namespace TDS_Server.Handler.Maps
                 MapCreateDataDto mapCreateData;
                 try
                 {
-                    mapCreateData = _serializer.FromBrowser<MapCreateDataDto>(mapJson);
+                    mapCreateData = Serializer.FromBrowser<MapCreateDataDto>(mapJson);
                     if (mapCreateData is null)
                         return (null, MapCreateError.CouldNotDeserialize);
                 }
@@ -305,7 +304,7 @@ namespace TDS_Server.Handler.Maps
                 //foreach (var bombPlace in mapCreateData.BombPlaces)
                 //    bombPlace.PosZ -= 1;
 
-                var mapDto = new MapDto(mapCreateData, _serializer);
+                var mapDto = new MapDto(mapCreateData);
                 mapDto.Info.IsNewMap = true;
                 mapDto.Info.CreatorId = creator.Entity.Id;
 

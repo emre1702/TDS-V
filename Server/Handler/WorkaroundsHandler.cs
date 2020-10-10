@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -13,28 +13,26 @@ namespace TDS_Server.Handler
     public class WorkaroundsHandler
     {
         private static readonly Dictionary<Entity, EntityAttachInfoDto> _attachedEntitiesInfos = new Dictionary<Entity, EntityAttachInfoDto>();
-        private static readonly Dictionary<ILobby, List<Entity>> _attachedEntitiesPerLobby = new Dictionary<ILobby, List<Entity>>();
+        private static readonly Dictionary<IBaseLobby, List<Entity>> _attachedEntitiesPerLobby = new Dictionary<IBaseLobby, List<Entity>>();
 
         private static readonly Dictionary<Entity, EntityCollisionlessInfoDto> _collisionslessEntitiesInfos = new Dictionary<Entity, EntityCollisionlessInfoDto>();
-        private static readonly Dictionary<ILobby, List<Entity>> _collisionslessEntitiesPerLobby = new Dictionary<ILobby, List<Entity>>();
+        private static readonly Dictionary<IBaseLobby, List<Entity>> _collisionslessEntitiesPerLobby = new Dictionary<IBaseLobby, List<Entity>>();
 
-        private static readonly Dictionary<ILobby, List<Entity>> _frozenEntityPerLobby = new Dictionary<ILobby, List<Entity>>();
+        private static readonly Dictionary<IBaseLobby, List<Entity>> _frozenEntityPerLobby = new Dictionary<IBaseLobby, List<Entity>>();
 
-        private static readonly Dictionary<ILobby, List<Entity>> _invincibleEntityPerLobby = new Dictionary<ILobby, List<Entity>>();
+        private static readonly Dictionary<IBaseLobby, List<Entity>> _invincibleEntityPerLobby = new Dictionary<IBaseLobby, List<Entity>>();
 
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly Serializer _serializer;
 
-        public WorkaroundsHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler, Serializer serializer)
+        public WorkaroundsHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler)
         {
-            _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
 
             eventsHandler.PlayerJoinedLobby += PlayerJoinedLobby;
             eventsHandler.PlayerLeftLobby += PlayerLeftLobby;
         }
 
-        public void AttachEntityToEntity(Entity entity, Entity entityTarget, PedBone bone, Vector3 positionOffset, Vector3 rotationOffset, ILobby? lobby = null)
+        public void AttachEntityToEntity(Entity entity, Entity entityTarget, PedBone bone, Vector3 positionOffset, Vector3 rotationOffset, IBaseLobby? lobby = null)
         {
             var infoDto = new EntityAttachInfoDto
             (
@@ -47,16 +45,16 @@ namespace TDS_Server.Handler
                 RotationOffsetX: rotationOffset.X,
                 RotationOffsetY: rotationOffset.Y,
                 RotationOffsetZ: rotationOffset.Z,
-                LobbyId: lobby?.Id
+                LobbyId: lobby?.Entity.Id
             );
-            infoDto.Json = _serializer.ToClient(infoDto);
+            infoDto.Json = Serializer.ToClient(infoDto);
             _attachedEntitiesInfos[entity] = infoDto;
 
             if (lobby is null)
                 NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
             else
             {
-                lobby.TriggerEvent(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
+                lobby.Sync.TriggerEvent(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
 
                 if (!_attachedEntitiesPerLobby.ContainsKey(lobby))
                     _attachedEntitiesPerLobby[lobby] = new List<Entity>();
@@ -71,10 +69,10 @@ namespace TDS_Server.Handler
             var info = _attachedEntitiesInfos[entity];
             if (info.LobbyId.HasValue)
             {
-                ILobby? lobby = _lobbiesHandler.GetLobby(info.LobbyId.Value);
+                var lobby = _lobbiesHandler.GetLobby(info.LobbyId.Value);
                 if (lobby is null)
                     return;
-                lobby.TriggerEvent(ToClientEvent.DetachEntityWorkaround, entity.Value);
+                lobby.Sync.TriggerEvent(ToClientEvent.DetachEntityWorkaround, entity.Value);
             }
             else
                 NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.DetachEntityWorkaround, entity.Value);
@@ -82,9 +80,9 @@ namespace TDS_Server.Handler
             _attachedEntitiesInfos.Remove(entity);
         }
 
-        public void FreezeEntity(Entity entity, bool freeze, ILobby lobby)
+        public void FreezeEntity(Entity entity, bool freeze, IBaseLobby lobby)
         {
-            lobby.TriggerEvent(ToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, freeze);
+            lobby.Sync.TriggerEvent(ToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, freeze);
 
             if (freeze)
             {
@@ -105,14 +103,14 @@ namespace TDS_Server.Handler
             NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.FreezePlayerWorkaround, freeze);
         }
 
-        public void SetEntityCollisionless(Entity entity, bool collisionless, ILobby? lobby = null)
+        public void SetEntityCollisionless(Entity entity, bool collisionless, IBaseLobby? lobby = null)
         {
             var info = new EntityCollisionlessInfoDto
             (
                 entityValue: entity.Value,
                 collisionless: collisionless
             );
-            info.Json = _serializer.ToClient(info);
+            info.Json = Serializer.ToClient(info);
             _collisionslessEntitiesInfos[entity] = info;
 
             if (lobby is null)
@@ -132,9 +130,9 @@ namespace TDS_Server.Handler
             NAPI.ClientEvent.TriggerClientEvent(invincibleAtClient, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
         }
 
-        public void SetEntityInvincible(ILobby atLobby, Entity entity, bool invincible)
+        public void SetEntityInvincible(IBaseLobby atLobby, Entity entity, bool invincible)
         {
-            NAPI.ClientEvent.TriggerClientEventInDimension(atLobby.Dimension, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
+            NAPI.ClientEvent.TriggerClientEventInDimension(atLobby.MapHandler.Dimension, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
 
             if (!_invincibleEntityPerLobby.ContainsKey(atLobby))
                 _invincibleEntityPerLobby[atLobby] = new List<Entity>();
@@ -151,7 +149,7 @@ namespace TDS_Server.Handler
             NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerTeamWorkaround, team);
         }
 
-        private static void PlayerJoinedLobby(ITDSPlayer player, ILobby lobby)
+        private static void PlayerJoinedLobby(ITDSPlayer player, IBaseLobby lobby)
         {
             if (_attachedEntitiesPerLobby.ContainsKey(lobby))
             {
@@ -199,7 +197,7 @@ namespace TDS_Server.Handler
             }
         }
 
-        private void PlayerLeftLobby(ITDSPlayer player, ILobby lobby)
+        private void PlayerLeftLobby(ITDSPlayer player, IBaseLobby lobby)
         {
         }
     }

@@ -31,7 +31,7 @@ namespace TDS_Client.Handler.MapCreator
 
         public MapCreatorHandler(LoggingHandler loggingHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler,
             SettingsHandler settingsHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, BrowserHandler browserHandler,
-            DxHandler dxHandler, RemoteEventsSender remoteEventsSender, Serializer serializer, EventsHandler eventsHandler, LobbyHandler lobbyHandler,
+            DxHandler dxHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, LobbyHandler lobbyHandler,
             TimerHandler timerHandler, DataSyncHandler dataSyncHandler, DeathHandler deathHandler)
             : base(loggingHandler)
         {
@@ -45,8 +45,8 @@ namespace TDS_Client.Handler.MapCreator
 
             var clickedMarkerStorer = new ClickedMarkerStorer();
 
-            Objects = new MapCreatorObjectsHandler(loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler, serializer);
-            Sync = new MapCreatorSyncHandler(Objects, remoteEventsSender, serializer, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
+            Objects = new MapCreatorObjectsHandler(loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler);
+            Sync = new MapCreatorSyncHandler(Objects, remoteEventsSender, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
             ObjectsLoading = new ObjectsLoadingHelper(loggingHandler, utilsHandler, settingsHandler);
             ObjectsPreview = new MapCreatorObjectsPreviewHandler(ObjectsLoading, camerasHandler, utilsHandler, browserHandler);
             VehiclePreview = new MapCreatorVehiclesPreviewHandler(camerasHandler, utilsHandler, browserHandler);

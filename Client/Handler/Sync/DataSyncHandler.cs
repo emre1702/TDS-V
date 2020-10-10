@@ -23,14 +23,13 @@ namespace TDS_Client.Handler.Sync
         private readonly Dictionary<ushort, Dictionary<PlayerDataKey, object>> _playerRemoteIdDatas
                                     = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
 
-        private readonly Serializer _serializer;
         private bool _nameSyncedWithAngular;
 
-        public DataSyncHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, BrowserHandler angularHandler, Serializer serializer)
+        public DataSyncHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, BrowserHandler angularHandler)
                     : base(loggingHandler)
         {
             _browserHandler = angularHandler;
-            _serializer = serializer;
+
             _eventsHandler = eventsHandler;
 
             eventsHandler.DataChanged += OnLocalPlayerDataChange;
@@ -236,8 +235,7 @@ namespace TDS_Client.Handler.Sync
                     _playerRemoteIdDatas[playerRemoteId] = new Dictionary<PlayerDataKey, object>();
                 _playerRemoteIdDatas[playerRemoteId][key] = value;
 
-                var player = RAGE.Elements.Entities.Players.GetAtRemote(playerRemoteId) as ITDSPlayer;
-                if (player != null)
+                if (RAGE.Elements.Entities.Players.GetAtRemote(playerRemoteId) is ITDSPlayer player)
                 {
                     _eventsHandler.OnDataChanged(player, key, value);
                 }
@@ -253,7 +251,7 @@ namespace TDS_Client.Handler.Sync
             try
             {
                 string dictJson = (string)args[0];
-                var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<EntityDataKey, object>>>(dictJson);
+                var dict = Serializer.FromServer<Dictionary<ushort, Dictionary<EntityDataKey, object>>>(dictJson);
                 foreach (var entry in dict)
                 {
                     if (!_entityRemoteIdDatas.ContainsKey(entry.Key))
@@ -275,16 +273,15 @@ namespace TDS_Client.Handler.Sync
             try
             {
                 string dictJson = (string)args[0];
-                var dict = _serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
+                var dict = Serializer.FromServer<Dictionary<ushort, Dictionary<PlayerDataKey, object>>>(dictJson);
                 foreach (var entry in dict)
                 {
-                    var player = RAGE.Elements.Entities.Players.GetAtRemote(entry.Key) as ITDSPlayer;
                     if (!_playerRemoteIdDatas.ContainsKey(entry.Key))
                         _playerRemoteIdDatas[entry.Key] = new Dictionary<PlayerDataKey, object>();
                     foreach (var dataEntry in entry.Value)
                     {
                         _playerRemoteIdDatas[entry.Key][dataEntry.Key] = dataEntry.Value;
-                        if (player != null)
+                        if (RAGE.Elements.Entities.Players.GetAtRemote(entry.Key) is ITDSPlayer player)
                         {
                             _eventsHandler.OnDataChanged(player, dataEntry.Key, dataEntry.Value);
                         }

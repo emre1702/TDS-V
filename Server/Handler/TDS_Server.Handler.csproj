@@ -30,12 +30,4 @@
             <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
         </Reference>
     </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Entities\Gamemodes\CaptureTheFlag\" />
-        <Folder Include="Entities\Gamemodes\KingOfTheHill\" />
-        <Folder Include="Entities\Gamemodes\Domination\" />
-        <Folder Include="Entities\Gamemodes\JailBreak\" />
-        <Folder Include="Entities\Gamemodes\InstaGib\" />
-    </ItemGroup>
 </Project>

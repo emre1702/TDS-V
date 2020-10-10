@@ -1,0 +1,2799 @@
+﻿alt.requestIpl('hei_dlc_windows_casino')
+alt.requestIpl('hei_dlc_casino_door')
+alt.requestIpl('vw_dlc_casino_door')
+alt.requestIpl('hei_dlc_casino_aircon')
+alt.requestIpl('vw_casino_main')
+alt.requestIpl('vw_casino_garage')
+alt.requestIpl('vw_casino_carpark')
+alt.requestIpl('vw_casino_penthouse')
+let phPropList = [
+    "Set_Pent_Tint_Shell",
+    "Set_Pent_Pattern_01",
+    "Set_Pent_Spa_Bar_Open",
+    "Set_Pent_Media_Bar_Open",
+    "Set_Pent_Dealer",
+    "Set_Pent_Arcade_Retro",
+    "Set_Pent_Bar_Clutter",
+    "Set_Pent_Clutter_01",
+    "set_pent_bar_light_01",
+    "set_pent_bar_party_0"
+];
+
+for (const propName of phPropList) {
+    game.enableInteriorProp(274689, propName);
+    game.setInteriorPropColor(274689, propName, 1)
+}
+
+game.refreshInterior(274689)
+
+
+
+
+function tpToWaypoint() {
+    var waypoint = native.getFirstBlipInfoId(8);
+
+    if (native.doesBlipExist(waypoint)) {
+        var coords = native.getBlipInfoIdCoord(waypoint);
+        alt.Player.local.pos = coords;
+
+        var res = native.getGroundZFor3dCoord(coords.x, coords.y, coords.z + 100, undefined, undefined);
+
+        coords.z = res + 1;
+        alt.emitServer('test', coords);
+    }
+}
+
+
+
+
+
+Disable the possibility to fly through the Windscreen like in a car crash : game.setPedConfigFlag(alt.Player.local.scriptID, 32, false)
+
+Disable Auto Helmet when your on a motorcycle (Need to be set again if you change the player model) : game.setPedConfigFlag(alt.Player.local.scriptID, 35, false)
+
+Disable Player Melee (Only Melee, Weapons will still works) : game.setPedConfigFlag(alt.Player.local.scriptID, 122, true)
+
+
+
+
+
+
+
+
+
+function SkyCameraTeleport(pos) {
+    game.switchOutPlayer(alt.Player.local.scriptID, 0, 1);
+    alt.setTimeout(() => {
+        game.setEntityCoords(alt.Player.local.scriptID, pos.x, pos.y, pos.z, 0, 0, 0, false);
+        game.freezeEntityPosition(alt.Player.local.scriptID, true);
+        game.switchInPlayer(alt.Player.local.scriptID);
+        game.freezeEntityPosition(alt.Player.local.scriptID, false);
+    }, 1000);
+}
+
+SkyCameraTeleport({x: 414.20746, y: -972.52386, z: 29.44237});
+
+
+
+
+
+
+
+
+
+
+const CLOTHES_SHOPS = [
+    198145,
+    165633,
+    235265,
+    137217,
+    171265,
+    166145,
+    179713,
+    140801,
+    183553,
+    201473,
+    202497,
+    169217,
+    176129,
+    175361,
+];
+
+let wasInShop = false;
+let oldShop = 0;
+
+alt.setInterval(() => {
+    const currInterior = game.getInteriorFromEntity(alt.Player.local.scriptID);
+    if (!wasInShop) {
+        if (CLOTHES_SHOPS.indexOf(currInterior) != -1) {
+            alt.emit("enterShop");
+            oldShop = currInterior;
+            wasInShop = true;
+        }
+    } else {
+        if (currInterior != oldShop) {
+            wasInShop = false;
+            oldShop = 0;
+            alt.emit("leaveShop");
+        }
+    }
+}, 2000);
+
+alt.on('enterShop', () => {
+    alt.log("In Shop");
+});
+
+alt.on('leaveShop', () => {
+    alt.log("Out Shop");
+});
+
+
+
+
+
+
+
+
+
+
+
+let markers = [
+    { position: new alt.Vector3(-1434.9169, -267.3949, 44.7076) },
+    { position: new alt.Vector3(-1426.9833, -276.7636, 44.7076) },
+    { position: new alt.Vector3(-1438.5355, -285.7561, 44.7076) },
+    { position: new alt.Vector3(-1446.1750, -276.9494, 44.7076) },
+    { position: new alt.Vector3(-1431.4945, -280.2593, 44.6970) },
+    { position: new alt.Vector3(-1434.2373, -282.4219, 44.6970) },
+    { position: new alt.Vector3(-1442.0703, -273.3098, 44.7138) },
+    { position: new alt.Vector3(-1439.5648, -271.1604, 44.6970) },
+ 
+    { position: new alt.Vector3(-2085.8901, -327.6527, 11.5198) },
+    { position: new alt.Vector3(-2085.2175, -321.2440, 11.5198) },
+    { position: new alt.Vector3(-2084.3604, -313.2000, 11.5198) },
+    { position: new alt.Vector3(-2090.1626, -312.6066, 11.5198) },
+    { position: new alt.Vector3(-2091.0857, -320.7692, 11.5198) },
+    { position: new alt.Vector3(-2091.7319, -327.1912, 11.5198) },
+    { position: new alt.Vector3(-2094.6990, -326.6901, 11.5198) },
+    { position: new alt.Vector3(-2094.0527, -320.3868, 11.5198) },
+    { position: new alt.Vector3(-2093.1692, -312.3033, 11.5198) },
+    { position: new alt.Vector3(-2098.9187, -311.5385, 11.5198) },
+    { position: new alt.Vector3(-2099.7231, -319.9517, 11.5198) },
+    { position: new alt.Vector3(-2100.3428, -326.2945, 11.5198) },
+    { position: new alt.Vector3(-2103.3098, -325.8725, 11.5198) },
+    { position: new alt.Vector3(-2102.5979, -319.4769, 11.5198) },
+    { position: new alt.Vector3(-2101.7144, -311.3539, 11.5198) },
+    { position: new alt.Vector3(-2107.4504, -310.7209, 11.5198) },
+    { position: new alt.Vector3(-2108.3076, -319.0417, 11.5198) },
+    { position: new alt.Vector3(-2109.0066, -325.3714, 11.5198) },
+ 
+    { position: new alt.Vector3(-1805.7627, 792.6066, 137.0004) },
+    { position: new alt.Vector3(-1810.7076, 797.9604, 137.0004) },
+    { position: new alt.Vector3(-1806.7252, 801.7451, 137.0004) },
+    { position: new alt.Vector3(-1804.2593, 804.1978, 137.0004) },
+    { position: new alt.Vector3(-1801.7142, 796.2725, 137.0004) },
+    { position: new alt.Vector3(-1799.2615, 798.6989, 137.0004) },
+    { position: new alt.Vector3(-1795.2792, 802.4176, 137.0004) },
+    { position: new alt.Vector3(-1800.2902, 807.9033, 137.0004) },
+    { position: new alt.Vector3(-1797.9561, 810.0791, 137.0004) },
+    { position: new alt.Vector3(-1792.8132, 804.6330, 137.0004) },
+    { position: new alt.Vector3(-1788.8176, 808.2066, 137.0004) },
+    { position: new alt.Vector3(-1793.9077, 813.8242, 137.0004) },
+ 
+    { position: new alt.Vector3(-2557.8462, 2322.5803, 31.5542) },
+    { position: new alt.Vector3(-2550.9363, 2323.0549, 31.5542) },
+    { position: new alt.Vector3(-2551.5166, 2330.8352, 31.5542) },
+    { position: new alt.Vector3(-2558.1494, 2330.3735, 31.5542) },
+    { position: new alt.Vector3(-2558.5715, 2337.8506, 31.5542) },
+    { position: new alt.Vector3(-2552.1362, 2338.2725, 31.5542) },
+    { position: new alt.Vector3(-2552.5320, 2345.4329, 31.5542) },
+    { position: new alt.Vector3(-2559.1252, 2344.9583, 31.5542) },
+ 
+    { position: new alt.Vector3(-89.5648, 6420.7646, 29.9703) },
+    { position: new alt.Vector3(-95.2747, 6414.9624, 29.9703) },
+    { position: new alt.Vector3(-98.8484, 6418.6152, 29.9703) },
+    { position: new alt.Vector3(-93.2308, 6424.2725, 29.9703) },
+ 
+    { position: new alt.Vector3(169.2396, 6603.1387, 30.3411) },
+    { position: new alt.Vector3(175.8462, 6604.3252, 30.3411) },
+    { position: new alt.Vector3(183.2044, 6605.6704, 30.3411) },
+    { position: new alt.Vector3(190.1143, 6606.8569, 30.3411) },
+ 
+    { position: new alt.Vector3(1707.0066, 6417.0859, 31.1329) },
+    { position: new alt.Vector3(1702.9714, 6418.9448, 31.1329) },
+    { position: new alt.Vector3(1698.9626, 6420.9360, 31.1329) },
+    { position: new alt.Vector3(1696.5626, 6415.8726, 31.1666) },
+    { position: new alt.Vector3(1700.5187, 6413.8945, 31.2510) },
+    { position: new alt.Vector3(1704.3297, 6411.9033, 31.3184) },
+ 
+    { position: new alt.Vector3(2007.6000, 3772.5891, 30.6780) },
+    { position: new alt.Vector3(2010.5802, 3774.3164, 30.6780) },
+    { position: new alt.Vector3(2005.2131, 3771.1912, 30.6780) },
+    { position: new alt.Vector3(2002.7737, 3769.8066, 30.6780) },
+    { position: new alt.Vector3(2000.1362, 3774.4087, 30.6780) },
+    { position: new alt.Vector3(2002.5231, 3775.7407, 30.6780) },
+    { position: new alt.Vector3(2004.8704, 3777.1648, 30.6780) },
+    { position: new alt.Vector3(2007.8242, 3778.8923, 30.6780) },
+ 
+    { position: new alt.Vector3(2678.0703, 3267.8506, 53.7285) },
+    { position: new alt.Vector3(2675.7100, 3263.6704, 53.7285) },
+    { position: new alt.Vector3(2680.9583, 3260.7297, 53.7285) },
+    { position: new alt.Vector3(2683.2922, 3264.5010, 53.7285) },
+ 
+    { position: new alt.Vector3(1207.0681, 2656.9714, 36.3228) },
+    { position: new alt.Vector3(1203.9429, 2660.0439, 36.3059) },
+    { position: new alt.Vector3(1207.8726, 2664.0264, 36.3059) },
+    { position: new alt.Vector3(1211.0374, 2661.0066, 36.3059) },
+ 
+    { position: new alt.Vector3(47.9604, 2776.7078, 56.3740) },
+    { position: new alt.Vector3(51.1912, 2781.0725, 56.3740) },
+ 
+    { position: new alt.Vector3(2591.8945, 358.5099, 106.9572) },
+    { position: new alt.Vector3(2592.0527, 363.8506, 106.9572) },
+    { position: new alt.Vector3(2584.8396, 364.0352, 106.9572) },
+    { position: new alt.Vector3(2584.6287, 358.6945, 106.9572) },
+    { position: new alt.Vector3(2577.3625, 358.9583, 106.9572) },
+    { position: new alt.Vector3(2577.5474, 364.2066, 106.9572) },
+    { position: new alt.Vector3(2570.2681, 364.5099, 106.9572) },
+    { position: new alt.Vector3(2570.0308, 359.2220, 106.9572) },
+ 
+    { position: new alt.Vector3(631.8329, 273.8901, 101.5820) },
+    { position: new alt.Vector3(631.8066, 263.7626, 101.5820) },
+    { position: new alt.Vector3(627.3627, 273.9824, 101.5820) },
+    { position: new alt.Vector3(627.3759, 263.7099, 101.5820) },
+    { position: new alt.Vector3(623.1429, 263.8418, 101.5820) },
+    { position: new alt.Vector3(623.2615, 273.9692, 101.5820) },
+    { position: new alt.Vector3(618.8176, 274.0220, 101.5820) },
+    { position: new alt.Vector3(618.8307, 263.8286, 101.5820) },
+    { position: new alt.Vector3(614.5978, 263.8549, 101.5820) },
+    { position: new alt.Vector3(614.5714, 273.9429, 101.5820) },
+    { position: new alt.Vector3(610.2198, 273.9561, 101.5820) },
+    { position: new alt.Vector3(610.2330, 263.8022, 101.5820) },
+ 
+    { position: new alt.Vector3(1182.5670, -318.0132, 67.6633) },
+    { position: new alt.Vector3(1175.1560, -319.3055, 67.6633) },
+    { position: new alt.Vector3(1176.3429, -325.2132, 67.6633) },
+    { position: new alt.Vector3(1183.6747, -324.0000, 67.6633) },
+    { position: new alt.Vector3(1184.2549, -326.8352, 67.6633) },
+    { position: new alt.Vector3(1176.8176, -328.1011, 67.6633) },
+    { position: new alt.Vector3(1178.1099, -333.9033, 67.6633) },
+    { position: new alt.Vector3(1185.3890, -332.5978, 67.6633) },
+    { position: new alt.Vector3(1185.9692, -335.3802, 67.6633) },
+    { position: new alt.Vector3(1178.6110, -336.6461, 67.6633) },
+    { position: new alt.Vector3(1179.6000, -342.3297, 67.6802) },
+    { position: new alt.Vector3(1187.0374, -341.0110, 67.6633) },
+ 
+    { position: new alt.Vector3(829.5560, -1030.9978, 25.1681) },
+    { position: new alt.Vector3(829.5692, -1026.2505, 25.1681) },
+    { position: new alt.Vector3(824.9934, -1026.3561, 24.8312) },
+    { position: new alt.Vector3(825.0989, -1030.8528, 24.8649) },
+    { position: new alt.Vector3(821.1956, -1030.8660, 24.7806) },
+    { position: new alt.Vector3(821.2220, -1026.1582, 24.7468) },
+    { position: new alt.Vector3(816.6857, -1026.2241, 24.7468) },
+    { position: new alt.Vector3(816.7648, -1030.8396, 24.7806) },
+    { position: new alt.Vector3(812.8879, -1030.8792, 24.7806) },
+    { position: new alt.Vector3(812.8483, -1026.1846, 24.7300) },
+    { position: new alt.Vector3(808.4440, -1026.1978, 24.7468) },
+    { position: new alt.Vector3(808.4308, -1030.7208, 24.7806) },
+ 
+    { position: new alt.Vector3(1214.4528, -1405.6615, 33.7109) },
+    { position: new alt.Vector3(1211.6307, -1408.4440, 33.6604) },
+    { position: new alt.Vector3(1208.5055, -1405.2660, 33.7109) },
+    { position: new alt.Vector3(1211.3275, -1402.4835, 33.7109) },
+    { position: new alt.Vector3(1208.6637, -1399.7406, 33.7109) },
+    { position: new alt.Vector3(1205.7627, -1402.5758, 33.7109) },
+    { position: new alt.Vector3(1202.5978, -1399.3846, 33.7109) },
+    { position: new alt.Vector3(1205.4462, -1396.6285, 33.7109) },
+ 
+    { position: new alt.Vector3(276.3692, -1268.5055, 27.6619) },
+    { position: new alt.Vector3(276.3692, -1261.2131, 27.6619) },
+    { position: new alt.Vector3(276.4088, -1253.3934, 27.6619) },
+    { position: new alt.Vector3(271.1341, -1253.3539, 27.6282) },
+    { position: new alt.Vector3(271.1472, -1261.2924, 27.6282) },
+    { position: new alt.Vector3(271.1341, -1268.7428, 27.6282) },
+    { position: new alt.Vector3(267.6264, -1268.6110, 27.6282) },
+    { position: new alt.Vector3(267.6264, -1261.2395, 27.6282) },
+    { position: new alt.Vector3(267.6000, -1253.3539, 27.6282) },
+    { position: new alt.Vector3(262.4044, -1253.4198, 27.6282) },
+    { position: new alt.Vector3(262.3648, -1261.2263, 27.6282) },
+    { position: new alt.Vector3(262.3517, -1268.6637, 27.6282) },
+    { position: new alt.Vector3(259.0549, -1268.6769, 27.6282) },
+    { position: new alt.Vector3(259.0945, -1261.1868, 27.6282) },
+    { position: new alt.Vector3(259.0945, -1253.4725, 27.6282) },
+    { position: new alt.Vector3(253.7802, -1253.4066, 27.6956) },
+    { position: new alt.Vector3(253.7802, -1261.2527, 27.6282) },
+    { position: new alt.Vector3(253.7802, -1268.7561, 27.6450) },
+ 
+    { position: new alt.Vector3(167.4725, -1560.4352, 27.7461) },
+    { position: new alt.Vector3(174.2110, -1554.1187, 27.7124) },
+    { position: new alt.Vector3(177.5604, -1557.5472, 27.7292) },
+    { position: new alt.Vector3(170.8484, -1563.7979, 27.7631) },
+    { position: new alt.Vector3(173.2879, -1566.7913, 27.7799) },
+    { position: new alt.Vector3(180.1055, -1560.3824, 27.7461) },
+    { position: new alt.Vector3(183.4154, -1563.5604, 27.7631) },
+    { position: new alt.Vector3(176.5319, -1570.0220, 27.7968) },
+ 
+    { position: new alt.Vector3(-77.8154, -1763.0901, 28.0494) },
+    { position: new alt.Vector3(-75.2176, -1755.9956, 28.0831) },
+    { position: new alt.Vector3(-71.7626, -1757.3011, 27.9484) },
+    { position: new alt.Vector3(-74.3868, -1764.4220, 27.9315) },
+    { position: new alt.Vector3(-69.5868, -1766.0835, 27.8136) },
+    { position: new alt.Vector3(-66.9758, -1758.9099, 27.8304) },
+    { position: new alt.Vector3(-63.3231, -1760.0835, 27.6450) },
+    { position: new alt.Vector3(-66.0000, -1767.2439, 27.6450) },
+    { position: new alt.Vector3(-61.1473, -1768.8528, 27.5439) },
+    { position: new alt.Vector3(-58.5626, -1761.7715, 27.5439) },
+    { position: new alt.Vector3(-79.8725, -1754.1890, 28.0831) },
+    { position: new alt.Vector3(-82.4967, -1761.2968, 28.1337) },
+ 
+    { position: new alt.Vector3(-717.9561, -932.6110, 17.5015) },
+    { position: new alt.Vector3(-721.3055, -932.6110, 17.5015) },
+    { position: new alt.Vector3(-721.3450, -939.2308, 17.5015) },
+    { position: new alt.Vector3(-717.9692, -939.2044, 17.5015) },
+    { position: new alt.Vector3(-726.6066, -939.1912, 17.5015) },
+    { position: new alt.Vector3(-726.6329, -932.4791, 17.5015) },
+    { position: new alt.Vector3(-730.0483, -932.4000, 17.5015) },
+    { position: new alt.Vector3(-730.0352, -939.1121, 17.5015) },
+    { position: new alt.Vector3(-735.2967, -939.1385, 17.5015) },
+    { position: new alt.Vector3(-735.2176, -932.4528, 17.5015) },
+    { position: new alt.Vector3(-712.7077, -932.4132, 17.5015) },
+    { position: new alt.Vector3(-712.6945, -939.1912, 17.5015) },
+ 
+    { position: new alt.Vector3(-531.9956, -1215.5604, 16.7263) },
+    { position: new alt.Vector3(-524.6506, -1219.0549, 16.7263) },
+    { position: new alt.Vector3(-522.3956, -1214.5055, 16.6758) },
+    { position: new alt.Vector3(-529.9517, -1211.0374, 16.6758) },
+    { position: new alt.Vector3(-528.2374, -1207.6351, 16.6758) },
+    { position: new alt.Vector3(-520.8792, -1211.0901, 16.6758) },
+    { position: new alt.Vector3(-518.7560, -1206.5275, 16.7432) },
+    { position: new alt.Vector3(-526.1934, -1203.0989, 16.7263) },
+ 
+    { position: new alt.Vector3(-331.6352, -1472.6241, 29.0436) },
+    { position: new alt.Vector3(-326.5319, -1481.5121, 29.0436) },
+    { position: new alt.Vector3(-322.9846, -1479.4418, 29.0436) },
+    { position: new alt.Vector3(-328.0220, -1470.5275, 29.0436) },
+    { position: new alt.Vector3(-324.1187, -1468.4176, 29.0436) },
+    { position: new alt.Vector3(-319.0813, -1477.2000, 29.0436) },
+    { position: new alt.Vector3(-315.4945, -1475.1165, 29.0436) },
+    { position: new alt.Vector3(-320.5582, -1466.2682, 29.0436) },
+    { position: new alt.Vector3(-316.6813, -1464.0923, 29.0436) },
+    { position: new alt.Vector3(-311.6044, -1472.8879, 29.0436) },
+    { position: new alt.Vector3(-308.0176, -1470.7649, 29.0436) },
+    { position: new alt.Vector3(-313.1209, -1461.9429, 29.0436) },
+];
+
+
+
+
+
+
+
+
+Fix for Simeon’s IPL and missing glass with closed shutter:
+alt.requestIpl('shr_int');
+game.activateInteriorEntitySet(game.getInteriorAtCoordsWithType(-38.62, -1099.01, 27.31, 'v_carshowroom'), 'csr_beforeMission');
+game.activateInteriorEntitySet(game.getInteriorAtCoordsWithType(-38.62, -1099.01, 27.31, 'v_carshowroom'), 'shutter_closed');
+
+
+
+
+
+
+
+
+
+
+
+const blipColors = {
+    1: 'e13b3b',
+    2: '79ce79',
+    3: '64b8e6',
+    4: 'f0f0f0',
+    5: 'efca57',
+    6: 'c55758',
+    7: 'a074b3',
+    8: 'ff81c8',
+    9: 'f6a480',
+    10: 'b6968b',
+    11: '91cfaa',
+    12: '78adb3',
+    13: 'd5d3e8',
+    14: '95859f',
+    15: '70c7c1',
+    16: 'd8c59e',
+    17: 'eb9358',
+    18: '9dccea',
+    19: 'b6698d',
+    20: '95927f',
+    21: 'aa7a67',
+    22: 'b4abac',
+    23: 'e892a0',
+    24: 'bfd863',
+    25: '17815d',
+    26: '80c7ff',
+    27: 'ae44e6',
+    28: 'd0ac18',
+    29: '4e69b1',
+    30: '34a9bc',
+    31: 'bca183',
+    32: 'cde2ff',
+    33: 'f0f09b',
+    34: 'ed91a4',
+    35: 'f98f8f',
+    36: 'fdf0aa',
+    37: 'f1f1f1',
+    38: '3776bd',
+    39: '9f9f9f',
+    40: '545454',
+    41: 'f29e9e',
+    42: '6db8d7',
+    43: 'b0eeaf',
+    44: 'fea75e',
+    45: 'f0f0f0',
+    46: 'ebef28',
+    47: 'ff9a18',
+    48: 'f644a4',
+    49: 'e03b3b',
+    50: '8a6de2',
+    51: 'ff8a5c',
+    52: '426d42',
+    53: 'b3ddf3',
+    54: '3a647a',
+    55: 'a0a0a0',
+    56: '847232',
+    57: '65b9e7',
+    58: '4c4276',
+    59: 'e13b3b',
+    60: 'f0cb58',
+    61: 'cd3e98',
+    62: 'cfcfcf',
+    63: '286b9f',
+    64: 'd77a1a',
+    65: '8e8393',
+    66: 'f0ca57',
+    67: '64b8e6',
+    68: '65b9e7',
+    69: '78cd78',
+    70: 'efca57',
+    71: 'f0cb58',
+    72: '000000',
+    73: 'f0cb58',
+    74: '64b9e7',
+    75: 'e13b3b',
+    76: '782424',
+    77: '65b9e7',
+    78: '39647a',
+    79: 'e13b3b',
+    80: '65b9e7',
+    81: 'f2a40c',
+    82: 'a4ccaa',
+    83: 'a854f2',
+    84: '65b8e6',
+    85: '000000'
+};
+
+
+
+
+
+
+
+https://github.com/DurtyFree/gta-v-data-dumps/blob/master/objectslocations/worldAtms.json
+
+
+
+
+
+
+function GetEntityFrontPosition(entityHandle: number): Vector3 {
+    let modelDimensions = game.getModelDimensions(game.getEntityModel(entityHandle), undefined, undefined);
+    return GetOffsetPositionInWorldCoords(entityHandle, new alt.Vector3(0, modelDimensions[2].y, 0));
+}
+
+function GetEntityRearPosition(entityHandle: number): Vector3 {
+    let modelDimensions = game.getModelDimensions(game.getEntityModel(entityHandle), undefined, undefined);
+    return GetOffsetPositionInWorldCoords(entityHandle, new alt.Vector3(0, modelDimensions[1].y, 0));
+}
+
+function GetOffsetPositionInWorldCoords(entityHandle: number, offset: Vector3): Vector3 {
+    return game.getOffsetFromEntityInWorldCoords(entityHandle, offset.x, offset.y, offset.z);
+}
+
+
+
+
+
+
+
+
+function ForwardVectorFromRotation(rotation: Vector3) {
+    let z = rotation.z * (Math.PI / 180.0);
+    let x = rotation.x * (Math.PI / 180.0);
+    let num = Math.abs(Math.cos(x));
+    return new alt.Vector3(-Math.sin(z) * num, Math.cos(z) * num, Math.sin(x));
+}
+
+function PositionInFront(position: Vector3, rotation: Vector3, distance: number) {
+    let forwardVector = GameVector3.ForwardVectorFromRotation(rotation);
+    let scaledForwardVector = new alt.Vector3(forwardVector.x * distance, forwardVector.y * distance, forwardVector.z * distance);
+    return new alt.Vector3(position.x + scaledForwardVector.x, position.y + scaledForwardVector.y, position.z + scaledForwardVector.z);
+}
+
+
+
+
+
+
+
+
+Nametags without lags
+const inter = alt.setInterval(() => {
+    const localPlayer = alt.Player.local;
+    const playerPos = localPlayer.pos;
+    const entity = localPlayer.vehicle ? localPlayer.vehicle.scriptID : localPlayer.scriptID;
+    const vector = game.getEntityVelocity(entity);
+    const frameTime = game.getFrameTime();
+    game.setDrawOrigin(playerPos.x + (vector.x * frameTime), playerPos.y + (vector.y * frameTime), playerPos.z + (vector.z * frameTime) + 1.5, 0)
+    game.beginTextCommandDisplayText('STRING')
+    game.setTextFont(4)
+    game.setTextScale(0.4, 0.4)
+    game.setTextProportional(true)
+    game.setTextColour(255, 255, 255, 255)
+    game.addTextComponentSubstringPlayerName('test')
+    game.endTextCommandDisplayText(0, 0)
+}, 0);
+
+
+
+
+
+
+
+
+clientside typescript for original animated loading screen without sound based on the original scaleform: 
+https://gist.github.com/Razor2142/9d3ad7659a2d02f882307a5d947934ba
+
+
+
+
+
+
+
+
+
+
+
+
+client side typescript class for showing loading prompts ingame
+https://gyazo.com/b03ad28aa798f0b7aab0656a24a573e2
+import * as alt from 'alt';
+import * as game from 'natives';
+
+enum LoadingSpinnerType {
+    Clockwise1 = 1,
+    Clockwise2,
+    Clockwise3,
+    SocialClubSaving,
+    RegularClockwise
+}
+
+export default class LoadingPrompt {
+    public static get IsActive(): boolean {
+        return game.busyspinnerIsOn();
+    }
+
+    public static Show(loadingText: string = null, spinnerType: LoadingSpinnerType = LoadingSpinnerType.RegularClockwise): void {
+        LoadingPrompt.Hide();
+
+        if (loadingText == null) {
+            game.beginTextCommandBusyspinnerOn("");
+        }
+        else {
+            game.beginTextCommandBusyspinnerOn("STRING");
+            game.addTextComponentSubstringPlayerName(loadingText);
+        }
+        game.endTextCommandBusyspinnerOn(spinnerType);
+    }
+
+    public static Hide(): void {
+        if (LoadingPrompt.IsActive) {
+            game.busyspinnerOff();
+        }
+    }
+}
+
+export {
+    LoadingSpinnerType
+}
+
+
+
+
+
+
+
+
+https://forum.altv.mp/topic/405-all-gta-v-ipls-interiors-entity-sets-props/
+
+
+
+
+
+
+
+
+
+All hair colors as RGB
+const colors = [{"r":28,"b":33,"g":31},{"r":39,"b":44,"g":42},{"r":49,"b":44,"g":46},{"r":53,"b":28,"g":38},{"r":75,"b":31,"g":50},{"r":92,"b":36,"g":59},{"r":109,"b":53,"g":76},{"r":107,"b":59,"g":80},{"r":118,"b":69,"g":92},{"r":127,"b":78,"g":104},{"r":153,"b":93,"g":129},{"r":167,"b":105,"g":147},{"r":175,"b":112,"g":156},{"r":187,"b":99,"g":160},{"r":214,"b":123,"g":185},{"r":218,"b":142,"g":195},{"r":159,"b":89,"g":127},{"r":132,"b":57,"g":80},{"r":104,"b":31,"g":43},{"r":97,"b":12,"g":18},{"r":100,"b":10,"g":15},{"r":124,"b":15,"g":20},{"r":160,"b":25,"g":46},{"r":182,"b":40,"g":75},{"r":162,"b":47,"g":80},{"r":170,"b":43,"g":78},{"r":98,"b":98,"g":98},{"r":128,"b":128,"g":128},{"r":170,"b":170,"g":170},{"r":197,"b":197,"g":197},{"r":70,"b":85,"g":57},{"r":90,"b":107,"g":63},{"r":118,"b":118,"g":60},{"r":237,"b":227,"g":116},{"r":235,"b":147,"g":75},{"r":242,"b":188,"g":153},{"r":4,"b":158,"g":149},{"r":2,"b":134,"g":95},{"r":2,"b":116,"g":57},{"r":63,"b":106,"g":161},{"r":33,"b":97,"g":124},{"r":24,"b":85,"g":92},{"r":182,"b":52,"g":192},{"r":112,"b":11,"g":169},{"r":67,"b":19,"g":157},{"r":220,"b":87,"g":184},{"r":229,"b":3,"g":177},{"r":230,"b":2,"g":145},{"r":242,"b":49,"g":136},{"r":251,"b":87,"g":128},{"r":226,"b":88,"g":139},{"r":209,"b":60,"g":89},{"r":206,"b":32,"g":49},{"r":173,"b":3,"g":9},{"r":136,"b":2,"g":3},{"r":31,"b":20,"g":24},{"r":41,"b":25,"g":31},{"r":46,"b":27,"g":34},{"r":55,"b":30,"g":41},{"r":46,"b":24,"g":34},{"r":35,"b":21,"g":27},{"r":2,"b":2,"g":2},{"r":112,"b":102,"g":108},{"r":157,"b":80,"g":122}];
+
+
+
+
+
+
+
+All clothes variants and textures
+https://gist.github.com/Matix8981/2ab909f49dad268ca791118e464b4daa
+
+
+
+
+
+
+
+Thought I'd post this here incase people need it in the future, method can be used to draw stuff on/around the minimap, should work regardless of resolution:
+//     https://github.com/glitchdetector/fivem-minimap-anchor
+//     Returns a Minimap object with the following details:
+//     x, y: Top left origin of minimap
+//     width, height: Size of minimap (not pixels!)
+//     left_x, right_x: Left and right side of minimap on x axis
+//     top_y, bottom_y: Top and bottom side of minimap on y axis
+//
+function getMinimapAnchor( ) {
+    let sfX = 1.0 / 20.0;
+    let sfY = 1.0 / 20.0;
+    let safeZone = natives.getSafeZoneSize();
+    let aspectRatio = natives.getScreenAspectRatio( false );
+    let resolution = natives.getScreenActiveResolution( 0, 0 );
+    let scaleX = 1.0 / resolution.x;
+    let scaleY = 1.0 / resolution.y;
+
+    let minimap = {
+        width: scaleX * ( resolution.x / ( 4 * aspectRatio ) ),
+        height: scaleY * ( resolution.y / 5.674 ),
+        scaleX: scaleX,
+        scaleY: scaleY,
+        leftX: scaleX * ( resolution.x * ( sfX * ( Math.abs( safeZone - 1.0 ) * 10 ) ) ),
+        bottomY: 1.0 - scaleY * ( resolution.y * ( sfY * ( Math.abs( safeZone - 1.0 ) * 10 ) ) ),
+    };
+
+    minimap.rightX = minimap.leftX + minimap.width;
+    minimap.topY = minimap.bottomY - minimap.height;
+    minimap.x = minimap.leftX;
+    minimap.y = minimap.topY;
+
+    return minimap;
+}
+
+
+
+
+
+
+
+
+export enum PedConfigFlag {
+    // noinspection JSUnusedGlobalSymbols
+    CanPunch = 18,
+    CanFlyThruWindscreen = 32,
+    DiesByRagdoll = 33,
+    PutOnMotorcycleHelmet = 35,
+    NoCollision = 52,
+    IsShooting = 58,
+    IsOnGround = 60,
+    NoCollide = 62,
+    Dead = 71,
+    IsSniperScopeActive = 72,
+    SuperDead = 73,
+    IsInAir = 76,
+    IsAiming = 78,
+    Drunk = 100,
+    IsNotRagdollAndNotPlayingAnim = 104,
+    NoPlayerMelee = 122,
+    NmMessage466 = 125,
+    InjuredLimp = 166,
+    InjuredLimp2 = 170,
+    DisableShufflingToDriverSeat = 184,
+    InjuredDown = 187,
+    Shrink = 223,
+    MeleeCombat = 224,
+    IsOnStairs = 253,
+    HasOneLegOnGround = 276,
+    NoWrithe = 281,
+    Freeze = 292,
+    IsStill = 301,
+    NoPedMelee = 314,
+    PedSwitchingWeapon = 331,
+    Alpha = 410,
+    DisableStartingVehEngine = 429,
+    FlamingFootprints = 421
+}
+
+
+
+
+
+
+
+
+import * as alt from 'alt';
+import * as native from 'natives';
+
+const textureData = {};
+
+export function loadTexture(dictionary) {
+    return new Promise(resolve => {
+        const interval = alt.setInterval(() => {
+            native.requestStreamedTextureDict(dictionary, false);
+            if (!native.hasStreamedTextureDictLoaded(dictionary)) {
+                return;
+            }
+
+            alt.clearInterval(interval);
+            return resolve();
+        }, 100);
+    });
+}
+
+export function drawTexture3d(dictionary, name, position, scale = 1) {
+    const identifier = `${dictionary}${name}`;
+    if (!textureData[identifier]) {
+        const [_, width, height] = native.getActiveScreenResolution(0, 0);
+        const resolution = native.getTextureResolution(dictionary, name);
+        textureData[identifier] = {
+            x: resolution.x / width,
+            y: resolution.y / height
+        };
+    }
+
+    const texture = textureData[identifier];
+    if (!texture) {
+        return;
+    }
+
+    const width = texture.x * scale;
+    const height = texture.y * scale;
+    const [visible, x, y] = native.getScreenCoordFromWorldCoord(position.x, position.y, position.z);
+
+    if (!visible) {
+        return;
+    }
+
+    native.drawSprite(dictionary, name, x, y, width, height, 0, 255, 255, 255, 255, 0);
+}
+
+
+
+
+
+
+
+
+
+Simple Snippets to disable ambiant sounds in the city
+ 
+native.startAudioScene("FBI_HEIST_H5_MUTE_AMBIENCE_SCENE"); // Used to stop police sound in town
+native.cancelCurrentPoliceReport(); // Used to stop default police radio around/In police vehicle
+native.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_GENERAL", 1, 0); // Turn off prison sound
+native.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_WARNING", 1, 0); // Turn off prison sound
+native.clearAmbientZoneState("AZ_COUNTRYSIDE_PRISON_01_ANNOUNCER_ALARM", 1, 0); // Turn off prison sound
+native.setAmbientZoneState(0, 0, 0); // Set ambiant sound to 0,0,0
+native.clearAmbientZoneState("AZ_DISTANT_SASQUATCH", 0, 0);
+native.setAudioFlag("LoadMPData", true);
+native.setAudioFlag("DisableFlightMusic", true);
+
+
+
+
+
+
+
+
+
+
+
+const eyebrowList = [
+    {
+        id: 0,
+        name: 'Keine',
+        opacity: 0.0
+    },
+    {
+        id: 1,
+        name: 'Modisch',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Kleopatra',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Fragend',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Femme',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Verführerisch',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Verkniffen',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Chola',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Triomphe',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Sorglos',
+        opacity: 1.0
+    },
+    {
+        id: 10,
+        name: 'Kurvig',
+        opacity: 1.0
+    },
+    {
+        id: 11,
+        name: 'Mäuschen',
+        opacity: 1.0
+    },
+    {
+        id: 12,
+        name: 'Doppelschwung',
+        opacity: 1.0
+    },
+    {
+        id: 13,
+        name: 'Dünn',
+        opacity: 1.0
+    },
+    {
+        id: 14,
+        name: 'Gestrichelt',
+        opacity: 1.0
+    },
+    {
+        id: 15,
+        name: 'Gezupft',
+        opacity: 1.0
+    },
+    {
+        id: 16,
+        name: 'Schmal und gerade',
+        opacity: 1.0
+    },
+    {
+        id: 17,
+        name: 'Natürlich',
+        opacity: 1.0
+    },
+    {
+        id: 18,
+        name: 'Buschig',
+        opacity: 1.0
+    },
+    {
+        id: 19,
+        name: 'Ungekämmt',
+        opacity: 1.0
+    },
+    {
+        id: 20,
+        name: 'Raupe',
+        opacity: 1.0
+    },
+    {
+        id: 21,
+        name: 'Normal',
+        opacity: 1.0
+    },
+    {
+        id: 22,
+        name: 'Mediterran',
+        opacity: 1.0
+    },
+    {
+        id: 23,
+        name: 'Gepflegt',
+        opacity: 1.0
+    },
+    {
+        id: 24,
+        name: 'Büschel',
+        opacity: 1.0
+    },
+    {
+        id: 25,
+        name: 'Federig',
+        opacity: 1.0
+    },
+    {
+        id: 26,
+        name: 'Stachelig',
+        opacity: 1.0
+    },
+    {
+        id: 27,
+        name: 'Zusammengewachsen',
+        opacity: 1.0
+    },
+    {
+        id: 28,
+        name: 'Geschwungen',
+        opacity: 1.0
+    },
+    {
+        id: 29,
+        name: 'Dreifachschwung',
+        opacity: 1.0
+    },
+    {
+        id: 30,
+        name: 'Hoher Bogen',
+        opacity: 1.0
+    },
+    {
+        id: 31,
+        name: 'Scherenschnitt',
+        opacity: 1.0
+    },
+    {
+        id: 32,
+        name: 'Schütter',
+        opacity: 1.0
+    },
+    {
+        id: 33,
+        name: 'Einfachschwung',
+        opacity: 1.0
+    },
+    {
+        id: 34,
+        name: 'Gleichmäßig',
+        opacity: 1.0
+    }
+];
+
+
+
+
+
+
+
+
+
+
+
+const mothers = [
+    {
+        id: 21,
+        name: "Hannah",
+        img: "Hannah.png"
+    },
+    {
+        id: 22,
+        name: "Audrey",
+        img: "Audrey.png"
+    },
+    {
+        id: 23,
+        name: "Jasmine",
+        img: "Jasmine.png"
+    },
+    {
+        id: 24,
+        name: "Giselle",
+        img: "Giselle.png"
+    },
+    {
+        id: 25,
+        name: "Amelia",
+        img: "Amelia.png"
+    },
+    {
+        id: 26,
+        name: "Isabella",
+        img: "Isabella.png"
+    },
+    {
+        id: 27,
+        name: "Zoe",
+        img: "Zoe.png"
+    },
+    {
+        id: 28,
+        name: "Ava",
+        img: "Ava.png"
+    },
+    {
+        id: 29,
+        name: "Camilla",
+        img: "Camilla.png"
+    },
+    {
+        id: 30,
+        name: "Violet",
+        img: "Violet.png"
+    },
+    {
+        id: 31,
+        name: "Sophia",
+        img: "Sophia.png"
+    },
+    {
+        id: 32,
+        name: "Eveline",
+        img: "Eveline.png"
+    },
+    {
+        id: 33,
+        name: "Nicole",
+        img: "Nicole.png"
+    },
+    {
+        id: 34,
+        name: "Ashley",
+        img: "Ashley.png"
+    },
+    {
+        id: 35,
+        name: "Grace",
+        img: "Grace.png"
+    },
+    {
+        id: 36,
+        name: "Brianna",
+        img: "Brianna.png"
+    },
+    {
+        id: 37,
+        name: "Natalie",
+        img: "Natalie.png"
+    },
+    {
+        id: 38,
+        name: "Olivia",
+        img: "Olivia.png"
+    },
+    {
+        id: 39,
+        name: "Elizabeth",
+        img: "Elizabeth.png"
+    },
+    {
+        id: 40,
+        name: "Charlotte",
+        img: "Charlotte.png"
+    },
+    {
+        id: 41,
+        name: "Emma",
+        img: "Emma.png"
+    },
+    {
+        id: 45,
+        name: "Misty",
+        img: "Misty.png"
+    }
+];
+
+const fathers = [
+    {
+        id: 0,
+        name: "Benjamin",
+        img: "Benjamin.png"
+    },
+    {
+        id: 1,
+        name: "Daniel",
+        img: "Daniel.png"
+    },
+    {
+        id: 2,
+        name: "Joshua",
+        img: "Joshua.png"
+    },
+    {
+        id: 3,
+        name: "Noah",
+        img: "Noah.png"
+    },
+    {
+        id: 4,
+        name: "Andrew",
+        img: "Andrew.png"
+    },
+    {
+        id: 5,
+        name: "Joan",
+        img: "Joan.png"
+    },
+    {
+        id: 6,
+        name: "Alex",
+        img: "Alex.png"
+    },
+    {
+        id: 7,
+        name: "Isaac",
+        img: "Isaac.png"
+    },
+    {
+        id: 8,
+        name: "Evan",
+        img: "Evan.png"
+    },
+    {
+        id: 8,
+        name: "Ethan",
+        img: "Ethan.png"
+    },
+    {
+        id: 10,
+        name: "Vincent",
+        img: "Vincent.png"
+    },
+    {
+        id: 11,
+        name: "Angel",
+        img: "Angel.png"
+    },
+    {
+        id: 12,
+        name: "Diego",
+        img: "Diego.png"
+    },
+    {
+        id: 13,
+        name: "Adrian",
+        img: "Adrian.png"
+    },
+    {
+        id: 14,
+        name: "Gabriel",
+        img: "Gabriel.png"
+    },
+    {
+        id: 15,
+        name: "Michael",
+        img: "Michael.png"
+    },
+    {
+        id: 16,
+        name: "Santiago",
+        img: "Santiago.png"
+    },
+    {
+        id: 17,
+        name: "Kevin",
+        img: "Kevin.png"
+    },
+    {
+        id: 18,
+        name: "Louis",
+        img: "Louis.png"
+    },
+    {
+        id: 19,
+        name: "Samuel",
+        img: "Samuel.png"
+    },
+    {
+        id: 20,
+        name: "Anthony",
+        img: "Anthony.png"
+    },
+    {
+        id: 42,
+        name: "John",
+        img: "John.png"
+    },
+    {
+        id: 43,
+        name: "Niko",
+        img: "Niko.png"
+    },
+    {
+        id: 44,
+        name: "Claude",
+        img: "Claude.png"
+    }
+];
+
+const maleHairlist = [
+    {
+        id: 255,
+        name: '-',
+    },
+    {
+        id: 1,
+        name: 'Kurzgeschoren',
+    },
+    {
+        id: 2,
+        name: 'Iro, modisch',
+    },
+    {
+        id: 3,
+        name: 'Hipser',
+    },
+    {
+        id: 4,
+        name: 'Seitenscheitel',
+    },
+    {
+        id: 5,
+        name: 'Kurzhaarschnitt',
+    },
+    {
+        id: 6,
+        name: 'Bikerfrisur',
+    },
+    {
+        id: 7,
+        name: 'Pferdeschwanz',
+    },
+    {
+        id: 8,
+        name: 'Flechtreihen',
+    },
+    {
+        id: 9,
+        name: 'Gelfrisur',
+    },
+    {
+        id: 10,
+        name: 'Kurz gekämmt',
+    },
+    {
+        id: 11,
+        name: 'Stachelfrisur',
+    },
+    {
+        id: 12,
+        name: 'Cäsarenfrisur',
+    },
+    {
+        id: 13,
+        name: 'Zerzaust',
+    },
+    {
+        id: 14,
+        name: 'Dreadlocks',
+    },
+    {
+        id: 15,
+        name: 'Langhaarfrisur',
+    },
+    {
+        id: 16,
+        name: 'Zottellocken',
+    },
+    {
+        id: 17,
+        name: 'Surferfrisur',
+    },
+    {
+        id: 18,
+        name: 'Seitenscheitel',
+    },
+    {
+        id: 19,
+        name: 'Hochgekämmt',
+    },
+    {
+        id: 20,
+        name: 'Gelfrisur, lang',
+    },
+    {
+        id: 21,
+        name: 'Junger Hipster',
+    }
+];
+
+const femaleHairlist = [
+    {
+        id: 255,
+        name: '-',
+    },
+    {
+        id: 1,
+        name: 'Kurzgeschoren',
+    },
+    {
+        id: 2,
+        name: 'Stufenbob',
+    },
+    {
+        id: 3,
+        name: 'Zöpfe',
+    },
+    {
+        id: 4,
+        name: 'Pferdeschwanz',
+    },
+    {
+        id: 5,
+        name: 'Iro, geflochten',
+    },
+    {
+        id: 6,
+        name: 'Flechtzöpfe',
+    },
+    {
+        id: 7,
+        name: 'Bob',
+    },
+    {
+        id: 8,
+        name: 'Iro, modisch',
+    },
+    {
+        id: 9,
+        name: 'Bananenfrisur',
+    },
+    {
+        id: 10,
+        name: 'Langer Bob',
+    },
+    {
+        id: 11,
+        name: 'Locker',
+    },
+    {
+        id: 12,
+        name: 'Pixieschnitt',
+    },
+    {
+        id: 13,
+        name: 'Rasierter Pony',
+    },
+    {
+        id: 14,
+        name: 'Dutt',
+    },
+    {
+        id: 15,
+        name: 'Lockiger Bob',
+    },
+    {
+        id: 16,
+        name: 'Pin-up-Girl',
+    },
+    {
+        id: 17,
+        name: 'Wilder Dutt',
+    },
+    {
+        id: 19,
+        name: 'Kleiner Dutt',
+    },
+    {
+        id: 20,
+        name: 'Gelockter Bob',
+    },
+    {
+        id: 21,
+        name: 'Langer Pony',
+    },
+    {
+        id: 22,
+        name: 'Flechtdutt',
+    }
+];
+
+const augenbrauenListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Normal',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Modisch',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Kleopatra',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Fragend',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Femme',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Verführerisch',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Verkniffen',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Chola',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Triomphe',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Sorglos',
+        opacity: 1.0
+    },
+    {
+        id: 10,
+        name: 'Kurvig',
+        opacity: 1.0
+    },
+    {
+        id: 11,
+        name: 'Mäuschen',
+        opacity: 1.0
+    },
+    {
+        id: 12,
+        name: 'Doppelschwung',
+        opacity: 1.0
+    },
+    {
+        id: 13,
+        name: 'Dünn',
+        opacity: 1.0
+    },
+    {
+        id: 14,
+        name: 'Gestrichelt',
+        opacity: 1.0
+    },
+    {
+        id: 15,
+        name: 'Gezupft',
+        opacity: 1.0
+    },
+    {
+        id: 16,
+        name: 'Schmal und gerade',
+        opacity: 1.0
+    },
+    {
+        id: 17,
+        name: 'Natürlich',
+        opacity: 1.0
+    },
+    {
+        id: 18,
+        name: 'Buschig',
+        opacity: 1.0
+    },
+    {
+        id: 19,
+        name: 'Ungekämmt',
+        opacity: 1.0
+    },
+    {
+        id: 20,
+        name: 'Raupe',
+        opacity: 1.0
+    },
+    {
+        id: 21,
+        name: 'Normal',
+        opacity: 1.0
+    },
+    {
+        id: 22,
+        name: 'Mediterran',
+        opacity: 1.0
+    },
+    {
+        id: 23,
+        name: 'Gepflegt',
+        opacity: 1.0
+    },
+    {
+        id: 24,
+        name: 'Büschel',
+        opacity: 1.0
+    },
+    {
+        id: 25,
+        name: 'Federig',
+        opacity: 1.0
+    },
+    {
+        id: 26,
+        name: 'Stachelig',
+        opacity: 1.0
+    },
+    {
+        id: 27,
+        name: 'Zusammengewachsen',
+        opacity: 1.0
+    },
+    {
+        id: 28,
+        name: 'Geschwungen',
+        opacity: 1.0
+    },
+    {
+        id: 29,
+        name: 'Dreifachschwung',
+        opacity: 1.0
+    },
+    {
+        id: 30,
+        name: 'Hoher Bogen',
+        opacity: 1.0
+    },
+    {
+        id: 31,
+        name: 'Scherenschnitt',
+        opacity: 1.0
+    },
+    {
+        id: 32,
+        name: 'Schütter',
+        opacity: 1.0
+    },
+    {
+        id: 33,
+        name: 'Einfachschwung',
+        opacity: 1.0
+    },
+    {
+        id: 34,
+        name: 'Gleichmäßig',
+        opacity: 1.0
+    }
+];
+
+const gesichtsbehaarungListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Kurze Stoppeln',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Balbo',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Henriquatre',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Spitzbart',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Kinnbart',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Kinnflaum',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Dünner Kinnstreifen',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Ungepflegt',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Knebelbart',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Schnurrbart',
+        opacity: 1.0
+    },
+    {
+        id: 10,
+        name: 'Kurzer Bart',
+        opacity: 1.0
+    },
+    {
+        id: 11,
+        name: 'Dreitagebart',
+        opacity: 1.0
+    },
+    {
+        id: 12,
+        name: 'Dünner Henriquatre',
+        opacity: 1.0
+    },
+    {
+        id: 13,
+        name: 'Mongolenbart',
+        opacity: 1.0
+    },
+    {
+        id: 14,
+        name: 'Stift und Koteletten',
+        opacity: 1.0
+    },
+    {
+        id: 15,
+        name: 'Kinnstreifen',
+        opacity: 1.0
+    },
+    {
+        id: 16,
+        name: 'Balbo und Backenbart',
+        opacity: 1.0
+    },
+    {
+        id: 17,
+        name: 'Koteletten',
+        opacity: 1.0
+    },
+    {
+        id: 18,
+        name: 'Ungepflegter Bart',
+        opacity: 1.0
+    },
+    {
+        id: 19,
+        name: 'Gezwirbelt',
+        opacity: 1.0
+    },
+    {
+        id: 20,
+        name: 'Gezwirbelt & Dreitagebart',
+        opacity: 1.0
+    },
+    {
+        id: 21,
+        name: 'Langer Schnäuzer',
+        opacity: 1.0
+    },
+    {
+        id: 22,
+        name: 'Faustisch',
+        opacity: 1.0
+    },
+    {
+        id: 23,
+        name: 'Otto & Kinnbart',
+        opacity: 1.0
+    },
+    {
+        id: 24,
+        name: 'Otto & Vollbart',
+        opacity: 1.0
+    },
+    {
+        id: 25,
+        name: 'Dünner Franz',
+        opacity: 1.0
+    },
+    {
+        id: 26,
+        name: 'Schnäuzer & Koteletten',
+        opacity: 1.0
+    },
+    {
+        id: 27,
+        name: 'Backenbart',
+        opacity: 1.0
+    },
+    {
+        id: 28,
+        name: 'Lincoln-Kinnbart',
+        opacity: 1.0
+    }
+];
+
+const hautunreinheitenListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Masern',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Pickel',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Hautunreinheiten',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Ausschlag',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Mitesser',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Erhitzt',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Pusteln',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Eiterpusteln',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Furunkulose',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Akne',
+        opacity: 1.0
+    },
+    {
+        id: 10,
+        name: 'Ringelröteln',
+        opacity: 1.0
+    },
+    {
+        id: 11,
+        name: 'Gesichtsausschlag',
+        opacity: 1.0
+    },
+    {
+        id: 12,
+        name: 'Nasenbohrer',
+        opacity: 1.0
+    },
+    {
+        id: 13,
+        name: 'Pubertät',
+        opacity: 1.0
+    },
+    {
+        id: 14,
+        name: 'Matschauge',
+        opacity: 1.0
+    },
+    {
+        id: 15,
+        name: 'Kinnausschlag',
+        opacity: 1.0
+    },
+    {
+        id: 16,
+        name: 'Two Face',
+        opacity: 1.0
+    },
+    {
+        id: 17,
+        name: 'T-Zone',
+        opacity: 1.0
+    },
+    {
+        id: 18,
+        name: 'Fettig',
+        opacity: 1.0
+    },
+    {
+        id: 19,
+        name: 'Narbig',
+        opacity: 1.0
+    },
+    {
+        id: 20,
+        name: 'Aknenarben',
+        opacity: 1.0
+    },
+    {
+        id: 21,
+        name: 'Totale Kraterlandschaft',
+        opacity: 1.0
+    },
+    {
+        id: 22,
+        name: 'Herpes',
+        opacity: 1.0
+    },
+    {
+        id: 23,
+        name: 'Eiterflechte',
+        opacity: 1.0
+    }
+];
+
+const hautalterungListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0,
+    },
+    {
+        id: 0,
+        name: 'Krähenfüße',
+        opacity: 1.0,
+    },
+    {
+        id: 1,
+        name: 'Erste Anzeichen',
+        opacity: 1.0,
+    },
+    {
+        id: 2,
+        name: 'Mittelalt',
+        opacity: 1.0,
+    },
+    {
+        id: 3,
+        name: 'Sorgenfalten',
+        opacity: 1.0,
+    },
+    {
+        id: 4,
+        name: 'Depression',
+        opacity: 1.0,
+    },
+    {
+        id: 5,
+        name: 'Distinguiert',
+        opacity: 1.0,
+    },
+    {
+        id: 6,
+        name: 'Gealtert',
+        opacity: 1.0,
+    },
+    {
+        id: 7,
+        name: 'Verwittert',
+        opacity: 1.0,
+    },
+    {
+        id: 8,
+        name: 'Faltig',
+        opacity: 1.0,
+    },
+    {
+        id: 9,
+        name: 'Schlaff',
+        opacity: 1.0,
+    },
+    {
+        id: 10,
+        name: 'Verlebt',
+        opacity: 1.0,
+    },
+    {
+        id: 11,
+        name: 'Oldie',
+        opacity: 1.0,
+    },
+    {
+        id: 12,
+        name: 'Ruhestand',
+        opacity: 1.0,
+    },
+    {
+        id: 13,
+        name: 'Junkie',
+        opacity: 1.0,
+    },
+    {
+        id: 14,
+        name: 'Geriatrix',
+        opacity: 1.0,
+    }
+];
+
+const teintListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Rotbäckchen',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Stoppelausschlag',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Hitzewallung',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Sonnenbrand',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Blutunterlaufen',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Alkoholiker',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Fleckig',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Totem',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Äderchen',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Lädiert',
+        opacity: 1.0
+    },
+    {
+        id: 10,
+        name: 'Bleich',
+        opacity: 1.0
+    },
+    {
+        id: 11,
+        name: 'Gespenstisch',
+        opacity: 1.0
+    }
+];
+
+const hautmaleListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Engelchen',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Überall',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Unregelmäßig',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Fleckentanz',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Über die Brücke',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Babypuppe',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Kobold',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Sonnenverwöhnt',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Schönheitsflecken',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Reihenweise',
+        opacity: 1.0
+    },
+    {
+        id: 10,
+        name: 'Fotomodellig',
+        opacity: 1.0
+    },
+    {
+        id: 11,
+        name: 'Vereinzelt',
+        opacity: 1.0
+    },
+    {
+        id: 12,
+        name: 'Gesprenkelt',
+        opacity: 1.0
+    },
+    {
+        id: 13,
+        name: 'Regentropfen',
+        opacity: 1.0
+    },
+    {
+        id: 14,
+        name: 'Beide Bäckchen',
+        opacity: 1.0
+    },
+    {
+        id: 15,
+        name: 'Einseitig',
+        opacity: 1.0
+    },
+    {
+        id: 16,
+        name: 'Paarweise',
+        opacity: 1.0
+    },
+    {
+        id: 17,
+        name: 'Wucher',
+        opacity: 1.0
+    }
+];
+
+const hautschadenListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Uneben',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Sandpapier',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Ungleichmäßig',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Rau',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Ledrig',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Strukturiert',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Grob',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Zerklüftet',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Knittrig',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Rissig',
+        opacity: 1.0
+    },
+    {
+        id: 10,
+        name: 'Hart',
+        opacity: 1.0
+    }
+];
+
+const augenfarbeListe = [
+    {
+        id: 0,
+        name: 'Grün',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Smaragd',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Hellblau',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Meerblau',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Hellbraun',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Dunkelbraun',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Haselnussbraun',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Dunkelgrau',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Hellgrau',
+        opacity: 1.0
+    }
+];
+
+const augenmakeupListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Verruchtes Schwarz',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Bronze',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Hellgrau',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Retro-Glam',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Natürlicher Look',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Cat Eyes',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Chola',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Vamp',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Vinewood-Glamour',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Bubblegum',
+        opacity: 1.0
+    },
+    {
+        id: 10,
+        name: 'Aqua-Traum',
+        opacity: 1.0
+    },
+    {
+        id: 11,
+        name: 'Pin-up',
+        opacity: 1.0
+    },
+    {
+        id: 12,
+        name: 'Lila-Leidenschaft',
+        opacity: 1.0
+    },
+    {
+        id: 13,
+        name: 'Verruchte Cat Eye',
+        opacity: 1.0
+    },
+    {
+        id: 14,
+        name: 'Glühender Rubin',
+        opacity: 1.0
+    },
+    {
+        id: 15,
+        name: 'Pop-Prinzessin',
+        opacity: 1.0
+    },
+    {
+        id: 16,
+        name: 'Guyliner',
+        opacity: 1.0
+    },
+    {
+        id: 17,
+        name: 'Blutige Tränen',
+        opacity: 1.0
+    },
+    {
+        id: 18,
+        name: 'Heavy Metal',
+        opacity: 1.0
+    },
+    {
+        id: 19,
+        name: 'Trauer',
+        opacity: 1.0
+    },
+    {
+        id: 20,
+        name: 'Fürst der Finsternis',
+        opacity: 1.0
+    },
+    {
+        id: 21,
+        name: 'Rocker',
+        opacity: 1.0
+    },
+    {
+        id: 22,
+        name: 'Grufti',
+        opacity: 1.0
+    },
+    {
+        id: 23,
+        name: 'Punk',
+        opacity: 1.0
+    },
+    {
+        id: 24,
+        name: 'Verwüstet',
+        opacity: 1.0
+    }
+];
+
+const lippenstiftListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Farbe, matt',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Farbe, glanz',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Umranet, matt',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Umrandet, Glanz',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Stark umrandet, matt',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Stark umrandet, Glanz',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Nude Look, umraned, matt',
+        opacity: 1.0
+    },
+    {
+        id: 7,
+        name: 'Nude Look, umraned, Glanz',
+        opacity: 1.0
+    },
+    {
+        id: 8,
+        name: 'Verwischt',
+        opacity: 1.0
+    },
+    {
+        id: 9,
+        name: 'Geisha',
+        opacity: 1.0
+    }
+];
+
+const rougeListe = [
+    {
+        id: 255,
+        name: '-',
+        opacity: 0.0
+    },
+    {
+        id: 0,
+        name: 'Voll',
+        opacity: 1.0
+    },
+    {
+        id: 1,
+        name: 'Schräg',
+        opacity: 1.0
+    },
+    {
+        id: 2,
+        name: 'Rund',
+        opacity: 1.0
+    },
+    {
+        id: 3,
+        name: 'Horizontal',
+        opacity: 1.0
+    },
+    {
+        id: 4,
+        name: 'Hoch',
+        opacity: 1.0
+    },
+    {
+        id: 5,
+        name: 'Schätzchen',
+        opacity: 1.0
+    },
+    {
+        id: 6,
+        name: 'Achtziger',
+        opacity: 1.0
+    }
+];
+
+
+
+
+
+
+
+
+
+
+
+dynamic open/close doors + synced:
+//clientside:
+alt.on('keydown', (key) => {
+    //Key: E
+    if(key == 69) {
+        //if player logged in...
+        if(chat.isChatOpen() || alt.Player.local.vehicle) return;
+        
+        let findDoorEntity, doorString = 'v_ilev_arm_secdoor';
+        findDoorEntity = native.getClosestObjectOfType(alt.Player.local.pos.x, alt.Player.local.pos.y, alt.Player.local.pos.z, 2.0, '749848321', false, 0, 0);
+        if(findDoorEntity == 0) {
+            findDoorEntity = native.getClosestObjectOfType(alt.Player.local.pos.x, alt.Player.local.pos.y, alt.Player.local.pos.z, 2.0, '-340230128', false, 0, 0);
+            doorString = 'v_ilev_gtdoor02';
+        }
+        if(findDoorEntity != 0) {
+            let hashKey = native.getHashKey(doorString);
+            if(native.getStateOfClosestDoorOfType(hashKey, alt.Player.local.pos.x, alt.Player.local.pos.y, alt.Player.local.pos.z)[1]) {
+                alt.emitServer('ServerDoorControl', hashKey, alt.Player.local.pos.x, alt.Player.local.pos.y, alt.Player.local.pos.z, false, alt.Player.local.rot.x, alt.Player.local.rot.y, alt.Player.local.rot.z);
+                //Gametext/Info => Door: OPENED
+            } else {
+                alt.emitServer('ServerDoorControl', hashKey, alt.Player.local.pos.x, alt.Player.local.pos.y, alt.Player.local.pos.z, true, 0.0, 0.0, 0.00001);
+                //Gametext/Info => Door: CLOSED
+            }
+        }
+    }
+});
+alt.onServer('ClientDoorControl', (hashKey, posX, posY, posZ, state, rotX, rotY, rotZ) => {
+    native.doorControl(hashKey, posX, posY, posZ, state, rotX, rotY, rotZ);
+});
+
+//serverside:
+alt.onClient('ServerDoorControl', (player, hashKey, posX, posY, posZ, state, rotX, rotY, rotZ) => {
+    alt.emitClient(null, 'ClientDoorControl', hashKey, posX, posY, posZ, state, rotX, rotY, rotZ);
+});
+
+
+
+
+
+
+
+
+
+
+creates a PED/NPC after player connect, that just stands around and doesn't respond to anything.
+//Serverside:
+alt.on('playerConnect', (player) => {
+    alt.emitClient(player, 'CreaterPedAfterPlayerConnect');
+});
+
+//Clientside:
+alt.onServer('CreaterPedAfterPlayerConnect', () => {
+    let npcModel = native.getHashKey('a_m_m_farmer_01');
+    native.requestModel(npcModel);
+
+    //Change posX, posY, posZ ...
+    let npcID = native.createPed(1, npcModel, posX, posY, posZ, heading, false, false);
+    native.setBlockingOfNonTemporaryEvents(npcID, true);
+    native.taskSetBlockingOfNonTemporaryEvents(npcID, true);
+    native.setEntityInvincible(npcID, true);
+    native.setPedFleeAttributes(npcID, 15, false);
+    native.freezeEntityPosition(npcID, true);
+});
+
+
+
+
+
+
+
+
+
+
+
+    native.setScriptGfxAlign(76, 66);
+    const [_void, minimapTopX, minimapTopY] = native.getScriptGfxPosition(-0.0045, 0.002 + (-0.188888));
+    native.resetScriptGfxAlign();
+    const [_void2, w, h] = native.getActiveScreenResolution(0, 0);
+    let minimap = {};
+    minimap.width = w * minimapTopX;
+    minimap.height = h * minimapTopY;
+    minimap.ratio = native.getAspectRatio(false);
+
+
+
+
+
+
+https://forum.altv.mp/topic/571-all-gta-v-ped-component-variations-ped-props-clothes-hats-glasses-watches/
+
+
+
+
+
+
+
+
+
+
+
+
+not sure if I posted this yet, but this is how you "make a ped dumb", so it doesnt react to the environment
+native.setEntityAsMissionEntity(pedHandle, true, false); // make sure its not despawned by game engine
+native.setBlockingOfNonTemporaryEvents(pedHandle, true); // make sure ped doesnt flee etc only do what its told
+native.setPedCanBeTargetted(pedHandle, false);
+native.setPedCanBeKnockedOffVehicle(pedHandle, 1);
+native.setPedCanBeDraggedOut(pedHandle, false);
+native.setPedSuffersCriticalHits(pedHandle, false);
+native.setPedDropsWeaponsWhenDead(pedHandle, false);
+native.setPedDiesInstantlyInWater(pedHandle, false);
+native.setPedCanRagdoll(pedHandle, false);
+native.setPedDiesWhenInjured(pedHandle, false);
+native.taskSetBlockingOfNonTemporaryEvents(pedHandle, true);
+native.setPedFleeAttributes(pedHandle, 0, false);
+native.setPedConfigFlag(pedHandle, 32, false); // ped cannot fly thru windscreen
+native.setPedConfigFlag(pedHandle, 281, true); // ped no writhe
+native.setPedGetOutUpsideDownVehicle(pedHandle, false);
+native.setPedCanEvasiveDive(pedHandle, false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Nametags with LOS check
+export function distance(vector1, vector2) {
+    return Math.sqrt(
+        Math.pow(vector1.x - vector2.x, 2) +
+            Math.pow(vector1.y - vector2.y, 2) +
+            Math.pow(vector1.z - vector2.z, 2)
+    );
+}
+alt.everyTick(renderNametags);
+function renderNametags() {
+    for(let player of alt.Player.all) {
+        if(player != alt.Player.local && player.scriptID) {
+            if(distance(player.pos, alt.Player.local.pos) < 50) {
+                game.requestPedVisibilityTracking(player.scriptID);
+                if(game.isTrackedPedVisible(player.scriptID)) {
+                    game.setDrawOrigin(player.pos.x, player.pos.y, player.pos.z + 1, false);
+                    game.beginTextCommandDisplayText('STRING');
+                    game.setTextFont(4);
+                    game.setTextCentre(true);
+                    game.setTextScale(0.4, 0.4);
+                    game.setTextProportional(true);
+                    game.setTextColour(255, 255, 255, 255);
+                    game.addTextComponentSubstringPlayerName(player.name);
+                    game.endTextCommandDisplayText(0, 0);
+                    game.clearDrawOrigin();
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+Helper for getting minimap anchor / size in pixels.
+
+class HUD {
+    public getMinimapWidth() {
+        const aspectRatio = this.getScreenAspectRatio();
+        const resolution = this.getScreenResolution();
+
+        return resolution.x / (4 * aspectRatio);
+    }
+
+    public getMinimapHeight() {
+        const resolution = this.getScreenResolution();
+
+        return resolution.y / 5.674;
+    }
+
+    public getMinimapTopLeft() {
+        const resolution = this.getScreenResolution();
+        const safeZone = this.getSafeZoneSize();
+        const height = this.getMinimapHeight();
+        
+        const x = resolution.x * ((1.0 / 20.0) * (Math.abs(safeZone - 1.0) * 10));
+        const y = resolution.y - resolution.y * ((1.0 / 20.0) * (Math.abs(safeZone - 1.0) * 10)) - height;
+        
+        return { x, y };
+    }
+
+    public getMinimapTopRight() {
+        const { x, y } = this.getMinimapTopLeft();
+        return { x: x + this.getMinimapWidth(), y };
+    }
+
+    public getMinimapBottomLeft() {
+        const { x, y } = this.getMinimapTopLeft();
+        return { x, y: y + this.getMinimapHeight() };
+    }
+
+    public getMinimapBottomRight() {
+        const { x, y } = this.getMinimapTopLeft();
+        return { x: x + this.getMinimapWidth(), y: y + this.getMinimapHeight() };
+    }
+
+    public getSafeZoneSize() {
+        return game.getSafeZoneSize();
+    }
+
+    public getScreenAspectRatio() {
+        return game.getAspectRatio(false);
+    }
+
+    public getScreenResolution() {
+        const [_, x, y] = game.getActiveScreenResolution(0, 0);
+        return { x, y };
+    }
+}
+
+
+
+
+
+
+
+
+let idle = alt.setInterval(() => {
+    native.invalidateIdleCam(); // Disable player idle camera
+    native._0x9E4CFFF989258472(); // Disable vehicle idle camera
+}, 20000); // Idle camera activated after 30 seconds
+
+
+
+
+
+
+
+
+
+How do we know all components of map have been loaded?
+Here is the solution :point_down:
+Don't forgot, before using client side codes, spawn player in destination coords (Server Side).
+// Server Side
+import alt from 'alt-server';
+
+alt.on('playerConnect', (player) => {
+    player.spawn(1252.97, -1962.62, 43.26, 0);
+});
+
+// Client Side
+import alt from 'alt-client';
+import native from 'natives';
+
+let myCoord = [1252.97, -1962.62, 43.26];
+native.newLoadSceneStartSphere(myCoord[0], myCoord[1], myCoord[2], 50.0, 0);
+
+let timeout = 0;
+
+let myInterval = alt.setInterval(() => {
+    if (native.isNewLoadSceneLoaded()) {
+        alt.log('All components successfully loaded.');
+        timeout = 0;
+        alt.clearInterval(myInterval);
+    } else {
+        timeout++;
+
+        // If map does not load after 20 seconds.
+        if (timeout == 200) {
+            alt.log('Failed to load map, try again.');
+            timeout = 0;
+            alt.clearInterval(myInterval);
+        }
+    }
+}, 100);
+
+
+
+
+
+
+
+
+
+
+
+
+teleport To Waypoint
+import * as alt from 'alt-client';
+import * as native from 'natives';
+
+alt.on('teleportToWaypoint', () => {
+  if (!native.isWaypointActive()) return alt.log('Waypoint not defined');
+
+  const z = 1000;
+  const { scriptID: player } = alt.Player.local;
+
+  const waypoint = native.getFirstBlipInfoId(8);
+  const coords = native.getBlipInfoIdCoord(waypoint);
+
+  native.freezeEntityPosition(player, true);
+  native.startPlayerTeleport(player, coords.x, coords.y, z, 0, true, true, true);
+
+  const interval = alt.setInterval(() => {
+    if (native.hasPlayerTeleportFinished(player)) {
+      const ground = native.getEntityHeightAboveGround(player);
+
+      native.startPlayerTeleport(player, coords.x, coords.y, z - ground, 0, true, true, true);
+      native.freezeEntityPosition(player, false);
+      alt.clearInterval(interval);
+    }
+  }, 100);
+});

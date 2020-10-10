@@ -45,7 +45,7 @@ namespace TDS_Server.Handler
             if (targetDiscordId.HasValue)
                 _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId.Value);
 
-            InformIfPlayerIsOnline(targetId, msg);
+            InformIfPlayerIsOnline(targetId);
         }
 
         public async void Add(Players target, Players source, string message)
@@ -66,7 +66,7 @@ namespace TDS_Server.Handler
             if (target.PlayerSettings.DiscordUserId.HasValue)
                 _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId.Value);
 
-            InformIfPlayerIsOnline(target.Id, msg);
+            InformIfPlayerIsOnline(target.Id);
         }
 
         public async void CheckOfflineMessages(ITDSPlayer player)
@@ -90,7 +90,7 @@ namespace TDS_Server.Handler
             }
         }
 
-        private void InformIfPlayerIsOnline(int playerId, Offlinemessages msg)
+        private void InformIfPlayerIsOnline(int playerId)
         {
             var player = _tdsPlayerHandler.Get(playerId);
             if (player is { })

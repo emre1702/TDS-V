@@ -4,8 +4,8 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -120,7 +120,6 @@ namespace TDS_Server.Handler.Commands
                     _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName),
                         target: target,
                         sender: player,
-                        serializer: _serializer,
                         invitationsHandler: _invitationsHandler,
                         onAccept: async (target, sender, invitation) =>
                         {
@@ -128,7 +127,7 @@ namespace TDS_Server.Handler.Commands
                                 return;
                             if (sender.Lobby is null)
                                 return;
-                            await sender.Lobby.AddPlayer(target!, null);
+                            await sender.Lobby.Players.AddPlayer(target!, 0);
                             NAPI.Task.Run(() =>
                             {
                                 target.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
@@ -166,7 +165,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             }
 
-            await _lobbiesHandler.MainMenu.AddPlayer(player, 0);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
         }
 
         [TDSCommand(PlayerCommand.OpenPrivateChat)]
@@ -279,7 +278,7 @@ namespace TDS_Server.Handler.Commands
         [TDSCommand(PlayerCommand.Suicide)]
         public void Suicide(ITDSPlayer player)
         {
-            if (!(player.Lobby is FightLobby fightLobby))
+            if (!(player.Lobby is IFightLobby fightLobby))
                 return;
             if (player.Lifes == 0)
                 return;
@@ -307,7 +306,7 @@ namespace TDS_Server.Handler.Commands
                     break;
             }
 
-            fightLobby.TriggerEvent(ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
+            fightLobby.Sync.TriggerEvent(ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
         }
 
         [TDSCommand(PlayerCommand.TeamChat)]

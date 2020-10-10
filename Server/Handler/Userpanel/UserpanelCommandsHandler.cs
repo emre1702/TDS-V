@@ -11,31 +11,14 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelCommandsHandler
     {
-        #region Private Fields
-
-        private readonly Serializer _serializer;
         private string _commandDatasJson = "[]";
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public UserpanelCommandsHandler(Serializer serializer, EventsHandler eventsHandler)
+        public UserpanelCommandsHandler(EventsHandler eventsHandler)
         {
-            _serializer = serializer;
-
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public List<UserpanelCommandDataDto> CommandDatas { get; } = new List<UserpanelCommandDataDto>();
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public string GetData()
         {
@@ -86,18 +69,12 @@ namespace TDS_Server.Handler.Userpanel
                 CommandDatas.Add(userpanelCommandData);
             }
 
-            _commandDatasJson = _serializer.ToBrowser(CommandDatas);
+            _commandDatasJson = Serializer.ToBrowser(CommandDatas);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
             player.TriggerBrowserEvent(ToBrowserEvent.SyncCommandsData, GetData());
         }
-
-        #endregion Private Methods
     }
 }

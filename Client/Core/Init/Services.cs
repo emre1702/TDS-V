@@ -22,7 +22,7 @@ namespace TDS_Client.Core.Init
         internal static void Initialize()
         {
             var loggingHandler = new LoggingHandler();
-            var serializer = new Serializer(str => loggingHandler.LogInfo(str, "Serializer"), ex => loggingHandler.LogError(ex));
+            Serializer.Init(str => loggingHandler.LogInfo(str, "Serializer"), ex => loggingHandler.LogError(ex));
 
             try
             {
@@ -38,14 +38,14 @@ namespace TDS_Client.Core.Init
                 var bindsHandler = new BindsHandler(loggingHandler);
                 var discordHandler = new DiscordHandler(loggingHandler, eventsHandler);
 
-                var browserHandler = new BrowserHandler(loggingHandler, eventsHandler, serializer, remoteEventsSender);
-                var settingsHandler = new SettingsHandler(loggingHandler, remoteEventsSender, eventsHandler, browserHandler, serializer);
+                var browserHandler = new BrowserHandler(loggingHandler, eventsHandler, remoteEventsSender);
+                var settingsHandler = new SettingsHandler(loggingHandler, remoteEventsSender, eventsHandler, browserHandler);
                 var cursorHandler = new CursorHandler(loggingHandler, eventsHandler, bindsHandler, settingsHandler);
                 new FreeroamHandler(loggingHandler, eventsHandler, browserHandler);
 
-                var dataSyncHandler = new DataSyncHandler(loggingHandler, eventsHandler, browserHandler, serializer);
-                var utilsHandler = new UtilsHandler(loggingHandler, serializer, dataSyncHandler, eventsHandler);
-                new GangHousesHandler(loggingHandler, eventsHandler, settingsHandler, serializer);
+                var dataSyncHandler = new DataSyncHandler(loggingHandler, eventsHandler, browserHandler);
+                var utilsHandler = new UtilsHandler(loggingHandler, dataSyncHandler, eventsHandler);
+                new GangHousesHandler(loggingHandler, eventsHandler, settingsHandler);
                 new GangVehiclesHandler(loggingHandler, dataSyncHandler, eventsHandler);
                 new GhostModeHandler(loggingHandler, eventsHandler);
 
@@ -57,12 +57,12 @@ namespace TDS_Client.Core.Init
                 var deathHandler = new DeathHandler(loggingHandler, settingsHandler, scaleformMessageHandler, eventsHandler, utilsHandler, browserHandler);
                 var camerasHandler = new CamerasHandler(loggingHandler, utilsHandler, remoteEventsSender, bindsHandler, deathHandler, eventsHandler);
                 var instructionalButtonHandler = new InstructionalButtonHandler(loggingHandler, eventsHandler, settingsHandler);
-                new UserpanelHandler(loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, serializer, eventsHandler, bindsHandler, instructionalButtonHandler);
-                new CharCreatorHandler(loggingHandler, browserHandler, serializer, deathHandler, camerasHandler, eventsHandler, cursorHandler, utilsHandler);
+                new UserpanelHandler(loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, eventsHandler, bindsHandler, instructionalButtonHandler);
+                new CharCreatorHandler(loggingHandler, browserHandler, deathHandler, camerasHandler, eventsHandler, cursorHandler, utilsHandler);
 
-                var registerLoginHandler = new RegisterLoginHandler(loggingHandler, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, serializer, eventsHandler);
+                var registerLoginHandler = new RegisterLoginHandler(loggingHandler, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, eventsHandler);
                 var voiceHandler = new VoiceHandler(loggingHandler, bindsHandler, browserHandler, utilsHandler, eventsHandler);
-                var forceStayAtPosHandler = new ForceStayAtPosHandler(loggingHandler, remoteEventsSender, settingsHandler, dxHandler, timerHandler, serializer);
+                var forceStayAtPosHandler = new ForceStayAtPosHandler(loggingHandler, remoteEventsSender, settingsHandler, dxHandler, timerHandler);
                 new CrouchingHandler(loggingHandler, eventsHandler, dataSyncHandler, remoteEventsSender);
 
                 new MidsizedMessageHandler(loggingHandler, timerHandler);
@@ -72,23 +72,23 @@ namespace TDS_Client.Core.Init
                 new AntiCheatHandler(loggingHandler, playerFightHandler);
                 var mapLimitHandler = new MapLimitHandler(loggingHandler, settingsHandler, remoteEventsSender, eventsHandler, dxHandler, timerHandler);
 
-                var lobbyHandler = new LobbyHandler(loggingHandler, browserHandler, playerFightHandler, instructionalButtonHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
-                    timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler, serializer);
+                var lobbyHandler = new LobbyHandler(loggingHandler, browserHandler, playerFightHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
+                    timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler);
                 new GangWindowHandler(loggingHandler, browserHandler, cursorHandler, eventsHandler, bindsHandler);
                 new DamageHandler(browserHandler, remoteEventsSender, playerFightHandler, lobbyHandler, eventsHandler);
-                var scoreboardHandler = new ScoreboardHandler(loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler, serializer);
+                var scoreboardHandler = new ScoreboardHandler(loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler);
                 var chatHandler = new ChatHandler(loggingHandler, browserHandler, bindsHandler, remoteEventsSender, eventsHandler);
                 new CommandsHandler(loggingHandler, chatHandler, settingsHandler, lobbyHandler, playerFightHandler, camerasHandler, remoteEventsSender, utilsHandler);
                 new ShirtTeamColorsHandler(loggingHandler, lobbyHandler, dataSyncHandler, eventsHandler);
 
-                var workaroundsHandler = new WorkaroundsHandler(loggingHandler, serializer, utilsHandler);
+                var workaroundsHandler = new WorkaroundsHandler(loggingHandler, utilsHandler);
                 new AFKCheckHandler(loggingHandler, eventsHandler, settingsHandler, remoteEventsSender, playerFightHandler, timerHandler, dxHandler);
 
                 var nametagsHandler = new NametagsHandler(loggingHandler, camerasHandler, settingsHandler, utilsHandler, playerFightHandler);
 
                 new RankingHandler(loggingHandler, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler, timerHandler);
                 new MapCreatorHandler(loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler,
-                    browserHandler, dxHandler, remoteEventsSender, serializer, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler, deathHandler);
+                    browserHandler, dxHandler, remoteEventsSender, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler, deathHandler);
                 new InfosHandler(loggingHandler, browserHandler, eventsHandler);
                 new WeaponStatsHandler(loggingHandler, remoteEventsSender);
 

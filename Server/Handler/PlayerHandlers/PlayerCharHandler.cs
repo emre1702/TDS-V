@@ -6,12 +6,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Player.Char;
-using TDS_Server.Handler.Entities.LobbySystem;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.CharCreator;
@@ -25,13 +24,12 @@ namespace TDS_Server.Handler.PlayerHandlers
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
         private readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
-        private readonly Serializer _serializer;
+
         private readonly ISettingsHandler _settingsHandler;
 
-        public PlayerCharHandler(EventsHandler eventsHandler, Serializer serializer, LobbiesHandler lobbiesHandler,
+        public PlayerCharHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler,
             TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
         {
-            _serializer = serializer;
             _lobbiesHandler = lobbiesHandler;
             _dbContext = dbContext;
             _loggingHandler = loggingHandler;
@@ -42,12 +40,12 @@ namespace TDS_Server.Handler.PlayerHandlers
             eventsHandler.PlayerRegisteredBefore += InitPlayerChar;
         }
 
-        internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> args)
+        internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> _)
         {
-            if (!(player.Lobby is CharCreateLobby))
+            if (!(player.Lobby is ICharCreateLobby))
                 return null;
 
-            await _lobbiesHandler.MainMenu.AddPlayer(player, null);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
             return null;
         }
 
@@ -56,7 +54,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (player.Entity is null)
                 return null;
 
-            var data = _serializer.FromBrowser<CharCreateData>((string)args[0]);
+            var data = Serializer.FromBrowser<CharCreateData>((string)args[0]);
 
             // By doing this we can ensure that player datas don't save while editing. Because else
             // this could result in PlayerCharDatas getting messed up for the player
@@ -76,11 +74,11 @@ namespace TDS_Server.Handler.PlayerHandlers
             await player.SaveData(true);
             LoadPlayerChar(player);
 
-            await _lobbiesHandler.MainMenu.AddPlayer(player, null);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
             return null;
         }
 
-        private void CopyJsonValues<T, R>(List<T> originalObjList, ICollection<R> newObjList)
+        /*private void CopyJsonValues<T, R>(List<T> originalObjList, ICollection<R> newObjList)
         {
             for (int i = 0; i < originalObjList.Count; ++i)
             {
@@ -93,7 +91,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                     .Where(p => p.GetCustomAttributes(typeof(Newtonsoft.Json.JsonPropertyAttribute), false).Length > 0)
                     .ForEach(p => p.SetValue(newObj, p.GetValue(originalObj)));
             }
-        }
+        }*/
 
         private async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
         {
@@ -158,6 +156,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (player.Entity is null || player.Entity.CharDatas is null)
                 return;
 
+            player.SetClothes(11, 0, 0);
             var data = player.Entity.CharDatas;
             while (data.AppearanceData.Count < _settingsHandler.ServerSettings.AmountCharSlots)
             {

@@ -7,6 +7,7 @@ using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
 using TDS_Client.Data.Extensions;
 using TDS_Client.Handler.Deathmatch;
+using TDS_Shared.Data.Enums;
 using static RAGE.Events;
 
 namespace TDS_Client.Handler.Draw
@@ -32,7 +33,7 @@ namespace TDS_Client.Handler.Draw
 
         public void Draw(List<TickNametagData> nametags)
         {
-            if (!GetShowOnlyAtAim())
+            if (GetShowOnlyAtAim())
             {
                 DrawAtAim();
                 DrawSpectatedNametag();
@@ -46,15 +47,15 @@ namespace TDS_Client.Handler.Draw
 
         public void DrawNametag(int handle, string name, float distance)
         {
-            float scale = Math.Max(distance / _settingsHandler.NametagMaxDistance, 0.5f);
-            var position = RAGE.Game.Entity.GetEntityCoords(handle, true);
-            position.Z += 0.9f + distance / _settingsHandler.NametagMaxDistance;
+            float scale = Math.Min(Math.Max(distance / _settingsHandler.NametagMaxDistance, 0.5f), 0.8f);
+            var position = Ped.GetPedBoneCoords(handle, (int)PedBone.IK_Head, 0, 0, 0);
+            position.Z += 0.25f + Math.Min(distance / _settingsHandler.NametagMaxDistance, 0.4f);
 
             float screenX = 0;
             float screenY = 0;
-            RAGE.Game.Graphics.GetScreenCoordFromWorldCoord(position.X, position.Y, position.Z, ref screenX, ref screenY);
+            Graphics.GetScreenCoordFromWorldCoord(position.X, position.Y, position.Z, ref screenX, ref screenY);
 
-            float textheight = RAGE.Game.Ui.GetTextScaleHeight(scale, (int)Font.ChaletLondon);
+            float textheight = Ui.GetTextScaleHeight(scale, (int)Font.ChaletLondon);
             screenY -= textheight;
 
             RAGE.NUI.UIResText.Draw(name, (int)(1920 * screenX), (int)(1080 * screenY), Font.ChaletLondon, scale, GetHealthColor(handle),
@@ -64,10 +65,13 @@ namespace TDS_Client.Handler.Draw
         private void DrawAtAim()
         {
             int targetEntity = 0;
-            if (!RAGE.Game.Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
+            if (!Player.GetEntityPlayerIsFreeAimingAt(ref targetEntity))
                 return;
 
             if (Entity.GetEntityType(targetEntity) != (int)EntityTypeInGetEntityType.Ped)
+                return;
+
+            if (!RAGE.Game.Entity.HasEntityClearLosToEntity(RAGE.Elements.Player.LocalPlayer.Handle, targetEntity, 17))
                 return;
 
             var myPos = _camerasHandler.ActiveCamera?.Position ?? RAGE.Elements.Player.LocalPlayer.Position;
@@ -97,6 +101,9 @@ namespace TDS_Client.Handler.Draw
                 if (nametag.Distance > _settingsHandler.NametagMaxDistance)
                     continue;
 
+                if (!RAGE.Game.Entity.HasEntityClearLosToEntity(RAGE.Elements.Player.LocalPlayer.Handle, nametag.Player.Handle, 17))
+                    continue;
+
                 DrawNametag(nametag.Player.Handle, _utilsHandler.GetDisplayName(nametag.Player as ITDSPlayer), nametag.Distance);
             }
         }
@@ -104,6 +111,8 @@ namespace TDS_Client.Handler.Draw
         private void DrawSpectatedNametag()
         {
             if (!(_camerasHandler.Spectating.SpectatingEntity is ITDSPlayer target))
+                return;
+            if (_camerasHandler.ActiveCamera is null)
                 return;
 
             var myPos = _camerasHandler.ActiveCamera.Position;

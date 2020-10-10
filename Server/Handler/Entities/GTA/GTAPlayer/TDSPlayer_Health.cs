@@ -26,5 +26,14 @@ namespace TDS_Server.Handler.Entities.GTA.GTAPlayer
                 NAPI.Player.SetPlayerHealth(this, value);
             }
         }
+
+        public override void Spawn(Vector3 pos, float heading = 0)
+        {
+            DeathSpawnTimer?.Kill();
+            DeathSpawnTimer = null;
+            NAPI.Player.SpawnPlayer(this, pos, heading);
+            if (Lobby is { })
+                Dimension = Lobby.MapHandler.Dimension;
+        }
     }
 }

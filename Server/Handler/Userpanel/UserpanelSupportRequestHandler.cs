@@ -121,14 +121,13 @@ namespace TDS_Server.Handler.Userpanel
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly Dictionary<int, HashSet<ITDSPlayer>> _inSupportRequest = new Dictionary<int, HashSet<ITDSPlayer>>();
         private readonly HashSet<ITDSPlayer> _inSupportRequestsList = new HashSet<ITDSPlayer>();
-        private readonly Serializer _serializer;
+
         private readonly ISettingsHandler _settingsHandler;
 
-        public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, Serializer serializer,
+        public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
             : base(dbContext, loggingHandler)
         {
-            _serializer = serializer;
             _settingsHandler = settingsHandler;
             _bonusBotConnectorClient = bonusBotConnectorClient;
 
@@ -195,7 +194,7 @@ namespace TDS_Server.Handler.Userpanel
             if (!_inSupportRequest.ContainsKey(requestId))
                 return null;
 
-            string messageJson = _serializer.ToBrowser(new SupportRequestMessage
+            string messageJson = Serializer.ToBrowser(new SupportRequestMessage
             {
                 Author = playerData.Name,
                 Message = messageEntity.Text,
@@ -321,7 +320,7 @@ namespace TDS_Server.Handler.Userpanel
                     _inSupportRequest[data.ID] = new HashSet<ITDSPlayer>();
                 _inSupportRequest[data.ID].Add(player);
 
-                return _serializer.ToBrowser(data);
+                return Serializer.ToBrowser(data);
             }
             catch (Exception ex)
             {
@@ -355,7 +354,7 @@ namespace TDS_Server.Handler.Userpanel
 
             _inSupportRequestsList.Add(player);
 
-            return _serializer.ToBrowser(data);
+            return Serializer.ToBrowser(data);
         }
 
         public object? LeftSupportRequest(ITDSPlayer player, ref ArraySegment<object> args)
@@ -415,7 +414,7 @@ namespace TDS_Server.Handler.Userpanel
             if (!_inSupportRequest.ContainsKey(requestId.Value))
                 return null;
 
-            string messageJson = _serializer.ToBrowser(new SupportRequestMessage
+            string messageJson = Serializer.ToBrowser(new SupportRequestMessage
             {
                 Author = player.DisplayName,
                 Message = messageEntity.Text,
@@ -437,7 +436,7 @@ namespace TDS_Server.Handler.Userpanel
         {
             string json = (string)args[0];
 
-            var request = _serializer.FromBrowser<SupportRequestData>(json);
+            var request = Serializer.FromBrowser<SupportRequestData>(json);
             if (request is null)
                 return null;
 

@@ -36,7 +36,7 @@ namespace TDS_Client.Handler.Draw
             }
         }
 
-        private DxGrid _grid;
+        private readonly DxGrid _grid;
         private bool _isActivated;
         private int _lastLoadedTick;
         private bool _isManualToggleDisabled;
@@ -49,10 +49,9 @@ namespace TDS_Client.Handler.Draw
         private readonly TimerHandler _timerHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly BindsHandler _bindsHandler;
-        private readonly Serializer _serializer;
 
         public ScoreboardHandler(LoggingHandler loggingHandler, DxHandler dxHandler, SettingsHandler settingsHandler, LobbyHandler lobbyHandler,
-            TimerHandler timerHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, BindsHandler bindsHandler, Serializer serializer)
+            TimerHandler timerHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler, BindsHandler bindsHandler)
             : base(loggingHandler)
         {
             _dxHandler = dxHandler;
@@ -61,7 +60,6 @@ namespace TDS_Client.Handler.Draw
             _timerHandler = timerHandler;
             _remoteEventsSender = remoteEventsSender;
             _bindsHandler = bindsHandler;
-            _serializer = serializer;
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
             eventsHandler.LanguageChanged += (lang, _) => LoadLanguage(lang);
@@ -69,8 +67,10 @@ namespace TDS_Client.Handler.Draw
             eventsHandler.ShowScoreboard += () => PressedScoreboardKey();
             eventsHandler.HideScoreboard += () => ReleasedScoreboardKey();
 
-            _grid = new DxGrid(dxHandler, 0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15);
-            _grid.Activated = false;
+            _grid = new DxGrid(dxHandler, 0.5f, 0.5f, 0.45f, 0.365f, Color.FromArgb(187, 10, 10, 10), 0.3f, maxRows: 15)
+            {
+                Activated = false
+            };
             CreateColumns();
             CreateTitle();
             CreateBody();
@@ -285,14 +285,14 @@ namespace TDS_Client.Handler.Draw
             bool inmainmenu = args.Length == 1;
             if (inmainmenu)
             {
-                var list = _serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[0]);
+                var list = Serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[0]);
                 ClearRows();
                 AddMainmenuData(list);
             }
             else
             {
-                var playerlist = _serializer.FromServer<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
-                var lobbylist = _serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
+                var playerlist = Serializer.FromServer<List<SyncedScoreboardLobbyDataDto>>((string)args[0]);
+                var lobbylist = Serializer.FromServer<List<SyncedScoreboardMainmenuLobbyDataDto>>((string)args[1]);
                 ClearRows();
                 AddLobbyData(playerlist, lobbylist);
             }

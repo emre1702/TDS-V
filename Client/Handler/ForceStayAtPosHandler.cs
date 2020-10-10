@@ -18,7 +18,7 @@ namespace TDS_Client.Handler
 
         private readonly DxHandler _dxHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
-        private readonly Serializer _serializer;
+
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
         private MapLimit _mapLimit;
@@ -27,15 +27,13 @@ namespace TDS_Client.Handler
 
         #region Public Constructors
 
-        public ForceStayAtPosHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler,
-            Serializer serializer)
+        public ForceStayAtPosHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler)
             : base(loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
             _settingsHandler = settingsHandler;
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
-            _serializer = serializer;
 
             RAGE.Events.Add(ToClientEvent.SetForceStayAtPosition, OnSetForceStayAtPositionMethod);
             RAGE.Events.Add(ToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
@@ -81,7 +79,7 @@ namespace TDS_Client.Handler
 
         private void OnSetForceStayAtPositionMethod(object[] args)
         {
-            var pos = _serializer.FromServer<Position3D>(Convert.ToString(args[0]));
+            var pos = Serializer.FromServer<Position3D>(Convert.ToString(args[0]));
             var radius = Convert.ToSingle(args[1]);
             var type = args.Length >= 3 ? (MapLimitType)Convert.ToInt32(args[2]) : MapLimitType.Block;
             var allowedTimeOut = args.Length >= 4 ? Convert.ToInt32(args[3]) : 0;

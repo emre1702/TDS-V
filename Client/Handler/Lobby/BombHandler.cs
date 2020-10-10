@@ -33,8 +33,6 @@ namespace TDS_Client.Handler.Lobby
 
         private readonly RoundInfosHandler _roundInfosHandler;
 
-        private readonly Serializer _serializer;
-
         private readonly SettingsHandler _settingsHandler;
 
         private readonly TimerHandler _timerHandler;
@@ -55,7 +53,7 @@ namespace TDS_Client.Handler.Lobby
 
         public BombHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, RoundInfosHandler roundInfosHandler, SettingsHandler settingsHandler,
             UtilsHandler utilsHandler, RemoteEventsSender remoteEventsSender, DxHandler dxHandler, TimerHandler timerHandler, EventsHandler eventsHandler,
-            LobbyMapDatasHandler lobbyMapDatasHandler, Serializer serializer) : base(loggingHandler)
+            LobbyMapDatasHandler lobbyMapDatasHandler) : base(loggingHandler)
         {
             _browserHandler = browserHandler;
             _roundInfosHandler = roundInfosHandler;
@@ -65,7 +63,7 @@ namespace TDS_Client.Handler.Lobby
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
             _lobbyMapDatasHandler = lobbyMapDatasHandler;
-            _serializer = serializer;
+
             _eventsHandler = eventsHandler;
 
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
@@ -293,7 +291,7 @@ namespace TDS_Client.Handler.Lobby
 
         private void OnBombPlantedMethod(object[] args)
         {
-            BombPlanted(_serializer.FromServer<Position3D>((string)args[0]), Convert.ToBoolean(args[1]), args.Length > 2 ? (int?)args[2] : null);
+            BombPlanted(Serializer.FromServer<Position3D>((string)args[0]), Convert.ToBoolean(args[1]), args.Length > 2 ? (int?)args[2] : null);
         }
 
         private void OnPlayerGotBombMethod(object[] args)

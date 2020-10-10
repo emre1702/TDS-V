@@ -16,10 +16,7 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
         public float X, Y, Width, BodyHeight;
 
         private readonly List<DxGridRow> _rows = new List<DxGridRow>();
-        private Color _bodyBackColor;
-        private Font _bodyFont;
-        private float _bodyTextScale;
-        private int _maxRows;
+        private readonly int _maxRows;
 
         public DxGrid(DxHandler dxHandler, float x, float y, float width, float bodyHeight, Color bodyBackColor, float bodyTextScale = 1.0f, Font bodyFont = Font.ChaletLondon,
             Alignment alignment = Alignment.Centered, int maxRows = 25, int frontPriority = 0) : base(dxHandler, frontPriority)
@@ -28,9 +25,6 @@ namespace TDS_Client.Handler.Draw.Dx.Grid
             Y = y;
             Width = width;
             BodyHeight = bodyHeight;
-            _bodyBackColor = bodyBackColor;
-            _bodyTextScale = bodyTextScale;
-            _bodyFont = bodyFont;
             Alignment = alignment;
             _maxRows = maxRows;
 

@@ -19,9 +19,9 @@ namespace TDS_Server.Handler
 
         #region Public Constructors
 
-        public ChatInfosHandler(TDSDbContext dbContext, Serializer serializer, EventsHandler eventsHandler)
+        public ChatInfosHandler(TDSDbContext dbContext, EventsHandler eventsHandler)
         {
-            LoadChatInfos(dbContext, serializer);
+            LoadChatInfos(dbContext);
 
             eventsHandler.PlayerLoggedIn += SendChatInfos;
         }
@@ -42,7 +42,7 @@ namespace TDS_Server.Handler
 
         #region Private Methods
 
-        private void LoadChatInfos(TDSDbContext dbContext, Serializer serializer)
+        private void LoadChatInfos(TDSDbContext dbContext)
         {
             var data = dbContext.ChatInfos
                 .ToList()
@@ -51,7 +51,7 @@ namespace TDS_Server.Handler
 
             foreach (var entry in data)
             {
-                _chatInfosJsonCache[entry.Key] = serializer.ToBrowser(entry.Value).Replace("\\", "\\\\");
+                _chatInfosJsonCache[entry.Key] = Serializer.ToBrowser(entry.Value).Replace("\\", "\\\\");
             }
         }
 
