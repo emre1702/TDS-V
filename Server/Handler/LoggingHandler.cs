@@ -336,7 +336,7 @@ namespace TDS_Server.Handler
 
         public async void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false)
         {
-            bool ipAddressParseWorked = IPAddress.TryParse(source?.IPAddress ?? "-", out IPAddress? address);
+            bool ipAddressParseWorked = IPAddress.TryParse(source?.Address ?? "-", out IPAddress? address);
             var log = new LogRests
             {
                 Id = ++_currentIdRests,

@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Chat;
 using TDS_Server.Data.Interfaces.LobbySystem.Colshapes;
@@ -17,7 +18,6 @@ using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.BansHandlers;
@@ -47,7 +47,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
         public IBaseLobbyColshapesHandler ColshapesHandler { get; private set; }
         public IBaseLobbyDatabase Database { get; private set; }
         public IBaseLobbyDeathmatch Deathmatch { get; private set; }
-        public DatabaseHandler GlobalDatabaseHandler { get; }
+        public IDatabaseHandler GlobalDatabaseHandler { get; }
         public IBaseLobbyEventsHandler Events { get; private set; }
         public EventsHandler GlobalEventsHandler { get; }
         public LangHelper LangHelper { get; }
@@ -64,7 +64,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public BaseLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
+        public BaseLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
             ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {

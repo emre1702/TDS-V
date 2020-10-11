@@ -69,7 +69,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             task = PlayerLeftAfter?.InvokeAsync((player, hadLifes));
             if (task.HasValue)
                 await task.Value.ConfigureAwait(false);
-            _eventsHandler.OnLobbyLeaveNew(player, _lobby);
+            _eventsHandler.OnLobbyLeave(player, _lobby);
+            player.Events.TriggerLobbyLeft(_lobby);
         }
 
         public async ValueTask TriggerPlayerJoined(ITDSPlayer player, int teamIndex)
@@ -80,7 +81,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             task = PlayerJoinedAfter?.InvokeAsync((player, teamIndex));
             if (task.HasValue)
                 await task.Value.ConfigureAwait(false);
-            _eventsHandler.OnLobbyJoinedNew(player, _lobby);
+            _eventsHandler.OnLobbyJoined(player, _lobby);
+            player.Events.TriggerLobbyJoined(_lobby);
         }
 
         public void TriggerNewBan(PlayerBans ban, ulong? targetDiscordUserId)

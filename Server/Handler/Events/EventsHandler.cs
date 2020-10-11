@@ -208,7 +208,7 @@ namespace TDS_Server.Handler.Events
             if (!(player.Lobby is IFightLobby fightLobby))
                 return;
 
-            player.OnPlayerWeaponSwitch(previousWeapon, newWeapon);
+            player.Events.TriggerWeaponSwitch(previousWeapon, newWeapon);
             PlayerWeaponSwitch?.Invoke(player, previousWeapon, newWeapon);
         }
 
@@ -308,12 +308,12 @@ namespace TDS_Server.Handler.Events
             PlayerLeftLobby?.Invoke(player, lobby);
         }
 
-        public void OnLobbyLeaveNew(ITDSPlayer player, IBaseLobby lobby)
+        public void OnLobbyLeave(ITDSPlayer player, IBaseLobby lobby)
         {
             PlayerLeftLobbyNew?.Invoke(player, lobby);
         }
 
-        public void OnLobbyJoinedNew(ITDSPlayer player, IBaseLobby lobby)
+        public void OnLobbyJoined(ITDSPlayer player, IBaseLobby lobby)
         {
             PlayerJoinedLobbyNew?.Invoke(player, lobby);
         }

@@ -111,12 +111,12 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (!Enum.IsDefined(typeof(Language), language))
                 return;
 
-            player.LanguageEnum = (Language)language;
+            player.LanguageHandler.Enum = (Language)language;
         }
 
         private void OnWeaponShot(ITDSPlayer player)
         {
-            player.AddWeaponShot(player.CurrentWeapon, null, null, false);
+            player.WeaponStats.AddWeaponShot(player.CurrentWeapon);
         }
 
         private void ReduceMuteTime(ITDSPlayer player)

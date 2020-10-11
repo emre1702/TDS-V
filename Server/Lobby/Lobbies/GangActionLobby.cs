@@ -2,13 +2,13 @@
 using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Entities.Gangs;
 using TDS_Server.Data.Interfaces.GamemodesSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Maps;
@@ -31,7 +31,7 @@ namespace TDS_Server.LobbySystem.Lobbies
 
         public new IGangActionLobbyTeamsHandler Teams => (IGangActionLobbyTeamsHandler)base.Teams;
 
-        public GangActionLobby(LobbyDb entity, IGangwarArea gangArea, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
+        public GangActionLobby(LobbyDb entity, IGangwarArea gangArea, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
             ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
             : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
         {

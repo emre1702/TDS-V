@@ -6,8 +6,6 @@ namespace TDS_Server.Data.Interfaces
 {
     public interface IDatabaseEntityWrapper
     {
-        #region Public Methods
-
         Task ExecuteForDB(Action<TDSDbContext> action);
 
         Task<T> ExecuteForDB<T>(Func<TDSDbContext, T> action);
@@ -17,7 +15,5 @@ namespace TDS_Server.Data.Interfaces
         Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action);
 
         void ExecuteForDBAsyncWithoutWait(Func<TDSDbContext, Task> action);
-
-        #endregion Public Methods
     }
 }

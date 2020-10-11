@@ -167,7 +167,7 @@ namespace TDS_Server.LobbySystem.Players
         {
             var newOwner = await _semaphore.Do(() => SharedUtils.GetRandom(_players.Where(p => p.Entity is { }))).ConfigureAwait(false);
             Lobby.Entity.OwnerId = newOwner.Entity!.Id;
-            newOwner.SetLobby(Lobby);
+            newOwner.SetLobby(Lobby);   // Only to sync it
         }
 
         private async void Events_NewBan(PlayerBans ban)

@@ -152,7 +152,7 @@ namespace TDS_Server.Core.Init.Services.Creators
                .AddSingleton<ScoreboardHandler>()
                .AddSingleton<ChatInfosHandler>()
                .AddSingleton<WeaponLevelHandler>()
-               .AddTransient<DatabaseHandler>()
+               .AddTransient<IDatabaseHandler, DatabaseHandler>()
                .AddSingleton<WorkaroundsHandler>()
                .AddSingleton<FreeroamDataHandler>()
                .AddTransient<IDamagesys, Damagesys>();

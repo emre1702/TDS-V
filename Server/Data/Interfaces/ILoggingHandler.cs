@@ -9,7 +9,7 @@ namespace TDS_Server.Data.Interfaces
 
     public interface ILoggingHandler
     {
-        #region Public Methods
+        static ILoggingHandler Instance { get; }
 
         void LogAdmin(LogType cmd, ITDSPlayer? source, ITDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null);
 
@@ -30,7 +30,5 @@ namespace TDS_Server.Data.Interfaces
         void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false);
 
         Task SaveTask(int? counter = null);
-
-        #endregion Public Methods
     }
 }

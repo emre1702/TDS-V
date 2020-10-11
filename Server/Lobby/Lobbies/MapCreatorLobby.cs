@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.Data.Interfaces.TeamsSystem;
@@ -25,13 +26,13 @@ namespace TDS_Server.LobbySystem.Lobbies
     {
         public new IMapCreatorLobbySync Sync => (IMapCreatorLobbySync)base.Sync;
 
-        public MapCreatorLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
+        public MapCreatorLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
             ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
             : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
         {
         }
 
-        public MapCreatorLobby(ITDSPlayer player, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
+        public MapCreatorLobby(ITDSPlayer player, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
             LobbiesHandler lobbiesHandler, ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
             : base(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler,
                   loggingHandler, serviceProvider, teamsProvider)

@@ -30,7 +30,7 @@ namespace TDS_Server.Core.Damagesystem
             int damage = (int)Math.Ceiling(_damagesDict.TryGetValue(weapon, out DamageDto? value) ? (value.Damage * (isHeadShot ? value.HeadMultiplier : 1)) : 0);
 
             target.Damage(ref damage, out bool killed);
-            source.AddWeaponShot(weapon, pedBodyPart, damage, killed);
+            source.WeaponStats.AddWeaponDamage(weapon, pedBodyPart, damage, killed);
 
             UpdateLastHitter(target, source, damage);
             if (source.CurrentRoundStats != null)

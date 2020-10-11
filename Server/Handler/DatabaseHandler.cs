@@ -3,11 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Database.Entity;
 
 namespace TDS_Server.Handler
 {
-    public class DatabaseHandler : IDatabaseEntityWrapper
+    public class DatabaseHandler : IDatabaseHandler
     {
         protected ILoggingHandler LoggingHandler;
 
