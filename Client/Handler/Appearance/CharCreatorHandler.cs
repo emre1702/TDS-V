@@ -71,7 +71,7 @@ namespace TDS_Client.Handler.Appearance
 
                 PreparePed(data);
 
-                new TDSTimer(PrepareCamera, 1000);
+                new TDSTimer(PrepareCamera, 2000);
                 Tick += MovePed;
             }
             catch (Exception ex)
