@@ -30,7 +30,7 @@ namespace TDS_Server.Handler.Server
             _eventsHandler.PlayerLoggedIn += PlayerLoggedIn;
             _eventsHandler.PlayerLoggedOut += CheckPlayerPeak;
             _eventsHandler.PlayerRegistered += PlayerRegistered;
-            _eventsHandler.LobbyCreated += EventsHandler_LobbyCreatedNew;
+            _eventsHandler.LobbyCreated += EventsHandler_LobbyCreated;
 
             // Only to remove nullable warning
             DailyStats = new ServerDailyStats();
@@ -52,7 +52,7 @@ namespace TDS_Server.Handler.Server
             _eventsHandler.Minute += Save;
         }
 
-        private void EventsHandler_LobbyCreatedNew(IBaseLobby lobby)
+        private void EventsHandler_LobbyCreated(IBaseLobby lobby)
         {
             if (lobby is IArena arena)
                 arena.Events.RoundEndStats += () => CheckAddArenaRound(arena);

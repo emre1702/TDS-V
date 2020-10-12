@@ -18,20 +18,22 @@ namespace TDS_Server.LobbySystem.Sync
     public class BaseLobbySync : IBaseLobbySync
     {
         protected IBaseLobby Lobby { get; }
+
+#nullable disable
         protected SyncedLobbySettings SyncedSettings { get; private set; }
+#nullable enable
+
         protected IBaseLobbyEventsHandler Events { get; }
 
         public BaseLobbySync(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
             Lobby = lobby;
-            SyncedSettings = GetSyncedSettings(lobby.Entity);
-            SyncedSettings.Json = Serializer.ToClient(SyncedSettings);
             Events = events;
 
             events.CreatedAfter += Events_CreatedAfter;
             events.PlayerLeftAfter += Events_PlayerLeftLobbyAfter;
             events.PlayerJoined += Events_PlayerJoined;
-            Events.RemoveAfter += RemoveEvents;
+            events.RemoveAfter += RemoveEvents;
         }
 
         protected virtual void RemoveEvents(IBaseLobby lobby)
@@ -70,6 +72,7 @@ namespace TDS_Server.LobbySystem.Sync
         private void Events_CreatedAfter(LobbyDb entity)
         {
             SyncedSettings = GetSyncedSettings(entity);
+            SyncedSettings.Json = Serializer.ToClient(SyncedSettings);
         }
 
         private ValueTask Events_PlayerLeftLobbyAfter((ITDSPlayer Player, int HadLifes) data)

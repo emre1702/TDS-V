@@ -62,6 +62,8 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
         public IBaseLobbyTeamsHandler Teams { get; private set; }
         public ITeamsProvider TeamsProvider { get; }
 
+        public TaskCompletionSource<bool> IsCreatingTask { get; } = new TaskCompletionSource<bool>();
+
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public BaseLobby(LobbyDb entity, DatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
@@ -81,7 +83,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             Events.PlayerLeft += PlayerLeft;
         }
 
-        protected virtual void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
+        protected virtual async void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
         {
             lobbyDependencies ??= new BaseLobbyDependencies();
 
@@ -113,6 +115,9 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             Sounds = lobbyDependencies.Sounds;
             Sync = lobbyDependencies.Sync;
             Teams = lobbyDependencies.Teams;
+
+            await Events.TriggerCreated(Entity);
+            IsCreatingTask.SetResult(true);
         }
 
         protected virtual async ValueTask CheckRemoveLobby()
