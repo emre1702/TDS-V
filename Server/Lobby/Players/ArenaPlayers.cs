@@ -53,7 +53,7 @@ namespace TDS_Server.LobbySystem.Players
                 var team = Lobby.Entity.LobbyRoundSettings.MixTeamsAfterRound
                     ? await Lobby.Teams.GetTeamWithFewestPlayer().ConfigureAwait(false)
                     : await Lobby.Teams.GetTeam((short)teamIndex).ConfigureAwait(false);
-                await Lobby.Teams.SetPlayerTeam(player, team).ConfigureAwait(false);
+                Lobby.Teams.SetPlayerTeam(player, team);
                 bool hasBeenSetInRound = await Lobby.Rounds.PlayerJoinedRound(player).ConfigureAwait(false);
                 if (!hasBeenSetInRound)
                     Lobby.Spectator.SetPlayerInSpectateMode(player);

@@ -4,6 +4,8 @@ namespace TDS_Server.Data.Interfaces.TeamsSystem
 {
     public interface ITeamSync
     {
+        bool SyncChanges { get; set; }
+
         void SyncAddedPlayer(ITDSPlayer player);
 
         void SyncAllPlayers();

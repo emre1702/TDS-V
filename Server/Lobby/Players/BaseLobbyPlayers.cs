@@ -87,7 +87,7 @@ namespace TDS_Server.LobbySystem.Players
             await player.SetPlayerLobbyStats(null).ConfigureAwait(false);
             var lifes = player.Lifes;
             player.Lifes = 0;
-            await Lobby.Teams.SetPlayerTeam(player, null).ConfigureAwait(false);
+            Lobby.Teams.SetPlayerTeam(player, null);
             player.SetSpectates(null);
 
             await Lobby.Events.TriggerPlayerLeft(player, lifes).ConfigureAwait(false);

@@ -55,17 +55,12 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             }
         }
 
-        public virtual Task SetPlayerTeam(ITDSPlayer player, ITeam? team)
+        public virtual void SetPlayerTeam(ITDSPlayer player, ITeam? team)
         {
             if (player.Team == team)
-                return Task.CompletedTask;
+                return;
 
-            return NAPI.Task.RunWait(() =>
-            {
-                player.Team?.Sync.SyncRemovedPlayer(player);
-                player.SetTeam(team, true);
-                team?.Sync.SyncAddedPlayer(player);
-            });
+            player.SetTeam(team, true);
         }
 
         protected virtual async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
@@ -77,7 +72,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 return _teams[data.TeamIndex];
             }).ConfigureAwait(false);
 
-            await SetPlayerTeam(data.Player, team).ConfigureAwait(false);
+            SetPlayerTeam(data.Player, team);
         }
 
         public Task Do(Action<ITeam[]> action)
