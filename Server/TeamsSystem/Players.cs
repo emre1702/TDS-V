@@ -56,13 +56,15 @@ namespace TDS_Server.TeamsSystem
             }
         }
 
-        private readonly List<ITDSPlayer>? _alive;
-        private readonly List<ITDSPlayer>? _spectatable;
+        private List<ITDSPlayer>? _alive;
+        private List<ITDSPlayer>? _spectatable;
         private readonly List<ITDSPlayer> _all = new List<ITDSPlayer>();
 
-        private readonly ITeam _team;
+#nullable disable
+        private ITeam _team;
+#nullable enable
 
-        public Players(ITeam team)
+        public void Init(ITeam team)
         {
             _team = team;
             if (!team.IsSpectator)

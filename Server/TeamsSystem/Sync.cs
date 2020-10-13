@@ -11,9 +11,11 @@ namespace TDS_Server.TeamsSystem
     {
         public bool SyncChanges { get; set; } = true;
 
-        private readonly ITeam _team;
+#nullable disable
+        private ITeam _team;
+#nullable enable
 
-        public Sync(ITeam team)
+        public void Init(ITeam team)
         {
             _team = team;
         }

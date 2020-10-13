@@ -27,15 +27,15 @@ namespace TDS_Server.TeamsSystem
             }
         }
 
+#nullable disable
         private Teams _entity;
+#nullable enable
 
-        public Team(Teams entity, LangHelper langHelper)
+        public Team(ITeamChat chat, ITeamPlayers players, ITeamSync sync)
         {
-            _entity = entity;
-
-            Chat = new Chat(this, langHelper);
-            Players = new Players(this);
-            Sync = new Sync(this);
+            Chat = chat;
+            Players = players;
+            Sync = sync;
 
             SyncedData = new SyncedTeamDataDto
             (
@@ -44,6 +44,15 @@ namespace TDS_Server.TeamsSystem
                 color: new ColorDto(Entity.ColorR, Entity.ColorG, Entity.ColorB),
                 amountPlayers: new SyncedTeamPlayerAmountDto()
             );
+        }
+
+        public void Init(Teams entity)
+        {
+            _entity = entity;
+
+            Chat.Init(this);
+            Players.Init(this);
+            Sync.Init(this);
         }
 
         public static bool operator !=(Team a, Team b)

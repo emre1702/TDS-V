@@ -6,6 +6,8 @@ namespace TDS_Server.Data.Interfaces.TeamsSystem
     {
         bool SyncChanges { get; set; }
 
+        void Init(ITeam team);
+
         void SyncAddedPlayer(ITDSPlayer player);
 
         void SyncAllPlayers();

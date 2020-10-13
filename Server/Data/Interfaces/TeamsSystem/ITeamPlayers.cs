@@ -15,6 +15,8 @@ namespace TDS_Server.Data.Interfaces.TeamsSystem
         bool HasAnySpectatable { get; }
         bool HasAnyAlive { get; }
 
+        void Init(ITeam team);
+
         void Add(ITDSPlayer player);
 
         void Do(Action<ITDSPlayer> action);

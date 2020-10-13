@@ -7,6 +7,8 @@ namespace TDS_Server.Data.Interfaces.TeamsSystem
     {
         string Color { get; }
 
+        void Init(ITeam team);
+
         void InitColor();
 
         void Send(Dictionary<ILanguage, string> texts);
