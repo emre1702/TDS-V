@@ -20,6 +20,8 @@ namespace TDS_Server.Handler
 {
     public class LoggingHandler : DatabaseEntityWrapper, ILoggingHandler
     {
+        public static ILoggingHandler? Instance { get; private set; }
+
         private static long _currentIdAdmins;
         private static long _currentIdChats;
         private static long _currentIdErrors;
@@ -35,6 +37,7 @@ namespace TDS_Server.Handler
             : base(dbContext, null)
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         {
+            Instance = this;
             _bonusBotConnectorClient = bonusBotConnectorClient;
             _settingsHandler = settingsHandler;
             LoggingHandler = this;

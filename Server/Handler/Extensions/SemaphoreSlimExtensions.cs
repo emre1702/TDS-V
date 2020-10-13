@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TDS_Server.Data.Extensions
+namespace TDS_Server.Handler.Extensions
 {
     public static class SemaphoreSlimExtensions
     {
@@ -17,8 +17,9 @@ namespace TDS_Server.Data.Extensions
             {
                 action();
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingHandler.Instance?.LogError(ex);
                 throw;
             }
             finally
@@ -36,8 +37,9 @@ namespace TDS_Server.Data.Extensions
             {
                 return func();
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingHandler.Instance?.LogError(ex);
                 throw;
             }
             finally
@@ -56,8 +58,9 @@ namespace TDS_Server.Data.Extensions
             {
                 return await func();
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingHandler.Instance?.LogError(ex);
                 throw;
             }
             finally
@@ -76,8 +79,9 @@ namespace TDS_Server.Data.Extensions
             {
                 return func(input);
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingHandler.Instance?.LogError(ex);
                 throw;
             }
             finally
@@ -96,8 +100,9 @@ namespace TDS_Server.Data.Extensions
             {
                 return func(input1, input2);
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingHandler.Instance?.LogError(ex);
                 throw;
             }
             finally
