@@ -62,9 +62,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
             return NAPI.Task.RunWait(() =>
             {
-                player.Team?.Sync.SyncRemovedPlayer(player);
-                player.SetTeam(team, true);
-                team?.Sync.SyncAddedPlayer(player);
+                player.TeamHandler.SetTeam(team, true);
             });
         }
 

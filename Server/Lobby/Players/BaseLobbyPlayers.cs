@@ -61,7 +61,7 @@ namespace TDS_Server.LobbySystem.Players
             await _semaphore.Do(() => _players.Add(player)).ConfigureAwait(false);
 
             await Lobby.Events.TriggerPlayerJoined(player, teamIndex).ConfigureAwait(false);
-            player.SetLobby(Lobby);
+            player.LobbyHandler.SetLobby(Lobby);
             InformAboutHowToLeaveLobby(player);
 
             return true;
@@ -81,13 +81,12 @@ namespace TDS_Server.LobbySystem.Players
             if (!playerHasBeenInLobby)
                 return false;
 
-            player.Lobby = null;
-            player.PreviousLobby = null;
-            await player.SetPlayerLobbyStats(null).ConfigureAwait(false);
+            player.LobbyHandler.SetLobby(null);
+            await player.LobbyHandler.SetPlayerLobbyStats(null).ConfigureAwait(false);
             var lifes = player.Lifes;
             player.Lifes = 0;
             await Lobby.Teams.SetPlayerTeam(player, null).ConfigureAwait(false);
-            player.SetSpectates(null);
+            player.SpectateHandler.SetSpectates(null);
 
             await Lobby.Events.TriggerPlayerLeft(player, lifes).ConfigureAwait(false);
 
@@ -167,7 +166,7 @@ namespace TDS_Server.LobbySystem.Players
         {
             var newOwner = await _semaphore.Do(() => SharedUtils.GetRandom(_players.Where(p => p.Entity is { }))).ConfigureAwait(false);
             Lobby.Entity.OwnerId = newOwner.Entity!.Id;
-            newOwner.SetLobby(Lobby);   // Only to sync it
+            newOwner.LobbyHandler.SyncLobbyOwnerInfo();
         }
 
         private async void Events_NewBan(PlayerBans ban)

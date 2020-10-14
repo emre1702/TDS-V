@@ -5,8 +5,8 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
 {
     public interface IPlayerAdmin
     {
-        AdminLevelDto AdminLevel { get; }
-        string AdminLevelName { get; }
+        AdminLevelDto Level { get; }
+        string LevelName { get; }
 
         void Init(ITDSPlayer player);
     }

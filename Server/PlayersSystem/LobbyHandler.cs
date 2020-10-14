@@ -17,6 +17,7 @@ namespace TDS_Server.PlayersSystem
     public class LobbyHandler : IPlayerLobbyHandler
     {
         public IBaseLobby? Current { get; private set; }
+        public IBaseLobby? Previous { get; private set; }
         public PlayerLobbyStats? LobbyStats { get; private set; }
 
         private readonly DataSyncHandler _dataSyncHandler;
@@ -46,13 +47,22 @@ namespace TDS_Server.PlayersSystem
                 await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Attach(LobbyStats));
         }
 
-        public async void SetLobby(IBaseLobby lobby)
+        public async void SetLobby(IBaseLobby? lobby)
         {
+            if (lobby == Current)
+                return;
             if (LobbyStats is { })
                 await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(LobbyStats).State = EntityState.Detached);
 
+            if (Current is { })
+                Previous = Current;
             Current = lobby;
-            NAPI.Task.Run(() => _dataSyncHandler.SetData(_player, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, lobby.Players.IsLobbyOwner(_player)));
+            SyncLobbyOwnerInfo();
+        }
+
+        public void SyncLobbyOwnerInfo()
+        {
+            NAPI.Task.Run(() => _dataSyncHandler.SetData(_player, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, Current?.Players.IsLobbyOwner(_player) == true));
         }
     }
 }

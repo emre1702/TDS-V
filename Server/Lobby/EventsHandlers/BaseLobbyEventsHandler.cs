@@ -81,7 +81,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             task = PlayerJoinedAfter?.InvokeAsync((player, teamIndex));
             if (task.HasValue)
                 await task.Value.ConfigureAwait(false);
-            _eventsHandler.OnLobbyJoined(player, _lobby);
+            _eventsHandler.OnLobbyJoin(player, _lobby);
             player.Events.TriggerLobbyJoined(_lobby);
         }
 

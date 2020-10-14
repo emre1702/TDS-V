@@ -34,13 +34,12 @@ namespace TDS_Server.Data.Models.GangWindow
         [JsonProperty("7")]
         public int LastLoginSortNumber { get; set; }
 
-
         public SyncedGangMember(ITDSPlayer forPlayer, GangMembers copyFrom)
         {
             PlayerId = copyFrom.PlayerId;
             Name = copyFrom.Name;
-            JoinDate = forPlayer.GetLocalDateTimeString(copyFrom.JoinTime);
-            LastLoginDate = forPlayer.GetLocalDateTimeString(copyFrom.LastLogin);
+            JoinDate = forPlayer.Timezone.GetLocalDateTimeString(copyFrom.JoinTime);
+            LastLoginDate = forPlayer.Timezone.GetLocalDateTimeString(copyFrom.LastLogin);
             IsOnline = forPlayer.Gang.PlayersOnline.Any(p => p.Entity.Id == copyFrom.PlayerId);
             Rank = copyFrom.Rank.Rank;
             JoinDateSortNumber = (int)(DateTime.UtcNow - copyFrom.JoinTime).TotalSeconds;

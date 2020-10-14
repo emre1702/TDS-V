@@ -1,24 +1,23 @@
-﻿using System;
-using System.Threading.Tasks;
-using GTANetworkAPI;
+﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using System;
+using System.Threading.Tasks;
 using TDS_Server.Core.Init.Services;
 using TDS_Server.Core.Init.Services.Creators;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
-using TDS_Server.Handler.Entities.GTA.GTAPlayer;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Factories;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.Server;
-using TDS_Shared.Core;
 using ObjectFactory = TDS_Server.Handler.Factories.ObjectFactory;
 
 namespace TDS_Server.Core.Init
@@ -140,7 +139,7 @@ namespace TDS_Server.Core.Init
 
                     if (_consolePlayerCache is null)
                     {
-                        _consolePlayerCache = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider);
+                        _consolePlayerCache = _serviceProvider.GetRequiredService<IPlayerProvider>().Create(new NetHandle());
                         _consolePlayerCache.IsConsole = true;
                     }
 
@@ -163,7 +162,7 @@ namespace TDS_Server.Core.Init
             new ObjectFactory(_serviceProvider);
             new PedFactory(_serviceProvider);
             new PickupFactory(_serviceProvider);
-            new PlayerFactory(_serviceProvider);
+            new PlayerFactory(_serviceProvider.GetRequiredService<IPlayerProvider>());
             new TextLabelFactory(_serviceProvider);
             new VehicleFactory(_serviceProvider);
         }

@@ -3,6 +3,8 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 
 namespace TDS_Server.Data.Interfaces.PlayersSystem
 {
+#nullable enable
+
     public interface IPlayerSpectateHandler
     {
         void AddSpectator(ITDSPlayer spectator);
@@ -15,6 +17,6 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
 
         void RemoveSpectator(ITDSPlayer spectator);
 
-        void SetSpectates(ITDSPlayer target);
+        void SetSpectates(ITDSPlayer? target);
     }
 }

@@ -63,13 +63,13 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 ClearTeamPlayersLists(teams);
                 foreach (var player in oldPlayersList)
                 {
-                    player.ResetVoiceToAndFrom();
+                    player.Voice.ResetVoiceToAndFrom();
                     if (player.Team is null) // propably not (yet) in the lobby
                         continue;
                     if (player.Team.IsSpectator)
                         player.Team.Players.Add(player);
                     else
-                        player.SetTeam(GetTeamWithFewestPlayer(teams), true);
+                        player.TeamHandler.SetTeam(GetTeamWithFewestPlayer(teams), true);
                 }
 
                 foreach (var team in teams)

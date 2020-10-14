@@ -8,7 +8,7 @@ namespace TDS_Server.PlayersSystem
 {
     public class Admin : IPlayerAdmin
     {
-        public AdminLevelDto AdminLevel
+        public AdminLevelDto Level
         {
             get
             {
@@ -20,7 +20,7 @@ namespace TDS_Server.PlayersSystem
             }
         }
 
-        public string AdminLevelName => AdminLevel.Names[_player.Language.Enum];
+        public string LevelName => Level.Names[_player.LanguageHandler.Enum];
 
         private readonly AdminsHandler _adminsHandler;
 #nullable disable

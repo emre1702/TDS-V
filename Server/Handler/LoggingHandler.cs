@@ -48,8 +48,8 @@ namespace TDS_Server.Handler
             eventsHandler.Minute += Save;
             eventsHandler.Error += LogError;
             eventsHandler.ErrorMessage += LogError;
-            eventsHandler.PlayerLeftLobbyNew += EventsHandler_PlayerLeftLobbyNew;
-            eventsHandler.PlayerJoinedLobbyNew += EventsHandler_PlayerJoinedLobbyNew;
+            eventsHandler.PlayerLeftLobby += EventsHandler_PlayerLeftLobby;
+            eventsHandler.PlayerJoinedLobby += EventsHandler_PlayerJoinedLobby;
 
             if (_bonusBotConnectorClient.ChannelChat is { })
             {
@@ -354,7 +354,7 @@ namespace TDS_Server.Handler
 
         #endregion Rest
 
-        private void EventsHandler_PlayerLeftLobbyNew(ITDSPlayer player, IBaseLobby lobby)
+        private void EventsHandler_PlayerLeftLobby(ITDSPlayer player, IBaseLobby lobby)
         {
             if (lobby.Type == LobbyType.MainMenu)
                 return;
@@ -365,7 +365,7 @@ namespace TDS_Server.Handler
             LogRest(LogType.Lobby_Leave, player, false, lobby.IsOfficial);
         }
 
-        private void EventsHandler_PlayerJoinedLobbyNew(ITDSPlayer player, IBaseLobby lobby)
+        private void EventsHandler_PlayerJoinedLobby(ITDSPlayer player, IBaseLobby lobby)
         {
             if (lobby.Type == LobbyType.MainMenu)
                 return;

@@ -14,7 +14,6 @@ using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Command;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.GTA.GTAPlayer;
 using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Data.Attributes;
 using TDS_Shared.Default;
@@ -278,8 +277,7 @@ namespace TDS_Server.Handler.Commands
                     {
                         #region Check if player exists
 
-                        if (parameterInfo.ParameterType == typeof(TDSPlayer)
-                            || parameterInfo.ParameterType == typeof(ITDSPlayer)
+                        if (parameterInfo.ParameterType == typeof(ITDSPlayer)
                             || parameterInfo.ParameterType == typeof(Players))
                         {
                             // if it's the last method (there can be an alternative method with
@@ -420,7 +418,7 @@ namespace TDS_Server.Handler.Commands
             if (!canuse && entity.NeededAdminLevel.HasValue)
             {
                 needright = true;
-                canuse = player.AdminLevel.Level >= entity.NeededAdminLevel.Value;
+                canuse = player.Admin.Level.Level >= entity.NeededAdminLevel.Value;
                 if (canuse)
                     cmdinfos.WithRight = CommandUsageRight.Admin;
             }

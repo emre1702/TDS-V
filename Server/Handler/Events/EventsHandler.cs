@@ -59,8 +59,6 @@ namespace TDS_Server.Handler.Events
 
         public delegate void PlayerLobbyDelegate(ITDSPlayer player, IBaseLobby lobby);
 
-        public delegate void PlayerLobbyDelegateNew(ITDSPlayer player, IBaseLobby lobby);
-
         public delegate void PlayerWeaponSwitchDelegate(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon);
 
         public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
@@ -103,15 +101,11 @@ namespace TDS_Server.Handler.Events
 
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
 
-        public event PlayerLobbyDelegateNew? PlayerJoinedLobbyNew;
-
         public event PlayerDelegate? PlayerLeftCustomMenuLobby;
 
         public event PlayerGangDelegate? PlayerLeftGang;
 
         public event PlayerLobbyDelegate? PlayerLeftLobby;
-
-        public event PlayerLobbyDelegateNew? PlayerLeftLobbyNew;
 
         public event PlayerDelegate? PlayerLoggedIn;
 
@@ -298,24 +292,14 @@ namespace TDS_Server.Handler.Events
             LoadedServerBans?.Invoke();
         }
 
-        internal void OnLobbyJoin(ITDSPlayer player, IBaseLobby lobby)
+        public void OnLobbyJoin(ITDSPlayer player, IBaseLobby lobby)
         {
             PlayerJoinedLobby?.Invoke(player, lobby);
         }
 
-        internal void OnLobbyLeave(ITDSPlayer player, IBaseLobby lobby)
-        {
-            PlayerLeftLobby?.Invoke(player, lobby);
-        }
-
         public void OnLobbyLeave(ITDSPlayer player, IBaseLobby lobby)
         {
-            PlayerLeftLobbyNew?.Invoke(player, lobby);
-        }
-
-        public void OnLobbyJoined(ITDSPlayer player, IBaseLobby lobby)
-        {
-            PlayerJoinedLobbyNew?.Invoke(player, lobby);
+            PlayerLeftLobby?.Invoke(player, lobby);
         }
 
         internal void OnMinute()
