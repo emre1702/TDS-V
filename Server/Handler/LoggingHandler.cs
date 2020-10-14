@@ -337,7 +337,7 @@ namespace TDS_Server.Handler
 
         #region Rest
 
-        public async void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false)
+        public async void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false, int? lobbyId = null)
         {
             bool ipAddressParseWorked = IPAddress.TryParse(source?.Address ?? "-", out IPAddress? address);
             var log = new LogRests
@@ -347,7 +347,7 @@ namespace TDS_Server.Handler
                 Source = source?.Id ?? 0,
                 Ip = saveipserial && ipAddressParseWorked ? address : null,
                 Serial = saveipserial ? source?.Serial ?? null : null,
-                Lobby = savelobby ? source?.Lobby?.Entity.Id : null,
+                Lobby = savelobby ? (lobbyId ?? source?.Lobby?.Entity.Id) : null,
                 Timestamp = DateTime.UtcNow
             };
 
@@ -365,7 +365,7 @@ namespace TDS_Server.Handler
             if (lobby.IsRemoved)
                 return;
 
-            LogRest(LogType.Lobby_Leave, player, false, lobby.IsOfficial);
+            LogRest(LogType.Lobby_Leave, player, false, lobby.IsOfficial, lobbyId: lobby.Entity.Id);
         }
 
         private void EventsHandler_PlayerJoinedLobby(ITDSPlayer player, IBaseLobby lobby)
@@ -373,7 +373,7 @@ namespace TDS_Server.Handler
             if (lobby.Type == LobbyType.MainMenu)
                 return;
 
-            LogRest(LogType.Lobby_Join, player, false, lobby.IsOfficial);
+            LogRest(LogType.Lobby_Join, player, false, lobby.IsOfficial, lobbyId: lobby.Entity.Id));
         }
     }
 }
