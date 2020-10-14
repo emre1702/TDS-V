@@ -373,7 +373,7 @@ namespace TDS_Server.Handler
             if (lobby.Type == LobbyType.MainMenu)
                 return;
 
-            LogRest(LogType.Lobby_Join, player, false, lobby.IsOfficial, lobbyId: lobby.Entity.Id));
+            LogRest(LogType.Lobby_Join, player, false, lobby.IsOfficial, lobbyId: lobby.Entity.Id);
         }
     }
 }

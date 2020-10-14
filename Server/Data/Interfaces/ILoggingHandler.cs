@@ -27,7 +27,7 @@ namespace TDS_Server.Data.Interfaces
 
         void LogKill(ITDSPlayer player, ITDSPlayer killer, uint weapon);
 
-        void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false);
+        void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false, int? lobbyId = null);
 
         Task SaveTask(int? counter = null);
     }
