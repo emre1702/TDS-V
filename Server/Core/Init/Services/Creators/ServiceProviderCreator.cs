@@ -10,7 +10,8 @@ namespace TDS_Server.Core.Init.Services.Creators
                 .WithDatabase()
                 .WithHandlers()
                 .WithLobby()
-                .WithGamemode();
+                .WithGamemode()
+                .WithTeam();
 
             var provider = new CustomServiceProvider(serviceCollection);
             return provider;

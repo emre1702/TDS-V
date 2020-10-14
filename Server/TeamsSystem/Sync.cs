@@ -9,9 +9,13 @@ namespace TDS_Server.TeamsSystem
 {
     public class Sync : ITeamSync
     {
-        private readonly ITeam _team;
+        public bool SyncChanges { get; set; } = true;
 
-        public Sync(ITeam team)
+#nullable disable
+        private ITeam _team;
+#nullable enable
+
+        public void Init(ITeam team)
         {
             _team = team;
         }
@@ -32,6 +36,8 @@ namespace TDS_Server.TeamsSystem
 
         public void SyncAddedPlayer(ITDSPlayer player)
         {
+            if (!SyncChanges)
+                return;
             string _allPlayersRemoteIdsJson = Serializer.ToClient(_team.Players.GetRemoteIds());
             var playersToSyncTo = _team.Players.GetAllArrayExcept(player);
             NAPI.Task.Run(() =>
@@ -51,6 +57,8 @@ namespace TDS_Server.TeamsSystem
 
         public void SyncAllPlayers()
         {
+            if (!SyncChanges)
+                return;
             string _allPlayersRemoteIdsJson = Serializer.ToClient(_team.Players.GetRemoteIds());
             var playersToSyncTo = _team.Players.GetAllArray();
             NAPI.Task.Run(() =>
@@ -71,6 +79,8 @@ namespace TDS_Server.TeamsSystem
 
         public void SyncRemovedPlayer(ITDSPlayer player)
         {
+            if (!SyncChanges)
+                return;
             var playersToSyncTo = _team.Players.GetAllArrayExcept(player);
             NAPI.Task.Run(() =>
             {

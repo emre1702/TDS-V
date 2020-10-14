@@ -16,5 +16,7 @@ namespace TDS_Server.Data.Interfaces.TeamsSystem
         bool IsSpectator { get; }
         int SpawnCounter { get; set; }
         SyncedTeamDataDto SyncedData { get; set; }
+
+        void Init(Teams entity);
     }
 }

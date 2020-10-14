@@ -11,6 +11,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Utility;
 
 namespace TDS_Server.LobbySystem.Players
@@ -54,6 +55,7 @@ namespace TDS_Server.LobbySystem.Players
         /// <returns></returns>
         public virtual async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex = 0)
         {
+            await Lobby.IsCreatingTask.Task;
             if (await Lobby.Bans.CheckIsBanned(player).ConfigureAwait(false))
                 return false;
 

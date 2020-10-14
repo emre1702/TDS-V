@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using GTANetworkAPI;
 using MoreLinq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Utility;
 using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
 
@@ -55,15 +55,12 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             }
         }
 
-        public virtual Task SetPlayerTeam(ITDSPlayer player, ITeam? team)
+        public virtual void SetPlayerTeam(ITDSPlayer player, ITeam? team)
         {
             if (player.Team == team)
-                return Task.CompletedTask;
+                return;
 
-            return NAPI.Task.RunWait(() =>
-            {
-                player.TeamHandler.SetTeam(team, true);
-            });
+            player.SetTeam(team, true);
         }
 
         protected virtual async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
@@ -75,7 +72,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 return _teams[data.TeamIndex];
             }).ConfigureAwait(false);
 
-            await SetPlayerTeam(data.Player, team).ConfigureAwait(false);
+            SetPlayerTeam(data.Player, team);
         }
 
         public Task Do(Action<ITeam[]> action)

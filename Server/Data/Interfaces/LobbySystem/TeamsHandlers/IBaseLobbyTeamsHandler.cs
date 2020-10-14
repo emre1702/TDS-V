@@ -20,7 +20,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers
 
         List<ITeam> GetTeams();
 
-        Task SetPlayerTeam(ITDSPlayer player, ITeam? team);
+        void SetPlayerTeam(ITDSPlayer player, ITeam? team);
 
         Task<ITeam> GetTeamWithFewestPlayer();
 

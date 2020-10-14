@@ -8,6 +8,22 @@ namespace TDS_Server.Core.Init.Services.Creators
     {
         public static IServiceCollection WithTeam(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<ITeamsProvider, TeamsProvider>();
+                .AddTransient<ITeam, Team>()
+                .WithProvider()
+                .WithTeamDependencies();
+
+        private static IServiceCollection WithProvider(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection
+               .AddSingleton<ITeamsProvider, TeamsProvider>();
+        }
+
+        private static IServiceCollection WithTeamDependencies(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection
+               .AddTransient<ITeamChat, Chat>()
+               .AddTransient<ITeamPlayers, Players>()
+               .AddTransient<ITeamSync, Sync>();
+        }
     }
 }

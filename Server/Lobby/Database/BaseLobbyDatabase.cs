@@ -41,6 +41,9 @@ namespace TDS_Server.LobbySystem.Database
 
         private async Task AddCreatedDatabaseToDatabase(LobbyDb entity)
         {
+            if (entity.Id != 0)
+                return;
+
             await DbHandler.ExecuteForDBAsync(async (dbContext) =>
             {
                 dbContext.Add(entity);

@@ -10,14 +10,19 @@ namespace TDS_Server.TeamsSystem
     {
         public string Color { get; private set; } = string.Empty;
 
-        private readonly ITeam _team;
+#nullable disable
+        private ITeam _team;
+#nullable enable
         private readonly LangHelper _langHelper;
 
-        public Chat(ITeam team, LangHelper langHelper)
+        public Chat(LangHelper langHelper)
+        {
+            _langHelper = langHelper;
+        }
+
+        public void Init(ITeam team)
         {
             _team = team;
-            _langHelper = langHelper;
-
             InitColor();
         }
 

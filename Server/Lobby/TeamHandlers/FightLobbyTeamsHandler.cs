@@ -59,7 +59,11 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         {
             return Do(teams =>
             {
+                foreach (var team in teams)
+                    team.Sync.SyncChanges = false;
+
                 var oldPlayersList = Lobby.Players.GetPlayers();
+
                 ClearTeamPlayersLists(teams);
                 foreach (var player in oldPlayersList)
                 {
@@ -74,6 +78,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
                 foreach (var team in teams)
                 {
+                    team.Sync.SyncChanges = true;
                     team.Sync.SyncAllPlayers();
                 }
             });

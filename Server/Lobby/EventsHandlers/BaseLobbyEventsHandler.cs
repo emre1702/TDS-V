@@ -50,6 +50,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             if (task is { })
                 await task.ConfigureAwait(false);
             CreatedAfter?.Invoke(entity);
+            _eventsHandler.OnLobbyCreated(_lobby);
         }
 
         public async Task TriggerRemove()

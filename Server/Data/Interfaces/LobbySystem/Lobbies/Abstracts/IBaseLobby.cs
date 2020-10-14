@@ -24,6 +24,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
         public bool IsRemoved => Events.IsRemoved;
 
         LobbyDb Entity { get; }
+        TaskCompletionSource<bool> IsCreatingTask { get; }
 
         IBaseLobbyBansHandler Bans { get; }
         IBaseLobbyChat Chat { get; }

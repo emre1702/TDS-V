@@ -27,6 +27,7 @@ namespace TDS_Server.LobbySystem.Players
 
             NAPI.Task.Run(() =>
             {
+                player.Spawn(Lobby.MapHandler.SpawnPoint, Lobby.MapHandler.SpawnRotation);
                 player.SetInvincible(true);
                 player.Freeze(true);
                 player.SetInvisible(true);

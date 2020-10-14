@@ -56,13 +56,15 @@ namespace TDS_Server.TeamsSystem
             }
         }
 
-        private readonly List<ITDSPlayer>? _alive;
-        private readonly List<ITDSPlayer>? _spectatable;
+        private List<ITDSPlayer>? _alive;
+        private List<ITDSPlayer>? _spectatable;
         private readonly List<ITDSPlayer> _all = new List<ITDSPlayer>();
 
-        private readonly ITeam _team;
+#nullable disable
+        private ITeam _team;
+#nullable enable
 
-        public Players(ITeam team)
+        public void Init(ITeam team)
         {
             _team = team;
             if (!team.IsSpectator)
@@ -76,6 +78,7 @@ namespace TDS_Server.TeamsSystem
         {
             lock (_all) { _all.Add(player); }
             player.SetSkin(_team.Entity.SkinHash != 0 ? (PedHash)_team.Entity.SkinHash : player.FreemodeSkin);
+            _team.Sync.SyncAddedPlayer(player);
         }
 
         public void AddAlive(ITDSPlayer player)
@@ -94,6 +97,7 @@ namespace TDS_Server.TeamsSystem
             if (_spectatable is { })
                 lock (_spectatable) { _spectatable.Remove(player); }
             RemoveAlive(player);
+            _team.Sync.SyncRemovedPlayer(player);
 
             return wasIn;
         }
