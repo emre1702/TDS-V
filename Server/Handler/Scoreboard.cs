@@ -58,7 +58,7 @@ namespace TDS_Server.Handler
                 var entry = new SyncedScoreboardLobbyDataDto
                 (
                     name: player.DisplayName,
-                    playtimeMinutes: player.PlayMinutes,
+                    playtimeMinutes: player.PlayTime.Minutes,
                     kills: ((player.LobbyStats?.Kills ?? 0) + (player.CurrentRoundStats?.Kills ?? 0)),
                     assists: ((player.LobbyStats?.Assists ?? 0) + (player.CurrentRoundStats?.Assists ?? 0)),
                     deaths: player.LobbyStats?.Deaths ?? 0,

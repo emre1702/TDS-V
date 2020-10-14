@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Database.Entity.Player;
 
@@ -22,14 +23,14 @@ namespace TDS_Server.PlayersSystem
         private Players? _entity;
         private int _lastSavedMs;
 
-        public IDatabaseEntityWrapper Database { get; }
+        public IDatabaseHandler Database { get; }
         private readonly ISettingsHandler _settingsHandler;
 
 #nullable disable
         private ITDSPlayer _player;
 #nullable enable
 
-        public DatabaseHandler(IDatabaseEntityWrapper database, ISettingsHandler settingsHandler)
+        public DatabaseHandler(IDatabaseHandler database, ISettingsHandler settingsHandler)
         {
             Database = database;
             _settingsHandler = settingsHandler;

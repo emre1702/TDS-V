@@ -29,7 +29,7 @@ namespace TDS_Server.Core.Damagesystem
             bool isHeadShot = pedBodyPart == PedBodyPart.Head;
             int damage = (int)Math.Ceiling(_damagesDict.TryGetValue(weapon, out DamageDto? value) ? (value.Damage * (isHeadShot ? value.HeadMultiplier : 1)) : 0);
 
-            target.Damage(ref damage, out bool killed);
+            target.HealthAndArmor.Remove(damage, out damage, out bool killed);
             source.WeaponStats.AddWeaponDamage(weapon, pedBodyPart, damage, killed);
 
             UpdateLastHitter(target, source, damage);
@@ -68,7 +68,7 @@ namespace TDS_Server.Core.Damagesystem
             }
             lasthitterdict.TryGetValue(source, out int currentDamage);
             lasthitterdict[source] = currentDamage + damage;
-            target.LastHitter = source;
+            target.Deathmatch.LastHitter = source;
         }
     }
 }

@@ -296,15 +296,15 @@ namespace TDS_Server.Handler.Userpanel
             if (forPlayer != null)
             {
                 data.RegisterTimestamp = forPlayer
-                    .GetLocalDateTimeString(data.RegisterDateTime);
+                    .Timezone.GetLocalDateTimeString(data.RegisterDateTime);
 
                 data.LastLogin = forPlayer
-                    .GetLocalDateTimeString(data.LastLoginDateTime);
+                    .Timezone.GetLocalDateTimeString(data.LastLoginDateTime);
 
                 foreach (var log in data.Logs)
                 {
                     log.Timestamp = forPlayer
-                        .GetLocalDateTimeString(log.TimestampDateTime);
+                        .Timezone.GetLocalDateTimeString(log.TimestampDateTime);
                 }
             }
             else

@@ -151,10 +151,12 @@ namespace TDS_Server.Handler.Helper
                     await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload();
                 });
             }
+
+            player.Challenges.InitChallengesDict();
+            var json = GetChallengesJson(player);
             NAPI.Task.Run(() =>
             {
-                player.InitChallengesDict();
-                player.TriggerBrowserEvent(ToBrowserEvent.SyncChallenges, GetChallengesJson(player));
+                player.TriggerBrowserEvent(ToBrowserEvent.SyncChallenges, json);
             });
         }
 

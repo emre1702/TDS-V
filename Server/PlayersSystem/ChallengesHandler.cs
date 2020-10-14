@@ -20,6 +20,7 @@ namespace TDS_Server.PlayersSystem
 
 #nullable disable
         private ITDSPlayer _player;
+        private IPlayerEvents _events;
 #nullable enable
 
         public ChallengesHandler(ILoggingHandler logging, ChallengesHelper challengesHelper)
@@ -28,11 +29,19 @@ namespace TDS_Server.PlayersSystem
             _challengesHelper = challengesHelper;
         }
 
-        public void Init(ITDSPlayer player)
+        public void Init(ITDSPlayer player, IPlayerEvents events)
         {
             _player = player;
+            _events = events;
 
-            InitChallengesDict();
+            events.SettingsChanged += Events_SettingsChanged;
+            events.Removed += Events_Removed;
+        }
+
+        private void Events_Removed()
+        {
+            _events.SettingsChanged -= Events_SettingsChanged;
+            _events.Removed -= Events_Removed;
         }
 
         public void AddToChallenge(ChallengeType type, int amount = 1, bool setTheValue = false)
@@ -82,9 +91,14 @@ namespace TDS_Server.PlayersSystem
             }
         }
 
-        private void InitChallengesDict()
+        public void InitChallengesDict()
         {
             _challengesDict = _player.Entity!.Challenges.GroupBy(c => c.Challenge).ToDictionary(c => c.Key, c => c.ToList());
+        }
+
+        private void Events_SettingsChanged()
+        {
+            AddToChallenge(ChallengeType.ChangeSettings);
         }
     }
 }

@@ -19,6 +19,8 @@ namespace TDS_Server.PlayersSystem
 
         public event PlayerLobbyDelegate? LobbyLeft;
 
+        public event EmptyDelegate? SettingsChanged;
+
 #nullable disable
         private ITDSPlayer _player;
 #nullable enable
@@ -43,5 +45,8 @@ namespace TDS_Server.PlayersSystem
 
         public void TriggerWeaponSwitch(WeaponHash previousWeapon, WeaponHash newWeapon)
             => WeaponSwitch?.Invoke(previousWeapon, newWeapon);
+
+        public void TriggerSettingsChanged()
+            => SettingsChanged?.Invoke();
     }
 }

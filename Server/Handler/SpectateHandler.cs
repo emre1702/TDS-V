@@ -13,11 +13,11 @@ namespace TDS_Server.Handler
                 return;
 
             if (player.Spectates is { })
-                player.Spectates.RemoveSpectator(player);
+                player.Spectates.SpectateHandler.RemoveSpectator(player);
 
             if (targetPlayer is { })
             {
-                targetPlayer.AddSpectator(player);
+                targetPlayer.SpectateHandler.AddSpectator(player);
                 NAPI.Task.Run(() =>
                 {
                     player.Position = targetPlayer.Position.AddToZ(10);

@@ -308,12 +308,12 @@ namespace TDS_Server.Handler.Userpanel
 
                 if (data is null)
                     return null;
-                if (data.AuthorId != player.Entity!.Id && player.AdminLevel.Level == 0)
+                if (data.AuthorId != player.Entity!.Id && player.Admin.Level.Level == 0)
                     return null;
 
                 foreach (var entry in data.Messages)
                 {
-                    entry.CreateTime = player.GetLocalDateTimeString(entry.CreateTimeDate);
+                    entry.CreateTime = player.Timezone.GetLocalDateTimeString(entry.CreateTimeDate);
                 }
 
                 if (!_inSupportRequest.ContainsKey(data.ID))
@@ -335,7 +335,7 @@ namespace TDS_Server.Handler.Userpanel
                 => await dbContext.SupportRequests
                     .Include(r => r.Author)
                     .Where(r => r.AuthorId == player.Entity!.Id
-                        || player.AdminLevel.Level > 0)
+                        || player.Admin.Level.Level > 0)
                     .Select(r => new SupportRequestsListData
                     {
                         ID = r.Id,
@@ -349,7 +349,7 @@ namespace TDS_Server.Handler.Userpanel
 
             foreach (var entry in data)
             {
-                entry.CreateTime = player.GetLocalDateTimeString(entry.CreateTimeDate);
+                entry.CreateTime = player.Timezone.GetLocalDateTimeString(entry.CreateTimeDate);
             }
 
             _inSupportRequestsList.Add(player);
@@ -389,7 +389,7 @@ namespace TDS_Server.Handler.Userpanel
                 => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
             if (request is null)
                 return null;
-            if (request.AuthorId != player.Entity!.Id && player.AdminLevel.Level == 0)
+            if (request.AuthorId != player.Entity!.Id && player.Admin.Level.Level == 0)
                 return null;
 
             var maxMessageIndex = await ExecuteForDBAsync(async dbContext
@@ -418,7 +418,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 Author = player.DisplayName,
                 Message = messageEntity.Text,
-                CreateTime = player.GetLocalDateTimeString(messageEntity.CreateTime)
+                CreateTime = player.Timezone.GetLocalDateTimeString(messageEntity.CreateTime)
             });
 
             NAPI.Task.Run(() =>
@@ -481,7 +481,7 @@ namespace TDS_Server.Handler.Userpanel
                 => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
             if (request is null)
                 return null;
-            if (request.AuthorId != player.Entity!.Id && player.AdminLevel.Level == 0)
+            if (request.AuthorId != player.Entity!.Id && player.Admin.Level.Level == 0)
                 return null;
             if (request.CloseTime is { } && closed || request.CloseTime is null && !closed)
                 return null;

@@ -50,8 +50,9 @@ namespace TDS_Server.PlayersSystem
             ++_player.Entity!.PlayerStats.MapsBoughtCounter;
             if (_player.LobbyStats is { })
                 ++_player.LobbyStats.TotalMapsBought;
-            _player.AddToChallenge(ChallengeType.BuyMaps);
-            _dataSyncHandler.SetData(_player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, _player.Entity.PlayerStats.MapsBoughtCounter);
+            _player.Challenges.AddToChallenge(ChallengeType.BuyMaps);
+            NAPI.Task.Run(() =>
+                _dataSyncHandler.SetData(_player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, _player.Entity.PlayerStats.MapsBoughtCounter));
         }
     }
 }

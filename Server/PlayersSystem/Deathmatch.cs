@@ -27,6 +27,7 @@ namespace TDS_Server.PlayersSystem
         public void Init(ITDSPlayer player, IPlayerEvents events)
         {
             _player = player;
+            _events = events;
 
             events.WeaponSwitch += Events_WeaponSwitch;
             events.Removed += Events_Removed;

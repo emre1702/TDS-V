@@ -60,7 +60,7 @@ namespace TDS_Server.LobbySystem.Players
             else
             {
                 SavePlayerRoundStats(player);
-                player.SetSpectates(null);
+                player.SpectateHandler.SetSpectates(null);
             }
 
             return true;
@@ -156,11 +156,11 @@ namespace TDS_Server.LobbySystem.Players
             if (from.Damage > 0)
             {
                 if (from.Kills > 0)
-                    player.AddToChallenge(ChallengeType.Kills, from.Kills);
+                    player.Challenges.AddToChallenge(ChallengeType.Kills, from.Kills);
                 if (from.Assists > 0)
-                    player.AddToChallenge(ChallengeType.Assists, from.Assists);
-                player.AddToChallenge(ChallengeType.Damage, from.Damage);
-                player.AddToChallenge(ChallengeType.RoundPlayed);
+                    player.Challenges.AddToChallenge(ChallengeType.Assists, from.Assists);
+                player.Challenges.AddToChallenge(ChallengeType.Damage, from.Damage);
+                player.Challenges.AddToChallenge(ChallengeType.RoundPlayed);
             }
         }
 

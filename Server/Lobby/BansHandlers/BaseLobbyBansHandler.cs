@@ -179,9 +179,9 @@ namespace TDS_Server.LobbySystem.BansHandlers
         protected virtual void OutputUnbanMessage(ITDSPlayer admin, string targetName, string reason)
         {
             if (Lobby.Entity.IsOfficial)
-                LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, targetName, Lobby.Entity.Name, admin.AdminLevelName, reason));
+                LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_LOBBY_INFO, targetName, Lobby.Entity.Name, admin.Admin.LevelName, reason));
             else
-                Lobby.Chat.Send(lang => string.Format(lang.UNBAN_LOBBY_INFO, targetName, Lobby.Entity.Name, admin.AdminLevelName, reason));
+                Lobby.Chat.Send(lang => string.Format(lang.UNBAN_LOBBY_INFO, targetName, Lobby.Entity.Name, admin.Admin.LevelName, reason));
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Database;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
@@ -13,13 +14,13 @@ namespace TDS_Server.LobbySystem.Database
 {
     public class BaseLobbyDatabase : IBaseLobbyDatabase
     {
-        protected IDatabaseEntityWrapper DbHandler { get; }
+        protected IDatabaseHandler DbHandler { get; }
         protected readonly IBaseLobby Lobby;
         protected readonly IBaseLobbyEventsHandler Events;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public BaseLobbyDatabase(IBaseLobby lobby, IDatabaseEntityWrapper dbHandler, IBaseLobbyEventsHandler events)
+        public BaseLobbyDatabase(IBaseLobby lobby, IDatabaseHandler dbHandler, IBaseLobbyEventsHandler events)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             Lobby = lobby;

@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Server
 
         public bool CanLoadMapsFromOthers(ITDSPlayer player)
         {
-            return _loadMapOfOthersRightInfos.NeededAdminLevel.HasValue && _loadMapOfOthersRightInfos.NeededAdminLevel <= player.AdminLevel.Level
+            return _loadMapOfOthersRightInfos.NeededAdminLevel.HasValue && _loadMapOfOthersRightInfos.NeededAdminLevel <= player.Admin.Level.Level
                 || _loadMapOfOthersRightInfos.VipCanUse && player.IsVip == true;
         }
 

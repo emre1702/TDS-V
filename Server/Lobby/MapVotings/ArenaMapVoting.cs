@@ -93,7 +93,7 @@ namespace TDS_Server.LobbySystem.MapVotings
                 NAPI.Task.Run(() => player.SendNotification(player.Language.NOT_ENOUGH_MONEY));
                 return;
             }
-            player.SetBoughtMap(price);
+            player.MapsVoting.SetBoughtMap(price);
         }
 
         private void AddVoteToMap(ITDSPlayer player, int mapId)

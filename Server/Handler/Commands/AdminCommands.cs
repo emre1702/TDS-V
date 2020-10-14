@@ -204,7 +204,7 @@ namespace TDS_Server.Handler.Commands
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            target.ChangeMuteTime(target, minutes, reason);
+            target.MuteHandler.ChangeMuteTime(target, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Mute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -295,7 +295,7 @@ namespace TDS_Server.Handler.Commands
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            target.ChangeVoiceMuteTime(player, minutes, reason);
+            target.MuteHandler.ChangeVoiceMuteTime(player, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.VoiceMute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);

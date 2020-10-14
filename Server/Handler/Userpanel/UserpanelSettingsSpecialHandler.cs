@@ -75,7 +75,7 @@ namespace TDS_Server.Handler.Userpanel
                             return player.Language.NOT_ENOUGH_MONEY;
                         }
                         paid = _settingsHandler.ServerSettings.UsernameChangeCost;
-                        NAPI.Task.Run(() => player.GiveMoney(-_settingsHandler.ServerSettings.UsernameChangeCost));
+                        player.MoneyHandler.GiveMoney(-_settingsHandler.ServerSettings.UsernameChangeCost);
                     }
                     oldValue = player.Entity.Name;
                     player.Entity.Name = value;
@@ -100,13 +100,13 @@ namespace TDS_Server.Handler.Userpanel
 
             try
             {
-                await player.SaveData();
+                await player.DatabaseHandler.SaveData();
             }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex, player);
                 if (paid.HasValue)
-                    NAPI.Task.Run(() => player.GiveMoney(paid.Value));
+                    player.MoneyHandler.GiveMoney(paid.Value);
                 if (lastFreeUsernameChange != player.Entity.PlayerStats.LastFreeUsernameChange)
                     player.Entity.PlayerStats.LastFreeUsernameChange = lastFreeUsernameChange;
 

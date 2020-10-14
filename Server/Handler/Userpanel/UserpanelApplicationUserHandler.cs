@@ -133,7 +133,7 @@ namespace TDS_Server.Handler.Userpanel
 
             player.Entity.AdminLeaderId = invitation.AdminId;
             player.Entity.AdminLvl = 1;
-            await player.SaveData();
+            await player.DatabaseHandler.SaveData();
 
             NAPI.Task.Run(() =>
             {
@@ -244,7 +244,7 @@ namespace TDS_Server.Handler.Userpanel
                 return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
 
-            return Serializer.ToBrowser(new ApplicationUserData { CreateTime = player.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
+            return Serializer.ToBrowser(new ApplicationUserData { CreateTime = player.Timezone.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
         }
 
         public async Task<object?> RejectInvitation(ITDSPlayer player, ArraySegment<object> args)

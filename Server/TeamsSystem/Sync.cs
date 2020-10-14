@@ -47,10 +47,10 @@ namespace TDS_Server.TeamsSystem
 
                 foreach (var target in playersToSyncTo)
                 {
-                    if (!player.HasRelationTo(target, PlayerRelation.Block) && !target.IsVoiceMuted)
-                        target.SetVoiceTo(player, true);
-                    if (!target.HasRelationTo(player, PlayerRelation.Block) && !player.IsVoiceMuted)
-                        player.SetVoiceTo(target, true);
+                    if (!player.Relations.HasRelationTo(target, PlayerRelation.Block) && !target.MuteHandler.IsVoiceMuted)
+                        target.Voice.SetVoiceTo(player, true);
+                    if (!target.Relations.HasRelationTo(player, PlayerRelation.Block) && !player.MuteHandler.IsVoiceMuted)
+                        player.Voice.SetVoiceTo(target, true);
                 }
             });
         }
@@ -69,10 +69,10 @@ namespace TDS_Server.TeamsSystem
                     {
                         if (target == player)
                             continue;
-                        if (!player.HasRelationTo(target, PlayerRelation.Block) && !target.IsVoiceMuted)
-                            target.SetVoiceTo(player, true);
-                        if (!target.HasRelationTo(player, PlayerRelation.Block) && !player.IsVoiceMuted)
-                            player.SetVoiceTo(target, true);
+                        if (!player.Relations.HasRelationTo(target, PlayerRelation.Block) && !target.MuteHandler.IsVoiceMuted)
+                            target.Voice.SetVoiceTo(player, true);
+                        if (!target.Relations.HasRelationTo(player, PlayerRelation.Block) && !player.MuteHandler.IsVoiceMuted)
+                            player.Voice.SetVoiceTo(target, true);
                     }
             });
         }
@@ -84,7 +84,7 @@ namespace TDS_Server.TeamsSystem
             var playersToSyncTo = _team.Players.GetAllArrayExcept(player);
             NAPI.Task.Run(() =>
             {
-                player.ResetVoiceToAndFrom();
+                player.Voice.ResetVoiceToAndFrom();
 
                 NAPI.ClientEvent.TriggerClientEventToPlayers(playersToSyncTo, ToClientEvent.PlayerLeftTeam, player.RemoteId);
                 player.TriggerEvent(ToClientEvent.ClearTeamPlayers);

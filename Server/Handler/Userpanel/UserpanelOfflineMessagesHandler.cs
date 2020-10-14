@@ -120,7 +120,7 @@ namespace TDS_Server.Handler.Userpanel
 
             foreach (var message in offlineMessages)
             {
-                message.CreateTime = player.GetLocalDateTimeString(message.CreateTimeDate);
+                message.CreateTime = player.Timezone.GetLocalDateTimeString(message.CreateTimeDate);
             }
 
             string json = Serializer.ToBrowser(offlineMessages);

@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
@@ -10,10 +11,10 @@ namespace TDS_Server.PlayersSystem
 {
     public class WeaponStats : IPlayerWeaponStats
     {
-        private Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>>? _weaponBodyPartsStats { get; set; }
-        private Dictionary<WeaponHash, PlayerWeaponStats>? _weaponStats { get; set; }
-
 #nullable disable
+        private Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>> _weaponBodyPartsStats { get; set; }
+        private Dictionary<WeaponHash, PlayerWeaponStats> _weaponStats { get; set; }
+
         private ITDSPlayer _player;
         private IPlayerEvents _events;
 #nullable enable
@@ -90,32 +91,45 @@ namespace TDS_Server.PlayersSystem
             }
         }
 
-        private PlayerWeaponBodypartStats? GetWeaponBodyPartStats(WeaponHash weaponHash, PedBodyPart pedBodyPart)
+        public PlayerWeaponBodypartStats? GetWeaponBodyPartStats(WeaponHash weaponHash, PedBodyPart pedBodyPart)
         {
-            if (!_weaponBodyPartsStats!.TryGetValue(weaponHash, out Dictionary<PedBodyPart, PlayerWeaponBodypartStats>? bodyPartStatsDict))
+            Dictionary<PedBodyPart, PlayerWeaponBodypartStats>? bodyPartStatsDict;
+            lock (_weaponBodyPartsStats)
             {
-                bodyPartStatsDict = new Dictionary<PedBodyPart, PlayerWeaponBodypartStats>();
-                _weaponBodyPartsStats[weaponHash] = bodyPartStatsDict;
+                if (!_weaponBodyPartsStats.TryGetValue(weaponHash, out bodyPartStatsDict))
+                {
+                    bodyPartStatsDict = new Dictionary<PedBodyPart, PlayerWeaponBodypartStats>();
+                    _weaponBodyPartsStats[weaponHash] = bodyPartStatsDict;
+                }
             }
 
-            if (!bodyPartStatsDict.TryGetValue(pedBodyPart, out PlayerWeaponBodypartStats? bodyPartStats))
+            PlayerWeaponBodypartStats? bodyPartStats;
+            lock (bodyPartStatsDict)
             {
-                bodyPartStats = new PlayerWeaponBodypartStats { BodyPart = pedBodyPart, PlayerId = _player.Entity!.Id, WeaponHash = weaponHash };
-                bodyPartStatsDict[pedBodyPart] = bodyPartStats;
-                _player.Entity.WeaponBodypartStats.Add(bodyPartStats);
+                if (!bodyPartStatsDict.TryGetValue(pedBodyPart, out bodyPartStats))
+                {
+                    bodyPartStats = new PlayerWeaponBodypartStats { BodyPart = pedBodyPart, PlayerId = _player.Entity!.Id, WeaponHash = weaponHash };
+                    bodyPartStatsDict[pedBodyPart] = bodyPartStats;
+                    _player.Entity.WeaponBodypartStats.Add(bodyPartStats);
+                }
             }
 
             return bodyPartStats;
         }
 
-        private PlayerWeaponStats? GetWeaponStats(WeaponHash weaponHash)
+        public PlayerWeaponStats? GetWeaponStats(WeaponHash weaponHash)
         {
-            if (!_weaponStats!.TryGetValue(weaponHash, out PlayerWeaponStats? weaponStats))
+            PlayerWeaponStats? weaponStats;
+            lock (_weaponStats)
             {
-                weaponStats = new PlayerWeaponStats { WeaponHash = weaponHash, PlayerId = _player.Entity!.Id };
-                _weaponStats[weaponHash] = weaponStats;
-                _player.Entity.WeaponStats.Add(weaponStats);
+                if (!_weaponStats!.TryGetValue(weaponHash, out weaponStats))
+                {
+                    weaponStats = new PlayerWeaponStats { WeaponHash = weaponHash, PlayerId = _player.Entity!.Id };
+                    _weaponStats[weaponHash] = weaponStats;
+                    _player.Entity.WeaponStats.Add(weaponStats);
+                }
             }
+
             return weaponStats;
         }
 
@@ -125,6 +139,25 @@ namespace TDS_Server.PlayersSystem
                 return;
             _weaponBodyPartsStats = entity.WeaponBodypartStats.GroupBy(e => e.WeaponHash).ToDictionary(e => e.Key, e => e.ToDictionary(w => w.BodyPart, w => w));
             _weaponStats = entity.WeaponStats.ToDictionary(e => e.WeaponHash, e => e);
+        }
+
+        public void DoForBodyPartStats(WeaponHash weaponHash, Action<Dictionary<PedBodyPart, PlayerWeaponBodypartStats>> action)
+        {
+            lock (_weaponBodyPartsStats)
+            {
+                if (!_weaponBodyPartsStats.TryGetValue(weaponHash, out var bodyStats))
+                    return;
+                lock (bodyStats)
+                {
+                    action(bodyStats);
+                }
+            }
+        }
+
+        public List<string> GetWeaponHashesUsedSoFar()
+        {
+            lock (_weaponStats)
+                return _weaponStats?.OrderBy(w => w.Value.DealtDamage).Select(w => w.Key.ToString()).ToList() ?? new List<string>();
         }
     }
 }

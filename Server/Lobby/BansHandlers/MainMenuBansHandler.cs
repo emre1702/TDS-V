@@ -67,7 +67,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
 
         protected override void OutputUnbanMessage(ITDSPlayer admin, string targetName, string reason)
         {
-            LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_INFO, targetName, admin.AdminLevelName, reason));
+            LangHelper.SendAllChatMessage(lang => string.Format(lang.UNBAN_INFO, targetName, admin.Admin.LevelName, reason));
         }
     }
 }

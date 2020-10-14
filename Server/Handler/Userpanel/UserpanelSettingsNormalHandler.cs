@@ -64,12 +64,12 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
 
+            player.Events.TriggerSettingsChanged();
+
+            var generalSettingsJson = Serializer.ToBrowser(obj.General);
             NAPI.Task.Run(() =>
             {
-                player.LoadTimezone();
-                player.AddToChallenge(ChallengeType.ChangeSettings);
-
-                player.TriggerEvent(ToClientEvent.SyncSettings, Serializer.ToBrowser(obj.General));
+                player.TriggerEvent(ToClientEvent.SyncSettings, generalSettingsJson);
 
                 if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId && newDiscordUserId.HasValue)
                 {
@@ -100,7 +100,7 @@ namespace TDS_Server.Handler.Userpanel
         private async Task SaveDiscordUserId(ITDSPlayer player, ulong discordUserId)
         {
             player.Entity!.PlayerSettings.DiscordUserId = discordUserId;
-            await player.SaveData(true);
+            await player.DatabaseHandler.SaveData(true);
         }
     }
 }

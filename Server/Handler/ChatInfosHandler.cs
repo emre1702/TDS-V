@@ -32,7 +32,7 @@ namespace TDS_Server.Handler
 
         public void SendChatInfos(ITDSPlayer player)
         {
-            if (!_chatInfosJsonCache.TryGetValue(player.LanguageEnum, out string? json))
+            if (!_chatInfosJsonCache.TryGetValue(player.LanguageHandler.Enum, out string? json))
                 return;
 
             player.TriggerBrowserEvent(ToBrowserEvent.LoadChatInfos, json);

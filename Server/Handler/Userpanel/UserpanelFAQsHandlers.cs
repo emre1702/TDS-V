@@ -49,7 +49,7 @@ namespace TDS_Server.Handler.Userpanel
 
         public string GetData(ITDSPlayer player)
         {
-            return _faqsJsonByLanguage[player.LanguageEnum];
+            return _faqsJsonByLanguage[player.LanguageHandler.Enum];
         }
 
         public void LoadFAQs(TDSDbContext dbContext)

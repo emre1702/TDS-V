@@ -25,7 +25,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 if (player.Entity is null)
                     return null;
-                var weaponHashes = GetPlayerWeaponsUsed(player);
+                var weaponHashes = player.WeaponStats.GetWeaponHashesUsedSoFar();
                 return Serializer.ToBrowser(weaponHashes);
             }
             catch (Exception ex)
@@ -47,7 +47,7 @@ namespace TDS_Server.Handler.Userpanel
             if (!Enum.TryParse(weaponName, out WeaponHash weaponHash))
                 return null;
 
-            var weaponStats = player.WeaponStats.TryGetValue(weaponHash, out PlayerWeaponStats? value) ? value : new PlayerWeaponStats();
+            var weaponStats = player.WeaponStats.GetWeaponStats(weaponHash) ?? new PlayerWeaponStats();
 
             var data = new UserpanelPlayerWeaponStatsData
             {
@@ -65,7 +65,7 @@ namespace TDS_Server.Handler.Userpanel
                 DealtOfficialDamage = weaponStats.DealtOfficialDamage
             };
 
-            if (player.WeaponBodyPartsStats is { } && player.WeaponBodyPartsStats.TryGetValue(weaponHash, out Dictionary<PedBodyPart, PlayerWeaponBodypartStats>? bodyStats))
+            player.WeaponStats.DoForBodyPartStats(weaponHash, bodyStats =>
             {
                 foreach (var entry in bodyStats.OrderBy(b => (int)b.Key))
                 {
@@ -80,14 +80,9 @@ namespace TDS_Server.Handler.Userpanel
                         OfficialKills = entry.Value.OfficialKills
                     });
                 }
-            }
+            });
 
             return Serializer.ToBrowser(data);
-        }
-
-        private List<string> GetPlayerWeaponsUsed(ITDSPlayer player)
-        {
-            return player.WeaponStats?.OrderBy(w => w.Value.DealtDamage).Select(w => w.Key.ToString()).ToList() ?? new List<string>();
         }
     }
 }

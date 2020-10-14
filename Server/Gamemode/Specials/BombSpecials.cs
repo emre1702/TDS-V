@@ -136,7 +136,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                     return;
                 int damage = player.Health + player.Armor;
                 Lobby.Deathmatch.Damage.UpdateLastHitter(player, _gamemode.Players.Planter, damage);
-                player.Damage(ref damage, out bool killed);
+                player.HealthAndArmor.Remove(damage, out damage, out bool killed);
                 if (_gamemode.Players.Planter?.CurrentRoundStats is { } stats)
                     stats.Damage += damage;
             });
@@ -257,7 +257,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 return;
 
             if (Lobby.IsOfficial)
-                player.AddToChallenge(ChallengeType.BombDefuse);
+                player.Challenges.AddToChallenge(ChallengeType.BombDefuse);
 
             _gamemode.Teams.Terrorists.Players.Do(target =>
             {
@@ -294,7 +294,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 return;
 
             if (Lobby.IsOfficial)
-                player.AddToChallenge(ChallengeType.BombPlant);
+                player.Challenges.AddToChallenge(ChallengeType.BombPlant);
 
             NAPI.Task.Run(() =>
             {

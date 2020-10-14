@@ -71,7 +71,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                 }
             });
 
-            await player.SaveData(true);
+            await player.DatabaseHandler.SaveData(true);
             LoadPlayerChar(player);
 
             await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);

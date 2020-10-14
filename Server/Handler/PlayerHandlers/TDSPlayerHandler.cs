@@ -103,7 +103,7 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
         {
-            return player.SaveData(true);
+            return player.DatabaseHandler.SaveData(true);
         }
 
         private void OnLanguageChange(ITDSPlayer player, int language)
@@ -121,25 +121,25 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         private void ReduceMuteTime(ITDSPlayer player)
         {
-            if (!player.MuteTime.HasValue || player.MuteTime == 0)
+            if (!player.MuteHandler.MuteTime.HasValue || player.MuteHandler.MuteTime == 0)
                 return;
 
-            if (--player.MuteTime != 0)
+            if (--player.MuteHandler.MuteTime != 0)
                 return;
 
-            player.MuteTime = null;
+            player.MuteHandler.MuteTime = null;
             player.SendNotification(player.Language.MUTE_EXPIRED);
         }
 
         private void ReduceVoiceMuteTime(ITDSPlayer player)
         {
-            if (!player.VoiceMuteTime.HasValue || player.VoiceMuteTime == 0)
+            if (!player.MuteHandler.VoiceMuteTime.HasValue || player.MuteHandler.VoiceMuteTime == 0)
                 return;
 
-            if (--player.VoiceMuteTime != 0)
+            if (--player.MuteHandler.VoiceMuteTime != 0)
                 return;
 
-            player.VoiceMuteTime = null;
+            player.MuteHandler.VoiceMuteTime = null;
             NAPI.Task.Run(() => player.SendNotification(player.Language.VOICE_MUTE_EXPIRED));
 
             if (player.Team is null || player.Team.IsSpectator)
@@ -147,8 +147,8 @@ namespace TDS_Server.Handler.PlayerHandlers
 
             player.Team.Players.DoInMain(target =>
             {
-                if (!target.HasRelationTo(player, PlayerRelation.Block))
-                    player.SetVoiceTo(target, true);
+                if (!target.Relations.HasRelationTo(player, PlayerRelation.Block))
+                    player.Voice.SetVoiceTo(target, true);
             });
         }
 
@@ -158,12 +158,12 @@ namespace TDS_Server.Handler.PlayerHandlers
             {
                 try
                 {
-                    ++player.PlayMinutes;
+                    ++player.PlayTime.Minutes;
                     ReduceMuteTime(player);
                     ReduceVoiceMuteTime(player);
-                    player.CheckReduceMapBoughtCounter();
+                    player.MapsVoting.CheckReduceMapBoughtCounter();
 
-                    player.CheckSaveData();
+                    player.DatabaseHandler.CheckSaveData();
                 }
                 catch (Exception ex)
                 {

@@ -96,12 +96,12 @@ namespace TDS_Server.Handler.Userpanel
 
                 case UserpanelLoadDataType.Rules:
                     json = _rulesHandler.GetData();
-                    player.AddToChallenge(ChallengeType.ReadTheRules);
+                    player.Challenges.AddToChallenge(ChallengeType.ReadTheRules);
                     break;
 
                 case UserpanelLoadDataType.FAQs:
                     json = _fAQsHandlers.GetData(player);
-                    player.AddToChallenge(ChallengeType.ReadTheFAQ);
+                    player.Challenges.AddToChallenge(ChallengeType.ReadTheFAQ);
                     break;
 
                 case UserpanelLoadDataType.MyStatsGeneral:

@@ -25,6 +25,8 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
 
         event EmptyDelegate? Removed;
 
+        event EmptyDelegate? SettingsChanged;
+
         event WeaponSwitchDelegate? WeaponSwitch;
 
         void Init(ITDSPlayer player);
@@ -36,6 +38,8 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
         void TriggerLobbyLeft(IBaseLobby lobby);
 
         void TriggerRemoved();
+
+        void TriggerSettingsChanged();
 
         void TriggerWeaponSwitch(WeaponHash previousWeapon, WeaponHash newWeapon);
     }

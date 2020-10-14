@@ -75,7 +75,7 @@ namespace TDS_Server.PlayersSystem
             admin.Init(this);
 
             Challenges = challengesHandler;
-            challengesHandler.Init(this);
+            challengesHandler.Init(this, events);
 
             Chat = chat;
             chat.Init(this);

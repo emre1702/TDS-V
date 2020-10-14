@@ -42,7 +42,7 @@ namespace TDS_Server.Handler.Commands
                     dbContext.PlayerRelations.Add(relation);
                     msg = string.Format(player.Language.TARGET_ADDED_BLOCK, target.DisplayName);
                 }
-                player.SetRelation(target, PlayerRelation.Block);
+                player.Relations.SetRelation(target, PlayerRelation.Block);
                 relation.Relation = PlayerRelation.Block;
                 await dbContext.SaveChangesAsync();
                 NAPI.Task.Run(() => player.SendChatMessage(msg));
@@ -56,8 +56,8 @@ namespace TDS_Server.Handler.Commands
             NAPI.Task.Run(() =>
             {
                 if (player.InPrivateChatWith == target)
-                    player.ClosePrivateChat(false);
-                target.SetVoiceTo(player, false);
+                    player.Chat.ClosePrivateChat(false);
+                target.Voice.SetVoiceTo(player, false);
 
                 target.SendChatMessage(string.Format(target.Language.YOU_GOT_BLOCKED_BY, player.DisplayName));
             });
@@ -71,7 +71,7 @@ namespace TDS_Server.Handler.Commands
                 player.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
                 return;
             }
-            player.ClosePrivateChat(false);
+            player.Chat.ClosePrivateChat(false);
         }
 
         [TDSCommand(PlayerCommand.GiveMoney)]
@@ -95,8 +95,8 @@ namespace TDS_Server.Handler.Commands
                 return;
             }
 
-            player.GiveMoney((int)money * -1);
-            target.GiveMoney(money - fee);
+            player.MoneyHandler.GiveMoney((int)money * -1);
+            target.MoneyHandler.GiveMoney(money - fee);
 
             player.SendChatMessage(string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.DisplayName));
             target.SendChatMessage(string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.DisplayName));
@@ -172,7 +172,7 @@ namespace TDS_Server.Handler.Commands
         public void OpenPrivateChat(ITDSPlayer player, ITDSPlayer target)
         {
             // Am I blocked?
-            if (target.HasRelationTo(player, PlayerRelation.Block))
+            if (target.Relations.HasRelationTo(player, PlayerRelation.Block))
             {
                 player.SendChatMessage(string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName));
                 return;
@@ -266,7 +266,7 @@ namespace TDS_Server.Handler.Commands
         {
             if (player == target)
                 return;
-            if (target.HasRelationTo(player, PlayerRelation.Block))
+            if (target.Relations.HasRelationTo(player, PlayerRelation.Block))
             {
                 player.SendChatMessage(string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName));
                 return;
@@ -337,9 +337,9 @@ namespace TDS_Server.Handler.Commands
             NAPI.Task.Run(() =>
             {
                 if (target.Team == player.Team)
-                    target.SetVoiceTo(player, true);
+                    target.Voice.SetVoiceTo(player, true);
 
-                player.SetRelation(target, PlayerRelation.None);
+                player.Relations.SetRelation(target, PlayerRelation.None);
                 player.SendChatMessage(string.Format(player.Language.YOU_UNBLOCKED, target.DisplayName));
                 target.SendChatMessage(string.Format(target.Language.YOU_GOT_UNBLOCKED_BY, player.DisplayName));
             });

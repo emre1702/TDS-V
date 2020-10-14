@@ -60,7 +60,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             if (player.Team == team)
                 return;
 
-            player.SetTeam(team, true);
+            player.TeamHandler.SetTeam(team, true);
         }
 
         protected virtual async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)

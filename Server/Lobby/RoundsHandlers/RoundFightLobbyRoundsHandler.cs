@@ -107,7 +107,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
         public void RewardPlayerForRound(ITDSPlayer player, RoundPlayerRewardsData rewardsData)
         {
-            player.GiveMoney(rewardsData.KillsReward + rewardsData.AssistsReward + rewardsData.DamageReward);
+            player.MoneyHandler.GiveMoney(rewardsData.KillsReward + rewardsData.AssistsReward + rewardsData.DamageReward);
             player.SendChatMessage(rewardsData.Message);
         }
 
@@ -195,7 +195,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         public virtual void SetPlayerReadyForRound(ITDSPlayer player, bool freeze)
         {
             Lobby.Players.SetPlayerDataAlive(player);
-            player.LastHitter = null;
+            player.Deathmatch.LastHitter = null;
 
             if (player.Team != null && !player.Team.IsSpectator)
             {
@@ -203,7 +203,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
                 NAPI.Task.Run(() =>
                 {
-                    player.SetSpectates(null);
+                    player.SpectateHandler.SetSpectates(null);
                     player.Freeze(freeze);
                     player.SetInvisible(false);
                 });

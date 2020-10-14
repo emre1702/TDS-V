@@ -108,7 +108,7 @@ namespace TDS_Server.Handler.Account
                 await dbContext.Entry(entity).Collection(e => e.WeaponStats).LoadAsync();
                 await dbContext.Entry(entity).Collection(e => e.WeaponBodypartStats).LoadAsync();
 
-                await NAPI.Task.RunWait(() => player.Entity = entity);
+                player.DatabaseHandler.Entity = entity;
 
                 return true;
             });

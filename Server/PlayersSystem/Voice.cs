@@ -23,15 +23,15 @@ namespace TDS_Server.PlayersSystem
             {
                 if (!target.LoggedIn)
                     continue;
-                _player.SetVoiceTo(target, false);
-                target.SetVoiceTo(_player, false);
+                _player.Voice.SetVoiceTo(target, false);
+                target.Voice.SetVoiceTo(_player, false);
             }
             _settedVoiceTo.Clear();
         }
 
         public void SetVoiceTo(ITDSPlayer target, bool on)
         {
-            _player.SetVoiceTo(target, on);
+            _player.Voice.SetVoiceTo(target, on);
 
             if (on)
                 _settedVoiceTo.Add(target);

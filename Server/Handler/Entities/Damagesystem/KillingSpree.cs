@@ -35,14 +35,14 @@ namespace TDS_Server.Core.Damagesystem
         {
             if (player.Lobby is null)
                 return;
-            if (!_killingSpreeRewards.TryGetValue(player.KillingSpree, out LobbyKillingspreeRewards? reward))
+            if (!_killingSpreeRewards.TryGetValue(player.Deathmatch.KillingSpree, out LobbyKillingspreeRewards? reward))
                 return;
 
             if (reward.HealthOrArmor.HasValue)
             {
-                player.AddHPArmor(reward.HealthOrArmor.Value);
+                player.HealthAndArmor.Add(reward.HealthOrArmor.Value, out int givenEffectiveHp);
                 player.Lobby.Notifications.Send(lang
-                    => string.Format(lang.KILLING_SPREE_HEALTHARMOR, player.DisplayName, player.KillingSpree, reward.HealthOrArmor));
+                    => string.Format(lang.KILLING_SPREE_HEALTHARMOR, player.DisplayName, player.Deathmatch.KillingSpree, givenEffectiveHp));
             }
         }
 
@@ -55,42 +55,42 @@ namespace TDS_Server.Core.Damagesystem
 
         private void KillingSpreeDeath(ITDSPlayer player)
         {
-            player.KillingSpree = 0;
+            player.Deathmatch.KillingSpree = 0;
         }
 
         private void KillingSpreeKill(ITDSPlayer player)
         {
             if (player.Lobby is null)
                 return;
-            ++player.KillingSpree;
+            ++player.Deathmatch.KillingSpree;
 
             var timeNow = DateTime.UtcNow;
-            if (player.LastKillAt is null)
+            if (player.Deathmatch.LastKillAt is null)
             {
-                player.LastKillAt = timeNow;
+                player.Deathmatch.LastKillAt = timeNow;
                 return;
             }
 
             PlayKillingSpreeSound(player);
             GiveKillingSpreeReward(player);
 
-            player.LastKillAt = timeNow;
+            player.Deathmatch.LastKillAt = timeNow;
         }
 
         private void PlayKillingSpreeSound(ITDSPlayer player)
         {
             bool playLongTimeKillSound = true;
-            if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.ShortTimeKillingSpree)
+            if (_shortTimeKillingSpreeSounds.Keys.Min() <= player.Deathmatch.ShortTimeKillingSpree)
             {
-                short playSoundIndex = Math.Min(player.ShortTimeKillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
+                short playSoundIndex = Math.Min(player.Deathmatch.ShortTimeKillingSpree, _shortTimeKillingSpreeSounds.Keys.Max());
                 player.Lobby?.Sync.TriggerEvent(ToClientEvent.PlayCustomSound, _shortTimeKillingSpreeSounds[playSoundIndex]);
                 //if (player.KillingSpree <= 5)
                 //    playLongTimeKillSound = false;
             }
 
-            if (playLongTimeKillSound && _longTimeKillingSpreeSounds.Keys.Min() <= player.KillingSpree)
+            if (playLongTimeKillSound && _longTimeKillingSpreeSounds.Keys.Min() <= player.Deathmatch.KillingSpree)
             {
-                short playSoundIndex = Math.Min(player.KillingSpree, _longTimeKillingSpreeSounds.Keys.Max());
+                short playSoundIndex = Math.Min(player.Deathmatch.KillingSpree, _longTimeKillingSpreeSounds.Keys.Max());
                 player.Lobby?.Sync.TriggerEvent(ToClientEvent.PlayCustomSound, _longTimeKillingSpreeSounds[playSoundIndex]);
             }
         }

@@ -75,17 +75,17 @@ namespace TDS_Server.Handler
 
         private void SetOffline(ITDSPlayer player)
         {
-            if (AdminLevels.ContainsKey(player.AdminLevel.Level))
+            if (AdminLevels.ContainsKey(player.Admin.Level.Level))
             {
-                AdminLevels[player.AdminLevel.Level].PlayersOnline.Remove(player);
+                AdminLevels[player.Admin.Level.Level].PlayersOnline.Remove(player);
             }
         }
 
         private void SetOnline(ITDSPlayer player)
         {
-            if (AdminLevels.ContainsKey(player.AdminLevel.Level))
+            if (AdminLevels.ContainsKey(player.Admin.Level.Level))
             {
-                AdminLevels[player.AdminLevel.Level].PlayersOnline.Add(player);
+                AdminLevels[player.Admin.Level.Level].PlayersOnline.Add(player);
             }
         }
 

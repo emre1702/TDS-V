@@ -38,10 +38,10 @@ namespace TDS_Server.LobbySystem.Spectator
         {
             player.Team?.Players.RemoveSpectatable(player);
 
-            if (player.HasSpectators())
+            if (player.SpectateHandler.HasSpectators())
             {
                 // ToList because the list gets changed in both methods
-                foreach (var spectator in player.GetSpectators())
+                foreach (var spectator in player.SpectateHandler.GetSpectators())
                     await SpectateNext(spectator, true).ConfigureAwait(false);
             }
         }

@@ -70,14 +70,14 @@ namespace TDS_Server.Handler
 
         public void SendAdminChat(ITDSPlayer player, string message)
         {
-            string changedMessage = "[ADMINCHAT] " + player.AdminLevel.FontColor + player.DisplayName + ": !$220|220|220$" + message;
+            string changedMessage = "[ADMINCHAT] " + player.Admin.Level.FontColor + player.DisplayName + ": !$220|220|220$" + message;
             NAPI.Task.Run(() => _adminsHandler.SendMessage(changedMessage));
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
         public void SendAdminMessage(ITDSPlayer player, string message)
         {
-            string changedMessage = player.AdminLevel.FontColor + "[" + player.AdminLevelName + "] !$255|255|255$" + player.DisplayName + ": !$220|220|220$" + message;
+            string changedMessage = player.Admin.Level.FontColor + "[" + player.Admin.LevelName + "] !$255|255|255$" + player.DisplayName + ": !$220|220|220$" + message;
             NAPI.Task.Run(() => NAPI.Chat.SendChatMessageToAll(changedMessage));
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
@@ -89,7 +89,7 @@ namespace TDS_Server.Handler
             {
                 foreach (var target in _tdsPlayerHandler.LoggedInPlayers)
                 {
-                    if (target.HasRelationTo(player, TDS_Shared.Data.Enums.PlayerRelation.Block))
+                    if (target.Relations.HasRelationTo(player, TDS_Shared.Data.Enums.PlayerRelation.Block))
                         continue;
                     target.SendChatMessage(changedMessage);
                 }
@@ -100,14 +100,14 @@ namespace TDS_Server.Handler
 
         public void SendLobbyMessage(ITDSPlayer player, string message, int chatTypeNumber)
         {
-            if (player.IsPermamuted)
+            if (player.MuteHandler.IsPermamuted)
             {
                 NAPI.Task.Run(() => player.SendNotification(player.Language.STILL_PERMAMUTED));
                 return;
             }
-            if (player.IsMuted)
+            if (player.MuteHandler.IsMuted)
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteTime?.ToString() ?? "?")));
+                NAPI.Task.Run(() => player.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteHandler.MuteTime?.ToString() ?? "?")));
                 return;
             }
 

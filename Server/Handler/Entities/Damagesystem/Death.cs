@@ -11,11 +11,11 @@ namespace TDS_Server.Core.Damagesystem
         public void RewardLastHitter(ITDSPlayer player, out ITDSPlayer? killer)
         {
             killer = null;
-            if (player.LastHitter is null)
+            if (player.Deathmatch.LastHitter is null)
                 return;
 
-            ITDSPlayer lastHitter = player.LastHitter;
-            player.LastHitter = null;
+            ITDSPlayer lastHitter = player.Deathmatch.LastHitter;
+            player.Deathmatch.LastHitter = null;
 
             if (player.Lobby != lastHitter.Lobby)
                 return;
@@ -37,8 +37,8 @@ namespace TDS_Server.Core.Damagesystem
                 return possiblekiller;
 
             // It's the last hitter //
-            if (player.LastHitter != null)
-                return player.LastHitter;
+            if (player.Deathmatch.LastHitter != null)
+                return player.Deathmatch.LastHitter;
 
             // It's a suicide //
             return player;

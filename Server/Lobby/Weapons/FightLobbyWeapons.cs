@@ -35,7 +35,7 @@ namespace TDS_Server.LobbySystem.Weapons
 
         public virtual void GivePlayerWeapons(ITDSPlayer player)
         {
-            var lastWeapon = player.LastWeaponOnHand;
+            var lastWeapon = player.Deathmatch.LastWeaponOnHand;
             player.RemoveAllWeapons();
             bool giveLastWeapon = false;
             foreach (var weapon in GetAllWeapons())

@@ -7,6 +7,8 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
     {
         void AddToChallenge(ChallengeType type, int amount = 1, bool setTheValue = false);
 
-        void Init(ITDSPlayer player);
+        void Init(ITDSPlayer player, IPlayerEvents events);
+
+        void InitChallengesDict();
     }
 }

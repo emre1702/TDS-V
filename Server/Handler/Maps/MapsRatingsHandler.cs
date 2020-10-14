@@ -52,7 +52,7 @@ namespace TDS_Server.Handler.Maps
             {
                 maprating = new PlayerMapRatings { PlayerId = playerId, MapId = mapId };
                 await ExecuteForDB(dbContext => dbContext.PlayerMapRatings.Add(maprating));
-                player.AddToChallenge(ChallengeType.ReviewMaps);
+                player.Challenges.AddToChallenge(ChallengeType.ReviewMaps);
             }
             maprating.Rating = (byte)rating;
             map.BrowserSyncedData.Rating = (byte)rating;

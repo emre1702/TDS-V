@@ -82,7 +82,7 @@ namespace TDS_Server.Handler.Userpanel
         {
             try
             {
-                if (player.AdminLevel.Level == (short)AdminLevel.User)
+                if (player.Admin.Level.Level == (short)AdminLevel.User)
                     return null;
 
                 var apps = await ExecuteForDBAsync(async dbContext => await dbContext.Applications
@@ -100,7 +100,7 @@ namespace TDS_Server.Handler.Userpanel
                 var appsToSend = apps.Select(a => new AppToSendData
                 {
                     ID = a.ID,
-                    CreateTime = player.GetLocalDateTimeString(a.CreateTime),
+                    CreateTime = player.Timezone.GetLocalDateTimeString(a.CreateTime),
                     PlayerName = a.PlayerName
                 });
 
@@ -117,7 +117,7 @@ namespace TDS_Server.Handler.Userpanel
         {
             int applicationId = (int)args[0];
 
-            if (player.AdminLevel.Level == (short)AdminLevel.User)
+            if (player.Admin.Level.Level == (short)AdminLevel.User)
                 return null;
 
             int creatorId = await ExecuteForDBAsync(async dbContext
@@ -158,7 +158,7 @@ namespace TDS_Server.Handler.Userpanel
 
         public async Task<object?> SendInvitation(ITDSPlayer player, ArraySegment<object> args)
         {
-            if (player.AdminLevel.Level != (short)AdminLevel.Administrator)
+            if (player.Admin.Level.Level != (short)AdminLevel.Administrator)
                 return null;
 
             if (args.Count < 2)

@@ -61,7 +61,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             if (!player.LoggedIn)
                 return;
 
-            player.Damage(ref damage, out _);
+            player.HealthAndArmor.Remove(damage, out _, out _);
         }
 
         public void OnHitOtherPlayer(ITDSPlayer attacker, int targetRemoteId, long weaponHashLong, int bodyPartValue)

@@ -41,8 +41,8 @@ namespace TDS_Server.LobbySystem.Players
             if (!worked)
                 return false;
 
-            player.LastKillAt = null;
-            player.KillingSpree = 0;
+            player.Deathmatch.LastKillAt = null;
+            player.Deathmatch.KillingSpree = 0;
             player.CurrentRoundStats = null;
 
             if (lifes > 0)
@@ -68,7 +68,7 @@ namespace TDS_Server.LobbySystem.Players
                     await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 }
             }).ConfigureAwait(false);
-            await player.SetPlayerLobbyStats(stats).ConfigureAwait(false);
+            await player.LobbyHandler.SetPlayerLobbyStats(stats).ConfigureAwait(false);
         }
     }
 }

@@ -167,7 +167,7 @@ namespace TDS_Server.Handler.Server
                 {
                     try
                     {
-                        tasks.Add(player.SaveData(true).AsTask());
+                        tasks.Add(player.DatabaseHandler.SaveData(true).AsTask());
                     }
                     catch (Exception ex)
                     {
