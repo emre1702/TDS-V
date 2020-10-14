@@ -39,7 +39,6 @@ namespace TDS_Server.Core.Init
             {
                 Data.Extensions.TaskExtensions.IsMainThread = true;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
 
                 _serviceProvider = ServiceProviderCreator.Create();
                 InitFactories();
@@ -122,11 +121,6 @@ namespace TDS_Server.Core.Init
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             HandleProgramException((Exception)e.ExceptionObject, "CurrentDomain_UnhandledException: ");
-        }
-
-        private void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-        {
-            HandleProgramException(e.Exception, "CurrentDomain_FirstChanceException: ");
         }
 
         private void ReadInput()

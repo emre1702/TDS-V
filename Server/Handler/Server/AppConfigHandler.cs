@@ -22,7 +22,7 @@ namespace TDS_Server.Handler.Server
             string path = Path.Join(AssemblyDirectory, "TDS_Server.config");
             using var fileStream = new FileStream(path, FileMode.Open);
             using var reader = XmlReader.Create(fileStream);
-            var xmlSerializer = new XmlSerializer(typeof(AppConfigDto));
+            var xmlSerializer = XmlSerializer.FromTypes(new[] { typeof(AppConfigDto) })[0];
 
             _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
         }

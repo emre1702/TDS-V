@@ -123,9 +123,9 @@ export class CarouselComponent implements AfterViewInit {
         } else if (event.key === "Enter") {
             this.buttons[this.buttons.length - this.selectedIndex - 1].func();
         } else if (!isNaN(parseInt(event.key, 10))) {
-            const index = parseInt(event.key, 10);
-            if (this.buttons.length >= index) {
-                this.buttons.find(i => i.index == index - 1).func();
+            const index = parseInt(event.key, 10) - 1;
+            if (index < this.buttons.length && index >= 0) {
+                this.buttons[index].func();
             }
         } else {
             this.stopTurnAroundAnimation();

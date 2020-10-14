@@ -30,6 +30,7 @@ namespace TDS_Server.Core.Init.Services.Creators
                 .WithCommands()
                 .WithEvents()
                 .WithGangSystems()
+                .WithPlayerSystem()
                 .WithHelper()
                 .WithMaps()
                 .WithPlayers()

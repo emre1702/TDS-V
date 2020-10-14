@@ -7,7 +7,7 @@ namespace TDS_Server.Core.Init.Services.Creators
 {
     public static class PlayerCreator
     {
-        public static IServiceCollection WithPlayer(this IServiceCollection serviceCollection)
+        public static IServiceCollection WithPlayerSystem(this IServiceCollection serviceCollection)
             => serviceCollection
                 .WithProvider()
                 .WithDependencies();

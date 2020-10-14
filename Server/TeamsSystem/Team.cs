@@ -15,8 +15,6 @@ namespace TDS_Server.TeamsSystem
         public bool IsSpectator => Entity.Index == 0;
         public int SpawnCounter { get; set; }
 
-        public SyncedTeamDataDto SyncedData { get; set; }
-
         public Teams Entity
         {
             get => _entity;
@@ -28,6 +26,8 @@ namespace TDS_Server.TeamsSystem
         }
 
 #nullable disable
+        public SyncedTeamDataDto SyncedData { get; set; }
+
         private Teams _entity;
 #nullable enable
 
@@ -36,14 +36,6 @@ namespace TDS_Server.TeamsSystem
             Chat = chat;
             Players = players;
             Sync = sync;
-
-            SyncedData = new SyncedTeamDataDto
-            (
-                index: Entity.Index,
-                name: Entity.Name,
-                color: new ColorDto(Entity.ColorR, Entity.ColorG, Entity.ColorB),
-                amountPlayers: new SyncedTeamPlayerAmountDto()
-            );
         }
 
         public void Init(Teams entity)
@@ -53,6 +45,14 @@ namespace TDS_Server.TeamsSystem
             Chat.Init(this);
             Players.Init(this);
             Sync.Init(this);
+
+            SyncedData = new SyncedTeamDataDto
+            (
+                index: Entity.Index,
+                name: Entity.Name,
+                color: new ColorDto(Entity.ColorR, Entity.ColorG, Entity.ColorB),
+                amountPlayers: new SyncedTeamPlayerAmountDto()
+            );
         }
 
         public static bool operator !=(Team a, Team b)

@@ -3,10 +3,10 @@
     [style.transform]="sanitizer.bypassSecurityTrustStyle(buttonStyles[0].transform)">
         <button mat-raised-button
         class="active"
-        *ngFor="let button of buttons | orderBy:'-index'"
+        *ngFor="let button of buttons; index as i"
         (click)="button.func()"
         [style.background]="getImageUrl(button.imgUrl)"
-        [style.transform]="sanitizer.bypassSecurityTrustStyle(buttonStyles[button.index + 1].transform)"
+        [style.transform]="sanitizer.bypassSecurityTrustStyle(buttonStyles[i + 1].transform)"
             >
             <span>{{ button.name | language: settings.Lang }}</span>
         </button>

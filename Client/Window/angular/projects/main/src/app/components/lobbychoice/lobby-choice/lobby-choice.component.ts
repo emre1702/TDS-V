@@ -35,11 +35,11 @@ import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 })
 export class LobbyChoiceComponent implements OnInit, OnDestroy {
     lobbyChoices: LobbyChoice[] = [
-        { index: 0, name: "Arena", func: this.joinArena.bind(this), imgUrl: "assets/arenachoice.png" },
-        { index: 1, name: "MapCreator", func: this.joinMapCreator.bind(this), imgUrl: "assets/mapcreatorchoice.png" },
-        { index: 2, name: "UserLobbies", func: this.showUserLobbies.bind(this), imgUrl: "assets/customlobbychoice.png" },
-        // { index: 3, name: "Gang", func: this.joinGang.bind(this), imgUrl: "assets/gangchoice.png" },
-        { index: 4, name: "CharCreator", func: this.joinCharCreator.bind(this), imgUrl: "assets/charcreatorchoice.png" }
+        { name: "Arena", func: this.joinArena.bind(this), imgUrl: "assets/arenachoice.png" },
+        { name: "MapCreator", func: this.joinMapCreator.bind(this), imgUrl: "assets/mapcreatorchoice.png" },
+        { name: "UserLobbies", func: this.showUserLobbies.bind(this), imgUrl: "assets/customlobbychoice.png" },
+        // { name: "Gang", func: this.joinGang.bind(this), imgUrl: "assets/gangchoice.png" },
+        { name: "CharCreator", func: this.joinCharCreator.bind(this), imgUrl: "assets/charcreatorchoice.png" }
     ];
 
     timeToNextWeeklyChallengesRestartInfo: string;
