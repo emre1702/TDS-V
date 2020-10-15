@@ -193,7 +193,7 @@ namespace TDS_Server.Handler.Userpanel
         {
             try
             {
-                await ExecuteForDB(async dbContext =>
+                await ExecuteForDBAsync(async dbContext =>
                 {
                     await dbContext.Applications
                        .Where(a => a.CreateTime.AddDays(_settingsHandler.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
