@@ -78,9 +78,9 @@ namespace TDS_Server.Handler.Userpanel
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public UserpanelApplicationUserHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler,
+        public UserpanelApplicationUserHandler(TDSDbContext dbContext,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, ITDSPlayerHandler tdsPlayerHandler,
-            OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
+            OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) : base(dbContext)
         {
             _settingsHandler = settingsHandler;
             _bonusbotConnectorClient = bonusbotConnectorClient;
@@ -119,7 +119,7 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.Applications.Include(a => a.Player).Where(a => a.Id == invitation.ApplicationId).FirstOrDefaultAsync());
             if (application.PlayerId != player.Entity!.Id)
             {
-                LoggingHandler.LogError($"{player.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.",
+                LoggingHandler.Instance.LogError($"{player.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.",
                     Environment.StackTrace, null, player);
                 return null;
             }
@@ -191,13 +191,20 @@ namespace TDS_Server.Handler.Userpanel
 
         public async void DeleteTooLongClosedApplications(int _)
         {
-            await ExecuteForDB(async dbContext =>
+            try
             {
-                await dbContext.Applications
-                   .Where(a => a.CreateTime.AddDays(_settingsHandler.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
-                   .ForEachAsync(a => dbContext.Applications.Remove(a));
-                await dbContext.SaveChangesAsync();
-            });
+                await ExecuteForDB(async dbContext =>
+                {
+                    await dbContext.Applications
+                       .Where(a => a.CreateTime.AddDays(_settingsHandler.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
+                       .ForEachAsync(a => dbContext.Applications.Remove(a));
+                    await dbContext.SaveChangesAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async Task<string> GetData(ITDSPlayer player)
@@ -276,7 +283,7 @@ namespace TDS_Server.Handler.Userpanel
                     .FirstOrDefaultAsync());
             if (application.PlayerId != player.Entity!.Id)
             {
-                LoggingHandler.LogError($"{player.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, null, player);
+                LoggingHandler.Instance.LogError($"{player.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, null, player);
                 return null;
             }
 
@@ -306,26 +313,33 @@ namespace TDS_Server.Handler.Userpanel
 
         private async void LoadAdminQuestions()
         {
-            var list = await ExecuteForDB(dbContext => dbContext.ApplicationQuestions.Include(q => q.Admin).Select(e => new
+            try
             {
-                AdminName = e.Admin.Name,
-                ID = e.Id,
-                e.Question,
-                e.AnswerType
-            }).ToList()
-            .GroupBy(g => g.AdminName)
-            .Select(g => new AdminQuestionsData
-            {
-                AdminName = g.Key,
-                Questions = g.Select(q => new AdminQuestionData
+                var list = await ExecuteForDB(dbContext => dbContext.ApplicationQuestions.Include(q => q.Admin).Select(e => new
                 {
-                    ID = q.ID,
-                    Question = q.Question,
-                    AnswerType = q.AnswerType
-                })
-            }));
+                    AdminName = e.Admin.Name,
+                    ID = e.Id,
+                    e.Question,
+                    e.AnswerType
+                }).ToList()
+                .GroupBy(g => g.AdminName)
+                .Select(g => new AdminQuestionsData
+                {
+                    AdminName = g.Key,
+                    Questions = g.Select(q => new AdminQuestionData
+                    {
+                        ID = q.ID,
+                        Question = q.Question,
+                        AnswerType = q.AnswerType
+                    })
+                }));
 
-            AdminQuestions = Serializer.ToBrowser(list);
+                AdminQuestions = Serializer.ToBrowser(list);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
     }
 }

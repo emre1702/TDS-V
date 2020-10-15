@@ -49,11 +49,18 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public async void OnChooseTeam(ITDSPlayer player, int index)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby?.Players is ArenaPlayers players))
-                return;
-            await players.ChooseTeam(player, index).ConfigureAwait(false);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby?.Players is ArenaPlayers players))
+                    return;
+                await players.ChooseTeam(player, index).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public void OnGotHit(ITDSPlayer player, int damage)
@@ -88,13 +95,20 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public async void OnLeaveLobby(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (player.Lobby is null)
-                return;
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (player.Lobby is null)
+                    return;
 
-            await player.Lobby.Players.RemovePlayer(player).ConfigureAwait(false);
-            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
+                await player.Lobby.Players.RemovePlayer(player).ConfigureAwait(false);
+                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public void OnMapCreatorStartNewMap(ITDSPlayer player)

@@ -40,9 +40,9 @@ namespace TDS_Server.Handler.Userpanel
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly ISettingsHandler _settingsHandler;
 
-        public UserpanelOfflineMessagesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler,
-            ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler)
-            : base(dbContext, loggingHandler)
+        public UserpanelOfflineMessagesHandler(TDSDbContext dbContext, ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler,
+            EventsHandler eventsHandler)
+            : base(dbContext)
         {
             (_settingsHandler, _offlineMessagesHandler) = (settingsHandler, offlineMessagesHandler);
 
@@ -93,13 +93,20 @@ namespace TDS_Server.Handler.Userpanel
 
         public async void DeleteOldMessages(int _)
         {
-            var deleteAfterDays = _settingsHandler.ServerSettings.DeleteOfflineMessagesAfterDays;
-            await ExecuteForDBAsync(async dbContext =>
+            try
             {
-                var msgs = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
-                dbContext.Offlinemessages.RemoveRange(msgs);
-                await dbContext.SaveChangesAsync();
-            });
+                var deleteAfterDays = _settingsHandler.ServerSettings.DeleteOfflineMessagesAfterDays;
+                await ExecuteForDBAsync(async dbContext =>
+                {
+                    var msgs = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
+                    dbContext.Offlinemessages.RemoveRange(msgs);
+                    await dbContext.SaveChangesAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async Task<string?> GetData(ITDSPlayer player)

@@ -36,8 +36,7 @@ namespace TDS_Server.Handler.Helper
         public ChallengesHelper(
             ISettingsHandler settingsHandler,
             EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler,
-            TDSDbContext dbContext) : base(dbContext, loggingHandler)
+            TDSDbContext dbContext) : base(dbContext)
         {
             _settingsHandler = settingsHandler;
 
@@ -140,24 +139,31 @@ namespace TDS_Server.Handler.Helper
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            if (player.Entity is null)
-                return;
-
-            if (!player.Entity.Challenges.Any(c => c.Frequency == ChallengeFrequency.Weekly))
+            try
             {
-                await AddWeeklyChallenges(player);
-                await player.Database.ExecuteForDBAsync(async dbContext =>
+                if (player.Entity is null)
+                    return;
+
+                if (!player.Entity.Challenges.Any(c => c.Frequency == ChallengeFrequency.Weekly))
                 {
-                    await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload();
+                    await AddWeeklyChallenges(player);
+                    await player.Database.ExecuteForDBAsync(async dbContext =>
+                    {
+                        await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload();
+                    });
+                }
+
+                player.Challenges.InitChallengesDict();
+                var json = GetChallengesJson(player);
+                NAPI.Task.Run(() =>
+                {
+                    player.TriggerBrowserEvent(ToBrowserEvent.SyncChallenges, json);
                 });
             }
-
-            player.Challenges.InitChallengesDict();
-            var json = GetChallengesJson(player);
-            NAPI.Task.Run(() =>
+            catch (Exception ex)
             {
-                player.TriggerBrowserEvent(ToBrowserEvent.SyncChallenges, json);
-            });
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         private async ValueTask EventsHandler_PlayerRegister((ITDSPlayer player, Players dbPlayer) args)
@@ -168,7 +174,7 @@ namespace TDS_Server.Handler.Helper
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, args.player);
+                LoggingHandler.Instance.LogError(ex, args.player);
             }
         }
 

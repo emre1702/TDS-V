@@ -39,10 +39,9 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         private readonly EventsHandler _eventsHandler;
         private readonly IBaseLobby _lobby;
-        protected readonly ILoggingHandler Logging;
 
-        public BaseLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler, ILoggingHandler logging)
-            => (_lobby, _eventsHandler, Logging) = (lobby, eventsHandler, logging);
+        public BaseLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler)
+            => (_lobby, _eventsHandler) = (lobby, eventsHandler);
 
         public async Task TriggerCreated(LobbyDb entity)
         {

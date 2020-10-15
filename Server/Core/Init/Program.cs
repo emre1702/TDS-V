@@ -37,7 +37,7 @@ namespace TDS_Server.Core.Init
         {
             try
             {
-                Data.Extensions.TaskExtensions.IsMainThread = true;
+                Handler.Extensions.TaskExtensions.IsMainThread = true;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
                 _serviceProvider = ServiceProviderCreator.Create();
@@ -51,6 +51,7 @@ namespace TDS_Server.Core.Init
                     connection.ReloadTypes();
                 }
 
+                _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 var mapsLoadingHandler = _serviceProvider.GetRequiredService<MapsLoadingHandler>();
                 mapsLoadingHandler.LoadAllMaps();
 
@@ -74,7 +75,6 @@ namespace TDS_Server.Core.Init
                 gangsHandler.LoadAll();
 
                 var tdsPlayerHandler = _serviceProvider.GetRequiredService<ITDSPlayerHandler>();
-                _loggingHandler = _serviceProvider.GetRequiredService<ILoggingHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
 
                 _serviceProvider.InitAllSingletons();

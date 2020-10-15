@@ -10,6 +10,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -43,14 +44,21 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void StartNewMap()
         {
-            _currentMap = new MapCreateDataDto();
-            _lastId = 0;
-            await _posDictSemaphore.Do(() =>
+            try
             {
-                _posById = new Dictionary<int, MapCreatorPosition>();
-            }).ConfigureAwait(false);
-            NAPI.Task.Run(()
-                => TriggerEvent(ToClientEvent.MapCreatorStartNewMap));
+                _currentMap = new MapCreateDataDto();
+                _lastId = 0;
+                await _posDictSemaphore.Do(() =>
+                {
+                    _posById = new Dictionary<int, MapCreatorPosition>();
+                }).ConfigureAwait(false);
+                NAPI.Task.Run(()
+                    => TriggerEvent(ToClientEvent.MapCreatorStartNewMap));
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async Task SetMap(MapCreateDataDto dto)
@@ -151,37 +159,51 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncNewObject(ITDSPlayer player, string json)
         {
-            var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
-            NAPI.Task.Run(() =>
-                NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncNewObject, json));
+            try
+            {
+                var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
+                NAPI.Task.Run(() =>
+                    NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncNewObject, json));
 
-            var pos = Serializer.FromClient<MapCreatorPosition>(json);
-            if (pos.Type == MapCreatorPositionType.MapCenter)
-                _currentMap.MapCenter = pos;
-            else if (pos.Type == MapCreatorPositionType.Target)
-                _currentMap.Target = pos;
-            else
-                GetListInCurrentMapForMapType(pos.Type, pos.Info)?.Add(pos);
+                var pos = Serializer.FromClient<MapCreatorPosition>(json);
+                if (pos.Type == MapCreatorPositionType.MapCenter)
+                    _currentMap.MapCenter = pos;
+                else if (pos.Type == MapCreatorPositionType.Target)
+                    _currentMap.Target = pos;
+                else
+                    GetListInCurrentMapForMapType(pos.Type, pos.Info)?.Add(pos);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async void SyncObjectPosition(ITDSPlayer player, string json)
         {
-            var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
-            NAPI.Task.Run(() =>
-                NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectPosition, json));
+            try
+            {
+                var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
+                NAPI.Task.Run(() =>
+                    NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectPosition, json));
 
-            var pos = Serializer.FromClient<MapCreatorPosData>(json);
+                var pos = Serializer.FromClient<MapCreatorPosData>(json);
 
-            var data = await GetPosById(pos.Id).ConfigureAwait(false);
-            if (data is null)
-                return;
+                var data = await GetPosById(pos.Id).ConfigureAwait(false);
+                if (data is null)
+                    return;
 
-            data.PosX = pos.PosX;
-            data.PosY = pos.PosY;
-            data.PosZ = pos.PosZ;
-            data.RotX = pos.RotX;
-            data.RotY = pos.RotY;
-            data.RotZ = pos.RotZ;
+                data.PosX = pos.PosX;
+                data.PosY = pos.PosY;
+                data.PosZ = pos.PosZ;
+                data.RotX = pos.RotX;
+                data.RotY = pos.RotY;
+                data.RotZ = pos.RotZ;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         private Task<MapCreatorPosition?> GetPosById(int posId)
@@ -193,35 +215,49 @@ namespace TDS_Server.LobbySystem.Sync
 
         public async void SyncRemoveObject(ITDSPlayer player, int objId)
         {
-            var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
-            NAPI.Task.Run(() =>
-                NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectRemove, objId));
+            try
+            {
+                var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
+                NAPI.Task.Run(() =>
+                    NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectRemove, objId));
 
-            if (!_posById.ContainsKey(objId))
-                return;
-            var data = _posById[objId];
-            if (data.Type == MapCreatorPositionType.MapCenter)
-                _currentMap.MapCenter = null;
-            else if (data.Type == MapCreatorPositionType.Target)
-                _currentMap.Target = null;
-            GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
-            _posById.Remove(objId);
+                if (!_posById.ContainsKey(objId))
+                    return;
+                var data = _posById[objId];
+                if (data.Type == MapCreatorPositionType.MapCenter)
+                    _currentMap.MapCenter = null;
+                else if (data.Type == MapCreatorPositionType.Target)
+                    _currentMap.Target = null;
+                GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
+                _posById.Remove(objId);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async void SyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
         {
-            var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
-            NAPI.Task.Run(() =>
-                NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber));
-
-            foreach (var entry in _posById)
+            try
             {
-                if (entry.Value.Type != MapCreatorPositionType.TeamSpawn)
-                    continue;
-                if ((int)entry.Value.Info != teamNumber)
-                    continue;
+                var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
+                NAPI.Task.Run(() =>
+                    NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber));
 
-                GetListInCurrentMapForMapType(entry.Value.Type, entry.Value.Info)?.Remove(entry.Value);
+                foreach (var entry in _posById)
+                {
+                    if (entry.Value.Type != MapCreatorPositionType.TeamSpawn)
+                        continue;
+                    if ((int)entry.Value.Info != teamNumber)
+                        continue;
+
+                    GetListInCurrentMapForMapType(entry.Value.Type, entry.Value.Info)?.Remove(entry.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
             }
         }
 

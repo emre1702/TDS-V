@@ -1,9 +1,11 @@
 ﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -15,34 +17,43 @@ namespace TDS_Server.Handler
     public class ScoreboardHandler
     {
         private readonly LobbiesHandler _lobbiesHandler;
+        private readonly ILoggingHandler _loggingHandler;
 
-        public ScoreboardHandler(LobbiesHandler lobbiesHandler)
+        public ScoreboardHandler(LobbiesHandler lobbiesHandler, ILoggingHandler loggingHandler)
         {
             _lobbiesHandler = lobbiesHandler;
+            _loggingHandler = loggingHandler;
 
             NAPI.ClientEvent.Register<ITDSPlayer>(ToServerEvent.RequestPlayersForScoreboard, this, OnRequestPlayersForScoreboard);
         }
 
         public async void OnRequestPlayersForScoreboard(ITDSPlayer player)
         {
-            if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
+            try
             {
-                var entries = await GetDataForMainmenu();
-                var entriesJson = Serializer.ToClient(entries);
-                NAPI.Task.Run(() =>
-                    player.TriggerEvent(ToClientEvent.SyncScoreboardData, entriesJson));
-            }
-            else
-            {
-                var entries = await GetDataForLobby(player.Lobby.Entity.Id);
-                if (entries is null)
-                    return;
-                var lobbydata = (await GetDataForMainmenu()).Where(d => d.Id != player.Lobby?.Entity.Id);
+                if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
+                {
+                    var entries = await GetDataForMainmenu();
+                    var entriesJson = Serializer.ToClient(entries);
+                    NAPI.Task.Run(() =>
+                        player.TriggerEvent(ToClientEvent.SyncScoreboardData, entriesJson));
+                }
+                else
+                {
+                    var entries = await GetDataForLobby(player.Lobby.Entity.Id);
+                    if (entries is null)
+                        return;
+                    var lobbydata = (await GetDataForMainmenu()).Where(d => d.Id != player.Lobby?.Entity.Id);
 
-                var entriesJson = Serializer.ToClient(entries);
-                var lobbyDataJson = Serializer.ToClient(lobbydata);
-                NAPI.Task.Run(() =>
-                    player.TriggerEvent(ToClientEvent.SyncScoreboardData, entriesJson, lobbyDataJson));
+                    var entriesJson = Serializer.ToClient(entries);
+                    var lobbyDataJson = Serializer.ToClient(lobbydata);
+                    NAPI.Task.Run(() =>
+                        player.TriggerEvent(ToClientEvent.SyncScoreboardData, entriesJson, lobbyDataJson));
+                }
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
             }
         }
 

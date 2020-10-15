@@ -42,9 +42,9 @@ namespace TDS_Server.Handler.Entities.GangSystem
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly DataSyncHandler _dataSyncHandler;
 
-        public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, LangHelper langHelper,
+        public Gang(Gangs entity, GangsHandler gangsHandler, TDSDbContext dbContext, LangHelper langHelper,
             LobbiesHandler lobbiesHandler, DataSyncHandler dataSyncHandler)
-            : base(dbContext, loggingHandler)
+            : base(dbContext)
         {
             _langHelper = langHelper;
             _lobbiesHandler = lobbiesHandler;

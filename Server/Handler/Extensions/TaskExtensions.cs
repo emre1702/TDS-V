@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace TDS_Server.Data.Extensions
+namespace TDS_Server.Handler.Extensions
 {
     public static class TaskExtensions
     {

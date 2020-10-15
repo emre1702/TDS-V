@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq;
 using BonusBotConnector.Client;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,9 @@ namespace TDS_Server.Handler
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler, BonusBotConnectorClient bonusBotConnectorClient,
+        public OfflineMessagesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient,
             ITDSPlayerHandler tdsPlayerHandler)
-            : base(dbContext, loggingHandler)
+            : base(dbContext)
         {
             _bonusBotConnectorClient = bonusBotConnectorClient;
             _tdsPlayerHandler = tdsPlayerHandler;
@@ -29,64 +30,85 @@ namespace TDS_Server.Handler
 
         public async void Add(int targetId, ulong? targetDiscordId, Players source, string message)
         {
-            var msg = new Offlinemessages()
+            try
             {
-                TargetId = targetId,
-                SourceId = source.Id,
-                Message = message
-            };
+                var msg = new Offlinemessages()
+                {
+                    TargetId = targetId,
+                    SourceId = source.Id,
+                    Message = message
+                };
 
-            await ExecuteForDBAsync(async dbContext =>
+                await ExecuteForDBAsync(async dbContext =>
+                {
+                    dbContext.Add(msg);
+                    await dbContext.SaveChangesAsync();
+                });
+
+                if (targetDiscordId.HasValue)
+                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId.Value);
+
+                InformIfPlayerIsOnline(targetId);
+            }
+            catch (Exception ex)
             {
-                dbContext.Add(msg);
-                await dbContext.SaveChangesAsync();
-            });
-
-            if (targetDiscordId.HasValue)
-                _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId.Value);
-
-            InformIfPlayerIsOnline(targetId);
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async void Add(Players target, Players source, string message)
         {
-            Offlinemessages msg = new Offlinemessages()
+            try
             {
-                TargetId = target.Id,
-                SourceId = source.Id,
-                Message = message
-            };
+                Offlinemessages msg = new Offlinemessages()
+                {
+                    TargetId = target.Id,
+                    SourceId = source.Id,
+                    Message = message
+                };
 
-            await ExecuteForDBAsync(async dbContext =>
+                await ExecuteForDBAsync(async dbContext =>
+                {
+                    dbContext.Add(msg);
+                    await dbContext.SaveChangesAsync();
+                });
+
+                if (target.PlayerSettings.DiscordUserId.HasValue)
+                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId.Value);
+
+                InformIfPlayerIsOnline(target.Id);
+            }
+            catch (Exception ex)
             {
-                dbContext.Add(msg);
-                await dbContext.SaveChangesAsync();
-            });
-
-            if (target.PlayerSettings.DiscordUserId.HasValue)
-                _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId.Value);
-
-            InformIfPlayerIsOnline(target.Id);
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async void CheckOfflineMessages(ITDSPlayer player)
         {
-            (int amountNewEntries, int amountEntries) = await ExecuteForDBAsync(async dbContext =>
+            try
             {
-                int amountNewEntries = await dbContext.Offlinemessages
-                   .Where(msg => player.Entity != null && msg.TargetId == player.Entity.Id && !msg.Seen)
-                   .AsNoTracking()
-                   .CountAsync();
-                int amountEntries = await dbContext.Offlinemessages
-                    .Where(msg => player.Entity != null && msg.TargetId == player.Entity.Id)
-                    .AsNoTracking()
-                    .CountAsync();
-                return (amountNewEntries, amountEntries);
-            });
+                (int amountNewEntries, int amountEntries) = await ExecuteForDBAsync(async dbContext =>
+                {
+                    int amountNewEntries = await dbContext.Offlinemessages
+                       .Where(msg => player.Entity != null && msg.TargetId == player.Entity.Id && !msg.Seen)
+                       .AsNoTracking()
+                       .CountAsync();
+                    int amountEntries = await dbContext.Offlinemessages
+                        .Where(msg => player.Entity != null && msg.TargetId == player.Entity.Id)
+                        .AsNoTracking()
+                        .CountAsync();
+                    return (amountNewEntries, amountEntries);
+                });
 
-            if (amountNewEntries > 0)
+                if (amountNewEntries > 0)
+                {
+                    player.SendChatMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries));
+                }
+            }
+            catch (Exception ex)
             {
-                player.SendChatMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries));
+                LoggingHandler.Instance.LogError(ex);
             }
         }
 

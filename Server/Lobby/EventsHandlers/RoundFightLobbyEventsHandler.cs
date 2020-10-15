@@ -3,6 +3,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using static TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers.IRoundFightLobbyEventsHandler;
 
@@ -34,8 +35,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public AsyncValueTaskEvent? RoundClear { get; set; }
 
-        public RoundFightLobbyEventsHandler(IRoundFightLobby lobby, EventsHandler eventsHandler, ILoggingHandler logging)
-            : base(lobby, eventsHandler, logging)
+        public RoundFightLobbyEventsHandler(IRoundFightLobby lobby, EventsHandler eventsHandler)
+            : base(lobby, eventsHandler)
         {
         }
 
@@ -44,7 +45,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             var mapDto = RequestNewMap?.Invoke();
             if (mapDto is null)
             {
-                Logging.LogError("RequestNewMap didn't return a map.");
+                LoggingHandler.Instance.LogError("RequestNewMap didn't return a map.");
                 return;
             }
 

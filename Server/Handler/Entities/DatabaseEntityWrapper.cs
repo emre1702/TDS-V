@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 
@@ -9,12 +8,6 @@ namespace TDS_Server.Handler.Entities
 {
     public abstract class DatabaseEntityWrapper : IDatabaseEntityWrapper
     {
-        #region Protected Fields
-
-        protected ILoggingHandler LoggingHandler;
-
-        #endregion Protected Fields
-
         #region Private Fields
 
         private readonly TDSDbContext _dbContext;
@@ -25,8 +18,8 @@ namespace TDS_Server.Handler.Entities
 
         #region Protected Constructors
 
-        protected DatabaseEntityWrapper(TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            => (_dbContext, LoggingHandler) = (dbContext, loggingHandler);
+        protected DatabaseEntityWrapper(TDSDbContext dbContext)
+            => (_dbContext) = (dbContext);
 
         #endregion Protected Constructors
 
@@ -47,7 +40,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex);
+                LoggingHandler.Instance.LogError(ex);
             }
             finally
             {
@@ -65,7 +58,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex);
+                LoggingHandler.Instance.LogError(ex);
                 return default!;
             }
             finally
@@ -84,7 +77,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex);
+                LoggingHandler.Instance.LogError(ex);
             }
             finally
             {
@@ -102,7 +95,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex);
+                LoggingHandler.Instance.LogError(ex);
                 return default!;
             }
             finally
@@ -121,7 +114,7 @@ namespace TDS_Server.Handler.Entities
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex);
+                LoggingHandler.Instance.LogError(ex);
             }
             finally
             {

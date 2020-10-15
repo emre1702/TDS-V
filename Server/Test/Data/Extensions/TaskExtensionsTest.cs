@@ -3,8 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data.Extensions;
-using TaskExtensions = TDS_Server.Data.Extensions.TaskExtensions;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Tests.Data.Extensions
 {
@@ -16,7 +15,7 @@ namespace TDS_Server.Tests.Data.Extensions
         public void OneTimeSetUp()
         {
             mainThreadId = GetThreadId();
-            TaskExtensions.IsMainThread = true;
+            Handler.Extensions.TaskExtensions.IsMainThread = true;
         }
 
         [Test, RequiresThread]

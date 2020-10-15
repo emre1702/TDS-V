@@ -24,13 +24,13 @@ namespace TDS_Server.LobbySystem.Lobbies
     {
         public CharCreateLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
             ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider)
         {
         }
 
         public CharCreateLobby(ITDSPlayer player, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler, LobbiesHandler lobbiesHandler,
             ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
-            : base(CreateEntity(player, lobbiesHandler.CharCreateLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler, loggingHandler,
+            : base(CreateEntity(player, lobbiesHandler.CharCreateLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler,
                   serviceProvider, teamsProvider)
         {
         }
@@ -40,7 +40,7 @@ namespace TDS_Server.LobbySystem.Lobbies
             lobbyDependencies ??= new CharCreateLobbyDependencies();
 
             lobbyDependencies.Bans ??= new CharCreateLobbyBansHandler(this, LangHelper);
-            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler);
             lobbyDependencies.Players ??= new CharCreateLobbyPlayers(this, lobbyDependencies.Events);
 
             base.InitDependencies(lobbyDependencies);

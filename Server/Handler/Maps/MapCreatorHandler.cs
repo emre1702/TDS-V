@@ -35,8 +35,8 @@ namespace TDS_Server.Handler.Maps
         private readonly XmlHelper _xmlHelper;
 
         public MapCreatorHandler(MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            : base(dbContext, loggingHandler)
+            TDSDbContext dbContext)
+            : base(dbContext)
         {
             (_mapsLoadingHandler, _xmlHelper, _settingsHandler) = (mapsLoadingHandler, xmlHelper, settingsHandler);
             NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
@@ -71,53 +71,60 @@ namespace TDS_Server.Handler.Maps
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, creator);
+                LoggingHandler.Instance.LogError(ex, creator);
                 return MapCreateError.Unknown;
             }
         }
 
         public async void RemoveMap(ITDSPlayer player, int mapId)
         {
-            if (!player.LoggedIn)
-                return;
-
-            bool isSavedMap = true;
-            MapDto? map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
-            if (map is null)
+            try
             {
-                map = _mapsLoadingHandler.NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+                if (!player.LoggedIn)
+                    return;
+
+                bool isSavedMap = true;
+                MapDto? map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
                 if (map is null)
-                    map = _mapsLoadingHandler.NeedCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
-                isSavedMap = false;
-            }
-
-            if (map is null)
-                return;
-
-            bool canLoadMapsFromOthers = _settingsHandler.CanLoadMapsFromOthers(player);
-            if (map.Info.CreatorId != player.Entity?.Id && !canLoadMapsFromOthers)
-                return;
-            if (map.Info.CreatorId != player.Entity?.Id)
-                LoggingHandler.LogAdmin(LogType.RemoveMap, player, string.Empty, asvip: player.Entity?.IsVip ?? false);
-
-            if (isSavedMap)
-                _mapsLoadingHandler.SavedMaps.Remove(map);
-            else
-            {
-                if (_mapsLoadingHandler.NewCreatedMaps.Contains(map))
-                    _mapsLoadingHandler.NewCreatedMaps.Remove(map);
-                else
-                    _mapsLoadingHandler.NeedCheckMaps.Remove(map);
-
-                await ExecuteForDBAsync(async dbContext =>
                 {
-                    var maps = await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).ToListAsync();
-                    dbContext.RemoveRange(maps);
-                    await dbContext.SaveChangesAsync();
-                });
-            }
+                    map = _mapsLoadingHandler.NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+                    if (map is null)
+                        map = _mapsLoadingHandler.NeedCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+                    isSavedMap = false;
+                }
 
-            File.Delete(map.Info.FilePath);
+                if (map is null)
+                    return;
+
+                bool canLoadMapsFromOthers = _settingsHandler.CanLoadMapsFromOthers(player);
+                if (map.Info.CreatorId != player.Entity?.Id && !canLoadMapsFromOthers)
+                    return;
+                if (map.Info.CreatorId != player.Entity?.Id)
+                    LoggingHandler.Instance.LogAdmin(LogType.RemoveMap, player, string.Empty, asvip: player.Entity?.IsVip ?? false);
+
+                if (isSavedMap)
+                    _mapsLoadingHandler.SavedMaps.Remove(map);
+                else
+                {
+                    if (_mapsLoadingHandler.NewCreatedMaps.Contains(map))
+                        _mapsLoadingHandler.NewCreatedMaps.Remove(map);
+                    else
+                        _mapsLoadingHandler.NeedCheckMaps.Remove(map);
+
+                    await ExecuteForDBAsync(async dbContext =>
+                    {
+                        var maps = await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).ToListAsync();
+                        dbContext.RemoveRange(maps);
+                        await dbContext.SaveChangesAsync();
+                    });
+                }
+
+                File.Delete(map.Info.FilePath);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async Task<object?> Save(ITDSPlayer creator, ArraySegment<object> args)
@@ -144,7 +151,7 @@ namespace TDS_Server.Handler.Maps
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, creator);
+                LoggingHandler.Instance.LogError(ex, creator);
                 return MapCreateError.Unknown;
             }
         }
@@ -330,7 +337,7 @@ namespace TDS_Server.Handler.Maps
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, creator);
+                LoggingHandler.Instance.LogError(ex, creator);
                 return (null, MapCreateError.Unknown);
             }
         }

@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Defaults;
@@ -32,7 +33,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Ban, 1)]
-        public async void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             PlayerBans? ban = null;
             if (length == TimeSpan.MinValue)
@@ -50,7 +51,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Ban, 0)]
-        public async void BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == TimeSpan.MinValue)
                 await _lobbiesHandler.MainMenu.Bans.Unban(player, dbTarget, reason);
@@ -168,7 +169,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.LobbyKick)]
-        public async void LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player == target)
                 return;
@@ -211,7 +212,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.Mute, 0)]
-        public async void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!IsMuteTimeValid(minutes, player))
                 return;
@@ -278,7 +279,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 0)]
-        public async void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (!IsMuteTimeValid(minutes, player))
                 return;
@@ -302,7 +303,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(AdminCommand.CreateHouse)]
-        public void CreateHouse(ITDSPlayer player, byte neededGangLevel)
+        public async Task CreateHouse(ITDSPlayer player, byte neededGangLevel)
         {
             if (player is null || player.Entity is null)
                 return;
@@ -319,7 +320,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             }
 
-            _gangHousesHandler.AddHouse(player.Position, player.Rotation.Z, neededGangLevel, player.Entity.Id);
+            await _gangHousesHandler.AddHouse(player.Position, player.Rotation.Z, neededGangLevel, player.Entity.Id);
             player.SendNotification(player.Language.ADDED_THE_GANG_HOUSE_SUCCESSFULLY);
         }
 

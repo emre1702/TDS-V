@@ -1,5 +1,7 @@
 ﻿using GTANetworkAPI;
+using System;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 
 namespace TDS_Server.Core.Events
@@ -21,13 +23,20 @@ namespace TDS_Server.Core.Events
         [ServerEvent(Event.PlayerDisconnected)]
         public async void PlayerDisconnected(ITDSPlayer player, DisconnectionType disconnectionType, string reason)
         {
-            if (player.LoggedIn)
-                await EventsHandler.Instance.OnPlayerLoggedOut(player);
-
-            NAPI.Task.Run(() =>
+            try
             {
-                EventsHandler.Instance.OnPlayerDisconnected(player);
-            });
+                if (player.LoggedIn)
+                    await EventsHandler.Instance.OnPlayerLoggedOut(player);
+
+                NAPI.Task.Run(() =>
+                {
+                    EventsHandler.Instance.OnPlayerDisconnected(player);
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
     }
 }

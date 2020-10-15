@@ -35,8 +35,8 @@ namespace TDS_Server.LobbySystem.Lobbies
 
         public GangLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider)
         {
         }
 
@@ -49,7 +49,7 @@ namespace TDS_Server.LobbySystem.Lobbies
 
             ((GangLobbyDependencies)lobbyDependencies).Actions ??= new GangLobbyActions();
             lobbyDependencies.Chat ??= new GangLobbyChat(this, LangHelper);
-            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler);
             lobbyDependencies.Deathmatch ??= new GangLobbyDeathmatch(this, lobbyDependencies.Events);
             lobbyDependencies.MapHandler ??= new GangLobbyMapHandler(this, lobbyDependencies.Events, GlobalEventsHandler, gangHousesHandler);
             lobbyDependencies.Notifications ??= new GangLobbyNotifications(this, LangHelper);

@@ -164,6 +164,10 @@ namespace TDS_Server.Handler.Account
                 else
                     NAPI.Task.Run(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
             }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
             finally
             {
                 player.TryingToLoginRegister = false;

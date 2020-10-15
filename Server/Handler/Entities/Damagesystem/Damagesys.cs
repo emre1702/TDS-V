@@ -10,12 +10,10 @@ namespace TDS_Server.Core.Damagesystem
 {
     public partial class Damagesys : IDamagesys
     {
-        private readonly ILoggingHandler _loggingHandler;
         private readonly WeaponDatasLoadingHandler _weaponDatasLoadingHandler;
 
-        public Damagesys(IFightLobby lobby, ILoggingHandler loggingHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler)
+        public Damagesys(IFightLobby lobby, WeaponDatasLoadingHandler weaponDatasLoadingHandler)
         {
-            _loggingHandler = loggingHandler;
             _weaponDatasLoadingHandler = weaponDatasLoadingHandler;
 
             foreach (var weapon in lobby.Entity.LobbyWeapons)
@@ -28,9 +26,8 @@ namespace TDS_Server.Core.Damagesystem
             InitKillingSpreeRewards(lobby.Entity.LobbyKillingspreeRewards);
         }
 
-        public Damagesys(ILoggingHandler loggingHandler, WeaponDatasLoadingHandler weaponDatasLoadingHandler)
+        public Damagesys(WeaponDatasLoadingHandler weaponDatasLoadingHandler)
         {
-            _loggingHandler = loggingHandler;
             _weaponDatasLoadingHandler = weaponDatasLoadingHandler;
         }
 

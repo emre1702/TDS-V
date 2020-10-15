@@ -124,9 +124,9 @@ namespace TDS_Server.Handler.Userpanel
 
         private readonly ISettingsHandler _settingsHandler;
 
-        public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler,
+        public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
-            : base(dbContext, loggingHandler)
+            : base(dbContext)
         {
             _settingsHandler = settingsHandler;
             _bonusBotConnectorClient = bonusBotConnectorClient;
@@ -253,24 +253,31 @@ namespace TDS_Server.Handler.Userpanel
 
         public async void DeleteTooLongClosedRequests(int _)
         {
-            var deleteAfterDays = _settingsHandler.ServerSettings.DeleteRequestsDaysAfterClose;
-            var requestIdsToDelete = await ExecuteForDBAsync(async dbContext =>
+            try
             {
-                var requests = await dbContext.SupportRequests
-                    .Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow)
-                    .ToListAsync();
-                if (requests.Count == 0)
-                    return null;
+                var deleteAfterDays = _settingsHandler.ServerSettings.DeleteRequestsDaysAfterClose;
+                var requestIdsToDelete = await ExecuteForDBAsync(async dbContext =>
+                {
+                    var requests = await dbContext.SupportRequests
+                        .Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow)
+                        .ToListAsync();
+                    if (requests.Count == 0)
+                        return null;
 
-                var requestIdsToDelete = requests.Select(r => r.Id);
-                dbContext.SupportRequests.RemoveRange(requests);
-                await dbContext.SaveChangesAsync();
+                    var requestIdsToDelete = requests.Select(r => r.Id);
+                    dbContext.SupportRequests.RemoveRange(requests);
+                    await dbContext.SaveChangesAsync();
 
-                return requestIdsToDelete;
-            });
+                    return requestIdsToDelete;
+                });
 
-            if (requestIdsToDelete is { })
-                _bonusBotConnectorClient.Support?.Delete(requestIdsToDelete);
+                if (requestIdsToDelete is { })
+                    _bonusBotConnectorClient.Support?.Delete(requestIdsToDelete);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async Task<object?> GetSupportRequestData(ITDSPlayer player, ArraySegment<object> args)
@@ -324,7 +331,7 @@ namespace TDS_Server.Handler.Userpanel
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, player);
+                LoggingHandler.Instance.LogError(ex, player);
                 return null;
             }
         }

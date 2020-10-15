@@ -24,9 +24,9 @@ namespace TDS_Server.LobbySystem.Lobbies
 {
     public class MainMenu : BaseLobby, IMainMenu
     {
-        public MainMenu(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler, ILoggingHandler loggingHandler,
+        public MainMenu(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
             IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider)
         {
         }
 
@@ -37,7 +37,7 @@ namespace TDS_Server.LobbySystem.Lobbies
             lobbyDependencies ??= new MainMenuDependencies();
 
             lobbyDependencies.Bans ??= new MainMenuBansHandler(this, LangHelper, bansHandler);
-            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler);
             lobbyDependencies.Deathmatch ??= new MainMenuDeathmatch(this, lobbyDependencies.Events);
             lobbyDependencies.MapHandler ??= new MainMenuMapHandler(this, lobbyDependencies.Events);
             lobbyDependencies.Players ??= new MainMenuPlayers(this, lobbyDependencies.Events);

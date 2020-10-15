@@ -9,6 +9,7 @@ using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 
@@ -49,15 +50,22 @@ namespace TDS_Server.PlayersSystem
 
         public async void SetLobby(IBaseLobby? lobby)
         {
-            if (lobby == Current)
-                return;
-            if (LobbyStats is { })
-                await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(LobbyStats).State = EntityState.Detached);
+            try
+            {
+                if (lobby == Current)
+                    return;
+                if (LobbyStats is { })
+                    await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(LobbyStats).State = EntityState.Detached);
 
-            if (Current is { })
-                Previous = Current;
-            Current = lobby;
-            SyncLobbyOwnerInfo();
+                if (Current is { })
+                    Previous = Current;
+                Current = lobby;
+                SyncLobbyOwnerInfo();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public void SyncLobbyOwnerInfo()

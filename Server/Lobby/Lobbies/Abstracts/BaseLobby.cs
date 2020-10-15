@@ -18,6 +18,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.BansHandlers;
@@ -51,7 +52,6 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
         public IBaseLobbyEventsHandler Events { get; private set; }
         public EventsHandler GlobalEventsHandler { get; }
         public LangHelper LangHelper { get; }
-        public ILoggingHandler LoggingHandler { get; }
         public IBaseLobbyMapHandler MapHandler { get; private set; }
         public IBaseLobbyNatives Natives { get; private set; }
         public IBaseLobbyNotifications Notifications { get; private set; }
@@ -67,14 +67,13 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public BaseLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             Entity = entity;
             GlobalEventsHandler = eventsHandler;
             LangHelper = langHelper;
             GlobalDatabaseHandler = databaseHandler;
-            LoggingHandler = loggingHandler;
             ServiceProvider = serviceProvider;
             TeamsProvider = teamsProvider;
 
@@ -85,39 +84,46 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
         protected virtual async void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
         {
-            lobbyDependencies ??= new BaseLobbyDependencies();
+            try
+            {
+                lobbyDependencies ??= new BaseLobbyDependencies();
 
-            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
-            lobbyDependencies.Bans ??= new BaseLobbyBansHandler(this, LangHelper);
-            lobbyDependencies.Chat ??= new BaseLobbyChat(this, LangHelper);
-            lobbyDependencies.ColshapesHandler ??= new BaseLobbyColshapesHandler();
-            lobbyDependencies.Teams ??= new BaseLobbyTeamsHandler(this, lobbyDependencies.Events, TeamsProvider);
-            lobbyDependencies.Database ??= new BaseLobbyDatabase(this, GlobalDatabaseHandler, lobbyDependencies.Events);
-            lobbyDependencies.Deathmatch ??= new BaseLobbyDeathmatch(this, lobbyDependencies.Events);
-            lobbyDependencies.MapHandler ??= new BaseLobbyMapHandler(this, lobbyDependencies.Events);
-            lobbyDependencies.Natives ??= new BaseLobbyNatives(this);
-            lobbyDependencies.Notifications ??= new BaseLobbyNotifications(this, LangHelper);
-            lobbyDependencies.Players ??= new BaseLobbyPlayers(this, lobbyDependencies.Events);
+                lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler);
+                lobbyDependencies.Bans ??= new BaseLobbyBansHandler(this, LangHelper);
+                lobbyDependencies.Chat ??= new BaseLobbyChat(this, LangHelper);
+                lobbyDependencies.ColshapesHandler ??= new BaseLobbyColshapesHandler();
+                lobbyDependencies.Teams ??= new BaseLobbyTeamsHandler(this, lobbyDependencies.Events, TeamsProvider);
+                lobbyDependencies.Database ??= new BaseLobbyDatabase(this, GlobalDatabaseHandler, lobbyDependencies.Events);
+                lobbyDependencies.Deathmatch ??= new BaseLobbyDeathmatch(this, lobbyDependencies.Events);
+                lobbyDependencies.MapHandler ??= new BaseLobbyMapHandler(this, lobbyDependencies.Events);
+                lobbyDependencies.Natives ??= new BaseLobbyNatives(this);
+                lobbyDependencies.Notifications ??= new BaseLobbyNotifications(this, LangHelper);
+                lobbyDependencies.Players ??= new BaseLobbyPlayers(this, lobbyDependencies.Events);
 
-            lobbyDependencies.Sync ??= new BaseLobbySync(this, lobbyDependencies.Events);
-            lobbyDependencies.Sounds ??= new BaseLobbySoundsHandler(this);
+                lobbyDependencies.Sync ??= new BaseLobbySync(this, lobbyDependencies.Events);
+                lobbyDependencies.Sounds ??= new BaseLobbySoundsHandler(this);
 
-            Bans = lobbyDependencies.Bans;
-            Chat = lobbyDependencies.Chat;
-            ColshapesHandler = lobbyDependencies.ColshapesHandler;
-            Database = lobbyDependencies.Database;
-            Deathmatch = lobbyDependencies.Deathmatch;
-            Events = lobbyDependencies.Events;
-            MapHandler = lobbyDependencies.MapHandler;
-            Natives = lobbyDependencies.Natives;
-            Notifications = lobbyDependencies.Notifications;
-            Players = lobbyDependencies.Players;
-            Sounds = lobbyDependencies.Sounds;
-            Sync = lobbyDependencies.Sync;
-            Teams = lobbyDependencies.Teams;
+                Bans = lobbyDependencies.Bans;
+                Chat = lobbyDependencies.Chat;
+                ColshapesHandler = lobbyDependencies.ColshapesHandler;
+                Database = lobbyDependencies.Database;
+                Deathmatch = lobbyDependencies.Deathmatch;
+                Events = lobbyDependencies.Events;
+                MapHandler = lobbyDependencies.MapHandler;
+                Natives = lobbyDependencies.Natives;
+                Notifications = lobbyDependencies.Notifications;
+                Players = lobbyDependencies.Players;
+                Sounds = lobbyDependencies.Sounds;
+                Sync = lobbyDependencies.Sync;
+                Teams = lobbyDependencies.Teams;
 
-            await Events.TriggerCreated(Entity);
-            IsCreatingTask.SetResult(true);
+                await Events.TriggerCreated(Entity);
+                IsCreatingTask.SetResult(true);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         protected virtual async ValueTask CheckRemoveLobby()

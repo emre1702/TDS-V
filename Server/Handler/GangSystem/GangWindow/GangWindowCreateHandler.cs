@@ -27,9 +27,9 @@ namespace TDS_Server.Handler.GangSystem
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly EventsHandler _eventsHandler;
 
-        public GangWindowCreateHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, IServiceProvider serviceProvider,
+        public GangWindowCreateHandler(TDSDbContext dbContext, IServiceProvider serviceProvider,
             LobbiesHandler lobbiesHandler, EventsHandler eventsHandler)
-            : base(dbContext, loggingHandler)
+            : base(dbContext)
         {
             _serviceProvider = serviceProvider;
             _lobbiesHandler = lobbiesHandler;

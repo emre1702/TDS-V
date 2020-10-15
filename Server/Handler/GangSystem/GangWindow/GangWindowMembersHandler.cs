@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
@@ -26,10 +27,11 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly LangHelper _langHelper;
         private readonly DataSyncHandler _dataSyncHandler;
+        private readonly ILoggingHandler _loggingHandler;
 
         public GangWindowMembersHandler(GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler,
             InvitationsHandler invitationsHandler, EventsHandler eventsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper,
-            DataSyncHandler dataSyncHandler)
+            DataSyncHandler dataSyncHandler, ILoggingHandler loggingHandler)
         {
             _gangsHandler = gangsHandler;
             _lobbiesHandler = lobbiesHandler;
@@ -39,6 +41,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             _offlineMessagesHandler = offlineMessagesHandler;
             _langHelper = langHelper;
             _dataSyncHandler = dataSyncHandler;
+            _loggingHandler = loggingHandler;
         }
 
         public string? GetMembers(ITDSPlayer player)
@@ -188,24 +191,31 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
         private async void AcceptedInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation invitation)
         {
-            if (sender is null || !sender.LoggedIn)
-                return;
-
-            if (player.IsInGang)
+            try
             {
-                player.SendNotification(player.Language.YOU_ARE_ALREADY_IN_A_GANG);
-                return;
+                if (sender is null || !sender.LoggedIn)
+                    return;
+
+                if (player.IsInGang)
+                {
+                    player.SendNotification(player.Language.YOU_ARE_ALREADY_IN_A_GANG);
+                    return;
+                }
+
+                var gangRank = sender.Gang.Entity.Ranks.First(r => r.Rank == 0);
+
+                await _eventsHandler.OnGangJoin(player, sender.Gang, gangRank);
+
+                if (player.Lobby is IGangLobby)
+                    await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
+
+                player.SendNotification(string.Format(player.Language.YOU_JOINED_THE_GANG, player.Gang.Entity.Name));
+                player.Gang.SendNotification(lang => string.Format(lang.PLAYER_JOINED_YOUR_GANG, player.DisplayName));
             }
-
-            var gangRank = sender.Gang.Entity.Ranks.First(r => r.Rank == 0);
-
-            await _eventsHandler.OnGangJoin(player, sender.Gang, gangRank);
-
-            if (player.Lobby is IGangLobby)
-                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
-
-            player.SendNotification(string.Format(player.Language.YOU_JOINED_THE_GANG, player.Gang.Entity.Name));
-            player.Gang.SendNotification(lang => string.Format(lang.PLAYER_JOINED_YOUR_GANG, player.DisplayName));
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         private void RejectedInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation invitation)

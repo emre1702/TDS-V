@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.CustomAttribute;
 using TDS_Server.Data.Defaults;
@@ -15,7 +16,7 @@ namespace TDS_Server.Handler.Commands
     partial class BaseCommands
     {
         [TDSCommand(PlayerCommand.BlockUser)]
-        public async void BlockUser(ITDSPlayer player, ITDSPlayer target)
+        public async Task BlockUser(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.Entity is null || target.Entity is null)
                 return;
@@ -27,7 +28,7 @@ namespace TDS_Server.Handler.Commands
                 if (relation != null && relation.Relation == PlayerRelation.Block)
                 {
                     //player.SendChatMessage(string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.DisplayName));
-                    UnblockUser(player, target);
+                    await UnblockUser(player, target);
                     return false;
                 }
 
@@ -148,7 +149,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.LobbyLeave)]
-        public async void OnLobbyLeave(ITDSPlayer player)
+        public async Task OnLobbyLeave(ITDSPlayer player)
         {
             if (player.Lobby is null)
                 return;
@@ -316,7 +317,7 @@ namespace TDS_Server.Handler.Commands
         }
 
         [TDSCommand(PlayerCommand.UnblockUser)]
-        public async void UnblockUser(ITDSPlayer player, ITDSPlayer target)
+        public async Task UnblockUser(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.Entity is null || target.Entity is null)
                 return;

@@ -10,6 +10,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Server;
 using TDS_Shared.Data.Enums;
@@ -25,9 +26,9 @@ namespace TDS_Server.Handler.Account
         private readonly LangHelper _langHelper;
         private readonly ServerStartHandler _serverStartHandler;
 
-        public RegisterHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, EventsHandler eventsHandler,
+        public RegisterHandler(TDSDbContext dbContext, EventsHandler eventsHandler,
             DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler, LangHelper langHelper)
-            : base(dbContext, loggingHandler)
+            : base(dbContext)
         {
             (_eventsHandler, _databasePlayerHelper, _serverStartHandler) = (eventsHandler, databasePlayerHelper, serverStartHandler);
             _langHelper = langHelper;
@@ -91,7 +92,7 @@ namespace TDS_Server.Handler.Account
                 await dbContext.SaveChangesAsync();
             });
 
-            LoggingHandler.LogRest(LogType.Register, player, true);
+            LoggingHandler.Instance.LogRest(LogType.Register, player, true);
 
             _eventsHandler.OnPlayerRegister(player, dbPlayer);
 
@@ -131,6 +132,10 @@ namespace TDS_Server.Handler.Account
                     return;
                 }
                 RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
             }
             finally
             {

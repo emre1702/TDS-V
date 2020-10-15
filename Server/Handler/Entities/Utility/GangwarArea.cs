@@ -26,12 +26,12 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
         private int _playerNotAtTargetCounter;
         private ITDSBlip? _blip;
 
-        public GangwarArea(GangwarArea copyFrom, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext, loggingHandler)
+        public GangwarArea(GangwarArea copyFrom, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext)
+            : this(copyFrom.Map, settingsHandler, gangsHandler, dbContext)
             => Entity = null;
 
-        public GangwarArea(MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            : base(dbContext, loggingHandler)
+        public GangwarArea(MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler, TDSDbContext dbContext)
+            : base(dbContext)
         {
             Map = map;
 
@@ -41,8 +41,8 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
 
         [ActivatorUtilitiesConstructor]
         public GangwarArea(GangwarAreas entity, MapDto map, ISettingsHandler settingsHandler, GangsHandler gangsHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler)
-            : this(map, settingsHandler, gangsHandler, dbContext, loggingHandler)
+            TDSDbContext dbContext, LobbiesHandler lobbiesHandler)
+            : this(map, settingsHandler, gangsHandler, dbContext)
         {
             Entity = entity;
             _lobbiesHandler = lobbiesHandler;

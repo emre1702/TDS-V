@@ -1,6 +1,8 @@
 ﻿using GTANetworkAPI;
+using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 
 namespace TDS_Server.LobbySystem.EventsHandlers
@@ -18,10 +20,17 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         private async void EventsHandler_PlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint reason)
         {
-            // Triggering the event for lobby events handler is handled in Deathmatch.OnPlayerDeath
-            var task = player.Lobby?.Deathmatch.OnPlayerDeath(player, killer, reason);
-            if (task is { })
-                await task.ConfigureAwait(false);
+            try
+            {
+                // Triggering the event for lobby events handler is handled in Deathmatch.OnPlayerDeath
+                var task = player.Lobby?.Deathmatch.OnPlayerDeath(player, killer, reason);
+                if (task is { })
+                    await task.ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         private void EventsHandler_PlayerEnteredColshape(ITDSColshape colshape, ITDSPlayer player)

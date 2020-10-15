@@ -13,6 +13,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.RoundEndReasons;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Extensions;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
 using TDS_Shared.Core;
@@ -73,13 +74,20 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
 
         public virtual async void SetNext()
         {
-            await _roundWaitSemaphore.Do(() =>
+            try
             {
-                if (_lobbyRemoved)
-                    Stop();
-                else
-                    SetState(Next);
-            }).ConfigureAwait(false);
+                await _roundWaitSemaphore.Do(() =>
+                {
+                    if (_lobbyRemoved)
+                        Stop();
+                    else
+                        SetState(Next);
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public void Start()
@@ -92,16 +100,23 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
 
         public async void Stop()
         {
-            if (!Started)
-                return;
-            Started = false;
-            await _roundWaitSemaphore.Do(() =>
+            try
             {
-                _nextTimer?.Kill();
-                if (Current != List.Last)
-                    List.Last!.Value.SetCurrent();
-                Current = List.Last!;
-            }).ConfigureAwait(false);
+                if (!Started)
+                    return;
+                Started = false;
+                await _roundWaitSemaphore.Do(() =>
+                {
+                    _nextTimer?.Kill();
+                    if (Current != List.Last)
+                        List.Last!.Value.SetCurrent();
+                    Current = List.Last!;
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public void EndRound(IRoundEndReason roundEndReason)

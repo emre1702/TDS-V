@@ -21,9 +21,9 @@ namespace TDS_Server.Handler.Userpanel
     {
         private readonly UserpanelCommandsHandler _userpanelCommandsHandler;
 
-        public UserpanelSettingsCommandsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, UserpanelCommandsHandler userpanelCommandsHandler,
+        public UserpanelSettingsCommandsHandler(TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler,
             EventsHandler eventsHandler)
-            : base(dbContext, loggingHandler)
+            : base(dbContext)
         {
             _userpanelCommandsHandler = userpanelCommandsHandler;
 
@@ -63,7 +63,7 @@ namespace TDS_Server.Handler.Userpanel
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, player);
+                LoggingHandler.Instance.LogError(ex, player);
                 return null;
             }
         }
@@ -117,11 +117,19 @@ namespace TDS_Server.Handler.Userpanel
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            var data = await GetData(player);
-            NAPI.Task.Run(() =>
+            try
             {
-                player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, Serializer.ToClient(data));
-            });
+                var data = await GetData(player);
+                var json = Serializer.ToClient(data);
+                NAPI.Task.Run(() =>
+                {
+                    player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, json);
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
     }
 }

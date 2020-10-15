@@ -37,8 +37,8 @@ namespace TDS_Server.LobbySystem.Lobbies
 
         public Arena(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider)
         {
         }
 
@@ -50,7 +50,7 @@ namespace TDS_Server.LobbySystem.Lobbies
 
             lobbyDependencies ??= new ArenaDependencies();
 
-            lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler);
             lobbyDependencies.MapHandler ??= new ArenaMapHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, settingsHandler, mapsLoadingHandler);
             ((ArenaDependencies)lobbyDependencies).MapVoting ??= new ArenaMapVoting(this, mapsLoadingHandler, settingsHandler);
             lobbyDependencies.Players ??= new ArenaPlayers(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);

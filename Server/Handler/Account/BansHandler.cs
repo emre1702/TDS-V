@@ -22,9 +22,9 @@ namespace TDS_Server.Handler.Account
 
         private List<PlayerBans> _cachedBans = new List<PlayerBans>();
 
-        public BansHandler(TDSDbContext dbContext, ILoggingHandler logger, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler,
+        public BansHandler(TDSDbContext dbContext, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler,
             ISettingsHandler settingsHandler)
-            : base(dbContext, logger)
+            : base(dbContext)
         {
             _lobbiesHandler = lobbiesHandler;
             _settingsHandler = settingsHandler;
@@ -151,18 +151,25 @@ namespace TDS_Server.Handler.Account
 
         public async void RefreshServerBansCache(int counter)
         {
-            if (counter % _settingsHandler.ServerSettings.ReloadServerBansEveryMinutes != 0)
-                return;
-
-            int lobbyId = _lobbiesHandler.MainMenu.Entity.Id;
-            var entries = await ExecuteForDBAsync(async dbContext
-                => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
-            lock (_cachedBans)
+            try
             {
-                _cachedBans = entries;
-            }
+                if (counter % _settingsHandler.ServerSettings.ReloadServerBansEveryMinutes != 0)
+                    return;
 
-            NAPI.Task.Run(() => _eventsHandler.OnLoadedServerBans());
+                int lobbyId = _lobbiesHandler.MainMenu.Entity.Id;
+                var entries = await ExecuteForDBAsync(async dbContext
+                    => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
+                lock (_cachedBans)
+                {
+                    _cachedBans = entries;
+                }
+
+                NAPI.Task.Run(() => _eventsHandler.OnLoadedServerBans());
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public void RemoveServerBanByPlayerId(PlayerBans ban)
@@ -184,14 +191,21 @@ namespace TDS_Server.Handler.Account
 
         private async void RemoveExpiredBans(int _)
         {
-            await ExecuteForDBAsync(async (dbContext) =>
+            try
             {
-                var bans = await dbContext.PlayerBans
-                    .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.UtcNow)
-                    .ToListAsync();
-                dbContext.PlayerBans.RemoveRange(bans);
-                await dbContext.SaveChangesAsync();
-            });
+                await ExecuteForDBAsync(async (dbContext) =>
+                {
+                    var bans = await dbContext.PlayerBans
+                        .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.UtcNow)
+                        .ToListAsync();
+                    dbContext.PlayerBans.RemoveRange(bans);
+                    await dbContext.SaveChangesAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
     }
 }

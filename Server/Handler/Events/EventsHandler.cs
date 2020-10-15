@@ -186,10 +186,17 @@ namespace TDS_Server.Handler.Events
 
         public async void OnPlayerRegister(ITDSPlayer player, Players dbPlayer)
         {
-            var task = PlayerRegisteredBefore?.InvokeAsync((player, dbPlayer));
-            if (task.HasValue)
-                await task.Value;
-            PlayerRegistered?.Invoke(player, dbPlayer);
+            try
+            {
+                var task = PlayerRegisteredBefore?.InvokeAsync((player, dbPlayer));
+                if (task.HasValue)
+                    await task.Value;
+                PlayerRegistered?.Invoke(player, dbPlayer);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnPlayerSpawn(ITDSPlayer player)

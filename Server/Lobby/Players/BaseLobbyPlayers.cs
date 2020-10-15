@@ -11,6 +11,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler;
 using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Utility;
 
@@ -173,12 +174,19 @@ namespace TDS_Server.LobbySystem.Players
 
         private async void Events_NewBan(PlayerBans ban)
         {
-            await _semaphore.Do(() =>
+            try
             {
-                var index = _players.FindIndex(p => p.Entity?.Id == ban.PlayerId);
-                if (index >= 0)
-                    _players.RemoveAt(index);
-            }).ConfigureAwait(false);
+                await _semaphore.Do(() =>
+                {
+                    var index = _players.FindIndex(p => p.Entity?.Id == ban.PlayerId);
+                    if (index >= 0)
+                        _players.RemoveAt(index);
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
     }
 }

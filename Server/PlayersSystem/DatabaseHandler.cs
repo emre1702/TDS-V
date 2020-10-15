@@ -5,6 +5,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler;
 
 namespace TDS_Server.PlayersSystem
 {
@@ -43,10 +44,17 @@ namespace TDS_Server.PlayersSystem
 
         public async void CheckSaveData()
         {
-            if (Environment.TickCount - _lastSavedMs < _settingsHandler.ServerSettings.SavePlayerDataCooldownMinutes * 60 * 1000)
-                return;
+            try
+            {
+                if (Environment.TickCount - _lastSavedMs < _settingsHandler.ServerSettings.SavePlayerDataCooldownMinutes * 60 * 1000)
+                    return;
 
-            await SaveData().ConfigureAwait(false);
+                await SaveData().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async ValueTask SaveData(bool force = false)

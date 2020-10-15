@@ -37,20 +37,20 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public FightLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            ILoggingHandler loggingHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            : base(entity, databaseHandler, langHelper, eventsHandler, loggingHandler, serviceProvider, teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider)
         {
         }
 
         protected override void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
         {
             var weaponDatasLoadingHandler = ServiceProvider.GetRequiredService<WeaponDatasLoadingHandler>();
-            var damageSys = new Damagesys(LoggingHandler, weaponDatasLoadingHandler);
+            var damageSys = new Damagesys(this, weaponDatasLoadingHandler);
 
             lobbyDependencies ??= new FightLobbyDependencies();
 
-            lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler);
             ((FightLobbyDependencies)lobbyDependencies).Spectator ??= new FightLobbySpectator(this);
             ((FightLobbyDependencies)lobbyDependencies).Weapons ??= new FightLobbyWeapons(this, (IFightLobbyEventsHandler)lobbyDependencies.Events);
             lobbyDependencies.Deathmatch ??= new FightLobbyDeathmatch(this, (IFightLobbyEventsHandler)lobbyDependencies.Events, damageSys, LangHelper);

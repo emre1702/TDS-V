@@ -86,66 +86,73 @@ namespace TDS_Server.Handler.Userpanel
 
         public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)
         {
-            string? json = null;
-            switch (dataType)
+            try
             {
-                // Doing that at login now because it's also used for chat
-                /*case UserpanelLoadDataType.Commands:
-                    json = _commandsHandler.GetData();
-                    break;*/
+                string? json = null;
+                switch (dataType)
+                {
+                    // Doing that at login now because it's also used for chat
+                    /*case UserpanelLoadDataType.Commands:
+                        json = _commandsHandler.GetData();
+                        break;*/
 
-                case UserpanelLoadDataType.Rules:
-                    json = _rulesHandler.GetData();
-                    player.Challenges.AddToChallenge(ChallengeType.ReadTheRules);
-                    break;
+                    case UserpanelLoadDataType.Rules:
+                        json = _rulesHandler.GetData();
+                        player.Challenges.AddToChallenge(ChallengeType.ReadTheRules);
+                        break;
 
-                case UserpanelLoadDataType.FAQs:
-                    json = _fAQsHandlers.GetData(player);
-                    player.Challenges.AddToChallenge(ChallengeType.ReadTheFAQ);
-                    break;
+                    case UserpanelLoadDataType.FAQs:
+                        json = _fAQsHandlers.GetData(player);
+                        player.Challenges.AddToChallenge(ChallengeType.ReadTheFAQ);
+                        break;
 
-                case UserpanelLoadDataType.MyStatsGeneral:
-                    json = await _playerStatsHandler.GetData(player);
-                    break;
+                    case UserpanelLoadDataType.MyStatsGeneral:
+                        json = await _playerStatsHandler.GetData(player);
+                        break;
 
-                case UserpanelLoadDataType.MyStatsWeapon:
-                    json = PlayerWeaponStatsHandler.GetData(player);
-                    break;
+                    case UserpanelLoadDataType.MyStatsWeapon:
+                        json = PlayerWeaponStatsHandler.GetData(player);
+                        break;
 
-                case UserpanelLoadDataType.ApplicationUser:
-                    json = await ApplicationUserHandler.GetData(player);
-                    break;
+                    case UserpanelLoadDataType.ApplicationUser:
+                        json = await ApplicationUserHandler.GetData(player);
+                        break;
 
-                case UserpanelLoadDataType.ApplicationsAdmin:
-                    json = await ApplicationsAdminHandler.GetData(player);
-                    break;
+                    case UserpanelLoadDataType.ApplicationsAdmin:
+                        json = await ApplicationsAdminHandler.GetData(player);
+                        break;
 
-                case UserpanelLoadDataType.SettingsSpecial:
-                    json = SettingsSpecialHandler.GetData(player);
-                    break;
+                    case UserpanelLoadDataType.SettingsSpecial:
+                        json = SettingsSpecialHandler.GetData(player);
+                        break;
 
-                // Doing that at clientside
-                /*case UserpanelLoadDataType.SettingsCommands:
-                    json = await SettingsCommandsHandler.GetData(player);
-                    break;*/
+                    // Doing that at clientside
+                    /*case UserpanelLoadDataType.SettingsCommands:
+                        json = await SettingsCommandsHandler.GetData(player);
+                        break;*/
 
-                case UserpanelLoadDataType.SupportUser:
-                    json = await SupportUserHandler.GetData(player);
-                    break;
+                    case UserpanelLoadDataType.SupportUser:
+                        json = await SupportUserHandler.GetData(player);
+                        break;
 
-                case UserpanelLoadDataType.SupportAdmin:
-                    json = await SupportAdminHandler.GetData(player);
-                    break;
+                    case UserpanelLoadDataType.SupportAdmin:
+                        json = await SupportAdminHandler.GetData(player);
+                        break;
 
-                case UserpanelLoadDataType.OfflineMessages:
-                    json = await OfflineMessagesHandler.GetData(player);
-                    break;
+                    case UserpanelLoadDataType.OfflineMessages:
+                        json = await OfflineMessagesHandler.GetData(player);
+                        break;
+                }
+
+                if (json == null)
+                    return;
+
+                NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
             }
-
-            if (json == null)
-                return;
-
-            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         #endregion Public Methods

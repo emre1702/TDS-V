@@ -1,6 +1,8 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+﻿using System;
+using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.RoundEndReasons;
+using TDS_Server.Handler;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
 
 namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
@@ -14,13 +16,20 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
 
         public override async void SetNext()
         {
-            if (Next.Value is RoundEndState)
+            try
             {
-                var winnerTeam = await _arena.Rounds.GetTimesUpWinnerTeam().ConfigureAwait(false);
-                CurrentRoundEndReason = new TimeRoundEndReason(winnerTeam);
-            }
+                if (Next.Value is RoundEndState)
+                {
+                    var winnerTeam = await _arena.Rounds.GetTimesUpWinnerTeam().ConfigureAwait(false);
+                    CurrentRoundEndReason = new TimeRoundEndReason(winnerTeam);
+                }
 
-            base.SetNext();
+                base.SetNext();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
     }
 }

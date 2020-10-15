@@ -17,8 +17,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public event PlayerWeaponSwitchDelegate? PlayerWeaponSwitch;
 
-        public FightLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler, ILoggingHandler logging)
-            : base(lobby, eventsHandler, logging)
+        public FightLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler)
+            : base(lobby, eventsHandler)
         {
         }
 

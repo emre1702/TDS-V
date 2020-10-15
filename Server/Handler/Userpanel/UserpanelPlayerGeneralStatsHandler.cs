@@ -198,7 +198,7 @@ namespace TDS_Server.Handler.Userpanel
     {
         private readonly LobbiesHandler _lobbiesHandler;
 
-        public UserpanelPlayerGeneralStatsHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler) : base(dbContext, loggingHandler)
+        public UserpanelPlayerGeneralStatsHandler(TDSDbContext dbContext, LobbiesHandler lobbiesHandler) : base(dbContext)
             => (_lobbiesHandler) = (lobbiesHandler);
 
         public async Task<string?> GetData(ITDSPlayer player)
@@ -213,7 +213,7 @@ namespace TDS_Server.Handler.Userpanel
             catch (Exception ex)
             {
                 var baseEx = ex.GetBaseException();
-                LoggingHandler.LogError("SendPlayerPlayerStats failed: " + baseEx.Message, ex.StackTrace ?? Environment.StackTrace,
+                LoggingHandler.Instance.LogError("SendPlayerPlayerStats failed: " + baseEx.Message, ex.StackTrace ?? Environment.StackTrace,
                     ex.GetType().Name + "|" + baseEx.GetType().Name, player);
                 return null;
             }

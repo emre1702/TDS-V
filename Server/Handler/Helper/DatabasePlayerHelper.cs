@@ -16,8 +16,8 @@ namespace TDS_Server.Handler.Helper
     {
         private readonly ChatHandler _chatHandler;
 
-        public DatabasePlayerHelper(TDSDbContext dbContext, ILoggingHandler loggingHandler, ChatHandler chatHandler)
-            : base(dbContext, loggingHandler)
+        public DatabasePlayerHelper(TDSDbContext dbContext, ChatHandler chatHandler)
+            : base(dbContext)
         {
             _chatHandler = chatHandler;
 

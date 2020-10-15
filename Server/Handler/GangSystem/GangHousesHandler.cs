@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
@@ -28,8 +29,8 @@ namespace TDS_Server.Handler.GangSystem
         private readonly GangsHandler _gangsHandler;
         private readonly EventsHandler _eventsHandler;
 
-        public GangHousesHandler(TDSDbContext dbContext, ILoggingHandler loggingHandler, GangLevelsHandler gangLevelsHandler, GangsHandler gangsHandler,
-            IServiceProvider serviceProvider, EventsHandler eventsHandler) : base(dbContext, loggingHandler)
+        public GangHousesHandler(TDSDbContext dbContext, GangLevelsHandler gangLevelsHandler, GangsHandler gangsHandler,
+            IServiceProvider serviceProvider, EventsHandler eventsHandler) : base(dbContext)
         {
             _gangLevelsHandler = gangLevelsHandler;
             _serviceProvider = serviceProvider;
@@ -57,7 +58,7 @@ namespace TDS_Server.Handler.GangSystem
             }
         }
 
-        public async void AddHouse(Vector3 position, float rotation, byte neededGangLevel, int creatorId)
+        public async Task AddHouse(Vector3 position, float rotation, byte neededGangLevel, int creatorId)
         {
             var entity = new GangHouses
             {

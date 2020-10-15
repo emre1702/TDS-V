@@ -46,9 +46,8 @@ namespace TDS_Server.Handler
             TDSDbContext dbContext,
             ISettingsHandler settingsHandler,
             MapsLoadingHandler mapsHandler,
-            ILoggingHandler loggingHandler,
             EventsHandler eventsHandler,
-            ILobbiesProvider lobbiesProvider) : base(dbContext, loggingHandler)
+            ILobbiesProvider lobbiesProvider) : base(dbContext)
         {
             _mapsHandler = mapsHandler;
             _eventsHandler = eventsHandler;
@@ -343,7 +342,7 @@ namespace TDS_Server.Handler
                 }
                 catch (Exception ex)
                 {
-                    LoggingHandler.LogError(ex);
+                    LoggingHandler.Instance.LogError(ex);
                 }
             }
         }
@@ -391,7 +390,14 @@ namespace TDS_Server.Handler
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            await MainMenu.Players.AddPlayer(player, 0);
+            try
+            {
+                await MainMenu.Players.AddPlayer(player, 0);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         private bool IsCustomLobbyNameAllowed(string name)

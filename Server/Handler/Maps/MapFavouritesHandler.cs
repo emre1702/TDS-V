@@ -18,23 +18,31 @@ namespace TDS_Server.Handler.Maps
 {
     public class MapFavouritesHandler : DatabaseEntityWrapper
     {
-        public MapFavouritesHandler(EventsHandler eventsHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            : base(dbContext, loggingHandler)
+        public MapFavouritesHandler(EventsHandler eventsHandler, TDSDbContext dbContext)
+            : base(dbContext)
         {
             eventsHandler.PlayerLoggedIn += LoadPlayerFavourites;
         }
 
         public async void LoadPlayerFavourites(ITDSPlayer player)
         {
-            if (player.Entity is null)
-                return;
+            try
+            {
+                if (player.Entity is null)
+                    return;
 
-            List<int> mapIDs = await ExecuteForDBAsync(async dbContext
-                => await dbContext.PlayerMapFavourites
-                    .Where(m => m.PlayerId == player.Entity.Id)
-                    .Select(m => m.MapId)
-                    .ToListAsync());
-            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, Serializer.ToBrowser(mapIDs)));
+                var mapIDs = await ExecuteForDBAsync(async dbContext
+                    => await dbContext.PlayerMapFavourites
+                        .Where(m => m.PlayerId == player.Entity.Id)
+                        .Select(m => m.MapId)
+                        .ToListAsync());
+                var json = Serializer.ToBrowser(mapIDs);
+                NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, json));
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async Task<object?> ToggleMapFavouriteState(ITDSPlayer player, ArraySegment<object> args)

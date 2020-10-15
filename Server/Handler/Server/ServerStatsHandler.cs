@@ -21,8 +21,8 @@ namespace TDS_Server.Handler.Server
         private readonly EventsHandler _eventsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public ServerStatsHandler(EventsHandler eventsHandler, ITDSPlayerHandler tdsPlayerHandler, TDSDbContext dbContext, ILoggingHandler loggingHandler)
-            : base(dbContext, loggingHandler)
+        public ServerStatsHandler(EventsHandler eventsHandler, ITDSPlayerHandler tdsPlayerHandler, TDSDbContext dbContext)
+            : base(dbContext)
         {
             _eventsHandler = eventsHandler;
             _tdsPlayerHandler = tdsPlayerHandler;
@@ -80,7 +80,14 @@ namespace TDS_Server.Handler.Server
 
         public async void Save(int _)
         {
-            await SaveTask();
+            try
+            {
+                await SaveTask();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public async Task SaveTask()
@@ -111,29 +118,50 @@ namespace TDS_Server.Handler.Server
 
         private async void CheckPlayerPeak(ITDSPlayer _)
         {
-            await CheckNewDay();
-            int amountLoggedIn = _tdsPlayerHandler.AmountLoggedInPlayers;
-            if (amountLoggedIn > DailyStats.PlayerPeak)
+            try
             {
-                DailyStats.PlayerPeak = (short)amountLoggedIn;
+                await CheckNewDay();
+                int amountLoggedIn = _tdsPlayerHandler.AmountLoggedInPlayers;
+                if (amountLoggedIn > DailyStats.PlayerPeak)
+                {
+                    DailyStats.PlayerPeak = (short)amountLoggedIn;
+                }
+                if (amountLoggedIn > TotalStats.PlayerPeak)
+                {
+                    TotalStats.PlayerPeak = (short)amountLoggedIn;
+                }
             }
-            if (amountLoggedIn > TotalStats.PlayerPeak)
+            catch (Exception ex)
             {
-                TotalStats.PlayerPeak = (short)amountLoggedIn;
+                LoggingHandler.Instance.LogError(ex);
             }
         }
 
         private async void PlayerLoggedIn(ITDSPlayer player)
         {
-            await CheckNewDay();
-            ++DailyStats.AmountLogins;
-            CheckPlayerPeak(player);
+            try
+            {
+                await CheckNewDay();
+                ++DailyStats.AmountLogins;
+                CheckPlayerPeak(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         private async void PlayerRegistered(ITDSPlayer _, Players dbPlayer)
         {
-            await CheckNewDay();
-            ++DailyStats.AmountRegistrations;
+            try
+            {
+                await CheckNewDay();
+                ++DailyStats.AmountRegistrations;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
     }
 }

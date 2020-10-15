@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
+using TDS_Server.Handler;
 
 namespace TDS_Server.Core.Damagesystem
 {
@@ -88,7 +89,7 @@ namespace TDS_Server.Core.Damagesystem
 
             if (lobbyPlayersHandler?.SavePlayerLobbyStats == true && player.Lobby?.IsOfficial == true)
             {
-                _loggingHandler.LogKill(player, killer, weapon);
+                LoggingHandler.Instance.LogKill(player, killer, weapon);
             }
         }
 

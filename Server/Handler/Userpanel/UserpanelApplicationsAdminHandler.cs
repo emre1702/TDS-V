@@ -69,8 +69,8 @@ namespace TDS_Server.Handler.Userpanel
         #region Public Constructors
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerGeneralStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
-            TDSDbContext dbContext, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler, ITDSPlayerHandler tdsPlayerHandler)
-            : base(dbContext, loggingHandler)
+            TDSDbContext dbContext, ISettingsHandler settingsHandler, ITDSPlayerHandler tdsPlayerHandler)
+            : base(dbContext)
             => (_userpanelPlayerStatsHandler, _settingsHandler, _tdsPlayerHandler, _userpanelApplicationUserHandler)
             = (userpanelPlayerStatsHandler, settingsHandler, tdsPlayerHandler, userpanelApplicationUserHandler);
 
@@ -108,7 +108,7 @@ namespace TDS_Server.Handler.Userpanel
             }
             catch (Exception ex)
             {
-                LoggingHandler.LogError(ex, player);
+                LoggingHandler.Instance.LogError(ex, player);
                 return null;
             }
         }

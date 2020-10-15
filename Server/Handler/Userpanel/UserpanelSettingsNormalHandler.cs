@@ -23,8 +23,8 @@ namespace TDS_Server.Handler.Userpanel
         private readonly Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 
         public UserpanelSettingsNormalHandler(BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext,
-            ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler)
-            : base(dbContext, loggingHandler)
+            ITDSPlayerHandler tdsPlayerHandler)
+            : base(dbContext)
             => (_bonusBotConnectorClient, _tdsPlayerHandler)
             = (bonusBotConnectorClient, tdsPlayerHandler);
 

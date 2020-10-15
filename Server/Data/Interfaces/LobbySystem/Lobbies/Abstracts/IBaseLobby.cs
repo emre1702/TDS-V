@@ -32,7 +32,6 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
         IBaseLobbyDatabase Database { get; }
         IBaseLobbyDeathmatch Deathmatch { get; }
         IBaseLobbyEventsHandler Events { get; }
-        ILoggingHandler LoggingHandler { get; }
         IBaseLobbyMapHandler MapHandler { get; }
         IBaseLobbyNatives Natives { get; }
         IBaseLobbyNotifications Notifications { get; }
