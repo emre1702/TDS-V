@@ -11,8 +11,6 @@ namespace TDS_Server.Handler
 {
     public class AdminsHandler
     {
-        #region Public Constructors
-
         public AdminsHandler(TDSDbContext dbContext, EventsHandler eventsHandler)
         {
             AdminLevels = dbContext.AdminLevels
@@ -33,23 +31,18 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerLoggedOut += SetOffline;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public Dictionary<short, AdminLevelDto> AdminLevels { get; } = new Dictionary<short, AdminLevelDto>();
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void CallMethodForAdmins(Action<ITDSPlayer> func, byte minadminlvl = 1)
         {
-            for (byte lvl = minadminlvl; lvl < AdminLevels.Count; ++lvl)
+            lock (AdminLevels)
             {
-                foreach (ITDSPlayer player in AdminLevels[lvl].PlayersOnline)
+                for (byte lvl = minadminlvl; lvl < AdminLevels.Count; ++lvl)
                 {
-                    func(player);
+                    foreach (ITDSPlayer player in AdminLevels[lvl].PlayersOnline)
+                    {
+                        func(player);
+                    }
                 }
             }
         }
@@ -69,26 +62,26 @@ namespace TDS_Server.Handler
             CallMethodForAdmins(player => player.SendNotification(propertygetter(player.Language)), minadminlvl);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void SetOffline(ITDSPlayer player)
         {
-            if (AdminLevels.ContainsKey(player.Admin.Level.Level))
+            lock (AdminLevels)
             {
-                AdminLevels[player.Admin.Level.Level].PlayersOnline.Remove(player);
+                if (AdminLevels.ContainsKey(player.Admin.Level.Level))
+                {
+                    AdminLevels[player.Admin.Level.Level].PlayersOnline.Remove(player);
+                }
             }
         }
 
         private void SetOnline(ITDSPlayer player)
         {
-            if (AdminLevels.ContainsKey(player.Admin.Level.Level))
+            lock (AdminLevels)
             {
-                AdminLevels[player.Admin.Level.Level].PlayersOnline.Add(player);
+                if (AdminLevels.ContainsKey(player.Admin.Level.Level))
+                {
+                    AdminLevels[player.Admin.Level.Level].PlayersOnline.Add(player);
+                }
             }
         }
-
-        #endregion Private Methods
     }
 }

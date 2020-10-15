@@ -169,14 +169,12 @@ namespace TDS_Server.Handler.Events
             var task = PlayerLoggedOutBefore?.InvokeAsync(tdsPlayer);
             if (task.HasValue)
                 await task.Value;
-            NAPI.Task.Run(() =>
-            {
-                PlayerLoggedOut?.Invoke(tdsPlayer);
-            });
+            PlayerLoggedOut?.Invoke(tdsPlayer);
             await tdsPlayer.Database.ExecuteForDBAsync(async dbContext =>
             {
                 await dbContext.DisposeAsync();
             });
+            tdsPlayer.Events.TriggerRemoved();
         }
 
         public void OnPlayerLogin(ITDSPlayer tdsPlayer)
