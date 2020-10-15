@@ -64,15 +64,15 @@ namespace TDS_Server.Core.Init
 
                 _serviceProvider.GetRequiredService<ServerStartHandler>();
 
+                var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
+                gangsHandler.LoadAll();
+
                 var lobbiesHandler = _serviceProvider.GetRequiredService<LobbiesHandler>();
                 lobbiesHandler.LoadLobbies();
 
                 var bansHandler = _serviceProvider.GetRequiredService<BansHandler>();
                 var settingsHandler = _serviceProvider.GetRequiredService<ISettingsHandler>();
                 bansHandler.RefreshServerBansCache(settingsHandler.ServerSettings.ReloadServerBansEveryMinutes);
-
-                var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
-                gangsHandler.LoadAll();
 
                 var tdsPlayerHandler = _serviceProvider.GetRequiredService<ITDSPlayerHandler>();
                 _commandsHandler = _serviceProvider.GetRequiredService<CommandsHandler>();
