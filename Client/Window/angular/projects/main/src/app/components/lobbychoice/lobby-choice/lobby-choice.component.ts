@@ -16,7 +16,6 @@ import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
 @Component({
     selector: 'app-lobby-choice',
     templateUrl: './lobby-choice.component.html',
-    styleUrls: ['./lobby-choice.component.scss'],
     animations: [
         trigger('hideShowAnimation', [
             transition(
@@ -35,10 +34,6 @@ import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LobbyChoiceComponent implements OnInit, OnDestroy {
-
-
-
-
 
     constructor(
         private rageConnector: RageConnectorService,
@@ -63,8 +58,6 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-
-
     joinLobby(id: number) {
         if (id === OfficialLobbyId.CustomLobby)
             this.showUserLobbies();
@@ -76,6 +69,4 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
         this.settings.InUserLobbiesMenu = true;
         this.changeDetector.detectChanges();
     }
-
-
 }

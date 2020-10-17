@@ -2,16 +2,14 @@
 
     <tdswindow class="left-window challenges" [title]="'Challenges' | language: settings.Lang"
         [@leftToRight]="animState">
-        <div class="challenges-content">
-            <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
-                <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">
-                    {{ timeToNextWeeklyChallengesRestartInfo }}:</div>
-                <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Forever">
-                    {{ 'NoTimeLimit' | language: settings.Lang }}:</div>
-                <li *ngFor="let challenge of challengeGroup[1]" [innerHTML]="challenge[99]"
-                    [class.done]="challenge[1] == challenge[2]">
-                </li>
-            </div>
+        <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
+            <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">
+                {{ timeToNextWeeklyChallengesRestartInfo }}:</div>
+            <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Forever">
+                {{ 'NoTimeLimit' | language: settings.Lang }}:</div>
+            <li *ngFor="let challenge of challengeGroup[1]" [innerHTML]="challenge[99]"
+                [class.done]="challenge[1] == challenge[2]">
+            </li>
         </div>
     </tdswindow>
 

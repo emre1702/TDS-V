@@ -12,20 +12,60 @@
 
     .left-window {
         flex-grow: 1;
+        width: 33%;
+
+        .challenge {
+            margin-bottom: 20px;
+
+            .date {
+                margin-bottom: 5px;
+                font-size: larger;
+                font-weight: bolder;
+            }
+
+            .done {
+                text-decoration: line-through
+            }
+
+            li {
+                margin-bottom: 2px;
+            }
+
+            .challenge:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+
     }
 
     .center-window {
         flex-grow: 2;
+        width: 42%;
     }
 
     .right-window {
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        justify-self: space-between;
+        justify-content: space-between;
+        width: 25%;
 
         tdswindow {
             flex-grow: 1;
+
+            .announcement {
+                margin-bottom: 20px;
+
+                .date {
+                    margin-bottom: 5px;
+                    font-size: larger;
+                    font-weight: bolder;
+                }
+            }
+
+            .announcement:last-of-type {
+                margin-bottom: 0;
+            }
         }
 
         #language-button-container {
