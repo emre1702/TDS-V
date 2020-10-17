@@ -107,6 +107,17 @@ export class TDSWindowComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    private _contentWidth = "auto";
+    get contentWidth(): string {
+        return this._contentWidth;
+    }
+
+    @Input("contentWidth")
+    set contentWidth(value: string) {
+        this._contentWidth = value;
+        this.changeDetector.detectChanges();
+    }
+
     private _contentHeight = "auto";
     get contentHeight(): string {
         return this._contentHeight;
@@ -115,6 +126,17 @@ export class TDSWindowComponent implements OnInit, OnDestroy {
     @Input("contentHeight")
     set contentHeight(value: string) {
         this._contentHeight = value;
+        this.changeDetector.detectChanges();
+    }
+
+    private _contentPadding = "10px";
+    get contentPadding(): string {
+        return this._contentPadding;
+    }
+
+    @Input("contentPadding")
+    set contentPadding(value: string) {
+        this._contentPadding = value;
         this.changeDetector.detectChanges();
     }
 

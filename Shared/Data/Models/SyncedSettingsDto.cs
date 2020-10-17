@@ -2,29 +2,28 @@
 
 namespace TDS_Shared.Data.Models
 {
+    // Todo: Remove not used properties
     public class SyncedServerSettingsDto
     {
         [JsonProperty("0")]
-        public float DistanceToSpotToPlant;
+        public float DistanceToSpotToPlant { get; set; }
+
         [JsonProperty("1")]
-        public float DistanceToSpotToDefuse;
+        public float DistanceToSpotToDefuse { get; set; }
+
         [JsonProperty("2")]
-        public int RoundEndTime;
+        public int RoundEndTime { get; set; }
+
         [JsonProperty("3")]
-        public int MapChooseTime;
+        public int MapChooseTime { get; set; }
+
         [JsonProperty("4")]
-        public int TeamOrderCooldownMs;
+        public int TeamOrderCooldownMs { get; set; }
+
         [JsonProperty("5")]
-        public float NametagMaxDistance;
+        public float NametagMaxDistance { get; set; }
+
         [JsonProperty("6")]
-        public bool ShowNametagOnlyOnAiming;
-        [JsonProperty("7")]
-        public int ArenaLobbyId;
-        [JsonProperty("8")]
-        public int MapCreatorLobbyId;
-        [JsonProperty("9")]
-        public int CharCreatorLobbyId;
-        [JsonProperty("10")]
-        public int GangLobbyLobbyId;
+        public bool ShowNametagOnlyOnAiming { get; set; }
     }
 }

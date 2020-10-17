@@ -54,7 +54,6 @@ namespace TDS_Client.Handler.Lobby
 
             Camera = new LobbyCamHandler(loggingHandler, camerasHandler, settingsHandler, eventsHandler);
             Countdown = new CountdownHandler(loggingHandler, settingsHandler, dxHandler, timerHandler, browserHandler, eventsHandler, Camera);
-            Choice = new LobbyChoiceHandler(remoteEventsSender, settingsHandler);
             MapDatas = new LobbyMapDatasHandler(loggingHandler, dxHandler, timerHandler, eventsHandler, Camera, mapLimitHandler, settingsHandler);
             MapManager = new MapManagerHandler(eventsHandler, browserHandler, settingsHandler, cursorHandler, remoteEventsSender, dataSyncHandler, bindsHandler);
             MainMenu = new MainMenuHandler(eventsHandler, browserHandler);
@@ -78,8 +77,6 @@ namespace TDS_Client.Handler.Lobby
         public BombHandler Bomb { get; }
 
         public LobbyCamHandler Camera { get; }
-
-        public LobbyChoiceHandler Choice { get; }
 
         public CountdownHandler Countdown { get; }
 

@@ -11,6 +11,7 @@ import { ChallengeFrequency } from '../enums/challenge-frequency.enum';
 import { ChallengeType } from '../enums/challenge-type.enum';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
 
 @Component({
     selector: 'app-lobby-choice',
@@ -34,18 +35,10 @@ import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LobbyChoiceComponent implements OnInit, OnDestroy {
-    lobbyChoices: LobbyChoice[] = [
-        { name: "Arena", func: this.joinArena.bind(this), imgUrl: "assets/arenachoice.png" },
-        { name: "MapCreator", func: this.joinMapCreator.bind(this), imgUrl: "assets/mapcreatorchoice.png" },
-        { name: "UserLobbies", func: this.showUserLobbies.bind(this), imgUrl: "assets/customlobbychoice.png" },
-        // { name: "Gang", func: this.joinGang.bind(this), imgUrl: "assets/gangchoice.png" },
-        { name: "CharCreator", func: this.joinCharCreator.bind(this), imgUrl: "assets/charcreatorchoice.png" }
-    ];
 
-    timeToNextWeeklyChallengesRestartInfo: string;
-    challengeType = ChallengeType;
-    challengeFrequency = ChallengeFrequency;
-    languagePipe = new LanguagePipe();
+
+
+
 
     constructor(
         private rageConnector: RageConnectorService,
@@ -55,20 +48,11 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.refreshTimeToWeeklyChallengesRestart();
         this.rageConnector.listen(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
-        this.settings.LanguageChanged.on(null, this.languageChanged.bind(this));
-        this.settings.ChallengesLoaded.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
         this.rageConnector.remove(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
-        this.settings.LanguageChanged.off(null, this.languageChanged.bind(this));
-        this.settings.ChallengesLoaded.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
 
         // Clear it so it doesn't use fill our RAM without a reason
         this.settings.AllMapsForCustomLobby = [];
@@ -79,38 +63,13 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-    private languageChanged() {
-        this.changeDetector.detectChanges();
-    }
 
-    private detectChanges() {
-        this.refreshTimeToWeeklyChallengesRestart();
-        this.changeDetector.detectChanges();
-    }
 
-    setLanguage(languageId: number) {
-        this.settings.loadLanguage(languageId);
-        this.rageConnector.call(DToClientEvent.LanguageChange, languageId);
-    }
-
-    getImageUrl(url: string) {
-        return this.sanitizer.bypassSecurityTrustStyle("url(" + url + ") no-repeat");
-    }
-
-    joinArena() {
-        this.rageConnector.call(DToClientEvent.ChooseArenaToJoin);
-    }
-
-    joinGang() {
-        this.rageConnector.call(DToClientEvent.ChooseGangLobbyToJoin);
-    }
-
-    joinMapCreator() {
-        this.rageConnector.call(DToClientEvent.ChooseMapCreatorToJoin);
-    }
-
-    joinCharCreator() {
-        this.rageConnector.call(DToClientEvent.ChooseCharCreatorToJoin);
+    joinLobby(id: number) {
+        if (id === OfficialLobbyId.CustomLobby)
+            this.showUserLobbies();
+        else
+            this.rageConnector.callServer(DToServerEvent.JoinLobby, id);
     }
 
     showUserLobbies() {
@@ -118,22 +77,5 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-    refreshTimeToWeeklyChallengesRestart(): void {
-        const currentDate = new Date();
-        let restartDate = new Date();
-        restartDate = new Date(restartDate.setDate(currentDate.getDate() - currentDate.getDay() + 7));
-        restartDate.setUTCHours(5);
-        restartDate.setMinutes(0);
-        restartDate.setSeconds(0);
 
-        const hoursToWeeklyChallengesRestart = (restartDate.getTime() - currentDate.getTime()) / 1000 / 60 / 60;
-
-        if (hoursToWeeklyChallengesRestart / 24 >= 1) {
-            this.timeToNextWeeklyChallengesRestartInfo
-                = this.languagePipe.transform("DaysLeft", this.settings.Lang, Math.ceil(hoursToWeeklyChallengesRestart / 24));
-        } else {
-            this.timeToNextWeeklyChallengesRestartInfo
-                = this.languagePipe.transform("HoursLeft", this.settings.Lang, Math.ceil(hoursToWeeklyChallengesRestart % 24));
-        }
-    }
 }

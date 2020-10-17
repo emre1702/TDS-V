@@ -1,0 +1,63 @@
+<div class="container">
+
+    <tdswindow class="left-window challenges" [title]="'Challenges' | language: settings.Lang"
+        [@leftToRight]="animState">
+        <div class="challenges-content">
+            <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
+                <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">
+                    {{ timeToNextWeeklyChallengesRestartInfo }}:</div>
+                <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Forever">
+                    {{ 'NoTimeLimit' | language: settings.Lang }}:</div>
+                <li *ngFor="let challenge of challengeGroup[1]" [innerHTML]="challenge[99]"
+                    [class.done]="challenge[1] == challenge[2]">
+                </li>
+            </div>
+        </div>
+    </tdswindow>
+
+    <div class="placeholder"></div>
+
+    <div class="center-window lobbies" [title]="'Lobbies' | language: settings.Lang" [@topToBottom]="animState"
+        (@topToBottom.done)="onAnimationEvent($event)">
+        <ng-container *ngFor="let button of lobbyChoices; index as i">
+            <div>
+                <button mat-raised-button class="mat-elevation-z8" (click)="triggerJoinLobby(button.id)"
+                    [style.background]="getImageUrl(button.imgUrl)">
+                    <span>[{{ i + 1 }}] {{ button.name | language: settings.Lang }}</span>
+                </button>
+            </div>
+            <div class="placeholder"></div>
+        </ng-container>
+    </div>
+
+    <div class="placeholder"></div>
+
+    <div class="right-window">
+        <div id="language-button-container" [@rightToLeft]="animState">
+            <button mat-icon-button class="language-button mat-elevation-z8" (click)="setLanguage(7)"
+                [style.background]="getImageUrl('assets/german.png')"></button>
+            <button mat-icon-button class="language-button mat-elevation-z8" (click)="setLanguage(9)"
+                [style.background]="getImageUrl('assets/english.png')"></button>
+        </div>
+
+        <div class="placeholder"></div>
+
+        <tdswindow class="announcements" [title]="'Announcements' | language: settings.Lang" [@rightToLeft]="animState">
+            <ng-container *ngIf="settings.Constants && settings.Constants[6]">
+                <div *ngFor="let announcement of settings.Constants[6]" class="announcement">
+                    <div class="date">{{ 'XDaysAgo' | language: settings.Lang:announcement[0] }}:</div>
+                    <div>{{ announcement[1] }}</div>
+                </div>
+            </ng-container>
+
+        </tdswindow>
+
+        <div class="placeholder"></div>
+
+        <tdswindow class="changelogs" [title]="'Changelogs' | language: settings.Lang" [@rightToLeft]="animState">
+
+        </tdswindow>
+    </div>
+
+
+</div>

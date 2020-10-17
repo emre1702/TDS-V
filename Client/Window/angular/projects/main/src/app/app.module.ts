@@ -73,7 +73,6 @@ import { ApplicationInviteDialog } from './dialog/application-invite-dialog';
 import { UserpanelSupportUserComponent } from './components/userpanel/userpanel-support-user/userpanel-support-user.component';
 import { UserpanelSupportAdminComponent } from './components/userpanel/userpanel-support-admin/userpanel-support-admin.component';
 import { UserpanelSupportViewComponent } from './components/userpanel/userpanel-support-view/userpanel-support-view.component';
-import { CarouselComponent } from './components/carousel/carousel.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { UserpanelOfflineMessagesComponent } from './components/userpanel/userpanel-offline-messages/userpanel-offline-messages.component';
@@ -115,6 +114,7 @@ import { GangWindowRankPermissionsComponent } from './components/gang-window/gan
 import { GangWindowMainmenuComponent } from './components/gang-window/gang-window-mainmenu/gang-window-mainmenu.component';
 import { CustomLobbyArmsRaceWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-armsraceweapons-menu/custom-lobby-armsraceweapons-menu.component';
 import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
+import { MainMenuComponent } from './components/lobbychoice/main-menu/main-menu.component';
 
 @NgModule({
   declarations: [
@@ -159,7 +159,6 @@ import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
     UserpanelSupportUserComponent,
     UserpanelSupportAdminComponent,
     UserpanelSupportViewComponent,
-    CarouselComponent,
     UserpanelOfflineMessagesComponent,
     InvitationComponent,
     UserpanelSettingsSpecialComponent,
@@ -188,7 +187,8 @@ import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
     GangWindowVehiclesComponent,
     GangWindowAllGangsComponent,
     GangWindowRankPermissionsComponent,
-    GangWindowMainmenuComponent
+    GangWindowMainmenuComponent,
+    MainMenuComponent
   ],
   imports: [
     ReactiveFormsModule,

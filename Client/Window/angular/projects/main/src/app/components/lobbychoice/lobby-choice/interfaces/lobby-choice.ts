@@ -1,5 +1,5 @@
 export interface LobbyChoice {
+    id: number;
     name: string;
-    func: () => void;
     imgUrl: string;
 }

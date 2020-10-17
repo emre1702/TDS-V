@@ -787,6 +787,9 @@ export interface Language {
     DeleteThisRank: string;
     SaveRanks: string;
     SettingSavedSuccessfully: string;
+    CharCreator: string;
+    Announcements: string;
+    Changelogs: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

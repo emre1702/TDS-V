@@ -42,7 +42,7 @@
                 </mat-toolbar>
             </ng-template>
         </ng-container>
-        <div class="container-content" #content [style.height]="contentHeight">
+        <div class="container-content" #content [style.width]="contentWidth" [style.height]="contentHeight" [style.padding]="contentPadding">
             <ng-container *ngIf="!isLoading">
                 <ng-content></ng-content>
             </ng-container>

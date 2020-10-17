@@ -7,13 +7,7 @@ namespace TDS_Client.Handler.Lobby
 {
     public class MainMenuHandler
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public MainMenuHandler(EventsHandler eventsHandler, BrowserHandler browserHandler)
         {
@@ -23,15 +17,12 @@ namespace TDS_Client.Handler.Lobby
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
         }
 
-        #endregion Public Constructors
-
-        #region Private Methods
-
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
             if (settings.Type != LobbyType.MainMenu)
                 return;
 
+            RAGE.Game.Ui.DisplayRadar(false);
             _browserHandler.Angular.ToggleLobbyChoiceMenu(true);
         }
 
@@ -40,9 +31,8 @@ namespace TDS_Client.Handler.Lobby
             if (settings.Type != LobbyType.MainMenu)
                 return;
 
+            RAGE.Game.Ui.DisplayRadar(true);
             _browserHandler.Angular.ToggleLobbyChoiceMenu(false);
         }
-
-        #endregion Private Methods
     }
 }

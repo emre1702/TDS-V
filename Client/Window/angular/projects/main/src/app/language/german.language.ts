@@ -96,7 +96,7 @@ export class German extends English {
 
     Arena = "Arena";
     Gang = "Gang";
-    UserLobbies = "Benutzer-Lobbies";
+    UserLobbies = "Benutzer-Lobbys";
 
     Userpanel = "Benutzeroberfläche";
     UserpanelInfo = `Das hier ist deine Benutzeroberfläche.
@@ -291,7 +291,7 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     Hour = "Stunde";
     Day = "Tag";
     Week = "Woche";
-    ScoreboardPlayerSortingInfo = "Wonach sollten die Spieler im Scoreboard in Lobbies (NICHT im Hauptmenü) sortiert werden??";
+    ScoreboardPlayerSortingInfo = "Wonach sollten die Spieler im Scoreboard in Lobbys (NICHT im Hauptmenü) sortiert werden??";
     ScoreboardPlayerSortingDescInfo = "Sollten die Spieler absteigend sortiert werden? Wenn nicht, werden sie aufsteigend sortiert.";
     ScoreboardPlaytimeUnitInfo = "In welcher Zeiteinheit sollen die Spielzeiten im Scoreboard angezeigt werden?";
     KillsDeathsRatio = "KD Verhältnis";
@@ -768,6 +768,9 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     CursorVisibleInfo = `Dein Cursor ist aktiviert.
     Du wirst einige Steuerungen nicht nutzen können.`;
     SettingSavedSuccessfully = "Die Einstellungen wurden erfolgreich gespeichert.";
+    CharCreator = "Charakter-Ersteller";
+    Announcements = "Ankündigungen";
+    Changelogs = "Changelogs";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

@@ -126,13 +126,10 @@ namespace TDS_Client.Handler
         public string LobbyName => _syncedLobbySettings != null ? _syncedLobbySettings.Name : "Mainmenu";
         public bool LoggedIn { get; set; }
         public SyncedPlayerSettingsDto PlayerSettings { get; private set; }
-        public int ArenaLobbyId => _syncedServerSettings.ArenaLobbyId;
 
         //public uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
         //public uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
         public int BombDetonateTimeMs => _syncedLobbySettings.BombDetonateTimeMs ?? 0;
-
-        public int CharCreatorLobbyId => _syncedServerSettings.CharCreatorLobbyId;
 
         //public uint SpawnAgainAfterDeathMs => syncedLobbySettings.SpawnAgainAfterDeathMs.Value;
         public int CountdownTime => _syncedLobbySettings.CountdownTime ?? 0;
@@ -143,8 +140,6 @@ namespace TDS_Client.Handler
 
         public bool InLobbyWithMaps => _syncedLobbySettings?.InLobbyWithMaps ?? false;
         public int MapChooseTime => _syncedServerSettings.MapChooseTime;
-        public int MapCreatorLobbyId => _syncedServerSettings.MapCreatorLobbyId;
-        public int GangLobbyLobbyId => _syncedServerSettings.GangLobbyLobbyId;
         public int MapLimitTime => _syncedLobbySettings.MapLimitTime ?? 0;
         public MapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? MapLimitType.KillAfterTime;
         public int RoundEndTime => _syncedServerSettings.RoundEndTime;

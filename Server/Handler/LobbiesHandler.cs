@@ -258,11 +258,6 @@ namespace TDS_Server.Handler
                     AddMapsToArena(arena, lobbyEntity);
                 //lobby.Events.LobbyRemoveAfter += RemoveLobby;
             }
-
-            _settingsHandler.SyncedSettings.ArenaLobbyId = Arena.Entity.Id;
-            _settingsHandler.SyncedSettings.CharCreatorLobbyId = CharCreateLobbyDummy.Entity.Id;
-            _settingsHandler.SyncedSettings.MapCreatorLobbyId = MapCreateLobbyDummy.Entity.Id;
-            _settingsHandler.SyncedSettings.GangLobbyLobbyId = GangLobby.Entity.Id;
         }
 
         public async Task<object?> OnJoinLobby(ITDSPlayer player, ArraySegment<object> args)

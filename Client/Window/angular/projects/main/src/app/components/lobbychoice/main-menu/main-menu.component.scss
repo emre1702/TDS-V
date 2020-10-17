@@ -1,0 +1,82 @@
+.container {
+    position: absolute;
+    left: 10px;
+    width: calc(100vw - 20px);
+
+    top: 10px;
+    height: calc(100vh - 20px - 5vh);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .left-window {
+        flex-grow: 1;
+    }
+
+    .center-window {
+        flex-grow: 2;
+    }
+
+    .right-window {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-self: space-between;
+
+        tdswindow {
+            flex-grow: 1;
+        }
+
+        #language-button-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+
+            .language-button {
+                width: 80px;
+                height: 80px;
+                margin-left: 15px;
+                background-size: 100% 100% !important;
+                border: 0;
+            }
+        }
+    }
+
+    .placeholder {
+        width: 10px;
+        height: 10px;
+    }
+
+    .challenges {
+        margin-top: 40vh;
+    }
+
+    .lobbies {
+        display: flex;
+        flex-direction: column-reverse;
+
+        div:not(.placeholder) {
+            flex: 1;
+
+            button {
+                width: 100%;
+                height: 100%;
+                background-size: 100% 100% !important;
+                margin-bottom: 10px;
+
+                span {
+                    font-size: xx-large;
+                    font-weight: bolder;
+                }
+            }
+
+            button:hover {
+                transform: scale(1.1);
+                opacity: 1 !important;
+                z-index: 99;
+            }
+        }
+
+    }
+}
