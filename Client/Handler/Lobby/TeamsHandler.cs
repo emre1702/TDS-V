@@ -83,7 +83,7 @@ namespace TDS_Client.Handler.Lobby
                 _LobbyTeams = value;
                 if (_LobbyTeams != null)
                 {
-                    if (_LobbyTeams.Count == 1)
+                    if (_LobbyTeams.Count(t => !t.IsSpectator) == 1)
                     {
                         RAGE.Elements.Player.LocalPlayer.SetCanAttackFriendly(true, false);
                     }

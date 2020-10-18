@@ -58,7 +58,7 @@ namespace TDS_Client.Handler.Deathmatch
             if (sourcePlayer == Player.LocalPlayer)
                 return;
 
-            if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer as ITDSPlayer))
+            if (_lobbyHandler.Teams.IsInSameTeam(sourcePlayer as ITDSPlayer) && !_lobbyHandler.HasAllVsAllTeam)
             {
                 cancel.Cancel = true;
                 return;

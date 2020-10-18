@@ -1,12 +1,11 @@
 ﻿using RAGE.Game;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TDS_Client.Data.Abstracts.Entities.GTA;
 using TDS_Client.Data.Enums;
-using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Map;
@@ -20,6 +19,47 @@ namespace TDS_Client.Handler.Lobby
 {
     public class LobbyHandler : ServiceBase
     {
+        public BombHandler Bomb { get; }
+
+        public LobbyCamHandler Camera { get; }
+
+        public CountdownHandler Countdown { get; }
+
+        public bool InFightLobby
+        {
+            get => _inFightLobby;
+            set
+            {
+                _inFightLobby = value;
+                _browserHandler.Angular.SyncInFightLobby(value);
+                _browserHandler.Angular.ToggleHUD(_inFightLobby);
+                _playerFightHandler.Reset();
+            }
+        }
+
+        public bool IsLobbyOwner
+        {
+            get => _isLobbyOwner;
+            set
+            {
+                if (_isLobbyOwner != value)
+                {
+                    _browserHandler.Angular.SyncIsLobbyOwner(value);
+                }
+                _isLobbyOwner = value;
+            }
+        }
+
+        public bool HasAllVsAllTeam => Teams.LobbyTeams.Count(t => !t.IsSpectator) == 1;
+
+        public MainMenuHandler MainMenu { get; }
+        public LobbyMapDatasHandler MapDatas { get; }
+        public MapManagerHandler MapManager { get; }
+        public LobbyPlayersHandler Players { get; }
+        public RoundHandler Round { get; }
+        public RoundInfosHandler RoundInfos { get; }
+        public TeamsHandler Teams { get; }
+
         private readonly BrowserHandler _browserHandler;
 
         private readonly EventsHandler _eventsHandler;
@@ -73,45 +113,6 @@ namespace TDS_Client.Handler.Lobby
 
             RAGE.Events.Tick += DisableAttack;
         }
-
-        public BombHandler Bomb { get; }
-
-        public LobbyCamHandler Camera { get; }
-
-        public CountdownHandler Countdown { get; }
-
-        public bool InFightLobby
-        {
-            get => _inFightLobby;
-            set
-            {
-                _inFightLobby = value;
-                _browserHandler.Angular.SyncInFightLobby(value);
-                _browserHandler.Angular.ToggleHUD(_inFightLobby);
-                _playerFightHandler.Reset();
-            }
-        }
-
-        public bool IsLobbyOwner
-        {
-            get => _isLobbyOwner;
-            set
-            {
-                if (_isLobbyOwner != value)
-                {
-                    _browserHandler.Angular.SyncIsLobbyOwner(value);
-                }
-                _isLobbyOwner = value;
-            }
-        }
-
-        public MainMenuHandler MainMenu { get; }
-        public LobbyMapDatasHandler MapDatas { get; }
-        public MapManagerHandler MapManager { get; }
-        public LobbyPlayersHandler Players { get; }
-        public RoundHandler Round { get; }
-        public RoundInfosHandler RoundInfos { get; }
-        public TeamsHandler Teams { get; }
 
         public void Join(object[] args)
         {
