@@ -15,6 +15,7 @@ import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
 import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
 import { InitialDatas } from './services/test-datas';
+import { DFromServerEvent } from './enums/dfromserverevent.enum';
 
 @Component({
     selector: 'app-root',
@@ -22,7 +23,6 @@ import { InitialDatas } from './services/test-datas';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     animations: [
-
         trigger('teamOrdersAnimation', [
             transition('* => *', [
                 query(':enter', [
@@ -44,14 +44,15 @@ import { InitialDatas } from './services/test-datas';
 export class AppComponent {
     started = InitialDatas.started;
 
-    showMapCreator = false;
-    showFreeroam = false;
-    showLobbyChoice = false;
-    showTeamChoice = false;
-    showRankings = false;
-    showHUD = false;
-    showCharCreator = false;
-    showGangWindow = false;
+    showMapCreator = InitialDatas.opened.mapCreator;
+    showFreeroam = InitialDatas.opened.freeroam;
+    showLobbyChoice = InitialDatas.opened.lobbyChoice;
+    showTeamChoice = InitialDatas.opened.teamChoice;
+    showRankings = InitialDatas.opened.rankings;
+    showHUD = InitialDatas.opened.hud;
+    showCharCreator = InitialDatas.opened.charCreator;
+    showGangWindow = InitialDatas.opened.gangWindow;
+    showDamageTestMenu = InitialDatas.opened.damageTestMenu;
 
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;
@@ -144,6 +145,10 @@ export class AppComponent {
 
         rageConnector.listen(DFromClientEvent.SyncUsernameChange, (newName: string) => {
             this.settings.Constants[7] = newName;
+        });
+
+        rageConnector.listen(DFromServerEvent.ToggleDamageTestMenu, () => {
+
         });
 
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());

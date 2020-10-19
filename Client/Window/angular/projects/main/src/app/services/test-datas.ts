@@ -9,6 +9,18 @@ export class InitialDatas {
     static readonly started = false;
     static readonly isMapVotingActive = false;
 
+    static readonly opened = {
+        mapCreator: false,
+        freeroam: false,
+        lobbyChoice: false,
+        teamChoice: false,
+        rankings: false,
+        hud: false,
+        charCreator: false,
+        gangWindow: false,
+        damageTestMenu: true,
+    };
+
     private static readonly testMapsInVoting: MapVoteDto[] = [
         { 0: 1, 1: "1231", 2: 2 },
         { 0: 1, 1: "1231", 2: 2 },

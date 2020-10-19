@@ -115,6 +115,7 @@ import { GangWindowMainmenuComponent } from './components/gang-window/gang-windo
 import { CustomLobbyArmsRaceWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-armsraceweapons-menu/custom-lobby-armsraceweapons-menu.component';
 import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
 import { MainMenuComponent } from './components/lobbychoice/main-menu/main-menu.component';
+import { DamageTestMenuComponent } from './components/damage-test-menu/damage-test-menu.component';
 
 @NgModule({
   declarations: [
@@ -188,7 +189,8 @@ import { MainMenuComponent } from './components/lobbychoice/main-menu/main-menu.
     GangWindowAllGangsComponent,
     GangWindowRankPermissionsComponent,
     GangWindowMainmenuComponent,
-    MainMenuComponent
+    MainMenuComponent,
+    DamageTestMenuComponent
   ],
   imports: [
     ReactiveFormsModule,

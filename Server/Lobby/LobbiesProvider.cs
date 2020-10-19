@@ -33,6 +33,8 @@ namespace TDS_Server.LobbySystem
                 lobby = ActivatorUtilities.CreateInstance<MainMenu>(_serviceProvider, entity);
             else if (type == typeof(IMapCreatorLobby))
                 lobby = ActivatorUtilities.CreateInstance<MapCreatorLobby>(_serviceProvider, entity);
+            else if (type == typeof(IDamageTestLobby))
+                lobby = ActivatorUtilities.CreateInstance<DamageTestLobby>(_serviceProvider, entity);
             else
                 throw new ArgumentException($"LobbiesProvider doesn't create lobby with Lobby entity for type '{typeof(TLobby).FullName}'.");
 
@@ -47,6 +49,8 @@ namespace TDS_Server.LobbySystem
                 lobby = ActivatorUtilities.CreateInstance<CharCreateLobby>(_serviceProvider, owner);
             else if (type == typeof(IMapCreatorLobby))
                 lobby = ActivatorUtilities.CreateInstance<MapCreatorLobby>(_serviceProvider, owner);
+            else if (type == typeof(IDamageTestLobby))
+                lobby = ActivatorUtilities.CreateInstance<DamageTestLobby>(_serviceProvider, owner);
             else
                 throw new ArgumentException($"LobbiesProvider doesn't create lobby with Player for type '{typeof(TLobby).FullName}'.");
 
@@ -63,6 +67,7 @@ namespace TDS_Server.LobbySystem
                 LobbyType.GangLobby => ActivatorUtilities.CreateInstance<GangLobby>(_serviceProvider, entity),
                 LobbyType.MainMenu => ActivatorUtilities.CreateInstance<MainMenu>(_serviceProvider, entity),
                 LobbyType.MapCreateLobby => ActivatorUtilities.CreateInstance<MapCreatorLobby>(_serviceProvider, entity),
+                LobbyType.DamageTestLobby => ActivatorUtilities.CreateInstance<DamageTestLobby>(_serviceProvider, entity),
 
                 _ => throw new ArgumentException($"LobbiesProvider doesn't create lobby with Lobby entity for lobbytype '{lobbyType}'.")
             };

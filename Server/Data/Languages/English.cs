@@ -74,7 +74,7 @@ namespace TDS_Server.Data.Languages
         public virtual string HITSOUND_ACTIVATED => "Hitsound activated!";
         public virtual string HITSOUND_DEACTIVATED => "Hitsound deactivated!";
 
-        public virtual string INVITATION_MAPCREATELOBBY => "You've been invited to the MapCreator lobby by {0}.";
+        public virtual string INVITATION_LOBBY => "You've been invited to the '{1}' lobby by {0}.";
         public virtual string INVITATION_WAS_WITHDRAWN_OR_REMOVED => "The invitation has already been withdrawn or removed.";
 
         public virtual string JOINED_LOBBY_MESSAGE => "You joined lobby \"{0}\".\nUse '/{1}' to leave.";

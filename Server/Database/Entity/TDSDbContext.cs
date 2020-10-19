@@ -1560,7 +1560,7 @@ namespace TDS_Server.Database.Entity
                 new Lobbies
                 {
                     Id = -3, OwnerId = -1, Type = LobbyType.MapCreateLobby, Name = "MapCreateLobby", IsTemporary = false, IsOfficial = true,
-                    DefaultSpawnX =  -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f
+                    DefaultSpawnX = -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f
                 },
 
                 // only for char-creator ban & spawn
@@ -1568,6 +1568,13 @@ namespace TDS_Server.Database.Entity
                 {
                     Id = -5, OwnerId = -1, Type = LobbyType.CharCreateLobby, Name = "CharCreateLobby", IsTemporary = false, IsOfficial = true,
                     DefaultSpawnX = -425.2233f, DefaultSpawnY = 1126.9731f, DefaultSpawnZ = 326.8f, DefaultSpawnRotation = 0f
+                },
+
+                // only for damage-test spawn
+                new Lobbies
+                {
+                    Id = -6, OwnerId = -1, Type = LobbyType.DamageTestLobby, Name = "DamageTestLobby", IsTemporary = false, IsOfficial = true,
+                    DefaultSpawnX = -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f
                 }
             };
             modelBuilder.Entity<Lobbies>().HasData(seedLobbies);

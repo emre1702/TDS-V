@@ -2,8 +2,6 @@
 {
     public static class ToBrowserEvent
     {
-        #region Public Fields
-
         public const string AddCustomLobby = "sb20";
         public const string AddInvitation = "sb1";
         public const string AddMapToVoting = "sb10";
@@ -27,7 +25,6 @@
         public const string SyncChallenges = "sb7";
         public const string SyncCommandsData = "sb22";
         public const string SyncNewSupportRequestMessage = "sb9";
-
-        #endregion Public Fields
+        public const string ToggleDamageTestMenu = "sb24";
     }
 }
