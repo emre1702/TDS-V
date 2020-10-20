@@ -158,7 +158,8 @@ namespace TDS_Server.Core.Init.Services.Creators
                .AddTransient<IDatabaseHandler, DatabaseHandler>()
                .AddSingleton<WorkaroundsHandler>()
                .AddSingleton<FreeroamDataHandler>()
-               .AddTransient<IDamagesys, Damagesys>();
+               .AddTransient<IDamagesys, Damagesys>()
+               .AddSingleton<IChangelogsHandler, ChangelogsHandler>();
         }
     }
 }

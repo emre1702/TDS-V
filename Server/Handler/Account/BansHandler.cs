@@ -14,6 +14,8 @@ namespace TDS_Server.Handler.Account
 {
     public class BansHandler : DatabaseEntityWrapper
     {
+        public bool LoadedServerBans { get; private set; }
+
         private readonly EventsHandler _eventsHandler;
 
         private readonly LobbiesHandler _lobbiesHandler;
@@ -164,7 +166,8 @@ namespace TDS_Server.Handler.Account
                     _cachedBans = entries;
                 }
 
-                NAPI.Task.Run(() => _eventsHandler.OnLoadedServerBans());
+                LoadedServerBans = true;
+                _eventsHandler.OnLoadedServerBans();
             }
             catch (Exception ex)
             {

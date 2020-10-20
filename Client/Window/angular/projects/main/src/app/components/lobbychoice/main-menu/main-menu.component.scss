@@ -14,28 +14,31 @@
         flex-grow: 1;
         width: 33%;
 
-        .challenge {
-            margin-bottom: 20px;
+        tds-window {
+            overflow-y: auto;
+            overflow-x: hidden;
+            .challenge {
+                margin-bottom: 20px;
 
-            .date {
-                margin-bottom: 5px;
-                font-size: larger;
-                font-weight: bolder;
-            }
+                .date {
+                    margin-bottom: 5px;
+                    font-size: larger;
+                    font-weight: bolder;
+                }
 
-            .done {
-                text-decoration: line-through
-            }
+                .done {
+                    text-decoration: line-through;
+                }
 
-            li {
-                margin-bottom: 2px;
-            }
+                li {
+                    margin-bottom: 2px;
+                }
 
-            .challenge:last-of-type {
-                margin-bottom: 0;
+                .challenge:last-of-type {
+                    margin-bottom: 0;
+                }
             }
         }
-
     }
 
     .center-window {
@@ -52,6 +55,9 @@
 
         tdswindow {
             flex-grow: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 20%;
 
             .announcement {
                 margin-bottom: 20px;
@@ -60,6 +66,24 @@
                     margin-bottom: 5px;
                     font-size: larger;
                     font-weight: bolder;
+                }
+            }
+
+            .changelog {
+                margin-bottom: 20px;
+
+                .date {
+                    margin-bottom: 5px;
+                    font-size: larger;
+                    font-weight: bolder;
+                }
+
+                li {
+                    margin-bottom: 2px;
+                }
+
+                .changelog:last-of-type {
+                    margin-bottom: 0;
                 }
             }
 
@@ -86,6 +110,7 @@
     .placeholder {
         width: 10px;
         height: 10px;
+        flex-shrink: 0;
     }
 
     .challenges {
@@ -117,6 +142,5 @@
                 z-index: 99;
             }
         }
-
     }
 }

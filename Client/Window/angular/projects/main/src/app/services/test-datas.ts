@@ -4,9 +4,12 @@ import { ConstantsData } from '../interfaces/constants-data';
 
 export class InitialDatas {
 
+    private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
+        sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
+
     private static readonly inDebug = false;
 
-    static readonly started = false;
+    static readonly started = InitialDatas.inDebug;
     static readonly isMapVotingActive = false;
 
     private static readonly testMapsInVoting: MapVoteDto[] = [
@@ -51,8 +54,18 @@ export class InitialDatas {
     ];
 
     private static readonly testSettingsConstants: ConstantsData = {
-        0: 1, 1: 1, 2: 10000, 3: 60, 4: 12, 5: 23, 6: [[1, "asd"]], 7: "Bonus", 8: "Bonus"
+        0: 1, 1: 1, 2: 10000, 3: 60, 4: 12, 5: 23, 6: [[1, "asd"]], 7: "Bonus", 8: "Bonus",
+        9: [
+            { 0: new Date(), 1: ["[NEW] Test 123 123", "[BUG] " + InitialDatas.longText] },
+            { 0: new Date(Date.parse("2000-1-4")), 1: ["[NEW] Test 123 123", "[BUG] " + InitialDatas.longText] },
+            { 0: new Date(Date.parse("2000-1-3")), 1: ["[NEW] Test 123 123", "[BUG] " + InitialDatas.longText] },
+            { 0: new Date(Date.parse("2000-1-2")), 1: ["[NEW] Test 123 123", "[BUG] " + InitialDatas.longText] },
+            { 0: new Date(Date.parse("2000-1-1")), 1: ["[NEW] Test 123 123", "[BUG] " + InitialDatas.longText] },
+            { 0: new Date(Date.parse("1995-2-17")), 1: ["[NEW] ASD ASD ASD", "[BUG] " + InitialDatas.longText, "[CHANGE] ASDAsdi joidsajofsa"] }
+        ]
     };
+
+
 
     static getMapsInVoting(): MapVoteDto[] {
         return this.inDebug ? this.testMapsInVoting : [];

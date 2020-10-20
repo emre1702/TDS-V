@@ -150,11 +150,7 @@ namespace TDS_Server.Handler.Account
             player.TryingToLoginRegister = true;
             try
             {
-                if (!_serverStartHandler.IsReadyForLogin)
-                {
-                    NAPI.Task.Run(() => player.SendNotification(player.Language.TRY_AGAIN_LATER));
-                    return;
-                }
+                await _serverStartHandler.LoadingTask.Task;
 
                 int id = await _databasePlayerHandler.GetPlayerIDByName(username);
                 if (id != 0)

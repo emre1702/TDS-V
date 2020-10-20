@@ -46,7 +46,7 @@ export class AppComponent {
 
     showMapCreator = false;
     showFreeroam = false;
-    showLobbyChoice = false;
+    showLobbyChoice = true;
     showTeamChoice = false;
     showRankings = false;
     showHUD = false;
@@ -72,6 +72,9 @@ export class AppComponent {
             this.settings.Constants = JSON.parse(constantsDataJson);
             if (this.settings.Constants[6] && typeof this.settings.Constants[6] === "string") {
                 this.settings.Constants[6] = JSON.parse(this.settings.Constants[6]);
+            }
+            if (this.settings.Constants[9] && typeof this.settings.Constants[9] === "string") {
+                this.settings.Constants[9] = JSON.parse(this.settings.Constants[9]);
             }
             this.started = true;
             changeDetector.detectChanges();

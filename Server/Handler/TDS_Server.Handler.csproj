@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="morelinq" Version="3.3.2" />
+        <PackageReference Include="Octokit" Version="0.48.0" />
         <PackageReference Include="TimeZoneConverter" Version="3.3.0" />
     </ItemGroup>
 

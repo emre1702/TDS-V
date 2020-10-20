@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
@@ -9,8 +10,6 @@ namespace TDS_Server.Handler
 {
     public class AnnouncementsHandler : IAnnouncementsHandler
     {
-        #region Public Constructors
-
         public AnnouncementsHandler(TDSDbContext dbContext)
         {
             var data = dbContext.Announcements
@@ -23,15 +22,9 @@ namespace TDS_Server.Handler
                 })
                 .ToList();
 
-            Json = Serializer.ToBrowser(data);
+            Json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(data));
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public string Json { get; }
-
-        #endregion Public Properties
     }
 }

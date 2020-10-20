@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
@@ -12,32 +13,41 @@ namespace TDS_Server.Handler.Server
 {
     public class ServerStartHandler
     {
-        #region Private Fields
+        public TaskCompletionSource<bool> LoadingTask { get; } = new TaskCompletionSource<bool>();
+
+        public bool LoadedServerBans
+        {
+            get => _loadedServerBans;
+            set
+            {
+                _loadedServerBans = value;
+                CheckIsServerLoaded();
+            }
+        }
+
+        public bool LoadedChangelogs
+        {
+            get => _loadedChangelogs;
+            set
+            {
+                _loadedChangelogs = value;
+                CheckIsServerLoaded();
+            }
+        }
 
         private readonly BansHandler _bansHandler;
 
         private bool _loadedServerBans;
-
-        #endregion Private Fields
-
-        #region Public Constructors
+        private bool _loadedChangelogs;
 
         public ServerStartHandler(BansHandler bansHandler, EventsHandler eventsHandler)
         {
             _bansHandler = bansHandler;
 
             eventsHandler.LoadedServerBans += EventsHandler_LoadedServerBans;
+            if (bansHandler.LoadedServerBans)
+                LoadedServerBans = true;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        public bool IsReadyForLogin => _loadedServerBans;
-
-        #endregion Public Properties
-
-        #region Private Methods
 
         private void EventsHandler_LoadedServerBans()
         {
@@ -72,14 +82,23 @@ namespace TDS_Server.Handler.Server
 
         private void KickServerBannedPlayers()
         {
-            var players = NAPI.Pools.GetAllPlayers().OfType<ITDSPlayer>();
-            foreach (var player in players)
+            NAPI.Task.Run(() =>
             {
-                var ban = _bansHandler.GetServerBan(null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, null, false);
-                HandleBan(player, ban);
-            }
+                var players = NAPI.Pools.GetAllPlayers().OfType<ITDSPlayer>();
+                foreach (var player in players)
+                {
+                    var ban = _bansHandler.GetServerBan(null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, null, false);
+                    HandleBan(player, ban);
+                }
+            });
         }
 
-        #endregion Private Methods
+        private void CheckIsServerLoaded()
+        {
+            if (_loadedServerBans && _loadedChangelogs)
+            {
+                LoadingTask.TrySetResult(true);
+            }
+        }
     }
 }

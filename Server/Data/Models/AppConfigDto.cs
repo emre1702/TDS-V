@@ -7,15 +7,11 @@ namespace TDS_Server.Data.Models
     [XmlRoot("root")]
     public class AppConfigDto
     {
-        #region Public Properties
-
         [XmlElement]
         public AppConfigEntryDto ConnectionString { get; set; }
 
         [XmlElement]
-        public EFExtensionsEntryDto EFExtensions { get; set; }
-
-        #endregion Public Properties
+        public AppConfigEntryDto GitHubToken { get; set; }
     }
 
 #nullable restore

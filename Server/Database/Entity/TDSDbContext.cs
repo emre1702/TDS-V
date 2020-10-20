@@ -23,8 +23,6 @@ namespace TDS_Server.Database.Entity
 {
     public partial class TDSDbContext : DbContext
     {
-        #region Public Constructors
-
         static TDSDbContext()
         {
             NpgsqlConnection.GlobalTypeMapper.MapEnum<PlayerRelation>();
@@ -52,10 +50,6 @@ namespace TDS_Server.Database.Entity
         {
             this.ChangeTracker.LazyLoadingEnabled = false;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
         public virtual DbSet<AdminLevels> AdminLevels { get; set; }
@@ -123,18 +117,12 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Teams> Teams { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
-        #endregion Public Properties
-
-        #region Protected Methods
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.UseIdentityByDefaultColumns();
             modelBuilder.HasPostgresExtension("tsm_system_rows");
-
-            #region Enum
 
             modelBuilder.HasPostgresEnum<PlayerRelation>();
             modelBuilder.HasPostgresEnum<WeaponHash>();
@@ -154,10 +142,6 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasPostgresEnum<ScoreboardPlayerSorting>();
             modelBuilder.HasPostgresEnum<TimeSpanUnitsOfTime>();
             modelBuilder.HasPostgresEnum<PedBodyPart>();
-
-            #endregion Enum
-
-            #region Tables
 
             modelBuilder.Entity<AdminLevels>(entity =>
             {
@@ -1378,6 +1362,12 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.AmountCharSlots)
                     .IsRequired()
                     .HasDefaultValue(3);
+
+                entity.Property(e => e.GitHubRepoOwnerName)
+                    .IsRequired(false);
+
+                entity.Property(e => e.GitHubRepoRepoName)
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<ServerTotalStats>(entity =>
@@ -1471,10 +1461,6 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.ShotsExpMult).HasDefaultValue(0);
             });
 
-            #endregion Tables
-
-            #region Seed data
-
             modelBuilder.Entity<ServerSettings>().HasData(
                 new ServerSettings
                 {
@@ -1500,7 +1486,9 @@ namespace TDS_Server.Database.Entity
                     MultiplierRankingAssists = 25f,
                     MultiplierRankingDamage = 1f,
                     GangwarAttackerCanBeMore = true,
-                    GangwarOwnerCanBeMore = false
+                    GangwarOwnerCanBeMore = false,
+                    GitHubRepoOwnerName = "emre1702",
+                    GitHubRepoRepoName = "TDS-V"
                 }
             );
 
@@ -2290,10 +2278,6 @@ namespace TDS_Server.Database.Entity
                 }
             );
 
-            #endregion Seed data
-
-            #region Autoincrement
-
             /* Use this code at the before the first InsertData in the Up Method in the migration.
             migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" DROP IDENTITY");
             migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" DROP IDENTITY");
@@ -2328,10 +2312,6 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasSequence<int>("gangs_ID_seq");
 
             modelBuilder.HasSequence<int>("maps_ID_seq");*/
-
-            #endregion Autoincrement
         }
-
-        #endregion Protected Methods
     }
 }

@@ -1,3 +1,5 @@
+import { ChangelogsGroup } from './changelogs/changelogs-group';
+
 export interface ConstantsData {
 
     /** TDSId */
@@ -31,4 +33,7 @@ export interface ConstantsData {
 
     /** SCName */
     [8]: string;
+
+    /** Changelogs */
+    [9]: ChangelogsGroup[];
 }

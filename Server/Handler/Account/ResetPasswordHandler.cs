@@ -21,14 +21,11 @@ namespace TDS_Server.Handler.Account
     {
         private readonly IMailSender _mailSender;
         private readonly ILoggingHandler _loggingHandler;
-        private readonly TDSDbContext _dbContext;
 
-        public ResetPasswordHandler(IMailSender mailSender, ILoggingHandler loggingHandler, TDSDbContext dbContext)
+        public ResetPasswordHandler(IMailSender mailSender, ILoggingHandler loggingHandler)
         {
             _mailSender = mailSender;
             _loggingHandler = loggingHandler;
-            _dbContext = dbContext;
-            _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
 
             NAPI.ClientEvent.Register<ITDSPlayer, string, string>(ToServerEvent.ResetPassword, this, ResetPassword);
         }
@@ -37,7 +34,8 @@ namespace TDS_Server.Handler.Account
         {
             try
             {
-                var isEmailCorrect = await _dbContext.Players.AnyAsync(p => p.Name == username && p.Email == email);
+                var isEmailCorrect = await player.Database.ExecuteForDBAsync(async dbContext =>
+                    await dbContext.Players.AnyAsync(p => p.Name == username && p.Email == email));
                 if (!isEmailCorrect)
                 {
                     player.SendAlert(player.Language.EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID);
@@ -47,9 +45,9 @@ namespace TDS_Server.Handler.Account
                 var newPassword = GeneratePassword();
                 var newPasswordHashed = Utils.HashPasswordServer(SharedUtils.HashPWClient(newPassword));
 
-                var playerEntity = await _dbContext.Players.FirstOrDefaultAsync(p => p.Name == username);
+                var playerEntity = await player.Database.ExecuteForDBAsync(async dbContext => await dbContext.Players.FirstOrDefaultAsync(p => p.Name == username));
                 playerEntity.Password = newPasswordHashed;
-                await _dbContext.SaveChangesAsync();
+                await player.Database.ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
                 _loggingHandler.LogRest(LogType.ResetPassword, player, true);
 
                 var response = await _mailSender.SendPasswordResetMail(playerEntity, newPassword, player.Language);

@@ -2,8 +2,6 @@
 {
     public partial class ServerSettings
     {
-        #region Public Properties
-
         public int AmountPlayersAllowedInGangwarTeamBeforeCountCheck { get; set; }
         public int AmountWeeklyChallenges { get; set; }
         public float ArenaNewMapProbabilityPercent { get; set; }
@@ -46,7 +44,7 @@
         public int UsernameChangeCooldownDays { get; set; }
         public int UsernameChangeCost { get; set; }
         public byte AmountCharSlots { get; set; }
-
-        #endregion Public Properties
+        public string GitHubRepoOwnerName { get; set; }
+        public string GitHubRepoRepoName { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace TDS_Client.Handler.Browser
         public virtual void SetReady(params object[] args)
         {
             Execute(ToBrowserEvent.InitLoadAngular, args);
+            Browser.Active = true;
         }
 
         public void Stop()

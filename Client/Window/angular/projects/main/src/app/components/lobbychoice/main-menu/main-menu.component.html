@@ -47,13 +47,19 @@
                     <div>{{ announcement[1] }}</div>
                 </div>
             </ng-container>
-
         </tdswindow>
 
         <div class="placeholder"></div>
 
         <tdswindow class="changelogs" [title]="'Changelogs' | language: settings.Lang" [@rightToLeft]="animState">
-
+            <ng-container *ngIf="settings.Constants && settings.Constants[9]">
+                <div *ngFor="let changelog of settings.Constants[9]" class="changelog">
+                    <div class="date">{{ changelog[0] | date: 'fullDate' }}:</div>
+                    <ul>
+                        <li *ngFor="let change of changelog[1]">{{ change }}</li>
+                    </ul>
+                </div>
+            </ng-container>
         </tdswindow>
     </div>
 

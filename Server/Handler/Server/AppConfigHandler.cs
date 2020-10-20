@@ -22,6 +22,7 @@ namespace TDS_Server.Handler.Server
         }
 
         public string ConnectionString => _localSettings.ConnectionString.Value;
+        public string GitHubToken => _localSettings.GitHubToken.Value;
 
         private string AssemblyDirectory
         {
