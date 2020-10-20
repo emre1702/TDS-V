@@ -13,7 +13,7 @@ namespace TDS_Server.MailSystem.Datas
             }, args);
 
         private string GetPasswordResetBody()
-            => @"You (or someone else) has requested a password reset for your account.
+            => @"You have (or someone else has) requested a password reset for your account.
 The system has generated a random password only for you.
 Use it to login to your account and change the password in the special settings window in the Userpanel.
 
