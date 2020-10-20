@@ -37,7 +37,8 @@ namespace TDS_Server.Core.Init.Services.Creators
                 .WithServer()
                 .WithSync()
                 .WithUserpanel()
-                .WithMisc();
+                .WithMisc()
+                .WithMailsystem();
         }
 
         private static IServiceCollection WithBonusBotConnectors(this IServiceCollection serviceCollection)
@@ -52,7 +53,8 @@ namespace TDS_Server.Core.Init.Services.Creators
             return serviceCollection
                .AddSingleton<BansHandler>()
                .AddSingleton<LoginHandler>()
-               .AddSingleton<RegisterHandler>();
+               .AddSingleton<RegisterHandler>()
+               .AddSingleton<ResetPasswordHandler>();
         }
 
         private static IServiceCollection WithCommands(this IServiceCollection serviceCollection)

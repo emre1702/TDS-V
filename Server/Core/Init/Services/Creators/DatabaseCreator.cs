@@ -30,6 +30,7 @@ namespace TDS_Server.Core.Init.Services.Creators
                );
 
             return serviceCollection
+                .AddSingleton(appConfigHandler)
                 .AddDbContext<TDSDbContext>(options => CreateDbContextOptionsBuilder(options, appConfigHandler, loggerFactory), ServiceLifetime.Transient, ServiceLifetime.Singleton);
         }
     }

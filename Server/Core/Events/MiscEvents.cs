@@ -13,12 +13,6 @@ namespace TDS_Server.Core.Events
             EventsHandler.Instance.OnUpdate();
         }
 
-        [ServerEvent(Event.FirstChanceException)]
-        public void FirstChanceException(Exception ex)
-        {
-            LoggingHandler.Instance?.LogError(ex);
-        }
-
         [ServerEvent(Event.UnhandledException)]
         public void UnhandledException(Exception ex)
         {

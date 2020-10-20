@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Server.Database.Entity;
@@ -14,9 +15,10 @@ using TDS_Shared.Data.Enums.Userpanel;
 namespace TDS_Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201019215331_Add_ResetPassword_LogType")]
+    partial class Add_ResetPassword_LogType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +26,7 @@ namespace TDS_Server.Database.Migrations
                 .HasAnnotation("Npgsql:Enum:challenge_type", "kills,assists,damage,play_time,round_played,bomb_defuse,bomb_plant,killstreak,buy_maps,review_maps,read_the_rules,read_the_faq,change_settings,join_discord_server,write_helpful_issue,creator_of_accepted_map,be_helpful_enough")
                 .HasAnnotation("Npgsql:Enum:freeroam_vehicle_type", "car,helicopter,plane,bike,boat")
                 .HasAnnotation("Npgsql:Enum:language", "german,english")
-                .HasAnnotation("Npgsql:Enum:lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,char_create_lobby,gang_action_lobby,damage_test_lobby")
+                .HasAnnotation("Npgsql:Enum:lobby_type", "main_menu,fight_lobby,arena,gang_lobby,map_create_lobby,char_create_lobby,gang_action_lobby")
                 .HasAnnotation("Npgsql:Enum:log_type", "kick,ban,mute,next,login,register,lobby_join,lobby_leave,lobby_kick,lobby_ban,goto,remove_map,voice_mute,reset_password")
                 .HasAnnotation("Npgsql:Enum:map_limit_type", "kill_after_time,teleport_back_after_time,block,display")
                 .HasAnnotation("Npgsql:Enum:ped_body_part", "head,neck,torso,genital_region,arm,hand,leg,foot")
@@ -2021,21 +2023,6 @@ namespace TDS_Server.Database.Migrations
                             Name = "CharCreateLobby",
                             OwnerId = -1,
                             Type = LobbyType.CharCreateLobby
-                        },
-                        new
-                        {
-                            Id = -6,
-                            AroundSpawnPoint = 0f,
-                            CreateTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultSpawnRotation = 0f,
-                            DefaultSpawnX = -365.425f,
-                            DefaultSpawnY = -131.809f,
-                            DefaultSpawnZ = 37.873f,
-                            IsOfficial = true,
-                            IsTemporary = false,
-                            Name = "DamageTestLobby",
-                            OwnerId = -1,
-                            Type = LobbyType.DamageTestLobby
                         });
                 });
 

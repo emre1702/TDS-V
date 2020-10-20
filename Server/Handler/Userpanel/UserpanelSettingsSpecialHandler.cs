@@ -51,7 +51,7 @@ namespace TDS_Server.Handler.Userpanel
             string value = Convert.ToString(args[1])!;
             string password = Convert.ToString(args[2])!;
 
-            if (Utils.HashPasswordServer(password) != player.Entity.Password)
+            if (!Utils.IsPasswordValid(password, player.Entity.Password))
             {
                 return player.Language.WRONG_PASSWORD;
             }

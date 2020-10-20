@@ -69,6 +69,7 @@
         public const string RequestNewMapsList = "s48";
         public const string RoundEnd = "s51";
         public const string RoundStart = "s50";
+        public const string SendAlert = "s89";
         public const string SetEntityCollisionlessWorkaround = "s78";
         public const string SetEntityData = "s12";
         public const string SetEntityInvincible = "s54";

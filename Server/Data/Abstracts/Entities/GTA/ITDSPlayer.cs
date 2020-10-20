@@ -90,6 +90,8 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public new void SendNotification(string msg, bool flashing = false) => Chat.SendNotification(msg, flashing);
 
+        public void SendAlert(string msg) => Chat.SendAlert(msg);
+
         public void TriggerBrowserEvent(params object[] eventNameAndArgs) => Sync.TriggerBrowserEvent(eventNameAndArgs);
 
         public virtual new int Armor { get => base.Armor; set => base.Armor = value; }

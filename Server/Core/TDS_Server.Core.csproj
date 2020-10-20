@@ -34,6 +34,7 @@
         <ProjectReference Include="..\Gamemode\TDS_Server.GamemodesSystem.csproj" />
         <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
         <ProjectReference Include="..\Lobby\TDS_Server.LobbySystem.csproj" />
+        <ProjectReference Include="..\MailSystem\TDS_Server.MailSystem.csproj" />
         <ProjectReference Include="..\PlayersSystem\TDS_Server.PlayersSystem.csproj" />
         <ProjectReference Include="..\TeamsSystem\TDS_Server.TeamsSystem.csproj" />
     </ItemGroup>

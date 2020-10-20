@@ -31,6 +31,7 @@
       <Folder Include="Core\" />
       <Folder Include="Database\" />
       <Folder Include="Handler\" />
+      <Folder Include="Systems\MailSystem\" />
     </ItemGroup>
 
     <ItemGroup>

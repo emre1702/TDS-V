@@ -31,6 +31,7 @@ namespace TDS_Client.Handler
 
             RAGE.Events.Add(FromBrowserEvent.TryLogin, TryLogin);
             RAGE.Events.Add(FromBrowserEvent.TryRegister, TryRegister);
+            RAGE.Events.Add(FromBrowserEvent.ResetPassword, ResetPassword);
             RAGE.Events.Add(ToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             RAGE.Events.Add(ToClientEvent.LoginSuccessful, OnLoginSuccessfulMethod);
         }
@@ -65,6 +66,13 @@ namespace TDS_Client.Handler
             string password = (string)args[1];
             string email = (string)args[2];
             _remoteEventsSender.Send(ToServerEvent.TryRegister, username, SharedUtils.HashPWClient(password), email ?? string.Empty, (int)_settingsHandler.LanguageEnum);
+        }
+
+        public void ResetPassword(object[] args)
+        {
+            string username = (string)args[0];
+            string email = (string)args[1];
+            _remoteEventsSender.Send(ToServerEvent.ResetPassword, username, email);
         }
 
         private void OnLoginSuccessfulMethod(object[] args)

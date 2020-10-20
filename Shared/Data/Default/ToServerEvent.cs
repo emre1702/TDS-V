@@ -64,6 +64,7 @@
         public const string RejectTDSTeamInvitation = "c68";
         public const string RemoveMap = "c39";
         public const string RequestPlayersForScoreboard = "c40";
+        public const string ResetPassword = "c74";
 
         public const string SaveCharCreateData = "c29";
         public const string SaveMapCreatorData = "c41";

@@ -40,6 +40,7 @@
         public const string ReloadPlayerSettings = "b2";
         public const string RemoveMapCreatorPosition = "b30";
         public const string RemoveMapCreatorTeamNumber = "b31";
+        public const string ResetPassword = "b43";
 
         public const string SendMapRating = "b34";
         public const string StartMapCreatorPosPlacing = "b35";

@@ -5,8 +5,6 @@ namespace TDS_Server.Data.Languages
 {
     public class English : ILanguage
     {
-        #region Public Properties
-
         public virtual string A_MAP_WAS_ALREADY_BOUGHT => "A map has already been purchased/set.";
         public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
         public virtual string ADDED_THE_GANG_HOUSE_SUCCESSFULLY => "The gang house was successfully added.";
@@ -42,7 +40,7 @@ namespace TDS_Server.Data.Languages
         public virtual string DISCORD_IDENTITY_SAVE_FAILED => "Saving the Discord user id failed: {0}";
         public virtual string DISCORD_IDENTITY_SAVED_SUCCESSFULLY => "The discord user id has been successfully saved.";
 
-        public virtual string ERROR_INFO => "An error occured. The Developer(s) have been notified.";
+        public virtual string ERROR_INFO => "An error occured. The Developer(s) has/have been notified.";
 
         public virtual string FRIEND_JOINED_LOBBY_INFO => "~g~Your friend {0} has joined the lobby '{1}'.";
         public virtual string FRIEND_LEFT_LOBBY_INFO => "~r~Your friend {0} has left the lobby '{1}'.";
@@ -223,6 +221,9 @@ namespace TDS_Server.Data.Languages
         public virtual string YOUVE_BECOME_GANG_LEADER => "You've become the gang owner.";
         public virtual string YOUVE_LEFT_THE_GANG => "You've left the gang.";
 
-        #endregion Public Properties
+        public virtual string NO_EMAIL_ADDRESS_HAS_BEEN_SET => "This account has not set any email address.";
+
+        public virtual string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID => "The email address for this account is invalid.";
+        public virtual string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Your password has been successfully reset. Check your emails (look into junk mails folder!).";
     }
 }

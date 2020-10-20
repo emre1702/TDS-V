@@ -28,6 +28,7 @@ namespace TDS_Client.Handler.Events
             [ToServerEvent.MapsListRequest] = new CooldownEventDto(1000),
             [ToServerEvent.MapVote] = new CooldownEventDto(500),
             [ToServerEvent.RequestPlayersForScoreboard] = new CooldownEventDto(5000),
+            [ToServerEvent.ResetPassword] = new CooldownEventDto(4000),
             [ToServerEvent.SaveCharCreateData] = new CooldownEventDto(10000),
             [ToServerEvent.SaveMapCreatorData] = new CooldownEventDto(10000),
             [ToServerEvent.SaveSettings] = new CooldownEventDto(3000),

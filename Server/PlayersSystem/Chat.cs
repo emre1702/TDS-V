@@ -2,6 +2,7 @@
 using System;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.PlayersSystem;
+using TDS_Shared.Default;
 
 namespace TDS_Server.PlayersSystem
 {
@@ -36,6 +37,14 @@ namespace TDS_Server.PlayersSystem
                 Console.WriteLine(msg);
             else
                 ((Player)_player).SendNotification(msg, flashing);
+        }
+
+        public void SendAlert(string msg)
+        {
+            if (_player.IsConsole)
+                Console.WriteLine(msg);
+            else
+                _player.TriggerEvent(ToClientEvent.SendAlert, msg);
         }
 
         private void CloseInPrivateChat(bool becauseOfDisconnectOfTarget)
