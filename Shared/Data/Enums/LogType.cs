@@ -14,6 +14,7 @@
         Lobby_Ban = 10,
         Goto = 11,
         RemoveMap = 12,
-        VoiceMute = 13
+        VoiceMute = 13,
+        ResetPassword = 14
     }
 }

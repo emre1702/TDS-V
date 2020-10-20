@@ -221,5 +221,8 @@ namespace TDS_Server.Data.Languages
         public override string YOU_UNBLOCKED => "Du hast {0} nicht mehr blockiert.";
         public override string YOUVE_BECOME_GANG_LEADER => "Du wurdest zum Gang-Besitzer.";
         public override string YOUVE_LEFT_THE_GANG => "Du hast die Gang verlassen.";
+        public override string NO_EMAIL_ADDRESS_HAS_BEEN_SET => "Dieser Account hat keine E-Mail Adresse hinterlegt.";
+        public override string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID => "Die für diesen Account hinterlegte E-Mail Adresse ist ungültig.";
+        public override string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Dein Passwort wurde erfolgreich zurückgesetzt. Überprüfe deine E-Mails (besonders die Junk-Emails!).";
     }
 }

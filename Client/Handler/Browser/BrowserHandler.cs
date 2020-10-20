@@ -2,6 +2,7 @@
 using TDS_Client.Data.Interfaces;
 using TDS_Client.Handler.Events;
 using TDS_Shared.Core;
+using TDS_Shared.Default;
 
 namespace TDS_Client.Handler.Browser
 {
@@ -21,6 +22,7 @@ namespace TDS_Client.Handler.Browser
 
             RAGE.Events.Add(FromBrowserEvent.InputStarted, _ => InInput = true);
             RAGE.Events.Add(FromBrowserEvent.InputStopped, _ => InInput = false);
+            RAGE.Events.Add(ToClientEvent.SendAlert, SendAlert);
         }
 
         public AngularBrowserHandler Angular { get; }
@@ -36,6 +38,12 @@ namespace TDS_Client.Handler.Browser
                 Angular.LoadLanguage(lang);
             if (!(RegisterLogin.Browser is null))
                 RegisterLogin.SyncLanguage(lang);
+        }
+
+        private void SendAlert(object[] args)
+        {
+            var msg = (string)args[0];
+            RAGE.Ui.DefaultWindow.ExecuteJs($"alert(`{msg.Replace("`", "\"")}`)");
         }
     }
 }

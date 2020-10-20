@@ -213,5 +213,8 @@
         string YOU_UNBLOCKED { get; }
         string YOUVE_BECOME_GANG_LEADER { get; }
         string YOUVE_LEFT_THE_GANG { get; }
+        string NO_EMAIL_ADDRESS_HAS_BEEN_SET { get; }
+        string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID { get; }
+        string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT { get; }
     }
 }

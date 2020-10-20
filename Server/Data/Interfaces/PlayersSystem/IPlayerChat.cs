@@ -11,5 +11,6 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
         void SendChatMessage(string msg);
 
         void SendNotification(string msg, bool flashing = false);
+        void SendAlert(string msg);
     }
 }

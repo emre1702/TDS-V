@@ -30,6 +30,7 @@ $(document).ready(function () {
     });
 
     var lasttick = 0;
+	var submitLastTick = 0;
 
     $('.tab a').on('click', function (e) {
         var tick = new Date().getTime();
@@ -78,6 +79,10 @@ $(document).ready(function () {
 
     $(".form").submit(function (event) {
         event.preventDefault();
+		var tick = new Date().getTime();
+        if (tick < submitLastTick + 2000) return;
+		submitLastTick = tick;
+		
         var $this = $(this);
         var button = $this.find(':submit:not(:hidden)');
         var type = button.attr("data-eventtype");
@@ -106,6 +111,12 @@ $(document).ready(function () {
                     }
                 });
                 break;
+			case "resetpw":
+				var username = $this.find("input[id=forgotpw_username]").val();
+                var email = $this.find("input[id=forgotpw_email]").val();
+				
+				mp.trigger("b43", username, email);   // ResetPassword
+				break;
         }
     });
 });

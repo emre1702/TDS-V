@@ -1,10 +1,8 @@
 ﻿using GTANetworkAPI;
-using GTANetworkMethods;
 using System;
 using System.ComponentModel.DataAnnotations;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
@@ -14,7 +12,6 @@ using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Server;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Account
