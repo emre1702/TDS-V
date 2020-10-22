@@ -71,7 +71,6 @@ namespace TDS_Client.Handler.Deathmatch
             eventsHandler.MapCleared += SetNotInFight;
             eventsHandler.RoundStarted += EventsHandler_RoundStarted;
             eventsHandler.RoundEnded += _ => SetNotInFight();
-            eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
 
             RAGE.Events.Add(ToClientEvent.HitOpponent, OnHitOpponentMethod);
             RAGE.Events.Add(ToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
@@ -208,12 +207,6 @@ namespace TDS_Client.Handler.Deathmatch
             if (!_camerasHandler.Spectating.IsSpectator)
                 InFight = true;
             _eventsHandler.OnRespawned(InFight);
-        }
-
-        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
-        {
-            if (settings.Type == LobbyType.DamageTestLobby)
-                InFight = true;
         }
 
         private void SetNotInFight()

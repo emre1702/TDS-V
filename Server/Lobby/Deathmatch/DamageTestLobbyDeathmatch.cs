@@ -35,7 +35,6 @@ namespace TDS_Server.LobbySystem.Deathmatch
                 player.Spawn(Lobby.MapHandler.SpawnPoint, Lobby.MapHandler.SpawnRotation);
                 player.Freeze(false);
                 player.SpectateHandler.SetSpectates(null);
-                player.SetInvisible(false);
                 player.TriggerEvent(ToClientEvent.PlayerRespawned);
             });
         }

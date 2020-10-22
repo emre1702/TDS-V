@@ -31,7 +31,7 @@ namespace TDS_Server.LobbySystem.Players
 
             NAPI.Task.Run(() =>
             {
-                player.SetInvincible(false);
+                player.TriggerEvent(ToClientEvent.PlayerRespawned);
                 if (isOwner)
                     player.TriggerEvent(ToClientEvent.ToggleDamageTestMenu, true, _damagesToSync);
             });

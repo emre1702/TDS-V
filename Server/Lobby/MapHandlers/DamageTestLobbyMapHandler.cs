@@ -18,6 +18,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
             {
                 data.Player.Spawn(SpawnPoint, SpawnRotation);
                 data.Player.Freeze(false);
+                data.Player.SetInvisible(false);
             });
             return default;
         }
