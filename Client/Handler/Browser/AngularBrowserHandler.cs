@@ -37,12 +37,8 @@ namespace TDS_Client.Handler.Browser
             RAGE.Events.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
             RAGE.Events.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
             RAGE.Events.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
-        }
 
-        public void CreateAngularBrowser()
-        {
             CreateBrowser();
-            Browser.MarkAsChat();
         }
 
         public void AddNameForChat(string name)
@@ -84,11 +80,6 @@ namespace TDS_Client.Handler.Browser
         public void LoadChatSettings(float width, float maxHeight, float fontSize, bool hideDirtyChat, bool hideChatInfo, float chatInfoFontSize, int chatInfoAnimationTimeMs)
         {
             Execute(ToBrowserEvent.LoadChatSettings, width, maxHeight, fontSize, hideDirtyChat, hideChatInfo, chatInfoFontSize, chatInfoAnimationTimeMs);
-        }
-
-        public void LoadFavoriteMaps(string mapFavoritesJson)
-        {
-            Execute(ToBrowserEvent.LoadFavoriteMaps, mapFavoritesJson);
         }
 
         public void LoadLanguage(ILanguage language)
