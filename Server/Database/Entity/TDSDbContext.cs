@@ -23,8 +23,6 @@ namespace TDS_Server.Database.Entity
 {
     public partial class TDSDbContext : DbContext
     {
-        #region Public Constructors
-
         static TDSDbContext()
         {
             NpgsqlConnection.GlobalTypeMapper.MapEnum<PlayerRelation>();
@@ -52,10 +50,6 @@ namespace TDS_Server.Database.Entity
         {
             this.ChangeTracker.LazyLoadingEnabled = false;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public virtual DbSet<AdminLevelNames> AdminLevelNames { get; set; }
         public virtual DbSet<AdminLevels> AdminLevels { get; set; }
@@ -123,18 +117,12 @@ namespace TDS_Server.Database.Entity
         public virtual DbSet<Teams> Teams { get; set; }
         public virtual DbSet<Weapons> Weapons { get; set; }
 
-        #endregion Public Properties
-
-        #region Protected Methods
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.UseIdentityByDefaultColumns();
             modelBuilder.HasPostgresExtension("tsm_system_rows");
-
-            #region Enum
 
             modelBuilder.HasPostgresEnum<PlayerRelation>();
             modelBuilder.HasPostgresEnum<WeaponHash>();
@@ -154,10 +142,6 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasPostgresEnum<ScoreboardPlayerSorting>();
             modelBuilder.HasPostgresEnum<TimeSpanUnitsOfTime>();
             modelBuilder.HasPostgresEnum<PedBodyPart>();
-
-            #endregion Enum
-
-            #region Tables
 
             modelBuilder.Entity<AdminLevels>(entity =>
             {
@@ -1471,10 +1455,6 @@ namespace TDS_Server.Database.Entity
                 entity.Property(e => e.ShotsExpMult).HasDefaultValue(0);
             });
 
-            #endregion Tables
-
-            #region Seed data
-
             modelBuilder.Entity<ServerSettings>().HasData(
                 new ServerSettings
                 {
@@ -1574,7 +1554,7 @@ namespace TDS_Server.Database.Entity
                 new Lobbies
                 {
                     Id = -6, OwnerId = -1, Type = LobbyType.DamageTestLobby, Name = "DamageTestLobby", IsTemporary = false, IsOfficial = true,
-                    DefaultSpawnX = -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f
+                    DefaultSpawnX = -365.425f, DefaultSpawnY = -131.809f, DefaultSpawnZ = 37.873f, DefaultSpawnRotation = 0f,
                 }
             };
             modelBuilder.Entity<Lobbies>().HasData(seedLobbies);
@@ -1837,7 +1817,8 @@ namespace TDS_Server.Database.Entity
             );
 
             modelBuilder.Entity<LobbyFightSettings>().HasData(
-                new LobbyFightSettings { LobbyId = -1 }
+                new LobbyFightSettings { LobbyId = -1 },
+                new LobbyFightSettings { LobbyId = -6 }
             );
 
             modelBuilder.Entity<LobbyRoundSettings>().HasData(
@@ -2297,10 +2278,6 @@ namespace TDS_Server.Database.Entity
                 }
             );
 
-            #endregion Seed data
-
-            #region Autoincrement
-
             /* Use this code at the before the first InsertData in the Up Method in the migration.
             migrationBuilder.Sql("ALTER TABLE gangs ALTER COLUMN \"ID\" DROP IDENTITY");
             migrationBuilder.Sql("ALTER TABLE lobbies ALTER COLUMN \"ID\" DROP IDENTITY");
@@ -2335,10 +2312,6 @@ namespace TDS_Server.Database.Entity
             modelBuilder.HasSequence<int>("gangs_ID_seq");
 
             modelBuilder.HasSequence<int>("maps_ID_seq");*/
-
-            #endregion Autoincrement
         }
-
-        #endregion Protected Methods
     }
 }

@@ -6,7 +6,6 @@ namespace TDS_Server.Handler.Entities.GTA.Peds
     {
         public TDSPed(NetHandle netHandle) : base(netHandle)
         {
-
         }
     }
 }

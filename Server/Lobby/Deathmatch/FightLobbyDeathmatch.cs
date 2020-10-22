@@ -26,7 +26,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
         {
             Damage = damage;
             _langHelper = langHelper;
-            damage.Init(lobby.Entity.LobbyWeapons, lobby.Entity.LobbyKillingspreeRewards);
+            InitDamagesys(damage);
             AmountLifes = lobby.Entity.FightSettings.AmountLifes;
         }
 
@@ -100,6 +100,11 @@ namespace TDS_Server.LobbySystem.Deathmatch
                 player.Kill();
                 player.SendChatMessage(reason);
             });
+        }
+
+        protected virtual void InitDamagesys(IDamagesys damagesys)
+        {
+            damagesys.Init(Lobby.Entity.LobbyWeapons, Lobby.Entity.LobbyKillingspreeRewards);
         }
     }
 }

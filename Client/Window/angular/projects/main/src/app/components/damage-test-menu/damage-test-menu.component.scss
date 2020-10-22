@@ -1,0 +1,18 @@
+tdswindow {
+    position: absolute;
+    top: 40vh;
+    right: 10px;
+    width: auto;
+    height: auto;
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        ::ng-deep .mat-form-field-infix {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+    }
+}

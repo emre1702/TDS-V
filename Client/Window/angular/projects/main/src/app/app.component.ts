@@ -57,6 +57,7 @@ export class AppComponent {
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;
     charCreateData: CharCreateData;
+    damageTestMenuInitWeapon: WeaponHash = InitialDatas.getDamageTestInitialWeapon();
 
     constructor(
         public settings: SettingsService,
@@ -70,7 +71,7 @@ export class AppComponent {
         this.loadSvgIcons();
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
-            this.settings.Constants = JSON.parse(constantsDataJson);
+             this.settings.Constants = JSON.parse(constantsDataJson);
             if (this.settings.Constants[6] && typeof this.settings.Constants[6] === "string") {
                 this.settings.Constants[6] = JSON.parse(this.settings.Constants[6]);
             }
@@ -147,8 +148,13 @@ export class AppComponent {
             this.settings.Constants[7] = newName;
         });
 
-        rageConnector.listen(DFromServerEvent.ToggleDamageTestMenu, () => {
-
+        rageConnector.listen(DFromClientEvent.ToggleDamageTestMenu, (toggle: boolean, json?: string, weapon?: WeaponHash) => {
+            if (json) {
+                this.settings.DamageTestWeaponDatas = JSON.parse(json);
+                this.damageTestMenuInitWeapon = weapon;
+            }
+            this.showDamageTestMenu = toggle;
+            this.changeDetector.detectChanges();
         });
 
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());

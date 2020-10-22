@@ -108,8 +108,10 @@ namespace TDS_Server.Handler
         }
 
         private bool GetIgnoreLobbyInScoreboard(IBaseLobby lobby)
-            => (lobby.Type == LobbyType.MapCreateLobby && lobby.IsOfficial)     // Dummy map create lobby
-            || lobby.Type == LobbyType.CharCreateLobby;
+            => lobby.IsOfficial &&
+            (lobby.Type == LobbyType.MapCreateLobby
+            || lobby.Type == LobbyType.CharCreateLobby && lobby.IsOfficial
+            || lobby.Type == LobbyType.DamageTestLobby && lobby.IsOfficial);
 
         private bool GetShowAllLobbies(LobbyType myLobbyType)
             => myLobbyType == LobbyType.MainMenu || myLobbyType == LobbyType.CharCreateLobby;

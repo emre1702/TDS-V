@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS_Server.Database.Entity;
@@ -14,9 +15,10 @@ using TDS_Shared.Data.Enums.Userpanel;
 namespace TDS_Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201021233017_Add_DamageTestLobby_2")]
+    partial class Add_DamageTestLobby_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2193,14 +2195,6 @@ namespace TDS_Server.Database.Migrations
                         new
                         {
                             LobbyId = -1,
-                            AmountLifes = (short)0,
-                            SpawnAgainAfterDeathMs = 0,
-                            StartArmor = (short)0,
-                            StartHealth = (short)0
-                        },
-                        new
-                        {
-                            LobbyId = -6,
                             AmountLifes = (short)0,
                             SpawnAgainAfterDeathMs = 0,
                             StartArmor = (short)0,

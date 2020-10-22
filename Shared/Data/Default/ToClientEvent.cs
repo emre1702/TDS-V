@@ -96,6 +96,7 @@
         // Special //
         public const string ToBrowserEvent = "s81";
 
+        public const string ToggleDamageTestMenu = "s90";
         public const string ToggleTeamChoiceMenu = "s74";
 
         #endregion Public Fields

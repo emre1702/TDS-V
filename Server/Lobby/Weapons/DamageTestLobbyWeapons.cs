@@ -11,14 +11,14 @@ namespace TDS_Server.LobbySystem.Weapons
 {
     public class DamageTestLobbyWeapons : FightLobbyWeapons
     {
-        private static List<LobbyWeapons>? _allWeapons;
+        public static List<LobbyWeapons>? AllWeapons;
 
         public DamageTestLobbyWeapons(IDamageTestLobby lobby, IFightLobbyEventsHandler events, IServiceProvider serviceProvider) : base(lobby, events)
         {
-            if (_allWeapons is null)
+            if (AllWeapons is null)
             {
                 var dbContext = serviceProvider.GetRequiredService<TDSDbContext>();
-                _allWeapons = dbContext.Weapons.Select(w => new LobbyWeapons
+                AllWeapons = dbContext.Weapons.Select(w => new LobbyWeapons
                 {
                     Ammo = 9999,
                     Damage = w.Damage,
@@ -30,6 +30,6 @@ namespace TDS_Server.LobbySystem.Weapons
         }
 
         internal override IEnumerable<LobbyWeapons> GetAllWeapons()
-            => _allWeapons!;
+            => AllWeapons!;
     }
 }

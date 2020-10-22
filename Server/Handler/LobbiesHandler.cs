@@ -280,6 +280,10 @@ namespace TDS_Server.Handler
 
                     lobby = _lobbiesProvider.Create<ICharCreateLobby>(player);
                 }
+                else if (lobby is IDamageTestLobby)
+                {
+                    lobby = _lobbiesProvider.Create<IDamageTestLobby>(player);
+                }
                 await lobby.Players.AddPlayer(player, 0);
                 return null;
             }

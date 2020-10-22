@@ -21,6 +21,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { UserpanelSettingKey } from '../components/userpanel/enums/userpanel-setting-key.enum';
 import { ThemeSettings } from '../interfaces/theme-settings';
 import { InitialDatas } from './test-datas';
+import { DamageTestWeapon } from '../components/damage-test-menu/interfaces/damage-test-weapon';
 
 // tslint:disable: member-ordering
 
@@ -154,6 +155,8 @@ export class SettingsService {
     public IsInGangChanged = new EventEmitter();
 
     public InputFocused = false;
+
+    public DamageTestWeaponDatas: DamageTestWeapon[] = InitialDatas.getDamageTestWeaponDatas();
 
     public AdminLevels = [
         { Level: 0, Name: "User", Color: "rgb(220,220,220)" },

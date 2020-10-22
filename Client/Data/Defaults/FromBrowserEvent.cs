@@ -11,6 +11,7 @@
         public const string CloseMapVotingMenu = "b7";
         public const string CloseUserpanel = "b8";
         public const string CommandUsed = "b9";
+        public const string Created = "b44";
 
         public const string GetHashedPassword = "b11";
         public const string GetVehicle = "b12";

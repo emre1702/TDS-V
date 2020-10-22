@@ -52,6 +52,7 @@ namespace TDS_Client.Handler.Lobby
 
         public bool HasAllVsAllTeam => Teams.LobbyTeams.Count(t => !t.IsSpectator) == 1;
 
+        public DamageTestMenuHandler DamageTestMenu { get; }
         public MainMenuHandler MainMenu { get; }
         public LobbyMapDatasHandler MapDatas { get; }
         public MapManagerHandler MapManager { get; }
@@ -92,6 +93,7 @@ namespace TDS_Client.Handler.Lobby
 
             _utilsHandler = utilsHandler;
 
+            DamageTestMenu = new DamageTestMenuHandler(eventsHandler, browserHandler);
             Camera = new LobbyCamHandler(loggingHandler, camerasHandler, settingsHandler, eventsHandler);
             Countdown = new CountdownHandler(loggingHandler, settingsHandler, dxHandler, timerHandler, browserHandler, eventsHandler, Camera);
             MapDatas = new LobbyMapDatasHandler(loggingHandler, dxHandler, timerHandler, eventsHandler, Camera, mapLimitHandler, settingsHandler);
@@ -144,6 +146,7 @@ namespace TDS_Client.Handler.Lobby
                 {
                     case LobbyType.Arena:
                     case LobbyType.FightLobby:
+                    case LobbyType.DamageTestLobby:
                         InFightLobby = true;
                         break;
 

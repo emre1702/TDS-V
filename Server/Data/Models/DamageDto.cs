@@ -4,14 +4,8 @@ namespace TDS_Server.Data.Models
 {
     public class DamageDto
     {
-        #region Public Fields
-
         public float Damage;
         public float HeadMultiplier;
-
-        #endregion Public Fields
-
-        #region Public Constructors
 
         public DamageDto()
         {
@@ -23,6 +17,10 @@ namespace TDS_Server.Data.Models
             HeadMultiplier = weapon.HeadMultiplicator ?? 0;
         }
 
-        #endregion Public Constructors
+        public DamageDto(DamageTestWeapon weaponDamageData)
+        {
+            Damage = weaponDamageData.Damage;
+            HeadMultiplier = weaponDamageData.HeadshotDamageMultiplier;
+        }
     }
 }

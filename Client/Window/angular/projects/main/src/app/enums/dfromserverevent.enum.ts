@@ -22,5 +22,4 @@ export enum DFromServerEvent {
     SyncChallenges = "sb7",
     SyncCommandsData = "sb22",
     SyncNewSupportRequestMessage = "sb9",
-    ToggleDamageTestMenu = "sb24",
 }

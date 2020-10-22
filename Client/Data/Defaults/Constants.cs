@@ -6,8 +6,6 @@ namespace TDS_Client.Data.Defaults
 {
     public class Constants
     {
-        #region Public Fields
-
         public static uint GangHouseFreeBlipModel = 374;
         public static float NeededDistanceToBeNotAFK = 1f;
 
@@ -21,10 +19,6 @@ namespace TDS_Client.Data.Defaults
             PedHash.Blackops02SMY, PedHash.ChiCold01GMM, PedHash.Cop01SMY, PedHash.Claude01,
             PedHash.ExArmy01, PedHash.Famca01GMY, PedHash.FibSec01
          };
-
-        #endregion Public Fields
-
-        #region Public Properties
 
         public static string AngularMainBrowserPath => "package://Window/angular/main/index.html";
         public static string AngularMapCreatorObjectChoiceBrowserPath => "package://Window/angular/map-creator-object-choice/index.html";
@@ -42,6 +36,9 @@ namespace TDS_Client.Data.Defaults
         public static int ScoreboardLoadCooldown => 2000;
         public static string TargetHashName => "v_ret_ta_skull";
 
-        #endregion Public Properties
+        public static List<PedHash> DamageTestLobbyPedModels = new List<PedHash>
+        {
+            PedHash.Abigail, PedHash.Agent14, PedHash.Andreas, PedHash.Michael, PedHash.Trevor, PedHash.Tonya
+        };
     }
 }

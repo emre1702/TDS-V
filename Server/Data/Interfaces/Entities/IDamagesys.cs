@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Shared.Data.Enums;
 
@@ -27,5 +28,9 @@ namespace TDS_Server.Data.Interfaces.Entities
         void RewardLastHitter(ITDSPlayer player, out ITDSPlayer? killer);
 
         void UpdateLastHitter(ITDSPlayer target, ITDSPlayer? source, int damage);
+
+        Dictionary<WeaponHash, DamageDto> GetDamages();
+
+        void SetDamage(WeaponHash weapon, DamageDto damageDto);
     }
 }

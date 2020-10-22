@@ -100,7 +100,7 @@ namespace TDS_Server.LobbySystem.Players
         {
             if (player.Entity is null)
                 return false;
-            return player.Lobby == this && Lobby.Entity.OwnerId == player.Entity.Id;
+            return player.Lobby == Lobby && Lobby.Entity.OwnerId == player.Entity.Id;
         }
 
         public Task<bool> Any() => _semaphore.Do(() => _players.Any());
