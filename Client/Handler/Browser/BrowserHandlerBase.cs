@@ -21,16 +21,19 @@ namespace TDS_Client.Handler.Browser
         }
 
         public HtmlWindow Browser { get; private set; }
+        public bool CreatedSuccessfully { get; set; }
+        public bool HasBeenCreatedOnce { get; set; }
 
-        public void CreateBrowser()
+        public virtual void CreateBrowser()
         {
             Browser = new HtmlWindow(_url);
             RAGE.Ui.Console.Log(ConsoleVerbosity.Info, $"Browser for URL {_url} loaded: {(!(Browser is null))} | Active: {Browser.Active} | Id: {Browser.Id}");
-            ProcessExecuteList();
+            HasBeenCreatedOnce = true;
         }
 
         public virtual void SetReady(params object[] args)
         {
+            RAGE.Ui.Console.Log(ConsoleVerbosity.Info, $"SetReady: Browser for URL {_url} loaded: {(!(Browser is null))} | Active: {Browser.Active} | Id: {Browser.Id}");
             Execute(ToBrowserEvent.InitLoadAngular, args);
             Browser.Active = true;
         }
@@ -44,15 +47,15 @@ namespace TDS_Client.Handler.Browser
             _executeList.Clear();
         }
 
-        protected void Execute(string eventName, params object[] args)
+        public void Execute(string eventName, params object[] args)
         {
             string execStr = GetExecStr(eventName, args);
             ExecuteStr(execStr);
         }
 
-        protected void ExecuteFast(string eventName, params object[] args)
+        public void ExecuteFast(string eventName, params object[] args)
         {
-            if (Browser is null)
+            if (!CreatedSuccessfully)
                 _executeList.AddLast(() => Browser.Call(eventName, args));
             else
                 Browser.Call(eventName, args);
@@ -60,7 +63,7 @@ namespace TDS_Client.Handler.Browser
 
         protected void ExecuteStr(string str)
         {
-            if (Browser is null)
+            if (!CreatedSuccessfully)
                 _executeList.AddLast(() => Browser.ExecuteJs(str));
             else
                 Browser.ExecuteJs(str);
@@ -115,7 +118,7 @@ namespace TDS_Client.Handler.Browser
             return strBuilder.ToString();
         }
 
-        protected void ProcessExecuteList()
+        public void ProcessExecuteList()
         {
             foreach (var exec in _executeList)
             {

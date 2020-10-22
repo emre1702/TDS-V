@@ -790,6 +790,8 @@ export interface Language {
     CharCreator: string;
     Announcements: string;
     Changelogs: string;
+    Apply: string;
+    DamageTestLobby: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

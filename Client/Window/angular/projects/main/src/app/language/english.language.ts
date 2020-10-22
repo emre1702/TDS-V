@@ -825,6 +825,8 @@ You need to set the target for this mode.`;
     CharCreator = "Character creator";
     Announcements = "Announcements";
     Changelogs = "Changelogs";
+    Apply = "Apply";
+    DamageTestLobby = "Damage test";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

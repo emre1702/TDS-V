@@ -9,10 +9,12 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Data.Models;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.PlayerHandlers;
+using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
 
@@ -88,7 +90,8 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.LoadMapForMapCreator] = mapCreatorHandler.SendPlayerMapForMapCreator,
                 [ToServerEvent.MapCreatorSyncCurrentMapToServer] = mapCreatorHandler.SyncCurrentMapToClient,
                 [ToServerEvent.LoadPlayerWeaponStats] = userpanelHandler.PlayerWeaponStatsHandler.GetPlayerWeaponStats,
-                [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData
+                [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData,
+                [ToServerEvent.SetDamageTestWeaponDamage] = SetDamageTestWeaponDamage
             };
 
             NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
@@ -209,6 +212,19 @@ namespace TDS_Server.Handler.Events
                 return null;
 
             arena.MapVoting.VoteForMap(player, mapId.Value);
+            return null;
+        }
+
+        private object? SetDamageTestWeaponDamage(ITDSPlayer player, ref ArraySegment<object> args)
+        {
+            if (!(player.Lobby is IDamageTestLobby damageTestLobby))
+                return null;
+            if (!player.IsLobbyOwner)
+                return null;
+
+            var weaponDamageData = Serializer.FromBrowser<DamageTestWeapon>((string)args[0]);
+            damageTestLobby.Deathmatch.SetWeaponDamage(weaponDamageData);
+
             return null;
         }
     }

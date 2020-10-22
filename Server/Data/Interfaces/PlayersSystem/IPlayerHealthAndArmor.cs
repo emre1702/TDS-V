@@ -6,6 +6,7 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
     {
         int Armor { get; set; }
         int Health { get; set; }
+        bool DisableDying { get; set; }
 
         void Add(int effectiveHp, out int effectiveHpAdded);
 

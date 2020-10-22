@@ -44,6 +44,7 @@ export enum DToServerEvent {
     SendOfflineMessage = "c48",
     SendSupportRequest = "c49",
     SendSupportRequestMessage = "c50",
+    SetDamageTestWeaponDamage = "c79",
     SetSupportRequestClosed = "c52",
     ToggleMapFavouriteState = "c61",
 

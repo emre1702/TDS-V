@@ -63,7 +63,7 @@
         string HITSOUND_ACTIVATED { get; }
         string HITSOUND_DEACTIVATED { get; }
 
-        string INVITATION_MAPCREATELOBBY { get; }
+        string INVITATION_LOBBY { get; }
         string INVITATION_WAS_WITHDRAWN_OR_REMOVED { get; }
 
         string JOINED_LOBBY_MESSAGE { get; }

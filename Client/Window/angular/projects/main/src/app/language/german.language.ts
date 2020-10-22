@@ -771,6 +771,8 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     CharCreator = "Charakter-Ersteller";
     Announcements = "Ankündigungen";
     Changelogs = "Changelogs";
+    Apply = "Anwenden";
+    DamageTestLobby = "Schaden Test";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

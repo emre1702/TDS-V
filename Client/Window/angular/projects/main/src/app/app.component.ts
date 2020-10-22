@@ -15,6 +15,7 @@ import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
 import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
 import { InitialDatas } from './services/test-datas';
+import { DFromServerEvent } from './enums/dfromserverevent.enum';
 
 @Component({
     selector: 'app-root',
@@ -22,7 +23,6 @@ import { InitialDatas } from './services/test-datas';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     animations: [
-
         trigger('teamOrdersAnimation', [
             transition('* => *', [
                 query(':enter', [
@@ -44,18 +44,20 @@ import { InitialDatas } from './services/test-datas';
 export class AppComponent {
     started = InitialDatas.started;
 
-    showMapCreator = false;
-    showFreeroam = false;
-    showLobbyChoice = true;
-    showTeamChoice = false;
-    showRankings = false;
-    showHUD = false;
-    showCharCreator = false;
-    showGangWindow = false;
+    showMapCreator = InitialDatas.opened.mapCreator;
+    showFreeroam = InitialDatas.opened.freeroam;
+    showLobbyChoice = InitialDatas.opened.lobbyChoice;
+    showTeamChoice = InitialDatas.opened.teamChoice;
+    showRankings = InitialDatas.opened.rankings;
+    showHUD = InitialDatas.opened.hud;
+    showCharCreator = InitialDatas.opened.charCreator;
+    showGangWindow = InitialDatas.opened.gangWindow;
+    showDamageTestMenu = InitialDatas.opened.damageTestMenu;
 
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;
     charCreateData: CharCreateData;
+    damageTestMenuInitWeapon: WeaponHash = InitialDatas.getDamageTestInitialWeapon();
 
     constructor(
         public settings: SettingsService,
@@ -69,7 +71,7 @@ export class AppComponent {
         this.loadSvgIcons();
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
-            this.settings.Constants = JSON.parse(constantsDataJson);
+             this.settings.Constants = JSON.parse(constantsDataJson);
             if (this.settings.Constants[6] && typeof this.settings.Constants[6] === "string") {
                 this.settings.Constants[6] = JSON.parse(this.settings.Constants[6]);
             }
@@ -147,6 +149,15 @@ export class AppComponent {
 
         rageConnector.listen(DFromClientEvent.SyncUsernameChange, (newName: string) => {
             this.settings.Constants[7] = newName;
+        });
+
+        rageConnector.listen(DFromClientEvent.ToggleDamageTestMenu, (toggle: boolean, json?: string, weapon?: WeaponHash) => {
+            if (json) {
+                this.settings.DamageTestWeaponDatas = JSON.parse(json);
+                this.damageTestMenuInitWeapon = weapon;
+            }
+            this.showDamageTestMenu = toggle;
+            this.changeDetector.detectChanges();
         });
 
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());

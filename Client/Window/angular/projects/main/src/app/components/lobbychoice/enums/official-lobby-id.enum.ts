@@ -4,5 +4,6 @@ export enum OfficialLobbyId {
     GangLobby = -2,
     MapCreateLobby = -3,
     MainMenu = -4,
-    CharCreateLobby = -5
+    CharCreateLobby = -5,
+    DamageTestLobby = -6
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
@@ -44,6 +45,14 @@ namespace TDS_Server.Core.Damagesystem
         }
 
         public bool DamageDealtThisRound => _allHitters.Count > 0;
+
+        public void SetDamage(WeaponHash weaponHash, DamageDto damage)
+        {
+            _damagesDict[weaponHash] = damage;
+        }
+
+        public Dictionary<WeaponHash, DamageDto> GetDamages()
+            => _damagesDict;
 
         public void Clear()
         {

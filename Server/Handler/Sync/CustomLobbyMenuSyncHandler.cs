@@ -139,6 +139,7 @@ namespace TDS_Server.Handler.Sync
             => !(lobby.IsOfficial
                 || lobby.Entity.Type == LobbyType.MapCreateLobby
                 || lobby.Entity.Type == LobbyType.CharCreateLobby
-                || lobby.Entity.Type == LobbyType.GangActionLobby);
+                || lobby.Entity.Type == LobbyType.GangActionLobby
+                || lobby.Entity.Type == LobbyType.DamageTestLobby);
     }
 }

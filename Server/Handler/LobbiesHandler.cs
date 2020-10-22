@@ -31,27 +31,23 @@ namespace TDS_Server.Handler
     {
         public readonly Dictionary<int, IBaseLobby> LobbiesByIndex = new Dictionary<int, IBaseLobby>();
 
-        private readonly EventsHandler _eventsHandler;
         private readonly MapsLoadingHandler _mapsHandler;
-        private readonly ISettingsHandler _settingsHandler;
         private readonly ILobbiesProvider _lobbiesProvider;
         private IArena? _arena;
         private ICharCreateLobby? _charCreateLobby;
         private string? _customLobbyDatas;
+        private IDamageTestLobby? _damageTestLobby;
         private IGangLobby? _gangLobby;
         private IBaseLobby? _mainMenu;
         private IMapCreatorLobby? _mapCreateLobby;
 
         public LobbiesHandler(
             TDSDbContext dbContext,
-            ISettingsHandler settingsHandler,
             MapsLoadingHandler mapsHandler,
             EventsHandler eventsHandler,
             ILobbiesProvider lobbiesProvider) : base(dbContext)
         {
             _mapsHandler = mapsHandler;
-            _eventsHandler = eventsHandler;
-            _settingsHandler = settingsHandler;
             _lobbiesProvider = lobbiesProvider;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
@@ -61,6 +57,9 @@ namespace TDS_Server.Handler
 
         public ICharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??=
             Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.CharCreateLobby).Cast<ICharCreateLobby>().First();
+
+        public IDamageTestLobby DamageTestLobbyDummy => _damageTestLobby ??=
+            Lobbies.Where(l => l.IsOfficial && l.Entity.Type == LobbyType.DamageTestLobby).Cast<IDamageTestLobby>().First();
 
         public List<IBaseLobby> Lobbies { get; } = new List<IBaseLobby>();
 
@@ -280,6 +279,10 @@ namespace TDS_Server.Handler
                         return null;
 
                     lobby = _lobbiesProvider.Create<ICharCreateLobby>(player);
+                }
+                else if (lobby is IDamageTestLobby)
+                {
+                    lobby = _lobbiesProvider.Create<IDamageTestLobby>(player);
                 }
                 await lobby.Players.AddPlayer(player, 0);
                 return null;

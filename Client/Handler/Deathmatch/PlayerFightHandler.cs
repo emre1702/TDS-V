@@ -6,6 +6,8 @@ using TDS_Client.Data.Models;
 using TDS_Client.Handler.Browser;
 using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Events;
+using TDS_Shared.Data.Enums;
+using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
 using static RAGE.Events;
 
@@ -69,6 +71,7 @@ namespace TDS_Client.Handler.Deathmatch
             eventsHandler.MapCleared += SetNotInFight;
             eventsHandler.RoundStarted += EventsHandler_RoundStarted;
             eventsHandler.RoundEnded += _ => SetNotInFight();
+            eventsHandler.LobbyJoined += EventsHandler_LobbyJoined;
 
             RAGE.Events.Add(ToClientEvent.HitOpponent, OnHitOpponentMethod);
             RAGE.Events.Add(ToClientEvent.PlayerRespawned, OnPlayerRespawnedMethod);
@@ -195,7 +198,7 @@ namespace TDS_Client.Handler.Deathmatch
         {
             ushort targetHandle = Convert.ToUInt16(args[0]);
             int damage = (int)args[1];
-            var target = _utilsHandler.GetPlayerByHandleValue(targetHandle) as ITDSPlayer;
+            var target = _utilsHandler.GetPlayerByHandleValue(targetHandle);
 
             HittedOpponent(target, damage);
         }
@@ -205,6 +208,12 @@ namespace TDS_Client.Handler.Deathmatch
             if (!_camerasHandler.Spectating.IsSpectator)
                 InFight = true;
             _eventsHandler.OnRespawned(InFight);
+        }
+
+        private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
+        {
+            if (settings.Type == LobbyType.DamageTestLobby)
+                InFight = true;
         }
 
         private void SetNotInFight()

@@ -31,12 +31,16 @@ namespace TDS_Server.PlayersSystem
 
         public void SetVoiceTo(ITDSPlayer target, bool on)
         {
-            _player.Voice.SetVoiceTo(target, on);
-
             if (on)
+            {
+                _player.EnableVoiceTo(target);
                 _settedVoiceTo.Add(target);
+            }
             else
+            {
+                _player.DisableVoiceTo(target);
                 _settedVoiceTo.Remove(target);
+            }
         }
     }
 }

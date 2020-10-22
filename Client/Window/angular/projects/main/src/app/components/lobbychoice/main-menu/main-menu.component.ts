@@ -34,6 +34,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
         { id: OfficialLobbyId.Arena, name: "Arena", imgUrl: "assets/arenachoice.png" },
         { id: OfficialLobbyId.CustomLobby, name: "UserLobbies", imgUrl: "assets/customlobbychoice.png" },
         // { id: OfficialLobbyId.GangLobby, name: "Gang", imgUrl: "assets/gangchoice.png" },
+        { id: OfficialLobbyId.DamageTestLobby, name: "DamageTestLobby", imgUrl: "assets/arenachoice.png" },
         { id: OfficialLobbyId.MapCreateLobby, name: "MapCreator", imgUrl: "assets/mapcreatorchoice.png" },
         { id: OfficialLobbyId.CharCreateLobby, name: "CharCreator", imgUrl: "assets/charcreatorchoice.png" }
     ];

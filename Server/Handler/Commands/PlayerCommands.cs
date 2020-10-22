@@ -117,8 +117,9 @@ namespace TDS_Server.Handler.Commands
 
             switch (player.Lobby.Type)
             {
+                case LobbyType.DamageTestLobby:
                 case LobbyType.MapCreateLobby:
-                    _ = new Invitation(string.Format(target.Language.INVITATION_MAPCREATELOBBY, player.DisplayName),
+                    _ = new Invitation(string.Format(target.Language.INVITATION_LOBBY, player.DisplayName, player.Lobby.Type.ToString()),
                         target: target,
                         sender: player,
                         invitationsHandler: _invitationsHandler,
@@ -144,6 +145,10 @@ namespace TDS_Server.Handler.Commands
 
                         type: InvitationType.Lobby
                     );
+                    break;
+
+                default:
+                    player.SendNotification(player.Language.NOT_POSSIBLE_IN_THIS_LOBBY);
                     break;
             }
         }

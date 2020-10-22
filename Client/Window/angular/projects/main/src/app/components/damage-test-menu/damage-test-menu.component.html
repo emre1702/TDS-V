@@ -1,0 +1,15 @@
+<tdswindow [title]="weaponHash[currentWeapon] | language:settings.Lang">
+    <form [formGroup]="weaponFormGroup">
+        <mat-form-field color="accent">
+            <mat-label>{{ 'Damage' | language: settings.Lang }}</mat-label>
+            <input type="number" matInput formControlName="1">
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <mat-label>{{ 'HeadShotMultiplier' | language: settings.Lang }}</mat-label>
+            <input type="number" matInput formControlName="2" step="0.1">
+        </mat-form-field>
+        <button mat-raised-button [disabled]="weaponFormGroup.invalid" (click)="applyDamageSettings()">
+            {{ 'Apply' | language: settings.Lang }}
+        </button>
+    </form>
+</tdswindow>

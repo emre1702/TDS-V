@@ -73,7 +73,7 @@ namespace TDS_Server.Data.Languages
         public override string HITSOUND_ACTIVATED => "Hitsound aktiviert!";
         public override string HITSOUND_DEACTIVATED => "Hitsound deaktiviert!";
 
-        public override string INVITATION_MAPCREATELOBBY => "Du wurdest von {0} in die MapCreator-Lobby eingeladen.";
+        public override string INVITATION_LOBBY => "Du wurdest von {0} in die '{1}' Lobby eingeladen.";
         public override string INVITATION_WAS_WITHDRAWN_OR_REMOVED => "Die Einladung wurde schon zurückgezogen oder entfernt.";
 
         public override string JOINED_LOBBY_MESSAGE => "Du bist in die Lobby \"{0}\" eingetreten.\nNutze '/{1}' zum Verlassen.";

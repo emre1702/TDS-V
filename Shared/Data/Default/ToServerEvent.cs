@@ -79,6 +79,7 @@
         public const string SendSupportRequest = "c49";
         public const string SendSupportRequestMessage = "c50";
         public const string SendTeamOrder = "c51";
+        public const string SetDamageTestWeaponDamage = "c79";
         public const string SetInFreecam = "c13";
         public const string SetSupportRequestClosed = "c52";
         public const string SpectateNext = "c53";

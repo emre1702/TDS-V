@@ -8,6 +8,7 @@
         GangLobby = 3,
         MapCreateLobby = 4,
         CharCreateLobby = 5,
-        GangActionLobby = 6
+        GangActionLobby = 6,
+        DamageTestLobby = 7
     }
 }

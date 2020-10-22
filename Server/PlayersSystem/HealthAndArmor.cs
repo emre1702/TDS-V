@@ -29,6 +29,8 @@ namespace TDS_Server.PlayersSystem
             }
         }
 
+        public bool DisableDying { get; set; }
+
 #nullable disable
         private ITDSPlayer _player;
 #nullable enable
@@ -89,7 +91,15 @@ namespace TDS_Server.PlayersSystem
             if (removeFromArmor > 0)
                 Armor -= removeFromArmor;
             if (removeFromHealth > 0)
-                Health -= removeFromHealth;
+            {
+                if (Health > removeFromHealth || !DisableDying)
+                    Health -= removeFromHealth;
+                else
+                {
+                    Health = 100;
+                    Armor = 100;
+                }
+            }
 
             killed = Health <= 0;
         }

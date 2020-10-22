@@ -1,5 +1,6 @@
 ﻿using RAGE;
 using System.Drawing;
+using TDS_Client.Data.Enums;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 
@@ -12,6 +13,8 @@ namespace TDS_Client.Data.Abstracts.Entities.GTA
             get => GetRotation(2);
             set => SetRotation(value.X, value.Y, value.Z, 2, true);
         }
+
+        public WeaponHash CurrentWeapon => (WeaponHash)GetSelectedWeapon();
 
         public ITDSPlayer(ushort id, ushort remoteId) : base(id, remoteId)
         {

@@ -8,6 +8,8 @@ namespace TDS_Client.Handler.Browser
 {
     public class BrowserHandler : ServiceBase
     {
+        private TDSTimer _browserCreatedCheckTimer;
+
         public BrowserHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler,
             RemoteEventsSender remoteEventsSender)
             : base(loggingHandler)
@@ -23,6 +25,9 @@ namespace TDS_Client.Handler.Browser
             RAGE.Events.Add(FromBrowserEvent.InputStarted, _ => InInput = true);
             RAGE.Events.Add(FromBrowserEvent.InputStopped, _ => InInput = false);
             RAGE.Events.Add(ToClientEvent.SendAlert, SendAlert);
+            RAGE.Events.Add(FromBrowserEvent.Created, BrowserSentCreated);
+
+            _browserCreatedCheckTimer = new TDSTimer(MakeSureBrowsersAreCreatedCorrectly, 2000);
         }
 
         public AngularBrowserHandler Angular { get; }
@@ -44,6 +49,60 @@ namespace TDS_Client.Handler.Browser
         {
             var msg = (string)args[0];
             RAGE.Ui.DefaultWindow.ExecuteJs($"alert(`{msg.Replace("`", "\"")}`)");
+        }
+
+        private void MakeSureBrowsersAreCreatedCorrectly()
+        {
+            bool oneNotCreated = false;
+            if (!(Angular.Browser is null) && !Angular.CreatedSuccessfully)
+            {
+                Angular.CreateBrowser();
+                Angular.Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'Angular')");
+                oneNotCreated = true;
+            }
+
+            if (!(RegisterLogin.Browser is null) && !RegisterLogin.CreatedSuccessfully)
+            {
+                RegisterLogin.Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'RegisterLogin')");
+                oneNotCreated = true;
+            }
+
+            if (!(PlainMain.Browser is null) && !PlainMain.CreatedSuccessfully)
+            {
+                PlainMain.Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'PlainMain')");
+                oneNotCreated = true;
+            }
+
+            if (!oneNotCreated && Angular.HasBeenCreatedOnce && RegisterLogin.HasBeenCreatedOnce && PlainMain.HasBeenCreatedOnce)
+            {
+                _browserCreatedCheckTimer?.Kill();
+                _browserCreatedCheckTimer = null;
+            }
+        }
+
+        private void BrowserSentCreated(object[] args)
+        {
+            var browserName = (string)args[0];
+            switch (browserName)
+            {
+                case "Angular":
+                    Angular.CreatedSuccessfully = true;
+                    RAGE.Ui.Console.LogLine(RAGE.Ui.ConsoleVerbosity.Info, "Angular browser has been created successfully.", true);
+                    Angular.Browser.MarkAsChat();
+                    RAGE.Chat.Show(true);
+                    Angular.ProcessExecuteList();
+                    break;
+
+                case "RegisterLogin":
+                    RegisterLogin.CreatedSuccessfully = true;
+                    RegisterLogin.ProcessExecuteList();
+                    break;
+
+                case "PlainMain":
+                    PlainMain.CreatedSuccessfully = true;
+                    PlainMain.ProcessExecuteList();
+                    break;
+            }
         }
     }
 }
