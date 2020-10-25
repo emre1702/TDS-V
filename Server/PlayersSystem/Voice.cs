@@ -23,8 +23,8 @@ namespace TDS_Server.PlayersSystem
             {
                 if (!target.LoggedIn)
                     continue;
-                _player.Voice.SetVoiceTo(target, false);
-                target.Voice.SetVoiceTo(_player, false);
+                _player.DisableVoiceTo(target);
+                target.DisableVoiceTo(_player);
             }
             _settedVoiceTo.Clear();
         }
