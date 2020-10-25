@@ -49,8 +49,8 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
             }
 
-            RequestGamemode?.Invoke(mapDto);
             InitNewMap?.Invoke(mapDto);
+            RequestGamemode?.Invoke(mapDto);
         }
 
         public void TriggerTeamPreparation()
