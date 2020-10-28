@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
@@ -205,7 +206,7 @@ namespace TDS_Server.LobbySystem.Players
             {
                 Lobby.Rounds.SetPlayerReadyForRound(player, false);
                 Lobby.Rounds.StartRoundForPlayer(player);
-                NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.PlayerRespawned));
+                NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.PlayerRespawned));
             }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);
         }
     }

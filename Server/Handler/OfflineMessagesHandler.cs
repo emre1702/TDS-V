@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using BonusBotConnector.Client;
+using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
@@ -10,6 +11,7 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler
 {
@@ -103,7 +105,8 @@ namespace TDS_Server.Handler
 
                 if (amountNewEntries > 0)
                 {
-                    player.SendChatMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries));
+                    NAPI.Task.RunSafe(() => 
+                        player.SendChatMessage(string.Format(player.Language.GOT_UNREAD_OFFLINE_MESSAGES, amountNewEntries)));
                 }
             }
             catch (Exception ex)

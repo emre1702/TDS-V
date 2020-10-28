@@ -3,6 +3,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -38,7 +39,7 @@ namespace TDS_Server.PlayersSystem
 
                 Team = team;
 
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     _player.TriggerEvent(ToClientEvent.PlayerTeamChange, team?.Entity.Name ?? "-");
                     _dataSyncHandler.SetData(_player, PlayerDataKey.TeamIndex, DataSyncMode.Lobby, team?.Entity.Index ?? -1);

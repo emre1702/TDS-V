@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
+using TDS_Server.Database.Entity.Command;
 
 namespace TDS_Server.Data.Models
 {
+    #nullable disable
     public class CommandDataDto
     {
-        #region Public Fields
-
-        public List<CommandMethodDataDto> MethodDatas = new List<CommandMethodDataDto>();
-
-        #endregion Public Fields
+        public Commands Entity { get; set; }
+        public List<CommandMethodDataDto> MethodDatas { get; set; } = new List<CommandMethodDataDto>();
     }
 }

@@ -5,6 +5,7 @@ using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -159,8 +160,14 @@ namespace TDS_Server.Handler.Sync
 
         private void SyncPlayerAllData(ITDSPlayer player)
         {
-            player.TriggerEvent(ToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasAll));
-            player.TriggerEvent(ToClientEvent.SyncEntityData, Serializer.ToClient(_entityHandleDatasAll));
+            var playerHandleDatasAllJson = Serializer.ToClient(_playerHandleDatasAll);
+            var entityHandleDatasAllJson = Serializer.ToClient(_entityHandleDatasAll);
+
+            NAPI.Task.RunSafe(() =>
+            {
+                player.TriggerEvent(ToClientEvent.SyncPlayerData, playerHandleDatasAllJson);
+                player.TriggerEvent(ToClientEvent.SyncEntityData, entityHandleDatasAllJson);
+            });
         }
 
         private void SyncPlayerLobbyData(ITDSPlayer player, IBaseLobby lobby)

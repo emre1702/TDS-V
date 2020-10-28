@@ -11,6 +11,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.PlayerCommands;
 using TDS_Shared.Default;
@@ -121,7 +122,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 var data = await GetData(player);
                 var json = Serializer.ToClient(data);
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, json);
                 });

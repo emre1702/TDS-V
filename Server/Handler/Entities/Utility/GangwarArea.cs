@@ -12,6 +12,7 @@ using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.GangSystem;
 using TDS_Shared.Core;
 
@@ -98,7 +99,7 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
                     await dbContext.SaveChangesAsync();
                 });
 
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     CreateGangLobbyMapInfo();
 
@@ -124,7 +125,7 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
                     await dbContext.SaveChangesAsync();
                 });
 
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     //Todo: Inform everyone + attacker
                 });
@@ -237,7 +238,7 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
             if (_lobbiesHandler is null)
                 return;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 _blip = NAPI.Blip.CreateBlip(
                     sprite: 84,

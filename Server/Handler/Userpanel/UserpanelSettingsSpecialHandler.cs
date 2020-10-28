@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel;
 using TDS_Server.Data.Utility;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -135,7 +136,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 case UserpanelSettingsSpecialType.Username:
                     player.Name = value;
-                    NAPI.Task.Run(() => _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, value));
+                    NAPI.Task.RunSafe(() => _dataSyncHandler.SetData(player, PlayerDataKey.Name, DataSyncMode.Player, value));
                     break;
             }
 

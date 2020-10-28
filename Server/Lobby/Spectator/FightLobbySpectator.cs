@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.LobbySystem.TeamHandlers;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
@@ -24,7 +25,7 @@ namespace TDS_Server.LobbySystem.Spectator
             player.DeathSpawnTimer?.Kill();
             player.DeathSpawnTimer = new TDSTimer(async () =>
             {
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                     player.TriggerEvent(ToClientEvent.PlayerSpectateMode));
                 await EnsurePlayerSpectatesAnyone(player).ConfigureAwait(false);
             }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);

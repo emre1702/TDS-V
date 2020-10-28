@@ -10,6 +10,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.Weapons;
 using TDS_Shared.Default;
@@ -30,7 +31,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
             await base.OnPlayerDeath(player, killer, weapon).ConfigureAwait(false);
 
             player.DeathSpawnTimer?.Kill();
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.Spawn(Lobby.MapHandler.SpawnPoint, Lobby.MapHandler.SpawnRotation);
                 player.Freeze(false);

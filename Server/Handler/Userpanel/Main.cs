@@ -9,6 +9,7 @@ using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
@@ -17,17 +18,12 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class UserpanelHandler : IUserpanelHandler
     {
-        #region Private Fields
 
         private readonly UserpanelCommandsHandler _commandsHandler;
         private readonly UserpanelFAQsHandlers _fAQsHandlers;
         private readonly UserpanelPlayerGeneralStatsHandler _playerStatsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer,
             UserpanelCommandsHandler userpanelCommandsHandler, ITDSPlayerHandler tdsPlayerHandler)
@@ -57,10 +53,6 @@ namespace TDS_Server.Handler.Userpanel
             NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.LoadUserpanelData, this, OnLoadUserpanelData);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public IUserpanelApplicationsAdminHandler ApplicationsAdminHandler { get; }
         public IUserpanelApplicationUserHandler ApplicationUserHandler { get; }
         public IUserpanelOfflineMessagesHandler OfflineMessagesHandler { get; }
@@ -71,10 +63,6 @@ namespace TDS_Server.Handler.Userpanel
         public IUserpanelSupportAdminHandler SupportAdminHandler { get; }
         public IUserpanelSupportRequestHandler SupportRequestHandler { get; }
         public IUserpanelSupportUserHandler SupportUserHandler { get; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void OnLoadUserpanelData(ITDSPlayer player, int dataType)
         {
@@ -147,17 +135,13 @@ namespace TDS_Server.Handler.Userpanel
                 if (json == null)
                     return;
 
-                NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
+                NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
             }
             catch (Exception ex)
             {
                 LoggingHandler.Instance.LogError(ex);
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private async ValueTask CommandService_OnUsedCommand((ulong userId, string command, IList<string> args, BBUsedCommandReply reply) data)
         {
@@ -173,6 +157,5 @@ namespace TDS_Server.Handler.Userpanel
             }
         }
 
-        #endregion Private Methods
     }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.LobbySystem.MapHandlers
 {
@@ -15,7 +16,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
         protected override ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 data.Player.Spawn(SpawnPoint, SpawnRotation);
                 data.Player.Freeze(false);

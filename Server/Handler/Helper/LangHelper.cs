@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GTANetworkAPI;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Languages;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Helper
@@ -60,7 +61,7 @@ namespace TDS_Server.Handler.Helper
                 returnDict[lang] = langgetter(lang);
             }
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
                 {
@@ -77,7 +78,7 @@ namespace TDS_Server.Handler.Helper
                 returnDict[lang] = langgetter(lang);
             }
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
                 {

@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Default;
 
 namespace TDS_Server.GamemodesSystem.MapHandlers
@@ -49,7 +50,7 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
 
         private ValueTask ClearTarget()
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 _targetBlip?.Delete();
                 _targetBlip = null;

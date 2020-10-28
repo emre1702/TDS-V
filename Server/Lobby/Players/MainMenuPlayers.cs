@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.LobbySystem.Players
 {
@@ -19,7 +20,7 @@ namespace TDS_Server.LobbySystem.Players
             if (!worked)
                 return false;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.SetInvincible(true);
                 player.SetInvisible(true);

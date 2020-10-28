@@ -6,6 +6,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.LobbySystem.Players
 {
@@ -26,7 +27,7 @@ namespace TDS_Server.LobbySystem.Players
 
             await AddPlayerLobbyStats(player).ConfigureAwait(false);
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.SetInvincible(false);
                 player.SetInvisible(false);

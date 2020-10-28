@@ -2,6 +2,7 @@
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Shared.Default;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler
 {
@@ -18,7 +19,7 @@ namespace TDS_Server.Handler
             if (targetPlayer is { })
             {
                 targetPlayer.SpectateHandler.AddSpectator(player);
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     player.Position = targetPlayer.Position.AddToZ(10);
                     new TDS_Shared.Core.TDSTimer(() =>

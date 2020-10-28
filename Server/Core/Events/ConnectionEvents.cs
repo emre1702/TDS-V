@@ -3,6 +3,7 @@ using System;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Core.Events
 {
@@ -28,7 +29,7 @@ namespace TDS_Server.Core.Events
                 if (player.LoggedIn)
                     await EventsHandler.Instance.OnPlayerLoggedOut(player);
 
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     EventsHandler.Instance.OnPlayerDisconnected(player);
                 });

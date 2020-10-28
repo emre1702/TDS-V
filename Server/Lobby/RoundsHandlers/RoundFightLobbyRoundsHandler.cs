@@ -14,6 +14,7 @@ using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.RoundEndReasons;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
 using TDS_Shared.Default;
@@ -92,7 +93,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
         {
             var teamPlayerAmountsJson = await Lobby.Teams.GetAmountInFightSyncDataJson().ConfigureAwait(false);
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 if (Lobby.CurrentMap is { } map)
                     player.TriggerEvent(ToClientEvent.MapChange, map.ClientSyncedDataJson);
@@ -201,7 +202,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             {
                 player.Team.Players.AddToSpectatable(player);
 
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     player.SpectateHandler.SetSpectates(null);
                     player.Freeze(freeze);
@@ -210,7 +211,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             }
             else
             {
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     player.Freeze(true);
                     player.SetInvisible(true);
@@ -221,7 +222,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
         public virtual void StartRoundForPlayer(ITDSPlayer player)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.Freeze(false);
                 player.TriggerEvent(ToClientEvent.RoundStart, player.Team is null || player.Team.IsSpectator);

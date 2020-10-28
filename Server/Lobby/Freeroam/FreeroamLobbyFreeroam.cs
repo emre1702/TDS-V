@@ -3,6 +3,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Freeroam;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.LobbySystem.Freeroam
@@ -21,7 +22,7 @@ namespace TDS_Server.LobbySystem.Freeroam
             if (!vehicleHash.HasValue)
                 return;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 var pos = player.Position;
                 if (player.FreeroamVehicle is { })

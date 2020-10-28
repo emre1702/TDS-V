@@ -14,6 +14,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Userpanel;
 
@@ -111,7 +112,7 @@ namespace TDS_Server.Handler.Userpanel
                 .FirstOrDefaultAsync());
             if (invitation == null)
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -135,7 +136,7 @@ namespace TDS_Server.Handler.Userpanel
             player.Entity.AdminLvl = 1;
             await player.DatabaseHandler.SaveData();
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.SendChatMessage(string.Format(player.Language.YOU_ACCEPTED_TEAM_INVITATION, invitation.Admin.Name));
 
@@ -271,7 +272,7 @@ namespace TDS_Server.Handler.Userpanel
                     .FirstOrDefaultAsync());
             if (invitation == null)
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -293,7 +294,7 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync();
             });
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.SendChatMessage(string.Format(player.Language.YOU_REJECTED_TEAM_INVITATION, invitation.Admin.Name));
 

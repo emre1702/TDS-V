@@ -10,6 +10,7 @@ using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
@@ -67,7 +68,7 @@ namespace TDS_Server.Handler.Userpanel
             player.Events.TriggerSettingsChanged();
 
             var generalSettingsJson = Serializer.ToBrowser(obj.General);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.TriggerEvent(ToClientEvent.SyncSettings, generalSettingsJson);
 

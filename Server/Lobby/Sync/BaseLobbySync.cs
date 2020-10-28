@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Players;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.LobbySystem.TeamHandlers;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models;
@@ -77,7 +78,7 @@ namespace TDS_Server.LobbySystem.Sync
 
         private ValueTask Events_PlayerLeftLobbyAfter((ITDSPlayer Player, int HadLifes) data)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 TriggerEvent(ToClientEvent.LeaveSameLobby, data.Player.RemoteId, data.Player.Entity?.Name ?? data.Player.DisplayName);
             });
@@ -89,7 +90,7 @@ namespace TDS_Server.LobbySystem.Sync
             var playerRemoteIdsJson = Serializer.ToClient(Lobby.Players.GetPlayers().Select(p => p.RemoteId));
             var syncedTeamDataJson = Serializer.ToClient(Lobby.Teams.GetTeams().Select(t => t.SyncedData));
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 TriggerEvent(ToClientEvent.JoinSameLobby, data.Player.RemoteId);
                 data.Player.TriggerEvent(ToClientEvent.JoinLobby, SyncedSettings.Json, playerRemoteIdsJson, syncedTeamDataJson);

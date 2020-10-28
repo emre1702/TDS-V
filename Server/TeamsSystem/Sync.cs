@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -23,14 +24,14 @@ namespace TDS_Server.TeamsSystem
         public void TriggerEvent(string eventName, params object[] args)
         {
             var playersToSyncTo = _team.Players.GetAllArray();
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 NAPI.ClientEvent.TriggerClientEventToPlayers(playersToSyncTo, eventName, args));
         }
 
         public void TriggerEventExcept(ITDSPlayer exceptPlayer, string eventName, params object[] args)
         {
             var playersToSyncTo = _team.Players.GetAllArrayExcept(exceptPlayer);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 NAPI.ClientEvent.TriggerClientEventToPlayers(playersToSyncTo, eventName, args));
         }
 
@@ -40,7 +41,7 @@ namespace TDS_Server.TeamsSystem
                 return;
             string _allPlayersRemoteIdsJson = Serializer.ToClient(_team.Players.GetRemoteIds());
             var playersToSyncTo = _team.Players.GetAllArrayExcept(player);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.TriggerEvent(ToClientEvent.SyncTeamPlayers, _allPlayersRemoteIdsJson);
                 NAPI.ClientEvent.TriggerClientEventToPlayers(playersToSyncTo, ToClientEvent.PlayerJoinedTeam, player.RemoteId);
@@ -61,7 +62,7 @@ namespace TDS_Server.TeamsSystem
                 return;
             string _allPlayersRemoteIdsJson = Serializer.ToClient(_team.Players.GetRemoteIds());
             var playersToSyncTo = _team.Players.GetAllArray();
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 NAPI.ClientEvent.TriggerClientEventToPlayers(playersToSyncTo, ToClientEvent.SyncTeamPlayers, _allPlayersRemoteIdsJson);
                 foreach (var player in playersToSyncTo)
@@ -82,7 +83,7 @@ namespace TDS_Server.TeamsSystem
             if (!SyncChanges)
                 return;
             var playersToSyncTo = _team.Players.GetAllArrayExcept(player);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.Voice.ResetVoiceToAndFrom();
 

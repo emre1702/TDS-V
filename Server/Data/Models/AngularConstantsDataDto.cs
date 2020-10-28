@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Data.Models
 {
@@ -8,20 +6,6 @@ namespace TDS_Server.Data.Models
 
     public class AngularConstantsDataDto
     {
-        public AngularConstantsDataDto(ITDSPlayer player, ISettingsHandler settingsHandler, IAnnouncementsHandler announcementsHandler, IChangelogsHandler changelogsHandler)
-        {
-            TDSId = player.Id;
-            RemoteId = player.RemoteId;
-            UsernameChangeCost = settingsHandler.ServerSettings.UsernameChangeCost;
-            UsernameChangeCooldownDays = settingsHandler.ServerSettings.UsernameChangeCooldownDays;
-            MapBuyBasePrice = settingsHandler.ServerSettings.MapBuyBasePrice;
-            MapBuyCounterMultiplicator = settingsHandler.ServerSettings.MapBuyCounterMultiplicator;
-            AnnouncementsJson = announcementsHandler.Json;
-            ChangelogsJson = changelogsHandler.Json;
-            Username = player.Entity.Name;
-            SCName = player.Entity.SCName;
-        }
-
         [JsonProperty("0")]
         public int TDSId { get; set; }
 
@@ -52,6 +36,4 @@ namespace TDS_Server.Data.Models
         [JsonProperty("9")]
         public string ChangelogsJson { get; set; }
     }
-
-#nullable restore
 }

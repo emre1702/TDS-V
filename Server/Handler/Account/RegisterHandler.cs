@@ -16,16 +16,15 @@ using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Account
 {
-    public class RegisterHandler : DatabaseEntityWrapper
+    public class RegisterHandler
     {
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly EventsHandler _eventsHandler;
         private readonly LangHelper _langHelper;
         private readonly ServerStartHandler _serverStartHandler;
 
-        public RegisterHandler(TDSDbContext dbContext, EventsHandler eventsHandler,
+        public RegisterHandler(EventsHandler eventsHandler,
             DatabasePlayerHelper databasePlayerHelper, ServerStartHandler serverStartHandler, LangHelper langHelper)
-            : base(dbContext)
         {
             (_eventsHandler, _databasePlayerHelper, _serverStartHandler) = (eventsHandler, databasePlayerHelper, serverStartHandler);
             _langHelper = langHelper;
@@ -33,57 +32,21 @@ namespace TDS_Server.Handler.Account
             NAPI.ClientEvent.Register<ITDSPlayer, string, string, string, int>(ToServerEvent.TryRegister, this, TryRegister);
         }
 
-        public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language)
+        public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language, string scName, ulong scId)
         {
             if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
                 email = null;
             if (int.TryParse(username, out int result))
                 return;
 
-            var (scId, scName) = await NAPI.Task.RunWait(() => (player.SocialClubId, player.SocialClubName));
-
-            var dbPlayer = new Players
-            {
-                Name = username,
-                SCId = scId,
-                SCName = scName,
-                Password = Utils.HashPasswordServer(password),
-                Email = email,
-                IsVip = false
-            };
-            if (dbPlayer is null)
-                return;
-
-            dbPlayer.PlayerSettings = new PlayerSettings
-            {
-                AllowDataTransfer = false,
-                Language = language,
-                Hitsound = true,
-                Bloodscreen = true,
-                FloatingDamageInfo = true,
-                ShowConfettiAtRanking = true,
-                CheckAFK = true,
-                WindowsNotifications = false,
-                HideDirtyChat = false,
-                ShowCursorOnChatOpen = true,
-                Voice3D = false,
-                VoiceAutoVolume = false,
-                HideChatInfo = false,
-                ShowCursorInfo = true,
-                ShowLobbyLeaveInfo = true
-            };
-            dbPlayer.PlayerStats = new PlayerStats
-            {
-                LoggedIn = false
-            };
+            var dbPlayer = CreatePlayerEntity(username, password, email, scName, scId);
+            dbPlayer.PlayerSettings = CreatePlayerSettingsEntity(language);
+            dbPlayer.PlayerStats = CreatePlayerStatsEntity();
             dbPlayer.PlayerTotalStats = new PlayerTotalStats();
             dbPlayer.PlayerClothes = new PlayerClothes();
-            dbPlayer.ThemeSettings = new PlayerThemeSettings
-            {
-                UseDarkTheme = true
-            };
+            dbPlayer.ThemeSettings = CreatePlayerThemeSettingsEntity();
 
-            await ExecuteForDBAsync(async dbContext =>
+            await player.Database.ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Players.Add(dbPlayer);
                 await dbContext.SaveChangesAsync();
@@ -104,27 +67,29 @@ namespace TDS_Server.Handler.Account
             player.TryingToLoginRegister = true;
             try
             {
+                var scName = player.SocialClubName;
+                var scId = player.SocialClubId;
+
                 await _serverStartHandler.LoadingTask.Task;
 
                 if (username.Length < 3 || username.Length > 20)
                     return;
-                var scName = await NAPI.Task.RunWait(() => player.SocialClubName);
 
                 if (await _databasePlayerHelper.DoesPlayerWithScnameExist(scName))
                     return;
                 if (await _databasePlayerHelper.DoesPlayerWithNameExist(username))
                 {
-                    NAPI.Task.Run(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
+                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
                     return;
                 }
                 char? invalidChar = Utils.CheckNameValid(username);
                 if (invalidChar.HasValue)
                 {
-                    NAPI.Task.Run(()
+                    NAPI.Task.RunSafe(()
                         => player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value)));
                     return;
                 }
-                RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language);
+                RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language, scName, scId);
             }
             catch (Exception ex)
             {
@@ -135,5 +100,48 @@ namespace TDS_Server.Handler.Account
                 player.TryingToLoginRegister = false;
             }
         }
+
+        private Players CreatePlayerEntity(string username, string password, string? email, string scName, ulong scId)
+            => new Players
+            {
+                Name = username,
+                SCId = scId,
+                SCName = scName,
+                Password = Utils.HashPasswordServer(password),
+                Email = email,
+                IsVip = false
+            };
+
+        private PlayerSettings CreatePlayerSettingsEntity(Language language)
+            => new PlayerSettings
+            {
+                AllowDataTransfer = false,
+                Language = language,
+                Hitsound = true,
+                Bloodscreen = true,
+                FloatingDamageInfo = true,
+                ShowConfettiAtRanking = true,
+                CheckAFK = true,
+                WindowsNotifications = false,
+                HideDirtyChat = false,
+                ShowCursorOnChatOpen = true,
+                Voice3D = false,
+                VoiceAutoVolume = false,
+                HideChatInfo = false,
+                ShowCursorInfo = true,
+                ShowLobbyLeaveInfo = true
+            };
+
+        private PlayerStats CreatePlayerStatsEntity()
+            => new PlayerStats
+            {
+                LoggedIn = false
+            };
+
+        private PlayerThemeSettings CreatePlayerThemeSettingsEntity()
+           => new PlayerThemeSettings
+           {
+               UseDarkTheme = true
+           };
     }
 }

@@ -11,6 +11,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
 
@@ -37,7 +38,7 @@ namespace TDS_Server.Handler.Maps
                         .Select(m => m.MapId)
                         .ToListAsync());
                 var json = Serializer.ToBrowser(mapIDs);
-                NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, json));
+                NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, json));
             }
             catch (Exception ex)
             {

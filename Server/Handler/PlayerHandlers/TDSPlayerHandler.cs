@@ -10,6 +10,7 @@ using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
@@ -21,17 +22,14 @@ namespace TDS_Server.Handler.PlayerHandlers
     {
         private readonly ILoggingHandler _loggingHandler;
         private readonly NameCheckHelper _nameCheckHelper;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<ushort, ITDSPlayer> _tdsPlayerRemoteIdCache = new ConcurrentDictionary<ushort, ITDSPlayer>();
 
         public TDSPlayerHandler(
             NameCheckHelper nameCheckHelper,
-            IServiceProvider serviceProvider,
             EventsHandler eventsHandler,
             ILoggingHandler loggingHandler)
         {
             _nameCheckHelper = nameCheckHelper;
-            _serviceProvider = serviceProvider;
             _loggingHandler = loggingHandler;
 
             NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.LanguageChange, this, OnLanguageChange);
@@ -48,13 +46,20 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         public ITDSPlayer? Get(int playerId)
         {
-            return _tdsPlayerRemoteIdCache.Values.FirstOrDefault(p => p.Id == playerId);
+            lock (_tdsPlayerRemoteIdCache)
+            {
+                return _tdsPlayerRemoteIdCache.Values.FirstOrDefault(p => p.Id == playerId);
+            }
         }
 
         public ITDSPlayer? GetIfLoggedIn(ushort remoteId)
         {
-            _tdsPlayerRemoteIdCache.TryGetValue(remoteId, out ITDSPlayer? player);
-            return player;
+            lock (_tdsPlayerRemoteIdCache)
+            {
+                _tdsPlayerRemoteIdCache.TryGetValue(remoteId, out ITDSPlayer? player);
+                return player;
+            }
+             
         }
 
         public ITDSPlayer? FindTDSPlayer(string name)
@@ -64,28 +69,31 @@ namespace TDS_Server.Handler.PlayerHandlers
                 name = name.Substring(suffix.Length);
             name = name.Trim();
 
-            foreach (var player in _tdsPlayerRemoteIdCache.Values)
+            lock (_tdsPlayerRemoteIdCache)
             {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
-                    return player;
-            }
+                foreach (var player in _tdsPlayerRemoteIdCache.Values)
+                {
+                    if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
+                        return player;
+                }
 
-            foreach (var player in _tdsPlayerRemoteIdCache.Values)
-            {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
-                    return player;
-            }
+                foreach (var player in _tdsPlayerRemoteIdCache.Values)
+                {
+                    if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
+                        return player;
+                }
 
-            foreach (var player in _tdsPlayerRemoteIdCache.Values)
-            {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
-                    return player;
-            }
+                foreach (var player in _tdsPlayerRemoteIdCache.Values)
+                {
+                    if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
+                        return player;
+                }
 
-            foreach (var player in _tdsPlayerRemoteIdCache.Values)
-            {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
-                    return player;
+                foreach (var player in _tdsPlayerRemoteIdCache.Values)
+                {
+                    if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
+                        return player;
+                }
             }
 
             return null;
@@ -93,12 +101,14 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            _tdsPlayerRemoteIdCache[player.RemoteId] = player;
+            lock (_tdsPlayerRemoteIdCache) 
+                _tdsPlayerRemoteIdCache[player.RemoteId] = player;
         }
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
-            _tdsPlayerRemoteIdCache.TryRemove(player.RemoteId, out _);
+            lock (_tdsPlayerRemoteIdCache)
+                _tdsPlayerRemoteIdCache.TryRemove(player.RemoteId, out _);
         }
 
         private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)
@@ -140,7 +150,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                 return;
 
             player.MuteHandler.VoiceMuteTime = null;
-            NAPI.Task.Run(() => player.SendNotification(player.Language.VOICE_MUTE_EXPIRED));
+            NAPI.Task.RunSafe(() => player.SendNotification(player.Language.VOICE_MUTE_EXPIRED));
 
             if (player.Team is null || player.Team.IsSpectator)
                 return;

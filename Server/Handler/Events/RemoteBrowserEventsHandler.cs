@@ -11,6 +11,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Utility;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
 using TDS_Server.Handler.PlayerHandlers;
@@ -123,7 +124,7 @@ namespace TDS_Server.Handler.Events
                     ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName);
                 }
 
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     if (_methods.ContainsKey(eventName))
                     {

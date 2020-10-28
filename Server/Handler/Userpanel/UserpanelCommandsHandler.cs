@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Userpanel.Command;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
@@ -25,25 +27,23 @@ namespace TDS_Server.Handler.Userpanel
             return _commandDatasJson;
         }
 
-        public void LoadCommandData(
-                    Dictionary<string, CommandDataDto> commandDataByCommand,
-            Dictionary<string, Database.Entity.Command.Commands> commandsDict)
+        public void LoadCommandData(Dictionary<string, CommandDataDto> commandDatas)
         {
-            foreach (var entry in commandDataByCommand)
+            foreach (var entry in commandDatas)
             {
                 string command = entry.Key;
-                var dbCommand = commandsDict[command];
+                var entity = entry.Value.Entity;
 
                 var userpanelCommandData = new UserpanelCommandDataDto
                 {
-                    Id = dbCommand.Id,
-                    Command = dbCommand.Command,
-                    Aliases = dbCommand.CommandAlias.Select(a => a.Alias).ToList(),
-                    Description = dbCommand.CommandInfos.ToDictionary(i => (int)i.Language, i => i.Info),
-                    LobbyOwnerCanUse = dbCommand.LobbyOwnerCanUse,
-                    MinAdminLevel = dbCommand.NeededAdminLevel,
-                    MinDonation = dbCommand.NeededDonation,
-                    VIPCanUse = dbCommand.VipCanUse
+                    Id = entity.Id,
+                    Command = entity.Command,
+                    Aliases = entity.CommandAlias.Select(a => a.Alias).ToList(),
+                    Description = entity.CommandInfos.ToDictionary(i => (int)i.Language, i => i.Info),
+                    LobbyOwnerCanUse = entity.LobbyOwnerCanUse,
+                    MinAdminLevel = entity.NeededAdminLevel,
+                    MinDonation = entity.NeededDonation,
+                    VIPCanUse = entity.VipCanUse
                 };
 
                 var commandData = entry.Value;
@@ -74,7 +74,9 @@ namespace TDS_Server.Handler.Userpanel
 
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            player.TriggerBrowserEvent(ToBrowserEvent.SyncCommandsData, GetData());
+            var data = GetData();
+            NAPI.Task.RunSafe(() => 
+                player.TriggerBrowserEvent(ToBrowserEvent.SyncCommandsData, data));
         }
     }
 }

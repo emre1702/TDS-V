@@ -11,6 +11,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
@@ -71,7 +72,7 @@ namespace TDS_Server.Handler.Entities.GangSystem
             Entity.OwnerId = nextLeader.PlayerId;
 
             var onlinePlayer = PlayersOnline.FirstOrDefault(p => p.Entity?.Id == nextLeader.PlayerId);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 onlinePlayer?.SendNotification(onlinePlayer.Language.YOUVE_BECOME_GANG_LEADER);
             });

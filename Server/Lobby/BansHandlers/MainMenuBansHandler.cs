@@ -5,6 +5,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using PlayerDb = TDS_Server.Database.Entity.Player.Players;
 
@@ -46,14 +47,14 @@ namespace TDS_Server.LobbySystem.BansHandlers
         protected override void OutputTempBanInfoToTarget(ITDSPlayer target, PlayerBans ban, ITDSPlayer admin)
         {
             var lengthHours = (ban.EndTimestamp!.Value - ban.StartTimestamp).TotalMinutes / 60;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 target.SendChatMessage(string.Format(target.Language.TIMEBAN_YOU_INFO, lengthHours, admin.DisplayName, ban.Reason)));
         }
 
         protected override void OutputPermBanInfoToTarget(ITDSPlayer target, PlayerBans ban, ITDSPlayer admin)
         {
             var lengthHours = (ban.EndTimestamp!.Value - ban.StartTimestamp).TotalMinutes / 60;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 target.SendChatMessage(string.Format(target.Language.PERMABAN_YOU_INFO, admin.DisplayName, ban.Reason)));
         }
 

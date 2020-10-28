@@ -9,6 +9,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.TeamsSystem;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.Models.Map.Creator;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Maps;
 using TDS_Shared.Data.Default;
 
@@ -25,7 +26,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
         protected override ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 data.Player.Spawn(SpawnPoint.Around(Lobby.Entity.AroundSpawnPoint), SpawnRotation);
                 data.Player.Freeze(true);
@@ -71,7 +72,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
                     if (teams.Length < teamsSpawnList.TeamID)
                         return;
                     var regions = new List<Vector3>();
-                    NAPI.Task.Run(() =>
+                    NAPI.Task.RunSafe(() =>
                     {
                         foreach (var spawns in teamsSpawnList.Spawns)
                         {

@@ -18,6 +18,7 @@ using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Maps;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -289,7 +290,7 @@ namespace TDS_Server.Handler
             }
             else
             {
-                NAPI.Task.Run(() => player.SendChatMessage(player.Language.LOBBY_DOESNT_EXIST));
+                NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }
@@ -305,7 +306,7 @@ namespace TDS_Server.Handler
                 IBaseLobby lobby = LobbiesByIndex[index];
                 if (password != null && lobby.Entity.Password != password)
                 {
-                    NAPI.Task.Run(() => player.SendChatMessage(player.Language.WRONG_PASSWORD));
+                    NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.WRONG_PASSWORD));
                     return null;
                 }
 
@@ -314,7 +315,7 @@ namespace TDS_Server.Handler
             }
             else
             {
-                NAPI.Task.Run(() => player.SendChatMessage(player.Language.LOBBY_DOESNT_EXIST));
+                NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }

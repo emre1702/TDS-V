@@ -16,6 +16,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Userpanel;
 using TDS_Shared.Default;
@@ -201,7 +202,7 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = messageEntity.CreateTime.ToString()
             });
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var target in _inSupportRequest[requestId])
                 {
@@ -428,7 +429,7 @@ namespace TDS_Server.Handler.Userpanel
                 CreateTime = player.Timezone.GetLocalDateTimeString(messageEntity.CreateTime)
             });
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var target in _inSupportRequest[requestId.Value])
                 {
@@ -473,7 +474,7 @@ namespace TDS_Server.Handler.Userpanel
 
             _bonusBotConnectorClient.Support?.Create(player, requestEntity);
 
-            NAPI.Task.Run(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
+            NAPI.Task.RunSafe(() => player.SendNotification(player.Language.SUPPORT_REQUEST_CREATED));
             return null;
         }
 
@@ -500,7 +501,7 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var target in _inSupportRequestsList)
                 {
@@ -528,7 +529,7 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var target in _inSupportRequestsList)
                 {

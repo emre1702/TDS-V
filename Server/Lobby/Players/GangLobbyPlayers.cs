@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.LobbySystem.Lobbies;
 
 namespace TDS_Server.LobbySystem.Players
@@ -23,7 +24,7 @@ namespace TDS_Server.LobbySystem.Players
             var spawnPoint = player.Gang.House?.Position ?? Lobby.MapHandler.SpawnPoint;
             var spawnRotation = player.Gang.House?.SpawnRotation ?? Lobby.MapHandler.SpawnRotation;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.Spawn(spawnPoint, spawnRotation);
                 player.Freeze(false);

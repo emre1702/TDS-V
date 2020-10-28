@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
     <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+    <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
   </ItemGroup>
 
   <ItemGroup>

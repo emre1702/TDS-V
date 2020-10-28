@@ -13,11 +13,11 @@
 //        {
 //            if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
 //            {
-//                NAPI.Task.Run(() => invitation?.Resend());
+//                NAPI.Task.RunSafe(() => invitation?.Resend());
 //                return;
 //            }
 
-//            NAPI.Task.Run(() =>
+//            NAPI.Task.RunSafe(() =>
 //            {
 //                _gangwarArea?.Owner!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO, player.DisplayName));
 //                _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName));
@@ -28,22 +28,22 @@
 //        {
 //            if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
 //            {
-//                NAPI.Task.Run(() => invitation?.Resend());
+//                NAPI.Task.RunSafe(() => invitation?.Resend());
 //                return;
 //            }
 
-//            NAPI.Task.Run(() => _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName)));
+//            NAPI.Task.RunSafe(() => _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName)));
 //        }
 
 //        private async void AcceptDefendInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
 //        {
 //            if (!await Lobby.AddPlayer(player, (uint)OwnerTeam.Entity.Index))
 //            {
-//                NAPI.Task.Run(() => invitation?.Resend());
+//                NAPI.Task.RunSafe(() => invitation?.Resend());
 //                return;
 //            }
 
-//            NAPI.Task.Run(() =>
+//            NAPI.Task.RunSafe(() =>
 //            {
 //                _gangwarArea?.Attacker!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO, player.DisplayName));
 //                _gangwarArea?.Owner!.SendNotification(lang => string.Format(lang.GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO, player.DisplayName));

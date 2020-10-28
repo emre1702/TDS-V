@@ -15,6 +15,7 @@ using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.CharCreator;
 using TDS_Shared.Data.Utility;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler.PlayerHandlers
 {
@@ -179,7 +180,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             var currentAppearanceData = data.AppearanceData.First(d => d.SyncedData.Slot == data.SyncedData.Slot);
             var currentFeaturesData = data.FeaturesData.First(d => d.SyncedData.Slot == data.SyncedData.Slot);
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.SetClothes(2, currentHairAndColor.SyncedData.Hair, 0);
                 player.SetCustomization(

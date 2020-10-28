@@ -7,7 +7,9 @@ using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
+using TDS_Server.Handler.Browser;
 using TDS_Server.Handler.Commands;
+using TDS_Server.Handler.Commands.System;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
@@ -27,6 +29,7 @@ namespace TDS_Server.Core.Init.Services.Creators
             return serviceCollection
                 .WithBonusBotConnectors()
                 .WithAccounts()
+                .WithBrowser()
                 .WithCommands()
                 .WithEvents()
                 .WithGangSystems()
@@ -57,9 +60,14 @@ namespace TDS_Server.Core.Init.Services.Creators
                .AddSingleton<ResetPasswordHandler>();
         }
 
+        private static IServiceCollection WithBrowser(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<AngularConstantsProvider>();
+
         private static IServiceCollection WithCommands(this IServiceCollection serviceCollection)
         {
             return serviceCollection
+               .AddSingleton<CommandsLoader>()
                .AddSingleton<CommandsHandler>()
                .AddSingleton<BaseCommands>();
         }

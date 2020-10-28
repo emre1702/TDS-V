@@ -4,6 +4,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.PlayersSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
@@ -40,7 +41,7 @@ namespace TDS_Server.PlayersSystem
             {
                 stats.LastMapsBoughtCounterReduce = DateTime.UtcNow;
                 --stats.MapsBoughtCounter;
-                NAPI.Task.Run(() => _dataSyncHandler.SetData(_player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, stats.MapsBoughtCounter));
+                NAPI.Task.RunSafe(() => _dataSyncHandler.SetData(_player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, stats.MapsBoughtCounter));
             }
         }
 
@@ -51,7 +52,7 @@ namespace TDS_Server.PlayersSystem
             if (_player.LobbyStats is { })
                 ++_player.LobbyStats.TotalMapsBought;
             _player.Challenges.AddToChallenge(ChallengeType.BuyMaps);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 _dataSyncHandler.SetData(_player, PlayerDataKey.MapsBoughtCounter, DataSyncMode.Player, _player.Entity.PlayerStats.MapsBoughtCounter));
         }
     }

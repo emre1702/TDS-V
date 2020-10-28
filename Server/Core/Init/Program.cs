@@ -4,16 +4,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Core.Init.Services;
 using TDS_Server.Core.Init.Services.Creators;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.PlayersSystem;
+using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Commands;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Factories;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Maps;
@@ -62,6 +63,7 @@ namespace TDS_Server.Core.Init
                     Environment.Exit(1);
                 }
 
+                _serviceProvider.GetRequiredService<TimerHandler>();
                 _serviceProvider.GetRequiredService<ServerStartHandler>();
 
                 var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
@@ -143,7 +145,7 @@ namespace TDS_Server.Core.Init
                         _consolePlayerCache.IsConsole = true;
                     }
 
-                    NAPI.Task.Run(() => _commandsHandler.UseCommand(_consolePlayerCache, input));
+                    NAPI.Task.RunSafe(() => _commandsHandler.UseCommand(_consolePlayerCache, input));
                 }
                 catch (Exception ex)
                 {

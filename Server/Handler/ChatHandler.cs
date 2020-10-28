@@ -3,6 +3,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Default;
 
@@ -71,21 +72,21 @@ namespace TDS_Server.Handler
         public void SendAdminChat(ITDSPlayer player, string message)
         {
             string changedMessage = "[ADMINCHAT] " + player.Admin.Level.FontColor + player.DisplayName + ": !$220|220|220$" + message;
-            NAPI.Task.Run(() => _adminsHandler.SendMessage(changedMessage));
+            NAPI.Task.RunSafe(() => _adminsHandler.SendMessage(changedMessage));
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
         public void SendAdminMessage(ITDSPlayer player, string message)
         {
             string changedMessage = player.Admin.Level.FontColor + "[" + player.Admin.LevelName + "] !$255|255|255$" + player.DisplayName + ": !$220|220|220$" + message;
-            NAPI.Task.Run(() => NAPI.Chat.SendChatMessageToAll(changedMessage));
+            NAPI.Task.RunSafe(() => NAPI.Chat.SendChatMessageToAll(changedMessage));
             _loggingHandler.LogChat(message, player, isGlobal: true, isAdminChat: true);
         }
 
         public void SendGlobalMessage(ITDSPlayer player, string message)
         {
             string changedMessage = "[GLOBAL] " + (player.Team?.Chat.Color ?? string.Empty) + player.DisplayName + "!$220|220|220$: " + message + "$Global$";
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var target in _tdsPlayerHandler.LoggedInPlayers)
                 {
@@ -102,12 +103,12 @@ namespace TDS_Server.Handler
         {
             if (player.MuteHandler.IsPermamuted)
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.STILL_PERMAMUTED));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.STILL_PERMAMUTED));
                 return;
             }
             if (player.MuteHandler.IsMuted)
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteHandler.MuteTime?.ToString() ?? "?")));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteHandler.MuteTime?.ToString() ?? "?")));
                 return;
             }
 
@@ -156,7 +157,7 @@ namespace TDS_Server.Handler
         public void SendPrivateMessage(ITDSPlayer player, ITDSPlayer target, string message)
         {
             string changedMessage = "[PM] !$253|132|85$" + player.DisplayName + ": !$220|220|220$" + message;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 target.SendChatMessage(changedMessage));
             _loggingHandler.LogChat(message, player, target: target);
         }

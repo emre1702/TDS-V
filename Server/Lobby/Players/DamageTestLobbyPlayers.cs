@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
 
@@ -29,7 +30,7 @@ namespace TDS_Server.LobbySystem.Players
             if (_damagesToSync is null)
                 _damagesToSync = Serializer.ToBrowser(Lobby.Deathmatch.GetWeaponDamages());
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.TriggerEvent(ToClientEvent.PlayerRespawned);
                 if (isOwner)

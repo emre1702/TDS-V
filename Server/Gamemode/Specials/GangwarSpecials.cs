@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.GamemodesSystem.Specials;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
@@ -122,7 +123,7 @@ namespace TDS_Server.GamemodesSystem.Specials
 
             var targetObjectPositionJson = Serializer.ToClient(_gamemode.MapHandler.TargetObject!.Position);
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 _playerForcedAtTarget.TriggerEvent(ToClientEvent.SetForceStayAtPosition,
                     targetObjectPositionJson,
                     _settingsHandler.ServerSettings.GangwarTargetRadius,
@@ -135,7 +136,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             if (_playerForcedAtTarget is null)
                 return;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 _playerForcedAtTarget.TriggerEvent(ToClientEvent.RemoveForceStayAtPosition));
 
             _playerForcedAtTarget = null;

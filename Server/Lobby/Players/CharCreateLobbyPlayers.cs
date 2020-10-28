@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
 
@@ -25,7 +26,7 @@ namespace TDS_Server.LobbySystem.Players
 
             var charDatasJson = Serializer.ToClient(player.Entity.CharDatas.SyncedData);
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.Spawn(Lobby.MapHandler.SpawnPoint, Lobby.MapHandler.SpawnRotation);
                 player.SetInvincible(true);

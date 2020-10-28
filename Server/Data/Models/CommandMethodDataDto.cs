@@ -8,38 +8,27 @@ namespace TDS_Server.Data.Models
 
     public class CommandMethodDataDto
     {
-        #region Public Fields
 
-        public bool HasCommandInfos = false;
-        public MethodInfo MethodDefault;  // only used when UseImplicitTypes == true
+        public bool HasCommandInfos { get; set; } = false;
+        public MethodInfo MethodDefault { get; set; }  // only used when UseImplicitTypes == true
 
-        public List<CommandMultipleArgsToOneInfo> MultipleArgsToOneInfos = new List<CommandMultipleArgsToOneInfo>();
+        public List<CommandMultipleArgsToOneInfo> MultipleArgsToOneInfos { get; set; } = new List<CommandMultipleArgsToOneInfo>();
 
         // public CommandDefaultMethod? Method; // only used when UseImplicitTypes == false public
         // CommandEmptyDefaultMethod? MethodEmpty; // only used when UseImplicitTypes == false
-        public List<ParameterInfo> ParameterInfos = new List<ParameterInfo>();
+        public List<ParameterInfo> ParameterInfos { get; set; } = new List<ParameterInfo>();
 
-        public int? ParametersWithDefaultValueStartIndex;
-        public int Priority;
-        public TDSRemainingText? RemainingTextAttribute;
-        public int? ToOneStringAfterParameterCount = null;
+        public int? ParametersWithDefaultValueStartIndex { get; set; }
+        public int Priority { get; set; }
+        public TDSRemainingText? RemainingTextAttribute { get; set; }
+        public int? ToOneStringAfterParameterCount { get; set; } = null;
 
-        #endregion Public Fields
-
-        #region Public Constructors
+        public int AmountDefaultParams => HasCommandInfos ? 2 : 1;
 
         public CommandMethodDataDto(MethodInfo methodDefault, int priority)
         {
             MethodDefault = methodDefault;
             Priority = priority;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        public int AmountDefaultParams => 1 + (HasCommandInfos ? 1 : 0);
-
-        #endregion Public Properties
     }
 }

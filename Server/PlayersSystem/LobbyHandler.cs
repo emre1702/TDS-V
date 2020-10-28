@@ -10,6 +10,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 
@@ -70,7 +71,7 @@ namespace TDS_Server.PlayersSystem
 
         public void SyncLobbyOwnerInfo()
         {
-            NAPI.Task.Run(() => _dataSyncHandler.SetData(_player, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, Current?.Players.IsLobbyOwner(_player) == true));
+            NAPI.Task.RunSafe(() => _dataSyncHandler.SetData(_player, PlayerDataKey.IsLobbyOwner, DataSyncMode.Player, Current?.Players.IsLobbyOwner(_player) == true));
         }
     }
 }

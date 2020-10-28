@@ -52,7 +52,7 @@ namespace TDS_Server.LobbySystem.Sync
                 {
                     _posById = new Dictionary<int, MapCreatorPosition>();
                 }).ConfigureAwait(false);
-                NAPI.Task.Run(()
+                NAPI.Task.RunSafe(()
                     => TriggerEvent(ToClientEvent.MapCreatorStartNewMap));
             }
             catch (Exception ex)
@@ -97,7 +97,7 @@ namespace TDS_Server.LobbySystem.Sync
             }).ConfigureAwait(false);
 
             string json = Serializer.ToBrowser(dto);
-            NAPI.Task.Run(()
+            NAPI.Task.RunSafe(()
                 => TriggerEvent(ToClientEvent.LoadMapForMapCreator, json, _lastId));
         }
 
@@ -111,7 +111,7 @@ namespace TDS_Server.LobbySystem.Sync
             var player = await Lobby.Players.GetById(tdsPlayerId).ConfigureAwait(false);
             if (player is null)
                 return;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 player.TriggerEvent(ToClientEvent.MapCreatorSyncAllObjects, json, lastId));
         }
 
@@ -119,7 +119,7 @@ namespace TDS_Server.LobbySystem.Sync
         {
             if (_lastId >= lastId)
             {
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                     player.TriggerEvent(ToClientEvent.MapCreatorSyncFixLastId, lastId, _lastId));
             }
             else
@@ -130,7 +130,7 @@ namespace TDS_Server.LobbySystem.Sync
 
         public void SyncMapInfoChange(MapCreatorInfoType infoType, object data)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.MapCreatorSyncData, (int)infoType, data));
 
             switch (infoType)
@@ -162,7 +162,7 @@ namespace TDS_Server.LobbySystem.Sync
             try
             {
                 var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                     NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncNewObject, json));
 
                 var pos = Serializer.FromClient<MapCreatorPosition>(json);
@@ -184,7 +184,7 @@ namespace TDS_Server.LobbySystem.Sync
             try
             {
                 var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                     NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectPosition, json));
 
                 var pos = Serializer.FromClient<MapCreatorPosData>(json);
@@ -218,7 +218,7 @@ namespace TDS_Server.LobbySystem.Sync
             try
             {
                 var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                     NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectRemove, objId));
 
                 if (!_posById.ContainsKey(objId))
@@ -242,7 +242,7 @@ namespace TDS_Server.LobbySystem.Sync
             try
             {
                 var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                     NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber));
 
                 foreach (var entry in _posById)
@@ -300,7 +300,7 @@ namespace TDS_Server.LobbySystem.Sync
         private async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
             var firstPlayer = await Lobby.Players.GetFirst(data.Player).ConfigureAwait(false);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 if (Lobby.Players.Count == 2)
                     firstPlayer?.TriggerEvent(ToClientEvent.MapCreatorRequestAllObjectsForPlayer, data.Player.Id);

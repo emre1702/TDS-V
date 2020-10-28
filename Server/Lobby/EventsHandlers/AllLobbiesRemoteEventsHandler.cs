@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.LobbySystem.Players;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -173,7 +174,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
 
             var mapsJson = arena.MapHandler.GetMapsJson();
-            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.MapsListRequest, mapsJson));
+            NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.MapsListRequest, mapsJson));
         }
 
         public void OnOutsideMapLimit(ITDSPlayer player)

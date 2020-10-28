@@ -13,6 +13,7 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Extensions;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
@@ -155,7 +156,7 @@ namespace TDS_Server.Handler.Helper
 
                 player.Challenges.InitChallengesDict();
                 var json = GetChallengesJson(player);
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     player.TriggerBrowserEvent(ToBrowserEvent.SyncChallenges, json);
                 });

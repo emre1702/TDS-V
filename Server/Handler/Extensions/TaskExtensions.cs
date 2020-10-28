@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Extensions
 {
@@ -8,18 +9,35 @@ namespace TDS_Server.Handler.Extensions
         [ThreadStatic]
         public static bool IsMainThread = false;
 
-        public static void RunCustom(this GTANetworkMethods.Task task, Action action, int delayTime = 0)
+        public static void RunSafe(this GTANetworkMethods.Task task, Action action, int delayTime = 0)
         {
-            if (IsMainThread)
-                action();
-            else
-                task.Run(action, delayTime);
+            try
+            {
+                if (IsMainThread)
+                    new TDSTimer(action, (uint)delayTime);
+                else
+                    task.Run(() => 
+                    {
+                        try
+                        {
+                            action();
+                        }
+                        catch (Exception ex)
+                        {
+                            LoggingHandler.Instance?.LogError(ex);
+                        }
+                    }, delayTime);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public static async Task RunWait(this GTANetworkMethods.Task task, Action action)
         {
             var taskCompletionSource = new TaskCompletionSource<bool>();
-            RunCustom(task, () =>
+            RunSafe(task, () =>
             {
                 action();
                 taskCompletionSource.SetResult(true);
@@ -30,12 +48,24 @@ namespace TDS_Server.Handler.Extensions
         public static Task<T> RunWait<T>(this GTANetworkMethods.Task task, Func<T> action)
         {
             var taskCompletionSource = new TaskCompletionSource<T>();
-            RunCustom(task, () =>
+            RunSafe(task, () =>
             {
                 var result = action();
                 taskCompletionSource.SetResult(result);
             });
             return taskCompletionSource.Task;
+        }
+
+        public static async void IgnoreResult(this Task task)
+        {
+            try
+            {
+                await task;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
     }
 }

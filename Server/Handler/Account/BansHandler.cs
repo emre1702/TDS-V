@@ -3,12 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler.Account
 {
@@ -21,16 +23,18 @@ namespace TDS_Server.Handler.Account
         private readonly LobbiesHandler _lobbiesHandler;
 
         private readonly ISettingsHandler _settingsHandler;
+        private readonly ILoggingHandler _logger;
 
         private List<PlayerBans> _cachedBans = new List<PlayerBans>();
 
         public BansHandler(TDSDbContext dbContext, LobbiesHandler lobbiesHandler, EventsHandler eventsHandler,
-            ISettingsHandler settingsHandler)
+            ISettingsHandler settingsHandler, ILoggingHandler logger)
             : base(dbContext)
         {
             _lobbiesHandler = lobbiesHandler;
             _settingsHandler = settingsHandler;
             _eventsHandler = eventsHandler;
+            _logger = logger;
 
             eventsHandler.Hour += RemoveExpiredBans;
             eventsHandler.Minute += RefreshServerBansCache;
@@ -40,19 +44,33 @@ namespace TDS_Server.Handler.Account
 
         public void AddServerBan(PlayerBans ban)
         {
-            RemoveServerBan(ban);
-            lock (_cachedBans)
+            try
             {
-                _cachedBans.Add(ban);
+                RemoveServerBan(ban);
+                lock (_cachedBans)
+                {
+                    _cachedBans.Add(ban);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
             }
         }
 
         public void RemoveServerBan(PlayerBans oldBan)
         {
-            lock (_cachedBans)
+            try
             {
-                var ban = _cachedBans.FirstOrDefault(b => b.PlayerId == oldBan.PlayerId && b.LobbyId == oldBan.LobbyId);
-                _cachedBans.Remove(oldBan);
+                lock (_cachedBans)
+                {
+                    var ban = _cachedBans.FirstOrDefault(b => b.PlayerId == oldBan.PlayerId && b.LobbyId == oldBan.LobbyId);
+                    _cachedBans.Remove(oldBan);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
             }
         }
 
@@ -60,94 +78,87 @@ namespace TDS_Server.Handler.Account
                     int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
             bool? preventConnection = null, bool andConnection = false)
         {
-            PlayerBans? ban = (playerId, ip, serial, socialClubName, socialClubId, andConnection) switch
+            try
             {
-                ({ }, null, null, null, null, _)
-                    => await ExecuteForDBAsync(async (dbContext) =>
+                PlayerBans? ban = (playerId, ip, serial, socialClubName, socialClubId, andConnection) switch
+                {
+                    ({ }, null, null, null, null, _)
+                        => await ExecuteForDBAsync(async (dbContext) =>
                         {
-                            return await dbContext.PlayerBans.FirstOrDefaultAsync(b => b.PlayerId == playerId && b.LobbyId == lobbyId);
+                            return await dbContext.PlayerBans.FirstOrDefaultAsync(ban => 
+                                GetConditionForPlayerAndLobby(playerId!.Value, lobbyId)(ban));
                         }),
 
-                (_, _, _, _, _, true)
-                    => await ExecuteForDBAsync(async (dbContext) =>
-                    {
-                        return await dbContext.PlayerBans
-                            .Where(b => b.LobbyId == lobbyId
-                                && (playerId == null || b.PlayerId == playerId)
-                                && (ip == null || b.IP == ip)
-                                && (serial == null || b.Serial == serial)
-                                && (socialClubName == null || b.SCName == socialClubName)
-                                && (socialClubId == null || b.SCId == socialClubId)
-                                && (preventConnection == null || b.PreventConnection == preventConnection))
-                            .FirstOrDefaultAsync();
-                    }),
+                    (_, _, _, _, _, true)
+                         => await ExecuteForDBAsync(async (dbContext) =>
+                         {
+                             return await dbContext.PlayerBans
+                                .FirstOrDefaultAsync(ban => 
+                                    GetConditionForSatisfyingAllConditions(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)(ban));
+                         }),
 
-                (_, _, _, _, _, false)
-                    => await ExecuteForDBAsync(async (dbContext) =>
-                    {
-                        return await dbContext.PlayerBans
-                            .Where(b => b.LobbyId == lobbyId && (
-                                (playerId == null || b.PlayerId == playerId)
-                                || (ip == null || b.IP == ip)
-                                || (serial == null || b.Serial == serial)
-                                || (socialClubName == null || b.SCName == socialClubName)
-                                || (socialClubId == null || b.SCId == socialClubId)
-                                || (preventConnection == null || b.PreventConnection == preventConnection)))
-                            .FirstOrDefaultAsync();
-                    }),
-            };
+                    (_, _, _, _, _, false)
+                         => await ExecuteForDBAsync(async (dbContext) =>
+                         {
+                             return await dbContext.PlayerBans
+                                .FirstOrDefaultAsync(ban => 
+                                    GetConditionBanSatisfyingOneCondition(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)(ban));
+                         }),
+                };
 
-            if (ban is null)
-                return null;
+                if (ban is null)
+                    return null;
 
-            if (ban.EndTimestamp <= DateTime.UtcNow)
+                if (RemoveBanIfExpired(ban))
+                    return null;
+
+                return ban;
+            }
+            catch (Exception ex)
             {
-                await ExecuteForDBAsync(async (dbContext) =>
-                {
-                    dbContext.Entry(ban).State = EntityState.Deleted;
-                    await dbContext.SaveChangesAsync();
-                });
+                _logger.LogError(ex);
                 return null;
             }
-
-            return ban;
         }
 
         public PlayerBans? GetServerBan(int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
             bool? preventConnection = null, bool andConnection = false)
         {
-            int lobbyId = _lobbiesHandler.MainMenu.Entity.Id;
-            lock (_cachedBans)
+            try
             {
-                return (playerId, ip, serial, socialClubName, socialClubId, andConnection) switch
+                int lobbyId = _lobbiesHandler.MainMenu.Entity.Id;
+                PlayerBans? ban;
+                lock (_cachedBans)
                 {
-                    ({ }, null, null, null, null, _)
-                        => _cachedBans.FirstOrDefault(b => b.PlayerId == playerId && b.LobbyId == lobbyId),
+                    ban = (playerId, ip, serial, socialClubName, socialClubId, andConnection) switch
+                    {
+                        ({ }, null, null, null, null, _)
+                            => _cachedBans.FirstOrDefault(GetConditionForPlayerAndLobby(playerId!.Value, lobbyId)),
 
-                    (_, _, _, _, _, true)
-                        => _cachedBans
-                                .Where(b => b.LobbyId == lobbyId
-                                    && b.EndTimestamp > DateTime.UtcNow
-                                    && (playerId is null || b.PlayerId == playerId)
-                                    && (ip is null || b.IP == ip)
-                                    && (serial is null || b.Serial == serial)
-                                    && (socialClubName is null || b.SCName == socialClubName)
-                                    && (socialClubId is null || b.SCId == socialClubId)
-                                    && (preventConnection is null || b.PreventConnection == preventConnection))
-                                .FirstOrDefault(),
+                        (_, _, _, _, _, true)
+                             => _cachedBans.FirstOrDefault(GetConditionForSatisfyingAllConditions(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)),
 
-                    (_, _, _, _, _, false)
-                        => _cachedBans
-                                .Where(b => b.LobbyId == lobbyId
-                                    && b.EndTimestamp > DateTime.UtcNow
-                                    && ((playerId is null || b.PlayerId == playerId)
-                                    || (ip is null || b.IP == ip)
-                                    || (serial is null || b.Serial == serial)
-                                    || (socialClubName is null || b.SCName == socialClubName)
-                                    || (socialClubId is null || b.SCId == socialClubId))
-                                    && (preventConnection is null || b.PreventConnection == preventConnection))
-                                .FirstOrDefault()
-                };
+                        (_, _, _, _, _, false)
+                             => _cachedBans.FirstOrDefault(GetConditionBanSatisfyingOneCondition(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection))
+                    };
+                }
+
+                if (ban is null)
+                    return null;
+
+                if (RemoveBanIfExpired(ban))
+                {
+                    _cachedBans.Remove(ban);
+                    return null;
+                }
+                    
+
+                return ban;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return null;
             }
         }
 
@@ -210,5 +221,44 @@ namespace TDS_Server.Handler.Account
                 LoggingHandler.Instance.LogError(ex);
             }
         }
+
+        private bool RemoveBanIfExpired(PlayerBans ban)
+        {
+            if (ban.EndTimestamp <= DateTime.UtcNow)
+            {
+                ExecuteForDBAsync(async (dbContext) =>
+                {
+                    dbContext.Entry(ban).State = EntityState.Deleted;
+                    await dbContext.SaveChangesAsync();
+                }).IgnoreResult();
+                return true;
+            }
+            return false;
+        }
+
+        private Func<PlayerBans, bool> GetConditionForPlayerAndLobby(int playerId, int lobbyId)
+            => ban => ban.PlayerId == playerId && ban.LobbyId == lobbyId;
+
+        private Func<PlayerBans, bool> GetConditionForSatisfyingAllConditions(int lobbyId,
+                   int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
+                   bool? preventConnection = null)
+            => b => b.LobbyId == lobbyId
+                        && (playerId == null || b.PlayerId == playerId)
+                        && (ip == null || b.IP == ip)
+                        && (serial == null || b.Serial == serial)
+                        && (socialClubName == null || b.SCName == socialClubName)
+                        && (socialClubId == null || b.SCId == socialClubId)
+                        && (preventConnection == null || b.PreventConnection == preventConnection);
+
+        private Func<PlayerBans, bool> GetConditionBanSatisfyingOneCondition(int lobbyId,
+                  int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
+                  bool? preventConnection = null)
+          => b => b.LobbyId == lobbyId && (
+                      (playerId == null || b.PlayerId == playerId)
+                      || (ip == null || b.IP == ip)
+                      || (serial == null || b.Serial == serial)
+                      || (socialClubName == null || b.SCName == socialClubName)
+                      || (socialClubId == null || b.SCId == socialClubId))
+                      && (preventConnection == null || b.PreventConnection == preventConnection);
     }
 }

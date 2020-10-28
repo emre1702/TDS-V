@@ -5,6 +5,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 using TDS_Server.GamemodesSystem.Gamemodes;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
 
@@ -66,7 +67,7 @@ namespace TDS_Server.GamemodesSystem.Rounds
                 var bombDetonateTimer = _gamemode.Specials.BombDetonateTimer!;
                 var startAtMs = bombDetonateTimer.ExecuteAfterMs - bombDetonateTimer.RemainingMsToExecute;
 
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                    data.Player.TriggerEvent(ToClientEvent.BombPlanted, bombPosJson, false, startAtMs));
             }
             return default;

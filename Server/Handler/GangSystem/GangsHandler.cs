@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MoreLinq;
 using System;
@@ -14,6 +15,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 
@@ -132,7 +134,8 @@ namespace TDS_Server.Handler.GangSystem
                 player.Gang.Entity.Members.First(m => m.PlayerId == player.Entity.Id).LastLogin = player.Entity.PlayerStats.LastLoginTimestamp;
             }
 
-            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
+            NAPI.Task.RunSafe(() => 
+                _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id));
         }
 
         private void EventsHandler_PlayerLoggedOut(ITDSPlayer player)

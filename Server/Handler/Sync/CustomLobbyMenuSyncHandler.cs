@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.CustomLobby;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -36,7 +37,7 @@ namespace TDS_Server.Handler.Sync
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
             var lobbyDatasJson = Serializer.ToBrowser(lobbyDatas);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SyncAllCustomLobbies, lobbyDatasJson));
         }
 
@@ -56,7 +57,7 @@ namespace TDS_Server.Handler.Sync
                 return;
 
             string json = Serializer.ToBrowser(GetCustomLobbyData(lobby));
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {
@@ -76,7 +77,7 @@ namespace TDS_Server.Handler.Sync
             if (!IsLobbyToSync(lobby))
                 return;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)
                 {

@@ -10,6 +10,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.MapVotings;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Maps;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Models.Map;
@@ -46,7 +47,7 @@ namespace TDS_Server.LobbySystem.MapVotings
             lock (_playerVotes) { _playerVotes.Clear(); }
 
             Lobby.Notifications.Send(lang => string.Format(lang.MAP_BUY_INFO, player.DisplayName, map.BrowserSyncedData.Name));
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 Lobby.Sync.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.StopMapVoting));
         }
 
@@ -66,7 +67,7 @@ namespace TDS_Server.LobbySystem.MapVotings
             {
                 if (_mapVotes.Count >= 9)
                 {
-                    NAPI.Task.Run(() => player.SendNotification(player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED));
+                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.NOT_MORE_MAPS_FOR_VOTING_ALLOWED));
                     return;
                 }
             }
@@ -90,7 +91,7 @@ namespace TDS_Server.LobbySystem.MapVotings
             int price = GetMapBuyPrice(player);
             if (price > player.Money)
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.NOT_ENOUGH_MONEY));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.NOT_ENOUGH_MONEY));
                 return;
             }
             player.MapsVoting.SetBoughtMap(price);
@@ -171,13 +172,13 @@ namespace TDS_Server.LobbySystem.MapVotings
                 return false;
             if (_boughtMap is { })
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.A_MAP_WAS_ALREADY_BOUGHT));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.A_MAP_WAS_ALREADY_BOUGHT));
                 return false;
             }
 
             if (!player.IsLobbyOwner && !Lobby.IsOfficial)
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.YOU_CANT_BUY_A_MAP_IN_CUSTOM_LOBBY));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.YOU_CANT_BUY_A_MAP_IN_CUSTOM_LOBBY));
                 return false;
             }
 
@@ -188,7 +189,7 @@ namespace TDS_Server.LobbySystem.MapVotings
         {
             if (_boughtMap is { })
             {
-                NAPI.Task.Run(() => player.SendNotification(player.Language.A_MAP_WAS_ALREADY_BOUGHT));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.A_MAP_WAS_ALREADY_BOUGHT));
                 return false;
             }
             lock (_playerVotes)

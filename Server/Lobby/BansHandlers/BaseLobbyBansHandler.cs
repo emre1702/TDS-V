@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using PlayerDb = TDS_Server.Database.Entity.Player.Players;
 
@@ -53,7 +54,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
                 duration = DateTime.UtcNow.DurationTo(ban.EndTimestamp.Value);
             }
             string msg = string.Format(player.Language.GOT_LOBBY_BAN, duration, ban.Reason);
-            NAPI.Task.Run(() => player.SendChatMessage(msg));
+            NAPI.Task.RunSafe(() => player.SendChatMessage(msg));
         }
 
         public async Task<PlayerBans?> Ban(ITDSPlayer admin, PlayerDb target, TimeSpan? length, string reason, string? serial = null)
@@ -114,14 +115,14 @@ namespace TDS_Server.LobbySystem.BansHandlers
         protected virtual void OutputTempBanInfoToTarget(ITDSPlayer target, PlayerBans ban, ITDSPlayer admin)
         {
             var lengthHours = (ban.EndTimestamp!.Value - ban.StartTimestamp).TotalMinutes / 60;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 target.SendChatMessage(string.Format(target.Language.TIMEBAN_LOBBY_YOU_INFO, lengthHours, Lobby.Entity.Name, admin.DisplayName, ban.Reason)));
         }
 
         protected virtual void OutputPermBanInfoToTarget(ITDSPlayer target, PlayerBans ban, ITDSPlayer admin)
         {
             var lengthHours = (ban.EndTimestamp!.Value - ban.StartTimestamp).TotalMinutes / 60;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 target.SendChatMessage(string.Format(target.Language.PERMABAN_LOBBY_YOU_INFO, Lobby.Entity.Name, admin.DisplayName, ban.Reason)));
         }
 
@@ -167,7 +168,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
             var ban = await Lobby.Database.GetBan(target.Id).ConfigureAwait(false);
             if (ban is null)
             {
-                NAPI.Task.Run(() => admin.SendChatMessage(admin.Language.PLAYER_ISNT_BANED));
+                NAPI.Task.RunSafe(() => admin.SendChatMessage(admin.Language.PLAYER_ISNT_BANED));
                 return null;
             }
             await Lobby.Database.Remove<PlayerBans>(ban).ConfigureAwait(false);

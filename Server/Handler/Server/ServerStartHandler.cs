@@ -8,6 +8,7 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler.Server
 {
@@ -82,7 +83,7 @@ namespace TDS_Server.Handler.Server
 
         private void KickServerBannedPlayers()
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 var players = NAPI.Pools.GetAllPlayers().OfType<ITDSPlayer>();
                 foreach (var player in players)

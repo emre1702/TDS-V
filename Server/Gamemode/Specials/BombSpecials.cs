@@ -13,6 +13,7 @@ using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Data.RoundEndReasons;
 using TDS_Server.GamemodesSystem.Gamemodes;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Enums.Challenge;
@@ -67,7 +68,7 @@ namespace TDS_Server.GamemodesSystem.Specials
         private void CreateBomb(MapDto map)
         {
             var bombPos = map.BombInfo!.PlantPositions[0];
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 Bomb = NAPI.Object.CreateObject(1764669601, new Vector3(bombPos.X, bombPos.Y, bombPos.Z), new Vector3(), 255, Lobby.MapHandler.Dimension) as ITDSObject);
         }
 
@@ -94,7 +95,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 _gamemode.Players.BombAtPlayer = player;
             }
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 Bomb.Detach();
                 Bomb.SetCollisionsless(true, Lobby);
@@ -115,7 +116,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 _gamemode.Players.BombAtPlayer = player;
             }
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 Bomb.Detach();
                 Bomb.SetCollisionsless(true, Lobby);
@@ -151,7 +152,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 return;
             if (Bomb is null)
                 return;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 Bomb.Detach();
                 Bomb.Freeze(true, Lobby);
@@ -170,7 +171,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 return;
 
             ITDSPlayer player = _gamemode.Teams.Terrorists.Players.GetRandom();
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 if (player.CurrentWeapon == WeaponHash.Unarmed)
                     BombToHand(player);
@@ -205,7 +206,7 @@ namespace TDS_Server.GamemodesSystem.Specials
         {
             if (!CanStartBombDefusing(player))
                 return false;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 player.PlayAnimation("misstrevor2ig_7", "plantBomb", (int)AnimationFlag.Loop));
             BombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(player), (uint)Lobby.Entity.LobbyRoundSettings.BombDefuseTimeMs);
             return true;
@@ -215,7 +216,7 @@ namespace TDS_Server.GamemodesSystem.Specials
         {
             if (!CanStartBombPlanting(player))
                 return false;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 player.PlayAnimation("misstrevor2ig_7", "plantBomb", (int)AnimationFlag.Loop));
             BombPlantDefuseTimer = new TDSTimer(() => PlantBomb(player), (uint)Lobby.Entity.LobbyRoundSettings.BombPlantTimeMs);
             return true;
@@ -226,7 +227,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             BombPlantDefuseTimer?.Kill();
             BombPlantDefuseTimer = null;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 player.StopAnimation());
         }
 
@@ -235,13 +236,13 @@ namespace TDS_Server.GamemodesSystem.Specials
             BombPlantDefuseTimer?.Kill();
             BombPlantDefuseTimer = null;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 player.StopAnimation());
         }
 
         private static void SendBombPlantInfos(ITDSPlayer player)
         {
-            NAPI.Task.Run(() => player.SendChatMessage(player.Language.BOMB_PLANT_INFO));
+            NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.BOMB_PLANT_INFO));
         }
 
         private void DefuseBomb(ITDSPlayer player)
@@ -262,9 +263,9 @@ namespace TDS_Server.GamemodesSystem.Specials
             _gamemode.Teams.Terrorists.Players.Do(target =>
             {
                 Lobby.Deathmatch.Damage.UpdateLastHitter(target, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
-                NAPI.Task.Run(() => target.Kill());
+                NAPI.Task.RunSafe(() => target.Kill());
             });
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 player.StopAnimation());
 
             // COUNTER-TERROR WON //
@@ -296,7 +297,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             if (Lobby.IsOfficial)
                 player.Challenges.AddToChallenge(ChallengeType.BombPlant);
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.TriggerEvent(ToClientEvent.PlayerPlantedBomb);
                 Bomb.Detach();

@@ -72,7 +72,7 @@ namespace TDS_Server.LobbySystem.Players
 
         protected virtual void InformAboutHowToLeaveLobby(ITDSPlayer player)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.SendNotification(string.Format(player.Language.JOINED_LOBBY_MESSAGE, Lobby.Entity.Name, PlayerCommand.LobbyLeave));
             });

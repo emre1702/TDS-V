@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.GangSystem;
 using TDS_Shared.Data.Default;
 
@@ -34,7 +35,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
         protected override ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 data.Player.Spawn(data.Player.Gang.SpawnPosition ?? SpawnPoint, data.Player.Gang.SpawnHeading ?? SpawnRotation);
                 data.Player.Freeze(false);
@@ -65,7 +66,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
         private void SetHouseOwner(GangHouse house, IGang? owner)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 if (owner is null)
                 {

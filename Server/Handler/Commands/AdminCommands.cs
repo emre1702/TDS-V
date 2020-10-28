@@ -11,6 +11,7 @@ using TDS_Server.Data.Models;
 using TDS_Server.Data.RoundEndReasons;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 
@@ -18,8 +19,6 @@ namespace TDS_Server.Handler.Commands
 {
     partial class BaseCommands
     {
-        #region Public Methods
-
         [TDSCommand(AdminCommand.AdminChat)]
         public void AdminChat(ITDSPlayer player, [TDSRemainingText] string text)
         {
@@ -44,10 +43,10 @@ namespace TDS_Server.Handler.Commands
                 ban = await _lobbiesHandler.MainMenu.Bans.Ban(player, target, length, reason);
 
             if (ban is { })
-                NAPI.Task.Run(() => Utils.HandleBan(target, ban));
+                NAPI.Task.RunSafe(() => Utils.HandleBan(target, ban));
 
             if (!cmdinfos.AsLobbyOwner)
-                NAPI.Task.Run(() => _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                NAPI.Task.RunSafe(() => _loggingHandler.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.Ban, 0)]
@@ -61,7 +60,7 @@ namespace TDS_Server.Handler.Commands
                 await _lobbiesHandler.MainMenu.Bans.Ban(player, dbTarget, length, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                NAPI.Task.Run(() => _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                NAPI.Task.RunSafe(() => _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.Goto)]
@@ -177,7 +176,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             if (!cmdinfos.AsLobbyOwner)
             {
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     _loggingHandler.LogAdmin(LogType.Lobby_Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
                     _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_LOBBY_INFO, target.DisplayName, player.DisplayName, reason));
@@ -185,7 +184,7 @@ namespace TDS_Server.Handler.Commands
             }
             else
             {
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     if (player.Lobby != target.Lobby)
                     {
@@ -220,7 +219,7 @@ namespace TDS_Server.Handler.Commands
             await _databasePlayerHelper.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                NAPI.Task.Run(() => _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                NAPI.Task.RunSafe(() => _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.NextMap)]
@@ -287,7 +286,7 @@ namespace TDS_Server.Handler.Commands
             await _databasePlayerHelper.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason);
 
             if (!cmdinfos.AsLobbyOwner)
-                NAPI.Task.Run(() => _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
+                NAPI.Task.RunSafe(() => _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP));
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 1)]
@@ -324,20 +323,6 @@ namespace TDS_Server.Handler.Commands
             player.SendNotification(player.Language.ADDED_THE_GANG_HOUSE_SUCCESSFULLY);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        #region Private Methods
-
-        #region Private Methods
-
-        #region Private Methods
-
-        #region Private Methods
-
-        #region Private Methods
-
         private bool IsMuteTimeValid(int muteTime, ITDSPlayer outputTo)
         {
             if (muteTime < -1)
@@ -347,18 +332,6 @@ namespace TDS_Server.Handler.Commands
             }
             return true;
         }
-
-        #endregion Private Methods
-
-        #endregion Private Methods
-
-        #endregion Private Methods
-
-        #endregion Private Methods
-
-        #endregion Private Methods
-
-        #endregion Private Methods
 
         /*private readonly Dictionary<string, uint> neededLevels = new Dictionary<string, uint> {
 			{ "goto", 2 },

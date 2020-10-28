@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 using TDS_Shared.Default;
@@ -32,7 +33,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
         protected override ValueTask ResetPlayer((ITDSPlayer Player, int HadLifes) data)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 data.Player.RemoveAllWeapons();
             });
@@ -95,7 +96,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
         public void Kill(ITDSPlayer player, string reason)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.Kill();
                 player.SendChatMessage(reason);

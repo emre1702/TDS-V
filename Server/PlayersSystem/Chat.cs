@@ -2,6 +2,7 @@
 using System;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.PlayersSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Default;
 
 namespace TDS_Server.PlayersSystem
@@ -52,7 +53,7 @@ namespace TDS_Server.PlayersSystem
             if (_player.InPrivateChatWith is null)
                 return;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 if (becauseOfDisconnectOfTarget)
                 {
@@ -73,7 +74,7 @@ namespace TDS_Server.PlayersSystem
             if (_player.SentPrivateChatRequestTo is null)
                 return;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 if (!becauseOfDisconnectOfTarget)
                 {

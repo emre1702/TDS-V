@@ -9,6 +9,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums.Challenge;
 using TDS_Shared.Default;
@@ -64,7 +65,7 @@ namespace TDS_Server.Handler.Maps
                 map.RatingAverage = map.Ratings.Average(r => r.Rating);
 
                 if (map.Info.IsNewMap)
-                    NAPI.Task.Run(() => _mapsCreatingHandler.AddedMapRating(map));
+                    NAPI.Task.RunSafe(() => _mapsCreatingHandler.AddedMapRating(map));
             }
             catch (Exception ex)
             {
@@ -80,7 +81,7 @@ namespace TDS_Server.Handler.Maps
                 return;
 
             var ratingsDict = player.Entity.PlayerMapRatings.ToDictionary(r => r.MapId, r => r.Rating);
-            NAPI.Task.Run(() => player.TriggerEvent(ToClientEvent.LoadOwnMapRatings, Serializer.ToBrowser(ratingsDict)));
+            NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.LoadOwnMapRatings, Serializer.ToBrowser(ratingsDict)));
         }
     }
 }

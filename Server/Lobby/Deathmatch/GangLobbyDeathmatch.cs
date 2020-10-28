@@ -3,6 +3,7 @@ using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.LobbySystem.Deathmatch
 {
@@ -16,7 +17,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
         {
             await base.OnPlayerDeath(player, killer, weapon).ConfigureAwait(false);
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 player.Spawn(player.Position, player.Rotation.Z));
         }
     }

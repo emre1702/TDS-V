@@ -13,6 +13,7 @@ using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
 using TDS_Server.Handler.Entities;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
@@ -188,7 +189,7 @@ namespace TDS_Server.Handler.Userpanel
             if (playerId == default)
                 return null;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 var target = _tdsPlayerHandler.Get(playerId);
                 if (target is { })

@@ -7,6 +7,7 @@ using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.GamemodesSystem.Weapons
 {
@@ -62,7 +63,7 @@ namespace TDS_Server.GamemodesSystem.Weapons
         private void GivePlayerWeapon(ITDSPlayer player, WeaponHash? weapon = null)
         {
             weapon ??= GetCurrentWeapon(player);
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 player.RemoveAllWeapons();
                 player.GiveWeapon(weapon.Value, 9999);

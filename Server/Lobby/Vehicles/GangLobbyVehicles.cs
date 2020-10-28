@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.LobbySystem.Vehicles
 {
@@ -58,7 +59,7 @@ namespace TDS_Server.LobbySystem.Vehicles
             if (gang.Entity.Vehicles is null || gang.Entity.Vehicles.Count == 0)
                 return;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var vehicleDb in gang.Entity.Vehicles)
                     CreateGangVehicle(vehicleDb, gang);

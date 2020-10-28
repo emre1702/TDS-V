@@ -11,6 +11,7 @@ using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
 using TDS_Shared.Default;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler
 {
@@ -35,7 +36,7 @@ namespace TDS_Server.Handler
                 {
                     var entries = await GetDataForMainmenu();
                     var entriesJson = Serializer.ToClient(entries);
-                    NAPI.Task.Run(() =>
+                    NAPI.Task.RunSafe(() =>
                         player.TriggerEvent(ToClientEvent.SyncScoreboardData, entriesJson));
                 }
                 else
@@ -47,7 +48,7 @@ namespace TDS_Server.Handler
 
                     var entriesJson = Serializer.ToClient(entries);
                     var lobbyDataJson = Serializer.ToClient(lobbydata);
-                    NAPI.Task.Run(() =>
+                    NAPI.Task.RunSafe(() =>
                         player.TriggerEvent(ToClientEvent.SyncScoreboardData, entriesJson, lobbyDataJson));
                 }
             }

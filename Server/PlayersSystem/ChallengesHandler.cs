@@ -6,6 +6,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Database.Entity.Challenge;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Data.Enums.Challenge;
 
@@ -77,7 +78,7 @@ namespace TDS_Server.PlayersSystem
                     challenge.CurrentAmount = Math.Min(amount, challenge.Amount);
                 else
                     challenge.CurrentAmount = Math.Min(challenge.CurrentAmount + amount, challenge.Amount);
-                NAPI.Task.Run(() => _challengesHelper.SyncCurrentAmount(_player, challenge));
+                NAPI.Task.RunSafe(() => _challengesHelper.SyncCurrentAmount(_player, challenge));
 
                 if (challenge.Frequency == ChallengeFrequency.Forever)
                 {

@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
 using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
 using TDS_Shared.Default;
 
@@ -57,7 +58,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
             await base.SendPlayerRoundInfoOnJoin(player).ConfigureAwait(false);
 
             var mapVotingDataJson = Lobby.MapVoting.GetJson();
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 if (mapVotingDataJson is { })
                     player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapVoting, mapVotingDataJson);
@@ -102,11 +103,11 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
                 var spawndata = Lobby.MapHandler.GetMapRandomSpawnData(player.Team);
                 if (spawndata is null)
                     return;
-                NAPI.Task.Run(() => player.Spawn(spawndata.ToVector3(), spawndata.Rotation));
+                NAPI.Task.RunSafe(() => player.Spawn(spawndata.ToVector3(), spawndata.Rotation));
             }
             else
             {
-                NAPI.Task.Run(() => player.Spawn(Lobby.Spectator.CurrentMapSpectatorPosition));
+                NAPI.Task.RunSafe(() => player.Spawn(Lobby.Spectator.CurrentMapSpectatorPosition));
             }
 
             base.SetPlayerReadyForRound(player, freeze);

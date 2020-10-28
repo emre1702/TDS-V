@@ -14,6 +14,7 @@ using TDS_Server.Data.Models;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Command;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Userpanel;
 using TDS_Shared.Data.Attributes;
 using TDS_Shared.Default;
@@ -59,114 +60,10 @@ namespace TDS_Server.Handler.Commands
             _chatHandler = chatHandler;
             _baseCommands = baseCommands;
 
-            LoadCommands(dbContext, userpanelCommandsHandler);
-
             NAPI.ClientEvent.Register<ITDSPlayer, string>(ToServerEvent.CommandUsed, this, UseCommand);
         }
 
-        public void LoadCommands(TDSDbContext dbcontext, UserpanelCommandsHandler userpanelCommandsHandler)
-        {
-            foreach (DB.Commands command in dbcontext.Commands.Include(c => c.CommandAlias).Include(c => c.CommandInfos).ToList())
-            {
-                _commandsDict[command.Command.ToLower()] = command;
-
-                foreach (CommandAlias alias in command.CommandAlias)
-                {
-                    _commandByAlias[alias.Alias.ToLower()] = command.Command.ToLower();
-                }
-            }
-
-            List<MethodInfo> methods = _baseCommands
-                    .GetType()
-                    .GetMethods()
-                    .Where(m => m.GetCustomAttributes(typeof(TDSCommand), false).Length > 0)
-                    .ToList();
-            foreach (MethodInfo method in methods)
-            {
-                var attribute = method.GetCustomAttribute<TDSCommand>();
-                if (attribute is null)
-                    continue;
-                string cmd = attribute.Command.ToLower();
-                if (!_commandsDict.ContainsKey(cmd))  // Only add the command if we got an entry in DB
-                    continue;
-
-                CommandDataDto commanddata;
-                if (_commandDataByCommand.ContainsKey(cmd))
-                    commanddata = _commandDataByCommand[cmd];
-                else
-                    commanddata = new CommandDataDto();
-                var methoddata = new CommandMethodDataDto
-                (
-                    priority: attribute.Priority,
-                    methodDefault: method
-                );
-                commanddata.MethodDatas.Add(methoddata);
-
-                var methodParams = method.GetParameters();
-                if (methodParams.Length >= 2)
-                {
-                    if (methodParams[1].ParameterType == typeof(TDSCommandInfos))
-                        methoddata.HasCommandInfos = true;
-                }
-
-                var parameters = method.GetParameters().Skip(methoddata.AmountDefaultParams).ToList();
-
-                for (int i = 0; i < parameters.Count; ++i)
-                {
-                    var parameter = parameters[i];
-
-                    var argLength = parameter.ParameterType.GetCustomAttribute<TDSCommandArgLength>();
-                    if (argLength is { })
-                        methoddata.MultipleArgsToOneInfos.Add(new CommandMultipleArgsToOneInfo { Index = i, Length = argLength.ArgLength });
-
-                    if (parameter.ParameterType == typeof(Vector3))
-                        methoddata.MultipleArgsToOneInfos.Add(new CommandMultipleArgsToOneInfo { Index = i, Length = 3 });
-
-                    #region Save parameters start index with default value
-
-                    if (methoddata.ParametersWithDefaultValueStartIndex is null && parameter.HasDefaultValue)
-                    {
-                        methoddata.ParametersWithDefaultValueStartIndex = i;
-                    }
-
-                    #endregion Save parameters start index with default value
-
-                    #region TDSRemainingText attribute
-
-                    if (!methoddata.ToOneStringAfterParameterCount.HasValue)
-                    {
-                        var remainingTextAttribute = parameter.GetCustomAttribute(typeof(TDSRemainingText), false);
-                        if (remainingTextAttribute != null)
-                        {
-                            methoddata.ToOneStringAfterParameterCount = parameter.Position;
-                            methoddata.RemainingTextAttribute = (TDSRemainingText)remainingTextAttribute;
-                            break;
-                        }
-                    }
-
-                    #endregion TDSRemainingText attribute
-                }
-                methoddata.ParameterInfos = parameters;
-
-                /*if (!UseImplicitTypes)
-                {
-#pragma warning disable
-                    if (parametertypes.Length == 0)
-                        methoddata.MethodEmpty = (CommandEmptyDefaultMethod)method.CreateDelegate(typeof(CommandEmptyDefaultMethod));
-                    else
-                        methoddata.Method = (CommandDefaultMethod)method.CreateDelegate(typeof(CommandDefaultMethod));
-                }*/
-
-                _commandDataByCommand[cmd] = commanddata;
-            }
-
-            foreach (var commanddata in _commandDataByCommand.Values)
-            {
-                commanddata.MethodDatas.Sort((a, b) => -1 * a.Priority.CompareTo(b.Priority));
-            }
-
-            userpanelCommandsHandler.LoadCommandData(_commandDataByCommand, _commandsDict);
-        }
+        
 
         public async void UseCommand(ITDSPlayer player, string msg) // here msg is WITHOUT the command char (/) ... (e.g. "kick Pluz Test")
         {
@@ -234,7 +131,7 @@ namespace TDS_Server.Handler.Commands
                     //if (UseImplicitTypes)
                     //{
                     var finalInvokeArgs = GetFinalInvokeArgs(methoddata, player, cmdinfos, args);
-                    NAPI.Task.Run(() =>
+                    NAPI.Task.RunSafe(() =>
                         methoddata.MethodDefault.Invoke(_baseCommands, finalInvokeArgs.ToArray()));
                     /*}
                     else

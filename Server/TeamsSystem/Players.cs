@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Utility;
 
 namespace TDS_Server.TeamsSystem
@@ -145,7 +146,7 @@ namespace TDS_Server.TeamsSystem
         {
             lock (_all)
             {
-                NAPI.Task.Run(() =>
+                NAPI.Task.RunSafe(() =>
                 {
                     foreach (var player in _all)
                         action(player);

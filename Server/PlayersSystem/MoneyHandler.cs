@@ -4,6 +4,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.PlayersSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 
@@ -19,7 +20,7 @@ namespace TDS_Server.PlayersSystem
                 if (_player.Entity is null)
                     return;
                 _player.Entity.PlayerStats.Money = value;
-                NAPI.Task.Run(() => _dataSyncHandler.SetData(_player, PlayerDataKey.Money, DataSyncMode.Player, value));
+                NAPI.Task.RunSafe(() => _dataSyncHandler.SetData(_player, PlayerDataKey.Money, DataSyncMode.Player, value));
             }
         }
 

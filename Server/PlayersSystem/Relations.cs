@@ -5,6 +5,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.PlayersSystem
@@ -94,7 +95,7 @@ namespace TDS_Server.PlayersSystem
                 return;
 
             var msg = string.Format(_player.Language.FRIEND_JOINED_LOBBY_INFO, otherPlayer.DisplayName, lobby.Entity.Name);
-            NAPI.Task.Run(() => _player.Chat.SendNotification(msg));
+            NAPI.Task.RunSafe(() => _player.Chat.SendNotification(msg));
         }
 
         private void FriendPlayerLeftLobby(ITDSPlayer otherPlayer, IBaseLobby lobby)
@@ -103,7 +104,7 @@ namespace TDS_Server.PlayersSystem
                 return;
 
             var msg = string.Format(_player.Language.FRIEND_LEFT_LOBBY_INFO, otherPlayer.DisplayName, lobby.Entity.Name);
-            NAPI.Task.Run(() => _player.Chat.SendNotification(msg));
+            NAPI.Task.RunSafe(() => _player.Chat.SendNotification(msg));
         }
 
         private void CheckPlayerOnlineIsFriend(ITDSPlayer otherPlayer)
@@ -115,20 +116,24 @@ namespace TDS_Server.PlayersSystem
             if (hasRelation && relation == PlayerRelation.Friend)
             {
                 AddFriendPlayerEvents(otherPlayer);
-                _friendsOnline.Add(otherPlayer);
+                lock (_friendsOnline) { _friendsOnline.Add(otherPlayer); }
                 var msg = string.Format(_player.Language.FRIEND_LOGGEDIN_INFO, otherPlayer.DisplayName);
-                NAPI.Task.Run(() => _player.Chat.SendNotification(msg));
+                NAPI.Task.RunSafe(() => _player.Chat.SendNotification(msg));
             }
         }
 
         private void RemovePlayerFromOnlineFriend(ITDSPlayer otherPlayer)
         {
-            if (_friendsOnline.Remove(otherPlayer))
+            lock (_friendsOnline)
             {
-                RemoveFriendPlayerEvents(otherPlayer);
-                var msg = string.Format(_player.Language.FRIEND_LOGGEDOFF_INFO, otherPlayer.DisplayName);
-                NAPI.Task.Run(() => _player.Chat.SendNotification(msg));
+                if (_friendsOnline.Remove(otherPlayer))
+                {
+                    RemoveFriendPlayerEvents(otherPlayer);
+                    var msg = string.Format(_player.Language.FRIEND_LOGGEDOFF_INFO, otherPlayer.DisplayName);
+                    NAPI.Task.RunSafe(() => _player.Chat.SendNotification(msg));
+                }
             }
+            
         }
 
         private void LoadRelations(Database.Entity.Player.Players? entity)

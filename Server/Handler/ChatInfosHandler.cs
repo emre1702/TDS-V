@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 
@@ -11,13 +13,7 @@ namespace TDS_Server.Handler
 {
     public class ChatInfosHandler
     {
-        #region Private Fields
-
         private readonly Dictionary<Language, string> _chatInfosJsonCache = new Dictionary<Language, string>();
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public ChatInfosHandler(TDSDbContext dbContext, EventsHandler eventsHandler)
         {
@@ -26,21 +22,18 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerLoggedIn += SendChatInfos;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public void SendChatInfos(ITDSPlayer player)
         {
-            if (!_chatInfosJsonCache.TryGetValue(player.LanguageHandler.Enum, out string? json))
-                return;
+            lock (_chatInfosJsonCache)
+            {
+                if (!_chatInfosJsonCache.TryGetValue(player.LanguageHandler.Enum, out string? json))
+                    return;
 
-            player.TriggerBrowserEvent(ToBrowserEvent.LoadChatInfos, json);
+                NAPI.Task.RunSafe(() =>
+                    player.TriggerBrowserEvent(ToBrowserEvent.LoadChatInfos, json));
+            }
+            
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void LoadChatInfos(TDSDbContext dbContext)
         {
@@ -55,6 +48,5 @@ namespace TDS_Server.Handler
             }
         }
 
-        #endregion Private Methods
     }
 }

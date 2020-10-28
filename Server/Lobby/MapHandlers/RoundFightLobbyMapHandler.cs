@@ -9,6 +9,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Maps;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Default;
@@ -59,7 +60,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
             if (map.LimitInfo.Edges is null)
                 return;
             int i = 0;
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var edge in map.LimitInfo.Edges)
                 {

@@ -10,6 +10,7 @@ using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Core;
@@ -78,7 +79,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             await RemoveMemberFromGang(gang, memberInGangEntity);
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 _eventsHandler.OnGangLeave(player, gang);
                 if (sendInfo)

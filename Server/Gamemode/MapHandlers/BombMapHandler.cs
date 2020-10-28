@@ -8,6 +8,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Default;
 
 namespace TDS_Server.GamemodesSystem.MapHandlers
@@ -46,7 +47,7 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
 
         public void CreateBombTakeMarker(ITDSObject bomb)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 _bombTakeMarker = NAPI.Marker.CreateMarker(0, bomb.Position, new Vector3(), new Vector3(), 1,
                                                         new Color(180, 0, 0, 180), true, _lobby.MapHandler.Dimension) as ITDSMarker;
@@ -57,7 +58,7 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
 
         public void DeleteBombTakeMarker()
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 _bombTakeMarker?.Delete();
                 _bombTakeMarker = null;
@@ -71,7 +72,7 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
             if (map.BombInfo is null)
                 return;
 
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var bombplace in map.BombInfo.PlantPositions)
                 {
@@ -88,7 +89,7 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
 
         private ValueTask RoundClear()
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var bombPlantPlace in BombPlantPlaces)
                     bombPlantPlace?.Delete();

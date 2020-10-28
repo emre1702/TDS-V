@@ -7,6 +7,7 @@ using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Default;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler.PlayerHandlers
 {
@@ -49,7 +50,7 @@ namespace TDS_Server.Handler.PlayerHandlers
 
                 if (ban is { })
                 {
-                    NAPI.Task.Run(()
+                    NAPI.Task.RunSafe(()
                         => Utils.HandleBan(player, ban));
                     return;
                 }
@@ -57,7 +58,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                 var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player);
                 if (playerIdName is null)
                 {
-                    NAPI.Task.Run(()
+                    NAPI.Task.RunSafe(()
                         => player.TriggerEvent(ToClientEvent.StartRegisterLogin, player.SocialClubName, false));
                     return;
                 }
@@ -65,12 +66,12 @@ namespace TDS_Server.Handler.PlayerHandlers
                 ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, playerIdName.Id);
                 if (ban is { })
                 {
-                    NAPI.Task.Run(()
+                    NAPI.Task.RunSafe(()
                         => Utils.HandleBan(player, ban));
                     return;
                 }
 
-                NAPI.Task.Run(()
+                NAPI.Task.RunSafe(()
                     => player.TriggerEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
             }
             catch (Exception ex)

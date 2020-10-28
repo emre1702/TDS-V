@@ -5,6 +5,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.Weapons;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.LobbySystem.Weapons
 {
@@ -30,7 +31,7 @@ namespace TDS_Server.LobbySystem.Weapons
 
         private void Events_PlayerSpawned(ITDSPlayer player)
         {
-            NAPI.Task.Run(() => GivePlayerWeapons(player));
+            NAPI.Task.RunSafe(() => GivePlayerWeapons(player));
         }
 
         public virtual void GivePlayerWeapons(ITDSPlayer player)

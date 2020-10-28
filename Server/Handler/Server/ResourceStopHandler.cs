@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 
@@ -97,7 +98,7 @@ namespace TDS_Server.Handler.Server
 
         private void RemoveAllCreated()
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 DeleteEntityList(NAPI.Pools.GetAllBlips());
                 DeleteEntityList(NAPI.Pools.GetAllCheckpoints());

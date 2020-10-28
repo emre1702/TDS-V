@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models.Map;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Default;
 
 namespace TDS_Server.LobbySystem.Sync
@@ -29,13 +30,13 @@ namespace TDS_Server.LobbySystem.Sync
 
         private void Events_InitNewMap(MapDto map)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 TriggerEvent(ToClientEvent.MapChange, map.ClientSyncedDataJson));
         }
 
         private ValueTask RoundClear()
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
                 TriggerEvent(ToClientEvent.MapClear));
             return default;
         }

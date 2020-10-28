@@ -9,6 +9,7 @@ using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
 using TDS_Server.Handler.Entities;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler.Helper
 {
@@ -34,7 +35,7 @@ namespace TDS_Server.Handler.Helper
 
         public async Task ChangePlayerMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 _chatHandler.OutputMuteInfo(admin.DisplayName, target.Name, minutes, reason);
             });
@@ -52,7 +53,7 @@ namespace TDS_Server.Handler.Helper
 
         public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
         {
-            NAPI.Task.Run(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 _chatHandler.OutputVoiceMuteInfo(admin.DisplayName, target.Name, minutes, reason);
             });
