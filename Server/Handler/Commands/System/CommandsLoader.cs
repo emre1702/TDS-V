@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,15 @@ namespace TDS_Server.Handler.Commands.System
 
         private readonly ILoggingHandler _logger;
         private readonly CustomServiceProvider _serviceProvider;
+        private readonly FastMethodInvoker _fastMethodInvoker;
 
         public CommandsLoader(TDSDbContext dbContext, CustomServiceProvider serviceProvider, UserpanelCommandsHandler userpanelCommandsHandler, ILoggingHandler logger)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
+            _fastMethodInvoker = new FastMethodInvoker();
 
+            dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             LoadCommandsFromAllSingletons(dbContext);
             userpanelCommandsHandler.LoadCommandData(_commandsDatas);
 
@@ -81,16 +85,16 @@ namespace TDS_Server.Handler.Commands.System
         {
             var allMethods = GetAllCommandMethodsFromSingletons();
             foreach (var method in allMethods)
-                AddMethod(method);
+                AddMethod(method.Method, method.Instance);
         }
 
-        private IEnumerable<MethodInfo> GetAllCommandMethodsFromSingletons()
+        private IEnumerable<(MethodInfo Method, object Instance)> GetAllCommandMethodsFromSingletons()
         {
             var allTypes = _serviceProvider.GetAllSingletonTypes();
             return allTypes.SelectMany(type => 
-                type.GetType()
-                    .GetMethods()
-                    .Where(m => m.GetCustomAttributes(typeof(TDSCommand), false).Length > 0));
+                type.GetMethods()
+                    .Where(m => m.GetCustomAttributes(typeof(TDSCommand), false).Length > 0)
+                    .Select(m => (m, _serviceProvider.GetRequiredService(type))));
         }
 
         private bool HasCommandInfos(MethodInfo method)
@@ -102,7 +106,7 @@ namespace TDS_Server.Handler.Commands.System
             return false;
         }
 
-        private void AddMethod(MethodInfo method)
+        private void AddMethod(MethodInfo method, object instance)
         {
             var attribute = method.GetCustomAttribute<TDSCommand>()!;
             var cmd = attribute.Command.ToLower();
@@ -113,7 +117,7 @@ namespace TDS_Server.Handler.Commands.System
                 return;
             }
 
-            var methodData = new CommandMethodDataDto(method, attribute.Priority);
+            var methodData = new CommandMethodDataDto(method, _fastMethodInvoker.GetMethodInvoker(method), instance, attribute.Priority);
             commandData.MethodDatas.Add(methodData);
             methodData.HasCommandInfos = HasCommandInfos(method);
 

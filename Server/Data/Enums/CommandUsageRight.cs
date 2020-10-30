@@ -2,6 +2,7 @@
 {
     public enum CommandUsageRight
     {
+        NotAllowed,
         User,
         LobbyOwner,
         Donator,

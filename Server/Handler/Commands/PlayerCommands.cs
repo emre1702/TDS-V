@@ -24,7 +24,7 @@ namespace TDS_Server.Handler.Commands
 
             bool continuue = await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
-                PlayerRelations relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
+                var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
 
                 if (relation != null && relation.Relation == PlayerRelation.Block)
                 {
@@ -70,7 +70,7 @@ namespace TDS_Server.Handler.Commands
         {
             if (player.InPrivateChatWith is null && player.SentPrivateChatRequestTo is null)
             {
-                player.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
+                NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT));
                 return;
             }
             player.Chat.ClosePrivateChat(false);
@@ -84,7 +84,7 @@ namespace TDS_Server.Handler.Commands
 
             if (money < _settingsHandler.ServerSettings.GiveMoneyMinAmount)
             {
-                player.SendNotification(player.Language.GIVE_MONEY_TOO_LESS);
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.GIVE_MONEY_TOO_LESS));
                 return;
             }
 
@@ -93,15 +93,18 @@ namespace TDS_Server.Handler.Commands
 
             if (player.Money < money)
             {
-                player.SendNotification(string.Format(player.Language.GIVE_MONEY_NEED_FEE, money, fee));
+                NAPI.Task.RunSafe(() => player.SendNotification(string.Format(player.Language.GIVE_MONEY_NEED_FEE, money, fee)));
                 return;
             }
 
             player.MoneyHandler.GiveMoney((int)money * -1);
             target.MoneyHandler.GiveMoney(money - fee);
 
-            player.SendChatMessage(string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.DisplayName));
-            target.SendChatMessage(string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.DisplayName));
+            NAPI.Task.RunSafe(() =>
+            {
+                player.SendChatMessage(string.Format(player.Language.YOU_GAVE_MONEY_TO_WITH_FEE, money - fee, fee, target.DisplayName));
+                target.SendChatMessage(string.Format(target.Language.YOU_GOT_MONEY_BY_WITH_FEE, money - fee, fee, player.DisplayName));
+            });
         }
 
         [TDSCommand(PlayerCommand.GlobalChat)]
@@ -140,8 +143,11 @@ namespace TDS_Server.Handler.Commands
 
                         onReject: (target, sender, invitation) =>
                         {
-                            target.SendNotification(string.Format(target.Language.YOU_REJECTED_INVITATION, sender?.DisplayName ?? "?"), false);
-                            sender?.SendNotification(string.Format(sender.Language.TARGET_REJECTED_INVITATION, target.DisplayName), false);
+                            NAPI.Task.RunSafe(() =>
+                            {
+                                target.SendNotification(string.Format(target.Language.YOU_REJECTED_INVITATION, sender?.DisplayName ?? "?"), false);
+                                sender?.SendNotification(string.Format(sender.Language.TARGET_REJECTED_INVITATION, target.DisplayName), false);
+                            });
                         },
 
                         type: InvitationType.Lobby
@@ -149,7 +155,7 @@ namespace TDS_Server.Handler.Commands
                     break;
 
                 default:
-                    player.SendNotification(player.Language.NOT_POSSIBLE_IN_THIS_LOBBY);
+                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.NOT_POSSIBLE_IN_THIS_LOBBY));
                     break;
             }
         }
@@ -161,14 +167,11 @@ namespace TDS_Server.Handler.Commands
                 return;
             if (player.Lobby.Entity.Type == LobbyType.MainMenu)
             {
-                NAPI.Task.RunSafe(() =>
+                if (_customLobbyMenuSyncHandler.IsPlayerInCustomLobbyMenu(player))
                 {
-                    if (_customLobbyMenuSyncHandler.IsPlayerInCustomLobbyMenu(player))
-                    {
-                        _customLobbyMenuSyncHandler.RemovePlayer(player);
-                        player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LeaveCustomLobbyMenu);
-                    }
-                });
+                    _customLobbyMenuSyncHandler.RemovePlayer(player);
+                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LeaveCustomLobbyMenu));
+                }
                 return;
             }
 
@@ -181,14 +184,14 @@ namespace TDS_Server.Handler.Commands
             // Am I blocked?
             if (target.Relations.HasRelationTo(player, PlayerRelation.Block))
             {
-                player.SendChatMessage(string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName));
+                NAPI.Task.RunSafe(() => player.SendChatMessage(string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName)));
                 return;
             }
 
             // Am I already in chat?
             if (player.InPrivateChatWith != null)
             {
-                player.SendNotification(string.Format(player.Language.ALREADY_IN_PRIVATE_CHAT_WITH, player.InPrivateChatWith.DisplayName));
+                NAPI.Task.RunSafe(() => player.SendNotification(string.Format(player.Language.ALREADY_IN_PRIVATE_CHAT_WITH, player.InPrivateChatWith.DisplayName)));
                 return;
             }
 
@@ -199,30 +202,36 @@ namespace TDS_Server.Handler.Commands
             // Withdraw my old request
             if (player.SentPrivateChatRequestTo != null)
             {
-                ITDSPlayer oldTargett = player.SentPrivateChatRequestTo;
-                oldTargett.SendNotification(string.Format(oldTargett.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER, player.DisplayName));
+                ITDSPlayer oldTarget = player.SentPrivateChatRequestTo;
+                NAPI.Task.RunSafe(() => oldTarget.SendNotification(string.Format(oldTarget.Language.PRIVATE_CHAT_REQUEST_CLOSED_REQUESTER, player.DisplayName)));
                 player.SentPrivateChatRequestTo = null;
             }
 
             // Is Target already in a private chat?
             if (target.InPrivateChatWith != null)
             {
-                player.SendNotification(player.Language.TARGET_ALREADY_IN_PRIVATE_CHAT);
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.TARGET_ALREADY_IN_PRIVATE_CHAT));
                 return;
             }
 
             // Send request
             if (target.SentPrivateChatRequestTo != player)
             {
-                player.SendNotification(string.Format(player.Language.PRIVATE_CHAT_REQUEST_SENT_TO, target.DisplayName));
-                target.SendNotification(string.Format(target.Language.PRIVATE_CHAT_REQUEST_RECEIVED_FROM, player.DisplayName));
+                NAPI.Task.RunSafe(() =>
+                {
+                    player.SendNotification(string.Format(player.Language.PRIVATE_CHAT_REQUEST_SENT_TO, target.DisplayName));
+                    target.SendNotification(string.Format(target.Language.PRIVATE_CHAT_REQUEST_RECEIVED_FROM, player.DisplayName));
+                });
                 player.SentPrivateChatRequestTo = target;
             }
             // Accept request
             else
             {
-                player.SendNotification(string.Format(player.Language.PRIVATE_CHAT_OPENED_WITH, target.DisplayName));
-                target.SendNotification(string.Format(target.Language.PRIVATE_CHAT_OPENED_WITH, player.DisplayName));
+                NAPI.Task.RunSafe(() =>
+                {
+                    player.SendNotification(string.Format(player.Language.PRIVATE_CHAT_OPENED_WITH, target.DisplayName));
+                    target.SendNotification(string.Format(target.Language.PRIVATE_CHAT_OPENED_WITH, player.DisplayName));
+                });
                 target.SentPrivateChatRequestTo = null;
                 player.InPrivateChatWith = target;
                 target.InPrivateChatWith = player;
@@ -232,28 +241,31 @@ namespace TDS_Server.Handler.Commands
         [TDSCommand(PlayerCommand.Position)]
         public void OutputCurrentPosition(ITDSPlayer player)
         {
-            if (player.IsInVehicle && player.Vehicle is { })
+            NAPI.Task.RunSafe(() =>
             {
-                var pos = player.Vehicle.Position;
-                player.SendChatMessage("Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
-                var rot = player.Vehicle.Rotation;
-                player.SendChatMessage("Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
-                player.SendChatMessage($"Vehicle dimension: {player.Vehicle.Dimension} | Your dimension: {player.Dimension}");
-            }
-            else
-            {
-                var pos = player.Position;
-                player.SendChatMessage("Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
-                var rot = player.Rotation;
-                player.SendChatMessage("Player ROT: " + rot);
-                player.SendChatMessage($"Dimension: {player.Dimension}");
-            }
+                if (player.IsInVehicle && player.Vehicle is { })
+                {
+                    var pos = player.Vehicle.Position;
+                    player.SendChatMessage("Vehicle X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
+                    var rot = player.Vehicle.Rotation;
+                    player.SendChatMessage("Vehicle ROT RX: " + rot.X + " RY: " + rot.Y + " RZ: " + rot.Z);
+                    player.SendChatMessage($"Vehicle dimension: {player.Vehicle.Dimension} | Your dimension: {player.Dimension}");
+                }
+                else
+                {
+                    var pos = player.Position;
+                    player.SendChatMessage("Player X: " + pos.X + " Y: " + pos.Y + " Z: " + pos.Z);
+                    var rot = player.Rotation;
+                    player.SendChatMessage("Player ROT: " + rot);
+                    player.SendChatMessage($"Dimension: {player.Dimension}");
+                }
+            });
         }
 
         [TDSCommand(PlayerCommand.UserId)]
         public void OutputUserId(ITDSPlayer player)
         {
-            player.SendChatMessage("User id: " + (player.Entity?.Id.ToString() ?? "?"));
+            NAPI.Task.RunSafe(() => player.SendChatMessage("User id: " + (player.Entity?.Id.ToString() ?? "?")));
         }
 
         [TDSCommand(PlayerCommand.PrivateChat)]
@@ -261,11 +273,11 @@ namespace TDS_Server.Handler.Commands
         {
             if (player.InPrivateChatWith is null)
             {
-                player.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT);
+                NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.NOT_IN_PRIVATE_CHAT));
                 return;
             }
             string colorStr = "!$155|35|133$";
-            player.InPrivateChatWith.SendChatMessage($"{colorStr}[{player.DisplayName}: {message}]");
+            NAPI.Task.RunSafe(() => player.InPrivateChatWith.SendChatMessage($"{colorStr}[{player.DisplayName}: {message}]"));
         }
 
         [TDSCommand(PlayerCommand.PrivateMessage)]
@@ -275,11 +287,11 @@ namespace TDS_Server.Handler.Commands
                 return;
             if (target.Relations.HasRelationTo(player, PlayerRelation.Block))
             {
-                player.SendChatMessage(string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName));
+                NAPI.Task.RunSafe(() => player.SendChatMessage(string.Format(player.Language.YOU_GOT_BLOCKED_BY, target.DisplayName)));
                 return;
             }
             _chatHandler.SendPrivateMessage(player, target, message);
-            player.SendChatMessage(player.Language.PRIVATE_MESSAGE_SENT);
+            NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.PRIVATE_MESSAGE_SENT));
         }
 
         [TDSCommand(PlayerCommand.Suicide)]
@@ -313,7 +325,7 @@ namespace TDS_Server.Handler.Commands
                     break;
             }
 
-            fightLobby.Sync.TriggerEvent(ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
+            NAPI.Task.RunSafe(() => fightLobby.Sync.TriggerEvent(ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime));
         }
 
         [TDSCommand(PlayerCommand.TeamChat)]
@@ -341,12 +353,13 @@ namespace TDS_Server.Handler.Commands
                 await dbContext.SaveChangesAsync();
             });
 
+            player.Relations.SetRelation(target, PlayerRelation.None);
+
             NAPI.Task.RunSafe(() =>
             {
                 if (target.Team == player.Team)
                     target.Voice.SetVoiceTo(player, true);
 
-                player.Relations.SetRelation(target, PlayerRelation.None);
                 player.SendChatMessage(string.Format(player.Language.YOU_UNBLOCKED, target.DisplayName));
                 target.SendChatMessage(string.Format(target.Language.YOU_GOT_UNBLOCKED_BY, player.DisplayName));
             });
