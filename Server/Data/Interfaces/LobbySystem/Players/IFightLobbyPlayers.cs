@@ -1,8 +1,7 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-
-namespace TDS_Server.Data.Interfaces.LobbySystem.Players
+﻿namespace TDS_Server.Data.Interfaces.LobbySystem.Players
 {
     public interface IFightLobbyPlayers : IBaseLobbyPlayers
     {
+        bool SavePlayerLobbyStats { get; }
     }
 }

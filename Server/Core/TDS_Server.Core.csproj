@@ -26,6 +26,7 @@
         <ProjectReference Include="..\..\Shared\Data\TDS_Shared.Data.csproj" />
         <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
         <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
+        <ProjectReference Include="..\DamageSystem\TDS_Server.DamageSystem.csproj" />
         <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
         <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
         <ProjectReference Include="..\Gamemode\TDS_Server.GamemodesSystem.csproj" />

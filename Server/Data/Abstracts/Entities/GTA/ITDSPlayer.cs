@@ -94,12 +94,12 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public void TriggerBrowserEvent(params object[] eventNameAndArgs) => Sync.TriggerBrowserEvent(eventNameAndArgs);
 
-        public virtual new int Armor { get => base.Armor; set => base.Armor = value; }
+        public virtual new int Armor { get => HealthAndArmor.Armor; set => HealthAndArmor.Armor = value; }
         public RoundStatsDto? CurrentRoundStats { get; set; }
 
         public ITDSVehicle? FreeroamVehicle { get; set; }
 
-        public virtual new int Health { get => base.Health; set => base.Health = value; }
+        public virtual new int Health { get => HealthAndArmor.Health; set => HealthAndArmor.Health = value; }
 
         public bool IsCrouched { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.DamageSystem;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
@@ -13,29 +14,15 @@ namespace TDS_Server.LobbySystem.Deathmatch
         protected new IRoundFightLobby Lobby => (IRoundFightLobby)base.Lobby;
         protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
 
-        public RoundFightLobbyDeathmatch(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, IDamagesys damage, LangHelper langHelper)
-            : base(lobby, events, damage, langHelper)
+        public RoundFightLobbyDeathmatch(IRoundFightLobby lobby, IRoundFightLobbyEventsHandler events, IDamageHandler damageHandler, LangHelper langHelper)
+            : base(lobby, events, damageHandler, langHelper)
         {
-            events.RoundClear += RoundClear;
-        }
-
-        protected override void RemoveEvents(IBaseLobby lobby)
-        {
-            base.RemoveEvents(lobby);
-            if (Events.RoundClear is { })
-                Events.RoundClear -= RoundClear;
         }
 
         public async Task RemovePlayerFromAlive(ITDSPlayer player)
         {
             player.Team?.Players.RemoveAlive(player);
             await Lobby.Spectator.SetPlayerCantBeSpectatedAnymore(player).ConfigureAwait(false);
-        }
-
-        private ValueTask RoundClear()
-        {
-            Damage.Clear();
-            return default;
         }
 
         public override async Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)

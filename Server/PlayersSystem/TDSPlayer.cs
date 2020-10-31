@@ -1,15 +1,8 @@
 ﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Database.Entity.Player;
 using TDS_Server.Handler;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
 
 namespace TDS_Server.PlayersSystem
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.DamageSystem;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.GamemodesSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
@@ -37,8 +38,8 @@ namespace TDS_Server.LobbySystem.Lobbies
 
         public Arena(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, damageHandler)
         {
         }
 

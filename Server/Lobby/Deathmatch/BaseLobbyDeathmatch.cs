@@ -41,7 +41,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
         protected virtual void OnPlayerSpawned(ITDSPlayer player)
         {
-            // Add weapons here
+            //Todo: Add weapons here
             RemoveAfterDeathSpawnTimer(player);
             player.Health = Lobby.Entity.FightSettings?.StartHealth ?? 100;
             player.Armor = Lobby.Entity.FightSettings?.StartArmor ?? 100;

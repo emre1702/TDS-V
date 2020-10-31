@@ -14,6 +14,8 @@ namespace TDS_Server.LobbySystem.Players
     {
         protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
 
+        public bool SavePlayerLobbyStats { get; protected set; }
+
         public FightLobbyPlayers(IFightLobby lobby, IFightLobbyEventsHandler events)
             : base(lobby, events)
         {
@@ -49,7 +51,7 @@ namespace TDS_Server.LobbySystem.Players
 
             if (lifes > 0)
             {
-                Lobby.Deathmatch.Damage.RewardLastHitter(player, out var killer);
+                Lobby.Deathmatch.Damage.DeathHandler.RewardLastHitter(player, out var killer);
                 Lobby.Deathmatch.DeathInfoSync(player, killer, (uint)WeaponHash.Unarmed);
             }
 

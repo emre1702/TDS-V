@@ -91,7 +91,7 @@ namespace TDS_Server.LobbySystem.EventsHandlers
                 return;
             }
 
-            fightLobby.Deathmatch.Damage.DamagePlayer(target, weaponHash, bodyPart, attacker);
+            fightLobby.Deathmatch.Damage.DamageDealer.DamagePlayer(target, weaponHash, bodyPart, attacker);
         }
 
         public async void OnLeaveLobby(ITDSPlayer player)

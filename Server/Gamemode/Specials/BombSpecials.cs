@@ -136,7 +136,8 @@ namespace TDS_Server.GamemodesSystem.Specials
                 if (player.Lifes == 0)
                     return;
                 int damage = player.Health + player.Armor;
-                Lobby.Deathmatch.Damage.UpdateLastHitter(player, _gamemode.Players.Planter, damage);
+                if (_gamemode.Players.Planter is { })
+                    Lobby.Deathmatch.Damage.HitterHandler.SetLastHitter(player, _gamemode.Players.Planter, damage);
                 player.HealthAndArmor.Remove(damage, out damage, out bool killed);
                 if (_gamemode.Players.Planter?.CurrentRoundStats is { } stats)
                     stats.Damage += damage;
@@ -262,7 +263,7 @@ namespace TDS_Server.GamemodesSystem.Specials
 
             _gamemode.Teams.Terrorists.Players.Do(target =>
             {
-                Lobby.Deathmatch.Damage.UpdateLastHitter(target, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
+                Lobby.Deathmatch.Damage.HitterHandler.SetLastHitter(target, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
                 NAPI.Task.RunSafe(() => target.Kill());
             });
             NAPI.Task.RunSafe(() =>

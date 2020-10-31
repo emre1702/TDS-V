@@ -1,7 +1,6 @@
 ﻿using BonusBotConnector.Client;
 using BonusBotConnector_Server;
 using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.Core.Damagesystem;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.Userpanel;
@@ -166,7 +165,6 @@ namespace TDS_Server.Core.Init.Services.Creators
                .AddTransient<IDatabaseHandler, DatabaseHandler>()
                .AddSingleton<WorkaroundsHandler>()
                .AddSingleton<FreeroamDataHandler>()
-               .AddTransient<IDamagesys, Damagesys>()
                .AddSingleton<IChangelogsHandler, ChangelogsHandler>();
         }
     }

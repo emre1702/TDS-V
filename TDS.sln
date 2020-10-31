@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.PlayersSystem", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.MailSystem", "Server\MailSystem\TDS_Server.MailSystem.csproj", "{1C24C2A8-595A-40A1-9796-F989114C50AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS_Server.DamageSystem", "Server\DamageSystem\TDS_Server.DamageSystem.csproj", "{447507BE-F6A8-4B24-A669-5511E94261B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -279,6 +281,18 @@ Global
 		{1C24C2A8-595A-40A1-9796-F989114C50AF}.Server|Any CPU.Build.0 = Release|Any CPU
 		{1C24C2A8-595A-40A1-9796-F989114C50AF}.Server|x64.ActiveCfg = Release|Any CPU
 		{1C24C2A8-595A-40A1-9796-F989114C50AF}.Server|x64.Build.0 = Release|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Debug|x64.Build.0 = Debug|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Release|x64.ActiveCfg = Release|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Release|x64.Build.0 = Release|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Server|Any CPU.ActiveCfg = Release|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Server|Any CPU.Build.0 = Release|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Server|x64.ActiveCfg = Release|Any CPU
+		{447507BE-F6A8-4B24-A669-5511E94261B3}.Server|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -303,6 +317,7 @@ Global
 		{C54F006D-E685-4970-9A6A-AF428BE5C809} = {CA8EEB00-F61C-4E60-BC8E-1C031008A505}
 		{B6C2C9E4-BD9D-47BB-9E35-E8C2FEE9F17D} = {C54F006D-E685-4970-9A6A-AF428BE5C809}
 		{1C24C2A8-595A-40A1-9796-F989114C50AF} = {C54F006D-E685-4970-9A6A-AF428BE5C809}
+		{447507BE-F6A8-4B24-A669-5511E94261B3} = {C54F006D-E685-4970-9A6A-AF428BE5C809}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CEB846EC-4F41-4917-84C6-D0332E61A49C}

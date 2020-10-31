@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.DamageSystem;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
@@ -19,10 +20,10 @@ namespace TDS_Server.LobbySystem.Deathmatch
         public int AmountLifes { get; set; }
 
         private readonly LangHelper _langHelper;
-        public IDamagesys Damage { get; }
+        public IDamageHandler Damage { get; }
         protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
 
-        public FightLobbyDeathmatch(IFightLobby lobby, IFightLobbyEventsHandler events, IDamagesys damage, LangHelper langHelper)
+        public FightLobbyDeathmatch(IFightLobby lobby, IFightLobbyEventsHandler events, IDamageHandler damage, LangHelper langHelper)
             : base(lobby, events)
         {
             Damage = damage;
@@ -49,9 +50,9 @@ namespace TDS_Server.LobbySystem.Deathmatch
                 await Lobby.Spectator.SpectateOtherAllTeams(player).ConfigureAwait(false);
             }
 
-            Damage.OnPlayerDeath(player, killer, weapon);
-
             var hadLifes = player.Lifes;
+            Damage.DeathHandler.PlayerDeath(player, killer, weapon, hadLifes);
+
             if (player.Lifes > 0)
                 PlayerDiedInFight(player, killer, weapon);
             else
@@ -103,9 +104,9 @@ namespace TDS_Server.LobbySystem.Deathmatch
             });
         }
 
-        protected virtual void InitDamagesys(IDamagesys damagesys)
+        protected virtual void InitDamagesys(IDamageHandler damageHandler)
         {
-            damagesys.Init(Lobby.Entity.LobbyWeapons, Lobby.Entity.LobbyKillingspreeRewards);
+            damageHandler.Init(Lobby, Lobby.Entity.LobbyWeapons, Lobby.Entity.LobbyKillingspreeRewards);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces.DamageSystem;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
@@ -19,8 +20,8 @@ namespace TDS_Server.LobbySystem.Deathmatch
 {
     public class DamageTestLobbyDeathmatch : FightLobbyDeathmatch, IDamageTestLobbyDeathmatch
     {
-        public DamageTestLobbyDeathmatch(IDamageTestLobby lobby, IFightLobbyEventsHandler events, IDamagesys damage, LangHelper langHelper)
-            : base(lobby, events, damage, langHelper)
+        public DamageTestLobbyDeathmatch(IDamageTestLobby lobby, IFightLobbyEventsHandler events, IDamageHandler damageHandler, LangHelper langHelper)
+            : base(lobby, events, damageHandler, langHelper)
         {
             AmountLifes = short.MaxValue;
         }
@@ -42,12 +43,12 @@ namespace TDS_Server.LobbySystem.Deathmatch
 
         public void SetWeaponDamage(DamageTestWeapon weaponDamageData)
         {
-            Damage.SetDamage(weaponDamageData.Weapon, new DamageDto(weaponDamageData));
+            Damage.DamageProvider.SetDamage(weaponDamageData.Weapon, new DamageDto(weaponDamageData));
         }
 
         public IEnumerable<DamageTestWeapon> GetWeaponDamages()
         {
-            var damageDict = Damage.GetDamages();
+            var damageDict = Damage.DamageProvider.GetDamages();
             return damageDict.Select(e => new DamageTestWeapon
             {
                 Weapon = e.Key,
@@ -56,10 +57,10 @@ namespace TDS_Server.LobbySystem.Deathmatch
             });
         }
 
-        protected override void InitDamagesys(IDamagesys damagesys)
+        protected override void InitDamagesys(IDamageHandler damageHandler)
         {
             if (DamageTestLobbyWeapons.AllWeapons is { })
-                damagesys.Init(DamageTestLobbyWeapons.AllWeapons, new List<LobbyKillingspreeRewards>());
+                damageHandler.Init(Lobby, DamageTestLobbyWeapons.AllWeapons, new List<LobbyKillingspreeRewards>());
         }
     }
 }

@@ -21,8 +21,6 @@ namespace TDS_Server.LobbySystem.Players
         protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
         protected new IRoundFightLobby Lobby => (IRoundFightLobby)base.Lobby;
 
-        public bool SavePlayerLobbyStats { get; private set; }
-
         protected bool ShouldRewardPlayerForRound => Lobby.Entity.LobbyRewards is { } rewards &&
             (rewards.MoneyPerAssist != 0 || rewards.MoneyPerDamage != 0 || rewards.MoneyPerKill != 0);
 

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Models;
+using TDS_Server.Data.Interfaces.DamageSystem;
 
 namespace TDS_Server.Data.Interfaces.LobbySystem.Deathmatch
 {
@@ -10,7 +9,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Deathmatch
     public interface IFightLobbyDeathmatch
     {
         int AmountLifes { get; set; }
-        IDamagesys Damage { get; }
+        IDamageHandler Damage { get; }
 
         Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon);
 

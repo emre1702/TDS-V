@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.PlayersSystem;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.PlayersSystem
 {
@@ -15,7 +16,8 @@ namespace TDS_Server.PlayersSystem
             set
             {
                 _armor = value;
-                NAPI.Player.SetPlayerArmor(_player, value);
+                NAPI.Task.RunSafe(() => 
+                    NAPI.Player.SetPlayerArmor(_player, value));
             }
         }
 
@@ -25,7 +27,8 @@ namespace TDS_Server.PlayersSystem
             set
             {
                 _health = value;
-                NAPI.Player.SetPlayerHealth(_player, value);
+                NAPI.Task.RunSafe(() =>
+                    NAPI.Player.SetPlayerHealth(_player, value));
             }
         }
 
@@ -50,7 +53,7 @@ namespace TDS_Server.PlayersSystem
 
             if (effectiveHp < 0)
             {
-                Add(effectiveHp, out effectiveHpAdded);
+                Remove(effectiveHp, out effectiveHpAdded, out _);
                 effectiveHpAdded *= -1;
                 return;
             }
