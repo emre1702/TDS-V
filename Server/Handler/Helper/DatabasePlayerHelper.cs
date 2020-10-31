@@ -46,9 +46,9 @@ namespace TDS_Server.Handler.Helper
             {
                 dbContext.Entry(target.PlayerStats).State = EntityState.Modified;
 
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 dbContext.Entry(target.PlayerStats).State = EntityState.Detached;
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
@@ -64,9 +64,9 @@ namespace TDS_Server.Handler.Helper
             {
                 dbContext.Entry(target.PlayerStats).State = EntityState.Modified;
 
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 dbContext.Entry(target.PlayerStats).State = EntityState.Detached;
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<bool> DoesPlayerWithNameExist(string name)
@@ -75,7 +75,8 @@ namespace TDS_Server.Handler.Helper
                  await dbContext.Players
                     .AsNoTracking()
                     .AnyAsync(p => EF.Functions.ILike(p.Name, name))
-                    .ConfigureAwait(false));
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
 
         public async Task<bool> DoesPlayerWithScnameExist(string scname)
@@ -87,7 +88,8 @@ namespace TDS_Server.Handler.Helper
         public async Task<Players?> GetPlayerByName(string name)
         {
             return await ExecuteForDBAsync(async dbContext =>
-                await dbContext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()));
+                    await dbContext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()).ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
 
         public async Task<int> GetPlayerIDByName(string name)
@@ -98,7 +100,8 @@ namespace TDS_Server.Handler.Helper
                     .Where(p => p.Name == name)
                     .Select(p => p.Id)
                     .FirstOrDefaultAsync()
-                    .ConfigureAwait(false));
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
 
         public async Task<int> GetPlayerIDByScname(string scname)
@@ -109,7 +112,8 @@ namespace TDS_Server.Handler.Helper
                     .Where(p => p.SCName == scname)
                     .Select(p => p.Id)
                     .FirstOrDefaultAsync()
-                    .ConfigureAwait(false));
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
 
         internal async Task<DatabasePlayerIdName?> GetPlayerIdName(ITDSPlayer modPlayer)
@@ -117,7 +121,9 @@ namespace TDS_Server.Handler.Helper
             return await ExecuteForDBAsync(async dbContext =>
                 await dbContext.Players.Where(p => p.Name == modPlayer.Name || p.SCName == modPlayer.SocialClubName)
                     .Select(p => new DatabasePlayerIdName(p.Id, p.Name))
-                    .FirstOrDefaultAsync());
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
     }
 }

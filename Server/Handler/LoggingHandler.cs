@@ -91,7 +91,7 @@ namespace TDS_Server.Handler
                 Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogErrors.Add(log));
+                    dbContext.LogErrors.Add(log)).ConfigureAwait(false);
 
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
             }
@@ -117,7 +117,7 @@ namespace TDS_Server.Handler
                 Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogErrors.Add(log));
+                    dbContext.LogErrors.Add(log)).ConfigureAwait(false);
 
                 _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
             }
@@ -131,7 +131,7 @@ namespace TDS_Server.Handler
         {
             try
             {
-                await SaveTask(counter);
+                await SaveTask(counter).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -144,7 +144,7 @@ namespace TDS_Server.Handler
             if (counter is null || counter % _settingsHandler.ServerSettings.SaveLogsCooldownMinutes == 0)
                 await ExecuteForDBAsync(async dbContext =>
                 {
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                     var changedEntriesCopy = dbContext.ChangeTracker.Entries()
                         .Where(e => e.State == EntityState.Added ||
@@ -152,7 +152,7 @@ namespace TDS_Server.Handler
                                     e.State == EntityState.Deleted);
                     foreach (var entry in changedEntriesCopy)
                         entry.State = EntityState.Detached;
-                });
+                }).ConfigureAwait(false);
         }
 
         #region Error
@@ -174,7 +174,7 @@ namespace TDS_Server.Handler
                 Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogErrors.Add(log));
+                    dbContext.LogErrors.Add(log)).ConfigureAwait(false);
 
                 if (logToBonusBot)
                     _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -202,7 +202,7 @@ namespace TDS_Server.Handler
                 Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogErrors.Add(log));
+                    dbContext.LogErrors.Add(log)).ConfigureAwait(false);
 
                 if (logToBonusBot)
                     _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -230,7 +230,7 @@ namespace TDS_Server.Handler
                 Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogErrors.Add(log));
+                    dbContext.LogErrors.Add(log)).ConfigureAwait(false);
 
                 if (logToBonusBot)
                     _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -257,7 +257,7 @@ namespace TDS_Server.Handler
                 Console.WriteLine($"[{DateTime.Now}] " + info + "\n" + stacktrace);
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogErrors.Add(log));
+                    dbContext.LogErrors.Add(log)).ConfigureAwait(false);
 
                 if (logToBonusBot)
                     _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
@@ -321,7 +321,7 @@ namespace TDS_Server.Handler
                 };
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogChats.Add(log));
+                    dbContext.LogChats.Add(log)).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -352,7 +352,7 @@ namespace TDS_Server.Handler
                 };
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogAdmins.Add(log));
+                    dbContext.LogAdmins.Add(log)).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -379,7 +379,7 @@ namespace TDS_Server.Handler
                 };
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogAdmins.Add(log));
+                    dbContext.LogAdmins.Add(log)).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -404,7 +404,7 @@ namespace TDS_Server.Handler
                 };
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogKills.Add(log));
+                    dbContext.LogKills.Add(log)).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -433,7 +433,7 @@ namespace TDS_Server.Handler
                 };
 
                 await ExecuteForDB(dbContext =>
-                    dbContext.LogRests.Add(log));
+                    dbContext.LogRests.Add(log)).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

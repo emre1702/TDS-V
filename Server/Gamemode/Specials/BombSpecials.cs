@@ -74,8 +74,15 @@ namespace TDS_Server.GamemodesSystem.Specials
 
         private ValueTask RoundClear()
         {
-            Bomb?.Delete();
-            Bomb = null;
+            if (Bomb is { })
+            {
+                NAPI.Task.RunSafe(() =>
+                {
+                    Bomb?.Delete();
+                    Bomb = null;
+                });
+            }
+            
             BombDetonateTimer?.Kill();
             BombDetonateTimer = null;
             BombPlantDefuseTimer?.Kill();
@@ -288,7 +295,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 return;
             if (Bomb is null)
                 return;
-            player.StopAnimation();
+            NAPI.Task.RunSafe(() => player.StopAnimation());
 
             var playerPos = player.Position;
             var plantPlace = GetPlantPos(playerPos);

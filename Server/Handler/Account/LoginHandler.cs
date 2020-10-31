@@ -61,7 +61,7 @@ namespace TDS_Server.Handler.Account
         {
             bool worked = await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
-                var rightPassword = await GetPlayerPassword(dbContext, id);
+                var rightPassword = await GetPlayerPassword(dbContext, id).ConfigureAwait(false);
                 if (rightPassword is null)
                 {
                     NAPI.Task.RunSafe(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
@@ -74,20 +74,20 @@ namespace TDS_Server.Handler.Account
                     return false;
                 }
 
-                var entity = await LoadPlayer(dbContext, id);
+                var entity = await LoadPlayer(dbContext, id).ConfigureAwait(false);
                 if (entity is null)
                     return false;
 
                 entity.PlayerStats.LoggedIn = true;
                 entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-                await LoadCollections(dbContext, entity);
+                await LoadCollections(dbContext, entity).ConfigureAwait(false);
 
                 player.DatabaseHandler.Entity = entity;
 
                 return true;
-            });
+            }).ConfigureAwait(false);
 
             if (!worked || player.Entity == null)
                 return;
@@ -125,12 +125,12 @@ namespace TDS_Server.Handler.Account
             player.TryingToLoginRegister = true;
             try
             {
-                await _serverStartHandler.LoadingTask.Task;
+                await _serverStartHandler.LoadingTask.Task.ConfigureAwait(false);
 
-                int id = await _databasePlayerHandler.GetPlayerIDByName(username);
+                int id = await _databasePlayerHandler.GetPlayerIDByName(username).ConfigureAwait(false);
                 if (id != 0)
                 {
-                    await LoginPlayer(player, id, password);
+                    await LoginPlayer(player, id, password).ConfigureAwait(false);
                 }
                 else
                     NAPI.Task.RunSafe(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
@@ -147,7 +147,7 @@ namespace TDS_Server.Handler.Account
 
         private async void EventsHandler_PlayerRegistered(ITDSPlayer player, Players dbPlayer)
         {
-            await LoginPlayer(player, dbPlayer.Id, null);
+            await LoginPlayer(player, dbPlayer.Id, null).ConfigureAwait(false);
         }
 
         private Task<string?> GetPlayerPassword(TDSDbContext dbContext, int playerId)
@@ -165,20 +165,20 @@ namespace TDS_Server.Handler.Account
 
         private async Task LoadCollections(TDSDbContext dbContext, Players entity)
         {
-            await dbContext.Entry(entity).Reference(e => e.CharDatas).LoadAsync();
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.AppearanceData).LoadAsync();
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.FeaturesData).LoadAsync();
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.GeneralData).LoadAsync();
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.HairAndColorsData).LoadAsync();
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.HeritageData).LoadAsync();
+            await dbContext.Entry(entity).Reference(e => e.CharDatas).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.CharDatas).Collection(e => e.AppearanceData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.CharDatas).Collection(e => e.FeaturesData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.CharDatas).Collection(e => e.GeneralData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.CharDatas).Collection(e => e.HairAndColorsData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.CharDatas).Collection(e => e.HeritageData).LoadAsync().ConfigureAwait(false);
 
-            await dbContext.Entry(entity).Collection(e => e.OfflinemessagesTarget).LoadAsync();
-            await dbContext.Entry(entity).Collection(e => e.PlayerMapRatings).LoadAsync();
-            await dbContext.Entry(entity).Collection(e => e.PlayerMapFavourites).LoadAsync();
-            await dbContext.Entry(entity).Collection(e => e.PlayerRelationsTarget).LoadAsync();
-            await dbContext.Entry(entity).Collection(e => e.Challenges).LoadAsync();
-            await dbContext.Entry(entity).Collection(e => e.WeaponStats).LoadAsync();
-            await dbContext.Entry(entity).Collection(e => e.WeaponBodypartStats).LoadAsync();
+            await dbContext.Entry(entity).Collection(e => e.OfflinemessagesTarget).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity).Collection(e => e.PlayerMapRatings).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity).Collection(e => e.PlayerMapFavourites).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity).Collection(e => e.PlayerRelationsTarget).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity).Collection(e => e.Challenges).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity).Collection(e => e.WeaponStats).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity).Collection(e => e.WeaponBodypartStats).LoadAsync().ConfigureAwait(false);
         }
     }
 }

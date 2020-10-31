@@ -115,7 +115,8 @@ namespace TDS_Server.Handler.Commands.System
                 args = _commandsUseParametersConverter.HandleDefaultValues(methodData, args);
                 args = _commandsUseParametersConverter.HandleRemaingText(methodData, args, out string remainingText);
 
-                var handleArgumentsResult = await _commandsUseParametersConverter.HandleArgumentsTypeConvertings(player, methodData, methodIndex, amountMethods, args)
+                var handleArgumentsResult = await _commandsUseParametersConverter
+                    .HandleArgumentsTypeConvertings(player, methodData, methodIndex, amountMethods, args)
                     .ConfigureAwait(false);
                 if (handleArgumentsResult.IsWrongMethod)
                     continue;

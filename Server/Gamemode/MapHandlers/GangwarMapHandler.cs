@@ -67,10 +67,13 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
 
         private void InitMap(MapDto map)
         {
-            CreateTargetObject(map);
-            CreateTargetBlip(map);
-            CreateTargetColShape();
-            CreateTargetTextLabel();
+            NAPI.Task.RunSafe(() =>
+            {
+                CreateTargetObject(map);
+                CreateTargetBlip(map);
+                CreateTargetColShape();
+                CreateTargetTextLabel();
+            });
         }
 
         private void CreateTargetBlip(MapDto map)

@@ -95,7 +95,7 @@ namespace TDS_Server.Handler.Userpanel
                         break;
 
                     case UserpanelLoadDataType.MyStatsGeneral:
-                        json = await _playerStatsHandler.GetData(player);
+                        json = await _playerStatsHandler.GetData(player).ConfigureAwait(false);
                         break;
 
                     case UserpanelLoadDataType.MyStatsWeapon:
@@ -103,11 +103,11 @@ namespace TDS_Server.Handler.Userpanel
                         break;
 
                     case UserpanelLoadDataType.ApplicationUser:
-                        json = await ApplicationUserHandler.GetData(player);
+                        json = await ApplicationUserHandler.GetData(player).ConfigureAwait(false);
                         break;
 
                     case UserpanelLoadDataType.ApplicationsAdmin:
-                        json = await ApplicationsAdminHandler.GetData(player);
+                        json = await ApplicationsAdminHandler.GetData(player).ConfigureAwait(false);
                         break;
 
                     case UserpanelLoadDataType.SettingsSpecial:
@@ -120,15 +120,15 @@ namespace TDS_Server.Handler.Userpanel
                         break;*/
 
                     case UserpanelLoadDataType.SupportUser:
-                        json = await SupportUserHandler.GetData(player);
+                        json = await SupportUserHandler.GetData(player).ConfigureAwait(false);
                         break;
 
                     case UserpanelLoadDataType.SupportAdmin:
-                        json = await SupportAdminHandler.GetData(player);
+                        json = await SupportAdminHandler.GetData(player).ConfigureAwait(false);
                         break;
 
                     case UserpanelLoadDataType.OfflineMessages:
-                        json = await OfflineMessagesHandler.GetData(player);
+                        json = await OfflineMessagesHandler.GetData(player).ConfigureAwait(false);
                         break;
                 }
 
@@ -150,7 +150,7 @@ namespace TDS_Server.Handler.Userpanel
                 case "ConfirmTDS":
                     var task = SettingsNormalHandler?.ConfirmDiscordUserId(data.userId);
                     if (task is { })
-                        data.reply.Message = await task;
+                        data.reply.Message = await task.ConfigureAwait(false);
 
                     data.reply.Message ??= "BonusBot-Connector is not started at server.";
                     break;

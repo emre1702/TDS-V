@@ -48,11 +48,11 @@ namespace TDS_Server.Handler.GangSystem
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Gangs.Add(gangEntity);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             var gang = _gangsProvider.Get(gangEntity);
-            await _eventsHandler.OnGangJoin(player, gang, gangEntity.Ranks.MaxBy(r => r.Rank).First());
+            await _eventsHandler.OnGangJoin(player, gang, gangEntity.Ranks.MaxBy(r => r.Rank).First()).ConfigureAwait(false);
             // IsInGang is set to true in Angular, not needed here
             // Permissions will get synced, too - not needed here.
 

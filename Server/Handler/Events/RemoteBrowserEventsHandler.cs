@@ -117,11 +117,11 @@ namespace TDS_Server.Handler.Events
 
                 if (_asyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _asyncMethods[eventName](player, argsWithoutEventName);
+                    ret = await _asyncMethods[eventName](player, argsWithoutEventName).ConfigureAwait(false);
                 }
                 else if (_maybeAsyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName);
+                    ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName).ConfigureAwait(false);
                 }
 
                 NAPI.Task.RunSafe(() =>

@@ -29,7 +29,7 @@ namespace TDS_Server.MailSystem
                 return language.ERROR_INFO;
             }
 
-            var result = await _sendCompletionSource.Task;
+            var result = await _sendCompletionSource.Task.ConfigureAwait(false);
             _sendCompletionSource = null;
             return result;
         }

@@ -44,8 +44,8 @@ namespace TDS_Server.Handler
                 await ExecuteForDBAsync(async dbContext =>
                 {
                     dbContext.Add(msg);
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
 
                 if (targetDiscordId.HasValue)
                     _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId.Value);
@@ -72,8 +72,8 @@ namespace TDS_Server.Handler
                 await ExecuteForDBAsync(async dbContext =>
                 {
                     dbContext.Add(msg);
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
 
                 if (target.PlayerSettings.DiscordUserId.HasValue)
                     _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId.Value);
@@ -95,13 +95,15 @@ namespace TDS_Server.Handler
                     int amountNewEntries = await dbContext.Offlinemessages
                        .Where(msg => player.Entity != null && msg.TargetId == player.Entity.Id && !msg.Seen)
                        .AsNoTracking()
-                       .CountAsync();
+                       .CountAsync()
+                       .ConfigureAwait(false);
                     int amountEntries = await dbContext.Offlinemessages
                         .Where(msg => player.Entity != null && msg.TargetId == player.Entity.Id)
                         .AsNoTracking()
-                        .CountAsync();
+                        .CountAsync()
+                        .ConfigureAwait(false);
                     return (amountNewEntries, amountEntries);
-                });
+                }).ConfigureAwait(false);
 
                 if (amountNewEntries > 0)
                 {

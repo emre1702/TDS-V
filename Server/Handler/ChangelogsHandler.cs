@@ -31,7 +31,7 @@ namespace TDS_Server.Handler
                 return;
 
             var client = CreateGitHubClient(appConfigHandler);
-            var commits = await GetCommits(client, settingsHandler);
+            var commits = await GetCommits(client, settingsHandler).ConfigureAwait(false);
             var commitsToSync = Map(commits);
             Json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(commitsToSync));
             serverStartHandler.LoadedChangelogs = true;
@@ -47,7 +47,10 @@ namespace TDS_Server.Handler
         {
             var commitRequest = new CommitRequest { Since = DateTimeOffset.Now.AddDays(-30) };
 
-            var commits = await client.Repository.Commit.GetAll(settingsHandler.ServerSettings.GitHubRepoOwnerName, settingsHandler.ServerSettings.GitHubRepoRepoName, commitRequest);
+            var commits = await client.Repository
+                .Commit
+                .GetAll(settingsHandler.ServerSettings.GitHubRepoOwnerName, settingsHandler.ServerSettings.GitHubRepoRepoName, commitRequest)
+                .ConfigureAwait(false);
             return commits.Where(ShouldShowCommit);
         }
 

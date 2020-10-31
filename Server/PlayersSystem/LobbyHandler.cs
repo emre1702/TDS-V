@@ -41,12 +41,14 @@ namespace TDS_Server.PlayersSystem
         public async Task SetPlayerLobbyStats(PlayerLobbyStats? playerLobbyStats)
         {
             if (LobbyStats is { })
-                await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(LobbyStats).State = EntityState.Detached);
+                await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(LobbyStats).State = EntityState.Detached)
+                    .ConfigureAwait(false);
 
             LobbyStats = playerLobbyStats;
 
             if (playerLobbyStats != null)
-                await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Attach(LobbyStats));
+                await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Attach(LobbyStats))
+                    .ConfigureAwait(false);
         }
 
         public async void SetLobby(IBaseLobby? lobby)
@@ -56,7 +58,8 @@ namespace TDS_Server.PlayersSystem
                 if (lobby == Current)
                     return;
                 if (LobbyStats is { })
-                    await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(LobbyStats).State = EntityState.Detached);
+                    await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(LobbyStats).State = EntityState.Detached)
+                        .ConfigureAwait(false);
 
                 if (Current is { })
                     Previous = Current;

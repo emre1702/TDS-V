@@ -73,8 +73,8 @@ namespace TDS_Server.Handler.GangSystem
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.GangHouses.Add(entity);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             LoadHouse(entity);
         }

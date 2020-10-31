@@ -97,8 +97,8 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
                     else
                         SetDefended(dbContext);
 
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
 
                 NAPI.Task.RunSafe(() =>
                 {
@@ -123,8 +123,8 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
 
                     SetConquered(dbContext);
 
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
 
                 NAPI.Task.RunSafe(() =>
                 {

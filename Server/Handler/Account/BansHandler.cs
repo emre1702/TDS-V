@@ -86,24 +86,24 @@ namespace TDS_Server.Handler.Account
                         => await ExecuteForDBAsync(async (dbContext) =>
                         {
                             return await dbContext.PlayerBans.FirstOrDefaultAsync(ban => 
-                                GetConditionForPlayerAndLobby(playerId!.Value, lobbyId)(ban));
-                        }),
+                                GetConditionForPlayerAndLobby(playerId!.Value, lobbyId)(ban)).ConfigureAwait(false);
+                        }).ConfigureAwait(false),
 
                     (_, _, _, _, _, true)
                          => await ExecuteForDBAsync(async (dbContext) =>
                          {
                              return await dbContext.PlayerBans
                                 .FirstOrDefaultAsync(ban => 
-                                    GetConditionForSatisfyingAllConditions(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)(ban));
-                         }),
+                                    GetConditionForSatisfyingAllConditions(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)(ban)).ConfigureAwait(false);
+                         }).ConfigureAwait(false),
 
                     (_, _, _, _, _, false)
                          => await ExecuteForDBAsync(async (dbContext) =>
                          {
                              return await dbContext.PlayerBans
                                 .FirstOrDefaultAsync(ban => 
-                                    GetConditionBanSatisfyingOneCondition(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)(ban));
-                         }),
+                                    GetConditionBanSatisfyingOneCondition(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)(ban)).ConfigureAwait(false);
+                         }).ConfigureAwait(false),
                 };
 
                 if (ban is null)
@@ -171,7 +171,7 @@ namespace TDS_Server.Handler.Account
 
                 int lobbyId = _lobbiesHandler.MainMenu.Entity.Id;
                 var entries = await ExecuteForDBAsync(async dbContext
-                    => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync());
+                    => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 lock (_cachedBans)
                 {
                     _cachedBans = entries;
@@ -211,10 +211,11 @@ namespace TDS_Server.Handler.Account
                 {
                     var bans = await dbContext.PlayerBans
                         .Where(b => b.EndTimestamp.HasValue && b.EndTimestamp.Value < DateTime.UtcNow)
-                        .ToListAsync();
+                        .ToListAsync()
+                        .ConfigureAwait(false);
                     dbContext.PlayerBans.RemoveRange(bans);
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -229,7 +230,7 @@ namespace TDS_Server.Handler.Account
                 ExecuteForDBAsync(async (dbContext) =>
                 {
                     dbContext.Entry(ban).State = EntityState.Deleted;
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 }).IgnoreResult();
                 return true;
             }

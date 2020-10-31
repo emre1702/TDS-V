@@ -22,8 +22,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             await player.Gang.Database.ExecuteForDBAsync(async dbContext =>
             {
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             return "";
         }

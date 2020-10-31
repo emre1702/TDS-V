@@ -35,7 +35,7 @@ namespace TDS_Server.Handler.Account
             try
             {
                 var isEmailCorrect = await player.Database.ExecuteForDBAsync(async dbContext =>
-                    await dbContext.Players.AnyAsync(p => p.Name == username && p.Email == email));
+                    await dbContext.Players.AnyAsync(p => p.Name == username && p.Email == email).ConfigureAwait(false)).ConfigureAwait(false);
                 if (!isEmailCorrect)
                 {
                     player.SendAlert(player.Language.EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID);
@@ -45,12 +45,17 @@ namespace TDS_Server.Handler.Account
                 var newPassword = GeneratePassword();
                 var newPasswordHashed = Utils.HashPasswordServer(SharedUtils.HashPWClient(newPassword));
 
-                var playerEntity = await player.Database.ExecuteForDBAsync(async dbContext => await dbContext.Players.FirstOrDefaultAsync(p => p.Name == username));
+                var playerEntity = await player.Database
+                    .ExecuteForDBAsync(async dbContext => await dbContext
+                        .Players
+                        .FirstOrDefaultAsync(p => p.Name == username)
+                        .ConfigureAwait(false))
+                    .ConfigureAwait(false);
                 playerEntity.Password = newPasswordHashed;
-                await player.Database.ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
+                await player.Database.ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 _loggingHandler.LogRest(LogType.ResetPassword, player, true);
 
-                var response = await _mailSender.SendPasswordResetMail(playerEntity, newPassword, player.Language);
+                var response = await _mailSender.SendPasswordResetMail(playerEntity, newPassword, player.Language).ConfigureAwait(false);
                 if (response.Worked)
                     player.SendAlert(player.Language.PASSWORD_HAS_BEEN_RESET_EMAIL_SENT);
                 else if (response.ErrorMessage is { })

@@ -53,7 +53,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                         player.Gang.Entity.Ranks.Remove(rank);
                     }
                 }
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                 for (short rank = 0; rank < fromList.Count; ++rank)
                 {
@@ -70,8 +70,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                     });
                 }
 
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             return "";
         }

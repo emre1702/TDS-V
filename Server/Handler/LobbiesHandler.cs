@@ -170,7 +170,7 @@ namespace TDS_Server.Handler
 
                 AddMapsToArena(arena, entity);
 
-                await arena.Players.AddPlayer(player, 0);
+                await arena.Players.AddPlayer(player, 0).ConfigureAwait(false);
                 return null;
             }
             catch
@@ -202,8 +202,8 @@ namespace TDS_Server.Handler
                             Ammo = 9999,
                             Damage = w.Damage,
                             HeadshotMultiplicator = w.HeadShotDamageModifier
-                        }).ToListAsync();
-                    }),
+                        }).ToListAsync().ConfigureAwait(false);
+                    }).ConfigureAwait(false),
 
                     ArenaWeaponDatas = Arena.Entity.LobbyWeapons.Select(w => new CustomLobbyWeaponData
                     {
@@ -269,14 +269,14 @@ namespace TDS_Server.Handler
                 IBaseLobby lobby = LobbiesByIndex[index];
                 if (lobby is IMapCreatorLobby)
                 {
-                    if (await lobby.Bans.CheckIsBanned(player))
+                    if (await lobby.Bans.CheckIsBanned(player).ConfigureAwait(false))
                         return null;
 
                     lobby = _lobbiesProvider.Create<IMapCreatorLobby>(player);
                 }
                 else if (lobby is ICharCreateLobby)
                 {
-                    if (await lobby.Bans.CheckIsBanned(player))
+                    if (await lobby.Bans.CheckIsBanned(player).ConfigureAwait(false))
                         return null;
 
                     lobby = _lobbiesProvider.Create<ICharCreateLobby>(player);
@@ -285,7 +285,7 @@ namespace TDS_Server.Handler
                 {
                     lobby = _lobbiesProvider.Create<IDamageTestLobby>(player);
                 }
-                await lobby.Players.AddPlayer(player, 0);
+                await lobby.Players.AddPlayer(player, 0).ConfigureAwait(false);
                 return null;
             }
             else
@@ -310,7 +310,7 @@ namespace TDS_Server.Handler
                     return null;
                 }
 
-                await lobby.Players.AddPlayer(player, 0);
+                await lobby.Players.AddPlayer(player, 0).ConfigureAwait(false);
                 return null;
             }
             else
@@ -337,7 +337,7 @@ namespace TDS_Server.Handler
             {
                 try
                 {
-                    await lobby.Database.Save();
+                    await lobby.Database.Save().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -391,7 +391,7 @@ namespace TDS_Server.Handler
         {
             try
             {
-                await MainMenu.Players.AddPlayer(player, 0);
+                await MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

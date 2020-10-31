@@ -21,7 +21,7 @@ namespace TDS_Server.LobbySystem.Players
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex)
         {
-            if (!await base.AddPlayer(player, teamIndex))
+            if (!await base.AddPlayer(player, teamIndex).ConfigureAwait(false))
                 return false;
             var isOwner = Lobby.Players.IsLobbyOwner(player);
             player.HealthAndArmor.DisableDying = true;
@@ -42,7 +42,7 @@ namespace TDS_Server.LobbySystem.Players
 
         public override async Task<bool> RemovePlayer(ITDSPlayer player)
         {
-            if (!await base.RemovePlayer(player))
+            if (!await base.RemovePlayer(player).ConfigureAwait(false))
                 return false;
             player.HealthAndArmor.DisableDying = false;
 

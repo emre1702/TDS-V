@@ -63,7 +63,7 @@ namespace TDS_Server.LobbySystem.BansHandlers
             if (serial is null)
                 serial = await Lobby.Database.GetLastUsedSerial(targetId).ConfigureAwait(false);
 
-            var ban = await Lobby.Database.GetBan(targetId);
+            var ban = await Lobby.Database.GetBan(targetId).ConfigureAwait(false);
             if (ban is { })
             {
                 UpdateBanEntity(ban, admin.Entity?.Id, length, reason, serial);

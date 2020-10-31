@@ -11,7 +11,7 @@
 
 //        private async void AcceptAttackInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
 //        {
-//            if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
+//            if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index).ConfigureAwait(false))
 //            {
 //                NAPI.Task.RunSafe(() => invitation?.Resend());
 //                return;
@@ -26,7 +26,7 @@
 
 //        private async void AcceptAttackPreparationInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
 //        {
-//            if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index))
+//            if (!await Lobby.AddPlayer(player, (uint)AttackerTeam.Entity.Index).ConfigureAwait(false))
 //            {
 //                NAPI.Task.RunSafe(() => invitation?.Resend());
 //                return;
@@ -37,7 +37,7 @@
 
 //        private async void AcceptDefendInvitation(ITDSPlayer player, ITDSPlayer? sender, Invitation? invitation)
 //        {
-//            if (!await Lobby.AddPlayer(player, (uint)OwnerTeam.Entity.Index))
+//            if (!await Lobby.AddPlayer(player, (uint)OwnerTeam.Entity.Index).ConfigureAwait(false))
 //            {
 //                NAPI.Task.RunSafe(() => invitation?.Resend());
 //                return;

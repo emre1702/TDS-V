@@ -56,7 +56,7 @@ namespace TDS_Server.LobbySystem.Players
         /// <returns></returns>
         public virtual async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex = 0)
         {
-            await Lobby.IsCreatingTask.Task;
+            await Lobby.IsCreatingTask.Task.ConfigureAwait(false);
             if (await Lobby.Bans.CheckIsBanned(player).ConfigureAwait(false))
                 return false;
 

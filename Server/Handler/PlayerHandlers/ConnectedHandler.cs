@@ -46,7 +46,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                 player.Freeze(true);
 
                 var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, null, player.Address, player.Serial, player.SocialClubName,
-                    player.SocialClubId, false);
+                    player.SocialClubId, false).ConfigureAwait(false);
 
                 if (ban is { })
                 {
@@ -55,7 +55,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                     return;
                 }
 
-                var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player);
+                var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player).ConfigureAwait(false);
                 if (playerIdName is null)
                 {
                     NAPI.Task.RunSafe(()
@@ -63,7 +63,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                     return;
                 }
 
-                ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, playerIdName.Id);
+                ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, playerIdName.Id).ConfigureAwait(false);
                 if (ban is { })
                 {
                     NAPI.Task.RunSafe(()

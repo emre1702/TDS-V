@@ -76,9 +76,9 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
 
             if (player.Lobby is IGangLobby || player.Lobby is IGangActionLobby)
-                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
+                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
 
-            await RemoveMemberFromGang(gang, memberInGangEntity);
+            await RemoveMemberFromGang(gang, memberInGangEntity).ConfigureAwait(false);
 
             NAPI.Task.RunSafe(() =>
             {
@@ -115,12 +115,12 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             var target = _tdsPlayerHandler.Get(gangMember.PlayerId);
             if (target is { })
             {
-                await LeaveGang(target, false);
+                await LeaveGang(target, false).ConfigureAwait(false);
                 target.SendNotification(string.Format(target.Language.YOU_GOT_KICKED_OUT_OF_THE_GANG_BY, player.DisplayName, player.Gang.Entity.Name));
             }
             else
             {
-                await RemoveMemberFromGang(player.Gang, gangMember);
+                await RemoveMemberFromGang(player.Gang, gangMember).ConfigureAwait(false);
                 _offlineMessagesHandler.Add(gangMember.Player, player.Entity,
                     string.Format(_langHelper.GetLang(Language.English).YOU_GOT_KICKED_OUT_OF_THE_GANG_BY, player.DisplayName, player.Gang.Entity.Name));
             }
@@ -135,7 +135,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (oldRank is null || oldRank == 0)
                 return "?";
 
-            var msg = await ChangeRank(player, gangMember, (short)(oldRank - 1));
+            var msg = await ChangeRank(player, gangMember, (short)(oldRank - 1)).ConfigureAwait(false);
             if (msg is { })
                 return msg;
 
@@ -158,7 +158,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (oldRank is null || oldRank == player.Gang.Entity.Ranks.Max(r => r.Rank))
                 return "?";
 
-            var msg = await ChangeRank(player, gangMember, (short)(oldRank + 1));
+            var msg = await ChangeRank(player, gangMember, (short)(oldRank + 1)).ConfigureAwait(false);
             if (msg is { })
                 return msg;
 
@@ -186,8 +186,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             await executer.Gang.Database.ExecuteForDBAsync(async dbContext =>
             {
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
             return null;
         }
 
@@ -206,10 +206,10 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
                 var gangRank = sender.Gang.Entity.Ranks.First(r => r.Rank == 0);
 
-                await _eventsHandler.OnGangJoin(player, sender.Gang, gangRank);
+                await _eventsHandler.OnGangJoin(player, sender.Gang, gangRank).ConfigureAwait(false);
 
                 if (player.Lobby is IGangLobby)
-                    await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
+                    await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
 
                 player.SendNotification(string.Format(player.Language.YOU_JOINED_THE_GANG, player.Gang.Entity.Name));
                 player.Gang.Chat.SendNotification(lang => string.Format(lang.PLAYER_JOINED_YOUR_GANG, player.DisplayName));
@@ -237,7 +237,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         {
             if (gang.Entity.Members.Count == 1)
             {
-                await gang.Delete();
+                await gang.Delete().ConfigureAwait(false);
                 return;
             }
 
@@ -248,8 +248,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                 if (gang.Entity.OwnerId == member.PlayerId)
                     gang.LeaderHandler.AppointNextSuitableLeader();
 
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
     }
 }

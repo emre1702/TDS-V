@@ -41,10 +41,10 @@ namespace TDS_Server.MailSystem
                 var mail = new TDSMail(options);
 
                 using var client = new TDSSmtpClient(_loggingHandler, language);
-                await client.ConnectAsync("localhost", 0, MailKit.Security.SecureSocketOptions.None);
-                await client.SendAsync(mail);
-                await client.DisconnectAsync(true);
-                var possibleErrorMessage = await client.GetErrorMessage(language);
+                await client.ConnectAsync("localhost", 0, MailKit.Security.SecureSocketOptions.None).ConfigureAwait(false);
+                await client.SendAsync(mail).ConfigureAwait(false);
+                await client.DisconnectAsync(true).ConfigureAwait(false);
+                var possibleErrorMessage = await client.GetErrorMessage(language).ConfigureAwait(false);
                 return new SmtpClientResponse { ErrorMessage = possibleErrorMessage };
             }
             catch (Exception ex)

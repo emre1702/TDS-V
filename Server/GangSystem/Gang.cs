@@ -51,13 +51,13 @@ namespace TDS_Server.GangsSystem
         public async Task Delete()
         {
             Deleted = true;
-            await Players.RemoveAll();
+            await Players.RemoveAll().ConfigureAwait(false);
             await Database.ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Gangs.Remove(Entity);
-                await dbContext.SaveChangesAsync();
-                await dbContext.DisposeAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                await dbContext.DisposeAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
     }
 }

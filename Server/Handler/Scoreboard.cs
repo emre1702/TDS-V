@@ -34,17 +34,17 @@ namespace TDS_Server.Handler
             {
                 if (player.Lobby is null || GetShowAllLobbies(player.Lobby.Type))
                 {
-                    var entries = await GetDataForMainmenu();
+                    var entries = await GetDataForMainmenu().ConfigureAwait(false);
                     var entriesJson = Serializer.ToClient(entries);
                     NAPI.Task.RunSafe(() =>
                         player.TriggerEvent(ToClientEvent.SyncScoreboardData, entriesJson));
                 }
                 else
                 {
-                    var entries = await GetDataForLobby(player.Lobby.Entity.Id);
+                    var entries = await GetDataForLobby(player.Lobby.Entity.Id).ConfigureAwait(false);
                     if (entries is null)
                         return;
-                    var lobbydata = (await GetDataForMainmenu()).Where(d => d.Id != player.Lobby?.Entity.Id);
+                    var lobbydata = (await GetDataForMainmenu().ConfigureAwait(false)).Where(d => d.Id != player.Lobby?.Entity.Id);
 
                     var entriesJson = Serializer.ToClient(entries);
                     var lobbyDataJson = Serializer.ToClient(lobbydata);
@@ -77,7 +77,7 @@ namespace TDS_Server.Handler
                     teamIndex: player.Team?.Entity.Index ?? 0
                 );
                 list.Add(entry);
-            });
+            }).ConfigureAwait(false);
             return list;
         }
 
@@ -90,7 +90,7 @@ namespace TDS_Server.Handler
                 string playersStr = string.Empty;
                 if (playersCount > 0)
                 {
-                    var playerNames = await lobby.Players.GetOrderedNames();
+                    var playerNames = await lobby.Players.GetOrderedNames().ConfigureAwait(false);
                     playersStr = string.Join(", ", playerNames);
                 }
 

@@ -24,12 +24,12 @@ namespace TDS_Server.Handler.Commands
 
             bool continuue = await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
-                var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
+                var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id).ConfigureAwait(false);
 
                 if (relation != null && relation.Relation == PlayerRelation.Block)
                 {
                     //player.SendChatMessage(string.Format(player.Language.TARGET_ALREADY_BLOCKED, target.DisplayName));
-                    await UnblockUser(player, target);
+                    await UnblockUser(player, target).ConfigureAwait(false);
                     return false;
                 }
 
@@ -46,11 +46,11 @@ namespace TDS_Server.Handler.Commands
                 }
                 player.Relations.SetRelation(target, PlayerRelation.Block);
                 relation.Relation = PlayerRelation.Block;
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 NAPI.Task.RunSafe(() => player.SendChatMessage(msg));
 
                 return true;
-            });
+            }).ConfigureAwait(false);
 
             if (!continuue)
                 return;
@@ -133,7 +133,7 @@ namespace TDS_Server.Handler.Commands
                                 return;
                             if (sender.Lobby is null)
                                 return;
-                            await sender.Lobby.Players.AddPlayer(target!, 0);
+                            await sender.Lobby.Players.AddPlayer(target!, 0).ConfigureAwait(false);
                             NAPI.Task.RunSafe(() =>
                             {
                                 target.SendNotification(string.Format(target.Language.YOU_ACCEPTED_INVITATION, sender.DisplayName), false);
@@ -175,7 +175,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             }
 
-            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
         }
 
         [TDSCommand(PlayerCommand.OpenPrivateChat)]
@@ -342,7 +342,7 @@ namespace TDS_Server.Handler.Commands
 
             await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
-                var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id);
+                var relation = await dbContext.PlayerRelations.FindAsync(player.Entity.Id, target.Entity.Id).ConfigureAwait(false);
                 if (relation is null || relation.Relation != PlayerRelation.Block)
                 {
                     NAPI.Task.RunSafe(() => player.SendChatMessage(string.Format(player.Language.TARGET_NOT_BLOCKED, target.DisplayName)));
@@ -350,8 +350,8 @@ namespace TDS_Server.Handler.Commands
                 }
 
                 dbContext.PlayerRelations.Remove(relation);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             player.Relations.SetRelation(target, PlayerRelation.None);
 

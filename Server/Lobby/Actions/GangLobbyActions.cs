@@ -18,7 +18,7 @@ namespace TDS_Server.LobbySystem.Actions
             {
                 var task = gangwarArea.SetConqueredWithoutAttack(attacker.Gang);
                 if (task is { })
-                    await task;
+                    await task.ConfigureAwait(false);
                 return;
             }
 
@@ -31,7 +31,7 @@ namespace TDS_Server.LobbySystem.Actions
 
             var lobby = ActivatorUtilities.CreateInstance<Arena>(_serviceProvider, CreateEntity(gangwarArea), gangwarArea, true);
 
-            await lobby.AddToDB();
+            await lobby.AddToDB().ConfigureAwait(false);
             await NAPI.Task.RunWait(() =>
             {
                 EventsHandler.OnLobbyCreated(lobby);
@@ -39,9 +39,9 @@ namespace TDS_Server.LobbySystem.Actions
 
                 lobby.SetRoundStatus(RoundStatus.NewMapChoose);
                 lobby.Start();
-            });
+            }).ConfigureAwait(false);
 
-            await lobby.AddPlayer(attacker, 1);
+            await lobby.AddPlayer(attacker, 1).ConfigureAwait(false);
         }
 
         private bool CheckCanStartAction(ITDSPlayer attacker, GangwarArea gangwarArea)

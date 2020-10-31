@@ -82,7 +82,7 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
                         blip: NAPI.Blip.CreateBlip(SharedConstants.BombPlantPlaceBlipSprite, pos, 1f, 0, name: "Bomb-Plant", dimension: _lobby.MapHandler.Dimension) as ITDSBlip,
                         pos: pos
                     );
-                    BombPlantPlaces.Add(dto);
+                    lock (BombPlantPlaces) { BombPlantPlaces.Add(dto); }
                 }
             });
         }
@@ -91,9 +91,13 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
         {
             NAPI.Task.RunSafe(() =>
             {
-                foreach (var bombPlantPlace in BombPlantPlaces)
-                    bombPlantPlace?.Delete();
-                BombPlantPlaces.Clear();
+                lock (BombPlantPlaces)
+                {
+                    foreach (var bombPlantPlace in BombPlantPlaces)
+                        bombPlantPlace?.Delete();
+                    BombPlantPlaces.Clear();
+                }
+                
                 DeleteBombTakeMarker();
             });
 

@@ -42,7 +42,7 @@ namespace TDS_Server.Handler.Extensions
                 action();
                 taskCompletionSource.SetResult(true);
             });
-            await taskCompletionSource.Task;
+            await taskCompletionSource.Task.ConfigureAwait(false);
         }
 
         public static Task<T> RunWait<T>(this GTANetworkMethods.Task task, Func<T> action)
@@ -60,7 +60,7 @@ namespace TDS_Server.Handler.Extensions
         {
             try
             {
-                await task;
+                await task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {

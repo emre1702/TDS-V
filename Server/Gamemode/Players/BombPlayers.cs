@@ -22,7 +22,7 @@ namespace TDS_Server.GamemodesSystem.Players
 
         protected override async ValueTask PlayerLeftAfter((ITDSPlayer Player, int HadLifes) data)
         {
-            await base.PlayerLeftAfter(data);
+            await base.PlayerLeftAfter(data).ConfigureAwait(false);
             if (Planter == data.Player)
                 Planter = null;
             else if (BombAtPlayer == data.Player)

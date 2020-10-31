@@ -36,7 +36,8 @@ namespace TDS_Server.Handler.Maps
                     => await dbContext.PlayerMapFavourites
                         .Where(m => m.PlayerId == player.Entity.Id)
                         .Select(m => m.MapId)
-                        .ToListAsync());
+                        .ToListAsync().ConfigureAwait(false))
+                    .ConfigureAwait(false);
                 var json = Serializer.ToBrowser(mapIDs);
                 NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadMapFavourites, json));
             }
@@ -53,7 +54,7 @@ namespace TDS_Server.Handler.Maps
 
             await ExecuteForDBAsync(async dbContext =>
             {
-                PlayerMapFavourites? favorite = await dbContext.PlayerMapFavourites.FindAsync(player.Id, mapId);
+                PlayerMapFavourites? favorite = await dbContext.PlayerMapFavourites.FindAsync(player.Id, mapId).ConfigureAwait(false);
 
                 #region Add Favourite
 
@@ -61,7 +62,7 @@ namespace TDS_Server.Handler.Maps
                 {
                     favorite = new PlayerMapFavourites { PlayerId = player.Id, MapId = mapId };
                     dbContext.PlayerMapFavourites.Add(favorite);
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
                     return;
                 }
 
@@ -72,12 +73,12 @@ namespace TDS_Server.Handler.Maps
                 if (favorite != null && !isFavorite)
                 {
                     dbContext.PlayerMapFavourites.Remove(favorite);
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
                     return;
                 }
 
                 #endregion Remove Favourite
-            });
+            }).ConfigureAwait(false);
             return null;
         }
     }

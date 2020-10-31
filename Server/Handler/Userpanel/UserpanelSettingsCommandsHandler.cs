@@ -45,8 +45,9 @@ namespace TDS_Server.Handler.Userpanel
                             CommandId = c.CommandId,
                             CustomCommand = c.CommandText
                         })
-                        .ToListAsync();
-                });
+                        .ToListAsync()
+                        .ConfigureAwait(false);
+                }).ConfigureAwait(false);
 
                 var data = new UserpanelPlayerCommandData
                 {
@@ -81,7 +82,9 @@ namespace TDS_Server.Handler.Userpanel
             {
                 foreach (var data in datas)
                 {
-                    var entity = await dbContext.PlayerCommands.FirstOrDefaultAsync(c => c.PlayerId == player.Id && c.CommandId == data.CommandId);
+                    var entity = await dbContext.PlayerCommands
+                        .FirstOrDefaultAsync(c => c.PlayerId == player.Id && c.CommandId == data.CommandId)
+                        .ConfigureAwait(false);
                     if (data.CustomCommand.Length == 0)
                     {
                         if (entity is null)
@@ -107,11 +110,12 @@ namespace TDS_Server.Handler.Userpanel
                         }
                     }
                 }
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
-            var newData = await GetData(player);
-            player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, Serializer.ToClient(newData));
+            var newData = await GetData(player).ConfigureAwait(false);
+            NAPI.Task.RunSafe(() => 
+                player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, Serializer.ToClient(newData)));
 
             return null;
         }
@@ -120,7 +124,7 @@ namespace TDS_Server.Handler.Userpanel
         {
             try
             {
-                var data = await GetData(player);
+                var data = await GetData(player).ConfigureAwait(false);
                 var json = Serializer.ToClient(data);
                 NAPI.Task.RunSafe(() =>
                 {

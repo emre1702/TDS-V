@@ -65,7 +65,7 @@ namespace TDS_Server.Handler.Server
         {
             if (!lobby.CurrentRoundEndReason.AddToServerStats)
                 return;
-            await CheckNewDay();
+            await CheckNewDay().ConfigureAwait(false);
             if (lobby.IsOfficial)
             {
                 ++DailyStats.ArenaRoundsPlayed;
@@ -82,7 +82,7 @@ namespace TDS_Server.Handler.Server
         {
             try
             {
-                await SaveTask();
+                await SaveTask().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -94,10 +94,10 @@ namespace TDS_Server.Handler.Server
         {
             await ExecuteForDBAsync(async dbContext =>
             {
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
-            await CheckNewDay();
+            await CheckNewDay().ConfigureAwait(false);
         }
 
         private async ValueTask CheckNewDay()
@@ -112,15 +112,15 @@ namespace TDS_Server.Handler.Server
                 dbContext.Entry(DailyStats).State = EntityState.Detached;
                 DailyStats = new ServerDailyStats { Date = DateTime.UtcNow.Date };
                 dbContext.ServerDailyStats.Add(DailyStats);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
 
         private async void CheckPlayerPeak(ITDSPlayer _)
         {
             try
             {
-                await CheckNewDay();
+                await CheckNewDay().ConfigureAwait(false);
                 int amountLoggedIn = _tdsPlayerHandler.AmountLoggedInPlayers;
                 if (amountLoggedIn > DailyStats.PlayerPeak)
                 {
@@ -141,7 +141,7 @@ namespace TDS_Server.Handler.Server
         {
             try
             {
-                await CheckNewDay();
+                await CheckNewDay().ConfigureAwait(false);
                 ++DailyStats.AmountLogins;
                 CheckPlayerPeak(player);
             }
@@ -155,7 +155,7 @@ namespace TDS_Server.Handler.Server
         {
             try
             {
-                await CheckNewDay();
+                await CheckNewDay().ConfigureAwait(false);
                 ++DailyStats.AmountRegistrations;
             }
             catch (Exception ex)

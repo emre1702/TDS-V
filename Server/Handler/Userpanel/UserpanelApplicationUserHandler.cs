@@ -106,10 +106,12 @@ namespace TDS_Server.Handler.Userpanel
 
             var invitation = await ExecuteForDBAsync(async dbContext
                 => await dbContext.ApplicationInvitations
-                .Include(i => i.Admin)
-                .ThenInclude(a => a.PlayerSettings)
-                .Where(i => i.Id == invitationId)
-                .FirstOrDefaultAsync());
+                    .Include(i => i.Admin)
+                    .ThenInclude(a => a.PlayerSettings)
+                    .Where(i => i.Id == invitationId)
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (invitation == null)
             {
                 NAPI.Task.RunSafe(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
@@ -117,7 +119,12 @@ namespace TDS_Server.Handler.Userpanel
             }
 
             var application = await ExecuteForDBAsync(async dbContext =>
-                await dbContext.Applications.Include(a => a.Player).Where(a => a.Id == invitation.ApplicationId).FirstOrDefaultAsync());
+                await dbContext.Applications
+                    .Include(a => a.Player)
+                    .Where(a => a.Id == invitation.ApplicationId)
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (application.PlayerId != player.Entity!.Id)
             {
                 LoggingHandler.Instance.LogError($"{player.Name ?? "?"} tried to accept an invitation from {invitation.Admin.Name}, but for {application.Player.Name}.",
@@ -129,12 +136,12 @@ namespace TDS_Server.Handler.Userpanel
             {
                 dbContext.Remove(invitation);
                 application.Closed = true;
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             player.Entity.AdminLeaderId = invitation.AdminId;
             player.Entity.AdminLvl = 1;
-            await player.DatabaseHandler.SaveData();
+            await player.DatabaseHandler.SaveData().ConfigureAwait(false);
 
             NAPI.Task.RunSafe(() =>
             {
@@ -168,7 +175,7 @@ namespace TDS_Server.Handler.Userpanel
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Applications.Add(application);
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                 foreach (var entry in answers)
                 {
@@ -181,10 +188,10 @@ namespace TDS_Server.Handler.Userpanel
                     dbContext.ApplicationAnswers.Add(answer);
                 }
 
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-                await dbContext.Entry(application).Reference(a => a.Player).LoadAsync();
-            });
+                await dbContext.Entry(application).Reference(a => a.Player).LoadAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application, player);
             return null;
@@ -198,9 +205,10 @@ namespace TDS_Server.Handler.Userpanel
                 {
                     await dbContext.Applications
                        .Where(a => a.CreateTime.AddDays(_settingsHandler.ServerSettings.DeleteApplicationAfterDays) < DateTime.UtcNow)
-                       .ForEachAsync(a => dbContext.Applications.Remove(a));
-                    await dbContext.SaveChangesAsync();
-                });
+                       .ForEachAsync(a => dbContext.Applications.Remove(a))
+                       .ConfigureAwait(false);
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -211,7 +219,10 @@ namespace TDS_Server.Handler.Userpanel
         public async Task<string> GetData(ITDSPlayer player)
         {
             var application = await player.Database.ExecuteForDBAsync(async dbContext =>
-                await dbContext.Applications.FirstOrDefaultAsync(a => a.PlayerId == player.Entity!.Id));
+                await dbContext.Applications
+                    .FirstOrDefaultAsync(a => a.PlayerId == player.Entity!.Id)
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             if (application == null)
             {
@@ -223,8 +234,8 @@ namespace TDS_Server.Handler.Userpanel
                 await player.Database.ExecuteForDBAsync(async (dbContext) =>
                 {
                     dbContext.Remove(application);
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
 
                 return Serializer.ToBrowser(new ApplicationUserData { AdminQuestions = AdminQuestions });
             }
@@ -245,7 +256,9 @@ namespace TDS_Server.Handler.Userpanel
                                 Message = i.Message
                             })
                     })
-                    .FirstOrDefaultAsync());
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             if (applicationData == default)
             {
@@ -269,7 +282,9 @@ namespace TDS_Server.Handler.Userpanel
                     .Include(i => i.Admin)
                     .ThenInclude(a => a.PlayerSettings)
                     .Where(i => i.Id == invitationId)
-                    .FirstOrDefaultAsync());
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (invitation == null)
             {
                 NAPI.Task.RunSafe(() => player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
@@ -281,7 +296,9 @@ namespace TDS_Server.Handler.Userpanel
                     .Include(a => a.Player)
                     .Where(a => a.Id == invitation.ApplicationId)
                     .Select(a => new { PlayerName = a.Player.Name, a.PlayerId })
-                    .FirstOrDefaultAsync());
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (application.PlayerId != player.Entity!.Id)
             {
                 LoggingHandler.Instance.LogError($"{player.Name ?? "?"} tried to reject an invitation from {invitation.Admin.Name}, but for {application.PlayerName}.", Environment.StackTrace, null, player);
@@ -291,8 +308,8 @@ namespace TDS_Server.Handler.Userpanel
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Remove(invitation);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             NAPI.Task.RunSafe(() =>
             {
@@ -333,7 +350,8 @@ namespace TDS_Server.Handler.Userpanel
                         Question = q.Question,
                         AnswerType = q.AnswerType
                     })
-                }));
+                }))
+                .ConfigureAwait(false);
 
                 AdminQuestions = Serializer.ToBrowser(list);
             }

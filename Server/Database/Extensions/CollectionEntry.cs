@@ -17,7 +17,7 @@ namespace TDS_Server.Database.Extensions
                 source.CurrentValue = null;
             }
             source.IsLoaded = false;
-            await source.LoadAsync();
+            await source.LoadAsync().ConfigureAwait(false);
         }
 
         #endregion Public Methods

@@ -49,7 +49,7 @@ namespace TDS_Server.Data.Utility
 
             foreach (var callback in tmpInvocationList)
             {
-                await callback(arg);
+                await callback(arg).ConfigureAwait(false);
             }
         }
     }
@@ -97,7 +97,7 @@ namespace TDS_Server.Data.Utility
 
             foreach (var callback in tmpInvocationList)
             {
-                await callback();
+                await callback().ConfigureAwait(false);
             }
         }
     }

@@ -207,7 +207,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 if (player.Entity is null)
                     return null;
-                var stats = await GetPlayerGeneralStats(player.Entity.Id, true, player);
+                var stats = await GetPlayerGeneralStats(player.Entity.Id, true, player).ConfigureAwait(false);
                 return Serializer.ToBrowser(stats);
             }
             catch (Exception ex)
@@ -223,73 +223,79 @@ namespace TDS_Server.Handler.Userpanel
         {
             var data = await ExecuteForDBAsync(async dbContext
                 => await dbContext.Players
-                .Include(p => p.GangMemberNavigation)
-                    .ThenInclude(g => g.Gang)
-                        .ThenInclude(g => g.Team)
-                .Include(p => p.Maps)
-                    .ThenInclude(m => m.PlayerMapRatings)
-                .Include(p => p.PlayerBansPlayer)
-                    .ThenInclude(b => b.Lobby)
-                .Include(p => p.PlayerMapRatings)
-                .Include(p => p.PlayerStats)
-                .Include(p => p.PlayerTotalStats)
-                .Include(p => p.PlayerLobbyStats)
-                    .ThenInclude(s => s.Lobby)
-                .Where(p => p.Id == playerId)
-                .AsNoTracking()
-                .Select(p => new PlayerUserpanelGeneralStatsDataDto
-                {
-                    Id = p.Id,
-                    AdminLvl = p.AdminLvl,
-                    Donation = p.Donation,
-                    IsVip = p.IsVip,
-                    Name = p.Name,
-                    RegisterDateTime = p.RegisterTimestamp,
-                    SCName = p.SCName,
-                    Gang = p.GangMemberNavigation != null ? p.GangMemberNavigation.Gang.Name : "-",
-                    AmountMapsCreated = p.Maps.Count,
-                    CreatedMapsAverageRating = p.Maps.Average(map => map.PlayerMapRatings.Average(rating => rating.Rating)),
-                    BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name).ToList(),
-                    AmountMapsRated = p.PlayerMapRatings.Count,
-                    MapsRatedAverage = p.PlayerMapRatings.Average(m => m.Rating),
-                    LastLoginDateTime = p.PlayerStats.LastLoginTimestamp,
-                    Money = p.PlayerStats.Money,
-                    MuteTime = p.PlayerStats.MuteTime,
-                    PlayTime = p.PlayerStats.PlayTime,
-                    VoiceMuteTime = p.PlayerStats.VoiceMuteTime,
-                    TotalMoney = p.PlayerTotalStats.Money,
+                    .Include(p => p.GangMemberNavigation)
+                        .ThenInclude(g => g.Gang)
+                            .ThenInclude(g => g.Team)
+                    .Include(p => p.Maps)
+                        .ThenInclude(m => m.PlayerMapRatings)
+                    .Include(p => p.PlayerBansPlayer)
+                        .ThenInclude(b => b.Lobby)
+                    .Include(p => p.PlayerMapRatings)
+                    .Include(p => p.PlayerStats)
+                    .Include(p => p.PlayerTotalStats)
+                    .Include(p => p.PlayerLobbyStats)
+                        .ThenInclude(s => s.Lobby)
+                    .Where(p => p.Id == playerId)
+                    .AsNoTracking()
+                    .Select(p => new PlayerUserpanelGeneralStatsDataDto
+                    {
+                        Id = p.Id,
+                        AdminLvl = p.AdminLvl,
+                        Donation = p.Donation,
+                        IsVip = p.IsVip,
+                        Name = p.Name,
+                        RegisterDateTime = p.RegisterTimestamp,
+                        SCName = p.SCName,
+                        Gang = p.GangMemberNavigation != null ? p.GangMemberNavigation.Gang.Name : "-",
+                        AmountMapsCreated = p.Maps.Count,
+                        CreatedMapsAverageRating = p.Maps.Average(map => map.PlayerMapRatings.Average(rating => rating.Rating)),
+                        BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name).ToList(),
+                        AmountMapsRated = p.PlayerMapRatings.Count,
+                        MapsRatedAverage = p.PlayerMapRatings.Average(m => m.Rating),
+                        LastLoginDateTime = p.PlayerStats.LastLoginTimestamp,
+                        Money = p.PlayerStats.Money,
+                        MuteTime = p.PlayerStats.MuteTime,
+                        PlayTime = p.PlayerStats.PlayTime,
+                        VoiceMuteTime = p.PlayerStats.VoiceMuteTime,
+                        TotalMoney = p.PlayerTotalStats.Money,
 
-                    LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s)).ToList() : null
-                })
-                .FirstOrDefaultAsync());
+                        LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s)).ToList() : null
+                    })
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             if (data == null)
                 return null;
 
             data.Logs = await ExecuteForDBAsync(async dbContext
                 => await dbContext.LogAdmins
-                .Select(l => new PlayerUserpanelAdminTargetHistoryDataDto
-                {
-                    SourceId = l.Source,
-                    TargetId = l.Target,
-                    AsDonator = l.AsDonator,
-                    AsVip = l.AsVip,
-                    LobbyId = l.Lobby,
-                    Reason = l.Reason,
-                    TimestampDateTime = l.Timestamp,
-                    Type = l.Type.ToString(),
-                    LengthOrEndTime = l.LengthOrEndTime
-                })
-                .Where(l => l.TargetId == playerId)
-                .ToListAsync());
+                    .Select(l => new PlayerUserpanelAdminTargetHistoryDataDto
+                    {
+                        SourceId = l.Source,
+                        TargetId = l.Target,
+                        AsDonator = l.AsDonator,
+                        AsVip = l.AsVip,
+                        LobbyId = l.Lobby,
+                        Reason = l.Reason,
+                        TimestampDateTime = l.Timestamp,
+                        Type = l.Type.ToString(),
+                        LengthOrEndTime = l.LengthOrEndTime
+                    })
+                    .Where(l => l.TargetId == playerId)
+                    .ToListAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             foreach (var adminTarget in data.Logs)
             {
                 adminTarget.Admin = await ExecuteForDBAsync(async dbContext
-                => await dbContext.Players
-                    .Where(p => p.Id == adminTarget.SourceId)
-                    .Select(p => p.Name)
-                    .FirstOrDefaultAsync());
+                    => await dbContext.Players
+                        .Where(p => p.Id == adminTarget.SourceId)
+                        .Select(p => p.Name)
+                        .FirstOrDefaultAsync()
+                        .ConfigureAwait(false))
+                    .ConfigureAwait(false);
                 adminTarget.Lobby = adminTarget.LobbyId.HasValue ? _lobbiesHandler.GetLobby(adminTarget.LobbyId.Value)?.Entity.Name : null;
             }
 

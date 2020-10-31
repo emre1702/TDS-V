@@ -46,7 +46,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (!(player.Lobby is ICharCreateLobby))
                 return null;
 
-            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
             return null;
         }
 
@@ -70,12 +70,12 @@ namespace TDS_Server.Handler.PlayerHandlers
                     player.Entity.CharDatas.HeritageData.ElementAt(i).SyncedData = data.HeritageDataSynced[i];
                     player.Entity.CharDatas.AppearanceData.ElementAt(i).SyncedData = data.AppearanceDataSynced[i];
                 }
-            });
+            }).ConfigureAwait(false);
 
-            await player.DatabaseHandler.SaveData(true);
+            await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
             LoadPlayerChar(player);
 
-            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
             return null;
         }
 
@@ -96,7 +96,7 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         private async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
         {
-            await _semaphoreSlim.WaitAsync();
+            await _semaphoreSlim.WaitAsync().ConfigureAwait(false);
 
             try
             {
@@ -119,7 +119,7 @@ namespace TDS_Server.Handler.PlayerHandlers
                 }
 
                 _dbContext.Add(charDatas);
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

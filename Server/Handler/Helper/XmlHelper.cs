@@ -25,7 +25,7 @@ namespace TDS_Server.Handler.Helper
             };
             using (var xmlWriter = XmlWriter.Create(stringBuilder, settings))
             {
-                await element.SaveAsync(xmlWriter, default);
+                await element.SaveAsync(xmlWriter, default).ConfigureAwait(false);
             }
 
             return stringBuilder.ToString();

@@ -165,18 +165,23 @@ namespace TDS_Server.Handler.Userpanel
                     .Where(p => p.DiscordUserId == discordUserId)
                     .Include(p => p.Player)
                     .Select(p => new { p.PlayerId, p.Player.Name })
-                    .FirstOrDefaultAsync();
-            });
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false);
+            }).ConfigureAwait(false);
             if (playerData is null)
                 return $"There is no player with that Discord-ID.";
 
             var request = await ExecuteForDBAsync(async dbContext
-                => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
+                => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId).ConfigureAwait(false)).ConfigureAwait(false);
             if (request is null)
                 return "-";
 
             var maxMessageIndex = await ExecuteForDBAsync(async dbContext
-               => await dbContext.SupportRequestMessages.Where(m => m.RequestId == requestId).MaxAsync(m => m.MessageIndex) + 1);
+               => await dbContext.SupportRequestMessages
+                    .Where(m => m.RequestId == requestId)
+                    .MaxAsync(m => m.MessageIndex)
+                    .ConfigureAwait(false) + 1)
+                .ConfigureAwait(false);
 
             var messageEntity = new SupportRequestMessages
             {
@@ -189,8 +194,8 @@ namespace TDS_Server.Handler.Userpanel
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.SupportRequestMessages.Add(messageEntity);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             if (!_inSupportRequest.ContainsKey(requestId))
                 return null;
@@ -220,8 +225,9 @@ namespace TDS_Server.Handler.Userpanel
                 return await dbContext.PlayerSettings
                     .Where(p => p.DiscordUserId == discordUserId)
                     .Select(p => p.PlayerId)
-                    .FirstOrDefaultAsync();
-            });
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false);
+            }).ConfigureAwait(false);
             if (playerId == 0)
                 return $"There is no player with that Discord-ID.";
 
@@ -246,8 +252,8 @@ namespace TDS_Server.Handler.Userpanel
             {
                 dbContext.SupportRequests.Add(requestEntity);
 
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             return requestEntity.Id.ToString();
         }
@@ -261,16 +267,17 @@ namespace TDS_Server.Handler.Userpanel
                 {
                     var requests = await dbContext.SupportRequests
                         .Where(r => r.CloseTime != null && r.CloseTime.Value.AddDays(deleteAfterDays) < DateTime.UtcNow)
-                        .ToListAsync();
+                        .ToListAsync()
+                        .ConfigureAwait(false);
                     if (requests.Count == 0)
                         return null;
 
                     var requestIdsToDelete = requests.Select(r => r.Id);
                     dbContext.SupportRequests.RemoveRange(requests);
-                    await dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                     return requestIdsToDelete;
-                });
+                }).ConfigureAwait(false);
 
                 if (requestIdsToDelete is { })
                     _bonusBotConnectorClient.Support?.Delete(requestIdsToDelete);
@@ -312,7 +319,9 @@ namespace TDS_Server.Handler.Userpanel
 
                             AuthorId = r.AuthorId
                         })
-                        .FirstOrDefaultAsync());
+                        .FirstOrDefaultAsync()
+                        .ConfigureAwait(false))
+                    .ConfigureAwait(false);
 
                 if (data is null)
                     return null;
@@ -353,7 +362,9 @@ namespace TDS_Server.Handler.Userpanel
                         Type = r.Type,
                         Closed = r.CloseTime != null
                     })
-                    .ToListAsync());
+                    .ToListAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             foreach (var entry in data)
             {
@@ -394,14 +405,21 @@ namespace TDS_Server.Handler.Userpanel
             string message = (string)args[1];
 
             var request = await ExecuteForDBAsync(async dbContext
-                => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
+                => await dbContext.SupportRequests
+                    .FirstOrDefaultAsync(r => r.Id == requestId)
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (request is null)
                 return null;
             if (request.AuthorId != player.Entity!.Id && player.Admin.Level.Level == 0)
                 return null;
 
             var maxMessageIndex = await ExecuteForDBAsync(async dbContext
-                => await dbContext.SupportRequestMessages.Where(m => m.RequestId == requestId).MaxAsync(m => m.MessageIndex) + 1);
+                => await dbContext.SupportRequestMessages
+                    .Where(m => m.RequestId == requestId)
+                    .MaxAsync(m => m.MessageIndex)
+                    .ConfigureAwait(false) + 1)
+                .ConfigureAwait(false);
 
             var messageEntity = new SupportRequestMessages
             {
@@ -414,8 +432,8 @@ namespace TDS_Server.Handler.Userpanel
             await ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.SupportRequestMessages.Add(messageEntity);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             _bonusBotConnectorClient.Support?.Answer(player, messageEntity);
 
@@ -469,8 +487,8 @@ namespace TDS_Server.Handler.Userpanel
             {
                 dbContext.SupportRequests.Add(requestEntity);
 
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             _bonusBotConnectorClient.Support?.Create(player, requestEntity);
 
@@ -486,7 +504,10 @@ namespace TDS_Server.Handler.Userpanel
             bool closed = (bool)args[1];
 
             var request = await ExecuteForDBAsync(async dbContext
-                => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
+                => await dbContext.SupportRequests
+                    .FirstOrDefaultAsync(r => r.Id == requestId)
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (request is null)
                 return null;
             if (request.AuthorId != player.Entity!.Id && player.Admin.Level.Level == 0)
@@ -499,7 +520,7 @@ namespace TDS_Server.Handler.Userpanel
             else
                 request.CloseTime = null;
 
-            await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
+            await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync()).ConfigureAwait(false);
 
             NAPI.Task.RunSafe(() =>
             {
@@ -516,7 +537,10 @@ namespace TDS_Server.Handler.Userpanel
         public async Task<string?> ToggleClosedRequestFromDiscord(ulong discordUserId, int requestId, bool closed)
         {
             var request = await ExecuteForDBAsync(async dbContext
-                => await dbContext.SupportRequests.FirstOrDefaultAsync(r => r.Id == requestId));
+                => await dbContext.SupportRequests
+                    .FirstOrDefaultAsync(r => r.Id == requestId)
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (request is null)
                 return null;
             if (request.CloseTime is { } && closed || request.CloseTime is null && !closed)
@@ -527,7 +551,11 @@ namespace TDS_Server.Handler.Userpanel
             else
                 request.CloseTime = null;
 
-            await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
+            await ExecuteForDBAsync(async dbContext 
+                => await dbContext
+                    .SaveChangesAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             NAPI.Task.RunSafe(() =>
             {

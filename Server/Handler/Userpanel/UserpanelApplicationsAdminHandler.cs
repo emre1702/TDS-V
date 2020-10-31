@@ -20,7 +20,6 @@ namespace TDS_Server.Handler.Userpanel
 {
     public class ApplicationData
     {
-        #region Public Properties
 
         [JsonProperty("4")]
         public bool AlreadyInvited { get; set; }
@@ -37,12 +36,10 @@ namespace TDS_Server.Handler.Userpanel
         [JsonProperty("3")]
         public PlayerUserpanelGeneralStatsDataDto? Stats { get; set; }
 
-        #endregion Public Properties
     }
 
     public class AppToSendData
     {
-        #region Public Properties
 
         [JsonProperty("1")]
         public string CreateTime { get; set; } = string.Empty;
@@ -53,31 +50,21 @@ namespace TDS_Server.Handler.Userpanel
         [JsonProperty("2")]
         public string PlayerName { get; set; } = string.Empty;
 
-        #endregion Public Properties
     }
 
     public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper, IUserpanelApplicationsAdminHandler
     {
-        #region Private Fields
 
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
         private readonly UserpanelPlayerGeneralStatsHandler _userpanelPlayerStatsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public UserpanelApplicationsAdminHandler(UserpanelPlayerGeneralStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
             TDSDbContext dbContext, ISettingsHandler settingsHandler, ITDSPlayerHandler tdsPlayerHandler)
             : base(dbContext)
             => (_userpanelPlayerStatsHandler, _settingsHandler, _tdsPlayerHandler, _userpanelApplicationUserHandler)
             = (userpanelPlayerStatsHandler, settingsHandler, tdsPlayerHandler, userpanelApplicationUserHandler);
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public async Task<string?> GetData(ITDSPlayer player)
         {
@@ -87,16 +74,18 @@ namespace TDS_Server.Handler.Userpanel
                     return null;
 
                 var apps = await ExecuteForDBAsync(async dbContext => await dbContext.Applications
-                    .Where(a => !a.Closed && DateTime.UtcNow < a.CreateTime.AddDays(_settingsHandler.ServerSettings.CloseApplicationAfterDays))
-                    .Include(a => a.Player)
-                    .Select(a => new
-                    {
-                        ID = a.Id,
-                        a.CreateTime,
-                        PlayerName = a.Player.Name
-                    })
-                    .OrderBy(a => a.ID)
-                    .ToListAsync());
+                        .Where(a => !a.Closed && DateTime.UtcNow < a.CreateTime.AddDays(_settingsHandler.ServerSettings.CloseApplicationAfterDays))
+                        .Include(a => a.Player)
+                        .Select(a => new
+                        {
+                            ID = a.Id,
+                            a.CreateTime,
+                            PlayerName = a.Player.Name
+                        })
+                        .OrderBy(a => a.ID)
+                        .ToListAsync()
+                        .ConfigureAwait(false))
+                    .ConfigureAwait(false);
 
                 var appsToSend = apps.Select(a => new AppToSendData
                 {
@@ -126,7 +115,8 @@ namespace TDS_Server.Handler.Userpanel
                     .Where(a => a.Id == applicationId)
                     .Select(a => a.PlayerId)
                     .FirstOrDefaultAsync()
-                    .ConfigureAwait(false));
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             if (creatorId == default)
                 return null;
@@ -135,7 +125,8 @@ namespace TDS_Server.Handler.Userpanel
                 => await dbContext.ApplicationAnswers
                     .Where(a => a.ApplicationId == applicationId)
                     .ToDictionaryAsync(a => a.QuestionId, a => a.Answer)
-                    .ConfigureAwait(false));
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             var questionsJson = _userpanelApplicationUserHandler.AdminQuestions;
 
             var stats = await _userpanelPlayerStatsHandler.GetPlayerGeneralStats(creatorId, false, player).ConfigureAwait(false);
@@ -143,7 +134,8 @@ namespace TDS_Server.Handler.Userpanel
             bool alreadyInvited = await ExecuteForDBAsync(async dbContext
                 => await dbContext.ApplicationInvitations
                     .AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == player.Entity!.Id)
-                    .ConfigureAwait(false));
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             string json = Serializer.ToBrowser(new ApplicationData
             {
@@ -181,10 +173,11 @@ namespace TDS_Server.Handler.Userpanel
             {
                 dbContext.ApplicationInvitations.Add(invitation);
 
-                await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-                return await dbContext.Applications.Where(a => a.Id == applicationId).Select(a => a.PlayerId).FirstOrDefaultAsync();
-            });
+                return await dbContext.Applications.Where(a => a.Id == applicationId).Select(a => a.PlayerId).FirstOrDefaultAsync().ConfigureAwait(false);
+            })
+                .ConfigureAwait(false);
 
             if (playerId == default)
                 return null;
@@ -206,6 +199,5 @@ namespace TDS_Server.Handler.Userpanel
             return null;
         }
 
-        #endregion Public Methods
     }
 }

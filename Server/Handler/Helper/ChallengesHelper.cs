@@ -71,8 +71,8 @@ namespace TDS_Server.Handler.Helper
                     WHERE
                         ""{_challengeSettingsFrequencyColumnName}"" = 'forever'
                 ";
-                await dbContext.Database.ExecuteSqlRawAsync(sql);
-            });
+                await dbContext.Database.ExecuteSqlRawAsync(sql).ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
 
         public async Task AddWeeklyChallenges(ITDSPlayer player)
@@ -97,8 +97,8 @@ namespace TDS_Server.Handler.Helper
                 WHERE
                     ""{_challengeSettingsFrequencyColumnName}"" = 'weekly'
                 ";
-                await dbContext.Database.ExecuteSqlRawAsync(sql);
-            });
+                await dbContext.Database.ExecuteSqlRawAsync(sql).ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
 
         public void ClearWeeklyChallenges()
@@ -147,11 +147,11 @@ namespace TDS_Server.Handler.Helper
 
                 if (!player.Entity.Challenges.Any(c => c.Frequency == ChallengeFrequency.Weekly))
                 {
-                    await AddWeeklyChallenges(player);
+                    await AddWeeklyChallenges(player).ConfigureAwait(false);
                     await player.Database.ExecuteForDBAsync(async dbContext =>
                     {
-                        await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload();
-                    });
+                        await dbContext.Entry(player.Entity).Collection(p => p.Challenges).Reload().ConfigureAwait(false);
+                    }).ConfigureAwait(false);
                 }
 
                 player.Challenges.InitChallengesDict();
@@ -171,7 +171,7 @@ namespace TDS_Server.Handler.Helper
         {
             try
             {
-                await AddForeverChallenges(args.dbPlayer);
+                await AddForeverChallenges(args.dbPlayer).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

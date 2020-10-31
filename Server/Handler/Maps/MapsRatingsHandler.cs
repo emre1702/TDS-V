@@ -49,17 +49,21 @@ namespace TDS_Server.Handler.Maps
                 if (map is null)
                     return;
 
-                PlayerMapRatings? maprating = await ExecuteForDBAsync(async dbContext => await dbContext.PlayerMapRatings.FindAsync(playerId, mapId));
+                PlayerMapRatings? maprating = await ExecuteForDBAsync(async dbContext => 
+                    await dbContext.PlayerMapRatings
+                        .FindAsync(playerId, mapId)
+                        .ConfigureAwait(false))
+                    .ConfigureAwait(false);
                 if (maprating is null)
                 {
                     maprating = new PlayerMapRatings { PlayerId = playerId, MapId = mapId };
-                    await ExecuteForDB(dbContext => dbContext.PlayerMapRatings.Add(maprating));
+                    await ExecuteForDB(dbContext => dbContext.PlayerMapRatings.Add(maprating)).ConfigureAwait(false);
                     player.Challenges.AddToChallenge(ChallengeType.ReviewMaps);
                 }
                 maprating.Rating = (byte)rating;
                 map.BrowserSyncedData.Rating = (byte)rating;
 
-                await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
+                await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
                 map.Ratings.Add(maprating);
                 map.RatingAverage = map.Ratings.Average(r => r.Rating);

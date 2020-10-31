@@ -101,7 +101,7 @@ namespace TDS_Server.Handler.Userpanel
 
             try
             {
-                await player.DatabaseHandler.SaveData();
+                await player.DatabaseHandler.SaveData().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

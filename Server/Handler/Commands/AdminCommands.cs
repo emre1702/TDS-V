@@ -36,11 +36,11 @@ namespace TDS_Server.Handler.Commands
         {
             PlayerBans? ban = null;
             if (length == TimeSpan.MinValue)
-                await _lobbiesHandler.MainMenu.Bans.Unban(player, target, reason);
+                await _lobbiesHandler.MainMenu.Bans.Unban(player, target, reason).ConfigureAwait(false);
             else if (length == TimeSpan.MaxValue)
-                ban = await _lobbiesHandler.MainMenu.Bans.Ban(player, target, null, reason);
+                ban = await _lobbiesHandler.MainMenu.Bans.Ban(player, target, null, reason).ConfigureAwait(false);
             else
-                ban = await _lobbiesHandler.MainMenu.Bans.Ban(player, target, length, reason);
+                ban = await _lobbiesHandler.MainMenu.Bans.Ban(player, target, length, reason).ConfigureAwait(false);
 
             if (ban is { })
                 NAPI.Task.RunSafe(() => Utils.HandleBan(target, ban));
@@ -53,11 +53,11 @@ namespace TDS_Server.Handler.Commands
         public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == TimeSpan.MinValue)
-                await _lobbiesHandler.MainMenu.Bans.Unban(player, dbTarget, reason);
+                await _lobbiesHandler.MainMenu.Bans.Unban(player, dbTarget, reason).ConfigureAwait(false);
             else if (length == TimeSpan.MaxValue)
-                await _lobbiesHandler.MainMenu.Bans.Ban(player, dbTarget, null, reason);
+                await _lobbiesHandler.MainMenu.Bans.Ban(player, dbTarget, null, reason).ConfigureAwait(false);
             else
-                await _lobbiesHandler.MainMenu.Bans.Ban(player, dbTarget, length, reason);
+                await _lobbiesHandler.MainMenu.Bans.Ban(player, dbTarget, length, reason).ConfigureAwait(false);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -228,7 +228,7 @@ namespace TDS_Server.Handler.Commands
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            await _databasePlayerHelper.ChangePlayerMuteTime(player, dbTarget, minutes, reason);
+            await _databasePlayerHelper.ChangePlayerMuteTime(player, dbTarget, minutes, reason).ConfigureAwait(false);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -295,7 +295,7 @@ namespace TDS_Server.Handler.Commands
             if (!IsMuteTimeValid(minutes, player))
                 return;
 
-            await _databasePlayerHelper.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason);
+            await _databasePlayerHelper.ChangePlayerVoiceMuteTime(player, dbTarget, minutes, reason).ConfigureAwait(false);
 
             if (!cmdinfos.AsLobbyOwner)
                 _loggingHandler.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
@@ -331,7 +331,7 @@ namespace TDS_Server.Handler.Commands
                 return;
             }
 
-            await _gangHousesHandler.AddHouse(player.Position, player.Rotation.Z, neededGangLevel, player.Entity.Id);
+            await _gangHousesHandler.AddHouse(player.Position, player.Rotation.Z, neededGangLevel, player.Entity.Id).ConfigureAwait(false);
             NAPI.Task.RunSafe(() => player.SendNotification(player.Language.ADDED_THE_GANG_HOUSE_SUCCESSFULLY));
         }
 

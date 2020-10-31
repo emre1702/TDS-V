@@ -106,8 +106,8 @@ namespace TDS_Server.Handler.GangSystem
             await args.player.Gang.Database.ExecuteForDBAsync(async dbContext =>
             {
                 args.player.Gang.Entity.Members.Add(gangMember);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             _gangByPlayerId.Add(args.player.Entity.Id, args.gang);
             _gangMemberByPlayerId.Add(args.player.Entity.Id, gangMember);

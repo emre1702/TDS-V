@@ -86,7 +86,7 @@ namespace TDS_Server.PlayersSystem
                     _player.Database.ExecuteForDBAsyncWithoutWait(async dbContext =>
                     {
                         dbContext.PlayerChallenges.Remove(challenge);
-                        await dbContext.SaveChangesAsync();
+                        await dbContext.SaveChangesAsync().ConfigureAwait(false);
                     });
                 }
             }

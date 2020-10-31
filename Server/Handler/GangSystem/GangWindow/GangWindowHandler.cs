@@ -91,14 +91,14 @@ namespace TDS_Server.Handler.GangSystem
 
             var ret = type switch
             {
-                GangCommand.Create => await _create.CreateGang(player, args[1].ToString()!),
+                GangCommand.Create => await _create.CreateGang(player, args[1].ToString()!).ConfigureAwait(false),
                 GangCommand.Invite => _member.Invite(player, args[1].ToString()!),
-                GangCommand.Kick => await _member.Kick(player, target!),
-                GangCommand.Leave => await _member.LeaveGang(player),
-                GangCommand.ModifyPermissions => await _ranksPermissions.Modify(player, args[1].ToString()!),
-                GangCommand.ModifyRanks => await _ranksLevels.Modify(player, args[1].ToString()!),
-                GangCommand.RankDown => await _member.RankDown(player, target!),
-                GangCommand.RankUp => await _member.RankUp(player, target!),
+                GangCommand.Kick => await _member.Kick(player, target!).ConfigureAwait(false),
+                GangCommand.Leave => await _member.LeaveGang(player).ConfigureAwait(false),
+                GangCommand.ModifyPermissions => await _ranksPermissions.Modify(player, args[1].ToString()!).ConfigureAwait(false),
+                GangCommand.ModifyRanks => await _ranksLevels.Modify(player, args[1].ToString()!).ConfigureAwait(false),
+                GangCommand.RankDown => await _member.RankDown(player, target!).ConfigureAwait(false),
+                GangCommand.RankUp => await _member.RankUp(player, target!).ConfigureAwait(false),
                 GangCommand.OpenOnlyOneEditorPage => _specialPage.OpenOnlyOneEditorPage(player, (GangWindowOnlyOneEditorPage)(int)args[1]),
                 GangCommand.CloseOnlyOneEditorPage => _specialPage.CloseOnlyOneEditorPage(player, (GangWindowOnlyOneEditorPage)(int)args[1]),
                 _ => null

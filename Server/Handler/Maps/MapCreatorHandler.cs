@@ -57,7 +57,7 @@ namespace TDS_Server.Handler.Maps
         {
             try
             {
-                var result = await SaveOrCreate(creator, (string)args[0], Constants.NewMapsPath);
+                var result = await SaveOrCreate(creator, (string)args[0], Constants.NewMapsPath).ConfigureAwait(false);
                 if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
                     return result;
 
@@ -113,10 +113,10 @@ namespace TDS_Server.Handler.Maps
 
                     await ExecuteForDBAsync(async dbContext =>
                     {
-                        var maps = await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).ToListAsync();
+                        var maps = await dbContext.Maps.Where(m => m.Id == map.BrowserSyncedData.Id).ToListAsync().ConfigureAwait(false);
                         dbContext.RemoveRange(maps);
-                        await dbContext.SaveChangesAsync();
-                    });
+                        await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                    }).ConfigureAwait(false);
                 }
 
                 File.Delete(map.Info.FilePath);
@@ -131,7 +131,7 @@ namespace TDS_Server.Handler.Maps
         {
             try
             {
-                var result = await SaveOrCreate(creator, (string)args[0], Constants.SavedMapsPath);
+                var result = await SaveOrCreate(creator, (string)args[0], Constants.SavedMapsPath).ConfigureAwait(false);
                 if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
                     return result;
 
@@ -139,9 +139,9 @@ namespace TDS_Server.Handler.Maps
 
                 await ExecuteForDBAsync(async dbContext =>
                 {
-                    await dbContext.Maps.AddAsync(dbMap);
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.Maps.AddAsync(dbMap).ConfigureAwait(false);
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
 
                 result.Item1.BrowserSyncedData.Id = dbMap.Id;
                 result.Item1.RatingAverage = 5;
@@ -330,8 +330,8 @@ namespace TDS_Server.Handler.Maps
                 byte[] utf8EncodedData = memStrm.ToArray();
 
                 var mapXml = utf8e.GetString(utf8EncodedData);
-                var prettyMapXml = await _xmlHelper.GetPrettyAsync(mapXml).ConfigureAwait(true);
-                await File.WriteAllTextAsync(mapPath, prettyMapXml).ConfigureAwait(true);
+                var prettyMapXml = await _xmlHelper.GetPrettyAsync(mapXml).ConfigureAwait(false);
+                await File.WriteAllTextAsync(mapPath, prettyMapXml).ConfigureAwait(false);
 
                 return (mapDto, MapCreateError.MapCreatedSuccessfully);
             }

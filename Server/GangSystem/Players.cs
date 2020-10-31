@@ -63,7 +63,7 @@ namespace TDS_Server.GangsSystem
         public async Task Do(Func<ITDSPlayer, Task> action)
         {
             foreach (var player in _onlinePlayers.ToList())
-                await action(player);
+                await action(player).ConfigureAwait(false);
         }
 
         public void DoInMain(Action<ITDSPlayer> action)
@@ -98,13 +98,13 @@ namespace TDS_Server.GangsSystem
                 player.GangRank = _gangsHandler.NoneRank;
 
                 if (player.Lobby is IGangLobby || player.Lobby is IGangActionLobby)
-                    await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
-            });
+                    await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             await DoInMainWait(player =>
             {
                 _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
-            });
+            }).ConfigureAwait(false);
 
         }
     }

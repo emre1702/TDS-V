@@ -63,7 +63,9 @@ namespace TDS_Server.Handler.Userpanel
                     .Include(o => o.Source)
                     .ThenInclude(s => s.PlayerSettings)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(o => o.Id == offlineMessageID));
+                    .FirstOrDefaultAsync(o => o.Id == offlineMessageID)
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (offlineMessage is null)
                 return null;
 
@@ -80,13 +82,13 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext =>
             {
-                var offlineMessage = await dbContext.Offlinemessages.FirstOrDefaultAsync(o => o.Id == offlineMessageId);
+                var offlineMessage = await dbContext.Offlinemessages.FirstOrDefaultAsync(o => o.Id == offlineMessageId).ConfigureAwait(false);
                 if (offlineMessage is null)
                     return;
                 dbContext.Offlinemessages.Remove(offlineMessage);
 
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             return null;
         }
@@ -98,10 +100,10 @@ namespace TDS_Server.Handler.Userpanel
                 var deleteAfterDays = _settingsHandler.ServerSettings.DeleteOfflineMessagesAfterDays;
                 await ExecuteForDBAsync(async dbContext =>
                 {
-                    var msgs = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync();
+                    var msgs = await dbContext.Offlinemessages.Where(o => o.Timestamp.AddDays(deleteAfterDays) < DateTime.UtcNow).ToListAsync().ConfigureAwait(false);
                     dbContext.Offlinemessages.RemoveRange(msgs);
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -123,7 +125,9 @@ namespace TDS_Server.Handler.Userpanel
                         Text = o.Message,
                         Seen = o.Seen
                     })
-                    .ToListAsync());
+                    .ToListAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
 
             foreach (var message in offlineMessages)
             {
@@ -140,8 +144,8 @@ namespace TDS_Server.Handler.Userpanel
                     {
                         message.Seen = true;
                     }
-                    await dbContext.SaveChangesAsync();
-                });
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
             }
 
             return json;
@@ -156,7 +160,12 @@ namespace TDS_Server.Handler.Userpanel
             if (!(targetId = Utils.GetInt(args[0])).HasValue)
             {
                 targetId = await ExecuteForDBAsync(async dbContext
-                    => await dbContext.Players.Where(p => p.Name == playerName || p.SCName == playerName).Select(p => p.Id).FirstOrDefaultAsync());
+                    => await dbContext.Players
+                        .Where(p => p.Name == playerName || p.SCName == playerName)
+                        .Select(p => p.Id)
+                        .FirstOrDefaultAsync()
+                        .ConfigureAwait(false))
+                    .ConfigureAwait(false);
                 if (targetId is null || targetId == 0)
                 {
                     player.SendNotification(player.Language.PLAYER_DOESNT_EXIST, true);
@@ -172,7 +181,9 @@ namespace TDS_Server.Handler.Userpanel
                 await dbContext.PlayerSettings
                     .Where(p => p.PlayerId == targetId.Value)
                     .Select(p => p.DiscordUserId)
-                    .FirstOrDefaultAsync());
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             _offlineMessagesHandler.Add(targetId.Value, discordUserId, player.Entity!, message);
 
             return true;

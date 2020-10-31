@@ -168,12 +168,12 @@ namespace TDS_Server.Handler.Events
         {
             var task = PlayerLoggedOutBefore?.InvokeAsync(tdsPlayer);
             if (task.HasValue)
-                await task.Value;
+                await task.Value.ConfigureAwait(false);
             PlayerLoggedOut?.Invoke(tdsPlayer);
             await tdsPlayer.Database.ExecuteForDBAsync(async dbContext =>
             {
-                await dbContext.DisposeAsync();
-            });
+                await dbContext.DisposeAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
             tdsPlayer.Events.TriggerRemoved();
         }
 
@@ -188,7 +188,7 @@ namespace TDS_Server.Handler.Events
             {
                 var task = PlayerRegisteredBefore?.InvokeAsync((player, dbPlayer));
                 if (task.HasValue)
-                    await task.Value;
+                    await task.Value.ConfigureAwait(false);
                 PlayerRegistered?.Invoke(player, dbPlayer);
             }
             catch (Exception ex)
@@ -272,7 +272,7 @@ namespace TDS_Server.Handler.Events
         {
             var task = PlayerJoinedGang?.InvokeAsync((player, gang, rank));
             if (task.HasValue)
-                await task.Value;
+                await task.Value.ConfigureAwait(false);
         }
 
         internal void OnGangLeave(ITDSPlayer player, IGang gang)

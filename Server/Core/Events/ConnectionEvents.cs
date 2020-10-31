@@ -27,7 +27,7 @@ namespace TDS_Server.Core.Events
             try
             {
                 if (player.LoggedIn)
-                    await EventsHandler.Instance.OnPlayerLoggedOut(player);
+                    await EventsHandler.Instance.OnPlayerLoggedOut(player).ConfigureAwait(false);
 
                 NAPI.Task.RunSafe(() =>
                 {

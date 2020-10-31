@@ -25,7 +25,7 @@ namespace TDS_Server.Tests.Data.Extensions
             int actionThreadId = -1;
             try
             {
-                actionThreadId = await NAPI.Task.RunWait(GetThreadId);
+                actionThreadId = await NAPI.Task.RunWait(GetThreadId).ConfigureAwait(false);
             }
 
             // assert
@@ -45,7 +45,7 @@ namespace TDS_Server.Tests.Data.Extensions
             var valueExpected = 5;
 
             // act
-            await NAPI.Task.RunWait(() => { Thread.Sleep(5000); valueTest = valueExpected; });
+            await NAPI.Task.RunWait(() => { Thread.Sleep(5000); valueTest = valueExpected; }).ConfigureAwait(false);
 
             // assert
             Assert.AreEqual(valueExpected, valueTest);

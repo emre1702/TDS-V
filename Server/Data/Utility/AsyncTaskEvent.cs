@@ -53,7 +53,7 @@ namespace TDS_Server.Data.Utility
             foreach (var callback in tmpInvocationList)
             {
                 //Assuming we want a serial invocation, for a parallel invocation we can use Task.WhenAll instead
-                await callback(arg);
+                await callback(arg).ConfigureAwait(false);
             }
         }
     }

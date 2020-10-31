@@ -49,8 +49,8 @@ namespace TDS_Server.Handler.Account
             await player.Database.ExecuteForDBAsync(async dbContext =>
             {
                 dbContext.Players.Add(dbPlayer);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             LoggingHandler.Instance.LogRest(LogType.Register, player, true);
 
@@ -70,14 +70,14 @@ namespace TDS_Server.Handler.Account
                 var scName = player.SocialClubName;
                 var scId = player.SocialClubId;
 
-                await _serverStartHandler.LoadingTask.Task;
+                await _serverStartHandler.LoadingTask.Task.ConfigureAwait(false);
 
                 if (username.Length < 3 || username.Length > 20)
                     return;
 
-                if (await _databasePlayerHelper.DoesPlayerWithScnameExist(scName))
+                if (await _databasePlayerHelper.DoesPlayerWithScnameExist(scName).ConfigureAwait(false))
                     return;
-                if (await _databasePlayerHelper.DoesPlayerWithNameExist(username))
+                if (await _databasePlayerHelper.DoesPlayerWithNameExist(username).ConfigureAwait(false))
                 {
                     NAPI.Task.RunSafe(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
                     return;

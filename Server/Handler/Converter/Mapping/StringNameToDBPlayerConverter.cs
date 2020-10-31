@@ -18,7 +18,7 @@ namespace TDS_Server.Handler.Converter.Mapping
             if (name.Length >= 2 && name[0] == '@' && name[^1] == ':')
                 name = name[1..^1];
 
-            return await _databasePlayerHelper.GetPlayerByName(name);
+            return await _databasePlayerHelper.GetPlayerByName(name).ConfigureAwait(false);
         }
 
     }

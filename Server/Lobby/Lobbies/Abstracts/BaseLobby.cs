@@ -117,7 +117,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
                 Sync = lobbyDependencies.Sync;
                 Teams = lobbyDependencies.Teams;
 
-                await Events.TriggerCreated(Entity);
+                await Events.TriggerCreated(Entity).ConfigureAwait(false);
                 IsCreatingTask.SetResult(true);
             }
             catch (Exception ex)

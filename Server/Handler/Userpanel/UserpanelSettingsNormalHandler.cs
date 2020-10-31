@@ -38,9 +38,9 @@ namespace TDS_Server.Handler.Userpanel
             {
                 var player = _tdsPlayerHandler.Get(userId);
                 if (player is { })
-                    await SaveDiscordUserId(player, discordUserId);
+                    await SaveDiscordUserId(player, discordUserId).ConfigureAwait(false);
                 else
-                    await SaveDiscordUserId(userId, discordUserId);
+                    await SaveDiscordUserId(userId, discordUserId).ConfigureAwait(false);
 
                 return "Discord Id confirmation was successful";
             }
@@ -62,8 +62,8 @@ namespace TDS_Server.Handler.Userpanel
             {
                 dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj.General);
                 dbContext.Entry(player.Entity.ThemeSettings).CurrentValues.SetValues(obj.ThemeSettings);
-                await dbContext.SaveChangesAsync();
-            });
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             player.Events.TriggerSettingsChanged();
 
@@ -90,18 +90,24 @@ namespace TDS_Server.Handler.Userpanel
         private async Task SaveDiscordUserId(int userId, ulong discordUserId)
         {
             var settings = await ExecuteForDBAsync(async dbContext
-                => await dbContext.PlayerSettings.FirstOrDefaultAsync(s => s.PlayerId == userId));
+                => await dbContext.PlayerSettings
+                    .FirstOrDefaultAsync(s => s.PlayerId == userId)
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             if (settings is null)
                 throw new Exception("Your player settings do not exist?!");
             settings.DiscordUserId = discordUserId;
             await ExecuteForDBAsync(async dbContext
-                => await dbContext.SaveChangesAsync());
+                => await dbContext
+                    .SaveChangesAsync()
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
 
         private async Task SaveDiscordUserId(ITDSPlayer player, ulong discordUserId)
         {
             player.Entity!.PlayerSettings.DiscordUserId = discordUserId;
-            await player.DatabaseHandler.SaveData(true);
+            await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
         }
     }
 }
