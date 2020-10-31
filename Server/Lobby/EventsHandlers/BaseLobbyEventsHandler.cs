@@ -1,4 +1,4 @@
-﻿using GTANetworkAPI;
+﻿using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
@@ -39,66 +39,116 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         private readonly EventsHandler _eventsHandler;
         private readonly IBaseLobby _lobby;
+        protected ILoggingHandler LoggingHandler { get; }
 
-        public BaseLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler)
-            => (_lobby, _eventsHandler) = (lobby, eventsHandler);
+        public BaseLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler, ILoggingHandler loggingHandler)
+            => (_lobby, _eventsHandler, LoggingHandler) = (lobby, eventsHandler, loggingHandler);
 
         public async Task TriggerCreated(LobbyDb entity)
         {
-            var task = Created?.InvokeAsync(entity);
-            if (task is { })
-                await task.ConfigureAwait(false);
-            CreatedAfter?.Invoke(entity);
-            _eventsHandler.OnLobbyCreated(_lobby);
+            try
+            {
+                var task = Created?.InvokeAsync(entity);
+                if (task is { })
+                    await task.ConfigureAwait(false);
+                CreatedAfter?.Invoke(entity);
+                _eventsHandler.OnLobbyCreated(_lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
 
         public async Task TriggerRemove()
         {
-            IsRemoved = true;
-            var task = Remove?.InvokeAsync(_lobby);
-            if (task is { })
-                await task.ConfigureAwait(false);
-            RemoveAfter?.Invoke(_lobby);
+            try
+            {
+                IsRemoved = true;
+                var task = Remove?.InvokeAsync(_lobby);
+                if (task is { })
+                    await task.ConfigureAwait(false);
+                RemoveAfter?.Invoke(_lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
 
         public async ValueTask TriggerPlayerLeft(ITDSPlayer player, int hadLifes)
         {
-            var task = PlayerLeft?.InvokeAsync((player, hadLifes));
-            if (task.HasValue)
-                await task.Value.ConfigureAwait(false);
-            task = PlayerLeftAfter?.InvokeAsync((player, hadLifes));
-            if (task.HasValue)
-                await task.Value.ConfigureAwait(false);
-            _eventsHandler.OnLobbyLeave(player, _lobby);
-            player.Events.TriggerLobbyLeft(_lobby);
+            try
+            {
+                var task = PlayerLeft?.InvokeAsync((player, hadLifes));
+                if (task.HasValue)
+                    await task.Value.ConfigureAwait(false);
+                task = PlayerLeftAfter?.InvokeAsync((player, hadLifes));
+                if (task.HasValue)
+                    await task.Value.ConfigureAwait(false);
+                _eventsHandler.OnLobbyLeave(player, _lobby);
+                player.Events.TriggerLobbyLeft(_lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
 
         public async ValueTask TriggerPlayerJoined(ITDSPlayer player, int teamIndex)
         {
-            var task = PlayerJoined?.InvokeAsync((player, teamIndex));
-            if (task.HasValue)
-                await task.Value.ConfigureAwait(false);
-            task = PlayerJoinedAfter?.InvokeAsync((player, teamIndex));
-            if (task.HasValue)
-                await task.Value.ConfigureAwait(false);
-            _eventsHandler.OnLobbyJoin(player, _lobby);
-            player.Events.TriggerLobbyJoined(_lobby);
+            try
+            {
+                var task = PlayerJoined?.InvokeAsync((player, teamIndex));
+                if (task.HasValue)
+                    await task.Value.ConfigureAwait(false);
+                task = PlayerJoinedAfter?.InvokeAsync((player, teamIndex));
+                if (task.HasValue)
+                    await task.Value.ConfigureAwait(false);
+                _eventsHandler.OnLobbyJoin(player, _lobby);
+                player.Events.TriggerLobbyJoined(_lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
 
         public void TriggerNewBan(PlayerBans ban, ulong? targetDiscordUserId)
         {
-            NewBan?.Invoke(ban);
-            _eventsHandler.OnNewBan(ban, _lobby.Entity.IsOfficial, targetDiscordUserId);
+            try
+            {
+                NewBan?.Invoke(ban);
+                _eventsHandler.OnNewBan(ban, _lobby.Entity.IsOfficial, targetDiscordUserId);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
 
         public void TriggerPlayerEnteredColshape(ITDSColshape colshape, ITDSPlayer player)
         {
-            PlayerEnteredColshape?.Invoke(colshape, player);
+            try
+            {
+                PlayerEnteredColshape?.Invoke(colshape, player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
 
         public void TriggerPlayerSpawned(ITDSPlayer player)
         {
-            PlayerSpawned?.Invoke(player);
+            try
+            {
+                PlayerSpawned?.Invoke(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
     }
 }

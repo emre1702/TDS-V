@@ -5,6 +5,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 
 namespace TDS_Server.LobbySystem.Deathmatch
@@ -43,9 +44,12 @@ namespace TDS_Server.LobbySystem.Deathmatch
         {
             //Todo: Add weapons here
             RemoveAfterDeathSpawnTimer(player);
-            player.Health = Lobby.Entity.FightSettings?.StartHealth ?? 100;
-            player.Armor = Lobby.Entity.FightSettings?.StartArmor ?? 100;
-            player.SetClothes(11, 0, 0);
+            NAPI.Task.RunSafe(() =>
+            {
+                player.Health = Lobby.Entity.FightSettings?.StartHealth ?? 100;
+                player.Armor = Lobby.Entity.FightSettings?.StartArmor ?? 100;
+                player.SetClothes(11, 0, 0);
+            });
         }
 
         protected virtual ValueTask ResetPlayer((ITDSPlayer Player, int HadLifes) data)

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.DamageSystem;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
@@ -32,15 +33,17 @@ namespace TDS_Server.LobbySystem.Lobbies
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public DamageTestLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper,
-            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, damageHandler)
+            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler, 
+            ILoggingHandler loggingHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, damageHandler, loggingHandler)
         {
         }
 
         public DamageTestLobby(ITDSPlayer owner, IDatabaseHandler databaseHandler, LangHelper langHelper, LobbiesHandler lobbiesHandler,
-            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler)
+            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler, 
+            ILoggingHandler loggingHandler)
             : base(CreateEntity(owner, lobbiesHandler.DamageTestLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler, serviceProvider, 
-                  teamsProvider, damageHandler)
+                  teamsProvider, damageHandler, loggingHandler)
         {
         }
 
@@ -51,7 +54,7 @@ namespace TDS_Server.LobbySystem.Lobbies
             lobbyDependencies ??= new DamageTestLobbyDependencies();
 
             lobbyDependencies.Bans ??= new DamageTestLobbyBansHandler(this, LangHelper);
-            lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler);
+            lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.Deathmatch ??= new DamageTestLobbyDeathmatch(this, (FightLobbyEventsHandler)lobbyDependencies.Events, DamageHandler, LangHelper);
             lobbyDependencies.Players ??= new DamageTestLobbyPlayers(this, (FightLobbyEventsHandler)lobbyDependencies.Events);
             lobbyDependencies.MapHandler ??= new DamageTestLobbyMapHandler(this, (FightLobbyEventsHandler)lobbyDependencies.Events);

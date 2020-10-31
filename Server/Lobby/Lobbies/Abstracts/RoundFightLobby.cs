@@ -54,9 +54,9 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         protected RoundFightLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler, ILoggingHandler loggingHandler)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, damageHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, damageHandler, loggingHandler)
         {
         }
 
@@ -68,7 +68,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
             lobbyDependencies ??= new RoundFightLobbyDependencies();
 
-            lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler);
+            lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.Deathmatch ??= new RoundFightLobbyDeathmatch(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, DamageHandler, LangHelper);
             lobbyDependencies.MapHandler ??= new RoundFightLobbyMapHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, settingsHandler, mapsLoadingHandler);
             lobbyDependencies.Notifications ??= new RoundFightLobbyNotifications(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, LangHelper);

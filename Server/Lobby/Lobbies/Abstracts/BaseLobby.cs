@@ -52,6 +52,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
         public IBaseLobbyEventsHandler Events { get; private set; }
         public EventsHandler GlobalEventsHandler { get; }
         public LangHelper LangHelper { get; }
+        protected ILoggingHandler LoggingHandler { get; }
         public IBaseLobbyMapHandler MapHandler { get; private set; }
         public IBaseLobbyNatives Natives { get; private set; }
         public IBaseLobbyNotifications Notifications { get; private set; }
@@ -67,7 +68,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public BaseLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             Entity = entity;
@@ -76,6 +77,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             GlobalDatabaseHandler = databaseHandler;
             ServiceProvider = serviceProvider;
             TeamsProvider = teamsProvider;
+            LoggingHandler = loggingHandler;
 
             InitDependencies();
 
@@ -88,7 +90,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             {
                 lobbyDependencies ??= new BaseLobbyDependencies();
 
-                lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler);
+                lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
                 lobbyDependencies.Bans ??= new BaseLobbyBansHandler(this, LangHelper);
                 lobbyDependencies.Chat ??= new BaseLobbyChat(this, LangHelper);
                 lobbyDependencies.ColshapesHandler ??= new BaseLobbyColshapesHandler();
@@ -122,7 +124,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
             }
             catch (Exception ex)
             {
-                LoggingHandler.Instance.LogError(ex);
+                LoggingHandler.LogError(ex);
             }
         }
 

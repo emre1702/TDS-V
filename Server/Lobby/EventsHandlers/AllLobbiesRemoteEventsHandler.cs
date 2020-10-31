@@ -60,38 +60,52 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             }
             catch (Exception ex)
             {
-                LoggingHandler.Instance.LogError(ex);
+                _loggingHandler.LogError(ex);
             }
         }
 
         public void OnGotHit(ITDSPlayer player, int damage)
         {
-            if (!player.LoggedIn)
-                return;
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
 
-            player.HealthAndArmor.Remove(damage, out _, out _);
+                player.HealthAndArmor.Remove(damage, out _, out _);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnHitOtherPlayer(ITDSPlayer attacker, int targetRemoteId, long weaponHashLong, int bodyPartValue)
         {
-            if (!attacker.LoggedIn)
-                return;
-            var target = _tdsPlayerHandler.GetIfLoggedIn((ushort)targetRemoteId);
-            if (target is null)
-                return;
-            var weaponHash = (WeaponHash)weaponHashLong;
-            var bodyPart = (PedBodyPart)bodyPartValue;
-
-            if (!(target.Lobby is IFightLobby fightLobby))
+            try
             {
-                _loggingHandler.LogError(
-                    string.Format("Attacker {0} dealt damage on body part {1} to {2} - but this player isn't in fightlobby.",
-                        attacker.DisplayName, bodyPart, target.DisplayName),
-                    Environment.StackTrace, null, attacker);
-                return;
-            }
+                if (!attacker.LoggedIn)
+                    return;
+                var target = _tdsPlayerHandler.GetIfLoggedIn((ushort)targetRemoteId);
+                if (target is null)
+                    return;
+                var weaponHash = (WeaponHash)weaponHashLong;
+                var bodyPart = (PedBodyPart)bodyPartValue;
 
-            fightLobby.Deathmatch.Damage.DamageDealer.DamagePlayer(target, weaponHash, bodyPart, attacker);
+                if (!(target.Lobby is IFightLobby fightLobby))
+                {
+                    _loggingHandler.LogError(
+                        string.Format("Attacker {0} dealt damage on body part {1} to {2} - but this player isn't in fightlobby.",
+                            attacker.DisplayName, bodyPart, target.DisplayName),
+                        Environment.StackTrace, null, attacker);
+                    return;
+                }
+
+                fightLobby.Deathmatch.Damage.DamageDealer.DamagePlayer(target, weaponHash, bodyPart, attacker);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public async void OnLeaveLobby(ITDSPlayer player)
@@ -108,172 +122,285 @@ namespace TDS_Server.LobbySystem.EventsHandlers
             }
             catch (Exception ex)
             {
-                LoggingHandler.Instance.LogError(ex);
+                _loggingHandler.LogError(ex);
             }
         }
 
         public void OnMapCreatorStartNewMap(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IMapCreatorLobby lobby))
-                return;
-            lobby.Sync.StartNewMap();
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IMapCreatorLobby lobby))
+                    return;
+                lobby.Sync.StartNewMap();
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnMapCreatorSyncLastId(ITDSPlayer player, int id)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IMapCreatorLobby lobby))
-                return;
-            lobby.Sync.SyncLastId(player, id);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IMapCreatorLobby lobby))
+                    return;
+                lobby.Sync.SyncLastId(player, id);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnMapCreatorSyncNewObject(ITDSPlayer player, string json)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IMapCreatorLobby lobby))
-                return;
-            lobby.Sync.SyncNewObject(player, json);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IMapCreatorLobby lobby))
+                    return;
+                lobby.Sync.SyncNewObject(player, json);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnMapCreatorSyncObjectPosition(ITDSPlayer player, string json)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IMapCreatorLobby lobby))
-                return;
-            lobby.Sync.SyncObjectPosition(player, json);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IMapCreatorLobby lobby))
+                    return;
+                lobby.Sync.SyncObjectPosition(player, json);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnMapCreatorSyncRemoveObject(ITDSPlayer player, int id)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IMapCreatorLobby lobby))
-                return;
-            lobby.Sync.SyncRemoveObject(player, id);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IMapCreatorLobby lobby))
+                    return;
+                lobby.Sync.SyncRemoveObject(player, id);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnMapCreatorSyncRemoveTeamObjects(ITDSPlayer player, int teamNumber)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IMapCreatorLobby lobby))
-                return;
-            lobby.Sync.SyncRemoveTeamObjects(player, teamNumber);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IMapCreatorLobby lobby))
+                    return;
+                lobby.Sync.SyncRemoveTeamObjects(player, teamNumber);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnMapsListRequest(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IArena arena))
-                return;
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IArena arena))
+                    return;
 
-            var mapsJson = arena.MapHandler.GetMapsJson();
-            NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.MapsListRequest, mapsJson));
+                var mapsJson = arena.MapHandler.GetMapsJson();
+                NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.MapsListRequest, mapsJson));
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnOutsideMapLimit(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IArena arena))
-                return;
-            if (arena.Entity.LobbyMapSettings.MapLimitType == MapLimitType.KillAfterTime)
-                arena.Deathmatch.Kill(player, player.Language.TOO_LONG_OUTSIDE_MAP);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IArena arena))
+                    return;
+                if (arena.Entity.LobbyMapSettings.MapLimitType == MapLimitType.KillAfterTime)
+                    arena.Deathmatch.Kill(player, player.Language.TOO_LONG_OUTSIDE_MAP);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnSendTeamOrder(ITDSPlayer player, int teamOrderInt)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IFightLobby fightLobby))
-                return;
-            if (!Enum.IsDefined(typeof(TeamOrder), teamOrderInt))
-                return;
-            fightLobby.Teams.SendTeamOrder(player, (TeamOrder)teamOrderInt);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IFightLobby fightLobby))
+                    return;
+                if (!Enum.IsDefined(typeof(TeamOrder), teamOrderInt))
+                    return;
+                fightLobby.Teams.SendTeamOrder(player, (TeamOrder)teamOrderInt);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
-        public void OnSpectateNext(ITDSPlayer player, bool forward)
+        public async void OnSpectateNext(ITDSPlayer player, bool forward)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IFightLobby lobby))
-                return;
-            lobby.Spectator.SpectateNext(player, forward);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IFightLobby lobby))
+                    return;
+                await lobby.Spectator.SpectateNext(player, forward);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnStartDefusing(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IRoundFightLobby roundFightLobby))
-                return;
-            if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
-                return;
-            if (!bombMode.Specials.StartBombDefusing(player))
-                player.TriggerEvent(ToClientEvent.StopBombPlantDefuse);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IRoundFightLobby roundFightLobby))
+                    return;
+                if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
+                    return;
+                if (!bombMode.Specials.StartBombDefusing(player))
+                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.StopBombPlantDefuse));
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnStartPlanting(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IRoundFightLobby roundFightLobby))
-                return;
-            if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
-                return;
-            if (!bombMode.Specials.StartBombPlanting(player))
-                player.TriggerEvent(ToClientEvent.StopBombPlantDefuse);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IRoundFightLobby roundFightLobby))
+                    return;
+                if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
+                    return;
+                if (!bombMode.Specials.StartBombPlanting(player))
+                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.StopBombPlantDefuse));
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnStopDefusing(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IRoundFightLobby roundFightLobby))
-                return;
-            if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
-                return;
-            bombMode.Specials.StopBombDefusing(player);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IRoundFightLobby roundFightLobby))
+                    return;
+                if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
+                    return;
+                bombMode.Specials.StopBombDefusing(player);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnStopPlanting(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (!(player.Lobby is IRoundFightLobby roundFightLobby))
-                return;
-            if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
-                return;
-            bombMode.Specials.StopBombPlanting(player);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (!(player.Lobby is IRoundFightLobby roundFightLobby))
+                    return;
+                if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
+                    return;
+                bombMode.Specials.StopBombPlanting(player);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnSuicideKill(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (player.Lifes == 0)
-                return;
-            if (!(player.Lobby is IFightLobby lobby))
-                return;
-            lobby.Deathmatch.Kill(player, player.Language.COMMITED_SUICIDE);
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (player.Lifes == 0)
+                    return;
+                if (!(player.Lobby is IFightLobby lobby))
+                    return;
+                lobby.Deathmatch.Kill(player, player.Language.COMMITED_SUICIDE);
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
 
         public void OnSuicideShoot(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            if (player.Lifes == 0)
-                return;
-            if (!(player.Lobby is IFightLobby fightLobby))
-                return;
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (player.Lifes == 0)
+                    return;
+                if (!(player.Lobby is IFightLobby fightLobby))
+                    return;
 
-            fightLobby.Natives.Send(NativeHash.SET_PED_SHOOTS_AT_COORD, player.RemoteId, 0f, 0f, 0f, false);
+                NAPI.Task.RunSafe(() => 
+                    fightLobby.Natives.Send(NativeHash.SET_PED_SHOOTS_AT_COORD, player.RemoteId, 0f, 0f, 0f, false));
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
         }
     }
 }

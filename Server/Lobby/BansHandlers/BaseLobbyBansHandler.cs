@@ -160,7 +160,8 @@ namespace TDS_Server.LobbySystem.BansHandlers
         public virtual async Task Unban(ITDSPlayer admin, ITDSPlayer target, string reason)
         {
             await Unban(admin, target.Entity!, reason).ConfigureAwait(false);
-            target.SendChatMessage(string.Format(target.Language.UNBAN_YOU_LOBBY_INFO, Lobby.Entity.Name, admin.DisplayName, reason));
+            NAPI.Task.RunSafe(() => 
+                target.SendChatMessage(string.Format(target.Language.UNBAN_YOU_LOBBY_INFO, Lobby.Entity.Name, admin.DisplayName, reason)));
         }
 
         public virtual async Task<PlayerBans?> Unban(ITDSPlayer admin, PlayerDb target, string reason)

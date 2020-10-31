@@ -33,8 +33,8 @@ namespace TDS_Server.LobbySystem.Lobbies
         public new IGangActionLobbyTeamsHandler Teams => (IGangActionLobbyTeamsHandler)base.Teams;
 
         public GangActionLobby(LobbyDb entity, IGangwarArea gangArea, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, damageHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler, ILoggingHandler loggingHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, damageHandler, loggingHandler)
         {
             GangArea = gangArea;
             gangArea.InLobby = this;
@@ -49,7 +49,7 @@ namespace TDS_Server.LobbySystem.Lobbies
             lobbyDependencies ??= new GangActionLobbyDependencies();
 
             lobbyDependencies.Bans ??= new GangActionLobbyBansHandler(this, LangHelper);
-            lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler);
+            lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.MapHandler ??=
                 new GangActionLobbyMapHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, settingsHandler, mapsLoadingHandler);
             lobbyDependencies.Players ??= new GangActionLobbyPlayers(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);

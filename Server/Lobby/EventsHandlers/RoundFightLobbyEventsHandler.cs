@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Utility;
-using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using static TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers.IRoundFightLobbyEventsHandler;
 
@@ -35,49 +35,143 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public AsyncValueTaskEvent? RoundClear { get; set; }
 
-        public RoundFightLobbyEventsHandler(IRoundFightLobby lobby, EventsHandler eventsHandler)
-            : base(lobby, eventsHandler)
+        public RoundFightLobbyEventsHandler(IRoundFightLobby lobby, EventsHandler eventsHandler, ILoggingHandler loggingHandler)
+            : base(lobby, eventsHandler, loggingHandler)
         {
         }
 
         public void TriggerNewMapChoose()
         {
-            var mapDto = RequestNewMap?.Invoke();
-            if (mapDto is null)
+            try
             {
-                LoggingHandler.Instance.LogError("RequestNewMap didn't return a map.");
-                return;
-            }
+                var mapDto = RequestNewMap?.Invoke();
+                if (mapDto is null)
+                {
+                    Handler.LoggingHandler.Instance.LogError("RequestNewMap didn't return a map.");
+                    return;
+                }
 
-            InitNewMap?.Invoke(mapDto);
-            RequestGamemode?.Invoke(mapDto);
+                InitNewMap?.Invoke(mapDto);
+                RequestGamemode?.Invoke(mapDto);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
 
         public void TriggerTeamPreparation()
-            => TeamPreparation?.Invoke();
+        {
+            try
+            {
+                TeamPreparation?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
+        }
 
         public void TriggerWeaponsLoading()
-            => WeaponsLoading?.Invoke();
+        {
+            try
+            {
+                WeaponsLoading?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
+        }
 
         public void TriggerPlayersPreparation()
-            => PlayersPreparation?.Invoke();
+        {
+            try
+            {
+                PlayersPreparation?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
+        }
 
         public void TriggerCountdown()
-            => Countdown?.Invoke();
+        {
+            try
+            {
+                Countdown?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
+        }
 
         public ValueTask TriggerInRound()
-            => InRound?.InvokeAsync() ?? default;
+        {
+            try
+            {
+                return InRound?.InvokeAsync() ?? default;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+                return default;
+            }
+        }
 
         public ValueTask TriggerRoundClear()
-            => RoundClear?.InvokeAsync() ?? default;
+        {
+            try
+            {
+                return RoundClear?.InvokeAsync() ?? default;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+                return default;
+            }
+        }
 
         public ValueTask TriggerRoundEnd()
-            => RoundEnd?.InvokeAsync() ?? default;
+        {
+            try
+            {
+                return RoundEnd?.InvokeAsync() ?? default;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+                return default;
+            }
+        }
 
         public ValueTask TriggerRoundEndRanking()
-            => RoundEndRanking?.InvokeAsync() ?? default;
+        { 
+            try
+            {
+                return RoundEndRanking?.InvokeAsync() ?? default;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+                return default;
+            }
+        }
 
         public ValueTask TriggerRoundEndStats()
-            => RoundEndStats?.InvokeAsync() ?? default;
+        {
+            try
+            {
+                return RoundEndStats?.InvokeAsync() ?? default;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+                return default;
+            }
+        }
+
     }
 }

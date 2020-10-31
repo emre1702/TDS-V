@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.DamageSystem;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
@@ -38,9 +39,9 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public FightLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler, ILoggingHandler loggingHandler)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
         {
             DamageHandler = damageHandler;
         }
@@ -51,7 +52,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
             lobbyDependencies ??= new FightLobbyDependencies();
 
-            lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler);
+            lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             ((FightLobbyDependencies)lobbyDependencies).Spectator ??= new FightLobbySpectator(this);
             ((FightLobbyDependencies)lobbyDependencies).Weapons ??= new FightLobbyWeapons(this, (IFightLobbyEventsHandler)lobbyDependencies.Events);
             lobbyDependencies.Deathmatch ??= new FightLobbyDeathmatch(this, (IFightLobbyEventsHandler)lobbyDependencies.Events, DamageHandler, LangHelper);

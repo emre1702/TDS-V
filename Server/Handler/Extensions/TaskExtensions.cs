@@ -14,7 +14,10 @@ namespace TDS_Server.Handler.Extensions
             try
             {
                 if (IsMainThread)
-                    new TDSTimer(action, (uint)delayTime);
+                    if (delayTime == 0)
+                        action();
+                    else 
+                        new TDSTimer(action, (uint)delayTime);
                 else
                     task.Run(() => 
                     {

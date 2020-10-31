@@ -27,15 +27,15 @@ namespace TDS_Server.LobbySystem.Lobbies
         public new IMapCreatorLobbySync Sync => (IMapCreatorLobbySync)base.Sync;
 
         public MapCreatorLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
         {
         }
 
         public MapCreatorLobby(ITDSPlayer player, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            LobbiesHandler lobbiesHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider)
+            LobbiesHandler lobbiesHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
             : base(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler,
-                  serviceProvider, teamsProvider)
+                  serviceProvider, teamsProvider, loggingHandler)
         {
         }
 
@@ -43,7 +43,7 @@ namespace TDS_Server.LobbySystem.Lobbies
         {
             lobbyDependencies ??= new MapCreatorLobbyDependencies();
 
-            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler);
+            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.Sync ??= new MapCreatorLobbySync(this, lobbyDependencies.Events);
             lobbyDependencies.Bans ??= new MapCreatorLobbyBansHandler(this, LangHelper);
             lobbyDependencies.MapHandler ??= new MapCreatorLobbyMapHandler(this, lobbyDependencies.Events);

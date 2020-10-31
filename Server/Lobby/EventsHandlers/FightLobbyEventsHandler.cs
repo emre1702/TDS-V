@@ -1,7 +1,5 @@
 ﻿using GTANetworkAPI;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
@@ -17,19 +15,33 @@ namespace TDS_Server.LobbySystem.EventsHandlers
 
         public event PlayerWeaponSwitchDelegate? PlayerWeaponSwitch;
 
-        public FightLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler)
-            : base(lobby, eventsHandler)
+        public FightLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler, ILoggingHandler loggingHandler)
+            : base(lobby, eventsHandler, loggingHandler)
         {
         }
 
         public void TriggerPlayerDied(ITDSPlayer player, ITDSPlayer killer, uint weapon, int hadLifes)
         {
-            PlayerDied?.Invoke(player, killer, weapon, hadLifes);
+            try
+            {
+                PlayerDied?.Invoke(player, killer, weapon, hadLifes);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
 
         public void TriggerPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
         {
-            PlayerWeaponSwitch?.Invoke(player, oldWeapon, newWeapon);
+            try
+            {
+                PlayerWeaponSwitch?.Invoke(player, oldWeapon, newWeapon);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex);
+            }
         }
     }
 }
