@@ -20,7 +20,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         protected override ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            SetPlayerTeam(data.Player, data.Player.Gang.GangLobbyTeam);
+            SetPlayerTeam(data.Player, data.Player.Gang.TeamHandler.GangLobbyTeam);
             return default;
         }
 
@@ -34,7 +34,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                     var gang = _gangsHandler.GetByTeamId(teamId);
                     if (gang != null)
                     {
-                        gang.GangLobbyTeam = team;
+                        gang.TeamHandler.GangLobbyTeam = team;
                     }
                 }
             }).Wait();

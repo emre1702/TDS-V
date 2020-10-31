@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
@@ -37,7 +38,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
         {
             NAPI.Task.RunSafe(() =>
             {
-                data.Player.Spawn(data.Player.Gang.SpawnPosition ?? SpawnPoint, data.Player.Gang.SpawnHeading ?? SpawnRotation);
+                data.Player.Spawn(data.Player.Gang.MapHandler.SpawnPosition ?? SpawnPoint, data.Player.Gang.MapHandler.SpawnHeading ?? SpawnRotation);
                 data.Player.Freeze(false);
             });
             return default;

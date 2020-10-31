@@ -20,7 +20,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             to.SetRanks = from.SetRanks;
             to.StartGangwar = from.StartGangwar;
 
-            await player.Gang.ExecuteForDBAsync(async dbContext =>
+            await player.Gang.Database.ExecuteForDBAsync(async dbContext =>
             {
                 await dbContext.SaveChangesAsync();
             });

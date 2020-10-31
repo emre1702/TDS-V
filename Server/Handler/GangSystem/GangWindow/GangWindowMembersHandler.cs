@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity.GangEntities;
@@ -64,7 +65,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             var gang = player.Gang;
 
-            gang.PlayersOnline.Remove(player);
+            gang.Players.RemoveOnline(player);
 
             var memberInGangEntity = gang.Entity.Members.FirstOrDefault(m => m.PlayerId == player.Id);
             if (memberInGangEntity is null)
@@ -183,7 +184,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             gangMember.RankId = nextRank.Id;
             gangMember.RankNumber = nextRank.Rank;
 
-            await executer.Gang.ExecuteForDBAsync(async dbContext =>
+            await executer.Gang.Database.ExecuteForDBAsync(async dbContext =>
             {
                 await dbContext.SaveChangesAsync();
             });
@@ -211,7 +212,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                     await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0);
 
                 player.SendNotification(string.Format(player.Language.YOU_JOINED_THE_GANG, player.Gang.Entity.Name));
-                player.Gang.SendNotification(lang => string.Format(lang.PLAYER_JOINED_YOUR_GANG, player.DisplayName));
+                player.Gang.Chat.SendNotification(lang => string.Format(lang.PLAYER_JOINED_YOUR_GANG, player.DisplayName));
             }
             catch (Exception ex)
             {
@@ -240,12 +241,12 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
                 return;
             }
 
-            await gang.ExecuteForDBAsync(async dbContext =>
+            await gang.Database.ExecuteForDBAsync(async dbContext =>
             {
                 gang.Entity.Members.Remove(member);
 
                 if (gang.Entity.OwnerId == member.PlayerId)
-                    gang.AppointNextSuitableLeader();
+                    gang.LeaderHandler.AppointNextSuitableLeader();
 
                 await dbContext.SaveChangesAsync();
             });

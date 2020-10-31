@@ -115,7 +115,7 @@ namespace TDS_Server.Handler.GangSystem
             if (type == GangCommand.Create && player.IsInGang || type != GangCommand.Create && !player.IsInGang)
                 return player.IsInGang ? player.Language.YOU_ARE_ALREADY_IN_A_GANG : player.Language.YOU_ARE_NOT_IN_A_GANG;
 
-            if (!player.Gang.IsAllowedTo(player, type))
+            if (!player.Gang.PermissionsHandler.IsAllowedTo(player, type))
                 return player.Language.NOT_ALLOWED;
 
             // Is target rank lower? Or is he the owner?

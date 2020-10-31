@@ -6,6 +6,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities.Gangs;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.TeamsSystem;
@@ -143,20 +144,20 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
         public void SetInPreparation(IGang attackerGang)
         {
             Attacker = attackerGang;
-            Attacker.InAction = true;
-            Owner!.InAction = true;
+            Attacker.Action.InAction = true;
+            Owner!.Action.InAction = true;
         }
 
         private void ClearAttack()
         {
             if (Attacker is { })
             {
-                Attacker!.InAction = false;
+                Attacker!.Action.InAction = false;
                 Attacker = null;
             }
             if (Owner is { })
             {
-                Owner!.InAction = false;
+                Owner!.Action.InAction = false;
             }
 
             _checkAtTarget?.Kill();

@@ -16,13 +16,13 @@ namespace TDS_Server.LobbySystem.Players
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex = 0)
         {
-            var team = player.Gang.GangLobbyTeam;
+            var team = player.Gang.TeamHandler.GangLobbyTeam;
             var worked = await base.AddPlayer(player, team.Entity.Index).ConfigureAwait(false);
             if (!worked)
                 return false;
 
-            var spawnPoint = player.Gang.House?.Position ?? Lobby.MapHandler.SpawnPoint;
-            var spawnRotation = player.Gang.House?.SpawnRotation ?? Lobby.MapHandler.SpawnRotation;
+            var spawnPoint = player.Gang.HouseHandler.House?.Position ?? Lobby.MapHandler.SpawnPoint;
+            var spawnRotation = player.Gang.HouseHandler.House?.SpawnRotation ?? Lobby.MapHandler.SpawnRotation;
 
             NAPI.Task.RunSafe(() =>
             {

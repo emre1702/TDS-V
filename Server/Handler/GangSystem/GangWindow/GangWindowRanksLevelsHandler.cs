@@ -33,7 +33,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
         {
             var fromList = Serializer.FromBrowser<List<GangRanks>>(json);
 
-            await player.Gang.ExecuteForDBAsync(async dbContext =>
+            await player.Gang.Database.ExecuteForDBAsync(async dbContext =>
             {
                 var rank0 = player.Gang.Entity.Ranks.First(r => r.Rank == 0);
                 foreach (var rank in player.Gang.Entity.Ranks)

@@ -1,4 +1,5 @@
 ﻿using TDS_Server.Data.Enums;
+using TDS_Server.Data.Interfaces.GangsSystem;
 
 namespace TDS_Server.Data.Interfaces
 {

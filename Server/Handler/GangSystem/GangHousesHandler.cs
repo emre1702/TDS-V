@@ -99,7 +99,7 @@ namespace TDS_Server.Handler.GangSystem
             {
                 _occupiedHouses.Add(house);
                 var gang = _gangsHandler.GetById(entity.OwnerGang.Id);
-                gang.House = house;
+                gang.HouseHandler.House = house;
             }
 
             _eventsHandler.OnGangHouseLoaded(house);

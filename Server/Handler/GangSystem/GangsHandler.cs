@@ -1,6 +1,5 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
@@ -8,12 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.GangSystem;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Sync;
@@ -24,22 +20,20 @@ namespace TDS_Server.Handler.GangSystem
     public class GangsHandler
     {
         private readonly DataSyncHandler _dataSyncHandler;
+        private readonly IGangsProvider _gangsProvider;
         private readonly TDSDbContext _dbContext;
         private readonly Dictionary<int, IGang> _gangById = new Dictionary<int, IGang>();
         private readonly Dictionary<int, IGang> _gangByPlayerId = new Dictionary<int, IGang>();
         private readonly Dictionary<int, GangMembers> _gangMemberByPlayerId = new Dictionary<int, GangMembers>();
 
-        private readonly IServiceProvider _serviceProvider;
-
-        public GangsHandler(EventsHandler eventsHandler, TDSDbContext dbContext, IServiceProvider serviceProvider,
-            DataSyncHandler dataSyncHandler)
+        public GangsHandler(EventsHandler eventsHandler, TDSDbContext dbContext,
+            DataSyncHandler dataSyncHandler, IGangsProvider gangsProvider)
         {
             _dbContext = dbContext;
-            _serviceProvider = serviceProvider;
             _dataSyncHandler = dataSyncHandler;
+            _gangsProvider = gangsProvider;
 
             eventsHandler.PlayerLoggedIn += SetPlayerIntoHisGang;
-            eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
             eventsHandler.PlayerJoinedGang += EventsHandler_PlayerJoinedGang;
         }
 
@@ -93,7 +87,7 @@ namespace TDS_Server.Handler.GangSystem
                         member.Player = null;
                     }
 
-                    ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, g);
+                    _gangsProvider.Get(g);
                 });
         }
 
@@ -109,7 +103,7 @@ namespace TDS_Server.Handler.GangSystem
                 LastLogin = args.player.Entity.PlayerStats.LastLoginTimestamp
             };
 
-            await args.player.Gang.ExecuteForDBAsync(async dbContext =>
+            await args.player.Gang.Database.ExecuteForDBAsync(async dbContext =>
             {
                 args.player.Gang.Entity.Members.Add(gangMember);
                 await dbContext.SaveChangesAsync();
@@ -126,7 +120,7 @@ namespace TDS_Server.Handler.GangSystem
             player.Gang = GetPlayerGang(player);
             player.GangRank = GetPlayerGangRank(player);
 
-            player.Gang.PlayersOnline.Add(player);
+            player.Gang.Players.AddOnline(player);
 
             if (player.Entity is { } && player.IsInGang)
             {
@@ -134,13 +128,8 @@ namespace TDS_Server.Handler.GangSystem
                 player.Gang.Entity.Members.First(m => m.PlayerId == player.Entity.Id).LastLogin = player.Entity.PlayerStats.LastLoginTimestamp;
             }
 
-            NAPI.Task.RunSafe(() => 
+            NAPI.Task.RunSafe(() =>
                 _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id));
-        }
-
-        private void EventsHandler_PlayerLoggedOut(ITDSPlayer player)
-        {
-            player.Gang.PlayersOnline.Remove(player);
         }
 
         private IGang GetPlayerGang(ITDSPlayer player)

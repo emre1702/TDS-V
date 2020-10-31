@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Models.GangWindow;
 using TDS_Server.Database.Entity;
@@ -23,17 +24,17 @@ namespace TDS_Server.Handler.GangSystem
 {
     public class GangWindowCreateHandler : DatabaseEntityWrapper
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly EventsHandler _eventsHandler;
+        private readonly IGangsProvider _gangsProvider;
 
-        public GangWindowCreateHandler(TDSDbContext dbContext, IServiceProvider serviceProvider,
-            LobbiesHandler lobbiesHandler, EventsHandler eventsHandler)
+        public GangWindowCreateHandler(TDSDbContext dbContext,
+            LobbiesHandler lobbiesHandler, EventsHandler eventsHandler, IGangsProvider gangsProvider)
             : base(dbContext)
         {
-            _serviceProvider = serviceProvider;
             _lobbiesHandler = lobbiesHandler;
             _eventsHandler = eventsHandler;
+            _gangsProvider = gangsProvider;
         }
 
         public async Task<object?> CreateGang(ITDSPlayer player, string json)
@@ -50,7 +51,7 @@ namespace TDS_Server.Handler.GangSystem
                 await dbContext.SaveChangesAsync();
             });
 
-            var gang = ActivatorUtilities.CreateInstance<Gang>(_serviceProvider, gangEntity);
+            var gang = _gangsProvider.Get(gangEntity);
             await _eventsHandler.OnGangJoin(player, gang, gangEntity.Ranks.MaxBy(r => r.Rank).First());
             // IsInGang is set to true in Angular, not needed here
             // Permissions will get synced, too - not needed here.

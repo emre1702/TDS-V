@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Connections.Features;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
@@ -51,7 +52,7 @@ namespace TDS_Server.LobbySystem.Vehicles
             if (gang.Entity.Vehicles is { })
                 return;
 
-            await gang.ExecuteForDBAsync(async dbContext =>
+            await gang.Database.ExecuteForDBAsync(async dbContext =>
             {
                 await dbContext.Entry(gang.Entity).Collection(e => e.Vehicles).LoadAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);

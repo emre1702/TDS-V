@@ -40,7 +40,7 @@ namespace TDS_Server.Data.Models.GangWindow
             Name = copyFrom.Name;
             JoinDate = forPlayer.Timezone.GetLocalDateTimeString(copyFrom.JoinTime);
             LastLoginDate = forPlayer.Timezone.GetLocalDateTimeString(copyFrom.LastLogin);
-            IsOnline = forPlayer.Gang.PlayersOnline.Any(p => p.Entity.Id == copyFrom.PlayerId);
+            IsOnline = forPlayer.Gang.Players.GetOnline(forPlayer.Id) is { };
             Rank = copyFrom.Rank.Rank;
             JoinDateSortNumber = (int)(DateTime.UtcNow - copyFrom.JoinTime).TotalSeconds;
             LastLoginSortNumber = (int)(DateTime.UtcNow - copyFrom.LastLogin).TotalSeconds;

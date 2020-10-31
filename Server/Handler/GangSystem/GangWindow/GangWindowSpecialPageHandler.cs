@@ -3,6 +3,7 @@ using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Handler.Events;
 
 namespace TDS_Server.Handler.GangSystem.GangWindow

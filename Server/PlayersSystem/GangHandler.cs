@@ -1,4 +1,4 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Handler.GangSystem;
 

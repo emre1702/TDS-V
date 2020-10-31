@@ -40,7 +40,8 @@ namespace TDS_Server.Core.Init.Services.Creators
                 .WithSync()
                 .WithUserpanel()
                 .WithMisc()
-                .WithMailsystem();
+                .WithMailsystem()
+                .WithGang();
         }
 
         private static IServiceCollection WithBonusBotConnectors(this IServiceCollection serviceCollection)
