@@ -41,96 +41,102 @@ namespace TDS_Client.Handler.Browser
             CreateBrowser();
         }
 
+        public override void CreateBrowser()
+        {
+            base.CreateBrowser();
+            Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'Angular')");
+        }
+
         public void AddNameForChat(string name)
         {
-            Execute(ToBrowserEvent.AddNameForChat, name);
+            ExecuteFast(ToBrowserEvent.AddNameForChat, name);
         }
 
         public void AddPositionToMapCreatorBrowser(int id, MapCreatorPositionType type, float posX, float posY, float posZ, float rotX, float rotY, float rotZ,
             object info, ushort ownerRemoteId)
         {
-            Execute(ToBrowserEvent.AddPositionToMapCreatorBrowser, id, (int)type, posX, posY, posZ, rotX, rotY, rotZ, ownerRemoteId, info);
+            ExecuteFast(ToBrowserEvent.AddPositionToMapCreatorBrowser, id, (int)type, posX, posY, posZ, rotX, rotY, rotZ, ownerRemoteId, info);
         }
 
         public void CloseMapMenu()
         {
-            Execute(ToBrowserEvent.CloseMapMenu);
+            ExecuteFast(ToBrowserEvent.CloseMapMenu);
         }
 
         public void FromBrowserEventReturn(string eventName, object ret)
         {
-            Execute(ToServerEvent.FromBrowserEvent, eventName, ret);
+            ExecuteFast(ToServerEvent.FromBrowserEvent, eventName, ret);
         }
 
         public void FromServerToBrowser(string eventName, params object[] args)
         {
-            Execute(eventName, args);
+            ExecuteFast(eventName, args);
         }
 
         public void GetHashedPasswordReturn(string hashedPassword)
         {
-            Execute(FromBrowserEvent.GetHashedPassword, hashedPassword);
+            ExecuteFast(FromBrowserEvent.GetHashedPassword, hashedPassword);
         }
 
         public void HideRankings()
         {
-            Execute(ToBrowserEvent.HideRankings);
+            ExecuteFast(ToBrowserEvent.HideRankings);
         }
 
         public void LoadChatSettings(float width, float maxHeight, float fontSize, bool hideDirtyChat, bool hideChatInfo, float chatInfoFontSize, int chatInfoAnimationTimeMs)
         {
-            Execute(ToBrowserEvent.LoadChatSettings, width, maxHeight, fontSize, hideDirtyChat, hideChatInfo, chatInfoFontSize, chatInfoAnimationTimeMs);
+            ExecuteFast(ToBrowserEvent.LoadChatSettings, width, maxHeight, fontSize, hideDirtyChat, hideChatInfo, chatInfoFontSize, chatInfoAnimationTimeMs);
         }
 
         public void LoadLanguage(ILanguage language)
         {
-            Execute(ToBrowserEvent.LoadLanguage, (int)language.Enum);
+            ExecuteFast(ToBrowserEvent.LoadLanguage, (int)language.Enum);
         }
 
         public void LoadMapForMapCreator(string json)
         {
-            Execute(ToBrowserEvent.LoadMapForMapCreator, json);
+            ExecuteFast(ToBrowserEvent.LoadMapForMapCreator, json);
         }
 
         public void LoadNamesForChat(List<ITDSPlayer> players)
         {
             IEnumerable<string> names = players.Select(p => p.Name);
-            Execute(ToBrowserEvent.LoadNamesForChat, Serializer.ToBrowser(names));
+            ExecuteFast(ToBrowserEvent.LoadNamesForChat, Serializer.ToBrowser(names));
         }
 
         public void LoadUserpanelData(int type, string json)
         {
-            Execute("sb13", type, json);
+            ExecuteFast("sb13", type, json);
         }
 
         public void OpenMapMenu(string mapsListJson)
         {
-            Execute(ToBrowserEvent.OpenMapMenu, mapsListJson);
+            ExecuteFast(ToBrowserEvent.OpenMapMenu, mapsListJson);
         }
 
         public void RefreshAdminLevel(int adminLevel)
         {
-            Execute(ToBrowserEvent.RefreshAdminLevel, adminLevel);
+            ExecuteFast(ToBrowserEvent.RefreshAdminLevel, adminLevel);
         }
 
         public void RemoveNameForChat(string name)
         {
-            Execute(ToBrowserEvent.RemoveNameForChat, name);
+            ExecuteFast(ToBrowserEvent.RemoveNameForChat, name);
         }
 
         public void RemovePositionInMapCreatorBrowser(int id, MapCreatorPositionType type)
         {
-            Execute(ToBrowserEvent.RemovePositionInMapCreatorBrowser, id, (int)type);
+            ExecuteFast(ToBrowserEvent.RemovePositionInMapCreatorBrowser, id, (int)type);
         }
 
         public void RemoveTeamPositionInMapCreatorBrowser(int teamNumber)
         {
-            Execute(ToBrowserEvent.RemoveTeamPositionsInMapCreatorBrowser, teamNumber);
+            ExecuteFast(ToBrowserEvent.RemoveTeamPositionsInMapCreatorBrowser, teamNumber);
         }
 
         public void ResetMapVoting()
         {
-            Execute(ToBrowserEvent.ResetMapVoting);
+            ExecuteFast(ToBrowserEvent.ResetMapVoting);
         }
 
         public override void SetReady(params object[] args)
@@ -140,49 +146,49 @@ namespace TDS_Client.Handler.Browser
 
         public void ShowCooldown()
         {
-            Execute(ToBrowserEvent.ShowCooldown);
+            ExecuteFast(ToBrowserEvent.ShowCooldown);
         }
 
         public void ShowRankings(string rankingsJson)
         {
-            Execute(ToBrowserEvent.ShowRankings, rankingsJson);
+            ExecuteFast(ToBrowserEvent.ShowRankings, rankingsJson);
         }
 
         public void SyncHudDataChange(HudDataType type, int value)
         {
             ExecuteFast(ToBrowserEvent.SyncHudDataChange, (int)type, value);
-            //Execute(ToBrowserEvent.SyncHUDDataChange, type, value);
+            //ExecuteFast(ToBrowserEvent.SyncHUDDataChange, type, value);
         }
 
         public void SyncInFightLobby(bool b)
         {
-            Execute(ToBrowserEvent.ToggleInFightLobby, b);
+            ExecuteFast(ToBrowserEvent.ToggleInFightLobby, b);
         }
 
         public void SyncIsLobbyOwner(bool obj)
         {
-            Execute(ToBrowserEvent.SyncIsLobbyOwner, obj);
+            ExecuteFast(ToBrowserEvent.SyncIsLobbyOwner, obj);
         }
 
         public void SyncMapPriceData(int mapBuyCounter)
         {
-            Execute(ToBrowserEvent.SyncMapPriceData, mapBuyCounter);
+            ExecuteFast(ToBrowserEvent.SyncMapPriceData, mapBuyCounter);
         }
 
         public void SyncMoney(int money)
         {
-            Execute(ToBrowserEvent.SyncMoney, money);
+            ExecuteFast(ToBrowserEvent.SyncMoney, money);
         }
 
         public void SyncTeamChoiceMenuData(string teamsJson, bool isRandomTeams)
         {
             ToggleTeamChoiceMenu(true);
-            Execute(ToBrowserEvent.SyncTeamChoiceMenuData, teamsJson, isRandomTeams);
+            ExecuteFast(ToBrowserEvent.SyncTeamChoiceMenuData, teamsJson, isRandomTeams);
         }
 
         public void SyncUsernameChange(string name)
         {
-            Execute(ToBrowserEvent.SyncUsernameChange, name);
+            ExecuteFast(ToBrowserEvent.SyncUsernameChange, name);
         }
 
         public void ToggleCharCreator(bool toggle, string dataJson = "")
@@ -197,27 +203,27 @@ namespace TDS_Client.Handler.Browser
 
         public void ToggleChatInput(bool activated)
         {
-            Execute(ToBrowserEvent.ToggleChatInput, activated);
+            ExecuteFast(ToBrowserEvent.ToggleChatInput, activated);
         }
 
         public void ToggleChatInput(bool activated, string startWith)
         {
-            Execute(ToBrowserEvent.ToggleChatInput, activated, startWith);
+            ExecuteFast(ToBrowserEvent.ToggleChatInput, activated, startWith);
         }
 
         public void ToggleChatOpened(bool activated)
         {
-            Execute(ToBrowserEvent.ToggleChatOpened, activated);
+            ExecuteFast(ToBrowserEvent.ToggleChatOpened, activated);
         }
 
         public void ToggleFreeroam(bool activated)
         {
-            Execute(ToBrowserEvent.ToggleFreeroam, activated);
+            ExecuteFast(ToBrowserEvent.ToggleFreeroam, activated);
         }
 
         public void ToggleHUD(bool toggle)
         {
-            Execute(ToBrowserEvent.ToggleHUD, toggle);
+            ExecuteFast(ToBrowserEvent.ToggleHUD, toggle);
         }
 
         public void ToggleInfo(InfoType type, bool toggle)
@@ -228,48 +234,48 @@ namespace TDS_Client.Handler.Browser
         public void ToggleLobbyChoiceMenu(bool activated)
         {
             _eventsHandler.OnCursorToggleRequested(activated);
-            Execute(ToBrowserEvent.ToggleLobbyChoice, activated);
+            ExecuteFast(ToBrowserEvent.ToggleLobbyChoice, activated);
         }
 
         public void ToggleMapCreator(bool activated)
         {
-            Execute(ToBrowserEvent.ToggleMapCreator, activated);
+            ExecuteFast(ToBrowserEvent.ToggleMapCreator, activated);
         }
 
         public void ToggleRoundStats(bool toggle)
         {
             Logging.LogWarning(toggle.ToString(), "AngularBrowserHandler.ToggleRoundStats");
-            Execute(ToBrowserEvent.ToggleRoundStats, toggle);
+            ExecuteFast(ToBrowserEvent.ToggleRoundStats, toggle);
         }
 
         public void ToggleTeamChoiceMenu(bool boolean)
         {
-            Execute(ToBrowserEvent.ToggleTeamChoiceMenu, boolean);
+            ExecuteFast(ToBrowserEvent.ToggleTeamChoiceMenu, boolean);
         }
 
         public void ToggleTeamOrderModus(bool activated)
         {
-            Execute(ToBrowserEvent.ToggleTeamOrderModus, activated);
+            ExecuteFast(ToBrowserEvent.ToggleTeamOrderModus, activated);
         }
 
         public void ToggleUserpanel(bool boolean)
         {
-            Execute(ToBrowserEvent.ToggleUserpanel, boolean);
+            ExecuteFast(ToBrowserEvent.ToggleUserpanel, boolean);
         }
 
         public void ToggleGangWindow(bool boolean)
         {
-            Execute(ToBrowserEvent.ToggleGangWindow, boolean);
+            ExecuteFast(ToBrowserEvent.ToggleGangWindow, boolean);
         }
 
         internal void MapCreatorSyncCurrentMapToServer(int tdsPlayerId, int idCounter)
         {
-            Execute(ToBrowserEvent.MapCreatorSyncCurrentMapToServer, tdsPlayerId, idCounter);
+            ExecuteFast(ToBrowserEvent.MapCreatorSyncCurrentMapToServer, tdsPlayerId, idCounter);
         }
 
         internal void SyncThemeSettings(string dataJson)
         {
-            Execute(ToBrowserEvent.LoadThemeSettings, dataJson);
+            ExecuteFast(ToBrowserEvent.LoadThemeSettings, dataJson);
         }
 
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
