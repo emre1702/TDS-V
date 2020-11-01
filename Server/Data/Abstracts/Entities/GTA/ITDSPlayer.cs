@@ -104,13 +104,18 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public bool IsCrouched { get; set; }
 
-        public PlayerLobbyStats? LobbyStats { get; set; }
+        public PlayerLobbyStats? LobbyStats => LobbyHandler.LobbyStats;
 
         public ushort RemoteId => Handle.Value;
         public ITDSPlayer? Spectates { get; set; }
         public bool TryingToLoginRegister { get; set; }
         public new ITDSVehicle? Vehicle => base.Vehicle as ITDSVehicle;
         public TDSTimer? DeathSpawnTimer { get; set; }
+        public new string Name { get; set; } = string.Empty;
+        public new string SocialClubName { get; set; } = string.Empty;
+        public new ulong SocialClubId { get; set; }
+        public new string Address { get; private set; } = string.Empty; 
+
 
         public ITDSPlayer(NetHandle netHandle) : base(netHandle)
         {
@@ -135,6 +140,18 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public bool Equals(ITDSPlayer? other)
         {
             return Id == other?.Id;
+        }
+
+   
+        public void Init()
+        {
+            if (Name.Length > 0)
+                return;
+
+            Name = base.Name;
+            SocialClubId = base.SocialClubId;
+            SocialClubName = base.SocialClubName;
+            Address = base.Address;
         }
     }
 }
