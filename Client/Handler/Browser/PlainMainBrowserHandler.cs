@@ -36,6 +36,12 @@ namespace TDS_Client.Handler.Browser
             OnPlayerStopTalking += EventHandler_PlayerStopTalking;
         }
 
+        public override void CreateBrowser()
+        {
+            base.CreateBrowser();
+            Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'PlainMain')");
+        }
+
         public void AddKillMessage(string msg)
         {
             ExecuteFast("d", msg);

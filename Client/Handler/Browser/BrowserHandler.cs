@@ -27,7 +27,7 @@ namespace TDS_Client.Handler.Browser
             RAGE.Events.Add(ToClientEvent.SendAlert, SendAlert);
             RAGE.Events.Add(FromBrowserEvent.Created, BrowserSentCreated);
 
-            _browserCreatedCheckTimer = new TDSTimer(MakeSureBrowsersAreCreatedCorrectly, 2000);
+            _browserCreatedCheckTimer = new TDSTimer(MakeSureBrowsersAreCreatedCorrectly, 10000);
         }
 
         public AngularBrowserHandler Angular { get; }
@@ -56,20 +56,23 @@ namespace TDS_Client.Handler.Browser
             bool oneNotCreated = false;
             if (!(Angular.Browser is null) && !Angular.CreatedSuccessfully)
             {
+                Angular.Browser.Destroy();
                 Angular.CreateBrowser();
-                Angular.Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'Angular')");
                 oneNotCreated = true;
             }
 
             if (!(RegisterLogin.Browser is null) && !RegisterLogin.CreatedSuccessfully)
             {
-                RegisterLogin.Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'RegisterLogin')");
+                RegisterLogin.Browser.Destroy();
+                RegisterLogin.CreateBrowser();
+                RegisterLogin.SetLoginPanelData();
                 oneNotCreated = true;
             }
 
             if (!(PlainMain.Browser is null) && !PlainMain.CreatedSuccessfully)
             {
-                PlainMain.Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'PlainMain')");
+                PlainMain.Browser.Destroy();
+                PlainMain.CreateBrowser();
                 oneNotCreated = true;
             }
 

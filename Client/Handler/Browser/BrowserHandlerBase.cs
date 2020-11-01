@@ -93,7 +93,7 @@ namespace TDS_Client.Handler.Browser
                 else if (arg is char)
                     strBuilder.Append($", '{arg}'");
                 else if (arg is bool b)
-                    strBuilder.Append($", {(b ? 1 : 0)}");
+                    strBuilder.Append($", {(b ? "true" : "false")}");
                 else if (arg is float f)
                 {
                     f = (float)Math.Floor(f * 100) / 100;
