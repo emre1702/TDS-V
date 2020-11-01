@@ -49,6 +49,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
         this.settings.ChallengesLoaded.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.UserpanelOpenChanged.on(null, this.detectChanges.bind(this));
         this.lobbyChoices = [...this.initialLobbyChoices];
     }
 
@@ -57,6 +58,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
         this.settings.ChallengesLoaded.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.UserpanelOpenChanged.off(null, this.detectChanges.bind(this));
         this.lobbyChoices = undefined;
     }
 
@@ -70,6 +72,9 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     }
 
     triggerJoinLobby(id: number) {
+        if (this.settings.UserpanelOpen) {
+            return;
+        }
         if (this.animState === "close") {
             return;
         }
@@ -114,7 +119,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
         if (this.settings.ChatInputOpen) {
             return;
         }
-        if (this.settings.UserpanelOpened) {
+        if (this.settings.UserpanelOpen) {
             return;
         }
 
