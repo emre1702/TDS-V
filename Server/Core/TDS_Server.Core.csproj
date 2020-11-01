@@ -9,6 +9,8 @@
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <StartupObject />
         <PlatformTarget>x64</PlatformTarget>
+        <RunPostBuildEvent>Always</RunPostBuildEvent>
+        <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
     </PropertyGroup>
 
     <ItemGroup>
