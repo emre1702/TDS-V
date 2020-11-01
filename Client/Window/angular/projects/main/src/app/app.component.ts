@@ -109,7 +109,7 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ToggleUserpanel, (bool: boolean) => {
-            this.settings.setUserpanelOpened(bool);
+            this.settings.setUserpanelOpen(bool);
             changeDetector.detectChanges();
         });
 
