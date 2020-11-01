@@ -14,9 +14,12 @@
         flex-grow: 1;
         width: 33%;
 
-        tds-window {
+        .challenges-container {
             overflow-y: auto;
             overflow-x: hidden;
+            height: 100%;
+            width: 100%;
+
             .challenge {
                 margin-bottom: 20px;
 
@@ -96,6 +99,7 @@
             display: flex;
             flex-direction: row;
             justify-content: flex-end;
+            min-height: 80px;
 
             .language-button {
                 width: 80px;
@@ -136,7 +140,7 @@
                 }
             }
 
-            button:hover {
+            button:hover:enabled {
                 transform: scale(1.1);
                 opacity: 1 !important;
                 z-index: 99;

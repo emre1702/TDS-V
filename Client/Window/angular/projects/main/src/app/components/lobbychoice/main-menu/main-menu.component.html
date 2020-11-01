@@ -2,15 +2,18 @@
 
     <tdswindow class="left-window challenges" [title]="'Challenges' | language: settings.Lang"
         [@leftToRight]="animState">
-        <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
-            <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">
-                {{ timeToNextWeeklyChallengesRestartInfo }}:</div>
-            <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Forever">
-                {{ 'NoTimeLimit' | language: settings.Lang }}:</div>
-            <li *ngFor="let challenge of challengeGroup[1]" [innerHTML]="challenge[99]"
-                [class.done]="challenge[1] == challenge[2]">
-            </li>
+        <div class="challenges-container">
+            <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
+                <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">
+                    {{ timeToNextWeeklyChallengesRestartInfo }}:</div>
+                <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Forever">
+                    {{ 'NoTimeLimit' | language: settings.Lang }}:</div>
+                <li *ngFor="let challenge of challengeGroup[1]" [innerHTML]="challenge[99]"
+                    [class.done]="challenge[1] == challenge[2]">
+                </li>
+            </div>
         </div>
+
     </tdswindow>
 
     <div class="placeholder"></div>
@@ -19,7 +22,9 @@
         (@topToBottom.done)="onAnimationEvent($event)">
         <ng-container *ngFor="let button of lobbyChoices; index as i">
             <div>
-                <button mat-raised-button class="mat-elevation-z8" (click)="triggerJoinLobby(button.id)"
+                <button mat-raised-button class="mat-elevation-z8"
+                    [disabled]="settings.UserpanelOpen"
+                    (click)="triggerJoinLobby(button.id)"
                     [style.background]="getImageUrl(button.imgUrl)">
                     <span>[{{ i + 1 }}] {{ button.name | language: settings.Lang }}</span>
                 </button>
