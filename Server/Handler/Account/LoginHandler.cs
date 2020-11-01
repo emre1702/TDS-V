@@ -99,9 +99,11 @@ namespace TDS_Server.Handler.Account
             var playerThemeSettingsJson = Serializer.ToClient(player.Entity.ThemeSettings);
             var angularContentsJson = Serializer.ToBrowser(angularConstantsData);
 
+            await NAPI.Task.RunWait(player.Init);
+            player.Name = player.Entity.Name;
+
             NAPI.Task.RunSafe(() =>
             {
-                player.Name = player.Entity.Name;
                 player.TriggerEvent(ToClientEvent.LoginSuccessful,
                     syncedSettingsJson,
                     playerSettingsJson,

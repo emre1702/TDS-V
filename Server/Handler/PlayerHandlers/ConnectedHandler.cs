@@ -42,8 +42,13 @@ namespace TDS_Server.Handler.PlayerHandlers
                 if (player is null)
                     return;
 
-                player.Position = new Vector3(0, 0, 1000).Around(10);
-                player.Freeze(true);
+                await NAPI.Task.RunWait(player.Init);
+
+                NAPI.Task.RunSafe(() =>
+                {
+                    player.Position = new Vector3(0, 0, 1000).Around(10);
+                    player.Freeze(true);
+                });
 
                 var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, null, player.Address, player.Serial, player.SocialClubName,
                     player.SocialClubId, false).ConfigureAwait(false);

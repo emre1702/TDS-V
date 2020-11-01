@@ -88,6 +88,7 @@ namespace TDS_Server.Handler.Server
                 var players = NAPI.Pools.GetAllPlayers().OfType<ITDSPlayer>();
                 foreach (var player in players)
                 {
+                    player.Init();
                     var ban = _bansHandler.GetServerBan(null, player.Address, player.Serial, player.SocialClubName, player.SocialClubId, null, false);
                     HandleBan(player, ban);
                 }

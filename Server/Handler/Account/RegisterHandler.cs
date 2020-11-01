@@ -67,6 +67,7 @@ namespace TDS_Server.Handler.Account
             player.TryingToLoginRegister = true;
             try
             {
+                await NAPI.Task.RunWait(player.Init);
                 var scName = player.SocialClubName;
                 var scId = player.SocialClubId;
 

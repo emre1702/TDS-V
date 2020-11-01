@@ -79,7 +79,7 @@ namespace TDS_Server.PlayersSystem
                 return;
             }
 
-            if (effectiveHp > 0)
+            if (effectiveHp < 0)
             {
                 Add(effectiveHp, out effectiveHpRemoved);
                 effectiveHpRemoved *= -1;

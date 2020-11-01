@@ -78,7 +78,8 @@ namespace TDS_Server.TeamsSystem
         public void Add(ITDSPlayer player)
         {
             lock (_all) { _all.Add(player); }
-            player.SetSkin(_team.Entity.SkinHash != 0 ? (PedHash)_team.Entity.SkinHash : player.FreemodeSkin);
+            NAPI.Task.RunSafe(() => 
+                player.SetSkin(_team.Entity.SkinHash != 0 ? (PedHash)_team.Entity.SkinHash : player.FreemodeSkin));
             _team.Sync.SyncAddedPlayer(player);
         }
 
