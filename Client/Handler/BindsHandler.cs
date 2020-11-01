@@ -78,10 +78,9 @@ namespace TDS_Client.Handler
                 for (int i = _bindedKeys.Count - 1; i >= 0; --i)
                 {
                     var keyEntry = _bindedKeys[i];
-                    bool isDown = RAGE.Input.IsDown((int)keyEntry.Item1);
-                    if (_lastKeyDownState.ContainsKey(keyEntry.Item1))
-                        if (_lastKeyDownState[keyEntry.Item1] == isDown)
-                            continue;
+                    var isDown = RAGE.Input.IsDown((int)keyEntry.Item1);
+                    if (_lastKeyDownState.TryGetValue(keyEntry.Item1, out var previousState) && previousState == isDown)
+                        continue;
                     _lastKeyDownState[keyEntry.Item1] = isDown;
 
                     for (int j = keyEntry.Item2.Count - 1; j >= 0; --j)
@@ -95,8 +94,8 @@ namespace TDS_Client.Handler
                 for (int i = _bindedControls.Count - 1; i >= 0; --i)
                 {
                     var controlEntry = _bindedControls[i];
-                    bool isDownEnabled = RAGE.Game.Pad.IsControlPressed((int)InputGroup.MOVE, (int)controlEntry.Item1);
-                    bool isDownDisabled = RAGE.Game.Pad.IsDisabledControlPressed((int)InputGroup.MOVE, (int)controlEntry.Item1);
+                    bool isDownEnabled = Pad.IsControlPressed((int)InputGroup.MOVE, (int)controlEntry.Item1);
+                    bool isDownDisabled = Pad.IsDisabledControlPressed((int)InputGroup.MOVE, (int)controlEntry.Item1);
 
                     if (_lastControlPressedState.ContainsKey(controlEntry.Item1))
                         if (_lastControlPressedState[controlEntry.Item1] == (isDownEnabled || isDownDisabled))
