@@ -10,12 +10,12 @@ namespace TDS_Server.GangsSystem
     public class GangsProvider : IGangsProvider
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly GangsHandler _gangsHandler;
+        private readonly EventsHandler _eventsHandler;
 
-        public GangsProvider(IServiceProvider serviceProvider, GangsHandler gangsHandler, EventsHandler eventsHandler)
+        public GangsProvider(IServiceProvider serviceProvider, EventsHandler eventsHandler)
         {
             _serviceProvider = serviceProvider;
-            _gangsHandler = gangsHandler;
+            _eventsHandler = eventsHandler;
 
             new GlobalEventsHandler(eventsHandler);
         }
@@ -24,7 +24,7 @@ namespace TDS_Server.GangsSystem
         {
             var gang = _serviceProvider.GetRequiredService<IGang>();
             gang.Init(entity);
-            _gangsHandler.Add(gang);
+            _eventsHandler.OnGangObjectCreated(gang);
 
             return gang;
         }

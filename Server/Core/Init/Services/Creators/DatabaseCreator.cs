@@ -24,10 +24,12 @@ namespace TDS_Server.Core.Init.Services.Creators
         internal static IServiceCollection WithDatabase(this IServiceCollection serviceCollection)
         {
             var appConfigHandler = new AppConfigHandler();
+#pragma warning disable IDE0067 // Dispose objects before losing scope
             var loggerFactory = LoggerFactory.Create(builder =>
                    builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
                        .AddProvider(new CustomDBLogger(@"D:\DBLogs\FromCsharp\log.txt"))
                );
+#pragma warning restore IDE0067 // Dispose objects before losing scope
 
             return serviceCollection
                 .AddSingleton(appConfigHandler)

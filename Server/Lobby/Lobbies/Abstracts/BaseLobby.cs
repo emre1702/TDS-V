@@ -1,5 +1,4 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
@@ -18,7 +17,6 @@ using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
 using TDS_Server.Data.Interfaces.LobbySystem.Sync;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Server.LobbySystem.BansHandlers;

@@ -16,5 +16,6 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Deathmatch
         void DeathInfoSync(ITDSPlayer player, ITDSPlayer? killer, uint weapon);
 
         void Kill(ITDSPlayer player, string reason);
+        void InitDamageHandler(IDamageHandler damageHandler);
     }
 }

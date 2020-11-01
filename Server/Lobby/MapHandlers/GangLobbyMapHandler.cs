@@ -50,10 +50,14 @@ namespace TDS_Server.LobbySystem.MapHandlers
                 return;
             house.LoadedInGangLobby = true;
 
-            house.TextLabel = NAPI.TextLabel.CreateTextLabel(house.GetTextLabelText(), house.Position, 10f, 7f, 0, new Color(220, 220, 220), true, Dimension) as ITDSTextLabel;
+            NAPI.Task.RunSafe(() =>
+            {
+                house.TextLabel = NAPI.TextLabel.CreateTextLabel(house.GetTextLabelText(), house.Position, 10f, 7f, 0, new Color(220, 220, 220), true, Dimension) as ITDSTextLabel;
 
-            if (house.Entity.OwnerGang is { })
-                house.Blip = GetHouseWithOwnerBlip(house);
+                if (house.Entity.OwnerGang is { })
+                    house.Blip = GetHouseWithOwnerBlip(house);
+            });
+
             /*else
             {
                 BlipData = new GangHouseClientsideData

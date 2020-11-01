@@ -5,6 +5,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.LobbySystem.MapHandlers
 {
@@ -59,19 +60,25 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
         public void DeleteMapBlips()
         {
-            lock (_mapBlips)
+            NAPI.Task.RunSafe(() =>
             {
-                foreach (var blip in _mapBlips)
-                    blip.Delete();
-                _mapBlips.Clear();
-            }
+                lock (_mapBlips)
+                {
+                    foreach (var blip in _mapBlips)
+                        blip.Delete();
+                    _mapBlips.Clear();
+                }
+            });
         }
 
         private static uint GetFreeDimension()
         {
             uint tryid = 1;
-            while (_dimensionsUsed.Contains(tryid))
-                ++tryid;
+            lock (_dimensionsUsed)
+            {
+                while (_dimensionsUsed.Contains(tryid))
+                    ++tryid;
+            }
             return tryid;
         }
     }

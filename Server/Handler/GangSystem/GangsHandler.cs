@@ -35,6 +35,7 @@ namespace TDS_Server.Handler.GangSystem
 
             eventsHandler.PlayerLoggedIn += SetPlayerIntoHisGang;
             eventsHandler.PlayerJoinedGang += EventsHandler_PlayerJoinedGang;
+            eventsHandler.GangObjectCreated += Add;
         }
 
         public IGang None => _gangById[-1];

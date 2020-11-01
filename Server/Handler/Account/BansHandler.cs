@@ -85,24 +85,25 @@ namespace TDS_Server.Handler.Account
                     ({ }, null, null, null, null, _)
                         => await ExecuteForDBAsync(async (dbContext) =>
                         {
-                            return await dbContext.PlayerBans.FirstOrDefaultAsync(ban => 
-                                GetConditionForPlayerAndLobby(playerId!.Value, lobbyId)(ban)).ConfigureAwait(false);
+                            return await dbContext.PlayerBans.WherePlayerAndLobby(playerId!.Value, lobbyId).FirstOrDefaultAsync().ConfigureAwait(false);
                         }).ConfigureAwait(false),
 
                     (_, _, _, _, _, true)
                          => await ExecuteForDBAsync(async (dbContext) =>
                          {
                              return await dbContext.PlayerBans
-                                .FirstOrDefaultAsync(ban => 
-                                    GetConditionForSatisfyingAllConditions(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)(ban)).ConfigureAwait(false);
+                                .WhereAllConditions(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)
+                                .FirstOrDefaultAsync()
+                                .ConfigureAwait(false);
                          }).ConfigureAwait(false),
 
                     (_, _, _, _, _, false)
                          => await ExecuteForDBAsync(async (dbContext) =>
                          {
                              return await dbContext.PlayerBans
-                                .FirstOrDefaultAsync(ban => 
-                                    GetConditionBanSatisfyingOneCondition(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)(ban)).ConfigureAwait(false);
+                                .WhereOneCondition(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)
+                                .FirstOrDefaultAsync()
+                                .ConfigureAwait(false);
                          }).ConfigureAwait(false),
                 };
 
@@ -133,13 +134,13 @@ namespace TDS_Server.Handler.Account
                     ban = (playerId, ip, serial, socialClubName, socialClubId, andConnection) switch
                     {
                         ({ }, null, null, null, null, _)
-                            => _cachedBans.FirstOrDefault(GetConditionForPlayerAndLobby(playerId!.Value, lobbyId)),
+                            => _cachedBans.AsQueryable().WherePlayerAndLobby(playerId!.Value, lobbyId).FirstOrDefault(),
 
                         (_, _, _, _, _, true)
-                             => _cachedBans.FirstOrDefault(GetConditionForSatisfyingAllConditions(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection)),
+                             => _cachedBans.AsQueryable().WhereAllConditions(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection).FirstOrDefault(),
 
                         (_, _, _, _, _, false)
-                             => _cachedBans.FirstOrDefault(GetConditionBanSatisfyingOneCondition(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection))
+                             => _cachedBans.AsQueryable().WhereOneCondition(lobbyId, playerId, ip, serial, socialClubName, socialClubId, preventConnection).FirstOrDefault()
                     };
                 }
 

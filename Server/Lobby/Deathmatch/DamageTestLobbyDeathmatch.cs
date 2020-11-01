@@ -55,7 +55,7 @@ namespace TDS_Server.LobbySystem.Deathmatch
             });
         }
 
-        protected override void InitDamagesys(IDamageHandler damageHandler)
+        public override void InitDamageHandler(IDamageHandler damageHandler)
         {
             if (DamageTestLobbyWeapons.AllWeapons is { })
                 damageHandler.Init(Lobby, DamageTestLobbyWeapons.AllWeapons, new List<LobbyKillingspreeRewards>());

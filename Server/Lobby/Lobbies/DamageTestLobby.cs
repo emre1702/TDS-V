@@ -33,17 +33,17 @@ namespace TDS_Server.LobbySystem.Lobbies
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public DamageTestLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper,
-            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler, 
+            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider,
             ILoggingHandler loggingHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, damageHandler, loggingHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
         {
         }
 
         public DamageTestLobby(ITDSPlayer owner, IDatabaseHandler databaseHandler, LangHelper langHelper, LobbiesHandler lobbiesHandler,
-            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, IDamageHandler damageHandler, 
+            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, 
             ILoggingHandler loggingHandler)
             : base(CreateEntity(owner, lobbiesHandler.DamageTestLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler, serviceProvider, 
-                  teamsProvider, damageHandler, loggingHandler)
+                  teamsProvider, loggingHandler)
         {
         }
 
@@ -55,7 +55,9 @@ namespace TDS_Server.LobbySystem.Lobbies
 
             lobbyDependencies.Bans ??= new DamageTestLobbyBansHandler(this, LangHelper);
             lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
-            lobbyDependencies.Deathmatch ??= new DamageTestLobbyDeathmatch(this, (FightLobbyEventsHandler)lobbyDependencies.Events, DamageHandler, LangHelper);
+            ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler ??= ServiceProvider.GetRequiredService<IDamageHandler>();
+            lobbyDependencies.Deathmatch ??= new DamageTestLobbyDeathmatch(this, (FightLobbyEventsHandler)lobbyDependencies.Events, 
+                ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler!, LangHelper);
             lobbyDependencies.Players ??= new DamageTestLobbyPlayers(this, (FightLobbyEventsHandler)lobbyDependencies.Events);
             lobbyDependencies.MapHandler ??= new DamageTestLobbyMapHandler(this, (FightLobbyEventsHandler)lobbyDependencies.Events);
             ((DamageTestLobbyDependencies)lobbyDependencies).Weapons ??= new DamageTestLobbyWeapons(this, (FightLobbyEventsHandler)lobbyDependencies.Events, ServiceProvider);

@@ -41,6 +41,8 @@ namespace TDS_Server.Handler.Events
 
         public delegate void ErrorMessageDelegate(string info, string? stackTrace = null, string? exceptionType = null, ITDSPlayer? source = null, bool logToBonusBot = true);
 
+        public delegate void GangDelegate(IGang gang);
+
         public delegate void GangHouseDelegate(GangHouse house);
 
         public delegate void IncomingConnectionDelegate(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel);
@@ -70,6 +72,8 @@ namespace TDS_Server.Handler.Events
         public event ErrorMessageDelegate? ErrorMessage;
 
         public event GangHouseDelegate? GangHouseLoaded;
+
+        public event GangDelegate? GangObjectCreated;
 
         public event CounterDelegate? Hour;
 
@@ -305,6 +309,11 @@ namespace TDS_Server.Handler.Events
         public void OnLobbyLeave(ITDSPlayer player, IBaseLobby lobby)
         {
             PlayerLeftLobby?.Invoke(player, lobby);
+        }
+
+        public void OnGangObjectCreated(IGang gang)
+        {
+            GangObjectCreated?.Invoke(gang);
         }
 
         internal void OnMinute()
