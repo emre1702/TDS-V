@@ -60,9 +60,7 @@
             <ng-container *ngIf="settings.Constants && settings.Constants[9]">
                 <div *ngFor="let changelog of settings.Constants[9]" class="changelog">
                     <div class="date">{{ changelog[0] | date: 'fullDate' }}:</div>
-                    <ul>
-                        <li *ngFor="let change of changelog[1]">{{ change }}</li>
-                    </ul>
+                    <li *ngFor="let change of changelog[1]">{{ change }}</li>
                 </div>
             </ng-container>
         </tdswindow>
