@@ -8,7 +8,6 @@ namespace TDS_Server.Data.Models.Map
 
     public class MapLimitInfoDto
     {
-        #region Public Properties
 
         [XmlElement("center")]
         [JsonProperty("1")]
@@ -22,6 +21,5 @@ namespace TDS_Server.Data.Models.Map
         [JsonIgnore]
         public string EdgesJson { get; set; } = "[]";
 
-        #endregion Public Properties
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
@@ -34,13 +36,21 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         public void SendTeamOrder(ITDSPlayer player, TeamOrder teamOrder)
         {
-            if (!_teamOrdersDict.ContainsKey(teamOrder))
-                return;
+            lock (_teamOrdersDict)
+            {
+                if (!_teamOrdersDict.ContainsKey(teamOrder))
+                    return;
+            }
+            
             if (player.Team is null)
                 return;
 
             var team = player.Team;
-            Dictionary<ILanguage, string> texts = _langHelper.GetLangDictionary(_teamOrdersDict[teamOrder]);
+            Dictionary<ILanguage, string> texts;
+            lock (_teamOrdersDict)
+            {
+                texts = _langHelper.GetLangDictionary(_teamOrdersDict[teamOrder]);
+            }
 
             string str = $"[TEAM] {team.Chat.Color}{player.DisplayName}: !$150|0|0$";
             team.Chat.Send(lang => str + texts[lang]);
@@ -67,7 +77,8 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 ClearTeamPlayersLists(teams);
                 foreach (var player in oldPlayersList)
                 {
-                    player.Voice.ResetVoiceToAndFrom();
+                    NAPI.Task.RunSafe(() => 
+                        player.Voice.ResetVoiceToAndFrom());
                     if (player.Team is null) // propably not (yet) in the lobby
                         continue;
                     if (player.Team.IsSpectator)

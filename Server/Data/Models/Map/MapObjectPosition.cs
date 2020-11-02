@@ -6,7 +6,6 @@ namespace TDS_Server.Data.Models.Map
 {
     public class MapObjectPosition
     {
-        #region Public Constructors
 
         public MapObjectPosition()
         {
@@ -24,10 +23,6 @@ namespace TDS_Server.Data.Models.Map
             RotY = pos.RotY;
             RotZ = pos.RotZ;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         [XmlAttribute("name")]
         public string Name { get; set; } = string.Empty;
@@ -50,10 +45,6 @@ namespace TDS_Server.Data.Models.Map
         [XmlAttribute("z")]
         public float Z { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public MapCreatorPosition ToMapCreatorPosition(int id, MapCreatorPositionType type)
         {
             return new MapCreatorPosition
@@ -70,6 +61,5 @@ namespace TDS_Server.Data.Models.Map
             };
         }
 
-        #endregion Public Methods
     }
 }

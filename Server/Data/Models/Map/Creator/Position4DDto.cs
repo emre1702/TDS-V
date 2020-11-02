@@ -11,7 +11,6 @@ namespace TDS_Server.Data.Models.Map.Creator
 
     public class Position4DDto
     {
-        #region Public Constructors
 
         public Position4DDto()
         {
@@ -24,10 +23,6 @@ namespace TDS_Server.Data.Models.Map.Creator
             Z = pos.PosZ;
             Rotation = pos.RotZ;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         [XmlAttribute("rot")]
         [JsonProperty("3")]
@@ -44,10 +39,6 @@ namespace TDS_Server.Data.Models.Map.Creator
         [XmlAttribute("z")]
         [JsonProperty("2")]
         public float Z { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public Position3D To3D()
         {
@@ -75,6 +66,5 @@ namespace TDS_Server.Data.Models.Map.Creator
             };
         }
 
-        #endregion Public Methods
     }
 }

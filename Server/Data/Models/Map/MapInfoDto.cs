@@ -7,7 +7,6 @@ namespace TDS_Server.Data.Models.Map
 
     public class MapInfoDto
     {
-        #region Public Properties
 
         [XmlElement("creatorid")]
         public int? CreatorId { get; set; }
@@ -30,7 +29,6 @@ namespace TDS_Server.Data.Models.Map
         [XmlAttribute("type")]
         public MapType Type { get; set; } = MapType.Normal;
 
-        #endregion Public Properties
     }
 
 #nullable restore warnings

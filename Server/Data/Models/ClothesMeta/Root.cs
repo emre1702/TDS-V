@@ -7,12 +7,8 @@ namespace TDS_Server.Data.Models.ClothesMeta
     [XmlRoot("CScriptMetadata")]
     public class Root
     {
-        #region Public Properties
-
         [XmlElement("MPOutfits")]
         public Outfits Outfits { get; set; }
-
-        #endregion Public Properties
 
         //[XmlElement("BaseElements")]
         //public BaseElements BaseElements { get; set; }
@@ -20,6 +16,4 @@ namespace TDS_Server.Data.Models.ClothesMeta
         //[XmlElement("MPApparelData")]
         //public ApparelData ApparelData { get; set; }
     }
-
-#nullable restore
 }

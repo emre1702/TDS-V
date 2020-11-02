@@ -1,16 +1,13 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.MailSystem;
 using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Utility;
 using TDS_Shared.Default;
@@ -38,7 +35,8 @@ namespace TDS_Server.Handler.Account
                     await dbContext.Players.AnyAsync(p => p.Name == username && p.Email == email).ConfigureAwait(false)).ConfigureAwait(false);
                 if (!isEmailCorrect)
                 {
-                    player.SendAlert(player.Language.EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID);
+                    NAPI.Task.RunSafe(() =>
+                        player.SendAlert(player.Language.EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID));
                     return;
                 }
 

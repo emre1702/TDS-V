@@ -149,7 +149,8 @@ namespace TDS_Server.Handler.Account
 
                 if (RemoveBanIfExpired(ban))
                 {
-                    _cachedBans.Remove(ban);
+                    lock (_cachedBans) 
+                        _cachedBans.Remove(ban);
                     return null;
                 }
                     
@@ -237,30 +238,5 @@ namespace TDS_Server.Handler.Account
             }
             return false;
         }
-
-        private Func<PlayerBans, bool> GetConditionForPlayerAndLobby(int playerId, int lobbyId)
-            => ban => ban.PlayerId == playerId && ban.LobbyId == lobbyId;
-
-        private Func<PlayerBans, bool> GetConditionForSatisfyingAllConditions(int lobbyId,
-                   int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
-                   bool? preventConnection = null)
-            => b => b.LobbyId == lobbyId
-                        && (playerId == null || b.PlayerId == playerId)
-                        && (ip == null || b.IP == ip)
-                        && (serial == null || b.Serial == serial)
-                        && (socialClubName == null || b.SCName == socialClubName)
-                        && (socialClubId == null || b.SCId == socialClubId)
-                        && (preventConnection == null || b.PreventConnection == preventConnection);
-
-        private Func<PlayerBans, bool> GetConditionBanSatisfyingOneCondition(int lobbyId,
-                  int? playerId = null, string? ip = null, string? serial = null, string? socialClubName = null, ulong? socialClubId = null,
-                  bool? preventConnection = null)
-          => b => b.LobbyId == lobbyId && (
-                      (playerId == null || b.PlayerId == playerId)
-                      || (ip == null || b.IP == ip)
-                      || (serial == null || b.Serial == serial)
-                      || (socialClubName == null || b.SCName == socialClubName)
-                      || (socialClubId == null || b.SCId == socialClubId))
-                      && (preventConnection == null || b.PreventConnection == preventConnection);
     }
 }

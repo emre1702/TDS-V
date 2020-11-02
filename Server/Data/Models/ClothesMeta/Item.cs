@@ -6,8 +6,6 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
     public class Item
     {
-        #region Public Properties
-
         [XmlElement("ComponentDrawables")]
         public ComponentDrawables ComponentDrawables { get; set; }
 
@@ -22,9 +20,5 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
         [XmlElement("TattooHashes")]
         public TattooHashes TattooHashes { get; set; }
-
-        #endregion Public Properties
     }
-
-#nullable restore
 }

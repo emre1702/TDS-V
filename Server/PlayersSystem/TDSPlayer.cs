@@ -2,6 +2,7 @@
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.PlayersSystem;
 using TDS_Server.Handler;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.PlayersSystem
@@ -128,7 +129,8 @@ namespace TDS_Server.PlayersSystem
         {
             DeathSpawnTimer?.Kill();
             DeathSpawnTimer = null;
-            NAPI.Player.SpawnPlayer(this, pos, heading);
+            NAPI.Task.RunSafe(() => 
+                NAPI.Player.SpawnPlayer(this, pos, heading));
             if (Lobby is { })
                 Dimension = Lobby.MapHandler.Dimension;
         }

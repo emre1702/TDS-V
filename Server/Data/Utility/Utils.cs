@@ -16,8 +16,6 @@ namespace TDS_Server.Data.Utility
     {
 #nullable enable
 
-        #region Private Enums
-
         private enum CharASCII : byte
         {
             Space = 32,
@@ -69,10 +67,6 @@ namespace TDS_Server.Data.Utility
             RightCurlyBracket = 125,
             Tilde = 126
         }
-
-        #endregion Private Enums
-
-        #region Public Methods
 
         /// <summary>
         /// Check if the name is valid
@@ -212,7 +206,7 @@ namespace TDS_Server.Data.Utility
             }
 
             int iterations = new Random().Next(900, 1100);
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
+            using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
             byte[] hash = pbkdf2.GetBytes(24);
 
             return Convert.ToBase64String(salt) + "|B|" + iterations + "|B|" + Convert.ToBase64String(hash);
@@ -227,7 +221,7 @@ namespace TDS_Server.Data.Utility
                 var shouldBeIterations = int.Parse(shouldBeHashedParts[1]);
                 var shouldBeHash = shouldBeHashedParts[2];
 
-                var isPbkdf2 = new Rfc2898DeriveBytes(isPassword, shouldBeSalt, shouldBeIterations);
+                using var isPbkdf2 = new Rfc2898DeriveBytes(isPassword, shouldBeSalt, shouldBeIterations);
                 byte[] isHash = isPbkdf2.GetBytes(24);
 
                 return Convert.ToBase64String(isHash) == shouldBeHash;
@@ -293,6 +287,5 @@ namespace TDS_Server.Data.Utility
             return float.Parse(str, CultureInfo.InvariantCulture);
         }
 
-        #endregion Public Methods
     }
 }

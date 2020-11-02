@@ -1,9 +1,7 @@
 ﻿namespace TDS_Server.Data.Defaults
 {
-    public class PlayerCommand
+    public class UserCommand
     {
-        #region Public Fields
-
         public const string BlockUser = "BlockUser";
         public const string ClosePrivateChat = "ClosePrivateChat";
         public const string GiveMoney = "GiveMoney";
@@ -18,7 +16,5 @@
         public const string TeamChat = "TeamChat";
         public const string UnblockUser = "UnblockUser";
         public const string UserId = "UserId";
-
-        #endregion Public Fields
     }
 }

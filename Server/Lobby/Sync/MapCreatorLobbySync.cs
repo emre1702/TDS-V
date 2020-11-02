@@ -221,15 +221,19 @@ namespace TDS_Server.LobbySystem.Sync
                 NAPI.Task.RunSafe(() =>
                     NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncObjectRemove, objId));
 
-                if (!_posById.ContainsKey(objId))
-                    return;
-                var data = _posById[objId];
-                if (data.Type == MapCreatorPositionType.MapCenter)
-                    _currentMap.MapCenter = null;
-                else if (data.Type == MapCreatorPositionType.Target)
-                    _currentMap.Target = null;
-                GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
-                _posById.Remove(objId);
+                await _posDictSemaphore.Do(() =>
+                {
+                    if (!_posById.ContainsKey(objId))
+                        return;
+                    var data = _posById[objId];
+                    if (data.Type == MapCreatorPositionType.MapCenter)
+                        _currentMap.MapCenter = null;
+                    else if (data.Type == MapCreatorPositionType.Target)
+                        _currentMap.Target = null;
+                    GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
+                    _posById.Remove(objId);
+                }).ConfigureAwait(false);
+                
             }
             catch (Exception ex)
             {
@@ -245,15 +249,19 @@ namespace TDS_Server.LobbySystem.Sync
                 NAPI.Task.RunSafe(() =>
                     NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber));
 
-                foreach (var entry in _posById)
-                {
-                    if (entry.Value.Type != MapCreatorPositionType.TeamSpawn)
-                        continue;
-                    if ((int)entry.Value.Info != teamNumber)
-                        continue;
 
-                    GetListInCurrentMapForMapType(entry.Value.Type, entry.Value.Info)?.Remove(entry.Value);
-                }
+                await _posDictSemaphore.Do(() =>
+                {
+                    foreach (var entry in _posById)
+                    {
+                        if (entry.Value.Type != MapCreatorPositionType.TeamSpawn)
+                            continue;
+                        if ((int)entry.Value.Info != teamNumber)
+                            continue;
+
+                        GetListInCurrentMapForMapType(entry.Value.Type, entry.Value.Info)?.Remove(entry.Value);
+                    }
+                });
             }
             catch (Exception ex)
             {

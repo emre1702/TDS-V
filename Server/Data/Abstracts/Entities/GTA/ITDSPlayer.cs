@@ -1,8 +1,6 @@
 ﻿using GTANetworkAPI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Entities;
 using TDS_Server.Data.Interfaces.GangsSystem;
@@ -15,7 +13,6 @@ using TDS_Server.Database.Entity.Player;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Default;
 using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
 
 namespace TDS_Server.Data.Abstracts.Entities.GTA
 {
@@ -114,8 +111,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public new string Name { get; set; } = string.Empty;
         public new string SocialClubName { get; set; } = string.Empty;
         public new ulong SocialClubId { get; set; }
-        public new string Address { get; private set; } = string.Empty; 
-
+        public new string Address { get; private set; } = string.Empty;
 
         public ITDSPlayer(NetHandle netHandle) : base(netHandle)
         {
@@ -142,7 +138,6 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
             return Id == other?.Id;
         }
 
-   
         public void Init()
         {
             if (Name.Length > 0)

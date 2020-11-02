@@ -4,9 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
@@ -68,15 +66,13 @@ namespace TDS_Server.Handler.Account
             try
             {
                 await NAPI.Task.RunWait(player.Init);
-                var scName = player.SocialClubName;
-                var scId = player.SocialClubId;
 
                 await _serverStartHandler.LoadingTask.Task.ConfigureAwait(false);
 
                 if (username.Length < 3 || username.Length > 20)
                     return;
 
-                if (await _databasePlayerHelper.DoesPlayerWithScnameExist(scName).ConfigureAwait(false))
+                if (await _databasePlayerHelper.DoesPlayerWithScnameExist(player.SocialClubName).ConfigureAwait(false))
                     return;
                 if (await _databasePlayerHelper.DoesPlayerWithNameExist(username).ConfigureAwait(false))
                 {
@@ -90,7 +86,7 @@ namespace TDS_Server.Handler.Account
                         => player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value)));
                     return;
                 }
-                RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language, scName, scId);
+                RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language, player.SocialClubName, player.SocialClubId);
             }
             catch (Exception ex)
             {

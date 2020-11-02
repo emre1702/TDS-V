@@ -8,7 +8,9 @@ using TDS_Server.Handler;
 using TDS_Server.Handler.Account;
 using TDS_Server.Handler.Browser;
 using TDS_Server.Handler.Commands;
+using TDS_Server.Handler.Commands.Admin;
 using TDS_Server.Handler.Commands.System;
+using TDS_Server.Handler.Commands.User;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
@@ -70,7 +72,34 @@ namespace TDS_Server.Core.Init.Services.Creators
             return serviceCollection
                .AddSingleton<CommandsLoader>()
                .AddSingleton<CommandsHandler>()
-               .AddSingleton<BaseCommands>();
+               .WithAdminCommands()
+               .WithUserCommands();
+        }
+
+        private static IServiceCollection WithAdminCommands(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection
+               .AddSingleton<AdminBanCommands>()
+               .AddSingleton<AdminChatCommands>()
+               .AddSingleton<AdminGangCommands>()
+               .AddSingleton<AdminKickCommands>()
+               .AddSingleton<AdminLobbyCommands>()
+               .AddSingleton<AdminMapCommands>()
+               .AddSingleton<AdminMuteCommands>()
+               .AddSingleton<AdminTestCommands>();
+        }
+
+        private static IServiceCollection WithUserCommands(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection
+               .AddSingleton<UserAccountCommands>()
+               .AddSingleton<UserChatCommands>()
+               .AddSingleton<UserDeathmatchCommands>()
+               .AddSingleton<UserLobbyCommands>()
+               .AddSingleton<UserMapCommands>()
+               .AddSingleton<UserMoneyCommands>()
+               .AddSingleton<UserPrivateChatCommands>()
+               .AddSingleton<UserRelationCommands>();
         }
 
         private static IServiceCollection WithEvents(this IServiceCollection serviceCollection)

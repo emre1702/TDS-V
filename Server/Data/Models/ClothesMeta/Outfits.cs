@@ -6,16 +6,10 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
     public class Outfits
     {
-        #region Public Properties
-
         [XmlElement("MPOutfitsDataFemale")]
         public OutfitsDataGender OutfitsDataFemale { get; set; }
 
         [XmlElement("MPOutfitsDataMale")]
         public OutfitsDataGender OutfitsDataMale { get; set; }
-
-        #endregion Public Properties
     }
-
-#nullable restore
 }

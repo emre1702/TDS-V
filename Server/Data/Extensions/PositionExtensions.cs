@@ -6,8 +6,6 @@ namespace TDS_Server.Data.Extensions
 {
     public static class PositionExtensions
     {
-        #region Public Methods
-
         public static Position3DDto SwitchNamespace(this Position3D dto)
         {
             return new Position3DDto { X = dto.X, Y = dto.Y, Z = dto.Z };
@@ -26,6 +24,5 @@ namespace TDS_Server.Data.Extensions
         public static Vector3 ToVector3(this Position3D pos)
             => new Vector3(pos.X, pos.Y, pos.Z);
 
-        #endregion Public Methods
     }
 }

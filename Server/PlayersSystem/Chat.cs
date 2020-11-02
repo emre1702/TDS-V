@@ -29,7 +29,8 @@ namespace TDS_Server.PlayersSystem
             if (_player.IsConsole)
                 Console.WriteLine(msg);
             else
-                ((Player)_player).SendChatMessage(msg);
+                NAPI.Task.RunSafe(() =>
+                    ((Player)_player).SendChatMessage(msg));
         }
 
         public void SendNotification(string msg, bool flashing = false)
@@ -37,7 +38,8 @@ namespace TDS_Server.PlayersSystem
             if (_player.IsConsole)
                 Console.WriteLine(msg);
             else
-                ((Player)_player).SendNotification(msg, flashing);
+                NAPI.Task.RunSafe(() =>
+                    ((Player)_player).SendNotification(msg, flashing));
         }
 
         public void SendAlert(string msg)
@@ -45,7 +47,8 @@ namespace TDS_Server.PlayersSystem
             if (_player.IsConsole)
                 Console.WriteLine(msg);
             else
-                _player.TriggerEvent(ToClientEvent.SendAlert, msg);
+                NAPI.Task.RunSafe(() => 
+                    _player.TriggerEvent(ToClientEvent.SendAlert, msg));
         }
 
         private void CloseInPrivateChat(bool becauseOfDisconnectOfTarget)

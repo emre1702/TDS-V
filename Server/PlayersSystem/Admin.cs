@@ -20,7 +20,10 @@ namespace TDS_Server.PlayersSystem
             }
         }
 
-        public string LevelName => Level.Names[_player.LanguageHandler.Enum];
+        public string LevelName 
+        {
+            get { lock (Level.Names) return Level.Names[_player.LanguageHandler.Enum]; }
+        }
 
         private readonly AdminsHandler _adminsHandler;
 #nullable disable

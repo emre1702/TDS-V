@@ -4,7 +4,6 @@ namespace TDS_Server.Data.Models.CustomLobby
 {
     public class TeamChoiceMenuTeamData
     {
-        #region Public Constructors
 
         public TeamChoiceMenuTeamData(string name, short red, short green, short blue)
         {
@@ -13,10 +12,6 @@ namespace TDS_Server.Data.Models.CustomLobby
             Green = green;
             Blue = blue;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         [JsonProperty("3")]
         public short Blue { get; set; }
@@ -30,6 +25,5 @@ namespace TDS_Server.Data.Models.CustomLobby
         [JsonProperty("1")]
         public short Red { get; set; }
 
-        #endregion Public Properties
     }
 }

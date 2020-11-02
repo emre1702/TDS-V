@@ -2,8 +2,6 @@
 {
     public static class AdminCommand
     {
-        #region Public Fields
-
         public const string AdminChat = "adminchat";
         public const string AdminSay = "adminsay";
         public const string Ban = "ban";
@@ -16,7 +14,5 @@
         public const string Test = "test";
         public const string VoiceMute = "voicemute";
         public const string CreateHouse = "createhouse";
-
-        #endregion Public Fields
     }
 }

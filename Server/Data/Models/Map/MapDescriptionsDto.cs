@@ -6,7 +6,6 @@ namespace TDS_Server.Data.Models.Map
 
     public class MapDescriptionsDto
     {
-        #region Public Properties
 
         [XmlElement("english")]
         public string? English { get; set; }
@@ -14,6 +13,5 @@ namespace TDS_Server.Data.Models.Map
         [XmlElement("german")]
         public string? German { get; set; }
 
-        #endregion Public Properties
     }
 }

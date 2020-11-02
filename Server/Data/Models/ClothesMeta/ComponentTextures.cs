@@ -6,8 +6,6 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
     public class ComponentTextures
     {
-        #region Public Properties
-
         [XmlElement("pedComponentTexture0")]
         public Component Texture0 { get; set; }
 
@@ -44,8 +42,5 @@ namespace TDS_Server.Data.Models.ClothesMeta
         [XmlElement("pedComponentTexture9")]
         public Component Texture9 { get; set; }
 
-        #endregion Public Properties
     }
-
-#nullable restore
 }

@@ -61,7 +61,9 @@ namespace TDS_Server.Handler.Commands.System
                 var commands = GetCommandsFromDatabase(dbContext);
                 AddCommandsAndAliases(commands);
                 AddAllMethods();
+                RemoveInvalidCommandDatas();
                 SortMethodDatasByPriority();
+                OutputLoadedCommandsInfo();
             }
             catch (Exception ex)
             {
@@ -84,8 +86,8 @@ namespace TDS_Server.Handler.Commands.System
         private void AddAllMethods()
         {
             var allMethods = GetAllCommandMethodsFromSingletons();
-            foreach (var method in allMethods)
-                AddMethod(method.Method, method.Instance);
+            foreach (var (Method, Instance) in allMethods)
+                AddMethod(Method, Instance);
         }
 
         private IEnumerable<(MethodInfo Method, object Instance)> GetAllCommandMethodsFromSingletons()
@@ -165,6 +167,13 @@ namespace TDS_Server.Handler.Commands.System
             }
         }
 
+        private void RemoveInvalidCommandDatas()
+        {
+            foreach (var entry in _commandsDatas)
+                if (entry.Value.MethodDatas.Count == 0)
+                    _commandsDatas.Remove(entry.Key);
+        }
+
         private void SortMethodDatasByPriority()
         {
             foreach (var entry in _commandsDatas)
@@ -180,5 +189,36 @@ namespace TDS_Server.Handler.Commands.System
 
         private List<DB.Commands> GetCommandsFromDatabase(TDSDbContext dbContext)
             => dbContext.Commands.Include(c => c.CommandAlias).Include(c => c.CommandInfos).AsNoTracking().ToList();
+
+        private void OutputLoadedCommandsInfo()
+        {
+            var classAndAmountCommands = _commandsDatas.Values
+                .Select(entry => entry.MethodDatas[0].Instance.GetType().Name)
+                .Distinct()
+                .Select(className => (ClassName: className, AmountCommands: GetCountOfCommandsInClassName(className)))
+                .OrderBy(entry => entry.ClassName)
+                .ToList();
+
+            var previousForegroundColor = Console.ForegroundColor;
+            foreach (var (ClassName, AmountCommands) in classAndAmountCommands)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("Loaded ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write(ClassName);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(" with ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write(AmountCommands);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(" command(s).");
+            }
+            Console.ForegroundColor = previousForegroundColor;
+        }
+
+        private int GetCountOfCommandsInClassName(string className)
+        {
+            return _commandsDatas.Values.Count(v => v.MethodDatas[0].Instance.GetType().Name == className);
+        }
     }
 }

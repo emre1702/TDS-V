@@ -6,7 +6,6 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
     public class ComponentDrawables
     {
-        #region Public Properties
 
         [XmlElement("pedComponentDrawable0")]
         public Component Drawable0 { get; set; }
@@ -44,8 +43,5 @@ namespace TDS_Server.Data.Models.ClothesMeta
         [XmlElement("pedComponentDrawable9")]
         public Component Drawable9 { get; set; }
 
-        #endregion Public Properties
     }
-
-#nullable restore
 }

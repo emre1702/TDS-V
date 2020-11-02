@@ -6,7 +6,6 @@ namespace TDS_Server.Data.Models.CustomLobby
 
     public class CustomLobbyTeamData
     {
-        #region Public Properties
 
         [JsonProperty("2")]
         public int BlipColor { get; set; }
@@ -21,7 +20,6 @@ namespace TDS_Server.Data.Models.CustomLobby
         [JsonProperty("3")]
         public int SkinHash { get; set; }
 
-        #endregion Public Properties
     }
 
 #nullable restore

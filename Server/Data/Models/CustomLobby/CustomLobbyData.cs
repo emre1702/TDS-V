@@ -8,7 +8,6 @@ namespace TDS_Server.Data.Models.CustomLobby
 
     public class CustomLobbyData
     {
-        #region Public Properties
 
         [JsonProperty("0")]
         public int? LobbyId { get; set; }
@@ -73,7 +72,6 @@ namespace TDS_Server.Data.Models.CustomLobby
         [JsonProperty("20")]
         public List<CustomLobbyArmsRaceWeaponData> ArmsRaceWeapons { get; set; }
 
-        #endregion Public Properties
     }
 
 #nullable restore

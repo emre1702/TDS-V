@@ -5,8 +5,6 @@ namespace TDS_Server.Data.Models.Challenge
 {
     public class ChallengeModel
     {
-        #region Public Properties
-
         [JsonProperty("1")]
         public int Amount { get; set; }
 
@@ -15,7 +13,5 @@ namespace TDS_Server.Data.Models.Challenge
 
         [JsonProperty("0")]
         public ChallengeType Type { get; set; }
-
-        #endregion Public Properties
     }
 }

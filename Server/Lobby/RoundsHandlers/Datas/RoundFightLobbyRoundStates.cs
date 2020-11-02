@@ -141,7 +141,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             Current = state;
             Current.Value.SetCurrent();
 
-            _nextTimer = new TDSTimer(() => SetNext(), (uint)Current.Value.Duration);
+            _nextTimer = new TDSTimer(SetNext, (uint)Current.Value.Duration);
         }
 
         private LinkedListNode<RoundState> Get<T>() where T : RoundState

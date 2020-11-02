@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using GTANetworkAPI;
+using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.PlayersSystem;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.PlayersSystem
 {
@@ -19,28 +21,35 @@ namespace TDS_Server.PlayersSystem
 
         public void ResetVoiceToAndFrom()
         {
-            foreach (var target in _settedVoiceTo)
+            NAPI.Task.RunSafe(() =>
             {
-                if (!target.LoggedIn)
-                    continue;
-                _player.DisableVoiceTo(target);
-                target.DisableVoiceTo(_player);
-            }
-            _settedVoiceTo.Clear();
+                foreach (var target in _settedVoiceTo)
+                {
+                    if (!target.LoggedIn)
+                        continue;
+                    _player.DisableVoiceTo(target);
+                    target.DisableVoiceTo(_player);
+                }
+                _settedVoiceTo.Clear();
+            });
+
         }
 
         public void SetVoiceTo(ITDSPlayer target, bool on)
         {
-            if (on)
+            NAPI.Task.RunSafe(() =>
             {
-                _player.EnableVoiceTo(target);
-                _settedVoiceTo.Add(target);
-            }
-            else
-            {
-                _player.DisableVoiceTo(target);
-                _settedVoiceTo.Remove(target);
-            }
+                if (on)
+                {
+                    _player.EnableVoiceTo(target);
+                    _settedVoiceTo.Add(target);
+                }
+                else
+                {
+                    _player.DisableVoiceTo(target);
+                    _settedVoiceTo.Remove(target);
+                }
+            });
         }
     }
 }

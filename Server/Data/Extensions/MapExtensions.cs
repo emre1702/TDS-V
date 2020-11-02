@@ -11,7 +11,6 @@ namespace TDS_Server.Data.Extensions
 
     public static class MapExtensions
     {
-        #region Public Methods
 
         public static void CreateJsons(this MapDto map)
         {
@@ -43,10 +42,6 @@ namespace TDS_Server.Data.Extensions
             map.BrowserSyncedData.Description[(int)Language.German] = map.Descriptions?.German;
             map.BrowserSyncedData.Type = (MapType)(int)map.Info.Type;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private static Position3DDto? GetCenterByLimits(this MapDto map, float zpos)
         {
@@ -106,6 +101,5 @@ namespace TDS_Server.Data.Extensions
             return (spawn1!.Z + spawn2!.Z) / 2;
         }
 
-        #endregion Private Methods
     }
 }

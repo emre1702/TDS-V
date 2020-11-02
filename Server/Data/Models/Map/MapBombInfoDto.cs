@@ -3,11 +3,9 @@ using TDS_Server.Data.Models.Map.Creator;
 
 namespace TDS_Server.Data.Models.Map
 {
-#nullable disable warnings
-
+    #nullable disable
     public class MapBombInfoDto
     {
-        #region Public Properties
 
         [XmlElement("plantpos")]
         public Position3DDto[] PlantPositions { get; set; }
@@ -15,8 +13,5 @@ namespace TDS_Server.Data.Models.Map
         [XmlIgnore]
         public string PlantPositionsJson { get; set; }
 
-        #endregion Public Properties
     }
-
-#nullable restore warnings
 }

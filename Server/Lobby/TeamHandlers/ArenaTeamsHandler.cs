@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GTANetworkAPI;
 using MoreLinq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
@@ -8,6 +9,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
 
 namespace TDS_Server.LobbySystem.TeamHandlers
@@ -47,8 +49,11 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 }
             }).ConfigureAwait(false);
 
-            foreach (var player in playersToPutIntoOtherTeam)
-                Lobby.Notifications.Send(lang => string.Format(lang.BALANCE_TEAM_INFO, player.DisplayName));
+            NAPI.Task.RunSafe(() =>
+            {
+                foreach (var player in playersToPutIntoOtherTeam)
+                    Lobby.Notifications.Send(lang => string.Format(lang.BALANCE_TEAM_INFO, player.DisplayName));
+            });
         }
 
         private void Events_TeamPreparation()

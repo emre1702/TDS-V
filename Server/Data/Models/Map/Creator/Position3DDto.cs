@@ -10,7 +10,6 @@ namespace TDS_Server.Data.Models.Map.Creator
 {
     public class Position3DDto
     {
-        #region Public Constructors
 
         public Position3DDto()
         {
@@ -30,10 +29,6 @@ namespace TDS_Server.Data.Models.Map.Creator
             Z = pos.Z;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         [XmlAttribute("x")]
         [JsonProperty("0")]
         public float X { get; set; }
@@ -49,11 +44,7 @@ namespace TDS_Server.Data.Models.Map.Creator
         public Vector3 ToVector3()
             => new Vector3(X, Y, Z);
 
-        #endregion Public Properties
-
 #nullable enable
-
-        #region Public Methods
 
         public MapCreatorPosition ToMapCreatorPosition(int id, MapCreatorPositionType type, object? info = null, ushort ownerRemoteId = 0)
         {
@@ -69,6 +60,5 @@ namespace TDS_Server.Data.Models.Map.Creator
             };
         }
 
-        #endregion Public Methods
     }
 }

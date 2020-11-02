@@ -6,8 +6,6 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
     public class TattooHashes
     {
-        #region Public Properties
-
         [XmlElement("pedTattooHash0")]
         public Component TattooHash0 { get; set; }
 
@@ -16,9 +14,5 @@ namespace TDS_Server.Data.Models.ClothesMeta
 
         [XmlElement("pedTattooHash2")]
         public Component TattooHash2 { get; set; }
-
-        #endregion Public Properties
     }
-
-#nullable restore
 }

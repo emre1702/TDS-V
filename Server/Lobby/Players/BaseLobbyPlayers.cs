@@ -74,7 +74,7 @@ namespace TDS_Server.LobbySystem.Players
         {
             NAPI.Task.RunSafe(() =>
             {
-                player.SendNotification(string.Format(player.Language.JOINED_LOBBY_MESSAGE, Lobby.Entity.Name, PlayerCommand.LobbyLeave));
+                player.SendNotification(string.Format(player.Language.JOINED_LOBBY_MESSAGE, Lobby.Entity.Name, UserCommand.LobbyLeave));
             });
         }
 
