@@ -135,55 +135,115 @@ namespace TDS_Server.Handler.Events
 
         public void OnEntityDeleted(Entity entity)
         {
-            EntityDeleted?.Invoke(entity);
+            try
+            {
+                EntityDeleted?.Invoke(entity);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnIncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, CancelEventArgs cancel)
         {
-            IncomingConnection?.Invoke(ip, serial, socialClubName, socialClubId, cancel);
+            try
+            {
+                IncomingConnection?.Invoke(ip, serial, socialClubName, socialClubId, cancel);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnMapsLoaded()
         {
-            MapsLoaded?.Invoke();
+            try
+            {
+                MapsLoaded?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnPlayerConnected(ITDSPlayer player)
         {
-            PlayerConnected?.Invoke(player);
+            try
+            {
+                PlayerConnected?.Invoke(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint reason)
         {
-            PlayerDeath?.Invoke(player, killer, reason);
+            try
+            {
+                PlayerDeath?.Invoke(player, killer, reason);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnPlayerDisconnected(ITDSPlayer player)
         {
-            PlayerDisconnected?.Invoke(player);
+            try
+            {
+                PlayerDisconnected?.Invoke(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnPlayerEnterColshape(ITDSColshape colshape, ITDSPlayer player)
         {
-            PlayerEnteredColshape?.Invoke(colshape, player);
+            try
+            {
+                PlayerEnteredColshape?.Invoke(colshape, player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public async Task OnPlayerLoggedOut(ITDSPlayer tdsPlayer)
         {
-            var task = PlayerLoggedOutBefore?.InvokeAsync(tdsPlayer);
-            if (task.HasValue)
-                await task.Value.ConfigureAwait(false);
-            PlayerLoggedOut?.Invoke(tdsPlayer);
-            await tdsPlayer.Database.ExecuteForDBAsync(async dbContext =>
+            try
             {
-                await dbContext.DisposeAsync().ConfigureAwait(false);
-            }).ConfigureAwait(false);
-            tdsPlayer.Events.TriggerRemoved();
+                var task = PlayerLoggedOutBefore?.InvokeAsync(tdsPlayer);
+                if (task.HasValue)
+                    await task.Value.ConfigureAwait(false);
+                PlayerLoggedOut?.Invoke(tdsPlayer);
+                await tdsPlayer.Database.ExecuteForDBAsync(async dbContext =>
+                {
+                    await dbContext.DisposeAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
+                tdsPlayer.Events.TriggerRemoved();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnPlayerLogin(ITDSPlayer tdsPlayer)
         {
-            PlayerLoggedIn?.Invoke(tdsPlayer);
+            try
+            {
+                PlayerLoggedIn?.Invoke(tdsPlayer);
+            }
+            catch (Exception ex) { LoggingHandler.Instance?.LogError(ex); }
         }
 
         public async void OnPlayerRegister(ITDSPlayer player, Players dbPlayer)
@@ -203,38 +263,71 @@ namespace TDS_Server.Handler.Events
 
         public void OnPlayerSpawn(ITDSPlayer player)
         {
-            PlayerSpawned?.Invoke(player);
+            try
+            {
+                PlayerSpawned?.Invoke(player);
+            }
+            catch (Exception ex) { LoggingHandler.Instance?.LogError(ex); }
         }
 
         public void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash previousWeapon, WeaponHash newWeapon)
         {
-            if (!(player.Lobby is IFightLobby fightLobby))
-                return;
+            try
+            {
+                if (!(player.Lobby is IFightLobby fightLobby))
+                    return;
 
-            player.Events.TriggerWeaponSwitch(previousWeapon, newWeapon);
-            PlayerWeaponSwitch?.Invoke(player, previousWeapon, newWeapon);
+                player.Events.TriggerWeaponSwitch(previousWeapon, newWeapon);
+                PlayerWeaponSwitch?.Invoke(player, previousWeapon, newWeapon);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnResourceStop()
         {
-            ResourceStop?.Invoke();
+            try
+            {
+                ResourceStop?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnUpdate()
         {
-            Update?.Invoke();
+            try
+            {
+                Update?.Invoke();
+            }
+            catch (Exception ex) { LoggingHandler.Instance?.LogError(ex); }
         }
 
         internal void OnGangHouseLoaded(GangHouse house)
         {
-            GangHouseLoaded?.Invoke(house);
+            try
+            {
+                GangHouseLoaded?.Invoke(house);
+            }
+            catch (Exception ex) { LoggingHandler.Instance?.LogError(ex); }
         }
 
         public void OnNewBan(PlayerBans ban, bool isOfficial, ulong? targetDiscordUserId)
         {
-            NewBan?.Invoke(ban, isOfficial);
-            if (isOfficial)
-                _bonusBotConnectorClient.OnNewOfficialBan(ban, targetDiscordUserId);
+            try
+            {
+                NewBan?.Invoke(ban, isOfficial);
+                if (isOfficial)
+                    _bonusBotConnectorClient.OnNewOfficialBan(ban, targetDiscordUserId);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         /*public void OnPlayerEnterVehicle(ITDSPlayer tdsPlayer, ITDSVehicle vehicle, sbyte seatId)
@@ -249,39 +342,88 @@ namespace TDS_Server.Handler.Events
 
         public void OnError(Exception ex, string msgBefore)
         {
-            ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
+            try
+            {
+                ErrorMessage?.Invoke($"{msgBefore}{Environment.NewLine}{ex.GetBaseException().Message}");
+            }
+            catch
+            {
+
+            }
         }
 
         public void OnLobbyCreated(IBaseLobby lobby)
         {
-            LobbyCreated?.Invoke(lobby);
+            try
+            {
+                LobbyCreated?.Invoke(lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnLobbyRemoved(IBaseLobby lobby)
         {
-            LobbyRemoved?.Invoke(lobby);
+            try
+            {
+                LobbyRemoved?.Invoke(lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         internal void OnCustomLobbyMenuJoin(ITDSPlayer player)
         {
-            PlayerJoinedCustomMenuLobby?.Invoke(player);
+            try
+            {
+                PlayerJoinedCustomMenuLobby?.Invoke(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         internal void OnCustomLobbyMenuLeave(ITDSPlayer player)
         {
-            PlayerLeftCustomMenuLobby?.Invoke(player);
+            try
+            {
+                PlayerLeftCustomMenuLobby?.Invoke(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         internal async Task OnGangJoin(ITDSPlayer player, IGang gang, GangRanks rank)
         {
-            var task = PlayerJoinedGang?.InvokeAsync((player, gang, rank));
-            if (task.HasValue)
-                await task.Value.ConfigureAwait(false);
+            try
+            {
+                var task = PlayerJoinedGang?.InvokeAsync((player, gang, rank));
+                if (task.HasValue)
+                    await task.Value.ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         internal void OnGangLeave(ITDSPlayer player, IGang gang)
         {
-            PlayerLeftGang?.Invoke(player, gang);
+            try
+            {
+                PlayerLeftGang?.Invoke(player, gang);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         internal void OnHour()
@@ -298,22 +440,50 @@ namespace TDS_Server.Handler.Events
 
         internal void OnLoadedServerBans()
         {
-            LoadedServerBans?.Invoke();
+            try
+            {
+                LoadedServerBans?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnLobbyJoin(ITDSPlayer player, IBaseLobby lobby)
         {
-            PlayerJoinedLobby?.Invoke(player, lobby);
+            try
+            {
+                PlayerJoinedLobby?.Invoke(player, lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnLobbyLeave(ITDSPlayer player, IBaseLobby lobby)
         {
-            PlayerLeftLobby?.Invoke(player, lobby);
+            try
+            {
+                PlayerLeftLobby?.Invoke(player, lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         public void OnGangObjectCreated(IGang gang)
         {
-            GangObjectCreated?.Invoke(gang);
+            try
+            {
+                GangObjectCreated?.Invoke(gang);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         internal void OnMinute()
@@ -331,7 +501,14 @@ namespace TDS_Server.Handler.Events
         //Todo this is not used - check why
         internal void OnReloadPlayerChar(ITDSPlayer player)
         {
-            ReloadPlayerChar?.Invoke(player);
+            try
+            {
+                ReloadPlayerChar?.Invoke(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         internal void OnSecond()

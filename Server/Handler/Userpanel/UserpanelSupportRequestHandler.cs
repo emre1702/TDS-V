@@ -11,6 +11,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Data.Models.Userpanel.Support;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
@@ -23,100 +24,6 @@ using TDS_Shared.Default;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class SupportRequestData
-    {
-        #region Public Properties
-
-        [JsonProperty("4")]
-        public int AtleastAdminLevel { get; set; }
-
-        [JsonIgnore]
-        public int AuthorId { get; set; }
-
-        [JsonProperty("5")]
-        public bool Closed { get; set; }
-
-        [JsonIgnore]
-        public DateTime CreateTimeDate { get; set; }
-
-        [JsonProperty("0")]
-        public int ID { get; set; }
-
-        [JsonProperty("2")]
-        public IEnumerable<SupportRequestMessageData> Messages { get; set; } = new List<SupportRequestMessageData>();
-
-        [JsonProperty("1")]
-        public string Title { get; set; } = string.Empty;
-
-        [JsonProperty("3")]
-        public SupportType Type { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public class SupportRequestMessage
-    {
-        #region Public Properties
-
-        [JsonProperty("0")]
-        public string? Author { get; set; }
-
-        [JsonProperty("2")]
-        public string? CreateTime { get; set; }
-
-        [JsonProperty("1")]
-        public string? Message { get; set; }
-
-        #endregion Public Properties
-    }
-
-    public class SupportRequestMessageData
-    {
-        #region Public Properties
-
-        [JsonProperty("0")]
-        public string Author { get; set; } = string.Empty;
-
-        [JsonProperty("2")]
-        public string CreateTime { get; set; } = string.Empty;
-
-        [JsonIgnore]
-        public DateTime CreateTimeDate { get; set; }
-
-        [JsonProperty("1")]
-        public string Message { get; set; } = string.Empty;
-
-        #endregion Public Properties
-    }
-
-    public class SupportRequestsListData
-    {
-        #region Public Properties
-
-        [JsonProperty("5")]
-        public bool Closed { get; set; }
-
-        [JsonProperty("2")]
-        public string CreateTime { get; set; } = string.Empty;
-
-        [JsonIgnore]
-        public DateTime CreateTimeDate { get; set; }
-
-        [JsonProperty("0")]
-        public int ID { get; set; }
-
-        [JsonProperty("1")]
-        public string PlayerName { get; set; } = string.Empty;
-
-        [JsonProperty("4")]
-        public string Title { get; set; } = string.Empty;
-
-        [JsonProperty("3")]
-        public SupportType Type { get; set; }
-
-        #endregion Public Properties
-    }
-
     public class UserpanelSupportRequestHandler : DatabaseEntityWrapper, IUserpanelSupportRequestHandler
     {
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
@@ -140,7 +47,11 @@ namespace TDS_Server.Handler.Userpanel
 
             eventsHandler.PlayerLoggedOut += (player) =>
             {
-                _inSupportRequestsList.Remove(player);
+                lock (_inSupportRequestsList)
+                {
+                    _inSupportRequestsList.Remove(player);
+                }
+                
                 int leftRequestId = -1;
                 foreach (var entry in _inSupportRequest)
                 {
@@ -371,7 +282,8 @@ namespace TDS_Server.Handler.Userpanel
                 entry.CreateTime = player.Timezone.GetLocalDateTimeString(entry.CreateTimeDate);
             }
 
-            _inSupportRequestsList.Add(player);
+            lock (_inSupportRequestsList)
+                _inSupportRequestsList.Add(player);
 
             return Serializer.ToBrowser(data);
         }
@@ -392,7 +304,8 @@ namespace TDS_Server.Handler.Userpanel
 
         public object? LeftSupportRequestsList(ITDSPlayer player, ref ArraySegment<object> _)
         {
-            _inSupportRequestsList.Remove(player);
+            lock (_inSupportRequestsList)
+                _inSupportRequestsList.Remove(player);
             return null;
         }
 
@@ -522,9 +435,10 @@ namespace TDS_Server.Handler.Userpanel
 
             await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync()).ConfigureAwait(false);
 
+            var playersToTriggerTo = _inSupportRequestsList.ToList();
             NAPI.Task.RunSafe(() =>
             {
-                foreach (var target in _inSupportRequestsList)
+                foreach (var target in playersToTriggerTo)
                 {
                     target.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
                 }
@@ -557,9 +471,10 @@ namespace TDS_Server.Handler.Userpanel
                     .ConfigureAwait(false))
                 .ConfigureAwait(false);
 
+            var playersToTriggerTo = _inSupportRequestsList.ToList();
             NAPI.Task.RunSafe(() =>
             {
-                foreach (var target in _inSupportRequestsList)
+                foreach (var target in playersToTriggerTo)
                 {
                     target.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetSupportRequestClosed, requestId, closed);
                 }

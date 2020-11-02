@@ -44,8 +44,11 @@ namespace TDS_Server.Handler.Maps
 
         public void AddedMapRating(MapDto map)
         {
-            if (map.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck)
-                return;
+            lock (map.Ratings)
+            {
+                if (map.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck)
+                    return;
+            }
 
             if (map.RatingAverage >= _settingsHandler.ServerSettings.MinMapRatingForNewMaps)
                 return;
@@ -61,12 +64,15 @@ namespace TDS_Server.Handler.Maps
                 if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
                     return result;
 
-                result.Item1.BrowserSyncedData.Id = _mapsLoadingHandler.SavedMaps.Min(m => m.BrowserSyncedData.Id) - 1;
-                result.Item1.RatingAverage = 5;
-
-                _mapsLoadingHandler.SavedMaps.Add(result.Item1);
-
-                _mapsLoadingHandler.NewCreatedMaps.Add(result.Item1);
+                // lock to ensure id is added to the list in _mapsLoadingHandler first
+                lock (_mapsLoadingHandler)
+                {
+                    result.Item1.BrowserSyncedData.Id = _mapsLoadingHandler.GetNextNewCreatedMapId();
+                    result.Item1.RatingAverage = 5;
+                    _mapsLoadingHandler.AddSavedMap(result.Item1);
+                    _mapsLoadingHandler.AddNewCreatedMap(result.Item1);
+                }
+                
                 return MapCreateError.MapCreatedSuccessfully;
             }
             catch (Exception ex)
@@ -84,12 +90,12 @@ namespace TDS_Server.Handler.Maps
                     return;
 
                 bool isSavedMap = true;
-                MapDto? map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+                MapDto? map = _mapsLoadingHandler.GetSavedMap(mapId);
                 if (map is null)
                 {
-                    map = _mapsLoadingHandler.NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+                    map = _mapsLoadingHandler.GetNewCreatedMap(mapId);
                     if (map is null)
-                        map = _mapsLoadingHandler.NeedCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+                        map = _mapsLoadingHandler.GetNeedCheckMap(mapId);
                     isSavedMap = false;
                 }
 
@@ -103,13 +109,11 @@ namespace TDS_Server.Handler.Maps
                     LoggingHandler.Instance.LogAdmin(LogType.RemoveMap, player, string.Empty, asvip: player.Entity?.IsVip ?? false);
 
                 if (isSavedMap)
-                    _mapsLoadingHandler.SavedMaps.Remove(map);
+                    _mapsLoadingHandler.RemoveSavedMap(map);
                 else
                 {
-                    if (_mapsLoadingHandler.NewCreatedMaps.Contains(map))
-                        _mapsLoadingHandler.NewCreatedMaps.Remove(map);
-                    else
-                        _mapsLoadingHandler.NeedCheckMaps.Remove(map);
+                    if (!_mapsLoadingHandler.RemoveNewCreatedMap(map))
+                        _mapsLoadingHandler.RemoveNeedCheckMap(map);
 
                     await ExecuteForDBAsync(async dbContext =>
                     {
@@ -146,8 +150,8 @@ namespace TDS_Server.Handler.Maps
                 result.Item1.BrowserSyncedData.Id = dbMap.Id;
                 result.Item1.RatingAverage = 5;
 
-                _mapsLoadingHandler.NewCreatedMaps.Add(result.Item1);
-                return MapCreateError.MapCreatedSuccessfully;
+                _mapsLoadingHandler.AddSavedMap(result.Item1);
+                return MapCreateError.MapSavedSuccessfully;
             }
             catch (Exception ex)
             {
@@ -166,11 +170,11 @@ namespace TDS_Server.Handler.Maps
             MapDto? map = _mapsLoadingHandler.GetMapById(mapId);
 
             if (map is null)
-                map = _mapsLoadingHandler.NewCreatedMaps.FirstOrDefault(m => mapId == m.BrowserSyncedData.Id);
+                map = _mapsLoadingHandler.GetNewCreatedMap(mapId);
             if (map is null)
-                map = _mapsLoadingHandler.SavedMaps.FirstOrDefault(m => mapId == m.BrowserSyncedData.Id);
+                map = _mapsLoadingHandler.GetSavedMap(mapId);
             if (map is null)
-                map = _mapsLoadingHandler.NeedCheckMaps.FirstOrDefault(m => mapId == m.BrowserSyncedData.Id);
+                map = _mapsLoadingHandler.GetNeedCheckMap(mapId);
 
             if (map is null)
                 return null;
@@ -216,28 +220,25 @@ namespace TDS_Server.Handler.Maps
                 new LoadMapDialogGroupDto
                 {
                     GroupName = "Saved",
-                    Maps = _mapsLoadingHandler.SavedMaps
-                    .Where(m => m.Info.CreatorId == player.Entity.Id)
-                    .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
-                    .ToList()
+                    Maps = _mapsLoadingHandler.GetSavedMaps()
+                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                 },
 
                 new LoadMapDialogGroupDto
                 {
                     GroupName = "Created",
-                    Maps = _mapsLoadingHandler.NewCreatedMaps
-                    .Where(m => m.Info.CreatorId == player.Entity.Id)
-                    .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
-                    .ToList()
+                    Maps = _mapsLoadingHandler.GetNewCreatedMaps()
+                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                 },
 
                 new LoadMapDialogGroupDto
                 {
                     GroupName = "Added",
-                    Maps = _mapsLoadingHandler.DefaultMaps
-                    .Where(m => m.Info.CreatorId == player.Entity.Id)
-                    .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
-                    .ToList()
+                    Maps = _mapsLoadingHandler.GetDefaultMaps()
+                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                 }
             };
 
@@ -246,22 +247,20 @@ namespace TDS_Server.Handler.Maps
                 data.Add(new LoadMapDialogGroupDto
                 {
                     GroupName = "OthersCreated",
-                    Maps = _mapsLoadingHandler.NewCreatedMaps
+                    Maps = _mapsLoadingHandler.GetNewCreatedMaps()
                         .Where(m => m.Info.CreatorId != player.Entity.Id)
                         .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
-                        .ToList()
                 });
 
                 data.Add(new LoadMapDialogGroupDto
                 {
                     GroupName = "Deactivated",
-                    Maps = _mapsLoadingHandler.NeedCheckMaps
+                    Maps = _mapsLoadingHandler.GetNeedCheckMaps()
                         .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
-                        .ToList()
                 });
             }
 
-            return Serializer.ToBrowser(data.Where(d => d.Maps.Count > 0));
+            return Serializer.ToBrowser(data.Where(d => d.Maps.Any()));
         }
 
         public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
@@ -279,10 +278,10 @@ namespace TDS_Server.Handler.Maps
 
         private void DisableNewMap(MapDto map)
         {
-            _mapsLoadingHandler.NewCreatedMaps.Remove(map);
+            _mapsLoadingHandler.RemoveNewCreatedMap(map);
 
-            string fileName = Path.GetFileName(map.Info.FilePath);
-            string fileContent = File.ReadAllText(map.Info.FilePath);
+            var fileName = Path.GetFileName(map.Info.FilePath);
+            var fileContent = File.ReadAllText(map.Info.FilePath);
             File.WriteAllText(Constants.NeedCheckMapsPath + Utils.MakeValidFileName(fileName), fileContent);
         }
 

@@ -54,32 +54,44 @@ namespace TDS_Server.Handler.Sync
             switch (syncMode)
             {
                 case DataSyncMode.All:
-                    if (!_playerHandleDatasAll.ContainsKey(player.RemoteId))
-                        _playerHandleDatasAll[player.RemoteId] = new Dictionary<PlayerDataKey, object>();
-                    _playerHandleDatasAll[player.RemoteId][key] = value;
+                    lock (_playerHandleDatasAll)
+                    {
+                        if (!_playerHandleDatasAll.ContainsKey(player.RemoteId))
+                            _playerHandleDatasAll[player.RemoteId] = new Dictionary<PlayerDataKey, object>();
+                        _playerHandleDatasAll[player.RemoteId][key] = value;
+                    }
 
-                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
+                    NAPI.Task.RunSafe(() =>
+                        NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value));
                     break;
 
                 case DataSyncMode.Lobby:
                     if (player.Lobby is null)
                         return;
 
-                    if (!_playerHandleDatasLobby.ContainsKey(player.Lobby.Entity.Id))
-                        _playerHandleDatasLobby[player.Lobby.Entity.Id] = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
-                    if (!_playerHandleDatasLobby[player.Lobby.Entity.Id].ContainsKey(player.RemoteId))
-                        _playerHandleDatasLobby[player.Lobby.Entity.Id][player.RemoteId] = new Dictionary<PlayerDataKey, object>();
-                    _playerHandleDatasLobby[player.Lobby.Entity.Id][player.RemoteId][key] = value;
+                    lock (_playerHandleDatasLobby)
+                    {
+                        if (!_playerHandleDatasLobby.ContainsKey(player.Lobby.Entity.Id))
+                            _playerHandleDatasLobby[player.Lobby.Entity.Id] = new Dictionary<ushort, Dictionary<PlayerDataKey, object>>();
+                        if (!_playerHandleDatasLobby[player.Lobby.Entity.Id].ContainsKey(player.RemoteId))
+                            _playerHandleDatasLobby[player.Lobby.Entity.Id][player.RemoteId] = new Dictionary<PlayerDataKey, object>();
+                        _playerHandleDatasLobby[player.Lobby.Entity.Id][player.RemoteId][key] = value;
+                    }
 
-                    player.Lobby.Sync.TriggerEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
+                    NAPI.Task.RunSafe(() =>
+                        player.Lobby.Sync.TriggerEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value));
                     break;
 
                 case DataSyncMode.Player:
-                    if (!_playerHandleDatasPlayer.ContainsKey(player.RemoteId))
-                        _playerHandleDatasPlayer[player.RemoteId] = new Dictionary<PlayerDataKey, object>();
-                    _playerHandleDatasPlayer[player.RemoteId][key] = value;
+                    lock (_playerHandleDatasPlayer)
+                    {
+                        if (!_playerHandleDatasPlayer.ContainsKey(player.RemoteId))
+                            _playerHandleDatasPlayer[player.RemoteId] = new Dictionary<PlayerDataKey, object>();
+                        _playerHandleDatasPlayer[player.RemoteId][key] = value;
+                    }
 
-                    player.TriggerEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value);
+                    NAPI.Task.RunSafe(() =>
+                        player.TriggerEvent(ToClientEvent.SetPlayerData, player.RemoteId, (int)key, value));
                     break;
             }
         }
@@ -96,72 +108,102 @@ namespace TDS_Server.Handler.Sync
             switch (syncMode)
             {
                 case DataSyncMode.All:
-                    if (!_entityHandleDatasAll.ContainsKey(entity.Id))
-                        _entityHandleDatasAll[entity.Id] = new Dictionary<EntityDataKey, object>();
-                    _entityHandleDatasAll[entity.Id][key] = value;
-
-                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    lock (_entityHandleDatasAll)
+                    {
+                        if (!_entityHandleDatasAll.ContainsKey(entity.Id))
+                            _entityHandleDatasAll[entity.Id] = new Dictionary<EntityDataKey, object>();
+                        _entityHandleDatasAll[entity.Id][key] = value;
+                    }
+                    
+                    NAPI.Task.RunSafe(() =>
+                        NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetPlayerData, entity.Id, (int)key, value));
                     break;
 
                 case DataSyncMode.Lobby:
                     if (toLobby is null)
                         return;
 
-                    if (!_entityHandleDatasLobby.ContainsKey(toLobby.Entity.Id))
-                        _entityHandleDatasLobby[toLobby.Entity.Id] = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
-                    if (!_entityHandleDatasLobby[toLobby.Entity.Id].ContainsKey(entity.Id))
-                        _entityHandleDatasLobby[toLobby.Entity.Id][entity.Id] = new Dictionary<EntityDataKey, object>();
-                    _entityHandleDatasLobby[toLobby.Entity.Id][entity.Id][key] = value;
-
-                    toLobby.Sync.TriggerEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    lock (_entityHandleDatasLobby)
+                    {
+                        if (!_entityHandleDatasLobby.ContainsKey(toLobby.Entity.Id))
+                            _entityHandleDatasLobby[toLobby.Entity.Id] = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
+                        if (!_entityHandleDatasLobby[toLobby.Entity.Id].ContainsKey(entity.Id))
+                            _entityHandleDatasLobby[toLobby.Entity.Id][entity.Id] = new Dictionary<EntityDataKey, object>();
+                        _entityHandleDatasLobby[toLobby.Entity.Id][entity.Id][key] = value;
+                    }
+                    
+                    NAPI.Task.RunSafe(() =>
+                        toLobby.Sync.TriggerEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value));
                     break;
 
                 case DataSyncMode.Player:
                     if (toPlayer is null)
                         return;
 
-                    if (!_entityHandleDatasPlayer.ContainsKey(toPlayer.RemoteId))
-                        _entityHandleDatasPlayer[toPlayer.RemoteId] = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
-                    if (!_entityHandleDatasPlayer[toPlayer.RemoteId].ContainsKey(entity.Id))
-                        _entityHandleDatasPlayer[toPlayer.RemoteId][entity.Id] = new Dictionary<EntityDataKey, object>();
+                    lock (_entityHandleDatasPlayer)
+                    {
+                        if (!_entityHandleDatasPlayer.ContainsKey(toPlayer.RemoteId))
+                            _entityHandleDatasPlayer[toPlayer.RemoteId] = new Dictionary<ushort, Dictionary<EntityDataKey, object>>();
+                        if (!_entityHandleDatasPlayer[toPlayer.RemoteId].ContainsKey(entity.Id))
+                            _entityHandleDatasPlayer[toPlayer.RemoteId][entity.Id] = new Dictionary<EntityDataKey, object>();
 
-                    _entityHandleDatasPlayer[toPlayer.RemoteId][entity.Id][key] = value;
+                        _entityHandleDatasPlayer[toPlayer.RemoteId][entity.Id][key] = value;
+                    }
 
-                    toPlayer.TriggerEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value);
+                    NAPI.Task.RunSafe(() => 
+                        toPlayer.TriggerEvent(ToClientEvent.SetPlayerData, entity.Id, (int)key, value));
                     break;
             }
         }
 
         private void EntityDeleted(Entity entity)
         {
-            NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.RemoveSyncedEntityDatas, entity.Handle.Value);
+            NAPI.Task.RunSafe(() => 
+                NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.RemoveSyncedEntityDatas, entity.Handle.Value));
         }
 
         private void PlayerLeftLobby(ITDSPlayer player, IBaseLobby lobby)
         {
-            if (!_playerHandleDatasLobby.ContainsKey(lobby.Entity.Id))
-                return;
-            if (!_playerHandleDatasLobby[lobby.Entity.Id].ContainsKey(player.RemoteId))
-                return;
+            lock (_playerHandleDatasLobby)
+            {
+                if (!_playerHandleDatasLobby.ContainsKey(lobby.Entity.Id))
+                    return;
+                if (!_playerHandleDatasLobby[lobby.Entity.Id].ContainsKey(player.RemoteId))
+                    return;
 
-            _playerHandleDatasLobby[lobby.Entity.Id].Remove(player.RemoteId);
+                _playerHandleDatasLobby[lobby.Entity.Id].Remove(player.RemoteId);
+            }
         }
 
         private void PlayerLoggedOut(ITDSPlayer player)
         {
-            if (_playerHandleDatasAll.ContainsKey(player.RemoteId))
-                _playerHandleDatasAll.Remove(player.RemoteId);
+            lock (_playerHandleDatasAll)
+            {
+                if (_playerHandleDatasAll.ContainsKey(player.RemoteId))
+                    _playerHandleDatasAll.Remove(player.RemoteId);
+            }
+            lock (_playerHandleDatasPlayer)
+            {
+                if (_playerHandleDatasPlayer.ContainsKey(player.RemoteId))
+                    _playerHandleDatasPlayer.Remove(player.RemoteId);
+            }
 
-            if (_playerHandleDatasPlayer.ContainsKey(player.RemoteId))
-                _playerHandleDatasPlayer.Remove(player.RemoteId);
-
-            NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId);
+            NAPI.Task.RunSafe(() => 
+                NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.RemoveSyncedPlayerDatas, player.RemoteId));
         }
 
         private void SyncPlayerAllData(ITDSPlayer player)
         {
-            var playerHandleDatasAllJson = Serializer.ToClient(_playerHandleDatasAll);
-            var entityHandleDatasAllJson = Serializer.ToClient(_entityHandleDatasAll);
+            string? playerHandleDatasAllJson;
+            string? entityHandleDatasAllJson;
+            lock (_playerHandleDatasAll)
+            {
+                playerHandleDatasAllJson = Serializer.ToClient(_playerHandleDatasAll);
+            }
+            lock (_entityHandleDatasAll)
+            {
+                entityHandleDatasAllJson = Serializer.ToClient(_entityHandleDatasAll);
+            }
 
             NAPI.Task.RunSafe(() =>
             {
@@ -172,11 +214,23 @@ namespace TDS_Server.Handler.Sync
 
         private void SyncPlayerLobbyData(ITDSPlayer player, IBaseLobby lobby)
         {
-            if (_playerHandleDatasLobby.ContainsKey(lobby.Entity.Id))
-                player.TriggerEvent(ToClientEvent.SyncPlayerData, Serializer.ToClient(_playerHandleDatasLobby[lobby.Entity.Id]));
+            lock (_playerHandleDatasLobby)
+            {
+                if (_playerHandleDatasLobby.ContainsKey(lobby.Entity.Id))
+                {
+                    var playerDataJson = Serializer.ToClient(_playerHandleDatasLobby[lobby.Entity.Id]);
+                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.SyncPlayerData, playerDataJson));
+                }
+            }
 
-            if (_entityHandleDatasLobby.ContainsKey(lobby.Entity.Id))
-                player.TriggerEvent(ToClientEvent.SyncEntityData, Serializer.ToClient(_entityHandleDatasLobby[lobby.Entity.Id]));
+            lock (_entityHandleDatasLobby)
+            {
+                if (_entityHandleDatasLobby.ContainsKey(lobby.Entity.Id))
+                {
+                    var entityDataJson = Serializer.ToClient(_entityHandleDatasLobby[lobby.Entity.Id]);
+                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.SyncEntityData, entityDataJson));
+                }
+            } 
         }
     }
 }

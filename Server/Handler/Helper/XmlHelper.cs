@@ -7,7 +7,6 @@ namespace TDS_Server.Handler.Helper
 {
     public class XmlHelper
     {
-        #region Public Methods
 
         public async Task<string> GetPrettyAsync(string xml)
         {
@@ -31,6 +30,5 @@ namespace TDS_Server.Handler.Helper
             return stringBuilder.ToString();
         }
 
-        #endregion Public Methods
     }
 }

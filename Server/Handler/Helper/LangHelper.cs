@@ -10,7 +10,7 @@ namespace TDS_Server.Handler.Helper
 {
     public class LangHelper
     {
-        public readonly Dictionary<Language, ILanguage> LanguageByID = new Dictionary<Language, ILanguage>
+        private readonly Dictionary<Language, ILanguage> _languageById = new Dictionary<Language, ILanguage>
         {
             [Language.German] = new German(),
             [Language.English] = new English()
@@ -23,67 +23,63 @@ namespace TDS_Server.Handler.Helper
 
         public ILanguage GetLang(Type language)
         {
-            foreach (ILanguage lang in LanguageByID.Values)
+            lock (_languageById)
             {
-                if (lang.GetType() == language.GetType())
-                {
-                    return lang;
-                }
+                foreach (ILanguage lang in _languageById.Values)
+                    if (lang.GetType() == language.GetType())
+                        return lang;
+
+                return _languageById[Language.English];
             }
-            return LanguageByID[Language.English];
         }
 
         public ILanguage GetLang(byte language)
         {
-            return LanguageByID[(Language)language];
+            lock (_languageById)
+            {
+                return _languageById[(Language)language];
+            }
         }
 
         public ILanguage GetLang(Language language)
         {
-            return LanguageByID[language];
+            lock (_languageById)
+            {
+                return _languageById[language];
+            }
         }
 
-        public Dictionary<ILanguage, string> GetLangDictionary(Func<ILanguage, string> langgetter)
+        public Dictionary<ILanguage, string> GetLangDictionary(Func<ILanguage, string> langGetter)
         {
             var returnDict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in LanguageByID.Values)
+            lock (_languageById)
             {
-                returnDict[lang] = langgetter(lang);
+                foreach (ILanguage lang in _languageById.Values)
+                    returnDict[lang] = langGetter(lang);
             }
+            
             return returnDict;
         }
 
-        public void SendAllChatMessage(Func<ILanguage, string> langgetter)
+        public void SendAllChatMessage(Func<ILanguage, string> langGetter)
         {
-            var returnDict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in LanguageByID.Values)
-            {
-                returnDict[lang] = langgetter(lang);
-            }
+            var langDictionary = GetLangDictionary(langGetter);
 
             NAPI.Task.RunSafe(() =>
             {
                 foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
-                {
-                    player.SendChatMessage(returnDict[player.Language]);
-                }
+                    player.SendChatMessage(langDictionary[player.Language]);
             });
         }
 
-        public void SendAllNotification(Func<ILanguage, string> langgetter)
+        public void SendAllNotification(Func<ILanguage, string> langGetter)
         {
-            var returnDict = new Dictionary<ILanguage, string>();
-            foreach (ILanguage lang in LanguageByID.Values)
-            {
-                returnDict[lang] = langgetter(lang);
-            }
+            var langDictionary = GetLangDictionary(langGetter);
 
             NAPI.Task.RunSafe(() =>
-            {
+            { 
                 foreach (var player in _tdsPlayerHandler.LoggedInPlayers)
-                {
-                    player.SendNotification(returnDict[player.Language]);
-                }
+                    player.SendNotification(langDictionary[player.Language]);
             });
         }
     }

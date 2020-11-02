@@ -20,7 +20,8 @@ namespace BonusBotConnector.Client.Requests
             _client = new RAGEServerStatsClient(channel);
             _settings = settings;
 
-            _ipAddress = new WebClient().DownloadString("https://www.l2.io/ip");
+            using var webClient = new WebClient();
+            _ipAddress = webClient.DownloadString("https://www.l2.io/ip");
         }
 
         public event ErrorLogDelegate? Error;

@@ -65,7 +65,11 @@ namespace TDS_Server.Handler.Maps
 
                 await ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
-                map.Ratings.Add(maprating);
+                lock (map.Ratings)
+                {
+                    map.Ratings.Add(maprating);
+                }
+
                 map.RatingAverage = map.Ratings.Average(r => r.Rating);
 
                 if (map.Info.IsNewMap)

@@ -23,7 +23,8 @@ namespace TDS_Server.Handler
                 {
                     player.Position = targetPlayer.Position.AddToZ(10);
                     new TDS_Shared.Core.TDSTimer(() =>
-                        player.TriggerEvent(ToClientEvent.SetPlayerToSpectatePlayer, targetPlayer.RemoteId), 2000);
+                        NAPI.Task.Run(() => 
+                            player.TriggerEvent(ToClientEvent.SetPlayerToSpectatePlayer, targetPlayer.RemoteId)), 2000);
                 });
             }
         }

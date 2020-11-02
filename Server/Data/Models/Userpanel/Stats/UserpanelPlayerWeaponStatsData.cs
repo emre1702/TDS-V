@@ -5,7 +5,6 @@ namespace TDS_Server.Data.Models.Userpanel.Stats
 {
     public class UserpanelPlayerWeaponStatsData
     {
-        #region Public Properties
 
         [JsonProperty("10")]
         public int AmountHeadshots { get; set; }
@@ -43,6 +42,5 @@ namespace TDS_Server.Data.Models.Userpanel.Stats
         [JsonProperty("0")]
         public string WeaponName { get; set; }
 
-        #endregion Public Properties
     }
 }

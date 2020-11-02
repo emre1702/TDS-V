@@ -15,6 +15,8 @@ namespace TDS_Server.Handler.GangSystem
 {
     public class GangwarAreasHandler
     {
+        private readonly List<GangwarArea> _gangwarAreas = new List<GangwarArea>();
+
         private readonly TDSDbContext _dbContext;
         private readonly ILoggingHandler _loggingHandler;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
@@ -31,7 +33,7 @@ namespace TDS_Server.Handler.GangSystem
             eventsHandler.MapsLoaded += LoadGangwarAreas;
         }
 
-        public List<GangwarArea> GangwarAreas { get; set; } = new List<GangwarArea>();
+        
 
         /// <summary>
         /// Returns the Gangwar area by Id / MapId. MapId is used as Id!
@@ -40,7 +42,10 @@ namespace TDS_Server.Handler.GangSystem
         /// <returns></returns>
         public GangwarArea? GetById(int id)
         {
-            return GangwarAreas.FirstOrDefault(a => a.Entity?.MapId == id);
+            lock (_gangwarAreas)
+            {
+                return _gangwarAreas.FirstOrDefault(a => a.Entity?.MapId == id);
+            }
         }
 
         private void LoadGangwarAreas()
@@ -49,14 +54,14 @@ namespace TDS_Server.Handler.GangSystem
             CreateMissingGangwarAreas(entities);
             foreach (var entity in entities)
             {
-                var map = _mapsLoadingHandler.DefaultMaps.FirstOrDefault(m => m.Info.Type == MapType.Gangwar && m.BrowserSyncedData.Id == entity.MapId);
+                var map = _mapsLoadingHandler.GetGangwarAreaMap(entity.MapId);
                 if (map is null)
                 {
                     _loggingHandler.LogError($"GangwarArea with Map {entity.Map.Name} ({entity.MapId}) has no map file in default maps folder!", Environment.StackTrace);
                     continue;
                 }
                 var area = ActivatorUtilities.CreateInstance<GangwarArea>(_serviceProvider, entity, map);
-                GangwarAreas.Add(area);
+                lock(_gangwarAreas) { _gangwarAreas.Add(area); }
             }
             // Don't need it anymore
             _dbContext.Dispose();
@@ -64,8 +69,7 @@ namespace TDS_Server.Handler.GangSystem
 
         private void CreateMissingGangwarAreas(List<GangwarAreas> gangwarAreas)
         {
-            var mapsWithoutGangwarArea = _mapsLoadingHandler.DefaultMaps
-                .Where(map => map.BrowserSyncedData.Type == TDS_Shared.Data.Enums.MapType.Gangwar && !gangwarAreas.Any(a => a.MapId == map.BrowserSyncedData.Id));
+            var mapsWithoutGangwarArea = _mapsLoadingHandler.GetGangwarMapsWithoutGangwarAreas(gangwarAreas);
 
             var newEntities = new List<GangwarAreas>();
             foreach (var map in mapsWithoutGangwarArea)

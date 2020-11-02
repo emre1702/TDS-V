@@ -1,14 +1,11 @@
 ﻿using System;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
 
 namespace TDS_Server.Handler.Helper
 {
     public class NameCheckHelper
     {
-        #region Public Methods
-
         public bool IsName(ITDSPlayer player, string input, IsNameCheckLevel isNameCheckLevel)
         {
             return isNameCheckLevel switch
@@ -28,7 +25,5 @@ namespace TDS_Server.Handler.Helper
                 _ => false
             };
         }
-
-        #endregion Public Methods
     }
 }

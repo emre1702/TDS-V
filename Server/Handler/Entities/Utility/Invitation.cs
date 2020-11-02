@@ -1,8 +1,10 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Models;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Entities.Utility
@@ -42,7 +44,9 @@ namespace TDS_Server.Handler.Entities.Utility
 
             invitationsHandler.Add(this);
 
-            target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
+            var dataJson = Serializer.ToBrowser(Dto);
+            NAPI.Task.RunSafe(() => 
+                target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, dataJson));
         }
 
         public bool RemoveOnLobbyLeave { get; set; }
@@ -63,7 +67,9 @@ namespace TDS_Server.Handler.Entities.Utility
 
         public void Resend()
         {
-            Target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, Serializer.ToBrowser(Dto));
+            var dataJson = Serializer.ToBrowser(Dto);
+            NAPI.Task.RunSafe(() => 
+                Target.TriggerBrowserEvent(ToBrowserEvent.AddInvitation, dataJson));
         }
 
         public void Withdraw()
@@ -71,7 +77,8 @@ namespace TDS_Server.Handler.Entities.Utility
             _invitationsHandler.Remove(this);
             if (!Target.LoggedIn)
                 return;
-            Target.TriggerBrowserEvent(ToBrowserEvent.RemoveInvitation, Dto.Id);
+            NAPI.Task.RunSafe(() => 
+                Target.TriggerBrowserEvent(ToBrowserEvent.RemoveInvitation, Dto.Id));
         }
     }
 }

@@ -10,6 +10,8 @@ namespace TDS_Server.Handler
 {
     public class AnnouncementsHandler : IAnnouncementsHandler
     {
+        public string Json { get; }
+
         public AnnouncementsHandler(TDSDbContext dbContext)
         {
             var data = dbContext.Announcements
@@ -24,7 +26,5 @@ namespace TDS_Server.Handler
 
             Json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(data));
         }
-
-        public string Json { get; }
     }
 }

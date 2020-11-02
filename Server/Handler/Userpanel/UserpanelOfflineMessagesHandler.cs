@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Data.Models.Userpanel.OfflineMessage;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Handler.Entities;
@@ -14,27 +15,6 @@ using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class OfflineMessage
-    {
-        [JsonProperty("2")]
-        public string CreateTime { get; set; } = string.Empty;
-
-        [JsonIgnore]
-        public DateTime CreateTimeDate { get; set; }
-
-        [JsonProperty("0")]
-        public int ID { get; set; }
-
-        [JsonProperty("1")]
-        public string PlayerName { get; set; } = string.Empty;
-
-        [JsonProperty("4")]
-        public bool Seen { get; set; }
-
-        [JsonProperty("3")]
-        public string Text { get; set; } = string.Empty;
-    }
-
     public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper, IUserpanelOfflineMessagesHandler
     {
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
@@ -117,7 +97,7 @@ namespace TDS_Server.Handler.Userpanel
                 => await dbContext.Offlinemessages
                     .Where(o => o.TargetId == player.Entity!.Id)
                     .Include(o => o.Source)
-                    .Select(o => new OfflineMessage
+                    .Select(o => new OfflineMessageDto
                     {
                         ID = o.Id,
                         PlayerName = o.Source.Name,

@@ -100,9 +100,10 @@ namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
                     await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 }).ConfigureAwait(false);
 
+                CreateGangLobbyMapInfo();
                 NAPI.Task.RunSafe(() =>
                 {
-                    CreateGangLobbyMapInfo();
+                    
 
                     //Todo: Inform the owner
                     //Todo: Inform everyone + attacker

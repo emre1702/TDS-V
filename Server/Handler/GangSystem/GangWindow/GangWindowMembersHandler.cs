@@ -73,7 +73,8 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
 
             player.Gang = _gangsHandler.None;
             player.GangRank = _gangsHandler.NoneRank;
-            _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id);
+            NAPI.Task.RunSafe(() => 
+                _dataSyncHandler.SetData(player, PlayerDataKey.GangId, DataSyncMode.Player, player.Gang.Entity.Id));
 
             if (player.Lobby is IGangLobby || player.Lobby is IGangActionLobby)
                 await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);

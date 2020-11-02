@@ -1,14 +1,14 @@
-﻿using System;
+﻿using BonusBotConnector.Client;
+using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BonusBotConnector.Client;
-using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Data.Models.Userpanel.Application;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
@@ -16,60 +16,9 @@ using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
-using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class AdminQuestionData
-    {
-        [JsonProperty("2")]
-        public UserpanelAdminQuestionAnswerType AnswerType { get; set; }
-
-        [JsonProperty("0")]
-        public int ID { get; set; }
-
-        [JsonProperty("1")]
-        public string Question { get; set; } = string.Empty;
-    }
-
-    public class AdminQuestionsData
-    {
-        [JsonProperty("0")]
-        public string AdminName { get; set; } = string.Empty;
-
-        [JsonProperty("1")]
-        public IEnumerable<AdminQuestionData>? Questions { get; set; }
-    }
-
-    public class ApplicationUserData
-    {
-        [JsonProperty("2")]
-        public string AdminQuestions { get; set; } = string.Empty;
-
-        [JsonIgnore]
-        public DateTime CreateDateTime { get; set; }
-
-        [JsonProperty("0")]
-        public string? CreateTime { get; set; }
-
-        [JsonProperty("1")]
-        public IEnumerable<ApplicationUserInvitationData>? Invitations { get; set; }
-    }
-
-    public class ApplicationUserInvitationData
-    {
-        [JsonProperty("1")]
-        public string? AdminName { get; set; }
-
-        [JsonProperty("2")]
-        public string? AdminSCName { get; set; }
-
-        [JsonProperty("0")]
-        public int ID { get; set; }
-
-        [JsonProperty("3")]
-        public string? Message { get; set; }
-    }
 
     public class UserpanelApplicationUserHandler : DatabaseEntityWrapper, IUserpanelApplicationUserHandler
     {

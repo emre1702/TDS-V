@@ -4,31 +4,15 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Models.Userpanel.Faq;
 using TDS_Server.Database.Entity;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class FAQData
-    {
-        #region Public Properties
-
-        [JsonProperty("2")]
-        public string Answer { get; set; } = string.Empty;
-
-        [JsonProperty("0")]
-        public int Id { get; set; }
-
-        [JsonProperty("1")]
-        public string Question { get; set; } = string.Empty;
-
-        #endregion Public Properties
-    }
-
     internal class UserpanelFAQsHandlers
     {
-        #region Private Fields
 
         private readonly Dictionary<Language, string> _faqsJsonByLanguage = new Dictionary<Language, string>()
         {
@@ -36,16 +20,8 @@ namespace TDS_Server.Handler.Userpanel
             [Language.German] = string.Empty
         };
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public UserpanelFAQsHandlers(TDSDbContext dbContext)
             => LoadFAQs(dbContext);
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public string GetData(ITDSPlayer player)
         {
@@ -62,7 +38,7 @@ namespace TDS_Server.Handler.Userpanel
             {
                 var faqs = allFAQs
                     .Where(f => f.Language == entry.Key)
-                    .Select(f => new FAQData
+                    .Select(f => new FaqData
                     {
                         Id = f.Id,
                         Question = regex.Replace(f.Question, ""),
@@ -72,6 +48,5 @@ namespace TDS_Server.Handler.Userpanel
             }
         }
 
-        #endregion Public Methods
     }
 }

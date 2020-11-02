@@ -131,11 +131,12 @@ namespace TDS_Server.Handler.Helper
 
         public void SyncCurrentAmount(ITDSPlayer player, PlayerChallenges challenge)
         {
-            player.TriggerEvent(ToClientEvent.ToBrowserEvent,
-                ToBrowserEvent.SyncChallengeCurrentAmountChange,
-                (int)challenge.Frequency,
-                (int)challenge.Challenge,
-                challenge.CurrentAmount);
+            NAPI.Task.RunSafe(() => 
+                player.TriggerEvent(ToClientEvent.ToBrowserEvent,
+                    ToBrowserEvent.SyncChallengeCurrentAmountChange,
+                    (int)challenge.Frequency,
+                    (int)challenge.Challenge,
+                    challenge.CurrentAmount));
         }
 
         private async void EventsHandler_PlayerLoggedIn(ITDSPlayer player)

@@ -9,20 +9,20 @@ namespace TDS_Server.Handler.Server
 {
     public class AppConfigHandler
     {
+        public string ConnectionString => _localSettings.ConnectionString.Value;
+        public string GitHubToken => _localSettings.GitHubToken.Value;
+
         private readonly AppConfigDto _localSettings;
 
         public AppConfigHandler()
         {
-            string path = Path.Join(AssemblyDirectory, "TDS_Server.config");
+            var path = Path.Join(AssemblyDirectory, "TDS_Server.config");
             using var fileStream = new FileStream(path, FileMode.Open);
             using var reader = XmlReader.Create(fileStream);
             var xmlSerializer = XmlSerializer.FromTypes(new[] { typeof(AppConfigDto) })[0];
 
             _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
         }
-
-        public string ConnectionString => _localSettings.ConnectionString.Value;
-        public string GitHubToken => _localSettings.GitHubToken.Value;
 
         private string AssemblyDirectory
         {

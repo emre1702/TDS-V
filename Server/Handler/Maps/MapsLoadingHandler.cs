@@ -10,6 +10,7 @@ using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Interfaces;
+using TDS_Server.Data.Interfaces.Entities.Gangs;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.GangEntities;
@@ -23,14 +24,11 @@ namespace TDS_Server.Handler.Maps
 {
     public class MapsLoadingHandler
     {
-        /// <summary>
-        /// Former: AllMaps
-        /// </summary>
-        public List<MapDto> DefaultMaps = new List<MapDto>();
+        private List<MapDto> _defaultMaps = new List<MapDto>();
 
-        public List<MapDto> NeedCheckMaps = new List<MapDto>();
-        public List<MapDto> NewCreatedMaps = new List<MapDto>();
-        public List<MapDto> SavedMaps = new List<MapDto>();
+        private List<MapDto> _needCheckMaps = new List<MapDto>();
+        private List<MapDto> _newCreatedMaps = new List<MapDto>();
+        private List<MapDto> _savedMaps = new List<MapDto>();
 
         private readonly TDSDbContext _dbContext;
         private readonly EventsHandler _eventsHandler;
@@ -41,42 +39,175 @@ namespace TDS_Server.Handler.Maps
         public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
             => (_dbContext, _eventsHandler, _loggingHandler, _settingsHandler) = (dbContext, eventsHandler, loggingHandler, settingsHandler);
 
-        public IEnumerable<MapDto> AllCreatingMaps => NewCreatedMaps.Union(NeedCheckMaps);
+        public IEnumerable<MapDto> GetAllMapsInCreating()
+        {
+            lock (_newCreatedMaps)
+            {
+                lock (_needCheckMaps)
+                {
+                    return _newCreatedMaps.Union(_needCheckMaps);
+                }
+            }
+        }
 
-        // .Union(_savedMaps)
         public object? GetAllMapsForCustomLobby(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            var allMapsSyncData = DefaultMaps.Union(NewCreatedMaps).Union(NeedCheckMaps).Select(m => m.BrowserSyncedData);
+            lock (_defaultMaps)
+            {
+                lock (_newCreatedMaps)
+                {
+                    lock (_needCheckMaps)
+                    {
+                        var allMapsSyncData = _defaultMaps.Union(_newCreatedMaps).Union(_needCheckMaps).Select(m => m.BrowserSyncedData);
 
-            return Serializer.ToBrowser(allMapsSyncData);
+                        return Serializer.ToBrowser(allMapsSyncData);
+                    }
+                }
+            }
+        }
+
+        public int GetNextNewCreatedMapId()
+        {
+            lock (_savedMaps)
+            {
+                return _savedMaps.Min(m => m.BrowserSyncedData.Id) - 1;
+            }
+        }
+
+        public MapDto? GetGangwarAreaMap(int mapId)
+        { 
+            lock (_defaultMaps) 
+            { 
+                return _defaultMaps.FirstOrDefault(m => m.Info.Type == MapType.Gangwar && m.BrowserSyncedData.Id == mapId);
+            }
+        }
+
+        public void AddNewCreatedMap(MapDto map)
+        {
+            lock (_newCreatedMaps)
+            {
+                _newCreatedMaps.Add(map);
+            }
+        }
+
+        public void AddSavedMap(MapDto map)
+        {
+            lock (_savedMaps)
+            {
+                _savedMaps.Add(map);
+            }      
         }
 
         public MapDto? GetMapById(int id)
         {
-            return DefaultMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == id);
+            lock (_defaultMaps)
+            {
+                return _defaultMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == id);
+            }
+        }
+
+        public MapDto? GetSavedMap(int mapId)
+        {
+            lock (_savedMaps)
+            {
+                return _savedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+            }
+        }
+
+        public MapDto? GetNewCreatedMap(int mapId)
+        {
+            lock (_newCreatedMaps)
+            {
+                return _newCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+            }
+        }
+
+        public MapDto? GetNewCreatedMap(string mapName)
+        {
+            lock (_newCreatedMaps)
+            {
+                return _newCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapName);
+            }
+        }
+
+        public MapDto? GetNeedCheckMap(int mapId)
+        {
+            lock (_needCheckMaps)
+            {
+                return _needCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Id == mapId);
+            }
+        }
+
+        public MapDto? GetNeedCheckMap(string mapName)
+        {
+            lock (_needCheckMaps)
+            {
+                return _needCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapName);
+            }
+        }
+
+        public IEnumerable<MapDto> GetGangwarMapsWithoutGangwarAreas(List<GangwarAreas> gangwarAreas)
+        {
+            lock (_defaultMaps)
+            {
+                return _defaultMaps
+                    .Where(map => map.BrowserSyncedData.Type == TDS_Shared.Data.Enums.MapType.Gangwar 
+                                && !gangwarAreas.Any(a => a.MapId == map.BrowserSyncedData.Id));
+            }
+        }
+
+        internal bool RemoveSavedMap(MapDto map)
+        {
+            lock (_savedMaps)
+            {
+                return _savedMaps.Remove(map);
+            }
+        }
+
+        internal bool RemoveNewCreatedMap(MapDto map)
+        {
+            lock (_newCreatedMaps)
+            {
+                return _newCreatedMaps.Remove(map);
+            }
+        }
+
+        internal bool RemoveNeedCheckMap(MapDto map)
+        {
+            lock (_needCheckMaps)
+            {
+                return _needCheckMaps.Remove(map);
+            }
         }
 
         public MapDto? GetMapByName(string mapName)
         {
-            return DefaultMaps.FirstOrDefault(m => m.Info.Name == mapName);
+            lock (_defaultMaps)
+            {
+                return _defaultMaps.FirstOrDefault(m => m.Info.Name == mapName);
+            }
         }
 
         public MapDto? GetRandomNewMap()
         {
-            if (NewCreatedMaps.Count == 0)
+            List<MapDto>? listOfPossibleMaps;
+            lock (_newCreatedMaps)
+            {
+                if (_newCreatedMaps.Count == 0)
+                    return null;
+                listOfPossibleMaps = _newCreatedMaps.Where(m => m.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck).ToList();
+            }
+            if (listOfPossibleMaps.Count == 0)
                 return null;
-            var list = NewCreatedMaps.Where(m => m.Ratings.Count < _settingsHandler.ServerSettings.MapRatingAmountForCheck).ToList();
-            if (list.Count == 0)
-                return null;
-            return SharedUtils.GetRandom(list);
+            return SharedUtils.GetRandom(listOfPossibleMaps);
         }
 
         public void LoadAllMaps()
         {
             var allDbMaps = _dbContext.Maps.Include(m => m.Creator).Include(m => m.PlayerMapRatings).ToList();
 
-            NewCreatedMaps = LoadMaps(Constants.NewMapsPath, false, allDbMaps);
-            foreach (var map in NewCreatedMaps)
+            _newCreatedMaps = LoadMaps(Constants.NewMapsPath, false, allDbMaps);
+            foreach (var map in _newCreatedMaps)
             {
                 // Player shouldn't be able to see the creator of the map (so they don't rate it
                 // depending of the creator)
@@ -84,19 +215,19 @@ namespace TDS_Server.Handler.Maps
                 map.Info.IsNewMap = true;
             }
 
-            SavedMaps = LoadMaps(Constants.SavedMapsPath, true, allDbMaps);
-            foreach (var map in SavedMaps)
+            _savedMaps = LoadMaps(Constants.SavedMapsPath, true, allDbMaps);
+            foreach (var map in _savedMaps)
             {
                 map.Info.IsNewMap = true;
             }
 
-            NeedCheckMaps = LoadMaps(Constants.NeedCheckMapsPath, false, allDbMaps);
-            foreach (var map in NewCreatedMaps)
+            _needCheckMaps = LoadMaps(Constants.NeedCheckMapsPath, false, allDbMaps);
+            foreach (var map in _newCreatedMaps)
             {
                 map.Info.IsNewMap = true;
             }
 
-            DefaultMaps = LoadMaps(Constants.MapsPath, false, allDbMaps);
+            _defaultMaps = LoadMaps(Constants.MapsPath, false, allDbMaps);
 
             _eventsHandler.OnMapsLoaded();
         }
@@ -156,7 +287,7 @@ namespace TDS_Server.Handler.Maps
 
         private List<MapDto> LoadMaps(string path, bool isOnlySaved, List<DB.Rest.Maps> allDbMaps)
         {
-            List<MapDto> list = LoadMapsInDirectory(path, isOnlySaved);
+            var list = LoadMapsInDirectory(path, isOnlySaved);
 
             if (isOnlySaved)
             {
@@ -172,13 +303,45 @@ namespace TDS_Server.Handler.Maps
             return list;
         }
 
+        internal List<MapDto> GetSavedMaps()
+        {
+            lock (_savedMaps)
+            {
+                return _savedMaps.ToList();
+            }
+        }
+
+        internal List<MapDto> GetNewCreatedMaps()
+        {
+            lock (_newCreatedMaps)
+            {
+                return _newCreatedMaps.ToList();
+            }
+        }
+
+        internal List<MapDto> GetDefaultMaps()
+        {
+            lock (_defaultMaps)
+            {
+                return _defaultMaps.ToList();
+            }
+        }
+
+        internal List<MapDto> GetNeedCheckMaps()
+        {
+            lock (_needCheckMaps)
+            {
+                return _needCheckMaps.ToList();
+            }
+        }
+
         private List<MapDto> LoadMapsInDirectory(string path, bool isOnlySaved)
         {
             var list = new List<MapDto>();
             var directoryInfo = new DirectoryInfo(path);
             foreach (var fileInfo in directoryInfo.EnumerateFiles("*.map", SearchOption.AllDirectories))
             {
-                MapDto? map = LoadMap(fileInfo, isOnlySaved);
+                var map = LoadMap(fileInfo, isOnlySaved);
                 if (map is null)
                     continue;
                 list.Add(map);

@@ -2,6 +2,7 @@
 using GTANetworkAPI;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS_Server.Data.Utility;
@@ -36,13 +37,14 @@ namespace TDS_Server.Handler.Server
                 eventsHandler.Second += EventsHandler_Second;
         }
 
-        private void EventsHandler_Second(int counter)
+        private async void EventsHandler_Second(int counter)
         {
             if (_bonusBotSettings is null)
                 return;
 
             if (counter % _bonusBotSettings.RefreshServerStatsFrequencySec == 0)
             {
+                await Task.Yield();
                 var request = new RAGEServerStatsRequest
                 {
                     PlayerAmountInArena = _lobbiesHandler.Arena.Players.Count,

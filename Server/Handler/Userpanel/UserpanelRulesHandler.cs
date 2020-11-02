@@ -1,28 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Linq;
+using TDS_Server.Data.Models.Userpanel.Rules;
 using TDS_Server.Database.Entity;
 using TDS_Shared.Core;
-using TDS_Shared.Data.Enums.Userpanel;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class RuleData
-    {
-        [JsonProperty("3")]
-        public RuleCategory Category { get; set; }
-
-        [JsonProperty("0")]
-        public int Id { get; set; }
-
-        [JsonProperty("2")]
-        public RuleTarget Target { get; set; }
-
-        [JsonProperty("1")]
-        public Dictionary<int, string>? Texts { get; set; }
-    }
-
     internal class UserpanelRulesHandler
     {
         private string _rulesJson = string.Empty;

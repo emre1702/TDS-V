@@ -29,7 +29,8 @@ export class German extends English {
     NameAlreadyExists = "Der Name existiert bereits.";
     Unknown = "Unbekannter Fehler.";
     Cooldown = "Bitte warte etwas vor dem nächsten Absenden.";
-    MapCreatedSuccessfully = "Die Karte wurde erfolgreich erstellt/gespeichert.";
+    MapCreatedSuccessfully = "Die Karte wurde erfolgreich erstellt und gespeichert.";
+    MapSavedSuccessfully = "Die Karte wurde erfolgreich gespeichert.";
     SavedMapLoadSuccessful = "Die Karte konnte erfolgreich geladen werden.";
     Cancel = "Abbrechen";
     ChooseAMapFromList = "Wähle eine Karte aus der Liste!";

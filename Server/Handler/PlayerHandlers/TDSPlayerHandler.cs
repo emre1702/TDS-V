@@ -46,20 +46,13 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         public ITDSPlayer? Get(int playerId)
         {
-            lock (_tdsPlayerRemoteIdCache)
-            {
-                return _tdsPlayerRemoteIdCache.Values.FirstOrDefault(p => p.Id == playerId);
-            }
+            return _tdsPlayerRemoteIdCache.Values.FirstOrDefault(p => p.Id == playerId);
         }
 
         public ITDSPlayer? GetIfLoggedIn(ushort remoteId)
         {
-            lock (_tdsPlayerRemoteIdCache)
-            {
-                _tdsPlayerRemoteIdCache.TryGetValue(remoteId, out ITDSPlayer? player);
-                return player;
-            }
-             
+            _tdsPlayerRemoteIdCache.TryGetValue(remoteId, out ITDSPlayer? player);
+            return player;
         }
 
         public ITDSPlayer? FindTDSPlayer(string name)
@@ -69,31 +62,28 @@ namespace TDS_Server.Handler.PlayerHandlers
                 name = name.Substring(suffix.Length);
             name = name.Trim();
 
-            lock (_tdsPlayerRemoteIdCache)
+            foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
-                foreach (var player in _tdsPlayerRemoteIdCache.Values)
-                {
-                    if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
-                        return player;
-                }
+                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
+                    return player;
+            }
 
-                foreach (var player in _tdsPlayerRemoteIdCache.Values)
-                {
-                    if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
-                        return player;
-                }
+            foreach (var player in _tdsPlayerRemoteIdCache.Values)
+            {
+                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
+                    return player;
+            }
 
-                foreach (var player in _tdsPlayerRemoteIdCache.Values)
-                {
-                    if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
-                        return player;
-                }
+            foreach (var player in _tdsPlayerRemoteIdCache.Values)
+            {
+                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
+                    return player;
+            }
 
-                foreach (var player in _tdsPlayerRemoteIdCache.Values)
-                {
-                    if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
-                        return player;
-                }
+            foreach (var player in _tdsPlayerRemoteIdCache.Values)
+            {
+                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
+                    return player;
             }
 
             return null;
@@ -107,8 +97,7 @@ namespace TDS_Server.Handler.PlayerHandlers
 
         private void EventsHandler_PlayerLoggedOutAfter(ITDSPlayer player)
         {
-            lock (_tdsPlayerRemoteIdCache)
-                _tdsPlayerRemoteIdCache.TryRemove(player.RemoteId, out _);
+            _tdsPlayerRemoteIdCache.TryRemove(player.RemoteId, out _);
         }
 
         private ValueTask EventsHandler_PlayerLoggedOutBefore(ITDSPlayer player)

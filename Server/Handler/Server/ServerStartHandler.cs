@@ -69,13 +69,20 @@ namespace TDS_Server.Handler.Server
 
             var splittedReason = Utils.SplitPartsByLength($"Banned!\nName: {ban.Player?.Name ?? player.Name}\nAdmin: {ban.Admin.Name}\nReason: {ban.Reason}\nEnd: {endstr} UTC\nStart: {startstr} UTC", 90);
 
-            foreach (var split in splittedReason)
-                player.SendNotification(split, true);
+            NAPI.Task.RunSafe(() =>
+            {
+                foreach (var split in splittedReason)
+                    player.SendNotification(split, true);
+            });
 
             _ = new TDSTimer(() =>
             {
                 if (!player.IsNull)
-                    player.Kick("Ban");
+                {
+                    NAPI.Task.RunSafe(() =>
+                        player.Kick("Ban"));
+                }
+                    
             }, 3000, 1);
 
             return false;

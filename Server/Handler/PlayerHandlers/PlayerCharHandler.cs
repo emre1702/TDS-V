@@ -152,11 +152,12 @@ namespace TDS_Server.Handler.PlayerHandlers
             charDatas.HairAndColorsData.Add(new PlayerCharHairAndColorsDatas { Slot = slot, SyncedData = new CharCreateHairAndColorsData { Slot = slot } });
         }
 
-        private void LoadPlayerChar(ITDSPlayer player)
+        private async void LoadPlayerChar(ITDSPlayer player)
         {
             if (player.Entity is null || player.Entity.CharDatas is null)
                 return;
 
+            await Task.Yield();
             var data = player.Entity.CharDatas;
             while (data.AppearanceData.Count < _settingsHandler.ServerSettings.AmountCharSlots)
             {

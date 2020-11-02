@@ -14,7 +14,6 @@ namespace TDS_Server.Handler.Server
 {
     public class ResourceStopHandler
     {
-        #region Private Fields
 
         private readonly ChallengesHelper _challengesHelper;
         private readonly LangHelper _langHelper;
@@ -24,10 +23,6 @@ namespace TDS_Server.Handler.Server
         private readonly ITDSPlayerHandler _tdsPlayersHandler;
         private bool _isFirstResourceStopCheck = true;
         private bool _resourceStopped = false;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, ChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
             LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
@@ -45,10 +40,6 @@ namespace TDS_Server.Handler.Server
             eventsHandler.Hour += CheckHourForResourceRestart;
             eventsHandler.ResourceStop += OnResourceStop;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void CheckHourForResourceRestart(int _)
         {
@@ -71,10 +62,6 @@ namespace TDS_Server.Handler.Server
             OnResourceStop();
             Environment.Exit(0);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void ExecuteResourceRestart()
         {
@@ -176,7 +163,9 @@ namespace TDS_Server.Handler.Server
                     }
                 }
 
+                Console.WriteLine("Saving all in database ...");
                 Task.WaitAll(tasks.ToArray(), System.Threading.Timeout.Infinite);
+                Console.WriteLine("Saved all in database.");
             }
             catch (Exception ex)
             {
@@ -184,6 +173,5 @@ namespace TDS_Server.Handler.Server
             }
         }
 
-        #endregion Private Methods
     }
 }

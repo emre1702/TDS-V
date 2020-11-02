@@ -23,7 +23,7 @@ namespace TDS_Server.DamageSystem.Damages
             foreach (var weapon in weapons)
             {
                 if (!weapon.Damage.HasValue && !weapon.HeadMultiplicator.HasValue)
-                    _damagesDict[weapon.Hash] = _weaponDatasLoadingHandler.DefaultDamages[weapon.Hash];
+                    _damagesDict[weapon.Hash] = _weaponDatasLoadingHandler.GetDefaultDamage(weapon.Hash);
                 else
                     _damagesDict[weapon.Hash] = new DamageDto(weapon);
             }

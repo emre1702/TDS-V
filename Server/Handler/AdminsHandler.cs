@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoreLinq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
@@ -11,9 +12,11 @@ namespace TDS_Server.Handler
 {
     public class AdminsHandler
     {
+        private readonly Dictionary<short, AdminLevelDto> _adminLevels  = new Dictionary<short, AdminLevelDto>();
+
         public AdminsHandler(TDSDbContext dbContext, EventsHandler eventsHandler)
         {
-            AdminLevels = dbContext.AdminLevels
+            _adminLevels = dbContext.AdminLevels
                 .OrderBy(lvl => lvl.Level)
                 .Select(lvl => new AdminLevelDto
                             (
@@ -24,22 +27,44 @@ namespace TDS_Server.Handler
 
             foreach (var entry in dbContext.AdminLevelNames.ToList())
             {
-                AdminLevels[entry.Level].Names[entry.Language] = entry.Name;
+                _adminLevels[entry.Level].Names[entry.Language] = entry.Name;
             }
 
             eventsHandler.PlayerLoggedIn += SetOnline;
             eventsHandler.PlayerLoggedOut += SetOffline;
         }
 
-        public Dictionary<short, AdminLevelDto> AdminLevels { get; } = new Dictionary<short, AdminLevelDto>();
+        public AdminLevelDto GetLevel(short adminLvl)
+        {
+            lock (_adminLevels)
+            {
+                return _adminLevels[adminLvl];
+            }
+        }
+
+        public AdminLevelDto GetLowestLevel()
+        {
+            lock (_adminLevels)
+            {
+                return _adminLevels[0];
+            }
+        }
+
+        public AdminLevelDto GetHighestLevel()
+        {
+            lock (_adminLevels)
+            {
+                return _adminLevels.Values.MaxBy(a => a.Level).First();
+            }
+        }
 
         public void CallMethodForAdmins(Action<ITDSPlayer> func, byte minadminlvl = 1)
         {
-            lock (AdminLevels)
+            lock (_adminLevels)
             {
-                for (byte lvl = minadminlvl; lvl < AdminLevels.Count; ++lvl)
+                for (byte lvl = minadminlvl; lvl < _adminLevels.Count; ++lvl)
                 {
-                    foreach (ITDSPlayer player in AdminLevels[lvl].PlayersOnline)
+                    foreach (ITDSPlayer player in _adminLevels[lvl].PlayersOnline)
                     {
                         func(player);
                     }
@@ -64,22 +89,22 @@ namespace TDS_Server.Handler
 
         private void SetOffline(ITDSPlayer player)
         {
-            lock (AdminLevels)
+            lock (_adminLevels)
             {
-                if (AdminLevels.ContainsKey(player.Admin.Level.Level))
+                if (_adminLevels.ContainsKey(player.Admin.Level.Level))
                 {
-                    AdminLevels[player.Admin.Level.Level].PlayersOnline.Remove(player);
+                    _adminLevels[player.Admin.Level.Level].PlayersOnline.Remove(player);
                 }
             }
         }
 
         private void SetOnline(ITDSPlayer player)
         {
-            lock (AdminLevels)
+            lock (_adminLevels)
             {
-                if (AdminLevels.ContainsKey(player.Admin.Level.Level))
+                if (_adminLevels.ContainsKey(player.Admin.Level.Level))
                 {
-                    AdminLevels[player.Admin.Level.Level].PlayersOnline.Add(player);
+                    _adminLevels[player.Admin.Level.Level].PlayersOnline.Add(player);
                 }
             }
         }

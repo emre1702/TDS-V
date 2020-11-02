@@ -1,14 +1,13 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
+using TDS_Server.Data.Models.Userpanel.Application;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Userpanel;
@@ -18,39 +17,6 @@ using TDS_Shared.Core;
 
 namespace TDS_Server.Handler.Userpanel
 {
-    public class ApplicationData
-    {
-
-        [JsonProperty("4")]
-        public bool AlreadyInvited { get; set; }
-
-        [JsonProperty("1")]
-        public Dictionary<int, string> Answers { get; set; } = new Dictionary<int, string>();
-
-        [JsonProperty("0")]
-        public int ApplicationID { get; set; }
-
-        [JsonProperty("2")]
-        public string Questions { get; set; } = string.Empty;
-
-        [JsonProperty("3")]
-        public PlayerUserpanelGeneralStatsDataDto? Stats { get; set; }
-
-    }
-
-    public class AppToSendData
-    {
-
-        [JsonProperty("1")]
-        public string CreateTime { get; set; } = string.Empty;
-
-        [JsonProperty("0")]
-        public int ID { get; set; }
-
-        [JsonProperty("2")]
-        public string PlayerName { get; set; } = string.Empty;
-
-    }
 
     public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper, IUserpanelApplicationsAdminHandler
     {

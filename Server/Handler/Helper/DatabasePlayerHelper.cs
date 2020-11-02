@@ -116,10 +116,10 @@ namespace TDS_Server.Handler.Helper
                 .ConfigureAwait(false);
         }
 
-        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(ITDSPlayer modPlayer)
+        internal async Task<DatabasePlayerIdName?> GetPlayerIdName(ITDSPlayer player)
         {
             return await ExecuteForDBAsync(async dbContext =>
-                await dbContext.Players.Where(p => p.Name == modPlayer.Name || p.SCName == modPlayer.SocialClubName)
+                await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName)
                     .Select(p => new DatabasePlayerIdName(p.Id, p.Name))
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false))

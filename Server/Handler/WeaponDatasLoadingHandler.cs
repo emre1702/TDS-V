@@ -20,7 +20,7 @@ namespace TDS_Server.Handler
 {
     public class WeaponDatasLoadingHandler
     {
-        public Dictionary<WeaponHash, DamageDto> DefaultDamages;
+        private Dictionary<WeaponHash, DamageDto> _defaultDamages;
 
         private readonly TDSDbContext _dbContext;
         private readonly ILoggingHandler _loggingHandler;
@@ -33,7 +33,7 @@ namespace TDS_Server.Handler
             LoadWeaponMetaInfos();
             ReloadArenaWeaponDatas();
 
-            DefaultDamages = _dbContext.Weapons
+            _defaultDamages = _dbContext.Weapons
                .ToDictionary(
                    w => w.Hash,
                    w => new DamageDto
@@ -42,6 +42,14 @@ namespace TDS_Server.Handler
                        HeadMultiplier = w.HeadShotDamageModifier
                    }
                );
+        }
+
+        public DamageDto GetDefaultDamage(WeaponHash hash)
+        {
+            lock (_defaultDamages)
+            {
+                return _defaultDamages[hash];
+            }
         }
 
         [Conditional("loadWeaponDatas")]

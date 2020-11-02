@@ -1,4 +1,5 @@
 ﻿using System;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Utility;
 using TDS_Server.Handler.Events;
 using TDS_Shared.Core;
@@ -9,11 +10,11 @@ namespace TDS_Server.Handler
     {
         private readonly EventsHandler _eventsHandler;
 
-        public TimerHandler(EventsHandler eventsHandler)
+        public TimerHandler(ILoggingHandler loggingHandler, EventsHandler eventsHandler)
         {
             _eventsHandler = eventsHandler;
 
-            TDSTimer.Init(Console.WriteLine, () => Environment.TickCount);
+            TDSTimer.Init(ex => loggingHandler.LogError(ex), () => Environment.TickCount);
 
             _eventsHandler.Update += TDSTimer.OnUpdateFunc;
 

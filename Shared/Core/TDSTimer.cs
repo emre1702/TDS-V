@@ -16,7 +16,7 @@ namespace TDS_Shared.Core
         private static readonly List<TDSTimer> _insertAfterList = new List<TDSTimer>();
 
         /// <summary>Logger</summary>
-        private static Action<string> _logger;
+        private static Action<Exception> _logger;
 
         /// <summary>The Action getting called by the Timer. Can be changed dynamically.</summary>
         public Action Func;
@@ -64,7 +64,7 @@ namespace TDS_Shared.Core
         /// <summary>
         /// Can be used once at server and once at client to define a logger
         /// </summary>
-        public static void Init(Action<string> thelogger, Func<int> msGetter)
+        public static void Init(Action<Exception> thelogger, Func<int> msGetter)
         {
             _logger = thelogger;
             _msGetter = msGetter;
@@ -77,7 +77,7 @@ namespace TDS_Shared.Core
         /// <param name="executeafterms">Execute after milliseconds.</param>
         /// <param name="executes">Amount of executes. Use 0 for infinitely.</param>
         /// <param name="handleexception">If try-catch-finally should be used when calling the Action</param>
-        public TDSTimer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = false)
+        public TDSTimer(Action thefunc, uint executeafterms, uint executes = 1, bool handleexception = true)
         {
             uint executeatms = executeafterms + (uint)_msGetter();
             Func = thefunc;
@@ -133,7 +133,7 @@ namespace TDS_Shared.Core
             }
             catch (Exception ex)
             {
-                _logger?.Invoke(ex.ToString());
+                _logger?.Invoke(ex);
             }
             finally
             {

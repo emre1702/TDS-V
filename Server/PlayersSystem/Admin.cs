@@ -13,10 +13,10 @@ namespace TDS_Server.PlayersSystem
             get
             {
                 if (_player.IsConsole)
-                    return _adminsHandler.AdminLevels.Values.MaxBy(a => a.Level).First();
+                    return _adminsHandler.GetHighestLevel();
                 if (_player.Entity is null)
-                    return _adminsHandler.AdminLevels[0];
-                return _adminsHandler.AdminLevels[_player.Entity.AdminLvl];
+                    return _adminsHandler.GetLowestLevel();
+                return _adminsHandler.GetLevel(_player.Entity.AdminLvl);
             }
         }
 

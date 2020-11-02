@@ -13,6 +13,9 @@ namespace TDS_Server.Handler
 {
     public class MappingHandler
     {
+        public IMapper Mapper { get; set; }
+
+
         public MappingHandler(ITDSPlayerHandler tdsPlayerHandler, DatabasePlayerHelper databasePlayerHelper)
         {
             var config = new MapperConfiguration(cfg =>
@@ -38,14 +41,6 @@ namespace TDS_Server.Handler
             Mapper = config.CreateMapper();
         }
 
-        #region Public Properties
-
-        public IMapper Mapper { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
-
         public Type GetCorrectDestType(Type sourceType)
             => sourceType switch
             {
@@ -55,6 +50,5 @@ namespace TDS_Server.Handler
                 _ => sourceType
             };
 
-        #endregion Public Methods
     }
 }

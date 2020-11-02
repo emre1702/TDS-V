@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Data.Models;
@@ -51,14 +52,19 @@ namespace TDS_Server.Handler
             _attachedEntitiesInfos[entity] = infoDto;
 
             if (lobby is null)
-                NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
+                NAPI.Task.RunSafe(() => 
+                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json));
             else
             {
                 lobby.Sync.TriggerEvent(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
 
-                if (!_attachedEntitiesPerLobby.ContainsKey(lobby))
-                    _attachedEntitiesPerLobby[lobby] = new List<Entity>();
-                _attachedEntitiesPerLobby[lobby].Add(entity);
+                lock (_attachedEntitiesPerLobby)
+                {
+                    if (!_attachedEntitiesPerLobby.ContainsKey(lobby))
+                        _attachedEntitiesPerLobby[lobby] = new List<Entity>();
+                    _attachedEntitiesPerLobby[lobby].Add(entity);
+                }
+                
             }
         }
 
@@ -75,7 +81,8 @@ namespace TDS_Server.Handler
                 lobby.Sync.TriggerEvent(ToClientEvent.DetachEntityWorkaround, entity.Value);
             }
             else
-                NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.DetachEntityWorkaround, entity.Value);
+                NAPI.Task.RunSafe(() =>
+                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.DetachEntityWorkaround, entity.Value));
 
             _attachedEntitiesInfos.Remove(entity);
         }
@@ -100,7 +107,8 @@ namespace TDS_Server.Handler
 
         public void FreezePlayer(Player player, bool freeze)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.FreezePlayerWorkaround, freeze);
+            NAPI.Task.RunSafe(() =>
+                NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.FreezePlayerWorkaround, freeze));
         }
 
         public void SetEntityCollisionless(Entity entity, bool collisionless, IBaseLobby? lobby = null)
@@ -114,10 +122,12 @@ namespace TDS_Server.Handler
             _collisionslessEntitiesInfos[entity] = info;
 
             if (lobby is null)
-                NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
+                NAPI.Task.RunSafe(() =>
+                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json));
             else
             {
-                NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
+                NAPI.Task.RunSafe(() =>
+                    NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json));
 
                 if (!_collisionslessEntitiesPerLobby.ContainsKey(lobby))
                     _collisionslessEntitiesPerLobby[lobby] = new List<Entity>();
@@ -127,12 +137,14 @@ namespace TDS_Server.Handler
 
         public void SetEntityInvincible(Player invincibleAtClient, Entity entity, bool invincible)
         {
-            NAPI.ClientEvent.TriggerClientEvent(invincibleAtClient, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
+            NAPI.Task.RunSafe(() =>
+                NAPI.ClientEvent.TriggerClientEvent(invincibleAtClient, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible));
         }
 
         public void SetEntityInvincible(IBaseLobby atLobby, Entity entity, bool invincible)
         {
-            NAPI.ClientEvent.TriggerClientEventInDimension(atLobby.MapHandler.Dimension, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible);
+            NAPI.Task.RunSafe(() =>
+                NAPI.ClientEvent.TriggerClientEventInDimension(atLobby.MapHandler.Dimension, ToClientEvent.SetEntityInvincible, entity.Handle.Value, invincible));
 
             if (!_invincibleEntityPerLobby.ContainsKey(atLobby))
                 _invincibleEntityPerLobby[atLobby] = new List<Entity>();
@@ -141,12 +153,14 @@ namespace TDS_Server.Handler
 
         public void SetPlayerInvincible(Player player, bool invincible)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerInvincible, invincible);
+            NAPI.Task.RunSafe(() =>
+                NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerInvincible, invincible));
         }
 
         public void SetPlayerTeam(Player player, int team)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerTeamWorkaround, team);
+            NAPI.Task.RunSafe(() =>
+                NAPI.ClientEvent.TriggerClientEvent(player, ToClientEvent.SetPlayerTeamWorkaround, team));
         }
 
         private static void PlayerJoinedLobby(ITDSPlayer player, IBaseLobby lobby)
@@ -161,7 +175,8 @@ namespace TDS_Server.Handler
                         _attachedEntitiesPerLobby[lobby].Remove(entity);
                         continue;
                     }
-                    player.TriggerEvent(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
+                    NAPI.Task.RunSafe(() =>
+                        player.TriggerEvent(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json));
                 }
                 if (_attachedEntitiesPerLobby[lobby].Count == 0)
                     _attachedEntitiesPerLobby.Remove(lobby);
@@ -170,10 +185,12 @@ namespace TDS_Server.Handler
             if (_collisionslessEntitiesPerLobby.ContainsKey(lobby))
             {
                 _collisionslessEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
-                foreach (Entity entity in _collisionslessEntitiesPerLobby[lobby])
+                NAPI.Task.RunSafe(() =>
                 {
-                    player.TriggerEvent(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
-                }
+                    foreach (Entity entity in _collisionslessEntitiesPerLobby[lobby])
+                        player.TriggerEvent(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
+                });
+                
                 if (_collisionslessEntitiesPerLobby[lobby].Count == 0)
                     _collisionslessEntitiesPerLobby.Remove(lobby);
             }
@@ -181,19 +198,21 @@ namespace TDS_Server.Handler
             if (_frozenEntityPerLobby.ContainsKey(lobby))
             {
                 _frozenEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
-                foreach (Entity entity in _frozenEntityPerLobby[lobby])
+                NAPI.Task.RunSafe(() =>
                 {
-                    player.TriggerEvent(ToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, true);
-                }
+                    foreach (Entity entity in _frozenEntityPerLobby[lobby])
+                        player.TriggerEvent(ToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, true);
+                });
             }
 
             if (_invincibleEntityPerLobby.ContainsKey(lobby))
             {
                 _invincibleEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
-                foreach (var entity in _invincibleEntityPerLobby[lobby])
+                NAPI.Task.RunSafe(() =>
                 {
-                    player.TriggerEvent(ToClientEvent.SetEntityInvincible, entity.Handle.Value, true);
-                }
+                    foreach (var entity in _invincibleEntityPerLobby[lobby])
+                        player.TriggerEvent(ToClientEvent.SetEntityInvincible, entity.Handle.Value, true);
+                });
             }
         }
 

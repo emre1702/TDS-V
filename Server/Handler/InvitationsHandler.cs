@@ -1,25 +1,21 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GangsSystem;
 using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Handler.Entities.Utility;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.Extensions;
 
 namespace TDS_Server.Handler
 {
     public class InvitationsHandler
     {
-        #region Private Fields
 
         private readonly Dictionary<ulong, Invitation> _invitationById = new Dictionary<ulong, Invitation>();
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public InvitationsHandler(EventsHandler eventsHandler)
         {
@@ -27,10 +23,6 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerLeftGang += RemoveSendersGangInvitations;
             eventsHandler.PlayerLoggedOut += RemoveSendersGangInvitations;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public object? AcceptInvitation(ITDSPlayer player, ref ArraySegment<object> args)
         {
@@ -40,7 +32,8 @@ namespace TDS_Server.Handler
             Invitation? invitation = GetById(id);
             if (invitation is null)
             {
-                player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
+                NAPI.Task.RunSafe(() => 
+                    player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -51,7 +44,8 @@ namespace TDS_Server.Handler
 
         public void Add(Invitation invitation)
         {
-            _invitationById[invitation.Dto.Id] = invitation;
+            lock (_invitationById)
+                _invitationById[invitation.Dto.Id] = invitation;
         }
 
         public object? RejectInvitation(ITDSPlayer player, ref ArraySegment<object> args)
@@ -62,7 +56,8 @@ namespace TDS_Server.Handler
             Invitation? invitation = GetById(id);
             if (invitation is null)
             {
-                player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED);
+                NAPI.Task.RunSafe(() =>
+                    player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -73,33 +68,42 @@ namespace TDS_Server.Handler
 
         public void Remove(Invitation invitation)
         {
-            _invitationById.Remove(invitation.Dto.Id);
+            lock (_invitationById)
+                _invitationById.Remove(invitation.Dto.Id);
         }
 
         public Invitation? FindInvitation(ITDSPlayer sender, ITDSPlayer target, InvitationType type)
         {
-            return _invitationById.Values.FirstOrDefault(i => i.Sender == sender && i.Target == target && i.Type == type);
+            lock (_invitationById)
+            {
+                return _invitationById.Values.FirstOrDefault(i => i.Sender == sender && i.Target == target && i.Type == type);
+            }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private Invitation? GetById(ulong id)
         {
-            if (!_invitationById.TryGetValue(id, out Invitation? invitation))
-                return null;
-            return invitation;
+            lock (_invitationById)
+            {
+                 if (!_invitationById.TryGetValue(id, out Invitation? invitation))
+                    return null;
+                 return invitation;
+            }
         }
 
         private IEnumerable<Invitation> GetBySender(ITDSPlayer sender, InvitationType type)
         {
-            return _invitationById.Values.Where(i => i.Sender == sender && i.Type == type);
+            lock (_invitationById)
+            {
+                return _invitationById.Values.Where(i => i.Sender == sender && i.Type == type);
+            }
         }
 
         private IEnumerable<Invitation> GetByTarget(ITDSPlayer target)
         {
-            return _invitationById.Values.Where(i => i.Target == target);
+            lock (_invitationById)
+            {
+                return _invitationById.Values.Where(i => i.Target == target);
+            }
         }
 
         private void RemoveSendersLobbyInvitations(ITDSPlayer player, IBaseLobby lobby)
@@ -130,8 +134,6 @@ namespace TDS_Server.Handler
         {
             RemoveSendersGangInvitations(player);
         }
-
-        #endregion Private Methods
 
         /*private IEnumerable<Invitation> GetBySender(ITDSPlayer sender)
         {

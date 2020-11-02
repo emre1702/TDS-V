@@ -34,7 +34,8 @@ export class English implements Language {
     NameAlreadyExists = "The name already exists.";
     Unknown = "Unknown error.";
     Cooldown = "Please wait a bit before sending again.";
-    MapCreatedSuccessfully = "The map was successfully created/saved.";
+    MapCreatedSuccessfully = "The map was successfully created and saved.";
+    MapSavedSuccessfully = "The map was successfully saved.";
     SavedMapLoadSuccessful = "Loading map was successful.";
     Cancel = "Cancel";
     ChooseAMapFromList = "Choose a map from the list!";

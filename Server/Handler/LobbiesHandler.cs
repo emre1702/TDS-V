@@ -86,6 +86,7 @@ namespace TDS_Server.Handler
         {
             try
             {
+                await Task.Yield();
                 string dataJson = (string)args[0];
                 var data = Serializer.FromBrowser<CustomLobbyData>(dataJson);
                 if (!IsCustomLobbyNameAllowed(data.Name))
@@ -354,31 +355,31 @@ namespace TDS_Server.Handler
                 switch (mapAssignment.MapId)
                 {
                     case (int)DefaultMapIds.AllWithoutGangwars:
-                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type != MapType.Gangwar));
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type != MapType.Gangwar));
                         break;
 
                     case (int)DefaultMapIds.Normals:
-                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type == MapType.Normal));
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type == MapType.Normal));
                         break;
 
                     case (int)DefaultMapIds.Bombs:
-                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type == MapType.Bomb));
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type == MapType.Bomb));
                         break;
 
                     case (int)DefaultMapIds.Snipers:
-                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type == MapType.Sniper));
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type == MapType.Sniper));
                         break;
 
                     case (int)DefaultMapIds.Gangwars:
-                        lobbyMapsList.AddRange(_mapsHandler.DefaultMaps.Where(m => m.Info.Type == MapType.Gangwar));
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type == MapType.Gangwar));
                         break;
 
                     default:
-                        var map = _mapsHandler.DefaultMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
+                        var map = _mapsHandler.GetMapByName(mapAssignment.Map.Name);
                         if (map is null)
-                            map = _mapsHandler.NewCreatedMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
+                            map = _mapsHandler.GetNewCreatedMap(mapAssignment.Map.Name);
                         if (map is null)
-                            map = _mapsHandler.NeedCheckMaps.FirstOrDefault(m => m.BrowserSyncedData.Name == mapAssignment.Map.Name);
+                            map = _mapsHandler.GetNeedCheckMap(mapAssignment.Map.Name);
                         if (map is { })
                             lobbyMapsList.Add(map);
                         break;

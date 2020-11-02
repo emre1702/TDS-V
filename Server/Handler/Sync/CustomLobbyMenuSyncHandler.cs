@@ -56,7 +56,7 @@ namespace TDS_Server.Handler.Sync
             if (!IsLobbyToSync(lobby))
                 return;
 
-            string json = Serializer.ToBrowser(GetCustomLobbyData(lobby));
+            var json = Serializer.ToBrowser(GetCustomLobbyData(lobby));
             NAPI.Task.RunSafe(() =>
             {
                 for (int i = _playersInCustomLobbyMenu.Count - 1; i >= 0; --i)

@@ -8,27 +8,18 @@ namespace TDS_Server.Handler.Entities
 {
     public abstract class DatabaseEntityWrapper : IDatabaseEntityWrapper
     {
-        #region Private Fields
 
         private readonly TDSDbContext _dbContext;
 
         private readonly SemaphoreSlim _dbContextSemaphore = new SemaphoreSlim(1, 1);
 
-        #endregion Private Fields
-
-        #region Protected Constructors
-
         protected DatabaseEntityWrapper(TDSDbContext dbContext)
             => (_dbContext) = (dbContext);
-
-        #endregion Protected Constructors
 
         /*public void InitDbContext()
         {
             _dbContext = new TDSDbContext();
         }*/
-
-        #region Public Methods
 
         public async Task ExecuteForDB(Action<TDSDbContext> action)
         {
@@ -122,6 +113,5 @@ namespace TDS_Server.Handler.Entities
             }
         }
 
-        #endregion Public Methods
     }
 }

@@ -2,6 +2,7 @@
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Extensions;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Sync;
 using TDS_Shared.Data.Enums;
 using TDS_Shared.Default;
@@ -23,7 +24,8 @@ namespace TDS_Server.Handler.PlayerHandlers
         {
             if (!player.LoggedIn)
                 return;
-            _dataSyncHandler.SetData(player, PlayerDataKey.InFreeCam, DataSyncMode.Lobby, inFreeCam);
+            NAPI.Task.RunSafe(() => 
+                _dataSyncHandler.SetData(player, PlayerDataKey.InFreeCam, DataSyncMode.Lobby, inFreeCam));
         }
     }
 }

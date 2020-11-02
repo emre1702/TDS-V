@@ -1,7 +1,6 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,17 +37,26 @@ namespace TDS_Server.Handler.GangSystem
             eventsHandler.GangObjectCreated += Add;
         }
 
-        public IGang None => _gangById[-1];
+        public IGang None => GetById(-1);
         public GangRanks NoneRank => None.Entity.Ranks.First();
 
         public void Add(IGang gang)
         {
-            _gangById[gang.Entity.Id] = gang;
-
-            foreach (var member in gang.Entity.Members)
+            lock (_gangById)
             {
-                _gangByPlayerId[member.PlayerId] = gang;
-                _gangMemberByPlayerId[member.PlayerId] = member;
+                _gangById[gang.Entity.Id] = gang;
+            }
+
+            lock (_gangByPlayerId)
+            {
+                lock (_gangMemberByPlayerId)
+                {
+                    foreach (var member in gang.Entity.Members)
+                    {
+                        _gangByPlayerId[member.PlayerId] = gang;
+                        _gangMemberByPlayerId[member.PlayerId] = member;
+                    }
+                }
             }
 
             if (gang.Entity.Id < 0)
@@ -57,12 +65,18 @@ namespace TDS_Server.Handler.GangSystem
 
         public IGang GetById(int id)
         {
-            return _gangById[id];
+            lock (_gangById)
+            {
+                return _gangById[id];
+            }
         }
 
         public IGang? GetByTeamId(int teamId)
         {
-            return _gangById.Values.FirstOrDefault(g => g.Entity.TeamId == teamId);
+            lock (_gangById)
+            {
+                return _gangById.Values.FirstOrDefault(g => g.Entity.TeamId == teamId);
+            }
         }
 
         public void LoadAll()
@@ -110,8 +124,14 @@ namespace TDS_Server.Handler.GangSystem
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
 
-            _gangByPlayerId.Add(args.player.Entity.Id, args.gang);
-            _gangMemberByPlayerId.Add(args.player.Entity.Id, gangMember);
+            lock (_gangByPlayerId)
+            {
+                _gangByPlayerId.Add(args.player.Entity.Id, args.gang);
+            }
+            lock (_gangMemberByPlayerId)
+            {
+                _gangMemberByPlayerId.Add(args.player.Entity.Id, gangMember);
+            }
 
             SetPlayerIntoHisGang(args.player);
         }
@@ -136,8 +156,11 @@ namespace TDS_Server.Handler.GangSystem
         private IGang GetPlayerGang(ITDSPlayer player)
         {
             if (player.Entity != null)
-                if (_gangByPlayerId.TryGetValue(player.Entity.Id, out var gang))
-                    return gang;
+                lock (_gangByPlayerId)
+                {
+                    if (_gangByPlayerId.TryGetValue(player.Entity.Id, out var gang))
+                        return gang;
+                }
 
             return None;
         }
@@ -145,8 +168,11 @@ namespace TDS_Server.Handler.GangSystem
         private GangRanks GetPlayerGangRank(ITDSPlayer player)
         {
             if (player.Entity != null)
-                if (_gangMemberByPlayerId.TryGetValue(player.Entity.Id, out GangMembers? gangMember))
-                    return gangMember.Rank;
+                lock (_gangMemberByPlayerId)
+                {
+                    if (_gangMemberByPlayerId.TryGetValue(player.Entity.Id, out GangMembers? gangMember))
+                        return gangMember.Rank;
+                }
 
             return NoneRank;
         }

@@ -8,7 +8,6 @@ namespace TDS_Server.Handler.Entities
 
     public class AngularConstantsData
     {
-        #region Public Properties
 
         [JsonProperty("6")]
         public string AnnouncementsJson { get; set; }
@@ -37,10 +36,6 @@ namespace TDS_Server.Handler.Entities
         [JsonProperty("2")]
         public int UsernameChangeCost { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public static AngularConstantsData Get(ITDSPlayer player, ISettingsHandler settingsHandler, IAnnouncementsHandler announcementsHandler)
         {
             return new AngularConstantsData
@@ -56,9 +51,5 @@ namespace TDS_Server.Handler.Entities
                 SCName = player.Entity.SCName
             };
         }
-
-        #endregion Public Methods
     }
-
-#nullable restore
 }

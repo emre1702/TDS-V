@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GTANetworkAPI;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using TDS_Server.Data.Defaults;
 using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Database.Entity.GangEntities;
+using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.GangSystem.GangWindow;
 
 namespace TDS_Server.Handler.GangSystem
@@ -71,7 +73,8 @@ namespace TDS_Server.Handler.GangSystem
                 }
 
                 if (json is { })
-                    player.TriggerBrowserEvent(ToBrowserEvent.LoadedGangWindowData, type, json);
+                    NAPI.Task.RunSafe(() => 
+                        player.TriggerBrowserEvent(ToBrowserEvent.LoadedGangWindowData, type, json));
             }
             catch (Exception ex)
             {

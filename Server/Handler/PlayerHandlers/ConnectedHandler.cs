@@ -8,6 +8,8 @@ using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Helper;
 using TDS_Shared.Default;
 using TDS_Server.Handler.Extensions;
+using System.Threading.Tasks;
+using TDS_Server.Data.Models;
 
 namespace TDS_Server.Handler.PlayerHandlers
 {
@@ -42,39 +44,18 @@ namespace TDS_Server.Handler.PlayerHandlers
                 if (player is null)
                     return;
 
-                await NAPI.Task.RunWait(player.Init);
+                await NAPI.Task.RunWait(player.Init).ConfigureAwait(false);
+                SpawnPlayerInWorld(player);
 
-                NAPI.Task.RunSafe(() =>
-                {
-                    player.Position = new Vector3(0, 0, 1000).Around(10);
-                    player.Freeze(true);
-                });
-
-                var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, null, player.Address, player.Serial, player.SocialClubName,
-                    player.SocialClubId, false).ConfigureAwait(false);
-
-                if (ban is { })
-                {
-                    NAPI.Task.RunSafe(()
-                        => Utils.HandleBan(player, ban));
+                if (await CheckIsBanned(player).ConfigureAwait(false))
                     return;
-                }
 
-                var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player).ConfigureAwait(false);
+                var playerIdName = await GetRegisteredPlayerIdAndName(player).ConfigureAwait(false);
                 if (playerIdName is null)
-                {
-                    NAPI.Task.RunSafe(()
-                        => player.TriggerEvent(ToClientEvent.StartRegisterLogin, player.SocialClubName, false));
                     return;
-                }
 
-                ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, playerIdName.Id).ConfigureAwait(false);
-                if (ban is { })
-                {
-                    NAPI.Task.RunSafe(()
-                        => Utils.HandleBan(player, ban));
+                if (await CheckIsAccountBanned(player, playerIdName))
                     return;
-                }
 
                 NAPI.Task.RunSafe(()
                     => player.TriggerEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
@@ -84,5 +65,54 @@ namespace TDS_Server.Handler.PlayerHandlers
                 _loggingHandler.LogError(ex);
             }
         }
+
+        private void SpawnPlayerInWorld(ITDSPlayer player)
+        {
+            NAPI.Task.RunSafe(() =>
+            {
+                player.Position = new Vector3(0, 0, 1000).Around(10);
+                player.Freeze(true);
+            });
+        }
+
+        private async Task<bool> CheckIsBanned(ITDSPlayer player)
+        {
+            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, null, player.Address, player.Serial, player.SocialClubName,
+                    player.SocialClubId, false).ConfigureAwait(false);
+
+            if (ban is { })
+            {
+                NAPI.Task.RunSafe(()
+                    => Utils.HandleBan(player, ban));
+                return true;
+            }
+
+            return false;
+        }
+
+        private async Task<DatabasePlayerIdName?> GetRegisteredPlayerIdAndName(ITDSPlayer player)
+        {
+            var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player).ConfigureAwait(false);
+            if (playerIdName is null)
+            {
+                NAPI.Task.RunSafe(()
+                    => player.TriggerEvent(ToClientEvent.StartRegisterLogin, player.SocialClubName, false));
+                return null;
+            }
+            return playerIdName;
+        }
+
+        private async Task<bool> CheckIsAccountBanned(ITDSPlayer player, DatabasePlayerIdName playerIdName)
+        {
+            var ban = await _bansHandler.GetBan(_lobbiesHandler.MainMenu.Entity.Id, playerIdName.Id).ConfigureAwait(false);
+            if (ban is { })
+            {
+                NAPI.Task.RunSafe(()
+                    => Utils.HandleBan(player, ban));
+                return true;
+            }
+            return false;
+        }
+
     }
 }
