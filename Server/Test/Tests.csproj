@@ -36,7 +36,7 @@
       <ProjectReference Include="..\Database\Database.csproj" />
       <ProjectReference Include="..\Data\Data.csproj" />
       <ProjectReference Include="..\Handler\Handler.csproj" />
-      <ProjectReference Include="..\Lobby\LobbySystem.csproj" />
+      <ProjectReference Include="..\Systems\Lobby\LobbySystem.csproj" />
     </ItemGroup>
 
     <ItemGroup>
