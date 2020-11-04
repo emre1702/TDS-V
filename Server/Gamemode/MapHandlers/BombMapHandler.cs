@@ -9,6 +9,7 @@ using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS_Server.Data.Models;
 using TDS_Server.Data.Models.Map;
 using TDS_Server.Handler.Extensions;
+using TDS_Server.Handler.FakePickups;
 using TDS_Shared.Data.Default;
 
 namespace TDS_Server.GamemodesSystem.MapHandlers
@@ -16,16 +17,17 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
     public class BombMapHandler : BaseGamemodeMapHandler, IBombGamemodeMapHandler
     {
         public List<BombPlantPlaceDto> BombPlantPlaces { get; } = new List<BombPlantPlaceDto>();
-        private ITDSColshape? _lobbyBombTakeCol;
-        private ITDSMarker? _bombTakeMarker;
+        private FakePickup? _bombTakePickup;
 
         private readonly IRoundFightLobby _lobby;
         private readonly IBombGamemode _gamemode;
+        private readonly FakePickupsHandler _fakePickupsHandler;
 
-        public BombMapHandler(IRoundFightLobby lobby, IBombGamemode gamemode)
+        public BombMapHandler(IRoundFightLobby lobby, IBombGamemode gamemode, FakePickupsHandler fakePickupsHandler)
         {
             _lobby = lobby;
             _gamemode = gamemode;
+            _fakePickupsHandler = fakePickupsHandler;
 
             InitNewMap(lobby.CurrentMap);
         }
@@ -34,7 +36,6 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
         {
             base.AddEvents(events);
             events.RoundClear += RoundClear;
-            events.PlayerEnteredColshape += OnPlayerEnterColshape;
         }
 
         internal override void RemoveEvents(IRoundFightLobbyEventsHandler events)
@@ -42,29 +43,18 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
             base.RemoveEvents(events);
             if (events.RoundClear is { })
                 events.RoundClear -= RoundClear;
-            events.PlayerEnteredColshape -= OnPlayerEnterColshape;
         }
 
-        public void CreateBombTakeMarker(ITDSObject bomb)
+        public void CreateBombTakePickup(ITDSObject bomb)
         {
-            NAPI.Task.RunSafe(() =>
-            {
-                _bombTakeMarker = NAPI.Marker.CreateMarker(0, bomb.Position, new Vector3(), new Vector3(), 1,
-                                                        new Color(180, 0, 0, 180), true, _lobby.MapHandler.Dimension) as ITDSMarker;
-                var bombTakeCol = NAPI.ColShape.CreateSphereColShape(bomb.Position, 2, _lobby.MapHandler.Dimension) as ITDSColshape;
-                _lobbyBombTakeCol = bombTakeCol;
-            });
+            _bombTakePickup = _fakePickupsHandler.Create(-51423166, bomb.Position, 2f, 0, _lobby);
+            _bombTakePickup.OnCollect = TakeDroppedBomb;
         }
 
-        public void DeleteBombTakeMarker()
+        public void DeleteBombTakePickup()
         {
-            NAPI.Task.RunSafe(() =>
-            {
-                _bombTakeMarker?.Delete();
-                _bombTakeMarker = null;
-                _lobbyBombTakeCol?.Delete();
-                _lobbyBombTakeCol = null;
-            });
+            _bombTakePickup?.Delete();
+            _bombTakePickup = null;
         }
 
         private void InitNewMap(MapDto map)
@@ -98,17 +88,22 @@ namespace TDS_Server.GamemodesSystem.MapHandlers
                     BombPlantPlaces.Clear();
                 }
                 
-                DeleteBombTakeMarker();
+                DeleteBombTakePickup();
             });
 
             return default;
         }
 
-        private void OnPlayerEnterColshape(ITDSColshape colshape, ITDSPlayer player)
+        private void TakeDroppedBomb(ITDSPlayer player, CancelEventArgs cancelEventArgs)
         {
-            if (_lobbyBombTakeCol == colshape)
-                if (player.Lifes > 0 && player.Team == _gamemode.Teams.Terrorists)
-                    _gamemode.Specials.TakeBomb(player);
+            if (player.Lifes <= 0 || player.Team != _gamemode.Teams.Terrorists)
+            { 
+                cancelEventArgs.Cancel = true;
+                return;
+            }
+
+            _gamemode.Specials.TakeBomb(player);
+            DeleteBombTakePickup();
         }
     }
 }

@@ -7,6 +7,7 @@ using TDS_Client.Handler.Draw;
 using TDS_Client.Handler.Draw.Dx;
 using TDS_Client.Handler.Events;
 using TDS_Client.Handler.Factories;
+using TDS_Client.Handler.FakePickups;
 using TDS_Client.Handler.GangSystem;
 using TDS_Client.Handler.Lobby;
 using TDS_Client.Handler.Map;
@@ -91,6 +92,7 @@ namespace TDS_Client.Core.Init
                     browserHandler, dxHandler, remoteEventsSender, eventsHandler, lobbyHandler, timerHandler, dataSyncHandler, deathHandler);
                 new InfosHandler(loggingHandler, browserHandler, eventsHandler);
                 new WeaponStatsHandler(loggingHandler, remoteEventsSender);
+                new FakePickupsHandler();
 
                 loggingHandler.LogInfo("Services successfully initialized", "Services.Initialize", true);
             }

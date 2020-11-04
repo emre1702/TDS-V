@@ -2,7 +2,6 @@
 {
     public static class ToClientEvent
     {
-        #region Public Fields
 
         public const string AmountInFightSync = "s2";
         public const string ApplySuicideAnimation = "s3";
@@ -78,11 +77,14 @@
         public const string SetPlayerInvincible = "s57";
         public const string SetPlayerTeamWorkaround = "s79";
         public const string SetPlayerToSpectatePlayer = "s80";
+        public const string SpawnFakePickup = "s91";
         public const string SpectatorReattachCam = "s59";
         public const string StartCharCreator = "s20";
         public const string StartRankingShowAfterRound = "s60";
         public const string StartRegisterLogin = "s61";
         public const string StopBombPlantDefuse = "s62";
+        public const string SyncFakePickupLightData = "s92";
+        public const string SyncFakePickups = "s94";
         public const string StopRoundStats = "s64";
         public const string StopSpectator = "s65";
         public const string SyncEntityData = "s19";
@@ -99,6 +101,5 @@
         public const string ToggleDamageTestMenu = "s90";
         public const string ToggleTeamChoiceMenu = "s74";
 
-        #endregion Public Fields
     }
 }

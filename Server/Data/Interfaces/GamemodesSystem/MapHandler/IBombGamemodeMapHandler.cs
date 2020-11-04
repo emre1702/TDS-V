@@ -8,8 +8,6 @@ namespace TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler
     {
         List<BombPlantPlaceDto> BombPlantPlaces { get; }
 
-        void CreateBombTakeMarker(ITDSObject bomb);
-
-        void DeleteBombTakeMarker();
+        void CreateBombTakePickup(ITDSObject bomb);
     }
 }

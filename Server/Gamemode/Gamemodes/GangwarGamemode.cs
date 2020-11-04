@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using System;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
 using TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Players;
@@ -19,7 +20,7 @@ namespace TDS_Server.GamemodesSystem.Gamemodes
         public new IGangwarGamemodeSpecials Specials => (IGangwarGamemodeSpecials)base.Specials;
         public new IGangwarGamemodeTeams Teams => (IGangwarGamemodeTeams)base.Teams;
 
-        public GangwarGamemode(ISettingsHandler settingsHandler) : base(settingsHandler)
+        public GangwarGamemode(ISettingsHandler settingsHandler, IServiceProvider serviceProvider) : base(settingsHandler, serviceProvider)
         {
         }
 

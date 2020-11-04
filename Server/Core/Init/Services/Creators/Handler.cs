@@ -12,6 +12,7 @@ using TDS_Server.Handler.Commands.Admin;
 using TDS_Server.Handler.Commands.System;
 using TDS_Server.Handler.Commands.User;
 using TDS_Server.Handler.Events;
+using TDS_Server.Handler.FakePickups;
 using TDS_Server.Handler.GangSystem;
 using TDS_Server.Handler.Helper;
 using TDS_Server.Handler.Maps;
@@ -41,6 +42,7 @@ namespace TDS_Server.Core.Init.Services.Creators
                 .WithServer()
                 .WithSync()
                 .WithUserpanel()
+                .WithFakePickup()
                 .WithMisc()
                 .WithMailsystem()
                 .WithGang()
@@ -169,6 +171,12 @@ namespace TDS_Server.Core.Init.Services.Creators
             return serviceCollection
                 .AddSingleton<IUserpanelHandler, UserpanelHandler>()
                .AddSingleton<UserpanelCommandsHandler>();
+        }
+
+        private static IServiceCollection WithFakePickup(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection
+                .AddSingleton<FakePickupsHandler>();
         }
 
         private static IServiceCollection WithMisc(this IServiceCollection serviceCollection)

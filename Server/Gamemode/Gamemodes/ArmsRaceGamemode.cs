@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using System;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Rounds;
 using TDS_Server.GamemodesSystem.DependenciesModels;
@@ -12,7 +13,7 @@ namespace TDS_Server.GamemodesSystem.Gamemodes
         public new IArmsRaceGamemodeRounds Rounds => (IArmsRaceGamemodeRounds)base.Rounds;
         public new IArmsRaceGamemodeWeapons Weapons => (IArmsRaceGamemodeWeapons)base.Weapons;
 
-        public ArmsRaceGamemode(ISettingsHandler settingsHandler) : base(settingsHandler)
+        public ArmsRaceGamemode(ISettingsHandler settingsHandler, IServiceProvider serviceProvider) : base(settingsHandler, serviceProvider)
         {
         }
 

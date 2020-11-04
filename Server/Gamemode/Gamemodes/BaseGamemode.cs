@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Deathmatch;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
@@ -34,6 +35,8 @@ namespace TDS_Server.GamemodesSystem.Gamemodes
         public IBaseGamemodeTeams Teams => _teams;
         public IBaseGamemodeWeapons Weapons => _weapons;
 
+        protected IServiceProvider ServiceProvider { get; }
+
         private BaseGamemodeDeathmatch _deathmatch;
         private BaseGamemodeMapHandler _mapHandler;
         private BaseGamemodePlayers _players;
@@ -46,10 +49,11 @@ namespace TDS_Server.GamemodesSystem.Gamemodes
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        protected BaseGamemode(ISettingsHandler settingsHandler)
+        protected BaseGamemode(ISettingsHandler settingsHandler, IServiceProvider serviceProvider)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             SettingsHandler = settingsHandler;
+            ServiceProvider = serviceProvider;
         }
 
         public void Init(IRoundFightLobby lobby, MapDto map)

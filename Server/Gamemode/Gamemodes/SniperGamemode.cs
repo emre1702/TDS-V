@@ -1,4 +1,5 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using System;
+using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
 using TDS_Server.Database.Entity;
 using TDS_Server.GamemodesSystem.DependenciesModels;
@@ -8,7 +9,7 @@ namespace TDS_Server.GamemodesSystem.Gamemodes
 {
     public class SniperGamemode : BaseGamemode, ISniperGamemode
     {
-        public SniperGamemode(ISettingsHandler settingsHandler) : base(settingsHandler)
+        public SniperGamemode(ISettingsHandler settingsHandler, IServiceProvider serviceProvider) : base(settingsHandler, serviceProvider)
         {
         }
 

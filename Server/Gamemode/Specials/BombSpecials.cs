@@ -165,7 +165,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                 Bomb.Detach();
                 Bomb.Freeze(true, Lobby);
                 Bomb.Position = bombPlayer.Position;
-                _gamemode.MapHandler.CreateBombTakeMarker(Bomb);
+                _gamemode.MapHandler.CreateBombTakePickup(Bomb);
 
                 bombPlayer.TriggerEvent(ToClientEvent.BombNotOnHand);
                 _gamemode.Players.BombAtPlayer = null;
@@ -195,7 +195,6 @@ namespace TDS_Server.GamemodesSystem.Specials
                 return;
             ToggleBombAtHand(player, player.CurrentWeapon, player.CurrentWeapon);
             //Bomb.FreezePosition = false;
-            _gamemode.MapHandler.DeleteBombTakeMarker();
         }
 
         public void ToggleBombAtHand(ITDSPlayer player, WeaponHash oldWeapon, WeaponHash newWeapon)
