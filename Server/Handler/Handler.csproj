@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>TDS_Server.Handler</AssemblyName>
+    <RootNamespace>TDS_Server.Handler</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,9 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
-        <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
-        <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+        <ProjectReference Include="..\BonusBotConnector\Client\Client.csproj" />
+        <ProjectReference Include="..\BonusBotConnector\Server\Server.csproj" />
+        <ProjectReference Include="..\Data\Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>

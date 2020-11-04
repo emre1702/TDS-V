@@ -3,13 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
-      <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>TDS_Server.TeamsSystem</AssemblyName>
+    <RootNamespace>TDS_Server.TeamsSystem</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Data\TDS_Shared.Data.csproj" />
-    <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
-    <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\Data.csproj" />
+    <ProjectReference Include="..\..\Handler\Handler.csproj" />
   </ItemGroup>
 
   <ItemGroup>

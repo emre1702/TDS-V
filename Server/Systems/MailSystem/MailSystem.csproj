@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
   <PlatformTarget>x64</PlatformTarget>
+  <AssemblyName>TDS_Server.MailSystem</AssemblyName>
+  <RootNamespace>TDS_Server.MailSystem</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
+    <ProjectReference Include="..\..\Data\Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Core", "Server\Core\TDS_Server.Core.csproj", "{E05649D8-0202-4FFC-8EE9-79E98F4CC866}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Server\Core\Core.csproj", "{E05649D8-0202-4FFC-8EE9-79E98F4CC866}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EC81393D-DF19-442B-87D3-BC150A823D6C} = {EC81393D-DF19-442B-87D3-BC150A823D6C}
 		{A347BAC1-8902-4403-A197-49C795598422} = {A347BAC1-8902-4403-A197-49C795598422}
@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Core", "Server\C
 		{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54} = {FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Database", "Server\Database\TDS_Server.Database.csproj", "{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database", "Server\Database\Database.csproj", "{9BB400CB-EE8D-4DA8-9EDB-B5B115757614}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FBF85CE-00FC-45A3-BB26-4D2120F025CE}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,9 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ServerSync.sh = ServerSync.sh
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BonusBotConnector.Server", "Server\BonusBotConnector\Server\BonusBotConnector.Server.csproj", "{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\BonusBotConnector\Server\Server.csproj", "{FC1A25E5-960F-46B5-AFCC-5F4F79DF1E54}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BonusBotConnector.Client", "Server\BonusBotConnector\Client\BonusBotConnector.Client.csproj", "{A347BAC1-8902-4403-A197-49C795598422}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Server\BonusBotConnector\Client\Client.csproj", "{A347BAC1-8902-4403-A197-49C795598422}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{9BBD6AEC-65B3-487B-A601-033600378583}"
 EndProject
@@ -37,37 +37,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{FA0358
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BonusBotConnector", "BonusBotConnector", "{39F7F011-8791-4B84-952E-4D1121078C8E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Data", "Server\Data\TDS_Server.Data.csproj", "{5A4CE9FF-7C88-456A-AAE9-DFF983376210}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Server\Data\Data.csproj", "{5A4CE9FF-7C88-456A-AAE9-DFF983376210}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Handler", "Server\Handler\TDS_Server.Handler.csproj", "{6C28A55A-861E-465C-901E-F893DEF3BE33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Handler", "Server\Handler\Handler.csproj", "{6C28A55A-861E-465C-901E-F893DEF3BE33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Shared.Data", "Shared\Data\TDS_Shared.Data.csproj", "{EC81393D-DF19-442B-87D3-BC150A823D6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Shared\Data\Data.csproj", "{EC81393D-DF19-442B-87D3-BC150A823D6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Shared.Core", "Shared\Core\TDS_Shared.Core.csproj", "{6139F5BE-220C-4BC7-9B22-1DE4F4E652D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Shared\Core\Core.csproj", "{6139F5BE-220C-4BC7-9B22-1DE4F4E652D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Core", "Client\Core\TDS_Client.Core.csproj", "{06BD8C09-1138-464C-B0AF-22C0EEC2B92F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Client\Core\Core.csproj", "{06BD8C09-1138-464C-B0AF-22C0EEC2B92F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Data", "Client\Data\TDS_Client.Data.csproj", "{3B39E1D8-F25A-415D-9087-DDA1EB84B2EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Client\Data\Data.csproj", "{3B39E1D8-F25A-415D-9087-DDA1EB84B2EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Client.Handler", "Client\Handler\TDS_Client.Handler.csproj", "{AF00FF1E-655B-46A7-B131-7E026057CED8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Handler", "Client\Handler\Handler.csproj", "{AF00FF1E-655B-46A7-B131-7E026057CED8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.Tests", "Server\Test\TDS_Server.Tests.csproj", "{682E88FB-AF64-4645-9010-7C1B61F77290}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Server\Test\Tests.csproj", "{682E88FB-AF64-4645-9010-7C1B61F77290}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.LobbySystem", "Server\Lobby\TDS_Server.LobbySystem.csproj", "{5D276406-7249-4125-9236-D904DAC033D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LobbySystem", "Server\Systems\Lobby\LobbySystem.csproj", "{5D276406-7249-4125-9236-D904DAC033D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.GamemodesSystem", "Server\Gamemode\TDS_Server.GamemodesSystem.csproj", "{3505ED11-F8E4-437B-9F92-5171A41FE576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamemodesSystem", "Server\Systems\Gamemode\GamemodesSystem.csproj", "{3505ED11-F8E4-437B-9F92-5171A41FE576}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.TeamsSystem", "Server\TeamsSystem\TDS_Server.TeamsSystem.csproj", "{9249B1A5-F0B8-49D9-9ED7-96F658EAFEBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamsSystem", "Server\Systems\TeamsSystem\TeamsSystem.csproj", "{9249B1A5-F0B8-49D9-9ED7-96F658EAFEBE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Systems", "Systems", "{C54F006D-E685-4970-9A6A-AF428BE5C809}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.PlayersSystem", "Server\PlayersSystem\TDS_Server.PlayersSystem.csproj", "{B6C2C9E4-BD9D-47BB-9E35-E8C2FEE9F17D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayersSystem", "Server\Systems\PlayersSystem\PlayersSystem.csproj", "{B6C2C9E4-BD9D-47BB-9E35-E8C2FEE9F17D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.MailSystem", "Server\MailSystem\TDS_Server.MailSystem.csproj", "{1C24C2A8-595A-40A1-9796-F989114C50AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSystem", "Server\Systems\MailSystem\MailSystem.csproj", "{1C24C2A8-595A-40A1-9796-F989114C50AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.DamageSystem", "Server\DamageSystem\TDS_Server.DamageSystem.csproj", "{447507BE-F6A8-4B24-A669-5511E94261B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DamageSystem", "Server\Systems\DamageSystem\DamageSystem.csproj", "{447507BE-F6A8-4B24-A669-5511E94261B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDS_Server.GangsSystem", "Server\GangSystem\TDS_Server.GangsSystem.csproj", "{02E79F57-EE78-402F-86ED-56F1496B2D2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GangsSystem", "Server\Systems\GangSystem\GangsSystem.csproj", "{02E79F57-EE78-402F-86ED-56F1496B2D2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

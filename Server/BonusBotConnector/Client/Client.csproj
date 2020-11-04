@@ -6,6 +6,7 @@
         <RootNamespace>BonusBotConnector.Client</RootNamespace>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <PlatformTarget>x64</PlatformTarget>
+        <AssemblyName>BonusBotConnector.Client</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Database\TDS_Server.Database.csproj" />
-        <ProjectReference Include="..\..\Data\TDS_Server.Data.csproj" />
+        <ProjectReference Include="..\..\Database\Database.csproj" />
+        <ProjectReference Include="..\..\Data\Data.csproj" />
     </ItemGroup>
 </Project>

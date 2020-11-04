@@ -4,15 +4,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>TDS_Server.GangsSystem</AssemblyName>
+    <RootNamespace>TDS_Server.GangsSystem</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="morelinq" Version="3.3.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
-    <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
+    <ProjectReference Include="..\..\Data\Data.csproj" />
+    <ProjectReference Include="..\..\Handler\Handler.csproj" />
   </ItemGroup>
 
   <ItemGroup>

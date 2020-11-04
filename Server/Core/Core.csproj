@@ -11,6 +11,8 @@
         <PlatformTarget>x64</PlatformTarget>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+        <AssemblyName>TDS_Server.Core</AssemblyName>
+        <RootNamespace>TDS_Server.Core</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,20 +26,20 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Shared\Core\TDS_Shared.Core.csproj" />
-        <ProjectReference Include="..\..\Shared\Data\TDS_Shared.Data.csproj" />
-        <ProjectReference Include="..\BonusBotConnector\Client\BonusBotConnector.Client.csproj" />
-        <ProjectReference Include="..\BonusBotConnector\Server\BonusBotConnector.Server.csproj" />
-        <ProjectReference Include="..\DamageSystem\TDS_Server.DamageSystem.csproj" />
-        <ProjectReference Include="..\Database\TDS_Server.Database.csproj" />
-        <ProjectReference Include="..\Data\TDS_Server.Data.csproj" />
-        <ProjectReference Include="..\Gamemode\TDS_Server.GamemodesSystem.csproj" />
-        <ProjectReference Include="..\GangSystem\TDS_Server.GangsSystem.csproj" />
-        <ProjectReference Include="..\Handler\TDS_Server.Handler.csproj" />
-        <ProjectReference Include="..\Lobby\TDS_Server.LobbySystem.csproj" />
-        <ProjectReference Include="..\MailSystem\TDS_Server.MailSystem.csproj" />
-        <ProjectReference Include="..\PlayersSystem\TDS_Server.PlayersSystem.csproj" />
-        <ProjectReference Include="..\TeamsSystem\TDS_Server.TeamsSystem.csproj" />
+        <ProjectReference Include="..\..\Shared\Core\Core.csproj" />
+        <ProjectReference Include="..\..\Shared\Data\Data.csproj" />
+        <ProjectReference Include="..\BonusBotConnector\Client\Client.csproj" />
+        <ProjectReference Include="..\BonusBotConnector\Server\Server.csproj" />
+        <ProjectReference Include="..\Systems\DamageSystem\DamageSystem.csproj" />
+        <ProjectReference Include="..\Database\Database.csproj" />
+        <ProjectReference Include="..\Data\Data.csproj" />
+        <ProjectReference Include="..\Systems\Gamemode\GamemodesSystem.csproj" />
+        <ProjectReference Include="..\Systems\GangSystem\GangsSystem.csproj" />
+        <ProjectReference Include="..\Handler\Handler.csproj" />
+        <ProjectReference Include="..\Systems\Lobby\LobbySystem.csproj" />
+        <ProjectReference Include="..\Systems\MailSystem\MailSystem.csproj" />
+        <ProjectReference Include="..\Systems\PlayersSystem\PlayersSystem.csproj" />
+        <ProjectReference Include="..\Systems\TeamsSystem\TeamsSystem.csproj" />
     </ItemGroup>
 
     <ItemGroup>
