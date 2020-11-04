@@ -37,7 +37,6 @@ namespace TDS_Server.Handler.PlayerHandlers
             _settingsHandler = settingsHandler;
 
             eventsHandler.PlayerLoggedIn += LoadPlayerChar;
-            eventsHandler.ReloadPlayerChar += LoadPlayerChar;
             eventsHandler.PlayerRegisteredBefore += InitPlayerChar;
         }
 

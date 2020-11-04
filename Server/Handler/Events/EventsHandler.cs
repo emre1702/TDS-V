@@ -121,8 +121,6 @@ namespace TDS_Server.Handler.Events
 
         public event PlayerWeaponSwitchDelegate? PlayerWeaponSwitch;
 
-        public event PlayerDelegate? ReloadPlayerChar;
-
         public event EmptyDelegate? ResourceStop;
 
         public event CounterDelegate? Second;
@@ -495,19 +493,6 @@ namespace TDS_Server.Handler.Events
             catch (Exception ex)
             {
                 Error?.Invoke(ex);
-            }
-        }
-
-        //Todo this is not used - check why
-        internal void OnReloadPlayerChar(ITDSPlayer player)
-        {
-            try
-            {
-                ReloadPlayerChar?.Invoke(player);
-            }
-            catch (Exception ex)
-            {
-                LoggingHandler.Instance?.LogError(ex);
             }
         }
 

@@ -2,7 +2,6 @@
 
 namespace TDS_Shared.Data.Models
 {
-    // Todo: Remove not used properties
     public class SyncedServerSettingsDto
     {
         [JsonProperty("0")]
