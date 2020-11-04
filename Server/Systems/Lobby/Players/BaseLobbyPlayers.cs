@@ -105,6 +105,8 @@ namespace TDS_Server.LobbySystem.Players
 
         public Task<bool> Any() => _semaphore.Do(() => _players.Any());
 
+        public Task<bool> Any(Func<ITDSPlayer, bool> func) => _semaphore.Do(() => _players.Any(func));
+
         public List<ITDSPlayer> GetPlayers() => _players.ToList();
 
         public int Count => _players.Count;

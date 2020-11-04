@@ -16,6 +16,8 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Players
 
         Task<bool> Any();
 
+        Task<bool> Any(Func<ITDSPlayer, bool> func);
+
         Task Do(Action<ITDSPlayer> func);
 
         Task DoInMain(Action<ITDSPlayer> func);

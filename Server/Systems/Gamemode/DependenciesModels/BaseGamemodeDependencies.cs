@@ -10,12 +10,12 @@ namespace TDS_Server.GamemodesSystem.DependenciesModels
 {
     public class BaseGamemodeDependencies
     {
-        internal BaseGamemodeDeathmatch? Deathmatch { get; set; }
-        internal BaseGamemodeMapHandler? MapHandler { get; set; }
-        internal BaseGamemodePlayers? Players { get; set; }
-        internal BaseGamemodeRounds? Rounds { get; set; }
-        internal BaseGamemodeSpecials? Specials { get; set; }
-        internal BaseGamemodeTeams? Teams { get; set; }
-        internal BaseGamemodeWeapons? Weapons { get; set; }
+        public BaseGamemodeDeathmatch? Deathmatch { get; set; }
+        public BaseGamemodeMapHandler? MapHandler { get; set; }
+        public BaseGamemodePlayers? Players { get; set; }
+        public BaseGamemodeRounds? Rounds { get; set; }
+        public BaseGamemodeSpecials? Specials { get; set; }
+        public BaseGamemodeTeams? Teams { get; set; }
+        public BaseGamemodeWeapons? Weapons { get; set; }
     }
 }

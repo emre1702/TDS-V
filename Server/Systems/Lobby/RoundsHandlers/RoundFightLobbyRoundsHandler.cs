@@ -128,6 +128,12 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
         public virtual async Task CheckForEnoughAlive()
         {
+            if (!await Lobby.Players.Any(p => p.Team is { } && !p.Team.IsSpectator))
+            {
+                Lobby.Rounds.RoundStates.EndRound(new LobbyEmptyRoundEndReason());
+                return;
+            }
+
             (int teamAmountWithAlive, int teamAmount) = await Lobby.Teams.Do(teams =>
                 (teams.Count(t => t.Players.AmountAlive > 0),
                 teams.Count(t => !t.IsSpectator))).ConfigureAwait(false);

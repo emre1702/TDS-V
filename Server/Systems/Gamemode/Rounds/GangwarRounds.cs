@@ -16,9 +16,11 @@ namespace TDS_Server.GamemodesSystem.Rounds
         public override bool CanEndRound(IRoundEndReason roundEndReason)
             => roundEndReason switch
             {
-                // If attacker dies it's handled by Target
+                // If attacker dies it's handled by target
                 DeathRoundEndReason deathRoundEndReason => deathRoundEndReason.WinnerTeam != _gamemode.Teams.Attacker,
                 NewPlayerRoundEndReason _ => false,
+                // Handled by target
+                LobbyEmptyRoundEndReason _ => false,    
 
                 _ => true
             };
