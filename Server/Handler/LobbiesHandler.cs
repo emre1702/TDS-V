@@ -148,7 +148,6 @@ namespace TDS_Server.Handler
                         AtKill = w.AtKill
                     })?.ToHashSet(),
                     Password = data.Password,
-                    //Todo: Add ArmsRaceWeapons (first in Angular)
                     Teams = data.Teams.Select((t, index) =>
                     {
                         var color = SharedUtils.GetColorFromHtmlRgba(t.Color) ?? System.Drawing.Color.FromArgb(255, 255, 255);

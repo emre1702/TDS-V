@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 
 namespace TDS_Server.Database.Extensions
 {
-    public static class CollectionEntryExtension
+    public static class CollectionEntryExtensions
     {
-        #region Public Methods
 
         public static async Task Reload(this CollectionEntry source)
         {
@@ -20,6 +19,5 @@ namespace TDS_Server.Database.Extensions
             await source.LoadAsync().ConfigureAwait(false);
         }
 
-        #endregion Public Methods
     }
 }
