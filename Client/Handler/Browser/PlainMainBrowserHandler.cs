@@ -42,11 +42,6 @@ namespace TDS_Client.Handler.Browser
             Browser.ExecuteJs($"mp.trigger('{FromBrowserEvent.Created}', 'PlainMain')");
         }
 
-        public void AddKillMessage(string msg)
-        {
-            ExecuteFast("d", msg);
-        }
-
         public void HideRoundEndReason()
         {
             try

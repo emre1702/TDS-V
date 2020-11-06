@@ -100,7 +100,8 @@ namespace TDS_Server.LobbySystem.Sync
 
         public void TriggerEvent(string eventName, params object[] args)
         {
-            NAPI.ClientEvent.TriggerClientEventInDimension(Lobby.MapHandler.Dimension, eventName, args);
+            NAPI.Task.RunSafe(() =>
+                NAPI.ClientEvent.TriggerClientEventInDimension(Lobby.MapHandler.Dimension, eventName, args));
         }
     }
 }

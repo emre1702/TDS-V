@@ -14,6 +14,7 @@ namespace TDS_Server.DamageSystem.Deaths
         private readonly KillingSpreeHandler _killingSpreeHandler;
         private readonly KillerProvider _killerProvider;
         private readonly AssisterProvider _assisterProvider;
+        private readonly DeathSyncHandler _deathSyncHandler;
         private readonly ILoggingHandler _logger;
 
 #nullable disable
@@ -27,6 +28,7 @@ namespace TDS_Server.DamageSystem.Deaths
             _killingSpreeHandler = killingSpreeHandler;
             _killerProvider = new KillerProvider(hitterHandler);
             _assisterProvider = new AssisterProvider(hitterHandler);
+            _deathSyncHandler = new DeathSyncHandler();
         }
 
         public void Init(IFightLobby lobby)
@@ -48,12 +50,12 @@ namespace TDS_Server.DamageSystem.Deaths
 
             AddStats(died, killer);
             CheckForAssist(died, killer);
+            _deathSyncHandler.Sync(died, killer, weapon, diedPlayerLifes);
 
             died.Deathmatch.LastHitter = null;
 
             if (killer != died && killer != killReason)
-                NAPI.Task.RunSafe(() =>
-                    killer.SendNotification(string.Format(killer.Language.GOT_LAST_HITTED_KILL, died.DisplayName)));
+                killer.SendNotification(string.Format(killer.Language.GOT_LAST_HITTED_KILL, died.DisplayName));
 
             if (_lobby.Players.SavePlayerLobbyStats)
                 _logger.LogKill(died, killer, weapon);

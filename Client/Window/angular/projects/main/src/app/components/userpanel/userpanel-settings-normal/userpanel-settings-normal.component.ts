@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { SettingType } from '../../../enums/setting-type';
 import { UserpanelSettingsPanel } from '../interfaces/userpanelSettingsPanel';
 import { SettingsService } from '../../../services/settings.service';
@@ -18,6 +18,7 @@ import { MatInput, MatSnackBar } from '@angular/material';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
 import { UserpanelSettingsSpecialType } from '../enums/userpanel-settings-special-type.enum';
+import { KillMessagesService } from '../../hud/kill-messages/services/kill-messages.service';
 
 @Component({
     selector: 'app-userpanel-settings-normal',
@@ -31,8 +32,9 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
     currentDate: Date;
     userpanelSettingKey = UserpanelSettingKey;
 
-    // CARE:
-    // nullable only implemented for Colors yet
+    private readonly intRegex = /^-?(0|[1-9]\d*)$/;
+    private readonly uintRegex = /^(0|[1-9]\d*)$/;
+    private readonly ufloatRegex =  /^(0|[1-9]\d*)(\.\d+)?$/;
 
     settingPanel: UserpanelSettingsPanel[] = [
         {
@@ -212,37 +214,39 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
             title: "Times", rows: [
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.BloodscreenCooldownMs, defaultValue: 150,
-                    formControl: new FormControl(150), min: 0, max: 1000000,
-                    onlyInt: true, tooltipLangKey: "BloodscreenCooldownMsSettingInfo", nullable: false,
+                    formControl: new FormControl(150, Validators.pattern(this.uintRegex)), min: 0, max: 1000000,
+                    tooltipLangKey: "BloodscreenCooldownMsSettingInfo", nullable: false,
                     settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.HudAmmoUpdateCooldownMs, defaultValue: 100,
-                    formControl: new FormControl(100), min: -1, max: 1000000,
-                    onlyInt: true, tooltipLangKey: "HudAmmoUpdateCooldownMsSettingInfo", nullable: false,
+                    formControl: new FormControl(100, Validators.pattern(this.intRegex)), min: -1, max: 1000000,
+                    tooltipLangKey: "HudAmmoUpdateCooldownMsSettingInfo", nullable: false,
                     settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.HudHealthUpdateCooldownMs, defaultValue: 100,
-                    formControl: new FormControl(100), min: -1, max: 1000000,
-                    onlyInt: true, tooltipLangKey: "HudHealthUpdateCooldownMsSettingInfo", nullable: false,
+                    formControl: new FormControl(100, Validators.pattern(this.intRegex)), min: -1, max: 1000000,
+                    tooltipLangKey: "HudHealthUpdateCooldownMsSettingInfo", nullable: false,
                     settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.AFKKickAfterSeconds, defaultValue: 25,
-                    formControl: new FormControl(25), min: 0, max: 1000000,
-                    onlyInt: true, tooltipLangKey: "AFKKickAfterSecondsSettingInfo", nullable: false,
+                    formControl: new FormControl(25, Validators.pattern(this.uintRegex)), min: 0, max: 1000000,
+                    tooltipLangKey: "AFKKickAfterSecondsSettingInfo", nullable: false,
                     settingObject: this.getNormalGeneralSettings.bind(this),
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.AFKKickShowWarningLastSeconds, defaultValue: 10,
-                    formControl: new FormControl(10), min: 0, max: 1000000, settingObject: this.getNormalGeneralSettings.bind(this),
-                    onlyInt: true, tooltipLangKey: "AFKKickShowWarningLastSecondsSettingInfo", nullable: false,
+                    formControl: new FormControl(10, Validators.pattern(this.uintRegex)),
+                    min: 0, max: 1000000, settingObject: this.getNormalGeneralSettings.bind(this),
+                    tooltipLangKey: "AFKKickShowWarningLastSecondsSettingInfo", nullable: false,
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.ShowFloatingDamageInfoDurationMs, defaultValue: 1000,
-                    formControl: new FormControl(1000), min: 0, max: 1000000, settingObject: this.getNormalGeneralSettings.bind(this),
-                    onlyInt: true, tooltipLangKey: "ShowFloatingDamageInfoDurationMsSettingInfo", nullable: false,
+                    formControl: new FormControl(1000, Validators.pattern(this.uintRegex)),
+                    min: 0, max: 1000000, settingObject: this.getNormalGeneralSettings.bind(this),
+                    tooltipLangKey: "ShowFloatingDamageInfoDurationMsSettingInfo", nullable: false,
                 }
             ]
         },
@@ -252,19 +256,19 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatWidth, defaultValue: 30,
                     min: 0, max: 100, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
-                    formControl: new FormControl(30), onValueChanged: this.onChatSettingsChanged.bind(this),
+                    formControl: new FormControl(30, Validators.pattern(this.ufloatRegex)), onValueChanged: this.onChatSettingsChanged.bind(this),
                     tooltipLangKey: "ChatWidthSettingInfo"
                 },
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatMaxHeight, defaultValue: 35,
                     min: 0, max: 100, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
-                    formControl: new FormControl(35), onValueChanged: this.onChatSettingsChanged.bind(this),
+                    formControl: new FormControl(35, Validators.pattern(this.ufloatRegex)), onValueChanged: this.onChatSettingsChanged.bind(this),
                     tooltipLangKey: "ChatHeightSettingInfo"
                 },
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatFontSize, defaultValue: 1.4,
                     min: 0, max: 5, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
-                    formControl: new FormControl(1.4), onValueChanged: this.onChatSettingsChanged.bind(this),
+                    formControl: new FormControl(1.4, Validators.pattern(this.ufloatRegex)), onValueChanged: this.onChatSettingsChanged.bind(this),
                     tooltipLangKey: "ChatFontSizeSettingInfo"
                 },
                 {
@@ -286,14 +290,14 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                 {
                     type: SettingType.numberSlider, dataSettingIndex: UserpanelSettingKey.ChatInfoFontSize, defaultValue: 1,
                     min: 0, max: 5, nullable: false, settingObject: this.getNormalGeneralSettings.bind(this),
-                    formControl: new FormControl(1), onValueChanged: this.onChatSettingsChanged.bind(this),
+                    formControl: new FormControl(1, Validators.pattern(this.ufloatRegex)), onValueChanged: this.onChatSettingsChanged.bind(this),
                     tooltipLangKey: "ChatInfoFontSizeInfo"
                 },
                 {
                     type: SettingType.number, dataSettingIndex: UserpanelSettingKey.ChatInfoMoveTimeMs, defaultValue: 15000,
-                    formControl: new FormControl(15000), min: 50, max: 1000000,
+                    formControl: new FormControl(15000, Validators.pattern(this.uintRegex)), min: 50, max: 1000000,
                     onValueChanged: this.onChatSettingsChanged.bind(this),
-                    onlyInt: true, tooltipLangKey: "ChatInfoMoveTimeMsInfo", nullable: false,
+                    tooltipLangKey: "ChatInfoMoveTimeMsInfo", nullable: false,
                     settingObject: this.getNormalGeneralSettings.bind(this),
                 }
             ]
@@ -318,6 +322,43 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
                     formControl: new FormControl(TimeSpanUnitsOfTime.HourMinute),
                     tooltipLangKey: "ScoreboardPlaytimeUnitInfo", settingObject: this.getNormalGeneralSettings.bind(this),
                 },
+            ]
+        },
+
+        {
+            title: "KillInfo", rows: [
+                {
+                    type: SettingType.booleanSlider, dataSettingIndex: UserpanelSettingKey.KillInfoShowIcon,
+                    defaultValue: this.settings.KillInfoSettings[2000], nullable: false,
+                    formControl: new FormControl(this.settings.KillInfoSettings[2000]),
+                    onValueChanged: this.onKillInfoSettingChanged.bind(this),
+                    tooltipLangKey: "KillInfoShowIconInfo", settingObject: this.getNormalKillInfoSettings.bind(this)
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.KillInfoFontWidth,
+                    defaultValue: this.settings.KillInfoSettings[2001], nullable: false,
+                    formControl: new FormControl(this.settings.KillInfoSettings[2001], [Validators.pattern(this.ufloatRegex)]),
+                    onValueChanged: this.onKillInfoSettingChanged.bind(this),
+                    tooltipLangKey: "KillInfoFontWidthInfo", settingObject: this.getNormalKillInfoSettings.bind(this)
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.KillInfoIconWidth,
+                    defaultValue: this.settings.KillInfoSettings[2002], nullable: false,
+                    formControl: new FormControl(this.settings.KillInfoSettings[2002], [Validators.pattern(this.uintRegex)]),
+                    onValueChanged: this.onKillInfoSettingChanged.bind(this),
+                    tooltipLangKey: "KillInfoIconWidthInfo", settingObject: this.getNormalKillInfoSettings.bind(this)
+                },
+                {
+                    type: SettingType.number, dataSettingIndex: UserpanelSettingKey.KillInfoSpacing,
+                    defaultValue: this.settings.KillInfoSettings[2003], nullable: false,
+                    formControl: new FormControl(this.settings.KillInfoSettings[2003], [Validators.pattern(this.uintRegex)]),
+                    onValueChanged: this.onKillInfoSettingChanged.bind(this),
+                    tooltipLangKey: "KillInfoSpacingInfo", settingObject: this.getNormalKillInfoSettings.bind(this)
+                },
+                {
+                    type: SettingType.button, title: "TestKillInfo",
+                    onClick: this.sendTestKillInfo.bind(this)
+                }
             ]
         },
 
@@ -348,7 +389,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         public changeDetector: ChangeDetectorRef,
         private rageConnector: RageConnectorService,
         private sanitizer: DomSanitizer,
-        private snackBar: MatSnackBar) { }
+        private snackBar: MatSnackBar,
+        private killMessagesService: KillMessagesService) { }
 
     ngOnInit() {
         this.userpanelService.settingsNormalLoaded.on(null, this.loadSettings.bind(this));
@@ -365,6 +407,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
         this.overrideLoadedSettingsWithCurrentSettings();
         this.settings.loadThemeSettings("");
+        this.settings.loadKillInfoSettings("");
         this.rageConnector.call(DToClientEvent.ReloadPlayerSettings);
     }
 
@@ -401,6 +444,11 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         }
     }
 
+    private onKillInfoSettingChanged(key: UserpanelSettingKey) {
+        const value = this.getFormControl("KillInfo", key).value;
+        this.settings.setKillInfoSetting(key, value);
+    }
+
     save() {
         const discordUserIdControl = this.getFormControl("General", UserpanelSettingKey.DiscordUserId);
         if (discordUserIdControl.value == "") {
@@ -416,7 +464,8 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
         const data = {
             ["0"]: this.getNormalGeneralSettings(),
-            ["1"]: this.getNormalThemeSettings()
+            ["1"]: this.getNormalThemeSettings(),
+            ["2"]: this.getNormalKillInfoSettings()
         };
         const json = JSON.stringify(data);
         this.rageConnector.callCallbackServer(DToServerEvent.SaveSettings, [json], (err: string) => {
@@ -526,6 +575,10 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
         return this.sanitizer.bypassSecurityTrustStyle(color);
     }
 
+    private sendTestKillInfo() {
+        this.killMessagesService.addTestDeathInfo();
+    }
+
     private overrideLoadedSettingsWithCurrentSettings() {
         this.settings.ChatWidth = this.originalChatWidth;
         this.settings.ChatMaxHeight = this.originalChatHeight;
@@ -544,6 +597,7 @@ export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 
     private getNormalGeneralSettings() { return this.userpanelService.allSettingsNormal; }
     private getNormalThemeSettings() { return this.settings.ThemeSettings; }
+    private getNormalKillInfoSettings() { return this.settings.KillInfoSettings; }
 
     private showSaveError(err: string) {
         this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: err, duration: undefined });

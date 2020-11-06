@@ -98,6 +98,11 @@ namespace TDS_Client.Handler.Browser
             ExecuteFast(ToBrowserEvent.LoadMapForMapCreator, json);
         }
 
+        internal void AddKillMessage(string killInfoJson)
+        {
+            ExecuteFast(ToBrowserEvent.AddKillMessage, killInfoJson);
+        }
+
         public void LoadNamesForChat(List<ITDSPlayer> players)
         {
             IEnumerable<string> names = players.Select(p => p.Name);

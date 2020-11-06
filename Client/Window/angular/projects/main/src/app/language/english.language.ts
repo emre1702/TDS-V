@@ -828,6 +828,15 @@ You need to set the target for this mode.`;
     Changelogs = "Changelogs";
     Apply = "Apply";
     DamageTestLobby = "Damage test";
+    KillInfo = "Kill info";
+    KillInfoShowIcon = "Show weapon icons";
+    KillInfoShowIconInfo = "Show weapon icons instead of weapon name.";
+    KillInfoFontWidth = "Font width";
+    KillInfoFontWidthInfo = "Font width of kill info texts. Higher number => bigger texts";
+    KillInfoIconWidth = "Weapon icon width (pixel)";
+    KillInfoIconWidthInfo = "Width in pixel for weapon icons.";
+    KillInfoSpacing = "Spacing (pixel)";
+    KillInfoSpacingInfo = "Spacing in pixel between texts and icon.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";

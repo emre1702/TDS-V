@@ -9,7 +9,7 @@ export class InitialDatas {
     private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
         sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
 
-    private static readonly inDebug = false;
+    private static readonly inDebug = true;
 
     static readonly started = InitialDatas.inDebug;
     static readonly isMapVotingActive = false;
@@ -20,7 +20,7 @@ export class InitialDatas {
         lobbyChoice: false,
         teamChoice: false,
         rankings: false,
-        hud: false,
+        hud: true,
         charCreator: false,
         gangWindow: false,
         damageTestMenu: false,

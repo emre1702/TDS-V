@@ -774,6 +774,15 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     Changelogs = "Changelogs";
     Apply = "Anwenden";
     DamageTestLobby = "Schaden Test";
+    KillInfo = "Tod-Info";
+    KillInfoShowIcon = "Zeige Waffen-Icons";
+    KillInfoShowIconInfo = "Zeige Waffen-Icons statt Waffen-Namen an.";
+    KillInfoFontWidth = "Schriftgröße";
+    KillInfoFontWidthInfo = "Schriftgröße der Tod-Info Texte. Höhere Zahl => größere Texte";
+    KillInfoIconWidth = "Waffen-Icon Breite (Pixel)";
+    KillInfoIconWidthInfo = "Breite in Pixel für die Waffen-Icons.";
+    KillInfoSpacing = "Abstände (Pixel)";
+    KillInfoSpacingInfo = "Abstände in Pixel zwischen Texten und Icon.";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";

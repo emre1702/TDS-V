@@ -101,4 +101,9 @@ export interface UserpanelSettingNormalDataDto {
     [43]: string;
     /** ThemeBackgroundLightColor */
     [44]: string;
+
+    /** ShowCursorInfo */
+    [45]: boolean;
+    /** ShowLobbyLeaveInfo */
+    [46]: boolean;
 }

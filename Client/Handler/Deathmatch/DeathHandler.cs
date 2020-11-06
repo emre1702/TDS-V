@@ -85,8 +85,8 @@ namespace TDS_Client.Handler.Deathmatch
             int teamIndex = (int)args[1];
             _eventsHandler.OnPlayerDied(player, teamIndex, willRespawn);
 
-            string killinfoStr = (string)args[2];
-            _browserHandler.PlainMain.AddKillMessage(killinfoStr);
+            string killInfoJson = (string)args[2];
+            _browserHandler.Angular.AddKillMessage(killInfoJson);
         }
 
         private void OnExplodeHeadMethod(object[] args)

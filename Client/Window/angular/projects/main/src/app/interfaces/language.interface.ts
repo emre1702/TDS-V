@@ -792,6 +792,15 @@ export interface Language {
     Changelogs: string;
     Apply: string;
     DamageTestLobby: string;
+    KillInfo: string;
+    KillInfoShowIcon: string;
+    KillInfoShowIconInfo: string;
+    KillInfoFontWidth: string;
+    KillInfoFontWidthInfo: string;
+    KillInfoIconWidth: string;
+    KillInfoIconWidthInfo: string;
+    KillInfoSpacing: string;
+    KillInfoSpacingInfo: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

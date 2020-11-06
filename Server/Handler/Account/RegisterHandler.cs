@@ -43,6 +43,7 @@ namespace TDS_Server.Handler.Account
             dbPlayer.PlayerTotalStats = new PlayerTotalStats();
             dbPlayer.PlayerClothes = new PlayerClothes();
             dbPlayer.ThemeSettings = CreatePlayerThemeSettingsEntity();
+            dbPlayer.KillInfoSettings = CreatePlayerKillInfoSettingsEntity();
 
             await player.Database.ExecuteForDBAsync(async dbContext =>
             {
@@ -139,6 +140,12 @@ namespace TDS_Server.Handler.Account
            => new PlayerThemeSettings
            {
                UseDarkTheme = true
+           };
+
+        private PlayerKillInfoSettings CreatePlayerKillInfoSettingsEntity()
+           => new PlayerKillInfoSettings
+           {
+               ShowIcon = true
            };
     }
 }

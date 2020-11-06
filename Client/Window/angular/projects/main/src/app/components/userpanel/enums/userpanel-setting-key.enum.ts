@@ -52,5 +52,10 @@ export enum UserpanelSettingKey {
     ThemeBackgroundLightColor = 1005,
 
     ShowCursorInfo = 45,
-    ShowLobbyLeaveInfo = 46
+    ShowLobbyLeaveInfo = 46,
+
+    KillInfoShowIcon = 2000,
+    KillInfoFontWidth = 2001,
+    KillInfoIconWidth = 2002,
+    KillInfoSpacing = 2003
 }

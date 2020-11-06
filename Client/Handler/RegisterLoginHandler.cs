@@ -83,7 +83,7 @@ namespace TDS_Client.Handler
             _settingsHandler.LoadThemeSettings(Serializer.FromServer<SyncedPlayerThemeSettings>(args[2].ToString()));
             _settingsHandler.LoggedIn = true;
 
-            _browserHandler.Angular.SetReady((string)args[3]);
+            _browserHandler.Angular.SetReady((string)args[3], (string)args[4]);
 
             _eventsHandler.OnLoggedIn();
 

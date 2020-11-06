@@ -8,6 +8,7 @@
       "schematics": {
         "@schematics/angular": {
           "style": "scss",
+          "styleExt": "scss",
           "skipTests": true,
           "changeDetection": "OnPush"
         }
@@ -132,6 +133,7 @@
       "schematics": {
         "@schematics/angular": {
           "style": "scss",
+          "styleExt": "scss",
           "skipTests": true,
           "changeDetection": "OnPush"
         }
@@ -253,6 +255,7 @@
       "schematics": {
         "@schematics/angular": {
           "style": "scss",
+          "styleExt": "scss",
           "skipTests": true,
           "changeDetection": "OnPush"
         }

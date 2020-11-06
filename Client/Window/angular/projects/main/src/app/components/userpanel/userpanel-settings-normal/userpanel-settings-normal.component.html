@@ -25,7 +25,7 @@
                     <ng-container *ngSwitchCase="userpanelSettingType.number">
                         <div class="setting-row">
                             <mat-form-field color="accent">
-                                <input matInput type="number" [formControl]="setting.formControl"
+                                <input matInput type="text" [formControl]="setting.formControl"
                                     (blur)="changeDetector.detectChanges()"
                                     [placeholder]="userpanelSettingKey[setting.dataSettingIndex] | language: settings.Lang"
                                     [matTooltipDisabled]="!setting.tooltipLangKey"
@@ -128,6 +128,14 @@
                             </button>
                             <button *ngIf="setting.nullable" mat-icon-button (click)="setting.formControl.setValue(undefined); changeDetector.detectChanges()">
                                 <mat-icon color="accent">delete_outline</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="userpanelSettingType.button">
+                        <div class="setting-row">
+                            <button mat-raised-button (click)="setting.onClick()">
+                                {{ setting.title }}
                             </button>
                         </div>
                     </ng-container>

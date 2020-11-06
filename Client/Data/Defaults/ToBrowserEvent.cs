@@ -2,8 +2,8 @@
 {
     public static class ToBrowserEvent
     {
-        #region Public Fields
 
+        public const string AddKillMessage = "cb45";
         public const string AddNameForChat = "cb38";
         public const string AddPositionToMapCreatorBrowser = "cb3";
         public const string CloseMapMenu = "cb4";
@@ -47,6 +47,5 @@
         public const string ToggleTeamOrderModus = "cb32";
         public const string ToggleUserpanel = "cb33";
 
-        #endregion Public Fields
     }
 }

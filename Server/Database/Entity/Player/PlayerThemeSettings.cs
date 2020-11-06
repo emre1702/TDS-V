@@ -8,7 +8,6 @@ namespace TDS_Server.Database.Entity.Player
 {
     public class PlayerThemeSettings : SyncedPlayerThemeSettings
     {
-        #region Public Properties
 
         [JsonIgnore]
         public virtual Players Player { get; set; }
@@ -16,6 +15,5 @@ namespace TDS_Server.Database.Entity.Player
         [JsonIgnore]
         public int PlayerId { get; set; }
 
-        #endregion Public Properties
     }
 }

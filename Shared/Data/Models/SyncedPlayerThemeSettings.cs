@@ -4,7 +4,6 @@ namespace TDS_Shared.Data.Models
 {
     public class SyncedPlayerThemeSettings
     {
-        #region Public Properties
 
         [JsonProperty("1004")]
         public string ThemeBackgroundDarkColor { get; set; }
@@ -27,6 +26,5 @@ namespace TDS_Shared.Data.Models
         [JsonProperty("1000")]
         public bool UseDarkTheme { get; set; }
 
-        #endregion Public Properties
     }
 }

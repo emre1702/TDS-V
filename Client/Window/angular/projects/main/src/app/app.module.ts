@@ -116,6 +116,7 @@ import { CustomLobbyArmsRaceWeaponsMenuComponent } from './components/lobbychoic
 import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
 import { MainMenuComponent } from './components/lobbychoice/main-menu/main-menu.component';
 import { DamageTestMenuComponent } from './components/damage-test-menu/damage-test-menu.component';
+import { KillMessagesComponent } from './components/hud/kill-messages/kill-messages.component';
 
 @NgModule({
   declarations: [
@@ -190,7 +191,8 @@ import { DamageTestMenuComponent } from './components/damage-test-menu/damage-te
     GangWindowRankPermissionsComponent,
     GangWindowMainmenuComponent,
     MainMenuComponent,
-    DamageTestMenuComponent
+    DamageTestMenuComponent,
+    KillMessagesComponent
   ],
   imports: [
     ReactiveFormsModule,

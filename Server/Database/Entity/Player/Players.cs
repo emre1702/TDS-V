@@ -12,6 +12,18 @@ namespace TDS_Server.Database.Entity.Player
 {
     public partial class Players
     {
+        public int Id { get; set; }
+        public bool IsVip { get; set; }
+        public int? AdminLeaderId { get; set; }
+        public short AdminLvl { get; set; }
+        public short Donation { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public DateTime RegisterTimestamp { get; set; }
+        public ulong SCId { get; set; }
+        public string SCName { get; set; }
+
         public Players()
         {
             Lobbies = new HashSet<Lobbies>();
@@ -29,8 +41,6 @@ namespace TDS_Server.Database.Entity.Player
         }
 
         public virtual Players AdminLeader { get; set; }
-        public int? AdminLeaderId { get; set; }
-        public short AdminLvl { get; set; }
         public virtual AdminLevels AdminLvlNavigation { get; set; }
         public virtual ICollection<Players> AdminMembers { get; set; }
         public virtual Applications Application { get; set; }
@@ -40,18 +50,13 @@ namespace TDS_Server.Database.Entity.Player
         public virtual PlayerCharDatas CharDatas { get; set; }
         public virtual ICollection<PlayerCommands> Commands { get; set; }
         public virtual ICollection<GangHouses> CreatedHouses { get; set; }
-        public short Donation { get; set; }
-        public string Email { get; set; }
         public virtual GangMembers GangMemberNavigation { get; set; }
-        public int Id { get; set; }
-        public bool IsVip { get; set; }
+        public virtual PlayerKillInfoSettings KillInfoSettings { get; set; }
         public virtual ICollection<Lobbies> Lobbies { get; set; }
         public virtual ICollection<Maps> Maps { get; set; }
-        public string Name { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesSource { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesTarget { get; set; }
         public virtual Gangs OwnedGang { get; set; }
-        public string Password { get; set; }
         public virtual ICollection<PlayerBans> PlayerBansAdmin { get; set; }
         public virtual ICollection<PlayerBans> PlayerBansPlayer { get; set; }
         public virtual PlayerClothes PlayerClothes { get; set; }
@@ -63,9 +68,6 @@ namespace TDS_Server.Database.Entity.Player
         public virtual PlayerSettings PlayerSettings { get; set; }
         public virtual PlayerStats PlayerStats { get; set; }
         public virtual PlayerTotalStats PlayerTotalStats { get; set; }
-        public DateTime RegisterTimestamp { get; set; }
-        public ulong SCId { get; set; }
-        public string SCName { get; set; }
         public virtual ICollection<SupportRequestMessages> SupportRequestMessages { get; set; }
         public virtual SupportRequests SupportRequests { get; set; }
         public virtual PlayerThemeSettings ThemeSettings { get; set; }

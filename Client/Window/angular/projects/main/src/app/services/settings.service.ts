@@ -22,6 +22,7 @@ import { UserpanelSettingKey } from '../components/userpanel/enums/userpanel-set
 import { ThemeSettings } from '../interfaces/theme-settings';
 import { InitialDatas } from './test-datas';
 import { DamageTestWeapon } from '../components/damage-test-menu/interfaces/damage-test-weapon';
+import { KillMessagesSettings as KillInfoSettings } from '../interfaces/kill-messages-settings';
 
 // tslint:disable: member-ordering
 
@@ -292,6 +293,26 @@ export class SettingsService {
     }
 
     ////////////////////////////////////////////////////
+
+    /////////////////// Kill-Messages //////////////////
+    KillInfoSettings: KillInfoSettings = {
+        2000: true, 2001: 1.4, 2002: 60, 2003: 15
+    };
+    KillInfoSettingChanged = new EventEmitter();
+    KillInfoSettingsLoaded = new EventEmitter();
+
+    setKillInfoSetting(key: UserpanelSettingKey, value: any) {
+        this.KillInfoSettings[key] = value;
+        this.KillInfoSettingChanged.emit(null, key, value);
+    }
+
+    loadKillInfoSettings(dataJson: string) {
+        if (dataJson.length) {
+            this.KillInfoSettings = JSON.parse(dataJson);
+        }
+
+        this.KillInfoSettingsLoaded.emit(null, this.KillInfoSettings);
+    }
 
     constructor(
         private rageConnector: RageConnectorService,

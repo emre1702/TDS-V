@@ -4,7 +4,6 @@ namespace TDS_Shared.Data.Models
 {
     public class SyncedPlayerSettingsDto
     {
-        #region Public Properties
 
         [JsonProperty("17")]
         public int AFKKickAfterSeconds { get; set; }
@@ -126,6 +125,5 @@ namespace TDS_Shared.Data.Models
         [JsonProperty("32")]
         public Enums.ScoreboardPlayerSorting ScoreboardPlayerSorting { get; set; }
 
-        #endregion Public Properties
     }
 }

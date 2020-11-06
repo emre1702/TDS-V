@@ -5,7 +5,6 @@ namespace TDS_Server.Data.Models.Userpanel
 {
     public class UserpanelSettingsNormalDataDto
     {
-        #region Public Properties
 
         [JsonProperty("0")]
         public PlayerSettings General { get; set; }
@@ -13,6 +12,8 @@ namespace TDS_Server.Data.Models.Userpanel
         [JsonProperty("1")]
         public PlayerThemeSettings ThemeSettings { get; set; }
 
-        #endregion Public Properties
+        [JsonProperty("2")]
+        public PlayerKillInfoSettings KillInfoSettings { get; set; }
+
     }
 }

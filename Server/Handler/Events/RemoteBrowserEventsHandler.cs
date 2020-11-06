@@ -110,6 +110,7 @@ namespace TDS_Server.Handler.Events
                 return;
             try
             {
+                await Task.Yield();
                 object? ret = null;
 
                 var eventName = (string)args[0];

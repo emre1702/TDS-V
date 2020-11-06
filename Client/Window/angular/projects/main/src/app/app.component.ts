@@ -70,8 +70,9 @@ export class AppComponent {
         private materialCssVarsService: MaterialCssVarsService) {
         this.loadSvgIcons();
 
-        rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
-             this.settings.Constants = JSON.parse(constantsDataJson);
+        rageConnector.listen(DFromClientEvent.InitLoadAngular, (killInfoSettingsJson: string, constantsDataJson: string) => {
+            this.settings.loadKillInfoSettings(killInfoSettingsJson);
+            this.settings.Constants = JSON.parse(constantsDataJson);
             if (this.settings.Constants[6] && typeof this.settings.Constants[6] === "string") {
                 this.settings.Constants[6] = JSON.parse(this.settings.Constants[6]);
             }

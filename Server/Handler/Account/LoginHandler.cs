@@ -78,6 +78,7 @@ namespace TDS_Server.Handler.Account
                 if (entity is null)
                     return false;
 
+                CreateMissingTables(entity);
                 entity.PlayerStats.LoggedIn = true;
                 entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -97,6 +98,7 @@ namespace TDS_Server.Handler.Account
             var syncedSettingsJson = Serializer.ToClient(_settingsHandler.SyncedSettings);
             var playerSettingsJson = Serializer.ToClient(player.Entity.PlayerSettings);
             var playerThemeSettingsJson = Serializer.ToClient(player.Entity.ThemeSettings);
+            var playerKillInfoSettingsJson = Serializer.ToClient(player.Entity.KillInfoSettings);
             var angularContentsJson = Serializer.ToBrowser(angularConstantsData);
 
             await NAPI.Task.RunWait(player.Init);
@@ -108,6 +110,7 @@ namespace TDS_Server.Handler.Account
                     syncedSettingsJson,
                     playerSettingsJson,
                     playerThemeSettingsJson,
+                    playerKillInfoSettingsJson,
                     angularContentsJson
                 );
 
@@ -155,6 +158,12 @@ namespace TDS_Server.Handler.Account
         private Task<string?> GetPlayerPassword(TDSDbContext dbContext, int playerId)
             => dbContext.Players.Where(p => p.Id == playerId).Select(p => p.Password).FirstOrDefaultAsync() as Task<string?>;
 
+        private void CreateMissingTables(Players entity)
+        {
+            if (entity.KillInfoSettings is null)
+                entity.KillInfoSettings = new PlayerKillInfoSettings { ShowIcon = true };
+        }
+
         private Task<Players?> LoadPlayer(TDSDbContext dbContext, int playerId)
             => dbContext.Players
                     .Include(p => p.PlayerStats)
@@ -162,6 +171,7 @@ namespace TDS_Server.Handler.Account
                     .Include(p => p.PlayerSettings)
                     .Include(p => p.PlayerClothes)
                     .Include(p => p.ThemeSettings)
+                    .Include(p => p.KillInfoSettings)
 
                    .FirstOrDefaultAsync(p => p.Id == playerId);
 

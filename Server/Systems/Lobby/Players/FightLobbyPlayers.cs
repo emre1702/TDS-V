@@ -52,7 +52,7 @@ namespace TDS_Server.LobbySystem.Players
             if (lifes > 0)
             {
                 Lobby.Deathmatch.Damage.DeathHandler.RewardLastHitter(player, out var killer);
-                Lobby.Deathmatch.DeathInfoSync(player, killer, (uint)WeaponHash.Unarmed);
+                Lobby.Deathmatch.Damage.DeathHandler.PlayerDeath(player, killer ?? player, (uint)WeaponHash.Unarmed, lifes);
             }
 
             return true;

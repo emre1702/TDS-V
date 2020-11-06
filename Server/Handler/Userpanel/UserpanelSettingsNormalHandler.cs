@@ -58,10 +58,12 @@ namespace TDS_Server.Handler.Userpanel
             var newDiscordUserId = obj.General.DiscordUserId;
             obj.General.DiscordUserId = player.Entity!.PlayerSettings.DiscordUserId;
             obj.ThemeSettings.PlayerId = player.Id;
+            obj.KillInfoSettings.PlayerId = player.Id;
             await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
                 dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj.General);
                 dbContext.Entry(player.Entity.ThemeSettings).CurrentValues.SetValues(obj.ThemeSettings);
+                dbContext.Entry(player.Entity.KillInfoSettings).CurrentValues.SetValues(obj.KillInfoSettings);
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
 
