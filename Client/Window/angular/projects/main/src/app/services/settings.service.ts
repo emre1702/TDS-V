@@ -17,12 +17,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { LanguagePipe } from '../pipes/language.pipe';
 import { DToServerEvent } from '../enums/dtoserverevent.enum';
 import { UserpanelCommandDataDto } from '../components/userpanel/interfaces/userpanelCommandDataDto';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { UserpanelSettingKey } from '../components/userpanel/enums/userpanel-setting-key.enum';
 import { ThemeSettings } from '../interfaces/theme-settings';
 import { InitialDatas } from './test-datas';
 import { DamageTestWeapon } from '../components/damage-test-menu/interfaces/damage-test-weapon';
-import { KillMessagesSettings as KillInfoSettings } from '../interfaces/kill-messages-settings';
+import { KillInfoSettings } from '../interfaces/kill-info-settings';
 
 // tslint:disable: member-ordering
 

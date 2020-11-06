@@ -1,4 +1,4 @@
-export interface KillInfosSettings {
+export interface KillInfoSettings {
     /** KillInfoShowIcon */
     [2000]: boolean;
     /** KillInfoFontWidth */

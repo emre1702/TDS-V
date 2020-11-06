@@ -4,7 +4,7 @@ import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../../../enums/dfromclientevent.enum';
 import { EventEmitter } from 'events';
 import { WeaponHash } from '../../../lobbychoice/enums/weapon-hash.enum';
-import { KillInfosSettings } from '../../../../interfaces/kill-infos-settings';
+import { KillInfoSettings } from '../../../../interfaces/kill-info-settings';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { UserpanelSettingKey } from '../../../userpanel/enums/userpanel-setting-key.enum';
 
@@ -14,7 +14,7 @@ import { UserpanelSettingKey } from '../../../userpanel/enums/userpanel-setting-
 export class KillMessagesService {
     killInfos: DeathInfoData[] = [];
     killInfosChanged = new EventEmitter();
-    killInfoSettings: KillInfosSettings;
+    killInfoSettings: KillInfoSettings;
 
     constructor(private rageConnector: RageConnectorService, private settings: SettingsService) {
         this.rageConnector.listen(DFromClientEvent.AddKillMessage, this.addDeathInfo.bind(this));
@@ -49,7 +49,7 @@ export class KillMessagesService {
         this.killInfosChanged.emit(null);
     }
 
-    private killInfoSettingsLoaded(settings: KillInfosSettings) {
+    private killInfoSettingsLoaded(settings: KillInfoSettings) {
         this.killInfoSettings = settings;
         this.killInfosChanged.emit(null);
     }
