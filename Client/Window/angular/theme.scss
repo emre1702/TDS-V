@@ -1,13 +1,13 @@
-@import "~angular-material-css-vars/main";
+@import '~angular-material-css-vars/main';
+
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat-core();
 
-$mat-css-dark-theme-selector: ".isDarkTheme";
-$mat-css-light-theme-selector: ".isLightTheme";
+$mat-css-dark-theme-selector: '.isDarkTheme';
+$mat-css-light-theme-selector: '.isLightTheme';
 
 $custom-primary: (
     50: #e0e0ea,
@@ -57,6 +57,7 @@ $mat-light-theme-background: (
     disabled-button-toggle: map_get($mat-grey, 200),
     unselected-chip: map_get($mat-grey, 300),
     disabled-list-option: map_get($mat-grey, 200),
+    tooltip: rgba(250, 250, 250, 0.95),
 );
 
 $mat-dark-theme-background: (
@@ -74,6 +75,7 @@ $mat-dark-theme-background: (
     disabled-button-toggle: black,
     unselected-chip: map_get($mat-grey, 700),
     disabled-list-option: black,
+    tooltip: rgba(48, 48, 48, 0.95),
 );
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
@@ -86,13 +88,14 @@ $dark-accent: mat-palette($mat-orange, A200, A100, A400);
 $dark-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$clight-theme: mat-light-theme($dark-primary, $dark-accent, $dark-warn);
-$cdark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+$light-theme: mat-light-theme($dark-primary, $dark-accent, $dark-warn);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 
+/*
 @mixin app-theme($theme) {
     // Extract the palettes you need from the theme definition.
     $primary: map-get($theme, primary);
@@ -104,11 +107,10 @@ $cdark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
         background-color: mat-color($primary);
         border: medium solid mat-color($accent, A400);
     }
-}
+}*/
 
-@include init-material-css-vars() {
-    @include app-theme($mat-css-theme);
-}
+@include init-material-css-vars();
+
 
 /*@include angular-material-theme($cdark-theme);
 
@@ -140,6 +142,10 @@ $background-color: rgba(48, 48, 48, 0.78);
 
 ::-webkit-scrollbar {
     width: 12px;
+}
+
+::ng-deep .mat-menu-panel {
+    background: red;
 }
 
 ::-webkit-scrollbar-track {
@@ -222,10 +228,6 @@ button:not([disabled]):hover {
     opacity: 0.6 !important;
 }
 
-.container {
-    border-radius: 10px;
-}
-
 .multi-line-text {
     white-space: pre-line;
 }
@@ -279,4 +281,8 @@ button:not([disabled]):hover {
 
 .mat-snack-bar-container {
     padding: 0px !important;
+}
+
+::ng-deep .mat-tooltip {
+    white-space: pre-line;
 }
