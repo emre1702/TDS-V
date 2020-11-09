@@ -167,9 +167,9 @@ namespace TDS_Server.Handler
         {
             if (_attachedEntitiesPerLobby.ContainsKey(lobby))
             {
-                _attachedEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
                 foreach (Entity entity in _attachedEntitiesPerLobby[lobby].ToArray())
                 {
+                    _attachedEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
                     if (!_attachedEntitiesInfos.ContainsKey(entity))
                     {
                         _attachedEntitiesPerLobby[lobby].Remove(entity);
@@ -184,9 +184,9 @@ namespace TDS_Server.Handler
 
             if (_collisionslessEntitiesPerLobby.ContainsKey(lobby))
             {
-                _collisionslessEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
                 NAPI.Task.RunSafe(() =>
                 {
+                    _collisionslessEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
                     foreach (Entity entity in _collisionslessEntitiesPerLobby[lobby])
                         player.TriggerEvent(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
                 });
@@ -197,9 +197,9 @@ namespace TDS_Server.Handler
 
             if (_frozenEntityPerLobby.ContainsKey(lobby))
             {
-                _frozenEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
                 NAPI.Task.RunSafe(() =>
                 {
+                    _frozenEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
                     foreach (Entity entity in _frozenEntityPerLobby[lobby])
                         player.TriggerEvent(ToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, true);
                 });
@@ -207,9 +207,10 @@ namespace TDS_Server.Handler
 
             if (_invincibleEntityPerLobby.ContainsKey(lobby))
             {
-                _invincibleEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
+                
                 NAPI.Task.RunSafe(() =>
                 {
+                    _invincibleEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
                     foreach (var entity in _invincibleEntityPerLobby[lobby])
                         player.TriggerEvent(ToClientEvent.SetEntityInvincible, entity.Handle.Value, true);
                 });

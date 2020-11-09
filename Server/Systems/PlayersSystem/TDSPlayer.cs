@@ -129,10 +129,13 @@ namespace TDS_Server.PlayersSystem
         {
             DeathSpawnTimer?.Kill();
             DeathSpawnTimer = null;
-            NAPI.Task.RunSafe(() => 
-                NAPI.Player.SpawnPlayer(this, pos, heading));
-            if (Lobby is { })
-                Dimension = Lobby.MapHandler.Dimension;
+            NAPI.Task.RunSafe(() =>
+            {
+                NAPI.Player.SpawnPlayer(this, pos, heading);
+                if (Lobby is { })
+                    Dimension = Lobby.MapHandler.Dimension;
+            });  
+                
         }
 
         public override void SetEntityInvincible(ITDSVehicle vehicle, bool invincible)
