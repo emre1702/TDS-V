@@ -52,7 +52,8 @@ namespace TDS_Server.PlayersSystem
 
         public void TriggerBrowserEvent(params object[] eventNameAndArgs)
         {
-            _player.TriggerEvent(ToClientEvent.ToBrowserEvent, eventNameAndArgs);
+            NAPI.Task.RunSafe(() => 
+                _player.TriggerEvent(ToClientEvent.ToBrowserEvent, eventNameAndArgs));
         }
     }
 }
