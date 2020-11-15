@@ -25,7 +25,7 @@ export class RageConnectorService {
 
     constructor(zone: NgZone) {
         RageConnectorService.zone = zone;
-        window.RageAngularEvent = this.rageEventHandler;
+        window.RageAngularEvent = this.rageEventHandler.bind(this);
     }
 
     public rageEventHandler(eventName: string, ...args: any) {
@@ -119,7 +119,8 @@ export class RageConnectorService {
         }
         RageConnectorService.callbackEvents[eventName].push(callback);
 
-        mp.events.add(eventName, callback);
+        this.addCallbackFunction(eventName, callback);
+
         if (args)
             mp.trigger(eventName, ...args);
         else
@@ -142,10 +143,19 @@ export class RageConnectorService {
         }
         RageConnectorService.callbackEvents[eventName].push(callback);
 
-        mp.events.add(eventName, callback);
+        this.addCallbackFunction(eventName, callback);
+        
         if (args)
             mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
         else
             mp.trigger(DToServerEvent.FromBrowserEvent, eventName);
+    }
+
+    private addCallbackFunction(eventName: string, callback: (...args: any) => void) {
+        const callbackFunc = function func(...args: any) {
+            mp.events.remove(eventName, func);
+            callback(...args);
+        }
+        mp.events.add(eventName, callbackFunc);
     }
 }
