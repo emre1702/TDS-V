@@ -2,7 +2,7 @@
   "name": "rage-connector",
   "version": "1.0",
   "peerDependencies": {
-    "@angular/common": "^8.2.7",
-    "@angular/core": "^8.2.7"
+    "@angular/common": "^10.2.2",
+    "@angular/core": "^10.2.2"
   }
 }

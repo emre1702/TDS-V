@@ -2,11 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'lib-rage-connector',
-  template: `
-    <p>
-      rage-connector works!
-    </p>
-  `,
+  template: "",
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -1,5 +1,4 @@
 import { Component, ViewChild, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort, MatInput } from '@angular/material';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from './enums/dtoclientevent.enum';
 import { MapCreatorPositionType } from './enums/mapcreatorpositiontype.enum';
@@ -8,6 +7,10 @@ import { LanguageEnum } from './enums/language.enum';
 import { German } from './language/german.language';
 import { English } from './language/english.language';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-root',
