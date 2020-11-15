@@ -65,7 +65,7 @@ namespace TDS_Client.Handler.Browser
 
         public void FromBrowserEventReturn(string eventName, object ret)
         {
-            ExecuteFast(ToServerEvent.FromBrowserEvent, eventName, ret);
+            ExecuteFast(eventName, ret);
         }
 
         public void FromServerToBrowser(string eventName, params object[] args)
@@ -83,9 +83,9 @@ namespace TDS_Client.Handler.Browser
             ExecuteFast(ToBrowserEvent.HideRankings);
         }
 
-        public void LoadChatSettings(float width, float maxHeight, float fontSize, bool hideDirtyChat, bool hideChatInfo, float chatInfoFontSize, int chatInfoAnimationTimeMs)
+        public void LoadSettings(string json)
         {
-            ExecuteFast(ToBrowserEvent.LoadChatSettings, width, maxHeight, fontSize, hideDirtyChat, hideChatInfo, chatInfoFontSize, chatInfoAnimationTimeMs);
+            ExecuteFast(ToBrowserEvent.LoadSettings, json);
         }
 
         public void LoadLanguage(ILanguage language)
@@ -278,11 +278,6 @@ namespace TDS_Client.Handler.Browser
             ExecuteFast(ToBrowserEvent.MapCreatorSyncCurrentMapToServer, tdsPlayerId, idCounter);
         }
 
-        internal void SyncThemeSettings(string dataJson)
-        {
-            ExecuteFast(ToBrowserEvent.LoadThemeSettings, dataJson);
-        }
-
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)
         {
             ResetMapVoting();
@@ -303,8 +298,46 @@ namespace TDS_Client.Handler.Browser
 
         private void OnToBrowserEventMethod(object[] args)
         {
-            string eventName = (string)args[0];
-            FromServerToBrowser(eventName, args.Skip(1).ToArray());
+            try
+            {
+                switch (args.Length)
+                {
+                    case 1:
+                        FromServerToBrowser((string)args[0]);
+                        break;
+                    case 2:
+                        FromServerToBrowser((string)args[0], args[1]);
+                        break;
+                    case 3:
+                        FromServerToBrowser((string)args[0], args[1], args[2]);
+                        break;
+                    case 4:
+                        FromServerToBrowser((string)args[0], args[1], args[2], args[3]);
+                        break;
+                    case 5:
+                        FromServerToBrowser((string)args[0], args[1], args[2], args[3], args[4]);
+                        break;
+                    case 6:
+                        FromServerToBrowser((string)args[0], args[1], args[2], args[3], args[4], args[5]);
+                        break;
+                    case 7:
+                        FromServerToBrowser((string)args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+                        break;
+                    case 8:
+                        FromServerToBrowser((string)args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+                        break;
+                    case 9:
+                        FromServerToBrowser((string)args[0], args[1], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
+                        break;
+                    case 10:
+                        FromServerToBrowser((string)args[0], args[1], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex, "OnToBrowser: " + (string)args[0]);
+            }
         }
     }
 }
