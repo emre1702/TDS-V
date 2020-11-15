@@ -21,10 +21,10 @@
     "disableSizeLimit": true,
     "paths": {
       "rage-connector": [
-        "dist/rage-connector"
+        "./projects/rage-connector/src/public-api"
       ],
       "rage-connector/*": [
-        "dist/rage-connector/*"
+        "./projects/rage-connector/src/*"
       ]
     }
   },
