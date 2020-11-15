@@ -59,7 +59,7 @@ namespace TDS_Server.DamageSystem.Damages
         {
             NAPI.Task.RunSafe(() =>
             {
-                if (player.Entity?.PlayerSettings.FloatingDamageInfo == true)
+                if (player.Entity?.PlayerSettings.FightEffect.FloatingDamageInfo == true)
                     player.TriggerEvent(ToClientEvent.HitOpponent, target.RemoteId, damage);
 
                 if (target.Health == 0 && isHeadshot)

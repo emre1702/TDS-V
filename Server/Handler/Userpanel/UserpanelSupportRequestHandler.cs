@@ -73,7 +73,7 @@ namespace TDS_Server.Handler.Userpanel
             var playerData = await ExecuteForDBAsync(async dbContext =>
             {
                 return await dbContext.PlayerSettings
-                    .Where(p => p.DiscordUserId == discordUserId)
+                    .Where(p => p.General.DiscordUserId == discordUserId)
                     .Include(p => p.Player)
                     .Select(p => new { p.PlayerId, p.Player.Name })
                     .FirstOrDefaultAsync()
@@ -134,7 +134,7 @@ namespace TDS_Server.Handler.Userpanel
             var playerId = await ExecuteForDBAsync(async dbContext =>
             {
                 return await dbContext.PlayerSettings
-                    .Where(p => p.DiscordUserId == discordUserId)
+                    .Where(p => p.General.DiscordUserId == discordUserId)
                     .Select(p => p.PlayerId)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false);

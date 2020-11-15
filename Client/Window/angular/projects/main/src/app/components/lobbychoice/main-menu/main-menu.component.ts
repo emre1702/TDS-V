@@ -3,7 +3,6 @@ import { AnimationEvent } from '@angular/animations';
 import { SettingsService } from '../../../services/settings.service';
 import { ChallengeType } from '../enums/challenge-type.enum';
 import { ChallengeFrequency } from '../enums/challenge-frequency.enum';
-import { LanguagePipe } from '../../../pipes/language.pipe';
 import { LobbyChoice } from '../lobby-choice/interfaces/lobby-choice';
 import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -12,6 +11,7 @@ import { RageConnectorService } from 'rage-connector';
 import { topToBottomMainMenuAnimation } from './animations/top-to-bottom-main-menu.animation';
 import { leftToRightMainMenuAnimation } from './animations/left-to-right-main-menu.animation';
 import { rightToLeftMainMenuAnimation } from './animations/right-to-left-main-menu.animation';
+import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-main-menu',
@@ -48,7 +48,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ChallengesLoaded.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
         this.settings.UserpanelOpenChanged.on(null, this.detectChanges.bind(this));
         this.lobbyChoices = [...this.initialLobbyChoices];
     }
@@ -57,7 +57,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ChallengesLoaded.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
         this.settings.UserpanelOpenChanged.off(null, this.detectChanges.bind(this));
         this.lobbyChoices = undefined;
     }

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, ViewChild, HostListener, ElementRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
-import { MatInput } from '@angular/material';
 import { SettingsService } from '../../../services/settings.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
@@ -10,7 +9,8 @@ import { MentionDirective } from '../../../extensions/mention/mentionDirective';
 import { animate, style, AnimationBuilder, AnimationPlayer } from '@angular/animations';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { UserpanelCommandDataDto } from '../../userpanel/interfaces/userpanelCommandDataDto';
-import { LanguagePipe } from '../../../pipes/language.pipe';
+import { MatInput } from '@angular/material/input';
+import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 declare const mp: {
     events: {
@@ -131,6 +131,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromClientEvent.ToggleChatInput, this.toggleChatInput.bind(this));
         this.rageConnector.listen(DFromServerEvent.LoadChatInfos, this.loadChatInfos.bind(this));
 
+        this.settings.SettingsLoaded.on(null, this.chatSettingsChanged.bind(this));
         this.settings.ChatSettingsChanged.on(null, this.chatSettingsChanged.bind(this));
         this.settings.CommandsDataLoaded.on(null, this.commandsDataLoaded.bind(this));
 
@@ -151,6 +152,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.rageConnector.remove(DFromClientEvent.ToggleChatInput, this.toggleChatInput.bind(this));
         this.rageConnector.remove(DFromServerEvent.LoadChatInfos, this.loadChatInfos.bind(this));
 
+        this.settings.SettingsLoaded.off(null, this.chatSettingsChanged.bind(this));
         this.settings.ChatSettingsChanged.off(null, this.chatSettingsChanged.bind(this));
         this.settings.CommandsDataLoaded.off(null, this.commandsDataLoaded.bind(this));
     }
@@ -395,10 +397,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     private chatSettingsChanged() {
-        if (this.chatBodies[this.selectedChatBody].name === "Dirty" && this.settings.ChatHideDirtyChat) {
+        if (this.chatBodies[this.selectedChatBody].name === "Dirty" && this.settings.Settings[3]) {
             this.selectChatBody(0);
         }
-        if (this.infoAnimationLastTimeMs && this.infoAnimationLastTimeMs != this.settings.ChatInfoAnimationTimeMs) {
+        if (this.infoAnimationLastTimeMs && this.infoAnimationLastTimeMs != this.settings.Settings[6]) {
             this.infoAnimationPlayer.destroy();
             this.createInfoAnimation();
         }
@@ -428,10 +430,10 @@ export class ChatComponent implements OnInit, OnDestroy {
             this.changeDetector.detectChanges();
         }
 
-        this.infoAnimationLastTimeMs = this.settings.ChatInfoAnimationTimeMs;
+        this.infoAnimationLastTimeMs = this.settings.Settings[6];
         const animation = this.animationBuilder.build([
             style({ transform: 'translateX(0)' }),
-            animate(this.settings.ChatInfoAnimationTimeMs, style({ transform: 'translateX(-100%)' }))
+            animate(this.settings.Settings[6], style({ transform: 'translateX(-100%)' }))
         ]);
         this.infoAnimationPlayer = animation.create(this.infoSpan.nativeElement);
         // Does not work (https://github.com/angular/angular/issues/26630)
@@ -459,7 +461,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     setInfoText(text: string) {
         this.infoText = text;
         this.infoAnimationPlayer.restart();
-        setTimeout(this.setNextInfo.bind(this), this.settings.ChatInfoAnimationTimeMs);
+        setTimeout(this.setNextInfo.bind(this), this.settings.Settings[6]);
         this.changeDetector.detectChanges();
     }
 

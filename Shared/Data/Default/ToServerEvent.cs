@@ -2,7 +2,6 @@
 {
     public static class ToServerEvent
     {
-        #region Public Fields
 
         public const string AcceptInvitation = "c1";
         public const string AcceptTDSTeamInvitation = "c67";
@@ -44,6 +43,7 @@
         public const string LoadMapNamesToLoadForMapCreator = "c26";
         public const string LoadPlayerWeaponStats = "c72";
         public const string LoadUserpanelData = "c27";
+        public const string LoadUserpanelNormalSettingsData = "c80";
         public const string LobbyChatMessage = "c23";
         public const string LogMessageToServer = "c77";
         public const string LogExceptionToServer = "c78";
@@ -62,6 +62,7 @@
 
         public const string RejectInvitation = "c38";
         public const string RejectTDSTeamInvitation = "c68";
+        public const string ReloadPlayerSettings = "c81";
         public const string RemoveMap = "c39";
         public const string RequestPlayersForScoreboard = "c40";
         public const string ResetPassword = "c74";
@@ -69,7 +70,7 @@
         public const string SaveCharCreateData = "c29";
         public const string SaveMapCreatorData = "c41";
         public const string SavePlayerCommandsSettings = "c70";
-        public const string SaveSettings = "c42";
+        public const string SaveUserpanelNormalSettings = "c42";
         public const string SaveSpecialSettingsChange = "c43";
         public const string SendApplication = "c44";
         public const string SendApplicationInvite = "c45";
@@ -97,6 +98,5 @@
 
         public const string WeaponShot = "c71";
 
-        #endregion Public Fields
     }
 }

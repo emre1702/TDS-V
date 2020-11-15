@@ -3,11 +3,11 @@ import { MapVoteDto } from '../models/mapVoteDto';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { EventEmitter } from 'events';
-import { OrderByPipe } from '../../../pipes/orderby.pipe';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { InfosHandlerService } from '../../infos-handler/services/infos-handler.service';
-import { InitialDatas } from '../../../services/test-datas';
+import { OrderByPipe } from '../../../modules/shared/pipes/orderby.pipe';
+import { InitialDatas } from '../../../initial-datas';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +17,8 @@ export class MapVotingService {
     public votedForMapId: number;
 
     public mapsInVotingChanged = new EventEmitter();
+
+    private orderByPipe = new OrderByPipe();
 
     public voteForMapId(id: number) {
         this.votedForMapId = id;
@@ -62,7 +64,6 @@ export class MapVotingService {
 
     constructor(
         private rageConnector: RageConnectorService,
-        private orderByPipe: OrderByPipe,
         private infosHandler: InfosHandlerService) {
         console.log("Map voting listener started.");
         rageConnector.listen(DFromServerEvent.LoadMapVoting, this.loadMapVoting.bind(this));

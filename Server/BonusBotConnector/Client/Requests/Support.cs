@@ -64,7 +64,7 @@ namespace BonusBotConnector.Client.Requests
                     return;
                 if (player.Entity.PlayerSettings is null)
                     return;
-                if (player.Entity.PlayerSettings.DiscordUserId == 0)
+                if (player.Entity.PlayerSettings.General.DiscordUserId == 0)
                     return;
 
                 var request = new SupportRequestCreateRequest
@@ -75,7 +75,7 @@ namespace BonusBotConnector.Client.Requests
                     SupportType = (int)requestEntity.Type,
                     Text = requestEntity.Messages.First().Text,
                     Title = requestEntity.Title,
-                    UserId = player.Entity.PlayerSettings.DiscordUserId ?? 0
+                    UserId = player.Entity.PlayerSettings.General.DiscordUserId ?? 0
                 };
 
                 var result = await _client.CreateAsync(request, deadline: _settings.GrpcDeadline);

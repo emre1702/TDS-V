@@ -10,6 +10,7 @@ using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Entity.Player.Settings;
 using TDS_Server.Handler.Browser;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Extensions;
@@ -96,10 +97,7 @@ namespace TDS_Server.Handler.Account
             var angularConstantsData = _angularConstantsProvider.Get(player);
 
             var syncedSettingsJson = Serializer.ToClient(_settingsHandler.SyncedSettings);
-            var playerSettingsJson = Serializer.ToClient(player.Entity.PlayerSettings);
-            var playerThemeSettingsJson = Serializer.ToClient(player.Entity.ThemeSettings);
-            var playerKillInfoSettingsJson = Serializer.ToClient(player.Entity.KillInfoSettings);
-            var angularContentsJson = Serializer.ToBrowser(angularConstantsData);
+            var angularContentsJson = Serializer.ToBrowser(angularConstantsData, true);
 
             await NAPI.Task.RunWait(player.Init);
             player.Name = player.Entity.Name;
@@ -108,9 +106,6 @@ namespace TDS_Server.Handler.Account
             {
                 player.TriggerEvent(ToClientEvent.LoginSuccessful,
                     syncedSettingsJson,
-                    playerSettingsJson,
-                    playerThemeSettingsJson,
-                    playerKillInfoSettingsJson,
                     angularContentsJson
                 );
 
@@ -169,6 +164,14 @@ namespace TDS_Server.Handler.Account
                     .Include(p => p.PlayerStats)
                     .Include(p => p.PlayerTotalStats)
                     .Include(p => p.PlayerSettings)
+                    .Include(p => p.PlayerSettings.Chat)
+                    .Include(p => p.PlayerSettings.CooldownsAndDurations)
+                    .Include(p => p.PlayerSettings.FightEffect)
+                    .Include(p => p.PlayerSettings.General)
+                    .Include(p => p.PlayerSettings.Info)
+                    .Include(p => p.PlayerSettings.IngameColors)
+                    .Include(p => p.PlayerSettings.Scoreboard)
+                    .Include(p => p.PlayerSettings.Voice)
                     .Include(p => p.PlayerClothes)
                     .Include(p => p.ThemeSettings)
                     .Include(p => p.KillInfoSettings)

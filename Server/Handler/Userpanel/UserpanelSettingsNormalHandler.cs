@@ -4,11 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS_Server.Data.Enums;
 using TDS_Server.Data.Interfaces;
 using TDS_Server.Data.Interfaces.Userpanel;
 using TDS_Server.Data.Models.Userpanel;
 using TDS_Server.Database.Entity;
+using TDS_Server.Database.Entity.Player.Settings;
+using TDS_Server.Database.Interfaces;
 using TDS_Server.Handler.Entities;
 using TDS_Server.Handler.Extensions;
 using TDS_Shared.Core;
@@ -52,39 +56,25 @@ namespace TDS_Server.Handler.Userpanel
 
         public async Task<object?> SaveSettings(ITDSPlayer player, ArraySegment<object> args)
         {
-            string json = (string)args[0];
-            var obj = Serializer.FromBrowser<UserpanelSettingsNormalDataDto>(json);
+            var type = (UserpanelSettingsNormalType)Convert.ToInt32(args[0]);
+            var json = (string)args[1];
+            var setting = GetSetting(player, type);
+            if (setting is null)
+                return null;
 
-            var newDiscordUserId = obj.General.DiscordUserId;
-            obj.General.DiscordUserId = player.Entity!.PlayerSettings.DiscordUserId;
-            obj.ThemeSettings.PlayerId = player.Id;
-            obj.KillInfoSettings.PlayerId = player.Id;
+            var obj = (IPlayerDataTable)Serializer.FromBrowser(setting.GetType(), json);
+            obj.PlayerId = setting.PlayerId;
+
+            if (obj is PlayerGeneralSettings generalSettings)
+                HandleDiscordUserIdChange(player, (PlayerGeneralSettings)setting, generalSettings);
+
             await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
-                dbContext.Entry(player.Entity.PlayerSettings).CurrentValues.SetValues(obj.General);
-                dbContext.Entry(player.Entity.ThemeSettings).CurrentValues.SetValues(obj.ThemeSettings);
-                dbContext.Entry(player.Entity.KillInfoSettings).CurrentValues.SetValues(obj.KillInfoSettings);
+                dbContext.Entry(setting).CurrentValues.SetValues(obj);
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
 
             player.Events.TriggerSettingsChanged();
-
-            var generalSettingsJson = Serializer.ToBrowser(obj.General);
-            NAPI.Task.RunSafe(() =>
-            {
-                player.TriggerEvent(ToClientEvent.SyncSettings, generalSettingsJson);
-
-                if (newDiscordUserId != player.Entity.PlayerSettings.DiscordUserId && newDiscordUserId.HasValue)
-                {
-                    _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), newDiscordUserId.Value, (reply) =>
-                    {
-                        if (string.IsNullOrEmpty(reply.ErrorMessage))
-                            return;
-
-                        player.SendChatMessage(string.Format(player.Language.DISCORD_IDENTITY_SAVE_FAILED, reply.ErrorMessage));
-                    });
-                }
-            });
 
             return "";
         }
@@ -98,7 +88,7 @@ namespace TDS_Server.Handler.Userpanel
                 .ConfigureAwait(false);
             if (settings is null)
                 throw new Exception("Your player settings do not exist?!");
-            settings.DiscordUserId = discordUserId;
+            settings.General.DiscordUserId = discordUserId;
             await ExecuteForDBAsync(async dbContext
                 => await dbContext
                     .SaveChangesAsync()
@@ -108,8 +98,56 @@ namespace TDS_Server.Handler.Userpanel
 
         private async Task SaveDiscordUserId(ITDSPlayer player, ulong discordUserId)
         {
-            player.Entity!.PlayerSettings.DiscordUserId = discordUserId;
+            player.Entity!.PlayerSettings.General.DiscordUserId = discordUserId;
             await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
         }
+
+        private void HandleDiscordUserIdChange(ITDSPlayer player, PlayerGeneralSettings originalSettings, PlayerGeneralSettings newSettings)
+        {
+            var newDiscordUserId = newSettings.DiscordUserId;
+            if (newDiscordUserId == originalSettings.DiscordUserId || newDiscordUserId is null)
+                return;
+
+            // The player gets asked in Discord if he wants to confirm it.
+            // This setting will be saved after the confirmation (in another method).
+            newSettings.DiscordUserId = originalSettings.DiscordUserId;
+            _playerIdWaitingForDiscordUserIdConfirm[newDiscordUserId.Value] = player.Id;
+
+            _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), 
+                newDiscordUserId.Value, (reply) =>
+            {
+                if (string.IsNullOrEmpty(reply.ErrorMessage))
+                    return;
+
+                NAPI.Task.RunSafe(() => 
+                    player.SendChatMessage(string.Format(player.Language.DISCORD_IDENTITY_SAVE_FAILED, reply.ErrorMessage)));
+            });
+        }
+
+        public object? LoadSettings(ITDSPlayer player, ref ArraySegment<object> args)
+        {
+            var type = (UserpanelSettingsNormalType)Convert.ToInt32(args[0]);
+            var setting = GetSetting(player, type);
+            if (setting is null)
+                return null;
+
+            return Serializer.ToBrowser(setting);
+        }
+
+        private IPlayerDataTable? GetSetting(ITDSPlayer player, UserpanelSettingsNormalType type)
+            => type switch
+            {
+                UserpanelSettingsNormalType.Chat => player.Entity?.PlayerSettings.Chat,
+                UserpanelSettingsNormalType.CooldownsAndDurations => player.Entity?.PlayerSettings.CooldownsAndDurations,
+                UserpanelSettingsNormalType.FightEffect => player.Entity?.PlayerSettings.FightEffect,
+                UserpanelSettingsNormalType.General => player.Entity?.PlayerSettings.General,
+                UserpanelSettingsNormalType.Info => player.Entity?.PlayerSettings.Info,
+                UserpanelSettingsNormalType.IngameColors => player.Entity?.PlayerSettings.IngameColors,
+                UserpanelSettingsNormalType.KillInfo => player.Entity?.KillInfoSettings,
+                UserpanelSettingsNormalType.Scoreboard => player.Entity?.PlayerSettings.Scoreboard,
+                UserpanelSettingsNormalType.Theme => player.Entity?.ThemeSettings,
+                UserpanelSettingsNormalType.Voice => player.Entity?.PlayerSettings.Voice,
+                _ => null
+            };
     }
 }

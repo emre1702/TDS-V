@@ -75,8 +75,8 @@ namespace TDS_Server.Handler
                     await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 }).ConfigureAwait(false);
 
-                if (target.PlayerSettings.DiscordUserId.HasValue)
-                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.DiscordUserId.Value);
+                if (target.PlayerSettings.General.DiscordUserId.HasValue)
+                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.General.DiscordUserId.Value);
 
                 InformIfPlayerIsOnline(target.Id);
             }

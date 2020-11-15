@@ -45,7 +45,6 @@ export class DamageTestMenuComponent implements OnInit, OnDestroy {
     }
 
     private setCurrentWeapon(weaponHash: WeaponHash) {
-        console.log("Current weapon hash: " + weaponHash);
         this.currentWeapon = weaponHash;
         const weaponData = this.settings.DamageTestWeaponDatas.find(w => w[0] == weaponHash);
         if (weaponData) {

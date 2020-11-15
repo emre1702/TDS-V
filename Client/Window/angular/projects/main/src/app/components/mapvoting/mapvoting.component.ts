@@ -6,11 +6,11 @@ import { MapVotingService } from './services/mapvoting.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
-import { MatSidenav } from '@angular/material';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
-import { LanguagePipe } from '../../pipes/language.pipe';
 import { bottomToTopEnterAnimation } from '../../animations/bottomToUpEnter.animation';
-import { InitialDatas } from '../../services/test-datas';
+import { MatSidenav } from '@angular/material/sidenav';
+import { LanguagePipe } from '../../modules/shared/pipes/language.pipe';
+import { InitialDatas } from '../../initial-datas';
 
 @Component({
     selector: 'app-mapvoting',
@@ -48,7 +48,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.settings.MoneyChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
 
         this.mapSearchFilter = "";
         this.refreshTitle();
@@ -63,7 +63,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.settings.MoneyChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     private detectChanges() {

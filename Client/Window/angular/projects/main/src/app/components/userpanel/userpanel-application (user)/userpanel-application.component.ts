@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild, Input, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
-import { MatVerticalStepper, MatCheckboxChange, MatDialog } from '@angular/material';
 import { RageConnectorService } from 'rage-connector';
 import { UserpanelService } from '../services/userpanel.service';
 import { AreYouSureDialog } from '../../../dialog/are-you-sure-dialog';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
+import { MatVerticalStepper } from '@angular/material/stepper';
+import { MatDialog } from '@angular/material/dialog';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-userpanel-application',

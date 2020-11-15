@@ -3,7 +3,6 @@ import { RageConnectorService } from 'rage-connector';
 import { SettingsService } from '../../services/settings.service';
 import { LanguageEnum } from '../../enums/language.enum';
 import { MapType } from '../../enums/maptype.enum';
-import { MatSelectChange, MatDialog, MatSnackBar } from '@angular/material';
 import { MapCreateDataDto } from './models/mapCreateDataDto';
 import { Constants } from '../../constants';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
@@ -19,9 +18,10 @@ import { MapCreatorPosition } from './models/mapCreatorPosition';
 import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
 import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
-import { isNumber } from 'util';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../services/error.service';
-import { CustomMatSnackBarComponent } from '../../extensions/customMatSnackbar';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
+import { NotificationService } from '../../modules/shared/services/notification.service';
 
 enum MapCreatorNav {
     Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, Vehicles, BombPlaces, Target
@@ -69,7 +69,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         private rageConnector: RageConnectorService,
         private changeDetector: ChangeDetectorRef,
         public dialog: MatDialog,
-        private snackBar: MatSnackBar) {
+        private notificationService: NotificationService) {
 
         this.addValidationsForSend();
         this.addValidationsForSave();
@@ -85,7 +85,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.isLobbyOwnerChanged.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
 
         this.isLobbyOwnerChanged();
     }
@@ -100,7 +100,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.isLobbyOwnerChanged.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     private addPositionToMapCreatorBrowser(id: number, type: MapCreatorPositionType, posX: number, posY: number, posZ: number,
@@ -378,8 +378,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
         this.rageConnector.callCallbackServer(DToServerEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
-            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-                { data: this.settings.Lang[errName], duration: undefined });
+            this.notificationService.showError(this.settings.Lang[errName]);
         });
     }
 
@@ -416,8 +415,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.fixData();
         this.rageConnector.callCallbackServer(DToServerEvent.SaveMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
-            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-                { data: this.settings.Lang[errName], duration: undefined });
+            this.notificationService.showError(this.settings.Lang[errName]);
         });
     }
 
@@ -442,8 +440,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.nameControl.setValue(this.data[1]);
         this.mapTypeControl.setValue(this.data[2]);
         this.fixData();
-        this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-            { data: this.settings.Lang.SavedMapLoadSuccessful, duration: 5000 });
+        this.notificationService.showSuccess(this.settings.Lang.SavedMapLoadSuccessful);
         this.changeDetector.detectChanges();
     }
 

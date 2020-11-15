@@ -2,10 +2,11 @@ import { Component, OnInit, ChangeDetectorRef, EventEmitter, Input, Output, View
 import { SettingsService } from '../../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../../enums/dtoserverevent.enum';
-import { MatTableDataSource, MatSort, MatTab } from '@angular/material';
 import { MapDataDto } from '../../../mapvoting/models/mapDataDto';
 import { MapType } from 'projects/main/src/app/enums/maptype.enum';
 import { DefaultMapIds } from '../../enums/default-map-ids.enum';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-custom-lobby-maps-menu',

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
-import { MatMenuPanel } from '@angular/material';
 import { SettingsService } from '../../services/settings.service';
-import { UserpanelSettingKey } from '../userpanel/enums/userpanel-setting-key.enum';
+import { MatMenuPanel } from '@angular/material/menu';
+import { SettingsThemeIndex } from '../userpanel/userpanel-settings-normal/enums/settings-theme-index.enum';
 
 @Component({
     // tslint:disable-next-line: component-selector
@@ -156,16 +156,16 @@ export class TDSWindowComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.settings.ThemeSettingChanged.on(null, this.themeChanged.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy(): void {
         this.settings.ThemeSettingChanged.off(null, this.themeChanged.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
-    private themeChanged(key: UserpanelSettingKey, value: any) {
-        if (key == UserpanelSettingKey.ToolbarDesign) {
+    private themeChanged(key: SettingsThemeIndex, value: any) {
+        if (key == SettingsThemeIndex.ToolbarDesign) {
             this.toolbarDesign = value;
         }
         this.detectChanges();

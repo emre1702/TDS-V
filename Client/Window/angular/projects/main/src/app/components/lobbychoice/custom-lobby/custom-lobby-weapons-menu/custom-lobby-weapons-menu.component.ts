@@ -4,7 +4,8 @@ import { WeaponHashGroupConstants } from '../../enums/weapon-hash-group.constant
 import { WeaponHash } from '../../enums/weapon-hash.enum';
 import { WeaponType } from '../../enums/weapon-type.enum';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
-import { MatTable, MatTableDataSource, MatSort } from '@angular/material';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'app-custom-lobby-weapons-menu',

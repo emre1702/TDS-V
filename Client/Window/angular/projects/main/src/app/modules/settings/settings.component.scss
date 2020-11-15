@@ -1,0 +1,71 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .setting-rows {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 0 10px 10px 10px;
+
+        > * {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+    }
+
+    .invalid {
+        * {
+            color: red;
+        }
+    }
+
+    .placeholder {
+        height: 20px;
+    }
+
+    .last-row-buttons {
+        vertical-align: bottom;
+        display: flex;
+        flex-direction: row;
+        min-height: 18%;
+
+        button {
+            margin-top: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: auto;
+            height: 4vh;
+            margin-bottom: 15px;
+        }
+    }
+
+    ::ng-deep .mat-form-field-should-float.mat-form-field-has-label .mat-form-field-label {
+        font-size: 1.3em !important;
+    }
+
+    ::ng-deep .mat-checkbox-layout {
+        width: 100%;
+    }
+
+    ::ng-deep .mat-checkbox-label {
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    ::ng-deep .mat-checkbox-inner-container {
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    ::ng-deep .mat-slide-toggle-bar {
+        margin-left: auto;
+        margin-right: 0;
+    }
+}

@@ -10,10 +10,10 @@ import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { GangData } from '../models/gang-data';
 import { SettingsService } from '../../../services/settings.service';
 import { GangRank } from '../models/gang-rank';
-import { MatSnackBar, MatDialog } from '@angular/material';
 import { GangCommand } from '../enums/gang-command.enum';
 import { AreYouSureDialog } from '../../../dialog/are-you-sure-dialog';
-import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationService } from '../../../modules/shared/services/notification.service';
 
 @Injectable()
 export class GangWindowService {
@@ -56,18 +56,6 @@ export class GangWindowService {
         this.members = undefined;
     }
 
-    showSuccess(msg: string) {
-        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: msg, duration: 5000 });
-    }
-
-    showError(msg: string) {
-        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: msg, duration: undefined });
-    }
-
-    showInfo(msg: string) {
-        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: msg, duration: undefined });
-    }
-
     executeCommand(command: GangCommand, args: any[], onSuccess: () => void, withConfirm: boolean = true, showSuccess: boolean = true) {
         if (withConfirm) {
             this.doOnConfirm(() => {
@@ -76,11 +64,11 @@ export class GangWindowService {
         } else {
             this.rageConnector.callCallbackServer(DToServerEvent.GangCommand, [command, ...args], (msg: string) => {
                 if (msg && msg.length) {
-                    this.showError(msg);
+                    this.notificationService.showError(msg);
                     return;
                 }
                 if (showSuccess) {
-                    this.showSuccess(this.settings.Lang.CommandExecutedSuccessfully);
+                    this.notificationService.showSuccess(this.settings.Lang.CommandExecutedSuccessfully);
                 }
                 onSuccess();
             });
@@ -88,7 +76,7 @@ export class GangWindowService {
     }
 
     private loadedGangWindowData(type: GangWindowNav, json: string) {
-        json = this.escapeSpecialChars(json);
+        json = json.escapeJson();
 
         if (json.length) {
             switch (type) {
@@ -111,19 +99,12 @@ export class GangWindowService {
                     break;
             }
         } else {
-            this.showError(this.settings.Lang.LoadingDataFailed);
+            this.notificationService.showError(this.settings.Lang.LoadingDataFailed);
         }
 
         this.loadedData.emit(GangWindowNav[type]);
         this.loadingData = false;
         this.loadingDataChanged.emit(null);
-    }
-
-    private escapeSpecialChars(json: string) {
-        return json.replace(/\n/g, "\\n")
-            .replace(/\r/g, "\\r")
-            .replace(/\t/g, "\\t")
-            .replace(/\f/g, "\\f");
     }
 
     private doOnConfirm(func: () => void) {
@@ -141,7 +122,7 @@ export class GangWindowService {
     constructor(
         private rageConnector: RageConnectorService,
         private settings: SettingsService,
-        private snackBar: MatSnackBar,
+        private notificationService: NotificationService,
         private dialog: MatDialog
     ) {
         rageConnector.listen(DFromServerEvent.LoadedGangWindowData, this.loadedGangWindowData.bind(this));

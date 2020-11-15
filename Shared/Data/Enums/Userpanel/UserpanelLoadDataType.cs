@@ -8,7 +8,6 @@
         Rules,
         FAQs,
         SettingsSpecial,
-        SettingsNormal,
         SettingsCommands,
         ApplicationUser,
         ApplicationsAdmin,

@@ -1,0 +1,8 @@
+.mat-slide-toggle {
+    width: 100%;
+
+    ::ng-deep .mat-slide-toggle-bar {
+        margin-left: auto;
+        margin-right: 0;
+    }
+}

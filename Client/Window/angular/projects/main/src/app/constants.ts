@@ -1,5 +1,9 @@
 import { MapType } from './enums/maptype.enum';
 import { BlipColor } from './components/lobbychoice/models/blip-color';
+import { LanguageEnum } from './enums/language.enum';
+import { German } from './language/german.language';
+import { English } from './language/english.language';
+import { Language } from './interfaces/language.interface';
 
 export class Constants {
     public static MIN_TEAM_SPAWNS = 3;
@@ -105,4 +109,9 @@ export class Constants {
         { ID: 84, Color: "rgb(101, 185, 231)" },
         { ID: 85, Color: "rgb(0, 0, 0)" }
     ];
+
+    static LANGUAGE_BY_ENUM: { [key: number]: Language } = {
+        [LanguageEnum.German]: new German(),
+        [LanguageEnum.English]: new English()
+    }
 }

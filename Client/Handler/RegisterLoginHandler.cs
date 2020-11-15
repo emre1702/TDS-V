@@ -79,11 +79,9 @@ namespace TDS_Client.Handler
         {
             Stop();
             _settingsHandler.LoadSyncedSettings(Serializer.FromServer<SyncedServerSettingsDto>(args[0].ToString()));
-            _settingsHandler.LoadUserSettings(Serializer.FromServer<SyncedPlayerSettingsDto>(args[1].ToString()));
-            _settingsHandler.LoadThemeSettings(Serializer.FromServer<SyncedPlayerThemeSettings>(args[2].ToString()));
             _settingsHandler.LoggedIn = true;
 
-            _browserHandler.Angular.SetReady((string)args[3], (string)args[4]);
+            _browserHandler.Angular.SetReady((string)args[1]);
 
             _eventsHandler.OnLoggedIn();
 
@@ -92,9 +90,9 @@ namespace TDS_Client.Handler
 
         private void OnStartRegisterLoginMethod(object[] args)
         {
-            string scname = (string)args[0];
-            bool isregistered = Convert.ToBoolean(args[1]);
-            Start(scname, isregistered);
+            var scName = (string)args[0];
+            bool isRegistered = Convert.ToBoolean(args[1]);
+            Start(scName, isRegistered);
         }
 
         private void SendWelcomeMessage()

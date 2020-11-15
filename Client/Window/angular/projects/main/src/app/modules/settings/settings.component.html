@@ -1,0 +1,39 @@
+<div class="container" [formGroup]="formGroup">
+    <div class="setting-rows">
+        <div *ngFor="let setting of settings" [ngSwitch]="setting.type" [class.invalid]="setting.formControl && setting.formControl.invalid">
+            <app-boolean-setting-row *ngSwitchCase="settingType.boolean" [setting]="setting" 
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-boolean-setting-row>
+            <app-booleanslider-setting-row *ngSwitchCase="settingType.booleanSlider" [setting]="setting"
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-booleanslider-setting-row>
+            <app-string-setting-row *ngSwitchCase="settingType.string" [setting]="setting" 
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-string-setting-row>
+            <app-number-setting-row *ngSwitchCase="settingType.number" [setting]="setting" 
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-number-setting-row>
+            <app-numberslider-setting-row *ngSwitchCase="settingType.numberSlider" [setting]="setting" 
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-numberslider-setting-row>
+            <app-enum-setting-row *ngSwitchCase="settingType.enum" [setting]="setting" 
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-enum-setting-row>
+            <app-datetimeenum-setting-row *ngSwitchCase="settingType.dateTimeEnum" [setting]="setting" 
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-datetimeenum-setting-row>
+            <app-color-setting-row *ngSwitchCase="settingType.color" [setting]="setting" 
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-color-setting-row>
+            <app-password-setting-row *ngSwitchCase="settingType.password" [setting]="setting" 
+            (changed)="onChanged(setting.dataSettingIndex, setting.formControl.value)"></app-password-setting-row>
+
+            <app-button-row *ngSwitchCase="settingType.button" [setting]="setting"></app-button-row>
+        </div>
+    </div>
+    <div class="placeholder"></div>
+
+    <div class="last-row-buttons">
+        <button mat-raised-button *ngIf="canSave" [disabled]="formGroup.invalid" (click)="save()" class="save-button">
+            {{ 'Save' | language: settingsService.Lang }}
+        </button>
+        <button mat-raised-button *ngIf="canRevertAll" (click)="revertAll()" class="revert-button">
+            {{ 'Revert' | language: settingsService.Lang }}
+        </button>
+        <button mat-raised-button *ngIf="canSetDefault" (click)="setDefault()" class="default-button">
+            {{ 'Default' | language: settingsService.Lang }}
+        </button>
+    </div>
+</div>

@@ -14,14 +14,14 @@ import { DFromServerEvent } from '../enums/dfromserverevent.enum';
 import { MapDataDto } from '../components/mapvoting/models/mapDataDto';
 import { Challenge } from '../components/lobbychoice/models/challenge';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LanguagePipe } from '../pipes/language.pipe';
 import { DToServerEvent } from '../enums/dtoserverevent.enum';
 import { UserpanelCommandDataDto } from '../components/userpanel/interfaces/userpanelCommandDataDto';
-import { UserpanelSettingKey } from '../components/userpanel/enums/userpanel-setting-key.enum';
-import { ThemeSettings } from '../interfaces/theme-settings';
-import { InitialDatas } from './test-datas';
 import { DamageTestWeapon } from '../components/damage-test-menu/interfaces/damage-test-weapon';
-import { KillInfoSettings } from '../interfaces/kill-info-settings';
+import { LanguagePipe } from '../modules/shared/pipes/language.pipe';
+import { InitialDatas } from '../initial-datas';
+import { SyncedSettings } from '../interfaces/synced-settings';
+import { SettingsThemeIndex } from '../components/userpanel/userpanel-settings-normal/enums/settings-theme-index.enum';
+import { Constants } from '../constants';
 
 // tslint:disable: member-ordering
 
@@ -43,14 +43,9 @@ export class SettingsService {
 
     ///////////////////// Language /////////////////////
     public LangValue: LanguageEnum = LanguageEnum.German;
-    public Lang: Language = SettingsService.langByLangValue[this.LangValue];
+    public Lang: Language = Constants.LANGUAGE_BY_ENUM[this.LangValue];
     public LanguageChanged = new EventEmitter();
     private langPipe = new LanguagePipe();
-
-    private static langByLangValue = {
-        [LanguageEnum.German]: new German(),
-        [LanguageEnum.English]: new English()
-    };
 
     public loadLanguage(lang: number) {
         if (this.LangValue == lang) {
@@ -58,7 +53,7 @@ export class SettingsService {
         }
 
         this.LangValue = lang;
-        this.Lang = SettingsService.langByLangValue[lang];
+        this.Lang = Constants.LANGUAGE_BY_ENUM[lang];
         this.loadChallenges();
         this.LanguageChanged.emit(null);
     }
@@ -97,7 +92,7 @@ export class SettingsService {
     public ChatOpenedChange = new EventEmitter();
 
     public ChatInputOpen = false;
-    public UserpanelOpen = false;
+    public UserpanelOpen = InitialDatas.opened.userpanel;
     public UserpanelOpenChanged = new EventEmitter();
 
     public InFightLobby = false;
@@ -114,13 +109,16 @@ export class SettingsService {
     public IsLobbyOwner = false;
     public IsLobbyOwnerChanged = new EventEmitter();
 
-    public ChatWidth = "30vw";
-    public ChatMaxHeight = "35vh";
-    public ChatFontSize = "1.4em";
-    public ChatHideDirtyChat = false;
-    public ChatInfoHide = false;
-    public ChatInfoFontSize = "1em";
-    public ChatInfoAnimationTimeMs = 15000;
+    public Settings: SyncedSettings = {
+        0: 30, 1: 35, 2: 1.4, 3: false, 4: false, 5: 1, 6: 15000,
+
+        7: true, 8: 1.4, 9: 60, 10: 15, 11: 10, 12: 30,
+
+        13: true, 14: "rgba(0,0,77,1)", 15: "rgba(255,152,0,1)", 16: "rgba(244,67,54,1)",
+        17: "linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)", 18: "rgba(250, 250, 250, 0.87)",
+        19: 1
+    };
+    public SettingsLoaded = new EventEmitter();
     public ChatSettingsChanged = new EventEmitter();
 
     public Constants: ConstantsData = InitialDatas.getSettingsConstants();
@@ -154,6 +152,8 @@ export class SettingsService {
 
     public IsInGang = false;
     public IsInGangChanged = new EventEmitter();
+
+    KillInfoSettingsChanged = new EventEmitter();
 
     public InputFocused = false;
 
@@ -226,32 +226,21 @@ export class SettingsService {
         this.ChallengesLoaded.emit(null);
     }
 
-    public triggerChatSettingsChanged() {
-        this.ChatSettingsChanged.emit(null);
-    }
-
     public syncGangId(gangId: number) {
         this.IsInGang = gangId > 0;
         this.IsInGangChanged.emit(null, this.IsInGang);
     }
 
-    private loadChatSettings(width: number, maxHeight: number, fontSize: number, hideDirtyChat: boolean,
-        hideChatInfo: boolean, chatInfoFontSize: number, chatInfoAnimationTimeMs: number) {
-        this.ChatWidth = width + "vw";
-        this.ChatMaxHeight = maxHeight + "vh";
-        this.ChatFontSize = fontSize + "em";
-        this.ChatHideDirtyChat = hideDirtyChat;
-        this.ChatInfoHide = hideChatInfo;
-        this.ChatInfoFontSize = chatInfoFontSize  + "em";
-        this.ChatInfoAnimationTimeMs = chatInfoAnimationTimeMs;
-        this.triggerChatSettingsChanged();
+    private loadSettings(settingsJson: string) {
+        this.Settings = JSON.parse(settingsJson.escapeJson());
+        this.SettingsLoaded.emit(null);
     }
 
     private getChallengeInfo(challenge: Challenge) {
         return this.sanitizer.bypassSecurityTrustHtml(
             this.langPipe.transform('Challenge_' + ChallengeType[challenge[0]], this.Lang, this.getColorText(challenge[1], "orange"))
             + " (" + this.langPipe.transform("Current:", this.Lang)
-            + " " + this.getColorText(challenge[2], "yellow") + ")");
+            + " " + this.getColorText(challenge[2] != undefined ? challenge[2] : 0, "yellow") + ")");
     }
 
     private syncCommandsData(dataJson: string) {
@@ -265,53 +254,19 @@ export class SettingsService {
     ////////////////////////////////////////////////////
 
     //////////////////// Theme ////////////////////////
-    ThemeSettings: ThemeSettings
-        = {
-            1000: true, 1001: "rgba(0,0,77,1)", 1002: "rgba(255,152,0,1)", 1003: "rgba(244,67,54,1)",
-            1004: "linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)", 1005: "rgba(250, 250, 250, 0.87)",
-            1006: 1
-        };
 
     ThemeSettingChangedBefore = new EventEmitter();
     ThemeSettingChanged = new EventEmitter();
     ThemeSettingChangedAfter = new EventEmitter();
-    ThemeSettingsLoaded = new EventEmitter();
 
-    setThemeChange(key: UserpanelSettingKey, value: any) {
+    setThemeChange(key: SettingsThemeIndex, value: any) {
         this.ThemeSettingChangedBefore.emit(null, key, value);
         this.ThemeSettingChanged.emit(null, key, value);
         this.ThemeSettingChangedAfter.emit(null, key, value);
     }
 
-    loadThemeSettings(dataJson: string) {
-        if (dataJson.length) {
-            this.ThemeSettings = JSON.parse(dataJson);
-        }
-
-        this.ThemeSettingsLoaded.emit(null, this.ThemeSettings);
-    }
-
     ////////////////////////////////////////////////////
 
-    /////////////////// Kill-Messages //////////////////
-    KillInfoSettings: KillInfoSettings = {
-        2000: true, 2001: 1.4, 2002: 60, 2003: 15
-    };
-    KillInfoSettingChanged = new EventEmitter();
-    KillInfoSettingsLoaded = new EventEmitter();
-
-    setKillInfoSetting(key: UserpanelSettingKey, value: any) {
-        this.KillInfoSettings[key] = value;
-        this.KillInfoSettingChanged.emit(null, key, value);
-    }
-
-    loadKillInfoSettings(dataJson: string) {
-        if (dataJson.length) {
-            this.KillInfoSettings = JSON.parse(dataJson);
-        }
-
-        this.KillInfoSettingsLoaded.emit(null, this.KillInfoSettings);
-    }
 
     constructor(
         private rageConnector: RageConnectorService,
@@ -327,13 +282,11 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.SyncMapPriceData, this.syncMapPriceData.bind(this));
         rageConnector.listen(DFromClientEvent.SyncMoney, this.onMoneySync.bind(this));
         rageConnector.listen(DFromClientEvent.SyncIsLobbyOwner, this.onSyncIsLobbyOwner.bind(this));
-        rageConnector.listen(DFromClientEvent.LoadChatSettings, this.loadChatSettings.bind(this));
+        rageConnector.listen(DFromClientEvent.LoadSettings, this.loadSettings.bind(this));
         rageConnector.listen(DFromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
-        rageConnector.listen(DFromClientEvent.LoadThemeSettings, this.loadThemeSettings.bind(this));
         rageConnector.listen(DFromClientEvent.SyncGangId, this.syncGangId.bind(this));
 
         this.LanguageChanged.setMaxListeners(40);
-        this.ThemeSettingsLoaded.setMaxListeners(40);
         this.ThemeSettingChangedBefore.setMaxListeners(40);
         this.ThemeSettingChanged.setMaxListeners(40);
         this.ThemeSettingChangedAfter.setMaxListeners(40);

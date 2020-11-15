@@ -1,0 +1,26 @@
+<div class="container">
+    <mat-form-field color="accent">
+        <mat-label>{{ setting.label | language: settingsService.Lang }}</mat-label>
+        <input #input matInput 
+        [colorPicker]="setting.formControl.value"
+        [value]="setting.formControl.value != undefined ? setting.formControl.value : null"
+        [style.background]="getColor(setting.formControl.value)" 
+        [cpFallbackColor]="setting.defaultValue"
+        cpOutputFormat="rgba"
+        cpAlphaChannel="always" 
+        [cpUseRootViewContainer]="true"
+        (colorPickerChange)="onColorChange($event)"
+        [cpIgnoredElements]="[input]"
+        [(cpToggle)]="setting.toggleColorPicker"
+        [matTooltipDisabled]="!setting.tooltipLangKey"
+        [matTooltip]="setting.tooltipLangKey | language: settingsService.Lang"
+        (focus)="$event.target.select()"
+        (change)="onChange()" />
+    </mat-form-field>
+    <button mat-icon-button (click)="setting.toggleColorPicker = !setting.toggleColorPicker">
+        <mat-icon color="accent">color_lens</mat-icon>
+    </button>
+    <button *ngIf="setting.nullable" mat-icon-button (click)="deleteColor()">
+        <mat-icon color="accent">delete_outline</mat-icon>
+    </button>
+</div>

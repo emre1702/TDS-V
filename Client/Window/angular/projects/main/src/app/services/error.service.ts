@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { LanguagePipe } from '../pipes/language.pipe';
 import { SettingsService } from './settings.service';
+import { LanguagePipe } from '../modules/shared/pipes/language.pipe';
 
 export class FormControlCheck {
     public readonly type = "FormControlCheck";

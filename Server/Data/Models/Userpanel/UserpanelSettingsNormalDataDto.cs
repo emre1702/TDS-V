@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Entity.Player.Settings;
 
 namespace TDS_Server.Data.Models.Userpanel
 {

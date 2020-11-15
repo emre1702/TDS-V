@@ -9,11 +9,10 @@
         public const string CloseMapMenu = "cb4";
         public const string HideRankings = "cb5";
         public const string InitLoadAngular = "cb6";
-        public const string LoadChatSettings = "cb1";
+        public const string LoadSettings = "cb1";
         public const string LoadLanguage = "cb9";
         public const string LoadMapForMapCreator = "cb43";
         public const string LoadNamesForChat = "cb39";
-        public const string LoadThemeSettings = "cb51";
         public const string MapCreatorSyncCurrentMapToServer = "cb50";
         public const string OpenMapMenu = "cb12";
         public const string RefreshAdminLevel = "cb13";

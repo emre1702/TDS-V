@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrateg
 import { SettingsService } from '../../../services/settings.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { UserpanelService } from '../services/userpanel.service';
-import { MatSlideToggleChange, MatSnackBar } from '@angular/material';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { UserpanelSettingsSpecialType } from '../enums/userpanel-settings-special-type.enum';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
-import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { NotificationService } from '../../../modules/shared/services/notification.service';
 
 @Component({
     selector: 'app-userpanel-settings-special',
@@ -31,7 +31,7 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         private userpanelService: UserpanelService,
         private rageConnector: RageConnectorService,
-        private snackBar: MatSnackBar) { }
+        private notificationService: NotificationService) { }
 
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
@@ -62,7 +62,7 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
                     [UserpanelSettingsSpecialType.Username, username, hashedPassword],
                     (err: string) => {
                         if (err.length) {
-                            this.showSaveError(err);
+                            this.notificationService.showError(err);
                         } else {
                             this.userpanelService.allSettingsSpecial[0] = username;
                             this.showSaveSuccess(UserpanelSettingsSpecialType.Username);
@@ -77,7 +77,7 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
                         [UserpanelSettingsSpecialType.Password, hashedNewPassword, hashedPassword],
                         (err: string) => {
                             if (err.length) {
-                                this.showSaveError(err);
+                                this.notificationService.showError(err);
                             } else {
                                 this.showSaveSuccess(UserpanelSettingsSpecialType.Password);
                             }
@@ -91,7 +91,7 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
                     [UserpanelSettingsSpecialType.Email, email, hashedPassword],
                     (err: string) => {
                         if (err.length) {
-                            this.showSaveError(err);
+                            this.notificationService.showError(err);
                         } else {
                             this.showSaveSuccess(UserpanelSettingsSpecialType.Email);
                         }
@@ -100,13 +100,8 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
         });
     }
 
-    private showSaveError(err: string) {
-        this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: err, duration: undefined });
-    }
-
     private showSaveSuccess(type: UserpanelSettingsSpecialType) {
-        this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-            { data: this.settings.Lang[UserpanelSettingsSpecialType[type] + "SettingSaved"], duration: 3000 });
+        this.notificationService.showSuccess(this.settings.Lang[UserpanelSettingsSpecialType[type] + "SettingSaved"]);
     }
 
     private loadSettings() {

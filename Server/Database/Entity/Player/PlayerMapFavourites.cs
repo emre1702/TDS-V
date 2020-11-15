@@ -1,16 +1,13 @@
 ﻿using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Database.Interfaces;
 
 namespace TDS_Server.Database.Entity.Player
 {
-    public partial class PlayerMapFavourites
+    public partial class PlayerMapFavourites : IPlayerDataTable
     {
-        #region Public Properties
-
         public virtual Maps Map { get; set; }
         public int MapId { get; set; }
         public virtual Players Player { get; set; }
         public int PlayerId { get; set; }
-
-        #endregion Public Properties
     }
 }

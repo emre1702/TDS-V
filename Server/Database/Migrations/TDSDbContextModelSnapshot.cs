@@ -2790,34 +2790,6 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerCommands");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerKillInfoSettings", b =>
-                {
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("FontWidth")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("real")
-                        .HasDefaultValue(1.4f);
-
-                    b.Property<int>("IconWidth")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(60);
-
-                    b.Property<bool>("ShowIcon")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("Spacing")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(15);
-
-                    b.HasKey("PlayerId");
-
-                    b.ToTable("PlayerKillInfoSettings");
-                });
-
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerLobbyStats", b =>
                 {
                     b.Property<int>("PlayerId")
@@ -2923,178 +2895,6 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerRelations");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerSettings", b =>
-                {
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("AFKKickAfterSeconds")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(25);
-
-                    b.Property<int>("AFKKickShowWarningLastSeconds")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(10);
-
-                    b.Property<bool>("AllowDataTransfer")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("Bloodscreen")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("BloodscreenCooldownMs")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(150);
-
-                    b.Property<float>("ChatFontSize")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("real")
-                        .HasDefaultValue(1.4f);
-
-                    b.Property<float>("ChatInfoFontSize")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("real")
-                        .HasDefaultValue(1f);
-
-                    b.Property<int>("ChatInfoMoveTimeMs")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(15000);
-
-                    b.Property<float>("ChatMaxHeight")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("real")
-                        .HasDefaultValue(35f);
-
-                    b.Property<float>("ChatWidth")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("real")
-                        .HasDefaultValue(30f);
-
-                    b.Property<bool>("CheckAFK")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("DateTimeFormat")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
-
-                    b.Property<decimal?>("DiscordUserId")
-                        .HasColumnType("numeric(20,0)");
-
-                    b.Property<bool>("FloatingDamageInfo")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HideChatInfo")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HideDirtyChat")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("Hitsound")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("HudAmmoUpdateCooldownMs")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(100);
-
-                    b.Property<int>("HudHealthUpdateCooldownMs")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(100);
-
-                    b.Property<Language>("Language")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("language")
-                        .HasDefaultValue(Language.English);
-
-                    b.Property<string>("MapBorderColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(150,0,0,0.35)");
-
-                    b.Property<string>("NametagArmorEmptyColor")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NametagArmorFullColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(255, 255, 255, 1)");
-
-                    b.Property<string>("NametagDeadColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(0, 0, 0, 1)");
-
-                    b.Property<string>("NametagHealthEmptyColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(50, 0, 0, 1)");
-
-                    b.Property<string>("NametagHealthFullColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(0, 255, 0, 1)");
-
-                    b.Property<ScoreboardPlayerSorting>("ScoreboardPlayerSorting")
-                        .HasColumnType("scoreboard_player_sorting");
-
-                    b.Property<bool>("ScoreboardPlayerSortingDesc")
-                        .HasColumnType("boolean");
-
-                    b.Property<TimeSpanUnitsOfTime>("ScoreboardPlaytimeUnit")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("time_span_units_of_time")
-                        .HasDefaultValue(TimeSpanUnitsOfTime.HourMinute);
-
-                    b.Property<bool>("ShowConfettiAtRanking")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("ShowCursorInfo")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("ShowCursorOnChatOpen")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("ShowFloatingDamageInfoDurationMs")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1000);
-
-                    b.Property<bool>("ShowLobbyLeaveInfo")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Timezone")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("UTC");
-
-                    b.Property<bool>("Voice3D")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("VoiceAutoVolume")
-                        .HasColumnType("boolean");
-
-                    b.Property<float>("VoiceVolume")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("real")
-                        .HasDefaultValue(6f);
-
-                    b.Property<bool>("WindowsNotifications")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("PlayerId");
-
-                    b.HasIndex("DiscordUserId")
-                        .IsUnique();
-
-                    b.ToTable("PlayerSettings");
-                });
-
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerStats", b =>
                 {
                     b.Property<int>("PlayerId")
@@ -3136,49 +2936,6 @@ namespace TDS_Server.Database.Migrations
                     b.HasKey("PlayerId");
 
                     b.ToTable("PlayerStats");
-                });
-
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerThemeSettings", b =>
-                {
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ThemeBackgroundDarkColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)");
-
-                    b.Property<string>("ThemeBackgroundLightColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(250, 250, 250, 0.87)");
-
-                    b.Property<string>("ThemeMainColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(0,0,77,1)");
-
-                    b.Property<string>("ThemeSecondaryColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(255,152,0,1)");
-
-                    b.Property<string>("ThemeWarnColor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("rgba(244,67,54,1)");
-
-                    b.Property<int>("ToolbarDesign")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
-
-                    b.Property<bool>("UseDarkTheme")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("PlayerId");
-
-                    b.ToTable("PlayerThemeSettings");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerTotalStats", b =>
@@ -3378,6 +3135,385 @@ namespace TDS_Server.Database.Migrations
                             SCId = 0m,
                             SCName = "System"
                         });
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerChatSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("ChatFontSize")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ChatFontSize")
+                        .HasColumnType("real")
+                        .HasDefaultValue(1.4f);
+
+                    b.Property<float>("ChatInfoFontSize")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ChatInfoFontSize")
+                        .HasColumnType("real")
+                        .HasDefaultValue(1f);
+
+                    b.Property<int>("ChatInfoMoveTimeMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ChatInfoMoveTimeMs")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(15000);
+
+                    b.Property<float>("ChatMaxHeight")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ChatMaxHeight")
+                        .HasColumnType("real")
+                        .HasDefaultValue(35f);
+
+                    b.Property<float>("ChatWidth")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ChatWidth")
+                        .HasColumnType("real")
+                        .HasDefaultValue(30f);
+
+                    b.Property<bool>("HideChatInfo")
+                        .HasColumnName("HideChatInfo")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("HideDirtyChat")
+                        .HasColumnName("HideDirtyChat")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowCursorOnChatOpen")
+                        .HasColumnName("ShowCursorOnChatOpen")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerCooldownsAndDurationsSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AFKKickAfterSeconds")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("AFKKickAfterSeconds")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(25);
+
+                    b.Property<int>("AFKKickShowWarningLastSeconds")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("AFKKickShowWarningLastSeconds")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(10);
+
+                    b.Property<int>("BloodscreenCooldownMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("BloodscreenCooldownMs")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(150);
+
+                    b.Property<int>("HudAmmoUpdateCooldownMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("HudAmmoUpdateCooldownMs")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(100);
+
+                    b.Property<int>("HudHealthUpdateCooldownMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("HudHealthUpdateCooldownMs")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(100);
+
+                    b.Property<int>("ShowFloatingDamageInfoDurationMs")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ShowFloatingDamageInfoDurationMs")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1000);
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerFightEffectSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Bloodscreen")
+                        .HasColumnName("Bloodscreen")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("FloatingDamageInfo")
+                        .HasColumnName("FloatingDamageInfo")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Hitsound")
+                        .HasColumnName("Hitsound")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerGeneralSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("AllowDataTransfer")
+                        .HasColumnName("AllowDataTransfer")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("CheckAFK")
+                        .HasColumnName("CheckAFK")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("DateTimeFormat")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("DateTimeFormat")
+                        .HasColumnType("text")
+                        .HasDefaultValue("yyyy'-'MM'-'dd HH':'mm':'ss");
+
+                    b.Property<decimal?>("DiscordUserId")
+                        .HasColumnName("DiscordUserId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<Language>("Language")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Language")
+                        .HasColumnType("language")
+                        .HasDefaultValue(Language.English);
+
+                    b.Property<int?>("PlayerSettingsPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("ShowConfettiAtRanking")
+                        .HasColumnName("ShowConfettiAtRanking")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Timezone")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Timezone")
+                        .HasColumnType("text")
+                        .HasDefaultValue("UTC");
+
+                    b.Property<bool>("WindowsNotifications")
+                        .HasColumnName("WindowsNotifications")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("PlayerId");
+
+                    b.HasIndex("DiscordUserId")
+                        .IsUnique();
+
+                    b.HasIndex("PlayerSettingsPlayerId");
+
+                    b.ToTable("PlayerSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerInfoSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("ShowCursorInfo")
+                        .HasColumnName("ShowCursorInfo")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ShowLobbyLeaveInfo")
+                        .HasColumnName("ShowLobbyLeaveInfo")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerIngameColorsSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MapBorderColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("MapBorderColor")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(150,0,0,0.35)");
+
+                    b.Property<string>("NametagArmorEmptyColor")
+                        .HasColumnName("NametagArmorEmptyColor")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NametagArmorFullColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("NametagArmorFullColor")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(255, 255, 255, 1)");
+
+                    b.Property<string>("NametagDeadColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("NametagDeadColor")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(0, 0, 0, 1)");
+
+                    b.Property<string>("NametagHealthEmptyColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("NametagHealthEmptyColor")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(50, 0, 0, 1)");
+
+                    b.Property<string>("NametagHealthFullColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("NametagHealthFullColor")
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(0, 255, 0, 1)");
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerKillInfoSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Duration")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(10f);
+
+                    b.Property<float>("FontSize")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(1.4f);
+
+                    b.Property<int>("IconHeight")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(30);
+
+                    b.Property<int>("IconWidth")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(60);
+
+                    b.Property<bool>("ShowIcon")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Spacing")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(15);
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerKillInfoSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerScoreboardSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<ScoreboardPlayerSorting>("ScoreboardPlayerSorting")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ScoreboardPlayerSorting")
+                        .HasColumnType("scoreboard_player_sorting")
+                        .HasDefaultValue(ScoreboardPlayerSorting.Name);
+
+                    b.Property<bool>("ScoreboardPlayerSortingDesc")
+                        .HasColumnName("ScoreboardPlayerSortingDesc")
+                        .HasColumnType("boolean");
+
+                    b.Property<TimeSpanUnitsOfTime>("ScoreboardPlaytimeUnit")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ScoreboardPlaytimeUnit")
+                        .HasColumnType("time_span_units_of_time")
+                        .HasDefaultValue(TimeSpanUnitsOfTime.HourMinute);
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerThemeSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ThemeBackgroundDarkColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)");
+
+                    b.Property<string>("ThemeBackgroundLightColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(250, 250, 250, 0.87)");
+
+                    b.Property<string>("ThemeMainColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(0,0,77,1)");
+
+                    b.Property<string>("ThemeSecondaryColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(255,152,0,1)");
+
+                    b.Property<string>("ThemeWarnColor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("rgba(244,67,54,1)");
+
+                    b.Property<int>("ToolbarDesign")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.Property<bool>("UseDarkTheme")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerThemeSettings");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerVoiceSettings", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Voice3D")
+                        .HasColumnName("Voice3D")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("VoiceAutoVolume")
+                        .HasColumnName("VoiceAutoVolume")
+                        .HasColumnType("boolean");
+
+                    b.Property<float>("VoiceVolume")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("VoiceVolume")
+                        .HasColumnType("real")
+                        .HasDefaultValue(6f);
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerSettings");
                 });
 
             modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Announcements", b =>
@@ -6957,15 +7093,6 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerKillInfoSettings", b =>
-                {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
-                        .WithOne("KillInfoSettings")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerKillInfoSettings", "PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerLobbyStats", b =>
                 {
                     b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
@@ -7026,29 +7153,11 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerSettings", b =>
-                {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
-                        .WithOne("PlayerSettings")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerSettings", "PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerStats", b =>
                 {
                     b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerStats")
                         .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerStats", "PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerThemeSettings", b =>
-                {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
-                        .WithOne("ThemeSettings")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerThemeSettings", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -7103,6 +7212,109 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         .WithMany("Players")
                         .HasForeignKey("AdminLvl")
                         .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerChatSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", null)
+                        .WithOne("Chat")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerChatSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerCooldownsAndDurationsSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", null)
+                        .WithOne("CooldownsAndDurations")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerCooldownsAndDurationsSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerFightEffectSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", null)
+                        .WithOne("FightEffect")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerFightEffectSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerGeneralSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", null)
+                        .WithOne("General")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerGeneralSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", "PlayerSettings")
+                        .WithMany()
+                        .HasForeignKey("PlayerSettingsPlayerId");
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerInfoSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", null)
+                        .WithOne("Info")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerInfoSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerIngameColorsSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", null)
+                        .WithOne("IngameColors")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerIngameColorsSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerKillInfoSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                        .WithOne("KillInfoSettings")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerKillInfoSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerScoreboardSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", null)
+                        .WithOne("Scoreboard")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerScoreboardSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                        .WithOne("PlayerSettings")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerThemeSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                        .WithOne("ThemeSettings")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerThemeSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Settings.PlayerVoiceSettings", b =>
+                {
+                    b.HasOne("TDS_Server.Database.Entity.Player.Settings.PlayerSettings", null)
+                        .WithOne("Voice")
+                        .HasForeignKey("TDS_Server.Database.Entity.Player.Settings.PlayerVoiceSettings", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

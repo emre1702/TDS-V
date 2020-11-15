@@ -1,14 +1,8 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
-import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { SettingsService } from '../../../services/settings.service';
-import { LobbyChoice } from './interfaces/lobby-choice';
 import { trigger, transition, animate, style } from '@angular/animations';
 import { DomSanitizer } from '@angular/platform-browser';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
-import { LanguagePipe } from '../../../pipes/language.pipe';
-import { ChallengeFrequency } from '../enums/challenge-frequency.enum';
-import { ChallengeType } from '../enums/challenge-type.enum';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
@@ -38,7 +32,6 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
     constructor(
         private rageConnector: RageConnectorService,
         public settings: SettingsService,
-        private sanitizer: DomSanitizer,
         private changeDetector: ChangeDetectorRef) {
     }
 

@@ -140,6 +140,7 @@ export interface Language {
     RemoveTeam: string;
     Back: string;
     TimeZone: string;
+    Timezone: string;
     Message: string;
     Invite: string;
     Accept: string;
@@ -799,8 +800,12 @@ export interface Language {
     KillInfoFontWidthInfo: string;
     KillInfoIconWidth: string;
     KillInfoIconWidthInfo: string;
+    KillInfoIconHeight: string;
+    KillInfoIconHeightInfo: string;
     KillInfoSpacing: string;
     KillInfoSpacingInfo: string;
+    TestKillInfo: string;
+    DateTimeFormat: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;
@@ -932,4 +937,10 @@ export interface Language {
     String: string;
     DateTime: string;
     TimeSpan: string;
+    KillInfoDuration: string;
+    KillInfoDurationInfo: string;
+    CooldownsAndDurations: string;
+    FightEffect: string;
+    IngameColors: string;
+    Theme: string;
 }

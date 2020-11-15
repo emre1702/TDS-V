@@ -1,0 +1,15 @@
+<mat-form-field color="accent">
+    <mat-label>
+        {{ setting.label | language: settingsService.Lang }}
+    </mat-label>
+    <mat-select 
+    [formControl]="setting.formControl" 
+    [matTooltipDisabled]="!setting.tooltipLangKey"
+    [matTooltip]="setting.tooltipLangKey | language: settingsService.Lang"
+    (change)="setting.onValueChanged && setting.onValueChanged(setting); changed.emit(null)">
+        <mat-option *ngFor="let enumStr of setting.enumKeys"
+        [value]="setting.enumType[setting.enumOriginalKeys[enumStr]]">
+            {{ enumStr }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

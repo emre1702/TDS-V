@@ -19,7 +19,6 @@ namespace TDS_Client.Handler
 {
     public class SettingsHandler : ServiceBase
     {
-        #region Public Fields
 
         public readonly int ScreenFadeInTimeAfterSpawn = 2000;
         public readonly int ScreenFadeOutTimeAfterSpawn = 2000;
@@ -39,10 +38,6 @@ namespace TDS_Client.Handler
         public int StartArmor;
         public int StartHealth = 100;
 
-        #endregion Public Fields
-
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly EventsHandler _eventsHandler;
 
@@ -58,10 +53,6 @@ namespace TDS_Client.Handler
         private bool _languageManuallyChanged;
         private SyncedLobbySettings _syncedLobbySettings;
         private SyncedServerSettingsDto _syncedServerSettings;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public SettingsHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler,
             BrowserHandler browserHandler)
@@ -96,10 +87,6 @@ namespace TDS_Client.Handler
             LoadLanguageFromRAGE();
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public UserpanelPlayerCommandData CommandsData { get; private set; }
         public ILanguage Language { get; private set; }
 
@@ -125,7 +112,7 @@ namespace TDS_Client.Handler
         public int LobbyId => _syncedLobbySettings.Id;
         public string LobbyName => _syncedLobbySettings != null ? _syncedLobbySettings.Name : "Mainmenu";
         public bool LoggedIn { get; set; }
-        public SyncedPlayerSettingsDto PlayerSettings { get; private set; }
+        public SyncedClientPlayerSettings PlayerSettings { get; private set; }
 
         //public uint BombDefuseTimeMs => syncedLobbySettings.BombDefuseTimeMs.Value;
         //public uint BombPlantTimeMs => syncedLobbySettings.BombPlantTimeMs.Value;
@@ -144,10 +131,6 @@ namespace TDS_Client.Handler
         public MapLimitType MapLimitType => _syncedLobbySettings.MapLimitType ?? MapLimitType.KillAfterTime;
         public int RoundEndTime => _syncedServerSettings.RoundEndTime;
         public int RoundTime => _syncedLobbySettings.RoundTime ?? 0;
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public int GetPlantOrDefuseTime(PlantDefuseStatus status)
         {
@@ -184,40 +167,33 @@ namespace TDS_Client.Handler
             ShowNametagOnlyOnAiming = _syncedServerSettings.ShowNametagOnlyOnAiming;
         }
 
-        public void LoadThemeSettings(SyncedPlayerThemeSettings data)
+        public void LoadUserSettings(SyncedPlayerSettings loadedSyncedSettings)
         {
-            _browserHandler.Angular.SyncThemeSettings(Serializer.ToBrowser(data));
-        }
-
-        public void LoadUserSettings(SyncedPlayerSettingsDto loadedSyncedSettings)
-        {
-            if (!_languageManuallyChanged || LanguageEnum == loadedSyncedSettings.Language || PlayerSettings != null)
-                LanguageEnum = loadedSyncedSettings.Language;
+            if (!_languageManuallyChanged || LanguageEnum == loadedSyncedSettings.Client.Language || PlayerSettings != null)
+                LanguageEnum = loadedSyncedSettings.Client.Language;
             else
             {
-                loadedSyncedSettings.Language = LanguageEnum;
-                _remoteEventsSender.Send(ToServerEvent.LanguageChange, loadedSyncedSettings.Language);
+                loadedSyncedSettings.Client.Language = LanguageEnum;
+                _remoteEventsSender.Send(ToServerEvent.LanguageChange, loadedSyncedSettings.Client.Language);
             }
 
             _languageManuallyChanged = false;
-            PlayerSettings = loadedSyncedSettings;
+            PlayerSettings = loadedSyncedSettings.Client;
 
-            MapBorderColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.MapBorderColor) ?? MapBorderColor;
-            NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagDeadColor);
-            NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthEmptyColor) ?? NametagHealthEmptyColor;
-            NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagHealthFullColor) ?? NametagHealthFullColor;
-            NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorEmptyColor);
-            NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
+            MapBorderColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.Client.MapBorderColor) ?? MapBorderColor;
+            NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.Client.NametagDeadColor);
+            NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.Client.NametagHealthEmptyColor) ?? NametagHealthEmptyColor;
+            NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.Client.NametagHealthFullColor) ?? NametagHealthFullColor;
+            NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.Client.NametagArmorEmptyColor);
+            NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.Client.NametagArmorFullColor) ?? NametagArmorFullColor;
 
             NotTempMapBorderColor = null;
 
             _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
 
-            _browserHandler.Angular.LoadChatSettings(loadedSyncedSettings.ChatWidth, loadedSyncedSettings.ChatMaxHeight,
-                loadedSyncedSettings.ChatFontSize, loadedSyncedSettings.HideDirtyChat, loadedSyncedSettings.HideChatInfo,
-                loadedSyncedSettings.ChatInfoFontSize, loadedSyncedSettings.ChatInfoMoveTimeMs);
+            _browserHandler.Angular.LoadSettings(loadedSyncedSettings.AngularJson);
 
-            _eventsHandler.OnSettingsLoaded(loadedSyncedSettings);
+            _eventsHandler.OnSettingsLoaded(loadedSyncedSettings.Client);
         }
 
         public void RevertTempSettings()
@@ -229,10 +205,6 @@ namespace TDS_Client.Handler
                 _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void LoadLanguageFromRAGE()
         {
@@ -248,33 +220,33 @@ namespace TDS_Client.Handler
 
         private void OnColorSettingChangeMethod(object[] args)
         {
-            string color = (string)args[0];
-            UserpanelSettingKey dataSetting = (UserpanelSettingKey)(Convert.ToInt32(args[1]));
+            var color = (string)args[0];
+            var dataSetting = (UserpanelSettingAtClientside)Convert.ToInt32(args[1]);
 
             switch (dataSetting)
             {
-                case UserpanelSettingKey.MapBorderColor:
+                case UserpanelSettingAtClientside.MapBorderColor:
                     MapBorderColor = SharedUtils.GetColorFromHtmlRgba(color) ?? MapBorderColor;
                     _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
                     break;
 
-                case UserpanelSettingKey.NametagDeadColor:
+                case UserpanelSettingAtClientside.NametagDeadColor:
                     NametagDeadColor = SharedUtils.GetColorFromHtmlRgba(color);
                     break;
 
-                case UserpanelSettingKey.NametagHealthEmptyColor:
+                case UserpanelSettingAtClientside.NametagHealthEmptyColor:
                     NametagHealthEmptyColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagHealthEmptyColor;
                     break;
 
-                case UserpanelSettingKey.NametagHealthFullColor:
+                case UserpanelSettingAtClientside.NametagHealthFullColor:
                     NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagHealthFullColor;
                     break;
 
-                case UserpanelSettingKey.NametagArmorEmptyColor:
+                case UserpanelSettingAtClientside.NametagArmorEmptyColor:
                     NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(color);
                     break;
 
-                case UserpanelSettingKey.NametagArmorFullColor:
+                case UserpanelSettingAtClientside.NametagArmorFullColor:
                     NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(color) ?? NametagArmorFullColor;
                     break;
             }
@@ -291,10 +263,9 @@ namespace TDS_Client.Handler
 
         private void OnSyncSettingsMethod(object[] args)
         {
-            string json = (string)args[0];
-            var settings = Serializer.FromServer<SyncedPlayerSettingsDto>(json);
+            var json = (string)args[0];
+            var settings = Serializer.FromServer<SyncedPlayerSettings>(json);
             LoadUserSettings(settings);
-            _browserHandler.Angular.LoadUserpanelData((int)UserpanelLoadDataType.SettingsNormal, json);
         }
 
         private void ReloadTempChangedPlayerSettings(object[] args)
@@ -316,8 +287,6 @@ namespace TDS_Client.Handler
         {
             _browserHandler.RegisterLogin.SyncLanguage(Language);
         }
-
-        #endregion Private Methods
 
         /*function loadSettings() {
             let savedlang = mp.storage.data.language;

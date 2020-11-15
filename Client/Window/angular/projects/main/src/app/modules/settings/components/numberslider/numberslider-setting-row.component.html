@@ -1,0 +1,14 @@
+<div class="container">
+    <span>{{ setting.label | language: settingsService.Lang }}</span>
+    <mat-slider 
+    color="accent"
+    thumbLabel
+    tickInterval="1"
+    step="setting.step"
+    [formControl]="setting.formControl"
+    [min]="setting.min"
+    [max]="setting.max"
+    (change)="setting.onValueChanged && setting.onValueChanged(setting); changed.emit(null)"
+    [matTooltipDisabled]="!setting.tooltipLangKey"
+    [matTooltip]="setting.tooltipLangKey | language: settingsService.Lang"></mat-slider>
+</div>

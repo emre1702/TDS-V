@@ -5,6 +5,7 @@ using TDS_Server.Database.Entity.Challenge;
 using TDS_Server.Database.Entity.GangEntities;
 using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Player.Char;
+using TDS_Server.Database.Entity.Player.Settings;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Database.Entity.Userpanel;
 

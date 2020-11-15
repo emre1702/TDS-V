@@ -1,6 +1,7 @@
 <tdswindow (close)="closeUserpanel()" [isLoading]="userpanelService.loadingData"
 [navMenu]="userpanelNav" [currentNav]="userpanelService.currentNav | language: settings.Lang"
 [navGlow]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
+contentWidth="30vw"
 contentHeight="36.5vh">
     <app-userpanel-stats-general *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsGeneral]"
         [stats]="userpanelService.myStatsGeneral"
@@ -87,13 +88,57 @@ contentHeight="36.5vh">
         <mat-icon color="accent">account_box</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SettingsSpecial] | language: settings.Lang }}</span>
     </button>
-    <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsNormal)">
+    <button mat-menu-item [matMenuTriggerFor]="settingsNormalNav">
         <mat-icon color="accent">list</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SettingsNormal] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.SettingsCommands)">
         <mat-icon color="accent">speaker_notes</mat-icon>
         <span>{{ userpanelNavPage[userpanelNavPage.SettingsCommands] | language: settings.Lang }}</span>
+    </button>
+</mat-menu>
+
+<mat-menu #settingsNormalNav="matMenu">
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.General)">
+        <mat-icon color="accent">settings_applications</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.General] | language: settings.Lang }}</span>
+    </button>
+
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.Chat)">
+        <mat-icon color="accent">chat</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.Chat] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.CooldownsAndDurations)">
+        <mat-icon color="accent">timer</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.CooldownsAndDurations] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.FightEffect)">
+        <mat-icon color="accent">flare</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.FightEffect] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.Info)">
+        <mat-icon color="accent">info</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.Info] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.IngameColors)">
+        <mat-icon color="accent">color_lens</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.IngameColors] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.KillInfo)">
+        <mat-icon color="accent">warning</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.KillInfo] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.Scoreboard)">
+        <mat-icon color="accent">view_column</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.Scoreboard] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.Theme)">
+        <mat-icon color="accent">colorize</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.Theme] | language: settings.Lang }}</span>
+    </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.Voice)">
+        <mat-icon color="accent">record_voice_over</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.Voice] | language: settings.Lang }}</span>
     </button>
 </mat-menu>
 

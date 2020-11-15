@@ -1,11 +1,10 @@
 ﻿using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Database.Interfaces;
 
 namespace TDS_Server.Database.Entity.Player
 {
-    public partial class PlayerLobbyStats
+    public class PlayerLobbyStats : IPlayerDataTable
     {
-        #region Public Properties
-
         public int Assists { get; set; }
         public int Damage { get; set; }
         public int Deaths { get; set; }
@@ -23,7 +22,5 @@ namespace TDS_Server.Database.Entity.Player
         public int TotalKills { get; set; }
         public int TotalMapsBought { get; set; }
         public int TotalRounds { get; set; }
-
-        #endregion Public Properties
     }
 }

@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { UserpanelCommandDataDto } from '../interfaces/userpanelCommandDataDto';
-import { LanguagePipe } from '../../../pipes/language.pipe';
 import { SettingsService } from '../../../services/settings.service';
-import { UserpanelService } from '../services/userpanel.service';
 import { ClipboardService } from 'ngx-clipboard';
+import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
   selector: 'app-userpanel-commands',

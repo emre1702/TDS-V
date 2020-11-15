@@ -54,7 +54,7 @@ namespace TDS_Client.Handler.Events
 
         public delegate void RoundStartedDelegate(bool isSpectator);
 
-        public delegate void SettingsLoadedDelegate(SyncedPlayerSettingsDto settings);
+        public delegate void SettingsLoadedDelegate(SyncedClientPlayerSettings settings);
 
         public delegate void TeamChangedDelegate(string currentTeamName);
 
@@ -488,7 +488,7 @@ namespace TDS_Client.Handler.Events
             }
         }
 
-        internal void OnSettingsLoaded(SyncedPlayerSettingsDto loadedSyncedSettings)
+        internal void OnSettingsLoaded(SyncedClientPlayerSettings loadedSyncedSettings)
         {
             try
             {

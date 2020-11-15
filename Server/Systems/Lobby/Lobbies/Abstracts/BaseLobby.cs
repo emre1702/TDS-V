@@ -79,7 +79,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
             InitDependencies();
 
-            Events.PlayerLeft += PlayerLeft;
+            Events!.PlayerLeft += PlayerLeft;
         }
 
         protected virtual async void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)

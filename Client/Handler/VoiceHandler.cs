@@ -13,7 +13,7 @@ namespace TDS_Client.Handler
         private readonly BindsHandler _bindsHandler;
         private readonly BrowserHandler _browserHandler;
         private readonly UtilsHandler _utilsHandler;
-        private SyncedPlayerSettingsDto _syncedPlayerSettingsDto;
+        private SyncedClientPlayerSettings _syncedClientPlayerSettings;
 
         public VoiceHandler(LoggingHandler loggingHandler, BindsHandler bindsHandler, BrowserHandler browserHandler,
             UtilsHandler utilsHandler, EventsHandler eventsHandler)
@@ -37,9 +37,9 @@ namespace TDS_Client.Handler
             _bindsHandler.Add(Control.PushToTalk, Stop, KeyPressState.Up);
         }
 
-        private void EventsHandler_SettingsLoaded(SyncedPlayerSettingsDto settings)
+        private void EventsHandler_SettingsLoaded(SyncedClientPlayerSettings settings)
         {
-            _syncedPlayerSettingsDto = settings;
+            _syncedClientPlayerSettings = settings;
 
             foreach (var player in RAGE.Elements.Entities.Players.All.OfType<ITDSPlayer>())
             {
@@ -51,13 +51,13 @@ namespace TDS_Client.Handler
         {
             if (!RAGE.Voice.Allowed)
                 return;
-            if (_syncedPlayerSettingsDto is null)
+            if (_syncedClientPlayerSettings is null)
                 return;
 
-            player.AutoVolume = _syncedPlayerSettingsDto.VoiceAutoVolume;
-            if (!_syncedPlayerSettingsDto.VoiceAutoVolume)
-                player.VoiceVolume = _syncedPlayerSettingsDto.VoiceVolume;
-            player.Voice3d = _syncedPlayerSettingsDto.Voice3D;
+            player.AutoVolume = _syncedClientPlayerSettings.VoiceAutoVolume;
+            if (!_syncedClientPlayerSettings.VoiceAutoVolume)
+                player.VoiceVolume = _syncedClientPlayerSettings.VoiceVolume;
+            player.Voice3d = _syncedClientPlayerSettings.Voice3D;
         }
 
         private void Start(Control _)

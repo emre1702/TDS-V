@@ -5,6 +5,7 @@ using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Extensions;
 using TDS_Server.Data.Utility;
 using TDS_Server.Database.Entity.Player;
+using TDS_Server.Database.Entity.Player.Settings;
 using TDS_Server.Handler.Events;
 using TDS_Server.Handler.Extensions;
 using TDS_Server.Handler.Helper;
@@ -113,21 +114,36 @@ namespace TDS_Server.Handler.Account
         private PlayerSettings CreatePlayerSettingsEntity(Language language)
             => new PlayerSettings
             {
-                AllowDataTransfer = false,
-                Language = language,
-                Hitsound = true,
-                Bloodscreen = true,
-                FloatingDamageInfo = true,
-                ShowConfettiAtRanking = true,
-                CheckAFK = true,
-                WindowsNotifications = false,
-                HideDirtyChat = false,
-                ShowCursorOnChatOpen = true,
-                Voice3D = false,
-                VoiceAutoVolume = false,
-                HideChatInfo = false,
-                ShowCursorInfo = true,
-                ShowLobbyLeaveInfo = true
+                General = new PlayerGeneralSettings 
+                { 
+                    AllowDataTransfer = false,
+                    Language = language,
+                    CheckAFK = true,
+                    WindowsNotifications = false,
+                    ShowConfettiAtRanking = true,
+                },
+                FightEffect = new PlayerFightEffectSettings
+                {
+                    Hitsound = true,
+                    Bloodscreen = true,
+                    FloatingDamageInfo = true
+                },
+                Chat = new PlayerChatSettings
+                {
+                    HideDirtyChat = false,
+                    ShowCursorOnChatOpen = true,
+                    HideChatInfo = false
+                },
+                Voice = new PlayerVoiceSettings
+                {
+                    Voice3D = false,
+                    VoiceAutoVolume = false,
+                },
+                Info = new PlayerInfoSettings
+                {
+                    ShowCursorInfo = true,
+                    ShowLobbyLeaveInfo = true
+                }
             };
 
         private PlayerStats CreatePlayerStatsEntity()

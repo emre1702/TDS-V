@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
 import { SettingsService } from '../services/settings.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     // tslint:disable-next-line: component-selector

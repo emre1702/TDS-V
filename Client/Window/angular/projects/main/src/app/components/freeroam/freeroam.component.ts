@@ -3,7 +3,7 @@ import { SettingsService } from '../../services/settings.service';
 import { Vehicle } from './enums/vehicle.enum';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
-import { MatButton } from '@angular/material';
+import { MatButton } from '@angular/material/button';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 
 @Component({
@@ -25,13 +25,13 @@ export class FreeroamComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     private detectChanges() {

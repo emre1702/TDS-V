@@ -73,10 +73,6 @@ namespace TDS_Client.Handler
             UserpanelLoadDataType type = (UserpanelLoadDataType)Convert.ToInt32(args[0]);
             switch (type)
             {
-                case UserpanelLoadDataType.SettingsNormal:
-                    _browserHandler.Angular.LoadUserpanelData((int)type, Serializer.ToBrowser(_settingsHandler.PlayerSettings));
-                    break;
-
                 case UserpanelLoadDataType.SettingsCommands:
                     _browserHandler.Angular.LoadUserpanelData((int)type, Serializer.ToBrowser(_settingsHandler.CommandsData));
                     break;

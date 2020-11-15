@@ -1,0 +1,9 @@
+<mat-form-field color="accent">
+    <mat-label>{{ setting.label | language: settingsService.Lang }}</mat-label>
+    <input matInput type="text"
+    [formControl]="setting.formControl"
+    [placeholder]="setting.placeHolder | language: settingsService.Lang"
+    [matTooltipDisabled]="!setting.tooltipLangKey"
+    [matTooltip]="setting.tooltipLangKey | language: settingsService.Lang"
+    (change)="setting.onValueChanged && setting.onValueChanged(setting); changed.emit(null)"/>
+</mat-form-field>

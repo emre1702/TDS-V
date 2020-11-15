@@ -1,13 +1,11 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TDS_Server.Database.Interfaces;
 using TDS_Shared.Data.Models.CharCreator;
 
 namespace TDS_Server.Database.Entity.Player.Char
 {
-    public class PlayerCharDatas 
+    public class PlayerCharDatas : IPlayerDataTable
     {
-        #region Public Properties
-
         public int PlayerId { get; set; }
         public byte Slot { get; set; }
         public CharCreateData SyncedData { get; set; }
@@ -19,7 +17,5 @@ namespace TDS_Server.Database.Entity.Player.Char
         public virtual ICollection<PlayerCharGeneralDatas> GeneralData { get; set; }
         public virtual ICollection<PlayerCharHairAndColorsDatas> HairAndColorsData { get; set; }
         public virtual ICollection<PlayerCharHeritageDatas> HeritageData { get; set; }
-
-        #endregion Public Properties
     }
 }

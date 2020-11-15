@@ -13,6 +13,7 @@ using TDS_Server.Database.Entity.LobbyEntities;
 using TDS_Server.Database.Entity.Log;
 using TDS_Server.Database.Entity.Player;
 using TDS_Server.Database.Entity.Player.Char;
+using TDS_Server.Database.Entity.Player.Settings;
 using TDS_Server.Database.Entity.Rest;
 using TDS_Server.Database.Entity.Server;
 using TDS_Server.Database.Entity.Userpanel;

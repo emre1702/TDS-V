@@ -1,12 +1,12 @@
 export enum SettingType {
   string,
-  password,
   number,
   numberSlider,
   boolean,
   booleanSlider,
   enum,
+  dateTimeEnum,
   button,
   color,
-  dateTimeFormatEnum
+  password
 }

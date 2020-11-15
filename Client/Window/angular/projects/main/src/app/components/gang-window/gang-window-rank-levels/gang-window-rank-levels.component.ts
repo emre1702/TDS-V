@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { GangWindowService } from '../services/gang-window-service';
 import { GangWindowNav } from '../enums/gang-window-nav.enum';
 import { GangCommand } from '../enums/gang-command.enum';
+import { NotificationService } from '../../../modules/shared/services/notification.service';
 
 @Component({
     selector: 'app-gang-window-rank-levels',
@@ -38,12 +39,13 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
         public settings: SettingsService,
         private changeDetector: ChangeDetectorRef,
         private sanitizer: DomSanitizer,
-        public gangWindowService: GangWindowService
+        public gangWindowService: GangWindowService,
+        private notificationService: NotificationService
     ) { }
 
     ngOnInit(): void {
         this.gangWindowService.loadedData.on(GangWindowNav[GangWindowNav.RanksLevels], this.loadedData.bind(this));
-        this.gangWindowService.showInfo(this.settings.Lang.RankLevelsModifyInfo);
+        this.notificationService.showInfo(this.settings.Lang.RankLevelsModifyInfo);
     }
 
     ngOnDestroy(): void {

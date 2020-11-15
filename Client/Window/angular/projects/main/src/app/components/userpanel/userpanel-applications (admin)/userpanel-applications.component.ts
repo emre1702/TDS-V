@@ -2,14 +2,12 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrateg
 import { SettingsService } from '../../../services/settings.service';
 import { UserpanelService } from '../services/userpanel.service';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuestionsGroup';
 import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
-import { MatDialog } from '@angular/material';
 import { ApplicationInviteDialog } from '../../../dialog/application-invite-dialog';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-userpanel-applications',

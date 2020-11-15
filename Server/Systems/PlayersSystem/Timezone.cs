@@ -53,12 +53,12 @@ namespace TDS_Server.PlayersSystem
 
         public string GetLocalDateTimeString(DateTime dateTime)
         {
-            return GetLocalDateTime(dateTime).ToString(_player.Entity?.PlayerSettings.DateTimeFormat ?? SharedConstants.DateTimeOffsetFormat);
+            return GetLocalDateTime(dateTime).ToString(_player.Entity?.PlayerSettings.General.DateTimeFormat ?? SharedConstants.DateTimeOffsetFormat);
         }
 
         private void LoadTimezone(Database.Entity.Player.Players entity)
         {
-            _timezone = TZConvert.GetTimeZoneInfo(entity.PlayerSettings.Timezone);
+            _timezone = TZConvert.GetTimeZoneInfo(entity.PlayerSettings.General.Timezone);
         }
     }
 }

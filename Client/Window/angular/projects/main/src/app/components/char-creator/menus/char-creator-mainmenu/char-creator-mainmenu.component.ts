@@ -1,9 +1,9 @@
 import { Component, Output, EventEmitter, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { CharCreatorMenuNav } from '../../enums/charCreatorMenuNav.enum';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
-import { MatSelectChange, MatRadioChange } from '@angular/material';
 import { CharCreateGeneralData } from '../../interfaces/charCreateGeneralData';
-import { RageConnectorService } from 'rage-connector';
+import { MatSelectChange } from '@angular/material/select';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
     // tslint:disable-next-line: component-selector

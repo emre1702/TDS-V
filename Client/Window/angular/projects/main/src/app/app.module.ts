@@ -7,42 +7,8 @@ import { MapVotingComponent } from './components/mapvoting/mapvoting.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import {
-  MatButtonModule,
-  MatToolbarModule,
-  MatSidenavModule,
-  MatIconModule,
-  MatListModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatSelectModule,
-  MatOptionModule,
-  MatTableModule,
-  MatAutocompleteModule,
-  MatSortModule,
-  MatDialogModule,
-  MatSnackBarModule,
-  MatRippleModule,
-  MatSliderModule,
-  MatExpansionModule,
-  MatGridListModule,
-  MatCheckboxModule,
-  MatMenuModule,
-  MatBadgeModule,
-  MatTooltipModule,
-  MatSlideToggleModule,
-  MatButtonToggleModule,
-  MatPaginatorModule,
-  MatPaginatorIntl,
-  MatStepperModule,
-  MatProgressSpinnerModule,
-  MatCardModule,
-  MatRadioModule
-} from "@angular/material";
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
-import { LanguagePipe } from './pipes/language.pipe';
 import { TeamOrdersComponent } from './components/teamorders/teamorders.component';
-import { OrderByPipe } from './pipes/orderby.pipe';
 import { MapCreatorComponent } from './components/mapcreator/map-creator.component';
 import { FreeroamComponent } from './components/freeroam/freeroam.component';
 import { LoadMapDialog } from './components/mapcreator/dialog/load-map-dialog';
@@ -60,7 +26,6 @@ import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRul
 import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/userpanel-faqs.component';
 import { UserpanelSettingsNormalComponent } from './components/userpanel/userpanel-settings-normal/userpanel-settings-normal.component';
 import { UserpanelStatsGeneralComponent } from './components/userpanel/userpanel-stats-general/userpanel-stats-general.component';
-import { CustomMatPaginatorIntl } from './extensions/customMatPaginatorIntl';
 import { InputTypeDirective } from './extensions/inputTypeDirective';
 import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
 import { RankingComponent } from './components/ranking/ranking.component';
@@ -73,8 +38,6 @@ import { ApplicationInviteDialog } from './dialog/application-invite-dialog';
 import { UserpanelSupportUserComponent } from './components/userpanel/userpanel-support-user/userpanel-support-user.component';
 import { UserpanelSupportAdminComponent } from './components/userpanel/userpanel-support-admin/userpanel-support-admin.component';
 import { UserpanelSupportViewComponent } from './components/userpanel/userpanel-support-view/userpanel-support-view.component';
-import { FilterPipe } from './pipes/filter.pipe';
-import { ReversePipe } from './pipes/reverse.pipe';
 import { UserpanelOfflineMessagesComponent } from './components/userpanel/userpanel-offline-messages/userpanel-offline-messages.component';
 import { InvitationComponent } from './components/utils/invitation/invitation.component';
 import { UserpanelSettingsSpecialComponent } from './components/userpanel/userpanel-settings-special/userpanel-settings-special.component';
@@ -98,7 +61,6 @@ import { CharCreatorHairandcolorsComponent } from './components/char-creator/men
 import { HttpClientModule } from '@angular/common/http';
 import { UserpanelSettingsCommandsComponent } from './components/userpanel/userpanel-settings-commands/userpanel-settings-commands.component';
 import { MaterialCssVarsModule, MaterialCssVarsService } from 'angular-material-css-vars';
-import { MatAppBackgroundDirective } from './extensions/matAppBackgroundDirective';
 import { InfosHandlerComponent } from './components/infos-handler/infos-handler.component';
 import { InfoComponent } from './components/infos-handler/info/info.component';
 import { UserpanelStatsWeaponComponent } from './components/userpanel/userpanel-stats-weapon/userpanel-stats-weapon.component';
@@ -113,10 +75,22 @@ import { GangWindowAllGangsComponent } from './components/gang-window/gang-windo
 import { GangWindowRankPermissionsComponent } from './components/gang-window/gang-window-rank-permissions/gang-window-rank-permissions.component';
 import { GangWindowMainmenuComponent } from './components/gang-window/gang-window-mainmenu/gang-window-mainmenu.component';
 import { CustomLobbyArmsRaceWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-armsraceweapons-menu/custom-lobby-armsraceweapons-menu.component';
-import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
 import { MainMenuComponent } from './components/lobbychoice/main-menu/main-menu.component';
 import { DamageTestMenuComponent } from './components/damage-test-menu/damage-test-menu.component';
 import { KillMessagesComponent } from './components/hud/kill-messages/kill-messages.component';
+import { MaterialModule } from './modules/material/material.module';
+import { SettingsModule } from './modules/settings/settings.module';
+import { SharedModule } from './modules/shared/shared.module';
+import { UserpanelSettingsChatComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-chat/userpanel-settings-chat.component';
+import { UserpanelSettingsCooldownsAndDurationsComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-cooldowns-and-durations/userpanel-settings-cooldowns-and-durations.component';
+import { UserpanelSettingsFightEffectComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-fight-effect/userpanel-settings-fight-effect.component';
+import { UserpanelSettingsGeneralComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-general/userpanel-settings-general.component';
+import { UserpanelSettingsInfoComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-info/userpanel-settings-info.component';
+import { UserpanelSettingsIngameColorsComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-ingame-colors/userpanel-settings-ingame-colors.component';
+import { UserpanelSettingsKillInfoComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-kill-info/userpanel-settings-kill-info.component';
+import { UserpanelSettingsScoreboardComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-scoreboard/userpanel-settings-scoreboard.component';
+import { UserpanelSettingsVoiceComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-voice/userpanel-settings-voice.component';
+import { UserpanelSettingsThemeComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-theme/userpanel-settings-theme.component';
 
 @NgModule({
   declarations: [
@@ -126,13 +100,9 @@ import { KillMessagesComponent } from './components/hud/kill-messages/kill-messa
     MapCreatorComponent,
     FreeroamComponent,
     CustomLobbyMenuComponent,
-    OrderByPipe,
     MapVotingNavPipe,
     UserpanelCommandNavPipe,
     UserpanelRulesNavPipe,
-    LanguagePipe,
-    FilterPipe,
-    ReversePipe,
     LoadMapDialog,
     AreYouSureDialog,
     CustomLobbyPasswordDialog,
@@ -146,13 +116,21 @@ import { KillMessagesComponent } from './components/hud/kill-messages/kill-messa
     UserpanelSettingsNormalComponent,
     UserpanelStatsGeneralComponent,
     UserpanelApplicationComponent,
-    CustomMatSnackBarComponent,
+    UserpanelSettingsChatComponent,
+    UserpanelSettingsCooldownsAndDurationsComponent,
+    UserpanelSettingsFightEffectComponent,
+    UserpanelSettingsGeneralComponent,
+    UserpanelSettingsInfoComponent,
+    UserpanelSettingsIngameColorsComponent,
+    UserpanelSettingsKillInfoComponent,
+    UserpanelSettingsScoreboardComponent,
+    UserpanelSettingsThemeComponent,
+    UserpanelSettingsVoiceComponent,
 
     InputTypeDirective,
     TextareaTypeDirective,
     ToolbarDirective,
     MentionDirective,
-    MatAppBackgroundDirective,
     MentionListComponent,
     RankingComponent,
     CustomLobbyTeamsMenuComponent,
@@ -201,54 +179,26 @@ import { KillMessagesComponent } from './components/hud/kill-messages/kill-messa
     BrowserAnimationsModule,
     DragDropModule,
     ColorPickerModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatOptionModule,
-    MatTableModule,
-    MatAutocompleteModule,
-    MatSortModule,
-    MatDialogModule,
-    MatRippleModule,
-    MatSliderModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatCheckboxModule,
-    MatMenuModule,
-    MatBadgeModule,
-    MatTooltipModule,
-    MatSlideToggleModule,
-    MatButtonToggleModule,
-    MatPaginatorModule,
-    MatStepperModule,
-    MatProgressSpinnerModule,
-    MatCardModule,
-    MatRadioModule,
     ClipboardModule,
     OverlayModule,
     CommonModule,
     HttpClientModule,
+    MaterialModule,
+    SettingsModule,
+    SharedModule,
 
     MaterialCssVarsModule.forRoot({
         isAutoContrast: true,
         isDarkTheme: true,
         primary: "rgba(0,0,77,1)",
-        accent: "rgba(255,152,0,1)",
+        accent: "rgb(255,152,0)",
         warn: "rgba(244,67,54,1)"
     })
   ],
   entryComponents: [
-      LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent, CustomMatSnackBarComponent
+      LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent
   ],
   providers: [
-    OrderByPipe,
-    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
     MaterialCssVarsService
   ],
   bootstrap: [AppComponent],

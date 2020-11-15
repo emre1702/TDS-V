@@ -152,6 +152,7 @@ The user interface is always being worked on, so don't be surprised if you disco
     RemoveTeam = "Remove team";
     Back = "Back";
     TimeZone = "Time zone";
+    Timezone = "Time zone";
     Message = "Message";
     Invite = "Invite";
     Accept = "Accept";
@@ -835,8 +836,12 @@ You need to set the target for this mode.`;
     KillInfoFontWidthInfo = "Font width of kill info texts. Higher number => bigger texts";
     KillInfoIconWidth = "Weapon icon width (pixel)";
     KillInfoIconWidthInfo = "Width in pixel for weapon icons.";
+    KillInfoIconHeight = "Weapon icon height (pixel)";
+    KillInfoIconHeightInfo = "Height in pixel for weapon icons.";
     KillInfoSpacing = "Spacing (pixel)";
     KillInfoSpacingInfo = "Spacing in pixel between texts and icon.";
+    TestKillInfo = "Test kill info";
+    DateTimeFormat = "Date time format";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "All without gangwar";
@@ -961,4 +966,10 @@ Here you can see all the invitations sent to you:`;
     String = "string";
     DateTime = "time";
     TimeSpan = "timespan";
+    KillInfoDuration = "Kill info duration (sec)";
+    KillInfoDurationInfo = "How long the kill info will stay on screen in seconds.";
+    CooldownsAndDurations = "Cooldowns and durations";
+    FightEffect = "Fight effects";
+    IngameColors = "Ingame colors";
+    Theme = "Window Theme";
 }

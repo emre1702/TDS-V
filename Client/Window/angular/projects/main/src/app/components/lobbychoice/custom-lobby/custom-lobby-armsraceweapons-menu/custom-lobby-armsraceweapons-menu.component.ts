@@ -4,9 +4,10 @@ import { WeaponHashGroupConstants } from '../../enums/weapon-hash-group.constant
 import { WeaponHash } from '../../enums/weapon-hash.enum';
 import { WeaponType } from '../../enums/weapon-type.enum';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
-import { MatTableDataSource, MatSort, MatSnackBar } from '@angular/material';
 import { CustomLobbyArmsRaceWeaponData } from '../../models/custom-lobby-armsraceweapon-data';
-import { CustomMatSnackBarComponent } from 'projects/main/src/app/extensions/customMatSnackbar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { NotificationService } from 'projects/main/src/app/modules/shared/services/notification.service';
 
 @Component({
     selector: 'app-custom-lobby-armsraceweapons-menu',
@@ -31,7 +32,7 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
     constructor(
         private changeDetector: ChangeDetectorRef,
         public settings: SettingsService,
-        private snackBar: MatSnackBar
+        private notificationService: NotificationService
     ) { }
 
     ngOnInit() {
@@ -133,11 +134,7 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
     private fixData(): boolean {
         const firstWeapon = this.selectedWeapons.find(w => w[1] == 0);
         if (!firstWeapon) {
-            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-                {
-                    data: this.settings.Lang.ArmsRaceWeaponsFirstWeaponError,
-                    duration: undefined
-                });
+            this.notificationService.showError(this.settings.Lang.ArmsRaceWeaponsFirstWeaponError);
             return false;
         }
 
@@ -151,8 +148,7 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
         });
 
         if (hasDuplicates) {
-            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-                { data: this.settings.Lang.ArmsRaceWeaponsDuplicateError, duration: undefined });
+            this.notificationService.showError(this.settings.Lang.ArmsRaceWeaponsDuplicateError);
             return false;
         }
 
@@ -161,14 +157,12 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
         const endEntry = this.selectedWeapons.find(w => !w[0]);
         if (!endEntry) {
             this.selectedWeapons.push({ 0: null, 1: maxSelectedAtKill + 1 });
-            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-                { data: this.settings.Lang.ArmsRaceWeaponsWinError, duration: undefined });
+            this.notificationService.showError(this.settings.Lang.ArmsRaceWeaponsWinError);
             return false;
         }
         if (endEntry[1] != maxSelectedAtKill) {
             endEntry[1] = maxSelectedAtKill + 1;
-            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-                { data: this.settings.Lang.ArmsRaceWeaponsWinNotLastError, duration: undefined });
+            this.notificationService.showError(this.settings.Lang.ArmsRaceWeaponsWinNotLastError);
             return false;
         }
 

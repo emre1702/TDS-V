@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using TDS_Server.Data.Abstracts.Entities.GTA;
 using TDS_Server.Data.Defaults;
 using TDS_Server.Database.Entity;
@@ -44,7 +45,7 @@ namespace TDS_Server.Handler
 
             foreach (var entry in data)
             {
-                _chatInfosJsonCache[entry.Key] = Serializer.ToBrowser(entry.Value).Replace("\\", "\\\\");
+                _chatInfosJsonCache[entry.Key] = Serializer.ToBrowser(entry.Value);
             }
         }
 

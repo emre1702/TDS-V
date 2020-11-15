@@ -5,12 +5,9 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 import { Constants } from '../../../constants';
 import { validBlipColorValidator } from './validators/valid-blip-color-validator';
 import { ClipboardService } from 'ngx-clipboard';
-import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { MatSnackBar } from '@angular/material';
 import { GangWindowService } from '../services/gang-window-service';
 import { GangCommand } from '../enums/gang-command.enum';
-import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
+import { NotificationService } from '../../../modules/shared/services/notification.service';
 
 @Component({
     selector: 'app-gang-window-create',
@@ -58,7 +55,7 @@ export class GangWindowCreateComponent implements OnInit {
         public settings: SettingsService,
         public sanitizer: DomSanitizer,
         private clipboardService: ClipboardService,
-        private snackBar: MatSnackBar,
+        private notificationService: NotificationService,
         private gangWindowService: GangWindowService) { }
 
     ngOnInit(): void {
@@ -70,8 +67,7 @@ export class GangWindowCreateComponent implements OnInit {
 
         const data = this.createFormGroup.getRawValue();
         this.gangWindowService.executeCommand(GangCommand.Create, [JSON.stringify(data)], () => {
-            this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-                { data: this.settings.Lang.GangSuccessfullyCreatedInfo, duration: undefined });
+            this.notificationService.showSuccess(this.settings.Lang.GangSuccessfullyCreatedInfo);
             this.back.emit();
         }, true, false);
     }

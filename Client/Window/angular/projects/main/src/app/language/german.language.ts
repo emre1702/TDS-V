@@ -119,7 +119,7 @@ Es wird immer wieder an der Benutzeroberfläche gearbeitet, wundere dich also ni
     AllowDataTransfer = "Erlaube Daten-Transfer";
     ShowConfettiAtRanking = "Konfetti beim Ranking";
     DiscordUserId = "Discord Benutzer ID";
-    Bloodscreen = "Blut-Screen";
+    Bloodscreen = "Bloodscreen";
     Hitsound = "Hit Geräusch";
     FloatingDamageInfo = "Schwebende Schaden-Infos";
     Voice3D = "Voice 3D";
@@ -182,6 +182,7 @@ WARNUNG! Leerzeichen werden entfernt und neue Zeilen mit einem bereits verwendet
     RemoveTeam = "Team entfernen";
     Back = "Zurück";
     TimeZone = "Zeitzone";
+    Timezone = "Zeitzone";
     Message = "Nachricht";
     Invite = "Einladen";
     Accept = "Akzeptieren";
@@ -781,8 +782,11 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     KillInfoFontWidthInfo = "Schriftgröße der Tod-Info Texte. Höhere Zahl => größere Texte";
     KillInfoIconWidth = "Waffen-Icon Breite (Pixel)";
     KillInfoIconWidthInfo = "Breite in Pixel für die Waffen-Icons.";
+    KillInfoIconHeight = "Waffen-Icon Höhe (Pixel)";
+    KillInfoIconHeightInfo = "Höhe in Pixel für die Waffen-Icons.";
     KillInfoSpacing = "Abstände (Pixel)";
     KillInfoSpacingInfo = "Abstände in Pixel zwischen Texten und Icon.";
+    TestKillInfo = "Teste Tod-Info";
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = "Alle ohne Gangwar";
@@ -907,4 +911,11 @@ Hier siehst du alle bisherigen Einladungen an dich:`;
     String = "Zeichenkette";
     DateTime = "Zeit";
     TimeSpan = "Zeitspanne";
+    DateTimeFormat = "Datum-Zeit-Format";
+    KillInfoDuration = "Tod-Info Dauer (Sek)";
+    KillInfoDurationInfo = "Wie viele Sekunden die Tod-Info auf dem Bildschirm bleiben wird.";
+    CooldownsAndDurations = "Cooldowns und Laufzeiten";
+    FightEffect = "Kampf-Effekte";
+    IngameColors = "Ingame-Farben";
+    Theme = "Fenster-Theme";
 }

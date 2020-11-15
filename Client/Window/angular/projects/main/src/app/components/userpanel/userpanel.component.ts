@@ -5,18 +5,24 @@ import { UserpanelCommandDataDto } from './interfaces/userpanelCommandDataDto';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 import { UserpanelService } from './services/userpanel.service';
-import { LanguagePipe } from '../../pipes/language.pipe';
+import { LanguagePipe } from '../../modules/shared/pipes/language.pipe';
+import { InitialDatas } from '../../initial-datas';
+import { UserpanelSettingsNormalType } from './userpanel-settings-normal/enums/userpanel-settings-normal-type.enum';
+import { UserpanelSettingsNormalService } from './userpanel-settings-normal/services/userpanel-settings-normal.service';
+import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 
 @Component({
     selector: 'app-userpanel',
     templateUrl: './userpanel.component.html',
     styleUrls: ['./userpanel.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [UserpanelSettingsNormalService]
 })
 export class UserpanelComponent implements OnInit, OnDestroy {
 
     langPipe = new LanguagePipe();
     userpanelNavPage = UserpanelNavPage;
+    userpanelSettingsNormalType = UserpanelSettingsNormalType;
     currentCommand: UserpanelCommandDataDto;
     myStatsGeneralColumns = {
         0:  "Id",
@@ -45,10 +51,13 @@ export class UserpanelComponent implements OnInit, OnDestroy {
         20: "Logs"
     };
 
+    private navigatedToSettingsNormal: boolean;
+
     constructor(public settings: SettingsService,
         private changeDetector: ChangeDetectorRef,
         private rageConnector: RageConnectorService,
-        public userpanelService: UserpanelService) {
+        public userpanelService: UserpanelService,
+        private userpanelSettingsNormalService: UserpanelSettingsNormalService) {
 
     }
 
@@ -70,6 +79,10 @@ export class UserpanelComponent implements OnInit, OnDestroy {
         this.userpanelService.currentNavChanged.off(null, this.detectChanges.bind(this));
         this.userpanelService.myStatsWeaponsUsedLoaded.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
+
+        if (this.navigatedToSettingsNormal) {
+            this.rageConnector.callServer(DToServerEvent.ReloadPlayerSettings);
+        }
     }
 
     closeUserpanel() {
@@ -77,9 +90,11 @@ export class UserpanelComponent implements OnInit, OnDestroy {
         this.rageConnector.call(DToClientEvent.CloseUserpanel);
     }
 
-    gotoNav(nav: number) {
+    gotoNav(nav: UserpanelNavPage) {
         this.currentCommand = undefined;
-        this.userpanelService.loadingData = true;
+        if (!InitialDatas.inDebug) {
+            this.userpanelService.loadingData = true;
+        }
         this.userpanelService.currentNav = UserpanelNavPage[nav];
 
         /*if (this.userpanelService.currentNav.startsWith("Commands") && !this.userpanelService.allCommands.length) {
@@ -90,8 +105,6 @@ export class UserpanelComponent implements OnInit, OnDestroy {
             this.userpanelService.loadFAQs();
         } else if (nav == UserpanelNavPage.SettingsSpecial) {
             this.userpanelService.loadSettingsSpecial();
-        } else if (nav == UserpanelNavPage.SettingsNormal && !this.userpanelService.allSettingsNormal) {
-            this.userpanelService.loadSettingsNormal();
         } else if (nav == UserpanelNavPage.SettingsCommands) {
             this.userpanelService.loadSettingsCommands();
         } else if (nav == UserpanelNavPage.MyStatsGeneral) {
@@ -112,6 +125,13 @@ export class UserpanelComponent implements OnInit, OnDestroy {
             this.userpanelService.loadingData = false;
             this.changeDetector.detectChanges();
         }
+    }
+
+    gotoSettingsNormalNav(nav: UserpanelSettingsNormalType) {
+        this.navigatedToSettingsNormal = true;
+        this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.SettingsNormal];
+        this.userpanelService.currentNavChanged.emit(null);
+        this.userpanelSettingsNormalService.navigateTo(nav);
     }
 
     getNavs(): Array<string> {

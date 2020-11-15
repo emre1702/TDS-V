@@ -2,20 +2,18 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
-import { MatSnackBar, MatIconRegistry } from '@angular/material';
 import { RoundPlayerRankingStat } from './components/ranking/models/roundPlayerRankingStat';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CharCreateData } from './components/char-creator/interfaces/charCreateData';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
-import { UserpanelSettingKey } from './components/userpanel/enums/userpanel-setting-key.enum';
-import { ThemeSettings } from './interfaces/theme-settings';
 import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
-import { CustomMatSnackBarComponent } from './extensions/customMatSnackbar';
-import { InitialDatas } from './services/test-datas';
-import { DFromServerEvent } from './enums/dfromserverevent.enum';
+import { MatIconRegistry } from '@angular/material/icon';
+import { InitialDatas } from './initial-datas';
+import { NotificationService } from './modules/shared/services/notification.service';
+import { SettingsThemeIndex } from './components/userpanel/userpanel-settings-normal/enums/settings-theme-index.enum';
 
 @Component({
     selector: 'app-root',
@@ -63,15 +61,14 @@ export class AppComponent {
         public settings: SettingsService,
         rageConnector: RageConnectorService,
         private changeDetector: ChangeDetectorRef,
-        snackBar: MatSnackBar,
+        private notificationService: NotificationService,
         public vcRef: ViewContainerRef,
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer,
         private materialCssVarsService: MaterialCssVarsService) {
         this.loadSvgIcons();
 
-        rageConnector.listen(DFromClientEvent.InitLoadAngular, (killInfoSettingsJson: string, constantsDataJson: string) => {
-            this.settings.loadKillInfoSettings(killInfoSettingsJson);
+        rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
             if (this.settings.Constants[6] && typeof this.settings.Constants[6] === "string") {
                 this.settings.Constants[6] = JSON.parse(this.settings.Constants[6]);
@@ -145,7 +142,7 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ShowCooldown, () => {
-            snackBar.openFromComponent(CustomMatSnackBarComponent, { data: "Cooldown", duration: 3000 });
+            this.notificationService.showInfo("Cooldown");
         });
 
         rageConnector.listen(DFromClientEvent.SyncUsernameChange, (newName: string) => {
@@ -164,21 +161,21 @@ export class AppComponent {
         this.settings.InFightLobbyChanged.on(null, () => changeDetector.detectChanges());
 
         this.settings.ThemeSettingChangedBefore.on(null, this.onThemeSettingChanged.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.onThemeSettingsLoaded.bind(this));
+        this.settings.SettingsLoaded.on(null, this.onThemeSettingsLoaded.bind(this));
     }
 
-    private onThemeSettingChanged(key: UserpanelSettingKey, value: any) {
+    private onThemeSettingChanged(key: SettingsThemeIndex, value: any) {
         switch (key) {
-            case UserpanelSettingKey.UseDarkTheme:
+            case SettingsThemeIndex.UseDarkTheme:
                 this.materialCssVarsService.setDarkTheme(value);
                 break;
-            case UserpanelSettingKey.ThemeMainColor:
+            case SettingsThemeIndex.ThemeMainColor:
                 this.materialCssVarsService.setPrimaryColor(value);
                 break;
-            case UserpanelSettingKey.ThemeSecondaryColor:
+            case SettingsThemeIndex.ThemeSecondaryColor:
                 this.materialCssVarsService.setAccentColor(value);
                 break;
-            case UserpanelSettingKey.ThemeWarnColor:
+            case SettingsThemeIndex.ThemeWarnColor:
                 this.materialCssVarsService.setWarnColor(value);
                 break;
         }
@@ -186,11 +183,11 @@ export class AppComponent {
         this.changeDetector.detectChanges();
     }
 
-    private onThemeSettingsLoaded(settings: ThemeSettings) {
-        this.materialCssVarsService.setDarkTheme(settings[1000]);
-        this.materialCssVarsService.setPrimaryColor(settings[1001]);
-        this.materialCssVarsService.setAccentColor(settings[1002]);
-        this.materialCssVarsService.setWarnColor(settings[1003]);
+    private onThemeSettingsLoaded() {
+        this.materialCssVarsService.setDarkTheme(this.settings.Settings[13]);
+        this.materialCssVarsService.setPrimaryColor(this.settings.Settings[14]);
+        this.materialCssVarsService.setAccentColor(this.settings.Settings[15]);
+        this.materialCssVarsService.setWarnColor(this.settings.Settings[16]);
     }
 
     @HostListener("window:keydown", ["$event"])

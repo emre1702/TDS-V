@@ -1,15 +1,15 @@
-<div id="chat_container" [style.max-width]="settings.ChatWidth" [style.display]="chatActive ? 'initial' : 'none'" tabindex="-1">
-    <div id="chat_info" class="marquee mat-app-background" [hidden]="settings.ChatInfoHide || !infoText">
+<div id="chat_container" [style.max-width]="settings.Settings[0] + 'vw'" [style.display]="chatActive ? 'initial' : 'none'" tabindex="-1">
+    <div id="chat_info" class="marquee mat-app-background" [hidden]="settings.Settings[4] || !infoText">
         <!--(@marquee.start)="infoAnimationEvent($event)"-->
-        <span #marquee [style.font-size]="settings.ChatInfoFontSize">{{ infoText }}</span>
+        <span #marquee [style.font-size]="settings.Settings[5] + 'em'">{{ infoText }}</span>
     </div>
-    <div id="chat_div" [style.max-height]="settings.ChatMaxHeight">
-        <div id="chat-body" #chatBody (scroll)="scrolled($event)" [style.font-size]="settings.ChatFontSize">
+    <div id="chat_div" [style.max-height]="settings.Settings[1] + 'vh'">
+        <div id="chat-body" #chatBody (scroll)="scrolled($event)" [style.font-size]="settings.Settings[2] + 'em'">
             <div *ngFor="let msg of chatBodies[selectedChatBody].messages" [innerHTML]="msg"></div>
         </div>
         <div id="chat_choice">
             <ng-container *ngFor="let body of chatBodies; let i = index">
-                <div *ngIf="body.name != 'Dirty' || !settings.ChatHideDirtyChat"
+                <div *ngIf="body.name != 'Dirty' || !settings.Settings[3]"
                 (click)="selectChatBody(i)"
                 [style.background-color]="selectedChatBody == i ? '#04074e' : '#A9A9A9'">
                     {{ body.name | language: settings.Lang }}

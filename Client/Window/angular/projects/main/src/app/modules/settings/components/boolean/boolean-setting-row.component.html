@@ -1,0 +1,8 @@
+<mat-checkbox 
+labelPosition="before" 
+[formControl]="setting.formControl"
+[matTooltipDisabled]="!setting.tooltipLangKey"
+[matTooltip]="setting.tooltipLangKey | language: settingsService.Lang"
+(change)="setting.onValueChanged && setting.onValueChanged(setting); changed.emit(null)">
+    {{ setting.label | language: settingsService.Lang }}
+ </mat-checkbox>

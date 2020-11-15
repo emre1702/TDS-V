@@ -149,7 +149,8 @@ namespace TDS_Server.Core.Init.Services.Creators
                .AddSingleton<ITDSPlayerHandler, TDSPlayerHandler>()
                .AddSingleton<PlayerCharHandler>()
                .AddSingleton<PlayerCrouchHandler>()
-               .AddSingleton<PlayerFreecamHandler>();
+               .AddSingleton<PlayerFreecamHandler>()
+               .AddSingleton<PlayerSettingsSyncHandler>();
         }
 
         private static IServiceCollection WithServer(this IServiceCollection serviceCollection)

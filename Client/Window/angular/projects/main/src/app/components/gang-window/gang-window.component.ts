@@ -27,7 +27,7 @@ export class GangWindowComponent implements OnInit, OnDestroy {
         this.settings.IsInGangChanged.on(null, this.detectChanges.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChanged.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
         this.gangWindowService.loadingDataChanged.on(null, this.detectChanges.bind(this));
 
         this.gotoNav(GangWindowNav.MainMenu);
@@ -37,7 +37,7 @@ export class GangWindowComponent implements OnInit, OnDestroy {
         this.settings.IsInGangChanged.off(null, this.detectChanges.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChanged.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
         this.gangWindowService.loadingDataChanged.off(null, this.detectChanges.bind(this));
 
         this.checkLeavePage();

@@ -160,7 +160,7 @@ namespace TDS_Server.Handler.Userpanel
             var discordUserId = await ExecuteForDBAsync(async dbContext =>
                 await dbContext.PlayerSettings
                     .Where(p => p.PlayerId == targetId.Value)
-                    .Select(p => p.DiscordUserId)
+                    .Select(p => p.General.DiscordUserId)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false))
                 .ConfigureAwait(false);

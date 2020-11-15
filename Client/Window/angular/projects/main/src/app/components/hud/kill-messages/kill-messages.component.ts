@@ -19,6 +19,7 @@ declare const window: any;
 export class KillMessagesComponent implements OnInit, OnDestroy {
 
     weaponHash = WeaponHash;
+    private killInfoHideTimeouts: NodeJS.Timeout[] = [];
 
     constructor(
         public killMessagesService: KillMessagesService,
@@ -32,15 +33,46 @@ export class KillMessagesComponent implements OnInit, OnDestroy {
         if (event.fromState > event.toState) {
             return;
         }
-        setTimeout(this.killMessagesService.removeFirstDeathInfo.bind(this), 10000);
+        const timeout = setTimeout(this.removeFirstDeathInfo.bind(this), this.settings.Settings[11] * 1000);
+        this.killInfoHideTimeouts.push(timeout);
     }
 
     ngOnInit() {
-        this.killMessagesService.killInfosChanged.on(null, this.changeDetector.detectChanges.bind(this));
+        this.killMessagesService.killInfosChanged.on(null, this.settingsChanged.bind(this));
+        this.settings.KillInfoSettingsChanged.on(null, this.settingsChanged.bind(this));
+        this.settings.SettingsLoaded.on(null, this.settingsChanged.bind(this));
     }
 
     ngOnDestroy() {
-        this.killMessagesService.killInfosChanged.off(null, this.changeDetector.detectChanges.bind(this));
+        this.killMessagesService.killInfosChanged.off(null, this.settingsChanged.bind(this));
+        this.settings.KillInfoSettingsChanged.on(null, this.settingsChanged.bind(this));
+        this.settings.SettingsLoaded.on(null, this.settingsChanged.bind(this));
+    }
+
+    private removeFirstDeathInfo() {
+        this.killInfoHideTimeouts.splice(0, 1);
+        this.killMessagesService.removeFirstDeathInfo();
+    }
+
+    private clearTooLongRunningTimeouts() {
+        for (let i = this.killInfoHideTimeouts.length - 1; i >= 0; --i) {
+            const timeout = this.killInfoHideTimeouts[i];
+            const secLeft = this.getSecLeft(timeout);
+            if (secLeft > this.settings.Settings[11]) {
+                this.killInfoHideTimeouts.splice(i, 1);
+                clearTimeout(timeout);
+            }
+        }
+    }
+
+    private settingsChanged() {
+        this.clearTooLongRunningTimeouts();
+        this.changeDetector.detectChanges();
+    }
+
+    private getSecLeft(timeout: NodeJS.Timeout) {
+        const usePrivateTimeout = timeout as any;
+        return Math.ceil((usePrivateTimeout._idleStart + usePrivateTimeout._idleTimeout - Date.now()) / 1000);
     }
 
 }

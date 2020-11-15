@@ -1,10 +1,10 @@
 import { Component, OnInit, EventEmitter, Input, Output, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CharCreateAppearanceData } from '../../interfaces/charCreateAppearanceData';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
-import { MatSelectChange, MatSliderChange } from '@angular/material';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from 'projects/main/src/app/enums/dtoclientevent.enum';
 import { CharCreatorDataKey } from '../../enums/charCreatorDataKey.enum';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
     // tslint:disable-next-line: component-selector

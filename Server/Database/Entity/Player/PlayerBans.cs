@@ -1,11 +1,11 @@
 ﻿using System;
 using TDS_Server.Database.Entity.LobbyEntities;
+using TDS_Server.Database.Interfaces;
 
 namespace TDS_Server.Database.Entity.Player
 {
-    public partial class PlayerBans
+    public class PlayerBans : IPlayerDataTable
     {
-        #region Public Properties
 
         public virtual Players Admin { get; set; }
         public int? AdminId { get; set; }
@@ -22,6 +22,5 @@ namespace TDS_Server.Database.Entity.Player
         public string Serial { get; set; }
         public DateTime StartTimestamp { get; set; }
 
-        #endregion Public Properties
     }
 }

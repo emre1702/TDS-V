@@ -1,6 +1,6 @@
-import { MatPaginatorIntl } from '@angular/material';
 import { SettingsService } from '../services/settings.service';
 import { Injectable, ChangeDetectorRef } from '@angular/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Injectable()
 export class CustomMatPaginatorIntl extends MatPaginatorIntl {

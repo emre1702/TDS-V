@@ -31,7 +31,7 @@ namespace TDS_Client.Handler.Events
             [ToServerEvent.ResetPassword] = new CooldownEventDto(4000),
             [ToServerEvent.SaveCharCreateData] = new CooldownEventDto(10000),
             [ToServerEvent.SaveMapCreatorData] = new CooldownEventDto(10000),
-            [ToServerEvent.SaveSettings] = new CooldownEventDto(3000),
+            [ToServerEvent.SaveUserpanelNormalSettings] = new CooldownEventDto(3000),
             [ToServerEvent.SendApplication] = new CooldownEventDto(3000),
             [ToServerEvent.SendApplicationInvite] = new CooldownEventDto(5000),
             [ToServerEvent.SendMapCreatorData] = new CooldownEventDto(10000),

@@ -1,13 +1,12 @@
 ﻿using GTANetworkAPI;
 using TDS_Server.Database.Entity.Rest;
+using TDS_Server.Database.Interfaces;
 using TDS_Shared.Data.Enums;
 
 namespace TDS_Server.Database.Entity.Player
 {
-    public class PlayerWeaponStats
+    public class PlayerWeaponStats : IPlayerDataTable
     {
-        #region Public Properties
-
         public int AmountHeadshots { get; set; }
         public int AmountHits { get; set; }
         public int AmountOfficialHeadshots { get; set; }
@@ -22,7 +21,5 @@ namespace TDS_Server.Database.Entity.Player
         public int PlayerId { get; set; }
         public virtual Weapons Weapon { get; set; }
         public WeaponHash WeaponHash { get; set; }
-
-        #endregion Public Properties
     }
 }

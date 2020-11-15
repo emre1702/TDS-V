@@ -82,8 +82,6 @@ export class UserpanelStatsWeaponComponent implements OnInit, OnDestroy {
 
     getWeaponStatKeys(): Array<string> {
         const keys = Object.keys(UserpanelWeaponStats);
-        console.log(keys);
-        console.log(keys.slice(keys.length / 2));
         return keys.slice(keys.length / 2);
     }
 

@@ -1,18 +1,20 @@
 <div class="container"
 [@killMessages]="killMessagesService.killInfos.length"
 (@killMessages.done)="onAnimationDoneEvent($event)"
-[style.font-size]="killMessagesService.killInfoSettings[2001]">
+[style.font-size]="settings.Settings[8] + 'em'">
     <div class="kill-message" *ngFor="let killInfo of killMessagesService.killInfos">
-        <span [style.margin-left]="killMessagesService.killInfoSettings[2003]">{{ killInfo[1] }}</span>
+        <span [style.margin-left]="settings.Settings[10] + 'px'">{{ killInfo[1] }}</span>
         <mat-icon color="accent"
-        *ngIf="killMessagesService.killInfoSettings[2000]"
+        *ngIf="settings.Settings[7]"
         [svgIcon]="weaponHash[killInfo[2]]"
-        [style.margin-left]="killMessagesService.killInfoSettings[2003]"
-        [style.width]="killMessagesService.killInfoSettings[2002]"
+        [style.margin-left]="settings.Settings[10] + 'px'"
+        [style.width]="settings.Settings[9] + 'px'"
+        [style.height]="settings.Settings[12] + 'px'"
         ></mat-icon>
-        <span *ngIf="!killMessagesService.killInfoSettings[2000]">
+        <span *ngIf="!settings.Settings[7]"
+        [style.margin-left]="settings.Settings[10] + 'px'">
             {{ weaponHash[killInfo[2]] | language: settings.Lang }}
         </span>
-        <span [style.margin-left]="killMessagesService.killInfoSettings[2003]">{{ killInfo[0] }}</span>
+        <span [style.margin-left]="settings.Settings[10] + 'px'">{{ killInfo[0] }}</span>
     </div>
 </div>

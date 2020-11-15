@@ -17,14 +17,14 @@ namespace TDS_Server.PlayersSystem
             {
                 if (_player.Entity is null || _player.Entity.PlayerSettings is null)
                     return _langEnumBeforeLogin;
-                return _player.Entity.PlayerSettings.Language;
+                return _player.Entity.PlayerSettings.General.Language;
             }
             set
             {
                 if (_player.Entity is null || _player.Entity.PlayerSettings is null)
                     _langEnumBeforeLogin = value;
                 else
-                    _player.Entity.PlayerSettings.Language = value;
+                    _player.Entity.PlayerSettings.General.Language = value;
                 Data = _langHelper.GetLang(value);
             }
         }
@@ -66,8 +66,8 @@ namespace TDS_Server.PlayersSystem
                 return;
 
             if (_langEnumBeforeLogin != Language.English)
-                entity.PlayerSettings.Language = _langEnumBeforeLogin;
-            Data = _langHelper.GetLang(entity.PlayerSettings.Language);
+                entity.PlayerSettings.General.Language = _langEnumBeforeLogin;
+            Data = _langHelper.GetLang(entity.PlayerSettings.General.Language);
         }
     }
 }

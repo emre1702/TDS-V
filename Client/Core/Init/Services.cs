@@ -76,7 +76,7 @@ namespace TDS_Client.Core.Init
                 var lobbyHandler = new LobbyHandler(loggingHandler, browserHandler, playerFightHandler, eventsHandler, settingsHandler, bindsHandler, remoteEventsSender, dxHandler,
                     timerHandler, utilsHandler, camerasHandler, cursorHandler, dataSyncHandler, mapLimitHandler);
                 new GangWindowHandler(loggingHandler, browserHandler, cursorHandler, eventsHandler, bindsHandler);
-                new DamageHandler(browserHandler, remoteEventsSender, playerFightHandler, lobbyHandler, eventsHandler);
+                new DamageHandler(browserHandler, remoteEventsSender, playerFightHandler, lobbyHandler, eventsHandler, timerHandler, settingsHandler);
                 var scoreboardHandler = new ScoreboardHandler(loggingHandler, dxHandler, settingsHandler, lobbyHandler, timerHandler, remoteEventsSender, eventsHandler, bindsHandler);
                 var chatHandler = new ChatHandler(loggingHandler, browserHandler, bindsHandler, remoteEventsSender, eventsHandler);
                 new CommandsHandler(loggingHandler, chatHandler, settingsHandler, lobbyHandler, playerFightHandler, camerasHandler, remoteEventsSender, utilsHandler);

@@ -36,7 +36,7 @@ namespace TDS_Server.Handler.Events
         public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
             ILoggingHandler loggingHandler, MapCreatorHandler mapCreatorHandler,
             MapFavouritesHandler mapFavouritesHandler, PlayerCharHandler playerCharHandler,
-            GangWindowHandler gangWindowHandler, EventsHandler eventsHandler)
+            GangWindowHandler gangWindowHandler, EventsHandler eventsHandler, PlayerSettingsSyncHandler playerSettingsSyncHandler)
         {
             _loggingHandler = loggingHandler;
             _eventsHandler = eventsHandler;
@@ -57,7 +57,7 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.LoadApplicationDataForAdmin] = userpanelHandler.ApplicationsAdminHandler.SendApplicationData,
                 [ToServerEvent.SaveMapCreatorData] = mapCreatorHandler.Save,
                 [ToServerEvent.SendMapCreatorData] = mapCreatorHandler.Create,
-                [ToServerEvent.SaveSettings] = userpanelHandler.SettingsNormalHandler.SaveSettings,
+                [ToServerEvent.SaveUserpanelNormalSettings] = userpanelHandler.SettingsNormalHandler.SaveSettings,
                 [ToServerEvent.SendApplication] = userpanelHandler.ApplicationUserHandler.CreateApplication,
                 [ToServerEvent.SetSupportRequestClosed] = userpanelHandler.SupportRequestHandler.SetSupportRequestClosed,
                 [ToServerEvent.SendSupportRequest] = userpanelHandler.SupportRequestHandler.SendRequest,
@@ -66,7 +66,7 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.SaveCharCreateData] = playerCharHandler.Save,
                 [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel,
                 [ToServerEvent.SavePlayerCommandsSettings] = userpanelHandler.SettingsCommandsHandler.Save,
-                [ToServerEvent.GangCommand] = gangWindowHandler.ExecuteCommand
+                [ToServerEvent.GangCommand] = gangWindowHandler.ExecuteCommand,
             };
 
             _maybeAsyncMethods = new Dictionary<string, FromBrowserMaybeAsyncMethodDelegate>
@@ -92,7 +92,9 @@ namespace TDS_Server.Handler.Events
                 [ToServerEvent.MapCreatorSyncCurrentMapToServer] = mapCreatorHandler.SyncCurrentMapToClient,
                 [ToServerEvent.LoadPlayerWeaponStats] = userpanelHandler.PlayerWeaponStatsHandler.GetPlayerWeaponStats,
                 [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData,
-                [ToServerEvent.SetDamageTestWeaponDamage] = SetDamageTestWeaponDamage
+                [ToServerEvent.SetDamageTestWeaponDamage] = SetDamageTestWeaponDamage,
+                [ToServerEvent.LoadUserpanelNormalSettingsData] = userpanelHandler.SettingsNormalHandler.LoadSettings,
+                [ToServerEvent.ReloadPlayerSettings] = playerSettingsSyncHandler.RequestSyncPlayerSettingsFromUserpanel
             };
 
             NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
@@ -123,20 +125,16 @@ namespace TDS_Server.Handler.Events
                 else if (_maybeAsyncMethods.ContainsKey(eventName))
                 {
                     ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName).ConfigureAwait(false);
+                } 
+                else if (_methods.ContainsKey(eventName))
+                {
+                    ret = _methods[eventName](player, ref argsWithoutEventName);
                 }
 
-                NAPI.Task.RunSafe(() =>
+                if (ret is { })
                 {
-                    if (_methods.ContainsKey(eventName))
-                    {
-                        ret = _methods[eventName](player, ref argsWithoutEventName);
-                    }
-
-                    if (ret != null)
-                    {
-                        player.TriggerEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret);
-                    }
-                });
+                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret));
+                }
             }
             catch (Exception ex)
             {

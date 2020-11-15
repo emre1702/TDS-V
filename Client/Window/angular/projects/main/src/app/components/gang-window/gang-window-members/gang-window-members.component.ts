@@ -1,12 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { GangMember } from '../models/gang-member';
 import { SettingsService } from '../../../services/settings.service';
-import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { GangWindowService } from '../services/gang-window-service';
 import { GangWindowNav } from '../enums/gang-window-nav.enum';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { GangCommand } from '../enums/gang-command.enum';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-gang-window-members',

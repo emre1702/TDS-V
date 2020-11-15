@@ -9,7 +9,7 @@ namespace TDS_Server.Data.Interfaces
 
     public interface ILoggingHandler
     {
-        static ILoggingHandler Instance { get; }
+        static ILoggingHandler? Instance { get; }
 
         void LogAdmin(LogType cmd, ITDSPlayer? source, ITDSPlayer? target, string reason, bool asdonator = false, bool asvip = false, string? lengthOrEndTime = null);
 

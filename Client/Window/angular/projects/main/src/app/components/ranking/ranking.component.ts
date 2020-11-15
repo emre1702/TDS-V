@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { RoundPlayerRankingStat } from './models/roundPlayerRankingStat';
 import { SettingsService } from '../../services/settings.service';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-ranking',

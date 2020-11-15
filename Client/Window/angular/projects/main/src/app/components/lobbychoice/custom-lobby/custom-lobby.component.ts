@@ -6,7 +6,6 @@ import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { CustomLobbyData } from '../models/custom-lobby-data';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
-import { MatSnackBar, MatDialog } from '@angular/material';
 import { CustomLobbyPasswordDialog } from '../dialog/custom-lobby-password-dialog';
 import { LobbyMapLimitType } from '../enums/lobby-map-limit-type';
 import { CustomLobbyTeamData } from '../models/custom-lobby-team-data';
@@ -20,8 +19,8 @@ import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { notEnoughTeamsValidator } from './validators/notEnoughTeamsValidator';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../../services/error.service';
 import { CustomLobbyArmsRaceWeaponData } from '../models/custom-lobby-armsraceweapon-data';
-import { WeaponHash } from '../enums/weapon-hash.enum';
-import { CustomMatSnackBarComponent } from '../../../extensions/customMatSnackbar';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationService } from '../../../modules/shared/services/notification.service';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -198,7 +197,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     validationError: string;
 
     constructor(public settings: SettingsService, private rageConnector: RageConnectorService,
-        public changeDetector: ChangeDetectorRef, private snackBar: MatSnackBar, private dialog: MatDialog,
+        public changeDetector: ChangeDetectorRef, private notificationService: NotificationService, private dialog: MatDialog,
         public errorService: ErrorService) {
 
         this.addValidatorsToErrorService();
@@ -210,7 +209,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(DFromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
         this.rageConnector.callServer(DToServerEvent.JoinedCustomLobbiesMenu);
 
 
@@ -235,7 +234,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.rageConnector.remove(DFromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
         this.rageConnector.callServer(DToServerEvent.LeftCustomLobbiesMenu);
     }
 
@@ -303,7 +302,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.rageConnector.callCallbackServer(DToServerEvent.CreateCustomLobby, [JSON.stringify(data)], (error: string) => {
             if (!error || error == "")
                 return;
-            this.snackBar.openFromComponent(CustomMatSnackBarComponent, { data: error, duration: 6000 });
+            this.notificationService.showError(error);
         });
     }
 
@@ -323,8 +322,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                 if (inputedPassword == undefined)
                     return;
                 if (inputedPassword == false) {
-                    this.snackBar.openFromComponent(CustomMatSnackBarComponent,
-                        { data: this.settings.Lang.PasswordIncorrect, duration: 7000 });
+                    this.notificationService.showError(this.settings.Lang.PasswordIncorrect);
                     return;
                 }
                 this.rageConnector.callServer(DToServerEvent.JoinLobbyWithPassword, clickedLobbyData[0], inputedPassword);

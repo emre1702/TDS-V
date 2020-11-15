@@ -70,13 +70,13 @@ export class CharCreatorComponent implements OnInit, OnDestroy {
         this.goToMain();
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
-        this.settings.ThemeSettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     goToMain() {
@@ -112,8 +112,6 @@ export class CharCreatorComponent implements OnInit, OnDestroy {
     }
 
     getData(list: { 99: number }[]) {
-        console.log(list);
-        console.log(list.find(entry => entry[99] == this.data[99]));
         return list.find(entry => entry[99] == this.data[99]);
     }
 

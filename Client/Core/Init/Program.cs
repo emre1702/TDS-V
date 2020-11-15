@@ -5,17 +5,12 @@ namespace TDS_Client.Core.Init
 {
     public class Program : RAGE.Events.Script
     {
-        #region Public Constructors
 
         public Program()
         {
             Init();
             Services.Initialize();
         }
-
-        #endregion Public Constructors
-
-        #region Private Methods
 
         private void Init()
         {
@@ -33,6 +28,5 @@ namespace TDS_Client.Core.Init
             Invoker.Invoke((ulong)NativeHash.CLEAR_GPS_CUSTOM_ROUTE);
         }
 
-        #endregion Private Methods
     }
 }
