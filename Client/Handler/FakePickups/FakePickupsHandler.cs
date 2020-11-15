@@ -40,7 +40,7 @@ namespace TDS_Client.Handler.FakePickups
         private void SyncFakePickups(object[] args)
         {
             ClearFakePickups();
-            if (args.Length == 0)
+            if (args is null || args.Length == 0)
                 return;
 
             var datas = Serializer.FromServer<List<FakePickupSyncData>>((string)args[0]);
