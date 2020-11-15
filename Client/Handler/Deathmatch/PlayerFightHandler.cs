@@ -37,8 +37,6 @@ namespace TDS_Client.Handler.Deathmatch
 
         private bool _inFight;
 
-        private int _lastBloodscreenUpdateTick;
-
         private int _lastHudAmmoUpdateMs;
 
         private int _lastHudHealthUpdateTick;
@@ -122,12 +120,6 @@ namespace TDS_Client.Handler.Deathmatch
 
             if (healthLost != 0)
             {
-                if (healthLost > 0 && (int)(_timerHandler.ElapsedMs - _lastBloodscreenUpdateTick) >= _settingsHandler.PlayerSettings.BloodscreenCooldownMs)
-                {
-                    //MainBrowser.ShowBloodscreen();
-                    _lastBloodscreenUpdateTick = _timerHandler.ElapsedMs;
-                }
-
                 if ((int)(_timerHandler.ElapsedMs - _lastHudHealthUpdateTick) >= _settingsHandler.PlayerSettings.HudHealthUpdateCooldownMs)
                 {
                     if (CurrentArmor != _lastHudUpdateArmor)
@@ -172,7 +164,6 @@ namespace TDS_Client.Handler.Deathmatch
             _lastHudUpdateTotalAmmo = -1;
             _lastHudUpdateAmmoInClip = -1;
 
-            _lastBloodscreenUpdateTick = default;
             _lastHudHealthUpdateTick = default;
             _lastHudAmmoUpdateMs = default;
 

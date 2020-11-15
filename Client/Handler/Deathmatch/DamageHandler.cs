@@ -14,38 +14,50 @@ namespace TDS_Client.Handler.Deathmatch
 {
     public class DamageHandler
     {
+        private int _lastBloodscreenUpdateTick;
+
         private readonly BrowserHandler _browserHandler;
         private readonly LobbyHandler _lobbyHandler;
-
+        private readonly TimerHandler _timerHandler;
+        private readonly SettingsHandler _settingsHandler;
         private readonly PlayerFightHandler _playerFightHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
 
         public DamageHandler(BrowserHandler browserHandler, RemoteEventsSender remoteEventsSender, PlayerFightHandler playerFightHandler,
-            LobbyHandler lobbyHandler, EventsHandler eventsHandler)
+            LobbyHandler lobbyHandler, EventsHandler eventsHandler, TimerHandler timerHandler, SettingsHandler settingsHandler)
         {
             _browserHandler = browserHandler;
             _remoteEventsSender = remoteEventsSender;
             _playerFightHandler = playerFightHandler;
             _lobbyHandler = lobbyHandler;
+            _timerHandler = timerHandler;
+            _settingsHandler = settingsHandler;
 
             eventsHandler.InFightStatusChanged += EventsHandler_InFightStatusChanged;
         }
 
         private void OnIncomingDamageMethod(Player sourcePlayer, Entity sourceEntity, Entity targetEntity, ulong weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
         {
-            RAGE.Ui.Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is ITDSPlayer}", true);
+            Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is ITDSPlayer}", true);
 
             if (sourcePlayer is null)
             {
                 _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.GotHit, damage);
-                _browserHandler.PlainMain.ShowBloodscreen();
+                if (ShouldShowBloodscreen())
+                {
+                    _browserHandler.PlainMain.ShowBloodscreen();
+                    _lastBloodscreenUpdateTick = _timerHandler.ElapsedMs;
+                }   
             }
             else
             {
                 cancel.Cancel = true;
 
-                if (!_lobbyHandler.Teams.IsInSameTeam(sourcePlayer as ITDSPlayer))
+                if (ShouldShowBloodscreen() && !_lobbyHandler.Teams.IsInSameTeam(sourcePlayer as ITDSPlayer))
+                {
                     _browserHandler.PlainMain.ShowBloodscreen();
+                    _lastBloodscreenUpdateTick = _timerHandler.ElapsedMs;
+                }     
             }
         }
 
@@ -82,5 +94,9 @@ namespace TDS_Client.Handler.Deathmatch
                 OnOutgoingDamage -= OnOutgoingDamageMethod;
             }
         }
+
+        private bool ShouldShowBloodscreen() 
+            => _settingsHandler.PlayerSettings.Bloodscreen 
+            && _timerHandler.ElapsedMs - _lastBloodscreenUpdateTick >= _settingsHandler.PlayerSettings.BloodscreenCooldownMs;
     }
 }
