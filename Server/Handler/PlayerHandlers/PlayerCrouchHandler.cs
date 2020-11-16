@@ -1,14 +1,14 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Sync;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Sync;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.PlayerHandlers
+namespace TDS.Server.Handler.PlayerHandlers
 {
     public class PlayerCrouchHandler
     {

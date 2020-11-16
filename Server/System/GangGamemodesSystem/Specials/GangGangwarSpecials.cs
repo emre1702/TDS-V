@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.GamemodesSystem.Specials;
-using TDS_Server.GangGamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.GamemodesSystem.Specials;
+using TDS.Server.GangGamemodesSystem.Gamemodes;
 
-namespace TDS_Server.GangGamemodesSystem.Specials
+namespace TDS.Server.GangGamemodesSystem.Specials
 {
     public class GangGangwarSpecials : GangwarSpecials, IGangGangwarGamemodeSpecials
     {

@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Models
+﻿namespace TDS.Server.Data.Models
 {
 #nullable enable
 

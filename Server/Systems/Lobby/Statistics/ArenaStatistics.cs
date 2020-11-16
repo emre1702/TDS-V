@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
-namespace TDS_Server.LobbySystem.Statistics
+namespace TDS.Server.LobbySystem.Statistics
 {
     public class ArenaStatistics : RoundFightLobbyStatistics
     {

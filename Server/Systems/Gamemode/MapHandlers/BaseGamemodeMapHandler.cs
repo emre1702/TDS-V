@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.MapHandler;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 
-namespace TDS_Server.GamemodesSystem.MapHandlers
+namespace TDS.Server.GamemodesSystem.MapHandlers
 {
     public class BaseGamemodeMapHandler : IBaseGamemodeMapHandler
     {

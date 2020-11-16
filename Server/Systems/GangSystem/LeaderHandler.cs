@@ -2,11 +2,11 @@
 using MoreLinq;
 using System;
 using System.Linq;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.GangsSystem
+namespace TDS.Server.GangsSystem
 {
     public class LeaderHandler : IGangLeaderHandler
     {

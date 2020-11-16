@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Server
+namespace TDS.Server.Handler.Server
 {
     public class ResourceStopHandler
     {
@@ -57,7 +57,7 @@ namespace TDS_Server.Handler.Server
             return;
         }
 
-        public void CurrentDomain_ProcessExit(object? sender, EventArgs e)
+        private void CurrentDomain_ProcessExit(object? sender, EventArgs e)
         {
             OnResourceStop();
             Environment.Exit(0);

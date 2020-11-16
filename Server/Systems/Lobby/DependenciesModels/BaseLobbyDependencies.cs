@@ -1,19 +1,19 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Chat;
-using TDS_Server.Data.Interfaces.LobbySystem.Colshapes;
-using TDS_Server.Data.Interfaces.LobbySystem.Database;
-using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Natives;
-using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
-using TDS_Server.Data.Interfaces.LobbySystem.Sync;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.LobbySystem.Vehicles;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.BansHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Chat;
+using TDS.Server.Data.Interfaces.LobbySystem.Colshapes;
+using TDS.Server.Data.Interfaces.LobbySystem.Database;
+using TDS.Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Natives;
+using TDS.Server.Data.Interfaces.LobbySystem.Notifications;
+using TDS.Server.Data.Interfaces.LobbySystem.Players;
+using TDS.Server.Data.Interfaces.LobbySystem.Sounds;
+using TDS.Server.Data.Interfaces.LobbySystem.Sync;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.LobbySystem.Vehicles;
 
-namespace TDS_Server.LobbySystem.DependenciesModels
+namespace TDS.Server.LobbySystem.DependenciesModels
 {
     public class BaseLobbyDependencies
     {

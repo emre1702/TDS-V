@@ -1,14 +1,14 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Rounds;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Data.RoundEndReasons;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Rounds;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Data.RoundEndReasons;
 
-namespace TDS_Server.GamemodesSystem.Rounds
+namespace TDS.Server.GamemodesSystem.Rounds
 {
     public class ArmsRaceRounds : BaseGamemodeRounds, IArmsRaceGamemodeRounds
     {
@@ -38,7 +38,7 @@ namespace TDS_Server.GamemodesSystem.Rounds
 
         public bool CheckHasKillerWonTheRound(ITDSPlayer killer)
         {
-            if (!_gamemode.Weapons.GetNextWeapon(killer, out WeaponHash? weaponHash))
+            if (!_gamemode.Weapons.TryGetNextWeapon(killer, out WeaponHash? weaponHash))
                 return false;
 
             // WeaponHash == null => Round end

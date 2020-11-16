@@ -1,12 +1,12 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Commands.User
+namespace TDS.Server.Handler.Commands.User
 {
     public class UserPrivateChatCommands
     {
@@ -15,7 +15,7 @@ namespace TDS_Server.Handler.Commands.User
         public UserPrivateChatCommands(ChatHandler chatHandler)
             => _chatHandler = chatHandler;
 
-        [TDSCommand(UserCommand.ClosePrivateChat)]
+        [TDSCommandAttribute(UserCommand.ClosePrivateChat)]
         public void ClosePrivateChat(ITDSPlayer player)
         {
             if (player.InPrivateChatWith is null && player.SentPrivateChatRequestTo is null)
@@ -26,7 +26,7 @@ namespace TDS_Server.Handler.Commands.User
             player.Chat.ClosePrivateChat(false);
         }
 
-        [TDSCommand(UserCommand.OpenPrivateChat)]
+        [TDSCommandAttribute(UserCommand.OpenPrivateChat)]
         public void OpenPrivateChat(ITDSPlayer player, ITDSPlayer target)
         {
             if (CheckIsBlocked(player, target))
@@ -45,8 +45,8 @@ namespace TDS_Server.Handler.Commands.User
                 AcceptPrivateChatRequest(player, target);
         }
 
-        [TDSCommand(UserCommand.PrivateChat)]
-        public void PrivateChat(ITDSPlayer player, [TDSRemainingText] string message)
+        [TDSCommandAttribute(UserCommand.PrivateChat)]
+        public void PrivateChat(ITDSPlayer player, [TDSRemainingTextAttribute] string message)
         {
             if (player.InPrivateChatWith is null)
             {
@@ -57,8 +57,8 @@ namespace TDS_Server.Handler.Commands.User
             NAPI.Task.RunSafe(() => player.InPrivateChatWith.SendChatMessage($"{colorStr}[{player.DisplayName}: {message}]"));
         }
 
-        [TDSCommand(UserCommand.PrivateMessage)]
-        public void PrivateMessage(ITDSPlayer player, ITDSPlayer target, [TDSRemainingText] string message)
+        [TDSCommandAttribute(UserCommand.PrivateMessage)]
+        public void PrivateMessage(ITDSPlayer player, ITDSPlayer target, [TDSRemainingTextAttribute] string message)
         {
             if (player == target)
                 return;

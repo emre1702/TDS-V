@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Natives;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Natives;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.LobbySystem.Natives
+namespace TDS.Server.LobbySystem.Natives
 {
     public class BaseLobbyNatives : IBaseLobbyNatives
     {

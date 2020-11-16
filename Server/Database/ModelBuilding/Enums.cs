@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Database.EntityConfigurations
+namespace TDS.Server.Database.EntityConfigurations
 {
     public static class Enums
     {

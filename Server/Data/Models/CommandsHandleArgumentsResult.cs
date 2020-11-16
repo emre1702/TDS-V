@@ -1,8 +1,4 @@
-﻿namespace TDS_Server.Data.Models
+﻿namespace TDS.Server.Data.Models
 {
-    public class CommandsHandleArgumentsResult
-    {
-        public bool Worked;
-        public bool IsWrongMethod;
-    }
+    public record CommandsHandleArgumentsResult(bool Worked = false, bool IsWrongMethod = false);
 }

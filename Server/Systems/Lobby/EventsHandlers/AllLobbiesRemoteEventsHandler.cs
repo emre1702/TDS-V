@@ -1,18 +1,18 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.LobbySystem.Players;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.LobbySystem.Players;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.EventsHandlers
+namespace TDS.Server.LobbySystem.EventsHandlers
 {
     public class AllLobbiesRemoteEventsHandler
     {

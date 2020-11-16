@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Database.Entity.LobbyEntities
+﻿namespace TDS.Server.Database.Entity.LobbyEntities
 {
     public partial class LobbyRoundSettings
     {

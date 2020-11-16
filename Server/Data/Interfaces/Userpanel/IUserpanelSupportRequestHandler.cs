@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Data.Interfaces.Userpanel
+namespace TDS.Server.Data.Interfaces.Userpanel
 {
 #nullable enable
 
@@ -21,7 +21,7 @@ namespace TDS_Server.Data.Interfaces.Userpanel
 
         object? LeftSupportRequest(ITDSPlayer player, ref ArraySegment<object> args);
 
-        object? LeftSupportRequestsList(ITDSPlayer player, ref ArraySegment<object> args);
+        object? LeftSupportRequestsList(ITDSPlayer player, ref ArraySegment<object> _);
 
         Task<object?> SendMessage(ITDSPlayer player, ArraySegment<object> args);
 

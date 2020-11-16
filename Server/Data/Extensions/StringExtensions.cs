@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace TDS_Server.Data.Extensions
+namespace TDS.Server.Data.Extensions
 {
     public static class StringExtensions
     {

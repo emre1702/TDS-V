@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.GangSystem;
-using TDS_Server.LobbySystem.Lobbies;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.GangSystem;
+using TDS.Server.LobbySystem.Lobbies;
 
-namespace TDS_Server.LobbySystem.TeamHandlers
+namespace TDS.Server.LobbySystem.TeamHandlers
 {
     public class GangLobbyTeamsHandler : BaseLobbyTeamsHandler
     {
@@ -18,7 +18,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             LoadGangTeams();
         }
 
-        protected override ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
+        protected override ValueTask OnPlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
             SetPlayerTeam(data.Player, data.Player.Gang.TeamHandler.GangLobbyTeam);
             return default;
@@ -26,7 +26,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         private void LoadGangTeams()
         {
-            Do(teams =>
+            DoForList(teams =>
             {
                 foreach (var team in teams)
                 {

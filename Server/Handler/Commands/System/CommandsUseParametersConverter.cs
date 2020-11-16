@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler.Commands.System
+namespace TDS.Server.Handler.Commands.System
 {
     internal class CommandsUseParametersConverter
     {
@@ -21,7 +21,7 @@ namespace TDS_Server.Handler.Commands.System
             int amountmethodsavailable, List<object> args)
         {
             if (args.Count == 0)
-                return new CommandsHandleArgumentsResult { Worked = true };
+                return new CommandsHandleArgumentsResult(Worked: false);
 
             try
             {
@@ -46,7 +46,7 @@ namespace TDS_Server.Handler.Commands.System
                                 NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.PLAYER_DOESNT_EXIST));
                                 return new CommandsHandleArgumentsResult();
                             }
-                            return new CommandsHandleArgumentsResult { IsWrongMethod = true };
+                            return new CommandsHandleArgumentsResult(IsWrongMethod: true);
                         }
 
                     }
@@ -54,14 +54,14 @@ namespace TDS_Server.Handler.Commands.System
                     object theArg = arg ?? string.Empty;
                     args[i] = theArg;  // arg shouldn't be able to be null
                 }
-                return new CommandsHandleArgumentsResult { Worked = true };
+                return new CommandsHandleArgumentsResult(Worked: true);
             }
             catch
             {
                 if (methodindex + 1 == amountmethodsavailable)
                     return new CommandsHandleArgumentsResult();
                 else
-                    return new CommandsHandleArgumentsResult { IsWrongMethod = true };
+                    return new CommandsHandleArgumentsResult(IsWrongMethod: true);
             }
         }
 

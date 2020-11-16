@@ -1,16 +1,16 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Models;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Models;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler.Commands.System
+namespace TDS.Server.Handler.Commands.System
 {
     internal class CommandsValidation
     {
-        internal bool CheckRemainingTextMinMaxLength(ITDSPlayer player, TDSRemainingText? attribute, string remainingText)
+        internal bool CheckRemainingTextMinMaxLength(ITDSPlayer player, TDSRemainingTextAttribute? attribute, string remainingText)
         {
             if (attribute is null)
                 return true;

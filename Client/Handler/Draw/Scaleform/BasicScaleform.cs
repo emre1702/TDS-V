@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Client.Handler.Entities.Draw.Scaleform
+namespace TDS.Client.Handler.Entities.Draw.Scaleform
 {
     internal class BasicScaleform : IDisposable
     {

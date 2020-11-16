@@ -1,17 +1,17 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.RoundEndReasons;
-using TDS_Shared.Data.Enums;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.RoundEndReasons;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Commands.Admin
+namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminLobbyCommands
     {
-        [TDSCommand(AdminCommand.NextMap)]
-        public void NextMap(ITDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.NextMap)]
+        public void NextMap(ITDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!(player.Lobby is IArena arena))
                 return;

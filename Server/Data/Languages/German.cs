@@ -1,7 +1,8 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces;
+using System.Collections.Generic;
+using TDS.Server.Data.Interfaces;
 
-namespace TDS_Server.Data.Languages
+namespace TDS.Server.Data.Languages
 {
     public class German : English, ILanguage
     {
@@ -28,7 +29,7 @@ namespace TDS_Server.Data.Languages
         public override string DEATH_DIED_INFO => "{0} ist gestorben";
         public override string DEATH_KILLED_INFO => "{0} hat {1} mit {2} getötet";
 
-        public override string[] DEFUSE_INFO => new string[]
+        public override List<string> DEFUSE_INFO => new List<string>
         {
             "Runden-Zeit hat sich verändert. Nun musst du entweder alle Gegner töten oder die Bombe entschärfen.",
             "Um die Bombe zu entschärfen, gehe zum roten Punkt auf der Map (Bombe), wechsel zur Faust und halte die linke Maustaste gedrückt."

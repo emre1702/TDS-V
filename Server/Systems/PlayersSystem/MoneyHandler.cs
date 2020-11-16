@@ -1,14 +1,14 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Sync;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Sync;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class MoneyHandler : IPlayerMoneyHandler
     {

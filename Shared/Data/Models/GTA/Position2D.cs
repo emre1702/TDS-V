@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Shared.Data.Models.GTA
+namespace TDS.Shared.Data.Models.GTA
 {
     public class Position2D
     {

@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Models.Userpanel.History;
+using TDS.Server.Data.Models.Userpanel.History;
 
-namespace TDS_Server.Data.Models.Userpanel.Stats
+namespace TDS.Server.Data.Models.Userpanel.Stats
 {
     public class PlayerUserpanelGeneralStatsDataDto
     {

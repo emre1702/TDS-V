@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore.Migrations;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Enums.Challenge;
 
-namespace TDS_Server.Database.Migrations
+namespace TDS.Server.Database.Migrations
 {
     public partial class ServerSettings_GitHubRepoOwnerAndName : Migration
     {

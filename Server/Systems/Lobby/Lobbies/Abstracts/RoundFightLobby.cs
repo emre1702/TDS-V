@@ -1,41 +1,41 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.DamageSystem;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.GamemodesSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.Data.Interfaces.LobbySystem.Rankings;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
-using TDS_Server.Data.Interfaces.LobbySystem.Statistics;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Weapons;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Maps;
-using TDS_Server.LobbySystem.Deathmatch;
-using TDS_Server.LobbySystem.DependenciesModels;
-using TDS_Server.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.MapHandlers;
-using TDS_Server.LobbySystem.Notifications;
-using TDS_Server.LobbySystem.Players;
-using TDS_Server.LobbySystem.Rankings;
-using TDS_Server.LobbySystem.RoundsHandlers;
-using TDS_Server.LobbySystem.Spectator;
-using TDS_Server.LobbySystem.Statistics;
-using TDS_Server.LobbySystem.Sync;
-using TDS_Server.LobbySystem.TeamHandlers;
-using TDS_Server.LobbySystem.Weapons;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.DamageSystem;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.GamemodesSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Notifications;
+using TDS.Server.Data.Interfaces.LobbySystem.Players;
+using TDS.Server.Data.Interfaces.LobbySystem.Rankings;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Spectator;
+using TDS.Server.Data.Interfaces.LobbySystem.Statistics;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Weapons;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Helper;
+using TDS.Server.Handler.Maps;
+using TDS.Server.LobbySystem.Deathmatch;
+using TDS.Server.LobbySystem.DependenciesModels;
+using TDS.Server.LobbySystem.EventsHandlers;
+using TDS.Server.LobbySystem.MapHandlers;
+using TDS.Server.LobbySystem.Notifications;
+using TDS.Server.LobbySystem.Players;
+using TDS.Server.LobbySystem.Rankings;
+using TDS.Server.LobbySystem.RoundsHandlers;
+using TDS.Server.LobbySystem.Spectator;
+using TDS.Server.LobbySystem.Statistics;
+using TDS.Server.LobbySystem.Sync;
+using TDS.Server.LobbySystem.TeamHandlers;
+using TDS.Server.LobbySystem.Weapons;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.Lobbies.Abstracts
+namespace TDS.Server.LobbySystem.Lobbies.Abstracts
 {
     public abstract class RoundFightLobby : FightLobby, IRoundFightLobby
     {

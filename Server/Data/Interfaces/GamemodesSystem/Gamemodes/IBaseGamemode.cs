@@ -1,14 +1,14 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.Deathmatch;
-using TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Players;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Rounds;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Specials;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Teams;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Weapons;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Models.Map;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.Deathmatch;
+using TDS.Server.Data.Interfaces.GamemodesSystem.MapHandler;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Players;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Rounds;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Specials;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Teams;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Weapons;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models.Map;
 
-namespace TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes
+namespace TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes
 {
     public interface IBaseGamemode
     {

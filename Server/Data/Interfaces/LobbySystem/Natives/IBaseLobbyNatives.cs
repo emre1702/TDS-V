@@ -1,6 +1,6 @@
-﻿using TDS_Shared.Data.Enums;
+﻿using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Natives
+namespace TDS.Server.Data.Interfaces.LobbySystem.Natives
 {
     public interface IBaseLobbyNatives
     {

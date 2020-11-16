@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Players;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.LobbySystem.Players
+namespace TDS.Server.LobbySystem.Players
 {
     public class FightLobbyPlayers : BaseLobbyPlayers, IFightLobbyPlayers
     {

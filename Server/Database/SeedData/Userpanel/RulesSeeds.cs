@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TDS_Server.Database.Entity.Userpanel;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Server.Database.Entity.Userpanel;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Database.SeedData.Userpanel
+namespace TDS.Server.Database.SeedData.Userpanel
 {
     public static class RulesSeeds
     {

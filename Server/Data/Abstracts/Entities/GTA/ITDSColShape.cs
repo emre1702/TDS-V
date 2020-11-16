@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 
-namespace TDS_Server.Data.Abstracts.Entities.GTA
+namespace TDS.Server.Data.Abstracts.Entities.GTA
 {
 #nullable enable
 
@@ -12,7 +12,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
 
         public abstract event PlayerEnteredExitedColShape? PlayerExited;
 
-        public ITDSColshape(NetHandle netHandle) : base(netHandle)
+        protected ITDSColshape(NetHandle netHandle) : base(netHandle)
         {
         }
     }

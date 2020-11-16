@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 
-namespace TDS_Server.Handler.Entities.GTA.DummyEntities
+namespace TDS.Server.Handler.Entities.GTA.DummyEntities
 {
     public class TDSDummyEntity : DummyEntity
     {

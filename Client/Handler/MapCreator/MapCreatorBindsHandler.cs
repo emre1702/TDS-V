@@ -1,9 +1,9 @@
 ﻿using RAGE.Game;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Draw;
-using TDS_Client.Handler.Events;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Draw;
+using TDS.Client.Handler.Events;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorBindsHandler
     {

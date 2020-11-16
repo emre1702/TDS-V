@@ -3,15 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.GangSystem.GangWindow;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.GangSystem.GangWindow;
 
-namespace TDS_Server.Handler.GangSystem
+namespace TDS.Server.Handler.GangSystem
 {
     public class GangWindowHandler
     {

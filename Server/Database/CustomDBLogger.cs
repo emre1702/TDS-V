@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace TDS_Server.Database
+namespace TDS.Server.Database
 {
     public class CustomDBLogger : ILoggerProvider
     {

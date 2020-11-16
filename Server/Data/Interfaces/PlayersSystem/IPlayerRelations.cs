@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Shared.Data.Enums;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Interfaces.PlayersSystem
+namespace TDS.Server.Data.Interfaces.PlayersSystem
 {
     public interface IPlayerRelations
     {

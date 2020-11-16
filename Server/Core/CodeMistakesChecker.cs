@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces;
-using TDS_Shared.Default;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Core
+namespace TDS.Server.Core
 {
     public class CodeMistakesChecker
     {

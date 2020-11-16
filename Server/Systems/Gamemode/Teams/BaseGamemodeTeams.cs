@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.Teams;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.Teams;
 
-namespace TDS_Server.GamemodesSystem.Teams
+namespace TDS.Server.GamemodesSystem.Teams
 {
     public class BaseGamemodeTeams : IBaseGamemodeTeams
     {

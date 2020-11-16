@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.GamemodesSystem.Players;
-using TDS_Server.GangGamemodesSystem.Gamemodes;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.GamemodesSystem.Players;
+using TDS.Server.GangGamemodesSystem.Gamemodes;
 
-namespace TDS_Server.GangGamemodesSystem.Players
+namespace TDS.Server.GangGamemodesSystem.Players
 {
     public class GangGangwarPlayers : GangwarPlayers, IGangGangwarGamemodePlayers
     {

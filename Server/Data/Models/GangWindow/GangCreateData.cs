@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Server.Data.Models.GangWindow
+namespace TDS.Server.Data.Models.GangWindow
 {
     public class GangCreateData
     {
@@ -8,7 +8,9 @@ namespace TDS_Server.Data.Models.GangWindow
         public string Name { get; set; }
 
         [JsonProperty("1")]
+#pragma warning disable CA1720 // Identifier contains type name
         public string Short { get; set; }
+#pragma warning restore CA1720 // Identifier contains type name
 
         [JsonProperty("2")]
         public string Color { get; set; }

@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Shared.Data.Models;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Server.Data.Models.GangWindow
+namespace TDS.Server.Data.Models.GangWindow
 {
     public class GangPermissionsWindowData
     {

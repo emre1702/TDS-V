@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces;
+﻿using TDS.Server.Data.Interfaces;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class WeaponLevelHandler
     {

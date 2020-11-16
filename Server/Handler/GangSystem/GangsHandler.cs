@@ -4,17 +4,17 @@ using MoreLinq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Sync;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Sync;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.GangSystem
+namespace TDS.Server.Handler.GangSystem
 {
     public class GangsHandler
     {
@@ -102,7 +102,7 @@ namespace TDS_Server.Handler.GangSystem
                         member.Player = null;
                     }
 
-                    _gangsProvider.Get(g);
+                    _gangsProvider.GetGang(g);
                 });
         }
 

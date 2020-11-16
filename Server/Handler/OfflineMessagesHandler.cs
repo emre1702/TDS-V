@@ -4,16 +4,16 @@ using System.Linq;
 using BonusBotConnector.Client;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class OfflineMessagesHandler : DatabaseEntityWrapper
     {
@@ -119,7 +119,7 @@ namespace TDS_Server.Handler
 
         private void InformIfPlayerIsOnline(int playerId)
         {
-            var player = _tdsPlayerHandler.Get(playerId);
+            var player = _tdsPlayerHandler.GetPlayer(playerId);
             if (player is { })
                 player.SendNotification(player.Language.NEW_OFFLINE_MESSAGE);
         }

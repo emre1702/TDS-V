@@ -1,10 +1,10 @@
 ﻿using MoreLinq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Data.Models;
-using TDS_Server.Handler;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Data.Models;
+using TDS.Server.Handler;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class Admin : IPlayerAdmin
     {
@@ -13,16 +13,16 @@ namespace TDS_Server.PlayersSystem
             get
             {
                 if (_player.IsConsole)
-                    return _adminsHandler.GetHighestLevel();
+                    return _adminsHandler.HighestLevel;
                 if (_player.Entity is null)
-                    return _adminsHandler.GetLowestLevel();
+                    return _adminsHandler.LowestLevel;
                 return _adminsHandler.GetLevel(_player.Entity.AdminLvl);
             }
         }
 
         public string LevelName 
         {
-            get { lock (Level.Names) return Level.Names[_player.LanguageHandler.Enum]; }
+            get { lock (Level.Names) return Level.Names[_player.LanguageHandler.EnumValue]; }
         }
 
         private readonly AdminsHandler _adminsHandler;

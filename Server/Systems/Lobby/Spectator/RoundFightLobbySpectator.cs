@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.LobbySystem.TeamHandlers;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Spectator;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.LobbySystem.TeamHandlers;
 
-namespace TDS_Server.LobbySystem.Spectator
+namespace TDS.Server.LobbySystem.Spectator
 {
     public class RoundFightLobbySpectator : FightLobbySpectator, IRoundFightLobbySpectator
     {

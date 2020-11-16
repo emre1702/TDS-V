@@ -2,19 +2,19 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Data.Models.Userpanel;
-using TDS_Server.Data.Utility;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Sync;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models.Userpanel;
+using TDS.Server.Data.Utility;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Sync;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     public class UserpanelSettingsSpecialHandler : IUserpanelSettingsSpecialHandler
     {

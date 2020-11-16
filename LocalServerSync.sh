@@ -19,22 +19,22 @@ SEPERATOR='==============================='
 
 echo -e "${SEPERATOR}"
 echo -e "Create ${LIGHTBLUE}folder ${NOCOLOR}..."
-mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS_Client
+mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS.Client
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window
-mkdir -p /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.1
+mkdir -p /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/net5.0
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-object-choice
 mkdir -p /cygdrive/c/RAGEMP/server-files/packages/tds
 
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/Core/bin/Debug/netcoreapp3.1
+cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/Core/bin/Debug/net5.0
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --exclude='TDS_Server.Core.*' --include="*.dll" --include='*.pdb' --exclude='*' . /cygdrive/c/RAGEMP/server-files/dotnet/runtime
+rsync -hmrtvzP --exclude='TDS.Server.Core.*' --include="*.dll" --include='*.pdb' --exclude='*' . /cygdrive/c/RAGEMP/server-files/dotnet/runtime
 
 echo -e "${SEPERATOR}"
-echo -e "Update ${LIGHTBLUE}TDS_Server.Core ${NOCOLOR}..."
-rsync -hmrtvzP ./TDS_Server.Core.dll ./TDS_Server.Core.pdb /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/netcoreapp3.1
+echo -e "Update ${LIGHTBLUE}TDS.Server.Core ${NOCOLOR}..."
+rsync -hmrtvzP ./TDS.Server.Core.dll ./TDS.Server.Core.pdb /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/net5.0
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."
@@ -42,7 +42,7 @@ cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/Core/JavaScript && rsync 
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}clientside C# ${NOCOLOR}files ..."
-cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V && rsync -hmrtvzP --delete --exclude="bin" --exclude="obj" --exclude="node_modules" --include="*/" --include='*.cs' --exclude='*' Client/. Shared/. /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS_Client/
+cd B:/Users/EmreKara/Desktop/Tools/GitHub/TDS-V && rsync -hmrtvzP --delete --exclude="bin" --exclude="obj" --exclude="node_modules" --include="*/" --include='*.cs' --exclude='*' Client/. Shared/. /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS.Client/
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}clientside JS ${NOCOLOR}..."

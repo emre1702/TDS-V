@@ -1,16 +1,16 @@
 ﻿using RAGE.Elements;
 using RAGE.Ui;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Lobby;
-using TDS_Shared.Data.Utility;
-using TDS_Shared.Default;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Models;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Lobby;
+using TDS.Shared.Data.Utility;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Deathmatch
+namespace TDS.Client.Handler.Deathmatch
 {
     public class DamageHandler
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Database.Entity.GangEntities
+namespace TDS.Server.Database.Entity.GangEntities
 {
     public class GangHouses
     {

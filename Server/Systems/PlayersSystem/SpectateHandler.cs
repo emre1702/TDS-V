@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.PlayersSystem;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class SpectateHandler : IPlayerSpectateHandler
     {

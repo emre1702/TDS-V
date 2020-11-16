@@ -1,4 +1,4 @@
-﻿namespace TDS_Client.Data.Models
+﻿namespace TDS.Client.Data.Models
 {
     public class CooldownEventDto
     {

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.Userpanel;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     public class UserpanelSupportAdminHandler : IUserpanelSupportAdminHandler
     {

@@ -1,19 +1,18 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Handler.Entities.GangSystem;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.GangSystem;
-using TDS_Shared.Data.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Handler.Entities.GangSystem;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.GangSystem;
+using TDS.Shared.Data.Default;
 
-namespace TDS_Server.LobbySystem.MapHandlers
+namespace TDS.Server.LobbySystem.MapHandlers
 {
     public class GangLobbyMapHandler : BaseLobbyMapHandler
     {
@@ -52,7 +51,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
             NAPI.Task.RunSafe(() =>
             {
-                house.TextLabel = NAPI.TextLabel.CreateTextLabel(house.GetTextLabelText(), house.Position, 10f, 7f, 0, new Color(220, 220, 220), true, Dimension) as ITDSTextLabel;
+                house.TextLabel = NAPI.TextLabel.CreateTextLabel(house.TextLabelText, house.Position, 10f, 7f, 0, new Color(220, 220, 220), true, Dimension) as ITDSTextLabel;
 
                 if (house.Entity.OwnerGang is { })
                     house.Blip = GetHouseWithOwnerBlip(house);
@@ -87,7 +86,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
                         name: $"[{house.Entity.NeededGangLevel}] " + (house.Entity.OwnerGang is null ? "-" : house.Entity.OwnerGang.Name)) as ITDSBlip;
                 }
                 if (house.TextLabel is { })
-                    house.TextLabel.Text = house.GetTextLabelText();
+                    house.TextLabel.Text = house.TextLabelText;
             });
         }
 

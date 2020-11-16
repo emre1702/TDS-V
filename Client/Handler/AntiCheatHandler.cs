@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Deathmatch;
+using TDS.Client.Data.Models;
+using TDS.Client.Handler.Deathmatch;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class AntiCheatHandler : ServiceBase
     {

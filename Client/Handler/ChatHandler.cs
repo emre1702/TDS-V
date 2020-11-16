@@ -1,13 +1,13 @@
 ﻿using RAGE.Game;
 using System.Collections.Generic;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Default;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class ChatHandler : ServiceBase
     {

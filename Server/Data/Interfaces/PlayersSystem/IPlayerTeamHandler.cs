@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.TeamsSystem;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.TeamsSystem;
 
-namespace TDS_Server.Data.Interfaces.PlayersSystem
+namespace TDS.Server.Data.Interfaces.PlayersSystem
 {
 #nullable enable
 

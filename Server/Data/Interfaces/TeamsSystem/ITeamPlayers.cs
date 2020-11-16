@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Data.Interfaces.TeamsSystem
+namespace TDS.Server.Data.Interfaces.TeamsSystem
 {
 #nullable enable
 
@@ -19,7 +19,7 @@ namespace TDS_Server.Data.Interfaces.TeamsSystem
 
         void Add(ITDSPlayer player);
 
-        void Do(Action<ITDSPlayer> action);
+        void DoForAll(Action<ITDSPlayer> action);
 
         void DoInMain(Action<ITDSPlayer> action);
 

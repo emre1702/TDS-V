@@ -1,19 +1,19 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Utility;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Utility;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Commands.Admin
+namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminMapCommands
     {
-        [TDSCommand(AdminCommand.Goto)]
-        public void GotoPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.Goto)]
+        public void GotoPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             NAPI.Task.RunSafe(() =>
             {
@@ -43,8 +43,8 @@ namespace TDS_Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Goto, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommand(AdminCommand.Goto)]
-        public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, Vector3 pos, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.Goto)]
+        public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, Vector3 pos, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (player is null)
                 return;

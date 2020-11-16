@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.DamageSystem.Damages;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.DamageSystem.Damages;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
-namespace TDS_Server.DamageSystem.Damages
+namespace TDS.Server.DamageSystem.Damages
 {
     public class HitterHandler : IHitterHandler
     {

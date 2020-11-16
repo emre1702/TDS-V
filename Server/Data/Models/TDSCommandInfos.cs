@@ -1,12 +1,12 @@
-﻿using TDS_Server.Data.Enums;
+﻿using TDS.Server.Data.Enums;
 
-namespace TDS_Server.Data.Models
+namespace TDS.Server.Data.Models
 {
     public class TDSCommandInfos
     {
 
-        public string Command;
-        public CommandUsageRight WithRight = CommandUsageRight.User;
+        public string Command { get; set; }
+        public CommandUsageRight WithRight { get; set; } = CommandUsageRight.User;
 
         public TDSCommandInfos(string command) => Command = command;
 

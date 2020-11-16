@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Shared.Data.Models
+namespace TDS.Shared.Data.Models
 {
     public class SyncedTeamDataDto
     {

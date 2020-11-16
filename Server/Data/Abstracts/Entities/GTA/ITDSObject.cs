@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Abstracts.Entities.GTA
+namespace TDS.Server.Data.Abstracts.Entities.GTA
 {
 #nullable enable
 
@@ -10,7 +10,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
     {
         public ushort RemoteId { get; set; }
 
-        public ITDSObject(NetHandle netHandle) : base(netHandle)
+        protected ITDSObject(NetHandle netHandle) : base(netHandle)
         {
             RemoteId = netHandle.Value;
         }

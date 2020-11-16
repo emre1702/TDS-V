@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using PlayerDb = TDS_Server.Database.Entity.Player.Players;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.BansHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using PlayerDb = TDS.Server.Database.Entity.Player.Players;
 
-namespace TDS_Server.LobbySystem.BansHandlers
+namespace TDS.Server.LobbySystem.BansHandlers
 {
     public class BaseLobbyBansHandler : IBaseLobbyBansHandler
     {
-        protected readonly IBaseLobby Lobby;
-        protected readonly LangHelper LangHelper;
+        protected IBaseLobby Lobby { get; }
+        protected LangHelper LangHelper { get; }
 
         public BaseLobbyBansHandler(IBaseLobby lobby, LangHelper langHelper)
             => (Lobby, LangHelper) = (lobby, langHelper);

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using System;
-using TDS_Server.Data.Extensions;
+using TDS.Server.Data.Extensions;
 
-namespace TDS_Server.Handler.Converter.Mapping
+namespace TDS.Server.Handler.Converter.Mapping
 {
     internal class StringToTimeSpanConverter : ITypeConverter<string, TimeSpan?>
     {

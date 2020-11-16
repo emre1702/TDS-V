@@ -5,19 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.GangSystem;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Entities.GangSystem;
+using TDS.Server.Handler.Events;
 
-namespace TDS_Server.Handler.GangSystem
+namespace TDS.Server.Handler.GangSystem
 {
     public class GangHousesHandler : DatabaseEntityWrapper
     {
-        public List<GangHouse> Houses = new List<GangHouse>();
+        public List<GangHouse> Houses { get; } = new List<GangHouse>();
 
         private readonly Dictionary<int, List<GangHouse>> _levelFreeHouses = new Dictionary<int, List<GangHouse>>();
         private readonly List<GangHouse> _occupiedHouses = new List<GangHouse>();

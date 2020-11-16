@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.LobbyEntities
+namespace TDS.Server.Database.Entity.LobbyEntities
 {
     public partial class Lobbies
     {

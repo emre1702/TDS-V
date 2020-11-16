@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Command;
+using TDS.Server.Database.Entity.Command;
 
-namespace TDS_Server.Database.SeedData.Command
+namespace TDS.Server.Database.SeedData.Command
 {
     public static class ComandAliasSeeds
     {

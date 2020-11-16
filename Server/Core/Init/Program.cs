@@ -4,24 +4,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Core.Init.Services.Creators;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Account;
-using TDS_Server.Handler.Commands.System;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Factories;
-using TDS_Server.Handler.GangSystem;
-using TDS_Server.Handler.Maps;
-using TDS_Server.Handler.Server;
-using ObjectFactory = TDS_Server.Handler.Factories.ObjectFactory;
+using TDS.Server.Core.Init.Services.Creators;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Account;
+using TDS.Server.Handler.Commands.System;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Factories;
+using TDS.Server.Handler.GangSystem;
+using TDS.Server.Handler.Maps;
+using TDS.Server.Handler.Server;
+using ObjectFactory = TDS.Server.Handler.Factories.ObjectFactory;
 
-namespace TDS_Server.Core.Init
+namespace TDS.Server.Core.Init
 {
     public class Program : Script
     {
@@ -100,7 +100,7 @@ namespace TDS_Server.Core.Init
             }
         }
 
-        private void InitRAGE(EventsHandler eventsHandler)
+        private static void InitRAGE(EventsHandler eventsHandler)
         {
             NAPI.Server.SetAutoRespawnAfterDeath(false);
             NAPI.Server.SetGlobalServerChat(false);
@@ -156,17 +156,17 @@ namespace TDS_Server.Core.Init
 
         private void InitFactories()
         {
-            new BlipFactory(_serviceProvider);
-            new CheckpointFactory(_serviceProvider);
-            new ColShapeFactory(_serviceProvider);
-            new DummyEntityFactory(_serviceProvider);
-            new MarkerFactory(_serviceProvider);
-            new ObjectFactory(_serviceProvider);
-            new PedFactory(_serviceProvider);
-            new PickupFactory(_serviceProvider);
-            new PlayerFactory(_serviceProvider.GetRequiredService<IPlayerProvider>());
-            new TextLabelFactory(_serviceProvider);
-            new VehicleFactory(_serviceProvider);
+            _ = new BlipFactory(_serviceProvider);
+            _ = new CheckpointFactory(_serviceProvider);
+            _ = new ColShapeFactory(_serviceProvider);
+            _ = new DummyEntityFactory(_serviceProvider);
+            _ = new MarkerFactory(_serviceProvider);
+            _ = new ObjectFactory(_serviceProvider);
+            _ = new PedFactory(_serviceProvider);
+            _ = new PickupFactory(_serviceProvider);
+            _ = new PlayerFactory(_serviceProvider.GetRequiredService<IPlayerProvider>());
+            _ = new TextLabelFactory(_serviceProvider);
+            _ = new VehicleFactory(_serviceProvider);
         }
     }
 }

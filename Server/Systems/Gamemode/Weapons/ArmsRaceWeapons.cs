@@ -2,14 +2,14 @@
 using MoreLinq;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.GamemodesSystem.Weapons
+namespace TDS.Server.GamemodesSystem.Weapons
 {
     public class ArmsRaceWeapons : BaseGamemodeWeapons, IArmsRaceGamemodeWeapons
     {
@@ -87,7 +87,7 @@ namespace TDS_Server.GamemodesSystem.Weapons
                 .WeaponHash ?? WeaponHash.Unarmed;
         }
 
-        public bool GetNextWeapon(ITDSPlayer player, out WeaponHash? weaponHash)
+        public bool TryGetNextWeapon(ITDSPlayer player, out WeaponHash? weaponHash)
         {
             var kills = player.CurrentRoundStats?.Kills;
             if (!kills.HasValue)
@@ -108,7 +108,7 @@ namespace TDS_Server.GamemodesSystem.Weapons
 
         private void GiveNextWeapon(ITDSPlayer player)
         {
-            if (!GetNextWeapon(player, out WeaponHash? weaponHash) || !weaponHash.HasValue)
+            if (!TryGetNextWeapon(player, out WeaponHash? weaponHash) || !weaponHash.HasValue)
                 return;
 
             GivePlayerWeapon(player, weaponHash.Value);

@@ -1,6 +1,6 @@
-﻿namespace TDS_Server.Data.Enums
+﻿namespace TDS.Server.Data.Enums
 {
-    public enum AdminLevel : short
+    public enum AdminLevel : int
     {
         User,
         Supporter,

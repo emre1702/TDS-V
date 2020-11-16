@@ -1,14 +1,14 @@
 ﻿using RAGE.Elements;
 using System;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Models;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Browser
+namespace TDS.Client.Handler.Browser
 {
     public class PlainMainBrowserHandler : BrowserHandlerBase
     {

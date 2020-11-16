@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Handler.Helper;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Handler.Helper;
 
-namespace TDS_Server.LobbySystem.Chats
+namespace TDS.Server.LobbySystem.Chats
 {
     public class GangLobbyChat : BaseLobbyChat
     {

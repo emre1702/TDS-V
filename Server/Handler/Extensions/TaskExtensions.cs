@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Shared.Core;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Extensions
+namespace TDS.Server.Handler.Extensions
 {
     public static class TaskExtensions
     {
         [ThreadStatic]
+#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static bool IsMainThread = false;
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 
         public static void RunSafe(this GTANetworkMethods.Task task, Action action, int delayTime = 0)
         {
@@ -17,7 +19,7 @@ namespace TDS_Server.Handler.Extensions
                     if (delayTime == 0)
                         action();
                     else 
-                        new TDSTimer(action, (uint)delayTime);
+                        _ = new TDSTimer(action, (uint)delayTime);
                 else
                     task.Run(() => 
                     {

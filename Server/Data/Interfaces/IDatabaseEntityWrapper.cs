@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Database.Entity;
+using TDS.Server.Database.Entity;
 
-namespace TDS_Server.Data.Interfaces
+namespace TDS.Server.Data.Interfaces
 {
     public interface IDatabaseEntityWrapper
     {

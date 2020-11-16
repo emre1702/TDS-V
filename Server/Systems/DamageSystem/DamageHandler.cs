@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.DamageSystem.Damages;
-using TDS_Server.DamageSystem.Deaths;
-using TDS_Server.DamageSystem.KillingSprees;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.DamageSystem;
-using TDS_Server.Data.Interfaces.DamageSystem.Damages;
-using TDS_Server.Data.Interfaces.DamageSystem.Deaths;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Handler;
+using TDS.Server.DamageSystem.Damages;
+using TDS.Server.DamageSystem.Deaths;
+using TDS.Server.DamageSystem.KillingSprees;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.DamageSystem;
+using TDS.Server.Data.Interfaces.DamageSystem.Damages;
+using TDS.Server.Data.Interfaces.DamageSystem.Deaths;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Handler;
 
-namespace TDS_Server.DamageSystem
+namespace TDS.Server.DamageSystem
 {
     public class DamageHandler : IDamageHandler
     {

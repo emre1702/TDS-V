@@ -1,7 +1,7 @@
 ﻿using Grpc.Net.Client;
 using System;
 using System.Net;
-using TDS_Server.Database.Entity.Bonusbot;
+using TDS.Server.Database.Entity.Bonusbot;
 using static BonusBotConnector.Client.BonusBotConnectorClient;
 using static BonusBotConnector.Client.RAGEServerStats;
 

@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.GamemodesSystem.Deathmatch
+﻿namespace TDS.Server.Data.Interfaces.GamemodesSystem.Deathmatch
 {
     public interface IBaseGamemodeDeathmatch
     {

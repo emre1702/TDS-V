@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AssemblyName>TDS_Client.Core</AssemblyName>
-    <RootNamespace>TDS_Client.Core</RootNamespace>
+    <AssemblyName>TDS.Client.Core</AssemblyName>
+    <RootNamespace>TDS.Client.Core</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

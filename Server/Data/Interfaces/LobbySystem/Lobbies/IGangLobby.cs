@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies
+namespace TDS.Server.Data.Interfaces.LobbySystem.Lobbies
 {
     public interface IGangLobby : IBaseLobby
     {

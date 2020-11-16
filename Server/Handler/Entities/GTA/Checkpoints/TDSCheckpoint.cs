@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 
-namespace TDS_Server.Handler.Entities.GTA.Checkpoints
+namespace TDS.Server.Handler.Entities.GTA.Checkpoints
 {
     public class TDSCheckpoint : Checkpoint
     {

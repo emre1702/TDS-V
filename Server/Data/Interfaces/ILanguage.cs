@@ -1,4 +1,6 @@
-﻿namespace TDS_Server.Data.Interfaces
+﻿using System.Collections.Generic;
+
+namespace TDS.Server.Data.Interfaces
 {
     public interface ILanguage
     {
@@ -24,7 +26,7 @@
 
         string DEATH_DIED_INFO { get; }
         string DEATH_KILLED_INFO { get; }
-        string[] DEFUSE_INFO { get; }
+        List<string> DEFUSE_INFO { get; }
         string DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO { get; }
         string DISCORD_IDENTITY_SAVE_FAILED { get; }
         string DISCORD_IDENTITY_SAVED_SUCCESSFULLY { get; }

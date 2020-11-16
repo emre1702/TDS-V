@@ -1,7 +1,7 @@
-﻿using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Database.Interfaces;
+﻿using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Database.Interfaces;
 
-namespace TDS_Server.Database.Entity.Player
+namespace TDS.Server.Database.Entity.Player
 {
     public class PlayerLobbyStats : IPlayerDataTable
     {

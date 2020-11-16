@@ -1,10 +1,10 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Abstracts.Entities.GTA
+namespace TDS.Server.Data.Abstracts.Entities.GTA
 {
 #nullable enable
 
@@ -12,7 +12,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
     {
         public IBaseLobby? Lobby { get; set; }
 
-        public ITDSVehicle(NetHandle netHandle) : base(netHandle)
+        protected ITDSVehicle(NetHandle netHandle) : base(netHandle)
         {
         }
 

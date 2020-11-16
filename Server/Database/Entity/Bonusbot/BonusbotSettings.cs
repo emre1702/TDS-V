@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TDS_Server.Database.Entity.Bonusbot
+namespace TDS.Server.Database.Entity.Bonusbot
 {
     public class BonusbotSettings
     {

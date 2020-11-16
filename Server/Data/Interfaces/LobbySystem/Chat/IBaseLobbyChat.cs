@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Chat
+namespace TDS.Server.Data.Interfaces.LobbySystem.Chat
 {
     public interface IBaseLobbyChat
     {

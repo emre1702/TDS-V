@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Helper;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Helper;
 
-namespace TDS_Server.Handler.Converter.Mapping
+namespace TDS.Server.Handler.Converter.Mapping
 {
     internal class StringNameToDBPlayerConverter : ITypeConverter<string, Task<Players?>>
     {

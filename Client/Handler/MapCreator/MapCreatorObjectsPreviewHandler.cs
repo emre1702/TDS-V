@@ -1,13 +1,13 @@
 ﻿using RAGE;
 using System.Collections.Generic;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Entities.GTA;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Entities.GTA;
+using TDS.Shared.Data.Models.GTA;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorObjectsPreviewHandler
     {

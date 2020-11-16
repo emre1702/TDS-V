@@ -1,6 +1,6 @@
-﻿using TDS_Client.Data.Interfaces;
+﻿using TDS.Client.Data.Interfaces;
 
-namespace TDS_Client.Handler.Entities.Languages
+namespace TDS.Client.Handler.Entities.Languages
 {
     internal class LobbyChoiceTextsEnglish : ILobbyChoiceTexts
     {

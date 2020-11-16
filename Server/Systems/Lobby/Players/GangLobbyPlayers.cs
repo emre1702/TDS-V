@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.LobbySystem.Lobbies;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.LobbySystem.Lobbies;
 
-namespace TDS_Server.LobbySystem.Players
+namespace TDS.Server.LobbySystem.Players
 {
     public class GangLobbyPlayers : BaseLobbyPlayers
     {

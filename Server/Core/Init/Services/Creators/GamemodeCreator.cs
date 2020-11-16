@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.Data.Interfaces.GamemodesSystem;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.GamemodesSystem;
-using TDS_Server.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.GamemodesSystem;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.GamemodesSystem;
+using TDS.Server.GamemodesSystem.Gamemodes;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     internal static class GamemodeCreator
     {

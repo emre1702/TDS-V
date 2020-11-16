@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Server.Data.Models.Userpanel.Command
+namespace TDS.Server.Data.Models.Userpanel.Command
 {
 #nullable disable
 

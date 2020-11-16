@@ -1,13 +1,13 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class ChatHandler
     {
@@ -80,7 +80,7 @@ namespace TDS_Server.Handler
             {
                 foreach (var target in _tdsPlayerHandler.LoggedInPlayers)
                 {
-                    if (target.Relations.HasRelationTo(player, TDS_Shared.Data.Enums.PlayerRelation.Block))
+                    if (target.Relations.HasRelationTo(player, TDS.Shared.Data.Enums.PlayerRelation.Block))
                         continue;
                     target.SendChatMessage(changedMessage);
                 }

@@ -1,6 +1,6 @@
-﻿using TDS_Client.Handler.Entities.GTA;
+﻿using TDS.Client.Handler.Entities.GTA;
 
-namespace TDS_Client.Handler.Factories
+namespace TDS.Client.Handler.Factories
 {
     public class CameraFactory
     {

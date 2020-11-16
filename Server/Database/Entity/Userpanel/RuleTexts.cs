@@ -1,6 +1,6 @@
-﻿using TDS_Shared.Data.Enums;
+﻿using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Userpanel
+namespace TDS.Server.Database.Entity.Userpanel
 {
     public class RuleTexts
     {

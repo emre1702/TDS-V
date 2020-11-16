@@ -1,9 +1,9 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Shared.Data.Enums;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Shared.Data.Enums;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem
+namespace TDS.Server.Data.Interfaces.LobbySystem
 {
     public interface ILobbiesProvider
     {

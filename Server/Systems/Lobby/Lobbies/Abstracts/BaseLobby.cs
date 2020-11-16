@@ -1,41 +1,41 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Chat;
-using TDS_Server.Data.Interfaces.LobbySystem.Colshapes;
-using TDS_Server.Data.Interfaces.LobbySystem.Database;
-using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Natives;
-using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
-using TDS_Server.Data.Interfaces.LobbySystem.Sync;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.Chats;
-using TDS_Server.LobbySystem.ColshapesHandlers;
-using TDS_Server.LobbySystem.Database;
-using TDS_Server.LobbySystem.Deathmatch;
-using TDS_Server.LobbySystem.DependenciesModels;
-using TDS_Server.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.MapHandlers;
-using TDS_Server.LobbySystem.Natives;
-using TDS_Server.LobbySystem.Notifications;
-using TDS_Server.LobbySystem.Players;
-using TDS_Server.LobbySystem.Sounds;
-using TDS_Server.LobbySystem.Sync;
-using TDS_Server.LobbySystem.TeamHandlers;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.LobbySystem.BansHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Chat;
+using TDS.Server.Data.Interfaces.LobbySystem.Colshapes;
+using TDS.Server.Data.Interfaces.LobbySystem.Database;
+using TDS.Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Natives;
+using TDS.Server.Data.Interfaces.LobbySystem.Notifications;
+using TDS.Server.Data.Interfaces.LobbySystem.Players;
+using TDS.Server.Data.Interfaces.LobbySystem.Sounds;
+using TDS.Server.Data.Interfaces.LobbySystem.Sync;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Helper;
+using TDS.Server.LobbySystem.BansHandlers;
+using TDS.Server.LobbySystem.Chats;
+using TDS.Server.LobbySystem.ColshapesHandlers;
+using TDS.Server.LobbySystem.Database;
+using TDS.Server.LobbySystem.Deathmatch;
+using TDS.Server.LobbySystem.DependenciesModels;
+using TDS.Server.LobbySystem.EventsHandlers;
+using TDS.Server.LobbySystem.MapHandlers;
+using TDS.Server.LobbySystem.Natives;
+using TDS.Server.LobbySystem.Notifications;
+using TDS.Server.LobbySystem.Players;
+using TDS.Server.LobbySystem.Sounds;
+using TDS.Server.LobbySystem.Sync;
+using TDS.Server.LobbySystem.TeamHandlers;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.Lobbies.Abstracts
+namespace TDS.Server.LobbySystem.Lobbies.Abstracts
 {
     public abstract class BaseLobby : Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby
     {
@@ -65,7 +65,7 @@ namespace TDS_Server.LobbySystem.Lobbies.Abstracts
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
-        public BaseLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
+        protected BaseLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
             IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {

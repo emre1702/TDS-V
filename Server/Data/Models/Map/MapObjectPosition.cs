@@ -1,8 +1,8 @@
 ﻿using System.Xml.Serialization;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.Map.Creator;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models.Map.Creator;
 
-namespace TDS_Server.Data.Models.Map
+namespace TDS.Server.Data.Models.Map
 {
     public class MapObjectPosition
     {

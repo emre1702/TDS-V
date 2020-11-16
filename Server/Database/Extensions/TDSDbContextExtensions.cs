@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 
-namespace TDS_Server.Database.Entity
+namespace TDS.Server.Database.Entity
 {
     public static class TDSDbContextExtensions
     {

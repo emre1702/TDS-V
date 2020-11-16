@@ -2,16 +2,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Events;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler.Events;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class AdminsHandler
     {
+        public AdminLevelDto LowestLevel
+        {
+            get
+            {
+                lock (_adminLevels)
+                {
+                    return _adminLevels[0];
+                }
+            }
+        }
+
+        public AdminLevelDto HighestLevel
+        {
+            get
+            {
+                lock (_adminLevels)
+                {
+                    return _adminLevels.Values.MaxBy(a => a.Level).First();
+                }
+            }
+        }
+
         private readonly Dictionary<short, AdminLevelDto> _adminLevels  = new Dictionary<short, AdminLevelDto>();
 
         public AdminsHandler(TDSDbContext dbContext, EventsHandler eventsHandler)
@@ -39,22 +61,6 @@ namespace TDS_Server.Handler
             lock (_adminLevels)
             {
                 return _adminLevels[adminLvl];
-            }
-        }
-
-        public AdminLevelDto GetLowestLevel()
-        {
-            lock (_adminLevels)
-            {
-                return _adminLevels[0];
-            }
-        }
-
-        public AdminLevelDto GetHighestLevel()
-        {
-            lock (_adminLevels)
-            {
-                return _adminLevels.Values.MaxBy(a => a.Level).First();
             }
         }
 

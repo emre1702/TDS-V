@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Database.SeedData.Player
+namespace TDS.Server.Database.SeedData.Player
 {
     public static class PlayersSeeds
     {

@@ -1,8 +1,8 @@
-﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Handler;
-using TDS_Shared.Data.Enums;
+﻿using TDS.Client.Data.Defaults;
+using TDS.Client.Handler;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Client.Manager.Utility
+namespace TDS.Client.Manager.Utility
 {
     public class SoundsHandler : ServiceBase
     {

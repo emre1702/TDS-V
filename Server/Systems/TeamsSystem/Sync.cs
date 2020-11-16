@@ -1,12 +1,12 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
-namespace TDS_Server.TeamsSystem
+namespace TDS.Server.TeamsSystem
 {
     public class Sync : ITeamSync
     {

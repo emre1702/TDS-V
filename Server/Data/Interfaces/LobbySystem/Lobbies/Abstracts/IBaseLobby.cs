@@ -1,21 +1,21 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Chat;
-using TDS_Server.Data.Interfaces.LobbySystem.Colshapes;
-using TDS_Server.Data.Interfaces.LobbySystem.Database;
-using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Natives;
-using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
-using TDS_Server.Data.Interfaces.LobbySystem.Sync;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Shared.Data.Enums;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.BansHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Chat;
+using TDS.Server.Data.Interfaces.LobbySystem.Colshapes;
+using TDS.Server.Data.Interfaces.LobbySystem.Database;
+using TDS.Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Natives;
+using TDS.Server.Data.Interfaces.LobbySystem.Notifications;
+using TDS.Server.Data.Interfaces.LobbySystem.Players;
+using TDS.Server.Data.Interfaces.LobbySystem.Sounds;
+using TDS.Server.Data.Interfaces.LobbySystem.Sync;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Shared.Data.Enums;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
+namespace TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
 {
     public interface IBaseLobby
     {

@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.LobbySystem.Actions
+﻿namespace TDS.Server.Data.Interfaces.LobbySystem.Actions
 {
     public interface IGangLobbyActions
     {

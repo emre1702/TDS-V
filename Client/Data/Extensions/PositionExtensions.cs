@@ -1,7 +1,7 @@
 ﻿using RAGE;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Client.Data.Extensions
+namespace TDS.Client.Data.Extensions
 {
     public static class PositionExtensions
     {

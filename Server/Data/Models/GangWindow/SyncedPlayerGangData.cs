@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Server.Data.Models.GangWindow
+namespace TDS.Server.Data.Models.GangWindow
 {
     public class SyncedPlayerGangData
     {

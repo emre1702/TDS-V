@@ -1,13 +1,13 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Handler.Events;
-using static TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers.IFightLobbyEventsHandler;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Handler.Events;
+using static TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers.IFightLobbyEventsHandler;
 
-namespace TDS_Server.LobbySystem.EventsHandlers
+namespace TDS.Server.LobbySystem.EventsHandlers
 {
     public class FightLobbyEventsHandler : BaseLobbyEventsHandler, IFightLobbyEventsHandler
     {

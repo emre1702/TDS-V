@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Handler.Events;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Handler.Events;
 
-namespace TDS_Server.Handler.GangSystem.GangWindow
+namespace TDS.Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowSpecialPageHandler
     {

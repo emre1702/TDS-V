@@ -1,7 +1,7 @@
-﻿/*using TDS_Server.Data.Enums;
-using TDS_Server.Handler.Entities.Utility;
+﻿/*using TDS.Server.Data.Enums;
+using TDS.Server.Handler.Entities.Utility;
 
-namespace TDS_Server.LobbySystem.Gamemodes
+namespace TDS.Server.LobbySystem.Gamemodes
 {
     partial class Gangwar
     {

@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity.GangEntities;
 
-namespace TDS_Server.Data.Interfaces
+namespace TDS.Server.Data.Interfaces
 {
     public interface IGangHouse
     {

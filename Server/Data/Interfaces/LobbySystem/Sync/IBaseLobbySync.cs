@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.LobbySystem.Sync
+﻿namespace TDS.Server.Data.Interfaces.LobbySystem.Sync
 {
     public interface IBaseLobbySync
     {

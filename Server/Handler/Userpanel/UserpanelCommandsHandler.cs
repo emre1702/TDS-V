@@ -1,18 +1,20 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Models.Userpanel.Command;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Models.Userpanel.Command;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     public class UserpanelCommandsHandler
     {
+        public string Data => _commandDatasJson;
+
         private string _commandDatasJson = "[]";
 
         public UserpanelCommandsHandler(EventsHandler eventsHandler)
@@ -21,11 +23,6 @@ namespace TDS_Server.Handler.Userpanel
         }
 
         public List<UserpanelCommandDataDto> CommandDatas { get; } = new List<UserpanelCommandDataDto>();
-
-        public string GetData()
-        {
-            return _commandDatasJson;
-        }
 
         public void LoadCommandData(Dictionary<string, CommandDataDto> commandDatas)
         {
@@ -74,7 +71,7 @@ namespace TDS_Server.Handler.Userpanel
 
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
         {
-            var data = GetData();
+            var data = Data;
             NAPI.Task.RunSafe(() => 
                 player.TriggerBrowserEvent(ToBrowserEvent.SyncCommandsData, data));
         }

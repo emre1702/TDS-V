@@ -1,6 +1,6 @@
-﻿using TDS_Shared.Data.Enums.Challenge;
+﻿using TDS.Shared.Data.Enums.Challenge;
 
-namespace TDS_Server.Database.Entity.Challenge
+namespace TDS.Server.Database.Entity.Challenge
 {
     public class ChallengeSettings
     {

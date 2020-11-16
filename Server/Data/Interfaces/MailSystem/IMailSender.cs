@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Data.Interfaces.MailSystem
+namespace TDS.Server.Data.Interfaces.MailSystem
 {
     public interface IMailSender
     {

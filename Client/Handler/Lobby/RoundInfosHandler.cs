@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Default;
 using static RAGE.Events;
 using static RAGE.NUI.UIResText;
 
-namespace TDS_Client.Handler.Lobby
+namespace TDS.Client.Handler.Lobby
 {
     public class RoundInfosHandler : ServiceBase
     {

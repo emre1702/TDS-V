@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Entities.Draw.Scaleform;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Models;
+using TDS.Client.Handler.Entities.Draw.Scaleform;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Draw
+namespace TDS.Client.Handler.Draw
 {
     public class ScaleformMessageHandler : ServiceBase
     {

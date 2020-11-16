@@ -1,18 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.LobbySystem.Freeroam;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.DependenciesModels;
-using TDS_Server.LobbySystem.Freeroam;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.LobbySystem.Freeroam;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Helper;
+using TDS.Server.LobbySystem.DependenciesModels;
+using TDS.Server.LobbySystem.Freeroam;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.Lobbies.Abstracts
+namespace TDS.Server.LobbySystem.Lobbies.Abstracts
 {
     public abstract class FreeroamLobby : BaseLobby, IFreeroamLobby
     {

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <AssemblyName>TDS_Server.LobbySystem</AssemblyName>
-        <RootNamespace>TDS_Server.LobbySystem</RootNamespace>
+        <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>TDS.Server.LobbySystem</AssemblyName>
+        <RootNamespace>TDS.Server.LobbySystem</RootNamespace>
         <Nullable>enable</Nullable>
         <PlatformTarget>x64</PlatformTarget>
     </PropertyGroup>

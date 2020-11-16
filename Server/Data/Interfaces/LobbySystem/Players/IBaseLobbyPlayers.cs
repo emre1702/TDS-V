@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Players
+namespace TDS.Server.Data.Interfaces.LobbySystem.Players
 {
 #nullable enable
 
@@ -18,7 +18,7 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.Players
 
         Task<bool> Any(Func<ITDSPlayer, bool> func);
 
-        Task Do(Action<ITDSPlayer> func);
+        Task DoForAll(Action<ITDSPlayer> func);
 
         Task DoInMain(Action<ITDSPlayer> func);
 

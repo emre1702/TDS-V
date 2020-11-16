@@ -3,22 +3,22 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.Challenge;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Challenge;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Database.Extensions;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models.Challenge;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Challenge;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Database.Extensions;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.Helper
+namespace TDS.Server.Handler.Helper
 {
     public class ChallengesHelper : DatabaseEntityWrapper
     {

@@ -1,10 +1,10 @@
 ﻿using RAGE.Game;
 using System.Drawing;
-using TDS_Client.Data.Enums;
+using TDS.Client.Data.Enums;
 using static RAGE.NUI.UIResText;
 using Alignment = RAGE.NUI.UIResText.Alignment;
 
-namespace TDS_Client.Handler.Draw.Dx
+namespace TDS.Client.Handler.Draw.Dx
 {
     internal class DxTextRectangle : DxBase
     {

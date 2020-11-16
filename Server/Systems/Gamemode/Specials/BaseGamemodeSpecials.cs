@@ -1,8 +1,8 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.Specials;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.Specials;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
-namespace TDS_Server.GamemodesSystem.Specials
+namespace TDS.Server.GamemodesSystem.Specials
 {
     public class BaseGamemodeSpecials : IBaseGamemodeSpecials
     {

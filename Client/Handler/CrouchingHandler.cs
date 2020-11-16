@@ -1,12 +1,12 @@
 ﻿using RAGE.Elements;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Sync;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Sync;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class CrouchingHandler : ServiceBase
     {

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace TDS_Server.Data.Models.ClothesMeta
+namespace TDS.Server.Data.Models.ClothesMeta
 {
 #nullable disable
 

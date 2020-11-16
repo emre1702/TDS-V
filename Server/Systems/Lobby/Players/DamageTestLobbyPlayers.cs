@@ -1,13 +1,13 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.Players
+namespace TDS.Server.LobbySystem.Players
 {
     public class DamageTestLobbyPlayers : FightLobbyPlayers
     {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
-using TDS_Server.Database.Interfaces;
+using TDS.Server.Database.Interfaces;
 
-namespace TDS_Server.Database.Entity.Player.Settings
+namespace TDS.Server.Database.Entity.Player.Settings
 {
     public class PlayerIngameColorsSettings : IPlayerDataTable
     {

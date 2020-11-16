@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity.LobbyEntities;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.DamageSystem.Damages
+namespace TDS.Server.DamageSystem.Damages
 {
     public interface IDamageProvider
     {

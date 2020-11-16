@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Shared.Data.Models.Map.Creator
+namespace TDS.Shared.Data.Models.Map.Creator
 {
     public class MapCreatorPosData
     {

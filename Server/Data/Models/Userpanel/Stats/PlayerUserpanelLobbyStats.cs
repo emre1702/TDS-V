@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Data.Models.Userpanel.Stats
+namespace TDS.Server.Data.Models.Userpanel.Stats
 {
     public class PlayerUserpanelLobbyStats
     {

@@ -2,17 +2,17 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Database.Entity.Server;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Events;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Server;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
 
-namespace TDS_Server.Handler.Server
+namespace TDS.Server.Handler.Server
 {
     public class ServerStatsHandler : DatabaseEntityWrapper
     {

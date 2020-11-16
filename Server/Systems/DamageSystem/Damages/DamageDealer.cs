@@ -1,12 +1,12 @@
 ﻿using GTANetworkAPI;
 using System.Diagnostics.CodeAnalysis;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.DamageSystem.Damages;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.DamageSystem.Damages;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
-namespace TDS_Server.DamageSystem.Damages
+namespace TDS.Server.DamageSystem.Damages
 {
     public class DamageDealer : IDamageDealer
     {

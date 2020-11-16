@@ -5,9 +5,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces;
 
-namespace TDS_Server.MailSystem
+namespace TDS.Server.MailSystem
 {
     internal class TDSSmtpClient : SmtpClient
     {

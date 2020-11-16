@@ -1,18 +1,18 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces.GamemodesSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces.GamemodesSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.RoundsHandlers
+namespace TDS.Server.LobbySystem.RoundsHandlers
 {
     public class ArenaRoundsHandler : RoundFightLobbyRoundsHandler, IArenaRoundsHandler
     {
@@ -78,7 +78,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers
 
             if (!RoundStates.Started)
             {
-                RoundStates.Start();
+                RoundStates.StartRound();
                 return true;
             }
 

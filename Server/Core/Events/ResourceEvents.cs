@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Handler.Events;
+using TDS.Server.Handler.Events;
 
-namespace TDS_Server.Core.Events
+namespace TDS.Server.Core.Events
 {
     public class ResourceEvents : Script
     {

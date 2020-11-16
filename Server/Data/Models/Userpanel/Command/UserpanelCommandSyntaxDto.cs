@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TDS_Server.Data.Models.Userpanel.Command
+namespace TDS.Server.Data.Models.Userpanel.Command
 {
     public class UserpanelCommandSyntaxDto
     {

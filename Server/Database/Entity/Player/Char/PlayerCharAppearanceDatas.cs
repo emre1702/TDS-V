@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using TDS_Server.Database.Interfaces;
-using TDS_Shared.Data.Models.CharCreator;
+using TDS.Server.Database.Interfaces;
+using TDS.Shared.Data.Models.CharCreator;
 
-namespace TDS_Server.Database.Entity.Player.Char
+namespace TDS.Server.Database.Entity.Player.Char
 {
     public class PlayerCharAppearanceDatas : IPlayerDataTable
     {

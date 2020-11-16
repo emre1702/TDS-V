@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.LobbySystem.Sounds
+﻿namespace TDS.Server.Data.Interfaces.LobbySystem.Sounds
 {
     public interface IBaseLobbySoundsHandler
     {

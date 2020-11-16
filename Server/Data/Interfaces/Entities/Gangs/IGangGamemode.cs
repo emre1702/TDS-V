@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces.GangsSystem;
+﻿using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces.GangsSystem;
 
-namespace TDS_Server.Data.Interfaces
+namespace TDS.Server.Data.Interfaces
 {
 #nullable enable
 

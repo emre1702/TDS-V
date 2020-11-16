@@ -1,15 +1,15 @@
 ﻿using RAGE;
 using RAGE.Elements;
 using System;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Handler.Entities.GTA;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Default;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Data.Models.Map.Creator;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Handler.Entities.GTA;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Data.Default;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models.GTA;
+using TDS.Shared.Data.Models.Map.Creator;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorObject
     {

@@ -4,19 +4,19 @@ using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.MapVotings;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Maps;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models.Map;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.MapVotings;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Maps;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models.Map;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.MapVotings
+namespace TDS.Server.LobbySystem.MapVotings
 {
     public class ArenaMapVoting : IArenaMapVoting
     {

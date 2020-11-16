@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TDS_Server.Data.Models.Userpanel.Stats
+namespace TDS.Server.Data.Models.Userpanel.Stats
 {
     public class UserpanelPlayerWeaponStatsData
     {

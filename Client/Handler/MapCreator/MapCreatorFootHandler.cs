@@ -1,7 +1,7 @@
-﻿using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Draw;
+﻿using TDS.Client.Handler.Deathmatch;
+using TDS.Client.Handler.Draw;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorFootHandler
     {

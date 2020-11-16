@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class ChatInfosHandler
     {
@@ -27,7 +27,7 @@ namespace TDS_Server.Handler
         {
             lock (_chatInfosJsonCache)
             {
-                if (!_chatInfosJsonCache.TryGetValue(player.LanguageHandler.Enum, out string? json))
+                if (!_chatInfosJsonCache.TryGetValue(player.LanguageHandler.EnumValue, out string? json))
                     return;
 
                 NAPI.Task.RunSafe(() =>

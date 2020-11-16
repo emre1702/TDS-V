@@ -1,10 +1,10 @@
 ﻿using RAGE.Game;
 using System.Drawing;
-using TDS_Client.Data.Enums;
-using TDS_Shared.Data.Enums;
+using TDS.Client.Data.Enums;
+using TDS.Shared.Data.Enums;
 using Alignment = RAGE.NUI.UIResText.Alignment;
 
-namespace TDS_Client.Handler.Draw.Dx
+namespace TDS.Client.Handler.Draw.Dx
 {
     internal class DxText : DxBase
     {

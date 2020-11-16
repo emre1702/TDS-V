@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.MapVotings;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.MapVotings;
 
-namespace TDS_Server.LobbySystem.DependenciesModels
+namespace TDS.Server.LobbySystem.DependenciesModels
 {
     internal class ArenaDependencies : RoundFightLobbyDependencies
     {

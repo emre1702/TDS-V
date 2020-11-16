@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Weapons;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Weapons;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 
-namespace TDS_Server.GamemodesSystem.Weapons
+namespace TDS.Server.GamemodesSystem.Weapons
 {
     public class BaseGamemodeWeapons : IBaseGamemodeWeapons
     {

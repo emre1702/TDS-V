@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Extensions;
-using TDS_Client.Handler.Entities.GTA;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Utility;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Extensions;
+using TDS.Client.Handler.Entities.GTA;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Data.Utility;
 
-namespace TDS_Client.Handler.Lobby
+namespace TDS.Client.Handler.Lobby
 {
     public class DamageTestPedsHandler
     {

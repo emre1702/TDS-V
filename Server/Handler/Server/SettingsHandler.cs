@@ -1,12 +1,12 @@
 ﻿using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Server;
-using TDS_Shared.Data.Models;
-using Command = TDS_Server.Database.Entity.Command.Commands;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Server;
+using TDS.Shared.Data.Models;
+using Command = TDS.Server.Database.Entity.Command.Commands;
 
-namespace TDS_Server.Handler.Server
+namespace TDS.Server.Handler.Server
 {
     public class SettingsHandler : ISettingsHandler
     {

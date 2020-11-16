@@ -3,11 +3,11 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Database.Migrations
+namespace TDS.Server.Database.Migrations
 {
     public partial class Init : Migration
     {

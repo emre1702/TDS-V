@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TDS_Server.Database.Entity.Log
+namespace TDS.Server.Database.Entity.Log
 {
     public class LogKills
     {

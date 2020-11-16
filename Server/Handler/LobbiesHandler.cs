@@ -5,32 +5,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Models.CustomLobby;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Maps;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Utility;
-using MapType = TDS_Server.Data.Enums.MapType;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models.CustomLobby;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Maps;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Utility;
+using MapType = TDS.Server.Data.Enums.MapType;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     //Todo: Add team check for special gamemodes (e.g. ArmsRace allow only 1 team)
     public class LobbiesHandler : DatabaseEntityWrapper
     {
-        public readonly Dictionary<int, IBaseLobby> LobbiesByIndex = new Dictionary<int, IBaseLobby>();
+        public Dictionary<int, IBaseLobby> LobbiesByIndex { get; } = new Dictionary<int, IBaseLobby>();
 
         private readonly MapsLoadingHandler _mapsHandler;
         private readonly ILobbiesProvider _lobbiesProvider;
@@ -93,7 +93,7 @@ namespace TDS_Server.Handler
                 {
                     return player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR;
                 }
-                bool nameAlreadyInUse = Lobbies.Any(lobby => lobby.Entity.Name.Equals(data.Name, StringComparison.CurrentCultureIgnoreCase));
+                bool nameAlreadyInUse = Lobbies.Any(lobby => lobby.Entity.Name.Equals(data.Name, StringComparison.OrdinalIgnoreCase));
                 if (nameAlreadyInUse)
                 {
                     return player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;

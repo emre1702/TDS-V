@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TDS_Server.Database.Entity;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Server.Database.Entity;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Database.Migrations
+namespace TDS.Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
     [Migration("20201007223714_Nametag_Improvements")]
@@ -45,7 +45,7 @@ namespace TDS_Server.Database.Migrations
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Admin.AdminLevelNames", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Admin.AdminLevelNames", b =>
                 {
                     b.Property<short>("Level")
                         .HasColumnType("smallint");
@@ -113,7 +113,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Admin.AdminLevels", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Admin.AdminLevels", b =>
                 {
                     b.Property<short>("Level")
                         .HasColumnType("smallint");
@@ -162,7 +162,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Bonusbot.BonusbotSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Bonusbot.BonusbotSettings", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,7 +222,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Challenge.ChallengeSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Challenge.ChallengeSettings", b =>
                 {
                     b.Property<ChallengeType>("Type")
                         .HasColumnType("challenge_type");
@@ -366,7 +366,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Challenge.PlayerChallenges", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Challenge.PlayerChallenges", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -392,7 +392,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerChallenges");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Command.CommandAlias", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Command.CommandAlias", b =>
                 {
                     b.Property<string>("Alias")
                         .HasColumnType("character varying(100)")
@@ -930,7 +930,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Command.CommandInfos", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Command.CommandInfos", b =>
                 {
                     b.Property<short>("Id")
                         .HasColumnType("smallint");
@@ -1262,7 +1262,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Command.Commands", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Command.Commands", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
@@ -1497,7 +1497,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangHouses", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangHouses", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1537,7 +1537,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("GangHouses");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangLevelSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangLevelSettings", b =>
                 {
                     b.Property<byte>("Level")
                         .HasColumnType("smallint");
@@ -1590,7 +1590,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("GangLevelSettings");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangMembers", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangMembers", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -1615,7 +1615,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("GangMembers");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangRankPermissions", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangRankPermissions", b =>
                 {
                     b.Property<int>("GangId")
                         .HasColumnType("integer");
@@ -1655,7 +1655,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangRanks", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangRanks", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1693,7 +1693,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangStats", b =>
                 {
                     b.Property<int>("GangId")
                         .HasColumnType("integer");
@@ -1748,7 +1748,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("GangStats");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangVehicles", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangVehicles", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1792,7 +1792,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("GangVehicles");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.Gangs", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.Gangs", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1854,7 +1854,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangwarAreas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangwarAreas", b =>
                 {
                     b.Property<int>("MapId")
                         .HasColumnType("integer");
@@ -1884,7 +1884,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("GangwarAreas");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.Lobbies", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.Lobbies", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2026,7 +2026,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyArmsRaceWeapons", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyArmsRaceWeapons", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnType("integer");
@@ -2147,7 +2147,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyFightSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyFightSettings", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnType("integer");
@@ -2187,7 +2187,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyKillingspreeRewards", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyKillingspreeRewards", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnType("integer");
@@ -2229,7 +2229,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyMapSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyMapSettings", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnType("integer");
@@ -2255,7 +2255,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyMaps", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyMaps", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnType("integer");
@@ -2277,7 +2277,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyRewards", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyRewards", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnType("integer");
@@ -2312,7 +2312,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyRoundSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyRoundSettings", b =>
                 {
                     b.Property<int>("LobbyId")
                         .HasColumnType("integer");
@@ -2366,7 +2366,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyWeapons", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyWeapons", b =>
                 {
                     b.Property<WeaponHash>("Hash")
                         .HasColumnType("weapon_hash");
@@ -2956,7 +2956,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogAdmins", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Log.LogAdmins", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -2998,7 +2998,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("LogAdmins");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogChats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Log.LogChats", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -3034,7 +3034,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("LogChats");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogErrors", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Log.LogErrors", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -3063,7 +3063,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("LogErrors");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogKills", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Log.LogKills", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -3089,7 +3089,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("LogKills");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Log.LogRests", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Log.LogRests", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -3122,7 +3122,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("LogRests");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharAppearanceDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharAppearanceDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3135,7 +3135,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerCharAppearanceDatas");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3148,7 +3148,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerCharDatas");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharFeaturesDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharFeaturesDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3161,7 +3161,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerCharFeaturesDatas");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharGeneralDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharGeneralDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3174,7 +3174,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerCharGeneralDatas");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharHairAndColorsDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharHairAndColorsDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3187,7 +3187,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerCharHairAndColorsDatas");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharHeritageDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharHeritageDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3200,7 +3200,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerCharHeritageDatas");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerBans", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerBans", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3255,7 +3255,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerBans");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerClothes", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerClothes", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3265,7 +3265,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerClothes");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerCommands", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerCommands", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -3291,7 +3291,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerCommands");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerLobbyStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerLobbyStats", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3345,7 +3345,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerLobbyStats");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerMapFavourites", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerMapFavourites", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3360,7 +3360,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerMapFavourites");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerMapRatings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerMapRatings", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3378,7 +3378,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerMapRatings");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerRelations", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerRelations", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3396,7 +3396,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerRelations");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerSettings", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3568,7 +3568,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerSettings");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerStats", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3611,7 +3611,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerStats");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerThemeSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerThemeSettings", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3654,7 +3654,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerThemeSettings");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerTotalStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerTotalStats", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3667,7 +3667,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerTotalStats");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerWeaponBodypartStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerWeaponBodypartStats", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3715,7 +3715,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerWeaponBodypartStats");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerWeaponStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerWeaponStats", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3780,7 +3780,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("PlayerWeaponStats");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Players", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Players", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3853,7 +3853,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Announcements", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.Announcements", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3874,7 +3874,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("Announcements");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.ChatInfos", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.ChatInfos", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3942,7 +3942,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.FreeroamDefaultVehicle", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.FreeroamDefaultVehicle", b =>
                 {
                     b.Property<FreeroamVehicleType>("VehicleType")
                         .HasColumnType("freeroam_vehicle_type");
@@ -3985,7 +3985,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Maps", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.Maps", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4058,7 +4058,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Offlinemessages", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.Offlinemessages", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4092,7 +4092,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("Offlinemessages");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Teams", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.Teams", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4200,7 +4200,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Weapons", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.Weapons", b =>
                 {
                     b.Property<WeaponHash>("Hash")
                         .HasColumnType("weapon_hash");
@@ -6090,7 +6090,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Server.ServerDailyStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Server.ServerDailyStats", b =>
                 {
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
@@ -6127,7 +6127,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("ServerDailyStats");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Server.ServerSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Server.ServerSettings", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
@@ -6367,7 +6367,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Server.ServerTotalStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Server.ServerTotalStats", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
@@ -6403,7 +6403,7 @@ namespace TDS_Server.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationAnswers", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.ApplicationAnswers", b =>
                 {
                     b.Property<int>("ApplicationId")
                         .HasColumnType("integer");
@@ -6421,7 +6421,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("ApplicationAnswers");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationInvitations", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.ApplicationInvitations", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -6446,7 +6446,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("ApplicationInvitations");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationQuestions", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.ApplicationQuestions", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -6469,7 +6469,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("ApplicationQuestions");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.Applications", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.Applications", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -6495,7 +6495,7 @@ namespace TDS_Server.Database.Migrations
                     b.ToTable("Applications");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.FAQs", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.FAQs", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("integer");
@@ -6548,7 +6548,7 @@ Die Daten beinhalten keine sensiblen Informationen - IPs werden nicht gespeicher
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.RuleTexts", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.RuleTexts", b =>
                 {
                     b.Property<int>("RuleId")
                         .HasColumnType("integer");
@@ -6666,7 +6666,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.Rules", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.Rules", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -6728,7 +6728,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.SupportRequestMessages", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.SupportRequestMessages", b =>
                 {
                     b.Property<int>("RequestId")
                         .HasColumnType("integer");
@@ -6755,7 +6755,7 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.ToTable("SupportRequestMessages");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.SupportRequests", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.SupportRequests", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -6791,257 +6791,257 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                     b.ToTable("SupportRequests");
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Admin.AdminLevelNames", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Admin.AdminLevelNames", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Admin.AdminLevels", "LevelNavigation")
+                    b.HasOne("TDS.Server.Database.Entity.Admin.AdminLevels", "LevelNavigation")
                         .WithMany("AdminLevelNames")
                         .HasForeignKey("Level")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Challenge.PlayerChallenges", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Challenge.PlayerChallenges", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("Challenges")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Command.CommandAlias", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Command.CommandAlias", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Command.Commands", "CommandNavigation")
+                    b.HasOne("TDS.Server.Database.Entity.Command.Commands", "CommandNavigation")
                         .WithMany("CommandAlias")
                         .HasForeignKey("Command")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Command.CommandInfos", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Command.CommandInfos", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Command.Commands", "IdNavigation")
+                    b.HasOne("TDS.Server.Database.Entity.Command.Commands", "IdNavigation")
                         .WithMany("CommandInfos")
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Command.Commands", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Command.Commands", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Admin.AdminLevels", "NeededAdminLevelNavigation")
+                    b.HasOne("TDS.Server.Database.Entity.Admin.AdminLevels", "NeededAdminLevelNavigation")
                         .WithMany("Commands")
                         .HasForeignKey("NeededAdminLevel")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangHouses", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangHouses", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Creator")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Creator")
                         .WithMany("CreatedHouses")
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangMembers", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangMembers", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
+                    b.HasOne("TDS.Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithMany("Members")
                         .HasForeignKey("GangId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithOne("GangMemberNavigation")
-                        .HasForeignKey("TDS_Server.Database.Entity.GangEntities.GangMembers", "PlayerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.GangEntities.GangMembers", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.GangEntities.GangRanks", "Rank")
+                    b.HasOne("TDS.Server.Database.Entity.GangEntities.GangRanks", "Rank")
                         .WithMany("GangMembers")
                         .HasForeignKey("RankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangRankPermissions", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangRankPermissions", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
+                    b.HasOne("TDS.Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithOne("RankPermissions")
-                        .HasForeignKey("TDS_Server.Database.Entity.GangEntities.GangRankPermissions", "GangId")
+                        .HasForeignKey("TDS.Server.Database.Entity.GangEntities.GangRankPermissions", "GangId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangRanks", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangRanks", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
+                    b.HasOne("TDS.Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithMany("Ranks")
                         .HasForeignKey("GangId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangStats", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
+                    b.HasOne("TDS.Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithOne("Stats")
-                        .HasForeignKey("TDS_Server.Database.Entity.GangEntities.GangStats", "GangId")
+                        .HasForeignKey("TDS.Server.Database.Entity.GangEntities.GangStats", "GangId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangVehicles", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangVehicles", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "Gang")
+                    b.HasOne("TDS.Server.Database.Entity.GangEntities.Gangs", "Gang")
                         .WithMany("Vehicles")
                         .HasForeignKey("GangId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.Gangs", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.Gangs", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.GangEntities.GangHouses", "House")
+                    b.HasOne("TDS.Server.Database.Entity.GangEntities.GangHouses", "House")
                         .WithOne("OwnerGang")
-                        .HasForeignKey("TDS_Server.Database.Entity.GangEntities.Gangs", "HouseId")
+                        .HasForeignKey("TDS.Server.Database.Entity.GangEntities.Gangs", "HouseId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Owner")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Owner")
                         .WithOne("OwnedGang")
-                        .HasForeignKey("TDS_Server.Database.Entity.GangEntities.Gangs", "OwnerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.GangEntities.Gangs", "OwnerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Teams", "Team")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Teams", "Team")
                         .WithMany("Gangs")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.GangEntities.GangwarAreas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.GangEntities.GangwarAreas", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Maps", "Map")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Maps", "Map")
                         .WithOne("GangwarArea")
-                        .HasForeignKey("TDS_Server.Database.Entity.GangEntities.GangwarAreas", "MapId")
+                        .HasForeignKey("TDS.Server.Database.Entity.GangEntities.GangwarAreas", "MapId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.GangEntities.Gangs", "OwnerGang")
+                    b.HasOne("TDS.Server.Database.Entity.GangEntities.Gangs", "OwnerGang")
                         .WithMany("GangwarAreas")
                         .HasForeignKey("OwnerGangId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.Lobbies", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.Lobbies", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Owner")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Owner")
                         .WithMany("Lobbies")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyArmsRaceWeapons", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyArmsRaceWeapons", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("ArmsRaceWeapons")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Weapons", "Weapon")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Weapons", "Weapon")
                         .WithMany("ArmsRaceWeapons")
                         .HasForeignKey("WeaponHash")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyFightSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyFightSettings", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("FightSettings")
-                        .HasForeignKey("TDS_Server.Database.Entity.LobbyEntities.LobbyFightSettings", "LobbyId")
+                        .HasForeignKey("TDS.Server.Database.Entity.LobbyEntities.LobbyFightSettings", "LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyKillingspreeRewards", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyKillingspreeRewards", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("LobbyKillingspreeRewards")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyMapSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyMapSettings", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyMapSettings")
-                        .HasForeignKey("TDS_Server.Database.Entity.LobbyEntities.LobbyMapSettings", "LobbyId")
+                        .HasForeignKey("TDS.Server.Database.Entity.LobbyEntities.LobbyMapSettings", "LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyMaps", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyMaps", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("LobbyMaps")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Maps", "Map")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Maps", "Map")
                         .WithMany("LobbyMaps")
                         .HasForeignKey("MapId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyRewards", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyRewards", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyRewards")
-                        .HasForeignKey("TDS_Server.Database.Entity.LobbyEntities.LobbyRewards", "LobbyId")
+                        .HasForeignKey("TDS.Server.Database.Entity.LobbyEntities.LobbyRewards", "LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyRoundSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyRoundSettings", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithOne("LobbyRoundSettings")
-                        .HasForeignKey("TDS_Server.Database.Entity.LobbyEntities.LobbyRoundSettings", "LobbyId")
+                        .HasForeignKey("TDS.Server.Database.Entity.LobbyEntities.LobbyRoundSettings", "LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.LobbyEntities.LobbyWeapons", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.LobbyEntities.LobbyWeapons", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Weapons", "HashNavigation")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Weapons", "HashNavigation")
                         .WithMany("LobbyWeapons")
                         .HasForeignKey("Hash")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "LobbyNavigation")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "LobbyNavigation")
                         .WithMany("LobbyWeapons")
                         .HasForeignKey("Lobby")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharAppearanceDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharAppearanceDatas", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
                         .WithMany("AppearanceData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TDS_Shared.Data.Models.CharCreator.CharCreateAppearanceData", "SyncedData", b1 =>
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateAppearanceData", "SyncedData", b1 =>
                         {
                             b1.Property<int>("PlayerCharAppearanceDatasPlayerId")
                                 .HasColumnType("integer");
@@ -7139,15 +7139,15 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithOne("CharDatas")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "PlayerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TDS_Shared.Data.Models.CharCreator.CharCreateData", "SyncedData", b1 =>
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateData", "SyncedData", b1 =>
                         {
                             b1.Property<int>("PlayerCharDatasPlayerId")
                                 .HasColumnType("integer");
@@ -7164,15 +7164,15 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharFeaturesDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharFeaturesDatas", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
                         .WithMany("FeaturesData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TDS_Shared.Data.Models.CharCreator.CharCreateFeaturesData", "SyncedData", b1 =>
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateFeaturesData", "SyncedData", b1 =>
                         {
                             b1.Property<int>("PlayerCharFeaturesDatasPlayerId")
                                 .HasColumnType("integer");
@@ -7252,15 +7252,15 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharGeneralDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharGeneralDatas", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
                         .WithMany("GeneralData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TDS_Shared.Data.Models.CharCreator.CharCreateGeneralData", "SyncedData", b1 =>
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateGeneralData", "SyncedData", b1 =>
                         {
                             b1.Property<int>("PlayerCharGeneralDatasPlayerId")
                                 .HasColumnType("integer");
@@ -7283,15 +7283,15 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharHairAndColorsDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharHairAndColorsDatas", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
                         .WithMany("HairAndColorsData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TDS_Shared.Data.Models.CharCreator.CharCreateHairAndColorsData", "SyncedData", b1 =>
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateHairAndColorsData", "SyncedData", b1 =>
                         {
                             b1.Property<int>("PlayerCharHairAndColorsDatasPlayerId")
                                 .HasColumnType("integer");
@@ -7338,15 +7338,15 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Char.PlayerCharHeritageDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharHeritageDatas", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", "CharDatas")
                         .WithMany("HeritageData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("TDS_Shared.Data.Models.CharCreator.CharCreateHeritageData", "SyncedData", b1 =>
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateHeritageData", "SyncedData", b1 =>
                         {
                             b1.Property<int>("PlayerCharHeritageDatasPlayerId")
                                 .HasColumnType("integer");
@@ -7378,299 +7378,299 @@ Zu hohe Zeiten sind schlecht, zu niedrige kein Problem."
                         });
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerBans", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerBans", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Admin")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Admin")
                         .WithMany("PlayerBansAdmin")
                         .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("PlayerBans")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerBansPlayer")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerClothes", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerClothes", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerClothes")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerClothes", "PlayerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.PlayerClothes", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerCommands", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerCommands", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Command.Commands", "Command")
+                    b.HasOne("TDS.Server.Database.Entity.Command.Commands", "Command")
                         .WithMany("PlayerCommands")
                         .HasForeignKey("CommandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("Commands")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerLobbyStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerLobbyStats", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "Lobby")
                         .WithMany("PlayerLobbyStats")
                         .HasForeignKey("LobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerLobbyStats")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerMapFavourites", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerMapFavourites", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Maps", "Map")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Maps", "Map")
                         .WithMany("PlayerMapFavourites")
                         .HasForeignKey("MapId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerMapFavourites")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerMapRatings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerMapRatings", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Maps", "Map")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Maps", "Map")
                         .WithMany("PlayerMapRatings")
                         .HasForeignKey("MapId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerMapRatings")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerRelations", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerRelations", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("PlayerRelationsPlayer")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Target")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Target")
                         .WithMany("PlayerRelationsTarget")
                         .HasForeignKey("TargetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerSettings", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerSettings")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerSettings", "PlayerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.PlayerSettings", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerStats", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerStats")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerStats", "PlayerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.PlayerStats", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerThemeSettings", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerThemeSettings", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithOne("ThemeSettings")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerThemeSettings", "PlayerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.PlayerThemeSettings", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerTotalStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerTotalStats", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithOne("PlayerTotalStats")
-                        .HasForeignKey("TDS_Server.Database.Entity.Player.PlayerTotalStats", "PlayerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.PlayerTotalStats", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerWeaponBodypartStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerWeaponBodypartStats", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("WeaponBodypartStats")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Weapons", "Weapon")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Weapons", "Weapon")
                         .WithMany("PlayerWeaponBodypartStats")
                         .HasForeignKey("WeaponHash")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.PlayerWeaponStats", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerWeaponStats", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithMany("WeaponStats")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Rest.Weapons", "Weapon")
+                    b.HasOne("TDS.Server.Database.Entity.Rest.Weapons", "Weapon")
                         .WithMany("PlayerWeaponStats")
                         .HasForeignKey("WeaponHash")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Player.Players", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Players", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "AdminLeader")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "AdminLeader")
                         .WithMany("AdminMembers")
                         .HasForeignKey("AdminLeaderId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("TDS_Server.Database.Entity.Admin.AdminLevels", "AdminLvlNavigation")
+                    b.HasOne("TDS.Server.Database.Entity.Admin.AdminLevels", "AdminLvlNavigation")
                         .WithMany("Players")
                         .HasForeignKey("AdminLvl")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Maps", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.Maps", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Creator")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Creator")
                         .WithMany("Maps")
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.SetNull);
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Offlinemessages", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.Offlinemessages", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Source")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Source")
                         .WithMany("OfflinemessagesSource")
                         .HasForeignKey("SourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Target")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Target")
                         .WithMany("OfflinemessagesTarget")
                         .HasForeignKey("TargetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Rest.Teams", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Rest.Teams", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.LobbyEntities.Lobbies", "LobbyNavigation")
+                    b.HasOne("TDS.Server.Database.Entity.LobbyEntities.Lobbies", "LobbyNavigation")
                         .WithMany("Teams")
                         .HasForeignKey("Lobby")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationAnswers", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.ApplicationAnswers", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Userpanel.Applications", "Application")
+                    b.HasOne("TDS.Server.Database.Entity.Userpanel.Applications", "Application")
                         .WithMany("Answers")
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Userpanel.ApplicationQuestions", "Question")
+                    b.HasOne("TDS.Server.Database.Entity.Userpanel.ApplicationQuestions", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationInvitations", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.ApplicationInvitations", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Admin")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Admin")
                         .WithMany("ApplicationInvitations")
                         .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Userpanel.Applications", "Application")
+                    b.HasOne("TDS.Server.Database.Entity.Userpanel.Applications", "Application")
                         .WithMany("Invitations")
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.ApplicationQuestions", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.ApplicationQuestions", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Admin")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Admin")
                         .WithMany("ApplicationQuestions")
                         .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.Applications", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.Applications", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Player")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
                         .WithOne("Application")
-                        .HasForeignKey("TDS_Server.Database.Entity.Userpanel.Applications", "PlayerId")
+                        .HasForeignKey("TDS.Server.Database.Entity.Userpanel.Applications", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.RuleTexts", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.RuleTexts", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Userpanel.Rules", "Rule")
+                    b.HasOne("TDS.Server.Database.Entity.Userpanel.Rules", "Rule")
                         .WithMany("RuleTexts")
                         .HasForeignKey("RuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.SupportRequestMessages", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.SupportRequestMessages", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Author")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Author")
                         .WithMany("SupportRequestMessages")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TDS_Server.Database.Entity.Userpanel.SupportRequests", "Request")
+                    b.HasOne("TDS.Server.Database.Entity.Userpanel.SupportRequests", "Request")
                         .WithMany("Messages")
                         .HasForeignKey("RequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TDS_Server.Database.Entity.Userpanel.SupportRequests", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Userpanel.SupportRequests", b =>
                 {
-                    b.HasOne("TDS_Server.Database.Entity.Player.Players", "Author")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Author")
                         .WithOne("SupportRequests")
-                        .HasForeignKey("TDS_Server.Database.Entity.Userpanel.SupportRequests", "AuthorId")
+                        .HasForeignKey("TDS.Server.Database.Entity.Userpanel.SupportRequests", "AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

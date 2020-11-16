@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Data.Interfaces.TeamsSystem
+namespace TDS.Server.Data.Interfaces.TeamsSystem
 {
     public interface ITeamChat
     {

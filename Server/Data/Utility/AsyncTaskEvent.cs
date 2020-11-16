@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace TDS_Server.Data.Utility
+namespace TDS.Server.Data.Utility
 {
 #nullable enable
 

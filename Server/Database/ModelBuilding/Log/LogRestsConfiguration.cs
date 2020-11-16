@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using TDS_Server.Database.Entity.Log;
+using TDS.Server.Database.Entity.Log;
 
-namespace TDS_Server.Database.ModelBuilding.Log
+namespace TDS.Server.Database.ModelBuilding.Log
 {
     public class LogRestsConfiguration : IEntityTypeConfiguration<LogRests>
     {

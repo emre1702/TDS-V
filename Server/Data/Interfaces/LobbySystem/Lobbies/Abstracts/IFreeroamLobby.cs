@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.Freeroam;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.Freeroam;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
+namespace TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
 {
     public interface IFreeroamLobby : IBaseLobby
     {

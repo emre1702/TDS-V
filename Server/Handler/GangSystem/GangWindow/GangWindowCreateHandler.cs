@@ -5,22 +5,22 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Models.GangWindow;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Entities.GangSystem;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Sync;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Utility;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models.GangWindow;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Entities.GangSystem;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Sync;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Utility;
 
-namespace TDS_Server.Handler.GangSystem
+namespace TDS.Server.Handler.GangSystem
 {
     public class GangWindowCreateHandler : DatabaseEntityWrapper
     {
@@ -51,7 +51,7 @@ namespace TDS_Server.Handler.GangSystem
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
 
-            var gang = _gangsProvider.Get(gangEntity);
+            var gang = _gangsProvider.GetGang(gangEntity);
             await _eventsHandler.OnGangJoin(player, gang, gangEntity.Ranks.MaxBy(r => r.Rank).First()).ConfigureAwait(false);
             // IsInGang is set to true in Angular, not needed here
             // Permissions will get synced, too - not needed here.

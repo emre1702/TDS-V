@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TDS_Shared.Data.Models.PlayerCommands
+namespace TDS.Shared.Data.Models.PlayerCommands
 {
     public class UserpanelPlayerCommandData
     {

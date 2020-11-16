@@ -1,11 +1,11 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.MapHandlers;
-using TDS_Server.LobbySystem.Players;
-using TDS_Server.LobbySystem.RoundsHandlers;
-using TDS_Server.LobbySystem.Sync;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.LobbySystem.BansHandlers;
+using TDS.Server.LobbySystem.MapHandlers;
+using TDS.Server.LobbySystem.Players;
+using TDS.Server.LobbySystem.RoundsHandlers;
+using TDS.Server.LobbySystem.Sync;
 
-namespace TDS_Server.LobbySystem.DependenciesModels
+namespace TDS.Server.LobbySystem.DependenciesModels
 {
     internal class GangActionLobbyDependencies : RoundFightLobbyDependencies
     {

@@ -1,7 +1,7 @@
 ﻿using MimeKit;
-using TDS_Server.Data.Models;
+using TDS.Server.Data.Models;
 
-namespace TDS_Server.MailSystem
+namespace TDS.Server.MailSystem
 {
     internal class TDSMail : MimeMessage
     {

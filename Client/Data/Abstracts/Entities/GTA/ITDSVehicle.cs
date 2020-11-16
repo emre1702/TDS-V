@@ -1,6 +1,6 @@
 ﻿using RAGE;
 
-namespace TDS_Client.Data.Abstracts.Entities.GTA
+namespace TDS.Client.Data.Abstracts.Entities.GTA
 {
     public abstract class ITDSVehicle : RAGE.Elements.Vehicle
     {

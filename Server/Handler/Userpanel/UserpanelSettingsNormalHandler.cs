@@ -4,22 +4,18 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Data.Models.Userpanel;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player.Settings;
-using TDS_Server.Database.Interfaces;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Player.Settings;
+using TDS.Server.Database.Interfaces;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     public class UserpanelSettingsNormalHandler : DatabaseEntityWrapper, IUserpanelSettingsNormalHandler
     {
@@ -40,7 +36,7 @@ namespace TDS_Server.Handler.Userpanel
 
             try
             {
-                var player = _tdsPlayerHandler.Get(userId);
+                var player = _tdsPlayerHandler.GetPlayer(userId);
                 if (player is { })
                     await SaveDiscordUserId(player, discordUserId).ConfigureAwait(false);
                 else
@@ -113,13 +109,13 @@ namespace TDS_Server.Handler.Userpanel
             newSettings.DiscordUserId = originalSettings.DiscordUserId;
             _playerIdWaitingForDiscordUserIdConfirm[newDiscordUserId.Value] = player.Id;
 
-            _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName), 
+            _bonusBotConnectorClient.PrivateChat?.SendMessage(string.Format(player.Language.DISCORD_IDENTITY_CHANGED_BONUSBOT_INFO, player.DisplayName),
                 newDiscordUserId.Value, (reply) =>
             {
                 if (string.IsNullOrEmpty(reply.ErrorMessage))
                     return;
 
-                NAPI.Task.RunSafe(() => 
+                NAPI.Task.RunSafe(() =>
                     player.SendChatMessage(string.Format(player.Language.DISCORD_IDENTITY_SAVE_FAILED, reply.ErrorMessage)));
             });
         }

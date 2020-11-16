@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Database.Entity.Player;
-using static TDS_Server.Data.Interfaces.PlayersSystem.IPlayerEvents;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Database.Entity.Player;
+using static TDS.Server.Data.Interfaces.PlayersSystem.IPlayerEvents;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class Events : IPlayerEvents
     {

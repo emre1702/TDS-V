@@ -1,15 +1,15 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Account;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using PlayerDb = TDS_Server.Database.Entity.Player.Players;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Account;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using PlayerDb = TDS.Server.Database.Entity.Player.Players;
 
-namespace TDS_Server.LobbySystem.BansHandlers
+namespace TDS.Server.LobbySystem.BansHandlers
 {
     public class MainMenuBansHandler : BaseLobbyBansHandler
     {

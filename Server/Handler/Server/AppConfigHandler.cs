@@ -3,9 +3,9 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Server.Data.Models;
+using TDS.Server.Data.Models;
 
-namespace TDS_Server.Handler.Server
+namespace TDS.Server.Handler.Server
 {
     public class AppConfigHandler
     {
@@ -16,20 +16,20 @@ namespace TDS_Server.Handler.Server
 
         public AppConfigHandler()
         {
-            var path = Path.Join(AssemblyDirectory, "TDS_Server.config");
+            var path = Path.Join(AssemblyDirectory, "TDS.Server.config");
             using var fileStream = new FileStream(path, FileMode.Open);
             using var reader = XmlReader.Create(fileStream);
             var xmlSerializer = XmlSerializer.FromTypes(new[] { typeof(AppConfigDto) })[0];
 
-            _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader);
+            _localSettings = (AppConfigDto)xmlSerializer.Deserialize(reader)!;
         }
 
         private string AssemblyDirectory
         {
             get
             {
-                string? codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                var uri = new UriBuilder(codeBase ?? "TDS_Server.RAGEAPI.dll");
+                string? codeBase = Assembly.GetExecutingAssembly().Location;
+                var uri = new UriBuilder(codeBase ?? "TDS.Server.RAGEAPI.dll");
                 var path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path) ?? ".";
             }

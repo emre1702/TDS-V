@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Drawing;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Default;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Default;
 using Alignment = RAGE.NUI.UIResText.Alignment;
 
-namespace TDS_Client.Handler.Lobby
+namespace TDS.Client.Handler.Lobby
 {
     public class CountdownHandler : ServiceBase
     {

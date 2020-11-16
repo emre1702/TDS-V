@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.GangSystem;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.GangSystem;
 
-namespace TDS_Server.GangsSystem
+namespace TDS.Server.GangsSystem
 {
     public class GangsProvider : IGangsProvider
     {
@@ -17,10 +17,10 @@ namespace TDS_Server.GangsSystem
             _serviceProvider = serviceProvider;
             _eventsHandler = eventsHandler;
 
-            new GlobalEventsHandler(eventsHandler);
+            _ = new GlobalEventsHandler(eventsHandler);
         }
 
-        public IGang Get(Gangs entity)
+        public IGang GetGang(Gangs entity)
         {
             var gang = _serviceProvider.GetRequiredService<IGang>();
             gang.Init(entity);

@@ -1,9 +1,9 @@
-﻿using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
+﻿using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Client.Handler.Lobby
+namespace TDS.Client.Handler.Lobby
 {
     public class MainMenuHandler
     {

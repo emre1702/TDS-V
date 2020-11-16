@@ -1,9 +1,9 @@
-﻿using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
+﻿using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class GhostModeHandler : ServiceBase
     {

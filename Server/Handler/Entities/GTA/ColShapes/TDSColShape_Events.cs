@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Handler.Entities.GTA.ColShapes
+namespace TDS.Server.Handler.Entities.GTA.ColShapes
 {
     partial class TDSColShape
     {

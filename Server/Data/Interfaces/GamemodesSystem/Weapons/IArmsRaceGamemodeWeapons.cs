@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.GamemodesSystem.Weapons
+namespace TDS.Server.GamemodesSystem.Weapons
 {
     public interface IArmsRaceGamemodeWeapons
     {
@@ -9,7 +9,7 @@ namespace TDS_Server.GamemodesSystem.Weapons
 
         WeaponHash GetCurrentWeapon(ITDSPlayer player);
 
-        bool GetNextWeapon(ITDSPlayer player, out WeaponHash? weaponHash);
+        bool TryGetNextWeapon(ITDSPlayer player, out WeaponHash? weaponHash);
 
         bool IsWeaponAllowed(WeaponHash weaponHash);
     }

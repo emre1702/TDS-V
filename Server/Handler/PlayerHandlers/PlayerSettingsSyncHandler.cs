@@ -2,14 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Web;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
-using static TDS_Server.Data.Interfaces.PlayersSystem.IPlayerEvents;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Default;
+using static TDS.Server.Data.Interfaces.PlayersSystem.IPlayerEvents;
 
-namespace TDS_Server.Handler.PlayerHandlers
+namespace TDS.Server.Handler.PlayerHandlers
 {
     public class PlayerSettingsSyncHandler
     {

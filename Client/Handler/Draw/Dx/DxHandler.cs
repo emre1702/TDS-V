@@ -1,11 +1,11 @@
 ﻿using RAGE;
 using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Models;
-using TDS_Shared.Core;
+using TDS.Client.Data.Models;
+using TDS.Shared.Core;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Draw.Dx
+namespace TDS.Client.Handler.Draw.Dx
 {
     public class DxHandler : ServiceBase
     {

@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Default;
 
-namespace TDS_Server.DamageSystem.KillingSprees
+namespace TDS.Server.DamageSystem.KillingSprees
 {
     internal class KillingSpreeSoundsHandler
     {

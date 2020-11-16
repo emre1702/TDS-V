@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Events;
-using static TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers.IBaseLobbyEventsHandler;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Events;
+using static TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers.IBaseLobbyEventsHandler;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.EventsHandlers
+namespace TDS.Server.LobbySystem.EventsHandlers
 {
     public class BaseLobbyEventsHandler : IBaseLobbyEventsHandler
     {

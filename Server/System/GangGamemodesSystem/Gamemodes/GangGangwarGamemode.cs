@@ -1,12 +1,12 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.GamemodesSystem.DependenciesModels;
-using TDS_Server.GamemodesSystem.Gamemodes;
-using TDS_Server.GangGamemodesSystem.Players;
-using TDS_Server.GangGamemodesSystem.Specials;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.GamemodesSystem.DependenciesModels;
+using TDS.Server.GamemodesSystem.Gamemodes;
+using TDS.Server.GangGamemodesSystem.Players;
+using TDS.Server.GangGamemodesSystem.Specials;
 
-namespace TDS_Server.GangGamemodesSystem.Gamemodes
+namespace TDS.Server.GangGamemodesSystem.Gamemodes
 {
     public class GangGangwarGamemode : GangwarGamemode, IGangGangwarGamemode
     {

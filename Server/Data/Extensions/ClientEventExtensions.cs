@@ -1,9 +1,9 @@
 ﻿using GTANetworkMethods;
 using System;
 using System.Reflection;
-using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Data.Extensions
+namespace TDS.Server.Data.Extensions
 {
     public static class ClientEventExtensions
     {

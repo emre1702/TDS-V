@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Players;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Players;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 
-namespace TDS_Server.GamemodesSystem.Players
+namespace TDS.Server.GamemodesSystem.Players
 {
     public class BaseGamemodePlayers : IBaseGamemodePlayers
     {

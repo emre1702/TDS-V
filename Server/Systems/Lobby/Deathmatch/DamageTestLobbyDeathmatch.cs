@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.DamageSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.Weapons;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.DamageSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using TDS.Server.LobbySystem.Weapons;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.Deathmatch
+namespace TDS.Server.LobbySystem.Deathmatch
 {
     public class DamageTestLobbyDeathmatch : FightLobbyDeathmatch, IDamageTestLobbyDeathmatch
     {

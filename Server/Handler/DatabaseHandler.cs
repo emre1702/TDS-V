@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Database.Entity;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Database.Entity;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
-    public class DatabaseHandler : IDatabaseHandler
+    public class DatabaseHandler : IDatabaseHandler, IAsyncDisposable
     {
-        protected ILoggingHandler LoggingHandler;
+        protected ILoggingHandler LoggingHandler { get; }
 
         private readonly TDSDbContext _dbContext;
 
@@ -136,6 +136,14 @@ namespace TDS_Server.Handler
             {
                 _dbContextSemaphore.Release();
             }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await (_dbContext?.DisposeAsync() ?? default);
+            _dbContextSemaphore?.Dispose();
+
+            GC.SuppressFinalize(this);
         }
     }
 }

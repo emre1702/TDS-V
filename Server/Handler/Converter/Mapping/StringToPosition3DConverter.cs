@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using System.Globalization;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Server.Handler.Converter.Mapping
+namespace TDS.Server.Handler.Converter.Mapping
 {
     internal class StringToPosition3DConverter : ITypeConverter<string, Position3D?>
     {

@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Shared.Data.Utility
+namespace TDS.Shared.Data.Utility
 {
     public static class SharedUtils
     {

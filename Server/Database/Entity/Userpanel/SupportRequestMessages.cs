@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Database.Entity.Userpanel
+namespace TDS.Server.Database.Entity.Userpanel
 {
     public class SupportRequestMessages
     {

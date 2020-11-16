@@ -1,6 +1,6 @@
-﻿using TDS_Shared.Data.Enums;
+﻿using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Command
+namespace TDS.Server.Database.Entity.Command
 {
     public partial class CommandInfos
     {

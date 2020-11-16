@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.LobbySystem.Notifications
+﻿namespace TDS.Server.Data.Interfaces.LobbySystem.Notifications
 {
     public interface IRoundFightLobbyNotifications : IBaseLobbyNotifications
     {

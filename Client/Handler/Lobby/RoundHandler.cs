@@ -1,9 +1,9 @@
 ﻿using System;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Default;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler.Lobby
+namespace TDS.Client.Handler.Lobby
 {
     public class RoundHandler : ServiceBase
     {

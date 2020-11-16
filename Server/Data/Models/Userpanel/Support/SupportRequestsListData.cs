@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Data.Models.Userpanel.Support
+namespace TDS.Server.Data.Models.Userpanel.Support
 {
     public class SupportRequestsListData
     {

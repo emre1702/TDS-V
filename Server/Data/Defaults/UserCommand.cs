@@ -1,6 +1,6 @@
-﻿namespace TDS_Server.Data.Defaults
+﻿namespace TDS.Server.Data.Defaults
 {
-    public class UserCommand
+    public static class UserCommand
     {
         public const string BlockUser = "BlockUser";
         public const string ClosePrivateChat = "ClosePrivateChat";

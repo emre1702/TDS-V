@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.Colshapes;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.Colshapes;
 
-namespace TDS_Server.LobbySystem.ColshapesHandlers
+namespace TDS.Server.LobbySystem.ColshapesHandlers
 {
     public class BaseLobbyColshapesHandler : IBaseLobbyColshapesHandler
     {

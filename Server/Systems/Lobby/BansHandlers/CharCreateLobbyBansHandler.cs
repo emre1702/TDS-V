@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.BansHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Handler.Helper;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.BansHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Handler.Helper;
 
-namespace TDS_Server.LobbySystem.BansHandlers
+namespace TDS.Server.LobbySystem.BansHandlers
 {
     public class CharCreateLobbyBansHandler : BaseLobbyBansHandler, ICharCreateLobbyBansHandler
     {

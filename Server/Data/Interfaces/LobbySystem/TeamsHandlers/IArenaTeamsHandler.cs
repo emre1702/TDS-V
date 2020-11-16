@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers
+namespace TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers
 {
     public interface IArenaTeamsHandler : IRoundFightLobbyTeamsHandler
     {

@@ -1,7 +1,7 @@
 ﻿using RAGE;
-using TDS_Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Client.Handler.Entities.GTA
+namespace TDS.Client.Handler.Entities.GTA
 {
     public class TDSObject : ITDSObject
     {

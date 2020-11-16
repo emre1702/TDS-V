@@ -1,13 +1,13 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.DamageSystem.KillingSprees;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.DamageSystem.Damages;
-using TDS_Server.Data.Interfaces.DamageSystem.Deaths;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.DamageSystem.KillingSprees;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.DamageSystem.Damages;
+using TDS.Server.Data.Interfaces.DamageSystem.Deaths;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.DamageSystem.Deaths
+namespace TDS.Server.DamageSystem.Deaths
 {
     public class DeathHandler : IDeathHandler
     {

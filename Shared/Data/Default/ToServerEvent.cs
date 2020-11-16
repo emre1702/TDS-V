@@ -1,4 +1,4 @@
-﻿namespace TDS_Shared.Default
+﻿namespace TDS.Shared.Default
 {
     public static class ToServerEvent
     {

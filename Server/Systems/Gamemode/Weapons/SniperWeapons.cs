@@ -1,10 +1,10 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Database.Entity;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.Entity;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.GamemodesSystem.Weapons
+namespace TDS.Server.GamemodesSystem.Weapons
 {
     public class SniperWeapons : BaseGamemodeWeapons
     {

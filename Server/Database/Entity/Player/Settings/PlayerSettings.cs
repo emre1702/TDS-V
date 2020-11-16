@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
-using TDS_Server.Database.Interfaces;
-using TDS_Shared.Data.Models;
+using TDS.Server.Database.Interfaces;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Server.Database.Entity.Player.Settings
+namespace TDS.Server.Database.Entity.Player.Settings
 {
     public class PlayerSettings : IPlayerDataTable
     {

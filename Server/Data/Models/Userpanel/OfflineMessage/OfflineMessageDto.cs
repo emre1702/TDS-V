@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace TDS_Server.Data.Models.Userpanel.OfflineMessage
+namespace TDS.Server.Data.Models.Userpanel.OfflineMessage
 {
     public class OfflineMessageDto
     {

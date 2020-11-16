@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Events;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Events;
 
-namespace TDS_Server.LobbySystem.EventsHandlers
+namespace TDS.Server.LobbySystem.EventsHandlers
 {
     public class AllLobbiesEventsHandler
     {

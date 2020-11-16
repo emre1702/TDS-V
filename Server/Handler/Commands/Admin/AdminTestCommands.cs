@@ -1,14 +1,14 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler.Commands.Admin
+namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminTestCommands
     {
-        [TDSCommand(AdminCommand.Test)]
+        [TDSCommandAttribute(AdminCommand.Test)]
         public void Test(ITDSPlayer player, string type, string? arg1 = null, string? arg2 = null, string? arg3 = null)
         {
             switch (type)

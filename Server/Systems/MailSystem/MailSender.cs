@@ -1,14 +1,14 @@
 ﻿using MimeKit;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.MailSystem;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.MailSystem.Datas;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.MailSystem;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.MailSystem.Datas;
 
-namespace TDS_Server.MailSystem
+namespace TDS.Server.MailSystem
 {
     public class MailSender : IMailSender
     {

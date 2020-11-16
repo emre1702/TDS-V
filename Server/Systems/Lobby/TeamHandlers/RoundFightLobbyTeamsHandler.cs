@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Helper;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Helper;
 
-namespace TDS_Server.LobbySystem.TeamHandlers
+namespace TDS.Server.LobbySystem.TeamHandlers
 {
     public class RoundFightLobbyTeamsHandler : FightLobbyTeamsHandler, IRoundFightLobbyTeamsHandler
     {
@@ -30,7 +30,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         public Task<ITeam?> GetTeamWithHighestHp()
         {
-            return Do(teams =>
+            return DoForList(teams =>
             {
                 var highestHp = 0;
                 var teamWithHighestHp = teams[1];
@@ -53,7 +53,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         private ValueTask RoundEnd()
         {
-            return new ValueTask(Do(teams =>
+            return new ValueTask(DoForList(teams =>
             {
                 foreach (var team in teams)
                     team.Players.ClearAlive();

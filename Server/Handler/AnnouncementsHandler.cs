@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class AnnouncementsHandler : IAnnouncementsHandler
     {

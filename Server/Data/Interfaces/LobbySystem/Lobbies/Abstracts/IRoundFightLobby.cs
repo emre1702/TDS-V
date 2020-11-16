@@ -1,18 +1,18 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.Data.Interfaces.LobbySystem.Rankings;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
-using TDS_Server.Data.Interfaces.LobbySystem.Spectator;
-using TDS_Server.Data.Interfaces.LobbySystem.Statistics;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Weapons;
-using TDS_Server.Data.Models.Map;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Notifications;
+using TDS.Server.Data.Interfaces.LobbySystem.Players;
+using TDS.Server.Data.Interfaces.LobbySystem.Rankings;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
+using TDS.Server.Data.Interfaces.LobbySystem.Spectator;
+using TDS.Server.Data.Interfaces.LobbySystem.Statistics;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Weapons;
+using TDS.Server.Data.Models.Map;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
+namespace TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts
 {
     public interface IRoundFightLobby : IFightLobby
     {

@@ -1,11 +1,11 @@
-﻿using TDS_Server.Database.Entity.LobbyEntities;
+﻿using TDS.Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.Data.Models
+namespace TDS.Server.Data.Models
 {
     public class DamageDto
     {
-        public float Damage;
-        public float HeadMultiplier;
+        public float Damage { get; set; }
+        public float HeadMultiplier { get; set; }
 
         public DamageDto()
         {

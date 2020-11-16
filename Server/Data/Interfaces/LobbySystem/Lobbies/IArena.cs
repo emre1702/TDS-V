@@ -1,10 +1,10 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.MapVotings;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.LobbySystem.MapHandlers;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.MapVotings;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.LobbySystem.MapHandlers;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Lobbies
+namespace TDS.Server.Data.Interfaces.LobbySystem.Lobbies
 {
     public interface IArena : IRoundFightLobby
     {

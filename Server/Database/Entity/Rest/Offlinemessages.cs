@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Database.Entity.Rest
+namespace TDS.Server.Database.Entity.Rest
 {
     public partial class Offlinemessages
     {

@@ -1,12 +1,12 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Rounds;
-using TDS_Server.GamemodesSystem.DependenciesModels;
-using TDS_Server.GamemodesSystem.Rounds;
-using TDS_Server.GamemodesSystem.Weapons;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Rounds;
+using TDS.Server.GamemodesSystem.DependenciesModels;
+using TDS.Server.GamemodesSystem.Rounds;
+using TDS.Server.GamemodesSystem.Weapons;
 
-namespace TDS_Server.GamemodesSystem.Gamemodes
+namespace TDS.Server.GamemodesSystem.Gamemodes
 {
     public class ArmsRaceGamemode : BaseGamemode, IArmsRaceGamemode
     {

@@ -1,22 +1,22 @@
 ﻿using System;
-using TDS_Client.Handler;
-using TDS_Client.Handler.Appearance;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Draw;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Factories;
-using TDS_Client.Handler.FakePickups;
-using TDS_Client.Handler.GangSystem;
-using TDS_Client.Handler.Lobby;
-using TDS_Client.Handler.Map;
-using TDS_Client.Handler.MapCreator;
-using TDS_Client.Handler.Sync;
-using TDS_Client.Manager.Utility;
-using TDS_Shared.Core;
+using TDS.Client.Handler;
+using TDS.Client.Handler.Appearance;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Deathmatch;
+using TDS.Client.Handler.Draw;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Factories;
+using TDS.Client.Handler.FakePickups;
+using TDS.Client.Handler.GangSystem;
+using TDS.Client.Handler.Lobby;
+using TDS.Client.Handler.Map;
+using TDS.Client.Handler.MapCreator;
+using TDS.Client.Handler.Sync;
+using TDS.Client.Manager.Utility;
+using TDS.Shared.Core;
 
-namespace TDS_Client.Core.Init
+namespace TDS.Client.Core.Init
 {
     internal class Services
     {

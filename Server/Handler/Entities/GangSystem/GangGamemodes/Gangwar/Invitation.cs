@@ -1,9 +1,9 @@
 ﻿//using GTANetworkAPI;
-//using TDS_Server.Data.Abstracts.Entities.GTA;
-//using TDS_Server.Data.Interfaces;
-//using TDS_Server.Handler.Entities.Utility;
+//using TDS.Server.Data.Abstracts.Entities.GTA;
+//using TDS.Server.Data.Interfaces;
+//using TDS.Server.Handler.Entities.Utility;
 
-//namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
+//namespace TDS.Server.Handler.Entities.GangSystem.GangGamemodes
 //{
 //    partial class GangGangwar
 //    {

@@ -2,20 +2,20 @@
 using GTANetworkAPI;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities.GangSystem;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Entities.GangSystem;
 
-namespace TDS_Server.Handler.Events
+namespace TDS.Server.Handler.Events
 {
     public class EventsHandler
     {
-        public AsyncValueTaskEvent<ITDSPlayer>? PlayerLoggedOutBefore;
-        public AsyncValueTaskEvent<(ITDSPlayer, Players)>? PlayerRegisteredBefore;
+        public AsyncValueTaskEvent<ITDSPlayer>? PlayerLoggedOutBefore { get; set; }
+        public AsyncValueTaskEvent<(ITDSPlayer, Players)>? PlayerRegisteredBefore { get; set; }
 
         private int _hourCounter;
         private int _minuteCounter;
@@ -101,7 +101,7 @@ namespace TDS_Server.Handler.Events
 
         public event PlayerDelegate? PlayerJoinedCustomMenuLobby;
 
-        public AsyncValueTaskEvent<(ITDSPlayer player, IGang gang, GangRanks rank)>? PlayerJoinedGang;
+        public AsyncValueTaskEvent<(ITDSPlayer player, IGang gang, GangRanks rank)>? PlayerJoinedGang { get; set; }
 
         public event PlayerLobbyDelegate? PlayerJoinedLobby;
 

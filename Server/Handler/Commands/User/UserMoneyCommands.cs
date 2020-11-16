@@ -1,12 +1,12 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler.Commands.User
+namespace TDS.Server.Handler.Commands.User
 {
     public class UserMoneyCommands
     {
@@ -15,7 +15,7 @@ namespace TDS_Server.Handler.Commands.User
         public UserMoneyCommands(ISettingsHandler settingsHandler)
             => _settingsHandler = settingsHandler;
 
-        [TDSCommand(UserCommand.GiveMoney)]
+        [TDSCommandAttribute(UserCommand.GiveMoney)]
         public void GiveMoney(ITDSPlayer player, ITDSPlayer target, uint money)
         {
             if (player.Entity is null || target.Entity is null)

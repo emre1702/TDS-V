@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace TDS_Server.Data.Models.WeaponsMeta
+namespace TDS.Server.Data.Models.WeaponsMeta
 {
 #nullable disable
 

@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Models.GangWindow;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Models.GangWindow;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Server.Handler.GangSystem.GangWindow
+namespace TDS.Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowRanksPermissionsHandler
     {

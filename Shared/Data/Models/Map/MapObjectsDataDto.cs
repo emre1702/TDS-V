@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Data.Models.Map.Creator;
+using TDS.Shared.Data.Models.GTA;
+using TDS.Shared.Data.Models.Map.Creator;
 
-namespace TDS_Shared.Data.Models.Map
+namespace TDS.Shared.Data.Models.Map
 {
     public class ClientSyncedDataDto
     {

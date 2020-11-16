@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using TDS_Server.Database.Entity.Rest;
+using TDS.Server.Database.Entity.Rest;
 
-namespace TDS_Server.Database.ModelBuilding.Rest
+namespace TDS.Server.Database.ModelBuilding.Rest
 {
     public class AnnouncementsConfiguration : IEntityTypeConfiguration<Announcements>
     {

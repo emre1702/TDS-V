@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Data.Interfaces.PlayersSystem
+namespace TDS.Server.Data.Interfaces.PlayersSystem
 {
 #nullable enable
 

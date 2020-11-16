@@ -1,4 +1,4 @@
-﻿namespace TDS_Shared.Data.Default
+﻿namespace TDS.Shared.Data.Default
 {
     public static class SharedConstants
     {

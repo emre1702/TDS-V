@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.Players;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.Players;
 
-namespace TDS_Server.GangGamemodesSystem.Players
+namespace TDS.Server.GangGamemodesSystem.Players
 {
     public interface IGangGangwarGamemodePlayers : IGangwarGamemodePlayers
     {

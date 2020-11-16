@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TDS_Server.Database.Entity.Server
+namespace TDS.Server.Database.Entity.Server
 {
     public class ServerDailyStats
     {

@@ -1,9 +1,9 @@
 ﻿using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Database.Entity;
 
-namespace TDS_Server.Data.Interfaces.Entities
+namespace TDS.Server.Data.Interfaces.Entities
 {
     public interface IDatabaseHandler : IDatabaseEntityWrapper
     {

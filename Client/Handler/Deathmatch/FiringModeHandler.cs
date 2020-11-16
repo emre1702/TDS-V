@@ -3,17 +3,17 @@ using RAGE.Elements;
 using RAGE.Game;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Draw;
-using TDS_Client.Handler.Entities.Draw.Scaleform;
-using TDS_Client.Handler.Events;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Interfaces;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Draw;
+using TDS.Client.Handler.Entities.Draw.Scaleform;
+using TDS.Client.Handler.Events;
 using static RAGE.Events;
 using Player = RAGE.Game.Player;
 
-namespace TDS_Client.Handler.Deathmatch
+namespace TDS.Client.Handler.Deathmatch
 {
     public class FiringModeHandler
     {

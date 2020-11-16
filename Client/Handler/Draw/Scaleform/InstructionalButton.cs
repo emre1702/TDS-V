@@ -1,7 +1,7 @@
 ﻿using RAGE.Game;
-using TDS_Client.Handler.Draw;
+using TDS.Client.Handler.Draw;
 
-namespace TDS_Client.Handler.Entities.Draw.Scaleform
+namespace TDS.Client.Handler.Entities.Draw.Scaleform
 {
     public class InstructionalButton
     {

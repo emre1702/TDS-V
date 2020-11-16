@@ -1,9 +1,9 @@
 ﻿using RAGE;
-using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Entities;
-using TDS_Client.Handler.Events;
+using TDS.Client.Handler.Deathmatch;
+using TDS.Client.Handler.Entities;
+using TDS.Client.Handler.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class CamerasHandler : ServiceBase
     {

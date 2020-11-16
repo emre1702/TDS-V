@@ -2,9 +2,9 @@
 using Grpc.Core;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Shared.Data.Enums.Userpanel;
 
 namespace BonusBotConnector_Server
 {

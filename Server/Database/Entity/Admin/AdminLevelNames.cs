@@ -1,6 +1,6 @@
-﻿using TDS_Shared.Data.Enums;
+﻿using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Admin
+namespace TDS.Server.Database.Entity.Admin
 {
     public partial class AdminLevelNames
     {

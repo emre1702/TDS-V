@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Data.Interfaces.TeamsSystem
+namespace TDS.Server.Data.Interfaces.TeamsSystem
 {
     public interface ITeamSync
     {

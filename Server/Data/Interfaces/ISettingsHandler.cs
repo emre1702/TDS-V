@@ -1,8 +1,8 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Database.Entity.Server;
-using TDS_Shared.Data.Models;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Database.Entity.Server;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Server.Data.Interfaces
+namespace TDS.Server.Data.Interfaces
 {
     public interface ISettingsHandler
     {

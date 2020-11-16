@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace TDS_Client.Data.Extensions
+namespace TDS.Client.Data.Extensions
 {
     public static class ColorExtensions
     {

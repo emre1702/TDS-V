@@ -2,22 +2,22 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Models.GangWindow;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.Utility;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Sync;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models.GangWindow;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Entities.Utility;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using TDS.Server.Handler.Sync;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.GangSystem.GangWindow
+namespace TDS.Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowMembersHandler
     {
@@ -104,7 +104,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (invitation is { })
                 return player.Language.YOU_ALREADY_INVITED_TARGET;
 
-            new Invitation(player.Language.GANG_INVITATION_INFO, target, player, _invitationsHandler, AcceptedInvitation, RejectedInvitation, InvitationType.Gang);
+            _ = new Invitation(player.Language.GANG_INVITATION_INFO, target, player, _invitationsHandler, AcceptedInvitation, RejectedInvitation, InvitationType.Gang);
             return "";
         }
 
@@ -113,7 +113,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (player.Entity is null)
                 return "?";
 
-            var target = _tdsPlayerHandler.Get(gangMember.PlayerId);
+            var target = _tdsPlayerHandler.GetPlayer(gangMember.PlayerId);
             if (target is { })
             {
                 await LeaveGang(target, false).ConfigureAwait(false);
@@ -140,7 +140,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (msg is { })
                 return msg;
 
-            var target = _tdsPlayerHandler.Get(gangMember.PlayerId);
+            var target = _tdsPlayerHandler.GetPlayer(gangMember.PlayerId);
             if (target is { })
             {
                 target.SendNotification(string.Format(target.Language.YOU_GOT_RANK_DOWN_BY, player.DisplayName, oldRank, oldRank - 1));
@@ -163,7 +163,7 @@ namespace TDS_Server.Handler.GangSystem.GangWindow
             if (msg is { })
                 return msg;
 
-            var target = _tdsPlayerHandler.Get(gangMember.PlayerId);
+            var target = _tdsPlayerHandler.GetPlayer(gangMember.PlayerId);
             if (target is { })
             {
                 target.SendNotification(string.Format(target.Language.YOU_GOT_RANK_UP, player.DisplayName, oldRank, oldRank + 1));

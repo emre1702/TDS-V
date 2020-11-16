@@ -1,9 +1,9 @@
-﻿using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Models;
+﻿using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class InfosHandler : ServiceBase
     {
@@ -36,7 +36,7 @@ namespace TDS_Client.Handler
 
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
-            _inMainMenu = settings.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu;
+            _inMainMenu = settings.Type == TDS.Shared.Data.Enums.LobbyType.MainMenu;
 
             if (_settings?.ShowLobbyLeaveInfo == true)
                 _angularBrowserHandler.ToggleInfo(InfoType.LobbyLeave, !_inMainMenu);

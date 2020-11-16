@@ -1,17 +1,17 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Players;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Specials;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Teams;
-using TDS_Server.GamemodesSystem.DependenciesModels;
-using TDS_Server.GamemodesSystem.MapHandlers;
-using TDS_Server.GamemodesSystem.Players;
-using TDS_Server.GamemodesSystem.Specials;
-using TDS_Server.GamemodesSystem.Teams;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.GamemodesSystem.MapHandler;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Players;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Specials;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Teams;
+using TDS.Server.GamemodesSystem.DependenciesModels;
+using TDS.Server.GamemodesSystem.MapHandlers;
+using TDS.Server.GamemodesSystem.Players;
+using TDS.Server.GamemodesSystem.Specials;
+using TDS.Server.GamemodesSystem.Teams;
 
-namespace TDS_Server.GamemodesSystem.Gamemodes
+namespace TDS.Server.GamemodesSystem.Gamemodes
 {
     public class GangwarGamemode : BaseGamemode, IGangwarGamemode
     {

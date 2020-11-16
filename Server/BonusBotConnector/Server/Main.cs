@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Userpanel;
 
 namespace BonusBotConnector_Server
 {

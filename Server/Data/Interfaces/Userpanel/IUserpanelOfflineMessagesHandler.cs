@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Data.Interfaces.Userpanel
+namespace TDS.Server.Data.Interfaces.Userpanel
 {
     public interface IUserpanelOfflineMessagesHandler
     {
@@ -10,7 +10,7 @@ namespace TDS_Server.Data.Interfaces.Userpanel
 
         Task<object> Answer(ITDSPlayer player, ArraySegment<object> args);
 
-        Task<object> Delete(ITDSPlayer player, ArraySegment<object> args);
+        Task<object> Delete(ITDSPlayer _, ArraySegment<object> args);
 
         Task<string> GetData(ITDSPlayer player);
 

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.Challenge;
 
-namespace TDS_Server.Data.Models.Challenge
+namespace TDS.Server.Data.Models.Challenge
 {
     public class ChallengeGroupModel
     {

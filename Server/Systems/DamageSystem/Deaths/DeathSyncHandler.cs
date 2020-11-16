@@ -1,10 +1,10 @@
 ﻿using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Models;
-using TDS_Shared.Core;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Models;
+using TDS.Shared.Core;
+using TDS.Shared.Default;
 
-namespace TDS_Server.DamageSystem.Deaths
+namespace TDS.Server.DamageSystem.Deaths
 {
     internal class DeathSyncHandler
     {

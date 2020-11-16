@@ -1,29 +1,28 @@
-﻿using System;
+﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Utility;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Players;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Utility;
 
-namespace TDS_Server.LobbySystem.Players
+namespace TDS.Server.LobbySystem.Players
 {
-    public class BaseLobbyPlayers : IBaseLobbyPlayers
+    public class BaseLobbyPlayers : IBaseLobbyPlayers, IDisposable
     {
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private readonly List<ITDSPlayer> _players = new List<ITDSPlayer>();
 
-        protected readonly IBaseLobby Lobby;
-        protected readonly IBaseLobbyEventsHandler Events;
+        protected IBaseLobby Lobby { get; }
+        protected IBaseLobbyEventsHandler Events { get; }
 
         public BaseLobbyPlayers(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {
@@ -116,7 +115,7 @@ namespace TDS_Server.LobbySystem.Players
         public virtual Task OnPlayerLoggedOut(ITDSPlayer player)
             => RemovePlayer(player);
 
-        public Task Do(Action<ITDSPlayer> func)
+        public Task DoForAll(Action<ITDSPlayer> func)
         {
             return _semaphore.Do(() =>
             {
@@ -189,6 +188,13 @@ namespace TDS_Server.LobbySystem.Players
             {
                 LoggingHandler.Instance.LogError(ex);
             }
+        }
+
+        public void Dispose()
+        {
+            _players.Clear();
+            _semaphore.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

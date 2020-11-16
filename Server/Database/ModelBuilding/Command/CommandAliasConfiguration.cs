@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Command;
+using TDS.Server.Database.Entity.Command;
 
-namespace TDS_Server.Database.ModelBuilding.Command
+namespace TDS.Server.Database.ModelBuilding.Command
 {
     internal class CommandAliasConfiguration : IEntityTypeConfiguration<CommandAlias>
     {

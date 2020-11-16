@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Database.Interfaces;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Database.Interfaces;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Player
+namespace TDS.Server.Database.Entity.Player
 {
     public class PlayerWeaponStats : IPlayerDataTable
     {

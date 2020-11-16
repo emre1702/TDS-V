@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler;
-using TDS_Server.Handler.GangSystem;
-using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Sync;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler;
+using TDS.Server.Handler.GangSystem;
+using TDS.Server.Handler.Helper;
+using TDS.Server.Handler.Sync;
 
-namespace TDS_Server.GangsSystem
+namespace TDS.Server.GangsSystem
 {
     public class Gang : IGang
     {

@@ -1,11 +1,11 @@
 ﻿using RAGE;
 using System.Drawing;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Draw.Dx;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Draw.Dx;
 using static RAGE.NUI.UIResText;
 
-namespace TDS_Client.Handler.Entities.Draw
+namespace TDS.Client.Handler.Entities.Draw
 {
     public class FloatingDamageInfo
     {

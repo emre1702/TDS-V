@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Database.ModelBuilding.Player
+namespace TDS.Server.Database.ModelBuilding.Player
 {
     public class PlayerClothesConfiguration : IEntityTypeConfiguration<PlayerClothes>
     {

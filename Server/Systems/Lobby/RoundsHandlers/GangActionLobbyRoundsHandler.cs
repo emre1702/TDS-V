@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.GamemodesSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Data.RoundEndReasons;
+using TDS.Server.Data.Interfaces.GamemodesSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Data.RoundEndReasons;
 
-namespace TDS_Server.LobbySystem.RoundsHandlers
+namespace TDS.Server.LobbySystem.RoundsHandlers
 {
     internal class GangActionLobbyRoundsHandler : RoundFightLobbyRoundsHandler
     {

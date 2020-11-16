@@ -2,10 +2,10 @@
 using Newtonsoft.Json;
 using System;
 using System.Xml.Serialization;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Data.Models.Map.Creator;
+using TDS.Shared.Data.Models.GTA;
+using TDS.Shared.Data.Models.Map.Creator;
 
-namespace TDS_Server.Data.Models.Map.Creator
+namespace TDS.Server.Data.Models.Map.Creator
 {
 #nullable enable
 

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.TeamsSystem;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers
+namespace TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers
 {
 #nullable enable
 
@@ -12,9 +12,9 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers
     {
         int Count { get; }
 
-        Task Do(Action<ITeam[]> action);
+        Task DoForList(Action<ITeam[]> action);
 
-        Task<T> Do<T>(Func<ITeam[], T> func);
+        Task<T> DoForList<T>(Func<ITeam[], T> func);
 
         Task<ITeam> GetTeam(short teamIndex);
 

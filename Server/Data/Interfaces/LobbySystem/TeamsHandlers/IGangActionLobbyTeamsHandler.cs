@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.TeamsSystem;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers
+namespace TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers
 {
     public interface IGangActionLobbyTeamsHandler : IRoundFightLobbyTeamsHandler
     {

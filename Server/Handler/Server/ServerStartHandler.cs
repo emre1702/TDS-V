@@ -2,15 +2,15 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Account;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Account;
+using TDS.Server.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler.Server
+namespace TDS.Server.Handler.Server
 {
     public class ServerStartHandler
     {

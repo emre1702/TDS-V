@@ -1,8 +1,8 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
 
-namespace TDS_Server.GamemodesSystem.Gamemodes
+namespace TDS.Server.GamemodesSystem.Gamemodes
 {
     public class DeathmatchGamemode : BaseGamemode, IDeathmatchGamemode
     {

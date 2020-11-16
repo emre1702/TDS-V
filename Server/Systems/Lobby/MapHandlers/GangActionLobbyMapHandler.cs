@@ -1,13 +1,13 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Maps;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Maps;
 
-namespace TDS_Server.LobbySystem.MapHandlers
+namespace TDS.Server.LobbySystem.MapHandlers
 {
     public class GangActionLobbyMapHandler : RoundFightLobbyMapHandler
     {

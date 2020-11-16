@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <PlatformTarget>x64</PlatformTarget>
         <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-        <AssemblyName>TDS_Server.Data</AssemblyName>
-        <RootNamespace>TDS_Server.Data</RootNamespace>
+        <AssemblyName>TDS.Server.Data</AssemblyName>
+        <RootNamespace>TDS.Server.Data</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DocumentationFile></DocumentationFile>
         <OutputPath></OutputPath>
+        <NoWarn>1701;1702;CA2227</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="10.1.0" />
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
     </ItemGroup>
 
     <ItemGroup>

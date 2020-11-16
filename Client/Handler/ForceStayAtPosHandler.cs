@@ -2,15 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Entities;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Default;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Entities;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models.GTA;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class ForceStayAtPosHandler : ServiceBase
     {

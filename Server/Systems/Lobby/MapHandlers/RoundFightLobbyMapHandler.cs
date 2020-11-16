@@ -3,19 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.MapHandlers;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Maps;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Default;
-using TDS_Shared.Data.Utility;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.MapHandlers;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Maps;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Default;
+using TDS.Shared.Data.Utility;
 
-namespace TDS_Server.LobbySystem.MapHandlers
+namespace TDS.Server.LobbySystem.MapHandlers
 {
     public class RoundFightLobbyMapHandler : BaseLobbyMapHandler, IRoundFightLobbyMapHandler
     {
@@ -51,7 +51,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
         public void SetMapList(IEnumerable<MapDto> maps, string? syncjson = null)
         {
             // Only choose maps with team-amount same as this lobby got teams (without spectator)
-            Maps = maps.Where(m => m.TeamSpawnsList.TeamSpawns.Length == Lobby.Teams.Count - 1).ToList();
+            Maps = maps.Where(m => m.TeamSpawnsList.TeamSpawns.Count == Lobby.Teams.Count - 1).ToList();
             _mapsJson = syncjson ?? Serializer.ToBrowser(Maps.Select(m => m.BrowserSyncedData).ToList());
         }
 

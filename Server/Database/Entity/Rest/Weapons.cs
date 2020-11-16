@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Database.Entity.Server;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Server;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Rest
+namespace TDS.Server.Database.Entity.Rest
 {
     public partial class Weapons
     {

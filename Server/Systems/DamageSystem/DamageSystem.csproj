@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
-    <AssemblyName>TDS_Server.DamageSystem</AssemblyName>
-    <RootNamespace>TDS_Server.DamageSystem</RootNamespace>
+    <AssemblyName>TDS.Server.DamageSystem</AssemblyName>
+    <RootNamespace>TDS.Server.DamageSystem</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

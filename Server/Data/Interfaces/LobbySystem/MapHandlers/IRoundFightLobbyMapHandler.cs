@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Models.Map;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Models.Map;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.MapHandlers
+namespace TDS.Server.Data.Interfaces.LobbySystem.MapHandlers
 {
 #nullable enable
 

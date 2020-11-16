@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Handler.Entities.GTA.ColShapes;
+using TDS.Server.Handler.Entities.GTA.ColShapes;
 
-namespace TDS_Server.Handler.Factories
+namespace TDS.Server.Handler.Factories
 {
     public class ColShapeFactory
     {

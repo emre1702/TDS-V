@@ -1,14 +1,14 @@
 ﻿using RAGE.Elements;
 using System;
 using System.Drawing;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Lobby;
-using TDS_Client.Handler.Sync;
-using TDS_Shared.Data.Enums;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Models;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Lobby;
+using TDS.Client.Handler.Sync;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Client.Handler.Appearance
+namespace TDS.Client.Handler.Appearance
 {
     /// <summary>
     /// Works only with Clothing_M_11_0 (shirt) and Clothing_M_11_90 (jacket). But because with

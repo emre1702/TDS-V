@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.Freeroam;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.Freeroam;
 
-namespace TDS_Server.LobbySystem.DependenciesModels
+namespace TDS.Server.LobbySystem.DependenciesModels
 {
     internal class FreeroamLobbyDependencies : BaseLobbyDependencies
     {

@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.LobbySystem.Vehicles
+﻿namespace TDS.Server.LobbySystem.Vehicles
 {
     public class BaseLobbyVehicles
     {

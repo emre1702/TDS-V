@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TDS_Server.Database.Entity.Player.Char;
+using TDS.Server.Database.Entity.Player.Char;
 
-namespace TDS_Server.Database.ModelBuilding.Player.Char
+namespace TDS.Server.Database.ModelBuilding.Player.Char
 {
     public class PlayerCharAppearanceDatasConfiguration : IEntityTypeConfiguration<PlayerCharAppearanceDatas>
     {

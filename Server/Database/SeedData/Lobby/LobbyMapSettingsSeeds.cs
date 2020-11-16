@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.SeedData.Lobby
+namespace TDS.Server.Database.SeedData.Lobby
 {
     public static class LobbyMapSettingsSeeds
     {

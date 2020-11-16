@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TDS_Server.Data.Interfaces.GangsSystem
+namespace TDS.Server.Data.Interfaces.GangsSystem
 {
 #nullable enable
     public interface IGangChat

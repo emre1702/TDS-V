@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Models.GangWindow;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Models.GangWindow;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.GangSystem.GangWindow
+namespace TDS.Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowMainMenuHandler
     {

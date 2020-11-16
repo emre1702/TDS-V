@@ -1,12 +1,12 @@
 ﻿using RAGE.Game;
 using System.Linq;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Models;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class VoiceHandler : ServiceBase
     {

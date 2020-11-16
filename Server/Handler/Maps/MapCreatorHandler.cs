@@ -9,24 +9,24 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.Map.Creator;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models.Map.Creator;
+using TDS.Shared.Default;
 
-using DB = TDS_Server.Database.Entity;
+using DB = TDS.Server.Database.Entity;
 
-namespace TDS_Server.Handler.Maps
+namespace TDS.Server.Handler.Maps
 {
     public class MapCreatorHandler : DatabaseEntityWrapper
     {

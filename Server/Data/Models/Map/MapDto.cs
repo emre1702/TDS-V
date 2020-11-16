@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Models.Map.Creator;
-using TDS_Server.Database.Entity.Player;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.Map;
-using TDS_Shared.Data.Models.Map.Creator;
-using MapType = TDS_Server.Data.Enums.MapType;
-using Position3DDto = TDS_Server.Data.Models.Map.Creator.Position3DDto;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Models.Map.Creator;
+using TDS.Server.Database.Entity.Player;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models.Map;
+using TDS.Shared.Data.Models.Map.Creator;
+using MapType = TDS.Server.Data.Enums.MapType;
+using Position3DDto = TDS.Server.Data.Models.Map.Creator.Position3DDto;
 
-namespace TDS_Server.Data.Models.Map
+namespace TDS.Server.Data.Models.Map
 {
 #nullable enable
 #nullable disable warnings
@@ -40,36 +40,36 @@ namespace TDS_Server.Data.Models.Map
             };
 
             data.TeamSpawns.RemoveAll(l => l.Count == 0);
-            TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new MapTeamSpawnsDto[data.TeamSpawns.Count] };
-            for (uint i = 0; i < data.TeamSpawns.Count; ++i)
+            TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new List<MapTeamSpawnsDto>(data.TeamSpawns.Count) };
+            for (int i = 0; i < data.TeamSpawns.Count; ++i)
             {
-                TeamSpawnsList.TeamSpawns[i] = new MapTeamSpawnsDto { TeamID = i, Spawns = data.TeamSpawns[(int)i].Select(pos => new Position4DDto(pos)).ToArray() };
+                TeamSpawnsList.TeamSpawns[i] = new MapTeamSpawnsDto { TeamID = (uint)i, Spawns = data.TeamSpawns[i].Select(pos => new Position4DDto(pos)).ToList() };
             }
 
             LimitInfo = new MapLimitInfoDto
             {
                 Center = data.MapCenter != null ? new Position3DDto(data.MapCenter) : null,
-                Edges = data.MapEdges.Select(pos => new Position3DDto(pos)).ToArray(),
+                Edges = data.MapEdges.Select(pos => new Position3DDto(pos)).ToList(),
                 EdgesJson = Serializer.ToClient(data.MapEdges)
             };
 
             Objects = new MapObjectsListDto
             {
-                Entries = data.Objects.Select(o => new MapObjectPosition(o)).ToArray()
+                Entries = data.Objects.Select(o => new MapObjectPosition(o)).ToList()
             };
 
             Vehicles = new MapVehiclesListDto
             {
-                Entries = data.Vehicles.Select(o => new MapObjectPosition(o)).ToArray()
+                Entries = data.Vehicles.Select(o => new MapObjectPosition(o)).ToList()
             };
 
-            Target = data.Target != null && data.Type == TDS_Shared.Data.Enums.MapType.Gangwar ? new Position3DDto(data.Target) : null;
+            Target = data.Target != null && data.Type == TDS.Shared.Data.Enums.MapType.Gangwar ? new Position3DDto(data.Target) : null;
 
             if (data.BombPlaces != null)
             {
                 BombInfo = new MapBombInfoDto
                 {
-                    PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToArray(),
+                    PlantPositions = data.BombPlaces.Select(pos => new Position3DDto(pos)).ToList(),
                 };
                 BombInfo.PlantPositionsJson = Serializer.ToClient(BombInfo.PlantPositions);
             }

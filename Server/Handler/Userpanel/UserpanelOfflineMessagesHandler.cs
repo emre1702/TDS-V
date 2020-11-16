@@ -3,17 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Data.Models.Userpanel.OfflineMessage;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models.Userpanel.OfflineMessage;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     public class UserpanelOfflineMessagesHandler : DatabaseEntityWrapper, IUserpanelOfflineMessagesHandler
     {

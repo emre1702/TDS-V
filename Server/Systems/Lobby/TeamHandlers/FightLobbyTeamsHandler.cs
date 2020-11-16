@@ -3,18 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.LobbySystem.TeamHandlers
+namespace TDS.Server.LobbySystem.TeamHandlers
 {
     public class FightLobbyTeamsHandler : BaseLobbyTeamsHandler, IFightLobbyTeamsHandler
     {
@@ -58,7 +58,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         protected Task ClearTeamPlayersAmounts()
         {
-            return Do(teams =>
+            return DoForList(teams =>
             {
                 foreach (var team in teams)
                     team.Players.ClearRound();
@@ -67,7 +67,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         protected Task MixTeams()
         {
-            return Do(teams =>
+            return DoForList(teams =>
             {
                 foreach (var team in teams)
                     team.Sync.SyncChanges = false;
@@ -106,7 +106,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         public Task<ITeam?> GetNextTeamWithSpectatablePlayers(short startIndex)
         {
-            return Do(teams =>
+            return DoForList(teams =>
             {
                 if (teams.Length <= 1)
                     return null;
@@ -134,7 +134,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         public Task<ITeam> GetNextNonSpectatorTeam(short startIndex)
         {
             var startIndexToIterate = startIndex;
-            return Do(teams =>
+            return DoForList(teams =>
             {
                 do
                 {
@@ -151,7 +151,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         public Task<ITeam?> GetPreviousNonSpectatorTeamWithPlayers(short startIndex)
         {
-            return Do(teams =>
+            return DoForList(teams =>
             {
                 if (teams.Length <= 1)
                     return null;
@@ -173,7 +173,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         public async Task<string> GetAmountInFightSyncDataJson()
         {
-            var teamPlayerAmounts = await Lobby.Teams.Do(teams => teams.Skip(1).Select(t => t.SyncedData).Select(t => t.AmountPlayers))
+            var teamPlayerAmounts = await Lobby.Teams.DoForList(teams => teams.Skip(1).Select(t => t.SyncedData).Select(t => t.AmountPlayers))
                 .ConfigureAwait(false);
             return Serializer.ToClient(teamPlayerAmounts);
         }

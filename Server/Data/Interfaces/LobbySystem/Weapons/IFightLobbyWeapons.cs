@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Weapons
+namespace TDS.Server.Data.Interfaces.LobbySystem.Weapons
 {
     public interface IFightLobbyWeapons
     {

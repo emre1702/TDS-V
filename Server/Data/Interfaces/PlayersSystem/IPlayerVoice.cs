@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Data.Interfaces.PlayersSystem
+namespace TDS.Server.Data.Interfaces.PlayersSystem
 {
     public interface IPlayerVoice
     {
@@ -8,6 +8,6 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
 
         void ResetVoiceToAndFrom();
 
-        void SetVoiceTo(ITDSPlayer target, bool on);
+        void SetVoiceTo(ITDSPlayer target, bool toggleOn);
     }
 }

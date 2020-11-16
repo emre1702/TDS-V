@@ -1,16 +1,16 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.Commands.User
+namespace TDS.Server.Handler.Commands.User
 {
     public class UserDeathmatchCommands
     {
-        [TDSCommand(UserCommand.Suicide)]
+        [TDSCommandAttribute(UserCommand.Suicide)]
         public void Suicide(ITDSPlayer player)
         {
             if (!(player.Lobby is IFightLobby fightLobby))

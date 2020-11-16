@@ -1,10 +1,10 @@
 ﻿using RAGE;
 using RAGE.Elements;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Default;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class WeaponStatsHandler : ServiceBase
     {

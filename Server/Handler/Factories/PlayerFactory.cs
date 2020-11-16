@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.PlayersSystem;
+﻿using TDS.Server.Data.Interfaces.PlayersSystem;
 
-namespace TDS_Server.Handler.Factories
+namespace TDS.Server.Handler.Factories
 {
     public class PlayerFactory
     {

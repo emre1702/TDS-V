@@ -3,12 +3,12 @@ using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Utility;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Utility;
 
-namespace TDS_Server.TeamsSystem
+namespace TDS.Server.TeamsSystem
 {
     public class Players : ITeamPlayers
     {
@@ -134,7 +134,7 @@ namespace TDS_Server.TeamsSystem
             return wasSpectatable;
         }
 
-        public void Do(Action<ITDSPlayer> action)
+        public void DoForAll(Action<ITDSPlayer> action)
         {
             lock (_all)
             {
@@ -267,13 +267,13 @@ namespace TDS_Server.TeamsSystem
             }
         }
 
-        public int GetAlivesHealth(int armorPerLife, int hpPerLifes)
+        public int GetAlivesHealth(int armorPerLife, int hpPerLife)
         {
             if (_alive is null)
                 return -1;
             int teamHp = 0;
 
-            int healthPerLife = armorPerLife + hpPerLifes;
+            int healthPerLife = armorPerLife + hpPerLife;
             lock (_alive)
             {
                 foreach (var player in _alive)

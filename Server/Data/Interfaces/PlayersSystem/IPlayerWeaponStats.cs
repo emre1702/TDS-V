@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Database.Entity.Player;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Database.Entity.Player;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Interfaces.PlayersSystem
+namespace TDS.Server.Data.Interfaces.PlayersSystem
 {
 #nullable enable
 
@@ -21,7 +21,7 @@ namespace TDS_Server.Data.Interfaces.PlayersSystem
 
         PlayerWeaponBodypartStats? GetWeaponBodyPartStats(WeaponHash weaponHash, PedBodyPart pedBodyPart);
 
-        void DoForBodyPartStats(WeaponHash weaponHash, Action<Dictionary<PedBodyPart, PlayerWeaponBodypartStats>> bodyStats);
+        void DoForBodyPartStats(WeaponHash weaponHash, Action<Dictionary<PedBodyPart, PlayerWeaponBodypartStats>> action);
 
         List<string> GetWeaponHashesUsedSoFar();
     }

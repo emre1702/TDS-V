@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Data.Interfaces.TeamsSystem;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
+namespace TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
 {
 #nullable enable
 

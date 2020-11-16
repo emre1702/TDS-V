@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces;
-using TDS_Client.Handler.Entities.Draw.Scaleform;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Models;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Interfaces;
+using TDS.Client.Handler.Entities.Draw.Scaleform;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Data.Models;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Draw
+namespace TDS.Client.Handler.Draw
 {
     public class InstructionalButtonHandler : ServiceBase
     {

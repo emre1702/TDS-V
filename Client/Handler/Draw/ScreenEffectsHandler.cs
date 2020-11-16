@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using RAGE;
 using RAGE.Game;
-using TDS_Client.Enum;
+using TDS.Client.Enum;
 
-namespace TDS_Client.Handler.Draw
+namespace TDS.Client.Handler.Draw
 {
     public class ScreenEffectsHandler
     {

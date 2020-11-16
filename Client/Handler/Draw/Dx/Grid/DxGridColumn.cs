@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using TDS_Client.Data.Enums;
+using TDS.Client.Data.Enums;
 using static RAGE.NUI.UIResText;
 
-namespace TDS_Client.Handler.Draw.Dx.Grid
+namespace TDS.Client.Handler.Draw.Dx.Grid
 {
     public class DxGridColumn : DxBase
     {

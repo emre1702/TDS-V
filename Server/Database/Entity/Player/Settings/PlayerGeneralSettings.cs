@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.EntityConfigurations;
-using TDS_Server.Database.Interfaces;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.EntityConfigurations;
+using TDS.Server.Database.Interfaces;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Player.Settings
+namespace TDS.Server.Database.Entity.Player.Settings
 {
     public class PlayerGeneralSettings : IPlayerDataTable
     {

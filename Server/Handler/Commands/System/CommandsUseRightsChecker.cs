@@ -1,8 +1,8 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using DB = TDS_Server.Database.Entity.Command;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using DB = TDS.Server.Database.Entity.Command;
 
-namespace TDS_Server.Handler.Commands.System
+namespace TDS.Server.Handler.Commands.System
 {
     public class CommandsUseRightsChecker
     {

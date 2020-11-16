@@ -1,12 +1,12 @@
 ﻿using RAGE.Elements;
 using System;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Default;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Deathmatch;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class SpectatingHandler : ServiceBase
     {

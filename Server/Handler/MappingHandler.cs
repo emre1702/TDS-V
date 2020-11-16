@@ -2,14 +2,14 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Converter.Mapping;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Converter.Mapping;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class MappingHandler
     {
@@ -26,7 +26,9 @@ namespace TDS_Server.Handler
                 cfg.CreateMap<string, float>().ConvertUsing(str => Convert.ToSingle(str));
                 cfg.CreateMap<string, double>().ConvertUsing(str => Convert.ToDouble(str));
                 cfg.CreateMap<string, bool>().ConvertUsing(str =>
-                        str.Equals("true", StringComparison.CurrentCultureIgnoreCase) || str == "1" || str.Equals("yes", StringComparison.CurrentCultureIgnoreCase));
+                        str.Equals("true", StringComparison.OrdinalIgnoreCase) 
+                        || str == "1" 
+                        || str.Equals("yes", StringComparison.OrdinalIgnoreCase));
 
                 cfg.CreateMap<string, DateTime?>().ConvertUsing<StringToDateTimeConverter>();
                 cfg.CreateMap<string, TimeSpan?>().ConvertUsing<StringToTimeSpanConverter>();

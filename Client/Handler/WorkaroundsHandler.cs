@@ -1,10 +1,10 @@
 ﻿using RAGE.Elements;
 using System;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class WorkaroundsHandler : ServiceBase
     {

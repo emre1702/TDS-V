@@ -2,18 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.SeedData.Admin;
-using TDS_Server.Database.SeedData.BonusBot;
-using TDS_Server.Database.SeedData.Challenge;
-using TDS_Server.Database.SeedData.Command;
-using TDS_Server.Database.SeedData.Gang;
-using TDS_Server.Database.SeedData.Lobby;
-using TDS_Server.Database.SeedData.Player;
-using TDS_Server.Database.SeedData.Rest;
-using TDS_Server.Database.SeedData.Server;
-using TDS_Server.Database.SeedData.Userpanel;
+using TDS.Server.Database.SeedData.Admin;
+using TDS.Server.Database.SeedData.BonusBot;
+using TDS.Server.Database.SeedData.Challenge;
+using TDS.Server.Database.SeedData.Command;
+using TDS.Server.Database.SeedData.Gang;
+using TDS.Server.Database.SeedData.Lobby;
+using TDS.Server.Database.SeedData.Player;
+using TDS.Server.Database.SeedData.Rest;
+using TDS.Server.Database.SeedData.Server;
+using TDS.Server.Database.SeedData.Userpanel;
 
-namespace TDS_Server.Database.SeedData
+namespace TDS.Server.Database.SeedData
 {
     public static class Seeds
     {

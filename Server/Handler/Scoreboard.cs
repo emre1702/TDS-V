@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Default;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class ScoreboardHandler
     {
@@ -65,7 +65,7 @@ namespace TDS_Server.Handler
                 return null;
 
             var list = new List<SyncedScoreboardLobbyDataDto>();
-            await lobby.Players.Do(player =>
+            await lobby.Players.DoForAll(player =>
             {
                 var entry = new SyncedScoreboardLobbyDataDto
                 (

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GTANetworkAPI;
-using TDS_Server.Database.Entity;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.Entity;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class FreeroamDataHandler
     {

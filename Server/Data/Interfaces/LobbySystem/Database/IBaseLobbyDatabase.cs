@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Database
+namespace TDS.Server.Data.Interfaces.LobbySystem.Database
 {
     public interface IBaseLobbyDatabase
     {

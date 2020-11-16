@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Handler.Entities.GTA.Vehicles;
+using TDS.Server.Handler.Entities.GTA.Vehicles;
 
-namespace TDS_Server.Handler.Factories
+namespace TDS.Server.Handler.Factories
 {
     public class VehicleFactory
     {

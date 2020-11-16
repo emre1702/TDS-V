@@ -1,8 +1,8 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
 
-namespace TDS_Server.Handler.Commands.Admin
+namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminChatCommands
     {
@@ -11,14 +11,14 @@ namespace TDS_Server.Handler.Commands.Admin
         public AdminChatCommands(ChatHandler chatHandler)
             => _chatHandler = chatHandler;
 
-        [TDSCommand(AdminCommand.AdminChat)]
-        public void AdminChat(ITDSPlayer player, [TDSRemainingText] string text)
+        [TDSCommandAttribute(AdminCommand.AdminChat)]
+        public void AdminChat(ITDSPlayer player, [TDSRemainingTextAttribute] string text)
         {
             _chatHandler.SendAdminChat(player, text);
         }
 
-        [TDSCommand(AdminCommand.AdminSay)]
-        public void AdminSay(ITDSPlayer player, [TDSRemainingText] string text)
+        [TDSCommandAttribute(AdminCommand.AdminSay)]
+        public void AdminSay(ITDSPlayer player, [TDSRemainingTextAttribute] string text)
         {
             _chatHandler.SendAdminMessage(player, text);
         }

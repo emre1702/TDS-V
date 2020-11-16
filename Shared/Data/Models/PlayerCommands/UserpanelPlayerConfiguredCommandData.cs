@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Shared.Data.Models.PlayerCommands
+namespace TDS.Shared.Data.Models.PlayerCommands
 {
     public class UserpanelPlayerConfiguredCommandData
     {

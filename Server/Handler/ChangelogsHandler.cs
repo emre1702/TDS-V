@@ -5,12 +5,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.Changelogs;
-using TDS_Server.Handler.Server;
-using TDS_Shared.Core;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models.Changelogs;
+using TDS.Server.Handler.Server;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class ChangelogsHandler : IChangelogsHandler
     {

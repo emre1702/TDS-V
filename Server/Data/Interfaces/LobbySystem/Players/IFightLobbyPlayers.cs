@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.LobbySystem.Players
+﻿namespace TDS.Server.Data.Interfaces.LobbySystem.Players
 {
     public interface IFightLobbyPlayers : IBaseLobbyPlayers
     {

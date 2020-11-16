@@ -1,20 +1,20 @@
 ﻿using RAGE;
 using System;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Draw;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Lobby;
-using TDS_Client.Handler.Sync;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Default;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Deathmatch;
+using TDS.Client.Handler.Draw;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Lobby;
+using TDS.Client.Handler.Sync;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Data.Models.GTA;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorHandler : ServiceBase
     {

@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.Actions;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.Actions;
 
-namespace TDS_Server.LobbySystem.DependenciesModels
+namespace TDS.Server.LobbySystem.DependenciesModels
 {
     internal class GangLobbyDependencies : FreeroamLobbyDependencies
     {

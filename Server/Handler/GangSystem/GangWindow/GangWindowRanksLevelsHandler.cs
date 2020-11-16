@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.GangSystem.GangWindow
+namespace TDS.Server.Handler.GangSystem.GangWindow
 {
     public class GangWindowRanksLevelsHandler
     {

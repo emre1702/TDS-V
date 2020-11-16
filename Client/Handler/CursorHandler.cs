@@ -1,7 +1,7 @@
-﻿using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Events;
+﻿using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class CursorHandler : ServiceBase
     {

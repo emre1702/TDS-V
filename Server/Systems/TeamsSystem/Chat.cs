@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Helper;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Helper;
 
-namespace TDS_Server.TeamsSystem
+namespace TDS.Server.TeamsSystem
 {
     public class Chat : ITeamChat
     {

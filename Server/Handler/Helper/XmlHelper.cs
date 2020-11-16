@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace TDS_Server.Handler.Helper
+namespace TDS.Server.Handler.Helper
 {
     public class XmlHelper
     {

@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>TDS_Server.GangGamemodesSystem</AssemblyName>
-    <RootNamespace>TDS_Server.GangGamemodesSystem</RootNamespace>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>TDS.Server.GangGamemodesSystem</AssemblyName>
+    <RootNamespace>TDS.Server.GangGamemodesSystem</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 

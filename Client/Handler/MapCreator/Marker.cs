@@ -1,8 +1,8 @@
 ﻿using RAGE;
 using System.Drawing;
-using TDS_Client.Data.Enums;
+using TDS.Client.Data.Enums;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class Marker
     {

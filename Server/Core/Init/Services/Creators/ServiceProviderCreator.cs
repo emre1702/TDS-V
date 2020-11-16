@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.Data.Utility;
+using TDS.Server.Data.Utility;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     internal static class ServiceProviderCreator
     {

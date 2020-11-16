@@ -1,6 +1,6 @@
-﻿//using TDS_Server.Data.Interfaces;
+﻿//using TDS.Server.Data.Interfaces;
 
-//namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
+//namespace TDS.Server.Handler.Entities.GangSystem.GangGamemodes
 //{
 //    partial class GangGangwar
 //    {

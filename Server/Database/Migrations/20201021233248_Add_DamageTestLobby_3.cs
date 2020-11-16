@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore.Migrations;
-using TDS_Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.Challenge;
 
-namespace TDS_Server.Database.Migrations
+namespace TDS.Server.Database.Migrations
 {
     public partial class Add_DamageTestLobby_3 : Migration
     {

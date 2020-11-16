@@ -1,12 +1,12 @@
 ﻿using RAGE.Elements;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Sync;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
+using TDS.Client.Data.Models;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Sync;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.GangSystem
+namespace TDS.Client.Handler.GangSystem
 {
     public class GangVehiclesHandler : ServiceBase
     {

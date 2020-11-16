@@ -1,27 +1,22 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.LobbySystem.Database;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.LobbySystem.Database;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Database.Entity.Player;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.Database
+namespace TDS.Server.LobbySystem.Database
 {
     public class BaseLobbyDatabase : IBaseLobbyDatabase
     {
         protected IDatabaseHandler DbHandler { get; }
-        protected readonly IBaseLobby Lobby;
-        protected readonly IBaseLobbyEventsHandler Events;
-
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        protected IBaseLobby Lobby { get; }
+        protected IBaseLobbyEventsHandler Events { get; }
 
         public BaseLobbyDatabase(IBaseLobby lobby, IDatabaseHandler dbHandler, IBaseLobbyEventsHandler events)
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             Lobby = lobby;
             DbHandler = dbHandler;

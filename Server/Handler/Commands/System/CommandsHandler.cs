@@ -1,15 +1,15 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.Commands.System
+namespace TDS.Server.Handler.Commands.System
 {
     public class CommandsHandler
     {

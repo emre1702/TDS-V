@@ -3,14 +3,14 @@ using GTANetworkAPI;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Bonusbot;
-using TDS_Server.Handler.Events;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Bonusbot;
+using TDS.Server.Handler.Events;
 
-namespace TDS_Server.Handler.Server
+namespace TDS.Server.Handler.Server
 {
     public class ServerInfoHandler
     {
@@ -50,7 +50,7 @@ namespace TDS_Server.Handler.Server
                     PlayerAmountInArena = _lobbiesHandler.Arena.Players.Count,
                     PlayerAmountInCustomLobby = _lobbiesHandler.Lobbies.Where(p => !p.IsOfficial).Sum(l => l.Players.Count),
                     PlayerAmountInGangLobby = _lobbiesHandler.Lobbies.Where(p => p is IGangLobby || p is IGangActionLobby).Sum(l => l.Players.Count),
-                    PlayerAmountInMainMenu = _tdsPlayerHandler.LoggedInPlayers.Where(p => p.Lobby is null || p.Lobby.Type == TDS_Shared.Data.Enums.LobbyType.MainMenu).Count(),
+                    PlayerAmountInMainMenu = _tdsPlayerHandler.LoggedInPlayers.Where(p => p.Lobby is null || p.Lobby.Type == TDS.Shared.Data.Enums.LobbyType.MainMenu).Count(),
                     PlayerAmountOnline = _tdsPlayerHandler.AmountLoggedInPlayers,
                     ServerPort = NAPI.Server.GetServerPort(),
                     Version = "1.0.0",   // Todo: Save Version somewhere else

@@ -4,39 +4,36 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Enums.Userpanel;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.Userpanel;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
+
     public class UserpanelHandler : IUserpanelHandler
     {
 
-        private readonly UserpanelCommandsHandler _commandsHandler;
         private readonly UserpanelFAQsHandlers _fAQsHandlers;
         private readonly UserpanelPlayerGeneralStatsHandler _playerStatsHandler;
         private readonly UserpanelRulesHandler _rulesHandler;
-        private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
+#pragma warning disable CA1506
         public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer,
             UserpanelCommandsHandler userpanelCommandsHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
-            _tdsPlayerHandler = tdsPlayerHandler;
-
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
 
             _playerStatsHandler = ActivatorUtilities.CreateInstance<UserpanelPlayerGeneralStatsHandler>(serviceProvider);
             ApplicationUserHandler = ActivatorUtilities.CreateInstance<UserpanelApplicationUserHandler>(serviceProvider);
             _rulesHandler = ActivatorUtilities.CreateInstance<UserpanelRulesHandler>(serviceProvider);
             _fAQsHandlers = ActivatorUtilities.CreateInstance<UserpanelFAQsHandlers>(serviceProvider);
-            _commandsHandler = userpanelCommandsHandler;
             SettingsCommandsHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsCommandsHandler>(serviceProvider);
             OfflineMessagesHandler = ActivatorUtilities.CreateInstance<UserpanelOfflineMessagesHandler>(serviceProvider);
             SettingsNormalHandler = ActivatorUtilities.CreateInstance<UserpanelSettingsNormalHandler>(serviceProvider);
@@ -72,12 +69,12 @@ namespace TDS_Server.Handler.Userpanel
             PlayerLoadData(player, type);
         }
 
-        public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType dataType)
+        public async void PlayerLoadData(ITDSPlayer player, UserpanelLoadDataType type)
         {
             try
             {
                 string? json = null;
-                switch (dataType)
+                switch (type)
                 {
                     // Doing that at login now because it's also used for chat
                     /*case UserpanelLoadDataType.Commands:
@@ -135,7 +132,7 @@ namespace TDS_Server.Handler.Userpanel
                 if (json == null)
                     return;
 
-                NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)dataType, json));
+                NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.LoadUserpanelData, (int)type, json));
             }
             catch (Exception ex)
             {

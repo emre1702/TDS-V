@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.TeamsSystem;
+﻿using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.TeamsSystem;
 
-namespace TDS_Server.GangsSystem
+namespace TDS.Server.GangsSystem
 {
     public class TeamHandler : IGangTeamHandler
     {

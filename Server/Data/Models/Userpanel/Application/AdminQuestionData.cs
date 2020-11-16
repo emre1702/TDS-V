@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Data.Models.Userpanel.Application
+namespace TDS.Server.Data.Models.Userpanel.Application
 {
     public class AdminQuestionData
     {

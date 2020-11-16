@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.Deathmatch;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.Deathmatch;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 
-namespace TDS_Server.GamemodesSystem.Deathmatch
+namespace TDS.Server.GamemodesSystem.Deathmatch
 {
     public class BaseGamemodeDeathmatch : IBaseGamemodeDeathmatch
     {

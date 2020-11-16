@@ -1,12 +1,13 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
-namespace TDS_Server.Data.Models.ClothesMeta
+namespace TDS.Server.Data.Models.ClothesMeta
 {
 #nullable disable
 
     public class OutfitsData
     {
         [XmlElement("Item")]
-        public Item[] Items { get; set; }
+        public List<Item> Items { get; set; }
     }
 }

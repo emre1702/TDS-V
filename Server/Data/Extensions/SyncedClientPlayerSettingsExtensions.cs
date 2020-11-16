@@ -1,7 +1,7 @@
-﻿using TDS_Server.Database.Entity.Player.Settings;
-using TDS_Shared.Data.Models;
+﻿using TDS.Server.Database.Entity.Player.Settings;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Server.Data.Extensions
+namespace TDS.Server.Data.Extensions
 {
     public static class SyncedClientPlayerSettingsExtensions
     {

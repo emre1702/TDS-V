@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.Map.Creator;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models.Map.Creator;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Sync
+namespace TDS.Server.Data.Interfaces.LobbySystem.Sync
 {
     public interface IMapCreatorLobbySync : IBaseLobbySync
     {

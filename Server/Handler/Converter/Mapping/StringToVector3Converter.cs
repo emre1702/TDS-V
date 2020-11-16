@@ -2,9 +2,9 @@
 using GTANetworkAPI;
 using System;
 using System.Globalization;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Server.Handler.Converter.Mapping
+namespace TDS.Server.Handler.Converter.Mapping
 {
     internal class StringToVector3Converter : ITypeConverter<string, Vector3?>
     {

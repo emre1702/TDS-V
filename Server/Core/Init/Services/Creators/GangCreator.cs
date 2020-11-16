@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.GangsSystem;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.GangsSystem;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     internal static class GangCreator
     {

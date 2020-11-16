@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.TeamsSystem;
+﻿using TDS.Server.Data.Interfaces.TeamsSystem;
 
-namespace TDS_Server.Data.Interfaces.GamemodesSystem.Teams
+namespace TDS.Server.Data.Interfaces.GamemodesSystem.Teams
 {
     public interface IBombGamemodeTeams : IBaseGamemodeTeams
     {

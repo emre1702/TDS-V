@@ -5,18 +5,18 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Log;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Log;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class LoggingHandler : DatabaseEntityWrapper, ILoggingHandler
     {
@@ -186,14 +186,14 @@ namespace TDS_Server.Handler
             }
         }
 
-        public async void LogError(string info, string? stackTrace = null, string? exceptionType = null, ITDSPlayer? source = null, bool logToBonusBot = true)
+        public async void LogError(string info, string? stackTrace = null, string? errorType = null, ITDSPlayer? source = null, bool logToBonusBot = true)
         {
             try
             {
                 var log = new LogErrors
                 {
                     Id = ++_currentIdErrors,
-                    ExceptionType = exceptionType,
+                    ExceptionType = errorType,
                     Info = info,
                     StackTrace = stackTrace ?? Environment.StackTrace,
                     Source = source?.Id,

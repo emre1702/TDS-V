@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Notifications
+namespace TDS.Server.Data.Interfaces.LobbySystem.Notifications
 {
 #nullable enable
 

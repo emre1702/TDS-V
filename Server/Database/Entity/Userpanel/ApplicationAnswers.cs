@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Database.Entity.Userpanel
+﻿namespace TDS.Server.Database.Entity.Userpanel
 {
     public class ApplicationAnswers
     {

@@ -1,13 +1,13 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.GangSystem;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.GangSystem;
 
-namespace TDS_Server.Handler.Commands.Admin
+namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminGangCommands
     {
@@ -17,7 +17,7 @@ namespace TDS_Server.Handler.Commands.Admin
         public AdminGangCommands(GangLevelsHandler gangLevelsHandler, GangHousesHandler gangHousesHandler) 
             => (_gangLevelsHandler, _gangHousesHandler) = (gangLevelsHandler, gangHousesHandler);
 
-        [TDSCommand(AdminCommand.CreateHouse)]
+        [TDSCommandAttribute(AdminCommand.CreateHouse)]
         public async Task CreateHouse(ITDSPlayer player, byte neededGangLevel)
         {
             if (player is null || player.Entity is null)

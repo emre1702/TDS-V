@@ -1,8 +1,8 @@
-﻿using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Handler.GangSystem;
+﻿using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Handler.GangSystem;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class GangHandler : IPlayerGangHandler
     {

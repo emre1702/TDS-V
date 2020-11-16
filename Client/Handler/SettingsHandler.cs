@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Entities.Languages;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Userpanel;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Models.PlayerCommands;
-using TDS_Shared.Data.Utility;
-using TDS_Shared.Default;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Interfaces;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Entities.Languages;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Enums.Userpanel;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Data.Models.PlayerCommands;
+using TDS.Shared.Data.Utility;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class SettingsHandler : ServiceBase
     {
@@ -43,13 +43,13 @@ namespace TDS_Client.Handler
 
         private readonly Dictionary<Language, ILanguage> _languagesDict = new Dictionary<Language, ILanguage>()
         {
-            [TDS_Shared.Data.Enums.Language.German] = new German(),
-            [TDS_Shared.Data.Enums.Language.English] = new English()
+            [TDS.Shared.Data.Enums.Language.German] = new German(),
+            [TDS.Shared.Data.Enums.Language.English] = new English()
         };
 
         private readonly RemoteEventsSender _remoteEventsSender;
 
-        private Language _languageEnum = TDS_Shared.Data.Enums.Language.English;
+        private Language _languageEnum = TDS.Shared.Data.Enums.Language.English;
         private bool _languageManuallyChanged;
         private SyncedLobbySettings _syncedLobbySettings;
         private SyncedServerSettingsDto _syncedServerSettings;
@@ -212,7 +212,7 @@ namespace TDS_Client.Handler
             switch (lang)
             {
                 case LanguageID.German:
-                    LanguageEnum = TDS_Shared.Data.Enums.Language.German;
+                    LanguageEnum = TDS.Shared.Data.Enums.Language.German;
                     _languageManuallyChanged = false;
                     break;
             }

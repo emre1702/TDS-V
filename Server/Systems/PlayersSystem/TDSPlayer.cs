@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class TDSPlayer : ITDSPlayer
     {

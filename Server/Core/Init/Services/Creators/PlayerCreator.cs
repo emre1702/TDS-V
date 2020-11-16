@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.PlayersSystem;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.PlayersSystem;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     public static class PlayerCreator
     {

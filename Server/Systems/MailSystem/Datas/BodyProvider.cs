@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Enums;
+﻿using TDS.Server.Data.Enums;
 
-namespace TDS_Server.MailSystem.Datas
+namespace TDS.Server.MailSystem.Datas
 {
     internal class BodyProvider
     {

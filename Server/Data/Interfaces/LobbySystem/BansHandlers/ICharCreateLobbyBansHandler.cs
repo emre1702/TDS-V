@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.LobbySystem.BansHandlers
+﻿namespace TDS.Server.Data.Interfaces.LobbySystem.BansHandlers
 {
     public interface ICharCreateLobbyBansHandler : IBaseLobbyBansHandler
     {

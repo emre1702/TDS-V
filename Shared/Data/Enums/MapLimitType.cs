@@ -1,4 +1,4 @@
-﻿namespace TDS_Shared.Data.Enums
+﻿namespace TDS.Shared.Data.Enums
 {
     public enum MapLimitType
     {

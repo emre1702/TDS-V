@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using TDS_Server.Data.Models;
+using TDS.Server.Data.Models;
 
-namespace TDS_Server.Handler.Commands.System
+namespace TDS.Server.Handler.Commands.System
 {
     internal class FastMethodInvoker
     {

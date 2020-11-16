@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using TDS_Server.Data.Models.Userpanel.Rules;
-using TDS_Server.Database.Entity;
-using TDS_Shared.Core;
+using TDS.Server.Data.Models.Userpanel.Rules;
+using TDS.Server.Database.Entity;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     internal class UserpanelRulesHandler
     {

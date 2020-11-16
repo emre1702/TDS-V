@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Interfaces;
+using TDS.Server.Database.Interfaces;
 
-namespace TDS_Server.Database.Entity.Player.Settings
+namespace TDS.Server.Database.Entity.Player.Settings
 {
     public class PlayerInfoSettings : IPlayerDataTable
     {

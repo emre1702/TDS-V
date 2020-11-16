@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using TDS_Shared.Core;
+using TDS.Shared.Core;
 
-namespace TDS_Shared.Data.Models
+namespace TDS.Shared.Data.Models
 {
     public class EntityAttachInfoDto
     {

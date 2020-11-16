@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Notifications;
-using TDS_Server.Handler.Helper;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Notifications;
+using TDS.Server.Handler.Helper;
 
-namespace TDS_Server.LobbySystem.Notifications
+namespace TDS.Server.LobbySystem.Notifications
 {
     public class BaseLobbyNotifications : IBaseLobbyNotifications
     {

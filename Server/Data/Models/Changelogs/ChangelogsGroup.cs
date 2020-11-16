@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TDS_Server.Data.Models.Changelogs
+namespace TDS.Server.Data.Models.Changelogs
 {
     public class ChangelogsGroup
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Models
+namespace TDS.Server.Data.Models
 {
     public class AdminLevelDto
     {
@@ -15,8 +15,8 @@ namespace TDS_Server.Data.Models
 
         public string FontColor { get; set; }
         public short Level { get; set; }
-        public Dictionary<Language, string> Names { get; set; } = new Dictionary<Language, string>();
-        public List<ITDSPlayer> PlayersOnline { get; set; } = new List<ITDSPlayer>();
+        public Dictionary<Language, string> Names { get; } = new Dictionary<Language, string>();
+        public List<ITDSPlayer> PlayersOnline { get; } = new List<ITDSPlayer>();
 
     }
 }

@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Shared.Data.Enums.Userpanel;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Data.Interfaces.Userpanel
+namespace TDS.Server.Data.Interfaces.Userpanel
 {
     public interface IUserpanelHandler
     {

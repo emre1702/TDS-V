@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Models.CustomLobby
+namespace TDS.Server.Data.Models.CustomLobby
 {
 #nullable disable
 

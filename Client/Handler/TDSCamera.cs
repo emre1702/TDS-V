@@ -2,11 +2,11 @@
 using RAGE.Elements;
 using RAGE.Game;
 using System.Collections.Generic;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Shared.Data.Enums;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Shared.Data.Enums;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Entities
+namespace TDS.Client.Handler.Entities
 {
     public class TDSCamera
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Server.Data.Models.Map
+namespace TDS.Server.Data.Models.Map
 {
     public class LoadMapDialogMapDto
     {

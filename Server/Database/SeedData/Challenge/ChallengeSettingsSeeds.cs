@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Challenge;
-using TDS_Shared.Data.Enums.Challenge;
+using TDS.Server.Database.Entity.Challenge;
+using TDS.Shared.Data.Enums.Challenge;
 
-namespace TDS_Server.Database.SeedData.Challenge
+namespace TDS.Server.Database.SeedData.Challenge
 {
     public static class ChallengeSettingsSeeds
     {

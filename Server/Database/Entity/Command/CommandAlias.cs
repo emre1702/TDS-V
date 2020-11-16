@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Database.Entity.Command
+﻿namespace TDS.Server.Database.Entity.Command
 {
     public partial class CommandAlias
     {

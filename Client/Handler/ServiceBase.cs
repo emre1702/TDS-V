@@ -1,4 +1,4 @@
-﻿namespace TDS_Client.Handler
+﻿namespace TDS.Client.Handler
 {
     public abstract class ServiceBase
     {

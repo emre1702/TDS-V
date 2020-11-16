@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.LobbySystem.Rankings
+﻿namespace TDS.Server.Data.Interfaces.LobbySystem.Rankings
 {
     public interface IRoundFightLobbyRanking
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
-namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
+namespace TDS.Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
     public class RoundClear : RoundState
     {

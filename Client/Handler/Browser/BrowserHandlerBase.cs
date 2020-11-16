@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using TDS_Client.Data.Defaults;
-using TDS_Shared.Core;
+using TDS.Client.Data.Defaults;
+using TDS.Shared.Core;
 
-namespace TDS_Client.Handler.Browser
+namespace TDS.Client.Handler.Browser
 {
     public class BrowserHandlerBase : ServiceBase
     {

@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Database.Interfaces
+﻿namespace TDS.Server.Database.Interfaces
 {
     public interface IPlayerDataTable
     {

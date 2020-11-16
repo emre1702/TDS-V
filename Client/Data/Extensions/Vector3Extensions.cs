@@ -1,10 +1,10 @@
 ﻿using RAGE;
 using System;
-using TDS_Shared.Data.Extensions;
-using TDS_Shared.Data.Models.Map.Creator;
-using TDS_Shared.Data.Utility;
+using TDS.Shared.Data.Extensions;
+using TDS.Shared.Data.Models.Map.Creator;
+using TDS.Shared.Data.Utility;
 
-namespace TDS_Client.Data.Extensions
+namespace TDS.Client.Data.Extensions
 {
     public static class Vector3Extensions
     {

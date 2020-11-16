@@ -1,7 +1,7 @@
 ﻿using GTANetworkAPI;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.GangEntities
+namespace TDS.Server.Database.Entity.GangEntities
 {
     public class GangVehicles
     {

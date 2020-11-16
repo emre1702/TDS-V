@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.Actions;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.Actions;
 
-namespace TDS_Server.LobbySystem.Actions
+namespace TDS.Server.LobbySystem.Actions
 {
     public class GangLobbyActions : IGangLobbyActions
     {

@@ -5,21 +5,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Database.Entity.Player.Char;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models.CharCreator;
-using TDS_Shared.Data.Utility;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player.Char;
+using TDS.Server.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models.CharCreator;
+using TDS.Shared.Data.Utility;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler.PlayerHandlers
+namespace TDS.Server.Handler.PlayerHandlers
 {
-    public class PlayerCharHandler
+    public class PlayerCharHandler : IAsyncDisposable
     {
         private readonly TDSDbContext _dbContext;
         private readonly LobbiesHandler _lobbiesHandler;
@@ -307,6 +307,13 @@ namespace TDS_Server.Handler.PlayerHandlers
                     decorations: Array.Empty<Decoration>()
                 );
             });
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await (_dbContext?.DisposeAsync() ?? default);
+            _semaphoreSlim.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

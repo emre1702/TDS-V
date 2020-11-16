@@ -3,33 +3,20 @@ using Grpc.Core;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Utility;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Utility;
 
 namespace BonusBotConnector_Server
 {
     public class BBCommandService : BBCommand.BBCommandBase
     {
-        #region Public Fields
 
-        public AsyncValueTaskEvent<(ulong userId, string command, IList<string> args, BBUsedCommandReply reply)>? OnUsedCommand;
-
-        #endregion Public Fields
-
-        #region Private Fields
+        public AsyncValueTaskEvent<(ulong userId, string command, IList<string> args, BBUsedCommandReply reply)>? OnUsedCommand { get; set; }
 
         private readonly ILoggingHandler _loggingHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public BBCommandService(ILoggingHandler loggingHandler)
             => _loggingHandler = loggingHandler;
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public override async Task<UsedCommandReply> UsedCommand(UsedCommandRequest request, ServerCallContext context)
         {
@@ -48,15 +35,12 @@ namespace BonusBotConnector_Server
             }
         }
 
-        #endregion Public Methods
     }
 
     public class BBUsedCommandReply
     {
-        #region Public Properties
 
         public string? Message { get; set; }
 
-        #endregion Public Properties
     }
 }

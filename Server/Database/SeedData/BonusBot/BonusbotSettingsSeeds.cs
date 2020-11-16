@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Bonusbot;
+using TDS.Server.Database.Entity.Bonusbot;
 
-namespace TDS_Server.Database.SeedData.BonusBot
+namespace TDS.Server.Database.SeedData.BonusBot
 {
     public static class BonusbotSettingsSeeds
     {

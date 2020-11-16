@@ -2,8 +2,8 @@
 using Grpc.Net.Client;
 using System;
 using System.Linq;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Player;
 
 namespace BonusBotConnector.Client
 {

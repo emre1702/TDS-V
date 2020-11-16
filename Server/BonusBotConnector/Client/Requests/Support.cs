@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity.Bonusbot;
-using TDS_Server.Database.Entity.Userpanel;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Database.Entity.Bonusbot;
+using TDS.Server.Database.Entity.Userpanel;
 using static BonusBotConnector.Client.BonusBotConnectorClient;
 using static BonusBotConnector.Client.SupportRequest;
 

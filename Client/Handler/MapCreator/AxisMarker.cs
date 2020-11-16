@@ -1,12 +1,12 @@
 ﻿using RAGE;
 using System;
 using System.Drawing;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Entities;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Entities;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class AxisMarker
     {

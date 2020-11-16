@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using TDS_Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity.GangEntities;
 
-namespace TDS_Server.Database.ModelBuilding.GangEntities
+namespace TDS.Server.Database.ModelBuilding.GangEntities
 {
     public class GangMembersConfiguration : IEntityTypeConfiguration<GangMembers>
     {

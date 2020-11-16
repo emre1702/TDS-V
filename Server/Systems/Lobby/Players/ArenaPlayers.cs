@@ -1,17 +1,17 @@
 ﻿using GTANetworkAPI;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Models.CustomLobby;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Models.CustomLobby;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.Players
+namespace TDS.Server.LobbySystem.Players
 {
     public class ArenaPlayers : RoundFightLobbyPlayers
     {
@@ -29,7 +29,7 @@ namespace TDS_Server.LobbySystem.Players
                 return false;
 
             var spawnPos = Lobby.CurrentMap?.LimitInfo?.Center?.ToVector3()?.AddToZ(10) ?? Lobby.MapHandler.SpawnPoint;
-            var teamChoiceData = await Lobby.Teams.Do(teams =>
+            var teamChoiceData = await Lobby.Teams.DoForList(teams =>
                 teams.Select(t => new TeamChoiceMenuTeamData(t.Entity.Name, t.Entity.ColorR, t.Entity.ColorG, t.Entity.ColorB)))
                 .ConfigureAwait(false);
             var teamChoiceDataJson = Serializer.ToBrowser(teamChoiceData);

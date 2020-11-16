@@ -1,11 +1,11 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Entities.GTA.Vehicles
+namespace TDS.Server.Handler.Entities.GTA.Vehicles
 {
     partial class TDSVehicle
     {

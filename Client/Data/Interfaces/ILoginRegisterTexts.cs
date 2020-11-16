@@ -1,4 +1,4 @@
-﻿namespace TDS_Client.Data.Interfaces
+﻿namespace TDS.Client.Data.Interfaces
 {
     public interface ILoginRegisterTexts
     {

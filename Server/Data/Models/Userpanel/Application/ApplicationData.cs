@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Server.Data.Models.Userpanel.Stats;
+using TDS.Server.Data.Models.Userpanel.Stats;
 
-namespace TDS_Server.Data.Models.Userpanel.Application
+namespace TDS.Server.Data.Models.Userpanel.Application
 {
     public class ApplicationData
     {

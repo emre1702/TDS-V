@@ -2,7 +2,7 @@
 using RAGE.Game;
 using System.Drawing;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorDrawHandler
     {

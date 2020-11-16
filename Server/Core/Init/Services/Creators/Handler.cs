@@ -1,28 +1,28 @@
 ﻿using BonusBotConnector.Client;
 using BonusBotConnector_Server;
 using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Account;
-using TDS_Server.Handler.Browser;
-using TDS_Server.Handler.Commands;
-using TDS_Server.Handler.Commands.Admin;
-using TDS_Server.Handler.Commands.System;
-using TDS_Server.Handler.Commands.User;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.FakePickups;
-using TDS_Server.Handler.GangSystem;
-using TDS_Server.Handler.Helper;
-using TDS_Server.Handler.Maps;
-using TDS_Server.Handler.PlayerHandlers;
-using TDS_Server.Handler.Server;
-using TDS_Server.Handler.Sync;
-using TDS_Server.Handler.Userpanel;
-using TDS_Server.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Account;
+using TDS.Server.Handler.Browser;
+using TDS.Server.Handler.Commands;
+using TDS.Server.Handler.Commands.Admin;
+using TDS.Server.Handler.Commands.System;
+using TDS.Server.Handler.Commands.User;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.FakePickups;
+using TDS.Server.Handler.GangSystem;
+using TDS.Server.Handler.Helper;
+using TDS.Server.Handler.Maps;
+using TDS.Server.Handler.PlayerHandlers;
+using TDS.Server.Handler.Server;
+using TDS.Server.Handler.Sync;
+using TDS.Server.Handler.Userpanel;
+using TDS.Server.LobbySystem.EventsHandlers;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     internal static class Handler
     {

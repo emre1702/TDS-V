@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Enums
+﻿namespace TDS.Server.Data.Enums
 {
     public enum GangCommand
     {

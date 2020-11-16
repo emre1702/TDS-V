@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
 
-namespace TDS_Server.Data.Interfaces.GangsSystem
+namespace TDS.Server.Data.Interfaces.GangsSystem
 {
     public interface IGangPermissionsHandler
     {

@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.GangSystem;
-using TDS_Server.Handler.Sync;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.GangSystem;
+using TDS.Server.Handler.Sync;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.GangsSystem
+namespace TDS.Server.GangsSystem
 {
     public class Players : IGangPlayers
     {
@@ -51,7 +51,7 @@ namespace TDS_Server.GangsSystem
             }
         }
 
-        public void Do(Action<ITDSPlayer> action)
+        public void DoForAll(Action<ITDSPlayer> action)
         {
             lock (_onlinePlayers)
             {
@@ -60,7 +60,7 @@ namespace TDS_Server.GangsSystem
             }
         }
 
-        public async Task Do(Func<ITDSPlayer, Task> action)
+        public async Task DoForAll(Func<ITDSPlayer, Task> action)
         {
             foreach (var player in _onlinePlayers.ToList())
                 await action(player).ConfigureAwait(false);
@@ -92,7 +92,7 @@ namespace TDS_Server.GangsSystem
 
         public async Task RemoveAll()
         {
-            await Do(async player =>
+            await DoForAll(async player =>
             {
                 player.Gang = _gangsHandler.None;
                 player.GangRank = _gangsHandler.NoneRank;

@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.Lobbies;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Helper;
+using TDS.Server.LobbySystem.Lobbies;
 
-namespace TDS_Server.LobbySystem.TeamHandlers
+namespace TDS.Server.LobbySystem.TeamHandlers
 {
     public class GangActionLobbyTeamsHandler : RoundFightLobbyTeamsHandler, IGangActionLobbyTeamsHandler
     {
@@ -67,9 +67,9 @@ namespace TDS_Server.LobbySystem.TeamHandlers
                 Events.PlayerLeftAfter -= Events_PlayerLeftAfter;
         }
 
-        protected override async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
+        protected override async ValueTask OnPlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
-            await base.Events_PlayerJoined(data).ConfigureAwait(false);
+            await base.OnPlayerJoined(data).ConfigureAwait(false);
 
             if (data.TeamIndex == (int)GangActionLobbyTeamIndex.Attacker)
                 lock (_attackerPlayerIds) { _attackerPlayerIds.Add(data.Player.Id); }

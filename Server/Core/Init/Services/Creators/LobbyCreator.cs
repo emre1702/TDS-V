@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.Data.Interfaces.LobbySystem;
-using TDS_Server.LobbySystem;
+using TDS.Server.Data.Interfaces.LobbySystem;
+using TDS.Server.LobbySystem;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     internal static class LobbyCreator
     {

@@ -69,7 +69,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DamageSystem", "Server\Syst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GangsSystem", "Server\Systems\GangSystem\GangsSystem.csproj", "{02E79F57-EE78-402F-86ED-56F1496B2D2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangGamemodesSystem", "Server\System\GangGamemodesSystem\GangGamemodesSystem.csproj", "{E4D3A483-5034-49E6-9148-722C2E867C10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GangGamemodesSystem", "Server\System\GangGamemodesSystem\GangGamemodesSystem.csproj", "{E4D3A483-5034-49E6-9148-722C2E867C10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

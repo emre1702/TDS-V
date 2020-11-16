@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TDS_Server.Database.Entity.GangEntities
+namespace TDS.Server.Database.Entity.GangEntities
 {
     public class GangRanks
     {

@@ -1,4 +1,4 @@
-﻿namespace TDS_Client.Data.Defaults
+﻿namespace TDS.Client.Data.Defaults
 {
     public static class FromBrowserEvent
     {

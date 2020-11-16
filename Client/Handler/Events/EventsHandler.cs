@@ -2,16 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces;
-using TDS_Client.Handler.MapCreator;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Interfaces;
+using TDS.Client.Handler.MapCreator;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Events
+namespace TDS.Client.Handler.Events
 {
     public class EventsHandler : ServiceBase
     {

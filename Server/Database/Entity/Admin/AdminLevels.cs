@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.Database.Entity.Command;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Command;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Database.Entity.Admin
+namespace TDS.Server.Database.Entity.Admin
 {
     public partial class AdminLevels
     {

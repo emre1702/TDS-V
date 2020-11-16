@@ -1,17 +1,17 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Commands.User
+namespace TDS.Server.Handler.Commands.User
 {
     public class UserRelationCommands
     {
-        [TDSCommand(UserCommand.BlockUser)]
+        [TDSCommandAttribute(UserCommand.BlockUser)]
         public async Task BlockUser(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.Entity is null || target.Entity is null)
@@ -60,7 +60,7 @@ namespace TDS_Server.Handler.Commands.User
             });
         }
 
-        [TDSCommand(UserCommand.UnblockUser)]
+        [TDSCommandAttribute(UserCommand.UnblockUser)]
         public async Task UnblockUser(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.Entity is null || target.Entity is null)

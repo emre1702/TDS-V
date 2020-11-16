@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TDS_Server.Data.Models.CustomLobby
+namespace TDS.Server.Data.Models.CustomLobby
 {
     public class DataForCustomLobbyCreation
     {

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TDS_Server.Handler.Extensions
+namespace TDS.Server.Handler.Extensions
 {
     public static class SemaphoreSlimExtensions
     {

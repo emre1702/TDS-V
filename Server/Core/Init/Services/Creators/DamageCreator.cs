@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.DamageSystem;
-using TDS_Server.Data.Interfaces.DamageSystem;
+using TDS.Server.DamageSystem;
+using TDS.Server.Data.Interfaces.DamageSystem;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     internal static class DamageCreator
     {

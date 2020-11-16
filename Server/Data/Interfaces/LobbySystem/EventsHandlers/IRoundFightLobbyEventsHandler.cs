@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Data.Utility;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Data.Utility;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
+namespace TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers
 {
 #nullable enable
 

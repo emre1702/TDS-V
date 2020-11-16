@@ -1,20 +1,20 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.Maps
+namespace TDS.Server.Handler.Maps
 {
     public class MapsRatingsHandler : DatabaseEntityWrapper
     {

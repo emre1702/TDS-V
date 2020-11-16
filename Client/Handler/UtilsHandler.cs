@@ -3,19 +3,19 @@ using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Entities;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Sync;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Default;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Utility;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Models;
+using TDS.Client.Handler.Entities;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Sync;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Default;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Utility;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class UtilsHandler : ServiceBase
     {

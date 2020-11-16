@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Data.Models.Userpanel.Rules
+namespace TDS.Server.Data.Models.Userpanel.Rules
 {
     public class RuleData
     {

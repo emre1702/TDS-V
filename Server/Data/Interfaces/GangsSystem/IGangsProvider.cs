@@ -1,11 +1,11 @@
-﻿using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Database.Entity.GangEntities;
+﻿using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Database.Entity.GangEntities;
 
-namespace TDS_Server.Data.Interfaces.GangsSystem
+namespace TDS.Server.Data.Interfaces.GangsSystem
 {
 #nullable enable
     public interface IGangsProvider
     {
-        IGang Get(Gangs entity);
+        IGang GetGang(Gangs entity);
     }
 }

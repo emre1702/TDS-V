@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.LobbySystem.Statistics
+﻿namespace TDS.Server.Data.Interfaces.LobbySystem.Statistics
 {
     public interface IRoundFightLobbyStatistics
     {

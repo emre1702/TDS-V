@@ -1,10 +1,10 @@
 ﻿using RAGE;
 using System.Drawing;
-using TDS_Client.Data.Enums;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
+using TDS.Client.Data.Enums;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Client.Data.Abstracts.Entities.GTA
+namespace TDS.Client.Data.Abstracts.Entities.GTA
 {
     public abstract class ITDSPlayer : RAGE.Elements.Player
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TDS_Server.Database.Entity.LobbyEntities;
+using TDS.Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.Database.ModelBuilding.LobbyEntities
+namespace TDS.Server.Database.ModelBuilding.LobbyEntities
 {
     public class LobbyRewardsConfiguration : IEntityTypeConfiguration<LobbyRewards>
     {

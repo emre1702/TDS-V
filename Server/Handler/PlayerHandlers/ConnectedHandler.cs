@@ -1,17 +1,17 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Utility;
-using TDS_Server.Handler.Account;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Default;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Utility;
+using TDS.Server.Handler.Account;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Default;
+using TDS.Server.Handler.Extensions;
 using System.Threading.Tasks;
-using TDS_Server.Data.Models;
+using TDS.Server.Data.Models;
 
-namespace TDS_Server.Handler.PlayerHandlers
+namespace TDS.Server.Handler.PlayerHandlers
 {
     public class ConnectedHandler
     {

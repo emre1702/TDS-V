@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Models.Userpanel.Stats
+namespace TDS.Server.Data.Models.Userpanel.Stats
 {
     public class UserpanelPlayerWeaponBodyPartStatsData
     {

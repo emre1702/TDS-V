@@ -1,9 +1,9 @@
 ﻿using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
 
-namespace TDS_Server.Data.RoundEndReasons
+namespace TDS.Server.Data.RoundEndReasons
 {
     public class CommandRoundEndReason : RoundEndReason
     {

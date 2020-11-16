@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Data.Interfaces.GamemodesSystem.Specials
+namespace TDS.Server.Data.Interfaces.GamemodesSystem.Specials
 {
 #nullable enable
 

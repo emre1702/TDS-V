@@ -3,17 +3,17 @@ using RAGE.Elements;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Handler.Deathmatch;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class AFKCheckHandler : ServiceBase
     {

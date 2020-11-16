@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using TDS_Server.Database.Entity.Admin;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.Entity.Admin;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.SeedData.Admin
+namespace TDS.Server.Database.SeedData.Admin
 {
     public static class AdminLevelNamesSeeds
     {

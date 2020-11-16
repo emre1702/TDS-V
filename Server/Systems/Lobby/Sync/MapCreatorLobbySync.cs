@@ -4,22 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Sync;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.Map.Creator;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Sync;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models.Map.Creator;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.Sync
+namespace TDS.Server.LobbySystem.Sync
 {
-    public class MapCreatorLobbySync : BaseLobbySync, IMapCreatorLobbySync
+    public class MapCreatorLobbySync : BaseLobbySync, IMapCreatorLobbySync, IDisposable
     {
         private int _lastId;
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
@@ -315,6 +315,13 @@ namespace TDS_Server.LobbySystem.Sync
                 else if (Lobby.Players.Count > 2)
                     data.Player.TriggerEvent(ToClientEvent.MapCreatorSyncAllObjects, Serializer.ToBrowser(_currentMap), _lastId);
             });
+        }
+
+        public void Dispose()
+        {
+            _posById.Clear();
+            _posDictSemaphore.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

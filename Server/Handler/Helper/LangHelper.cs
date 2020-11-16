@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using GTANetworkAPI;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Languages;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Languages;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Helper
+namespace TDS.Server.Handler.Helper
 {
     public class LangHelper
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Server.Data.Models.Userpanel
+namespace TDS.Server.Data.Models.Userpanel
 {
     public class UserpanelSettingsSpecialDataDto
     {

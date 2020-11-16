@@ -1,9 +1,9 @@
 ﻿using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
 
-namespace TDS_Server.Handler.Browser
+namespace TDS.Server.Handler.Browser
 {
     public class AngularConstantsProvider
     {

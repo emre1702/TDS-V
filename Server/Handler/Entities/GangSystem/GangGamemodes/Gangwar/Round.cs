@@ -1,6 +1,6 @@
-﻿//using TDS_Server.Handler.Entities.Utility;
+﻿//using TDS.Server.Handler.Entities.Utility;
 
-//namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes
+//namespace TDS.Server.Handler.Entities.GangSystem.GangGamemodes
 //{
 //    partial class GangGangwar
 //    {

@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Handler.Sync;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Handler.Sync;
 
-namespace TDS_Server.Handler.Entities.GTA.Vehicles
+namespace TDS.Server.Handler.Entities.GTA.Vehicles
 {
     public partial class TDSVehicle : ITDSVehicle
     {

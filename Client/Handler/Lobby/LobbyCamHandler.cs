@@ -1,12 +1,12 @@
 ﻿using RAGE;
 using System;
-using TDS_Client.Data.Extensions;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Client.Data.Extensions;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Client.Handler.Lobby
+namespace TDS.Client.Handler.Lobby
 {
     public class LobbyCamHandler : ServiceBase
     {

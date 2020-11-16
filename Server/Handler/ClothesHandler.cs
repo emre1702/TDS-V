@@ -5,14 +5,14 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.ClothesMeta;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models.ClothesMeta;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Events;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class ClothesHandler
     {
@@ -44,7 +44,7 @@ namespace TDS_Server.Handler
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
         }
 
-        private bool DoesCacheExist()
+        private static bool DoesCacheExist()
         {
             if (!File.Exists("cache/maleClothes.json"))
                 return false;
@@ -87,7 +87,9 @@ namespace TDS_Server.Handler
                 return;
             }
 
-            Root clothesData = (Root)_xmlSerializer.Deserialize(reader);
+            var clothesData = (Root?)_xmlSerializer.Deserialize(reader);
+            if (clothesData is null)
+                return;
 
             InitProperties();
             ProcessItems(clothesData.Outfits.OutfitsDataMale.OutfitsData.Items, _maleOutfits);
@@ -123,7 +125,7 @@ namespace TDS_Server.Handler
             }
         }
 
-        private void ProcessItems(Item[] items, List<GenderOutfits> listToAddTo)
+        private void ProcessItems(List<Item> items, List<GenderOutfits> listToAddTo)
         {
             foreach (var item in items)
             {

@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 
-namespace TDS_Server.Data.Interfaces.GamemodesSystem.Weapons
+namespace TDS.Server.Data.Interfaces.GamemodesSystem.Weapons
 {
     public interface IBaseGamemodeWeapons
     {

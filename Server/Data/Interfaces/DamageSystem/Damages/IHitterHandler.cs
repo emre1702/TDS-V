@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 
-namespace TDS_Server.Data.Interfaces.DamageSystem.Damages
+namespace TDS.Server.Data.Interfaces.DamageSystem.Damages
 {
     #nullable enable
     public interface IHitterHandler

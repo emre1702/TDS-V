@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
 
-namespace TDS_Server.Handler.Converter.Mapping
+namespace TDS.Server.Handler.Converter.Mapping
 {
     internal class StringNameToPlayerConverter : ITypeConverter<string, ITDSPlayer?>
     {

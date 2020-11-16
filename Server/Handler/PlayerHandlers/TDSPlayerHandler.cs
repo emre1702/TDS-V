@@ -5,18 +5,18 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Data.Default;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Data.Default;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.PlayerHandlers
+namespace TDS.Server.Handler.PlayerHandlers
 {
     public class TDSPlayerHandler : ITDSPlayerHandler
     {
@@ -44,7 +44,7 @@ namespace TDS_Server.Handler.PlayerHandlers
         public int AmountLoggedInPlayers => LoggedInPlayers.Count;
         public ICollection<ITDSPlayer> LoggedInPlayers => _tdsPlayerRemoteIdCache.Values;
 
-        public ITDSPlayer? Get(int playerId)
+        public ITDSPlayer? GetPlayer(int playerId)
         {
             return _tdsPlayerRemoteIdCache.Values.FirstOrDefault(p => p.Id == playerId);
         }
@@ -110,7 +110,7 @@ namespace TDS_Server.Handler.PlayerHandlers
             if (!Enum.IsDefined(typeof(Language), language))
                 return;
 
-            player.LanguageHandler.Enum = (Language)language;
+            player.LanguageHandler.EnumValue = (Language)language;
         }
 
         private void OnWeaponShot(ITDSPlayer player)

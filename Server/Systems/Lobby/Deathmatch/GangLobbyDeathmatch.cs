@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.LobbySystem.Deathmatch
+namespace TDS.Server.LobbySystem.Deathmatch
 {
     public class GangLobbyDeathmatch : BaseLobbyDeathmatch
     {

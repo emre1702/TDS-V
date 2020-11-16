@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Extensions;
-using TDS_Client.Handler.Deathmatch;
-using TDS_Shared.Data.Enums;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Extensions;
+using TDS.Client.Handler.Deathmatch;
+using TDS.Shared.Data.Enums;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Draw
+namespace TDS.Client.Handler.Draw
 {
     public class NametagsHandler : ServiceBase
     {

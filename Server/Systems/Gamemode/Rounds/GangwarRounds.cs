@@ -1,8 +1,8 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
-using TDS_Server.Data.RoundEndReasons;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
+using TDS.Server.Data.RoundEndReasons;
 
-namespace TDS_Server.GamemodesSystem.Rounds
+namespace TDS.Server.GamemodesSystem.Rounds
 {
     public class GangwarRounds : BaseGamemodeRounds
     {

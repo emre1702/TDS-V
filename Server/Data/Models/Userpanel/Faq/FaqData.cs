@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Server.Data.Models.Userpanel.Faq
+namespace TDS.Server.Data.Models.Userpanel.Faq
 {
     public class FaqData
     {

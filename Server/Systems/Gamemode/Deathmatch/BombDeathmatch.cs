@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.GamemodesSystem.Gamemodes;
 
-namespace TDS_Server.GamemodesSystem.Deathmatch
+namespace TDS.Server.GamemodesSystem.Deathmatch
 {
     public class BombDeathmatch : BaseGamemodeDeathmatch
     {

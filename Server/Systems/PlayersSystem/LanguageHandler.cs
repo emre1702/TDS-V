@@ -1,17 +1,17 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Data.Enums;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class LanguageHandler : IPlayerLanguageHandler
     {
         public ILanguage Data { get; set; }
 
-        public Language Enum
+        public Language EnumValue
         {
             get
             {

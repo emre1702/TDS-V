@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.DamageSystem.Damages;
-using TDS_Server.Data.Interfaces.DamageSystem.Damages;
-using TDS_Server.Data.Interfaces.DamageSystem.Deaths;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Database.Entity.LobbyEntities;
+using TDS.Server.DamageSystem.Damages;
+using TDS.Server.Data.Interfaces.DamageSystem.Damages;
+using TDS.Server.Data.Interfaces.DamageSystem.Deaths;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.Data.Interfaces.DamageSystem
+namespace TDS.Server.Data.Interfaces.DamageSystem
 {
     public interface IDamageHandler
     {

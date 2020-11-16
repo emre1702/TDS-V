@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler.Helper;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Handler.Helper;
 
-namespace TDS_Server.TeamsSystem
+namespace TDS.Server.TeamsSystem
 {
     public class TeamsProvider : ITeamsProvider
     {

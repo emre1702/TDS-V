@@ -6,11 +6,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Database.Entity.Player;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Database.Entity.Player;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Data.Utility
+namespace TDS.Server.Data.Utility
 {
     public static class Utils
     {

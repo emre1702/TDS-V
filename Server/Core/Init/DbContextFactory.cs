@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using TDS_Server.Core.Init.Services.Creators;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Server;
+using TDS.Server.Core.Init.Services.Creators;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler.Server;
 
-namespace TDS_Server.Core.Init
+namespace TDS.Server.Core.Init
 {
     public class DbContextFactory : IDesignTimeDbContextFactory<TDSDbContext>
     {
-        #region Public Methods
 
         public TDSDbContext CreateDbContext(string[] args)
         {
@@ -21,6 +20,5 @@ namespace TDS_Server.Core.Init
             return new TDSDbContext(optionsBuilder.Options);
         }
 
-        #endregion Public Methods
     }
 }

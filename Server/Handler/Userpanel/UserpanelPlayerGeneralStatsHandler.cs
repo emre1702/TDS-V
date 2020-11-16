@@ -4,17 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.Userpanel.History;
-using TDS_Server.Data.Models.Userpanel.Stats;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Entities;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models.Userpanel.History;
+using TDS.Server.Data.Models.Userpanel.Stats;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Entities;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Default;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     public class UserpanelPlayerGeneralStatsHandler : DatabaseEntityWrapper
     {

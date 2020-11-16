@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Shared.Data.Models
+namespace TDS.Shared.Data.Models
 {
     public class SyncedClientPlayerSettings
     {

@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces;
 
-namespace TDS_Server.Data.Utility
+namespace TDS.Server.Data.Utility
 {
     public class CustomServiceProvider : IServiceProvider
     {

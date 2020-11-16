@@ -3,21 +3,21 @@ using RAGE.Game;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Models;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Default;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Models;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Data.Models.GTA;
+using TDS.Shared.Default;
 using static RAGE.Events;
 using static RAGE.NUI.UIResText;
 using Alignment = RAGE.NUI.UIResText.Alignment;
 
-namespace TDS_Client.Handler.Lobby
+namespace TDS.Client.Handler.Lobby
 {
     public class BombHandler : ServiceBase
     {

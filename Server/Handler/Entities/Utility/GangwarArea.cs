@@ -2,22 +2,22 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities.Gangs;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.GangSystem;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities.Gangs;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.GangSystem;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
+namespace TDS.Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar
 {
     public class GangwarArea : DatabaseEntityWrapper, IGangwarArea
     {

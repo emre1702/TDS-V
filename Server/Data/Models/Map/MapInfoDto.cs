@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using TDS_Server.Data.Enums;
+using TDS.Server.Data.Enums;
 
-namespace TDS_Server.Data.Models.Map
+namespace TDS.Server.Data.Models.Map
 {
 #nullable disable warnings
 

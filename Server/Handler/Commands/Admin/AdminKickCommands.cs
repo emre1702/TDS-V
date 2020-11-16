@@ -1,15 +1,15 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Models;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Models;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Commands.Admin
+namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminKickCommands
     {
@@ -19,8 +19,8 @@ namespace TDS_Server.Handler.Commands.Admin
         public AdminKickCommands(LangHelper langHelper, LobbiesHandler lobbiesHandler)
             => (_langHelper, _lobbiesHandler) = (langHelper, lobbiesHandler);
 
-        [TDSCommand(AdminCommand.Kick)]
-        public void KickPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.Kick)]
+        public void KickPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_INFO, target.DisplayName, player.DisplayName, reason));
             NAPI.Task.RunSafe(() =>
@@ -43,8 +43,8 @@ namespace TDS_Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommand(AdminCommand.LobbyKick)]
-        public async Task LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.LobbyKick)]
+        public async Task LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (player == target)
                 return;

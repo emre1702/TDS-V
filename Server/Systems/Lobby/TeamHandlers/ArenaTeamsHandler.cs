@@ -3,16 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using GTANetworkAPI;
 using MoreLinq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
 
-namespace TDS_Server.LobbySystem.TeamHandlers
+namespace TDS.Server.LobbySystem.TeamHandlers
 {
     public class ArenaTeamsHandler : RoundFightLobbyTeamsHandler, IArenaTeamsHandler
     {
@@ -33,7 +33,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
         {
             var playersToPutIntoOtherTeam = new List<ITDSPlayer>();
 
-            await Do(teams =>
+            await DoForList(teams =>
             {
                 var teamWithFewestPlayers = teams.Skip(1).MinBy(t => t.Players.Amount).Shuffle().FirstOrDefault();
                 var teamWithMostPlayers = teams.Skip(1).MaxBy(t => t.Players.Amount).Shuffle().FirstOrDefault();

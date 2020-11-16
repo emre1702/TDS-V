@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.Database.Entity.Admin;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Admin;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Database.Entity.Command
+namespace TDS.Server.Database.Entity.Command
 {
     public partial class Commands
     {

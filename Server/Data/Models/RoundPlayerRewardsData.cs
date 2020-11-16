@@ -1,6 +1,6 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
 
-namespace TDS_Server.Data.Models
+namespace TDS.Server.Data.Models
 {
     public class RoundPlayerRewardsData
     {

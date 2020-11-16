@@ -1,9 +1,9 @@
 ﻿using RAGE.Game;
 using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Enums;
+using TDS.Client.Data.Enums;
 
-namespace TDS_Client.Handler.Draw.Dx
+namespace TDS.Client.Handler.Draw.Dx
 {
     // UIResText.Draw is top aligned Graphics.DrawRect is center aligned (X & Y)
     public abstract class DxBase : IDisposable

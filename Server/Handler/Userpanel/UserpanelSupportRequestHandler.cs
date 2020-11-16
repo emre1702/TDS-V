@@ -7,22 +7,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Data.Models.Userpanel.Support;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Userpanel;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums.Userpanel;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models.Userpanel.Support;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Userpanel;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums.Userpanel;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     public class UserpanelSupportRequestHandler : DatabaseEntityWrapper, IUserpanelSupportRequestHandler
     {

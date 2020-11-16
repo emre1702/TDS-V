@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
+namespace TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
 {
     public interface IRoundStatesHandler
     {
@@ -17,9 +17,9 @@ namespace TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas
 
         void SetNext();
 
-        void Start();
+        void StartRound();
 
-        void Stop();
+        void StopRound();
 
         Task<IDisposable> GetContext([CallerMemberName] string calledFrom = "");
 

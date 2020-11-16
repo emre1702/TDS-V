@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ApplicationIcon />
         <OutputType>Library</OutputType>
@@ -11,15 +11,15 @@
         <PlatformTarget>x64</PlatformTarget>
         <RunPostBuildEvent>Always</RunPostBuildEvent>
         <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-        <AssemblyName>TDS_Server.Core</AssemblyName>
-        <RootNamespace>TDS_Server.Core</RootNamespace>
+        <AssemblyName>TDS.Server.Core</AssemblyName>
+        <RootNamespace>TDS.Server.Core</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="10.1.0" />
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

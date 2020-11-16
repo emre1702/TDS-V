@@ -1,6 +1,6 @@
-﻿using TDS_Shared.Data.Enums;
+﻿using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Rest
+namespace TDS.Server.Database.Entity.Rest
 {
     public class ChatInfos
     {

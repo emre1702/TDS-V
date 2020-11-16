@@ -4,30 +4,30 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using TDS_Server.Database.Entity.Admin;
-using TDS_Server.Database.Entity.Bonusbot;
-using TDS_Server.Database.Entity.Challenge;
-using TDS_Server.Database.Entity.Command;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Database.Entity.Log;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Database.Entity.Player.Char;
-using TDS_Server.Database.Entity.Player.Settings;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Database.Entity.Server;
-using TDS_Server.Database.Entity.Userpanel;
-using TDS_Server.Database.EntityConfigurations;
-using TDS_Server.Database.EntityConfigurations.Admin;
-using TDS_Server.Database.ModelBuilding.BonusBot;
-using TDS_Server.Database.ModelBuilding.Challenge;
-using TDS_Server.Database.ModelBuilding.Command;
-using TDS_Server.Database.SeedData;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Enums.Userpanel;
+using TDS.Server.Database.Entity.Admin;
+using TDS.Server.Database.Entity.Bonusbot;
+using TDS.Server.Database.Entity.Challenge;
+using TDS.Server.Database.Entity.Command;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Database.Entity.Log;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player.Char;
+using TDS.Server.Database.Entity.Player.Settings;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Database.Entity.Server;
+using TDS.Server.Database.Entity.Userpanel;
+using TDS.Server.Database.EntityConfigurations;
+using TDS.Server.Database.EntityConfigurations.Admin;
+using TDS.Server.Database.ModelBuilding.BonusBot;
+using TDS.Server.Database.ModelBuilding.Challenge;
+using TDS.Server.Database.ModelBuilding.Command;
+using TDS.Server.Database.SeedData;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.Userpanel;
 
-namespace TDS_Server.Database.Entity
+namespace TDS.Server.Database.Entity
 {
     public partial class TDSDbContext : DbContext
     {

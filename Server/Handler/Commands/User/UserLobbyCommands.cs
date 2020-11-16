@@ -1,16 +1,16 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Enums;
-using TDS_Server.Handler.Entities.Utility;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Sync;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Enums;
+using TDS.Server.Handler.Entities.Utility;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Sync;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.Commands.User
+namespace TDS.Server.Handler.Commands.User
 {
     public class UserLobbyCommands
     {
@@ -21,7 +21,7 @@ namespace TDS_Server.Handler.Commands.User
         public UserLobbyCommands(InvitationsHandler invitationsHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler)
             => (_invitationsHandler, _customLobbyMenuSyncHandler, _lobbiesHandler) = (invitationsHandler, customLobbyMenuSyncHandler, lobbiesHandler);
 
-        [TDSCommand(UserCommand.LobbyInvitePlayer)]
+        [TDSCommandAttribute(UserCommand.LobbyInvitePlayer)]
         public void LobbyInvitePlayer(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.Lobby is null)
@@ -68,7 +68,7 @@ namespace TDS_Server.Handler.Commands.User
             }
         }
 
-        [TDSCommand(UserCommand.LobbyLeave)]
+        [TDSCommandAttribute(UserCommand.LobbyLeave)]
         public async Task OnLobbyLeave(ITDSPlayer player)
         {
             if (player.Lobby is null)

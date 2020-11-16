@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Deathmatch;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Players;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Rounds;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Specials;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Teams;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Weapons;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.GamemodesSystem.Deathmatch;
-using TDS_Server.GamemodesSystem.DependenciesModels;
-using TDS_Server.GamemodesSystem.MapHandlers;
-using TDS_Server.GamemodesSystem.Players;
-using TDS_Server.GamemodesSystem.Rounds;
-using TDS_Server.GamemodesSystem.Specials;
-using TDS_Server.GamemodesSystem.Teams;
-using TDS_Server.GamemodesSystem.Weapons;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Deathmatch;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.GamemodesSystem.MapHandler;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Players;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Rounds;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Specials;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Teams;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Weapons;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.GamemodesSystem.Deathmatch;
+using TDS.Server.GamemodesSystem.DependenciesModels;
+using TDS.Server.GamemodesSystem.MapHandlers;
+using TDS.Server.GamemodesSystem.Players;
+using TDS.Server.GamemodesSystem.Rounds;
+using TDS.Server.GamemodesSystem.Specials;
+using TDS.Server.GamemodesSystem.Teams;
+using TDS.Server.GamemodesSystem.Weapons;
 
-namespace TDS_Server.GamemodesSystem.Gamemodes
+namespace TDS.Server.GamemodesSystem.Gamemodes
 {
     public abstract class BaseGamemode : IBaseGamemode
     {
@@ -45,7 +45,7 @@ namespace TDS_Server.GamemodesSystem.Gamemodes
         private BaseGamemodeTeams _teams;
         private BaseGamemodeWeapons _weapons;
 
-        public readonly ISettingsHandler SettingsHandler;
+        public ISettingsHandler SettingsHandler { get; }
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 

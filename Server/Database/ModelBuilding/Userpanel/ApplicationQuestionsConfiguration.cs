@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TDS_Server.Database.Entity.Userpanel;
+using TDS.Server.Database.Entity.Userpanel;
 
-namespace TDS_Server.Database.ModelBuilding.Userpanel
+namespace TDS.Server.Database.ModelBuilding.Userpanel
 {
     public class ApplicationQuestionsConfiguration : IEntityTypeConfiguration<ApplicationQuestions>
     {

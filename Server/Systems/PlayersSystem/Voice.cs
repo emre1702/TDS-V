@@ -1,10 +1,10 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class Voice : IPlayerVoice
     {
@@ -35,11 +35,11 @@ namespace TDS_Server.PlayersSystem
 
         }
 
-        public void SetVoiceTo(ITDSPlayer target, bool on)
+        public void SetVoiceTo(ITDSPlayer target, bool toggleOn)
         {
             NAPI.Task.RunSafe(() =>
             {
-                if (on)
+                if (toggleOn)
                 {
                     _player.EnableVoiceTo(target);
                     _settedVoiceTo.Add(target);

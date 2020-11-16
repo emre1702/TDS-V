@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Log
+namespace TDS.Server.Database.Entity.Log
 {
     public partial class LogRests
     {

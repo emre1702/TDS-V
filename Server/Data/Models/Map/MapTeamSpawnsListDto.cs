@@ -1,17 +1,14 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
-namespace TDS_Server.Data.Models.Map
+namespace TDS.Server.Data.Models.Map
 {
 #nullable disable warnings
 
     public class MapTeamSpawnsListDto
     {
-        #region Public Properties
-
         [XmlElement("team")]
-        public MapTeamSpawnsDto[] TeamSpawns { get; set; }
-
-        #endregion Public Properties
+        public List<MapTeamSpawnsDto> TeamSpawns { get; set; }
     }
 
 #nullable restore warnings

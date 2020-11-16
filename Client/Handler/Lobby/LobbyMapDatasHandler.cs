@@ -4,22 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Extensions;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Entities.GTA;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Map;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Data.Models.Map;
-using TDS_Shared.Data.Models.Map.Creator;
-using TDS_Shared.Default;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Extensions;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Entities.GTA;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Map;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Data.Models.GTA;
+using TDS.Shared.Data.Models.Map;
+using TDS.Shared.Data.Models.Map.Creator;
+using TDS.Shared.Default;
 using static RAGE.NUI.UIResText;
 
-namespace TDS_Client.Handler.Lobby
+namespace TDS.Client.Handler.Lobby
 {
     public class LobbyMapDatasHandler : ServiceBase
     {

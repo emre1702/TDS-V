@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 
-namespace TDS_Server.Handler.Entities.GTA.Peds
+namespace TDS.Server.Handler.Entities.GTA.Peds
 {
     public class TDSPed : Ped
     {

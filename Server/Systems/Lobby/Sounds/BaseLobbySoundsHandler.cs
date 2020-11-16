@@ -1,8 +1,8 @@
-﻿using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Sounds;
-using TDS_Shared.Default;
+﻿using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Sounds;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.Sounds
+namespace TDS.Server.LobbySystem.Sounds
 {
     public class BaseLobbySoundsHandler : IBaseLobbySoundsHandler
     {

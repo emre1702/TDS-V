@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TDS_Shared.Data.Extensions
+namespace TDS.Shared.Data.Extensions
 {
     public static class RandomExtension
     {

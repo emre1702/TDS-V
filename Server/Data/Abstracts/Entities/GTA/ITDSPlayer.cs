@@ -1,20 +1,20 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Linq;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Database.Entity.Player;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Default;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity.Player;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Default;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Abstracts.Entities.GTA
+namespace TDS.Server.Data.Abstracts.Entities.GTA
 {
 #nullable enable
 
@@ -113,7 +113,7 @@ namespace TDS_Server.Data.Abstracts.Entities.GTA
         public new ulong SocialClubId { get; set; }
         public new string Address { get; private set; } = string.Empty;
 
-        public ITDSPlayer(NetHandle netHandle) : base(netHandle)
+        protected ITDSPlayer(NetHandle netHandle) : base(netHandle)
         {
         }
 

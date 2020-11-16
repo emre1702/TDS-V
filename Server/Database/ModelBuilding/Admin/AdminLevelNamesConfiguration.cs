@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Admin;
+using TDS.Server.Database.Entity.Admin;
 
-namespace TDS_Server.Database.EntityConfigurations.Admin
+namespace TDS.Server.Database.EntityConfigurations.Admin
 {
     internal class AdminLevelNamesConfiguration : IEntityTypeConfiguration<AdminLevelNames>
     {

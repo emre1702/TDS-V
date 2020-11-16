@@ -1,29 +1,27 @@
-﻿using GTANetworkAPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.RoundEndReasons;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.RoundEndReasons;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS.Shared.Core;
 
-namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
+namespace TDS.Server.LobbySystem.RoundsHandlers.Datas
 {
-    public class RoundFightLobbyRoundStates : IRoundStatesHandler
+    public class RoundFightLobbyRoundStates : IRoundStatesHandler, IDisposable
     {
-        public LinkedList<RoundState> List = new LinkedList<RoundState>();
-        public LinkedListNode<RoundState> Current;
+        public LinkedList<RoundState> List { get; } = new LinkedList<RoundState>();
+        public LinkedListNode<RoundState> Current { get; private set; }
         public IRoundState CurrentState => Current.Value;
         public LinkedListNode<RoundState> Next => Current == List.Last ? List.First! : Current.Next!;
         public int TimeToNextStateMs => (int?)_nextTimer?.RemainingMsToExecute ?? 0;
@@ -79,7 +77,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
                 await _roundWaitSemaphore.Do(() =>
                 {
                     if (_lobbyRemoved)
-                        Stop();
+                        StopRound();
                     else
                         SetState(Next);
                 }).ConfigureAwait(false);
@@ -90,7 +88,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             }
         }
 
-        public void Start()
+        public void StartRound()
         {
             if (Started)
                 return;
@@ -98,7 +96,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             Task.Run(SetNext);
         }
 
-        public async void Stop()
+        public async void StopRound()
         {
             try
             {
@@ -124,7 +122,7 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             if (CurrentState is RoundEndState)
                 return;
             if (_lobbyRemoved)
-                Stop();
+                StopRound();
             else
             {
                 CurrentRoundEndReason = roundEndReason;
@@ -155,14 +153,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
             if (data.TeamIndex == 0)
                 return default;
             if (_lobby.Players.Count == 1)
-                Start();
+                StartRound();
             return default;
         }
 
         private async ValueTask Events_PlayerLeft((ITDSPlayer Player, int HadLifes) _)
         {
             if (!await _lobby.Players.Any().ConfigureAwait(false))
-                Stop();
+                StopRound();
         }
 
         private void Events_RemoveAfter(IBaseLobby lobby)
@@ -207,6 +205,14 @@ namespace TDS_Server.LobbySystem.RoundsHandlers.Datas
                     node = node.Next;
                 return node is { };
             });
+        }
+
+        public void Dispose()
+        {
+            _nextTimer?.Kill();
+            _lobbyRemoved = true;
+            _roundWaitSemaphore.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TDS_Server.Database.Entity.Bonusbot;
+using TDS.Server.Database.Entity.Bonusbot;
 
-namespace TDS_Server.Database.ModelBuilding.BonusBot
+namespace TDS.Server.Database.ModelBuilding.BonusBot
 {
     internal class BonusBotSettingsConfiguration : IEntityTypeConfiguration<BonusbotSettings>
     {

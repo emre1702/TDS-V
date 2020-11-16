@@ -1,10 +1,10 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
-using TDS_Shared.Default;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Extensions;
+using TDS.Shared.Default;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class SpectateHandler
     {
@@ -22,7 +22,7 @@ namespace TDS_Server.Handler
                 NAPI.Task.RunSafe(() =>
                 {
                     player.Position = targetPlayer.Position.AddToZ(10);
-                    new TDS_Shared.Core.TDSTimer(() =>
+                    _ = new TDS.Shared.Core.TDSTimer(() =>
                         NAPI.Task.Run(() => 
                             player.TriggerEvent(ToClientEvent.SetPlayerToSpectatePlayer, targetPlayer.RemoteId)), 2000);
                 });

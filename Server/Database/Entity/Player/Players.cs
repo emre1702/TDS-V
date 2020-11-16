@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server.Database.Entity.Admin;
-using TDS_Server.Database.Entity.Challenge;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Database.Entity.LobbyEntities;
-using TDS_Server.Database.Entity.Player.Char;
-using TDS_Server.Database.Entity.Player.Settings;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Database.Entity.Userpanel;
+using TDS.Server.Database.Entity.Admin;
+using TDS.Server.Database.Entity.Challenge;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Database.Entity.Player.Char;
+using TDS.Server.Database.Entity.Player.Settings;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Database.Entity.Userpanel;
 
-namespace TDS_Server.Database.Entity.Player
+namespace TDS.Server.Database.Entity.Player
 {
     public partial class Players
     {

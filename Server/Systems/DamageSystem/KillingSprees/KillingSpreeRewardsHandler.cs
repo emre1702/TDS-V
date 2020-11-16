@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Database.Entity.LobbyEntities;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.DamageSystem.KillingSprees
+namespace TDS.Server.DamageSystem.KillingSprees
 {
     internal class KillingSpreeRewardsHandler
     {

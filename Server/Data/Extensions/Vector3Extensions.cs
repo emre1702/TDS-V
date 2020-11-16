@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Shared.Data.Extensions;
-using TDS_Shared.Data.Utility;
+using TDS.Shared.Data.Extensions;
+using TDS.Shared.Data.Utility;
 
-namespace TDS_Server.Data.Extensions
+namespace TDS.Server.Data.Extensions
 {
     public static class Vector3Extensions
     {

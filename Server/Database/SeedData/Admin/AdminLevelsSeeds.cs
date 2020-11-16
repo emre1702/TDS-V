@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Admin;
+using TDS.Server.Database.Entity.Admin;
 
-namespace TDS_Server.Database.SeedData.Admin
+namespace TDS.Server.Database.SeedData.Admin
 {
     public static class AdminLevelsSeeds
     {

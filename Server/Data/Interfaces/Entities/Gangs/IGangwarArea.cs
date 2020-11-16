@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.GangsSystem;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Database.Entity.GangEntities;
+using TDS.Server.Data.Interfaces.GangsSystem;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Database.Entity.GangEntities;
 
-namespace TDS_Server.Data.Interfaces.Entities.Gangs
+namespace TDS.Server.Data.Interfaces.Entities.Gangs
 {
     public interface IGangwarArea
     {

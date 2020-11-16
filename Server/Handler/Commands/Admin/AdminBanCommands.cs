@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Commands.Admin
+namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminBanCommands
     {
@@ -22,8 +22,8 @@ namespace TDS_Server.Handler.Commands.Admin
         public AdminBanCommands(LobbiesHandler lobbiesHandler) 
             => (_lobbiesHandler) = (lobbiesHandler);
 
-        [TDSCommand(AdminCommand.Ban, 1)]
-        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.Ban, 1)]
+        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             PlayerBans? ban = null;
             if (length == TimeSpan.MinValue)
@@ -40,8 +40,8 @@ namespace TDS_Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommand(AdminCommand.Ban, 0)]
-        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.Ban, 0)]
+        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (length == TimeSpan.MinValue)
                 await _lobbiesHandler.MainMenu.Bans.Unban(player, dbTarget, reason).ConfigureAwait(false);
@@ -54,8 +54,8 @@ namespace TDS_Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommand(AdminCommand.LobbyBan, 1)]
-        public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.LobbyBan, 1)]
+        public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (player.Lobby is null || player.Lobby is IMainMenu)
                 return;
@@ -80,8 +80,8 @@ namespace TDS_Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Lobby_Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommand(AdminCommand.LobbyBan, 0)]
-        public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.LobbyBan, 0)]
+        public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
                 return;

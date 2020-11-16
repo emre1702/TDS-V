@@ -1,7 +1,7 @@
 ﻿using RAGE.Game;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Client.Core.Init
+namespace TDS.Client.Core.Init
 {
     public class Program : RAGE.Events.Script
     {

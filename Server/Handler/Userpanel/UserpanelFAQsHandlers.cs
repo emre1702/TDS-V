@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models.Userpanel.Faq;
-using TDS_Server.Database.Entity;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models.Userpanel.Faq;
+using TDS.Server.Database.Entity;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
     internal class UserpanelFAQsHandlers
     {
@@ -25,7 +25,7 @@ namespace TDS_Server.Handler.Userpanel
 
         public string GetData(ITDSPlayer player)
         {
-            return _faqsJsonByLanguage[player.LanguageHandler.Enum];
+            return _faqsJsonByLanguage[player.LanguageHandler.EnumValue];
         }
 
         public void LoadFAQs(TDSDbContext dbContext)

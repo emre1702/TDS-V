@@ -1,9 +1,9 @@
 ﻿using GTANetworkAPI;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Handler.Entities.GTA.Objects;
+using TDS.Server.Handler.Entities.GTA.Objects;
 
-namespace TDS_Server.Handler.Factories
+namespace TDS.Server.Handler.Factories
 {
     public class ObjectFactory
     {

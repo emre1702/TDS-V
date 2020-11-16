@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
-using TDS_Shared.Data.Attributes;
-using TDS_Shared.Data.Extensions;
-using TDS_Shared.Data.Models.Map.Creator;
-using TDS_Shared.Data.Utility;
+using TDS.Shared.Data.Attributes;
+using TDS.Shared.Data.Extensions;
+using TDS.Shared.Data.Models.Map.Creator;
+using TDS.Shared.Data.Utility;
 
-namespace TDS_Shared.Data.Models.GTA
+namespace TDS.Shared.Data.Models.GTA
 {
     [TDSCommandArgLength(3)]
     public class Position3D

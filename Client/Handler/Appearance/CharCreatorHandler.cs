@@ -2,22 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Deathmatch;
-using TDS_Client.Handler.Entities.GTA;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Data.Models.CharCreator;
-using TDS_Shared.Data.Models.GTA;
-using TDS_Shared.Default;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Enums;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Deathmatch;
+using TDS.Client.Handler.Entities.GTA;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Data.Models.CharCreator;
+using TDS.Shared.Data.Models.GTA;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Appearance
+namespace TDS.Client.Handler.Appearance
 {
     public class CharCreatorHandler : ServiceBase
     {

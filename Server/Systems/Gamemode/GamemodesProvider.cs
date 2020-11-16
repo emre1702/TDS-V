@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using TDS_Server.Data.Interfaces.GamemodesSystem;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Database.Entity;
-using TDS_Server.GamemodesSystem.Gamemodes;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Interfaces.GamemodesSystem;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Database.Entity;
+using TDS.Server.GamemodesSystem.Gamemodes;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.GamemodesSystem
+namespace TDS.Server.GamemodesSystem
 {
     public class GamemodesProvider : IGamemodesProvider
     {

@@ -1,16 +1,16 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 
-namespace TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates
+namespace TDS.Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
     public abstract class RoundState : IRoundState
     {
         public abstract int Duration { get; }
 
-        protected readonly IRoundFightLobby Lobby;
+        protected IRoundFightLobby Lobby { get; }
 
-        public RoundState(IRoundFightLobby lobby)
+        protected RoundState(IRoundFightLobby lobby)
         {
             Lobby = lobby;
             LoadSettings();

@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Server.Database.Entity.Rest;
+using TDS.Server.Database.Entity.Rest;
 
-namespace TDS_Server.Database.Entity.GangEntities
+namespace TDS.Server.Database.Entity.GangEntities
 {
     public class GangwarAreas
     {

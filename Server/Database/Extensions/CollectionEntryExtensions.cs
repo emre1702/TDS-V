@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Threading.Tasks;
 
-namespace TDS_Server.Database.Extensions
+namespace TDS.Server.Database.Extensions
 {
     public static class CollectionEntryExtensions
     {

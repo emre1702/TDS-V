@@ -1,10 +1,10 @@
 ﻿using RAGE.Game;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Enums;
+using TDS.Client.Data.Enums;
 using Alignment = RAGE.NUI.UIResText.Alignment;
 
-namespace TDS_Client.Handler.Draw.Dx.Grid
+namespace TDS.Client.Handler.Draw.Dx.Grid
 {
     public class DxGridRow : DxBase
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TDS_Shared.Data.Attributes
+namespace TDS.Shared.Data.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class TDSCommandArgLength : Attribute

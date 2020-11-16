@@ -1,11 +1,11 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Database.Entity;
-using TDS_Server.GamemodesSystem.DependenciesModels;
-using TDS_Server.GamemodesSystem.Weapons;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Database.Entity;
+using TDS.Server.GamemodesSystem.DependenciesModels;
+using TDS.Server.GamemodesSystem.Weapons;
 
-namespace TDS_Server.GamemodesSystem.Gamemodes
+namespace TDS.Server.GamemodesSystem.Gamemodes
 {
     public class SniperGamemode : BaseGamemode, ISniperGamemode
     {

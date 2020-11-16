@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Shared.Core;
+using TDS.Shared.Core;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class TimerHandler : ServiceBase
     {

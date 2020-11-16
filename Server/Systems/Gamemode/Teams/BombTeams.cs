@@ -1,9 +1,9 @@
-﻿using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Teams;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.TeamsSystem;
+﻿using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Teams;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.TeamsSystem;
 
-namespace TDS_Server.GamemodesSystem.Teams
+namespace TDS.Server.GamemodesSystem.Teams
 {
     public class BombTeams : BaseGamemodeTeams, IBombGamemodeTeams
     {

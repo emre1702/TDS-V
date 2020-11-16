@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GTANetworkAPI;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Weapons;
-using TDS_Server.Database.Entity.LobbyEntities;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Weapons;
+using TDS.Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.LobbySystem.Weapons
+namespace TDS.Server.LobbySystem.Weapons
 {
     public class RoundFightLobbyWeapons : FightLobbyWeapons, IRoundFightLobbyWeapons
     {

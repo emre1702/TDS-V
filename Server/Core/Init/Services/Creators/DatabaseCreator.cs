@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TDS_Server.Database;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Server;
+using TDS.Server.Database;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler.Server;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     internal static class DatabaseCreator
     {
@@ -24,12 +24,14 @@ namespace TDS_Server.Core.Init.Services.Creators
         internal static IServiceCollection WithDatabase(this IServiceCollection serviceCollection)
         {
             var appConfigHandler = new AppConfigHandler();
+#pragma warning disable CA2000 // Dispose objects before losing scope
 #pragma warning disable IDE0067 // Dispose objects before losing scope
             var loggerFactory = LoggerFactory.Create(builder =>
                    builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
                        .AddProvider(new CustomDBLogger(@"D:\DBLogs\FromCsharp\log.txt"))
                );
 #pragma warning restore IDE0067 // Dispose objects before losing scope
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
             return serviceCollection
                 .AddSingleton(appConfigHandler)

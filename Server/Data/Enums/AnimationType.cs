@@ -1,6 +1,7 @@
-﻿namespace TDS_Server.Data.Enums
+﻿namespace TDS.Server.Data.Enums
 {
-    public enum AnimationFlag
+    [System.Flags]
+    public enum AnimationType
     {
         Loop = 1 << 0,
         StopOnLastFrame = 1 << 1,

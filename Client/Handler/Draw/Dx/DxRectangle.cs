@@ -1,9 +1,9 @@
 ﻿using RAGE;
 using System.Drawing;
-using TDS_Client.Data.Enums;
+using TDS.Client.Data.Enums;
 using static RAGE.NUI.UIResText;
 
-namespace TDS_Client.Handler.Draw.Dx
+namespace TDS.Client.Handler.Draw.Dx
 {
     internal class DxRectangle : DxBase
     {

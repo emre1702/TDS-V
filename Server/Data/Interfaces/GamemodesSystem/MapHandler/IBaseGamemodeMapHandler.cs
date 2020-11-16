@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler
+﻿namespace TDS.Server.Data.Interfaces.GamemodesSystem.MapHandler
 {
 #nullable enable
 

@@ -5,22 +5,22 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities.Gangs;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Events;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Utility;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities.Gangs;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Events;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Utility;
 
-using DB = TDS_Server.Database.Entity;
+using DB = TDS.Server.Database.Entity;
 
-namespace TDS_Server.Handler.Maps
+namespace TDS.Server.Handler.Maps
 {
     public class MapsLoadingHandler
     {
@@ -151,7 +151,7 @@ namespace TDS_Server.Handler.Maps
             lock (_defaultMaps)
             {
                 return _defaultMaps
-                    .Where(map => map.BrowserSyncedData.Type == TDS_Shared.Data.Enums.MapType.Gangwar 
+                    .Where(map => map.BrowserSyncedData.Type == TDS.Shared.Data.Enums.MapType.Gangwar 
                                 && !gangwarAreas.Any(a => a.MapId == map.BrowserSyncedData.Id));
             }
         }
@@ -266,7 +266,12 @@ namespace TDS_Server.Handler.Maps
                 return null;
             }
 
-            MapDto map = (MapDto)_xmlSerializer.Deserialize(reader);
+            var map = (MapDto?)_xmlSerializer.Deserialize(reader);
+            if (map is null)
+            {
+                _loggingHandler.LogError($"Could not deserialize file {fileInfo.FullName}.", Environment.StackTrace);
+                return null;
+            }
             map.Info.FilePath = fileInfo.FullName;
 
             if (isOnlySaved)

@@ -3,15 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Maps;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Maps;
 
-namespace TDS_Server.Handler.GangSystem
+namespace TDS.Server.Handler.GangSystem
 {
     public class GangwarAreasHandler
     {

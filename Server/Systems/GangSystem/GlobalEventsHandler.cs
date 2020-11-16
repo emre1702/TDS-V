@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Handler.Events;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Handler.Events;
 
-namespace TDS_Server.GangsSystem
+namespace TDS.Server.GangsSystem
 {
     public class GlobalEventsHandler
     {

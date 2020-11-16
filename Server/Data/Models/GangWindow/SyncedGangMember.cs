@@ -2,11 +2,11 @@
 using Newtonsoft.Json;
 using System;
 using System.Linq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity.GangEntities;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Database.Entity.GangEntities;
 
-namespace TDS_Server.Data.Models.GangWindow
+namespace TDS.Server.Data.Models.GangWindow
 {
     public class SyncedGangMember
     {

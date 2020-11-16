@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Models;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Models;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class BindsHandler : ServiceBase
     {

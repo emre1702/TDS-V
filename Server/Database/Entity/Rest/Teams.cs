@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.Database.Entity.GangEntities;
-using TDS_Server.Database.Entity.LobbyEntities;
+using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.Database.Entity.Rest
+namespace TDS.Server.Database.Entity.Rest
 {
     public partial class Teams
     {

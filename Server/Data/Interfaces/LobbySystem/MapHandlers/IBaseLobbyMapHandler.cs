@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.MapHandlers
+namespace TDS.Server.Data.Interfaces.LobbySystem.MapHandlers
 {
     public interface IBaseLobbyMapHandler
     {

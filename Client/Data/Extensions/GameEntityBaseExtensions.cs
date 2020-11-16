@@ -1,7 +1,7 @@
 ﻿using RAGE;
 using RAGE.Elements;
 
-namespace TDS_Client.Data.Extensions
+namespace TDS.Client.Data.Extensions
 {
     public static class GameEntityBaseExtensions
     {

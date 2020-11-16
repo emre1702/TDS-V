@@ -1,8 +1,8 @@
 ﻿using GTANetworkAPI;
-using TDS_Server.Data.Models.Map.Creator;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Server.Data.Models.Map.Creator;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Server.Data.Extensions
+namespace TDS.Server.Data.Extensions
 {
     public static class PositionExtensions
     {

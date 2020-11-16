@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Extensions;
-using TDS_Client.Handler.Browser;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Extensions;
+using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorMarkerHandler : ServiceBase
     {

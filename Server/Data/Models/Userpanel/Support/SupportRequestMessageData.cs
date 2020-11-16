@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace TDS_Server.Data.Models.Userpanel.Support
+namespace TDS.Server.Data.Models.Userpanel.Support
 {
     public class SupportRequestMessageData
     {

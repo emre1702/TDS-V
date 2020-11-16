@@ -2,23 +2,23 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Enums;
-using TDS_Client.Data.Interfaces;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Draw.Dx.Grid;
-using TDS_Client.Handler.Events;
-using TDS_Client.Handler.Lobby;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Models;
-using TDS_Shared.Default;
+using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Enums;
+using TDS.Client.Data.Interfaces;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Draw.Dx.Grid;
+using TDS.Client.Handler.Events;
+using TDS.Client.Handler.Lobby;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Models;
+using TDS.Shared.Default;
 using static RAGE.Events;
 using Alignment = RAGE.NUI.UIResText.Alignment;
 
 #pragma warning disable IDE0067 // Dispose objects before losing scope
 
-namespace TDS_Client.Handler.Draw
+namespace TDS.Client.Handler.Draw
 {
     public class ScoreboardHandler : ServiceBase
     {

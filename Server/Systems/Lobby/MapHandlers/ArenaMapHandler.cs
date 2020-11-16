@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Data.Models.Map.Creator;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Maps;
-using TDS_Shared.Data.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Data.Models.Map.Creator;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Maps;
+using TDS.Shared.Data.Default;
 
-namespace TDS_Server.LobbySystem.MapHandlers
+namespace TDS.Server.LobbySystem.MapHandlers
 {
     public class ArenaMapHandler : RoundFightLobbyMapHandler, IArenaMapHandler
     {
@@ -43,7 +43,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
 
             int index = team.SpawnCounter++;
             var teamSpawns = CurrentMap.TeamSpawnsList.TeamSpawns[team.Entity.Index - 1].Spawns;
-            if (index >= teamSpawns.Length)
+            if (index >= teamSpawns.Count)
             {
                 index = 0;
                 team.SpawnCounter = 0;
@@ -65,7 +65,7 @@ namespace TDS_Server.LobbySystem.MapHandlers
         /// <param name="map"></param>
         private void CreateTeamSpawnBlips(MapDto map)
         {
-            Lobby.Teams.Do(teams =>
+            Lobby.Teams.DoForList(teams =>
             {
                 foreach (var teamsSpawnList in map.TeamSpawnsList.TeamSpawns)
                 {

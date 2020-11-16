@@ -1,18 +1,18 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes;
-using TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.FakePickups;
-using TDS_Shared.Data.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes;
+using TDS.Server.Data.Interfaces.GamemodesSystem.MapHandler;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.FakePickups;
+using TDS.Shared.Data.Default;
 
-namespace TDS_Server.GamemodesSystem.MapHandlers
+namespace TDS.Server.GamemodesSystem.MapHandlers
 {
     public class BombMapHandler : BaseGamemodeMapHandler, IBombGamemodeMapHandler
     {

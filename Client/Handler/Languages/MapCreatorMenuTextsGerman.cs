@@ -1,4 +1,4 @@
-﻿namespace TDS_Client.Handler.Entities.Languages
+﻿namespace TDS.Client.Handler.Entities.Languages
 {
     internal class MapCreatorMenuTextsGerman : MapCreatorMenuTextsEnglish
     {

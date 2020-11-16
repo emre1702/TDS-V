@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.TeamsSystem;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.TeamsSystem;
 
-namespace TDS_Server.Core.Init.Services.Creators
+namespace TDS.Server.Core.Init.Services.Creators
 {
     internal static class TeamCreator
     {

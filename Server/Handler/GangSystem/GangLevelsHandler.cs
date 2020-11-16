@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.GangEntities;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.GangEntities;
 
-namespace TDS_Server.Handler.GangSystem
+namespace TDS.Server.Handler.GangSystem
 {
     public class GangLevelsHandler
     {
-        public Dictionary<byte, GangLevelSettings> Levels = new Dictionary<byte, GangLevelSettings>();
+        public Dictionary<byte, GangLevelSettings> Levels { get; private set; } = new Dictionary<byte, GangLevelSettings>();
 
         public byte HighestLevel => Levels.Keys.Max();
 

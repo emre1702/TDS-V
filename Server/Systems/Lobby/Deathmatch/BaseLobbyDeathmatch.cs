@@ -1,20 +1,20 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.Deathmatch;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.Deathmatch;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
 
-namespace TDS_Server.LobbySystem.Deathmatch
+namespace TDS.Server.LobbySystem.Deathmatch
 {
     public class BaseLobbyDeathmatch : IBaseLobbyDeathmatch
     {
         private readonly Dictionary<ITDSPlayer, TDSTimer> _afterDeathSpawnTimer = new Dictionary<ITDSPlayer, TDSTimer>();
-        protected readonly IBaseLobby Lobby;
-        protected readonly IBaseLobbyEventsHandler Events;
+        protected IBaseLobby Lobby { get; }
+        protected IBaseLobbyEventsHandler Events { get; }
 
         public BaseLobbyDeathmatch(IBaseLobby lobby, IBaseLobbyEventsHandler events)
         {

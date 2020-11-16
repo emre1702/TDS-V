@@ -1,6 +1,6 @@
-﻿using TDS_Shared.Data.Models.GTA;
+﻿using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Shared.Data.Models
+namespace TDS.Shared.Data.Models
 {
     public class GangHouseClientsideData
     {

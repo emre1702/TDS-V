@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace TDS_Shared.Core
+namespace TDS.Shared.Core
 {
     /// <summary>
     /// Timer-class

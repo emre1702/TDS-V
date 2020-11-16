@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
       <PlatformTarget>x64</PlatformTarget>
-      <AssemblyName>TDS_Server.GamemodesSystem</AssemblyName>
-      <RootNamespace>TDS_Server.GamemodesSystem</RootNamespace>
+      <AssemblyName>TDS.Server.GamemodesSystem</AssemblyName>
+      <RootNamespace>TDS.Server.GamemodesSystem</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

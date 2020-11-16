@@ -1,4 +1,4 @@
-﻿namespace TDS_Shared.Data.Enums.Challenge
+﻿namespace TDS.Shared.Data.Enums.Challenge
 {
     public enum ChallengeType
     {

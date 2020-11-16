@@ -1,10 +1,10 @@
 ﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS_Client.Enum;
+using TDS.Client.Enum;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     class RAGESoundHandler //: Script
     {

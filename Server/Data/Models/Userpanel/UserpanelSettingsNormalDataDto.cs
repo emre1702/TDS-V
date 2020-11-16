@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using TDS_Server.Database.Entity.Player.Settings;
+using TDS.Server.Database.Entity.Player.Settings;
 
-namespace TDS_Server.Data.Models.Userpanel
+namespace TDS.Server.Data.Models.Userpanel
 {
     public class UserpanelSettingsNormalDataDto
     {

@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-        <AssemblyName>TDS_Shared.Data</AssemblyName>
-        <RootNamespace>TDS_Shared.Data</RootNamespace>
+        <AssemblyName>TDS.Shared.Data</AssemblyName>
+        <RootNamespace>TDS.Shared.Data</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

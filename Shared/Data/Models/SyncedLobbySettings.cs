@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Core;
 
-namespace TDS_Shared.Data.Models
+namespace TDS.Shared.Data.Models
 {
     public class SyncedLobbySettings
     {

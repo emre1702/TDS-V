@@ -1,12 +1,12 @@
 ﻿using RAGE;
 using System.Collections.Generic;
 using System.Drawing;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Entities;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Data.Models.GTA;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Entities;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Data.Models.GTA;
 
-namespace TDS_Client.Handler.Map
+namespace TDS.Client.Handler.Map
 {
     public class MapLimitHandler : ServiceBase
     {
@@ -58,7 +58,7 @@ namespace TDS_Client.Handler.Map
             if (inFight)
                 _currentMapLimit?.SetType(_settingsHandler.MapLimitType, false);
             else
-                _currentMapLimit?.SetType(TDS_Shared.Data.Enums.MapLimitType.Display, false);
+                _currentMapLimit?.SetType(TDS.Shared.Data.Enums.MapLimitType.Display, false);
         }
 
         private void EventsHander_MapBorderColorChanged(Color color)

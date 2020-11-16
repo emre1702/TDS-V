@@ -5,16 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
-using TDS_Server.Handler.Userpanel;
-using TDS_Shared.Data.Attributes;
-using DB = TDS_Server.Database.Entity.Command;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity;
+using TDS.Server.Handler.Userpanel;
+using TDS.Shared.Data.Attributes;
+using DB = TDS.Server.Database.Entity.Command;
 
-namespace TDS_Server.Handler.Commands.System
+namespace TDS.Server.Handler.Commands.System
 {
     public class CommandsLoader
     {
@@ -95,7 +95,7 @@ namespace TDS_Server.Handler.Commands.System
             var allTypes = _serviceProvider.GetAllSingletonTypes();
             return allTypes.SelectMany(type => 
                 type.GetMethods()
-                    .Where(m => m.GetCustomAttributes(typeof(TDSCommand), false).Length > 0)
+                    .Where(m => m.GetCustomAttributes(typeof(TDSCommandAttribute), false).Length > 0)
                     .Select(m => (m, _serviceProvider.GetRequiredService(type))));
         }
 
@@ -110,7 +110,7 @@ namespace TDS_Server.Handler.Commands.System
 
         private void AddMethod(MethodInfo method, object instance)
         {
-            var attribute = method.GetCustomAttribute<TDSCommand>()!;
+            var attribute = method.GetCustomAttribute<TDSCommandAttribute>()!;
             var cmd = attribute.Command.ToLower();
             if (!_commandsDatas.TryGetValue(cmd, out var commandData))
             {
@@ -159,8 +159,8 @@ namespace TDS_Server.Handler.Commands.System
 
         private void HandleRemainingText(ParameterInfo parameter, CommandMethodDataDto methodData)
         {
-            var remainingTextAttribute = parameter.GetCustomAttribute(typeof(TDSRemainingText), false);
-            if (remainingTextAttribute is TDSRemainingText attr)
+            var remainingTextAttribute = parameter.GetCustomAttribute(typeof(TDSRemainingTextAttribute), false);
+            if (remainingTextAttribute is TDSRemainingTextAttribute attr)
             {
                 methodData.ToOneStringAfterParameterCount = parameter.Position;
                 methodData.RemainingTextAttribute = attr;

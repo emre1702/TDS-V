@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player;
 
-namespace TDS_Server.Handler.Extensions
+namespace TDS.Server.Handler.Extensions
 {
     public static class SearchForBansExtensions
     {

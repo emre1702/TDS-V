@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.Players;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.Players;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Default;
 
-namespace TDS_Server.LobbySystem.Players
+namespace TDS.Server.LobbySystem.Players
 {
     public class RoundFightLobbyPlayers : FightLobbyPlayers, IRoundFightLobbyPlayers
     {
@@ -73,7 +73,7 @@ namespace TDS_Server.LobbySystem.Players
         {
             var teamPlayerAmountsJson = await Lobby.Teams.GetAmountInFightSyncDataJson().ConfigureAwait(false);
 
-            await Do(player =>
+            await DoForAll(player =>
             {
                 Lobby.Rounds.StartRoundForPlayer(player);
             }).ConfigureAwait(false);
@@ -82,7 +82,7 @@ namespace TDS_Server.LobbySystem.Players
 
         protected virtual void Events_PlayersPreparation()
         {
-            Do(player =>
+            DoForAll(player =>
             {
                 Lobby.Rounds.SetPlayerReadyForRound(player, true);
                 player.CurrentRoundStats?.Clear();
@@ -112,7 +112,7 @@ namespace TDS_Server.LobbySystem.Players
         {
             var playerRewards = new Dictionary<ITDSPlayer, RoundPlayerRewardsData>();
             var strBuilder = new StringBuilder();
-            await Do(player =>
+            await DoForAll(player =>
             {
                 SavePlayerRoundStats(player);
                 if (ShouldRewardPlayerForRound)

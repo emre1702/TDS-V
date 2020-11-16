@@ -1,12 +1,12 @@
-﻿using TDS_Server.GamemodesSystem.Deathmatch;
-using TDS_Server.GamemodesSystem.MapHandlers;
-using TDS_Server.GamemodesSystem.Players;
-using TDS_Server.GamemodesSystem.Rounds;
-using TDS_Server.GamemodesSystem.Specials;
-using TDS_Server.GamemodesSystem.Teams;
-using TDS_Server.GamemodesSystem.Weapons;
+﻿using TDS.Server.GamemodesSystem.Deathmatch;
+using TDS.Server.GamemodesSystem.MapHandlers;
+using TDS.Server.GamemodesSystem.Players;
+using TDS.Server.GamemodesSystem.Rounds;
+using TDS.Server.GamemodesSystem.Specials;
+using TDS.Server.GamemodesSystem.Teams;
+using TDS.Server.GamemodesSystem.Weapons;
 
-namespace TDS_Server.GamemodesSystem.DependenciesModels
+namespace TDS.Server.GamemodesSystem.DependenciesModels
 {
     public class BaseGamemodeDependencies
     {

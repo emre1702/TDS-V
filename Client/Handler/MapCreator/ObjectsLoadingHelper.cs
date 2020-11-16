@@ -1,4 +1,4 @@
-﻿namespace TDS_Client.Handler.MapCreator
+﻿namespace TDS.Client.Handler.MapCreator
 {
     public class ObjectsLoadingHelper : ServiceBase
     {

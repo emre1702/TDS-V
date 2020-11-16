@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Data.Models.Map.Creator;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Data.Models.Map.Creator;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Data.Extensions
+namespace TDS.Server.Data.Extensions
 {
 #nullable enable
 
@@ -28,7 +29,7 @@ namespace TDS_Server.Data.Extensions
             if (map.LimitInfo.Center is { } && (map.LimitInfo.Center.X != 0 || map.LimitInfo.Center.Y != 0 || map.LimitInfo.Center.Z != 0))
                 return map.LimitInfo.Center;
 
-            if (map.LimitInfo.Edges is null || map.LimitInfo.Edges.Length == 0)
+            if (map.LimitInfo.Edges is null || map.LimitInfo.Edges.Count == 0)
                 return map.GetCenterBySpawns();
 
             float zpos = map.GetCenterZPos();
@@ -50,24 +51,24 @@ namespace TDS_Server.Data.Extensions
 
         private static Position3DDto? GetCenterBySpawns(this MapDto map)
         {
-            int amountteams = map.TeamSpawnsList.TeamSpawns.Length;
+            int amountteams = map.TeamSpawnsList.TeamSpawns.Count;
             if (amountteams == 1)
             {
                 return map.TeamSpawnsList.TeamSpawns[0].Spawns.First().To3DDto();
             }
             else if (amountteams > 1)
             {
-                Position3DDto[] positions = map.TeamSpawnsList.TeamSpawns
+                var positions = map.TeamSpawnsList.TeamSpawns
                     .Select(entry => entry.Spawns[0].To3DDto())
-                    .ToArray();
+                    .ToList();
                 return GetCenterOfMapPositions(positions);
             }
             return null;
         }
 
-        private static Position3DDto? GetCenterOfMapPositions(Position3DDto[]? positions, float zpos = 0)
+        private static Position3DDto? GetCenterOfMapPositions(List<Position3DDto>? positions, float zpos = 0)
         {
-            if (positions == null || positions.Length <= 2)
+            if (positions == null || positions.Count <= 2)
                 return null;
 
             float centerX = 0.0f;
@@ -81,13 +82,13 @@ namespace TDS_Server.Data.Extensions
                 centerZ += Math.Abs(zpos - (-1)) < 0.001 ? point.Z : zpos;
             }
 
-            return new Position3DDto { X = centerX / positions.Length, Y = centerY / positions.Length, Z = centerZ / positions.Length };
+            return new Position3DDto { X = centerX / positions.Count, Y = centerY / positions.Count, Z = centerZ / positions.Count };
         }
 
         private static float GetCenterZPos(this MapDto map)
         {
             var teamSpawns1 = map.TeamSpawnsList.TeamSpawns.FirstOrDefault();
-            if (teamSpawns1 is null || teamSpawns1.Spawns.Length == 0)
+            if (teamSpawns1 is null || teamSpawns1.Spawns.Count == 0)
                 return 0;
             var teamSpawns2 = map.TeamSpawnsList.TeamSpawns.Last();
             var spawn1 = teamSpawns1.Spawns.FirstOrDefault();

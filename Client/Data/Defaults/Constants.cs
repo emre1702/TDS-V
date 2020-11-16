@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Client.Data.Enums;
-using TDS_Shared.Data.Enums;
+using TDS.Client.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Client.Data.Defaults
+namespace TDS.Client.Data.Defaults
 {
     public class Constants
     {

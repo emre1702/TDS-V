@@ -1,12 +1,12 @@
 ﻿using RAGE.Game;
 using System.Collections.Generic;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Models.FakePickup;
-using TDS_Shared.Default;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Models.FakePickup;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.FakePickups
+namespace TDS.Client.Handler.FakePickups
 {
     public class FakePickupsHandler
     {

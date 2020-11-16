@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.LobbySystem.DependenciesModels
+﻿namespace TDS.Server.LobbySystem.DependenciesModels
 {
     internal class MainMenuDependencies : BaseLobbyDependencies
     {

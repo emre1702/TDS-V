@@ -1,26 +1,23 @@
 ﻿using GTANetworkAPI;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Specials;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas;
-using TDS_Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Models.Map;
-using TDS_Server.Data.RoundEndReasons;
-using TDS_Server.GamemodesSystem.Gamemodes;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Enums.Challenge;
-using TDS_Shared.Data.Utility;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Specials;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Models.Map;
+using TDS.Server.Data.RoundEndReasons;
+using TDS.Server.GamemodesSystem.Gamemodes;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Default;
 
-namespace TDS_Server.GamemodesSystem.Specials
+namespace TDS.Server.GamemodesSystem.Specials
 {
     public class BombSpecials : BaseGamemodeSpecials, IBombGamemodeSpecials
     {
@@ -44,7 +41,7 @@ namespace TDS_Server.GamemodesSystem.Specials
         private readonly BombGamemode _gamemode;
         private readonly ISettingsHandler _settingsHandler;
 
-        public BombSpecials(IRoundFightLobby lobby, BombGamemode gamemode, ISettingsHandler settingsHandler) : base(lobby)
+        internal BombSpecials(IRoundFightLobby lobby, BombGamemode gamemode, ISettingsHandler settingsHandler) : base(lobby)
         {
             _gamemode = gamemode;
             _settingsHandler = settingsHandler;
@@ -82,7 +79,7 @@ namespace TDS_Server.GamemodesSystem.Specials
                     Bomb = null;
                 });
             }
-            
+
             BombDetonateTimer?.Kill();
             BombDetonateTimer = null;
             BombPlantDefuseTimer?.Kill();
@@ -138,7 +135,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             // NAPI.Explosion.CreateOwnedExplosion(planter.Player, ExplosionType.GrenadeL,
             // bomb.Position, 200, Dimension); use 0x172AA1B624FA1013 as Hash instead if not getting fixed
             Lobby.Sync.TriggerEvent(ToClientEvent.BombDetonated);
-            _gamemode.Teams.CounterTerrorists.Players.Do(player =>
+            _gamemode.Teams.CounterTerrorists.Players.DoForAll(player =>
             {
                 if (player.Lifes == 0)
                     return;
@@ -214,7 +211,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             if (!CanStartBombDefusing(player))
                 return false;
             NAPI.Task.RunSafe(() =>
-                player.PlayAnimation("misstrevor2ig_7", "plantBomb", (int)AnimationFlag.Loop));
+                player.PlayAnimation("misstrevor2ig_7", "plantBomb", (int)AnimationType.Loop));
             BombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(player), (uint)Lobby.Entity.LobbyRoundSettings.BombDefuseTimeMs);
             return true;
         }
@@ -224,7 +221,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             if (!CanStartBombPlanting(player))
                 return false;
             NAPI.Task.RunSafe(() =>
-                player.PlayAnimation("misstrevor2ig_7", "plantBomb", (int)AnimationFlag.Loop));
+                player.PlayAnimation("misstrevor2ig_7", "plantBomb", (int)AnimationType.Loop));
             BombPlantDefuseTimer = new TDSTimer(() => PlantBomb(player), (uint)Lobby.Entity.LobbyRoundSettings.BombPlantTimeMs);
             return true;
         }
@@ -267,7 +264,7 @@ namespace TDS_Server.GamemodesSystem.Specials
             if (Lobby.IsOfficial)
                 player.Challenges.AddToChallenge(ChallengeType.BombDefuse);
 
-            _gamemode.Teams.Terrorists.Players.Do(target =>
+            _gamemode.Teams.Terrorists.Players.DoForAll(target =>
             {
                 Lobby.Deathmatch.Damage.HitterHandler.SetLastHitter(target, player, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);
                 NAPI.Task.RunSafe(() => target.Kill());
@@ -310,8 +307,8 @@ namespace TDS_Server.GamemodesSystem.Specials
                 Bomb.Detach();
                 Bomb.Position = new Vector3(playerPos.X, playerPos.Y, playerPos.Z - 0.9);
                 Bomb.Rotation = new Vector3(270, 0, 0);
-                plantPlace.Object?.Delete();
-                plantPlace.Object = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, dimension: Lobby.MapHandler.Dimension) as ITDSObject;
+                plantPlace.Obj?.Delete();
+                plantPlace.Obj = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, dimension: Lobby.MapHandler.Dimension) as ITDSObject;
                 if (plantPlace.Blip is { })
                 {
                     plantPlace.Blip.Color = 49;

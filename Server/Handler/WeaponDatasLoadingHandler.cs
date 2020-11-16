@@ -10,13 +10,13 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Models;
-using TDS_Server.Data.Models.WeaponsMeta;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Rest;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
+using TDS.Server.Data.Models.WeaponsMeta;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Rest;
 
-namespace TDS_Server.Handler
+namespace TDS.Server.Handler
 {
     public class WeaponDatasLoadingHandler
     {
@@ -76,7 +76,12 @@ namespace TDS_Server.Handler
                         continue;
                     }
 
-                    var weaponsMeta = (WeaponsMetaDto)xmlSerializer.Deserialize(reader);
+                    var weaponsMeta = (WeaponsMetaDto?)xmlSerializer.Deserialize(reader);
+                    if (weaponsMeta is null)
+                    {
+                        _loggingHandler.LogError($"Could not deserialize file {filePath}.", Environment.StackTrace);
+                        continue;
+                    }
 
                     foreach (var weaponsData in weaponsMeta.Datas)
                     {

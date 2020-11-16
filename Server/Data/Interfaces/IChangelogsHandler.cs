@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Data.Interfaces
+﻿namespace TDS.Server.Data.Interfaces
 {
     public interface IChangelogsHandler
     {

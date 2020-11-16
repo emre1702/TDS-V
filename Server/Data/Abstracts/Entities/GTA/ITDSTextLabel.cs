@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TDS_Server.Data.Abstracts.Entities.GTA
+namespace TDS.Server.Data.Abstracts.Entities.GTA
 {
     public abstract class ITDSTextLabel : TextLabel
     {
-        public ITDSTextLabel(NetHandle netHandle) : base(netHandle)
+        protected ITDSTextLabel(NetHandle netHandle) : base(netHandle)
         {
         }
     }

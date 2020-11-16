@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Shared.Data.Models.FakePickup
+namespace TDS.Shared.Data.Models.FakePickup
 {
     public class FakePickupLightData
     {

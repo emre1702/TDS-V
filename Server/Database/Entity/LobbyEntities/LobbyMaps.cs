@@ -1,6 +1,6 @@
-﻿using TDS_Server.Database.Entity.Rest;
+﻿using TDS.Server.Database.Entity.Rest;
 
-namespace TDS_Server.Database.Entity.LobbyEntities
+namespace TDS.Server.Database.Entity.LobbyEntities
 {
     public partial class LobbyMaps
     {

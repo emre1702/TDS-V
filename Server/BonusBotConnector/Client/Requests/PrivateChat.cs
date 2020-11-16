@@ -1,8 +1,8 @@
 ﻿using Grpc.Net.Client;
 using System;
 using System.Collections.Generic;
-using TDS_Server.Database.Entity.Bonusbot;
-using TDS_Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Bonusbot;
+using TDS.Server.Database.Entity.Player;
 using static BonusBotConnector.Client.BonusBotConnectorClient;
 using static BonusBotConnector.Client.MessageToUser;
 

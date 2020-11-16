@@ -1,6 +1,6 @@
-﻿using TDS_Shared.Data.Enums;
+﻿using TDS.Shared.Data.Enums;
 
-namespace TDS_Client.Data.Interfaces
+namespace TDS.Client.Data.Interfaces
 {
     public interface ILanguage
     {

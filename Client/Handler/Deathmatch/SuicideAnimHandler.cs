@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Handler.Events;
-using TDS_Shared.Default;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Handler.Events;
+using TDS.Shared.Default;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Deathmatch
+namespace TDS.Client.Handler.Deathmatch
 {
     public class SuicideAnimHandler : ServiceBase
     {

@@ -1,4 +1,4 @@
-﻿namespace TDS_Client.Data.Abstracts.Entities.GTA
+﻿namespace TDS.Client.Data.Abstracts.Entities.GTA
 {
     public abstract class ITDSCamera : RAGE.Elements.Camera
     {

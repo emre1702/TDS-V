@@ -1,4 +1,4 @@
-﻿namespace TDS_Server.Database.Entity.GangEntities
+﻿namespace TDS.Server.Database.Entity.GangEntities
 {
     public class GangStats
     {

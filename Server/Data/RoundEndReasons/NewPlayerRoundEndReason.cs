@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces;
 
-namespace TDS_Server.Data.RoundEndReasons
+namespace TDS.Server.Data.RoundEndReasons
 {
     public class NewPlayerRoundEndReason : RoundEndReason
     {

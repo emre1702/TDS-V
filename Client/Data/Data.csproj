@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AssemblyName>TDS_Client.Data</AssemblyName>
-    <RootNamespace>TDS_Client.Data</RootNamespace>
+    <AssemblyName>TDS.Client.Data</AssemblyName>
+    <RootNamespace>TDS.Client.Data</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

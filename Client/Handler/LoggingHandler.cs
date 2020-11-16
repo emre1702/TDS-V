@@ -1,7 +1,7 @@
 ﻿using RAGE.Ui;
-using TDS_Shared.Default;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler
+namespace TDS.Client.Handler
 {
     public class LoggingHandler
     {

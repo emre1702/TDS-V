@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Web;
-using TDS_Server.Data.CustomAttribute;
+using TDS.Server.Data.CustomAttribute;
 
-namespace TDS_Server.Data.Models
+namespace TDS.Server.Data.Models
 {
 #nullable enable
     public delegate object FastInvokeHandler(object target, object[] paramters);
@@ -15,7 +15,7 @@ namespace TDS_Server.Data.Models
         public MethodInfo MethodDefault { get; set; }  // only used when UseImplicitTypes == true
         public FastInvokeHandler FastMethodInvoker { get; set; }
 
-        public List<CommandMultipleArgsToOneInfo> MultipleArgsToOneInfos { get; set; } = new List<CommandMultipleArgsToOneInfo>();
+        public List<CommandMultipleArgsToOneInfo> MultipleArgsToOneInfos { get; } = new List<CommandMultipleArgsToOneInfo>();
 
         // public CommandDefaultMethod? Method; // only used when UseImplicitTypes == false public
         // CommandEmptyDefaultMethod? MethodEmpty; // only used when UseImplicitTypes == false
@@ -23,7 +23,7 @@ namespace TDS_Server.Data.Models
 
         public int? ParametersWithDefaultValueStartIndex { get; set; }
         public int Priority { get; set; }
-        public TDSRemainingText? RemainingTextAttribute { get; set; }
+        public TDSRemainingTextAttribute? RemainingTextAttribute { get; set; }
         public int? ToOneStringAfterParameterCount { get; set; } = null;
         public object Instance { get; set; }
 

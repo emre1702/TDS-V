@@ -1,8 +1,8 @@
-﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Data.Interfaces;
-using TDS_Shared.Core;
+﻿using TDS.Client.Data.Defaults;
+using TDS.Client.Data.Interfaces;
+using TDS.Shared.Core;
 
-namespace TDS_Client.Handler.Browser
+namespace TDS.Client.Handler.Browser
 {
     public class RegisterLoginBrowserHandler : BrowserHandlerBase
     {

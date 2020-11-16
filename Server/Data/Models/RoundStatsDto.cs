@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
 
-namespace TDS_Server.Data.Models
+namespace TDS.Server.Data.Models
 {
     public class RoundStatsDto
     {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Models;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Models;
 
-namespace TDS_Server.Data.Interfaces.GamemodesSystem.MapHandler
+namespace TDS.Server.Data.Interfaces.GamemodesSystem.MapHandler
 {
     public interface IBombGamemodeMapHandler : IBaseGamemodeMapHandler
     {

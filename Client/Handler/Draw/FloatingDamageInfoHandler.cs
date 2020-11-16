@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Client.Data.Abstracts.Entities.GTA;
-using TDS_Client.Handler.Draw.Dx;
-using TDS_Client.Handler.Entities.Draw;
-using TDS_Client.Handler.Events;
+using TDS.Client.Data.Abstracts.Entities.GTA;
+using TDS.Client.Handler.Draw.Dx;
+using TDS.Client.Handler.Entities.Draw;
+using TDS.Client.Handler.Events;
 using static RAGE.Events;
 
-namespace TDS_Client.Handler.Draw
+namespace TDS.Client.Handler.Draw
 {
     public class FloatingDamageInfoHandler : ServiceBase
     {

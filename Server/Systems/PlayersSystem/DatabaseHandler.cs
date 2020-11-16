@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.PlayersSystem;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler;
 
-namespace TDS_Server.PlayersSystem
+namespace TDS.Server.PlayersSystem
 {
     public class DatabaseHandler : IPlayerDatabaseHandler
     {

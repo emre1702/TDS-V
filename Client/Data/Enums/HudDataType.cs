@@ -1,4 +1,4 @@
-﻿namespace TDS_Client.Data.Enums
+﻿namespace TDS.Client.Data.Enums
 {
     public enum HudDataType
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Shared.Data.Models.CharCreator
+namespace TDS.Shared.Data.Models.CharCreator
 {
     public class CharCreateAppearanceData
     {

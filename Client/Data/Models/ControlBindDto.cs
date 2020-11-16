@@ -1,8 +1,8 @@
 ﻿using RAGE.Game;
 using System;
-using TDS_Client.Data.Enums;
+using TDS.Client.Data.Enums;
 
-namespace TDS_Client.Data.Models
+namespace TDS.Client.Data.Models
 {
     public class ControlBindDto
     {

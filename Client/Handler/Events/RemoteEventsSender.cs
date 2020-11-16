@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TDS_Client.Data.Models;
-using TDS_Shared.Default;
+using TDS.Client.Data.Models;
+using TDS.Shared.Default;
 
-namespace TDS_Client.Handler.Events
+namespace TDS.Client.Handler.Events
 {
     public class RemoteEventsSender : ServiceBase
     {

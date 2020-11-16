@@ -1,20 +1,20 @@
 ﻿using GTANetworkAPI;
 using System;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Models;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Models;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Entities.Utility
+namespace TDS.Server.Handler.Entities.Utility
 {
     public class Invitation
     {
-        public readonly ITDSPlayer? Sender;
-        public readonly ITDSPlayer Target;
-        public InvitationDto Dto;
-        public InvitationType Type;
+        public ITDSPlayer? Sender { get; set; }
+        public ITDSPlayer Target { get; set; }
+        public InvitationDto Dto { get; set; }
+        public InvitationType Type { get; set; }
 
         private static ulong _idCounter = 0;
         private readonly InvitationsHandler _invitationsHandler;

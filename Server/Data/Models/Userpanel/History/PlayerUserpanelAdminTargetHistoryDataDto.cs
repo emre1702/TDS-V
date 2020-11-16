@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace TDS_Server.Data.Models.Userpanel.History
+namespace TDS.Server.Data.Models.Userpanel.History
 {
     public class PlayerUserpanelAdminTargetHistoryDataDto
     {

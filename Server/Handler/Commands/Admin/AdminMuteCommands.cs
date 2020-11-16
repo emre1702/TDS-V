@@ -1,15 +1,15 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.CustomAttribute;
-using TDS_Server.Data.Defaults;
-using TDS_Server.Data.Models;
-using TDS_Server.Database.Entity.Player;
-using TDS_Server.Handler.Extensions;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Models;
+using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Handler.Commands.Admin
+namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminMuteCommands
     {
@@ -18,8 +18,8 @@ namespace TDS_Server.Handler.Commands.Admin
         public AdminMuteCommands(DatabasePlayerHelper databasePlayerHelper)
             => _databasePlayerHelper = databasePlayerHelper;
 
-        [TDSCommand(AdminCommand.Mute, 1)]
-        public void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.Mute, 1)]
+        public void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
                 return;
@@ -30,8 +30,8 @@ namespace TDS_Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Mute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommand(AdminCommand.Mute, 0)]
-        public async Task MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.Mute, 0)]
+        public async Task MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
                 return;
@@ -42,8 +42,8 @@ namespace TDS_Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommand(AdminCommand.VoiceMute, 0)]
-        public async Task VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.VoiceMute, 0)]
+        public async Task VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
                 return;
@@ -54,8 +54,8 @@ namespace TDS_Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommand(AdminCommand.VoiceMute, 1)]
-        public void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        [TDSCommandAttribute(AdminCommand.VoiceMute, 1)]
+        public void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
                 return;

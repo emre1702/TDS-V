@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TDS_Server.Database.Entity.LobbyEntities;
+using TDS.Server.Database.Entity.LobbyEntities;
 
-namespace TDS_Server.Database.SeedData.Lobby
+namespace TDS.Server.Database.SeedData.Lobby
 {
     public static class LobbyRewardsSeeds
     {

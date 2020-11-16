@@ -3,11 +3,11 @@ using NUnit.Framework;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Handler.Extensions;
+using TDS.Server.Handler.Extensions;
 
-namespace TDS_Server.Tests.Data.Extensions
+namespace TDS.Server.Tests.Data.Extensions
 {
-    internal class TaskExtensionsTest
+    public class TaskExtensionsTest
     {
         private int mainThreadId;
 

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Server;
+using TDS.Server.Database.Entity.Server;
 
-namespace TDS_Server.Database.ModelBuilding.Server
+namespace TDS.Server.Database.ModelBuilding.Server
 {
     public class ServerSettingsConfiguration : IEntityTypeConfiguration<ServerSettings>
     {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TDS_Shared.Data.Models.CharCreator
+namespace TDS.Shared.Data.Models.CharCreator
 {
     public class CharCreateData 
     {

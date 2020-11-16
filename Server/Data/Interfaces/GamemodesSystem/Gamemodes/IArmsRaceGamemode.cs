@@ -1,7 +1,7 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.Rounds;
-using TDS_Server.GamemodesSystem.Weapons;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.Rounds;
+using TDS.Server.GamemodesSystem.Weapons;
 
-namespace TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes
+namespace TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes
 {
     public interface IArmsRaceGamemode : IBaseGamemode
     {

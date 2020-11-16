@@ -3,25 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GTANetworkAPI;
 using MoreLinq;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Interfaces.LobbySystem.TeamsHandlers;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Utility;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Utility;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.TeamHandlers
+namespace TDS.Server.LobbySystem.TeamHandlers
 {
-    public class BaseLobbyTeamsHandler : IBaseLobbyTeamsHandler
+    public class BaseLobbyTeamsHandler : IBaseLobbyTeamsHandler, IDisposable
     {
         public int Count => _teams.Length;
 
-        protected readonly IBaseLobby Lobby;
-        protected readonly IBaseLobbyEventsHandler Events;
+        protected IBaseLobby Lobby { get; }
+        protected IBaseLobbyEventsHandler Events { get; }
         private readonly ITeamsProvider _teamsProvider;
 
         private ITeam[] _teams = Array.Empty<ITeam>();
@@ -34,14 +33,14 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             _teamsProvider = teamsProvider;
             InitTeams(Lobby.Entity);
 
-            events.PlayerJoined += Events_PlayerJoined;
+            events.PlayerJoined += OnPlayerJoined;
             events.RemoveAfter += RemoveEvents;
         }
 
         protected virtual void RemoveEvents(IBaseLobby lobby)
         {
             if (Events.PlayerJoined is { })
-                Events.PlayerJoined -= Events_PlayerJoined;
+                Events.PlayerJoined -= OnPlayerJoined;
             Events.RemoveAfter -= RemoveEvents;
         }
 
@@ -63,7 +62,7 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             player.TeamHandler.SetTeam(team, true);
         }
 
-        protected virtual async ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
+        protected virtual async ValueTask OnPlayerJoined((ITDSPlayer Player, int TeamIndex) data)
         {
             var team = await _teamsSemaphore.Do(() =>
             {
@@ -75,10 +74,10 @@ namespace TDS_Server.LobbySystem.TeamHandlers
             SetPlayerTeam(data.Player, team);
         }
 
-        public Task Do(Action<ITeam[]> action)
+        public Task DoForList(Action<ITeam[]> action)
             => _teamsSemaphore.Do(() => action(_teams));
 
-        public Task<T> Do<T>(Func<ITeam[], T> func)
+        public Task<T> DoForList<T>(Func<ITeam[], T> func)
             => _teamsSemaphore.Do(() => func(_teams));
 
         public List<ITeam> GetTeams() => _teams.ToList();
@@ -91,5 +90,12 @@ namespace TDS_Server.LobbySystem.TeamHandlers
 
         public ITeam GetTeamWithFewestPlayer(ITeam[] teams)
             => teams.Skip(1).MinBy(t => t.Players.Amount).Shuffle().First();
+
+
+        public void Dispose()
+        {
+            _teamsSemaphore?.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

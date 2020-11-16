@@ -1,7 +1,7 @@
-﻿using TDS_Client.Data.Defaults;
-using TDS_Client.Handler.Entities.Draw.Scaleform;
+﻿using TDS.Client.Data.Defaults;
+using TDS.Client.Handler.Entities.Draw.Scaleform;
 
-namespace TDS_Client.Handler.Draw
+namespace TDS.Client.Handler.Draw
 {
     public class MidsizedMessageHandler : ServiceBase
     {

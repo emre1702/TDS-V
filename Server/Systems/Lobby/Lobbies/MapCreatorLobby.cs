@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Entities;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies;
-using TDS_Server.Data.Interfaces.LobbySystem.Sync;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler;
-using TDS_Server.Handler.Events;
-using TDS_Server.Handler.Helper;
-using TDS_Server.LobbySystem.BansHandlers;
-using TDS_Server.LobbySystem.DependenciesModels;
-using TDS_Server.LobbySystem.EventsHandlers;
-using TDS_Server.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.LobbySystem.MapHandlers;
-using TDS_Server.LobbySystem.Players;
-using TDS_Server.LobbySystem.Sync;
-using TDS_Shared.Data.Enums;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Sync;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Handler;
+using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Helper;
+using TDS.Server.LobbySystem.BansHandlers;
+using TDS.Server.LobbySystem.DependenciesModels;
+using TDS.Server.LobbySystem.EventsHandlers;
+using TDS.Server.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.LobbySystem.MapHandlers;
+using TDS.Server.LobbySystem.Players;
+using TDS.Server.LobbySystem.Sync;
+using TDS.Shared.Data.Enums;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.LobbySystem.Lobbies
+namespace TDS.Server.LobbySystem.Lobbies
 {
     public class MapCreatorLobby : FreeroamLobby, IMapCreatorLobby
     {

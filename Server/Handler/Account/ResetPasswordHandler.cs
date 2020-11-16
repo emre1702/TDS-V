@@ -2,17 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Extensions;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.MailSystem;
-using TDS_Server.Data.Utility;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Data.Enums;
-using TDS_Shared.Data.Utility;
-using TDS_Shared.Default;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Extensions;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.MailSystem;
+using TDS.Server.Data.Utility;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Data.Enums;
+using TDS.Shared.Data.Utility;
+using TDS.Shared.Default;
 
-namespace TDS_Server.Handler.Account
+namespace TDS.Server.Handler.Account
 {
     public class ResetPasswordHandler
     {

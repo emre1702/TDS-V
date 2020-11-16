@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Shared.Data.Models.Map
+namespace TDS.Shared.Data.Models.Map
 {
     public class BrowserSyncedMapDataDto
     {

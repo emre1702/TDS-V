@@ -1,7 +1,7 @@
 ﻿using System;
-using TDS_Shared.Data.Enums;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.Entity.Log
+namespace TDS.Server.Database.Entity.Log
 {
     public partial class LogAdmins
     {

@@ -1,6 +1,6 @@
 ﻿using GTANetworkAPI;
 
-namespace TDS_Server.Core.Events
+namespace TDS.Server.Core.Events
 {
     public class VehicleEvents : Script
     {

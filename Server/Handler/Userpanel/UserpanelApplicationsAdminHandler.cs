@@ -3,19 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Enums;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Data.Interfaces.Userpanel;
-using TDS_Server.Data.Models.Userpanel.Application;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity;
-using TDS_Server.Database.Entity.Userpanel;
-using TDS_Server.Handler.Entities;
-using TDS_Server.Handler.Extensions;
-using TDS_Shared.Core;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models.Userpanel.Application;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity;
+using TDS.Server.Database.Entity.Userpanel;
+using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Extensions;
+using TDS.Shared.Core;
 
-namespace TDS_Server.Handler.Userpanel
+namespace TDS.Server.Handler.Userpanel
 {
 
     public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper, IUserpanelApplicationsAdminHandler
@@ -150,7 +150,7 @@ namespace TDS_Server.Handler.Userpanel
 
             NAPI.Task.RunSafe(() =>
             {
-                var target = _tdsPlayerHandler.Get(playerId);
+                var target = _tdsPlayerHandler.GetPlayer(playerId);
                 if (target is { })
                 {
                     target.SendChatMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));

@@ -1,12 +1,12 @@
 ﻿using GTANetworkAPI;
 using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS_Server.Data.Utility;
-using TDS_Server.Database.Entity.Player;
-using LobbyDb = TDS_Server.Database.Entity.LobbyEntities.Lobbies;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Utility;
+using TDS.Server.Database.Entity.Player;
+using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.EventsHandlers
+namespace TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers
 {
 #nullable enable
 

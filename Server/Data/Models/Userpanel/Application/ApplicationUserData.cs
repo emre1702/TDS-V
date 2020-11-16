@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TDS_Server.Data.Models.Userpanel.Application
+namespace TDS.Server.Data.Models.Userpanel.Application
 {
     public class ApplicationUserData
     {

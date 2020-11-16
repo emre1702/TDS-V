@@ -1,8 +1,8 @@
 ﻿using System;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Shared.Data.Models;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Server.Data.Interfaces.TeamsSystem
+namespace TDS.Server.Data.Interfaces.TeamsSystem
 {
 #nullable enable
 

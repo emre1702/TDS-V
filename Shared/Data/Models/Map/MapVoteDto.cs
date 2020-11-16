@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TDS_Shared.Data.Models.Map
+namespace TDS.Shared.Data.Models.Map
 {
     public class MapVoteDto
     {

@@ -1,7 +1,8 @@
 ﻿using System;
-using TDS_Server.Data.Interfaces;
+using System.Collections.Generic;
+using TDS.Server.Data.Interfaces;
 
-namespace TDS_Server.Data.Languages
+namespace TDS.Server.Data.Languages
 {
     public class English : ILanguage
     {
@@ -28,7 +29,7 @@ namespace TDS_Server.Data.Languages
         public virtual string DEATH_DIED_INFO => "{0} died";
         public virtual string DEATH_KILLED_INFO => "{0} killed {1} with {2}";
 
-        public virtual string[] DEFUSE_INFO => new string[] {
+        public virtual List<string> DEFUSE_INFO => new List<string> {
             "Round-time got changed. Now you have to kill all opponents or defuse the bomb.",
             "To defuse the bomb go to the red blip on your minimap (bomb), take your fists and hold the left mouse button."
         };

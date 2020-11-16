@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS_Server.Data.Interfaces;
-using TDS_Server.Database.Entity;
+using TDS.Server.Data.Interfaces;
+using TDS.Server.Database.Entity;
 
-namespace TDS_Server.Handler.Entities
+namespace TDS.Server.Handler.Entities
 {
-    public abstract class DatabaseEntityWrapper : IDatabaseEntityWrapper
+    public abstract class DatabaseEntityWrapper : IDatabaseEntityWrapper, IAsyncDisposable
     {
 
         private readonly TDSDbContext _dbContext;
@@ -113,5 +113,12 @@ namespace TDS_Server.Handler.Entities
             }
         }
 
+
+        public async ValueTask DisposeAsync()
+        {
+            await (_dbContext?.DisposeAsync() ?? default);
+            _dbContextSemaphore.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

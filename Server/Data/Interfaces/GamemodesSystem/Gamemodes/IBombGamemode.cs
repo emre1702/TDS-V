@@ -1,8 +1,8 @@
-﻿using TDS_Server.Data.Interfaces.GamemodesSystem.Players;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Specials;
-using TDS_Server.Data.Interfaces.GamemodesSystem.Teams;
+﻿using TDS.Server.Data.Interfaces.GamemodesSystem.Players;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Specials;
+using TDS.Server.Data.Interfaces.GamemodesSystem.Teams;
 
-namespace TDS_Server.Data.Interfaces.GamemodesSystem.Gamemodes
+namespace TDS.Server.Data.Interfaces.GamemodesSystem.Gamemodes
 {
     public interface IBombGamemode : IBaseGamemode
     {

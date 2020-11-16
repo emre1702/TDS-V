@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using TDS_Server.Data.Interfaces.TeamsSystem;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Server.Handler.Helper;
-using TDS_Shared.Data.Models;
+using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Server.Handler.Helper;
+using TDS.Shared.Data.Models;
 
-namespace TDS_Server.TeamsSystem
+namespace TDS.Server.TeamsSystem
 {
     public class Team : ITeam
     {

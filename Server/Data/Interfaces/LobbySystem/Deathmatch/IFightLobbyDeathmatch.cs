@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using TDS_Server.Data.Abstracts.Entities.GTA;
-using TDS_Server.Data.Interfaces.DamageSystem;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.DamageSystem;
 
-namespace TDS_Server.Data.Interfaces.LobbySystem.Deathmatch
+namespace TDS.Server.Data.Interfaces.LobbySystem.Deathmatch
 {
 #nullable enable
 

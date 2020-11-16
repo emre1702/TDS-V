@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TDS_Server.Database.Entity.Rest;
-using TDS_Shared.Data.Enums;
+using TDS.Server.Database.Entity.Rest;
+using TDS.Shared.Data.Enums;
 
-namespace TDS_Server.Database.SeedData.Rest
+namespace TDS.Server.Database.SeedData.Rest
 {
     public static class FreeroamDefaultVehicleSeeds
     {

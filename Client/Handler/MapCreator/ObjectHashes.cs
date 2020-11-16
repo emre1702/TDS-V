@@ -1,6 +1,6 @@
 ﻿/*using System.Collections.Generic;
 
-namespace TDS_Client.Handler.MapCreator
+namespace TDS.Client.Handler.MapCreator
 {
     static class ObjectHashes
     {
