@@ -62,8 +62,9 @@ namespace TDS.Server.LobbySystem.Players
             await (player.Lobby?.Players.RemovePlayer(player) ?? Task.CompletedTask).ConfigureAwait(false);
             await _semaphore.Do(() => _players.Add(player)).ConfigureAwait(false);
 
-            await Lobby.Events.TriggerPlayerJoined(player, teamIndex).ConfigureAwait(false);
             player.LobbyHandler.SetLobby(Lobby);
+            await Lobby.Events.TriggerPlayerJoined(player, teamIndex).ConfigureAwait(false);
+            
             InformAboutHowToLeaveLobby(player);
 
             return true;
