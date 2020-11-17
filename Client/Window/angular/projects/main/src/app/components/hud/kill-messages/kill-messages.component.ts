@@ -1,14 +1,9 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { killMessagesAnimation } from './animations/kill-messages.animation';
-import { DeathInfoData } from './interfaces/death-info-data';
 import { WeaponHash } from '../../lobbychoice/enums/weapon-hash.enum';
 import { AnimationEvent } from '@angular/animations';
 import { KillMessagesService } from './services/kill-messages.service';
 import { SettingsService } from '../../../services/settings.service';
-
-declare const window: any;
 
 @Component({
     selector: 'app-kill-messages',

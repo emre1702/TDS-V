@@ -6,8 +6,6 @@ namespace TDS.Server.Data.Models
 {
     public class RoundPlayerRankingStat
     {
-        #region Public Constructors
-
         public RoundPlayerRankingStat(ITDSPlayer player)
         {
             Player = player;
@@ -16,10 +14,6 @@ namespace TDS.Server.Data.Models
             Assists = player.CurrentRoundStats!.Assists;
             Damage = player.CurrentRoundStats!.Damage;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         [JsonProperty("4")]
         public int Assists { get; set; }
@@ -42,6 +36,5 @@ namespace TDS.Server.Data.Models
         [JsonProperty("2")]
         public int Points { get; set; }
 
-        #endregion Public Properties
     }
 }
