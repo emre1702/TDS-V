@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -186,25 +187,26 @@ namespace TDS.Server.Handler.Helper
 
             _challengeSettingsTableName = challengeSettingsType.GetTableName();
             var challengeSettingsEntity = new ChallengeSettings();
+            var storeObjectIdentifier = StoreObjectIdentifier.Create(challengeSettingsType, StoreObjectType.Table);
 
             foreach (var property in challengeSettingsType.GetProperties())
             {
                 switch (property.Name)
                 {
                     case nameof(challengeSettingsEntity.Frequency):
-                        _challengeSettingsFrequencyColumnName = property.GetColumnName();
+                        _challengeSettingsFrequencyColumnName = property.GetColumnName(storeObjectIdentifier!.Value);
                         break;
 
                     case nameof(challengeSettingsEntity.MinNumber):
-                        _challengeSettingsMinNumberColumnName = property.GetColumnName();
+                        _challengeSettingsMinNumberColumnName = property.GetColumnName(storeObjectIdentifier!.Value);
                         break;
 
                     case nameof(challengeSettingsEntity.MaxNumber):
-                        _challengeSettingsMaxNumberColumnName = property.GetColumnName();
+                        _challengeSettingsMaxNumberColumnName = property.GetColumnName(storeObjectIdentifier!.Value);
                         break;
 
                     case nameof(challengeSettingsEntity.Type):
-                        _challengeSettingsTypeColumnName = property.GetColumnName();
+                        _challengeSettingsTypeColumnName = property.GetColumnName(storeObjectIdentifier!.Value);
                         break;
                 }
             }
@@ -216,11 +218,16 @@ namespace TDS.Server.Handler.Helper
 
             _playerChallengesTableName = playerChallengesType.GetTableName();
             var playerChallengesEntity = new PlayerChallenges();
+            var storeObjectIdentifier = StoreObjectIdentifier.Create(playerChallengesType, StoreObjectType.Table);
 
-            _playerChallengesFrequencyColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Frequency)).GetColumnName();
-            _playerChallengesPlayerIdColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.PlayerId)).GetColumnName();
-            _playerChallengesChallengeColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Challenge)).GetColumnName();
-            _playerChallengesAmountColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Amount)).GetColumnName();
+            _playerChallengesFrequencyColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Frequency))
+                .GetColumnName(storeObjectIdentifier!.Value);
+            _playerChallengesPlayerIdColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.PlayerId))
+                .GetColumnName(storeObjectIdentifier!.Value);
+            _playerChallengesChallengeColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Challenge))
+                .GetColumnName(storeObjectIdentifier!.Value);
+            _playerChallengesAmountColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Amount))
+                .GetColumnName(storeObjectIdentifier!.Value);
         }
     }
 }
