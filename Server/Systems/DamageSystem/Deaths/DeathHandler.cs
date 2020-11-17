@@ -54,7 +54,7 @@ namespace TDS.Server.DamageSystem.Deaths
 
             died.Deathmatch.LastHitter = null;
 
-            if (killer != died && killer != killReason)
+            if (killer != died && killer != killReason && killReason != null)
                 killer.SendNotification(string.Format(killer.Language.GOT_LAST_HITTED_KILL, died.DisplayName));
 
             if (_lobby.Players.SavePlayerLobbyStats)
