@@ -918,4 +918,5 @@ Hier siehst du alle bisherigen Einladungen an dich:`;
     FightEffect = "Kampf-Effekte";
     IngameColors = "Ingame-Farben";
     Theme = "Fenster-Theme";
+    HeadShotMultiplier = "Kopfschuss Multiplikator";
 }

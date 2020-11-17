@@ -972,4 +972,5 @@ Here you can see all the invitations sent to you:`;
     FightEffect = "Fight effects";
     IngameColors = "Ingame colors";
     Theme = "Window Theme";
+    HeadShotMultiplier = "Headshot multiplier";
 }

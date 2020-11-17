@@ -943,4 +943,5 @@ export interface Language {
     FightEffect: string;
     IngameColors: string;
     Theme: string;
+    HeadShotMultiplier: string;
 }
