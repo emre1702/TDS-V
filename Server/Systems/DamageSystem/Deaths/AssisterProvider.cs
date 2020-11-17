@@ -27,7 +27,7 @@ namespace TDS.Server.DamageSystem.Deaths
 
             var minDamageForAssist = GetMinDamageForAssist();
             var assister = _hitterHandler.GetPlayersHitters(died, minDamageForAssist)
-                .FirstOrDefault(p => p.Lobby == died.Lobby && p != died && p.CurrentRoundStats is { });
+                .FirstOrDefault(p => p.Lobby == died.Lobby && p != died && p != killer && p.CurrentRoundStats is { });
 
             return assister;
         }
