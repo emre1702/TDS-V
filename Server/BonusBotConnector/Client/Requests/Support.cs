@@ -13,26 +13,25 @@ namespace BonusBotConnector.Client.Requests
     public class Support
     {
         private readonly SupportRequestClient _client;
-
         private readonly BonusbotSettings _settings;
+        private readonly ActionHandler _actionHandler;
 
-        internal Support(GrpcChannel channel, BonusbotSettings settings)
+        internal Support(GrpcChannel channel, BonusbotSettings settings, ActionHandler actionHandler)
         {
             _client = new SupportRequestClient(channel);
             _settings = settings;
+            _actionHandler = actionHandler;
         }
-
-        public event ErrorLogDelegate? Error;
 
         public event ErrorStringLogDelegate? ErrorString;
 
-        public async void Answer(ITDSPlayer player, SupportRequestMessages messageEntity)
+        public void Answer(ITDSPlayer player, SupportRequestMessages messageEntity)
         {
-            try
-            {
-                if (_settings.GuildId is null)
-                    return;
+            if (_settings.GuildId is null)
+                return;
 
+            _actionHandler.DoAction(async () =>
+            {
                 var request = new SupportRequestAnswerRequest
                 {
                     AuthorName = player.DisplayName,
@@ -46,26 +45,22 @@ namespace BonusBotConnector.Client.Requests
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
                 ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex);
-            }
+            });
         }
 
-        public async void Create(ITDSPlayer player, SupportRequests requestEntity)
+        public void Create(ITDSPlayer player, SupportRequests requestEntity)
         {
-            try
-            {
-                if (_settings.GuildId is null)
-                    return;
-                if (player.Entity is null)
-                    return;
-                if (player.Entity.PlayerSettings is null)
-                    return;
-                if (player.Entity.PlayerSettings.General.DiscordUserId == 0)
-                    return;
+            if (_settings.GuildId is null)
+                return;
+            if (player.Entity is null)
+                return;
+            if (player.Entity.PlayerSettings is null)
+                return;
+            if (player.Entity.PlayerSettings.General.DiscordUserId == 0)
+                return;
 
+            _actionHandler.DoAction(async () =>
+            {
                 var request = new SupportRequestCreateRequest
                 {
                     AtLeastAdminLevel = requestEntity.AtleastAdminLevel,
@@ -82,20 +77,16 @@ namespace BonusBotConnector.Client.Requests
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
                 ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex);
-            }
+            });
         }
 
-        public async void Delete(IEnumerable<int> requestIds)
+        public void Delete(IEnumerable<int> requestIds)
         {
-            try
-            {
-                if (_settings.GuildId is null)
-                    return;
+            if (_settings.GuildId is null)
+                return;
 
+            _actionHandler.DoAction(async () =>
+            {
                 var request = new SupportRequestDeleteRequest
                 {
                     GuildId = _settings.GuildId.Value
@@ -107,20 +98,16 @@ namespace BonusBotConnector.Client.Requests
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
                 ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex);
-            }
+            });
         }
 
-        public async void ToggleClosed(ITDSPlayer player, int id, bool closed)
+        public void ToggleClosed(ITDSPlayer player, int id, bool closed)
         {
-            try
-            {
-                if (_settings.GuildId is null)
-                    return;
+            if (_settings.GuildId is null)
+                return;
 
+            _actionHandler.DoAction(async () =>
+            {
                 var request = new SupportRequestToggleClosedRequest
                 {
                     GuildId = _settings.GuildId.Value,
@@ -134,11 +121,7 @@ namespace BonusBotConnector.Client.Requests
                 if (string.IsNullOrEmpty(result.ErrorMessage))
                     return;
                 ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex);
-            }
+            });
         }
     }
 }

@@ -55,6 +55,7 @@ namespace TDS.Server.Handler
             eventsHandler.PlayerLeftLobby += EventsHandler_PlayerLeftLobby;
             eventsHandler.PlayerJoinedLobby += EventsHandler_PlayerJoinedLobby;
 
+            _bonusBotConnectorClient.Error += LogErrorFromBonusBot;
             if (_bonusBotConnectorClient.ChannelChat is { })
             {
                 _bonusBotConnectorClient.ChannelChat.Error += LogErrorFromBonusBot;
@@ -67,8 +68,11 @@ namespace TDS.Server.Handler
             }
             if (_bonusBotConnectorClient.ServerInfos is { })
             {
-                _bonusBotConnectorClient.ServerInfos.Error += LogErrorFromBonusBot;
                 _bonusBotConnectorClient.ServerInfos.ErrorString += LogErrorFromBonusBot;
+            }
+            if (_bonusBotConnectorClient.Support is { })
+            {
+                _bonusBotConnectorClient.Support.ErrorString += LogErrorFromBonusBot;
             }
 
             NAPI.ClientEvent.Register<ITDSPlayer, string, string>(ToServerEvent.LogMessageToServer, this, LogMessageFromClient);

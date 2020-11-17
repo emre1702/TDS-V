@@ -9,6 +9,8 @@ namespace BonusBotConnector.Client
 {
     public class BonusBotConnectorClient
     {
+        public event ErrorLogDelegate? Error;
+
         public BonusBotConnectorClient(TDSDbContext dbContext)
         {
             if (System.Diagnostics.Debugger.IsAttached)
@@ -24,13 +26,14 @@ namespace BonusBotConnector.Client
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             var channel = GrpcChannel.ForAddress("http://localhost:5000");
 
+            var actionHandler = new ActionHandler(ex => Error?.Invoke(ex, true));
             Helper = new Helper();
-            ChannelChat = new ChannelChat(channel, settings);
+            ChannelChat = new ChannelChat(channel, settings, actionHandler);
 
             if (settings.ServerInfosChannelId is { })
-                ServerInfos = new ServerInfos(channel, settings);
-            PrivateChat = new PrivateChat(channel, settings);
-            Support = new Support(channel, settings);
+                ServerInfos = new ServerInfos(channel, settings, actionHandler);
+            PrivateChat = new PrivateChat(channel, settings, actionHandler);
+            Support = new Support(channel, settings, actionHandler);
         }
 
         //public delegate void BonusBotErrorLoggerDelegate(string info, string stackTrace, bool logToBonusBot = true);

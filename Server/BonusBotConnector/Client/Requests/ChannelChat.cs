@@ -15,17 +15,17 @@ namespace BonusBotConnector.Client.Requests
     public class ChannelChat
     {
         private readonly MessageToChannelClient _client;
-
         private readonly BonusbotSettings _settings;
+        private readonly ActionHandler _actionHandler;
 
-        public ChannelChat(GrpcChannel channel, BonusbotSettings settings)
+        public ChannelChat(GrpcChannel channel, BonusbotSettings settings, ActionHandler actionHandler)
         {
             _client = new MessageToChannelClient(channel);
             _settings = settings;
+            _actionHandler = actionHandler;
         }
 
         public event ErrorLogDelegate? Error;
-
         public event ErrorStringLogDelegate? ErrorString;
 
         public void SendActionStartInfo(IGangGamemode gamemode)
@@ -115,36 +115,35 @@ namespace BonusBotConnector.Client.Requests
             ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
         }
 
-        private async void SendRequest(string text, ulong? channelId, bool logToBonusBotOnError = true)
+        private void SendRequest(string text, ulong? channelId, bool logToBonusBotOnError = true)
         {
             if (channelId is null)
                 return;
-            try
-            {
-                var result = await _client.SendAsync(new MessageToChannelRequest { GuildId = _settings.GuildId!.Value, ChannelId = channelId.Value, Text = text }, deadline: _settings.GrpcDeadline);
+
+            _actionHandler.DoAction(async () => 
+            { 
+                var result = await _client.SendAsync(new MessageToChannelRequest 
+                { 
+                    GuildId = _settings.GuildId!.Value, 
+                    ChannelId = channelId.Value, 
+                    Text = text 
+                }, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex, logToBonusBotOnError);
-            }
+            });  
         }
 
-        private async void SendRequest(EmbedToChannelRequest request, ulong? channelId, bool logToBonusBotOnError = true)
+        private void SendRequest(EmbedToChannelRequest request, ulong? channelId, bool logToBonusBotOnError = true)
         {
             if (channelId is null)
                 return;
-            try
+
+            _actionHandler.DoAction(async () =>
             {
                 request.GuildId = _settings.GuildId!.Value;
                 request.ChannelId = channelId.Value;
                 var result = await _client.SendEmbedAsync(request, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex, logToBonusBotOnError);
-            }
+            });
         }
     }
 }

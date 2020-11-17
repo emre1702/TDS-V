@@ -13,11 +13,13 @@ namespace BonusBotConnector.Client.Requests
         private readonly MessageToUserClient _client;
 
         private readonly BonusbotSettings _settings;
+        private readonly ActionHandler _actionHandler;
 
-        internal PrivateChat(GrpcChannel channel, BonusbotSettings settings)
+        internal PrivateChat(GrpcChannel channel, BonusbotSettings settings, ActionHandler actionHandler)
         {
             _client = new MessageToUserClient(channel);
             _settings = settings;
+            _actionHandler = actionHandler;
         }
 
         public event ErrorLogDelegate? Error;
@@ -73,48 +75,43 @@ namespace BonusBotConnector.Client.Requests
             ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
         }
 
-        private async void SendRequest(string text, ulong userId, bool logToBonusBotOnError = true)
+        private void SendRequest(string text, ulong userId)
         {
             if (userId == 0)
                 return;
-            try
+
+            _actionHandler.DoAction(async () =>
             {
-                var result = await _client.SendAsync(new MessageToUserRequest { GuildId = _settings.GuildId!.Value, UserId = userId, Text = text }, deadline: _settings.GrpcDeadline);
+                var result = await _client.SendAsync(new MessageToUserRequest 
+                { 
+                    GuildId = _settings.GuildId!.Value, 
+                    UserId = userId, 
+                    Text = text 
+                }, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex, logToBonusBotOnError);
-            }
+            });
         }
 
-        private async void SendRequest(EmbedToUserRequest request, bool logToBonusBotOnError = true)
+        private void SendRequest(EmbedToUserRequest request)
         {
-            try
+            _actionHandler.DoAction(async () =>
             {
                 request.GuildId = _settings.GuildId!.Value;
                 var result = await _client.SendEmbedAsync(request, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex, logToBonusBotOnError);
-            }
+            });
         }
 
-        private async void SendRequest(string text, ulong userId, Action<MessageToUserRequestReply> replyHandler, bool logToBonusBotOnError = true)
+        private void SendRequest(string text, ulong userId, Action<MessageToUserRequestReply> replyHandler)
         {
             if (userId == 0)
                 return;
-            try
+
+            _actionHandler.DoAction(async () =>
             {
                 var result = await _client.SendAsync(new MessageToUserRequest { GuildId = _settings.GuildId!.Value, UserId = userId, Text = text }, deadline: _settings.GrpcDeadline);
                 replyHandler(result);
-            }
-            catch (Exception ex)
-            {
-                Error?.Invoke(ex, logToBonusBotOnError);
-            }
+            });
         }
     }
 }
