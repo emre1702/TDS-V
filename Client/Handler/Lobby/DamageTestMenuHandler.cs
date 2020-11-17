@@ -10,7 +10,7 @@ namespace TDS.Client.Handler.Lobby
 {
     public class DamageTestMenuHandler
     {
-        private bool _hasMenuOpened = true;
+        private bool _hasMenuOpened;
         private readonly BrowserHandler _browserHandler;
 
         public DamageTestMenuHandler(EventsHandler eventsHandler, BrowserHandler browserHandler)
@@ -25,10 +25,16 @@ namespace TDS.Client.Handler.Lobby
 
         private void ToggleDamageTestMenu(object[] args)
         {
-            var toggle = (bool)args[0];
-            var json = args.Length > 1 ? (string)args[1] : null;
+            _hasMenuOpened = (bool)args[0];
+            if (!_hasMenuOpened)
+            {
+                _browserHandler.Angular.Browser.Call(ToBrowserEvent.ToggleDamageTestMenu, _hasMenuOpened);
+                return;
+            }
+
+            var json = args[1].ToString();
             var weapon = ((TDSPlayer)RAGE.Elements.Player.LocalPlayer).CurrentWeapon;
-            _browserHandler.Angular.Browser.Call(ToBrowserEvent.ToggleDamageTestMenu, toggle, json, ((uint)weapon).ToString());
+            _browserHandler.Angular.Browser.Call(ToBrowserEvent.ToggleDamageTestMenu, _hasMenuOpened, json, ((uint)weapon).ToString());
         }
 
         private void EventsHandler_LobbyLeft(SyncedLobbySettings _)
