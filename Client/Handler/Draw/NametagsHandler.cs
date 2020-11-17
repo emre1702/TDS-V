@@ -49,7 +49,7 @@ namespace TDS.Client.Handler.Draw
         {
             float scale = Math.Min(Math.Max(distance / _settingsHandler.NametagMaxDistance, 0.5f), 0.8f);
             var position = Ped.GetPedBoneCoords(handle, (int)PedBone.IK_Head, 0, 0, 0);
-            position.Z += 0.25f + Math.Min(distance / _settingsHandler.NametagMaxDistance, 0.4f);
+            position.Z += 0.3f + Math.Min(distance / _settingsHandler.NametagMaxDistance, 0.4f);
 
             float screenX = 0;
             float screenY = 0;
