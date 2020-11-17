@@ -177,5 +177,12 @@ namespace TDS.Server.Data.Extensions
                 || time == "stop"
                 || time == "no";
         }
+
+        public static string TrimAndRemoveDuplicateSpaces(this string str)
+        {
+            while (str.Contains("  "))
+                str = str.Replace("  ", " ");
+            return str.Trim();
+        }
     }
 }

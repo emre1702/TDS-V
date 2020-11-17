@@ -1,5 +1,6 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
@@ -59,7 +60,7 @@ namespace TDS.Server.Handler.Commands.System
 
         private async Task HandleCommand(ITDSPlayer player, string msg)
         {
-            msg = msg.Trim();
+            msg = msg.TrimAndRemoveDuplicateSpaces();
             List<object> usedParameters = _commandsUseParametersConverter.GetUsedParameters(msg, out string cmdOrAlias);
 
             var commandData = _commandsLoader.GetCommandsData(cmdOrAlias);
