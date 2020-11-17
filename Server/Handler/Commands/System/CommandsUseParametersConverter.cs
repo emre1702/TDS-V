@@ -21,7 +21,7 @@ namespace TDS.Server.Handler.Commands.System
             int amountmethodsavailable, List<object> args)
         {
             if (args.Count == 0)
-                return new CommandsHandleArgumentsResult(Worked: false);
+                return new CommandsHandleArgumentsResult(Worked: true);
 
             try
             {
