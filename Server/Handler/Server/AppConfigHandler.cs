@@ -28,10 +28,8 @@ namespace TDS.Server.Handler.Server
         {
             get
             {
-                string? codeBase = Assembly.GetExecutingAssembly().Location;
-                var uri = new UriBuilder(codeBase ?? "TDS.Server.RAGEAPI.dll");
-                var path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path) ?? ".";
+                string? path = Assembly.GetExecutingAssembly().Location;
+                return Path.GetDirectoryName(path ?? ".") ?? ".";
             }
         }
     }
