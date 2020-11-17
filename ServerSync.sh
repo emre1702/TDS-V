@@ -21,11 +21,11 @@ cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/Core/bin/Debug/n
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS.Client.*" --exclude="TDS.Server.Core.*" --include="*/" --include='TDS_*.dll' --include='TDS_*.pdb' --include='BonusBotConnector*' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS.Client.*" --exclude="TDS.Server.Core.*" --include="*/" --include='TDS.*.dll' --include='TDS.*.pdb' --include='BonusBotConnector*' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
 
 echo -e "${SEPERATOR}"
 echo -e "Add ${LIGHTBLUE}missing ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --ignore-existing --exclude='TDS_*' --include='*.dll' --include='*.so' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --ignore-existing --exclude='TDS.*' --include='*.dll' --include='*.so' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}TDS.Server ${NOCOLOR}..."
