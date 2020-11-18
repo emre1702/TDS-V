@@ -69,6 +69,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                 if (task is { })
                     await task.ConfigureAwait(false);
                 RemoveAfter?.Invoke(_lobby);
+                _eventsHandler.OnLobbyRemoved(_lobby);
             }
             catch (Exception ex)
             {
