@@ -1,4 +1,4 @@
-<tdswindow [title]="charCreatorMenuNav[currentNav] | language: settings.Lang"
+<tdswindow cdkDrag [title]="charCreatorMenuNav[currentNav] | language: settings.Lang"
     (back)="goToMain()" [showBack]="currentNav != charCreatorMenuNav.MainMenu">
     <ng-container [ngSwitch]="currentNav">
         <char-creator-mainmenu *ngSwitchCase="charCreatorMenuNav.MainMenu"

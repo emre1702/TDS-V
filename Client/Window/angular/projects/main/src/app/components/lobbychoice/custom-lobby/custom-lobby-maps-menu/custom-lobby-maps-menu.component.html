@@ -1,6 +1,6 @@
 <div id="container">
 
-    <tdswindow class="container" [title]="'AvailableMaps' | language: settings.Lang">
+    <tdswindow cdkDrag class="container" [title]="'AvailableMaps' | language: settings.Lang">
         <table mat-table [dataSource]="availableMapsDataSource" matSort #availableMapsSort="matSort">
 
             <ng-container matColumnDef="Select">
@@ -45,7 +45,7 @@
         </table>
     </tdswindow>
 
-    <tdswindow id="available-maps-with-button" class="container" cdkDrag
+    <tdswindow cdkDrag id="available-maps-with-button" class="container" cdkDrag
     [title]="'SelectedMaps' | language: settings.Lang">
         <div class="table-container">
             <table mat-table [dataSource]="selectedMapsDataSource" matSort #selectedMapsSort="matSort">

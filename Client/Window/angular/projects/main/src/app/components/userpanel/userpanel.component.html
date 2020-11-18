@@ -1,4 +1,4 @@
-<tdswindow (close)="closeUserpanel()" [isLoading]="userpanelService.loadingData"
+<tdswindow cdkDrag (close)="closeUserpanel()" [isLoading]="userpanelService.loadingData"
 [navMenu]="userpanelNav" [currentNav]="userpanelService.currentNav | language: settings.Lang"
 [navGlow]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
 contentWidth="30vw"

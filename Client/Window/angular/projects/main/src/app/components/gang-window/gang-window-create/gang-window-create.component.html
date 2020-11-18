@@ -74,7 +74,7 @@
 
 </form>
 
-<tdswindow id="blip-color-window" *ngIf="showBlipColorWindow" hideToolbar="true">
+<tdswindow cdkDrag id="blip-color-window" *ngIf="showBlipColorWindow" hideToolbar="true">
     <div class="blip-container">
         <div *ngFor="let blip of constants.BLIP_COLORS"
         [style.background]="blip.Color"

@@ -1,4 +1,4 @@
-<tdswindow [navMenu]="navMenu" [isLoading]="gangWindowService.loadingData"
+<tdswindow cdkDrag [navMenu]="navMenu" [isLoading]="gangWindowService.loadingData"
 [currentNav]="gangWindowNav[currentNav] | language: settings.Lang"
 (close)="closeFunc()" [title]="'GangMenu' | language: settings.Lang"
 contentHeight="60vh">
