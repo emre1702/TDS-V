@@ -125,7 +125,7 @@ namespace TDS.Client.Handler.Draw
             if (!_settingsHandler.NametagArmorEmptyColor.HasValue)
                 return GetArmorColor(100, armor);
 
-            return _settingsHandler.NametagArmorFullColor.GetBetween(_settingsHandler.NametagArmorEmptyColor.Value, armor / _settingsHandler.StartArmor);
+            return _settingsHandler.NametagArmorFullColor.GetBetween(_settingsHandler.NametagArmorEmptyColor.Value, (float)armor / (float)_settingsHandler.StartArmor);
         }
 
         private Color GetArmorColor(int hp, int armor)
@@ -133,7 +133,7 @@ namespace TDS.Client.Handler.Draw
             if (_settingsHandler.NametagArmorEmptyColor.HasValue)
                 return GetArmorColor(armor);
 
-            return _settingsHandler.NametagArmorFullColor.GetBetween(GetHpColor(hp), armor / _settingsHandler.StartArmor);
+            return _settingsHandler.NametagArmorFullColor.GetBetween(GetHpColor(hp), (float)armor / (float)_settingsHandler.StartArmor);
         }
 
         private Color GetHealthColor(int handle)
@@ -175,7 +175,7 @@ namespace TDS.Client.Handler.Draw
 
         private Color GetHpColor(int hp)
         {
-            return _settingsHandler.NametagHealthFullColor.GetBetween(_settingsHandler.NametagHealthEmptyColor, hp / _settingsHandler.StartHealth);
+            return _settingsHandler.NametagHealthFullColor.GetBetween(_settingsHandler.NametagHealthEmptyColor, (float)hp / (float)_settingsHandler.StartHealth);
         }
     }
 }
