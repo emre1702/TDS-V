@@ -113,6 +113,8 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
         public new ulong SocialClubId { get; set; }
         public new string Address { get; private set; } = string.Empty;
 
+        public new string Serial { get; private set; } = string.Empty;
+
         protected ITDSPlayer(NetHandle netHandle) : base(netHandle)
         {
         }
@@ -147,6 +149,7 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
             SocialClubId = base.SocialClubId;
             SocialClubName = base.SocialClubName;
             Address = base.Address;
+            Serial = base.Serial;
         }
     }
 }
