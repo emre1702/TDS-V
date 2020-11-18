@@ -93,7 +93,7 @@ namespace TDS.Server.Handler.PlayerHandlers
             }
         }*/
 
-        private async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
+        public async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
         {
             await _semaphoreSlim.WaitAsync().ConfigureAwait(false);
 

@@ -15,6 +15,7 @@ using TDS.Server.Handler.Browser;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.Helper;
+using TDS.Server.Handler.PlayerHandlers;
 using TDS.Server.Handler.Server;
 using TDS.Server.Handler.Sync;
 using TDS.Shared.Core;
@@ -33,6 +34,7 @@ namespace TDS.Server.Handler.Account
         private readonly ServerStartHandler _serverStartHandler;
         private readonly ISettingsHandler _settingsHandler;
         private readonly AngularConstantsProvider _angularConstantsProvider;
+        private readonly PlayerCharHandler _playerCharHandler;
 
         public LoginHandler(
             DatabasePlayerHelper databasePlayerHandler,
@@ -42,7 +44,8 @@ namespace TDS.Server.Handler.Account
             DataSyncHandler dataSyncHandler,
             ILoggingHandler loggingHandler,
             ServerStartHandler serverStartHandler,
-            AngularConstantsProvider angularConstantsProvider)
+            AngularConstantsProvider angularConstantsProvider,
+            PlayerCharHandler playerCharHandler)
         {
             _databasePlayerHandler = databasePlayerHandler;
             _langHelper = langHelper;
@@ -52,6 +55,7 @@ namespace TDS.Server.Handler.Account
             _loggingHandler = loggingHandler;
             _serverStartHandler = serverStartHandler;
             _angularConstantsProvider = angularConstantsProvider;
+            _playerCharHandler = playerCharHandler;
 
             _eventsHandler.PlayerRegistered += EventsHandler_PlayerRegistered;
 
@@ -79,7 +83,7 @@ namespace TDS.Server.Handler.Account
                 if (entity is null)
                     return false;
 
-                CreateMissingTables(entity);
+                await CreateMissingTables(player, entity);
                 entity.PlayerStats.LoggedIn = true;
                 entity.PlayerStats.LastLoginTimestamp = DateTime.UtcNow;
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -94,6 +98,7 @@ namespace TDS.Server.Handler.Account
             if (!worked || player.Entity == null)
                 return;
 
+            player.Database.SetPlayerSource(player);
             var angularConstantsData = _angularConstantsProvider.Get(player);
 
             var syncedSettingsJson = Serializer.ToClient(_settingsHandler.SyncedSettings);
@@ -153,10 +158,12 @@ namespace TDS.Server.Handler.Account
         private Task<string?> GetPlayerPassword(TDSDbContext dbContext, int playerId)
             => dbContext.Players.Where(p => p.Id == playerId).Select(p => p.Password).FirstOrDefaultAsync() as Task<string?>;
 
-        private void CreateMissingTables(Players entity)
+        private async ValueTask CreateMissingTables(ITDSPlayer player, Players entity)
         {
             if (entity.KillInfoSettings is null)
                 entity.KillInfoSettings = new PlayerKillInfoSettings { ShowIcon = true };
+            if (entity.CharDatas is null)
+                await _playerCharHandler.InitPlayerChar((player, entity));
         }
 
         private Task<Players?> LoadPlayer(TDSDbContext dbContext, int playerId)
@@ -175,12 +182,12 @@ namespace TDS.Server.Handler.Account
                     .Include(p => p.PlayerClothes)
                     .Include(p => p.ThemeSettings)
                     .Include(p => p.KillInfoSettings)
+                    .Include(p => p.CharDatas)
 
                    .FirstOrDefaultAsync(p => p.Id == playerId);
 
         private async Task LoadCollections(TDSDbContext dbContext, Players entity)
         {
-            await dbContext.Entry(entity).Reference(e => e.CharDatas).LoadAsync().ConfigureAwait(false);
             await dbContext.Entry(entity.CharDatas).Collection(e => e.AppearanceData).LoadAsync().ConfigureAwait(false);
             await dbContext.Entry(entity.CharDatas).Collection(e => e.FeaturesData).LoadAsync().ConfigureAwait(false);
             await dbContext.Entry(entity.CharDatas).Collection(e => e.GeneralData).LoadAsync().ConfigureAwait(false);
