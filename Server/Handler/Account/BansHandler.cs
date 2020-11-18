@@ -174,6 +174,9 @@ namespace TDS.Server.Handler.Account
                 int lobbyId = _lobbiesHandler.MainMenu.Entity.Id;
                 var entries = await ExecuteForDBAsync(async dbContext
                     => await dbContext.PlayerBans.Where(b => b.LobbyId == lobbyId).Include(b => b.Admin).ToListAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                
+                if (entries is null)
+                    return;
                 lock (_cachedBans)
                 {
                     _cachedBans = entries;
