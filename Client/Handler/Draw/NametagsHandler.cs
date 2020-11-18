@@ -33,17 +33,16 @@ namespace TDS.Client.Handler.Draw
 
         public void Draw(List<TickNametagData> nametags)
         {
-            if (GetShowOnlyAtAim())
+            if (_settingsHandler.ShowNametagOnlyOnAiming)
             {
-                DrawAtAim();
-                DrawSpectatedNametag();
+                if (_playerFightHandler.InFight)
+                    DrawAtAim();
+                else 
+                    DrawSpectatedNametag();
             }
             else
                 DrawAtSight(nametags);
         }
-
-        private bool GetShowOnlyAtAim()
-            => _playerFightHandler.InFight && _settingsHandler.ShowNametagOnlyOnAiming;
 
         public void DrawNametag(int handle, string name, float distance)
         {
