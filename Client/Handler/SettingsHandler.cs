@@ -220,9 +220,9 @@ namespace TDS.Client.Handler
 
         private void OnColorSettingChangeMethod(object[] args)
         {
-            var color = (string)args[0];
-            var dataSetting = (UserpanelSettingAtClientside)Convert.ToInt32(args[1]);
-
+            var dataSetting = (UserpanelSettingAtClientside)Convert.ToInt32(args[0]);
+            var color = (string)args[1];
+            
             switch (dataSetting)
             {
                 case UserpanelSettingAtClientside.MapBorderColor:
