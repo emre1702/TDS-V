@@ -47,7 +47,7 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
 
         public void CreateBombTakePickup(ITDSObject bomb)
         {
-            _bombTakePickup = _fakePickupsHandler.Create(-51423166, bomb.Position, 2f, 0, _lobby);
+            _bombTakePickup = _fakePickupsHandler.Create(1764669601, bomb.Position, 2f, 0, _lobby);
             _bombTakePickup.OnCollect = TakeDroppedBomb;
         }
 
