@@ -297,9 +297,9 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IRoundFightLobby roundFightLobby))
+                if (player.Lobby is not IRoundFightLobby roundFightLobby)
                     return;
-                if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
+                if (roundFightLobby.Rounds.CurrentGamemode is not IBombGamemode bombMode)
                     return;
                 if (!bombMode.Specials.StartBombDefusing(player))
                     NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.StopBombPlantDefuse));
@@ -316,9 +316,9 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IRoundFightLobby roundFightLobby))
+                if (player.Lobby is not IRoundFightLobby roundFightLobby)
                     return;
-                if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
+                if (roundFightLobby.Rounds.CurrentGamemode is not IBombGamemode bombMode)
                     return;
                 if (!bombMode.Specials.StartBombPlanting(player))
                     NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.StopBombPlantDefuse));

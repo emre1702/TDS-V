@@ -6,6 +6,7 @@ app-invitation {
     height: auto;
     min-height: 5%;
     transform: translateY(-50%);
+    z-index: 1000;
 }
 
 app-teamorders {
