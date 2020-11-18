@@ -43,6 +43,11 @@ namespace TDS.Server.LobbySystem.MapHandlers
             if (Events.PlayerJoined is { })
                 Events.PlayerJoined -= Events_PlayerJoined;
             Events.RemoveAfter -= RemoveEvents;
+
+            lock (_dimensionsUsed)
+            {
+                _dimensionsUsed.Remove(Dimension);
+            }
         }
 
         protected virtual ValueTask Events_PlayerJoined((ITDSPlayer Player, int TeamIndex) data)
@@ -78,6 +83,7 @@ namespace TDS.Server.LobbySystem.MapHandlers
             {
                 while (_dimensionsUsed.Contains(tryid))
                     ++tryid;
+                _dimensionsUsed.Add(tryid);
             }
             return tryid;
         }
