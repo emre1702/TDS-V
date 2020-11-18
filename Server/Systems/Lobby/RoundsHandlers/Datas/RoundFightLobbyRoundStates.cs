@@ -50,7 +50,7 @@ namespace TDS.Server.LobbySystem.RoundsHandlers.Datas
             node = List.AddAfter(node, new RoundEndState(lobby));
 
             if (lobby.Entity.LobbyRoundSettings.ShowRanking)
-                List.AddAfter(node, new RoundEndRankingState(lobby));
+                node = List.AddAfter(node, new RoundEndRankingState(lobby));
 
             node = List.AddAfter(node, new RoundEndStatsState(lobby));
             List.AddLast(new RoundClear(lobby));
