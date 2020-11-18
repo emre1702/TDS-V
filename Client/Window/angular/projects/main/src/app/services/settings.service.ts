@@ -287,6 +287,7 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.SyncGangId, this.syncGangId.bind(this));
 
         this.LanguageChanged.setMaxListeners(40);
+        this.SettingsLoaded.setMaxListeners(40);
         this.ThemeSettingChangedBefore.setMaxListeners(40);
         this.ThemeSettingChanged.setMaxListeners(40);
         this.ThemeSettingChangedAfter.setMaxListeners(40);
