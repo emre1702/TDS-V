@@ -314,7 +314,8 @@ namespace TDS.Client.Handler.Lobby
             var weaponHash = RAGE.Elements.Player.LocalPlayer.GetSelectedWeapon();
             if (weaponHash != (uint)WeaponHash.Unarmed)
                 return true;
-            if (!RAGE.Game.Pad.IsDisabledControlPressed((int)InputGroup.MOVE, (int)Control.Attack))
+            if (!Pad.IsDisabledControlPressed((int)InputGroup.MOVE, (int)Control.Attack)
+                && !Pad.IsControlPressed((int)InputGroup.MOVE, (int)Control.Attack))
                 return true;
             if (RAGE.Elements.Player.LocalPlayer.IsDeadOrDying(true))
                 return true;

@@ -91,8 +91,8 @@ namespace TDS.Client.Handler.Deathmatch
 
         private void OnExplodeHeadMethod(object[] args)
         {
-            var weaponHash = Convert.ToUInt32(args[0]);
-            RAGE.Elements.Player.LocalPlayer.ExplodeHead(weaponHash);
+            var weaponHash = uint.Parse(args[0].ToString());
+            Player.LocalPlayer.ExplodeHead(weaponHash);
         }
     }
 }

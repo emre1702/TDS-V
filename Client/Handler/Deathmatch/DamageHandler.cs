@@ -38,7 +38,7 @@ namespace TDS.Client.Handler.Deathmatch
 
         private void OnIncomingDamageMethod(Player sourcePlayer, Entity sourceEntity, Entity targetEntity, ulong weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
         {
-            Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is ITDSPlayer}", true);
+            Console.Log(ConsoleVerbosity.Info, $"Incoming damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {targetEntity is ITDSPlayer} - Weapon: {weaponHash}", true);
 
             if (sourcePlayer is null)
             {
@@ -63,7 +63,7 @@ namespace TDS.Client.Handler.Deathmatch
 
         private void OnOutgoingDamageMethod(Entity sourceEntity, Entity targetEntity, Player sourcePlayer, ulong weaponHash, ulong boneIdx, int damage, CancelEventArgs cancel)
         {
-            RAGE.Ui.Console.Log(ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {(targetEntity is ITDSPlayer targetPlayer ? targetPlayer.Name : "Not player")}", true);
+            RAGE.Ui.Console.Log(ConsoleVerbosity.Info, $"Outgoing damage: Source {sourcePlayer.Name}, source entity {sourceEntity.Type}, targetEntity {targetEntity.Type} - {(targetEntity is ITDSPlayer targetPlayer ? targetPlayer.Name : "Not player")} - Weapon: {weaponHash}", true);
 
             if (sourcePlayer is null)
                 return;
