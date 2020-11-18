@@ -9,6 +9,7 @@ namespace TDS.Server.Data.Interfaces.PlayersSystem
     {
         short KillingSpree { get; set; }
         ITDSPlayer? LastHitter { get; set; }
+        WeaponHash? LastHitterWeapon { get; set; }
         DateTime? LastKillAt { get; set; }
         WeaponHash LastWeaponOnHand { get; set; }
         short ShortTimeKillingSpree { get; }

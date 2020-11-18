@@ -55,6 +55,7 @@ namespace TDS.Server.PlayersSystem
         }
 
         public ITDSPlayer? LastHitter { get; set; }
+        public WeaponHash? LastHitterWeapon { get; set; }
         public DateTime? LastKillAt { get; set; }
         public WeaponHash LastWeaponOnHand { get; set; } = WeaponHash.Unarmed;
 

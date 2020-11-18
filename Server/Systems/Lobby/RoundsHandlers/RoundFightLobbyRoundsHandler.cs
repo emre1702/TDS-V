@@ -203,6 +203,7 @@ namespace TDS.Server.LobbySystem.RoundsHandlers
         {
             Lobby.Players.SetPlayerDataAlive(player);
             player.Deathmatch.LastHitter = null;
+            player.Deathmatch.LastHitterWeapon = null;
 
             if (player.Team != null && !player.Team.IsSpectator)
             {

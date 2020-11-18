@@ -11,6 +11,6 @@ namespace TDS.Server.Data.Interfaces.DamageSystem.Damages
         ITDSPlayer? GetPlayersMostHitter(ITDSPlayer player);
         bool HasAnyHitters();
         void Init(IFightLobby fightLobby);
-        void SetLastHitter(ITDSPlayer target, ITDSPlayer source, int damage);
+        void SetLastHitter(ITDSPlayer target, ITDSPlayer source, uint weapon, int damage);
     }
 }

@@ -1,4 +1,6 @@
-﻿using MoreLinq;
+﻿using GTANetworkAPI;
+using MoreLinq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +36,7 @@ namespace TDS.Server.DamageSystem.Damages
             fightLobby.Events.RemoveAfter -= Remove;
         }
 
-        public void SetLastHitter(ITDSPlayer target, ITDSPlayer source, int damage)
+        public void SetLastHitter(ITDSPlayer target, ITDSPlayer source, uint weapon, int damage)
         {
             lock (_allHitters)
             {
@@ -50,6 +52,8 @@ namespace TDS.Server.DamageSystem.Damages
             }
 
             target.Deathmatch.LastHitter = source;
+            if (Enum.IsDefined(typeof(WeaponHash), weapon))
+                target.Deathmatch.LastHitterWeapon = (WeaponHash)weapon;
         }
 
         public ITDSPlayer? GetPlayersMostHitter(ITDSPlayer player)

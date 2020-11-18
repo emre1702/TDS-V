@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using System;
 using TDS.Server.DamageSystem.KillingSprees;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
@@ -40,6 +41,7 @@ namespace TDS.Server.DamageSystem.Deaths
 
         public void PlayerDeath(ITDSPlayer died, ITDSPlayer killReason, uint weapon, int diedPlayerLifes)
         {
+            weapon = GetCorrectWeapon(died, weapon);
             died.Freeze(true);
 
             var killer = _killerProvider.Get(died, killReason);
@@ -53,6 +55,7 @@ namespace TDS.Server.DamageSystem.Deaths
             _deathSyncHandler.Sync(died, killer, weapon, diedPlayerLifes);
 
             died.Deathmatch.LastHitter = null;
+            died.Deathmatch.LastHitterWeapon = null;
 
             if (killer != died && killer != killReason && killReason != null)
                 killer.SendNotification(string.Format(killer.Language.GOT_LAST_HITTED_KILL, died.DisplayName));
@@ -109,6 +112,7 @@ namespace TDS.Server.DamageSystem.Deaths
 
             var lastHitter = died.Deathmatch.LastHitter;
             died.Deathmatch.LastHitter = null;
+            died.Deathmatch.LastHitterWeapon = null;
 
             if (died.Lobby != lastHitter.Lobby)
                 return;
@@ -122,6 +126,15 @@ namespace TDS.Server.DamageSystem.Deaths
             NAPI.Task.RunSafe(() => 
                 lastHitter.SendNotification(string.Format(lastHitter.Language.GOT_LAST_HITTED_KILL, died.DisplayName)));
             killer = lastHitter;
+        }
+
+        private uint GetCorrectWeapon(ITDSPlayer player, uint possibleWeapon)
+        {
+            if (Enum.IsDefined(typeof(WeaponHash), possibleWeapon))
+                return possibleWeapon;
+            if (player.Deathmatch.LastHitterWeapon is { })
+                return (uint)player.Deathmatch.LastHitterWeapon;
+            return possibleWeapon;
         }
     }
 }
