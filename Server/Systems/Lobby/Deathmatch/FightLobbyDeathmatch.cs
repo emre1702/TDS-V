@@ -53,14 +53,14 @@ namespace TDS.Server.LobbySystem.Deathmatch
             Damage.DeathHandler.PlayerDeath(player, killer, weapon, hadLifes);
 
             if (player.Lifes > 0)
-                PlayerDiedInFight(player, killer, weapon);
+                PlayerDiedInFight(player);
             else
                 SetPlayerDeadCompletely(player);
 
             Lobby.Events.TriggerPlayerDied(player, killer, weapon, hadLifes);
         }
 
-        private void PlayerDiedInFight(ITDSPlayer player, ITDSPlayer killer, uint weapon)
+        private void PlayerDiedInFight(ITDSPlayer player)
         {
             if (--player.Lifes == 0)
                 SetPlayerDeadCompletely(player);

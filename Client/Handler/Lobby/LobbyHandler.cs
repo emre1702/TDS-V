@@ -50,7 +50,7 @@ namespace TDS.Client.Handler.Lobby
             }
         }
 
-        public bool HasAllVsAllTeam => Teams.LobbyTeams.Count(t => !t.IsSpectator) == 1;
+        public bool HasAllVsAllTeam => Teams.LobbyTeams.Count(t => !t.IsSpectator) <= 1;
 
         public DamageTestMenuHandler DamageTestMenu { get; }
         public MainMenuHandler MainMenu { get; }

@@ -40,7 +40,7 @@ namespace TDS.Server.DamageSystem.Damages
                 return false;
             if (target.Lobby != player.Lobby)
                 return false;
-            if (target.Team == player.Team)
+            if (target.Team == player.Team && player.Lobby?.Teams.HasAllVsAllTeams == false)
                 return false;
 
             return true;
@@ -48,7 +48,7 @@ namespace TDS.Server.DamageSystem.Damages
 
         private void AddStats(ITDSPlayer player, ITDSPlayer target, WeaponHash weapon, PedBodyPart pedBodyPart, int damage, bool killed)
         {
-            _hitterHandler.SetLastHitter(target, player, damage);
+            _hitterHandler.SetLastHitter(target, player, (uint)weapon, damage);
 
             player.WeaponStats.AddWeaponDamage(weapon, pedBodyPart, damage, killed);
             if (player.CurrentRoundStats != null)
@@ -63,7 +63,7 @@ namespace TDS.Server.DamageSystem.Damages
                     player.TriggerEvent(ToClientEvent.HitOpponent, target.RemoteId, damage);
 
                 if (target.Health == 0 && isHeadshot)
-                    target.TriggerEvent(ToClientEvent.ExplodeHead, (uint)weapon);
+                    target.TriggerEvent(ToClientEvent.ExplodeHead, weapon.ToString());
             });
         }
     }

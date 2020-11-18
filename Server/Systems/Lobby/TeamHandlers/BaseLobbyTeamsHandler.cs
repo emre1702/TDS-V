@@ -18,6 +18,18 @@ namespace TDS.Server.LobbySystem.TeamHandlers
     public class BaseLobbyTeamsHandler : IBaseLobbyTeamsHandler, IDisposable
     {
         public int Count => _teams.Length;
+        public int CountWithoutSpectator
+        {
+            get
+            {
+                lock (_teams)
+                {
+                    return _teams.Where(t => !t.IsSpectator).Count();
+                }
+            }
+        }
+
+        public bool HasAllVsAllTeams => CountWithoutSpectator <= 1;
 
         protected IBaseLobby Lobby { get; }
         protected IBaseLobbyEventsHandler Events { get; }

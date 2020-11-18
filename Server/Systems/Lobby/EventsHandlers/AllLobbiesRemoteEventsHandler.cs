@@ -91,7 +91,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                 var weaponHash = (WeaponHash)weaponHashLong;
                 var bodyPart = (PedBodyPart)bodyPartValue;
 
-                if (!(target.Lobby is IFightLobby fightLobby))
+                if (target.Lobby is not IFightLobby fightLobby)
                 {
                     _loggingHandler.LogError(
                         string.Format("Attacker {0} dealt damage on body part {1} to {2} - but this player isn't in fightlobby.",

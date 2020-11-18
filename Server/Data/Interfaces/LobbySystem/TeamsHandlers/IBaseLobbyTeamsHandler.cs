@@ -11,6 +11,8 @@ namespace TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers
     public interface IBaseLobbyTeamsHandler
     {
         int Count { get; }
+        int CountWithoutSpectator { get; }
+        bool HasAllVsAllTeams { get; }
 
         Task DoForList(Action<ITeam[]> action);
 
