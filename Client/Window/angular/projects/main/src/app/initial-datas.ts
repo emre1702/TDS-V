@@ -15,11 +15,8 @@ import { UserpanelSettingsKillInfo } from './components/userpanel/userpanel-sett
 import { UserpanelSettingsScoreboard } from './components/userpanel/userpanel-settings-normal/interfaces/userpanel-settings-scoreboard';
 import { UserpanelSettingsTheme } from './components/userpanel/userpanel-settings-normal/interfaces/userpanel-settings-theme';
 import { LanguageEnum } from './enums/language.enum';
-import { German } from './language/german.language';
-import { SettingsService } from './services/settings.service';
 import { ScoreboardPlayerSorting } from './components/userpanel/enums/scoreboard-player-sorting';
 import { TimeSpanUnitsOfTime } from './components/userpanel/enums/timespan-units-of-time.enum';
-import { Constants } from './constants';
 import { ChallengeGroup } from './components/lobbychoice/models/challenge-group';
 import { ChallengeFrequency } from './components/lobbychoice/enums/challenge-frequency.enum';
 import { ChallengeType } from './components/lobbychoice/enums/challenge-type.enum';
@@ -29,7 +26,7 @@ export class InitialDatas {
     private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
         sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
 
-    static readonly inDebug = true;
+    static readonly inDebug = false;
 
     static readonly started = InitialDatas.inDebug;
     static readonly isMapVotingActive = false;
@@ -37,7 +34,7 @@ export class InitialDatas {
     static readonly opened = {
         mapCreator: false,
         freeroam: false,
-        lobbyChoice: true,
+        lobbyChoice: false,
         teamChoice: false,
         rankings: false,
         hud: false,
