@@ -10,10 +10,10 @@ namespace TDS.Server.Handler.Commands.User
 {
     public class UserDeathmatchCommands
     {
-        [TDSCommandAttribute(UserCommand.Suicide)]
+        [TDSCommand(UserCommand.Suicide)]
         public void Suicide(ITDSPlayer player)
         {
-            if (!(player.Lobby is IFightLobby fightLobby))
+            if (player.Lobby is not IFightLobby fightLobby)
                 return;
             if (player.Lifes == 0)
                 return;

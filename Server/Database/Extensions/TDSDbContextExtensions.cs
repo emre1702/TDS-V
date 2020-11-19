@@ -16,12 +16,6 @@ namespace TDS.Server.Database.Entity
             return entityDbType.FindProperty(efCorePropertyName);
         }
 
-        public static string GetPropertyName(this TDSDbContext dbContext, IEntityType entityDbType, string efCorePropertyName)
-        {
-            var propertyInfo = entityDbType.FindProperty(efCorePropertyName);
-            return propertyInfo?.GetColumnName();
-        }
-
         public static string GetTableName(this TDSDbContext dbContext, Type entityType)
         {
             var entityDbType = dbContext.Model.FindEntityType(entityType);

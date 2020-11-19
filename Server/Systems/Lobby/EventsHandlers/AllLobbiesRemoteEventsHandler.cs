@@ -54,7 +54,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby?.Players is ArenaPlayers players))
+                if (player.Lobby?.Players is not ArenaPlayers players)
                     return;
                 await players.ChooseTeam(player, index).ConfigureAwait(false);
             }
@@ -132,7 +132,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IMapCreatorLobby lobby))
+                if (player.Lobby is not IMapCreatorLobby lobby)
                     return;
                 lobby.Sync.StartNewMap();
             }
@@ -148,7 +148,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IMapCreatorLobby lobby))
+                if (player.Lobby is not IMapCreatorLobby lobby)
                     return;
                 lobby.Sync.SyncLastId(player, id);
             }
@@ -164,7 +164,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IMapCreatorLobby lobby))
+                if (player.Lobby is not IMapCreatorLobby lobby)
                     return;
                 lobby.Sync.SyncNewObject(player, json);
             }
@@ -180,7 +180,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IMapCreatorLobby lobby))
+                if (player.Lobby is not IMapCreatorLobby lobby)
                     return;
                 lobby.Sync.SyncObjectPosition(player, json);
             }
@@ -196,7 +196,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IMapCreatorLobby lobby))
+                if (player.Lobby is not IMapCreatorLobby lobby)
                     return;
                 lobby.Sync.SyncRemoveObject(player, id);
             }
@@ -212,7 +212,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IMapCreatorLobby lobby))
+                if (player.Lobby is not IMapCreatorLobby lobby)
                     return;
                 lobby.Sync.SyncRemoveTeamObjects(player, teamNumber);
             }
@@ -228,7 +228,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IArena arena))
+                if (player.Lobby is not IArena arena)
                     return;
 
                 var mapsJson = arena.MapHandler.GetMapsJson();
@@ -246,7 +246,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IArena arena))
+                if (player.Lobby is not IArena arena)
                     return;
                 if (arena.Entity.LobbyMapSettings.MapLimitType == MapLimitType.KillAfterTime)
                     arena.Deathmatch.Kill(player, player.Language.TOO_LONG_OUTSIDE_MAP);
@@ -263,7 +263,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IFightLobby fightLobby))
+                if (player.Lobby is not IFightLobby fightLobby)
                     return;
                 if (!Enum.IsDefined(typeof(TeamOrder), teamOrderInt))
                     return;
@@ -281,7 +281,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IFightLobby lobby))
+                if (player.Lobby is not IFightLobby lobby)
                     return;
                 await lobby.Spectator.SpectateNext(player, forward);
             }
@@ -335,9 +335,9 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IRoundFightLobby roundFightLobby))
+                if (player.Lobby is not IRoundFightLobby roundFightLobby)
                     return;
-                if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
+                if (roundFightLobby.Rounds.CurrentGamemode is not IBombGamemode bombMode)
                     return;
                 bombMode.Specials.StopBombDefusing(player);
             }
@@ -353,9 +353,9 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             {
                 if (!player.LoggedIn)
                     return;
-                if (!(player.Lobby is IRoundFightLobby roundFightLobby))
+                if (player.Lobby is not IRoundFightLobby roundFightLobby)
                     return;
-                if (!(roundFightLobby.Rounds.CurrentGamemode is IBombGamemode bombMode))
+                if (roundFightLobby.Rounds.CurrentGamemode is not IBombGamemode bombMode)
                     return;
                 bombMode.Specials.StopBombPlanting(player);
             }
@@ -373,7 +373,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                     return;
                 if (player.Lifes == 0)
                     return;
-                if (!(player.Lobby is IFightLobby lobby))
+                if (player.Lobby is not IFightLobby lobby)
                     return;
                 lobby.Deathmatch.Kill(player, player.Language.COMMITED_SUICIDE);
             }
@@ -391,7 +391,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                     return;
                 if (player.Lifes == 0)
                     return;
-                if (!(player.Lobby is IFightLobby fightLobby))
+                if (player.Lobby is not IFightLobby fightLobby)
                     return;
 
                 NAPI.Task.RunSafe(() => 

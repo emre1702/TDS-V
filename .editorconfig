@@ -1372,4 +1372,6 @@ dotnet_diagnostic.IDE0068.severity = warning
 
 dotnet_diagnostic.IDE0069.severity = warning
 
+dotnet_diagnostic.IDE0083.severity = warning
+
 dotnet_diagnostic.NETSDK1138.severity = none
