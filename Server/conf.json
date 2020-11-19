@@ -1,8 +1,18 @@
 {
-  "maxplayers": 100,
-  "name": "RAGE:MP Unofficial server",
-  "gamemode": "freeroam",
-  "stream-distance": 500.0,
+  "name": "TDS-V testing server [team deathmatch]",
+  "gamemode": "tdm",
+  "stream-distance": 500,
   "announce": false,
-  "port": 22005
+  "csharp": true,
+  "port": 22005,
+  "maxplayers": 50,
+  "url": "tds-rage.com",
+  "sync-rate": 60,
+  "allow-cef-debugging": true,
+  "enable-nodejs": false,
+  "voice-chat": true,
+  "voice-chat-sample-rate": 24000,
+  "api-threading-debugging": false,
+  "min-fps": 10,
+  "max-packet-loss": 300
 }
