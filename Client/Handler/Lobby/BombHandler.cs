@@ -218,16 +218,20 @@ namespace TDS.Client.Handler.Lobby
 
         private void CheckPlantDefuseStop()
         {
-            if (ShouldPlantDefuseStop())
-            {
-                if (_playerStatus == PlantDefuseStatus.Planting)
-                    _remoteEventsSender.Send(ToServerEvent.StopPlanting);
-                else if (_playerStatus == PlantDefuseStatus.Defusing)
-                    _remoteEventsSender.Send(ToServerEvent.StopDefusing);
-                _playerStatus = PlantDefuseStatus.None;
-                _progressRect?.Remove();
-                _progressRect = null;
-            }
+            if (!ShouldPlantDefuseStop())
+                return;
+
+            if (_playerStatus == PlantDefuseStatus.Planting && IsOnPlantSpot()
+                || _playerStatus == PlantDefuseStatus.Defusing && IsOnDefuseSpot())
+                return;
+
+            if (_playerStatus == PlantDefuseStatus.Planting)
+                _remoteEventsSender.Send(ToServerEvent.StopPlanting);
+            else if (_playerStatus == PlantDefuseStatus.Defusing)
+                _remoteEventsSender.Send(ToServerEvent.StopDefusing);
+            _playerStatus = PlantDefuseStatus.None;
+            _progressRect?.Remove();
+            _progressRect = null;
         }
 
         private void CheckPlantStart()

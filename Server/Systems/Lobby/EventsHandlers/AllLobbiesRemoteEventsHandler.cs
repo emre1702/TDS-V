@@ -293,6 +293,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
 
         public void OnStartDefusing(ITDSPlayer player)
         {
+            bool worked = false;
             try
             {
                 if (!player.LoggedIn)
@@ -302,16 +303,25 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                 if (roundFightLobby.Rounds.CurrentGamemode is not IBombGamemode bombMode)
                     return;
                 if (!bombMode.Specials.StartBombDefusing(player))
-                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.StopBombPlantDefuse));
+                    return;
+
+                worked = true;
+                    
             }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
             }
+            finally
+            {
+                if (!worked)
+                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.StopBombPlantDefuse));
+            }
         }
 
         public void OnStartPlanting(ITDSPlayer player)
         {
+            bool worked = false;
             try
             {
                 if (!player.LoggedIn)
@@ -321,11 +331,17 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                 if (roundFightLobby.Rounds.CurrentGamemode is not IBombGamemode bombMode)
                     return;
                 if (!bombMode.Specials.StartBombPlanting(player))
-                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.StopBombPlantDefuse));
+                    return;
+                worked = true;
             }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
+            }
+            finally
+            {
+                if (!worked)
+                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.StopBombPlantDefuse));
             }
         }
 
