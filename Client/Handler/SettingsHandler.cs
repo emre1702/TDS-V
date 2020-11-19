@@ -132,15 +132,6 @@ namespace TDS.Client.Handler
         public int RoundEndTime => _syncedServerSettings.RoundEndTime;
         public int RoundTime => _syncedLobbySettings.RoundTime ?? 0;
 
-        public int GetPlantOrDefuseTime(PlantDefuseStatus status)
-        {
-            if (status == PlantDefuseStatus.Defusing)
-                return _syncedLobbySettings.BombDefuseTimeMs ?? 0;
-            else if (status == PlantDefuseStatus.Planting)
-                return _syncedLobbySettings.BombPlantTimeMs ?? 0;
-            return 0;
-        }
-
         public SyncedLobbySettings GetSyncedLobbySettings()
         {
             return _syncedLobbySettings;
