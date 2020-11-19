@@ -1,7 +1,7 @@
 <div class="container">
 
     <tdswindow cdkDrag class="left-window challenges" [title]="'Challenges' | language: settings.Lang"
-        [@leftToRight]="animState">
+        [@leftToRight]="animState" [canMinimize]="false">
         <div class="challenges-container">
             <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
                 <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">
@@ -45,7 +45,7 @@
 
         <div class="placeholder"></div>
 
-        <tdswindow cdkDrag class="announcements" [title]="'Announcements' | language: settings.Lang" [@rightToLeft]="animState">
+        <tdswindow cdkDrag class="announcements" [title]="'Announcements' | language: settings.Lang" [@rightToLeft]="animState" [canMinimize]="false">
             <ng-container *ngIf="settings.Constants && settings.Constants[6]">
                 <div *ngFor="let announcement of settings.Constants[6]" class="announcement">
                     <div class="date">{{ 'XDaysAgo' | language: settings.Lang:announcement[0] }}:</div>
@@ -56,7 +56,7 @@
 
         <div class="placeholder"></div>
 
-        <tdswindow cdkDrag class="changelogs" [title]="'Changelogs' | language: settings.Lang" [@rightToLeft]="animState">
+        <tdswindow cdkDrag class="changelogs" [title]="'Changelogs' | language: settings.Lang" [@rightToLeft]="animState" [canMinimize]="false">
             <ng-container *ngIf="settings.Constants && settings.Constants[9]">
                 <div *ngFor="let changelog of settings.Constants[9]" class="changelog">
                     <div class="date">{{ changelog[0] | date: 'fullDate' }}:</div>

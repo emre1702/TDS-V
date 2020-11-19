@@ -2,7 +2,7 @@
 <div class="container mat-elevation-z8 mat-app-background design1">
     <ng-container *ngIf="!hideToolbar" [ngTemplateOutlet]="this['toolbar' + toolbarDesign]">
         <ng-template #toolbar1 >
-            <div class="toolbar design1" cdkDragHandle cdkDragRootElement="[cdkDrag]" color="primary" [closeOnDoubleClick]="content">
+            <div class="toolbar design1" cdkDragHandle cdkDragRootElement="[cdkDrag]" color="primary" [closeOnDoubleClick]="canMinimize ? content : undefined">
                 <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
                     <mat-icon color="accent">arrow_back</mat-icon>
                 </button>
@@ -25,7 +25,7 @@
         </ng-template>
 
         <ng-template #toolbar2>
-            <mat-toolbar class="toolbar design2" color="primary" cdkDragHandle [closeOnDoubleClick]="content">
+            <mat-toolbar class="toolbar design2" color="primary" cdkDragHandle [closeOnDoubleClick]="canMinimize ? content : undefined">
                 <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
                     <mat-icon color="accent">arrow_back</mat-icon>
                 </button>

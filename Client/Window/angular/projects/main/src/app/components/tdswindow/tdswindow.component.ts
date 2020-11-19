@@ -140,6 +140,17 @@ export class TDSWindowComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    private _canMinimize = true;
+    get canMinimize(): boolean {
+        return this._canMinimize;
+    }
+
+    @Input("canMinimize")
+    set canMinimize(value: boolean) {
+        this._canMinimize = value;
+        this.changeDetector.detectChanges();
+    }
+
     windowDesign = 1;
     toolbarDesign = 1;
 
