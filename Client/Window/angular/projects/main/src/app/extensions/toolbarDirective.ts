@@ -32,6 +32,9 @@ export class ToolbarDirective {
     }
 
     private doubleClicked() {
+        if (!this.closeOnDoubleClick) {
+            return;
+        }
         if (this.closeOnDoubleClick.style.display !== "none") {
             this.origDisplay = this.closeOnDoubleClick.style.display;
             this.closeOnDoubleClick.style.display = "none";

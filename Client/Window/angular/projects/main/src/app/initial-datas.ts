@@ -20,13 +20,16 @@ import { SettingsService } from './services/settings.service';
 import { ScoreboardPlayerSorting } from './components/userpanel/enums/scoreboard-player-sorting';
 import { TimeSpanUnitsOfTime } from './components/userpanel/enums/timespan-units-of-time.enum';
 import { Constants } from './constants';
+import { ChallengeGroup } from './components/lobbychoice/models/challenge-group';
+import { ChallengeFrequency } from './components/lobbychoice/enums/challenge-frequency.enum';
+import { ChallengeType } from './components/lobbychoice/enums/challenge-type.enum';
 
 export class InitialDatas {
 
     private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
         sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
 
-    static readonly inDebug = false;
+    static readonly inDebug = true;
 
     static readonly started = InitialDatas.inDebug;
     static readonly isMapVotingActive = false;
@@ -34,7 +37,7 @@ export class InitialDatas {
     static readonly opened = {
         mapCreator: false,
         freeroam: false,
-        lobbyChoice: false,
+        lobbyChoice: true,
         teamChoice: false,
         rankings: false,
         hud: false,
@@ -134,7 +137,25 @@ export class InitialDatas {
         ]
     };
 
-    
+    private static readonly challengeGroups: ChallengeGroup[] = 
+    [
+        [ChallengeFrequency.Weekly, [
+            [ ChallengeType.Assists, 5, 3 ],
+            [ ChallengeType.Kills, 5, 2 ],
+            [ ChallengeType.RoundPlayed, 1, 0 ],
+        ]],
+        [ChallengeFrequency.Forever, [
+            [ ChallengeType.Assists, 5, 2 ],
+            [ ChallengeType.Kills, 5, 1 ],
+            [ ChallengeType.BeHelpfulEnough, 1, 0 ],
+            [ ChallengeType.ReadTheFAQ, 1, 0 ],
+            [ ChallengeType.ReadTheRules, 1, 0 ],
+            [ ChallengeType.ReviewMaps, 30, 10 ],
+            [ ChallengeType.ChangeSettings, 1, 0 ],
+            [ ChallengeType.CreatorOfAcceptedMap, 1, 0 ],
+            [ ChallengeType.ReviewMaps, 30, 10 ],
+        ]],
+    ];
 
     static getMapsInVoting(): MapVoteDto[] {
         return this.inDebug ? this.testMapsInVoting : [];
@@ -154,5 +175,9 @@ export class InitialDatas {
 
     static getDamageTestInitialWeapon(): WeaponHash | undefined {
         return this.inDebug ? this.damageTestWeapons[0][0] : undefined;
+    }
+
+    static getChallengeGroups(): ChallengeGroup[] {
+        return this.inDebug ? this.challengeGroups : [];
     }
 }

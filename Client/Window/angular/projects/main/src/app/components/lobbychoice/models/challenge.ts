@@ -13,5 +13,5 @@ export class Challenge {
     2: number;
 
     /** Challenge info (not synced) */
-    99: SafeHtml;
+    99?: SafeHtml;
 }

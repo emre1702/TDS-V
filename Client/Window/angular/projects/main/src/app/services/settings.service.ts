@@ -122,25 +122,7 @@ export class SettingsService {
     public ChatSettingsChanged = new EventEmitter();
 
     public Constants: ConstantsData = InitialDatas.getSettingsConstants();
-    public ChallengeGroups: ChallengeGroup[] /* = [
-        [ChallengeFrequency.Weekly, [
-            [ ChallengeType.Assists, 5, 3 ],
-            [ ChallengeType.Kills, 5, 2 ],
-            [ ChallengeType.RoundPlayed, 1, 0 ],
-        ]],
-
-        [ChallengeFrequency.Forever, [
-            [ ChallengeType.Assists, 5, 2 ],
-            [ ChallengeType.Kills, 5, 1 ],
-            [ ChallengeType.BeHelpfulEnough, 1, 0 ],
-            [ ChallengeType.ReadTheFAQ, 1, 0 ],
-            [ ChallengeType.ReadTheRules, 1, 0 ],
-            [ ChallengeType.ReviewMaps, 30, 10 ],
-            [ ChallengeType.ChangeSettings, 1, 0 ],
-            [ ChallengeType.CreatorOfAcceptedMap, 1, 0 ],
-            [ ChallengeType.ReviewMaps, 30, 10 ],
-        ]],
-    ]*/;
+    public ChallengeGroups: ChallengeGroup[] = InitialDatas.getChallengeGroups();
     public ChallengesLoaded = new EventEmitter();
 
     public CommandsData: UserpanelCommandDataDto[] = [];
@@ -215,6 +197,11 @@ export class SettingsService {
             this.ChallengeGroups = JSON.parse(challengesJson);
         }
 
+        this.setChallengeInfosToAll();
+        this.ChallengesLoaded.emit(null);
+    }
+
+    private setChallengeInfosToAll() {
         if (this.ChallengeGroups) {
             for (const group of this.ChallengeGroups) {
                 for (const challenge of group[1]) {
@@ -222,8 +209,6 @@ export class SettingsService {
                 }
             }
         }
-
-        this.ChallengesLoaded.emit(null);
     }
 
     public syncGangId(gangId: number) {
@@ -285,6 +270,8 @@ export class SettingsService {
         rageConnector.listen(DFromClientEvent.LoadSettings, this.loadSettings.bind(this));
         rageConnector.listen(DFromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
         rageConnector.listen(DFromClientEvent.SyncGangId, this.syncGangId.bind(this));
+
+        this.setChallengeInfosToAll();
 
         this.LanguageChanged.setMaxListeners(40);
         this.SettingsLoaded.setMaxListeners(40);
