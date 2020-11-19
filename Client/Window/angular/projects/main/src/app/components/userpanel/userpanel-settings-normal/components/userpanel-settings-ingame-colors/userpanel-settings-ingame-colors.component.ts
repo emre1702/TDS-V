@@ -76,7 +76,7 @@ export class UserpanelSettingsIngameColorsComponent implements OnInit {
 
     changed(event: SettingChangedEvent) {
         const settingName = SettingsIngameColorsIndex[event.index];
-        if (!SettingAtClientside[settingName]) {
+        if (!(settingName in SettingAtClientside)) {
             return;
         }
         let index = SettingAtClientside[settingName];
