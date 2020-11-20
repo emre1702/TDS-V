@@ -20,28 +20,29 @@ import { TimeSpanUnitsOfTime } from './components/userpanel/enums/timespan-units
 import { ChallengeGroup } from './components/lobbychoice/models/challenge-group';
 import { ChallengeFrequency } from './components/lobbychoice/enums/challenge-frequency.enum';
 import { ChallengeType } from './components/lobbychoice/enums/challenge-type.enum';
+import { isDevMode } from '@angular/core';
 
 export class InitialDatas {
 
     private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
         sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
 
-    static readonly inDebug = false;
+    static readonly inDebug = isDevMode();
 
     static readonly started = InitialDatas.inDebug;
     static readonly isMapVotingActive = false;
 
     static readonly opened = {
-        mapCreator: false,
-        freeroam: false,
-        lobbyChoice: false,
-        teamChoice: false,
-        rankings: false,
-        hud: false,
-        charCreator: false,
-        gangWindow: false,
-        damageTestMenu: false,
-        userpanel: false
+        mapCreator: !InitialDatas.inDebug && false,
+        freeroam: !InitialDatas.inDebug && false,
+        lobbyChoice: !InitialDatas.inDebug && false,
+        teamChoice: !InitialDatas.inDebug && false,
+        rankings: !InitialDatas.inDebug && false,
+        hud: !InitialDatas.inDebug && false,
+        charCreator: !InitialDatas.inDebug && false,
+        gangWindow: !InitialDatas.inDebug && false,
+        damageTestMenu: !InitialDatas.inDebug && false,
+        userpanel: !InitialDatas.inDebug && false
     };
 
     static settingsByType: { [key: number]: {} } = {
