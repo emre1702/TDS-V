@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS.Server.Database.Entity;
@@ -14,9 +15,10 @@ using TDS.Shared.Data.Enums.Userpanel;
 namespace TDS.Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201120175226_FixPlayerCharHasOne_2")]
+    partial class FixPlayerCharHasOne_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2629,84 +2631,6 @@ namespace TDS.Server.Database.Migrations
                     b.Property<byte>("Slot")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("AddBodyBlemishes")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("AddBodyBlemishesOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("Ageing")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("AgeingOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("Blemishes")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("BlemishesOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("Blush")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("BlushOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("BodyBlemishes")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("BodyBlemishesOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("ChestHair")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("ChestHairOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("Complexion")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("ComplexionOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("Eyebrows")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("EyebrowsOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("FacialHair")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("FacialHairOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("Lipstick")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("LipstickOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("Makeup")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("MakeupOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("MolesAndFreckles")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("MolesAndFrecklesOpacity")
-                        .HasColumnType("real");
-
-                    b.Property<int>("SunDamage")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("SunDamageOpacity")
-                        .HasColumnType("real");
-
                     b.HasKey("PlayerId", "Slot");
 
                     b.ToTable("PlayerCharAppearanceDatas");
@@ -2733,66 +2657,6 @@ namespace TDS.Server.Database.Migrations
                     b.Property<byte>("Slot")
                         .HasColumnType("smallint");
 
-                    b.Property<float>("BrowHeight")
-                        .HasColumnType("real");
-
-                    b.Property<float>("BrowWidth")
-                        .HasColumnType("real");
-
-                    b.Property<float>("CheekboneHeight")
-                        .HasColumnType("real");
-
-                    b.Property<float>("CheekboneWidth")
-                        .HasColumnType("real");
-
-                    b.Property<float>("CheeksWidth")
-                        .HasColumnType("real");
-
-                    b.Property<float>("ChinLength")
-                        .HasColumnType("real");
-
-                    b.Property<float>("ChinPosition")
-                        .HasColumnType("real");
-
-                    b.Property<float>("ChinShape")
-                        .HasColumnType("real");
-
-                    b.Property<float>("ChinWidth")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Eyes")
-                        .HasColumnType("real");
-
-                    b.Property<float>("JawHeight")
-                        .HasColumnType("real");
-
-                    b.Property<float>("JawWidth")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Lips")
-                        .HasColumnType("real");
-
-                    b.Property<float>("NeckWidth")
-                        .HasColumnType("real");
-
-                    b.Property<float>("NoseBridge")
-                        .HasColumnType("real");
-
-                    b.Property<float>("NoseBridgeShift")
-                        .HasColumnType("real");
-
-                    b.Property<float>("NoseHeight")
-                        .HasColumnType("real");
-
-                    b.Property<float>("NoseLength")
-                        .HasColumnType("real");
-
-                    b.Property<float>("NoseTip")
-                        .HasColumnType("real");
-
-                    b.Property<float>("NoseWidth")
-                        .HasColumnType("real");
-
                     b.HasKey("PlayerId", "Slot");
 
                     b.ToTable("PlayerCharFeaturesDatas");
@@ -2805,9 +2669,6 @@ namespace TDS.Server.Database.Migrations
 
                     b.Property<byte>("Slot")
                         .HasColumnType("smallint");
-
-                    b.Property<bool>("IsMale")
-                        .HasColumnType("boolean");
 
                     b.HasKey("PlayerId", "Slot");
 
@@ -2822,33 +2683,6 @@ namespace TDS.Server.Database.Migrations
                     b.Property<byte>("Slot")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("BlushColor")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ChestHairColor")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("EyeColor")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("EyebrowColor")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FacialHairColor")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Hair")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("HairColor")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("HairHighlightColor")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LipstickColor")
-                        .HasColumnType("integer");
-
                     b.HasKey("PlayerId", "Slot");
 
                     b.ToTable("PlayerCharHairAndColorsDatas");
@@ -2861,18 +2695,6 @@ namespace TDS.Server.Database.Migrations
 
                     b.Property<byte>("Slot")
                         .HasColumnType("smallint");
-
-                    b.Property<int>("FatherIndex")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MotherIndex")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("ResemblancePercentage")
-                        .HasColumnType("real");
-
-                    b.Property<float>("SkinTonePercentage")
-                        .HasColumnType("real");
 
                     b.HasKey("PlayerId", "Slot");
 
@@ -6932,7 +6754,109 @@ namespace TDS.Server.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateAppearanceData", "SyncedData", b1 =>
+                        {
+                            b1.Property<int>("PlayerCharAppearanceDatasPlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("PlayerCharAppearanceDatasSlot")
+                                .HasColumnType("smallint");
+
+                            b1.Property<int>("AddBodyBlemishes")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("AddBodyBlemishesOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("Ageing")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("AgeingOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("Blemishes")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("BlemishesOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("Blush")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("BlushOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("BodyBlemishes")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("BodyBlemishesOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("ChestHair")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("ChestHairOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("Complexion")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("ComplexionOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("Eyebrows")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("EyebrowsOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("FacialHair")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("FacialHairOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("Lipstick")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("LipstickOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("Makeup")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("MakeupOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("MolesAndFreckles")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("MolesAndFrecklesOpacity")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("PlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("Slot")
+                                .HasColumnType("smallint");
+
+                            b1.Property<int>("SunDamage")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("SunDamageOpacity")
+                                .HasColumnType("real");
+
+                            b1.HasKey("PlayerCharAppearanceDatasPlayerId", "PlayerCharAppearanceDatasSlot");
+
+                            b1.ToTable("PlayerCharAppearanceDatas");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlayerCharAppearanceDatasPlayerId", "PlayerCharAppearanceDatasSlot");
+                        });
+
                     b.Navigation("CharDatas");
+
+                    b.Navigation("SyncedData");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharDatas", b =>
@@ -6943,7 +6867,28 @@ namespace TDS.Server.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateData", "SyncedData", b1 =>
+                        {
+                            b1.Property<int>("PlayerCharDatasPlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("PlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("Slot")
+                                .HasColumnType("smallint");
+
+                            b1.HasKey("PlayerCharDatasPlayerId");
+
+                            b1.ToTable("PlayerCharDatas");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlayerCharDatasPlayerId");
+                        });
+
                     b.Navigation("Player");
+
+                    b.Navigation("SyncedData");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharFeaturesDatas", b =>
@@ -6954,7 +6899,91 @@ namespace TDS.Server.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateFeaturesData", "SyncedData", b1 =>
+                        {
+                            b1.Property<int>("PlayerCharFeaturesDatasPlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("PlayerCharFeaturesDatasSlot")
+                                .HasColumnType("smallint");
+
+                            b1.Property<float>("BrowHeight")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("BrowWidth")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("CheekboneHeight")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("CheekboneWidth")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("CheeksWidth")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("ChinLength")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("ChinPosition")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("ChinShape")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("ChinWidth")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("Eyes")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("JawHeight")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("JawWidth")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("Lips")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("NeckWidth")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("NoseBridge")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("NoseBridgeShift")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("NoseHeight")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("NoseLength")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("NoseTip")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("NoseWidth")
+                                .HasColumnType("real");
+
+                            b1.Property<int>("PlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("Slot")
+                                .HasColumnType("smallint");
+
+                            b1.HasKey("PlayerCharFeaturesDatasPlayerId", "PlayerCharFeaturesDatasSlot");
+
+                            b1.ToTable("PlayerCharFeaturesDatas");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlayerCharFeaturesDatasPlayerId", "PlayerCharFeaturesDatasSlot");
+                        });
+
                     b.Navigation("CharDatas");
+
+                    b.Navigation("SyncedData");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharGeneralDatas", b =>
@@ -6965,7 +6994,34 @@ namespace TDS.Server.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateGeneralData", "SyncedData", b1 =>
+                        {
+                            b1.Property<int>("PlayerCharGeneralDatasPlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("PlayerCharGeneralDatasSlot")
+                                .HasColumnType("smallint");
+
+                            b1.Property<bool>("IsMale")
+                                .HasColumnType("boolean");
+
+                            b1.Property<int>("PlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("Slot")
+                                .HasColumnType("smallint");
+
+                            b1.HasKey("PlayerCharGeneralDatasPlayerId", "PlayerCharGeneralDatasSlot");
+
+                            b1.ToTable("PlayerCharGeneralDatas");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlayerCharGeneralDatasPlayerId", "PlayerCharGeneralDatasSlot");
+                        });
+
                     b.Navigation("CharDatas");
+
+                    b.Navigation("SyncedData");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharHairAndColorsDatas", b =>
@@ -6976,7 +7032,58 @@ namespace TDS.Server.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateHairAndColorsData", "SyncedData", b1 =>
+                        {
+                            b1.Property<int>("PlayerCharHairAndColorsDatasPlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("PlayerCharHairAndColorsDatasSlot")
+                                .HasColumnType("smallint");
+
+                            b1.Property<int>("BlushColor")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("ChestHairColor")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("EyeColor")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("EyebrowColor")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("FacialHairColor")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Hair")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("HairColor")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("HairHighlightColor")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("LipstickColor")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("PlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("Slot")
+                                .HasColumnType("smallint");
+
+                            b1.HasKey("PlayerCharHairAndColorsDatasPlayerId", "PlayerCharHairAndColorsDatasSlot");
+
+                            b1.ToTable("PlayerCharHairAndColorsDatas");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlayerCharHairAndColorsDatasPlayerId", "PlayerCharHairAndColorsDatasSlot");
+                        });
+
                     b.Navigation("CharDatas");
+
+                    b.Navigation("SyncedData");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.Char.PlayerCharHeritageDatas", b =>
@@ -6987,7 +7094,43 @@ namespace TDS.Server.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("TDS.Shared.Data.Models.CharCreator.CharCreateHeritageData", "SyncedData", b1 =>
+                        {
+                            b1.Property<int>("PlayerCharHeritageDatasPlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<byte>("PlayerCharHeritageDatasSlot")
+                                .HasColumnType("smallint");
+
+                            b1.Property<int>("FatherIndex")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("MotherIndex")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("PlayerId")
+                                .HasColumnType("integer");
+
+                            b1.Property<float>("ResemblancePercentage")
+                                .HasColumnType("real");
+
+                            b1.Property<float>("SkinTonePercentage")
+                                .HasColumnType("real");
+
+                            b1.Property<byte>("Slot")
+                                .HasColumnType("smallint");
+
+                            b1.HasKey("PlayerCharHeritageDatasPlayerId", "PlayerCharHeritageDatasSlot");
+
+                            b1.ToTable("PlayerCharHeritageDatas");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PlayerCharHeritageDatasPlayerId", "PlayerCharHeritageDatasSlot");
+                        });
+
                     b.Navigation("CharDatas");
+
+                    b.Navigation("SyncedData");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerBans", b =>

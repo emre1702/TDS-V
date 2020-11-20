@@ -24,7 +24,7 @@ namespace TDS.Server.LobbySystem.Players
             if (!worked)
                 return false;
 
-            var charDatasJson = Serializer.ToClient(player.Entity.CharDatas.SyncedData);
+            var charDatasJson = Serializer.ToClient(player.Entity.CharDatas);
 
             NAPI.Task.RunSafe(() =>
             {

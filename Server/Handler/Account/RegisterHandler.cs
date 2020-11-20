@@ -145,7 +145,10 @@ namespace TDS.Server.Handler.Account
                 {
                     ShowCursorInfo = true,
                     ShowLobbyLeaveInfo = true
-                }
+                },
+                Scoreboard = new PlayerScoreboardSettings(),
+                CooldownsAndDurations = new PlayerCooldownsAndDurationsSettings(),
+                IngameColors = new PlayerIngameColorsSettings()
             };
 
         private PlayerStats CreatePlayerStatsEntity()
