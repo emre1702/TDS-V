@@ -20,14 +20,14 @@ import { TimeSpanUnitsOfTime } from './components/userpanel/enums/timespan-units
 import { ChallengeGroup } from './components/lobbychoice/models/challenge-group';
 import { ChallengeFrequency } from './components/lobbychoice/enums/challenge-frequency.enum';
 import { ChallengeType } from './components/lobbychoice/enums/challenge-type.enum';
-import { isDevMode } from '@angular/core';
+import { environment } from '../environments/environment';
 
 export class InitialDatas {
 
     private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
         sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
 
-    static readonly inDebug = isDevMode();
+    static readonly inDebug = !environment.production;
 
     static readonly started = InitialDatas.inDebug;
     static readonly isMapVotingActive = false;
