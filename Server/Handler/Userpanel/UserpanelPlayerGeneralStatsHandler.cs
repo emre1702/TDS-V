@@ -45,7 +45,7 @@ namespace TDS.Server.Handler.Userpanel
         {
             var data = await ExecuteForDBAsync(async dbContext
                 => await dbContext.Players
-                    .Include(p => p.GangMemberNavigation)
+                    /*.Include(p => p.GangMemberNavigation)
                         .ThenInclude(g => g.Gang)
                             .ThenInclude(g => g.Team)
                     .Include(p => p.Maps)
@@ -56,7 +56,7 @@ namespace TDS.Server.Handler.Userpanel
                     .Include(p => p.PlayerStats)
                     .Include(p => p.PlayerTotalStats)
                     .Include(p => p.PlayerLobbyStats)
-                        .ThenInclude(s => s.Lobby)
+                        .ThenInclude(s => s.Lobby)*/
                     .Where(p => p.Id == playerId)
                     .AsNoTracking()
                     .Select(p => new PlayerUserpanelGeneralStatsDataDto
@@ -70,10 +70,10 @@ namespace TDS.Server.Handler.Userpanel
                         SCName = p.SCName,
                         Gang = p.GangMemberNavigation != null ? p.GangMemberNavigation.Gang.Name : "-",
                         AmountMapsCreated = p.Maps.Count,
-                        CreatedMapsAverageRating = p.Maps.Average(map => map.PlayerMapRatings.Average(rating => rating.Rating)),
+                        CreatedMapsAverageRating = p.Maps.Any() ? p.Maps.Average(map => map.PlayerMapRatings.Average(rating => rating.Rating)) : 0,
                         BansInLobbies = p.PlayerBansPlayer.Select(b => b.Lobby.Name).ToList(),
                         AmountMapsRated = p.PlayerMapRatings.Count,
-                        MapsRatedAverage = p.PlayerMapRatings.Average(m => m.Rating),
+                        MapsRatedAverage = p.PlayerMapRatings.Any() ? p.PlayerMapRatings.Average(m => m.Rating) : 0,
                         LastLoginDateTime = p.PlayerStats.LastLoginTimestamp,
                         Money = p.PlayerStats.Money,
                         MuteTime = p.PlayerStats.MuteTime,
@@ -81,7 +81,7 @@ namespace TDS.Server.Handler.Userpanel
                         VoiceMuteTime = p.PlayerStats.VoiceMuteTime,
                         TotalMoney = p.PlayerTotalStats.Money,
 
-                        LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s)).ToList() : null
+                        LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s, s.Lobby.Name)).ToList() : null
                     })
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false))

@@ -5,9 +5,9 @@ namespace TDS.Server.Data.Models.Userpanel.Stats
 {
     public class PlayerUserpanelLobbyStats
     {
-        public PlayerUserpanelLobbyStats(PlayerLobbyStats stats)
+        public PlayerUserpanelLobbyStats(PlayerLobbyStats stats, string lobbyName)
         {
-            Lobby = stats.Lobby.Name;
+            Lobby = lobbyName;
 
             Kills = stats.Kills;
             Assists = stats.Assists;
