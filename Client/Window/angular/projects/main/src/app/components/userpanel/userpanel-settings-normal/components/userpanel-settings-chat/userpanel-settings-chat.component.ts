@@ -35,7 +35,7 @@ export class UserpanelSettingsChatComponent implements OnInit {
             label: SettingsChatIndex[SettingsChatIndex.ChatFontSize], 
             containerGetter: this.getSettingsContainer.bind(this),
             tooltipLangKey: "ChatFontSizeSettingInfo"
-        }, 0, 5),
+        }, 0, 3, 0.01),
         new BooleanSliderSettingRow({ 
             defaultValue: false, dataSettingIndex: SettingsChatIndex.HideDirtyChat, 
             label: SettingsChatIndex[SettingsChatIndex.HideDirtyChat], 
