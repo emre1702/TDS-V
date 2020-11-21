@@ -34,7 +34,7 @@ namespace TDS.Client.Handler.Browser
         public virtual void SetReady(params object[] args)
         {
             RAGE.Ui.Console.Log(ConsoleVerbosity.Info, $"SetReady: Browser for URL {_url} loaded: {(!(Browser is null))} | Active: {Browser.Active} | Id: {Browser.Id}");
-            Execute(ToBrowserEvent.InitLoadAngular, args);
+            ExecuteFast(ToBrowserEvent.InitLoadAngular, args);
             Browser.Active = true;
         }
 
