@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SettingRow } from './models/setting-row';
 import { SettingType } from '../../enums/setting-type';
 import { SettingsService } from '../../services/settings.service';
@@ -8,8 +8,7 @@ import { SettingChangedEvent } from './interfaces/setting-changed-event';
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnDestroy {
     

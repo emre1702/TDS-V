@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { UserpanelService } from '../services/userpanel.service';
@@ -12,8 +12,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
     selector: 'app-userpanel-application',
     templateUrl: './userpanel-application.component.html',
-    styleUrls: ['./userpanel-application.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./userpanel-application.component.scss']
 })
 export class UserpanelApplicationComponent implements OnInit, OnDestroy {
     @ViewChild("stepper") stepper: MatVerticalStepper;

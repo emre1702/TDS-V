@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { MatMenuPanel } from '@angular/material/menu';
 import { SettingsThemeIndex } from '../userpanel/userpanel-settings-normal/enums/settings-theme-index.enum';
@@ -12,8 +12,7 @@ import { SettingsThemeIndex } from '../userpanel/userpanel-settings-normal/enums
 
         './styles/toolbar/toolbar.design1.scss',
         './styles/toolbar/toolbar.design2.scss'
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class TDSWindowComponent implements OnInit, OnDestroy {
 

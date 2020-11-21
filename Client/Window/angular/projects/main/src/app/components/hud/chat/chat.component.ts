@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, ViewChild, HostListener, ElementRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, HostListener, ElementRef } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
 import { SettingsService } from '../../../services/settings.service';
@@ -26,8 +26,7 @@ declare const window: any;
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
-    styleUrls: ['./chat.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
 

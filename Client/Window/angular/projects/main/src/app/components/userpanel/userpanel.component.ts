@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { UserpanelNavPage } from './enums/userpanel-nav-page.enum';
 import { UserpanelCommandDataDto } from './interfaces/userpanelCommandDataDto';
@@ -15,7 +15,6 @@ import { DToServerEvent } from '../../enums/dtoserverevent.enum';
     selector: 'app-userpanel',
     templateUrl: './userpanel.component.html',
     styleUrls: ['./userpanel.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [UserpanelSettingsNormalService]
 })
 export class UserpanelComponent implements OnInit, OnDestroy {

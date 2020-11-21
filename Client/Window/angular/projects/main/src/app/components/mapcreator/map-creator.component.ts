@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { SettingsService } from '../../services/settings.service';
 import { LanguageEnum } from '../../enums/language.enum';
@@ -30,8 +30,7 @@ enum MapCreatorNav {
 @Component({
     selector: 'app-map-creator',
     templateUrl: './map-creator.component.html',
-    styleUrls: ['./map-creator.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./map-creator.component.scss']
 })
 export class MapCreatorComponent implements OnInit, OnDestroy {
     data = new MapCreateDataDto();

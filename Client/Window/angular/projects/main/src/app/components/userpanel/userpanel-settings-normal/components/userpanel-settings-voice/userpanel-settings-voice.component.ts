@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { SettingRow } from 'projects/main/src/app/modules/settings/models/setting-row';
 import { ButtonRow } from 'projects/main/src/app/modules/settings/models/button-row';
 import { BooleanSliderSettingRow } from 'projects/main/src/app/modules/settings/models/booleanslider-setting-row';
@@ -10,8 +10,7 @@ import { UserpanelSettingsNormalType } from '../../enums/userpanel-settings-norm
 
 @Component({
     selector: 'app-userpanel-settings-voice',
-    templateUrl: './userpanel-settings-voice.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './userpanel-settings-voice.component.html'
 })
 export class UserpanelSettingsVoiceComponent implements OnInit {
     userpanelSettings: (SettingRow | ButtonRow)[] = [

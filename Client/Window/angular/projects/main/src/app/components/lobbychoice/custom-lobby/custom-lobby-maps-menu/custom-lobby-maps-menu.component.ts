@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, EventEmitter, Input, Output, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { SettingsService } from '../../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../../enums/dtoserverevent.enum';
@@ -11,8 +11,7 @@ import { MatSort } from '@angular/material/sort';
 @Component({
     selector: 'app-custom-lobby-maps-menu',
     templateUrl: './custom-lobby-maps-menu.component.html',
-    styleUrls: ['./custom-lobby-maps-menu.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./custom-lobby-maps-menu.component.scss']
 })
 export class CustomLobbyMapsMenuComponent implements OnInit {
 

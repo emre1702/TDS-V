@@ -1,11 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 
 @Component({
     selector: 'app-info',
     templateUrl: './info.component.html',
-    styleUrls: ['./info.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit, OnDestroy {
 

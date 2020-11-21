@@ -1,12 +1,11 @@
-import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UserpanelStatsDataDto as UserpanelStatsGeneralDataDto } from '../interfaces/userpanelStatsDataDto';
 import { SettingsService } from '../../../services/settings.service';
 
 @Component({
     selector: 'app-userpanel-stats-general',
     templateUrl: './userpanel-stats-general.component.html',
-    styleUrls: ['./userpanel-stats-general.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./userpanel-stats-general.component.scss']
 })
 export class UserpanelStatsGeneralComponent implements OnInit, OnDestroy {
 

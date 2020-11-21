@@ -1,12 +1,11 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { NotificationService } from './services/notification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomMatSnackBarComponent } from '../material/components/custom-mat-snack-bar.component';
 
 @Component({
     selector: "app-shared-module",
-    template: "",
-    changeDetection: ChangeDetectionStrategy.OnPush
+    template: ""
 })
 export class SharedModuleComponent {
 

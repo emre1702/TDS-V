@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { UserpanelPlayerWeaponStatsData } from '../interfaces/stats/userpanelPlayerWeaponStatsData';
 import { WeaponHash } from '../../lobbychoice/enums/weapon-hash.enum';
@@ -11,8 +11,7 @@ import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 @Component({
     selector: 'app-userpanel-stats-weapon',
     templateUrl: './userpanel-stats-weapon.component.html',
-    styleUrls: ['./userpanel-stats-weapon.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./userpanel-stats-weapon.component.scss']
 })
 export class UserpanelStatsWeaponComponent implements OnInit, OnDestroy {
 

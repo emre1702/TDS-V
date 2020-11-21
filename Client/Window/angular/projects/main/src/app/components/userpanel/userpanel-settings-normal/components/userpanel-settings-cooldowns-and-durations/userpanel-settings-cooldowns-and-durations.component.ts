@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingRow } from 'projects/main/src/app/modules/settings/models/setting-row';
 import { ButtonRow } from 'projects/main/src/app/modules/settings/models/button-row';
 import { NumberSettingRow } from 'projects/main/src/app/modules/settings/models/number-setting-row';
@@ -9,8 +9,7 @@ import { UserpanelSettingsCooldownsAndDurations } from '../../interfaces/userpan
 
 @Component({
     selector: 'app-userpanel-settings-cooldowns-and-durations',
-    templateUrl: './userpanel-settings-cooldowns-and-durations.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './userpanel-settings-cooldowns-and-durations.component.html'
 })
 export class UserpanelSettingsCooldownsAndDurationsComponent implements OnInit {
     userpanelSettings: (SettingRow | ButtonRow)[] = [

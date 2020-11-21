@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingRow } from 'projects/main/src/app/modules/settings/models/setting-row';
 import { ButtonRow } from 'projects/main/src/app/modules/settings/models/button-row';
 import { EnumSettingRow } from 'projects/main/src/app/modules/settings/models/enum-setting-row';
@@ -15,8 +15,7 @@ import { SettingsGeneralIndex } from '../../enums/settings-general-index.enum';
 
 @Component({
     selector: 'app-userpanel-settings-general',
-    templateUrl: './userpanel-settings-general.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './userpanel-settings-general.component.html'
 })
 export class UserpanelSettingsGeneralComponent implements OnInit {
     userpanelSettings: (SettingRow | ButtonRow)[] = [

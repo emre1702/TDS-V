@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef, HostListener, Sanitizer, HostBinding } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewContainerRef, HostListener } from '@angular/core';
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from './enums/dfromclientevent.enum';
@@ -17,7 +17,6 @@ import { SettingsThemeIndex } from './components/userpanel/userpanel-settings-no
 
 @Component({
     selector: 'app-root',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     animations: [
@@ -42,15 +41,15 @@ import { SettingsThemeIndex } from './components/userpanel/userpanel-settings-no
 export class AppComponent {
     started = InitialDatas.started;
 
-    showMapCreator = InitialDatas.opened.mapCreator;
-    showFreeroam = InitialDatas.opened.freeroam;
-    showLobbyChoice = InitialDatas.opened.lobbyChoice;
-    showTeamChoice = InitialDatas.opened.teamChoice;
-    showRankings = InitialDatas.opened.rankings;
-    showHUD = InitialDatas.opened.hud;
-    showCharCreator = InitialDatas.opened.charCreator;
-    showGangWindow = InitialDatas.opened.gangWindow;
-    showDamageTestMenu = InitialDatas.opened.damageTestMenu;
+    showMapCreator: boolean = InitialDatas.opened.mapCreator;
+    showFreeroam: boolean = InitialDatas.opened.freeroam;
+    showLobbyChoice: boolean = InitialDatas.opened.lobbyChoice;
+    showTeamChoice: boolean = InitialDatas.opened.teamChoice;
+    showRankings: boolean = InitialDatas.opened.rankings;
+    showHUD: boolean = InitialDatas.opened.hud;
+    showCharCreator: boolean = InitialDatas.opened.charCreator;
+    showGangWindow: boolean = InitialDatas.opened.gangWindow;
+    showDamageTestMenu: boolean = InitialDatas.opened.damageTestMenu;
 
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;

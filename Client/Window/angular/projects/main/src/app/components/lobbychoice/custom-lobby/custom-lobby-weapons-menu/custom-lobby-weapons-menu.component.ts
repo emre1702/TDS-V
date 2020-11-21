@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Output, Input, ChangeDetectionStrategy, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Output, Input, EventEmitter, ViewChild } from '@angular/core';
 import { CustomLobbyWeaponData } from '../../models/custom-lobby-weapon-data';
 import { WeaponHashGroupConstants } from '../../enums/weapon-hash-group.constants';
 import { WeaponHash } from '../../enums/weapon-hash.enum';
@@ -10,8 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
     selector: 'app-custom-lobby-weapons-menu',
     templateUrl: './custom-lobby-weapons-menu.component.html',
-    styleUrls: ['./custom-lobby-weapons-menu.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./custom-lobby-weapons-menu.component.scss']
 })
 export class CustomLobbyWeaponsMenuComponent implements OnInit {
 

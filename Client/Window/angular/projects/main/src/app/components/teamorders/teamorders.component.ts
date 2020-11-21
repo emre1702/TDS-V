@@ -1,12 +1,11 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { TeamOrder } from './enums/teamorder.enum';
 import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-teamorders',
   templateUrl: './teamorders.component.html',
-  styleUrls: ['./teamorders.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./teamorders.component.scss']
 })
 export class TeamOrdersComponent implements OnInit, OnDestroy {
   constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) {

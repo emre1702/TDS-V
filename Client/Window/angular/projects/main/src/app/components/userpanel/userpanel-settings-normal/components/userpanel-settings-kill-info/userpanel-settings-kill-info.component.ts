@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingRow } from 'projects/main/src/app/modules/settings/models/setting-row';
 import { ButtonRow } from 'projects/main/src/app/modules/settings/models/button-row';
 import { BooleanSliderSettingRow } from 'projects/main/src/app/modules/settings/models/booleanslider-setting-row';
@@ -13,8 +13,7 @@ import { KillMessagesService } from '../../../../hud/kill-messages/services/kill
 
 @Component({
     selector: 'app-userpanel-settings-kill-info',
-    templateUrl: './userpanel-settings-kill-info.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './userpanel-settings-kill-info.component.html'
 })
 export class UserpanelSettingsKillInfoComponent implements OnInit {
     userpanelSettings: (SettingRow | ButtonRow)[] = [

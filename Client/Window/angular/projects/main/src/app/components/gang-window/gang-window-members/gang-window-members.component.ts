@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { GangMember } from '../models/gang-member';
 import { SettingsService } from '../../../services/settings.service';
 import { GangWindowService } from '../services/gang-window-service';
@@ -12,8 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
     selector: 'app-gang-window-members',
     templateUrl: './gang-window-members.component.html',
-    styleUrls: ['./gang-window-members.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./gang-window-members.component.scss']
 })
 export class GangWindowMembersComponent implements OnInit, OnDestroy {
 

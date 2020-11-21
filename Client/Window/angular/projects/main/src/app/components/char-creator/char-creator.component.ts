@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ChangeDetectionStrategy, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, NgZone, OnDestroy } from '@angular/core';
 import { CharCreatorMenuNav } from './enums/charCreatorMenuNav.enum';
 import { SettingsService } from '../../services/settings.service';
 import { CharCreateData } from './interfaces/charCreateData';
@@ -10,8 +10,7 @@ import { CharCreatorDataKey } from './enums/charCreatorDataKey.enum';
 @Component({
     selector: 'app-char-creator',
     templateUrl: './char-creator.component.html',
-    styleUrls: ['./char-creator.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Default
+    styleUrls: ['./char-creator.component.scss']
 })
 export class CharCreatorComponent implements OnInit, OnDestroy {
 

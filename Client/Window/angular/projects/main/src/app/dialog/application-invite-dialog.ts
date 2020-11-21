@@ -1,12 +1,11 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { SettingsService } from '../services/settings.service';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     // tslint:disable-next-line: component-selector
     selector: 'application-invite-dialog',
-    templateUrl: 'application-invite-dialog.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: 'application-invite-dialog.html'
 })
 // tslint:disable-next-line: component-class-suffix
 export class ApplicationInviteDialog {

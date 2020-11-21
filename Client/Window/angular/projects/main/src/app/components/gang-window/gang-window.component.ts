@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { GangWindowNav } from './enums/gang-window-nav.enum';
 import { GangWindowService } from './services/gang-window-service';
@@ -11,7 +11,6 @@ import { DToClientEvent } from '../../enums/dtoclientevent.enum';
     selector: 'app-gang-window',
     templateUrl: './gang-window.component.html',
     styleUrls: ['./gang-window.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [GangWindowService]
 })
 export class GangWindowComponent implements OnInit, OnDestroy {

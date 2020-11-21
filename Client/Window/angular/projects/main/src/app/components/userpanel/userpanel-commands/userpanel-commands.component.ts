@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
 import { UserpanelCommandDataDto } from '../interfaces/userpanelCommandDataDto';
 import { SettingsService } from '../../../services/settings.service';
 import { ClipboardService } from 'ngx-clipboard';
@@ -7,8 +7,7 @@ import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 @Component({
   selector: 'app-userpanel-commands',
   templateUrl: './userpanel-commands.component.html',
-  styleUrls: ['./userpanel-commands.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./userpanel-commands.component.scss']
 })
 export class UserpanelCommandsComponent implements OnInit, OnDestroy {
 

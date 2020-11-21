@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, ChangeDetectionStrategy, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { CharCreateHeritageData } from '../../interfaces/charCreateHeritageData';
 import { RageConnectorService } from 'rage-connector';
@@ -11,8 +11,7 @@ import { MatSliderChange } from '@angular/material/slider';
     // tslint:disable-next-line: component-selector
     selector: 'char-creator-heritage',
     templateUrl: './char-creator-heritage.component.html',
-    styleUrls: ['./char-creator-heritage.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Default
+    styleUrls: ['./char-creator-heritage.component.scss']
 })
 export class CharCreatorHeritageComponent implements OnInit, OnDestroy {
 

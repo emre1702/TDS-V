@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingRow } from 'projects/main/src/app/modules/settings/models/setting-row';
 import { ButtonRow } from 'projects/main/src/app/modules/settings/models/button-row';
 import { ColorSettingRow } from 'projects/main/src/app/modules/settings/models/color-setting-row';
@@ -13,8 +13,7 @@ import { SettingAtClientside } from '../../enums/setting-index-at-clientside';
 
 @Component({
     selector: 'app-userpanel-settings-ingame-colors',
-    templateUrl: './userpanel-settings-ingame-colors.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './userpanel-settings-ingame-colors.component.html'
 })
 export class UserpanelSettingsIngameColorsComponent implements OnInit {
     userpanelSettings: (SettingRow | ButtonRow)[] = [

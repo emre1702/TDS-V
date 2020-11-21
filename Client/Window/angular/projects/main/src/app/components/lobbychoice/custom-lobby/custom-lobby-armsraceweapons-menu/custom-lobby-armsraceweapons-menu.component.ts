@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Output, Input, ChangeDetectionStrategy, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Output, Input, EventEmitter, ViewChild } from '@angular/core';
 import { CustomLobbyWeaponData } from '../../models/custom-lobby-weapon-data';
 import { WeaponHashGroupConstants } from '../../enums/weapon-hash-group.constants';
 import { WeaponHash } from '../../enums/weapon-hash.enum';
@@ -12,8 +12,7 @@ import { NotificationService } from 'projects/main/src/app/modules/shared/servic
 @Component({
     selector: 'app-custom-lobby-armsraceweapons-menu',
     templateUrl: './custom-lobby-armsraceweapons-menu.component.html',
-    styleUrls: ['./custom-lobby-armsraceweapons-menu.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./custom-lobby-armsraceweapons-menu.component.scss']
 })
 export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
 

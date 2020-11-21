@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { CharCreateHairAndColorsData } from '../../interfaces/charCreateHairAndColorsData';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { RageConnectorService } from 'rage-connector';
@@ -10,8 +10,7 @@ import { MatSelectChange } from '@angular/material/select';
     // tslint:disable-next-line: component-selector
     selector: 'char-creator-hairandcolors',
     templateUrl: './char-creator-hairandcolors.component.html',
-    styleUrls: ['./char-creator-hairandcolors.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Default
+    styleUrls: ['./char-creator-hairandcolors.component.scss']
 })
 export class CharCreatorHairandcolorsComponent implements OnInit, OnDestroy {
 

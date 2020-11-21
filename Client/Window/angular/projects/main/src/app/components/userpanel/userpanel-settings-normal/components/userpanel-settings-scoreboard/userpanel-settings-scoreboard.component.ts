@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingRow } from 'projects/main/src/app/modules/settings/models/setting-row';
 import { ButtonRow } from 'projects/main/src/app/modules/settings/models/button-row';
 import { EnumSettingRow } from 'projects/main/src/app/modules/settings/models/enum-setting-row';
@@ -12,8 +12,7 @@ import { UserpanelSettingsNormalType } from '../../enums/userpanel-settings-norm
 
 @Component({
     selector: 'app-userpanel-settings-scoreboard',
-    templateUrl: './userpanel-settings-scoreboard.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './userpanel-settings-scoreboard.component.html'
 })
 export class UserpanelSettingsScoreboardComponent implements OnInit {
     userpanelSettings: (SettingRow | ButtonRow)[] = [

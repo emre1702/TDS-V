@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, EventEmitter, Input, Output, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { CharCreateFeaturesData } from '../../interfaces/charCreateFeaturesData';
 import { RageConnectorService } from 'rage-connector';
@@ -10,8 +10,7 @@ import { MatSliderChange } from '@angular/material/slider';
     // tslint:disable-next-line: component-selector
     selector: 'char-creator-features',
     templateUrl: './char-creator-features.component.html',
-    styleUrls: ['./char-creator-features.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Default
+    styleUrls: ['./char-creator-features.component.scss']
 })
 export class CharCreatorFeaturesComponent implements OnInit, OnDestroy {
 

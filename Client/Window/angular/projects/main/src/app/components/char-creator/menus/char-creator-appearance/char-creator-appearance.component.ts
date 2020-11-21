@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Input, Output, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CharCreateAppearanceData } from '../../interfaces/charCreateAppearanceData';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { RageConnectorService } from 'rage-connector';
@@ -10,8 +10,7 @@ import { MatSelectChange } from '@angular/material/select';
     // tslint:disable-next-line: component-selector
     selector: 'char-creator-appearance',
     templateUrl: './char-creator-appearance.component.html',
-    styleUrls: ['./char-creator-appearance.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Default
+    styleUrls: ['./char-creator-appearance.component.scss']
 })
 export class CharCreatorAppearanceComponent implements OnInit, OnDestroy {
 

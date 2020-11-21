@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingRow } from 'projects/main/src/app/modules/settings/models/setting-row';
 import { ButtonRow } from 'projects/main/src/app/modules/settings/models/button-row';
 import { BooleanSliderSettingRow } from 'projects/main/src/app/modules/settings/models/booleanslider-setting-row';
@@ -13,8 +13,7 @@ import { SettingsService } from 'projects/main/src/app/services/settings.service
 
 @Component({
     selector: 'app-userpanel-settings-chat',
-    templateUrl: './userpanel-settings-chat.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './userpanel-settings-chat.component.html'
 })
 export class UserpanelSettingsChatComponent implements OnInit {
     userpanelSettings: (SettingRow | ButtonRow)[] = [

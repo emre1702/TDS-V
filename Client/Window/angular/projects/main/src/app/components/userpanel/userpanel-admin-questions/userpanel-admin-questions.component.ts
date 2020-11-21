@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuestionsGroup';
 import { UserpanelAdminQuestionAnswerType } from '../enums/userpanel-admin-question-answer-type';
 import { SettingsService } from '../../../services/settings.service';
@@ -6,8 +6,7 @@ import { SettingsService } from '../../../services/settings.service';
 @Component({
     selector: 'app-userpanel-admin-questions',
     templateUrl: './userpanel-admin-questions.component.html',
-    styleUrls: ['./userpanel-admin-questions.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./userpanel-admin-questions.component.scss']
 })
 export class UserpanelAdminQuestionsComponent {
 

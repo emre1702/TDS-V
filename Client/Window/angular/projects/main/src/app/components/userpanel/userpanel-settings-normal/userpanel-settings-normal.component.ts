@@ -1,5 +1,5 @@
 import { UserpanelSettingsNormalService } from './services/userpanel-settings-normal.service';
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UserpanelSettingsNormalType } from './enums/userpanel-settings-normal-type.enum';
 import { Subscription } from 'rxjs';
 import { SettingsService } from '../../../services/settings.service';
@@ -7,8 +7,7 @@ import { SettingsService } from '../../../services/settings.service';
 @Component({
     selector: 'app-userpanel-settings-normal',
     templateUrl: './userpanel-settings-normal.component.html',
-    styleUrls: ['./userpanel-settings-normal.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./userpanel-settings-normal.component.scss']
 })
 export class UserpanelSettingsNormalComponent implements OnInit, OnDestroy {
 

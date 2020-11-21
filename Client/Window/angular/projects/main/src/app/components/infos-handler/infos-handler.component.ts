@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { InfosHandlerService } from './services/infos-handler.service';
 import { SettingsService } from '../../services/settings.service';
 import { rightToLeftItemsEnterAnimation } from '../../animations/rightToLeftItemsEnter.animation';
@@ -7,8 +7,7 @@ import { rightToLeftItemsEnterAnimation } from '../../animations/rightToLeftItem
     selector: 'app-infos-handler',
     templateUrl: './infos-handler.component.html',
     styleUrls: ['./infos-handler.component.scss'],
-    animations: [rightToLeftItemsEnterAnimation],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    animations: [rightToLeftItemsEnterAnimation]
 })
 export class InfosHandlerComponent implements OnInit, OnDestroy {
     constructor(

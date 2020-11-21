@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CharCreatorMenuNav } from '../../enums/charCreatorMenuNav.enum';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { CharCreateGeneralData } from '../../interfaces/charCreateGeneralData';
@@ -9,8 +9,7 @@ import { MatRadioChange } from '@angular/material/radio';
     // tslint:disable-next-line: component-selector
     selector: 'char-creator-mainmenu',
     templateUrl: './char-creator-mainmenu.component.html',
-    styleUrls: ['./char-creator-mainmenu.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./char-creator-mainmenu.component.scss']
 })
 export class CharCreatorMainmenuComponent implements OnInit, OnDestroy {
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { UserpanelService } from '../services/userpanel.service';
 import { SettingsService } from '../../../services/settings.service';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
@@ -6,15 +6,13 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 
 @Component({
     selector: 'app-userpanel-support-user',
     templateUrl: './userpanel-support-user.component.html',
-    styleUrls: ['./userpanel-support-user.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./userpanel-support-user.component.scss']
 })
 export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     userpanelSupportType = UserpanelSupportType;

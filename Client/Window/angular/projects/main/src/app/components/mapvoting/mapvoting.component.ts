@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ViewChild, OnInit, HostListener, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { MapDataDto } from './models/mapDataDto';
 import { MapNav } from './enums/mapnav.enum';
@@ -16,8 +16,7 @@ import { InitialDatas } from '../../initial-datas';
     selector: 'app-mapvoting',
     animations: [bottomToTopEnterAnimation],
     templateUrl: './mapvoting.component.html',
-    styleUrls: ['./mapvoting.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./mapvoting.component.scss']
 })
 export class MapVotingComponent implements OnInit, OnDestroy {
     private static readonly Numpad1KeyCode = 97;

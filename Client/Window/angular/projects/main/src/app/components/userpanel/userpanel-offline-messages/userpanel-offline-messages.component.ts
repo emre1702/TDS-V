@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UserpanelService } from '../services/userpanel.service';
 import { RageConnectorService } from 'rage-connector';
 import { SettingsService } from '../../../services/settings.service';
@@ -8,8 +8,7 @@ import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 @Component({
     selector: 'app-userpanel-offline-messages',
     templateUrl: './userpanel-offline-messages.component.html',
-    styleUrls: ['./userpanel-offline-messages.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./userpanel-offline-messages.component.scss']
 })
 export class UserpanelOfflineMessagesComponent implements OnInit, OnDestroy {
     inOfflineMessage: [

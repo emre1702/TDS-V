@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { SettingsService } from '../../../services/settings.service';
 import { trigger, transition, animate, style } from '@angular/animations';
@@ -24,8 +24,7 @@ import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
             ]
             )]
         )
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
 export class LobbyChoiceComponent implements OnInit, OnDestroy {
 

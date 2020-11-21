@@ -1,19 +1,17 @@
-import { Component, OnInit, ChangeDetectorRef, Output, Input, ViewChild, ElementRef, AfterViewInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Output, Input, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { EventEmitter } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 
 @Component({
     selector: 'app-userpanel-support-view',
     templateUrl: './userpanel-support-view.component.html',
-    styleUrls: ['./userpanel-support-view.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./userpanel-support-view.component.scss']
 })
 export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterViewInit {
 

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingRow } from 'projects/main/src/app/modules/settings/models/setting-row';
 import { ButtonRow } from 'projects/main/src/app/modules/settings/models/button-row';
 import { BooleanSliderSettingRow } from 'projects/main/src/app/modules/settings/models/booleanslider-setting-row';
@@ -13,8 +13,7 @@ import { SettingsService } from 'projects/main/src/app/services/settings.service
 
 @Component({
     selector: 'app-userpanel-settings-theme',
-    templateUrl: './userpanel-settings-theme.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './userpanel-settings-theme.component.html'
 })
 export class UserpanelSettingsThemeComponent implements OnInit {
     userpanelSettings: (SettingRow | ButtonRow)[] = [

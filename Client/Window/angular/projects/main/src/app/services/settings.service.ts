@@ -92,7 +92,7 @@ export class SettingsService {
     public ChatOpenedChange = new EventEmitter();
 
     public ChatInputOpen = false;
-    public UserpanelOpen = InitialDatas.opened.userpanel;
+    public UserpanelOpen: boolean = InitialDatas.opened.userpanel;
     public UserpanelOpenChanged = new EventEmitter();
 
     public InFightLobby = false;

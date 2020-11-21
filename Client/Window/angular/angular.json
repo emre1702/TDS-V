@@ -10,7 +10,7 @@
           "style": "scss",
           "styleExt": "scss",
           "skipTests": true,
-          "changeDetection": "OnPush"
+          "changeDetection": "Default"
         }
       },
       "root": "projects/main",
@@ -135,7 +135,7 @@
           "style": "scss",
           "styleExt": "scss",
           "skipTests": true,
-          "changeDetection": "OnPush"
+          "changeDetection": "Default"
         }
       },
       "root": "projects/map-creator-object-choice",
@@ -257,7 +257,7 @@
           "style": "scss",
           "styleExt": "scss",
           "skipTests": true,
-          "changeDetection": "OnPush"
+          "changeDetection": "Default"
         }
       },
       "root": "projects/map-creator-vehicle-choice",
