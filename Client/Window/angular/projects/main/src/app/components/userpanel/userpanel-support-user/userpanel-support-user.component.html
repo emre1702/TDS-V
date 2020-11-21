@@ -6,7 +6,7 @@
         </mat-card-header>
     </mat-card>
 
-    <mat-card class="mat-elevation-z8" matRipple *ngFor="let request of userpanelService.supportRequests" (click)="openRequest(request[0])">
+    <mat-card class="mat-elevation-z8 mat-app-background" matRipple *ngFor="let request of userpanelService.supportRequests" (click)="openRequest(request[0])">
         <mat-card-header>
             <mat-icon color="accent" mat-card-avatar>{{ userpanelService.supportTypeIcons[request[3]] }}</mat-icon>
             <mat-card-title>{{ request[1] }}</mat-card-title>
