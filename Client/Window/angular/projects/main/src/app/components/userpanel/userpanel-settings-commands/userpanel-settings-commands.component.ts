@@ -31,7 +31,7 @@ export class UserpanelSettingsCommandsComponent implements OnInit, OnDestroy {
     }
 
     addNewRow() {
-        const entry = { 0: 0, 1: "", initial: false, changed: true };
+        const entry = { 0: 0, 1: "", initial: false, changed: false };
         this.userpanelService.settingsCommandsData[1].push(entry);
         this.changeDetector.detectChanges();
     }

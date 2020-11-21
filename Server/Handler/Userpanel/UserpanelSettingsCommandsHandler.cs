@@ -105,6 +105,7 @@ namespace TDS.Server.Handler.Userpanel
                         }
                         else
                         {
+                            entity.CommandId = (short)data.CommandId;
                             entity.CommandText = data.CustomCommand;
                             dbContext.PlayerCommands.Update(entity);
                         }
