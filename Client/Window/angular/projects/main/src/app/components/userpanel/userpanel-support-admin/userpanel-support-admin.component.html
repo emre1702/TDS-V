@@ -1,5 +1,5 @@
 <ng-container *ngIf="inRequest == undefined">
-    <mat-card class="mat-elevation-z8" matRipple
+    <mat-card class="mat-elevation-z8 mat-app-background" matRipple
     *ngFor="let request of userpanelService.supportRequests"
     (click)="openRequest(request[0])"
     [style.border-color]="userpanelService.supportTypeBorderColors[request[3]]">

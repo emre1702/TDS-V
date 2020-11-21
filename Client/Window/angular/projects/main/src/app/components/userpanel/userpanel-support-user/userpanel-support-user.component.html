@@ -1,5 +1,5 @@
 <ng-container *ngIf="inRequest == undefined && !creatingRequest">
-    <mat-card class="add-card mat-elevation-z8" matRipple (click)="openCreateRequest()">
+    <mat-card class="add-card mat-elevation-z8 mat-app-background" matRipple (click)="openCreateRequest()">
         <mat-card-header>
             <mat-icon color="accent" mat-card-avatar>add</mat-icon>
             {{ 'CreateNewRequest' | language: settings.Lang }}

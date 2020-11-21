@@ -40,7 +40,7 @@
     <label class="multi-line-text">
         {{ "AlreadyCreatedApplicationInfo" | language: settings.Lang:userpanelService.myApplicationCreateTime }}
     </label>
-    <mat-card *ngFor="let invitation of userpanelService.adminApplyInvitations">
+    <mat-card class="mat-app-background" *ngFor="let invitation of userpanelService.adminApplyInvitations">
         <mat-card-header>
             <mat-card-title>{{ invitation[1] }}</mat-card-title>
             <mat-card-subtitle>{{ invitation[2] }}</mat-card-subtitle>
