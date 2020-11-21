@@ -2,18 +2,21 @@
     <span class="info">{{ "SettingsCommandsInfo" | language: settings.Lang }}</span>
     <div class="row" *ngFor="let entry of userpanelService.settingsCommandsData[1]">
         <mat-form-field color="accent" class="left">
-            <input matInput [(ngModel)]="entry[1]" (change)="changed(entry)">
+            <input matInput [(ngModel)]="entry[1]" (ngModelChange)="changed(entry)">
         </mat-form-field>
         <mat-icon color="accent" class="between">
             arrow_forward
         </mat-icon>
         <mat-form-field color="accent" class="right">
-            <mat-select [(ngModel)]="entry[0]">
+            <mat-select [(ngModel)]="entry[0]" (ngModelChange)="changed(entry)">
                 <mat-option *ngFor="let commandData of userpanelService.settingsCommandsData[0]" [value]="commandData[0]">
                     {{ commandData[1] }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        <button class="between" mat-icon-button class="delete" (click)="delete(entry)">
+            <mat-icon color="accent">delete_outline</mat-icon>
+        </button>
     </div>
 
     <div class="row">
