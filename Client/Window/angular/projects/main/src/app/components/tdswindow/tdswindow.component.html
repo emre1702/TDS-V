@@ -10,7 +10,7 @@
                         <button *ngIf="sideNavClick.observers.length" mat-button (click)="sideNavClick.emit()">
                         <mat-icon color="accent">menu</mat-icon>
                     </button>
-                    <button *ngIf="navMenu" mat-button id="menu-navigation" [matMenuTriggerFor]="navMenu" cdkFocusInitial
+                    <button *ngIf="navMenu" mat-button id="menu-navigation" (click)="$event.stopPropagation()" [matMenuTriggerFor]="navMenu" cdkFocusInitial
                     [class.glowing-button]="navGlow">
                         <mat-icon color="accent">menu</mat-icon>
                         <span>{{ (currentNav ? currentNav : "") }}</span>
