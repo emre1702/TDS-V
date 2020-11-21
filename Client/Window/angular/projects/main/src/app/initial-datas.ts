@@ -21,6 +21,7 @@ import { ChallengeGroup } from './components/lobbychoice/models/challenge-group'
 import { ChallengeFrequency } from './components/lobbychoice/enums/challenge-frequency.enum';
 import { ChallengeType } from './components/lobbychoice/enums/challenge-type.enum';
 import { environment } from '../environments/environment';
+import { UserpanelSettingCommandDataDto } from './components/userpanel/interfaces/settings-commands/userpanelSettingCommandDataDto';
 
 export class InitialDatas {
 
@@ -33,16 +34,16 @@ export class InitialDatas {
     static readonly isMapVotingActive = false;
 
     static readonly opened = {
-        mapCreator: !InitialDatas.inDebug && false,
-        freeroam: !InitialDatas.inDebug && false,
-        lobbyChoice: !InitialDatas.inDebug && false,
-        teamChoice: !InitialDatas.inDebug && false,
-        rankings: !InitialDatas.inDebug && false,
-        hud: !InitialDatas.inDebug && false,
-        charCreator: !InitialDatas.inDebug && false,
-        gangWindow: !InitialDatas.inDebug && false,
-        damageTestMenu: !InitialDatas.inDebug && false,
-        userpanel: !InitialDatas.inDebug && false
+        mapCreator: InitialDatas.inDebug && false,
+        freeroam: InitialDatas.inDebug && false,
+        lobbyChoice: InitialDatas.inDebug && false,
+        teamChoice: InitialDatas.inDebug && false,
+        rankings: InitialDatas.inDebug && false,
+        hud: InitialDatas.inDebug && false,
+        charCreator: InitialDatas.inDebug && false,
+        gangWindow: InitialDatas.inDebug && false,
+        damageTestMenu: InitialDatas.inDebug && false,
+        userpanel: InitialDatas.inDebug && true
     };
 
     static settingsByType: { [key: number]: {} } = {
@@ -155,6 +156,17 @@ export class InitialDatas {
         ]],
     ];
 
+    private static readonly settingsCommandData: UserpanelSettingCommandDataDto = {
+        0: [
+            { 0: 1, 1: "GoTo" },
+            { 0: 2, 1: "DoThis" },
+            { 0: 2, 1: "DoThat" },
+        ],
+        1: [
+            { 0: 1, 1: "GehHin" }
+        ]
+    }
+
     static getMapsInVoting(): MapVoteDto[] {
         return this.inDebug ? this.testMapsInVoting : [];
     }
@@ -177,5 +189,9 @@ export class InitialDatas {
 
     static getChallengeGroups(): ChallengeGroup[] {
         return this.inDebug ? this.challengeGroups : [];
+    }
+
+    static getSettingsCommandData(): UserpanelSettingCommandDataDto {
+        return this.inDebug ? this.settingsCommandData : undefined;
     }
 }

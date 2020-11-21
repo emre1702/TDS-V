@@ -5,6 +5,6 @@ export interface UserpanelSettingCommandConfiguredDataDto {
     /** CustomCommand */
     1: string;
 
-    changed: boolean;
-    initial: boolean;
+    changed?: boolean;
+    initial?: boolean;
 }

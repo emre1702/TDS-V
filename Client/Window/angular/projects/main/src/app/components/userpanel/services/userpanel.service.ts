@@ -50,7 +50,7 @@ export class UserpanelService {
     allFAQs: UserpanelFAQDataDto[] = [];
     allSettingsSpecial: UserpanelSettingSpecialDataDto;
     allSettingsNormal: UserpanelSettingNormalDataDto;
-    settingsCommandsData: UserpanelSettingCommandDataDto;
+    settingsCommandsData: UserpanelSettingCommandDataDto = InitialDatas.getSettingsCommandData();
     myStatsGeneral: UserpanelStatsDataDto /*= {
         Id: 1,
         AdminLvl: 3,
