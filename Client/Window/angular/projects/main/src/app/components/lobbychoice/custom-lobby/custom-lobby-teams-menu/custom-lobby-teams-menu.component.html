@@ -1,4 +1,4 @@
-<tdswindow cdkDrag id="main" hideToolbar="true">
+<tdswindow id="main" hideToolbar="true">
     <div class="mat-table-container">
         <table mat-table [dataSource]="teams" matSort>
 
@@ -67,7 +67,7 @@
     </div>
 </tdswindow>
 
-<tdswindow cdkDrag id="blip-color-window" *ngIf="showBlipColorWindow" hideToolbar="true">
+<tdswindow id="blip-color-window" *ngIf="showBlipColorWindow" hideToolbar="true">
     <div class="blip-container">
         <div *ngFor="let blip of constants.BLIP_COLORS" [style.background]="blip.Color"
             [matTooltip]="blip.Info | language: settings.Lang" (click)="clickedOnBlipColor(blip)"></div>

@@ -150,6 +150,18 @@ export class TDSWindowComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    private _isDraggable = true;
+    get isDraggable(): boolean {
+        return this._isDraggable;
+    }
+
+    @Input("isDraggable")
+    set isDraggable(value: boolean) {
+        this._isDraggable = value;
+        this.changeDetector.detectChanges();
+    }
+    
+
     windowDesign = 1;
     toolbarDesign = 1;
 

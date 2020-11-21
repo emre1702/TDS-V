@@ -1,4 +1,4 @@
-<tdswindow cdkDrag [title]="currentTitle | language: settings.Lang"
+<tdswindow [title]="currentTitle | language: settings.Lang"
 (save)="currentTitle='MapCreator'; saveNav()" [showSave]="isSaveableNav()"
 (back)="currentTitle='MapCreator'; goBackNav()" [showBack]="isBackableNav()">
     <div id="main-content" *ngIf="currentNav == mapCreatorNav.Main">

@@ -1,4 +1,4 @@
-<tdswindow cdkDrag [title]="weaponHash[currentWeapon] | language:settings.Lang">
+<tdswindow [title]="weaponHash[currentWeapon] | language:settings.Lang">
     <form [formGroup]="weaponFormGroup">
         <mat-form-field color="accent">
             <mat-label>{{ 'Damage' | language: settings.Lang }}</mat-label>

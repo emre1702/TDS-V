@@ -1,46 +1,48 @@
 
 <div class="container mat-elevation-z8 mat-app-background design1">
-    <ng-container *ngIf="!hideToolbar" [ngTemplateOutlet]="this['toolbar' + toolbarDesign]">
-        <ng-template #toolbar1 >
-            <div class="toolbar design1" cdkDragHandle cdkDragRootElement="[cdkDrag]" color="primary" [closeOnDoubleClick]="canMinimize ? content : undefined">
-                <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
-                    <mat-icon color="accent">arrow_back</mat-icon>
-                </button>
-                    <button *ngIf="sideNavClick.observers.length" mat-button (click)="sideNavClick.emit()">
-                    <mat-icon color="accent">menu</mat-icon>
-                </button>
-                <button *ngIf="navMenu" mat-button id="menu-navigation" [matMenuTriggerFor]="navMenu" cdkFocusInitial
-                [class.glowing-button]="navGlow">
-                    <mat-icon color="accent">menu</mat-icon>
-                    <span>{{ (currentNav ? currentNav : "") }}</span>
-                </button>
-                <span id="title">{{ (title ? title : "") }}</span>
-                <button *ngIf="save.observers.length && showSave" mat-button (click)="save.emit()">
-                    <mat-icon color="accent">save</mat-icon>
-                </button>
-                <button *ngIf="close.observers.length" mat-button (click)="close.emit()">
-                    <mat-icon color="accent">clear</mat-icon>
-                </button>
-            </div>
-        </ng-template>
+    <div class="toolbar-wrapper" cdkDrag [cdkDragDisabled]="!isDraggable" cdkDragRootElement="tdswindow">
+        <ng-container *ngIf="!hideToolbar" [ngTemplateOutlet]="this['toolbar' + toolbarDesign]">
+            <ng-template #toolbar1 >
+                <div class="toolbar design1" cdkDragHandle color="primary" [closeOnDoubleClick]="canMinimize ? content : undefined">
+                    <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
+                        <mat-icon color="accent">arrow_back</mat-icon>
+                    </button>
+                        <button *ngIf="sideNavClick.observers.length" mat-button (click)="sideNavClick.emit()">
+                        <mat-icon color="accent">menu</mat-icon>
+                    </button>
+                    <button *ngIf="navMenu" mat-button id="menu-navigation" [matMenuTriggerFor]="navMenu" cdkFocusInitial
+                    [class.glowing-button]="navGlow">
+                        <mat-icon color="accent">menu</mat-icon>
+                        <span>{{ (currentNav ? currentNav : "") }}</span>
+                    </button>
+                    <span id="title">{{ (title ? title : "") }}</span>
+                    <button *ngIf="save.observers.length && showSave" mat-button (click)="save.emit()">
+                        <mat-icon color="accent">save</mat-icon>
+                    </button>
+                    <button *ngIf="close.observers.length" mat-button (click)="close.emit()">
+                        <mat-icon color="accent">clear</mat-icon>
+                    </button>
+                </div>
+            </ng-template>
 
-        <ng-template #toolbar2>
-            <mat-toolbar class="toolbar design2" color="primary" cdkDragHandle [closeOnDoubleClick]="canMinimize ? content : undefined">
-                <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
-                    <mat-icon color="accent">arrow_back</mat-icon>
-                </button>
-                <button *ngIf="navMenu" mat-button id="menu-navigation" (click)="$event.stopPropagation()" [matMenuTriggerFor]="navMenu" cdkFocusInitial
-                [class.glowing-button]="navGlow">
-                    <mat-icon color="accent">menu</mat-icon>
-                    <span>{{ (currentNav ? currentNav : "") }}</span>
-                </button>
-                <span id="title">{{ (title ? title : "") }}</span>
-                <button *ngIf="close.observers.length" mat-button (click)="close.emit()">
-                    <mat-icon color="accent">clear</mat-icon>
-                </button>
-            </mat-toolbar>
-        </ng-template>
-    </ng-container>
+            <ng-template #toolbar2>
+                <mat-toolbar class="toolbar design2" color="primary" cdkDrag [cdkDragRootElement]="isDraggable ? 'tdswindow' : ''" cdkDragHandle [closeOnDoubleClick]="canMinimize ? content : undefined">
+                    <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
+                        <mat-icon color="accent">arrow_back</mat-icon>
+                    </button>
+                    <button *ngIf="navMenu" mat-button id="menu-navigation" (click)="$event.stopPropagation()" [matMenuTriggerFor]="navMenu" cdkFocusInitial
+                    [class.glowing-button]="navGlow">
+                        <mat-icon color="accent">menu</mat-icon>
+                        <span>{{ (currentNav ? currentNav : "") }}</span>
+                    </button>
+                    <span id="title">{{ (title ? title : "") }}</span>
+                    <button *ngIf="close.observers.length" mat-button (click)="close.emit()">
+                        <mat-icon color="accent">clear</mat-icon>
+                    </button>
+                </mat-toolbar>
+            </ng-template>
+        </ng-container>
+    </div>
     <div class="container-content" #content [style.width]="contentWidth" [style.height]="contentHeight" [style.padding]="contentPadding">
         <ng-container *ngIf="!isLoading">
             <ng-content></ng-content>
