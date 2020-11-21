@@ -31,7 +31,7 @@ import { Constants } from '../constants';
 export class SettingsService {
 
     //////////////////// AdminLevel ////////////////////
-    public AdminLevel = 3;
+    public AdminLevel = InitialDatas.getAdminLevel();
     public AdminLevelForApplicationInvites = 2;
 
     public AdminLevelChanged = new EventEmitter();

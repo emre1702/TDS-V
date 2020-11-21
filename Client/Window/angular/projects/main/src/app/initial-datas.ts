@@ -31,7 +31,6 @@ export class InitialDatas {
     static readonly inDebug = !environment.production;
 
     static readonly started = InitialDatas.inDebug;
-    static readonly isMapVotingActive = false;
 
     static readonly opened = {
         mapCreator: InitialDatas.inDebug && false,
@@ -45,6 +44,9 @@ export class InitialDatas {
         damageTestMenu: InitialDatas.inDebug && false,
         userpanel: InitialDatas.inDebug && true
     };
+
+    static readonly adminLevel = 0;
+    static readonly isMapVotingActive = false;
 
     static settingsByType: { [key: number]: {} } = {
         [UserpanelSettingsNormalType.Chat]: { 0: 30, 1: 35, 2: 1.4, 3: false, 4: true, 5: false, 6: 1, 7: 15000 } as UserpanelSettingsChat,
@@ -165,6 +167,10 @@ export class InitialDatas {
         1: [
             { 0: 1, 1: "GehHin" }
         ]
+    }
+
+    static getAdminLevel(): number {
+        return this.inDebug ? this.adminLevel : 0;
     }
 
     static getMapsInVoting(): MapVoteDto[] {
