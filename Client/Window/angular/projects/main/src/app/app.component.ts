@@ -70,10 +70,10 @@ export class AppComponent {
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
             if (this.settings.Constants[6] && typeof this.settings.Constants[6] === "string") {
-                this.settings.Constants[6] = JSON.parse(this.settings.Constants[6]);
+                this.settings.Constants[6] = JSON.parse((this.settings.Constants[6] as string).escapeJson());
             }
             if (this.settings.Constants[9] && typeof this.settings.Constants[9] === "string") {
-                this.settings.Constants[9] = JSON.parse(this.settings.Constants[9]);
+                this.settings.Constants[9] = JSON.parse((this.settings.Constants[9] as string).escapeJson());
             }
             this.started = true;
             changeDetector.detectChanges();

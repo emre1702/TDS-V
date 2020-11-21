@@ -109,7 +109,7 @@ namespace TDS.Server.Handler
         {
             var type = GetType(commitMessage);
             var message = GetWithoutPrefix(commitMessage);
-            return $"[{type}] {message}";
+            return $"[{type}] {message.Replace("\"", "[ESCSTR]")}";
         }
 
         private class ChangeLogsComparer : IComparer<string>

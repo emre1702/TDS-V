@@ -12,5 +12,6 @@ String.prototype.escapeJson = function() {
         .replace(/\n/g, "\\n")
         .replace(/\r/g, "\\r")
         .replace(/\t/g, "\\t")
-        .replace(/\f/g, "\\f");
+        .replace(/\f/g, "\\f")
+        .replace(/(\[ESCSTR\])/g, "\\\"");
 }
