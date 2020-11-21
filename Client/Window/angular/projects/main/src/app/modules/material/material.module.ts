@@ -33,8 +33,9 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { CustomMatPaginatorIntl } from "../../extensions/customMatPaginatorIntl";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatAppBackgroundDirective } from "./directives/matAppBackgroundDirective";
+import { MatAppBackgroundDirective } from "./directives/mat-app-background.directive";
 import { CustomMatSnackBarComponent } from './components/custom-mat-snack-bar.component';
+import { ApplyBackgroundService } from './services/apply-background.service';
 
 @NgModule({
     declarations: [MatAppBackgroundDirective, CustomMatSnackBarComponent],
@@ -101,12 +102,14 @@ import { CustomMatSnackBarComponent } from './components/custom-mat-snack-bar.co
         MatProgressSpinnerModule,
         MatCardModule,
         MatRadioModule,
-        MatAppBackgroundDirective,
+
+        MatAppBackgroundDirective
     ],
     entryComponents: [
         CustomMatSnackBarComponent
     ],
     providers: [
+        ApplyBackgroundService,
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
     ],
 })

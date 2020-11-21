@@ -1,41 +1,52 @@
-import { Directive, OnInit, OnDestroy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
+import { Injectable, ElementRef } from "@angular/core";
 import { SettingsService } from '../../../services/settings.service';
 import { SettingsThemeIndex } from '../../../components/userpanel/userpanel-settings-normal/enums/settings-theme-index.enum';
+import { EventEmitter } from 'events';
 
-@Directive({
-  selector: ".mat-app-background, .mat-menu-panel",
-})
-export class MatAppBackgroundDirective implements OnInit, OnDestroy {
+@Injectable()
+export class ApplyBackgroundService {
+    changed = new EventEmitter();
+
+    private elements: any[] = [];
     private lastUseDarkTheme: boolean;
     private lastDarkBackgroundColor: string;
     private lastLightBackgroundColor: string;
 
     constructor(
-        private settings: SettingsService,
-        private changeDetector: ChangeDetectorRef,
-        private viewContainerRef: ViewContainerRef) {
-
-    }
-
-    ngOnInit() {
-        this.settings.ThemeSettingChanged.on(null, this.revertBackgroundColorStyle.bind(this));
+        private settings: SettingsService
+    ) {
+        this.settings.ThemeSettingChanged.on(null, this.revertAllBackgroundColorStyles.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.themeChanged.bind(this));
         this.settings.SettingsLoaded.on(null, this.themeSettingsLoaded.bind(this));
         this.themeSettingsLoaded();
+     }
+    
+    add(element: any) {
+        this.elements.push(element);
+        this.applyThemeOnElement(element);
     }
 
-    ngOnDestroy() {
-        this.settings.ThemeSettingChanged.off(null, this.revertBackgroundColorStyle.bind(this));
-        this.settings.ThemeSettingChangedAfter.off(null, this.themeChanged.bind(this));
-        this.settings.SettingsLoaded.off(null, this.themeSettingsLoaded.bind(this));
+    remove(element: any) {
+        const index = this.elements.indexOf(element);
+        if (index > 0) {
+            this.elements.splice(index, 1);
+        }
     }
 
-    private revertBackgroundColorStyle() {
-        this.viewContainerRef.element.nativeElement.style.backgroundColor = "";
-        this.changeDetector.detectChanges();
+    private applyThemeOnElement(element: any) {
+        element.style.backgroundColor = "";
+        const colorStr = this.lastUseDarkTheme ? this.lastDarkBackgroundColor : this.lastLightBackgroundColor;
+        element.style.background = colorStr;
     }
 
-    themeChanged(key?: SettingsThemeIndex, value?: any) {
+    private revertAllBackgroundColorStyles() {
+        for (const element of this.elements) {
+            element.style.backgroundColor = "";
+        }
+        this.changed.emit(null);
+    }
+
+    private themeChanged(key?: SettingsThemeIndex, value?: any) {
         if (key != undefined) {
             switch (key) {
                 case SettingsThemeIndex.UseDarkTheme:
@@ -51,12 +62,15 @@ export class MatAppBackgroundDirective implements OnInit, OnDestroy {
         }
 
         const colorStr = this.lastUseDarkTheme ? this.lastDarkBackgroundColor : this.lastLightBackgroundColor;
-        this.viewContainerRef.element.nativeElement.style.background = colorStr;
-        this.changeDetector.detectChanges();
+        for (const element of this.elements) {
+            element.style.background = colorStr;
+        }
+        
+        this.changed.emit(null);
     }
 
-    themeSettingsLoaded() {
-        this.revertBackgroundColorStyle();
+    private themeSettingsLoaded() {
+        this.revertAllBackgroundColorStyles();
         this.lastUseDarkTheme = this.settings.Settings[13];
         this.lastDarkBackgroundColor = this.settings.Settings[17];
         this.lastLightBackgroundColor = this.settings.Settings[18];
