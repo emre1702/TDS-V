@@ -46,6 +46,20 @@ namespace TDS.Server.Handler
             }
         }
 
+        public async Task ExecuteForDBUnsafe(Action<TDSDbContext> action)
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
+
+            try
+            {
+                action(_dbContext);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
         public async Task<T> ExecuteForDB<T>(Func<TDSDbContext, T> action)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
@@ -65,6 +79,20 @@ namespace TDS.Server.Handler
             }
         }
 
+        public async Task<T> ExecuteForDBUnsafe<T>(Func<TDSDbContext, T> action)
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
+
+            try
+            {
+                return action(_dbContext);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
         public async Task ExecuteForDBAsync(Func<TDSDbContext, Task> action)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
@@ -76,6 +104,20 @@ namespace TDS.Server.Handler
             catch (Exception ex)
             {
                 LoggingHandler.LogError(ex, _player);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
+        public async Task ExecuteForDBAsyncUnsafe(Func<TDSDbContext, Task> action)
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
+
+            try
+            {
+                await action(_dbContext).ConfigureAwait(false);
             }
             finally
             {
@@ -102,6 +144,20 @@ namespace TDS.Server.Handler
             }
         }
 
+        public async Task<T> ExecuteForDBAsyncUnsafe<T>(Func<TDSDbContext, Task<T>> action)
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
+
+            try
+            {
+                return await action(_dbContext).ConfigureAwait(false);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
         public async void ExecuteForDBWithoutWait(Action<TDSDbContext> action)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
@@ -120,6 +176,20 @@ namespace TDS.Server.Handler
             }
         }
 
+        public async void ExecuteForDBWithoutWaitUnsafe(Action<TDSDbContext> action)
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
+
+            try
+            {
+                action(_dbContext);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
         public async void ExecuteForDBAsyncWithoutWait(Func<TDSDbContext, Task> action)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
@@ -131,6 +201,20 @@ namespace TDS.Server.Handler
             catch (Exception ex)
             {
                 LoggingHandler.LogError(ex, _player);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
+        public async void ExecuteForDBAsyncWithoutWaitUnsafe(Func<TDSDbContext, Task> action)
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
+
+            try
+            {
+                await action(_dbContext).ConfigureAwait(false);
             }
             finally
             {

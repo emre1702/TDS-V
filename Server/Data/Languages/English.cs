@@ -226,5 +226,6 @@ namespace TDS.Server.Data.Languages
 
         public virtual string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID => "The email address for this account is invalid.";
         public virtual string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Your password has been successfully reset. Check your emails (look into junk mails folder!).";
+        public virtual string REGISTER_FAILED_DEVS_INFORMED => "An error has occured while trying to register. The developers are informed and will fix this problem as soon as possible. Please try again later.";
     }
 }

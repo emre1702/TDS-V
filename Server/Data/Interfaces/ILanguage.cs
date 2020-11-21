@@ -218,5 +218,6 @@ namespace TDS.Server.Data.Interfaces
         string NO_EMAIL_ADDRESS_HAS_BEEN_SET { get; }
         string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID { get; }
         string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT { get; }
+        string REGISTER_FAILED_DEVS_INFORMED { get; }
     }
 }

@@ -244,19 +244,24 @@ namespace TDS.Server.Handler.Events
             catch (Exception ex) { LoggingHandler.Instance?.LogError(ex); }
         }
 
-        public async void OnPlayerRegister(ITDSPlayer player, Players dbPlayer)
+        public async Task OnPlayerRegistering(ITDSPlayer player, Players dbPlayer)
+        {
+            var task = PlayerRegisteredBefore?.InvokeAsync((player, dbPlayer));
+            if (task.HasValue)
+                await task.Value.ConfigureAwait(false);
+        }
+
+        public void OnPlayerRegistered(ITDSPlayer player, Players dbPlayer)
         {
             try
             {
-                var task = PlayerRegisteredBefore?.InvokeAsync((player, dbPlayer));
-                if (task.HasValue)
-                    await task.Value.ConfigureAwait(false);
                 PlayerRegistered?.Invoke(player, dbPlayer);
             }
             catch (Exception ex)
             {
                 LoggingHandler.Instance?.LogError(ex);
             }
+            
         }
 
         public void OnPlayerSpawn(ITDSPlayer player)
@@ -272,7 +277,7 @@ namespace TDS.Server.Handler.Events
         {
             try
             {
-                if (!(player.Lobby is IFightLobby fightLobby))
+                if (player.Lobby is not IFightLobby fightLobby)
                     return;
 
                 player.Events.TriggerWeaponSwitch(previousWeapon, newWeapon);

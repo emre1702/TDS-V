@@ -149,7 +149,7 @@ namespace TDS.Server.Handler.Events
         {
             if (player.Lobby is null)
                 return null;
-            if (!(player.Lobby is IArena arena))
+            if (player.Lobby is not IArena arena)
                 return null;
             int? mapId;
             if ((mapId = Utils.GetInt(args[0])) == null)
@@ -161,7 +161,7 @@ namespace TDS.Server.Handler.Events
 
         private object? GiveVehicle(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (player.Lobby is null || !(player.Lobby is IFreeroamLobby lobby))
+            if (player.Lobby is null || player.Lobby is not IFreeroamLobby lobby)
                 return null;
 
             if (args.Count == 0)
@@ -190,7 +190,7 @@ namespace TDS.Server.Handler.Events
         {
             if (player.Lobby is null)
                 return null;
-            if (!(player.Lobby is IMapCreatorLobby lobby))
+            if (player.Lobby is not IMapCreatorLobby lobby)
                 return null;
             var infoType = (MapCreatorInfoType)Convert.ToInt32(args[0]);
             var data = args[1];
@@ -201,7 +201,7 @@ namespace TDS.Server.Handler.Events
 
         private object? MapVote(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (!(player.Lobby is IArena arena))
+            if (player.Lobby is not IArena arena)
                 return null;
 
             if (args.Count == 0)
@@ -217,7 +217,7 @@ namespace TDS.Server.Handler.Events
 
         private object? SetDamageTestWeaponDamage(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (!(player.Lobby is IDamageTestLobby damageTestLobby))
+            if (player.Lobby is not IDamageTestLobby damageTestLobby)
                 return null;
             if (!player.IsLobbyOwner)
                 return null;

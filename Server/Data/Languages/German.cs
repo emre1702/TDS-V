@@ -225,5 +225,6 @@ namespace TDS.Server.Data.Languages
         public override string NO_EMAIL_ADDRESS_HAS_BEEN_SET => "Dieser Account hat keine E-Mail Adresse hinterlegt.";
         public override string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID => "Die für diesen Account hinterlegte E-Mail Adresse ist ungültig.";
         public override string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Dein Passwort wurde erfolgreich zurückgesetzt. Überprüfe deine E-Mails (besonders die Junk-Emails!).";
+        public override string REGISTER_FAILED_DEVS_INFORMED => "Ein Fehler ist beim Registrieren aufgetreten. Die Entwickler sind informiert und werden das Problem so schnell es geht beheben. Versuche es bitte später erneut.";
     }
 }

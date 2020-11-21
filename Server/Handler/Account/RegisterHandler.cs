@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,30 +36,51 @@ namespace TDS.Server.Handler.Account
 
         public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language, string scName, ulong scId)
         {
-            if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
-                email = null;
-            if (int.TryParse(username, out int result))
-                return;
-
-            var dbPlayer = CreatePlayerEntity(username, password, email, scName, scId);
-            dbPlayer.PlayerSettings = CreatePlayerSettingsEntity(language);
-            dbPlayer.PlayerStats = CreatePlayerStatsEntity();
-            dbPlayer.PlayerTotalStats = new PlayerTotalStats();
-            dbPlayer.PlayerClothes = new PlayerClothes();
-            dbPlayer.ThemeSettings = CreatePlayerThemeSettingsEntity();
-            dbPlayer.KillInfoSettings = CreatePlayerKillInfoSettingsEntity();
-
-            await player.Database.ExecuteForDBAsync(async dbContext =>
+            IDbContextTransaction? transaction = null;
+            try 
             {
-                dbContext.Players.Add(dbPlayer);
-                await dbContext.SaveChangesAsync().ConfigureAwait(false);
-            }).ConfigureAwait(false);
+                transaction = await player.Database.ExecuteForDBAsync(async dbContext => await dbContext.Database.BeginTransactionAsync());
+                if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
+                    email = null;
+                if (int.TryParse(username, out int result))
+                    return;
 
-            LoggingHandler.Instance.LogRest(LogType.Register, player, true);
+                var dbPlayer = CreatePlayerEntity(username, password, email, scName, scId);
+                dbPlayer.PlayerSettings = CreatePlayerSettingsEntity(language);
+                dbPlayer.PlayerStats = CreatePlayerStatsEntity();
+                dbPlayer.PlayerTotalStats = new PlayerTotalStats();
+                dbPlayer.PlayerClothes = new PlayerClothes();
+                dbPlayer.ThemeSettings = CreatePlayerThemeSettingsEntity();
+                dbPlayer.KillInfoSettings = CreatePlayerKillInfoSettingsEntity();
 
-            _eventsHandler.OnPlayerRegister(player, dbPlayer);
+                await player.Database.ExecuteForDBAsync(async dbContext =>
+                {
+                    dbContext.Players.Add(dbPlayer);
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+                }).ConfigureAwait(false);
 
-            _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
+                LoggingHandler.Instance.LogRest(LogType.Register, player, true);
+
+                await _eventsHandler.OnPlayerRegistering(player, dbPlayer);
+
+                await transaction.CommitAsync();
+
+                _eventsHandler.OnPlayerRegistered(player, dbPlayer);
+
+                _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+                player.SendAlert(player.Language.REGISTER_FAILED_DEVS_INFORMED);
+                if (transaction is { })
+                    await transaction.RollbackAsync();
+            }
+            finally
+            {
+                if (transaction is { })
+                    await transaction.DisposeAsync();
+            }
         }
 
         public async void TryRegister(ITDSPlayer player, string username, string password, string email, int language)

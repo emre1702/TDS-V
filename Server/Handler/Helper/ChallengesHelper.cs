@@ -51,27 +51,27 @@ namespace TDS.Server.Handler.Helper
 
         public async Task AddForeverChallenges(Players dbPlayer)
         {
-            await ExecuteForDBAsync(async dbContext =>
+            await ExecuteForDBAsyncUnsafe(async dbContext =>
             {
                 string challengeSettingsTable = dbContext.GetTableName(typeof(ChallengeSettings));
 
                 string sql = $@"
-                    INSERT INTO
-                        ""{_playerChallengesTableName}""
-                        ( ""{_playerChallengesPlayerIdColumnName}"",
-                        ""{_playerChallengesChallengeColumnName}"",
-                        ""{_playerChallengesFrequencyColumnName}"",
-                        ""{_playerChallengesAmountColumnName}"" )
-                    SELECT
-                        {dbPlayer.Id},
-                        ""{_challengeSettingsTypeColumnName}"",
-                        'forever',
-                        ""{_challengeSettingsMaxNumberColumnName}""
-                    FROM
-                        ""{challengeSettingsTable}""
-                    WHERE
-                        ""{_challengeSettingsFrequencyColumnName}"" = 'forever'
-                ";
+                INSERT INTO
+                    ""{_playerChallengesTableName}""
+                    ( ""{_playerChallengesPlayerIdColumnName}"",
+                    ""{_playerChallengesChallengeColumnName}"",
+                    ""{_playerChallengesFrequencyColumnName}"",
+                    ""{_playerChallengesAmountColumnName}"" )
+                SELECT
+                    {dbPlayer.Id},
+                    ""{_challengeSettingsTypeColumnName}"",
+                    'forever',
+                    ""{_challengeSettingsMaxNumberColumnName}""
+                FROM
+                    ""{challengeSettingsTable}""
+                WHERE
+                    ""{_challengeSettingsFrequencyColumnName}"" = 'forever'
+            ";
                 await dbContext.Database.ExecuteSqlRawAsync(sql).ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
@@ -171,14 +171,7 @@ namespace TDS.Server.Handler.Helper
 
         private async ValueTask EventsHandler_PlayerRegister((ITDSPlayer player, Players dbPlayer) args)
         {
-            try
-            {
-                await AddForeverChallenges(args.dbPlayer).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                LoggingHandler.Instance.LogError(ex, args.player);
-            }
+            await AddForeverChallenges(args.dbPlayer).ConfigureAwait(false);
         }
 
         private void LoadChallengeSettingsTableData(TDSDbContext dbContext)

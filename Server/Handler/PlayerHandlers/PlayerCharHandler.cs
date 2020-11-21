@@ -84,33 +84,26 @@ namespace TDS.Server.Handler.PlayerHandlers
 
         public async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
         {
-            try
+            byte amountSlots = _settingsHandler.ServerSettings.AmountCharSlots;
+
+            var charDatas = new PlayerCharDatas
             {
-                byte amountSlots = _settingsHandler.ServerSettings.AmountCharSlots;
+                PlayerId = args.dbPlayer.Id,
+                GeneralData = new List<PlayerCharGeneralDatas>(amountSlots),
+                HeritageData = new List<PlayerCharHeritageDatas>(amountSlots),
+                FeaturesData = new List<PlayerCharFeaturesDatas>(amountSlots),
+                AppearanceData = new List<PlayerCharAppearanceDatas>(amountSlots),
+                HairAndColorsData = new List<PlayerCharHairAndColorsDatas>(amountSlots),
+            };
+            args.dbPlayer.CharDatas = charDatas;
 
-                var charDatas = new PlayerCharDatas
-                {
-                    PlayerId = args.dbPlayer.Id,
-                    GeneralData = new List<PlayerCharGeneralDatas>(amountSlots),
-                    HeritageData = new List<PlayerCharHeritageDatas>(amountSlots),
-                    FeaturesData = new List<PlayerCharFeaturesDatas>(amountSlots),
-                    AppearanceData = new List<PlayerCharAppearanceDatas>(amountSlots),
-                    HairAndColorsData = new List<PlayerCharHairAndColorsDatas>(amountSlots),
-                };
-                args.dbPlayer.CharDatas = charDatas;
+            for (byte i = 0; i < amountSlots; ++i)
+                AddCharSlot(charDatas, i);
 
-                for (byte i = 0; i < amountSlots; ++i)
-                    AddCharSlot(charDatas, i);
-
-                await args.player.Database.ExecuteForDBAsync(async dbContext => 
-                {
-                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
-                });
-            }
-            catch (Exception ex)
+            await args.player.Database.ExecuteForDBAsyncUnsafe(async dbContext => 
             {
-                _loggingHandler.LogError(ex, args.player);
-            }
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            });
         }
 
         private void AddCharSlot(PlayerCharDatas charDatas, byte slot)
