@@ -49,9 +49,9 @@ namespace TDS.Server.Handler.Helper
             eventsHandler.PlayerRegisteredBefore += EventsHandler_PlayerRegister;
         }
 
-        public async Task AddForeverChallenges(Players dbPlayer)
+        public async Task AddForeverChallenges(ITDSPlayer player, Players dbPlayer)
         {
-            await ExecuteForDBAsyncUnsafe(async dbContext =>
+            await player.Database.ExecuteForDBAsyncUnsafe(async dbContext =>
             {
                 string challengeSettingsTable = dbContext.GetTableName(typeof(ChallengeSettings));
 
@@ -78,7 +78,7 @@ namespace TDS.Server.Handler.Helper
 
         public async Task AddWeeklyChallenges(ITDSPlayer player)
         {
-            await ExecuteForDBAsync(async dbContext =>
+            await player.Database.ExecuteForDBAsync(async dbContext =>
             {
                 string sql = @$"
                 INSERT INTO
@@ -171,7 +171,7 @@ namespace TDS.Server.Handler.Helper
 
         private async ValueTask EventsHandler_PlayerRegister((ITDSPlayer player, Players dbPlayer) args)
         {
-            await AddForeverChallenges(args.dbPlayer).ConfigureAwait(false);
+            await AddForeverChallenges(args.player, args.dbPlayer).ConfigureAwait(false);
         }
 
         private void LoadChallengeSettingsTableData(TDSDbContext dbContext)
