@@ -19,16 +19,16 @@ namespace TDS.Server.GamemodesSystem.Specials
     {
         private ITDSPlayer? _playerForcedAtTarget;
 
-        private readonly IGangwarGamemode _gamemode;
-        private readonly ISettingsHandler _settingsHandler;
+        protected IGangwarGamemode Gamemode { get; }
+        protected ISettingsHandler SettingsHandler { get; }
 
         public GangwarSpecials(IRoundFightLobby lobby, IGangwarGamemode gamemode, ISettingsHandler settingsHandler) : base(lobby)
         {
-            _gamemode = gamemode;
-            _settingsHandler = settingsHandler;
+            Gamemode = gamemode;
+            SettingsHandler = settingsHandler;
         }
 
-        internal override void AddEvents(IRoundFightLobbyEventsHandler events)
+        public override void AddEvents(IRoundFightLobbyEventsHandler events)
         {
             base.AddEvents(events);
 
@@ -38,7 +38,7 @@ namespace TDS.Server.GamemodesSystem.Specials
             events.RoundClear += RoundClear;
         }
 
-        internal override void RemoveEvents(IRoundFightLobbyEventsHandler events)
+        public override void RemoveEvents(IRoundFightLobbyEventsHandler events)
         {
             base.RemoveEvents(events);
 
@@ -49,14 +49,6 @@ namespace TDS.Server.GamemodesSystem.Specials
                 events.InRound -= InRound;
             if (events.RoundClear is { })
                 events.RoundClear -= RoundClear;
-        }
-
-        public void PlayerEnteredTargetColShape(ITDSPlayer player)
-        {
-        }
-
-        public void PlayerExitedTargetColShape(ITDSPlayer player)
-        {
         }
 
         private void PlayerDied(ITDSPlayer player, ITDSPlayer killer, uint weapon, int hadLifes)
@@ -72,17 +64,17 @@ namespace TDS.Server.GamemodesSystem.Specials
 
         public virtual ValueTask InRound()
         {
-            if (_gamemode.MapHandler.TargetObject is null)
+            if (Gamemode.MapHandler.TargetObject is null)
                 return default;
 
             ReplaceTargetMan();
             if (_playerForcedAtTarget is { })
-                _playerForcedAtTarget.Position = _gamemode.MapHandler.TargetObject.Position;
+                _playerForcedAtTarget.Position = Gamemode.MapHandler.TargetObject.Position;
 
             return default;
         }
 
-        private ValueTask RoundClear()
+        public virtual ValueTask RoundClear()
         {
             RemoveTargetMan();
             return default;
@@ -103,12 +95,12 @@ namespace TDS.Server.GamemodesSystem.Specials
         private ITDSPlayer? GetNextTargetMan()
         {
             if (Lobby.Rounds.RoundStates.CurrentState is IInRoundState)
-                return _gamemode.Teams.Attacker.Players.GetRandom();
+                return Gamemode.Teams.Attacker.Players.GetRandom();
 
-            if (_gamemode.MapHandler.TargetObject is null)
+            if (Gamemode.MapHandler.TargetObject is null)
                 return null;
 
-            return _gamemode.Teams.Attacker.Players.GetNearestPlayer(_gamemode.MapHandler.TargetObject.Position);
+            return Gamemode.Teams.Attacker.Players.GetNearestPlayer(Gamemode.MapHandler.TargetObject.Position);
         }
 
         private void SetTargetMan(ITDSPlayer? player)
@@ -118,17 +110,17 @@ namespace TDS.Server.GamemodesSystem.Specials
                 return;
 
             _playerForcedAtTarget = player;
-            _gamemode.Teams.Attacker.Players.DoInMain(player =>
+            Gamemode.Teams.Attacker.Players.DoInMain(player =>
                 player.SendNotification(string.Format(player.Language.TARGET_PLAYER_DEFEND_INFO, _playerForcedAtTarget.DisplayName)));
 
-            var targetObjectPositionJson = Serializer.ToClient(_gamemode.MapHandler.TargetObject!.Position);
+            var targetObjectPositionJson = Serializer.ToClient(Gamemode.MapHandler.TargetObject!.Position);
 
             NAPI.Task.RunSafe(() =>
                 _playerForcedAtTarget.TriggerEvent(ToClientEvent.SetForceStayAtPosition,
                     targetObjectPositionJson,
-                    _settingsHandler.ServerSettings.GangwarTargetRadius,
+                    SettingsHandler.ServerSettings.GangwarTargetRadius,
                     MapLimitType.KillAfterTime,
-                    _settingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds));
+                    SettingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds));
         }
 
         private void RemoveTargetMan()

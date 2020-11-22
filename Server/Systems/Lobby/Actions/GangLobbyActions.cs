@@ -1,9 +1,22 @@
-﻿using TDS.Server.Data.Interfaces.LobbySystem.Actions;
+﻿using System.Threading.Tasks;
+using TDS.Server.Data.Enums;
+using TDS.Server.Data.Interfaces.LobbySystem.Actions;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 
 namespace TDS.Server.LobbySystem.Actions
 {
     public class GangLobbyActions : IGangLobbyActions
     {
+        public GangLobbyActions(IGangLobby gangLobby)
+        {
+
+        } 
+
+        public async Task TryStartAction(GangActionType type)
+        {
+
+        }
+
         /*
          *  public async Task StartGangwar(ITDSPlayer attacker, int gangwarAreaId)
         {

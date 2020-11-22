@@ -17,7 +17,6 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
         private ITDSBlip? _targetBlip;
         private ITDSTextLabel? _targetTextLabel;
 
-        public ITDSColshape? TargetColShape { get; set; }
         public ITDSObject? TargetObject { get; set; }
 
         private readonly IRoundFightLobby _lobby;
@@ -71,7 +70,6 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
             {
                 CreateTargetObject(map);
                 CreateTargetBlip(map);
-                CreateTargetColShape();
                 CreateTargetTextLabel();
             });
         }
@@ -82,17 +80,6 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
                 return;
 
             _targetBlip = NAPI.Blip.CreateBlip(SharedConstants.TargetBlipSprite, map.Target.ToVector3(), 1f, 0, name: "Target", dimension: _lobby.MapHandler.Dimension) as ITDSBlip;
-        }
-
-        private void CreateTargetColShape()
-        {
-            if (TargetObject is null)
-                return;
-
-            TargetColShape = NAPI.ColShape.CreateSphereColShape(TargetObject.Position, (float)_settingsHandler.ServerSettings.GangwarTargetRadius, _lobby.MapHandler.Dimension) as ITDSColshape;
-
-            TargetColShape!.PlayerEntered += _gamemode.Specials.PlayerEnteredTargetColShape;
-            TargetColShape.PlayerExited += _gamemode.Specials.PlayerExitedTargetColShape;
         }
 
         private void CreateTargetObject(MapDto map)

@@ -11,11 +11,11 @@ namespace TDS.Server.GamemodesSystem.Specials
         public BaseGamemodeSpecials(IRoundFightLobby lobby)
             => Lobby = lobby;
 
-        internal virtual void AddEvents(IRoundFightLobbyEventsHandler events)
+        public virtual void AddEvents(IRoundFightLobbyEventsHandler events)
         {
         }
 
-        internal virtual void RemoveEvents(IRoundFightLobbyEventsHandler events)
+        public virtual void RemoveEvents(IRoundFightLobbyEventsHandler events)
         {
         }
     }
