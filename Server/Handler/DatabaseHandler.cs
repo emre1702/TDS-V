@@ -222,6 +222,24 @@ namespace TDS.Server.Handler
             }
         }
 
+        public async Task Save()
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex, _player);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
         public async ValueTask DisposeAsync()
         {
             await (_dbContext?.DisposeAsync() ?? default);

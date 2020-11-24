@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TDS.Server.Data.Interfaces
 {
@@ -219,5 +220,6 @@ namespace TDS.Server.Data.Interfaces
         string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID { get; }
         string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT { get; }
         string REGISTER_FAILED_DEVS_INFORMED { get; }
+        string GANGWAR_TARGET_EMPTY_SECS_LEFT { get; }
     }
 }

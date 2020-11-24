@@ -146,7 +146,7 @@ namespace TDS.Server.Handler.Maps
             }
         }
 
-        public IEnumerable<MapDto> GetGangwarMapsWithoutGangwarAreas(List<GangwarAreas> gangwarAreas)
+        public IEnumerable<MapDto> GetGangwarMapsWithoutGangwarAreas(List<GangActionAreas> gangwarAreas)
         {
             lock (_defaultMaps)
             {

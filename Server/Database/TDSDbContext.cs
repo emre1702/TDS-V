@@ -81,7 +81,7 @@ namespace TDS.Server.Database.Entity
         public virtual DbSet<GangRanks> GangRanks { get; set; }
         public virtual DbSet<Gangs> Gangs { get; set; }
         public virtual DbSet<GangVehicles> GangVehicles { get; set; }
-        public virtual DbSet<GangwarAreas> GangwarAreas { get; set; }
+        public virtual DbSet<GangActionAreas> GangwarAreas { get; set; }
         public virtual DbSet<LobbyKillingspreeRewards> KillingspreeRewards { get; set; }
         public virtual DbSet<Lobbies> Lobbies { get; set; }
         public virtual DbSet<LobbyFightSettings> LobbyFightSettings { get; set; }

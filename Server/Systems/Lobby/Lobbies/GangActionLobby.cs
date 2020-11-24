@@ -2,10 +2,9 @@
 using System;
 using System.Threading.Tasks;
 using TDS.Server.Data.Interfaces;
-using TDS.Server.Data.Interfaces.DamageSystem;
 using TDS.Server.Data.Interfaces.Entities;
-using TDS.Server.Data.Interfaces.Entities.Gangs;
 using TDS.Server.Data.Interfaces.GamemodesSystem;
+using TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas;
 using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
@@ -28,16 +27,15 @@ namespace TDS.Server.LobbySystem.Lobbies
 {
     public class GangActionLobby : RoundFightLobby, IGangActionLobby
     {
-        public IGangwarArea GangArea { get; }
+        public IBaseGangActionArea GangArea { get; }
 
         public new IGangActionLobbyTeamsHandler Teams => (IGangActionLobbyTeamsHandler)base.Teams;
 
-        public GangActionLobby(LobbyDb entity, IGangwarArea gangArea, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
+        public GangActionLobby(LobbyDb entity, IBaseGangActionArea gangArea, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
             IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
             : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
         {
             GangArea = gangArea;
-            gangArea.InLobby = this;
         }
 
         protected override void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
@@ -65,9 +63,6 @@ namespace TDS.Server.LobbySystem.Lobbies
         public override async Task Remove()
         {
             await base.Remove().ConfigureAwait(false);
-
-            if (GangArea is { })
-                GangArea.InLobby = null;
         }
     }
 }

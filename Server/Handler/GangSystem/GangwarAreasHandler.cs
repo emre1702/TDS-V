@@ -67,14 +67,14 @@ namespace TDS.Server.Handler.GangSystem
             _dbContext.Dispose();
         }
 
-        private void CreateMissingGangwarAreas(List<GangwarAreas> gangwarAreas)
+        private void CreateMissingGangwarAreas(List<GangActionAreas> gangwarAreas)
         {
             var mapsWithoutGangwarArea = _mapsLoadingHandler.GetGangwarMapsWithoutGangwarAreas(gangwarAreas);
 
-            var newEntities = new List<GangwarAreas>();
+            var newEntities = new List<GangActionAreas>();
             foreach (var map in mapsWithoutGangwarArea)
             {
-                var entity = new GangwarAreas
+                var entity = new GangActionAreas
                 {
                     MapId = map.BrowserSyncedData.Id,
                     OwnerGangId = -1

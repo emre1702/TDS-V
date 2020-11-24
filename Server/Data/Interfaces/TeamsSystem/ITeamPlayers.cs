@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 
 namespace TDS.Server.Data.Interfaces.TeamsSystem
@@ -24,6 +25,7 @@ namespace TDS.Server.Data.Interfaces.TeamsSystem
         void DoInMain(Action<ITDSPlayer> action);
 
         void DoList(Action<List<ITDSPlayer>> action);
+        Task<T> DoListInMain<T>(Func<List<ITDSPlayer>, T> action);
 
         ITDSPlayer? GetNearestPlayer(Vector3 position);
 

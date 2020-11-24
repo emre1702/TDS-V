@@ -118,59 +118,8 @@ namespace TDS.Server.LobbySystem.Actions
             //todo Check max gangwars per day or whatever
 
             return true;
-        }
-
-        private Lobbies CreateEntity(GangwarArea area)
-        {
-            var dummyDBTeam = LobbiesHandler.MainMenu.Teams[0].Entity.DeepCopy();
-
-            var ownerDBTeam = area.Owner!.Entity.Team.DeepCopy();
-            ownerDBTeam.Index = 1;
-
-            var attackerDBTeam = area.Attacker!.Entity.Team.DeepCopy();
-            attackerDBTeam.Index = 2;
-
-            var lobby = new Lobbies
-            {
-                FightSettings = new LobbyFightSettings(),
-                LobbyMaps = new HashSet<LobbyMaps> { new LobbyMaps { MapId = area.Entity!.MapId } },
-                LobbyMapSettings = new LobbyMapSettings
-                {
-                    MapLimitType = MapLimitType.Display,
-                },
-                LobbyRoundSettings = new LobbyRoundSettings
-                {
-                    CountdownTime = (int)SettingsHandler.ServerSettings.GangwarPreparationTime,
-                    RoundTime = (int)SettingsHandler.ServerSettings.GangwarActionTime,
-                    ShowRanking = true
-                },
-                LobbyWeapons = LobbiesHandler.Arena.Entity.LobbyWeapons.Select(w => new LobbyWeapons
-                {
-                    Ammo = w.Ammo,
-                    Damage = w.Damage,
-                    Hash = w.Hash,
-                    HeadMultiplicator = w.HeadMultiplicator
-                }).ToHashSet(),    //LobbiesHandler.GetAllPossibleLobbyWeapons(MapType.Normal),
-                LobbyRewards = new LobbyRewards
-                {
-                    MoneyPerAssist = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerAssist,
-                    MoneyPerDamage = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerDamage,
-                    MoneyPerKill = LobbiesHandler.Arena.Entity.LobbyRewards.MoneyPerKill,
-                },
-                IsOfficial = true,
-                IsTemporary = false,
-                OwnerId = -1,
-                Name = $"[GW-Prep] {area.Attacker.Entity.Short}",
-                Type = LobbyType.Arena,
-                Teams = new List<Teams>
-                {
-                    dummyDBTeam,
-                    ownerDBTeam,
-                    attackerDBTeam
-                },
-            };
-
-            return lobby;
         }*/
+
+
     }
 }

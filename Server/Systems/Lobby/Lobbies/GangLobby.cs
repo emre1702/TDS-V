@@ -47,7 +47,7 @@ namespace TDS.Server.LobbySystem.Lobbies
 
             lobbyDependencies ??= new GangLobbyDependencies();
 
-            ((GangLobbyDependencies)lobbyDependencies).Actions ??= new GangLobbyActions();
+            ((GangLobbyDependencies)lobbyDependencies).Actions ??= new GangLobbyActions(this);
             lobbyDependencies.Chat ??= new GangLobbyChat(this, LangHelper);
             lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.Deathmatch ??= new GangLobbyDeathmatch(this, lobbyDependencies.Events);
@@ -73,7 +73,7 @@ namespace TDS.Server.LobbySystem.Lobbies
 
         private void GangActionLobbyRemoved(IBaseLobby lobby)
         {
-            if (!(lobby is IGangActionLobby gangActionLobby))
+            if (lobby is not IGangActionLobby gangActionLobby)
                 return;
             lock (_gangActionLobbies)
             {

@@ -1,11 +1,12 @@
 ﻿using System;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.TeamsSystem;
 
 namespace TDS.Server.Data.RoundEndReasons
 {
     public class TargetEmptyRoundEndReason : RoundEndReason
     {
-        public TargetEmptyRoundEndReason() : base(null)
+        public TargetEmptyRoundEndReason(ITeam ownerTeam) : base(ownerTeam)
         {
         }
 
