@@ -18,7 +18,6 @@ namespace TDS.Server.Core.Events
         [ServerEvent(Event.PlayerConnected)]
         public void PlayerConnected(ITDSPlayer player)
         {
-            Console.WriteLine($"Player connected | Name: {player.Name} | ScName: {player.SocialClubName} | ScId: {player.SocialClubId} | IP: {player.Address}");
             EventsHandler.Instance.OnPlayerConnected(player);
         }
 

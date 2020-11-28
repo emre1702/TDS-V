@@ -45,6 +45,7 @@ namespace TDS.Server.Handler.PlayerHandlers
                     return;
 
                 await NAPI.Task.RunWait(player.Init).ConfigureAwait(false);
+                Console.WriteLine($"Player connected | Name: {player.Name} | ScName: {player.SocialClubName} | ScId: {player.SocialClubId} | IP: {player.Address}");
                 SpawnPlayerInWorld(player);
 
                 if (await CheckIsBanned(player).ConfigureAwait(false))
