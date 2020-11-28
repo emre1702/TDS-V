@@ -142,7 +142,7 @@ namespace TDS.Server.Data.Models.Map
             if (obj is null)
                 return false;
 
-            if (!(obj is MapDto otherMap))
+            if (obj is not MapDto otherMap)
                 return false;
 
             return BrowserSyncedData.Id == otherMap.BrowserSyncedData.Id;

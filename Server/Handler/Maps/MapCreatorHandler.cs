@@ -265,7 +265,7 @@ namespace TDS.Server.Handler.Maps
 
         public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
         {
-            if (!(player.Lobby is IMapCreatorLobby lobby))
+            if (player.Lobby is not IMapCreatorLobby lobby)
                 return null;
 
             string json = (string)args[0];
@@ -337,6 +337,7 @@ namespace TDS.Server.Handler.Maps
             catch (Exception ex)
             {
                 LoggingHandler.Instance.LogError(ex, creator);
+                LoggingHandler.Instance.AddErrorFile(creator.Name + "_" + Utils.GetTimestamp() + ".map-saveorcreate.json", mapJson);
                 return (null, MapCreateError.Unknown);
             }
         }

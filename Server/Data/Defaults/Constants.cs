@@ -8,6 +8,7 @@ namespace TDS.Server.Data.Defaults
         public const string NeedCheckMapsPath = _resourcePathPath + "needcheckmaps/";
         public const string NewMapsPath = _resourcePathPath + "newmaps/";
         public const string SavedMapsPath = _resourcePathPath + "savedmaps/";
+        public const string ErrorFilePath = _resourcePathPath + "errorfiles/";
         public const float ArenaHeadMultiplicator = 1.7f;
         public const string GangwarTargetObjectName = "v_ret_ta_skull";
         public const int RemoveTDSPlayerMinutesAfterLoggedOut = 5;

@@ -29,6 +29,8 @@ namespace TDS.Server.Data.Interfaces
 
         void LogRest(LogType type, ITDSPlayer source, bool saveipserial = false, bool savelobby = false, int? lobbyId = null);
 
+        void AddErrorFile(string fileName, string fileContent);
+
         Task SaveTask(int? counter = null);
     }
 }

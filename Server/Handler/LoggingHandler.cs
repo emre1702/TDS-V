@@ -2,13 +2,16 @@
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Extensions;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.Log;
 using TDS.Server.Handler.Entities;
@@ -446,6 +449,19 @@ namespace TDS.Server.Handler
         }
 
         #endregion Rest
+
+        public async void AddErrorFile(string fileName, string fileContent)
+        {
+            try
+            {
+                if (!Directory.Exists(Constants.ErrorFilePath))
+                    Directory.CreateDirectory(Constants.ErrorFilePath);
+
+                var path = Constants.ErrorFilePath + Utils.MakeValidFileName(fileName);
+                await File.WriteAllTextAsync(path, fileContent);
+            }
+            catch { }
+        }
 
         private void EventsHandler_PlayerLeftLobby(ITDSPlayer player, IBaseLobby lobby)
         {
