@@ -59,5 +59,12 @@ namespace TDS.Server.GangsSystem
                 await dbContext.DisposeAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
+
+        public override string ToString()
+        {
+            if (Entity is null)
+                return "Not initialized";
+            return $"'{Entity.Name}' ({Entity.Short})";
+        }
     }
 }

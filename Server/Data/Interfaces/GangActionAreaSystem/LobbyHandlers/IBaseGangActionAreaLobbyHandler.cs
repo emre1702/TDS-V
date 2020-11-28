@@ -10,7 +10,6 @@ namespace TDS.Server.Data.Interfaces.GangActionAreaSystem.LobbyHandlers
         IGangActionLobby? InLobby { get; }
 
         void Init(IBaseGangActionArea area);
-        void Remove();
         Task<IGangActionLobby> SetInGangActionLobby();
     }
 }

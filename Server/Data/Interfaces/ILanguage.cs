@@ -46,7 +46,6 @@ namespace TDS.Server.Data.Interfaces
         string GANGACTION_CANT_JOIN_AGAIN { get; }
         string GANGWAR_ATTACK_INVITATION { get; }
         string GANGWAR_ATTACK_PREPARATION_INVITATION { get; }
-        string GANGWAR_ATTACKER_PREPARATION_INFO { get; }
         string GANGWAR_ATTACKER_STARTED_INFO { get; }
         string GANGWAR_DEFEND_INVITATION { get; }
         string GANGWAR_OWNER_PREPARATION_INFO { get; }
@@ -221,5 +220,12 @@ namespace TDS.Server.Data.Interfaces
         string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT { get; }
         string REGISTER_FAILED_DEVS_INFORMED { get; }
         string GANGWAR_TARGET_EMPTY_SECS_LEFT { get; }
+        string GANG_ACTION_IN_PREPARATION { get; }
+        string GANG_ACTION_IN_PREPARATION_ATTACKER { get; }
+        string GANG_ACTION_IN_PREPARATION_OWNER { get; }
+        string GANG_ACTION_STARTED { get; }
+        string GANG_AREA_CONQUERED_WITH_OWNER { get; }
+        string GANG_AREA_CONQUERED_WITHOUT_OWNER { get; }
+        string GANG_AREA_DEFENDED { get; }
     }
 }

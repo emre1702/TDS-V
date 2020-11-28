@@ -29,6 +29,8 @@ namespace TDS.Server.Data.Models.Map
         [XmlAttribute("type")]
         public MapType Type { get; set; } = MapType.Normal;
 
+        [XmlIgnore]
+        public bool IsGangActionArea => Type == MapType.Gangwar;
     }
 
 #nullable restore warnings

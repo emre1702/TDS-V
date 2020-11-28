@@ -8,7 +8,7 @@ using TDS.Server.Database.Entity;
 
 namespace TDS.Server.Handler
 {
-    public class DatabaseHandler : IDatabaseHandler, IAsyncDisposable
+    public class DatabaseHandler : IDatabaseHandler
     {
         protected ILoggingHandler LoggingHandler { get; }
 

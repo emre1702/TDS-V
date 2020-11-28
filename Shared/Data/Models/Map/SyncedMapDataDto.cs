@@ -22,5 +22,9 @@ namespace TDS.Shared.Data.Models.Map
         public string CreatorName;
         [JsonProperty("5")]
         public uint Rating = 5;
+
+        [JsonIgnore]
+        public bool IsGangActionArea 
+            => Type == MapType.Gangwar;
     }
 }

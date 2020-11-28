@@ -37,11 +37,6 @@ namespace TDS.Server.GangActionAreaSystem.LobbyHandlers
             _area = area;
         }
 
-        public void Remove()
-        {
-            InLobby = null;
-        }
-
         public async Task<IGangActionLobby> SetInGangActionLobby()
         {
             var entity = await CreateEntity();

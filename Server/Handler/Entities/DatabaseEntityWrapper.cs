@@ -183,6 +183,8 @@ namespace TDS.Server.Handler.Entities
             }
         }
 
+        public Task Save() 
+            => ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
         public async ValueTask DisposeAsync()
         {

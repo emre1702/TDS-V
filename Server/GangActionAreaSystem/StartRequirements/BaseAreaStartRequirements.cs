@@ -1,7 +1,9 @@
 ﻿using System;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.StartRequirements;
+using TDS.Server.Data.Interfaces.GangsSystem;
 using TDS.Shared.Core;
 
 namespace TDS.Server.GangActionAreaSystem.StartRequirements
@@ -36,6 +38,23 @@ namespace TDS.Server.GangActionAreaSystem.StartRequirements
         {
             Area = area;
             CheckCooldownOnInit();
+        }
+
+        public bool CheckIsAttackable(ITDSPlayer outputTo) 
+        {
+            if (HasCooldown)
+            {
+                outputTo.SendNotification(outputTo.Language.GANG_ACTION_AREA_IN_COOLDOWN);
+                return false;
+            }
+
+            if (Area.GangsHandler.Owner?.Action.InAction == true)
+            {
+                outputTo.SendNotification(outputTo.Language.GANG_ACTION_AREA_OWNER_IN_ACTION);
+                return false;
+            }
+
+            return true;
         }
 
         private void CheckCooldownOnInit()

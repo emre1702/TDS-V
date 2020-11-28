@@ -10,7 +10,6 @@ using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Extensions;
 using TDS.Server.Data.Interfaces;
-using TDS.Server.Data.Interfaces.Entities.Gangs;
 using TDS.Server.Data.Models.Map;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.GangEntities;
@@ -74,11 +73,11 @@ namespace TDS.Server.Handler.Maps
             }
         }
 
-        public MapDto? GetGangwarAreaMap(int mapId)
+        public MapDto? GetGangActionAreaMap(int mapId)
         { 
             lock (_defaultMaps) 
             { 
-                return _defaultMaps.FirstOrDefault(m => m.Info.Type == MapType.Gangwar && m.BrowserSyncedData.Id == mapId);
+                return _defaultMaps.FirstOrDefault(m => m.Info.IsGangActionArea && m.BrowserSyncedData.Id == mapId);
             }
         }
 
@@ -146,13 +145,13 @@ namespace TDS.Server.Handler.Maps
             }
         }
 
-        public IEnumerable<MapDto> GetGangwarMapsWithoutGangwarAreas(List<GangActionAreas> gangwarAreas)
+        public IEnumerable<MapDto> GetGangActionAreaMapsWithoutGangActionArea(List<GangActionAreas> gangActionAreas)
         {
             lock (_defaultMaps)
             {
                 return _defaultMaps
-                    .Where(map => map.BrowserSyncedData.Type == TDS.Shared.Data.Enums.MapType.Gangwar 
-                                && !gangwarAreas.Any(a => a.MapId == map.BrowserSyncedData.Id));
+                    .Where(map => map.BrowserSyncedData.IsGangActionArea
+                                && !gangActionAreas.Any(a => a.MapId == map.BrowserSyncedData.Id));
             }
         }
 

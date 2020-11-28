@@ -55,7 +55,6 @@ namespace TDS.Server.Data.Languages
         public virtual string GANGACTION_CANT_JOIN_AGAIN => "You are not allowed to join the gang action again.";
         public virtual string GANGWAR_ATTACK_INVITATION => "Your gang is attacking an area!\n(Accept or use /attack)";
         public virtual string GANGWAR_ATTACK_PREPARATION_INVITATION => "Your gang is preparing a gangwar!\n(Accept or use /attack)";
-        public virtual string GANGWAR_ATTACKER_PREPARATION_INFO => "You are preparing an attack against '{1}' in the area '{0}'.";
         public virtual string GANGWAR_ATTACKER_STARTED_INFO => "You attack the area '{0}' of '{1}'.";
         public virtual string GANGWAR_DEFEND_INVITATION => "Defend your gang area!\n(Accept or use /defend)";
         public virtual string GANGWAR_OWNER_PREPARATION_INFO => "A gangwar is being prepared against one of your areas.";
@@ -228,5 +227,12 @@ namespace TDS.Server.Data.Languages
         public virtual string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Your password has been successfully reset. Check your emails (look into junk mails folder!).";
         public virtual string REGISTER_FAILED_DEVS_INFORMED => "An error has occured while trying to register. The developers are informed and will fix this problem as soon as possible. Please try again later.";
         public virtual string GANGWAR_TARGET_EMPTY_SECS_LEFT => "The target is empty! You have {0} seconds to occupy it again.";
+        public virtual string GANG_ACTION_IN_PREPARATION => "An attack is prepared in the area {0}.";
+        public virtual string GANG_ACTION_IN_PREPARATION_ATTACKER => "Your gang is preparing an attack against {0} in the area {1}.";
+        public virtual string GANG_ACTION_IN_PREPARATION_OWNER => "A gang is preparing an attack in your area {0}.";
+        public virtual string GANG_ACTION_STARTED => "An attack has been started by {0} against {1}. Area: {2}";
+        public virtual string GANG_AREA_CONQUERED_WITH_OWNER => "The area {0} has been successfully conquered by {1} from owners {2}.";
+        public virtual string GANG_AREA_CONQUERED_WITHOUT_OWNER => "The area {0} has been successfully taken by {1}.";
+        public virtual string GANG_AREA_DEFENDED => "The area {0} has been successfully defended by {1} against attackers {2}.";
     }
 }

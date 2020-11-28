@@ -56,7 +56,6 @@ namespace TDS.Server.Data.Languages
         public override string GANGACTION_CANT_JOIN_AGAIN => "Du darfst der Gang-Aktion nicht erneut beitreten.";
         public override string GANGWAR_ATTACK_INVITATION => "Deine Gang greift ein Gebiet an!\n(Nimm an oder nutze /angreifen)";
         public override string GANGWAR_ATTACK_PREPARATION_INVITATION => "Deine Gang bereitet einen Gangwar vor!\n(Nimm an oder nutze /angreifen)";
-        public override string GANGWAR_ATTACKER_PREPARATION_INFO => "Ihr bereitet im Gebiet '{0}' einen Angriff gegen '{1}' vor.";
         public override string GANGWAR_ATTACKER_STARTED_INFO => "Ihr greift das Gebiet '{0}' von '{1}' an.";
         public override string GANGWAR_DEFEND_INVITATION => "Verteidige euer Gang-Gebiet!\n(Nimm an oder nutze /verteidigen)";
         public override string GANGWAR_OWNER_PREPARATION_INFO => "Gegen eines eurer Gebiete wird ein Gangwar vorbereitet.";
@@ -227,5 +226,12 @@ namespace TDS.Server.Data.Languages
         public override string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Dein Passwort wurde erfolgreich zurückgesetzt. Überprüfe deine E-Mails (besonders die Junk-Emails!).";
         public override string REGISTER_FAILED_DEVS_INFORMED => "Ein Fehler ist beim Registrieren aufgetreten. Die Entwickler sind informiert und werden das Problem so schnell es geht beheben. Versuche es bitte später erneut.";
         public override string GANGWAR_TARGET_EMPTY_SECS_LEFT => "Das Ziel ist leer! Ihr habt {0} Sekunden, um es wieder zu besetzen.";
+        public override string GANG_ACTION_IN_PREPARATION => "Ein Angriff wird im Gebiet {0} vorbereitet.";
+        public override string GANG_ACTION_IN_PREPARATION_ATTACKER => "Deine Gang bereitet einen Angriff gegen {0} im Gebiet {1} vor.";
+        public override string GANG_ACTION_IN_PREPARATION_OWNER => "Eine Gang bereitet einen Angriff in eurem Gebiet {0} vor.";
+        public override string GANG_ACTION_STARTED => "Ein Angriff wurde von {0} gegen {1} gestartet. Gebiet: {2}";
+        public override string GANG_AREA_CONQUERED_WITH_OWNER => "Das Gebiet {0} wurde erfolgreich von {1} vom Besitzer {2} erobert.";
+        public override string GANG_AREA_CONQUERED_WITHOUT_OWNER => "Das Gebiet {0} wurde erfolgreich von {1} genommen.";
+        public override string GANG_AREA_DEFENDED => "Das Gebiet {0} wurde erfolgreich von {1} gegen die Angreifer {2} verteidigt.";
     }
 }

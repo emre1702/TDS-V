@@ -10,6 +10,7 @@ using TDS.Server.Data.Interfaces.GangActionAreaSystem.Notifications;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.StartRequirements;
 using TDS.Server.Data.Interfaces.GangsSystem;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Database.Entity.GangEntities;
 
 namespace TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas
 {
@@ -30,5 +31,6 @@ namespace TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas
         IGang? Owner => GangsHandler.Owner;
         GangActionType Type { get; }
         IDatabaseHandler Database => DatabaseHandler.Database;
+        GangActionAreas? Entity => DatabaseHandler.Entity;
     }
 }

@@ -12,7 +12,9 @@ namespace TDS.Server.GangActionAreaSystem.Events
         public event EmptyDelegate? CooldownStarted;
         public event EmptyDelegate? CooldownEnded;
         public event LobbyDelegate? AddedToLobby;
-        public event AttackerOwnerDelegate? Conquered;
+        public event LobbyDelegate? RemovedFromLobby;
+        public event AttackerMaybeOwnerDelegate? Conquered;
+        public event AttackerOwnerDelegate? Defended;
 
         public void TriggerCooldownStarted()
         {
@@ -50,6 +52,18 @@ namespace TDS.Server.GangActionAreaSystem.Events
             }
         }
 
+        public void TriggerRemovedFromLobby(IGangActionLobby lobby)
+        {
+            try
+            {
+                RemovedFromLobby?.Invoke(lobby);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
+        }
+
         public void TriggerConquered(IGang newOwner, IGang? previousOwner)
         {
             try
@@ -62,23 +76,16 @@ namespace TDS.Server.GangActionAreaSystem.Events
             }
         }
 
-        public void Remove()
+        public void TriggerDefended(IGang attacker, IGang owner)
         {
-            if (CooldownStarted is { })
-                foreach (var d in CooldownStarted.GetInvocationList())
-                    CooldownStarted -= d as EmptyDelegate;
-
-            if (CooldownEnded is { })
-                foreach (var d in CooldownEnded.GetInvocationList())
-                    CooldownEnded -= d as EmptyDelegate;
-
-            if (AddedToLobby is { })
-                foreach (var d in AddedToLobby.GetInvocationList())
-                    AddedToLobby -= d as LobbyDelegate;
-
-            if (Conquered is { })
-                foreach (var d in Conquered.GetInvocationList())
-                    Conquered -= d as AttackerOwnerDelegate;
+            try
+            {
+                Defended?.Invoke(attacker, owner);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
     }
 }

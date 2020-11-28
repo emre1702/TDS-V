@@ -11,6 +11,7 @@ using TDS.Server.Data.Interfaces.GangActionAreaSystem.MapHandlers;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.Notifications;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.StartRequirements;
 using TDS.Server.Data.Interfaces.LobbySystem;
+using TDS.Server.Data.Models.Map;
 using TDS.Server.Database.Entity.GangEntities;
 using TDS.Server.GangActionAreaSystem.Action;
 using TDS.Server.GangActionAreaSystem.Database;
@@ -26,6 +27,7 @@ using TDS.Server.Handler.GangSystem;
 
 namespace TDS.Server.GangActionAreaSystem.Areas
 {
+    //Todo: Add invitations
     internal abstract class BaseArea : IBaseGangActionArea
     {
         public abstract GangActionType Type { get; }
@@ -59,16 +61,19 @@ namespace TDS.Server.GangActionAreaSystem.Areas
             InitDependencies(null);
         }
 
-        public void Init(GangActionAreas? entity)
+        public void Init(MapDto map, GangActionAreas? entity)
         {
             if (entity is { })
+            {
                 DatabaseHandler.Init(entity);
+                GangsHandler.Init(entity);
+            }
+
+            Action.Init(this);                
             LobbyHandler.Init(this);
-        }
-
-        public void Remove()
-        {
-
+            MapHandler.Init(this, map);
+            Notifications.Init(this);
+            StartRequirements.Init(this);
         }
 
         protected virtual void InitDependencies(BaseAreaDependencies? d)
@@ -86,6 +91,12 @@ namespace TDS.Server.GangActionAreaSystem.Areas
 
             DatabaseHandler = d.DatabaseHandler;
             LobbyHandler = d.LobbyHandler;
+        }
+
+        public override string ToString()
+        {
+            var mapName = DatabaseHandler?.Entity?.Map.Name ?? "Unknown";
+            return $"'{mapName}' ({Type})";
         }
     }
 }
