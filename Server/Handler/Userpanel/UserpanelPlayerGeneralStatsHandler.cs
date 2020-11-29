@@ -45,18 +45,6 @@ namespace TDS.Server.Handler.Userpanel
         {
             var data = await ExecuteForDBAsync(async dbContext
                 => await dbContext.Players
-                    /*.Include(p => p.GangMemberNavigation)
-                        .ThenInclude(g => g.Gang)
-                            .ThenInclude(g => g.Team)
-                    .Include(p => p.Maps)
-                        .ThenInclude(m => m.PlayerMapRatings)
-                    .Include(p => p.PlayerBansPlayer)
-                        .ThenInclude(b => b.Lobby)
-                    .Include(p => p.PlayerMapRatings)
-                    .Include(p => p.PlayerStats)
-                    .Include(p => p.PlayerTotalStats)
-                    .Include(p => p.PlayerLobbyStats)
-                        .ThenInclude(s => s.Lobby)*/
                     .Where(p => p.Id == playerId)
                     .AsNoTracking()
                     .Select(p => new PlayerUserpanelGeneralStatsDataDto

@@ -11,5 +11,6 @@ namespace TDS.Server.Data.Interfaces.GangActionAreaSystem.GangsHandler
 
         void Init(GangActionAreas entity);
         void SetAttacker(IGang? attacker);
+        void SetOwner(IGang? owner);
     }
 }

@@ -98,7 +98,7 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
                 return;
 
             _targetTextLabel = NAPI.TextLabel.CreateTextLabel("Target", TargetObject.Position,
-                (float)_settingsHandler.ServerSettings.GangwarTargetRadius, 7f, 0, new Color(220, 220, 220), true, _lobby.MapHandler.Dimension) as ITDSTextLabel;
+                (float)_settingsHandler.ServerSettings.GangActionTargetRadius, 7f, 0, new Color(220, 220, 220), true, _lobby.MapHandler.Dimension) as ITDSTextLabel;
         }
     }
 }

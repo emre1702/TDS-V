@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.LobbyHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models.Map;
 using TDS.Server.Database.Entity.LobbyEntities;
 using TDS.Server.Database.Entity.Rest;
 using TDS.Server.Handler;
@@ -37,12 +40,17 @@ namespace TDS.Server.GangActionAreaSystem.LobbyHandlers
             _area = area;
         }
 
-        public async Task<IGangActionLobby> SetInGangActionLobby()
+        public async Task<IGangActionLobby> SetInGangActionLobby(ITDSPlayer attacker)
         {
             var entity = await CreateEntity();
             var lobby = _lobbiesProvider.Create<IGangActionLobby>(entity);
             InLobby = lobby;
+            lobby.MapHandler.SetMapList(new List<MapDto>() { _area.MapHandler.Map });
             _area.Events.TriggerAddedToLobby(lobby);
+
+            await lobby.Players.AddPlayer(attacker, (int)GangActionLobbyTeamIndex.Attacker).ConfigureAwait(false);
+            lobby.Rounds.RoundStates.StartRound();
+
             return lobby;
         }
 
@@ -53,10 +61,10 @@ namespace TDS.Server.GangActionAreaSystem.LobbyHandlers
             var dummyDBTeam = mainLobbySpectatorTeam.Entity.DeepCopy();
 
             var ownerDBTeam = _area.GangsHandler.Owner!.Entity.Team.DeepCopy();
-            ownerDBTeam.Index = 1;
+            ownerDBTeam.Index = (int)GangActionLobbyTeamIndex.Owner;
 
             var attackerDBTeam = _area.GangsHandler.Attacker!.Entity.Team.DeepCopy();
-            attackerDBTeam.Index = 2;
+            attackerDBTeam.Index = (int)GangActionLobbyTeamIndex.Attacker;
 
             var entity = new Lobbies
             {
@@ -68,8 +76,8 @@ namespace TDS.Server.GangActionAreaSystem.LobbyHandlers
                 },
                 LobbyRoundSettings = new LobbyRoundSettings
                 {
-                    CountdownTime = (int)_settingsHandler.ServerSettings.GangwarPreparationTime,
-                    RoundTime = (int)_settingsHandler.ServerSettings.GangwarActionTime,
+                    CountdownTime = (int)_settingsHandler.ServerSettings.GangActionPreparationTime,
+                    RoundTime = (int)_settingsHandler.ServerSettings.GangActionRoundTime,
                     ShowRanking = true
                 },
                 LobbyWeapons = _lobbiesHandler.Arena.Entity.LobbyWeapons.Select(w => new LobbyWeapons

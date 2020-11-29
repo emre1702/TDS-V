@@ -53,16 +53,7 @@ namespace TDS.Server.Data.Languages
         public virtual string GANG_LEVEL_MAX_ALLOWED => "A maximum of {0} is allowed as gang level.";
         public virtual string GANG_REMOVED => "Your gang got disbanded.";
         public virtual string GANGACTION_CANT_JOIN_AGAIN => "You are not allowed to join the gang action again.";
-        public virtual string GANGWAR_ATTACK_INVITATION => "Your gang is attacking an area!\n(Accept or use /attack)";
-        public virtual string GANGWAR_ATTACK_PREPARATION_INVITATION => "Your gang is preparing a gangwar!\n(Accept or use /attack)";
-        public virtual string GANGWAR_ATTACKER_STARTED_INFO => "You attack the area '{0}' of '{1}'.";
-        public virtual string GANGWAR_DEFEND_INVITATION => "Defend your gang area!\n(Accept or use /defend)";
-        public virtual string GANGWAR_OWNER_PREPARATION_INFO => "A gangwar is being prepared against one of your areas.";
-        public virtual string GANGWAR_OWNER_STARTED_INFO => "Your area '{0}' is being attacked by the gang '{1}'.";
-        public virtual string GANGWAR_PREPARATION_INFO => "Die Gang '{0}' bereitet einen Gangwar vor.";
         public virtual string GANGWAR_STARTED_INFO => "The gang '{0}' is preparing a gangwar.";
-        public virtual string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO => "{0} ist bei den Gegnern in den Gangwar beigetreten.";
-        public virtual string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO => "{0} ist bei euch in den Gangwar beigetreten.";
         public virtual string GIVE_MONEY_NEED_FEE => "You need ${0} with ${1} fee included.";
         public virtual string GIVE_MONEY_TOO_LESS => "The amount you tried to give is too less.";
         public virtual string GOT_ASSIST => "You got the assist of {0}.";
@@ -234,5 +225,17 @@ namespace TDS.Server.Data.Languages
         public virtual string GANG_AREA_CONQUERED_WITH_OWNER => "The area {0} has been successfully conquered by {1} from owners {2}.";
         public virtual string GANG_AREA_CONQUERED_WITHOUT_OWNER => "The area {0} has been successfully taken by {1}.";
         public virtual string GANG_AREA_DEFENDED => "The area {0} has been successfully defended by {1} against attackers {2}.";
+        public virtual string GANG_ACTION_AREA_IN_COOLDOWN => "The area has a cooldown. Try again after {0} minutes.";
+        public virtual string GANG_ACTION_AREA_OWNER_IN_ACTION => "The owner of that area is already in an gang action.";
+        public virtual string GANG_ACTION_ATTACK_PREPARATION_INVITATION => "Your gang is preparing an attack for area {0}!\n(Accept or use /attack)";
+        public virtual string GANG_ACTION_ATTACK_INVITATION => "Your gang is attacking area {0}!\n(Accept or use /attack)";
+        public virtual string GANG_ACTION_DEFEND_INVITATION => "Defend your gang area {0}!\n(Accept or use /defend)";
+        public virtual string GANG_ACTION_TEAM_YOURS_PLAYER_JOINED_INFO => "{0} joined the gang action for your gang.";
+        public virtual string GANG_ACTION_TEAM_OPPONENT_PLAYER_JOINED_INFO => "{0} joined the gang action on the opponents side.";
+        public virtual string YOUR_GANG_ALREADY_REACHED_MAX_ATTACK_COUNT => "Your gang has already reached the max. attack count of {0} for today.";
+        public virtual string YOUR_GANG_ALREADY_IN_ACTION => "Your gang is already in an gang action.";
+        public virtual string NOT_ENOUGH_PLAYERS_ONLINE_IN_YOUR_GANG => "There are not enough players online in your gang (expected {0}).";
+        public virtual string GANG_ACTION_AREA_DOES_NOT_EXIST => "The gang area does not exist?!";
+        public virtual string NOT_ENOUGH_PLAYERS_ONLINE_IN_TARGET_GANG => "There are not enough players online in the opponents gang (expected {0}).";
     }
 }

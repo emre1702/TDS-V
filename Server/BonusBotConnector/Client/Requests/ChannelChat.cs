@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas;
 using TDS.Server.Database.Entity.Bonusbot;
 using TDS.Server.Database.Entity.Player;
 using TDS.Server.Database.Entity.Userpanel;
@@ -28,7 +29,7 @@ namespace BonusBotConnector.Client.Requests
         public event ErrorLogDelegate? Error;
         public event ErrorStringLogDelegate? ErrorString;
 
-        public void SendActionStartInfo(IGangGamemode gamemode)
+        public void SendActionStartInfo(IBaseGangActionArea area)
         {
             if (_settings.ActionsInfoChannelId is null)
                 return;
@@ -43,10 +44,10 @@ namespace BonusBotConnector.Client.Requests
                     ColorG = 150,
                     ColorB = 150
                 };
-                embed.Fields.Add(new EmbedField { Name = "Attacker", Value = gamemode.AttackerGang?.Entity.Name ?? "?" });
-                embed.Fields.Add(new EmbedField { Name = "Owner", Value = gamemode.OwnerGang?.Entity.Name ?? "?" });
-                embed.Fields.Add(new EmbedField { Name = "Type", Value = gamemode.Type.ToString() });
-                embed.Fields.Add(new EmbedField { Name = "Area name", Value = gamemode.AreaName });
+                embed.Fields.Add(new EmbedField { Name = "Attacker", Value = area.Attacker?.Entity.Name ?? "?" });
+                embed.Fields.Add(new EmbedField { Name = "Owner", Value = area.Owner?.Entity.Name ?? "?" });
+                embed.Fields.Add(new EmbedField { Name = "Type", Value = area.Type.ToString() });
+                embed.Fields.Add(new EmbedField { Name = "Area name", Value = area.Entity?.Map.Name ?? "?" });
 
                 SendRequest(embed, _settings.ActionsInfoChannelId);
             }
@@ -100,7 +101,7 @@ namespace BonusBotConnector.Client.Requests
 
         public void SendError(string msg)
         {
-            SendRequest(msg, _settings.ErrorLogsChannelId, false);
+            SendRequest(msg, _settings.ErrorLogsChannelId);
         }
 
         public void SendSupportRequest(string info)
@@ -115,7 +116,7 @@ namespace BonusBotConnector.Client.Requests
             ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
         }
 
-        private void SendRequest(string text, ulong? channelId, bool logToBonusBotOnError = true)
+        private void SendRequest(string text, ulong? channelId)
         {
             if (channelId is null)
                 return;
@@ -132,7 +133,7 @@ namespace BonusBotConnector.Client.Requests
             });  
         }
 
-        private void SendRequest(EmbedToChannelRequest request, ulong? channelId, bool logToBonusBotOnError = true)
+        private void SendRequest(EmbedToChannelRequest request, ulong? channelId)
         {
             if (channelId is null)
                 return;

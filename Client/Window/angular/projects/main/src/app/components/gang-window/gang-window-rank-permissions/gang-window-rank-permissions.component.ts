@@ -58,9 +58,9 @@ export class GangWindowRankPermissionsComponent implements OnInit, OnDestroy {
         {
             title: "Action", rows: [
                 {
-                    index: GangPermissionKey.StartGangwar,
-                    text: GangPermissionKey[GangPermissionKey.StartGangwar],
-                    hint: GangPermissionKey[GangPermissionKey.StartGangwar] + "Hint",
+                    index: GangPermissionKey.StartGangAction,
+                    text: GangPermissionKey[GangPermissionKey.StartGangAction],
+                    hint: GangPermissionKey[GangPermissionKey.StartGangAction] + "Hint",
                     value: 0
                 }
             ]

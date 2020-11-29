@@ -39,7 +39,6 @@ namespace TDS.Server.PlayersSystem
         public void TriggerLobbyLeft(IBaseLobby lobby)
             => LobbyLeft?.Invoke(_player, lobby);
 
-        //Todo: Implement TriggerRemoved for player
         public void TriggerRemoved()
             => Removed?.Invoke();
 

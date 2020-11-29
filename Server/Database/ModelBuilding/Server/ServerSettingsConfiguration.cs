@@ -62,11 +62,11 @@ namespace TDS.Server.Database.ModelBuilding.Server
                 .IsRequired()
                 .HasDefaultValue(14);
 
-            builder.Property(e => e.GangwarPreparationTime)
+            builder.Property(e => e.GangActionPreparationTime)
                 .IsRequired()
                 .HasDefaultValue(3 * 60);
 
-            builder.Property(e => e.GangwarActionTime)
+            builder.Property(e => e.GangActionRoundTime)
                 .IsRequired()
                 .HasDefaultValue(15 * 60);
 
@@ -78,11 +78,11 @@ namespace TDS.Server.Database.ModelBuilding.Server
                 .IsRequired()
                 .HasDefaultValue(60);
 
-            builder.Property(e => e.MinPlayersOnlineForGangwar)
+            builder.Property(e => e.MinPlayersOnlineForGangAction)
                 .IsRequired()
                 .HasDefaultValue(3);
 
-            builder.Property(e => e.GangwarAreaAttackCooldownMinutes)
+            builder.Property(e => e.GangActionAreaAttackCooldownMinutes)
                 .IsRequired()
                 .HasDefaultValue(60);
 
@@ -90,11 +90,11 @@ namespace TDS.Server.Database.ModelBuilding.Server
                 .IsRequired()
                 .HasDefaultValue(3);
 
-            builder.Property(e => e.GangwarTargetRadius)
+            builder.Property(e => e.GangActionTargetRadius)
                 .IsRequired()
                 .HasDefaultValue(5d);
 
-            builder.Property(e => e.GangwarTargetWithoutAttackerMaxSeconds)
+            builder.Property(e => e.GangActionTargetWithoutAttackerMaxSeconds)
                 .IsRequired()
                 .HasDefaultValue(10);
 

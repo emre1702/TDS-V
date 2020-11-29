@@ -6,5 +6,6 @@ namespace TDS.Server.Data.Interfaces.GangsSystem
     public interface IGangPermissionsHandler
     {
         bool IsAllowedTo(ITDSPlayer player, GangCommand type);
+        bool CheckIsAllowedTo(ITDSPlayer player, GangCommand type);
     }
 }

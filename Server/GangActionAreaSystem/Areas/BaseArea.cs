@@ -1,4 +1,5 @@
-﻿using TDS.Server.Data.Enums;
+﻿using BonusBotConnector.Client;
+using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Entities;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.Action;
@@ -24,10 +25,10 @@ using TDS.Server.GangActionAreaSystem.Notifications;
 using TDS.Server.GangActionAreaSystem.StartRequirements;
 using TDS.Server.Handler;
 using TDS.Server.Handler.GangSystem;
+using TDS.Server.Handler.Helper;
 
 namespace TDS.Server.GangActionAreaSystem.Areas
 {
-    //Todo: Add invitations
     internal abstract class BaseArea : IBaseGangActionArea
     {
         public abstract GangActionType Type { get; }
@@ -46,17 +47,21 @@ namespace TDS.Server.GangActionAreaSystem.Areas
         protected IDatabaseHandler Database { get; }
         protected GangsHandler GlobalGangsHandler { get; }
         protected LobbiesHandler GlobalLobbiesHandler { get; }
+        protected LangHelper LangHelper { get; }
         protected ILobbiesProvider LobbiesProvider { get; }
         protected ISettingsHandler SettingsHandler { get; }
+        protected BonusBotConnectorClient BonusBotConnectorClient { get; }
 
-        protected BaseArea(IDatabaseHandler database, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, 
-            ILobbiesProvider lobbiesProvider, ISettingsHandler settingsHandler)
+        protected BaseArea(IDatabaseHandler database, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, LangHelper langHelper,
+            ILobbiesProvider lobbiesProvider, ISettingsHandler settingsHandler, BonusBotConnectorClient bonusBotConnectorClient)
         {
             Database = database;
             GlobalGangsHandler = gangsHandler;
             GlobalLobbiesHandler = lobbiesHandler;
+            LangHelper = langHelper;
             LobbiesProvider = lobbiesProvider;
             SettingsHandler = settingsHandler;
+            BonusBotConnectorClient = bonusBotConnectorClient;
 
             InitDependencies(null);
         }
@@ -86,7 +91,7 @@ namespace TDS.Server.GangActionAreaSystem.Areas
             d.GangsHandler ??= new BaseAreaGangsHandler(GlobalGangsHandler);
             d.LobbyHandler ??= new BaseAreaLobbyHandler(GlobalLobbiesHandler, SettingsHandler, LobbiesProvider);
             d.MapHandler ??= new BaseAreaMapHandler(GlobalLobbiesHandler);
-            d.Notifications ??= new BaseAreaNotifications(GlobalLobbiesHandler);
+            d.Notifications ??= new BaseAreaNotifications(BonusBotConnectorClient, LangHelper);
             d.StartRequirements ??= new BaseAreaStartRequirements(SettingsHandler);
 
             DatabaseHandler = d.DatabaseHandler;

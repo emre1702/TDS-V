@@ -755,8 +755,8 @@ export interface Language {
     InviteMembersHint: string;
     KickMembers: string;
     KickMembersHint: string;
-    StartGangwar: string;
-    StartGangwarHint: string;
+    StartGangAction: string;
+    StartGangActionHint: string;
     GangInfo: string;
     Members: string;
     Ranks: string;

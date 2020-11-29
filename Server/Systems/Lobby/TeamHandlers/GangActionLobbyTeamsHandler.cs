@@ -25,7 +25,7 @@ namespace TDS.Server.LobbySystem.TeamHandlers
             {
                 lock (_attackerPlayerIds)
                 {
-                    return Math.Max(_attackerPlayerIds.Count, _settingsHandler.ServerSettings.MinPlayersOnlineForGangwar);
+                    return Math.Max(_attackerPlayerIds.Count, _settingsHandler.ServerSettings.MinPlayersOnlineForGangAction);
                 }
             }
         }
@@ -36,7 +36,7 @@ namespace TDS.Server.LobbySystem.TeamHandlers
             {
                 lock (_ownerPlayerIds)
                 {
-                    return Math.Max(_ownerPlayerIds.Count, _settingsHandler.ServerSettings.MinPlayersOnlineForGangwar);
+                    return Math.Max(_ownerPlayerIds.Count, _settingsHandler.ServerSettings.MinPlayersOnlineForGangAction);
                 }
             }
         }
@@ -98,12 +98,12 @@ namespace TDS.Server.LobbySystem.TeamHandlers
                     if (isAttacker)
                     {
                         return _attackerPlayerIds.Count < _settingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
-                            || _attackerPlayerIds.Count < _ownerPlayerIds.Count + (_settingsHandler.ServerSettings.GangwarAttackerCanBeMore ? 1 : 0);
+                            || _attackerPlayerIds.Count < _ownerPlayerIds.Count + (_settingsHandler.ServerSettings.GangActionAttackerCanBeMore ? 1 : 0);
                     }
                     else
                     {
                         return _ownerPlayerIds.Count < _settingsHandler.ServerSettings.AmountPlayersAllowedInGangwarTeamBeforeCountCheck
-                            || _ownerPlayerIds.Count < _attackerPlayerIds.Count + (_settingsHandler.ServerSettings.GangwarOwnerCanBeMore ? 1 : 0);
+                            || _ownerPlayerIds.Count < _attackerPlayerIds.Count + (_settingsHandler.ServerSettings.GangActionOwnerCanBeMore ? 1 : 0);
                     }
                 }
             }

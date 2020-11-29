@@ -33,10 +33,11 @@ namespace TDS.Server.Database.SeedData.Server
                 MultiplierRankingKills = 75f,
                 MultiplierRankingAssists = 25f,
                 MultiplierRankingDamage = 1f,
-                GangwarAttackerCanBeMore = true,
-                GangwarOwnerCanBeMore = false,
+                GangActionAttackerCanBeMore = true,
+                GangActionOwnerCanBeMore = false,
                 GitHubRepoOwnerName = "emre1702",
-                GitHubRepoRepoName = "TDS-V"
+                GitHubRepoRepoName = "TDS-V",
+                GangMaxGangActionAttacksPerDay = 5
             });
             return modelBuilder;
         }

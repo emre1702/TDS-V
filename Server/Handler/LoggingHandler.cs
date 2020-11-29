@@ -271,39 +271,6 @@ namespace TDS.Server.Handler
                 LogError(newEx);
             }
         }
-
-        /*public static void LogError(string info, string stacktrace, Player source, bool logToBonusBot = true)
-       {
-           var log = new LogErrors
-           {
-               Info = info,
-               StackTrace = stacktrace,
-               Source = source?.GetEntity()?.Id,
-               Timestamp = DateTime.UtcNow
-           };
-           Console.WriteLine(info + "\n" + stacktrace);
-           LogsManager.AddLog(log);
-           if (logToBonusBot)
-               _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
-       }
-
-       public void LogError(string info, string stacktrace, TDSPlayer? source = null, bool logToBonusBot = true)
-       {
-           var log = new LogErrors
-           {
-               Info = info,
-               StackTrace = stacktrace,
-               Source = source?.Entity?.Id,
-               Timestamp = DateTime.UtcNow
-           };
-           Console.WriteLine(info + "\n" + stacktrace);
-           LogsManager.AddLog(log);
-           if (logToBonusBot)
-               _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
-       }
-
-      */
-
         #endregion Error
 
         #region Chat

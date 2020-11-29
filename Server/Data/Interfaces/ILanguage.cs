@@ -44,17 +44,8 @@ namespace TDS.Server.Data.Interfaces
         string GANG_INVITATION_WAS_REMOVED { get; }
         string GANG_REMOVED { get; }
         string GANGACTION_CANT_JOIN_AGAIN { get; }
-        string GANGWAR_ATTACK_INVITATION { get; }
-        string GANGWAR_ATTACK_PREPARATION_INVITATION { get; }
-        string GANGWAR_ATTACKER_STARTED_INFO { get; }
-        string GANGWAR_DEFEND_INVITATION { get; }
-        string GANGWAR_OWNER_PREPARATION_INFO { get; }
-        string GANGWAR_OWNER_STARTED_INFO { get; }
-        string GANGWAR_PREPARATION_INFO { get; }
         string GANGWAR_STARTED_INFO { get; }
         string TEAM_ALREADY_FULL_INFO { get; }
-        string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO { get; }
-        string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO { get; }
         string GIVE_MONEY_NEED_FEE { get; }
         string GIVE_MONEY_TOO_LESS { get; }
         string GOT_ASSIST { get; }
@@ -227,5 +218,17 @@ namespace TDS.Server.Data.Interfaces
         string GANG_AREA_CONQUERED_WITH_OWNER { get; }
         string GANG_AREA_CONQUERED_WITHOUT_OWNER { get; }
         string GANG_AREA_DEFENDED { get; }
+        string GANG_ACTION_AREA_IN_COOLDOWN { get; }
+        string GANG_ACTION_AREA_OWNER_IN_ACTION { get; }
+        string GANG_ACTION_ATTACK_PREPARATION_INVITATION { get; }
+        string GANG_ACTION_ATTACK_INVITATION { get; }
+        string GANG_ACTION_DEFEND_INVITATION { get; }
+        string GANG_ACTION_TEAM_YOURS_PLAYER_JOINED_INFO { get; }
+        string GANG_ACTION_TEAM_OPPONENT_PLAYER_JOINED_INFO { get; }
+        string YOUR_GANG_ALREADY_REACHED_MAX_ATTACK_COUNT { get; }
+        string YOUR_GANG_ALREADY_IN_ACTION { get; }
+        string NOT_ENOUGH_PLAYERS_ONLINE_IN_YOUR_GANG { get; }
+        string GANG_ACTION_AREA_DOES_NOT_EXIST { get; }
+        string NOT_ENOUGH_PLAYERS_ONLINE_IN_TARGET_GANG { get; }
     }
 }

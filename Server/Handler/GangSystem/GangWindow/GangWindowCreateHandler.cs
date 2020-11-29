@@ -85,7 +85,7 @@ namespace TDS.Server.Handler.GangSystem
                     KickMembers = 3,
                     ManagePermissions = 3,
                     ManageRanks = 3,
-                    StartGangwar = 3,
+                    StartGangAction = 3,
                     SetRanks = 3
                 },
                 Members = new List<GangMembers>(),

@@ -63,7 +63,7 @@ namespace TDS.Server.GangGamemodesSystem.Specials
         private void NoOneIsInTarget()
         {
             ++_noOneInTargetSeconds;
-            var secsLeft = SettingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds - _noOneInTargetSeconds;
+            var secsLeft = SettingsHandler.ServerSettings.GangActionTargetWithoutAttackerMaxSeconds - _noOneInTargetSeconds;
             switch ((secsLeft, _noOneInTargetSeconds))
             {
                 case (_, 1):
@@ -98,7 +98,7 @@ namespace TDS.Server.GangGamemodesSystem.Specials
                 && player.Lifes > 0
                 && player.LoggedIn
                 && player.Lobby == Lobby
-                && player.Position.DistanceTo(Gamemode.MapHandler.TargetObject!.Position) <= SettingsHandler.ServerSettings.GangwarTargetRadius;
+                && player.Position.DistanceTo(Gamemode.MapHandler.TargetObject!.Position) <= SettingsHandler.ServerSettings.GangActionTargetRadius;
         }
 
         public override ValueTask InRound()

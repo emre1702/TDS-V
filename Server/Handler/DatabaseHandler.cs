@@ -23,11 +23,6 @@ namespace TDS.Server.Handler
         public void SetPlayerSource(ITDSPlayer player)
             => _player = player;
 
-        /*public void InitDbContext()
-        {
-            _dbContext = new TDSDbContext();
-        }*/
-
         public async Task ExecuteForDB(Action<TDSDbContext> action)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);

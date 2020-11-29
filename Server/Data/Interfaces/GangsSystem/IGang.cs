@@ -12,6 +12,7 @@ namespace TDS.Server.Data.Interfaces.GangsSystem
         IGangChat Chat { get; set; }
         IDatabaseHandler Database { get; }
         IGangHouseHandler HouseHandler { get; }
+        IGangInvitations Invitations { get; }
         IGangLeaderHandler LeaderHandler { get; set; }
         IGangMapHandler MapHandler { get; }
         IGangPermissionsHandler PermissionsHandler { get; }

@@ -1,22 +1,25 @@
-﻿using System.Threading.Tasks;
+﻿using BonusBotConnector.Client;
+using System.Threading.Tasks;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.Notifications;
 using TDS.Server.Data.Interfaces.GangsSystem;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Handler;
+using TDS.Server.Handler.Helper;
 
 namespace TDS.Server.GangActionAreaSystem.Notifications
 {
     internal class BaseAreaNotifications : IBaseGangActionAreaNotifications
     {
-        private readonly LobbiesHandler _lobbiesHandler;
+        private readonly BonusBotConnectorClient _bonusBotConnectorClient;
+        private readonly LangHelper _langHelper;
 
 #nullable disable
         private IBaseGangActionArea _area;
 #nullable enable
 
-        internal BaseAreaNotifications(LobbiesHandler lobbiesHandler)
-            => _lobbiesHandler = lobbiesHandler;
+        internal BaseAreaNotifications(BonusBotConnectorClient bonusBotConnectorClient, LangHelper langHelper)
+            => (_bonusBotConnectorClient, _langHelper) = (bonusBotConnectorClient, langHelper);
 
         public void Init(IBaseGangActionArea area)
         {
@@ -43,7 +46,7 @@ namespace TDS.Server.GangActionAreaSystem.Notifications
 
         private void OnAttackPreparation()
         {
-            _lobbiesHandler.GangLobby.Notifications.Send(lang =>
+            _langHelper.SendAllNotification(lang =>
                 string.Format(lang.GANG_ACTION_IN_PREPARATION, _area));
 
             _area.GangsHandler.Attacker!.Chat.SendNotification(lang =>
@@ -55,24 +58,27 @@ namespace TDS.Server.GangActionAreaSystem.Notifications
 
         private ValueTask OnAttackStarted()
         {
-            _lobbiesHandler.GangLobby.Notifications.Send(lang =>
+            _area.InLobby!.Entity.Name = $"[GW] {_area.Attacker!.Entity.Short} - {_area.Owner!.Entity.Short}";
+
+            _langHelper.SendAllNotification(lang =>
                 string.Format(lang.GANG_ACTION_STARTED, _area.GangsHandler.Attacker, _area.GangsHandler.Owner, _area));
+            _bonusBotConnectorClient.ChannelChat?.SendActionStartInfo(_area);
             return default;
         }
 
         private void OnConquered(IGang newOwner, IGang? previousOwner)
         {
             if (previousOwner is { })
-                _lobbiesHandler.GangLobby.Notifications.Send(lang =>
+                _langHelper.SendAllNotification(lang =>
                     string.Format(lang.GANG_AREA_CONQUERED_WITH_OWNER, _area, newOwner, previousOwner));
             else
-                _lobbiesHandler.GangLobby.Notifications.Send(lang =>
+                _langHelper.SendAllNotification(lang =>
                     string.Format(lang.GANG_AREA_CONQUERED_WITHOUT_OWNER, _area, newOwner));
         }
 
         private void OnDefended(IGang attacker, IGang owner) 
         {
-            _lobbiesHandler.GangLobby.Notifications.Send(lang =>
+            _langHelper.SendAllNotification(lang =>
                 string.Format(lang.GANG_AREA_DEFENDED, _area, owner, attacker));
         }
     }

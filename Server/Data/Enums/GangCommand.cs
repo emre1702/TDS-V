@@ -13,6 +13,8 @@
         ModifyPermissions,
 
         OpenOnlyOneEditorPage,
-        CloseOnlyOneEditorPage
+        CloseOnlyOneEditorPage,
+
+        StartGangAction
     }
 }

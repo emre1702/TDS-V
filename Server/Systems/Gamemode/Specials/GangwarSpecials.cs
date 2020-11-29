@@ -118,9 +118,9 @@ namespace TDS.Server.GamemodesSystem.Specials
             NAPI.Task.RunSafe(() =>
                 _playerForcedAtTarget.TriggerEvent(ToClientEvent.SetForceStayAtPosition,
                     targetObjectPositionJson,
-                    SettingsHandler.ServerSettings.GangwarTargetRadius,
+                    SettingsHandler.ServerSettings.GangActionTargetRadius,
                     MapLimitType.KillAfterTime,
-                    SettingsHandler.ServerSettings.GangwarTargetWithoutAttackerMaxSeconds));
+                    SettingsHandler.ServerSettings.GangActionTargetWithoutAttackerMaxSeconds));
         }
 
         private void RemoveTargetMan()

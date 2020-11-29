@@ -18,7 +18,7 @@ namespace TDS.Server.Handler.GangSystem.GangWindow
             to.ManagePermissions = from.ManagePermissions;
             to.ManageRanks = from.ManageRanks;
             to.SetRanks = from.SetRanks;
-            to.StartGangwar = from.StartGangwar;
+            to.StartGangAction = from.StartGangAction;
 
             await player.Gang.Database.ExecuteForDBAsync(async dbContext =>
             {

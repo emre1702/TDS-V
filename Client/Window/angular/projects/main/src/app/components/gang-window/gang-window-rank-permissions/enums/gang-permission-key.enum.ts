@@ -3,6 +3,6 @@ export enum GangPermissionKey {
     KickMembers,
     ManagePermissions,
     ManageRanks,
-    StartGangwar,
+    StartGangAction,
     SetRanks
 }

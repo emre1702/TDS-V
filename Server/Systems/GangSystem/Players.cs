@@ -17,6 +17,14 @@ namespace TDS.Server.GangsSystem
 {
     public class Players : IGangPlayers
     {
+        public int CountOnline
+        {
+            get
+            {
+                lock (_onlinePlayers) { return _onlinePlayers.Count; }
+            }
+        }
+
         private readonly List<ITDSPlayer> _onlinePlayers = new List<ITDSPlayer>();
 
         private readonly GangsHandler _gangsHandler;

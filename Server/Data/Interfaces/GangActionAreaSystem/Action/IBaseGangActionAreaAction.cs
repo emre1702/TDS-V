@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas;
-using TDS.Server.Data.Interfaces.GangsSystem;
 
 namespace TDS.Server.Data.Interfaces.GangActionAreaSystem.Action
 {
@@ -9,6 +9,6 @@ namespace TDS.Server.Data.Interfaces.GangActionAreaSystem.Action
     {
         void Init(IBaseGangActionArea area);
 
-        ValueTask Attack(IGang attacker);
+        ValueTask Attack(ITDSPlayer attackerPlayer);
     }
 }

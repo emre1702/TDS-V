@@ -13,13 +13,13 @@
         public float DistanceToSpotToPlant { get; set; }
         public bool ErrorToPlayerOnNonExistentCommand { get; set; }
         public string GamemodeName { get; set; }
-        public uint GangwarActionTime { get; set; }
-        public int GangwarAreaAttackCooldownMinutes { get; set; }
-        public bool GangwarAttackerCanBeMore { get; set; }
-        public bool GangwarOwnerCanBeMore { get; set; }
-        public uint GangwarPreparationTime { get; set; }
-        public double GangwarTargetRadius { get; set; }
-        public int GangwarTargetWithoutAttackerMaxSeconds { get; set; }
+        public uint GangActionRoundTime { get; set; }
+        public int GangActionAreaAttackCooldownMinutes { get; set; }
+        public bool GangActionAttackerCanBeMore { get; set; }
+        public bool GangActionOwnerCanBeMore { get; set; }
+        public uint GangActionPreparationTime { get; set; }
+        public double GangActionTargetRadius { get; set; }
+        public int GangActionTargetWithoutAttackerMaxSeconds { get; set; }
         public float GiveMoneyFee { get; set; }
         public int GiveMoneyMinAmount { get; set; }
         public short Id { get; set; }
@@ -28,7 +28,7 @@
         public float MapBuyCounterMultiplicator { get; set; }
         public int MapRatingAmountForCheck { get; set; }
         public float MinMapRatingForNewMaps { get; set; }
-        public int MinPlayersOnlineForGangwar { get; set; }
+        public int MinPlayersOnlineForGangAction { get; set; }
         public float MultiplierRankingAssists { get; set; }
         public float MultiplierRankingDamage { get; set; }
         public float MultiplierRankingKills { get; set; }
@@ -46,5 +46,6 @@
         public byte AmountCharSlots { get; set; }
         public string GitHubRepoOwnerName { get; set; }
         public string GitHubRepoRepoName { get; set; }
+        public int GangMaxGangActionAttacksPerDay { get; set; }
     }
 }

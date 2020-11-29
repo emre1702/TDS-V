@@ -25,5 +25,8 @@ namespace TDS.Server.GangActionAreaSystem.GangsHandlers
 
         public void SetAttacker(IGang? attacker)
             => Attacker = attacker;
+
+        public void SetOwner(IGang? owner) 
+            => Owner = owner;
     }
 }
