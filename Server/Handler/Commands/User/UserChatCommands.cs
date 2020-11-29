@@ -15,13 +15,13 @@ namespace TDS.Server.Handler.Commands.User
             => _chatHandler = chatHandler;
 
         [TDSCommand(UserCommand.GlobalChat)]
-        public void GlobalChat(ITDSPlayer player, [TDSRemainingTextAttribute] string message)
+        public void GlobalChat(ITDSPlayer player, [TDSRemainingText] string message)
         {
             _chatHandler.SendGlobalMessage(player, message);
         }
 
         [TDSCommand(UserCommand.TeamChat)]
-        public void TeamChat(ITDSPlayer player, [TDSRemainingTextAttribute] string message)
+        public void TeamChat(ITDSPlayer player, [TDSRemainingText] string message)
         {
             _chatHandler.SendTeamChat(player, message);
         }

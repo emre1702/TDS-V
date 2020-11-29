@@ -46,7 +46,7 @@ namespace TDS.Server.Handler.Commands.User
         }
 
         [TDSCommand(UserCommand.PrivateChat)]
-        public void PrivateChat(ITDSPlayer player, [TDSRemainingTextAttribute] string message)
+        public void PrivateChat(ITDSPlayer player, [TDSRemainingText] string message)
         {
             if (player.InPrivateChatWith is null)
             {
@@ -58,7 +58,7 @@ namespace TDS.Server.Handler.Commands.User
         }
 
         [TDSCommand(UserCommand.PrivateMessage)]
-        public void PrivateMessage(ITDSPlayer player, ITDSPlayer target, [TDSRemainingTextAttribute] string message)
+        public void PrivateMessage(ITDSPlayer player, ITDSPlayer target, [TDSRemainingText] string message)
         {
             if (player == target)
                 return;

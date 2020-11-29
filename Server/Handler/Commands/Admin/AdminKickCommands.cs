@@ -20,7 +20,7 @@ namespace TDS.Server.Handler.Commands.Admin
             => (_langHelper, _lobbiesHandler) = (langHelper, lobbiesHandler);
 
         [TDSCommand(AdminCommand.Kick)]
-        public void KickPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
+        public void KickPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_INFO, target.DisplayName, player.DisplayName, reason));
             NAPI.Task.RunSafe(() =>
@@ -44,7 +44,7 @@ namespace TDS.Server.Handler.Commands.Admin
         }
 
         [TDSCommand(AdminCommand.LobbyKick)]
-        public async Task LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
+        public async Task LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player == target)
                 return;

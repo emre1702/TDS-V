@@ -23,7 +23,7 @@ namespace TDS.Server.Handler.Commands.Admin
             => (_lobbiesHandler) = (lobbiesHandler);
 
         [TDSCommand(AdminCommand.Ban, 1)]
-        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
+        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             PlayerBans? ban = null;
             if (length == TimeSpan.MinValue)
@@ -41,7 +41,7 @@ namespace TDS.Server.Handler.Commands.Admin
         }
 
         [TDSCommand(AdminCommand.Ban, 0)]
-        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
+        public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (length == TimeSpan.MinValue)
                 await _lobbiesHandler.MainMenu.Bans.Unban(player, dbTarget, reason).ConfigureAwait(false);
@@ -55,7 +55,7 @@ namespace TDS.Server.Handler.Commands.Admin
         }
 
         [TDSCommand(AdminCommand.LobbyBan, 1)]
-        public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
+        public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player.Lobby is null || player.Lobby is IMainMenu)
                 return;
@@ -81,7 +81,7 @@ namespace TDS.Server.Handler.Commands.Admin
         }
 
         [TDSCommand(AdminCommand.LobbyBan, 0)]
-        public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
+        public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingText(MinLength = 4)] string reason)
         {
             if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)
                 return;
