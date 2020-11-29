@@ -19,7 +19,7 @@ namespace TDS.Server.Handler.Commands.Admin
             => _databasePlayerHelper = databasePlayerHelper;
 
         [TDSCommand(AdminCommand.Mute, 1)]
-        public void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [RemainingText(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
                 return;
@@ -31,7 +31,7 @@ namespace TDS.Server.Handler.Commands.Admin
         }
 
         [TDSCommand(AdminCommand.Mute, 0)]
-        public async Task MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [RemainingText(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
                 return;
@@ -43,7 +43,7 @@ namespace TDS.Server.Handler.Commands.Admin
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 0)]
-        public async Task VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public async Task VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [RemainingText(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
                 return;
@@ -55,7 +55,7 @@ namespace TDS.Server.Handler.Commands.Admin
         }
 
         [TDSCommand(AdminCommand.VoiceMute, 1)]
-        public void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingText(MinLength = 4)] string reason)
+        public void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [RemainingText(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
                 return;

@@ -11,7 +11,7 @@ namespace TDS.Server.Handler.Commands.Admin
     public class AdminLobbyCommands
     {
         [TDSCommand(AdminCommand.NextMap)]
-        public void NextMap(ITDSPlayer player, TDSCommandInfos cmdinfos, [TDSRemainingText(MinLength = 4)] string reason)
+        public void NextMap(ITDSPlayer player, TDSCommandInfos cmdinfos, [RemainingText(MinLength = 4)] string reason)
         {
             if (!(player.Lobby is IArena arena))
                 return;

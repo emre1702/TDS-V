@@ -10,11 +10,11 @@ using TDS.Server.Handler.Extensions;
 
 namespace TDS.Server.Handler.Commands.System
 {
-    internal class CommandsUseParametersConverter
+    internal class CommandsUsedParametersConverter
     {
         private readonly MappingHandler _mappingHandler;
 
-        internal CommandsUseParametersConverter(MappingHandler mappingHandler) 
+        internal CommandsUsedParametersConverter(MappingHandler mappingHandler) 
             => _mappingHandler = mappingHandler;
 
         internal async Task<CommandsHandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex,

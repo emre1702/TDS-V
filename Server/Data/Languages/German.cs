@@ -17,8 +17,8 @@ namespace TDS.Server.Data.Languages
 
         public override string CHAR_IN_NAME_IS_NOT_ALLOWED => "Das Zeichen '{0}' in deinem Namen ist nicht erlaubt.";
         public override string COMMAND_DOESNT_EXIST => "Der Befehl existiert nicht.";
-        public override string COMMAND_TOO_LESS_ARGUMENTS => "Du hast zu wenige Argumente für diesen Befehl angegeben.";
-        public override string COMMAND_TOO_MANY_ARGUMENTS => "Du hast zu viele Argumente für diesen Befehl angegeben.";
+        public override string COMMAND_TOO_LESS_ARGUMENTS => "Du hast zu wenige Argumente für diesen Befehl angegeben. Erwartet werden {0}, aber gegeben sind {1} Argumente.";
+        public override string COMMAND_TOO_MANY_ARGUMENTS => "Du hast zu viele Argumente für diesen Befehl angegeben. Erwartet werden {0}, aber gegeben sind {1} Argumente.";
         public override string COMMAND_USED_WRONG => "Der Befehl wurde falsch benutzt.";
         public override string COMMITED_SUICIDE => "Du hast Selbstmord begangen.";
         public override string CONNECTING => "Verbindet ...";
@@ -236,5 +236,9 @@ namespace TDS.Server.Data.Languages
         public override string NOT_ENOUGH_PLAYERS_ONLINE_IN_YOUR_GANG => "Es sind nicht genug Spieler online in eurer Gang (erwartet: {0}).";
         public override string GANG_ACTION_AREA_DOES_NOT_EXIST => "Das Gang-Gebiet existiert nicht?!";
         public override string NOT_ENOUGH_PLAYERS_ONLINE_IN_TARGET_GANG => "Es sind nicht genug Spieler online in der gegnerischen Gang (erwartet: {0}).";
+        public override string ADMIN_LEVEL_MIN_NUMBER => "Das Admin-Level darf mindestens {0} sein.";
+        public override string ADMIN_LEVEL_MAX_NUMBER => "Das Admin-Level darf höchstens {0} sein.";
+        public override string MIN_NUMBER => "Die Zahl darf mindestens {0} sein.";
+        public override string MAX_NUMBER => "Die Zahl darf höchstens {0} sein.";
     }
 }

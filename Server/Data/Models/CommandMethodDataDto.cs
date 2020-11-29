@@ -12,8 +12,8 @@ namespace TDS.Server.Data.Models
     {
 
         public bool HasCommandInfos { get; set; } = false;
-        public MethodInfo MethodDefault { get; set; }  // only used when UseImplicitTypes == true
-        public FastInvokeHandler FastMethodInvoker { get; set; }
+        public MethodInfo MethodDefault { get; }  // only used when UseImplicitTypes == true
+        public FastInvokeHandler FastMethodInvoker { get; }
 
         public List<CommandMultipleArgsToOneInfo> MultipleArgsToOneInfos { get; } = new List<CommandMultipleArgsToOneInfo>();
 
@@ -22,10 +22,10 @@ namespace TDS.Server.Data.Models
         public List<ParameterInfo> ParameterInfos { get; set; } = new List<ParameterInfo>();
 
         public int? ParametersWithDefaultValueStartIndex { get; set; }
-        public int Priority { get; set; }
-        public TDSRemainingTextAttribute? RemainingTextAttribute { get; set; }
+        public int Priority { get; }
+        public RemainingTextAttribute? RemainingTextAttribute { get; set; }
         public int? ToOneStringAfterParameterCount { get; set; } = null;
-        public object Instance { get; set; }
+        public object Instance { get; }
 
         public int AmountDefaultParams => HasCommandInfos ? 2 : 1;
 

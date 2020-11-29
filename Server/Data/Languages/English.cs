@@ -17,8 +17,8 @@ namespace TDS.Server.Data.Languages
 
         public virtual string CHAR_IN_NAME_IS_NOT_ALLOWED => "The character '{0}' in your name is not allowed.";
         public virtual string COMMAND_DOESNT_EXIST => "The command doesn't exist.";
-        public virtual string COMMAND_TOO_LESS_ARGUMENTS => "You used too less arguments for this command.";
-        public virtual string COMMAND_TOO_MANY_ARGUMENTS => "You used too many arguments for this command.";
+        public virtual string COMMAND_TOO_LESS_ARGUMENTS => "You used too few arguments for this command. Expected are {0}, but given are {1} arguments.";
+        public virtual string COMMAND_TOO_MANY_ARGUMENTS => "You used too many arguments for this command. Expected are {0}, but given are {1} arguments.";
         public virtual string COMMAND_USED_WRONG => "The command usage was wrong.";
         public virtual string COMMITED_SUICIDE => "You commited suicide.";
         public virtual string CONNECTING => "connecting ...";
@@ -237,5 +237,9 @@ namespace TDS.Server.Data.Languages
         public virtual string NOT_ENOUGH_PLAYERS_ONLINE_IN_YOUR_GANG => "There are not enough players online in your gang (expected {0}).";
         public virtual string GANG_ACTION_AREA_DOES_NOT_EXIST => "The gang area does not exist?!";
         public virtual string NOT_ENOUGH_PLAYERS_ONLINE_IN_TARGET_GANG => "There are not enough players online in the opponents gang (expected {0}).";
+        public virtual string ADMIN_LEVEL_MIN_NUMBER => "The admin level has to be atleast {0}.";
+        public virtual string ADMIN_LEVEL_MAX_NUMBER => "The admin level can be at most {0}.";
+        public virtual string MIN_NUMBER => "The number has to be atleast {0}.";
+        public virtual string MAX_NUMBER => "The number can be at most {0}.";
     }
 }

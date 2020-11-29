@@ -159,8 +159,8 @@ namespace TDS.Server.Handler.Commands.System
 
         private void HandleRemainingText(ParameterInfo parameter, CommandMethodDataDto methodData)
         {
-            var remainingTextAttribute = parameter.GetCustomAttribute(typeof(TDSRemainingTextAttribute), false);
-            if (remainingTextAttribute is TDSRemainingTextAttribute attr)
+            var remainingTextAttribute = parameter.GetCustomAttribute(typeof(RemainingTextAttribute), false);
+            if (remainingTextAttribute is RemainingTextAttribute attr)
             {
                 methodData.ToOneStringAfterParameterCount = parameter.Position;
                 methodData.RemainingTextAttribute = attr;

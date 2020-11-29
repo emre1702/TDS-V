@@ -230,5 +230,9 @@ namespace TDS.Server.Data.Interfaces
         string NOT_ENOUGH_PLAYERS_ONLINE_IN_YOUR_GANG { get; }
         string GANG_ACTION_AREA_DOES_NOT_EXIST { get; }
         string NOT_ENOUGH_PLAYERS_ONLINE_IN_TARGET_GANG { get; }
+        string ADMIN_LEVEL_MIN_NUMBER { get; }
+        string ADMIN_LEVEL_MAX_NUMBER { get; }
+        string MIN_NUMBER { get; }
+        string MAX_NUMBER { get; }
     }
 }
