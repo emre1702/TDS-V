@@ -1,6 +1,5 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
@@ -29,18 +28,18 @@ namespace TDS.Server.Handler.Commands.System
         private readonly ChatHandler _chatHandler;
         private readonly CommandsLoader _commandsLoader;
         private readonly CommandsUseRightsChecker _commandsUseRightsChecker;
-        private readonly CommandsUseParametersConverter _commandsUseParametersConverter;
+        private readonly CommandsUsedParametersConverter _commandsUsedParametersConverter;
         private readonly CommandsValidation _commandsValidation;
 
         public CommandsHandler(MappingHandler mappingHandler, CommandsLoader commandsLoader,
-            ISettingsHandler settingsHandler, ChatHandler chatHandler)
+            ISettingsHandler settingsHandler, ChatHandler chatHandler, AdminsHandler adminsHandler)
         {
             _settingsHandler = settingsHandler;
             _chatHandler = chatHandler;
             _commandsLoader = commandsLoader;
             _commandsUseRightsChecker = new CommandsUseRightsChecker();
-            _commandsUseParametersConverter = new CommandsUseParametersConverter(mappingHandler);
-            _commandsValidation = new CommandsValidation();
+            _commandsUsedParametersConverter = new CommandsUsedParametersConverter(mappingHandler);
+            _commandsValidation = new CommandsValidation(adminsHandler);
 
             NAPI.ClientEvent.Register<ITDSPlayer, string>(ToServerEvent.CommandUsed, this, UseCommand);
         }
@@ -61,7 +60,7 @@ namespace TDS.Server.Handler.Commands.System
         private async Task HandleCommand(ITDSPlayer player, string msg)
         {
             msg = msg.TrimAndRemoveDuplicateSpaces();
-            List<object> usedParameters = _commandsUseParametersConverter.GetUsedParameters(msg, out string cmdOrAlias);
+            List<object> usedParameters = _commandsUsedParametersConverter.GetUsedParameters(msg, out string cmdOrAlias);
 
             var commandData = _commandsLoader.GetCommandsData(cmdOrAlias);
             if (commandData is null)
@@ -79,27 +78,27 @@ namespace TDS.Server.Handler.Commands.System
             }
 
             if (_commandsValidation.CheckIsInvalidArgsCount(player, commandData, usedParameters))
-            {
-                NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.COMMAND_USED_WRONG));
                 return;
-            }
 
             var correctMethodAndArgs = await GetCorrectMethodAndArgs(player, commandData, usedParameters).ConfigureAwait(false);
-            if (!correctMethodAndArgs.HasValue)
+            if (correctMethodAndArgs is null)
             {
                 NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.COMMAND_USED_WRONG));
                 return;
             }
 
-            var finalInvokeArgs = _commandsUseParametersConverter.GetFinalInvokeArgs(correctMethodAndArgs.Value.Method, player, cmdInfos, correctMethodAndArgs.Value.Args);
+            if (!_commandsValidation.CheckIsValid(player, correctMethodAndArgs))
+                return;
+
+            var finalInvokeArgs = _commandsUsedParametersConverter.GetFinalInvokeArgs(correctMethodAndArgs.Method, player, cmdInfos, correctMethodAndArgs.Args);
             //var ret = correctMethodAndArgs.Value.Method.MethodDefault.Invoke(correctMethodAndArgs.Value.Method.Instance, finalInvokeArgs.ToArray());   
-            var ret = correctMethodAndArgs.Value.Method.FastMethodInvoker.Invoke(correctMethodAndArgs.Value.Method.Instance, finalInvokeArgs.ToArray());
+            var ret = correctMethodAndArgs.Method.FastMethodInvoker.Invoke(correctMethodAndArgs.Method.Instance, finalInvokeArgs.ToArray());
 
             if (ret is Task task)
                 await task.ConfigureAwait(false);
         }
 
-        private async ValueTask<(CommandMethodDataDto Method, List<object> Args)?> GetCorrectMethodAndArgs(ITDSPlayer player, CommandDataDto commandData, List<object> usedParameters)
+        private async ValueTask<CommandMethodAndArgs?> GetCorrectMethodAndArgs(ITDSPlayer player, CommandDataDto commandData, List<object> usedParameters)
         {
             var amountMethods = commandData.MethodDatas.Count;
             for (int methodIndex = 0; methodIndex < amountMethods; ++methodIndex)
@@ -109,14 +108,14 @@ namespace TDS.Server.Handler.Commands.System
                     continue;
 
                 var args = new List<object>(usedParameters);
-                args = _commandsUseParametersConverter.HandleMultipleArgsToOneArg(methodData, args);
+                args = _commandsUsedParametersConverter.HandleMultipleArgsToOneArg(methodData, args);
                 if (args is null)
                     continue;
 
-                args = _commandsUseParametersConverter.HandleDefaultValues(methodData, args);
-                args = _commandsUseParametersConverter.HandleRemaingText(methodData, args, out string remainingText);
+                args = _commandsUsedParametersConverter.HandleDefaultValues(methodData, args);
+                args = _commandsUsedParametersConverter.HandleRemaingText(methodData, args, out string remainingText);
 
-                var handleArgumentsResult = await _commandsUseParametersConverter
+                var handleArgumentsResult = await _commandsUsedParametersConverter
                     .HandleArgumentsTypeConvertings(player, methodData, methodIndex, amountMethods, args)
                     .ConfigureAwait(false);
                 if (handleArgumentsResult.IsWrongMethod)
@@ -125,10 +124,7 @@ namespace TDS.Server.Handler.Commands.System
                 if (!handleArgumentsResult.Worked)
                     return null;
 
-                if (!_commandsValidation.CheckRemainingTextMinMaxLength(player, methodData.RemainingTextAttribute, remainingText))
-                    return null;
-
-                return (methodData, args);
+                return new() { Method = methodData, Args = args, RemainingText = remainingText };
             }
             return null;
         }
