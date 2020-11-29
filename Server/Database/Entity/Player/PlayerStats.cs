@@ -16,5 +16,9 @@ namespace TDS.Server.Database.Entity.Player
         public int PlayerId { get; set; }
         public int PlayTime { get; set; }
         public int? VoiceMuteTime { get; set; }
+        public int AmountLowPriorityIssues { get; set; }
+        public int AmountMediumPriorityIssues { get; set; }
+        public int AmountHighPriorityIssues { get; set; }
+        public int AmountUrgentPriorityIssues { get; set; }
     }
 }

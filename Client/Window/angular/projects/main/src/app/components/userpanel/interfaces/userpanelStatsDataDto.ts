@@ -48,4 +48,16 @@ export interface UserpanelStatsDataDto {
     [19]: UserpanelPlayerLobbyStatsDataDto[];
     /** Logs */
     [20]: UserpanelAdminTargetHistoryDataDto[];
+
+    /** AmountLowPriorityIssues */
+    [21]: number;
+    
+    /** AmountMediumPriorityIssues */
+    [22]: number;
+
+    /** AmountHighPriorityIssues */
+    [23]: number;
+
+    /** AmountUrgentPriorityIssues */
+    [24]: number;
 }

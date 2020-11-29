@@ -872,6 +872,10 @@ export interface Language {
     MostDamageInADay: string;
     MostAssistsInADay: string;
     TotalMapsBought: string;
+    AmountLowPriorityIssues: string;
+    AmountMediumPriorityIssues: string;
+    AmountHighPriorityIssues: string;
+    AmountUrgentPriorityIssues: string;
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

@@ -30,6 +30,11 @@ namespace TDS.Server.Database.ModelBuilding.Player
                 .HasConversion(v => v, v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?)null)
                 .IsRequired(false);
 
+            builder.Property(e => e.AmountLowPriorityIssues).HasDefaultValue(0);
+            builder.Property(e => e.AmountMediumPriorityIssues).HasDefaultValue(0);
+            builder.Property(e => e.AmountHighPriorityIssues).HasDefaultValue(0);
+            builder.Property(e => e.AmountUrgentPriorityIssues).HasDefaultValue(0);
+
             builder.HasOne(d => d.Player)
                 .WithOne(p => p.PlayerStats)
                 .HasForeignKey<PlayerStats>(d => d.PlayerId)

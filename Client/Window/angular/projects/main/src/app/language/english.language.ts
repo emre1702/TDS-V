@@ -910,6 +910,10 @@ You need to set the target for this mode.`;
     MostDamageInADay = "Most damage in a day";
     MostAssistsInADay = "Most assists in a day";
     TotalMapsBought = "Total maps bought";
+    AmountLowPriorityIssues = "Amount low priority issues";
+    AmountMediumPriorityIssues = "Amount medium priority issues";
+    AmountHighPriorityIssues = "Amount high priority issues";
+    AmountUrgentPriorityIssues = "Amount urgent priority issues";
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

@@ -51,7 +51,11 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         16: "AmountMapsRated",
         17: "LastLogin",
         18: "RegisterTimestamp",
-        20: "Logs"
+        20: "Logs",
+        21: "AmountLowPriorityIssues",
+        22: "AmountMediumPriorityIssues",
+        23: "AmountHighPriorityIssues",
+        24: "AmountUrgentPriorityIssues"
     };
 
     constructor(

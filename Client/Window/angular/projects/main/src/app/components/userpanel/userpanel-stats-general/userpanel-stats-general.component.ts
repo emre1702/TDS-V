@@ -49,7 +49,14 @@ export class UserpanelStatsGeneralComponent implements OnInit, OnDestroy {
         14: "MostDamageInADay",
         15: "MostAssistsInADay",
 
-        16: "TotalMapsBought"
+        16: "TotalMapsBought",
+
+        18: "RegisterTimestamp",
+
+        21: "AmountLowPriorityIssues",
+        22: "AmountMediumPriorityIssues",
+        23: "AmountHighPriorityIssues",
+        24: "AmountUrgentPriorityIssues"
     };
 
     private _stats: UserpanelStatsGeneralDataDto;

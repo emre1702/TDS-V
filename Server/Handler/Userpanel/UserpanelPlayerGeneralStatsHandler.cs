@@ -68,6 +68,7 @@ namespace TDS.Server.Handler.Userpanel
                         PlayTime = p.PlayerStats.PlayTime,
                         VoiceMuteTime = p.PlayerStats.VoiceMuteTime,
                         TotalMoney = p.PlayerTotalStats.Money,
+                        AmountI
 
                         LobbyStats = loadLobbyStats ? p.PlayerLobbyStats.Select(s => new PlayerUserpanelLobbyStats(s, s.Lobby.Name)).ToList() : null
                     })

@@ -855,6 +855,10 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     MostDamageInADay = "Meister Schaden an einem Tag";
     MostAssistsInADay = "Meiste Assists an einem Tag";
     TotalMapsBought = "Gesamt gekaufte Karten";
+    AmountLowPriorityIssues = "Anzahl Issues mit geringer Priorität";
+    AmountMediumPriorityIssues = "Anzahl Issues mit mittlerer Priorität";
+    AmountHighPriorityIssues = "Anzahl Issues mit hoher Priorität";
+    AmountUrgentPriorityIssues = "Anzahl Issues mit dringender Priorität";
     ////////////////////////////////////////
 
     ///////////// Applications /////////////
