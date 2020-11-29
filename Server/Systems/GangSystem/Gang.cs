@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Entities;
 using TDS.Server.Data.Interfaces.GangsSystem;
 using TDS.Server.Database.Entity.GangEntities;
@@ -15,6 +16,7 @@ namespace TDS.Server.GangsSystem
         public IGangChat Chat { get; set; }
         public IDatabaseHandler Database { get; }
         public IGangHouseHandler HouseHandler { get; }
+        public IGangInvitations Invitations { get; }
         public IGangLeaderHandler LeaderHandler { get; set; }
         public IGangMapHandler MapHandler { get; }
         public IGangPermissionsHandler PermissionsHandler { get; }
@@ -28,13 +30,15 @@ namespace TDS.Server.GangsSystem
         public Gangs Entity { get; private set; }
 #nullable restore
 
-        public Gang(IDatabaseHandler databaseHandler, LangHelper langHelper, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, DataSyncHandler dataSyncHandler)
+        public Gang(IDatabaseHandler databaseHandler, LangHelper langHelper, GangsHandler gangsHandler, LobbiesHandler lobbiesHandler, 
+            DataSyncHandler dataSyncHandler, InvitationsHandler invitationsHandler, ISettingsHandler settingsHandler)
         {
-            Action = new ActionHandler();
+            Action = new ActionHandler(this, settingsHandler);
             Players = new Players(gangsHandler, lobbiesHandler, dataSyncHandler);
             Chat = new Chat(langHelper, Players);
             Database = databaseHandler;
             HouseHandler = new HouseHandler();
+            Invitations = new Invitations(invitationsHandler, langHelper, this);
             LeaderHandler = new LeaderHandler(this);
             MapHandler = new MapHandler(HouseHandler);
             PermissionsHandler = new PermissionsHandler(this);
@@ -58,6 +62,13 @@ namespace TDS.Server.GangsSystem
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 await dbContext.DisposeAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
+        }
+
+        public override string ToString()
+        {
+            if (Entity is null)
+                return "Not initialized";
+            return $"'{Entity.Name}' ({Entity.Short})";
         }
     }
 }

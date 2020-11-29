@@ -104,12 +104,13 @@ namespace TDS.Server.LobbySystem.RoundsHandlers.Datas
                 if (!Started)
                     return;
                 Started = false;
-                await _roundWaitSemaphore.Do(() =>
+                await _roundWaitSemaphore.DoAsync(async () =>
                 {
                     _nextTimer?.Kill();
                     if (Current != List.Last)
-                        List.Last!.Value.SetCurrent();
+                        await List.Last!.Value.SetCurrent();
                     Current = List.Last!;
+                    return true;
                 }).ConfigureAwait(false);
             }
             catch (Exception ex)

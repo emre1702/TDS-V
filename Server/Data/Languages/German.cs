@@ -54,17 +54,7 @@ namespace TDS.Server.Data.Languages
         public override string GANG_LEVEL_MAX_ALLOWED => "Als Gang-Level ist höchstens {0} erlaubt.";
         public override string GANG_REMOVED => "Deine Gang wurde aufgelöst.";
         public override string GANGACTION_CANT_JOIN_AGAIN => "Du darfst der Gang-Aktion nicht erneut beitreten.";
-        public override string GANGWAR_ATTACK_INVITATION => "Deine Gang greift ein Gebiet an!\n(Nimm an oder nutze /angreifen)";
-        public override string GANGWAR_ATTACK_PREPARATION_INVITATION => "Deine Gang bereitet einen Gangwar vor!\n(Nimm an oder nutze /angreifen)";
-        public override string GANGWAR_ATTACKER_PREPARATION_INFO => "Ihr bereitet im Gebiet '{0}' einen Angriff gegen '{1}' vor.";
-        public override string GANGWAR_ATTACKER_STARTED_INFO => "Ihr greift das Gebiet '{0}' von '{1}' an.";
-        public override string GANGWAR_DEFEND_INVITATION => "Verteidige euer Gang-Gebiet!\n(Nimm an oder nutze /verteidigen)";
-        public override string GANGWAR_OWNER_PREPARATION_INFO => "Gegen eines eurer Gebiete wird ein Gangwar vorbereitet.";
-        public override string GANGWAR_OWNER_STARTED_INFO => "Euer Gebiet '{0}' wird von der Gang '{1}' angegriffen.";
-        public override string GANGWAR_PREPARATION_INFO => "Die Gang '{0}' bereitet einen Gangwar vor.";
         public override string GANGWAR_STARTED_INFO => "Die Gang '{0}' greift das Gebiet '{1}' von '{2}' an.";
-        public override string GANGWAR_TEAM_OPPONENT_PLAYER_JOINED_INFO => "{0} has joined the enemy gang in the gangwar.";
-        public override string GANGWAR_TEAM_YOURS_PLAYER_JOINED_INFO => "{0} has joined your team in the gangwar.";
         public override string GIVE_MONEY_NEED_FEE => "Du brauchst ${0} mit ${1} Gebühr inklusive.";
         public override string GIVE_MONEY_TOO_LESS => "Das Geld, was du versuchst zu geben, ist zu wenig.";
         public override string GOT_ASSIST => "Du hast den Assist von {0} bekommen.";
@@ -226,5 +216,25 @@ namespace TDS.Server.Data.Languages
         public override string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID => "Die für diesen Account hinterlegte E-Mail Adresse ist ungültig.";
         public override string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Dein Passwort wurde erfolgreich zurückgesetzt. Überprüfe deine E-Mails (besonders die Junk-Emails!).";
         public override string REGISTER_FAILED_DEVS_INFORMED => "Ein Fehler ist beim Registrieren aufgetreten. Die Entwickler sind informiert und werden das Problem so schnell es geht beheben. Versuche es bitte später erneut.";
+        public override string GANGWAR_TARGET_EMPTY_SECS_LEFT => "Das Ziel ist leer! Ihr habt {0} Sekunden, um es wieder zu besetzen.";
+        public override string GANG_ACTION_IN_PREPARATION => "Ein Angriff wird im Gebiet {0} vorbereitet.";
+        public override string GANG_ACTION_IN_PREPARATION_ATTACKER => "Deine Gang bereitet einen Angriff gegen {0} im Gebiet {1} vor.";
+        public override string GANG_ACTION_IN_PREPARATION_OWNER => "Eine Gang bereitet einen Angriff in eurem Gebiet {0} vor.";
+        public override string GANG_ACTION_STARTED => "Ein Angriff wurde von {0} gegen {1} gestartet. Gebiet: {2}";
+        public override string GANG_AREA_CONQUERED_WITH_OWNER => "Das Gebiet {0} wurde erfolgreich von {1} vom Besitzer {2} erobert.";
+        public override string GANG_AREA_CONQUERED_WITHOUT_OWNER => "Das Gebiet {0} wurde erfolgreich von {1} genommen.";
+        public override string GANG_AREA_DEFENDED => "Das Gebiet {0} wurde erfolgreich von {1} gegen die Angreifer {2} verteidigt.";
+        public override string GANG_ACTION_AREA_IN_COOLDOWN => "Das Gebiet hat einen Cooldown. Versuch es nach {0} Minuten erneut.";
+        public override string GANG_ACTION_AREA_OWNER_IN_ACTION => "Der Besitzer des Gebietes ist bereits in einer Aktion.";
+        public override string GANG_ACTION_ATTACK_PREPARATION_INVITATION => "Eure Gang bereitet einen Angriff gegen das Gebiet {0} vor!\n(Nimm an oder nutze /angreifen)";
+        public override string GANG_ACTION_ATTACK_INVITATION => "Your gang is attacking area {0}!\n(Nimm an oder nutze /angreifen)";
+        public override string GANG_ACTION_DEFEND_INVITATION => "Defend your gang area {0}!\n(Nimm an oder nutze /verteidigen)";
+        public override string GANG_ACTION_TEAM_YOURS_PLAYER_JOINED_INFO => "{0} ist der Gang-Aktion für eure Gang beigetreten.";
+        public override string GANG_ACTION_TEAM_OPPONENT_PLAYER_JOINED_INFO => "{0} ist der Gang-Aktion für die Gegner beigetreten.";
+        public override string YOUR_GANG_ALREADY_REACHED_MAX_ATTACK_COUNT => "Eure Gang hat bereits die max. Anzahl an Attacks von {0} für heute erreicht.";
+        public override string YOUR_GANG_ALREADY_IN_ACTION => "Eure Gang ist bereits in einer Gang-Aktion.";
+        public override string NOT_ENOUGH_PLAYERS_ONLINE_IN_YOUR_GANG => "Es sind nicht genug Spieler online in eurer Gang (erwartet: {0}).";
+        public override string GANG_ACTION_AREA_DOES_NOT_EXIST => "Das Gang-Gebiet existiert nicht?!";
+        public override string NOT_ENOUGH_PLAYERS_ONLINE_IN_TARGET_GANG => "Es sind nicht genug Spieler online in der gegnerischen Gang (erwartet: {0}).";
     }
 }

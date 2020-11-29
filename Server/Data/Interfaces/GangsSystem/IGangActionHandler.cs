@@ -1,8 +1,15 @@
-﻿namespace TDS.Server.Data.Interfaces.GangsSystem
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
+
+namespace TDS.Server.Data.Interfaces.GangsSystem
 {
 #nullable enable
     public interface IGangActionHandler
     {
-        bool InAction { get; set; }
+        int AttackCount { get; }
+        bool InAction { get; }
+
+        bool CheckCanAttack(ITDSPlayer outputTo);
+        void SetActionEnded();
+        void SetInAction(bool asAttacker);
     }
 }

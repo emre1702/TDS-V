@@ -15,6 +15,7 @@ namespace TDS.Server.GangsSystem
 
         public void SendMessage(Func<ILanguage, string> langGetter)
         {
+            string v = new ('a', 2);
             var langDictionary = _langHelper.GetLangDictionary(langGetter);
             _players.DoInMain(player =>
                 player.SendChatMessage(langDictionary[player.Language]));

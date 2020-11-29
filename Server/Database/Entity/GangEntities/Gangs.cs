@@ -24,7 +24,7 @@ namespace TDS.Server.Database.Entity.GangEntities
         public virtual GangStats Stats { get; set; }
         public virtual Teams Team { get; set; }
         public virtual GangHouses House { get; set; }
-        public virtual ICollection<GangwarAreas> GangwarAreas { get; set; }
+        public virtual ICollection<GangActionAreas> GangwarAreas { get; set; }
         public virtual GangRankPermissions RankPermissions { get; set; }
         public virtual ICollection<GangMembers> Members { get; set; }
         public virtual ICollection<GangRanks> Ranks { get; set; }

@@ -3,26 +3,25 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.GangEntities;
-using TDS.Server.Handler.Entities.GangSystem.GangGamemodes.Gangwar;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Maps;
 
 namespace TDS.Server.Handler.GangSystem
 {
-    public class GangwarAreasHandler
+    public class GangActionAreasHandler
     {
-        private readonly List<GangwarArea> _gangwarAreas = new List<GangwarArea>();
+        private readonly List<IBaseGangActionArea> _gangAreas = new List<IBaseGangActionArea>();
 
         private readonly TDSDbContext _dbContext;
         private readonly ILoggingHandler _loggingHandler;
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly IServiceProvider _serviceProvider;
 
-        public GangwarAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
+        public GangActionAreasHandler(TDSDbContext dbContext, MapsLoadingHandler mapsLoadingHandler, EventsHandler eventsHandler,
             ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
         {
             _dbContext = dbContext;
@@ -30,58 +29,58 @@ namespace TDS.Server.Handler.GangSystem
             _loggingHandler = loggingHandler;
             _serviceProvider = serviceProvider;
 
-            eventsHandler.MapsLoaded += LoadGangwarAreas;
+            eventsHandler.MapsLoaded += LoadGangActionAreas;
         }
 
-        
+
 
         /// <summary>
-        /// Returns the Gangwar area by Id / MapId. MapId is used as Id!
+        /// Returns the gang action area by Id / MapId. MapId is used as Id!
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public GangwarArea? GetById(int id)
+        public IBaseGangActionArea? GetById(int id)
         {
-            lock (_gangwarAreas)
+            lock (_gangAreas)
             {
-                return _gangwarAreas.FirstOrDefault(a => a.Entity?.MapId == id);
+                return _gangAreas.FirstOrDefault(a => a.Entity?.MapId == id);
             }
         }
 
-        private void LoadGangwarAreas()
+        private void LoadGangActionAreas()
         {
-            var entities = _dbContext.GangwarAreas.Include(a => a.Map).Include(a => a.OwnerGang).ToList();
-            CreateMissingGangwarAreas(entities);
+            var entities = _dbContext.GangActionAreas.Include(a => a.Map).Include(a => a.OwnerGang).ToList();
+            CreateMissingGangActionAreas(entities);
             foreach (var entity in entities)
             {
-                var map = _mapsLoadingHandler.GetGangwarAreaMap(entity.MapId);
+                var map = _mapsLoadingHandler.GetGangActionAreaMap(entity.MapId);
                 if (map is null)
                 {
-                    _loggingHandler.LogError($"GangwarArea with Map {entity.Map.Name} ({entity.MapId}) has no map file in default maps folder!", Environment.StackTrace);
+                    _loggingHandler.LogError($"Gang action area with Map {entity.Map.Name} ({entity.MapId}) has no map file in default maps folder!", Environment.StackTrace);
                     continue;
                 }
-                var area = ActivatorUtilities.CreateInstance<GangwarArea>(_serviceProvider, entity, map);
-                lock(_gangwarAreas) { _gangwarAreas.Add(area); }
+                var area = ActivatorUtilities.CreateInstance<IBaseGangActionArea>(_serviceProvider, entity, map);
+                lock (_gangAreas) { _gangAreas.Add(area); }
             }
             // Don't need it anymore
             _dbContext.Dispose();
         }
 
-        private void CreateMissingGangwarAreas(List<GangwarAreas> gangwarAreas)
+        private void CreateMissingGangActionAreas(List<GangActionAreas> gangActionArea)
         {
-            var mapsWithoutGangwarArea = _mapsLoadingHandler.GetGangwarMapsWithoutGangwarAreas(gangwarAreas);
+            var mapsWithoutGangActionArea = _mapsLoadingHandler.GetGangActionAreaMapsWithoutGangActionArea(gangActionArea);
 
-            var newEntities = new List<GangwarAreas>();
-            foreach (var map in mapsWithoutGangwarArea)
+            var newEntities = new List<GangActionAreas>();
+            foreach (var map in mapsWithoutGangActionArea)
             {
-                var entity = new GangwarAreas
+                var entity = new GangActionAreas
                 {
                     MapId = map.BrowserSyncedData.Id,
                     OwnerGangId = -1
                 };
                 newEntities.Add(entity);
-                _dbContext.GangwarAreas.Add(entity);
-                gangwarAreas.Add(entity);
+                _dbContext.GangActionAreas.Add(entity);
+                gangActionArea.Add(entity);
             }
 
             _dbContext.SaveChanges();

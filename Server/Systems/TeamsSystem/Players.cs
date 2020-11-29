@@ -3,6 +3,7 @@ using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces.TeamsSystem;
 using TDS.Server.Handler.Extensions;
@@ -145,14 +146,12 @@ namespace TDS.Server.TeamsSystem
 
         public void DoInMain(Action<ITDSPlayer> action)
         {
-            lock (_all)
+            var listCopy = _all.ToList();
+            NAPI.Task.RunSafe(() =>
             {
-                NAPI.Task.RunSafe(() =>
-                {
-                    foreach (var player in _all)
-                        action(player);
-                });
-            }
+                foreach (var player in listCopy)
+                    action(player);
+            });
         }
 
         public void DoList(Action<List<ITDSPlayer>> action)
@@ -161,6 +160,15 @@ namespace TDS.Server.TeamsSystem
             {
                 action(_all);
             }
+        }
+
+        public async Task<T> DoListInMain<T>(Func<List<ITDSPlayer>, T> action)
+        {
+            var listCopy = _all.ToList();
+            return await NAPI.Task.RunWait(() =>
+            {
+                return action(listCopy);
+            });
         }
 
         public ITDSPlayer? GetNearestPlayer(Vector3 position)

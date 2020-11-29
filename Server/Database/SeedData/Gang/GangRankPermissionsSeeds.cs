@@ -11,7 +11,7 @@ namespace TDS.Server.Database.SeedData.Gang
         public static ModelBuilder HasGangRankPermissions(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GangRankPermissions>().HasData(
-                new GangRankPermissions { GangId = -1, InviteMembers = 1, KickMembers = 1, ManagePermissions = 1, ManageRanks = 1, StartGangwar = 1 }
+                new GangRankPermissions { GangId = -1, InviteMembers = 1, KickMembers = 1, ManagePermissions = 1, ManageRanks = 1, StartGangAction = 1 }
             );
             return modelBuilder;
         }

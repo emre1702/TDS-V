@@ -20,7 +20,8 @@ namespace TDS.Server.Handler
         public InvitationsHandler(EventsHandler eventsHandler)
         {
             eventsHandler.PlayerLeftLobby += RemoveSendersLobbyInvitations;
-            eventsHandler.PlayerLeftGang += RemoveSendersGangInvitations;
+            eventsHandler.PlayerLeftGang += (player, _) => RemoveSendersGangInvitations(player);
+            eventsHandler.PlayerLeftGang += (player, _) => RemoveTargetsGangActionInvitations(player);
             eventsHandler.PlayerLoggedOut += RemoveSendersGangInvitations;
         }
 
@@ -106,6 +107,14 @@ namespace TDS.Server.Handler
             }
         }
 
+        private IEnumerable<Invitation> GetByTarget(ITDSPlayer sender, InvitationType type)
+        {
+            lock (_invitationById)
+            {
+                return _invitationById.Values.Where(i => i.Target == sender && i.Type == type);
+            }
+        }
+
         private void RemoveSendersLobbyInvitations(ITDSPlayer player, IBaseLobby lobby)
         {
             var invitations = GetBySender(player, InvitationType.Lobby);
@@ -130,14 +139,13 @@ namespace TDS.Server.Handler
             }
         }
 
-        private void RemoveSendersGangInvitations(ITDSPlayer player, IGang gang)
+        private void RemoveTargetsGangActionInvitations(ITDSPlayer player)
         {
-            RemoveSendersGangInvitations(player);
+            var invitations = GetByTarget(player, InvitationType.GangAction);
+            foreach (var invitation in invitations)
+            {
+                invitation.Withdraw();
+            }
         }
-
-        /*private IEnumerable<Invitation> GetBySender(ITDSPlayer sender)
-        {
-            return _invitationById.Values.Where(i => i.Sender == sender);
-        }*/
     }
 }

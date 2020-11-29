@@ -20,5 +20,7 @@ namespace TDS.Server.Data.Interfaces
 
         void ExecuteForDBAsyncWithoutWait(Func<TDSDbContext, Task> action);
         void ExecuteForDBAsyncWithoutWaitUnsafe(Func<TDSDbContext, Task> action);
+
+        Task Save();
     }
 }

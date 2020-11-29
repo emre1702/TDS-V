@@ -167,7 +167,7 @@ namespace TDS.Server.LobbySystem.Lobbies.Abstracts
 
         public override bool Equals(object? obj)
         {
-            if (!(obj is Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby otherLobby))
+            if (obj is not Data.Interfaces.LobbySystem.Lobbies.Abstracts.IBaseLobby otherLobby)
                 return false;
             return Entity.Id == otherLobby.Entity.Id;
         }

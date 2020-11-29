@@ -8,7 +8,7 @@ using TDS.Server.Database.Entity;
 
 namespace TDS.Server.Handler
 {
-    public class DatabaseHandler : IDatabaseHandler, IAsyncDisposable
+    public class DatabaseHandler : IDatabaseHandler
     {
         protected ILoggingHandler LoggingHandler { get; }
 
@@ -22,11 +22,6 @@ namespace TDS.Server.Handler
 
         public void SetPlayerSource(ITDSPlayer player)
             => _player = player;
-
-        /*public void InitDbContext()
-        {
-            _dbContext = new TDSDbContext();
-        }*/
 
         public async Task ExecuteForDB(Action<TDSDbContext> action)
         {
@@ -215,6 +210,24 @@ namespace TDS.Server.Handler
             try
             {
                 await action(_dbContext).ConfigureAwait(false);
+            }
+            finally
+            {
+                _dbContextSemaphore.Release();
+            }
+        }
+
+        public async Task Save()
+        {
+            await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.LogError(ex, _player);
             }
             finally
             {

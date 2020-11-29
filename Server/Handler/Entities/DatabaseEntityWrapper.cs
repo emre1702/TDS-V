@@ -16,11 +16,6 @@ namespace TDS.Server.Handler.Entities
         protected DatabaseEntityWrapper(TDSDbContext dbContext)
             => (_dbContext) = (dbContext);
 
-        /*public void InitDbContext()
-        {
-            _dbContext = new TDSDbContext();
-        }*/
-
         public async Task ExecuteForDB(Action<TDSDbContext> action)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
@@ -183,6 +178,8 @@ namespace TDS.Server.Handler.Entities
             }
         }
 
+        public Task Save() 
+            => ExecuteForDBAsync(async dbContext => await dbContext.SaveChangesAsync());
 
         public async ValueTask DisposeAsync()
         {

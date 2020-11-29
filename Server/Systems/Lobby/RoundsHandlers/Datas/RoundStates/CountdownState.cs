@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers.Datas.RoundStates;
 
 namespace TDS.Server.LobbySystem.RoundsHandlers.Datas.RoundStates
 {
-    public class CountdownState : RoundState
+    public class CountdownState : RoundState, ICountdownState
     {
         private int _duration = 5 * 1000;
 

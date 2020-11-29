@@ -119,7 +119,7 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddSingleton<GangHousesHandler>()
                .AddSingleton<GangLevelsHandler>()
                .AddSingleton<GangsHandler>()
-               .AddSingleton<GangwarAreasHandler>()
+               .AddSingleton<GangActionAreasHandler>()
                .AddSingleton<GangWindowHandler>();
         }
 

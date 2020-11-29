@@ -24,7 +24,7 @@ namespace TDS.Server.Database.Entity.Rest
         public DateTime CreateTimestamp { get; set; }
         public virtual Players Creator { get; set; }
         public int? CreatorId { get; set; }
-        public virtual GangwarAreas GangwarArea { get; set; }
+        public virtual GangActionAreas GangwarArea { get; set; }
         public int Id { get; set; }
         public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
         public string Name { get; set; }

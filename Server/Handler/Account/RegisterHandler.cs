@@ -190,24 +190,5 @@ namespace TDS.Server.Handler.Account
            {
                ShowIcon = true
            };
-
-
-        /* 
-         * charDatas.GeneralData.Add(new PlayerCharGeneralDatas { Slot = slot, SyncedData = new CharCreateGeneralData { Slot = slot, IsMale = isMale } });
-            charDatas.HeritageData.Add(new PlayerCharHeritageDatas
-            {
-                Slot = slot,
-                SyncedData = new CharCreateHeritageData
-                {
-                    Slot = slot,
-                    FatherIndex = 0,
-                    MotherIndex = 21,
-                    ResemblancePercentage = isMale ? 1 : 0,
-                    SkinTonePercentage = isMale ? 1 : 0
-                }
-            });
-            charDatas.FeaturesData.Add(new PlayerCharFeaturesDatas { Slot = slot, SyncedData = new CharCreateFeaturesData { Slot = slot } });
-            charDatas.AppearanceData.Add(new PlayerCharAppearanceDatas { Slot = slot, SyncedData = new CharCreateAppearanceData { Slot = slot } });
-            charDatas.HairAndColorsData.Add(new PlayerCharHairAndColorsDatas { Slot = slot, SyncedData = new CharCreateHairAndColorsData { Slot = slot } });*/
     }
 }

@@ -3,7 +3,6 @@ using System;
 using TDS.Server.Data.Interfaces.GangsSystem;
 using TDS.Server.Database.Entity.GangEntities;
 using TDS.Server.Handler.Events;
-using TDS.Server.Handler.GangSystem;
 
 namespace TDS.Server.GangsSystem
 {

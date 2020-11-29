@@ -31,13 +31,16 @@ namespace TDS.Server.LobbySystem.Lobbies
 
         public IGangLobbyActions Actions { get; private set; }
 
+        private readonly GangActionAreasHandler _gangActionAreasHandler;
+
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         public GangLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, GangActionAreasHandler gangActionAreasHandler)
             : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
         {
+            _gangActionAreasHandler = gangActionAreasHandler;
         }
 
         protected override void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
@@ -47,7 +50,7 @@ namespace TDS.Server.LobbySystem.Lobbies
 
             lobbyDependencies ??= new GangLobbyDependencies();
 
-            ((GangLobbyDependencies)lobbyDependencies).Actions ??= new GangLobbyActions();
+            ((GangLobbyDependencies)lobbyDependencies).Actions ??= new GangLobbyActions(this, _gangActionAreasHandler);
             lobbyDependencies.Chat ??= new GangLobbyChat(this, LangHelper);
             lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.Deathmatch ??= new GangLobbyDeathmatch(this, lobbyDependencies.Events);
@@ -73,7 +76,7 @@ namespace TDS.Server.LobbySystem.Lobbies
 
         private void GangActionLobbyRemoved(IBaseLobby lobby)
         {
-            if (!(lobby is IGangActionLobby gangActionLobby))
+            if (lobby is not IGangActionLobby gangActionLobby)
                 return;
             lock (_gangActionLobbies)
             {

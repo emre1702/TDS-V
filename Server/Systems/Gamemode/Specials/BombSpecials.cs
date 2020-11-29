@@ -49,13 +49,13 @@ namespace TDS.Server.GamemodesSystem.Specials
             CreateBomb(lobby.CurrentMap);
         }
 
-        internal override void AddEvents(IRoundFightLobbyEventsHandler events)
+        public override void AddEvents(IRoundFightLobbyEventsHandler events)
         {
             base.AddEvents(events);
             events.RoundClear += RoundClear;
         }
 
-        internal override void RemoveEvents(IRoundFightLobbyEventsHandler events)
+        public override void RemoveEvents(IRoundFightLobbyEventsHandler events)
         {
             base.RemoveEvents(events);
             if (events.RoundClear is { })
