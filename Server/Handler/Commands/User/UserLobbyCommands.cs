@@ -21,7 +21,7 @@ namespace TDS.Server.Handler.Commands.User
         public UserLobbyCommands(InvitationsHandler invitationsHandler, CustomLobbyMenuSyncHandler customLobbyMenuSyncHandler, LobbiesHandler lobbiesHandler)
             => (_invitationsHandler, _customLobbyMenuSyncHandler, _lobbiesHandler) = (invitationsHandler, customLobbyMenuSyncHandler, lobbiesHandler);
 
-        [TDSCommandAttribute(UserCommand.LobbyInvitePlayer)]
+        [TDSCommand(UserCommand.LobbyInvitePlayer)]
         public void LobbyInvitePlayer(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.Lobby is null)
@@ -68,7 +68,7 @@ namespace TDS.Server.Handler.Commands.User
             }
         }
 
-        [TDSCommandAttribute(UserCommand.LobbyLeave)]
+        [TDSCommand(UserCommand.LobbyLeave)]
         public async Task OnLobbyLeave(ITDSPlayer player)
         {
             if (player.Lobby is null)

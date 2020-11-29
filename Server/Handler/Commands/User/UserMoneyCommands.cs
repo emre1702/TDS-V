@@ -15,7 +15,7 @@ namespace TDS.Server.Handler.Commands.User
         public UserMoneyCommands(ISettingsHandler settingsHandler)
             => _settingsHandler = settingsHandler;
 
-        [TDSCommandAttribute(UserCommand.GiveMoney)]
+        [TDSCommand(UserCommand.GiveMoney)]
         public void GiveMoney(ITDSPlayer player, ITDSPlayer target, uint money)
         {
             if (player.Entity is null || target.Entity is null)

@@ -14,13 +14,13 @@ namespace TDS.Server.Handler.Commands.User
         public UserChatCommands(ChatHandler chatHandler)
             => _chatHandler = chatHandler;
 
-        [TDSCommandAttribute(UserCommand.GlobalChat)]
+        [TDSCommand(UserCommand.GlobalChat)]
         public void GlobalChat(ITDSPlayer player, [TDSRemainingTextAttribute] string message)
         {
             _chatHandler.SendGlobalMessage(player, message);
         }
 
-        [TDSCommandAttribute(UserCommand.TeamChat)]
+        [TDSCommand(UserCommand.TeamChat)]
         public void TeamChat(ITDSPlayer player, [TDSRemainingTextAttribute] string message)
         {
             _chatHandler.SendTeamChat(player, message);

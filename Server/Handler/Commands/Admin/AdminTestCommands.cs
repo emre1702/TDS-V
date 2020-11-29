@@ -8,7 +8,7 @@ namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminTestCommands
     {
-        [TDSCommandAttribute(AdminCommand.Test)]
+        [TDSCommand(AdminCommand.Test)]
         public void Test(ITDSPlayer player, string type, string? arg1 = null, string? arg2 = null, string? arg3 = null)
         {
             switch (type)

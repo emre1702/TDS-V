@@ -11,13 +11,13 @@ namespace TDS.Server.Handler.Commands.Admin
         public AdminChatCommands(ChatHandler chatHandler)
             => _chatHandler = chatHandler;
 
-        [TDSCommandAttribute(AdminCommand.AdminChat)]
+        [TDSCommand(AdminCommand.AdminChat)]
         public void AdminChat(ITDSPlayer player, [TDSRemainingTextAttribute] string text)
         {
             _chatHandler.SendAdminChat(player, text);
         }
 
-        [TDSCommandAttribute(AdminCommand.AdminSay)]
+        [TDSCommand(AdminCommand.AdminSay)]
         public void AdminSay(ITDSPlayer player, [TDSRemainingTextAttribute] string text)
         {
             _chatHandler.SendAdminMessage(player, text);

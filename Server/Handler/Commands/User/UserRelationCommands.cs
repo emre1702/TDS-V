@@ -11,7 +11,7 @@ namespace TDS.Server.Handler.Commands.User
 {
     public class UserRelationCommands
     {
-        [TDSCommandAttribute(UserCommand.BlockUser)]
+        [TDSCommand(UserCommand.BlockUser)]
         public async Task BlockUser(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.Entity is null || target.Entity is null)
@@ -60,7 +60,7 @@ namespace TDS.Server.Handler.Commands.User
             });
         }
 
-        [TDSCommandAttribute(UserCommand.UnblockUser)]
+        [TDSCommand(UserCommand.UnblockUser)]
         public async Task UnblockUser(ITDSPlayer player, ITDSPlayer target)
         {
             if (player.Entity is null || target.Entity is null)

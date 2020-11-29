@@ -19,7 +19,7 @@ namespace TDS.Server.Handler.Commands.Admin
         public AdminKickCommands(LangHelper langHelper, LobbiesHandler lobbiesHandler)
             => (_langHelper, _lobbiesHandler) = (langHelper, lobbiesHandler);
 
-        [TDSCommandAttribute(AdminCommand.Kick)]
+        [TDSCommand(AdminCommand.Kick)]
         public void KickPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             _langHelper.SendAllChatMessage(lang => string.Format(lang.KICK_INFO, target.DisplayName, player.DisplayName, reason));
@@ -43,7 +43,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Kick, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommandAttribute(AdminCommand.LobbyKick)]
+        [TDSCommand(AdminCommand.LobbyKick)]
         public async Task LobbyKick(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (player == target)

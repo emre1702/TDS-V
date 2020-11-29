@@ -18,7 +18,7 @@ namespace TDS.Server.Handler.Commands.Admin
         public AdminMuteCommands(DatabasePlayerHelper databasePlayerHelper)
             => _databasePlayerHelper = databasePlayerHelper;
 
-        [TDSCommandAttribute(AdminCommand.Mute, 1)]
+        [TDSCommand(AdminCommand.Mute, 1)]
         public void MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
@@ -30,7 +30,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Mute, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommandAttribute(AdminCommand.Mute, 0)]
+        [TDSCommand(AdminCommand.Mute, 0)]
         public async Task MutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
@@ -42,7 +42,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Mute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommandAttribute(AdminCommand.VoiceMute, 0)]
+        [TDSCommand(AdminCommand.VoiceMute, 0)]
         public async Task VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, int minutes, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))
@@ -54,7 +54,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.VoiceMute, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommandAttribute(AdminCommand.VoiceMute, 1)]
+        [TDSCommand(AdminCommand.VoiceMute, 1)]
         public void VoiceMutePlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, int minutes, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (!CheckIsMuteTimeValid(minutes, player))

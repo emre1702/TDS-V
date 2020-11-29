@@ -22,7 +22,7 @@ namespace TDS.Server.Handler.Commands.Admin
         public AdminBanCommands(LobbiesHandler lobbiesHandler) 
             => (_lobbiesHandler) = (lobbiesHandler);
 
-        [TDSCommandAttribute(AdminCommand.Ban, 1)]
+        [TDSCommand(AdminCommand.Ban, 1)]
         public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             PlayerBans? ban = null;
@@ -40,7 +40,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommandAttribute(AdminCommand.Ban, 0)]
+        [TDSCommand(AdminCommand.Ban, 0)]
         public async Task BanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (length == TimeSpan.MinValue)
@@ -54,7 +54,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Ban, player, reason, dbTarget.Id, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommandAttribute(AdminCommand.LobbyBan, 1)]
+        [TDSCommand(AdminCommand.LobbyBan, 1)]
         public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (player.Lobby is null || player.Lobby is IMainMenu)
@@ -80,7 +80,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Lobby_Ban, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommandAttribute(AdminCommand.LobbyBan, 0)]
+        [TDSCommand(AdminCommand.LobbyBan, 0)]
         public async Task LobbyBanPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, Players dbTarget, TimeSpan length, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (player.Lobby is null || player.Lobby.Type == LobbyType.MainMenu)

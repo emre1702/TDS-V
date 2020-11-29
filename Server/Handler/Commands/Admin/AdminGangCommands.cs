@@ -17,7 +17,7 @@ namespace TDS.Server.Handler.Commands.Admin
         public AdminGangCommands(GangLevelsHandler gangLevelsHandler, GangHousesHandler gangHousesHandler) 
             => (_gangLevelsHandler, _gangHousesHandler) = (gangLevelsHandler, gangHousesHandler);
 
-        [TDSCommandAttribute(AdminCommand.CreateHouse)]
+        [TDSCommand(AdminCommand.CreateHouse)]
         public async Task CreateHouse(ITDSPlayer player, byte neededGangLevel)
         {
             if (player is null || player.Entity is null)

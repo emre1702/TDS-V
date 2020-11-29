@@ -8,7 +8,7 @@ namespace TDS.Server.Handler.Commands.User
 {
     public class UserMapCommands
     {
-        [TDSCommandAttribute(UserCommand.Position)]
+        [TDSCommand(UserCommand.Position)]
         public void OutputCurrentPosition(ITDSPlayer player)
         {
             NAPI.Task.RunSafe(() =>

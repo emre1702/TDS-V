@@ -12,7 +12,7 @@ namespace TDS.Server.Handler.Commands.Admin
 {
     public class AdminMapCommands
     {
-        [TDSCommandAttribute(AdminCommand.Goto)]
+        [TDSCommand(AdminCommand.Goto)]
         public void GotoPlayer(ITDSPlayer player, TDSCommandInfos cmdinfos, ITDSPlayer target, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             NAPI.Task.RunSafe(() =>
@@ -43,7 +43,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 LoggingHandler.Instance.LogAdmin(LogType.Goto, player, target, reason, cmdinfos.AsDonator, cmdinfos.AsVIP);
         }
 
-        [TDSCommandAttribute(AdminCommand.Goto)]
+        [TDSCommand(AdminCommand.Goto)]
         public void GotoVector(ITDSPlayer player, TDSCommandInfos cmdinfos, Vector3 pos, [TDSRemainingTextAttribute(MinLength = 4)] string reason)
         {
             if (player is null)

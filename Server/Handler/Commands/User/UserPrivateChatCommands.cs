@@ -15,7 +15,7 @@ namespace TDS.Server.Handler.Commands.User
         public UserPrivateChatCommands(ChatHandler chatHandler)
             => _chatHandler = chatHandler;
 
-        [TDSCommandAttribute(UserCommand.ClosePrivateChat)]
+        [TDSCommand(UserCommand.ClosePrivateChat)]
         public void ClosePrivateChat(ITDSPlayer player)
         {
             if (player.InPrivateChatWith is null && player.SentPrivateChatRequestTo is null)
@@ -26,7 +26,7 @@ namespace TDS.Server.Handler.Commands.User
             player.Chat.ClosePrivateChat(false);
         }
 
-        [TDSCommandAttribute(UserCommand.OpenPrivateChat)]
+        [TDSCommand(UserCommand.OpenPrivateChat)]
         public void OpenPrivateChat(ITDSPlayer player, ITDSPlayer target)
         {
             if (CheckIsBlocked(player, target))
@@ -45,7 +45,7 @@ namespace TDS.Server.Handler.Commands.User
                 AcceptPrivateChatRequest(player, target);
         }
 
-        [TDSCommandAttribute(UserCommand.PrivateChat)]
+        [TDSCommand(UserCommand.PrivateChat)]
         public void PrivateChat(ITDSPlayer player, [TDSRemainingTextAttribute] string message)
         {
             if (player.InPrivateChatWith is null)
@@ -57,7 +57,7 @@ namespace TDS.Server.Handler.Commands.User
             NAPI.Task.RunSafe(() => player.InPrivateChatWith.SendChatMessage($"{colorStr}[{player.DisplayName}: {message}]"));
         }
 
-        [TDSCommandAttribute(UserCommand.PrivateMessage)]
+        [TDSCommand(UserCommand.PrivateMessage)]
         public void PrivateMessage(ITDSPlayer player, ITDSPlayer target, [TDSRemainingTextAttribute] string message)
         {
             if (player == target)
