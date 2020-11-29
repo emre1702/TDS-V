@@ -63,7 +63,9 @@ namespace TDS.Server.Database.SeedData.Command
                 new CommandInfos { Id = 26, Language = Language.German, Info = "Befehl zum schnellen Testen von Codes." },
                 new CommandInfos { Id = 26, Language = Language.English, Info = "Command for quick testing of codes." },
                 new CommandInfos { Id = 27, Language = Language.German, Info = "Erstellt ein Haus in der Gang-Lobby." },
-                new CommandInfos { Id = 27, Language = Language.English, Info = "Creates a house in the gang lobby." }
+                new CommandInfos { Id = 27, Language = Language.English, Info = "Creates a house in the gang lobby." },
+                new CommandInfos { Id = 28, Language = Language.German, Info = "Gibt alle Admins online aus." },
+                new CommandInfos { Id = 28, Language = Language.English, Info = "Outputs all online admins." }
             );
             return modelBuilder;
         }

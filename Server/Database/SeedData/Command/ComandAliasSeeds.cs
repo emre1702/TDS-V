@@ -114,7 +114,9 @@ namespace TDS.Server.Database.SeedData.Command
                 new CommandAlias { Alias = "InvitePlayerLobby", Command = 25 },
                 new CommandAlias { Alias = "HouseCreate", Command = 27 },
                 new CommandAlias { Alias = "NewHouse", Command = 27 },
-                new CommandAlias { Alias = "HouseNew", Command = 27 }
+                new CommandAlias { Alias = "HouseNew", Command = 27 },
+                new CommandAlias { Alias = "OutputAdmins", Command = 28 },
+                new CommandAlias { Alias = "ListAdmins", Command = 28 }
             );
 
             return modelBuilder;

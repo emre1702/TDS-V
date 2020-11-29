@@ -93,6 +93,28 @@ namespace TDS.Server.Handler
             CallMethodForAdmins(player => player.SendNotification(propertygetter(player.Language)), minadminlvl);
         }
 
+        public List<ITDSPlayer> GetAllAdmins()
+        {
+            lock (_adminLevels)
+            {
+                return _adminLevels.Values
+                    .SelectMany(entry => entry.PlayersOnline)
+                    .ToList();
+            }
+        }
+
+        public List<ITDSPlayer> GetAllAdminsSorted()
+        {
+            lock (_adminLevels)
+            {
+                return _adminLevels.Values
+                    .SelectMany(entry => entry.PlayersOnline)
+                    .OrderByDescending(player => player.Admin.Level.Level)
+                    .ThenBy(player => player.Name)
+                    .ToList();
+            }
+        }
+
         private void SetOffline(ITDSPlayer player)
         {
             lock (_adminLevels)

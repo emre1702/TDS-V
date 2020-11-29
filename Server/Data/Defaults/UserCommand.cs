@@ -2,6 +2,7 @@
 {
     public static class UserCommand
     {
+        public const string Admins = "Admins";
         public const string BlockUser = "BlockUser";
         public const string ClosePrivateChat = "ClosePrivateChat";
         public const string GiveMoney = "GiveMoney";

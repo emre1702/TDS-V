@@ -94,9 +94,9 @@ namespace TDS.Server.Core.Init.Services.Creators
         private static IServiceCollection WithUserCommands(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-               .AddSingleton<UserAccountCommands>()
                .AddSingleton<UserChatCommands>()
                .AddSingleton<UserDeathmatchCommands>()
+               .AddSingleton<UserInfoCommands>()
                .AddSingleton<UserLobbyCommands>()
                .AddSingleton<UserMapCommands>()
                .AddSingleton<UserMoneyCommands>()
