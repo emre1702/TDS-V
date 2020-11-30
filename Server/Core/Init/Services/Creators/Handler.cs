@@ -7,7 +7,6 @@ using TDS.Server.Data.Interfaces.Userpanel;
 using TDS.Server.Handler;
 using TDS.Server.Handler.Account;
 using TDS.Server.Handler.Browser;
-using TDS.Server.Handler.Commands;
 using TDS.Server.Handler.Commands.Admin;
 using TDS.Server.Handler.Commands.System;
 using TDS.Server.Handler.Commands.User;
@@ -81,14 +80,15 @@ namespace TDS.Server.Core.Init.Services.Creators
         private static IServiceCollection WithAdminCommands(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-               .AddSingleton<AdminBanCommands>()
-               .AddSingleton<AdminChatCommands>()
-               .AddSingleton<AdminGangCommands>()
-               .AddSingleton<AdminKickCommands>()
-               .AddSingleton<AdminLobbyCommands>()
-               .AddSingleton<AdminMapCommands>()
-               .AddSingleton<AdminMuteCommands>()
-               .AddSingleton<AdminTestCommands>();
+                .AddSingleton<AdminAdminTeamCommands>()
+                .AddSingleton<AdminBanCommands>()
+                .AddSingleton<AdminChatCommands>()
+                .AddSingleton<AdminGangCommands>()
+                .AddSingleton<AdminKickCommands>()
+                .AddSingleton<AdminLobbyCommands>()
+                .AddSingleton<AdminMapCommands>()
+                .AddSingleton<AdminMuteCommands>()
+                .AddSingleton<AdminTestCommands>();
         }
 
         private static IServiceCollection WithUserCommands(this IServiceCollection serviceCollection)
