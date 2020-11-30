@@ -241,7 +241,13 @@ namespace TDS.Server.Data.Languages
         public override string MIN_NUMBER => "Die Zahl darf mindestens {0} sein.";
         public override string MAX_NUMBER => "Die Zahl darf höchstens {0} sein.";
         public override string ADMIN_LEVEL_SET_SUCCESSFULLY => "Das Admin-Level von {0} wurde erfolgreich auf {1} gesetzt.";
-        public override string ADMIN_HAS_GAVE_YOU_ADMIN_LEVEL => "Der Admin {0} hat dein Admin-Level auf {1} gesetzt.";
+        public override string ADMIN_HAS_SET_YOUR_ADMIN_LEVEL => "Der Admin {0} hat dein Admin-Level auf {1} gesetzt.";
         public override string SHOULD_SET_ADMIN_LEADER_INFO => "Der Spieler ist hierarchisch nicht direkt unter dir, aber du bist sein Vorgesetzter. Du solltest seinen Admin-Leader auf einen direkten Vorgesetzten setzen.";
+        public override string ADMIN_LEADER_SET_SUCCESSFULLY => "Du hast {1} zum Vorgesetzten von {0} gemacht.";
+        public override string ADMIN_HAS_SET_YOUR_ADMIN_LEADER => "{0} hat {1} zu deinem Vorgesetzten gemacht.";
+        public override string YOUVE_BECOME_ADMIN_LEADER => "{0} hat dich zum Vorgesetzten von {1} gemacht.";
+        public override string VIP_SET_SUCCESSFULLY => "Du hast isVip von {0} auf {1} gesetzt.";
+        public override string ADMIN_HAS_SET_YOU_VIP => "{0} hat dir den VIP-Rang gegeben. Glückwunsch!";
+        public override string ADMIN_HAS_SET_YOU_NOT_VIP => "{0} hat dir den VIP-Rang weggenommen.";
     }
 }

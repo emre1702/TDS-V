@@ -16,6 +16,8 @@
         RemoveMap = 12,
         VoiceMute = 13,
         ResetPassword = 14,
-        AdminTeam = 15
+        SetAdmin = 15,
+        SetAdminLeader = 16,
+        SetVip = 16
     }
 }

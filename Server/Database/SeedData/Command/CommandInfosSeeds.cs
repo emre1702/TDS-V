@@ -67,7 +67,11 @@ namespace TDS.Server.Database.SeedData.Command
                 new CommandInfos { Id = 28, Language = Language.German, Info = "Gibt alle Admins online aus." },
                 new CommandInfos { Id = 28, Language = Language.English, Info = "Outputs all online admins." },
                 new CommandInfos { Id = 29, Language = Language.German, Info = "Setzt das Admin-Level eines Spielers." },
-                new CommandInfos { Id = 29, Language = Language.English, Info = "Sets the admin level of a player." }
+                new CommandInfos { Id = 29, Language = Language.English, Info = "Sets the admin level of a player." },
+                new CommandInfos { Id = 30, Language = Language.German, Info = "Setzt den Vorgesetzten eines Spielers." },
+                new CommandInfos { Id = 30, Language = Language.English, Info = "Sets the supervisor of a player." },
+                new CommandInfos { Id = 31, Language = Language.German, Info = "Gibt einem Spieler den VIP-Rang." },
+                new CommandInfos { Id = 31, Language = Language.English, Info = "Gives a player the vip rank." }
             );
             return modelBuilder;
         }

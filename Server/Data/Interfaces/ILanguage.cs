@@ -235,7 +235,13 @@ namespace TDS.Server.Data.Interfaces
         string MIN_NUMBER { get; }
         string MAX_NUMBER { get; }
         string ADMIN_LEVEL_SET_SUCCESSFULLY { get; }
-        string ADMIN_HAS_GAVE_YOU_ADMIN_LEVEL { get; }
+        string ADMIN_HAS_SET_YOUR_ADMIN_LEVEL { get; }
         string SHOULD_SET_ADMIN_LEADER_INFO { get; }
+        string ADMIN_LEADER_SET_SUCCESSFULLY { get; }
+        string ADMIN_HAS_SET_YOUR_ADMIN_LEADER { get; }
+        string YOUVE_BECOME_ADMIN_LEADER { get; }
+        string VIP_SET_SUCCESSFULLY { get; }
+        string ADMIN_HAS_SET_YOU_VIP { get; }
+        string ADMIN_HAS_SET_YOU_NOT_VIP { get; }
     }
 }

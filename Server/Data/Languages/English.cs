@@ -242,7 +242,13 @@ namespace TDS.Server.Data.Languages
         public virtual string MIN_NUMBER => "The number has to be atleast {0}.";
         public virtual string MAX_NUMBER => "The number can be at most {0}.";
         public virtual string ADMIN_LEVEL_SET_SUCCESSFULLY => "The admin level of {0} was successfully set to {1}.";
-        public virtual string ADMIN_HAS_GAVE_YOU_ADMIN_LEVEL => "The admin {0} has set your admin level to {1}.";
-        public virtual string SHOULD_SET_ADMIN_LEADER_INFO => "The player is not hierarchically directly below you, but you are his superior. You should set his admin leader to a direct superior.";
+        public virtual string ADMIN_HAS_SET_YOUR_ADMIN_LEVEL => "The admin {0} has set your admin level to {1}.";
+        public virtual string SHOULD_SET_ADMIN_LEADER_INFO => "The player is not hierarchically directly below you, but you are his supervisor. You should set his admin leader to a direct supervisor.";
+        public virtual string ADMIN_LEADER_SET_SUCCESSFULLY => "You've set {1} as the supervisor of {0}.";
+        public virtual string ADMIN_HAS_SET_YOUR_ADMIN_LEADER => "{0} has set {1} as your supervisor.";
+        public virtual string YOUVE_BECOME_ADMIN_LEADER => "{0} has set you as the supervisor of {1}.";
+        public virtual string VIP_SET_SUCCESSFULLY => "You've set isVip of {0} to {1}.";
+        public virtual string ADMIN_HAS_SET_YOU_VIP => "{0} has given you the VIP rank. Congratulations!";
+        public virtual string ADMIN_HAS_SET_YOU_NOT_VIP => "{0} has taken away your VIP rank.";
     }
 }

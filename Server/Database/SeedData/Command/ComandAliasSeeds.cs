@@ -116,7 +116,9 @@ namespace TDS.Server.Database.SeedData.Command
                 new CommandAlias { Alias = "NewHouse", Command = 27 },
                 new CommandAlias { Alias = "HouseNew", Command = 27 },
                 new CommandAlias { Alias = "OutputAdmins", Command = 28 },
-                new CommandAlias { Alias = "ListAdmins", Command = 28 }
+                new CommandAlias { Alias = "ListAdmins", Command = 28 },
+                new CommandAlias { Alias = "SetSupervisor", Command = 30 },
+                new CommandAlias { Alias = "GiveVip", Command = 31 }
             );
 
             return modelBuilder;
