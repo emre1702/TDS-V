@@ -39,7 +39,8 @@ namespace TDS.Server.Database.SeedData.Command
                 new Commands { Id = 25, Command = "LobbyInvitePlayer", LobbyOwnerCanUse = true },
                 new Commands { Id = 26, Command = "Test", NeededAdminLevel = 3 },
                 new Commands { Id = 27, Command = "CreateHouse", NeededAdminLevel = 2 },
-                new Commands { Id = 28, Command = "Admins" }
+                new Commands { Id = 28, Command = "Admins" },
+                new Commands { Id = 29, Command = "SetAdmin", NeededAdminLevel = 3 },
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
             return modelBuilder;

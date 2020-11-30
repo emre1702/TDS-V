@@ -59,30 +59,30 @@ namespace TDS.Server.Handler.PlayerHandlers
         {
             var suffix = SharedConstants.ServerTeamSuffix.Trim();
             if (name.StartsWith(suffix))
-                name = name.Substring(suffix.Length);
+                name = name[suffix.Length..];
             name = name.Trim();
 
             foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
+                if (player.Entity is { } && _nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsName))
                     return player;
             }
 
             foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
+                if (player.Entity is { } && _nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsName))
                     return player;
             }
 
             foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
+                if (player.Entity is { } && _nameCheckHelper.IsName(player, name, IsNameCheckLevel.EqualsScName))
                     return player;
             }
 
             foreach (var player in _tdsPlayerRemoteIdCache.Values)
             {
-                if (_nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
+                if (player.Entity is { } && _nameCheckHelper.IsName(player, name, IsNameCheckLevel.ContainsScName))
                     return player;
             }
 

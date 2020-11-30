@@ -3,11 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
-using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Models;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.Player;
-using TDS.Server.Handler;
 using TDS.Server.Handler.Entities;
 using TDS.Server.Handler.Extensions;
 
@@ -30,6 +28,9 @@ namespace TDS.Server.Handler.Helper
                     stat.LoggedIn = false;
                 }
                 dbContext.SaveChanges();
+
+                foreach (var entry in dbContext.ChangeTracker.Entries())
+                    entry.State = EntityState.Detached;
             }).Wait();
         }
 
@@ -42,13 +43,7 @@ namespace TDS.Server.Handler.Helper
 
             target.PlayerStats.MuteTime = minutes == -1 ? (int?)null : minutes;
 
-            await ExecuteForDBAsync(async dbContext =>
-            {
-                dbContext.Entry(target.PlayerStats).State = EntityState.Modified;
-
-                await dbContext.SaveChangesAsync().ConfigureAwait(false);
-                dbContext.Entry(target.PlayerStats).State = EntityState.Detached;
-            }).ConfigureAwait(false);
+            await Save(target.PlayerStats).ConfigureAwait(false);
         }
 
         public async Task ChangePlayerVoiceMuteTime(ITDSPlayer admin, Players target, int minutes, string reason)
@@ -59,6 +54,8 @@ namespace TDS.Server.Handler.Helper
             });
 
             target.PlayerStats.VoiceMuteTime = minutes == -1 ? (int?)null : minutes;
+
+            await Save(target.PlayerStats).ConfigureAwait(false);
 
             await ExecuteForDBAsync(async dbContext =>
             {
@@ -79,16 +76,16 @@ namespace TDS.Server.Handler.Helper
                 .ConfigureAwait(false);
         }
 
-        public async Task<bool> DoesPlayerWithScnameExist(string scname)
+        public async Task<bool> DoesPlayerWithScnameExist(string scName)
         {
-            int id = await GetPlayerIDByScname(scname).ConfigureAwait(false);
+            int id = await GetPlayerIDByScname(scName).ConfigureAwait(false);
             return id is { } && id != 0;
         }
 
         public async Task<Players?> GetPlayerByName(string name)
         {
             return await ExecuteForDBAsync(async dbContext =>
-                    await dbContext.Players.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()).ConfigureAwait(false))
+                    await dbContext.Players.AsNoTracking().FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower()).ConfigureAwait(false))
                 .ConfigureAwait(false);
         }
 
@@ -120,10 +117,22 @@ namespace TDS.Server.Handler.Helper
         {
             return await ExecuteForDBAsync(async dbContext =>
                 await dbContext.Players.Where(p => p.Name == player.Name || p.SCName == player.SocialClubName)
+                    .AsNoTracking()
                     .Select(p => new DatabasePlayerIdName(p.Id, p.Name))
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false))
                 .ConfigureAwait(false);
+        }
+
+        public async Task Save<TEntity>(TEntity entity) where TEntity : class
+        {
+            await ExecuteForDBAsync(async dbContext =>
+            {
+                dbContext.Update(entity);
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+                dbContext.Entry(entity).State = EntityState.Detached;
+            }).ConfigureAwait(false);
         }
     }
 }

@@ -234,5 +234,8 @@ namespace TDS.Server.Data.Interfaces
         string ADMIN_LEVEL_MAX_NUMBER { get; }
         string MIN_NUMBER { get; }
         string MAX_NUMBER { get; }
+        string ADMIN_LEVEL_SET_SUCCESSFULLY { get; }
+        string ADMIN_HAS_GAVE_YOU_ADMIN_LEVEL { get; }
+        string SHOULD_SET_ADMIN_LEADER_INFO { get; }
     }
 }

@@ -240,5 +240,8 @@ namespace TDS.Server.Data.Languages
         public override string ADMIN_LEVEL_MAX_NUMBER => "Das Admin-Level darf höchstens {0} sein.";
         public override string MIN_NUMBER => "Die Zahl darf mindestens {0} sein.";
         public override string MAX_NUMBER => "Die Zahl darf höchstens {0} sein.";
+        public override string ADMIN_LEVEL_SET_SUCCESSFULLY => "Das Admin-Level von {0} wurde erfolgreich auf {1} gesetzt.";
+        public override string ADMIN_HAS_GAVE_YOU_ADMIN_LEVEL => "Der Admin {0} hat dein Admin-Level auf {1} gesetzt.";
+        public override string SHOULD_SET_ADMIN_LEADER_INFO => "Der Spieler ist hierarchisch nicht direkt unter dir, aber du bist sein Vorgesetzter. Du solltest seinen Admin-Leader auf einen direkten Vorgesetzten setzen.";
     }
 }

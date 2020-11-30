@@ -15,6 +15,7 @@
         Goto = 11,
         RemoveMap = 12,
         VoiceMute = 13,
-        ResetPassword = 14
+        ResetPassword = 14,
+        AdminTeam = 15
     }
 }

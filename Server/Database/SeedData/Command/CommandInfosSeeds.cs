@@ -65,7 +65,9 @@ namespace TDS.Server.Database.SeedData.Command
                 new CommandInfos { Id = 27, Language = Language.German, Info = "Erstellt ein Haus in der Gang-Lobby." },
                 new CommandInfos { Id = 27, Language = Language.English, Info = "Creates a house in the gang lobby." },
                 new CommandInfos { Id = 28, Language = Language.German, Info = "Gibt alle Admins online aus." },
-                new CommandInfos { Id = 28, Language = Language.English, Info = "Outputs all online admins." }
+                new CommandInfos { Id = 28, Language = Language.English, Info = "Outputs all online admins." },
+                new CommandInfos { Id = 29, Language = Language.German, Info = "Setzt das Admin-Level eines Spielers." },
+                new CommandInfos { Id = 29, Language = Language.English, Info = "Sets the admin level of a player." }
             );
             return modelBuilder;
         }

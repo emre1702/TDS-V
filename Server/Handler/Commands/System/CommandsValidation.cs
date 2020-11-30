@@ -56,10 +56,10 @@ namespace TDS.Server.Handler.Commands.System
                 var index = commandMethodAndArgs.Method.ParameterInfos.IndexOf(parameterInfo);
                 var arg = commandMethodAndArgs.Args[index];
 
-                if (!int.TryParse(arg.ToString(), out int adminLevel))
+                if (!short.TryParse(arg.ToString(), out short adminLevel))
                 {
                     player.SendNotification(player.Language.ERROR_INFO);
-                    LoggingHandler.Instance.LogError($"Expect AdminLevel to be convertable to integer but it's not. Maybe wrong AdminLevelParameter attribute usage? Value: {arg} | Cmd: {commandMethodAndArgs.Method.MethodDefault.Name} | Index: {index}", Environment.StackTrace);
+                    LoggingHandler.Instance.LogError($"Expect AdminLevel to be convertable to short but it's not. Maybe wrong AdminLevelParameter attribute usage? Value: {arg} | Cmd: {commandMethodAndArgs.Method.MethodDefault.Name} | Index: {index}", Environment.StackTrace);
                     return false;
                 }
 

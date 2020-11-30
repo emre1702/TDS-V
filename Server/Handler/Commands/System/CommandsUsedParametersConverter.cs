@@ -112,14 +112,14 @@ namespace TDS.Server.Handler.Commands.System
 
         internal List<object> GetUsedParameters(string msg, out string cmd)
         {
-            int cmdendindex = msg.IndexOf(' ');
-            if (cmdendindex == -1)
+            int cmdEndIndex = msg.IndexOf(' ');
+            if (cmdEndIndex == -1)
             {
                 cmd = msg.ToLower();
                 return new List<object>();
             }
-            cmd = msg.Substring(0, cmdendindex).ToLower();
-            return msg.Substring(cmdendindex + 1).Split(' ').Cast<object>().ToList();
+            cmd = msg.Substring(0, cmdEndIndex).ToLower();
+            return msg[(cmdEndIndex + 1)..].Split(' ').Cast<object>().ToList();
         }
 
         internal List<object> GetFinalInvokeArgs(CommandMethodDataDto methodData, ITDSPlayer cmdUser, TDSCommandInfos cmdInfos, List<object> args)

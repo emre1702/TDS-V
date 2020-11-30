@@ -14,5 +14,6 @@
         public const string Test = "test";
         public const string VoiceMute = "voicemute";
         public const string CreateHouse = "createhouse";
+        public const string SetAdmin = "SetAdmin";
     }
 }

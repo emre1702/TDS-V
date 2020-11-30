@@ -241,5 +241,8 @@ namespace TDS.Server.Data.Languages
         public virtual string ADMIN_LEVEL_MAX_NUMBER => "The admin level can be at most {0}.";
         public virtual string MIN_NUMBER => "The number has to be atleast {0}.";
         public virtual string MAX_NUMBER => "The number can be at most {0}.";
+        public virtual string ADMIN_LEVEL_SET_SUCCESSFULLY => "The admin level of {0} was successfully set to {1}.";
+        public virtual string ADMIN_HAS_GAVE_YOU_ADMIN_LEVEL => "The admin {0} has set your admin level to {1}.";
+        public virtual string SHOULD_SET_ADMIN_LEADER_INFO => "The player is not hierarchically directly below you, but you are his superior. You should set his admin leader to a direct superior.";
     }
 }
