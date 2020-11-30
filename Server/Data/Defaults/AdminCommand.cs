@@ -15,5 +15,7 @@
         public const string VoiceMute = "voicemute";
         public const string CreateHouse = "createhouse";
         public const string SetAdmin = "SetAdmin";
+        public const string SetAdminLeader = "SetAdminLeader";
+        public const string SetVip = "SetVip";
     }
 }
