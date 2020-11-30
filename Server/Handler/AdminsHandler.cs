@@ -54,6 +54,7 @@ namespace TDS.Server.Handler
 
             eventsHandler.PlayerLoggedIn += SetOnline;
             eventsHandler.PlayerLoggedOut += SetOffline;
+            eventsHandler.PlayerAdminLevelChange += OnPlayerAdminLevelChange;
         }
 
         public AdminLevelDto GetLevel(short adminLvl)
@@ -119,10 +120,8 @@ namespace TDS.Server.Handler
         {
             lock (_adminLevels)
             {
-                if (_adminLevels.ContainsKey(player.Admin.Level.Level))
-                {
-                    _adminLevels[player.Admin.Level.Level].PlayersOnline.Remove(player);
-                }
+                if (_adminLevels.TryGetValue(player.Admin.Level.Level, out var level))
+                    level.PlayersOnline.Remove(player);
             }
         }
 
@@ -130,10 +129,19 @@ namespace TDS.Server.Handler
         {
             lock (_adminLevels)
             {
-                if (_adminLevels.ContainsKey(player.Admin.Level.Level))
-                {
-                    _adminLevels[player.Admin.Level.Level].PlayersOnline.Add(player);
-                }
+                if (_adminLevels.TryGetValue(player.Admin.Level.Level, out var level))
+                    level.PlayersOnline.Add(player);
+            }
+        }
+
+        private void OnPlayerAdminLevelChange(ITDSPlayer player, short oldAdminLevel, short newAdminLevel) 
+        {
+            lock (_adminLevels)
+            {
+                if (_adminLevels.TryGetValue(oldAdminLevel, out var oldLevel))
+                    oldLevel.PlayersOnline.Remove(player);
+                if (_adminLevels.TryGetValue(newAdminLevel, out var newLevel))
+                    newLevel.PlayersOnline.Add(player);
             }
         }
     }

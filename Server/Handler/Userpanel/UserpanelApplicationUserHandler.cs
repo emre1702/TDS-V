@@ -24,7 +24,7 @@ namespace TDS.Server.Handler.Userpanel
     {
         private readonly BonusBotConnectorClient _bonusbotConnectorClient;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
-
+        private readonly EventsHandler _eventsHandler;
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
@@ -36,6 +36,7 @@ namespace TDS.Server.Handler.Userpanel
             _bonusbotConnectorClient = bonusbotConnectorClient;
             _tdsPlayerHandler = tdsPlayerHandler;
             _offlineMessagesHandler = offlineMessagesHandler;
+            _eventsHandler = eventsHandler;
 
             LoadAdminQuestions();
 
@@ -91,6 +92,8 @@ namespace TDS.Server.Handler.Userpanel
             player.Entity.AdminLeaderId = invitation.AdminId;
             player.Entity.AdminLvl = 1;
             await player.DatabaseHandler.SaveData().ConfigureAwait(false);
+
+            _eventsHandler.OnPlayerAdminLevelChange(player, 0, 1);
 
             NAPI.Task.RunSafe(() =>
             {

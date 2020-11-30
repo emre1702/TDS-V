@@ -65,6 +65,8 @@ namespace TDS.Server.Handler.Events
 
         public delegate void TDSDbPlayerDelegate(ITDSPlayer player, Players dbPlayer);
 
+        public delegate void PlayerAdminLevelChangeDelegate(ITDSPlayer player, short oldAdminLevel, short newAdminLevel);
+
         public event EntityDelegate? EntityDeleted;
 
         public event ErrorDelegate? Error;
@@ -126,6 +128,8 @@ namespace TDS.Server.Handler.Events
         public event CounterDelegate? Second;
 
         public event EmptyDelegate? Update;
+
+        public event PlayerAdminLevelChangeDelegate? PlayerAdminLevelChange;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         public static EventsHandler Instance { get; private set; }
@@ -482,6 +486,18 @@ namespace TDS.Server.Handler.Events
             try
             {
                 GangObjectCreated?.Invoke(gang);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
+        }
+
+        public void OnPlayerAdminLevelChange(ITDSPlayer player, short oldAdminLevel, short newAdminLevel)
+        {
+            try
+            {
+                PlayerAdminLevelChange?.Invoke(player, oldAdminLevel, newAdminLevel);
             }
             catch (Exception ex)
             {

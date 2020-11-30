@@ -125,7 +125,7 @@ namespace TDS.Server.Handler.Userpanel
             int? applicationId;
             if ((applicationId = Utils.GetInt(args[0])) == null)
                 return null;
-            if (!(args[1] is string message))
+            if (args[1] is not string message)
                 return null;
 
             var invitation = new ApplicationInvitations
