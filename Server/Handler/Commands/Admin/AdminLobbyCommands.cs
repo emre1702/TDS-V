@@ -13,7 +13,7 @@ namespace TDS.Server.Handler.Commands.Admin
         [TDSCommand(AdminCommand.NextMap)]
         public void NextMap(ITDSPlayer player, TDSCommandInfos cmdinfos, [RemainingText(MinLength = 4)] string reason)
         {
-            if (!(player.Lobby is IArena arena))
+            if (player.Lobby is not IArena arena)
                 return;
             if (!cmdinfos.AsLobbyOwner)
                 LoggingHandler.Instance.LogAdmin(LogType.Next, player, reason, asdonator: cmdinfos.AsDonator, asvip: cmdinfos.AsVIP);

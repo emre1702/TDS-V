@@ -30,7 +30,7 @@ namespace TDS.Server.Handler.Commands.Admin
             NAPI.Task.RunSafe(() => target.SendNotification(string.Format(target.Language.ADMIN_HAS_GAVE_YOU_ADMIN_LEVEL, player.DisplayName, adminLevel)));
 
             if (player.Admin.Level.Level - adminLevel > 1)
-                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.SHOULD_SET_ADMIN_LEADER_INFO)));
+                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.SHOULD_SET_ADMIN_LEADER_INFO));
 
             LoggingHandler.Instance.LogAdmin(LogType.AdminTeam, player, target, string.Empty);
         }
