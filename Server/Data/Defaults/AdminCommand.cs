@@ -17,5 +17,6 @@
         public const string SetAdmin = "SetAdmin";
         public const string SetAdminLeader = "SetAdminLeader";
         public const string SetVip = "SetVip";
+        public const string AdminLeader = "AdminLeader";
     }
 }

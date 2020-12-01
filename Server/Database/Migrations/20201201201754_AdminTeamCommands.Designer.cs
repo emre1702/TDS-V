@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS.Server.Database.Entity;
@@ -14,9 +15,10 @@ using TDS.Shared.Data.Enums.Userpanel;
 namespace TDS.Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201201201754_AdminTeamCommands")]
+    partial class AdminTeamCommands
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3424,9 +3426,6 @@ namespace TDS.Server.Database.Migrations
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)0);
 
-                    b.Property<decimal?>("DiscordUserId")
-                        .HasColumnType("numeric(20,0)");
-
                     b.Property<short>("Donation")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint")
@@ -3467,9 +3466,6 @@ namespace TDS.Server.Database.Migrations
                     b.HasIndex("AdminLeaderId");
 
                     b.HasIndex("AdminLvl");
-
-                    b.HasIndex("DiscordUserId")
-                        .IsUnique();
 
                     b.ToTable("Players");
 

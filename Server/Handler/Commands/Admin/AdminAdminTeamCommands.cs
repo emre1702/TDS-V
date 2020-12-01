@@ -1,4 +1,6 @@
 ﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.CustomAttribute;
@@ -26,7 +28,8 @@ namespace TDS.Server.Handler.Commands.Admin
         public async Task SetAdmin(ITDSPlayer player, ITDSPlayer target, [AdminLevelParameter] short adminLevel)
         {
             var oldAdminLevel = target.Entity!.AdminLvl;
-            target.Entity.AdminLeaderId = player.Entity!.Id;
+            if (player.Entity is { })
+                target.Entity.AdminLeaderId = player.Entity.Id;
             target.Entity.AdminLvl = adminLevel;
             await target.DatabaseHandler.SaveData().ConfigureAwait(false);
 
@@ -47,7 +50,8 @@ namespace TDS.Server.Handler.Commands.Admin
         [TDSCommand(AdminCommand.SetAdmin, 0)]
         public async Task SetAdmin(ITDSPlayer player, Players target, [AdminLevelParameter] short adminLevel)
         {
-            target.AdminLeaderId = player.Entity!.Id;
+            if (player.Entity is { })
+                target.AdminLeaderId = player.Entity.Id;
             target.AdminLvl = adminLevel;
             await _databasePlayerHelper.Save(target).ConfigureAwait(false);
 
@@ -87,7 +91,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 player.SendNotification(string.Format(player.Language.ADMIN_LEADER_SET_SUCCESSFULLY, target.Name, adminLeader.Name));
                 adminLeader.SendNotification(string.Format(adminLeader.Language.YOUVE_BECOME_ADMIN_LEADER, player.Name, target.Name));
             });
-            _offlineMessagesHandler.Add(target, player.Entity!, string.Format(_langHelper.GetLang(Language.English).ADMIN_HAS_SET_YOUR_ADMIN_LEADER, player.Name, adminLeader.Name));
+            _offlineMessagesHandler.Add(target, player.Entity, string.Format(_langHelper.GetLang(Language.English).ADMIN_HAS_SET_YOUR_ADMIN_LEADER, player.Name, adminLeader.Name));
 
             LoggingHandler.Instance.LogAdmin(LogType.SetAdminLeader, player, string.Empty, targetid: target.Id);
         }
@@ -103,7 +107,7 @@ namespace TDS.Server.Handler.Commands.Admin
                 player.SendNotification(string.Format(player.Language.ADMIN_LEADER_SET_SUCCESSFULLY, target.Name, adminLeader.Name));
                 target.SendNotification(string.Format(target.Language.ADMIN_HAS_SET_YOUR_ADMIN_LEADER, player.Name, adminLeader.Name));
             });
-            _offlineMessagesHandler.Add(adminLeader, player.Entity!, string.Format(_langHelper.GetLang(Language.English).YOUVE_BECOME_ADMIN_LEADER, player.Name, target.Name));
+            _offlineMessagesHandler.Add(adminLeader, player.Entity, string.Format(_langHelper.GetLang(Language.English).YOUVE_BECOME_ADMIN_LEADER, player.Name, target.Name));
 
             LoggingHandler.Instance.LogAdmin(LogType.SetAdminLeader, player, target, string.Empty);
         }
@@ -115,8 +119,8 @@ namespace TDS.Server.Handler.Commands.Admin
             await _databasePlayerHelper.Save(target).ConfigureAwait(false);
 
             NAPI.Task.RunSafe(() => player.SendNotification(string.Format(player.Language.ADMIN_LEADER_SET_SUCCESSFULLY, target.Name, adminLeader.Name)));
-            _offlineMessagesHandler.Add(target, player.Entity!, string.Format(_langHelper.GetLang(Language.English).ADMIN_HAS_SET_YOUR_ADMIN_LEADER, player.Name, adminLeader.Name));
-            _offlineMessagesHandler.Add(adminLeader, player.Entity!, string.Format(_langHelper.GetLang(Language.English).YOUVE_BECOME_ADMIN_LEADER, player.Name, target.Name));
+            _offlineMessagesHandler.Add(target, player.Entity, string.Format(_langHelper.GetLang(Language.English).ADMIN_HAS_SET_YOUR_ADMIN_LEADER, player.Name, adminLeader.Name));
+            _offlineMessagesHandler.Add(adminLeader, player.Entity, string.Format(_langHelper.GetLang(Language.English).YOUVE_BECOME_ADMIN_LEADER, player.Name, target.Name));
 
             LoggingHandler.Instance.LogAdmin(LogType.SetAdminLeader, player, string.Empty, targetid: target.Id);
         }
@@ -147,11 +151,39 @@ namespace TDS.Server.Handler.Commands.Admin
 
             NAPI.Task.RunSafe(() => player.SendNotification(string.Format(player.Language.VIP_SET_SUCCESSFULLY, target.Name, isVip)));
             if (isVip)
-                _offlineMessagesHandler.Add(target, player.Entity!, string.Format(_langHelper.GetLang(Language.English).ADMIN_HAS_SET_YOU_VIP, player.Name));
+                _offlineMessagesHandler.Add(target, player.Entity, string.Format(_langHelper.GetLang(Language.English).ADMIN_HAS_SET_YOU_VIP, player.Name));
             else
-                _offlineMessagesHandler.Add(target, player.Entity!, string.Format(_langHelper.GetLang(Language.English).ADMIN_HAS_SET_YOU_NOT_VIP, player.Name));
+                _offlineMessagesHandler.Add(target, player.Entity, string.Format(_langHelper.GetLang(Language.English).ADMIN_HAS_SET_YOU_NOT_VIP, player.Name));
 
             LoggingHandler.Instance.LogAdmin(LogType.SetVip, player, string.Empty, targetid: target.Id);
+        }
+
+        [TDSCommand(AdminCommand.AdminLeader)]
+        public async Task GetAdminLeader(ITDSPlayer player, Players target)
+        {
+            if (target.AdminLvl == 0)
+            {
+                NAPI.Task.RunSafe(() => player.Chat.SendChatMessage(player.Language.TARGET_IS_NOT_ADMIN));
+                return;
+            }
+            if (!target.AdminLeaderId.HasValue)
+            {
+                NAPI.Task.RunSafe(() => player.Chat.SendChatMessage(player.Language.TARGET_IS_ADMIN_BUT_HAS_NO_SUPERVISOR));
+                return;
+            }
+
+            var adminLeaderName = await _databasePlayerHelper.ExecuteForDBAsync(async dbContext => 
+            {
+                return await dbContext.Players
+                    .Where(p => p.Id == target.AdminLeaderId)
+                    .Select(p => p.Name)
+                    .FirstOrDefaultAsync();
+            });
+
+            if (adminLeaderName is { })
+                NAPI.Task.RunSafe(() => player.Chat.SendChatMessage(string.Format(player.Language.SUPERVISOR_OF_PLAYER, adminLeaderName)));
+            else
+                NAPI.Task.RunSafe(() => player.Chat.SendChatMessage(player.Language.TARGET_IS_ADMIN_BUT_HAS_NO_SUPERVISOR));
         }
     }
 }
