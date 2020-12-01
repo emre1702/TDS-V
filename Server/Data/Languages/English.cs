@@ -108,7 +108,7 @@ namespace TDS.Server.Data.Languages
         public virtual string PLAYER_JOINED_YOUR_GANG => "{0} joined your gang.";
         public virtual string PLAYER_LOGGED_IN => "~b~~h~{0}~h~ ~w~logged in.";
         public virtual string PLAYER_LOGGED_OUT => "~b~~h~{0}~h~ ~w~logged out.";
-        public virtual string PLAYER_NOT_IN_YOUR_GANG => "The target is not in your gang (anymore).";
+        public virtual string PLAYER_NOT_IN_YOUR_GANG => "The player is not in your gang (anymore).";
         public virtual string PLAYER_NOT_MUTED => "The player is not muted!";
         public virtual string PLAYER_REGISTERED => "A new player named \"{0}\" has registered!";
         public virtual string PLAYER_REJECTED_YOUR_INVITATION => "{0} rejected your team-invitation.";
@@ -156,13 +156,13 @@ namespace TDS.Server.Data.Languages
         public virtual string TARGET_ACCEPTED_INVITATION => "{0} accepted your invitation.";
         public virtual string TARGET_ADDED_BLOCK => "You blocked {0}.";
         public virtual string TARGET_ALREADY_BLOCKED => "You already blocked {0}.";
-        public virtual string TARGET_ALREADY_IN_A_GANG => "The target is already in a gang.";
-        public virtual string TARGET_ALREADY_IN_PRIVATE_CHAT => "The target is already in a private chat.";
+        public virtual string TARGET_ALREADY_IN_A_GANG => "The player is already in a gang.";
+        public virtual string TARGET_ALREADY_IN_PRIVATE_CHAT => "The player is already in a private chat.";
         public virtual string TARGET_NOT_BLOCKED => "{0} is not blocked.";
-        public virtual string TARGET_NOT_IN_SAME_LOBBY => "The target is not in the same lobby.";
-        public virtual string TARGET_NOT_LOGGED_IN => "The target is not logged in.";
+        public virtual string TARGET_NOT_IN_SAME_LOBBY => "The player is not in the same lobby.";
+        public virtual string TARGET_NOT_LOGGED_IN => "The player is not logged in.";
         public virtual string TARGET_PLAYER_DEFEND_INFO => "Your teammate {0} is at the target. Defend him!";
-        public virtual string TARGET_RANK_IS_HIGHER_OR_EQUAL => "The target's rank is higher or equal to yours.";
+        public virtual string TARGET_RANK_IS_HIGHER_OR_EQUAL => "The player's rank is higher or equal to yours.";
         public virtual string TARGET_REJECTED_INVITATION => "{0} turned down your invitation.";
         public virtual string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "The player {0} is not your friend anymore and got blocked now.";
         public virtual string TEAM_ALREADY_FULL_INFO => "Your team is already full. Wait for a opponent to join and try again.";
@@ -191,7 +191,7 @@ namespace TDS.Server.Data.Languages
 
         public virtual string YOU_ACCEPTED_INVITATION => "You accepted the invitation of {0}.";
         public virtual string YOU_ACCEPTED_TEAM_INVITATION => "You accepted the team-invitation. {0} is your team-leader now.";
-        public virtual string YOU_ALREADY_INVITED_TARGET => "You've already invited the target.";
+        public virtual string YOU_ALREADY_INVITED_TARGET => "You've already invited the player.";
         public virtual string YOU_ARE_ALREADY_IN_A_GANG => "You are already in a gang.";
         public virtual string YOU_ARE_NOT_IN_A_GANG => "You are not in a gang.";
         public virtual string YOU_CANT_BUY_A_MAP_IN_CUSTOM_LOBBY => "You can't buy a map in a custom lobby.";
@@ -250,5 +250,8 @@ namespace TDS.Server.Data.Languages
         public virtual string VIP_SET_SUCCESSFULLY => "You've set isVip of {0} to {1}.";
         public virtual string ADMIN_HAS_SET_YOU_VIP => "{0} has given you the VIP rank. Congratulations!";
         public virtual string ADMIN_HAS_SET_YOU_NOT_VIP => "{0} has taken away your VIP rank.";
+        public virtual string SUPERVISOR_OF_PLAYER => "The supervisor of that player is {0}.";
+        public virtual string TARGET_IS_ADMIN_BUT_HAS_NO_SUPERVISOR => "That player is admin but has no supervisor.";
+        public virtual string TARGET_IS_NOT_ADMIN => "The player is not an admin.";
     }
 }
