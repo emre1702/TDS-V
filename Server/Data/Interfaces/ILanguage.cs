@@ -243,5 +243,8 @@ namespace TDS.Server.Data.Interfaces
         string VIP_SET_SUCCESSFULLY { get; }
         string ADMIN_HAS_SET_YOU_VIP { get; }
         string ADMIN_HAS_SET_YOU_NOT_VIP { get; }
+        string SUPERVISOR_OF_PLAYER { get; }
+        string TARGET_IS_ADMIN_BUT_HAS_NO_SUPERVISOR { get; }
+        string TARGET_IS_NOT_ADMIN { get; }
     }
 }

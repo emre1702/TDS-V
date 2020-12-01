@@ -72,10 +72,9 @@ namespace TDS.Server.Handler.Userpanel
         {
             var playerData = await ExecuteForDBAsync(async dbContext =>
             {
-                return await dbContext.PlayerSettings
-                    .Where(p => p.General.DiscordUserId == discordUserId)
-                    .Include(p => p.Player)
-                    .Select(p => new { p.PlayerId, p.Player.Name })
+                return await dbContext.Players
+                    .Where(p => p.DiscordUserId == discordUserId)
+                    .Select(p => new { p.Id, p.Name })
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false);
             }).ConfigureAwait(false);
@@ -96,7 +95,7 @@ namespace TDS.Server.Handler.Userpanel
 
             var messageEntity = new SupportRequestMessages
             {
-                AuthorId = playerData.PlayerId,
+                AuthorId = playerData.Id,
                 MessageIndex = maxMessageIndex,
                 RequestId = requestId,
                 Text = text
@@ -133,9 +132,9 @@ namespace TDS.Server.Handler.Userpanel
         {
             var playerId = await ExecuteForDBAsync(async dbContext =>
             {
-                return await dbContext.PlayerSettings
-                    .Where(p => p.General.DiscordUserId == discordUserId)
-                    .Select(p => p.PlayerId)
+                return await dbContext.Players
+                    .Where(p => p.DiscordUserId == discordUserId)
+                    .Select(p => p.Id)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false);
             }).ConfigureAwait(false);

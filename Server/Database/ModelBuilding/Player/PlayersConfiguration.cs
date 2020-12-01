@@ -11,6 +11,8 @@ namespace TDS.Server.Database.ModelBuilding.Player
         {
             builder.HasKey(e => e.Id);
 
+            builder.HasIndex(e => e.DiscordUserId).IsUnique();
+
             builder.Property(e => e.Email)
                 .IsRequired(false)
                 .HasMaxLength(100);
@@ -40,6 +42,9 @@ namespace TDS.Server.Database.ModelBuilding.Player
 
             builder.Property(e => e.SCId)
                 .IsRequired();
+
+            builder.Property(e => e.DiscordUserId)
+                .IsRequired(false);
 
             builder.HasOne(d => d.AdminLvlNavigation)
                 .WithMany(p => p.Players)

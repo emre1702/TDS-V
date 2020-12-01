@@ -77,6 +77,11 @@ namespace TDS.Server.Handler.Userpanel
 
         private async Task SaveDiscordUserId(int userId, ulong discordUserId)
         {
+            var player = await ExecuteForDBAsync(async dbContext
+                => await dbContext.Players
+                    .FirstOrDefaultAsync(s => s.Id == userId)
+                    .ConfigureAwait(false))
+                .ConfigureAwait(false);
             var settings = await ExecuteForDBAsync(async dbContext
                 => await dbContext.PlayerSettings
                     .FirstOrDefaultAsync(s => s.PlayerId == userId)
@@ -84,11 +89,17 @@ namespace TDS.Server.Handler.Userpanel
                 .ConfigureAwait(false);
             if (settings is null)
                 throw new Exception("Your player settings do not exist?!");
+
+            player.DiscordUserId = discordUserId;
             settings.General.DiscordUserId = discordUserId;
+
             await ExecuteForDBAsync(async dbContext
                 => await dbContext
                     .SaveChangesAsync()
-                    .ConfigureAwait(false))
+                    .ConfigureAwait(false), dbContext => {
+                        dbContext.Entry(player).State = EntityState.Detached;
+                        dbContext.Entry(settings).State = EntityState.Detached;
+                    })
                 .ConfigureAwait(false);
         }
 

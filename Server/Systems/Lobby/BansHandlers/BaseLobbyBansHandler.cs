@@ -75,7 +75,7 @@ namespace TDS.Server.LobbySystem.BansHandlers
                 await Lobby.Database.AddBanEntity(ban).ConfigureAwait(false);
             }
             OutputNewBanInfo(ban, admin, target.Name);
-            Lobby.Events.TriggerNewBan(ban, target.PlayerSettings?.General.DiscordUserId);
+            Lobby.Events.TriggerNewBan(ban, target.DiscordUserId);
 
             return ban;
         }

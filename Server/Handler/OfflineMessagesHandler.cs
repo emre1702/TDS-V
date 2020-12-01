@@ -58,14 +58,14 @@ namespace TDS.Server.Handler
             }
         }
 
-        public async void Add(Players target, Players source, string message)
+        public async void Add(Players target, Players? source, string message)
         {
             try
             {
                 Offlinemessages msg = new Offlinemessages()
                 {
                     TargetId = target.Id,
-                    SourceId = source.Id,
+                    SourceId = source?.Id ?? -1,
                     Message = message
                 };
 
@@ -75,8 +75,8 @@ namespace TDS.Server.Handler
                     await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 }).ConfigureAwait(false);
 
-                if (target.PlayerSettings.General.DiscordUserId.HasValue)
-                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, target.PlayerSettings.General.DiscordUserId.Value);
+                if (target.DiscordUserId.HasValue)
+                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source?.GetDiscriminator() ?? "System", message, target.DiscordUserId.Value);
 
                 InformIfPlayerIsOnline(target.Id);
             }

@@ -249,5 +249,8 @@ namespace TDS.Server.Data.Languages
         public override string VIP_SET_SUCCESSFULLY => "Du hast isVip von {0} auf {1} gesetzt.";
         public override string ADMIN_HAS_SET_YOU_VIP => "{0} hat dir den VIP-Rang gegeben. Glückwunsch!";
         public override string ADMIN_HAS_SET_YOU_NOT_VIP => "{0} hat dir den VIP-Rang weggenommen.";
+        public override string SUPERVISOR_OF_PLAYER => "Der Vorgesetzte vom Spieler ist {0}.";
+        public override string TARGET_IS_ADMIN_BUT_HAS_NO_SUPERVISOR => "Der Spieler ist Admin, aber hat keinen Vorgesetzten.";
+        public override string TARGET_IS_NOT_ADMIN => "Der Spieler ist kein Admin.";
     }
 }

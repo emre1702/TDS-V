@@ -158,9 +158,9 @@ namespace TDS.Server.Handler.Userpanel
                 return false;
 
             var discordUserId = await ExecuteForDBAsync(async dbContext =>
-                await dbContext.PlayerSettings
-                    .Where(p => p.PlayerId == targetId.Value)
-                    .Select(p => p.General.DiscordUserId)
+                await dbContext.Players
+                    .Where(p => p.Id == targetId.Value)
+                    .Select(p => p.DiscordUserId)
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false))
                 .ConfigureAwait(false);

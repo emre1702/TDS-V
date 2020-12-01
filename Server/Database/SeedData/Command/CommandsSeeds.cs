@@ -43,6 +43,7 @@ namespace TDS.Server.Database.SeedData.Command
                 new Commands { Id = 29, Command = "SetAdmin", NeededAdminLevel = 3 },
                 new Commands { Id = 30, Command = "SetAdminLeader", NeededAdminLevel = 3 },
                 new Commands { Id = 31, Command = "SetVip", NeededAdminLevel = 3 },
+                new Commands { Id = 32, Command = "AdminLeader" }
             };
             modelBuilder.Entity<Commands>().HasData(seedCommands);
             return modelBuilder;

@@ -24,6 +24,7 @@ namespace TDS.Server.Database.Entity.Player
         public DateTime RegisterTimestamp { get; set; }
         public ulong SCId { get; set; }
         public string SCName { get; set; }
+        public ulong? DiscordUserId { get; set; }
 
         public Players()
         {

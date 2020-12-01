@@ -18,6 +18,6 @@
         ResetPassword = 14,
         SetAdmin = 15,
         SetAdminLeader = 16,
-        SetVip = 16
+        SetVip = 17
     }
 }

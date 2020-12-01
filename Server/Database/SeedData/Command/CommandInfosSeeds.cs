@@ -71,7 +71,9 @@ namespace TDS.Server.Database.SeedData.Command
                 new CommandInfos { Id = 30, Language = Language.German, Info = "Setzt den Vorgesetzten eines Spielers." },
                 new CommandInfos { Id = 30, Language = Language.English, Info = "Sets the supervisor of a player." },
                 new CommandInfos { Id = 31, Language = Language.German, Info = "Gibt einem Spieler den VIP-Rang." },
-                new CommandInfos { Id = 31, Language = Language.English, Info = "Gives a player the vip rank." }
+                new CommandInfos { Id = 31, Language = Language.English, Info = "Gives a player the vip rank." },
+                new CommandInfos { Id = 32, Language = Language.German, Info = "Gibt den Vorgesetzten eines Admins aus." },
+                new CommandInfos { Id = 32, Language = Language.English, Info = "Outputs the supervisor of an admin." }
             );
             return modelBuilder;
         }

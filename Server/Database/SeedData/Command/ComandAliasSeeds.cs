@@ -118,7 +118,12 @@ namespace TDS.Server.Database.SeedData.Command
                 new CommandAlias { Alias = "OutputAdmins", Command = 28 },
                 new CommandAlias { Alias = "ListAdmins", Command = 28 },
                 new CommandAlias { Alias = "SetSupervisor", Command = 30 },
-                new CommandAlias { Alias = "GiveVip", Command = 31 }
+                new CommandAlias { Alias = "SetVorgesetzter", Command = 30 },
+                new CommandAlias { Alias = "GiveVip", Command = 31 },
+                new CommandAlias { Alias = "Supervisor", Command = 32 },
+                new CommandAlias { Alias = "Vorgesetzter", Command = 32 },
+                new CommandAlias { Alias = "GetSupervisor", Command = 32 },
+                new CommandAlias { Alias = "GetAdminLeader", Command = 32 }
             );
 
             return modelBuilder;
