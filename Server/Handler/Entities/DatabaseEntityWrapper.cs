@@ -81,7 +81,7 @@ namespace TDS.Server.Handler.Entities
             }
         }
 
-        public async Task ExecuteForDBAsync(Func<TDSDbContext, Task> action)
+        public async Task ExecuteForDBAsync(Func<TDSDbContext, Task> action, Action<TDSDbContext>? doFinally = null)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
 
@@ -95,6 +95,7 @@ namespace TDS.Server.Handler.Entities
             }
             finally
             {
+                doFinally?.Invoke(_dbContext);
                 _dbContextSemaphore.Release();
             }
         }
@@ -113,7 +114,7 @@ namespace TDS.Server.Handler.Entities
             }
         }
 
-        public async Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action)
+        public async Task<T> ExecuteForDBAsync<T>(Func<TDSDbContext, Task<T>> action, Action<TDSDbContext>? doFinally = null)
         {
             await _dbContextSemaphore.WaitAsync(Timeout.Infinite).ConfigureAwait(false);
 
@@ -128,6 +129,7 @@ namespace TDS.Server.Handler.Entities
             }
             finally
             {
+                doFinally?.Invoke(_dbContext);
                 _dbContextSemaphore.Release();
             }
         }

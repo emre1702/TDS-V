@@ -130,9 +130,7 @@ namespace TDS.Server.Handler.Helper
             {
                 dbContext.Update(entity);
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
-
-                dbContext.Entry(entity).State = EntityState.Detached;
-            }).ConfigureAwait(false);
+            }, dbContext => dbContext.Entry(entity).State = EntityState.Detached).ConfigureAwait(false);
         }
     }
 }
