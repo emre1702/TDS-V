@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TDS.Server.Database.Entity.Player;
 
 namespace TDS.Server.Data.Interfaces
 {
@@ -246,5 +247,7 @@ namespace TDS.Server.Data.Interfaces
         string SUPERVISOR_OF_PLAYER { get; }
         string TARGET_IS_ADMIN_BUT_HAS_NO_SUPERVISOR { get; }
         string TARGET_IS_NOT_ADMIN { get; }
+        string MAP_CREATOR_REWARD_INFO { get; }
+        string YOU_GOT_MAP_CREATOR_REWARD { get; }
     }
 }

@@ -18,6 +18,7 @@ using TDS.Server.Data.Models.Map;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
 using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Helper;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Enums;
@@ -39,6 +40,7 @@ namespace TDS.Server.Handler.Maps
             : base(dbContext)
         {
             (_mapsLoadingHandler, _xmlHelper, _settingsHandler) = (mapsLoadingHandler, xmlHelper, settingsHandler);
+
             NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
         }
 

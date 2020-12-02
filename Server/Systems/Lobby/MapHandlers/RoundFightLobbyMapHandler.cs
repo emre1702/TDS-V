@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
@@ -21,6 +22,7 @@ namespace TDS.Server.LobbySystem.MapHandlers
     {
         public MapDto? CurrentMap { get; private set; }
         public List<MapDto> Maps { get; private set; } = new List<MapDto>();
+        public MapRetrieveType MapRetrieveType { get; protected set; }
 
         protected new IRoundFightLobbyEventsHandler Events => (IRoundFightLobbyEventsHandler)base.Events;
         private readonly ISettingsHandler _settingsHandler;
@@ -83,6 +85,7 @@ namespace TDS.Server.LobbySystem.MapHandlers
 
         private MapDto? GetRandomMap()
         {
+            MapRetrieveType = MapRetrieveType.Random;
             lock (Maps)
             {
                 if (Maps.Count == 0)

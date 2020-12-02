@@ -252,5 +252,7 @@ namespace TDS.Server.Data.Languages
         public override string SUPERVISOR_OF_PLAYER => "Der Vorgesetzte vom Spieler ist {0}.";
         public override string TARGET_IS_ADMIN_BUT_HAS_NO_SUPERVISOR => "Der Spieler ist Admin, aber hat keinen Vorgesetzten.";
         public override string TARGET_IS_NOT_ADMIN => "Der Spieler ist kein Admin.";
+        public override string MAP_CREATOR_REWARD_INFO => "Der Ersteller der Karte '{0}' hat ${1} bekommen.";
+        public override string YOU_GOT_MAP_CREATOR_REWARD => "Deine Karte '{0}' wurde ausgewählt -> du verdienst ${1}.";
     }
 }

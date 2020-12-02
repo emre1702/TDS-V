@@ -11,6 +11,7 @@ namespace TDS.Server.Data.Interfaces.LobbySystem.MapVotings
 
         string? GetJson();
 
+        MapDto? GetBoughtMap();
         MapDto? GetVotedMap();
 
         void VoteForMap(ITDSPlayer player, int mapId);

@@ -144,26 +144,29 @@ namespace TDS.Server.LobbySystem.MapVotings
             Lobby.Sync.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.SetMapVotes, oldVote, oldVotedMap.AmountVotes);
         }
 
+        public MapDto? GetBoughtMap()
+        {
+            if (_boughtMap is null)
+                return null;
+
+            var map = _boughtMap;
+            _boughtMap = null;
+            return map;
+        }
+
         public MapDto? GetVotedMap()
         {
-            if (_boughtMap is { })
+            if (_mapVotes.Count == 0)
+                return null;
+
+            MapVoteDto wonMap = _mapVotes.MaxBy(vote => vote.AmountVotes).First();
+            Lobby.Notifications.Send(lang =>
             {
-                var map = _boughtMap;
-                _boughtMap = null;
-                return map;
-            }
-            if (_mapVotes.Count > 0)
-            {
-                MapVoteDto wonMap = _mapVotes.MaxBy(vote => vote.AmountVotes).First();
-                Lobby.Notifications.Send(lang =>
-                {
-                    return string.Format(lang.MAP_WON_VOTING, wonMap.Name);
-                });
-                lock (_mapVotes) { _mapVotes.Clear(); }
-                lock (_playerVotes) { _playerVotes.Clear(); }
-                return Lobby.MapHandler.Maps.FirstOrDefault(m => m.BrowserSyncedData.Id == wonMap.Id);
-            }
-            return null;
+                return string.Format(lang.MAP_WON_VOTING, wonMap.Name);
+            });
+            lock (_mapVotes) { _mapVotes.Clear(); }
+            lock (_playerVotes) { _playerVotes.Clear(); }
+            return Lobby.MapHandler.Maps.FirstOrDefault(m => m.BrowserSyncedData.Id == wonMap.Id);
         }
 
         private bool CheckCanBuyMap(ITDSPlayer player)

@@ -30,14 +30,14 @@ namespace TDS.Server.Handler
             eventsHandler.PlayerLoggedIn += CheckOfflineMessages;
         }
 
-        public async void Add(int targetId, ulong? targetDiscordId, Players source, string message)
+        public async void Add(int targetId, ulong? targetDiscordId, Players? source, string message)
         {
             try
             {
                 var msg = new Offlinemessages()
                 {
                     TargetId = targetId,
-                    SourceId = source.Id,
+                    SourceId = source?.Id ?? -1,
                     Message = message
                 };
 
@@ -48,7 +48,7 @@ namespace TDS.Server.Handler
                 }).ConfigureAwait(false);
 
                 if (targetDiscordId.HasValue)
-                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source.GetDiscriminator(), message, targetDiscordId.Value);
+                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source?.GetDiscriminator() ?? "Source", message, targetDiscordId.Value);
 
                 InformIfPlayerIsOnline(targetId);
             }

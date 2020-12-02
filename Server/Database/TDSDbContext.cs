@@ -114,6 +114,7 @@ namespace TDS.Server.Database.Entity
         public virtual DbSet<Players> Players { get; set; }
         public virtual DbSet<PlayerSettings> PlayerSettings { get; set; }
         public virtual DbSet<PlayerStats> PlayerStats { get; set; }
+        public virtual DbSet<PlayerTotalStats> PlayerTotalStats { get; set; }
         public virtual DbSet<PlayerThemeSettings> PlayerThemeSettings { get; set; }
         public virtual DbSet<PlayerWeaponBodypartStats> PlayerWeaponBodypartStats { get; set; }
         public virtual DbSet<PlayerWeaponStats> PlayerWeaponStats { get; set; }

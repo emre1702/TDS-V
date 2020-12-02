@@ -139,7 +139,8 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddSingleton<MapCreatorHandler>()
                .AddSingleton<MapFavouritesHandler>()
                .AddSingleton<MapsLoadingHandler>()
-               .AddSingleton<MapsRatingsHandler>();
+               .AddSingleton<MapsRatingsHandler>()
+               .AddSingleton<MapCreatorRewardsHandler>();
         }
 
         private static IServiceCollection WithPlayers(this IServiceCollection serviceCollection)

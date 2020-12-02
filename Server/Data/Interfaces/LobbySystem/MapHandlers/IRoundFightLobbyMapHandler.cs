@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
 using TDS.Server.Data.Models.Map;
 
 namespace TDS.Server.Data.Interfaces.LobbySystem.MapHandlers
@@ -10,6 +11,7 @@ namespace TDS.Server.Data.Interfaces.LobbySystem.MapHandlers
     {
         MapDto? CurrentMap { get; }
         List<MapDto> Maps { get; }
+        MapRetrieveType MapRetrieveType { get; }
 
         MapDto? GetNextMap();
 

@@ -253,5 +253,7 @@ namespace TDS.Server.Data.Languages
         public virtual string SUPERVISOR_OF_PLAYER => "The supervisor of that player is {0}.";
         public virtual string TARGET_IS_ADMIN_BUT_HAS_NO_SUPERVISOR => "That player is admin but has no supervisor.";
         public virtual string TARGET_IS_NOT_ADMIN => "The player is not an admin.";
+        public virtual string MAP_CREATOR_REWARD_INFO => "The creator of this map '{0}' earned ${1}.";
+        public virtual string YOU_GOT_MAP_CREATOR_REWARD => "Your map '{0}' has been selected -> you earn ${1}.";
     }
 }

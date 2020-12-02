@@ -37,7 +37,11 @@ namespace TDS.Server.Database.SeedData.Server
                 GangActionOwnerCanBeMore = false,
                 GitHubRepoOwnerName = "emre1702",
                 GitHubRepoRepoName = "TDS-V",
-                GangMaxGangActionAttacksPerDay = 5
+                GangMaxGangActionAttacksPerDay = 5,
+                MapCreatorRewardRandomlySelected = 1,
+                MapCreatorRewardVoted = 5,
+                MapCreatorRewardBought = 15
+                
             });
             return modelBuilder;
         }

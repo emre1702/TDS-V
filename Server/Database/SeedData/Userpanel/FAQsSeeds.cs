@@ -42,6 +42,27 @@ namespace TDS.Server.Database.SeedData.Userpanel
                     Answer = "Im Falle einer Übergabe von TDS-V wird die Datenbank auch übergeben, jedoch ohne die Spieler-Daten (aus Datenschutz-Gründen)."
                             + "\nFalls du jedoch deine Daten auch dann weiterhin behalten willst, musst du es im Userpanel erlauben."
                             + "\nDie Daten beinhalten keine sensiblen Informationen - IPs werden nicht gespeichert, Passwörter sind sicher (Hash + Salt)."
+                },
+
+                new FAQs
+                {
+                    Id = 3,
+                    Language = Language.English,
+                    Question = "What are the rewards for created maps?",
+                    Answer = "The map creator gets following rewards (only official lobbies):"
+                            + "\n$1 - map got selected randomly"
+                            + "\n$5 - map got voted"
+                            + "\n$15 - map got bought"
+                },
+                new FAQs
+                {
+                    Id = 3,
+                    Language = Language.German,
+                    Question = "Was sind die Belohnungen für erstelle Karten?",
+                    Answer = "Der Karten-Ersteller bekommt folgende Belohnungen (nur in offiziellen Lobbies):"
+                            + "\n$1 - Karte wurde zufällig ausgewählt"
+                            + "\n$5 - Karte wurde per Abstimmung gewählt"
+                            + "\n$15 - Karte wurde gekauft"
                 }
             );
             return modelBuilder;

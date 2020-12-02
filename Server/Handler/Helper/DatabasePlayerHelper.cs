@@ -82,6 +82,13 @@ namespace TDS.Server.Handler.Helper
             return id is { } && id != 0;
         }
 
+        public async Task<Players?> GetPlayerById(int id)
+        {
+            return await ExecuteForDBAsync(async dbContext =>
+                    await dbContext.Players.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false))
+                .ConfigureAwait(false);
+        }
+
         public async Task<Players?> GetPlayerByName(string name)
         {
             return await ExecuteForDBAsync(async dbContext =>
@@ -123,6 +130,12 @@ namespace TDS.Server.Handler.Helper
                     .ConfigureAwait(false))
                 .ConfigureAwait(false);
         }
+
+        public Task<ulong?> GetDiscordUserId(int playerId)
+            => ExecuteForDBAsync(async dbContext =>
+            {
+                return await dbContext.PlayerSettings.Where(p => p.PlayerId == playerId).Select(p => p.General.DiscordUserId).FirstOrDefaultAsync();
+            });
 
         public async Task Save<TEntity>(TEntity entity) where TEntity : class
         {

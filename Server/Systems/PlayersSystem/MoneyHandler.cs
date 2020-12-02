@@ -19,7 +19,10 @@ namespace TDS.Server.PlayersSystem
             {
                 if (_player.Entity is null)
                     return;
+                var addedMoney = value - _player.Entity.PlayerStats.Money;
                 _player.Entity.PlayerStats.Money = value;
+                if (addedMoney > 0 && _player.Entity?.PlayerTotalStats is { } totalStats)
+                    totalStats.Money += addedMoney;
                 NAPI.Task.RunSafe(() => _dataSyncHandler.SetData(_player, PlayerDataKey.Money, DataSyncMode.Player, value));
             }
         }
@@ -47,8 +50,6 @@ namespace TDS.Server.PlayersSystem
             if (money >= 0 || Money > money * -1)
             {
                 Money += money;
-                if (money > 0 && _player.Entity?.PlayerTotalStats != null)
-                    _player.Entity.PlayerTotalStats.Money += money;
             }
             else
                 _loggingHandler.LogError($"Should have went to minus money! Current: {Money} | Substracted money: {money}",

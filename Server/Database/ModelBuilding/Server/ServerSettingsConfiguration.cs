@@ -135,6 +135,17 @@ namespace TDS.Server.Database.ModelBuilding.Server
 
             builder.Property(e => e.GitHubRepoRepoName)
                 .IsRequired(false);
+
+            builder.Property(e => e.MapCreatorRewardRandomlySelected)
+                .IsRequired()
+                .HasDefaultValue(1);
+            builder.Property(e => e.MapCreatorRewardVoted)
+                .IsRequired()
+                .HasDefaultValue(5);
+
+            builder.Property(e => e.MapCreatorRewardBought)
+                .IsRequired()
+                .HasDefaultValue(15);
         }
     }
 }

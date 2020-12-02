@@ -47,5 +47,8 @@
         public string GitHubRepoOwnerName { get; set; }
         public string GitHubRepoRepoName { get; set; }
         public int GangMaxGangActionAttacksPerDay { get; set; }
+        public int MapCreatorRewardRandomlySelected { get; set; }
+        public int MapCreatorRewardVoted { get; set; }
+        public int MapCreatorRewardBought { get; set; }
     }
 }

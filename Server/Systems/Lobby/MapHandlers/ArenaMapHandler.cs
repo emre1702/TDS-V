@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
@@ -95,9 +96,19 @@ namespace TDS.Server.LobbySystem.MapHandlers
 
         public override MapDto? GetNextMap()
         {
-            var map = Lobby.MapVoting.GetVotedMap();
+            var map = Lobby.MapVoting.GetBoughtMap();
             if (map is { })
+            {
+                MapRetrieveType = MapRetrieveType.Bought;
                 return map;
+            }
+
+            map = Lobby.MapVoting.GetVotedMap();
+            if (map is { })
+            {
+                MapRetrieveType = MapRetrieveType.Voted;
+                return map;
+            }
             return base.GetNextMap();
         }
     }

@@ -65,6 +65,7 @@ namespace TDS.Server.Core.Init
 
                 _serviceProvider.GetRequiredService<TimerHandler>();
                 _serviceProvider.GetRequiredService<ServerStartHandler>();
+                _serviceProvider.GetRequiredService<MapCreatorRewardsHandler>();   // Uses LobbyCreated event, so needs to be before LobbiesHandler
 
                 var gangsHandler = _serviceProvider.GetRequiredService<GangsHandler>();
                 gangsHandler.LoadAll();
