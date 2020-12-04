@@ -144,6 +144,7 @@ namespace TDS.Server.Core.Init
                     {
                         _consolePlayerCache = _serviceProvider.GetRequiredService<IPlayerProvider>().Create(new NetHandle());
                         _consolePlayerCache.IsConsole = true;
+                        _consolePlayerCache.Name = "Console";
                     }
 
                     NAPI.Task.RunSafe(() => _commandsHandler.UseCommand(_consolePlayerCache, input));
