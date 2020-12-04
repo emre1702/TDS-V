@@ -211,7 +211,7 @@ namespace TDS.Server.GamemodesSystem.Specials
             if (!CanStartBombDefusing(player))
                 return false;
             NAPI.Task.RunSafe(() =>
-                player.PlayAnimation("misstrevor2ig_7", "plantBomb", (int)AnimationType.Loop));
+                player.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)AnimationType.Loop));
             BombPlantDefuseTimer = new TDSTimer(() => DefuseBomb(player), (uint)Lobby.Entity.LobbyRoundSettings.BombDefuseTimeMs);
             return true;
         }
@@ -221,7 +221,7 @@ namespace TDS.Server.GamemodesSystem.Specials
             if (!CanStartBombPlanting(player))
                 return false;
             NAPI.Task.RunSafe(() =>
-                player.PlayAnimation("misstrevor2ig_7", "plantBomb", (int)AnimationType.Loop));
+                player.PlayAnimation("misstrevor2ig_7", "plant_bomb", (int)AnimationType.Loop));
             BombPlantDefuseTimer = new TDSTimer(() => PlantBomb(player), (uint)Lobby.Entity.LobbyRoundSettings.BombPlantTimeMs);
             return true;
         }
