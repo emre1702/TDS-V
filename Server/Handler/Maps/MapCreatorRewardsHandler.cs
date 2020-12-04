@@ -20,13 +20,13 @@ namespace TDS.Server.Handler.Maps
     {
         private readonly Dictionary<IRoundFightLobby, Func<ValueTask>> _lobbyRoundEndStatsEventHandlers = new();
 
-        private readonly TDSPlayerHandler _tdsPlayerHandler;
+        private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly DatabasePlayerHelper _databasePlayerHelper;
         private readonly ISettingsHandler _settingsHandler;
         private readonly OfflineMessagesHandler _offlineMessagesHandler;
         private readonly LangHelper _langHelper;
 
-        public MapCreatorRewardsHandler(EventsHandler eventsHandler, TDSPlayerHandler tdsPlayerHandler, DatabasePlayerHelper databasePlayerHelper, 
+        public MapCreatorRewardsHandler(EventsHandler eventsHandler, ITDSPlayerHandler tdsPlayerHandler, DatabasePlayerHelper databasePlayerHelper, 
             ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler, LangHelper langHelper)
         {
             _tdsPlayerHandler = tdsPlayerHandler;
