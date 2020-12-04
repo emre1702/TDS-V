@@ -307,7 +307,8 @@ namespace TDS.Server.GamemodesSystem.Specials
                 Bomb.Detach();
                 Bomb.Position = new Vector3(playerPos.X, playerPos.Y, playerPos.Z - 0.9);
                 Bomb.Rotation = new Vector3(270, 0, 0);
-                plantPlace.Obj?.Delete();
+                if (plantPlace.Obj is { } obj)
+                    NAPI.Entity.DeleteEntity(obj);
                 plantPlace.Obj = NAPI.Object.CreateObject(-263709501, plantPlace.Position, new Vector3(), 255, dimension: Lobby.MapHandler.Dimension) as ITDSObject;
                 if (plantPlace.Blip is { })
                 {
