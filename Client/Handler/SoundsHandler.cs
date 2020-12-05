@@ -6,20 +6,11 @@ namespace TDS.Client.Manager.Utility
 {
     public class SoundsHandler : ServiceBase
     {
-        #region Private Fields
 
         private readonly SettingsHandler _settingsHandler;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public SoundsHandler(LoggingHandler loggingHandler, SettingsHandler settingsHandler)
             : base(loggingHandler) => _settingsHandler = settingsHandler;
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void PlaySound(Sound sound)
         {
@@ -32,6 +23,5 @@ namespace TDS.Client.Manager.Utility
             //TODO: Play sound
         }
 
-        #endregion Public Methods
     }
 }

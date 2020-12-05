@@ -264,6 +264,8 @@ namespace TDS.Server.GamemodesSystem.Specials
             if (Lobby.IsOfficial)
                 player.Challenges.AddToChallenge(ChallengeType.BombDefuse);
 
+            Lobby.Sounds.PlaySound(CustomSound.BombDefuse);
+
             _gamemode.Teams.Terrorists.Players.DoForAll(target =>
             {
                 Lobby.Deathmatch.Damage.HitterHandler.SetLastHitter(target, player, (uint)WeaponHash.Pipebomb, Lobby.Entity.FightSettings.StartArmor + Lobby.Entity.FightSettings.StartHealth);

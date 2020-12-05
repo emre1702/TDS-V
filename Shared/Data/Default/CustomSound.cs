@@ -2,8 +2,6 @@
 {
     public class CustomSound
     {
-        #region Public Fields
-
         public const string Dominating = "dominating";
         public const string DoubleKill = "doubleKill";
         public const string Godlike = "godlike";
@@ -18,7 +16,7 @@
         public const string UltraKill = "ultraKill";
         public const string Unstoppable = "unstoppable";
         public const string WickedSick = "wickedSick";
+        public const string BombDefuse = "bombDefuse";
 
-        #endregion Public Fields
     }
 }
