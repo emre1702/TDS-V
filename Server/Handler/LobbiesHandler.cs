@@ -325,10 +325,6 @@ namespace TDS.Server.Handler
         {
             LobbiesByIndex.Remove(lobby.Entity.Id);
             Lobbies.Remove(lobby);
-
-            //Todo: How to do that? Put it in Lobby? check it on event handlers?
-            //if (!lobby.IsOfficial)
-            //    _eventsHandler.OnCustomLobbyRemoved(lobby);
         }
 
         public async Task SaveAll()

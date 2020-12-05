@@ -78,7 +78,6 @@ namespace TDS.Server.GamemodesSystem.Weapons
             if (_weapons.TryGetValue((short)player.CurrentRoundStats.Kills, out LobbyArmsRaceWeapons? info) && info.WeaponHash.HasValue)
                 return info.WeaponHash.Value;
 
-            //Todo: Make sure there is always a weapon at AtKills = 0
             return _weapons
                 .Where(w => w.Key <= player.CurrentRoundStats.Kills && w.Value.WeaponHash.HasValue)
                 .MaxBy(w => w.Key)
