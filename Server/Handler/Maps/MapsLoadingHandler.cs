@@ -221,7 +221,7 @@ namespace TDS.Server.Handler.Maps
             }
 
             _needCheckMaps = LoadMaps(Constants.NeedCheckMapsPath, false, allDbMaps);
-            foreach (var map in _newCreatedMaps)
+            foreach (var map in _needCheckMaps)
             {
                 map.Info.IsNewMap = true;
             }
@@ -370,6 +370,7 @@ namespace TDS.Server.Handler.Maps
                 allDbMap.Add(dbMap);
             }
             _dbContext.SaveChanges();
+
             _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
     }
