@@ -43,6 +43,7 @@ export class UserpanelSettingsNormalService {
 
     navigateTo(type: UserpanelSettingsNormalType) {
         if (this.loadedSettingsByType[type]) {
+            this.currentType = type;
             this.userpanelService.setLoadingData(false);
             return;
         }
