@@ -6,7 +6,7 @@
     [formControl]="setting.formControl" 
     [matTooltipDisabled]="!setting.tooltipLangKey"
     [matTooltip]="setting.tooltipLangKey | language: settingsService.Lang"
-    (change)="setting.onValueChanged && setting.onValueChanged(setting); changed.emit(null)">
+    (selectionChange)="setting.onValueChanged && setting.onValueChanged(setting); changed.emit(null)">
         <mat-option *ngFor="let enumStr of setting.enumKeys"
         [value]="setting.enumType[enumStr]">
             {{ enumStr | language: settingsService.Lang }}
