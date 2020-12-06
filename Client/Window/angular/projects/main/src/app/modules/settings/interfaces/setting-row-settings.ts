@@ -9,6 +9,7 @@ export interface SettingRowSettings {
     tooltipLangKey?: string,
     onValueChanged?: (setting: SettingRow) => void,
     containerGetter?: () => {},
+    condition?: () => boolean;
 
     readonly?: boolean;
     nullable?: boolean;

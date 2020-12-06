@@ -14,6 +14,7 @@ export class SettingRow {
     tooltipLangKey?: string;
     onValueChanged?: (setting: SettingRow) => void;
     containerGetter?: () => {};
+    condition?: () => boolean;
 
     readonly: boolean = false;
     nullable: boolean = false;
@@ -26,6 +27,7 @@ export class SettingRow {
         this.tooltipLangKey = settings.tooltipLangKey;
         this.onValueChanged = settings.onValueChanged;
         this.containerGetter = settings.containerGetter;
+        this.condition = settings.condition;
 
         if (settings.readonly != undefined) {
             this.readonly = settings.readonly;
