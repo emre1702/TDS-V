@@ -1,4 +1,4 @@
-#hud-1 {
+#hud-BonusV1 {
     display: flex;
     flex-direction: column;
 
@@ -13,7 +13,6 @@
     .hud {
         width: 100%;
         height: 143px;
-        background-color: rgba(20, 20, 20, 0.55);
 
         .stats {
             width: 230px;
@@ -44,12 +43,11 @@
                     width: 220px;
                     height: 80%;
 
-
                     border: 1px grey inset;
                     box-shadow:inset 0px -2px 5px rgba(0, 0, 0, 0.5);
 
                     .progress-text {
-                        box-shadow:inset 0px -2px 5px 2px rgba(0, 0, 0, 0.5);
+                        box-shadow: inset 0px -2px 5px 2px rgba(0, 0, 0, 0.5);
                         animation: change 1s linear infinite;
                         height: 100%;
                         text-align: center;
