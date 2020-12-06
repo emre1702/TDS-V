@@ -58,6 +58,7 @@ namespace TDS.Client.Handler
         private bool _explosiveAmmoOn;
         private bool _explosiveMeleeOn;
         private bool _fireAmmoOn;
+        private bool _timecycleOn;
 
         private float _moveOverrideValue;
 
@@ -117,6 +118,18 @@ namespace TDS.Client.Handler
                 }
 
                 return;
+            }
+            else if (cmd == "timecycle")
+            {
+                // https://pastebin.com/kVPwMemE
+                _timecycleOn = !_timecycleOn;
+                if (!_timecycleOn)
+                {
+                    RAGE.Game.Graphics.ClearTimecycleModifier();
+                    return;
+                }
+                var timecycle = msg.Split(' ')[1];
+                RAGE.Game.Graphics.SetTimecycleModifier(timecycle);
             }
             else if (cmd == "stat")
             {
