@@ -170,7 +170,8 @@ namespace TDS.Server.Handler.Account
                 },
                 Scoreboard = new PlayerScoreboardSettings(),
                 CooldownsAndDurations = new PlayerCooldownsAndDurationsSettings(),
-                IngameColors = new PlayerIngameColorsSettings()
+                IngameColors = new PlayerIngameColorsSettings(),
+                Hud = new PlayerHudSettings()
             };
 
         private PlayerStats CreatePlayerStatsEntity()

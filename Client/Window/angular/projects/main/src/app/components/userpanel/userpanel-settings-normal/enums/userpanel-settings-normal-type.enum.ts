@@ -8,5 +8,6 @@ export enum UserpanelSettingsNormalType {
     KillInfo,
     Scoreboard,
     Theme,
-    Voice
+    Voice,
+    Hud
 }

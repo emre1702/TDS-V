@@ -26,22 +26,6 @@ namespace TDS.Server.Database.Entity.Player
         public string SCName { get; set; }
         public ulong? DiscordUserId { get; set; }
 
-        public Players()
-        {
-            Lobbies = new HashSet<Lobbies>();
-            Maps = new HashSet<Maps>();
-            OfflinemessagesSource = new HashSet<Offlinemessages>();
-            OfflinemessagesTarget = new HashSet<Offlinemessages>();
-            PlayerBansAdmin = new HashSet<PlayerBans>();
-            PlayerBansPlayer = new HashSet<PlayerBans>();
-            PlayerLobbyStats = new HashSet<PlayerLobbyStats>();
-            PlayerMapFavourites = new HashSet<PlayerMapFavourites>();
-            PlayerMapRatings = new HashSet<PlayerMapRatings>();
-            PlayerRelationsPlayer = new HashSet<PlayerRelations>();
-            PlayerRelationsTarget = new HashSet<PlayerRelations>();
-            SupportRequestMessages = new HashSet<SupportRequestMessages>();
-        }
-
         public virtual Players AdminLeader { get; set; }
         public virtual AdminLevels AdminLvlNavigation { get; set; }
         public virtual ICollection<Players> AdminMembers { get; set; }

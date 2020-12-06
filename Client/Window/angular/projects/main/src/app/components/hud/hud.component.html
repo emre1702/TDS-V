@@ -1,5 +1,7 @@
-<div id="hud-1" *ngIf="settings.ShownHudType == 1" [style.display]="rankingShowing ? 'none' : 'flex'" cdkDrag>
-    <div class="hud">
+<div id="hud-BonusV1" *ngIf="settings.Settings[20] == hudDesign.BonusV1" [style.display]="rankingShowing ? 'none' : 'flex'" cdkDrag>
+    <div class="hud mat-app-background" 
+    [style.background]="settings.Settings[21]?.length ? settings.Settings[21] : null" 
+    [style.color]="settings.Settings[23]?.length ? settings.Settings[23] : null">
         <div class="stats">
             <div class="row">
                 <img src="assets/hud/armor.png">

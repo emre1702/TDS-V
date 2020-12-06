@@ -56,6 +56,7 @@ namespace TDS.Server.Handler.PlayerHandlers
                 CheckAFK = s.General.CheckAFK,
                 FloatingDamageInfo = s.FightEffect.FloatingDamageInfo,
                 Hitsound = s.FightEffect.Hitsound,
+                HudDesign = s.Hud.HudDesign,
                 HudAmmoUpdateCooldownMs = s.CooldownsAndDurations.HudAmmoUpdateCooldownMs,
                 HudHealthUpdateCooldownMs = s.CooldownsAndDurations.HudHealthUpdateCooldownMs,
                 Language = s.General.Language,
@@ -109,7 +110,13 @@ namespace TDS.Server.Handler.PlayerHandlers
                 ThemeWarnColor = player.Entity.ThemeSettings.ThemeWarnColor,
                 ThemeBackgroundDarkColor = player.Entity.ThemeSettings.ThemeBackgroundDarkColor,
                 ThemeBackgroundLightColor = player.Entity.ThemeSettings.ThemeBackgroundLightColor,
-                ToolbarDesign = player.Entity.ThemeSettings.ToolbarDesign
+                ToolbarDesign = player.Entity.ThemeSettings.ToolbarDesign,
+
+                HudDesign = s.Hud.HudDesign,
+                HudBackgroundColor = s.Hud.HudBackgroundColor,
+                RoundStatsBackgroundColor = s.Hud.RoundStatsBackgroundColor,
+                HudFontColor = s.Hud.HudFontColor,
+                RoundStatsFontColor = s.Hud.RoundStatsFontColor,
             };
         }
     }

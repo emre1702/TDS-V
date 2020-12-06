@@ -124,6 +124,10 @@ contentHeight="36.5vh">
         <mat-icon color="accent">color_lens</mat-icon>
         <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.IngameColors] | language: settings.Lang }}</span>
     </button>
+    <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.Hud)">
+        <mat-icon style="transform: scale(-1,1)" color="accent">featured_video</mat-icon>
+        <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.Hud] | language: settings.Lang }}</span>
+    </button>
     <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.KillInfo)">
         <mat-icon color="accent">warning</mat-icon>
         <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.KillInfo] | language: settings.Lang }}</span>

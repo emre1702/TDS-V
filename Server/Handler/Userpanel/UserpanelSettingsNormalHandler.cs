@@ -150,6 +150,7 @@ namespace TDS.Server.Handler.Userpanel
                 UserpanelSettingsNormalType.General => player.Entity?.PlayerSettings.General,
                 UserpanelSettingsNormalType.Info => player.Entity?.PlayerSettings.Info,
                 UserpanelSettingsNormalType.IngameColors => player.Entity?.PlayerSettings.IngameColors,
+                UserpanelSettingsNormalType.Hud => player.Entity?.PlayerSettings.Hud,
                 UserpanelSettingsNormalType.KillInfo => player.Entity?.KillInfoSettings,
                 UserpanelSettingsNormalType.Scoreboard => player.Entity?.PlayerSettings.Scoreboard,
                 UserpanelSettingsNormalType.Theme => player.Entity?.ThemeSettings,

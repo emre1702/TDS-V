@@ -22,6 +22,9 @@ import { ChallengeFrequency } from './components/lobbychoice/enums/challenge-fre
 import { ChallengeType } from './components/lobbychoice/enums/challenge-type.enum';
 import { environment } from '../environments/environment';
 import { UserpanelSettingCommandDataDto } from './components/userpanel/interfaces/settings-commands/userpanelSettingCommandDataDto';
+import { UserpanelSettingsHud } from './components/userpanel/userpanel-settings-normal/interfaces/userpanel-settings-hud';
+import { HudDesign } from './components/hud/enums/hud-design.enum';
+import { SyncedSettings } from './interfaces/synced-settings';
 
 export class InitialDatas {
 
@@ -38,7 +41,7 @@ export class InitialDatas {
         lobbyChoice: InitialDatas.inDebug && false,
         teamChoice: InitialDatas.inDebug && false,
         rankings: InitialDatas.inDebug && false,
-        hud: InitialDatas.inDebug && false,
+        hud: InitialDatas.inDebug && true,
         charCreator: InitialDatas.inDebug && false,
         gangWindow: InitialDatas.inDebug && false,
         damageTestMenu: InitialDatas.inDebug && false,
@@ -47,6 +50,7 @@ export class InitialDatas {
 
     static readonly adminLevel = 0;
     static readonly isMapVotingActive = false;
+    static readonly language: LanguageEnum = LanguageEnum.English;
 
     static settingsByType: { [key: number]: {} } = {
         [UserpanelSettingsNormalType.Chat]: { 0: 30, 1: 35, 2: 1.4, 3: false, 4: true, 5: false, 6: 1, 7: 15000 } as UserpanelSettingsChat,
@@ -61,6 +65,7 @@ export class InitialDatas {
             0: "rgba(150,0,0,0.35)", 1: "rgba(0, 0, 0, 1)", 2: "rgba(50, 0, 0, 1)", 3: "rgba(0, 255, 0, 1)",
             4: undefined, 5: "rgba(255, 255, 255, 1)" 
         } as UserpanelSettingsIngameColors,
+        [UserpanelSettingsNormalType.Hud]: { 0: HudDesign.BonusV1 } as UserpanelSettingsHud,
         [UserpanelSettingsNormalType.KillInfo]: { 0: true, 1: 1.4, 2: 60, 3: 15, 4: 10, 5: 30 } as UserpanelSettingsKillInfo,
         [UserpanelSettingsNormalType.Scoreboard]: { 
             0: ScoreboardPlayerSorting.Name, 1: false, 2: TimeSpanUnitsOfTime.HourMinute 
@@ -168,6 +173,16 @@ export class InitialDatas {
             { 0: 1, 1: "GehHin" }
         ]
     }
+
+    static readonly syncedSettings: SyncedSettings = {
+        0: 30, 1: 35, 2: 1.4, 3: false, 4: false, 5: 1, 6: 15000,
+
+        7: true, 8: 1.4, 9: 60, 10: 15, 11: 10, 12: 30,
+
+        13: true, 14: "rgba(0,0,77,1)", 15: "rgba(255,152,0,1)", 16: "rgba(244,67,54,1)",
+        17: "linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)", 18: "rgba(250, 250, 250, 0.87)",
+        19: 1, 20: HudDesign.BonusV1, 21: undefined, 22: undefined, 23: undefined, 24: undefined
+    };
 
     static getAdminLevel(): number {
         return this.inDebug ? this.adminLevel : 0;

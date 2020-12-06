@@ -4,6 +4,7 @@ import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
 import { HUDDataType } from './enums/huddatatype.enum';
 import { FiringMode } from './enums/firingmode.enum';
+import { HudDesign } from './enums/hud-design.enum';
 
 @Component({
     selector: 'app-hud',
@@ -23,6 +24,7 @@ export class HudComponent implements OnInit, OnDestroy {
     ammoInClip = 0;
     ammoTotal = 0;
     firingMode = FiringMode[0];
+    hudDesign = HudDesign;
 
     @Input() rankingShowing: boolean;
 
@@ -30,17 +32,20 @@ export class HudComponent implements OnInit, OnDestroy {
         public settings: SettingsService,
         private rageConnector: RageConnectorService,
         private changeDetector: ChangeDetectorRef) {
-
     }
 
     ngOnInit() {
         this.rageConnector.listen(DFromClientEvent.ToggleRoundStats, this.toggleRoundStats.bind(this));
         this.rageConnector.listen(DFromClientEvent.SyncHUDDataChange, this.hudDataChange.bind(this));
+        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
+        this.settings.HudSettingsChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
         this.rageConnector.remove(DFromClientEvent.ToggleRoundStats, this.toggleRoundStats.bind(this));
         this.rageConnector.remove(DFromClientEvent.SyncHUDDataChange, this.hudDataChange.bind(this));
+        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
+        this.settings.HudSettingsChanged.off(null, this.detectChanges.bind(this));
     }
 
     toggleRoundStats(toggle: boolean) {
@@ -71,6 +76,10 @@ export class HudComponent implements OnInit, OnDestroy {
                 this.firingMode = FiringMode[value];
                 break;
         }
+        this.changeDetector.detectChanges();
+    }
+
+    private detectChanges() {
         this.changeDetector.detectChanges();
     }
 }

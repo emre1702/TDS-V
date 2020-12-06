@@ -914,6 +914,15 @@ You need to set the target for this mode.`;
     AmountMediumPriorityIssues = "Amount medium priority issues";
     AmountHighPriorityIssues = "Amount high priority issues";
     AmountUrgentPriorityIssues = "Amount urgent priority issues";
+    Hud = "Hud";
+    HudDesign = "Hud design";
+    HudDesignInfo = "If you want you can provide your own hud design. Draw an image with as detailed as you can and send it to hud@tds-v.com or in Discord.";
+    NoHudDesign = "GTA 5";
+    HudBackgroundColor = "Hud background color";
+    RoundStatsBackgroundColor = "Round stats background color";
+    HudFontColor = "Hud font color";
+    RoundStatsFontColor = "Round stats font color";
+    
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

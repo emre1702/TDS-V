@@ -806,6 +806,14 @@ export interface Language {
     KillInfoSpacingInfo: string;
     TestKillInfo: string;
     DateTimeFormat: string;
+    Hud: string;
+    HudDesign: string;
+    HudDesignInfo: string;
+    NoHudDesign: string;
+    HudBackgroundColor: string;
+    RoundStatsBackgroundColor: string;
+    HudFontColor: string;
+    RoundStatsFontColor: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

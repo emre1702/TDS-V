@@ -51,6 +51,7 @@ namespace TDS.Server.Database.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ScoreboardPlayerSorting>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TimeSpanUnitsOfTime>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<PedBodyPart>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<HudDesign>();
         }
 
         public TDSDbContext(DbContextOptions<TDSDbContext> options)

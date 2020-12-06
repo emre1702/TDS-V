@@ -37,6 +37,7 @@ namespace TDS.Client.Handler
         public bool ShowNametagOnlyOnAiming;
         public int StartArmor;
         public int StartHealth = 100;
+        public bool ShouldHideDefaultHud { get; private set; }
 
         private readonly BrowserHandler _browserHandler;
         private readonly EventsHandler _eventsHandler;
@@ -179,6 +180,7 @@ namespace TDS.Client.Handler
             NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(loadedSyncedSettings.Client.NametagArmorFullColor) ?? NametagArmorFullColor;
 
             NotTempMapBorderColor = null;
+            ShouldHideDefaultHud = PlayerSettings.HudDesign != HudDesign.NoHudDesign;
 
             _eventsHandler.OnMapBorderColorChanged(MapBorderColor);
 
@@ -278,50 +280,5 @@ namespace TDS.Client.Handler
         {
             _browserHandler.RegisterLogin.SyncLanguage(Language);
         }
-
-        /*function loadSettings() {
-            let savedlang = mp.storage.data.language;
-            let savedhitsound = mp.storage.data.hitsound;
-            let savedbloodscreen = mp.storage.data.bloodscreen;
-
-            if ( typeof savedlang !== "undefined" )
-                settingsdata.language = savedlang;
-            else {
-                let langnumber = mp.game.invoke( "E7A981467BC975BA", 0 );
-                if ( langnumber == 2 )
-                    settingsdata.language = "" + Language.GERMAN;
-            }
-
-            if ( typeof savedhitsound !== "undefined" )
-                settingsdata.hitsound = savedhitsound;
-
-            if ( typeof savedbloodscreen !== "undefined" )
-                settingsdata.bloodscreen = savedbloodscreen;
-        }
-
-         mp.events.add( "onPlayerSettingChange", ( setting, value ) => {
-            switch ( setting as PlayerSetting ) {
-                case PlayerSetting.LANGUAGE:
-                    settingsdata.language = value;
-                    mp.storage.data.language = value;
-                    EventsSender.SendCooldown( "onPlayerLanguageChange", value );
-                    if ( mainbrowserdata.angularloaded ) {
-                        loadOrderNamesInBrowser( JSON.stringify( getLang( "orders" ) ) );
-                        mainbrowserdata.angular.call( `syncLanguage('${settingsdata.language}');` );
-                    }
-                    break;
-
-                case PlayerSetting.HITSOUND:
-                    settingsdata.hitsound = value;
-                    mp.storage.data.hitsound = value;
-                    break;
-
-                case PlayerSetting.BLOODSCREEN:
-                    settingsdata.bloodscreen = value;
-                    mp.storage.data.blodscreen = value;
-                    break;
-            }
-        } );
-        */
     }
 }

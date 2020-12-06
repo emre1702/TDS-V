@@ -88,5 +88,8 @@ namespace TDS.Shared.Data.Models
 
         [JsonProperty("27")]
         public bool Bloodscreen { get; set; }
+
+        [JsonProperty("28")]
+        public HudDesign HudDesign { get; set; }
     }
 }

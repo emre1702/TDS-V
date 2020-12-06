@@ -91,6 +91,7 @@ import { UserpanelSettingsKillInfoComponent } from './components/userpanel/userp
 import { UserpanelSettingsScoreboardComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-scoreboard/userpanel-settings-scoreboard.component';
 import { UserpanelSettingsVoiceComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-voice/userpanel-settings-voice.component';
 import { UserpanelSettingsThemeComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-theme/userpanel-settings-theme.component';
+import { UserpanelSettingsHudComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-hud/userpanel-settings-hud.component';
 
 @NgModule({
   declarations: [
@@ -170,7 +171,8 @@ import { UserpanelSettingsThemeComponent } from './components/userpanel/userpane
     GangWindowMainmenuComponent,
     MainMenuComponent,
     DamageTestMenuComponent,
-    KillMessagesComponent
+    KillMessagesComponent,
+    UserpanelSettingsHudComponent
   ],
   imports: [
     ReactiveFormsModule,

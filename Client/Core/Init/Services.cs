@@ -45,7 +45,7 @@ namespace TDS.Client.Core.Init
                 new FreeroamHandler(loggingHandler, eventsHandler, browserHandler);
 
                 var dataSyncHandler = new DataSyncHandler(loggingHandler, eventsHandler, browserHandler);
-                var utilsHandler = new UtilsHandler(loggingHandler, dataSyncHandler, eventsHandler);
+                var utilsHandler = new UtilsHandler(loggingHandler, dataSyncHandler, eventsHandler, settingsHandler);
                 new GangHousesHandler(loggingHandler, eventsHandler, settingsHandler);
                 new GangVehiclesHandler(loggingHandler, dataSyncHandler, eventsHandler);
                 new GhostModeHandler(loggingHandler, eventsHandler);

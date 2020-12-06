@@ -8,6 +8,7 @@
         General,
         Info,
         IngameColors,
+        Hud,
         KillInfo,
         Scoreboard,
         Theme,

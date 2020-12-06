@@ -31,7 +31,8 @@ namespace TDS.Server.Database.EntityConfigurations
                 .HasPostgresEnum<ChallengeFrequency>()
                 .HasPostgresEnum<ScoreboardPlayerSorting>()
                 .HasPostgresEnum<TimeSpanUnitsOfTime>()
-                .HasPostgresEnum<PedBodyPart>();
+                .HasPostgresEnum<PedBodyPart>()
+                .HasPostgresEnum<HudDesign>();
         }
     }
 }

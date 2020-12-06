@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { LanguageEnum } from '../enums/language.enum';
-import { German } from '../language/german.language';
-import { English } from '../language/english.language';
 import { Language } from '../interfaces/language.interface';
 import { RageConnectorService } from 'rage-connector';
 import { DFromClientEvent } from '../enums/dfromclientevent.enum';
@@ -42,7 +40,7 @@ export class SettingsService {
     }
 
     ///////////////////// Language /////////////////////
-    public LangValue: LanguageEnum = LanguageEnum.German;
+    public LangValue: LanguageEnum = InitialDatas.language;
     public Lang: Language = Constants.LANGUAGE_BY_ENUM[this.LangValue];
     public LanguageChanged = new EventEmitter();
     private langPipe = new LanguagePipe();
@@ -109,17 +107,10 @@ export class SettingsService {
     public IsLobbyOwner = false;
     public IsLobbyOwnerChanged = new EventEmitter();
 
-    public Settings: SyncedSettings = {
-        0: 30, 1: 35, 2: 1.4, 3: false, 4: false, 5: 1, 6: 15000,
-
-        7: true, 8: 1.4, 9: 60, 10: 15, 11: 10, 12: 30,
-
-        13: true, 14: "rgba(0,0,77,1)", 15: "rgba(255,152,0,1)", 16: "rgba(244,67,54,1)",
-        17: "linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)", 18: "rgba(250, 250, 250, 0.87)",
-        19: 1
-    };
+    public Settings: SyncedSettings = InitialDatas.syncedSettings;
     public SettingsLoaded = new EventEmitter();
     public ChatSettingsChanged = new EventEmitter();
+    public HudSettingsChanged = new EventEmitter();
 
     public Constants: ConstantsData = InitialDatas.getSettingsConstants();
     public ChallengeGroups: ChallengeGroup[] = InitialDatas.getChallengeGroups();

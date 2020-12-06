@@ -3,6 +3,7 @@ import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { ClipboardService } from 'ngx-clipboard';
+import { HudDesign } from '../enums/hud-design.enum';
 
 @Component({
     selector: 'app-round-stats',
@@ -10,6 +11,8 @@ import { ClipboardService } from 'ngx-clipboard';
     styleUrls: ['./round-stats.component.scss']
 })
 export class RoundStatsComponent implements OnInit, OnDestroy {
+
+    hudDesign = HudDesign;
 
     kills = 0;
     assists = 0;

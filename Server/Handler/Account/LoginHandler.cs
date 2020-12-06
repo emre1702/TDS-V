@@ -177,6 +177,7 @@ namespace TDS.Server.Handler.Account
                     .Include(p => p.PlayerSettings.General)
                     .Include(p => p.PlayerSettings.Info)
                     .Include(p => p.PlayerSettings.IngameColors)
+                    .Include(p => p.PlayerSettings.Hud)
                     .Include(p => p.PlayerSettings.Scoreboard)
                     .Include(p => p.PlayerSettings.Voice)
                     .Include(p => p.PlayerClothes)

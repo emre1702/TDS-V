@@ -20,11 +20,13 @@ namespace TDS.Client.Handler
     public class UtilsHandler : ServiceBase
     {
         private readonly DataSyncHandler _dataSyncHandler;
+        private readonly SettingsHandler _settingsHandler;
 
-        public UtilsHandler(LoggingHandler loggingHandler, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler)
+        public UtilsHandler(LoggingHandler loggingHandler, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler)
             : base(loggingHandler)
         {
             _dataSyncHandler = dataSyncHandler;
+            _settingsHandler = settingsHandler;
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
@@ -454,6 +456,8 @@ namespace TDS.Client.Handler
 
         private void HideHudOriginalComponents(List<TickNametagData> _)
         {
+            if (!_settingsHandler.ShouldHideDefaultHud)
+                return;
             Ui.HideHudComponentThisFrame((int)HudComponent.Cash);
             Ui.HideHudComponentThisFrame((int)HudComponent.WeaponWheelStats);
             Ui.HideHudComponentThisFrame((int)HudComponent.WeaponIcon);

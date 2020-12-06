@@ -859,6 +859,15 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     AmountMediumPriorityIssues = "Anzahl Issues mit mittlerer Priorität";
     AmountHighPriorityIssues = "Anzahl Issues mit hoher Priorität";
     AmountUrgentPriorityIssues = "Anzahl Issues mit dringender Priorität";
+    Hud = "Hud";
+    HudDesign = "Hud-Design";
+    HudDesignInfo = "Falls du willst, kannst du dein eigenes Hud-Design senden. Zeichne ein Bild mit so vielen Details wie nur möglich und sende es an hud@tds-v.com oder in Discord.";
+    NoHudDesign = "GTA 5";
+    HudBackgroundColor = "Hud Hintergrund-Farbe";
+    RoundStatsBackgroundColor = "Runden-Stats Hintergrund-Farbe";
+    HudFontColor = "Hud Schrift-Farbe";
+    RoundStatsFontColor = "Runden-Stats Schrift-Farbe";
+    
     ////////////////////////////////////////
 
     ///////////// Applications /////////////

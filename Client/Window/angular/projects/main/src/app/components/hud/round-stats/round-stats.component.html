@@ -1,9 +1,12 @@
-<div id="round-stats-1" class="mat-elevation-z8" *ngIf="settings.ShownRoundStatsType == 1"
+<div id="round-stats-BonusV1" class="mat-elevation-z8" *ngIf="settings.Settings[20] == hudDesign.BonusV1"
+class="mat-app-background"
 (contextmenu)="copyToClipboard(); tooltip1.disabled = false; tooltip1.show();"
 #tooltip1="matTooltip"
 [matTooltip]="'Copied' | language: settings.Lang"
 matTooltipHideDelay="1000"
 (mouseenter)="tooltip1.disabled = true"
+[style.background]="settings.Settings[22]?.length ? settings.Settings[22] : null"
+[style.color]="settings.Settings[24]?.length ? settings.Settings[24] : null"
 cdkDrag>
     <div>
         <img class="kills-icon" src="assets/round-stats/kills.png">

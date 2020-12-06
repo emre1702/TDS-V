@@ -24,6 +24,8 @@ namespace TDS.Server.Database.Entity.Player.Settings
         [JsonIgnore]
         public virtual PlayerGeneralSettings General { get; set; }
         [JsonIgnore]
+        public virtual PlayerHudSettings Hud { get; set; }
+        [JsonIgnore]
         public virtual PlayerInfoSettings Info { get; set; }
         [JsonIgnore]
         public virtual PlayerIngameColorsSettings IngameColors { get; set; }
@@ -56,6 +58,9 @@ namespace TDS.Server.Database.Entity.Player.Settings
             builder.HasOne(e => e.General)
                 .WithOne()
                 .HasForeignKey<PlayerGeneralSettings>(e => e.PlayerId);
+            builder.HasOne(e => e.Hud)
+               .WithOne()
+               .HasForeignKey<PlayerHudSettings>(e => e.PlayerId);
             builder.HasOne(e => e.Info)
                 .WithOne()
                 .HasForeignKey<PlayerInfoSettings>(e => e.PlayerId);

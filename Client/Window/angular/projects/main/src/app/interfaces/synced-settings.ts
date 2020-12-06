@@ -1,3 +1,5 @@
+import { HudDesign } from '../components/hud/enums/hud-design.enum';
+
 export interface SyncedSettings {
     /** ChatWidth */
     0: number;
@@ -58,4 +60,19 @@ export interface SyncedSettings {
 
     /** ToolbarDesign */
     19: number;
+
+    /** HudDesign */
+    20: HudDesign;
+
+    /** HudBackgroundColor */
+    21: string;
+
+    /** RoundStatsBackgroundColor */
+    22: string;
+
+    /** HudFontColor */
+    23: string;
+
+    /** RoundStatsFontColor */
+    24: string;
 }

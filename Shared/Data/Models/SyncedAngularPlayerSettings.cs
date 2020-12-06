@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using TDS.Shared.Data.Enums;
 
 namespace TDS.Shared.Data.Models
 {
@@ -63,5 +64,21 @@ namespace TDS.Shared.Data.Models
 
         [JsonProperty("19")]
         public int ToolbarDesign { get; set; }
+
+        [JsonProperty("20")]
+        public HudDesign HudDesign { get; set; }
+
+        [JsonProperty("21")]
+        public string HudBackgroundColor { get; set; }
+
+        [JsonProperty("22")]
+        public string RoundStatsBackgroundColor { get; set; }
+
+        [JsonProperty("23")]
+        public string HudFontColor { get; set; }
+
+        [JsonProperty("24")]
+        public string RoundStatsFontColor { get; set; }
+
     }
 }
