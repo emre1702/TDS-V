@@ -1,13 +1,11 @@
 ﻿using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Extensions;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity.Player;
-using TDS.Server.Database.Entity.Player.Char;
 using TDS.Server.Database.Entity.Player.Settings;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
@@ -37,7 +35,7 @@ namespace TDS.Server.Handler.Account
         public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language, string scName, ulong scId)
         {
             IDbContextTransaction? transaction = null;
-            try 
+            try
             {
                 transaction = await player.Database.ExecuteForDBAsync(async dbContext => await dbContext.Database.BeginTransactionAsync());
                 if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
@@ -138,8 +136,8 @@ namespace TDS.Server.Handler.Account
         private PlayerSettings CreatePlayerSettingsEntity(Language language)
             => new PlayerSettings
             {
-                General = new PlayerGeneralSettings 
-                { 
+                General = new PlayerGeneralSettings
+                {
                     AllowDataTransfer = false,
                     Language = language,
                     CheckAFK = true,

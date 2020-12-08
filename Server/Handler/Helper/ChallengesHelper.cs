@@ -179,9 +179,9 @@ namespace TDS.Server.Handler.Helper
             var challengeSettingsType = dbContext.Model.FindEntityType(typeof(ChallengeSettings));
 
             _challengeSettingsTableName = challengeSettingsType.GetTableName();
-            var challengeSettingsEntity = new ChallengeSettings();
             var storeObjectIdentifier = StoreObjectIdentifier.Create(challengeSettingsType, StoreObjectType.Table);
 
+            ChallengeSettings? challengeSettingsEntity;
             foreach (var property in challengeSettingsType.GetProperties())
             {
                 switch (property.Name)
@@ -210,7 +210,7 @@ namespace TDS.Server.Handler.Helper
             var playerChallengesType = dbContext.Model.FindEntityType(typeof(PlayerChallenges));
 
             _playerChallengesTableName = playerChallengesType.GetTableName();
-            var playerChallengesEntity = new PlayerChallenges();
+            PlayerChallenges? playerChallengesEntity;
             var storeObjectIdentifier = StoreObjectIdentifier.Create(playerChallengesType, StoreObjectType.Table);
 
             _playerChallengesFrequencyColumnName = playerChallengesType.FindProperty(nameof(playerChallengesEntity.Frequency))

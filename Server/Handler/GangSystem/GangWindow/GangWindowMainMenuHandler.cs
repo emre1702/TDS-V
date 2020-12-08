@@ -19,7 +19,7 @@ namespace TDS.Server.Handler.GangSystem.GangWindow
                 GangData = new SyncedGangData
                 {
                     Name = gangEntity.Name,
-                    Short = gangEntity.Short,
+                    Short = gangEntity.NameShort,
                     Color = gangEntity.Color,
                     BlipColor = gangEntity.BlipColor,
                     Id = gangEntity.Id,

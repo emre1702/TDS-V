@@ -15,7 +15,7 @@ namespace TDS.Server.Database.Entity.GangEntities
         public int Id { get; set; }
         public string Name { get; set; }
         public int? OwnerId { get; set; }
-        public string Short { get; set; }
+        public string NameShort { get; set; }
         public int TeamId { get; set; }
         public string Color { get; set; }
 

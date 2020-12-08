@@ -48,7 +48,7 @@ namespace TDS.Server.Handler
                 }).ConfigureAwait(false);
 
                 if (targetDiscordId.HasValue)
-                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source?.GetDiscriminator() ?? "Source", message, targetDiscordId.Value);
+                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source?.Discriminator ?? "Source", message, targetDiscordId.Value);
 
                 InformIfPlayerIsOnline(targetId);
             }
@@ -76,7 +76,7 @@ namespace TDS.Server.Handler
                 }).ConfigureAwait(false);
 
                 if (target.DiscordUserId.HasValue)
-                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source?.GetDiscriminator() ?? "System", message, target.DiscordUserId.Value);
+                    _bonusBotConnectorClient.PrivateChat?.SendOfflineMessage(source?.Discriminator ?? "System", message, target.DiscordUserId.Value);
 
                 InformIfPlayerIsOnline(target.Id);
             }

@@ -20,9 +20,6 @@ namespace TDS.Server.LobbySystem.RoundsHandlers.Datas.RoundStates
         }
 
         public override ValueTask SetCurrent()
-        {
-            Lobby.Events.TriggerInRound();
-            return default;
-        }
+            => Lobby.Events.TriggerInRound();
     }
 }

@@ -52,7 +52,7 @@ namespace TDS.Server.LobbySystem.Lobbies.Abstracts
             ((FightLobbyDependencies)lobbyDependencies).Weapons ??= new FightLobbyWeapons(this, (IFightLobbyEventsHandler)lobbyDependencies.Events);
             ((FightLobbyDependencies)lobbyDependencies).DamageHandler ??= ServiceProvider.GetRequiredService<IDamageHandler>();
             lobbyDependencies.Deathmatch ??= new FightLobbyDeathmatch(this, (IFightLobbyEventsHandler)lobbyDependencies.Events, 
-                ((FightLobbyDependencies)lobbyDependencies).DamageHandler!, LangHelper);
+                ((FightLobbyDependencies)lobbyDependencies).DamageHandler!);
             lobbyDependencies.Players ??= new FightLobbyPlayers(this, (IFightLobbyEventsHandler)lobbyDependencies.Events);
             lobbyDependencies.Teams ??= new FightLobbyTeamsHandler(this, (IFightLobbyEventsHandler)lobbyDependencies.Events, LangHelper, TeamsProvider);
 

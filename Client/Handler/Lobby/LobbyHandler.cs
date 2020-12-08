@@ -75,8 +75,6 @@ namespace TDS.Client.Handler.Lobby
 
         private bool _inFightLobby;
 
-        private LobbyType? _inLobbyType;
-
         private bool _isLobbyOwner;
 
         public LobbyHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, PlayerFightHandler playerFightHandler,
@@ -155,8 +153,6 @@ namespace TDS.Client.Handler.Lobby
                         break;
                 }
                 _eventsHandler.OnLobbyJoined(settings);
-
-                _inLobbyType = settings.Type;
             }
             catch (Exception ex)
             {

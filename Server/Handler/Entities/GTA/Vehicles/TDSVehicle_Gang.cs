@@ -13,7 +13,7 @@ namespace TDS.Server.Handler.Entities.GTA.Vehicles
         {
             NAPI.Task.RunSafe(() =>
             { 
-                NumberPlate = gang.Entity.Short;
+                NumberPlate = gang.Entity.NameShort;
                 _dataSyncHandler.SetData(this, EntityDataKey.GangId, DataSyncMode.Lobby, gang.Entity.Id, toLobby: Lobby);
             });
         }

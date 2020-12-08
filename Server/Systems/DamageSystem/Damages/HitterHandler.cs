@@ -25,7 +25,7 @@ namespace TDS.Server.DamageSystem.Damages
 
         private void Remove(IBaseLobby lobby)
         {
-            if (!(lobby is IFightLobby fightLobby))
+            if (lobby is not IFightLobby fightLobby)
                 return;
 
             if (fightLobby is IRoundFightLobby roundFightLobby)

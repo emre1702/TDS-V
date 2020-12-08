@@ -68,7 +68,7 @@ namespace TDS.Server.GangsSystem
         {
             if (Entity is null)
                 return "Not initialized";
-            return $"'{Entity.Name}' ({Entity.Short})";
+            return $"'{Entity.Name}' ({Entity.NameShort})";
         }
     }
 }

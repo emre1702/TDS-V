@@ -19,15 +19,13 @@ namespace TDS.Server.LobbySystem.Deathmatch
     {
         public int AmountLifes { get; set; }
 
-        private readonly LangHelper _langHelper;
         public IDamageHandler Damage { get; }
         protected new IFightLobby Lobby => (IFightLobby)base.Lobby;
 
-        public FightLobbyDeathmatch(IFightLobby lobby, IFightLobbyEventsHandler events, IDamageHandler damage, LangHelper langHelper)
+        public FightLobbyDeathmatch(IFightLobby lobby, IFightLobbyEventsHandler events, IDamageHandler damage)
             : base(lobby, events)
         {
             Damage = damage;
-            _langHelper = langHelper;
             AmountLifes = lobby.Entity.FightSettings.AmountLifes;
         }
 

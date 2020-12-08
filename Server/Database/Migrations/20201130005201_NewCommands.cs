@@ -3,6 +3,7 @@ using TDS.Shared.Data.Enums;
 
 namespace TDS.Server.Database.Migrations
 {
+#pragma warning disable
     public partial class NewCommands : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -23,7 +23,7 @@ namespace TDS.Server.Handler.PlayerHandlers
             SyncPlayerSettings(player);
         }
 
-        public object? RequestSyncPlayerSettingsFromUserpanel(ITDSPlayer player, ref ArraySegment<object> arg)
+        public object? RequestSyncPlayerSettingsFromUserpanel(ITDSPlayer player, ref ArraySegment<object> _)
         {
             SyncPlayerSettings(player);
             return null;

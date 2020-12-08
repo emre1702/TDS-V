@@ -138,7 +138,7 @@ namespace TDS.Server.Core.Init
                     if (input.Length == 0)
                         continue;
                     if (input[0] == '/')
-                        input = input.Substring(1);
+                        input = input[1..];
 
                     if (_consolePlayerCache is null)
                     {

@@ -7,13 +7,13 @@ namespace TDS.Shared.Core
     {
         private static Action<string> _infoLogger;
         private static Action<Exception> _errorLogger;
-        private static JsonSerializerSettings _settingsIgnoreDefaultValues = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings _settingsIgnoreDefaultValues = new JsonSerializerSettings
         {
             Formatting = Formatting.None,
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore
         };
-        private static JsonSerializerSettings _settingsUseDefaultValues = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings _settingsUseDefaultValues = new JsonSerializerSettings
         {
             Formatting = Formatting.None,
             NullValueHandling = NullValueHandling.Ignore,

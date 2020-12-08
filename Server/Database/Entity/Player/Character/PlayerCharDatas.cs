@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TDS.Server.Database.Interfaces;
 using TDS.Shared.Data.Models.CharCreator;
 
-namespace TDS.Server.Database.Entity.Player.Char
+namespace TDS.Server.Database.Entity.Player.Character
 {
     public class PlayerCharDatas : IPlayerDataTable
     {

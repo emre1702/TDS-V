@@ -30,8 +30,6 @@ namespace TDS.Server.LobbySystem.Lobbies
     {
         public new IDamageTestLobbyDeathmatch Deathmatch => (IDamageTestLobbyDeathmatch)base.Deathmatch;
 
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-
         public DamageTestLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper,
             EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider,
             ILoggingHandler loggingHandler)
@@ -47,8 +45,6 @@ namespace TDS.Server.LobbySystem.Lobbies
         {
         }
 
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-
         protected override void InitDependencies(BaseLobbyDependencies? lobbyDependencies = null)
         {
             lobbyDependencies ??= new DamageTestLobbyDependencies();
@@ -57,7 +53,7 @@ namespace TDS.Server.LobbySystem.Lobbies
             lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler ??= ServiceProvider.GetRequiredService<IDamageHandler>();
             lobbyDependencies.Deathmatch ??= new DamageTestLobbyDeathmatch(this, (FightLobbyEventsHandler)lobbyDependencies.Events, 
-                ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler!, LangHelper);
+                ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler!);
             lobbyDependencies.Players ??= new DamageTestLobbyPlayers(this, (FightLobbyEventsHandler)lobbyDependencies.Events);
             lobbyDependencies.MapHandler ??= new DamageTestLobbyMapHandler(this, (FightLobbyEventsHandler)lobbyDependencies.Events);
             ((DamageTestLobbyDependencies)lobbyDependencies).Weapons ??= new DamageTestLobbyWeapons(this, (FightLobbyEventsHandler)lobbyDependencies.Events, ServiceProvider);

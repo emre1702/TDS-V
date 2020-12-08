@@ -1,9 +1,8 @@
 ﻿namespace TDS.Client.Data.Interfaces
 {
+    #pragma warning disable
     public interface ILoginRegisterTexts
     {
-        #region Public Properties
-
         string forgotpw_email { get; }
         string forgotpw_reset { get; }
         string forgotpw_title { get; }
@@ -20,7 +19,5 @@
         string tab_login { get; }
         string tab_register { get; }
         string username { get; }
-
-        #endregion Public Properties
     }
 }

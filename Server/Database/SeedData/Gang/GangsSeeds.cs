@@ -11,7 +11,7 @@ namespace TDS.Server.Database.SeedData.Gang
         public static ModelBuilder HasGangs(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Gangs>().HasData(
-                new Gangs { Id = -1, TeamId = -5, Name = "System", Short = "-", Color = "rgb(255,255,255)" }
+                new Gangs { Id = -1, TeamId = -5, Name = "System", NameShort = "-", Color = "rgb(255,255,255)" }
             );
             return modelBuilder;
         }

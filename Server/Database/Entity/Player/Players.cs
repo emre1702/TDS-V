@@ -4,7 +4,7 @@ using TDS.Server.Database.Entity.Admin;
 using TDS.Server.Database.Entity.Challenge;
 using TDS.Server.Database.Entity.GangEntities;
 using TDS.Server.Database.Entity.LobbyEntities;
-using TDS.Server.Database.Entity.Player.Char;
+using TDS.Server.Database.Entity.Player.Character;
 using TDS.Server.Database.Entity.Player.Settings;
 using TDS.Server.Database.Entity.Rest;
 using TDS.Server.Database.Entity.Userpanel;
@@ -60,9 +60,6 @@ namespace TDS.Server.Database.Entity.Player
         public virtual ICollection<PlayerWeaponBodypartStats> WeaponBodypartStats { get; set; }
         public virtual ICollection<PlayerWeaponStats> WeaponStats { get; set; }
 
-        public string GetDiscriminator()
-        {
-            return $"{Name} ({SCName})";
-        }
+        public string Discriminator => $"{Name} ({SCName})";
     }
 }

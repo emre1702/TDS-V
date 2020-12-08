@@ -25,8 +25,7 @@ namespace TDS.Server.Handler.Userpanel
         private readonly UserpanelRulesHandler _rulesHandler;
 
 #pragma warning disable CA1506
-        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer,
-            UserpanelCommandsHandler userpanelCommandsHandler, ITDSPlayerHandler tdsPlayerHandler)
+        public UserpanelHandler(IServiceProvider serviceProvider, BonusBotConnectorServer bonusBotConnectorServer)
         {
             bonusBotConnectorServer.CommandService.OnUsedCommand += CommandService_OnUsedCommand;
 

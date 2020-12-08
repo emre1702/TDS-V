@@ -2,6 +2,7 @@
 
 namespace TDS.Server.Database.Migrations
 {
+#pragma warning disable
     public partial class DiscordUserId_In_Players : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

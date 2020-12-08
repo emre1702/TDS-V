@@ -20,13 +20,11 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
         public ITDSObject? TargetObject { get; set; }
 
         private readonly IRoundFightLobby _lobby;
-        private readonly IGangwarGamemode _gamemode;
         private readonly ISettingsHandler _settingsHandler;
 
-        public GangwarMapHandler(IRoundFightLobby lobby, IGangwarGamemode gamemode, ISettingsHandler settingsHandler)
+        public GangwarMapHandler(IRoundFightLobby lobby, ISettingsHandler settingsHandler)
         {
             _lobby = lobby;
-            _gamemode = gamemode;
             _settingsHandler = settingsHandler;
         }
 

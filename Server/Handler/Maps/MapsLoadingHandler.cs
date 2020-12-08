@@ -49,7 +49,7 @@ namespace TDS.Server.Handler.Maps
             }
         }
 
-        public object? GetAllMapsForCustomLobby(ITDSPlayer player, ref ArraySegment<object> args)
+        public object? GetAllMapsForCustomLobby(ITDSPlayer _, ref ArraySegment<object> _2)
         {
             lock (_defaultMaps)
             {

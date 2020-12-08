@@ -11,7 +11,7 @@ namespace TDS.Server.Database.Entity
             return dbContext.Model.FindEntityType(entityType);
         }
 
-        public static IProperty GetPropertyInfo(this TDSDbContext dbContext, IEntityType entityDbType, string efCorePropertyName)
+        public static IProperty GetPropertyInfo(this TDSDbContext _, IEntityType entityDbType, string efCorePropertyName)
         {
             return entityDbType.FindProperty(efCorePropertyName);
         }
@@ -24,7 +24,7 @@ namespace TDS.Server.Database.Entity
             return dbContext.GetTableName(entityDbType);
         }
 
-        public static string GetTableName(this TDSDbContext dbContext, IEntityType entityDbType)
+        public static string GetTableName(this TDSDbContext _, IEntityType entityDbType)
         {
             string schema = entityDbType.GetSchema();
             string table = entityDbType.GetTableName();

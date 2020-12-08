@@ -28,7 +28,7 @@ namespace TDS.Server.GamemodesSystem.Gamemodes
         {
             d ??= new BaseGamemodeDependencies();
 
-            d.MapHandler ??= new GangwarMapHandler(Lobby, this, SettingsHandler);
+            d.MapHandler ??= new GangwarMapHandler(Lobby, SettingsHandler);
             d.Players ??= new GangwarPlayers();
             d.Specials ??= new GangwarSpecials(Lobby, this, SettingsHandler);
             d.Teams ??= new GangwarTeams(Lobby);

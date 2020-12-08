@@ -5,6 +5,7 @@ using TDS.Shared.Data.Enums.Challenge;
 
 namespace TDS.Server.Database.Migrations
 {
+#pragma warning disable
     public partial class Arena_Weapons_Reducing : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

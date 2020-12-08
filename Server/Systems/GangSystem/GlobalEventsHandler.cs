@@ -5,12 +5,8 @@ namespace TDS.Server.GangsSystem
 {
     public class GlobalEventsHandler
     {
-        private readonly EventsHandler _eventsHandler;
-
         public GlobalEventsHandler(EventsHandler eventsHandler)
         {
-            _eventsHandler = eventsHandler;
-
             eventsHandler.PlayerLoggedOut += EventsHandler_PlayerLoggedOut;
         }
 

@@ -68,6 +68,7 @@ namespace TDS.Server.LobbySystem.MapHandlers
             }*/
         }
 
+        /*
         private void SetHouseOwner(GangHouse house, IGang? owner)
         {
             NAPI.Task.RunSafe(() =>
@@ -88,7 +89,7 @@ namespace TDS.Server.LobbySystem.MapHandlers
                 if (house.TextLabel is { })
                     house.TextLabel.Text = house.TextLabelText;
             });
-        }
+        }*/
 
         private ITDSBlip GetHouseWithOwnerBlip(GangHouse house)
             => (ITDSBlip)NAPI.Blip.CreateBlip(

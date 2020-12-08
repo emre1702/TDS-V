@@ -12,7 +12,7 @@ using TDS.Server.Database.Entity.GangEntities;
 using TDS.Server.Database.Entity.LobbyEntities;
 using TDS.Server.Database.Entity.Log;
 using TDS.Server.Database.Entity.Player;
-using TDS.Server.Database.Entity.Player.Char;
+using TDS.Server.Database.Entity.Player.Character;
 using TDS.Server.Database.Entity.Player.Settings;
 using TDS.Server.Database.Entity.Rest;
 using TDS.Server.Database.Entity.Server;

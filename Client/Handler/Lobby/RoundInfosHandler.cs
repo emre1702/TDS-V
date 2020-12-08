@@ -253,11 +253,6 @@ namespace TDS.Client.Handler.Lobby
             StopDeathmatchInfo();
         }
 
-        private void ShowDeathmatchInfo()
-        {
-            // show info of kills, damage, assists if not already showing
-        }
-
         /*
        mp.events.add( "onClientPlayerAmountInFightSync", ( amountinteam, isroundstarted, amountaliveinteam ) => {
    log( "onClientPlayerAmountInFightSync" );

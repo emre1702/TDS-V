@@ -135,13 +135,20 @@ namespace TDS.Server.LobbySystem.RoundsHandlers.Datas
         private void SetState<T>() where T : RoundState
             => SetState(Get<T>());
 
-        private void SetState(LinkedListNode<RoundState> state)
+        private async void SetState(LinkedListNode<RoundState> state)
         {
-            _nextTimer?.Kill();
-            Current = state;
-            Current.Value.SetCurrent();
+            try
+            {
+                _nextTimer?.Kill();
+                Current = state;
+                await Current.Value.SetCurrent();
 
-            _nextTimer = new TDSTimer(SetNext, (uint)Current.Value.Duration);
+                _nextTimer = new TDSTimer(SetNext, (uint)Current.Value.Duration);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         private LinkedListNode<RoundState> Get<T>() where T : RoundState

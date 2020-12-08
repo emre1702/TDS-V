@@ -95,7 +95,7 @@ namespace TDS.Server.GangActionAreaSystem.Invitiations
 
             var invitations = _area.Attacker!.Invitations.Send(lang => string.Format(lang.GANG_ACTION_ATTACK_INVITATION, _area), null, AcceptAttackInvitation, type: InvitationType.GangAction);
             lock (_invitations) { _invitations.AddRange(invitations); }
-            invitations = _area.Owner!.Invitations.Send(lang => string.Format(lang.GANG_ACTION_DEFEND_INVITATION, _area), null, AcceptAttackInvitation, type: InvitationType.GangAction);
+            invitations = _area.Owner!.Invitations.Send(lang => string.Format(lang.GANG_ACTION_DEFEND_INVITATION, _area), null, AcceptDefendInvitation, type: InvitationType.GangAction);
             lock (_invitations) { _invitations.AddRange(invitations); }
             return default;
         }

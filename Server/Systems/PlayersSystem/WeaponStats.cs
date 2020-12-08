@@ -12,8 +12,8 @@ namespace TDS.Server.PlayersSystem
     public class WeaponStats : IPlayerWeaponStats
     {
 #nullable disable
-        private Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>> _weaponBodyPartsStats { get; set; }
-        private Dictionary<WeaponHash, PlayerWeaponStats> _weaponStats { get; set; }
+        private Dictionary<WeaponHash, Dictionary<PedBodyPart, PlayerWeaponBodypartStats>> _weaponBodyPartsStats;
+        private Dictionary<WeaponHash, PlayerWeaponStats> _weaponStats;
 
         private ITDSPlayer _player;
         private IPlayerEvents _events;

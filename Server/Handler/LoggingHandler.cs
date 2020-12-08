@@ -37,10 +37,7 @@ namespace TDS.Server.Handler
         private readonly ISettingsHandler _settingsHandler;
 
         public LoggingHandler(TDSDbContext dbContext, BonusBotConnectorClient bonusBotConnectorClient, EventsHandler eventsHandler,
-            ISettingsHandler settingsHandler)
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            : base(dbContext)
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+            ISettingsHandler settingsHandler) : base(dbContext)
         {
             Instance = this;
             _bonusBotConnectorClient = bonusBotConnectorClient;

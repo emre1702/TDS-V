@@ -58,7 +58,7 @@ namespace TDS.Server.GangActionAreaSystem.Notifications
 
         private ValueTask OnAttackStarted()
         {
-            _area.InLobby!.Entity.Name = $"[GW] {_area.Attacker!.Entity.Short} - {_area.Owner!.Entity.Short}";
+            _area.InLobby!.Entity.Name = $"[GW] {_area.Attacker!.Entity.NameShort} - {_area.Owner!.Entity.NameShort}";
 
             _langHelper.SendAllNotification(lang =>
                 string.Format(lang.GANG_ACTION_STARTED, _area.GangsHandler.Attacker, _area.GangsHandler.Owner, _area));

@@ -5,7 +5,6 @@ using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces.GangActionAreaSystem.Areas;
 using TDS.Server.Data.Interfaces.LobbySystem.Actions;
-using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Handler;
 using TDS.Server.Handler.GangSystem;
 using TDS.Shared.Data.Enums;
@@ -16,10 +15,10 @@ namespace TDS.Server.LobbySystem.Actions
     {
         private readonly GangActionAreasHandler _gangActionAreasHandler;
 
-        public GangLobbyActions(IGangLobby gangLobby, GangActionAreasHandler gangActionAreasHandler)
+        public GangLobbyActions(GangActionAreasHandler gangActionAreasHandler)
         {
             _gangActionAreasHandler = gangActionAreasHandler;
-        } 
+        }
 
         public async Task TryStartAction(ITDSPlayer attacker, int gangActionAreaId)
         {
@@ -58,7 +57,7 @@ namespace TDS.Server.LobbySystem.Actions
 
             return true;
         }
-        
+
 
         /*
          *  public async Task StartGangwar(ITDSPlayer attacker, int gangwarAreaId)

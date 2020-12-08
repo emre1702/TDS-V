@@ -18,8 +18,8 @@ namespace TDS.Server.LobbySystem.Deathmatch
 {
     public class DamageTestLobbyDeathmatch : FightLobbyDeathmatch, IDamageTestLobbyDeathmatch
     {
-        public DamageTestLobbyDeathmatch(IDamageTestLobby lobby, IFightLobbyEventsHandler events, IDamageHandler damageHandler, LangHelper langHelper)
-            : base(lobby, events, damageHandler, langHelper)
+        public DamageTestLobbyDeathmatch(IDamageTestLobby lobby, IFightLobbyEventsHandler events, IDamageHandler damageHandler)
+            : base(lobby, events, damageHandler)
         {
             AmountLifes = short.MaxValue;
         }

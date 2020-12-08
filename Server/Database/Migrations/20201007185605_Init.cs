@@ -11,6 +11,7 @@ namespace TDS.Server.Database.Migrations
 {
     public partial class Init : Migration
     {
+        #pragma warning disable
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()

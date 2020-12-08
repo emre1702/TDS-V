@@ -20,9 +20,7 @@ namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorObjectPlacingHandler : ServiceBase
     {
-#pragma warning disable IDE1006 // Naming Styles
         private const bool ONLY_HOLD_OWN_OBJECTS = true;
-#pragma warning restore IDE1006 // Naming Styles
 
         public MapCreatorObject LastHighlightedObject;
 

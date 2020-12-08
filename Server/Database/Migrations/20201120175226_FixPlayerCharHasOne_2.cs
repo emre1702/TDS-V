@@ -2,6 +2,7 @@
 
 namespace TDS.Server.Database.Migrations
 {
+    #pragma warning disable
     public partial class FixPlayerCharHasOne_2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

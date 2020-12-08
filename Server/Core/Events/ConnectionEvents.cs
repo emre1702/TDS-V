@@ -10,7 +10,7 @@ namespace TDS.Server.Core.Events
     public class ConnectionEvents : Script
     {
         [ServerEvent(Event.IncomingConnection)]
-        public void IncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, GameTypes gameType, CancelEventArgs cancel)
+        public void IncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, GameTypes _, CancelEventArgs cancel)
         {
             EventsHandler.Instance.OnIncomingConnection(ip, serial, socialClubName, socialClubId, cancel);
         }
@@ -22,7 +22,7 @@ namespace TDS.Server.Core.Events
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
-        public async void PlayerDisconnected(ITDSPlayer player, DisconnectionType disconnectionType, string reason)
+        public async void PlayerDisconnected(ITDSPlayer player, DisconnectionType _, string _2)
         {
             try
             {

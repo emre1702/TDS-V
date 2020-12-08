@@ -127,7 +127,7 @@ namespace TDS.Server.Handler.GangSystem
                 case GangCommand.Kick:
                 case GangCommand.RankDown:
                 case GangCommand.RankUp:
-                    var errorMsg = CheckRequirementsForCommandWithTarget(player, type, (int)args[1], out target);
+                    var errorMsg = CheckRequirementsForCommandWithTarget(player, (int)args[1], out target);
                     if (errorMsg is { })
                         return errorMsg;
                     break;
@@ -136,7 +136,7 @@ namespace TDS.Server.Handler.GangSystem
             return null;
         }
 
-        private string? CheckRequirementsForCommandWithTarget(ITDSPlayer player, GangCommand type, int targetId, out GangMembers? target)
+        private string? CheckRequirementsForCommandWithTarget(ITDSPlayer player, int targetId, out GangMembers? target)
         {
             target = player.Gang.Entity.Members.FirstOrDefault(m => m.PlayerId == targetId);
             if (target is null)

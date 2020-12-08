@@ -20,7 +20,7 @@ namespace TDS.Server.Handler
 {
     public class WeaponDatasLoadingHandler
     {
-        private Dictionary<WeaponHash, DamageDto> _defaultDamages;
+        private readonly Dictionary<WeaponHash, DamageDto> _defaultDamages;
 
         private readonly TDSDbContext _dbContext;
         private readonly ILoggingHandler _loggingHandler;
@@ -168,7 +168,7 @@ namespace TDS.Server.Handler
             if (name.Length < "WEAPON_".Length)
                 return null;
 
-            string weaponName = name.Substring("WEAPON_".Length);
+            string weaponName = name["WEAPON_".Length..];
 
             if (Enum.TryParse(weaponName, true, out WeaponHash result))
                 return result;

@@ -68,7 +68,7 @@ namespace TDS.Server.Handler.GangSystem
             return new Gangs
             {
                 Name = data.Name,
-                Short = data.Short,
+                NameShort = data.Short,
                 OwnerId = player.Entity!.Id,
                 Color = data.Color,
                 BlipColor = data.BlipColor,

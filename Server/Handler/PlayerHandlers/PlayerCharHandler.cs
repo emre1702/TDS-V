@@ -3,32 +3,28 @@ using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Database.Entity.Player;
-using TDS.Server.Database.Entity.Player.Char;
 using TDS.Server.Handler.Events;
 using TDS.Shared.Core;
-using TDS.Shared.Data.Models.CharCreator;
 using TDS.Shared.Data.Utility;
 using TDS.Server.Handler.Extensions;
+using TDS.Server.Database.Entity.Player.Character;
 
 namespace TDS.Server.Handler.PlayerHandlers
 {
     public class PlayerCharHandler
     {
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly ILoggingHandler _loggingHandler;
 
         private readonly ISettingsHandler _settingsHandler;
 
-        public PlayerCharHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
+        public PlayerCharHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler)
         {
             _lobbiesHandler = lobbiesHandler;
-            _loggingHandler = loggingHandler;
             _settingsHandler = settingsHandler;
 
             eventsHandler.PlayerLoggedIn += LoadPlayerChar;

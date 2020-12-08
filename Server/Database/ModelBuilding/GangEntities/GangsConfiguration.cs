@@ -12,7 +12,7 @@ namespace TDS.Server.Database.ModelBuilding.GangEntities
             builder.Property(e => e.Id)
                     .UseIdentityAlwaysColumn();
 
-            builder.Property(e => e.Short)
+            builder.Property(e => e.NameShort)
                 .IsRequired()
                 .HasMaxLength(20);
 

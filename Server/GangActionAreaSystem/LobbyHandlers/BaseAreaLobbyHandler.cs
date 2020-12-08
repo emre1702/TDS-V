@@ -96,7 +96,7 @@ namespace TDS.Server.GangActionAreaSystem.LobbyHandlers
                 IsOfficial = true,
                 IsTemporary = false,
                 OwnerId = -1,
-                Name = $"[GW-Prep] {_area.Attacker!.Entity.Short}",
+                Name = $"[GW-Prep] {_area.Attacker!.Entity.NameShort}",
                 Type = LobbyType.Arena,
                 Teams = new List<Teams>
                 {

@@ -50,7 +50,7 @@ namespace TDS.Server.LobbySystem.Lobbies
 
             lobbyDependencies ??= new GangLobbyDependencies();
 
-            ((GangLobbyDependencies)lobbyDependencies).Actions ??= new GangLobbyActions(this, _gangActionAreasHandler);
+            ((GangLobbyDependencies)lobbyDependencies).Actions ??= new GangLobbyActions(_gangActionAreasHandler);
             lobbyDependencies.Chat ??= new GangLobbyChat(this, LangHelper);
             lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.Deathmatch ??= new GangLobbyDeathmatch(this, lobbyDependencies.Events);

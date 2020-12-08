@@ -140,6 +140,11 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
             return Id == other?.Id;
         }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ITDSPlayer);
+        }
+
         public void Init()
         {
             if (Name.Length > 0)
@@ -150,6 +155,11 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
             SocialClubName = base.SocialClubName;
             Address = base.Address;
             Serial = base.Serial;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }
