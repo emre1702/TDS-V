@@ -71,7 +71,7 @@ namespace TDS.Server.LobbySystem.Lobbies.Abstracts
             lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             ((RoundFightLobbyDependencies)lobbyDependencies).DamageHandler ??= ServiceProvider.GetRequiredService<IDamageHandler>();
             lobbyDependencies.Deathmatch ??= new RoundFightLobbyDeathmatch(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, 
-                ((RoundFightLobbyDependencies)lobbyDependencies).DamageHandler!, LangHelper);
+                ((RoundFightLobbyDependencies)lobbyDependencies).DamageHandler!);
             lobbyDependencies.MapHandler ??= new RoundFightLobbyMapHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, settingsHandler, mapsLoadingHandler);
             lobbyDependencies.Notifications ??= new RoundFightLobbyNotifications(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, LangHelper);
             lobbyDependencies.Players ??= new RoundFightLobbyPlayers(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);
