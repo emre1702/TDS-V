@@ -20,7 +20,7 @@ namespace TDS.Server.Database.ModelBuilding.BonusBot
 
             builder.Ignore(e => e.GrpcDeadline);
 
-            builder.Property(e => e.RefreshServerStatsFrequencySec).IsRequired().HasDefaultValue(60);
+            builder.Property(e => e.RefreshServerStatsFrequencySec).IsRequired().HasDefaultValue(300);
         }
     }
 }

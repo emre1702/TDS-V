@@ -24,7 +24,8 @@ namespace TDS.Server.Database.SeedData.BonusBot
                     ErrorLogsChannelId = 659073884796092426,
 
                     SendPrivateMessageOnBan = true,
-                    SendPrivateMessageOnOfflineMessage = true
+                    SendPrivateMessageOnOfflineMessage = true,
+                    RefreshServerStatsFrequencySec = 300
                 }
             );
             return modelBuilder;
