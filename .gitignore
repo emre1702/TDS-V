@@ -11,3 +11,4 @@ TDS_Server/server/*
 node_modules
 *efcore.bat
 *scaffoldCommand.txt
+debug.log
