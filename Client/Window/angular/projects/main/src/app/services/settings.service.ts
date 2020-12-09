@@ -244,9 +244,7 @@ export class SettingsService {
     ////////////////////////////////////////////////////
 
 
-    constructor(
-        private rageConnector: RageConnectorService,
-        private sanitizer: DomSanitizer) {
+    constructor(private rageConnector: RageConnectorService, private sanitizer: DomSanitizer) {
         console.log("Settings listener started.");
         rageConnector.listen(DFromClientEvent.LoadLanguage, this.loadLanguage.bind(this));
         rageConnector.listen(DFromServerEvent.LoadMapFavourites, this.loadFavoriteMapIds.bind(this));
