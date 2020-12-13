@@ -102,7 +102,6 @@ import { ApplyBackgroundService } from './services/apply-background.service';
 
         MatAppBackgroundDirective,
     ],
-    entryComponents: [CustomMatSnackBarComponent],
     providers: [ApplyBackgroundService, { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }],
 })
 export class MaterialModule {}

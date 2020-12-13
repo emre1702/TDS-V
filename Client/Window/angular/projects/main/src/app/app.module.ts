@@ -197,9 +197,6 @@ import { UserpanelSettingsHudComponent } from './components/userpanel/userpanel-
         warn: "rgba(244,67,54,1)"
     })
   ],
-  entryComponents: [
-      LoadMapDialog, AreYouSureDialog, CustomLobbyPasswordDialog, ApplicationInviteDialog, MentionListComponent
-  ],
   providers: [
     MaterialCssVarsService
   ],
