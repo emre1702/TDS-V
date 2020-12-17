@@ -5,10 +5,13 @@ namespace TDS.Server.Database.Entity.GangEntities
 {
     public class GangRanks
     {
-        #region Public Properties
+        public GangRanks()
+        {
+            GangMembers = new List<GangMembers>();
+        }
 
-        [JsonIgnore]
-        public virtual Gangs Gang { get; set; }
+        [JsonProperty("2")]
+        public int Id { get; set; }
         [JsonIgnore]
         public int GangId { get; set; }
         [JsonProperty("0")]
@@ -17,12 +20,11 @@ namespace TDS.Server.Database.Entity.GangEntities
         public short Rank { get; set; }
         [JsonProperty("1")]
         public string Color { get; set; }
-        [JsonProperty("2")]
-        public int Id { get; set; }
+        
 
         [JsonIgnore]
         public virtual ICollection<GangMembers> GangMembers { get; internal set; }
-
-        #endregion Public Properties
+        [JsonIgnore]
+        public virtual Gangs Gang { get; set; }
     }
 }

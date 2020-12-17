@@ -7,7 +7,13 @@ namespace TDS.Server.Database.Entity.GangEntities
 {
     public partial class Gangs
     {
-        #region Public Properties
+        public Gangs()
+        {
+            GangwarAreas = new List<GangActionAreas>();
+            Members = new List<GangMembers>();
+            Ranks = new List<GangRanks>();
+            Vehicles = new List<GangVehicles>();
+        }
 
         public byte BlipColor { get; set; }
         public DateTime CreateTime { get; set; }
@@ -30,6 +36,5 @@ namespace TDS.Server.Database.Entity.GangEntities
         public virtual ICollection<GangRanks> Ranks { get; set; }
         public virtual ICollection<GangVehicles> Vehicles { get; set; }
 
-        #endregion Public Properties
     }
 }

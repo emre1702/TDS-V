@@ -5,8 +5,6 @@ namespace TDS.Server.Database.Entity.GangEntities
 {
     public class GangMembers
     {
-        #region Public Properties
-
         public int GangId { get; set; }
         public DateTime JoinTime { get; set; }
         public int PlayerId { get; set; }
@@ -18,7 +16,5 @@ namespace TDS.Server.Database.Entity.GangEntities
         public virtual Gangs Gang { get; set; }
         public virtual Players Player { get; set; }
         public virtual GangRanks Rank { get; set; }
-
-        #endregion Public Properties
     }
 }

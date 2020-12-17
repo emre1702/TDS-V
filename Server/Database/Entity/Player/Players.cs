@@ -13,6 +13,30 @@ namespace TDS.Server.Database.Entity.Player
 {
     public partial class Players
     {
+        public Players()
+        {
+            AdminMembers = new List<Players>();
+            ApplicationInvitations = new List<ApplicationInvitations>();
+            ApplicationQuestions = new List<ApplicationQuestions>();
+            Challenges = new List<PlayerChallenges>();
+            Commands = new List<PlayerCommands>();
+            CreatedHouses = new List<GangHouses>();
+            Lobbies = new List<Lobbies>();
+            Maps = new List<Maps>();
+            OfflinemessagesSource = new List<Offlinemessages>();
+            OfflinemessagesTarget = new List<Offlinemessages>();
+            PlayerBansAdmin = new List<PlayerBans>();
+            PlayerBansPlayer = new List<PlayerBans>();
+            PlayerLobbyStats = new List<PlayerLobbyStats>();
+            PlayerMapFavourites = new List<PlayerMapFavourites>();
+            PlayerMapRatings = new List<PlayerMapRatings>();
+            PlayerRelationsPlayer = new List<PlayerRelations>();
+            PlayerRelationsTarget = new List<PlayerRelations>();
+            SupportRequestMessages = new List<SupportRequestMessages>();
+            WeaponBodypartStats = new List<PlayerWeaponBodypartStats>();
+            WeaponStats = new List<PlayerWeaponStats>();
+        }
+
         public int Id { get; set; }
         public bool IsVip { get; set; }
         public int? AdminLeaderId { get; set; }

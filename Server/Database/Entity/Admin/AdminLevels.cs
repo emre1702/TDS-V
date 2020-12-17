@@ -4,20 +4,14 @@ using TDS.Server.Database.Entity.Player;
 
 namespace TDS.Server.Database.Entity.Admin
 {
-    public partial class AdminLevels
+    public class AdminLevels
     {
-        #region Public Constructors
-
         public AdminLevels()
         {
             AdminLevelNames = new HashSet<AdminLevelNames>();
             Commands = new HashSet<Commands>();
             Players = new HashSet<Players>();
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public virtual ICollection<AdminLevelNames> AdminLevelNames { get; set; }
         public short ColorB { get; set; }
@@ -27,6 +21,5 @@ namespace TDS.Server.Database.Entity.Admin
         public short Level { get; set; }
         public virtual ICollection<Players> Players { get; set; }
 
-        #endregion Public Properties
     }
 }

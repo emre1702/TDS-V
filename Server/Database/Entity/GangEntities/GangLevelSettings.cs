@@ -2,8 +2,6 @@
 {
     public class GangLevelSettings
     {
-        #region Public Properties
-
         public bool CanChangeBlipColor { get; set; }
         public byte GangAreaSlots { get; set; }
         public float HouseAreaRadius { get; set; }
@@ -14,7 +12,5 @@
         public byte RankSlots { get; set; }
         public int UpgradePrice { get; set; }
         public byte VehicleSlots { get; set; }
-
-        #endregion Public Properties
     }
 }

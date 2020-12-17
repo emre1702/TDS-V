@@ -184,6 +184,7 @@ namespace TDS.Server.Handler.Account
                     .Include(p => p.ThemeSettings)
                     .Include(p => p.KillInfoSettings)
                     .Include(p => p.CharDatas)
+                    .Include(p => p.PlayerLobbyStats)
 
                    .FirstOrDefaultAsync(p => p.Id == playerId);
 
