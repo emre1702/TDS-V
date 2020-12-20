@@ -17,18 +17,16 @@ LIGHTCYAN='\033[1;36m'
 WHITE='\033[1;37m'
 SEPERATOR='==============================='
 
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/Core/bin/Debug/net5.0
+dotnet publish Server/Core/Core.csproj -p:PublishProfile=LinuxDebug
+
+cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Build
 
 echo -e "${SEPERATOR}"
-echo -e "Update ${LIGHTBLUE}TDS ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --exclude="TDS.Client.*" --exclude="TDS.Server.Core.*" --include="*/" --include='TDS.*.dll' --include='TDS.*.pdb' --include='BonusBotConnector*' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
+echo -e "Update ${LIGHTBLUE}runtimes ${NOCOLOR}..."
+rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --delete --timeout=60 --exclude="TDS.Client.*" --exclude="TDS.Server.Core.*"  --exclude="TDS.Server.config" --exclude="BonusBotConnector.*.deps.json" --exclude="Microsoft.NETCore.App.deps.json" --exclude="TDS.*.deps.json"  --include='*' --exclude="rage-sharp*" --exclude="CodeCoverage/*"  --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
 
 echo -e "${SEPERATOR}"
-echo -e "Add ${LIGHTBLUE}missing ${NOCOLOR}runtimes ..."
-rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 --ignore-existing --exclude='TDS.*' --include='*.dll' --include='*.so' --exclude='*' -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/dotnet/runtime/
-
-echo -e "${SEPERATOR}"
-echo -e "Update ${LIGHTBLUE}TDS.Server ${NOCOLOR}..."
+echo -e "Update ${LIGHTBLUE}resource ${NOCOLOR}..."
 rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" ./TDS.Server.Core.dll ./TDS.Server.Core.pdb rage@185.101.94.212:/home/rage/RAGE/dotnet/resources/tds/
 
 echo -e "${SEPERATOR}"
