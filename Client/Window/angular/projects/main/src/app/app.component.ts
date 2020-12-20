@@ -22,20 +22,18 @@ import { SettingsThemeIndex } from './components/userpanel/userpanel-settings-no
     animations: [
         trigger('teamOrdersAnimation', [
             transition('* => *', [
-                query(':enter', [
-                    style({ transform: 'translateX(100%)', opacity: 0 }),
-                    stagger(150, [
-                        animate('500ms', style({ transform: 'translateX(0)', opacity: 1 })),
-                    ])
-                ], { optional: true }),
-                query(':leave', [
-                    style({ transform: 'translateX(0)', opacity: 1 }),
-                    stagger(150, [
-                        animate('500ms', style({ transform: 'translateX(100%)', opacity: 0 }))
-                    ])
-                ], { optional: true })
-            ])
-        ])
+                query(
+                    ':enter',
+                    [style({ transform: 'translateX(100%)', opacity: 0 }), stagger(150, [animate('500ms', style({ transform: 'translateX(0)', opacity: 1 }))])],
+                    { optional: true }
+                ),
+                query(
+                    ':leave',
+                    [style({ transform: 'translateX(0)', opacity: 1 }), stagger(150, [animate('500ms', style({ transform: 'translateX(100%)', opacity: 0 }))])],
+                    { optional: true }
+                ),
+            ]),
+        ]),
     ],
 })
 export class AppComponent {
@@ -46,7 +44,7 @@ export class AppComponent {
     showLobbyChoice: boolean = InitialDatas.opened.lobbyChoice;
     showTeamChoice: boolean = InitialDatas.opened.teamChoice;
     showRankings: boolean = InitialDatas.opened.rankings;
-    showHUD: boolean = InitialDatas.opened.hud;
+    showHud: boolean = InitialDatas.opened.hud;
     showCharCreator: boolean = InitialDatas.opened.charCreator;
     showGangWindow: boolean = InitialDatas.opened.gangWindow;
     showDamageTestMenu: boolean = InitialDatas.opened.damageTestMenu;
@@ -64,15 +62,16 @@ export class AppComponent {
         public vcRef: ViewContainerRef,
         private iconRegistry: MatIconRegistry,
         private sanitizer: DomSanitizer,
-        private materialCssVarsService: MaterialCssVarsService) {
+        private materialCssVarsService: MaterialCssVarsService
+    ) {
         this.loadSvgIcons();
 
         rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
-            if (this.settings.Constants[6] && typeof this.settings.Constants[6] === "string") {
+            if (this.settings.Constants[6] && typeof this.settings.Constants[6] === 'string') {
                 this.settings.Constants[6] = JSON.parse((this.settings.Constants[6] as string).escapeJson());
             }
-            if (this.settings.Constants[9] && typeof this.settings.Constants[9] === "string") {
+            if (this.settings.Constants[9] && typeof this.settings.Constants[9] === 'string') {
                 this.settings.Constants[9] = JSON.parse((this.settings.Constants[9] as string).escapeJson());
             }
             this.started = true;
@@ -95,8 +94,7 @@ export class AppComponent {
 
         rageConnector.listen(DFromClientEvent.ToggleLobbyChoice, (bool: boolean) => {
             this.showLobbyChoice = bool;
-            if (bool)
-                this.showTeamChoice = false;
+            if (bool) this.showTeamChoice = false;
             changeDetector.detectChanges();
         });
 
@@ -122,7 +120,7 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ToggleHUD, (bool: boolean) => {
-            this.showHUD = bool;
+            this.showHud = bool;
             changeDetector.detectChanges();
         });
 
@@ -141,7 +139,7 @@ export class AppComponent {
         });
 
         rageConnector.listen(DFromClientEvent.ShowCooldown, () => {
-            this.notificationService.showInfo("Cooldown");
+            this.notificationService.showInfo('Cooldown');
         });
 
         rageConnector.listen(DFromClientEvent.SyncUsernameChange, (newName: string) => {
@@ -189,29 +187,29 @@ export class AppComponent {
         this.materialCssVarsService.setWarnColor(this.settings.Settings[16]);
     }
 
-    @HostListener("window:keydown", ["$event"])
+    @HostListener('window:keydown', ['$event'])
     keyboardInput(event: KeyboardEvent) {
-        if (event.ctrlKey && event.key === "a" && !this.settings.InputFocused) {
+        if (event.ctrlKey && event.key === 'a' && !this.settings.InputFocused) {
             event.preventDefault();
         }
     }
 
     private loadSvgIcons() {
-        this.iconRegistry.addSvgIcon("man", this.sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));
-        this.iconRegistry.addSvgIcon("woman", this.sanitizer.bypassSecurityTrustResourceUrl('assets/woman.svg'));
+        this.iconRegistry.addSvgIcon('man', this.sanitizer.bypassSecurityTrustResourceUrl('assets/man.svg'));
+        this.iconRegistry.addSvgIcon('woman', this.sanitizer.bypassSecurityTrustResourceUrl('assets/woman.svg'));
 
         const bodyPartKeys = Object.keys(PedBodyPart);
         for (const bodyPart of bodyPartKeys.slice(bodyPartKeys.length / 2)) {
-            this.iconRegistry.addSvgIcon(bodyPart, this.sanitizer.bypassSecurityTrustResourceUrl("assets/body-parts/" + bodyPart + ".svg"));
+            this.iconRegistry.addSvgIcon(bodyPart, this.sanitizer.bypassSecurityTrustResourceUrl('assets/body-parts/' + bodyPart + '.svg'));
         }
 
         const weaponKeys = Object.keys(WeaponHash);
         for (const weapon of weaponKeys.slice(weaponKeys.length / 2)) {
-            this.iconRegistry.addSvgIcon(weapon, this.sanitizer.bypassSecurityTrustResourceUrl("assets/weapons/" + weapon + ".svg"));
+            this.iconRegistry.addSvgIcon(weapon, this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/' + weapon + '.svg'));
         }
-        this.iconRegistry.addSvgIcon("PistolColorless", this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/PistolColorless.svg'));
+        this.iconRegistry.addSvgIcon('PistolColorless', this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/PistolColorless.svg'));
 
-        this.iconRegistry.addSvgIcon("test1", this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/Carbinerifle.svg'));
-        this.iconRegistry.addSvgIcon("test2", this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/Assaultrifle.svg'));
+        this.iconRegistry.addSvgIcon('test1', this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/Carbinerifle.svg'));
+        this.iconRegistry.addSvgIcon('test2', this.sanitizer.bypassSecurityTrustResourceUrl('assets/weapons/Assaultrifle.svg'));
     }
 }

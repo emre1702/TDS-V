@@ -31,9 +31,6 @@ namespace TDS.Client.Handler.Browser
             Add(FromBrowserEvent.SendMapRating, OnBrowserSendMapRatingMethod);
             Add(ToClientEvent.LoadOwnMapRatings, OnLoadOwnMapRatingsMethod);
             Add(ToClientEvent.PlayCustomSound, OnPlayCustomSoundMethod);
-
-            OnPlayerStartTalking += EventHandler_PlayerStartTalking;
-            OnPlayerStopTalking += EventHandler_PlayerStopTalking;
         }
 
         public override void CreateBrowser()
@@ -93,29 +90,9 @@ namespace TDS.Client.Handler.Browser
             ExecuteStr($"startBombTickSound({msToDetonate}, {startAtMs})");
         }
 
-        public void StartPlayerTalking(string name)
-        {
-            ExecuteFast("e", name);
-        }
-
         public void StopBombTick()
         {
             ExecuteStr("stopBombTickSound()");
-        }
-
-        public void StopPlayerTalking(string name)
-        {
-            ExecuteFast("f", name);
-        }
-
-        private void EventHandler_PlayerStartTalking(Player player)
-        {
-            StartPlayerTalking(player.Name);
-        }
-
-        private void EventHandler_PlayerStopTalking(Player player)
-        {
-            StopPlayerTalking(player.Name);
         }
 
         private void EventsHandler_LobbyLeft(SyncedLobbySettings settings)

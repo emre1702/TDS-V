@@ -92,6 +92,7 @@ import { UserpanelSettingsScoreboardComponent } from './components/userpanel/use
 import { UserpanelSettingsVoiceComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-voice/userpanel-settings-voice.component';
 import { UserpanelSettingsThemeComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-theme/userpanel-settings-theme.component';
 import { UserpanelSettingsHudComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-hud/userpanel-settings-hud.component';
+import { VoiceInfoComponent } from './components/hud/voice-info/voice-info.component';
 
 @NgModule({
   declarations: [
@@ -172,7 +173,8 @@ import { UserpanelSettingsHudComponent } from './components/userpanel/userpanel-
     MainMenuComponent,
     DamageTestMenuComponent,
     KillMessagesComponent,
-    UserpanelSettingsHudComponent
+    UserpanelSettingsHudComponent,
+    VoiceInfoComponent
   ],
   imports: [
     ReactiveFormsModule,

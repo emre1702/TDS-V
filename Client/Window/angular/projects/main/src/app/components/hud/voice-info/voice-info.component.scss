@@ -1,0 +1,21 @@
+.container {
+    position: absolute;
+    top: 38vh;
+    width: auto;
+    max-height: 25vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+
+    div {
+        margin-left: 15px;
+        display: inline-flex;
+
+        span {
+            margin-left: 10px;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            font-size: 1.2em;
+        }
+    }
+}

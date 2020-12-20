@@ -6,6 +6,7 @@
         public const string AddKillMessage = "cb45";
         public const string AddNameForChat = "cb38";
         public const string AddPositionToMapCreatorBrowser = "cb3";
+        public const string AddUserTalking = "cb53";
         public const string CloseMapMenu = "cb4";
         public const string HideRankings = "cb5";
         public const string InitLoadAngular = "cb6";
@@ -19,6 +20,7 @@
         public const string RemoveNameForChat = "cb40";
         public const string RemovePositionInMapCreatorBrowser = "cb15";
         public const string RemoveTeamPositionsInMapCreatorBrowser = "cb2";
+        public const string RemoveUserTalking = "cb54";
         public const string ResetMapVoting = "cb16";
         public const string SetDamageTestMenuCurrentWeapon = "cb78";
         public const string ShowCooldown = "cb18";

@@ -1,4 +1,5 @@
-﻿using RAGE.Ui;
+﻿using RAGE.Elements;
+using RAGE.Ui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Models;
 using TDS.Shared.Data.Utility;
 using TDS.Shared.Default;
+using static RAGE.Events;
 
 namespace TDS.Client.Handler.Browser
 {
@@ -37,6 +39,9 @@ namespace TDS.Client.Handler.Browser
             RAGE.Events.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
             RAGE.Events.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
             RAGE.Events.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
+
+            OnPlayerStartTalking += EventHandler_PlayerStartTalking;
+            OnPlayerStopTalking += EventHandler_PlayerStopTalking;
 
             CreateBrowser();
         }
@@ -294,6 +299,20 @@ namespace TDS.Client.Handler.Browser
         {
             string pw = Convert.ToString(args[0]);
             GetHashedPasswordReturn(SharedUtils.HashPWClient(pw));
+        }
+
+        private void EventHandler_PlayerStartTalking(Player modPlayer)
+        {
+            if (!(modPlayer is ITDSPlayer player))
+                return;
+            ExecuteFast(ToBrowserEvent.AddUserTalking, player.RemoteId, player.Name);
+        }
+
+        private void EventHandler_PlayerStopTalking(Player modPlayer)
+        {
+            if (!(modPlayer is ITDSPlayer player))
+                return;
+            ExecuteFast(ToBrowserEvent.RemoveUserTalking, player.RemoteId);
         }
 
         private void OnToBrowserEventMethod(object[] args)

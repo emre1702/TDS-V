@@ -1,8 +1,6 @@
 <!-- If there is no *ngIf it's handled in the component itself -->
 <ng-container *ngIf="started">
     <app-shared-module></app-shared-module>
-
-    <app-chat></app-chat>
     <app-mapvoting></app-mapvoting>
     <app-invitation></app-invitation>
     <app-teamorders *ngIf="settings.InTeamOrderModus && settings.InFightLobby" [@teamOrdersAnimation]="teamOrdersLength"></app-teamorders>
@@ -12,10 +10,9 @@
     <app-team-choice *ngIf="showTeamChoice"></app-team-choice>
     <app-userpanel *ngIf="settings.UserpanelOpen"></app-userpanel>
     <app-ranking *ngIf="showRankings" [rankings]="rankings"></app-ranking>
-    <app-hud *ngIf="showHUD" [rankingShowing]="showRankings"></app-hud>
+    <app-hud [hudShowing]="showHud" [rankingShowing]="showRankings"></app-hud>
     <app-char-creator *ngIf="showCharCreator" [data]="charCreateData"></app-char-creator>
     <app-infos-handler></app-infos-handler>
     <app-gang-window *ngIf="showGangWindow"></app-gang-window>
     <app-damage-test-menu *ngIf="showDamageTestMenu" [initWeapon]="damageTestMenuInitWeapon"></app-damage-test-menu>
-    <app-kill-messages></app-kill-messages>
 </ng-container>

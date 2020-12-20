@@ -1,32 +1,40 @@
-<div id="hud-BonusV1" *ngIf="settings.Settings[20] == hudDesign.BonusV1" [style.display]="rankingShowing ? 'none' : 'flex'" cdkDrag>
-    <div class="hud mat-app-background" 
-    [style.background]="settings.Settings[21]?.length ? settings.Settings[21] : null" 
-    [style.color]="settings.Settings[23]?.length ? settings.Settings[23] : null">
-        <div class="stats">
-            <div class="row">
-                <img src="assets/hud/armor.png">
-                <div class="progress">
-                    <div class="progress-text armor" [style.width]="armorRectPercentage  + '%'">{{ armor }}%</div>
+<ng-container *ngIf="hudShowing">
+    <div id="hud-BonusV1" *ngIf="settings.Settings[20] == hudDesign.BonusV1" [style.display]="rankingShowing ? 'none' : 'flex'" cdkDrag>
+        <div
+            class="hud mat-app-background"
+            [style.background]="settings.Settings[21]?.length ? settings.Settings[21] : null"
+            [style.color]="settings.Settings[23]?.length ? settings.Settings[23] : null"
+        >
+            <div class="stats">
+                <div class="row">
+                    <img src="assets/hud/armor.png" />
+                    <div class="progress">
+                        <div class="progress-text armor" [style.width]="armorRectPercentage + '%'">{{ armor }}%</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <img src="assets/hud/hp.png" />
+                    <div class="progress">
+                        <div class="progress-text hp" [style.width]="hpRectPercentage + '%'">{{ hp }}%</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <img src="assets/hud/money.png" />
+                    <span>${{ money }}</span>
                 </div>
             </div>
-
-            <div class="row">
-                <img src="assets/hud/hp.png">
-                <div class="progress">
-                    <div class="progress-text hp" [style.width]="hpRectPercentage + '%'">{{ hp }}%</div>
-                </div>
-            </div>
-
-            <div class="row">
-                <img src="assets/hud/money.png">
-                <span>${{ money }}</span>
+            <div class="rest">
+                <div class="ammoInClip">{{ ammoInClip }}</div>
+                <div class="ammoTotal">{{ ammoTotal }}</div>
+                <div class="firingmode">{{ firingMode + 'FiringMode' | language: settings.Lang }}</div>
             </div>
         </div>
-        <div class="rest">
-            <div class="ammoInClip">{{ ammoInClip }}</div>
-            <div class="ammoTotal">{{ ammoTotal }}</div>
-            <div class="firingmode">{{ firingMode + 'FiringMode' | language: settings.Lang }}</div>
-        </div>
+        <app-round-stats [style.display]="showRoundStats ? 'initial' : 'none'"></app-round-stats>
     </div>
-    <app-round-stats [style.display]="showRoundStats ? 'initial' : 'none'"></app-round-stats>
-</div>
+</ng-container>
+
+<app-chat></app-chat>
+<app-kill-messages></app-kill-messages>
+<app-voice-info></app-voice-info>

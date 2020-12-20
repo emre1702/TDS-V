@@ -9,10 +9,9 @@ import { HudDesign } from './enums/hud-design.enum';
 @Component({
     selector: 'app-hud',
     templateUrl: './hud.component.html',
-    styleUrls: ['./hud.component.scss']
+    styleUrls: ['./hud.component.scss'],
 })
 export class HudComponent implements OnInit, OnDestroy {
-
     showRoundStats = true;
 
     hpRectPercentage = 0;
@@ -26,13 +25,10 @@ export class HudComponent implements OnInit, OnDestroy {
     firingMode = FiringMode[0];
     hudDesign = HudDesign;
 
+    @Input() hudShowing: boolean;
     @Input() rankingShowing: boolean;
 
-    constructor(
-        public settings: SettingsService,
-        private rageConnector: RageConnectorService,
-        private changeDetector: ChangeDetectorRef) {
-    }
+    constructor(public settings: SettingsService, private rageConnector: RageConnectorService, private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.rageConnector.listen(DFromClientEvent.ToggleRoundStats, this.toggleRoundStats.bind(this));
