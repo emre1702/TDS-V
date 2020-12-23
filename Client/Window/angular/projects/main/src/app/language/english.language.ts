@@ -867,6 +867,8 @@ You need to set the target for this mode.`;
     RequestNewPassword = 'Request new password';
     PasswordForgottenInfo = 'Request a new password to your email address.';
     PasswordsAreDifferentError = 'Both passwords are different.';
+    Login = 'Login';
+    Register = 'Register';
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = 'All without gangwar';

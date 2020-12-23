@@ -833,6 +833,8 @@ export interface Language {
     RequestNewPassword: string;
     PasswordForgottenInfo: string;
     PasswordsAreDifferentError: string;
+    Login: string;
+    Register: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

@@ -894,6 +894,8 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     RequestNewPassword = 'Neues Passwort beantragen';
     PasswordForgottenInfo = 'Beantrage ein neues Passwort an deine E-Mail Adresse.';
     PasswordsAreDifferentError = 'Beide Passwörter sind verschieden.';
+    Login = 'Einloggen';
+    Register = 'Registrieren';
 
     ////////////////////////////////////////
 
