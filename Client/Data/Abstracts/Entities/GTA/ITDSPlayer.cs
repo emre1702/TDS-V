@@ -15,6 +15,7 @@ namespace TDS.Client.Data.Abstracts.Entities.GTA
         }
 
         public WeaponHash CurrentWeapon => (WeaponHash)GetSelectedWeapon();
+        public abstract string DisplayName { get; }
 
         public ITDSPlayer(ushort id, ushort remoteId) : base(id, remoteId)
         {

@@ -16,16 +16,14 @@ namespace TDS.Client.Handler.Draw
     {
         private readonly CamerasHandler _camerasHandler;
         private readonly SettingsHandler _settingsHandler;
-        private readonly UtilsHandler _utilsHandler;
         private readonly PlayerFightHandler _playerFightHandler;
 
-        public NametagsHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler, UtilsHandler utilsHandler,
+        public NametagsHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, SettingsHandler settingsHandler,
             PlayerFightHandler playerFightHandler)
             : base(loggingHandler)
         {
             _camerasHandler = camerasHandler;
             _settingsHandler = settingsHandler;
-            _utilsHandler = utilsHandler;
             _playerFightHandler = playerFightHandler;
 
             Tick += Draw;
@@ -83,7 +81,7 @@ namespace TDS.Client.Handler.Draw
             string name = "Ped";
             var player = RAGE.Elements.Entities.Players.GetAtHandle(targetEntity) as ITDSPlayer;
             if (!(player is null))
-                name = _utilsHandler.GetDisplayName(player);
+                name = player.DisplayName;
 
             if (player is null)
                 Logging.LogWarning("GetAtHandle did not work. TargetEntity: " + targetEntity + " | Linq: " + (RAGE.Elements.Entities.Players.All.Any(p => p.Handle == targetEntity)), "NametagsHandler.DrawAtAim");
@@ -103,7 +101,7 @@ namespace TDS.Client.Handler.Draw
                 if (!RAGE.Game.Entity.HasEntityClearLosToEntity(RAGE.Elements.Player.LocalPlayer.Handle, nametag.Player.Handle, 17))
                     continue;
 
-                DrawNametag(nametag.Player.Handle, _utilsHandler.GetDisplayName(nametag.Player as ITDSPlayer), nametag.Distance);
+                DrawNametag(nametag.Player.Handle, (nametag.Player as ITDSPlayer).DisplayName, nametag.Distance);
             }
         }
 

@@ -30,21 +30,23 @@ namespace TDS.Client.Core.Init
                 loggingHandler.LogInfo("Initializing services ...", "Services.Initialize");
                 var timerHandler = new TimerHandler(loggingHandler);
 
-                new PlayerFactory();
+                var remoteEventsSender = new RemoteEventsSender(loggingHandler, timerHandler);
+                var eventsHandler = new EventsHandler(loggingHandler, remoteEventsSender);
+                var browserHandler = new BrowserHandler(loggingHandler, eventsHandler, remoteEventsSender);
+                var dataSyncHandler = new DataSyncHandler(loggingHandler, eventsHandler, browserHandler);
+                CreateFactories(dataSyncHandler);
 
                 var dxHandler = new DxHandler(loggingHandler);
-                var remoteEventsSender = new RemoteEventsSender(loggingHandler, timerHandler);
 
-                var eventsHandler = new EventsHandler(loggingHandler, remoteEventsSender);
                 var bindsHandler = new BindsHandler(loggingHandler);
                 var discordHandler = new DiscordHandler(loggingHandler, eventsHandler);
 
-                var browserHandler = new BrowserHandler(loggingHandler, eventsHandler, remoteEventsSender);
+               
                 var settingsHandler = new SettingsHandler(loggingHandler, remoteEventsSender, eventsHandler, browserHandler);
                 var cursorHandler = new CursorHandler(loggingHandler, eventsHandler, bindsHandler, settingsHandler);
                 new FreeroamHandler(loggingHandler, eventsHandler, browserHandler);
 
-                var dataSyncHandler = new DataSyncHandler(loggingHandler, eventsHandler, browserHandler);
+                
                 var utilsHandler = new UtilsHandler(loggingHandler, dataSyncHandler, eventsHandler, settingsHandler);
                 new GangHousesHandler(loggingHandler, eventsHandler, settingsHandler);
                 new GangVehiclesHandler(loggingHandler, dataSyncHandler, eventsHandler);
@@ -85,7 +87,7 @@ namespace TDS.Client.Core.Init
                 var workaroundsHandler = new WorkaroundsHandler(loggingHandler, utilsHandler);
                 new AFKCheckHandler(loggingHandler, eventsHandler, settingsHandler, remoteEventsSender, playerFightHandler, timerHandler, dxHandler);
 
-                var nametagsHandler = new NametagsHandler(loggingHandler, camerasHandler, settingsHandler, utilsHandler, playerFightHandler);
+                var nametagsHandler = new NametagsHandler(loggingHandler, camerasHandler, settingsHandler, playerFightHandler);
 
                 new RankingHandler(loggingHandler, camerasHandler, utilsHandler, settingsHandler, cursorHandler, browserHandler, nametagsHandler, deathHandler, eventsHandler, timerHandler);
                 new MapCreatorHandler(loggingHandler, bindsHandler, instructionalButtonHandler, settingsHandler, utilsHandler, camerasHandler, cursorHandler,
@@ -100,6 +102,22 @@ namespace TDS.Client.Core.Init
             {
                 loggingHandler.LogError(ex);
             }
+        }
+
+        private static void CreateFactories(DataSyncHandler dataSyncHandler)
+        {
+            new BlipFactory();
+            new CameraFactory();
+            new CheckpointFactory();
+            new ColshapeFactory();
+            new DummyEntityFactory();
+            new MarkerFactory();
+            new ObjectFactory();
+            new PedFactory();
+            new PickupFactory();
+            new PlayerFactory(dataSyncHandler);
+            new TextLabelFactory();
+            new VehicleFactory();
         }
     }
 }

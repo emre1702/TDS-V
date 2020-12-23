@@ -2,13 +2,10 @@
 using System;
 using System.Collections.Generic;
 using TDS.Client.Data.Abstracts.Entities.GTA;
-using TDS.Client.Data.Models;
 using TDS.Client.Handler.Browser;
 using TDS.Client.Handler.Deathmatch;
 using TDS.Client.Handler.Draw;
 using TDS.Client.Handler.Events;
-using TDS.Shared.Data.Models;
-using TDS.Shared.Data.Models.GTA;
 using TDS.Shared.Default;
 using static RAGE.Events;
 
@@ -101,11 +98,11 @@ namespace TDS.Client.Handler
             //StartParticleFx("scr_xs_beer_chug", -426.17f, 1121.18f, 325f, 2f);
 
             if (!(_winner is null) && _winner.Exists)
-                _nametagsHandler.DrawNametag(_winner.Handle, "1. " + _utilsHandler.GetDisplayName(_winner), 7f);
+                _nametagsHandler.DrawNametag(_winner.Handle, "1. " + _winner.DisplayName, 7f);
             if (!(_second is null) && _second.Exists)
-                _nametagsHandler.DrawNametag(_second.Handle, "2. " + _utilsHandler.GetDisplayName(_second), 7f);
+                _nametagsHandler.DrawNametag(_second.Handle, "2. " + _second.DisplayName, 7f);
             if (!(_third is null) && _third.Exists)
-                _nametagsHandler.DrawNametag(_third.Handle, "3. " + _utilsHandler.GetDisplayName(_third), 7f);
+                _nametagsHandler.DrawNametag(_third.Handle, "3. " + _third.DisplayName, 7f);
 
             //StartParticleFx("scr_xs_champagne_spray", -425.48f, 1123.55f, 325.85f, 1f);
             //StartParticleFx("scr_xs_beer_chug", 427.03f, 1123.21f, 325.85f, 1f);

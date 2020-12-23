@@ -170,15 +170,6 @@ namespace TDS.Client.Handler
             return new Vector3 { X = -MathF.Sin(num) * num3, Y = MathF.Cos(num) * num3, Z = MathF.Sin(num2) };
         }
 
-        public string GetDisplayName(ITDSPlayer player)
-        {
-            string name = player.Name;
-            int adminLevel = Convert.ToInt32(_dataSyncHandler.GetData(player, PlayerDataKey.AdminLevel));
-            if (adminLevel > SharedConstants.ServerTeamSuffixMinAdminLevel)
-                name = SharedConstants.ServerTeamSuffix + name;
-            return name;
-        }
-
         public float GetDotProduct(Vector3 v1, Vector3 v2)
         {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
