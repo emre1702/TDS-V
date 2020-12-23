@@ -18,19 +18,28 @@ import { MapCreatorPosition } from './models/mapCreatorPosition';
 import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
 import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
-import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../services/error.service';
+import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../modules/shared/services/error.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { NotificationService } from '../../modules/shared/services/notification.service';
 
 enum MapCreatorNav {
-    Main, MapSettings, Description, TeamSpawns, MapLimit, MapCenter, Objects, Vehicles, BombPlaces, Target
+    Main,
+    MapSettings,
+    Description,
+    TeamSpawns,
+    MapLimit,
+    MapCenter,
+    Objects,
+    Vehicles,
+    BombPlaces,
+    Target,
 }
 
 @Component({
     selector: 'app-map-creator',
     templateUrl: './map-creator.component.html',
-    styleUrls: ['./map-creator.component.scss']
+    styleUrls: ['./map-creator.component.scss'],
 })
 export class MapCreatorComponent implements OnInit, OnDestroy {
     data = new MapCreateDataDto();
@@ -42,34 +51,32 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     selectedPosition: MapCreatorPosition;
 
     editingDescriptionLang: string;
-    currentTitle = "MapCreator";
+    currentTitle = 'MapCreator';
     possibleMaps: string[];
     sendErrorService: ErrorService;
     saveErrorService: ErrorService;
 
-    displayedColumns: string[] = ["id", "x", "y", "z", "rot"];
-    displayedColumns2D: string[] = ["id", "x", "y"];
-    displayedColumnsObject: string[] = ["id", "name", "x", "y", "z", "rotX", "rotY", "rotZ"];
-    displayedColumnsVehicle: string[] = ["id", "name", "x", "y", "z", "rotX", "rotY", "rotZ"];
+    displayedColumns: string[] = ['id', 'x', 'y', 'z', 'rot'];
+    displayedColumns2D: string[] = ['id', 'x', 'y'];
+    displayedColumnsObject: string[] = ['id', 'name', 'x', 'y', 'z', 'rotX', 'rotY', 'rotZ'];
+    displayedColumnsVehicle: string[] = ['id', 'name', 'x', 'y', 'z', 'rotX', 'rotY', 'rotZ'];
 
-    nameControl = new FormControl("", [
+    nameControl = new FormControl('', [
         Validators.required,
         Validators.minLength(Constants.MIN_MAP_CREATE_NAME_LENGTH),
-        Validators.maxLength(Constants.MAX_MAP_CREATE_NAME_LENGTH)
+        Validators.maxLength(Constants.MAX_MAP_CREATE_NAME_LENGTH),
     ]);
-    mapTypeControl = new FormControl(MapType.Normal, [
-        Validators.required
-    ]);
+    mapTypeControl = new FormControl(MapType.Normal, [Validators.required]);
 
-    @ViewChild("descriptionTextArea") descriptionTextArea: ElementRef;
+    @ViewChild('descriptionTextArea') descriptionTextArea: ElementRef;
 
     constructor(
         public settings: SettingsService,
         private rageConnector: RageConnectorService,
         private changeDetector: ChangeDetectorRef,
         public dialog: MatDialog,
-        private notificationService: NotificationService) {
-
+        private notificationService: NotificationService
+    ) {
         this.addValidationsForSend();
         this.addValidationsForSave();
     }
@@ -102,8 +109,18 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
-    private addPositionToMapCreatorBrowser(id: number, type: MapCreatorPositionType, posX: number, posY: number, posZ: number,
-        rotX: number, rotY: number, rotZ: number, ownerRemoteId: number, info?: string | number) {
+    private addPositionToMapCreatorBrowser(
+        id: number,
+        type: MapCreatorPositionType,
+        posX: number,
+        posY: number,
+        posZ: number,
+        rotX: number,
+        rotY: number,
+        rotZ: number,
+        ownerRemoteId: number,
+        info?: string | number
+    ) {
         const pos = new MapCreatorPosition(id, type, posX, posY, posZ, rotX, rotY, rotZ, ownerRemoteId);
         switch (type) {
             case MapCreatorPositionType.TeamSpawn:
@@ -138,7 +155,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         switch (type) {
             case MapCreatorPositionType.TeamSpawn:
                 for (let i = 0; i < this.data[6].length; ++i) {
-                    const teamSpawnPos = this.data[6][i].find(p => p[0] === id);
+                    const teamSpawnPos = this.data[6][i].find((p) => p[0] === id);
                     if (teamSpawnPos) {
                         const prevEditingTeam = this.editingTeamNumber;
                         this.editingTeamNumber = i;
@@ -153,21 +170,21 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 this.data[9] = undefined;
                 break;
             case MapCreatorPositionType.BombPlantPlace:
-                const bombPos = this.data[8].find(p => p[0] === id);
+                const bombPos = this.data[8].find((p) => p[0] === id);
                 if (bombPos) {
                     this.selectedPosition = bombPos;
                     this.removePosFromBombPlaces();
                 }
                 break;
             case MapCreatorPositionType.MapLimit:
-                const mapLimitPos = this.data[7].find(p => p[0] === id);
+                const mapLimitPos = this.data[7].find((p) => p[0] === id);
                 if (mapLimitPos) {
                     this.selectedPosition = mapLimitPos;
                     this.removePosFromMapLimits();
                 }
                 break;
             case MapCreatorPositionType.Object:
-                const objectPos = this.data[5].find(p => p[0] === id);
+                const objectPos = this.data[5].find((p) => p[0] === id);
                 if (objectPos) {
                     this.selectedPosition = objectPos;
                     this.removePosFromObjects();
@@ -177,7 +194,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 this.data[10] = undefined;
                 break;
             case MapCreatorPositionType.Vehicle:
-                const vehiclePos = this.data[11].find(p => p[0] === id);
+                const vehiclePos = this.data[11].find((p) => p[0] === id);
                 if (vehiclePos) {
                     this.selectedPosition = vehiclePos;
                     this.removePosFromVehicles();
@@ -234,8 +251,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     startNewPosPlacing(type: MapCreatorPositionType) {
-        if (isNaN(Number(this.editingTeamNumber)))
-            return;
+        if (isNaN(Number(this.editingTeamNumber))) return;
         this.rageConnector.call(DToClientEvent.StartMapCreatorPosPlacing, type, Number(this.editingTeamNumber));
     }
 
@@ -260,47 +276,42 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     addPosToTeamSpawns(pos: MapCreatorPosition) {
-        if (!this.data[6][pos[2]])
-            this.data[6][pos[2]] = [];
+        if (!this.data[6][pos[2]]) this.data[6][pos[2]] = [];
         if (!this.updatePosIfExists(this.data[6][pos[2]], pos)) {
             this.data[6][pos[2]] = [...this.data[6][pos[2]], pos];
         }
     }
 
     addPosToMapLimits(pos: MapCreatorPosition) {
-        if (!this.data[7])
-            this.data[7] = [];
+        if (!this.data[7]) this.data[7] = [];
         if (!this.updatePosIfExists(this.data[7], pos)) {
             this.data[7] = [...this.data[7], pos];
         }
     }
 
     addPosToObjects(pos: MapCreatorPosition) {
-        if (!this.data[5])
-            this.data[5] = [];
+        if (!this.data[5]) this.data[5] = [];
         if (!this.updatePosIfExists(this.data[5], pos)) {
             this.data[5] = [...this.data[5], pos];
         }
     }
 
     addPosToBombPlaces(pos: MapCreatorPosition) {
-        if (!this.data[8])
-            this.data[8] = [];
+        if (!this.data[8]) this.data[8] = [];
         if (!this.updatePosIfExists(this.data[8], pos)) {
             this.data[8] = [...this.data[8], pos];
         }
     }
 
     addPosToVehicles(pos: MapCreatorPosition) {
-        if (!this.data[11])
-            this.data[11] = [];
+        if (!this.data[11]) this.data[11] = [];
         if (!this.updatePosIfExists(this.data[11], pos)) {
             this.data[11] = [...this.data[11], pos];
         }
     }
 
     private updatePosIfExists(arr: MapCreatorPosition[], pos: MapCreatorPosition): boolean {
-        const entries = arr.filter(position => position[0] === pos[0]);
+        const entries = arr.filter((position) => position[0] === pos[0]);
         if (entries.length <= 0) {
             return false;
         }
@@ -382,7 +393,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     removeTheMap() {
-        this.dialog.open(AreYouSureDialog, { panelClass: "mat-app-background" })
+        this.dialog
+            .open(AreYouSureDialog, { panelClass: 'mat-app-background' })
             .afterClosed()
             .subscribe((bool: boolean) => {
                 const map = this.data;
@@ -397,11 +409,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     startNew() {
-        this.dialog.open(AreYouSureDialog, { panelClass: "mat-app-background" })
+        this.dialog
+            .open(AreYouSureDialog, { panelClass: 'mat-app-background' })
             .afterClosed()
             .subscribe((bool: boolean) => {
-                if (!bool)
-                    return;
+                if (!bool) return;
                 this.data = new MapCreateDataDto();
                 this.nameControl.setValue(this.data[1]);
                 this.mapTypeControl.setValue(this.data[2]);
@@ -421,11 +433,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     loadPossibleMaps() {
         this.rageConnector.callCallbackServer(DToServerEvent.LoadMapNamesToLoadForMapCreator, null, (possibleMapsJson: string) => {
             const possibleMaps = JSON.parse(possibleMapsJson) as LoadMapDialogGroupDto[];
-            const dialogRef = this.dialog.open(LoadMapDialog, { data: possibleMaps, panelClass: "mat-app-background" });
+            const dialogRef = this.dialog.open(LoadMapDialog, { data: possibleMaps, panelClass: 'mat-app-background' });
 
             dialogRef.beforeClosed().subscribe((loadMapId?: number) => {
-                if (loadMapId === undefined)
-                    return;
+                if (loadMapId === undefined) return;
 
                 this.rageConnector.callServer(DToServerEvent.LoadMapForMapCreator, loadMapId);
             });
@@ -450,40 +461,28 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     private fixData() {
         this.data[1] = this.nameControl.value;
-        if (!this.data[1])
-            this.data[1] = "";
+        if (!this.data[1]) this.data[1] = '';
 
         this.data[2] = this.mapTypeControl.value;
-        if (!this.data[2])
-            this.data[2] = 0;
+        if (!this.data[2]) this.data[2] = 0;
 
-        if (!this.data[3])
-            this.data[3] = new MapCreateSettings();
-        if (this.data[3][0] == undefined)
-            this.data[3][0] = 0;
+        if (!this.data[3]) this.data[3] = new MapCreateSettings();
+        if (this.data[3][0] == undefined) this.data[3][0] = 0;
         this.data[3][0] = Math.max(0, Math.min(999, Math.floor(this.data[3][0])));
-        if (this.data[3][1] == undefined)
-            this.data[3][1] = 999;
+        if (this.data[3][1] == undefined) this.data[3][1] = 999;
         this.data[3][1] = Math.max(0, Math.min(999, Math.floor(this.data[3][1])));
 
-        if (!this.data[4])
-            this.data[4] = { [LanguageEnum.German]: "", [LanguageEnum.English]: "" };
-        if (!this.data[4][LanguageEnum.German])
-            this.data[4][LanguageEnum.German] = "";
-        if (!this.data[4][LanguageEnum.English])
-            this.data[4][LanguageEnum.English] = "";
+        if (!this.data[4]) this.data[4] = { [LanguageEnum.German]: '', [LanguageEnum.English]: '' };
+        if (!this.data[4][LanguageEnum.German]) this.data[4][LanguageEnum.German] = '';
+        if (!this.data[4][LanguageEnum.English]) this.data[4][LanguageEnum.English] = '';
 
-        if (!this.data[5])
-            this.data[5] = [];
+        if (!this.data[5]) this.data[5] = [];
 
-        if (!this.data[6])
-            this.data[6] = [[]];
+        if (!this.data[6]) this.data[6] = [[]];
 
-        if (!this.data[7])
-            this.data[7] = [];
+        if (!this.data[7]) this.data[7] = [];
 
-        if (!this.data[8])
-            this.data[8] = [];
+        if (!this.data[8]) this.data[8] = [];
     }
 
     getLanguages(): string[] {
@@ -521,32 +520,33 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     onEditingTeamNumberChange(event: MatSelectChange) {
-        console.log("onEditingTeamNumberChange: " + event.value + " | Lobby-owner: " + this.settings.IsLobbyOwner
-            + " | data[6].length: " + this.data[6].length );
-        if (event.value == "+" && (this.data[6].length == 0 || this.data[6][this.data[6].length - 1].length) && this.settings.IsLobbyOwner) {
-            console.log("onEditingTeamNumberChange 1.1 | this.data[6][lastTeam].length: "
-                + (this.data[6].length > 0 ? this.data[6][this.data[6].length - 1] : "no team"));
+        console.log(
+            'onEditingTeamNumberChange: ' + event.value + ' | Lobby-owner: ' + this.settings.IsLobbyOwner + ' | data[6].length: ' + this.data[6].length
+        );
+        if (event.value == '+' && (this.data[6].length == 0 || this.data[6][this.data[6].length - 1].length) && this.settings.IsLobbyOwner) {
+            console.log(
+                'onEditingTeamNumberChange 1.1 | this.data[6][lastTeam].length: ' +
+                    (this.data[6].length > 0 ? this.data[6][this.data[6].length - 1] : 'no team')
+            );
             this.data[6] = [...this.data[6], []];
-            console.log("onEditingTeamNumberChange 1.2 | this.data[6].length: " + this.data[6].length);
+            console.log('onEditingTeamNumberChange 1.2 | this.data[6].length: ' + this.data[6].length);
             this.editingTeamNumber = this.data[6].length - 1;
-            console.log("onEditingTeamNumberChange 1.3 | editingTeamNumber: " + this.editingTeamNumber);
-        } else if (event.value == "+") {
-            console.log("onEditingTeamNumberChange 2.1");
+            console.log('onEditingTeamNumberChange 1.3 | editingTeamNumber: ' + this.editingTeamNumber);
+        } else if (event.value == '+') {
+            console.log('onEditingTeamNumberChange 2.1');
             this.editingTeamNumber = this.data[6].length - 1;
-            console.log("onEditingTeamNumberChange 2.2 | editingTeamNumber: " + this.editingTeamNumber);
+            console.log('onEditingTeamNumberChange 2.2 | editingTeamNumber: ' + this.editingTeamNumber);
         } else {
-            console.log("onEditingTeamNumberChange 3.1");
+            console.log('onEditingTeamNumberChange 3.1');
             this.editingTeamNumber = event.value;
-            console.log("onEditingTeamNumberChange 3.2 | editingTeamNumber: " + this.editingTeamNumber);
+            console.log('onEditingTeamNumberChange 3.2 | editingTeamNumber: ' + this.editingTeamNumber);
         }
         this.changeDetector.detectChanges();
     }
 
     onSelectedPositionChanged(row: MapCreatorPosition) {
-        if (this.selectedPosition == row)
-            this.selectedPosition = undefined;
-        else
-            this.selectedPosition = row;
+        if (this.selectedPosition == row) this.selectedPosition = undefined;
+        else this.selectedPosition = row;
         this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.selectedPosition ? this.selectedPosition[0] : -1);
         this.changeDetector.detectChanges();
     }
@@ -619,8 +619,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.currentNav = MapCreatorNav.MapCenter;
         this.changeDetector.detectChanges();
 
-        if (this.data[9])
-            this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data[9][0]);
+        if (this.data[9]) this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data[9][0]);
     }
 
     switchToBombPlacesEdit() {
@@ -635,8 +634,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.currentNav = MapCreatorNav.Target;
         this.changeDetector.detectChanges();
 
-        if (this.data[10])
-            this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data[10][0]);
+        if (this.data[10]) this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data[10][0]);
     }
 
     saveNav() {
@@ -675,67 +673,41 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 this.rageConnector.call(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.DescriptionGerman, this.data[4][langId]);
                 break;
         }
-
     }
 
     addValidationsForSend() {
         this.sendErrorService = new ErrorService(this.settings);
 
         // Add custom checks
-        const notLobbyOwnerCheck = new CustomErrorCheck(
-            "NotLobbyOwnerCheck",
-            () => this.settings.IsLobbyOwner,
-            "ErrorNotLobbyOwner"
-        );
+        const notLobbyOwnerCheck = new CustomErrorCheck('NotLobbyOwnerCheck', () => this.settings.IsLobbyOwner, 'ErrorNotLobbyOwner');
         this.sendErrorService.add(notLobbyOwnerCheck);
 
-        const mapLimitCheck = new CustomErrorCheck(
-            "MapLimitCheck",
-            this.isMapLimitValid.bind(this),
-            "ErrorMapLimitMapCreator"
-        );
+        const mapLimitCheck = new CustomErrorCheck('MapLimitCheck', this.isMapLimitValid.bind(this), 'ErrorMapLimitMapCreator');
         this.sendErrorService.add(mapLimitCheck);
 
-        const teamSpawnsCheck = new CustomErrorCheck(
-            "TeamSpawnsCheck",
-            this.isTeamSpawnsValid.bind(this),
-            "ErrorTeamSpawnsMapCreator"
-        );
+        const teamSpawnsCheck = new CustomErrorCheck('TeamSpawnsCheck', this.isTeamSpawnsValid.bind(this), 'ErrorTeamSpawnsMapCreator');
         this.sendErrorService.add(teamSpawnsCheck);
 
-        const bombPlacesCheck = new CustomErrorCheck(
-            "BombPlacesCheck",
-            this.isBombPlacesValid.bind(this),
-            "ErrorBombPlacesMapCreator"
-        );
+        const bombPlacesCheck = new CustomErrorCheck('BombPlacesCheck', this.isBombPlacesValid.bind(this), 'ErrorBombPlacesMapCreator');
         this.sendErrorService.add(bombPlacesCheck);
 
-        const targetCheck = new CustomErrorCheck(
-            "TargetCheck",
-            this.isTargetValid.bind(this),
-            "ErrorTargetMapCreator"
-        );
+        const targetCheck = new CustomErrorCheck('TargetCheck', this.isTargetValid.bind(this), 'ErrorTargetMapCreator');
         this.sendErrorService.add(targetCheck);
 
         // Add form controls
-        this.sendErrorService.add(new FormControlCheck("NameCheck", this.nameControl));
+        this.sendErrorService.add(new FormControlCheck('NameCheck', this.nameControl));
     }
 
     addValidationsForSave() {
         this.saveErrorService = new ErrorService(this.settings);
 
         // Add custom checks
-        const notLobbyOwnerCheck = new CustomErrorCheck(
-            "NotLobbyOwnerCheck",
-            () => this.settings.IsLobbyOwner,
-            "ErrorNotLobbyOwner"
-        );
+        const notLobbyOwnerCheck = new CustomErrorCheck('NotLobbyOwnerCheck', () => this.settings.IsLobbyOwner, 'ErrorNotLobbyOwner');
         this.sendErrorService.add(notLobbyOwnerCheck);
 
         // Add form controls
-        this.sendErrorService.add(new FormControlCheck("NameCheck", this.nameControl));
+        this.sendErrorService.add(new FormControlCheck('NameCheck', this.nameControl));
     }
-
 
     isSaveableNav() {
         return this.currentNav != MapCreatorNav.Main;
@@ -747,13 +719,11 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     isTeamSpawnsValid(): boolean {
         // Check enough teams
-        if (this.data[6].length < Constants.MIN_TEAMS_PER_TYPE[this.mapTypeControl.value])
-            return false;
+        if (this.data[6].length < Constants.MIN_TEAMS_PER_TYPE[this.mapTypeControl.value]) return false;
 
         // Check enough spawns per team
         for (const spawnArr of this.data[6]) {
-            if (spawnArr.length < Constants.MIN_TEAM_SPAWNS)
-                return false;
+            if (spawnArr.length < Constants.MIN_TEAM_SPAWNS) return false;
         }
         return true;
     }

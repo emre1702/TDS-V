@@ -15,7 +15,6 @@ namespace TDS.Client.Handler.Browser
             : base(loggingHandler)
         {
             Angular = new AngularBrowserHandler(loggingHandler, eventsHandler);
-            RegisterLogin = new RegisterLoginBrowserHandler(loggingHandler);
             MapCreatorObjectChoice = new MapCreatorObjectChoiceBrowserHandler(loggingHandler);
             MapCreatorVehicleChoice = new MapCreatorVehicleChoiceBrowserHandler(loggingHandler);
             PlainMain = new PlainMainBrowserHandler(loggingHandler, remoteEventsSender, eventsHandler);
@@ -35,14 +34,11 @@ namespace TDS.Client.Handler.Browser
         public MapCreatorObjectChoiceBrowserHandler MapCreatorObjectChoice { get; }
         public MapCreatorVehicleChoiceBrowserHandler MapCreatorVehicleChoice { get; }
         public PlainMainBrowserHandler PlainMain { get; }
-        public RegisterLoginBrowserHandler RegisterLogin { get; }
 
         private void EventsHandler_LanguageChanged(ILanguage lang, bool beforeLogin)
         {
             if (!(Angular.Browser is null))
                 Angular.LoadLanguage(lang);
-            if (!(RegisterLogin.Browser is null))
-                RegisterLogin.SyncLanguage(lang);
         }
 
         private void SendAlert(object[] args)
@@ -61,14 +57,6 @@ namespace TDS.Client.Handler.Browser
                 oneNotCreated = true;
             }
 
-            if (!(RegisterLogin.Browser is null) && !RegisterLogin.CreatedSuccessfully)
-            {
-                RegisterLogin.Browser.Destroy();
-                RegisterLogin.CreateBrowser();
-                RegisterLogin.SetLoginPanelData();
-                oneNotCreated = true;
-            }
-
             if (!(PlainMain.Browser is null) && !PlainMain.CreatedSuccessfully)
             {
                 PlainMain.Browser.Destroy();
@@ -76,7 +64,7 @@ namespace TDS.Client.Handler.Browser
                 oneNotCreated = true;
             }
 
-            if (!oneNotCreated && Angular.HasBeenCreatedOnce && RegisterLogin.HasBeenCreatedOnce && PlainMain.HasBeenCreatedOnce)
+            if (!oneNotCreated && Angular.HasBeenCreatedOnce && PlainMain.HasBeenCreatedOnce)
             {
                 _browserCreatedCheckTimer?.Kill();
                 _browserCreatedCheckTimer = null;
@@ -94,11 +82,6 @@ namespace TDS.Client.Handler.Browser
                     Angular.Browser.MarkAsChat();
                     RAGE.Chat.Show(true);
                     Angular.ProcessExecuteList();
-                    break;
-
-                case "RegisterLogin":
-                    RegisterLogin.CreatedSuccessfully = true;
-                    RegisterLogin.ProcessExecuteList();
                     break;
 
                 case "PlainMain":

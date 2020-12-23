@@ -20,39 +20,44 @@ import { TimeSpanUnitsOfTime } from './components/userpanel/enums/timespan-units
 import { ChallengeGroup } from './components/lobbychoice/models/challenge-group';
 import { ChallengeFrequency } from './components/lobbychoice/enums/challenge-frequency.enum';
 import { ChallengeType } from './components/lobbychoice/enums/challenge-type.enum';
-import { environment } from '../environments/environment';
 import { UserpanelSettingCommandDataDto } from './components/userpanel/interfaces/settings-commands/userpanelSettingCommandDataDto';
 import { UserpanelSettingsHud } from './components/userpanel/userpanel-settings-normal/interfaces/userpanel-settings-hud';
 import { HudDesign } from './components/hud/enums/hud-design.enum';
 import { SyncedSettings } from './interfaces/synced-settings';
 import { VoiceInfo } from './components/hud/voice-info/models/voice-info';
+import { RegisterLoginInitData } from './modules/register-login/models/register-login-init-data';
+import { Announcement } from './components/lobbychoice/main-menu/models/announcement';
+import { ChangelogsGroup } from './interfaces/changelogs/changelogs-group';
+
+declare const mp: {};
 
 export class InitialDatas {
     private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
         sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
 
-    static readonly inDebug = !environment.production;
+    static readonly inDebug = !mp;
 
     static readonly started = InitialDatas.inDebug;
 
     static readonly opened = {
         mapCreator: InitialDatas.inDebug && false,
         freeroam: InitialDatas.inDebug && false,
-        lobbyChoice: InitialDatas.inDebug && false,
+        lobbyChoice: !InitialDatas.inDebug || true,
         teamChoice: InitialDatas.inDebug && false,
         rankings: InitialDatas.inDebug && false,
-        hud: InitialDatas.inDebug && true,
+        hud: InitialDatas.inDebug && false,
         charCreator: InitialDatas.inDebug && false,
         gangWindow: InitialDatas.inDebug && false,
         damageTestMenu: InitialDatas.inDebug && false,
         userpanel: InitialDatas.inDebug && false,
+        registerLogin: InitialDatas.inDebug && true,
     };
 
     static readonly adminLevel = 0;
     static readonly isMapVotingActive = false;
     static readonly language: LanguageEnum = LanguageEnum.English;
 
-    static settingsByType: { [key: number]: {} } = {
+    static readonly settingsByType: { [key: number]: {} } = {
         [UserpanelSettingsNormalType.Chat]: { 0: 30, 1: 35, 2: 1.4, 3: false, 4: true, 5: false, 6: 1, 7: 15000 } as UserpanelSettingsChat,
         [UserpanelSettingsNormalType.CooldownsAndDurations]: { 0: 150, 1: 100, 2: 100, 3: 25, 4: 10, 5: 1000 } as UserpanelSettingsCooldownsAndDurations,
         [UserpanelSettingsNormalType.FightEffect]: { 0: true, 1: true, 2: true } as UserpanelSettingsFightEffect,
@@ -91,6 +96,11 @@ export class InitialDatas {
             6: 1,
         } as UserpanelSettingsTheme,
         [UserpanelSettingsNormalType.Voice]: { 0: false, 1: false, 2: 6 } as UserpanelSettingsVoice,
+    };
+
+    static readonly registerLoginInitData: RegisterLoginInitData = {
+        0: false,
+        1: 'Emre',
     };
 
     private static readonly testMapsInVoting: MapVoteDto[] = [
@@ -154,17 +164,8 @@ export class InitialDatas {
         3: 60,
         4: 12,
         5: 23,
-        6: [[1, 'asd']],
         7: 'Bonus',
         8: 'Bonus',
-        9: [
-            { 0: new Date(), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
-            { 0: new Date(Date.parse('2000-1-4')), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
-            { 0: new Date(Date.parse('2000-1-3')), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
-            { 0: new Date(Date.parse('2000-1-2')), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
-            { 0: new Date(Date.parse('2000-1-1')), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
-            { 0: new Date(Date.parse('1995-2-17')), 1: ['[NEW] ASD ASD ASD', '[BUG] ' + InitialDatas.longText, '[CHANGE] ASDAsdi joidsajofsa'] },
-        ],
     };
 
     private static readonly challengeGroups: ChallengeGroup[] = [
@@ -250,6 +251,17 @@ export class InitialDatas {
         { RemoteId: 16, Name: 'Emre asdf sadfasdfsa' },
         { RemoteId: 17, Name: 'Emresaiodjfoisadfoiasdaf' },
         { RemoteId: 18, Name: 'Bonus' },*/
+    ];
+
+    static readonly announcements: Announcement[] = [[1, 'asd']];
+
+    static readonly changelogs: ChangelogsGroup[] = [
+        { 0: new Date(), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
+        { 0: new Date(Date.parse('2000-1-4')), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
+        { 0: new Date(Date.parse('2000-1-3')), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
+        { 0: new Date(Date.parse('2000-1-2')), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
+        { 0: new Date(Date.parse('2000-1-1')), 1: ['[NEW] Test 123 123', '[BUG] ' + InitialDatas.longText] },
+        { 0: new Date(Date.parse('1995-2-17')), 1: ['[NEW] ASD ASD ASD', '[BUG] ' + InitialDatas.longText, '[CHANGE] ASDAsdi joidsajofsa'] },
     ];
 
     static getAdminLevel(): number {

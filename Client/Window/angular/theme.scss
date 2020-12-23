@@ -111,7 +111,6 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
 @include init-material-css-vars();
 
-
 /*@include angular-material-theme($cdark-theme);
 
 .light-theme {
@@ -217,7 +216,7 @@ app-root {
 }*/
 
 * {
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 *:not([placeholder]) {
@@ -264,7 +263,8 @@ button:not([disabled]):hover {
     color: white !important;
 }
 
-.revert-button, .delete-button {
+.revert-button,
+.delete-button {
     background: darkred !important;
     color: white !important;
 }

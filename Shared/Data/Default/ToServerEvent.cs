@@ -36,12 +36,15 @@
         public const string LeftSupportRequest = "c21";
         public const string LeftSupportRequestsList = "c22";
         public const string LoadAllMapsForCustomLobby = "c65";
+        public const string LoadAnnouncements = "c83";
         public const string LoadApplicationDataForAdmin = "c24";
+        public const string LoadChangelogs = "c84";
         public const string LoadDatasForCustomLobby = "c66";
         public const string LoadGangWindowData = "c75";
         public const string LoadMapForMapCreator = "c25";
         public const string LoadMapNamesToLoadForMapCreator = "c26";
         public const string LoadPlayerWeaponStats = "c72";
+        public const string LoadRegisterLoginInitData = "c82";
         public const string LoadUserpanelData = "c27";
         public const string LoadUserpanelNormalSettingsData = "c80";
         public const string LobbyChatMessage = "c23";

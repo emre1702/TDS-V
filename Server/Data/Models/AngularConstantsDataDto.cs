@@ -24,16 +24,10 @@ namespace TDS.Server.Data.Models
         [JsonProperty("5")]
         public float MapBuyCounterMultiplicator { get; set; }
 
-        [JsonProperty("6")]
-        public string AnnouncementsJson { get; set; }
-
         [JsonProperty("7")]
         public string Username { get; set; }
 
         [JsonProperty("8")]
         public string SCName { get; set; }
-
-        [JsonProperty("9")]
-        public string ChangelogsJson { get; set; }
     }
 }

@@ -45,7 +45,6 @@
 
         public const string SendMapRating = "b34";
         public const string StartMapCreatorPosPlacing = "b35";
-        public const string SyncRegisterLoginLanguageTexts = "b36";
 
         public const string TeleportToPositionRotation = "b38";
         public const string TeleportToXY = "b37";

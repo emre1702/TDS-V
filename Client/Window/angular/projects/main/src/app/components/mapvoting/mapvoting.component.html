@@ -1,49 +1,54 @@
-<tdswindow [title]="title" *ngIf="active" (close)="deactivate(true)" (sideNavClick)="toggleSnav()" [@bottomToTopEnter] contentHeight="38vh">
-	<mat-sidenav-container>
-		<mat-sidenav #snav mode="push" role="directory" class="mat-app-background">
-			<mat-nav-list>
-				<mat-list-item (click)="changeToNav(nav)" *ngFor="let nav of getNavs()">{{ nav | language: settings.Lang }}</mat-list-item>
-			</mat-nav-list>
-		</mat-sidenav>
+<tds-window [title]="title" *ngIf="active" (close)="deactivate(true)" (sideNavClick)="toggleSnav()" [@bottomToTopEnter] contentHeight="38vh">
+    <mat-sidenav-container>
+        <mat-sidenav #snav mode="push" role="directory" class="mat-app-background">
+            <mat-nav-list>
+                <mat-list-item (click)="changeToNav(nav)" *ngFor="let nav of getNavs()">{{ nav | language: settings.Lang }}</mat-list-item>
+            </mat-nav-list>
+        </mat-sidenav>
 
-		<mat-sidenav-content role="main">
-			<div id="left-content">
-        <mat-form-field class="filter" color="accent">
-          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-        </mat-form-field>
-            <mat-action-list>
-                <mat-list-item (click)="changeSelectedMap(map)" class="map-item mat-body" *ngFor="let map of data | mapVotingNav: selectedNav:mapSearchFilter">
-                    {{ map[1] }}
-                </mat-list-item>
-            </mat-action-list>
-        </div>
-        <mat-divider vertical class="vertical-divider-color"></mat-divider>
-			<div id="right-content" *ngIf="selectedMap">
-				<!-- <div id="map-title-row">
+        <mat-sidenav-content role="main">
+            <div id="left-content">
+                <mat-form-field class="filter" color="accent">
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" />
+                </mat-form-field>
+                <mat-action-list>
+                    <mat-list-item
+                        (click)="changeSelectedMap(map)"
+                        class="map-item mat-body"
+                        *ngFor="let map of data | mapVotingNav: selectedNav:mapSearchFilter"
+                    >
+                        {{ map[1] }}
+                    </mat-list-item>
+                </mat-action-list>
+            </div>
+            <mat-divider vertical class="vertical-divider-color"></mat-divider>
+            <div id="right-content" *ngIf="selectedMap">
+                <!-- <div id="map-title-row">
 						<div id="map-title" class="mat-title">{{ selectedMap[1] }}</div>
                 </div>-->
                 <div id="map-description" class="mat-body-1">
                     {{ selectedMap[3][settings.LangValue] }}
                 </div>
 
-				<div id="map-action-row">
-                    <div id="map-creator-hint" *ngIf="selectedMap[4]">
-                        {{ "Creator" | language: settings.Lang }}: {{ selectedMap[4] }}
-                    </div>
-					<button mat-icon-button (click)="toggleMapIdToFavorite(selectedMap[0])">
-						<mat-icon color="accent" id="favorite-heart" [class.red-color]="settings.isInFavorites(selectedMap[0])">
-							favorite
-						</mat-icon>
-					</button>
-                    <button class="add-button" mat-button (click)="buyMap(selectedMap[0])" [disabled]="!canBuyMap()">
-                        {{ settings.IsLobbyOwner ? 'Choose' : 'Buy' | language: settings.Lang }}
+                <div id="map-action-row">
+                    <div id="map-creator-hint" *ngIf="selectedMap[4]">{{ 'Creator' | language: settings.Lang }}: {{ selectedMap[4] }}</div>
+                    <button mat-icon-button (click)="toggleMapIdToFavorite(selectedMap[0])">
+                        <mat-icon color="accent" id="favorite-heart" [class.red-color]="settings.isInFavorites(selectedMap[0])"> favorite </mat-icon>
                     </button>
-					<button id="vote-button" class="save-button" mat-button (click)="voteForMapId(selectedMap[0])"
-							[disabled]="voting.votedForMapId == selectedMap[0]">
-						{{ 'Vote' | language: settings.Lang }}
-					</button>
-				</div>
-			</div>
-		</mat-sidenav-content>
-	</mat-sidenav-container>
-</tdswindow>
+                    <button class="add-button" mat-button (click)="buyMap(selectedMap[0])" [disabled]="!canBuyMap()">
+                        {{ settings.IsLobbyOwner ? 'Choose' : ('Buy' | language: settings.Lang) }}
+                    </button>
+                    <button
+                        id="vote-button"
+                        class="save-button"
+                        mat-button
+                        (click)="voteForMapId(selectedMap[0])"
+                        [disabled]="voting.votedForMapId == selectedMap[0]"
+                    >
+                        {{ 'Vote' | language: settings.Lang }}
+                    </button>
+                </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</tds-window>

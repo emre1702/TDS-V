@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Models;
 using TDS.Server.Database.Entity;
-using TDS.Server.Handler.Extensions;
+using TDS.Server.Handler.Events;
 using TDS.Shared.Core;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler
 {
-    public class AnnouncementsHandler : IAnnouncementsHandler
+    public class AnnouncementsHandler
     {
-        public string Json { get; }
+        private readonly string _json;
 
-        public AnnouncementsHandler(TDSDbContext dbContext)
+        public AnnouncementsHandler(TDSDbContext dbContext, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
             var data = dbContext.Announcements
                 .OrderByDescending(a => a.Id)
@@ -25,7 +26,9 @@ namespace TDS.Server.Handler
                 })
                 .ToList();
 
-            Json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(data));
+            _json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(data));
+
+            remoteBrowserEventsHandler.AddSyncEvent(ToServerEvent.LoadAnnouncements, (ITDSPlayer player, ref ArraySegment<object> arg) => _json);
         }
     }
 }

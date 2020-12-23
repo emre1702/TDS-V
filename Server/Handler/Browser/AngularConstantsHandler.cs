@@ -8,16 +8,11 @@ namespace TDS.Server.Handler.Browser
     public class AngularConstantsProvider
     {
         private readonly ISettingsHandler _settingsHandler;
-        private readonly IAnnouncementsHandler _announcementsHandler;
-        private readonly IChangelogsHandler _changelogsHandler;
         private readonly ILoggingHandler _loggingHandler;
 
-        public AngularConstantsProvider(ISettingsHandler settingsHandler, IAnnouncementsHandler announcementsHandler, IChangelogsHandler changelogsHandler,
-            ILoggingHandler loggingHandler)
+        public AngularConstantsProvider(ISettingsHandler settingsHandler, ILoggingHandler loggingHandler)
         {
             _settingsHandler = settingsHandler;
-            _announcementsHandler = announcementsHandler;
-            _changelogsHandler = changelogsHandler;
             _loggingHandler = loggingHandler;
         }
 
@@ -33,8 +28,6 @@ namespace TDS.Server.Handler.Browser
                     UsernameChangeCooldownDays = _settingsHandler.ServerSettings.UsernameChangeCooldownDays,
                     MapBuyBasePrice = _settingsHandler.ServerSettings.MapBuyBasePrice,
                     MapBuyCounterMultiplicator = _settingsHandler.ServerSettings.MapBuyCounterMultiplicator,
-                    AnnouncementsJson = _announcementsHandler.Json,
-                    ChangelogsJson = _changelogsHandler.Json,
                     Username = player.Entity?.Name ?? "?",
                     SCName = player.Entity?.SCName ?? "?"
                 };

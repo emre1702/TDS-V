@@ -1,7 +1,5 @@
-<app-main-menu *ngIf="!settings.InUserLobbiesMenu" (lobbyJoin)="joinLobby($event)"></app-main-menu>
+<app-main-menu *ngIf="!settings.InUserLobbiesMenu" [showRegisterLogin]="showRegisterLogin" (lobbyJoin)="joinLobby($event)"></app-main-menu>
 <app-custom-lobby *ngIf="settings.InUserLobbiesMenu"></app-custom-lobby>
-
-
 
 <!--<ng-container *ngIf="!settings.InUserLobbiesMenu">
     <div id="language-button-container">

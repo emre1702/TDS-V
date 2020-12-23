@@ -1,104 +1,104 @@
-tdswindow {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 30%;
-  bottom: 30%;
-  left: 35%;
-  right: 35%;
-  opacity: 0.95;
+tds-window {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 30%;
+    bottom: 30%;
+    left: 35%;
+    right: 35%;
+    opacity: 0.95;
 }
 
 mat-toolbar > h1 {
-  margin-left: 8px;
-  flex: 1 1 auto;
+    margin-left: 8px;
+    flex: 1 1 auto;
 }
 
 .mat-toolbar {
-  height: 10%;
+    height: 10%;
 }
 
 .mat-sidenav-container {
-  flex: 1;
-  background: transparent;
+    flex: 1;
+    background: transparent;
 }
 
 .mat-sidenav-content {
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 #left-content {
-  float: left;
-  min-width: 15vw;
-  max-width: 60%;
-  height: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
-  // direction: rtl;
+    float: left;
+    min-width: 15vw;
+    max-width: 60%;
+    height: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    // direction: rtl;
 
-  .filter {
-    margin-top: 5px;
-    width: 100%;
-  }
-
-  .mat-list-item {
-    height: 5%;
-
-    ::ng-deep .mat-list-item-content {
-        padding: 0px;
-    }
-  }
-}
-
-#right-content {
-  display: flex;
-  flex-flow: column;
-  padding: 10px;
-  height: 100%;
-  overflow-x: hidden;
-  box-sizing: border-box;
-
-  #map-action-row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    * {
+    .filter {
         margin-top: 5px;
         width: 100%;
     }
-  }
 
-  #map-creator-hint {
-    text-align: center;
-  }
+    .mat-list-item {
+        height: 5%;
+
+        ::ng-deep .mat-list-item-content {
+            padding: 0px;
+        }
+    }
+}
+
+#right-content {
+    display: flex;
+    flex-flow: column;
+    padding: 10px;
+    height: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+
+    #map-action-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        * {
+            margin-top: 5px;
+            width: 100%;
+        }
+    }
+
+    #map-creator-hint {
+        text-align: center;
+    }
 }
 
 #map-description {
-  flex: 1 1 auto;
-  padding-bottom: 10px;
-  padding-right: 10px;
-  bottom: 0;
-  overflow-y: auto;
+    flex: 1 1 auto;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    bottom: 0;
+    overflow-y: auto;
 }
 
 #vote-button {
-  float: right;
+    float: right;
 }
 
 .mat-divider {
-  float: left;
-  height: 100%;
+    float: left;
+    height: 100%;
 }
 
 #map-title {
-  text-align: center;
+    text-align: center;
 }
 
 .red-color {
-  color: red;
+    color: red;
 }

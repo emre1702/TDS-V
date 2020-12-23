@@ -5,7 +5,6 @@ namespace TDS.Client.Handler.Entities.Languages
 {
     internal class English : ILanguage
     {
-        #region Public Properties
 
         public virtual string AFK_KICK_INFO => "You were AFK and got kicked out of the lobby.";
 
@@ -48,8 +47,6 @@ namespace TDS.Client.Handler.Entities.Languages
         public virtual string LEFT_SHIFT => "LShift";
 
         public virtual string LET_IT_FLOAT => "Let it float";
-
-        public virtual ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsEnglish();
 
         public virtual string OBJECT_MODEL_INVALID => "Object model is invalid.";
 
@@ -102,6 +99,5 @@ namespace TDS.Client.Handler.Entities.Languages
 
         public virtual string YOU_DIED => "You died.";
 
-        #endregion Public Properties
     }
 }

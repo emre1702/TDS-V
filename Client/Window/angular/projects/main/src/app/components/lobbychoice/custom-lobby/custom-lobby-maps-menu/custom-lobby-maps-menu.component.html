@@ -1,8 +1,6 @@
 <div id="container">
-
-    <tdswindow class="container" [title]="'AvailableMaps' | language: settings.Lang">
+    <tds-window class="container" [title]="'AvailableMaps' | language: settings.Lang">
         <table mat-table [dataSource]="availableMapsDataSource" matSort #availableMapsSort="matSort">
-
             <ng-container matColumnDef="Select">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let map">
@@ -24,7 +22,7 @@
 
             <ng-container matColumnDef="Type">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Type' | language: settings.Lang }}</th>
-                <td mat-cell *matCellDef="let map">{{ map[0] == defaultMapIds.AllWithoutGangwars ? '-' : mapType[map[2]] | language: settings.Lang }}</td>
+                <td mat-cell *matCellDef="let map">{{ map[0] == defaultMapIds.AllWithoutGangwars ? '-' : (mapType[map[2]] | language: settings.Lang) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="CreatorName">
@@ -38,18 +36,19 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row [matTooltip]="row[3][settings.LangValue]" matTooltipPosition="before"
+            <tr
+                mat-row
+                [matTooltip]="row[3][settings.LangValue]"
+                matTooltipPosition="before"
                 *matRowDef="let row; columns: displayedColumns"
-                [style.font-weight]="row[0] < 0 ? 'bold' : 'initial'"></tr>
-
+                [style.font-weight]="row[0] < 0 ? 'bold' : 'initial'"
+            ></tr>
         </table>
-    </tdswindow>
+    </tds-window>
 
-    <tdswindow id="available-maps-with-button" class="container" cdkDrag
-    [title]="'SelectedMaps' | language: settings.Lang">
+    <tds-window id="available-maps-with-button" class="container" cdkDrag [title]="'SelectedMaps' | language: settings.Lang">
         <div class="table-container">
             <table mat-table [dataSource]="selectedMapsDataSource" matSort #selectedMapsSort="matSort">
-
                 <ng-container matColumnDef="Select">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let map">
@@ -71,7 +70,7 @@
 
                 <ng-container matColumnDef="Type">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Type' | language: settings.Lang }}</th>
-                    <td mat-cell *matCellDef="let map">{{ map[0] == defaultMapIds.AllWithoutGangwars ? '-' : mapType[map[2]] | language: settings.Lang }}</td>
+                    <td mat-cell *matCellDef="let map">{{ map[0] == defaultMapIds.AllWithoutGangwars ? '-' : (mapType[map[2]] | language: settings.Lang) }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="CreatorName">
@@ -85,10 +84,13 @@
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row [matTooltip]="row[3][settings.LangValue]" matTooltipPosition="before"
+                <tr
+                    mat-row
+                    [matTooltip]="row[3][settings.LangValue]"
+                    matTooltipPosition="before"
                     *matRowDef="let row; columns: displayedColumns"
-                    [style.font-weight]="row[0] < 0 ? 'bold' : 'initial'"></tr>
-
+                    [style.font-weight]="row[0] < 0 ? 'bold' : 'initial'"
+                ></tr>
             </table>
 
             <!--<div class="last-row-buttons">
@@ -106,6 +108,5 @@
         <button mat-raised-button color="primary" class="save-button" (click)="backButtonClicked()" [disabled]="selectedMaps.length == 0">
             {{ 'Back' | language: settings.Lang }}
         </button>
-    </tdswindow>
+    </tds-window>
 </div>
-

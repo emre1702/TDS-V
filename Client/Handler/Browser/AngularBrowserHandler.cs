@@ -301,14 +301,14 @@ namespace TDS.Client.Handler.Browser
             GetHashedPasswordReturn(SharedUtils.HashPWClient(pw));
         }
 
-        private void EventHandler_PlayerStartTalking(Player modPlayer)
+        public void EventHandler_PlayerStartTalking(Player modPlayer)
         {
             if (!(modPlayer is ITDSPlayer player))
                 return;
-            ExecuteFast(ToBrowserEvent.AddUserTalking, player.RemoteId, player.Name);
+            ExecuteFast(ToBrowserEvent.AddUserTalking, player.RemoteId, player.DisplayName);
         }
 
-        private void EventHandler_PlayerStopTalking(Player modPlayer)
+        public void EventHandler_PlayerStopTalking(Player modPlayer)
         {
             if (!(modPlayer is ITDSPlayer player))
                 return;

@@ -1,4 +1,4 @@
-tdswindow {
+tds-window {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -27,14 +27,12 @@ tdswindow {
                 background: transparent;
 
                 .mat-row {
-
                     .mat-cell {
                         text-align: center;
                     }
                 }
 
                 .mat-header-row {
-
                     .mat-header-cell {
                         text-align: center;
                     }

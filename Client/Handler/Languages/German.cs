@@ -49,8 +49,6 @@ namespace TDS.Client.Handler.Entities.Languages
 
         public override string LET_IT_FLOAT => "Schweben lassen";
 
-        public override ILoginRegisterTexts LOGIN_REGISTER_TEXTS => new LoginRegisterTextsGerman();
-
         public override string OBJECT_MODEL_INVALID => "Objekt Modell ist ungültig.";
 
         public override string ON_FOOT => "Zu Fuß";

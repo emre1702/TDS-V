@@ -1,0 +1,20 @@
+<form [formGroup]="formGroup">
+    <div class="title">{{ 'RegisterInfo' | language: settings.Lang }}</div>
+    <mat-form-field color="accent">
+        <input matInput [formControlName]="'name'" [placeholder]="'Name' | language: settings.Lang" />
+    </mat-form-field>
+    <mat-form-field color="accent">
+        <input [type]="hidePasswordOne ? 'password' : 'text'" matInput [formControlName]="'password1'" [placeholder]="'Password' | language: settings.Lang" />
+        <mat-icon matSuffix (click)="hidePasswordOne = !hidePasswordOne">{{ hidePasswordOne ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </mat-form-field>
+    <mat-form-field color="accent">
+        <input [type]="hidePasswordTwo ? 'password' : 'text'" matInput [formControlName]="'password2'" [placeholder]="'Password' | language: settings.Lang" />
+        <mat-icon matSuffix (click)="hidePasswordTwo = !hidePasswordTwo">{{ hidePasswordTwo ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </mat-form-field>
+    <mat-form-field color="accent">
+        <input matInput type="email" [formControlName]="'email'" [placeholder]="'EmailAddressRegister' | language: settings.Lang" />
+    </mat-form-field>
+    <button type="submit" class="add-button" mat-raised-button [disabled]="errorService.hasError()" (click)="register()">
+        <span [matTooltip]="errorService.errorMessage">{{ 'Register' | language: settings.Lang }}</span>
+    </button>
+</form>

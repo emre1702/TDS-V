@@ -5,19 +5,24 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Models.Changelogs;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Server;
 using TDS.Shared.Core;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler
 {
-    public class ChangelogsHandler : IChangelogsHandler
+    public class ChangelogsHandler
     {
-        public string Json { get; private set; } = string.Empty;
+        private string _json = string.Empty;
 
-        public ChangelogsHandler(AppConfigHandler appConfigHandler, ISettingsHandler settingsHandler, ServerStartHandler serverStartHandler)
+        public ChangelogsHandler(AppConfigHandler appConfigHandler, ISettingsHandler settingsHandler, ServerStartHandler serverStartHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
+            remoteBrowserEventsHandler.AddSyncEvent(ToServerEvent.LoadChangelogs, (ITDSPlayer player, ref ArraySegment<object> _) => _json);
+
             LoadChangelogs(appConfigHandler, settingsHandler, serverStartHandler);
         }
 
@@ -33,7 +38,7 @@ namespace TDS.Server.Handler
             var client = CreateGitHubClient(appConfigHandler);
             var commits = await GetCommits(client, settingsHandler).ConfigureAwait(false);
             var commitsToSync = Map(commits);
-            Json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(commitsToSync));
+            _json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(commitsToSync));
             serverStartHandler.LoadedChangelogs = true;
         }
 

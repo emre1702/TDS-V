@@ -1,4 +1,4 @@
-tdswindow {
+tds-window {
     position: absolute;
     left: 35vw;
     top: 30vh;
@@ -15,7 +15,13 @@ tdswindow {
 }
 
 @keyframes glowing {
-    0% { box-shadow: 0 0 2px white; }
-    50% { box-shadow: 0 0 20px white; }
-    100% { box-shadow: 0 0 2px white; }
-  }
+    0% {
+        box-shadow: 0 0 2px white;
+    }
+    50% {
+        box-shadow: 0 0 20px white;
+    }
+    100% {
+        box-shadow: 0 0 2px white;
+    }
+}

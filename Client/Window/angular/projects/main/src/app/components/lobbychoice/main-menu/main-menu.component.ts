@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, EventEmitter, Output, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, EventEmitter, Output, HostListener, Input, Injector, NgZone } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { SettingsService } from '../../../services/settings.service';
 import { ChallengeType } from '../enums/challenge-type.enum';
@@ -12,36 +12,50 @@ import { topToBottomMainMenuAnimation } from './animations/top-to-bottom-main-me
 import { leftToRightMainMenuAnimation } from './animations/left-to-right-main-menu.animation';
 import { rightToLeftMainMenuAnimation } from './animations/right-to-left-main-menu.animation';
 import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
+import { InitialDatas } from '../../../initial-datas';
+import { MainMenuDebugService } from './services/main-menu.debug.service';
+import { MainMenuProdService } from './services/main-menu.prod.service';
+import { MainMenuService } from './services/main-menu.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main-menu',
     templateUrl: './main-menu.component.html',
     styleUrls: ['./main-menu.component.scss'],
-    animations: [topToBottomMainMenuAnimation, leftToRightMainMenuAnimation, rightToLeftMainMenuAnimation]
+    animations: [topToBottomMainMenuAnimation, leftToRightMainMenuAnimation, rightToLeftMainMenuAnimation],
+    providers: [{ provide: MainMenuService, useFactory: createService, deps: [Injector] }],
 })
 export class MainMenuComponent implements OnInit, OnDestroy {
-
+    @Input() showRegisterLogin: boolean;
     @Output() lobbyJoin = new EventEmitter<number>();
+
+    announcements$ = this.service.loadAnnouncements();
+    changelogs$ = this.service.loadChangelogs();
 
     challengeType = ChallengeType;
     challengeFrequency = ChallengeFrequency;
     timeToNextWeeklyChallengesRestartInfo: string;
-    animState = "open";
+    animState = 'open';
     private selectedLobbyId: number;
 
     languagePipe = new LanguagePipe();
     private initialLobbyChoices: LobbyChoice[] = [
-        { id: OfficialLobbyId.Arena, name: "Arena", imgUrl: "assets/arenachoice.png" },
-        { id: OfficialLobbyId.CustomLobby, name: "UserLobbies", imgUrl: "assets/customlobbychoice.png" },
+        { id: OfficialLobbyId.Arena, name: 'Arena', imgUrl: 'assets/arenachoice.png' },
+        { id: OfficialLobbyId.CustomLobby, name: 'UserLobbies', imgUrl: 'assets/customlobbychoice.png' },
         // { id: OfficialLobbyId.GangLobby, name: "Gang", imgUrl: "assets/gangchoice.png" },
-        { id: OfficialLobbyId.DamageTestLobby, name: "DamageTestLobby", imgUrl: "assets/arenachoice.png" },
-        { id: OfficialLobbyId.MapCreateLobby, name: "MapCreator", imgUrl: "assets/mapcreatorchoice.png" },
-        { id: OfficialLobbyId.CharCreateLobby, name: "CharCreator", imgUrl: "assets/charcreatorchoice.png" }
+        { id: OfficialLobbyId.DamageTestLobby, name: 'DamageTestLobby', imgUrl: 'assets/arenachoice.png' },
+        { id: OfficialLobbyId.MapCreateLobby, name: 'MapCreator', imgUrl: 'assets/mapcreatorchoice.png' },
+        { id: OfficialLobbyId.CharCreateLobby, name: 'CharCreator', imgUrl: 'assets/charcreatorchoice.png' },
     ];
     lobbyChoices: LobbyChoice[];
 
-    constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef, private sanitizer: DomSanitizer,
-        private rageConnector: RageConnectorService) { }
+    constructor(
+        public settings: SettingsService,
+        private changeDetector: ChangeDetectorRef,
+        private sanitizer: DomSanitizer,
+        private rageConnector: RageConnectorService,
+        private service: MainMenuService
+    ) {}
 
     ngOnInit(): void {
         this.refreshTimeToWeeklyChallengesRestart();
@@ -68,24 +82,24 @@ export class MainMenuComponent implements OnInit, OnDestroy {
     }
 
     getImageUrl(url: string) {
-        return this.sanitizer.bypassSecurityTrustStyle("url(" + url + ") no-repeat");
+        return this.sanitizer.bypassSecurityTrustStyle('url(' + url + ') no-repeat');
     }
 
     triggerJoinLobby(id: number) {
         if (this.settings.UserpanelOpen) {
             return;
         }
-        if (this.animState === "close") {
+        if (this.animState === 'close') {
             return;
         }
         this.selectedLobbyId = id;
-        this.animState = "close";
+        this.animState = 'close';
         this.lobbyChoices = [];
         this.changeDetector.detectChanges();
     }
 
     onAnimationEvent(event: AnimationEvent) {
-        if (event.triggerName === "topToBottom" && event.phaseName === "done" && event.toState === "close") {
+        if (event.triggerName === 'topToBottom' && event.phaseName === 'done' && event.toState === 'close') {
             this.lobbyJoin.emit(this.selectedLobbyId);
         }
     }
@@ -106,11 +120,17 @@ export class MainMenuComponent implements OnInit, OnDestroy {
         const hoursToWeeklyChallengesRestart = (restartDate.getTime() - currentDate.getTime()) / 1000 / 60 / 60;
 
         if (hoursToWeeklyChallengesRestart / 24 >= 1) {
-            this.timeToNextWeeklyChallengesRestartInfo
-                = this.languagePipe.transform("DaysLeft", this.settings.Lang, Math.ceil(hoursToWeeklyChallengesRestart / 24));
+            this.timeToNextWeeklyChallengesRestartInfo = this.languagePipe.transform(
+                'DaysLeft',
+                this.settings.Lang,
+                Math.ceil(hoursToWeeklyChallengesRestart / 24)
+            );
         } else {
-            this.timeToNextWeeklyChallengesRestartInfo
-                = this.languagePipe.transform("HoursLeft", this.settings.Lang, Math.ceil(hoursToWeeklyChallengesRestart % 24));
+            this.timeToNextWeeklyChallengesRestartInfo = this.languagePipe.transform(
+                'HoursLeft',
+                this.settings.Lang,
+                Math.ceil(hoursToWeeklyChallengesRestart % 24)
+            );
         }
     }
 
@@ -122,6 +142,9 @@ export class MainMenuComponent implements OnInit, OnDestroy {
         if (this.settings.UserpanelOpen) {
             return;
         }
+        if (this.showRegisterLogin) {
+            return;
+        }
 
         if (!isNaN(parseInt(event.key, 10))) {
             const index = parseInt(event.key, 10) - 1;
@@ -130,5 +153,13 @@ export class MainMenuComponent implements OnInit, OnDestroy {
                 this.triggerJoinLobby(id);
             }
         }
+    }
+}
+
+export function createService(injector: Injector) {
+    if (InitialDatas.inDebug) {
+        return new MainMenuDebugService();
+    } else {
+        return new MainMenuProdService(injector.get(RageConnectorService), injector.get(SettingsService));
     }
 }

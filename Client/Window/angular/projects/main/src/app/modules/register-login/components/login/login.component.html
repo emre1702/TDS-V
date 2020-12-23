@@ -1,0 +1,14 @@
+<form [formGroup]="formGroup">
+    <div class="title">{{ (isRegistered ? 'WelcomeBack' : 'AreYouAlreadyRegisteredQuestion') | language: settings.Lang }}</div>
+    <mat-form-field color="accent">
+        <input matInput [formControlName]="'name'" [placeholder]="'Name' | language: settings.Lang" />
+    </mat-form-field>
+    <mat-form-field color="accent">
+        <input [type]="hidePassword ? 'password' : 'text'" matInput [formControlName]="'password'" [placeholder]="'Password' | language: settings.Lang" />
+        <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </mat-form-field>
+    <label class="password-forgotten" matRipple (click)="openPasswordForgotten.emit()">{{ 'PasswordForgotten' | language: settings.Lang }}</label>
+    <button type="submit" class="add-button" mat-raised-button (click)="login()" [disabled]="errorService.hasError()">
+        <span [matTooltip]="errorService.errorMessage">{{ 'Login' | language: settings.Lang }}</span>
+    </button>
+</form>

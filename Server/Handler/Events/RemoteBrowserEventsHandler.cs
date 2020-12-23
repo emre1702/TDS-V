@@ -94,7 +94,7 @@ namespace TDS.Server.Handler.Events
                 [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData,
                 [ToServerEvent.SetDamageTestWeaponDamage] = SetDamageTestWeaponDamage,
                 [ToServerEvent.LoadUserpanelNormalSettingsData] = userpanelHandler.SettingsNormalHandler.LoadSettings,
-                [ToServerEvent.ReloadPlayerSettings] = playerSettingsSyncHandler.RequestSyncPlayerSettingsFromUserpanel
+                [ToServerEvent.ReloadPlayerSettings] = playerSettingsSyncHandler.RequestSyncPlayerSettingsFromUserpanel,
             };
 
             NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
@@ -106,10 +106,8 @@ namespace TDS.Server.Handler.Events
 
         public delegate object? FromBrowserMethodDelegate(ITDSPlayer player, ref ArraySegment<object> args);
 
-        public async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
+        private async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
         {
-            if (!player.LoggedIn)
-                return;
             try
             {
                 await Task.Yield();
@@ -140,9 +138,24 @@ namespace TDS.Server.Handler.Events
             {
                 var baseEx = ex.GetBaseException();
                 _loggingHandler.LogError(baseEx.Message + "\n"
-                    + String.Join('\n', args.Select(a => Convert.ToString(a)?.Substring(0, Math.Min(Convert.ToString(a)?.Length ?? 0, 20)) ?? "-")),
+                    + string.Join('\n', args.Select(a => Convert.ToString(a)?.Substring(0, Math.Min(Convert.ToString(a)?.Length ?? 0, 20)) ?? "-")),
                     ex.StackTrace ?? Environment.StackTrace, ex.GetType().Name + "|" + baseEx.GetType().Name, player);
             }
+        }
+
+        public void AddSyncEvent(string eventName, FromBrowserMethodDelegate method)
+        {
+            _methods[eventName] = method;
+        }
+
+        public void AddAsyncEvent(string eventName, FromBrowserAsyncMethodDelegate method)
+        {
+            _asyncMethods[eventName] = method;
+        }
+
+        public void AddMaybeAsyncEvent(string eventName, FromBrowserMaybeAsyncMethodDelegate method)
+        {
+            _maybeAsyncMethods[eventName] = method;
         }
 
         private object? BuyMap(ITDSPlayer player, ref ArraySegment<object> args)

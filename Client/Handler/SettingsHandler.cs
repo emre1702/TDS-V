@@ -69,7 +69,6 @@ namespace TDS.Client.Handler
             RAGE.Events.Add(FromBrowserEvent.LanguageChange, OnLanguageChangeMethod);
             RAGE.Events.Add(FromBrowserEvent.OnColorSettingChange, OnColorSettingChangeMethod);
             RAGE.Events.Add(ToClientEvent.SyncSettings, OnSyncSettingsMethod);
-            RAGE.Events.Add(FromBrowserEvent.SyncRegisterLoginLanguageTexts, SyncRegisterLoginLanguageTexts);
             RAGE.Events.Add(FromBrowserEvent.ReloadPlayerSettings, ReloadTempChangedPlayerSettings);
             RAGE.Events.Add(ToClientEvent.SyncPlayerCommandsSettings, LoadCommandsData);
 
@@ -274,11 +273,6 @@ namespace TDS.Client.Handler
             NametagHealthFullColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagHealthFullColor) ?? NametagHealthFullColor;
             NametagArmorEmptyColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagArmorEmptyColor);
             NametagArmorFullColor = SharedUtils.GetColorFromHtmlRgba(PlayerSettings.NametagArmorFullColor) ?? NametagArmorFullColor;
-        }
-
-        private void SyncRegisterLoginLanguageTexts(object[] args)
-        {
-            _browserHandler.RegisterLogin.SyncLanguage(Language);
         }
     }
 }

@@ -1,37 +1,43 @@
-<tdswindow [navMenu]="navMenu" [isLoading]="gangWindowService.loadingData"
-[currentNav]="gangWindowNav[currentNav] | language: settings.Lang"
-(close)="closeFunc()" [title]="'GangMenu' | language: settings.Lang"
-contentHeight="60vh">
+<tds-window
+    [navMenu]="navMenu"
+    [isLoading]="gangWindowService.loadingData"
+    [currentNav]="gangWindowNav[currentNav] | language: settings.Lang"
+    (close)="closeFunc()"
+    [title]="'GangMenu' | language: settings.Lang"
+    contentHeight="60vh"
+>
     <app-gang-window-mainmenu *ngIf="currentNav == gangWindowNav.MainMenu"></app-gang-window-mainmenu>
     <app-gang-window-create *ngIf="currentNav == gangWindowNav.Create" (back)="gotoNav(gangWindowNav.MainMenu)"></app-gang-window-create>
     <app-gang-window-members *ngIf="currentNav == gangWindowNav.Members" (back)="gotoNav(gangWindowNav.MainMenu)"></app-gang-window-members>
     <app-gang-window-rank-levels *ngIf="currentNav == gangWindowNav.RanksLevels" (back)="gotoNav(gangWindowNav.MainMenu)"></app-gang-window-rank-levels>
-    <app-gang-window-rank-permissions *ngIf="currentNav == gangWindowNav.RanksPermissions" (back)="gotoNav(gangWindowNav.MainMenu)"></app-gang-window-rank-permissions>
-</tdswindow>
-
+    <app-gang-window-rank-permissions
+        *ngIf="currentNav == gangWindowNav.RanksPermissions"
+        (back)="gotoNav(gangWindowNav.MainMenu)"
+    ></app-gang-window-rank-permissions>
+</tds-window>
 
 <mat-menu #navMenu="matMenu" panelClass="mat-app-background" class="mat-app-background">
-    <button mat-menu-item (click)="gotoNav(gangWindowNav.MainMenu)" >
+    <button mat-menu-item (click)="gotoNav(gangWindowNav.MainMenu)">
         <mat-icon color="accent">dashboard</mat-icon>
         {{ gangWindowNav[gangWindowNav.MainMenu] | language: settings.Lang }}
     </button>
 
-    <button mat-menu-item *ngIf="!settings.IsInGang" (click)="gotoNav(gangWindowNav.Create)" >
+    <button mat-menu-item *ngIf="!settings.IsInGang" (click)="gotoNav(gangWindowNav.Create)">
         <mat-icon color="accent">group_add</mat-icon>
         {{ gangWindowNav[gangWindowNav.Create] | language: settings.Lang }}
     </button>
-     <!--<button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.GangInfo)" >
+    <!--<button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.GangInfo)" >
         <mat-icon color="accent">info</mat-icon>
         {{ gangWindowNav[gangWindowNav.GangInfo] | language: settings.Lang }}
     </button>-->
 
-    <button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.Members)" >
+    <button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.Members)">
         <mat-icon color="accent">people_alt</mat-icon>
         {{ gangWindowNav[gangWindowNav.Members] | language: settings.Lang }}
     </button>
     <button mat-menu-item *ngIf="settings.IsInGang" [matMenuTriggerFor]="ranksNav">
         <mat-icon color="accent">accessibility</mat-icon>
-        <span>{{ gangWindowNav[gangWindowNav.Ranks]  | language: settings.Lang }}</span>
+        <span>{{ gangWindowNav[gangWindowNav.Ranks] | language: settings.Lang }}</span>
     </button>
     <!--<button mat-menu-item *ngIf="settings.IsInGang" (click)="gotoNav(gangWindowNav.Vehicles)" >
         <mat-icon color="accent">directions_car</mat-icon>
@@ -44,13 +50,12 @@ contentHeight="60vh">
 </mat-menu>
 
 <mat-menu #ranksNav="matMenu" class="mat-app-background">
-    <button mat-menu-item (click)="gotoNav(gangWindowNav.RanksLevels)" >
+    <button mat-menu-item (click)="gotoNav(gangWindowNav.RanksLevels)">
         <mat-icon color="accent">stairs</mat-icon>
         {{ gangWindowNav[gangWindowNav.RanksLevels] | language: settings.Lang }}
     </button>
-    <button mat-menu-item (click)="gotoNav(gangWindowNav.RanksPermissions)" >
+    <button mat-menu-item (click)="gotoNav(gangWindowNav.RanksPermissions)">
         <mat-icon color="accent">miscellaneous_services</mat-icon>
         {{ gangWindowNav[gangWindowNav.RanksPermissions] | language: settings.Lang }}
     </button>
 </mat-menu>
-

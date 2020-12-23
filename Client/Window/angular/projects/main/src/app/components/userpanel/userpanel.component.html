@@ -1,26 +1,36 @@
-<tdswindow (close)="closeUserpanel()" [isLoading]="userpanelService.loadingData"
-[navMenu]="userpanelNav" [currentNav]="userpanelService.currentNav | language: settings.Lang"
-[navGlow]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
-contentWidth="30vw"
-contentHeight="36.5vh">
-    <app-userpanel-stats-general *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsGeneral]"
+<tds-window
+    (close)="closeUserpanel()"
+    [isLoading]="userpanelService.loadingData"
+    [navMenu]="userpanelNav"
+    [currentNav]="userpanelService.currentNav | language: settings.Lang"
+    [navGlow]="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
+    contentWidth="30vw"
+    contentHeight="36.5vh"
+>
+    <app-userpanel-stats-general
+        *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsGeneral]"
         [stats]="userpanelService.myStatsGeneral"
-        [columns]="myStatsGeneralColumns">
+        [columns]="myStatsGeneralColumns"
+    >
     </app-userpanel-stats-general>
-    <app-userpanel-stats-weapon *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsWeapon]"
-        [weaponsUsed]="userpanelService.myStatsWeaponsUsed">
+    <app-userpanel-stats-weapon
+        *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.MyStatsWeapon]"
+        [weaponsUsed]="userpanelService.myStatsWeaponsUsed"
+    >
     </app-userpanel-stats-weapon>
-    <app-userpanel-commands *ngIf="userpanelService.currentNav.startsWith('Commands')"
+    <app-userpanel-commands
+        *ngIf="userpanelService.currentNav.startsWith('Commands')"
         [(currentCommand)]="currentCommand"
-        [currentNav]="userpanelService.currentNav" >
+        [currentNav]="userpanelService.currentNav"
+    >
     </app-userpanel-commands>
-    <app-userpanel-rules *ngIf="userpanelService.currentNav.startsWith('Rules')"
-        [currentNav]="userpanelService.currentNav" >
-    </app-userpanel-rules>
+    <app-userpanel-rules *ngIf="userpanelService.currentNav.startsWith('Rules')" [currentNav]="userpanelService.currentNav"> </app-userpanel-rules>
     <app-userpanel-faqs *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.FAQ]"></app-userpanel-faqs>
     <app-userpanel-settings-special *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsSpecial]"></app-userpanel-settings-special>
     <app-userpanel-settings-normal *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsNormal]"></app-userpanel-settings-normal>
-    <app-userpanel-settings-commands *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsCommands]"></app-userpanel-settings-commands>
+    <app-userpanel-settings-commands
+        *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SettingsCommands]"
+    ></app-userpanel-settings-commands>
     <app-userpanel-application *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Application] && settings.AdminLevel == 0">
     </app-userpanel-application>
     <app-userpanel-applications *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Applications] && settings.AdminLevel > 0">
@@ -29,19 +39,16 @@ contentHeight="36.5vh">
     </app-userpanel-support-user>
     <app-userpanel-support-admin *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SupportAdmin] && settings.AdminLevel > 0">
     </app-userpanel-support-admin>
-    <app-userpanel-offline-messages *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.OfflineMessages]">
-    </app-userpanel-offline-messages>
-    <div *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]"
-        [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)">
-    </div>
-</tdswindow>
+    <app-userpanel-offline-messages *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.OfflineMessages]"> </app-userpanel-offline-messages>
+    <div *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]" [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)"></div>
+</tds-window>
 
 <mat-menu #userpanelNav="matMenu">
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Main)">
         <mat-icon color="accent">dashboard</mat-icon>
         {{ userpanelNavPage[userpanelNavPage.Main] | language: settings.Lang }}
     </button>
-    <button mat-menu-item [matMenuTriggerFor]="statsNav" >
+    <button mat-menu-item [matMenuTriggerFor]="statsNav">
         <mat-icon color="accent">info</mat-icon>
         {{ userpanelNavPage[userpanelNavPage.MyStats] | language: settings.Lang }}
     </button>
@@ -70,8 +77,8 @@ contentHeight="36.5vh">
         <span>{{ userpanelNavPage[userpanelNavPage.SupportAdmin] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Application)" *ngIf="settings.AdminLevel == 0">
-      <mat-icon color="accent">post_add</mat-icon>
-      <span>{{ userpanelNavPage[userpanelNavPage.Application] | language: settings.Lang }}</span>
+        <mat-icon color="accent">post_add</mat-icon>
+        <span>{{ userpanelNavPage[userpanelNavPage.Application] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoNav(userpanelNavPage.Applications)" *ngIf="settings.AdminLevel > 0">
         <mat-icon color="accent">post_add</mat-icon>
@@ -125,7 +132,7 @@ contentHeight="36.5vh">
         <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.IngameColors] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.Hud)">
-        <mat-icon style="transform: scale(-1,1)" color="accent">featured_video</mat-icon>
+        <mat-icon style="transform: scale(-1, 1)" color="accent">featured_video</mat-icon>
         <span>{{ userpanelSettingsNormalType[userpanelSettingsNormalType.Hud] | language: settings.Lang }}</span>
     </button>
     <button mat-menu-item (click)="gotoSettingsNormalNav(userpanelSettingsNormalType.KillInfo)">

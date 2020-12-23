@@ -1,7 +1,4 @@
-import { ChangelogsGroup } from './changelogs/changelogs-group';
-
 export interface ConstantsData {
-
     /** TDSId */
     [0]: number;
 
@@ -20,20 +17,9 @@ export interface ConstantsData {
     /** MapBuyCounterMultiplicator */
     [5]: number;
 
-    /** Announcements */
-    [6]: [
-        /** DaysAgo */
-        number,
-        /** Text */
-        string
-    ][];
-
     /** Username */
     [7]: string;
 
     /** SCName */
     [8]: string;
-
-    /** Changelogs */
-    [9]: ChangelogsGroup[];
 }

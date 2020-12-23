@@ -1,8 +1,7 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy, Input } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { SettingsService } from '../../../services/settings.service';
 import { trigger, transition, animate, style } from '@angular/animations';
-import { DomSanitizer } from '@angular/platform-browser';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
@@ -12,27 +11,18 @@ import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
     templateUrl: './lobby-choice.component.html',
     animations: [
         trigger('hideShowAnimation', [
-            transition(
-                ':enter', [
+            transition(':enter', [
                 style({ transform: 'translateX(-100%)', opacity: 0 }),
-                animate('800ms', style({ transform: 'translateX(0)', opacity: 0.95 }))
-            ]
-            ),
-            transition(
-                ':leave', [
-                animate('800ms', style({ transform: 'translateX(-100%)', opacity: 0 })),
-            ]
-            )]
-        )
-    ]
+                animate('800ms', style({ transform: 'translateX(0)', opacity: 0.95 })),
+            ]),
+            transition(':leave', [animate('800ms', style({ transform: 'translateX(-100%)', opacity: 0 }))]),
+        ]),
+    ],
 })
 export class LobbyChoiceComponent implements OnInit, OnDestroy {
+    @Input() showRegisterLogin: boolean;
 
-    constructor(
-        private rageConnector: RageConnectorService,
-        public settings: SettingsService,
-        private changeDetector: ChangeDetectorRef) {
-    }
+    constructor(private rageConnector: RageConnectorService, public settings: SettingsService, private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.rageConnector.listen(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
@@ -51,10 +41,8 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
     }
 
     joinLobby(id: number) {
-        if (id === OfficialLobbyId.CustomLobby)
-            this.showUserLobbies();
-        else
-            this.rageConnector.callServer(DToServerEvent.JoinLobby, id);
+        if (id === OfficialLobbyId.CustomLobby) this.showUserLobbies();
+        else this.rageConnector.callServer(DToServerEvent.JoinLobby, id);
     }
 
     showUserLobbies() {

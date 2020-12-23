@@ -1,24 +1,23 @@
 import { Injectable, NgZone } from '@angular/core';
 
 enum DToServerEvent {
-    FromBrowserEvent = "c64"
+    FromBrowserEvent = 'c64',
 }
 
 declare const mp: {
     events: {
         add(eventName: string, method: () => void): void;
         remove(eventName: string, method?: () => void): void;
-    },
+    };
 
     trigger(eventName: string, ...args: any): void;
 };
 declare const window: any;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class RageConnectorService {
-
     private static zone: NgZone = null;
     private static events: { [key: string]: ((...args: any) => void)[] } = {};
     private static callbackEvents: { [key: string]: ((...args: any) => void)[] } = {};
@@ -57,7 +56,8 @@ export class RageConnectorService {
      * @param callback Any function
      */
     public listen(eventName: string, callback: (...args: any) => void) {
-        if (typeof mp == "undefined") // testing without RAGE
+        if (typeof mp == 'undefined')
+            // testing without RAGE
             return;
 
         if (!RageConnectorService.events[eventName]) {
@@ -69,7 +69,8 @@ export class RageConnectorService {
     }
 
     public remove(eventName: string, callback?: (...args: any) => void) {
-        if (typeof mp == "undefined") // testing without RAGE
+        if (typeof mp == 'undefined')
+            // testing without RAGE
             return;
 
         if (!RageConnectorService.events[eventName]) {
@@ -90,14 +91,16 @@ export class RageConnectorService {
     }
 
     public call(eventName: string, ...args: any) {
-        if (typeof mp == "undefined") // testing without RAGE
+        if (typeof mp == 'undefined')
+            // testing without RAGE
             return;
 
         mp.trigger(eventName, ...args);
     }
 
     public callServer(eventName: string, ...args: any) {
-        if (typeof mp == "undefined") // testing without RAGE
+        if (typeof mp == 'undefined')
+            // testing without RAGE
             return;
 
         mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
@@ -112,7 +115,8 @@ export class RageConnectorService {
      * @param callback Any function
      */
     public callCallback(eventName: string, args: any[] | undefined, callback: (...args: any) => void) {
-        if (typeof mp == "undefined") // testing without RAGE
+        if (typeof mp == 'undefined')
+            // testing without RAGE
             return;
         if (!RageConnectorService.callbackEvents[eventName]) {
             RageConnectorService.callbackEvents[eventName] = [];
@@ -121,10 +125,8 @@ export class RageConnectorService {
 
         this.addCallbackFunction(eventName, callback);
 
-        if (args)
-            mp.trigger(eventName, ...args);
-        else
-            mp.trigger(eventName);
+        if (args) mp.trigger(eventName, ...args);
+        else mp.trigger(eventName);
     }
 
     /**
@@ -136,7 +138,8 @@ export class RageConnectorService {
      * @param callback Any function
      */
     public callCallbackServer(eventName: string, args: any[] | undefined, callback: (...args: any) => void) {
-        if (typeof mp == "undefined") // testing without RAGE
+        if (typeof mp == 'undefined')
+            // testing without RAGE
             return;
         if (!RageConnectorService.callbackEvents[eventName]) {
             RageConnectorService.callbackEvents[eventName] = [];
@@ -144,18 +147,18 @@ export class RageConnectorService {
         RageConnectorService.callbackEvents[eventName].push(callback);
 
         this.addCallbackFunction(eventName, callback);
-        
-        if (args)
-            mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
-        else
-            mp.trigger(DToServerEvent.FromBrowserEvent, eventName);
+
+        if (args) mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
+        else mp.trigger(DToServerEvent.FromBrowserEvent, eventName);
     }
 
     private addCallbackFunction(eventName: string, callback: (...args: any) => void) {
         const callbackFunc = function func(...args: any) {
             mp.events.remove(eventName, func);
-            callback(...args);
-        }
+            RageConnectorService.zone.run(() => {
+                callback(...args);
+            });
+        };
         mp.events.add(eventName, callbackFunc);
     }
 }

@@ -47,7 +47,7 @@ namespace TDS.Client.Core.Init
                 new FreeroamHandler(loggingHandler, eventsHandler, browserHandler);
 
                 
-                var utilsHandler = new UtilsHandler(loggingHandler, dataSyncHandler, eventsHandler, settingsHandler);
+                var utilsHandler = new UtilsHandler(loggingHandler, eventsHandler, settingsHandler);
                 new GangHousesHandler(loggingHandler, eventsHandler, settingsHandler);
                 new GangVehiclesHandler(loggingHandler, dataSyncHandler, eventsHandler);
                 new GhostModeHandler(loggingHandler, eventsHandler);
@@ -63,8 +63,8 @@ namespace TDS.Client.Core.Init
                 new UserpanelHandler(loggingHandler, browserHandler, cursorHandler, settingsHandler, remoteEventsSender, eventsHandler, bindsHandler, instructionalButtonHandler);
                 new CharCreatorHandler(loggingHandler, browserHandler, deathHandler, camerasHandler, eventsHandler, cursorHandler, utilsHandler);
 
-                var registerLoginHandler = new RegisterLoginHandler(loggingHandler, cursorHandler, remoteEventsSender, browserHandler, settingsHandler, eventsHandler);
-                var voiceHandler = new VoiceHandler(loggingHandler, bindsHandler, browserHandler, utilsHandler, eventsHandler);
+                var registerLoginHandler = new RegisterLoginHandler(loggingHandler, remoteEventsSender, browserHandler, settingsHandler, eventsHandler);
+                var voiceHandler = new VoiceHandler(loggingHandler, bindsHandler, browserHandler, eventsHandler);
                 var forceStayAtPosHandler = new ForceStayAtPosHandler(loggingHandler, remoteEventsSender, settingsHandler, dxHandler, timerHandler);
                 new CrouchingHandler(loggingHandler, eventsHandler, dataSyncHandler, remoteEventsSender);
 

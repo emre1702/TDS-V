@@ -9,8 +9,7 @@
     justify-content: space-between;
 
     .left-window {
-        flex-grow: 1;
-        width: 33%;
+        flex: 1 1 30%;
 
         .challenges-container {
             overflow-y: auto;
@@ -43,18 +42,16 @@
     }
 
     .center-window {
-        flex-grow: 2;
-        width: 42%;
+        flex: 2 0 40%;
     }
 
     .right-window {
-        flex-grow: 1;
+        flex: 1 1 30%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 25%;
 
-        tdswindow {
+        tds-window {
             flex-grow: 1;
             overflow-y: auto;
             overflow-x: hidden;
@@ -110,14 +107,20 @@
     }
 
     .placeholder {
-        width: 10px;
-        height: 10px;
+        width: 5%;
+        height: 20px;
         flex-shrink: 0;
     }
 
     .challenges {
         margin-top: auto;
         max-height: 50vh;
+    }
+
+    app-register-login {
+        margin-top: auto;
+        margin-bottom: auto;
+        overflow: hidden;
     }
 
     .lobbies {

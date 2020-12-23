@@ -4,9 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { MapVotingComponent } from './components/mapvoting/mapvoting.component';
-
-import { DragDropModule } from '@angular/cdk/drag-drop';
-
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { TeamOrdersComponent } from './components/teamorders/teamorders.component';
 import { MapCreatorComponent } from './components/mapcreator/map-creator.component';
@@ -47,7 +44,6 @@ import { HudComponent } from './components/hud/hud.component';
 import { CustomLobbyMapsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-maps-menu/custom-lobby-maps-menu.component';
 import { ChatComponent } from './components/hud/chat/chat.component';
 import { CustomLobbyWeaponsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-weapons-menu/custom-lobby-weapons-menu.component';
-import { ToolbarDirective } from './extensions/toolbarDirective';
 import { MentionDirective } from './extensions/mention/mentionDirective';
 import { MentionListComponent } from './extensions/mention/mentionListComponent';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -64,7 +60,6 @@ import { MaterialCssVarsModule, MaterialCssVarsService } from 'angular-material-
 import { InfosHandlerComponent } from './components/infos-handler/infos-handler.component';
 import { InfoComponent } from './components/infos-handler/info/info.component';
 import { UserpanelStatsWeaponComponent } from './components/userpanel/userpanel-stats-weapon/userpanel-stats-weapon.component';
-import { TDSWindowComponent } from './components/tdswindow/tdswindow.component';
 import { GangWindowComponent } from './components/gang-window/gang-window.component';
 import { GangWindowMembersComponent } from './components/gang-window/gang-window-members/gang-window-members.component';
 import { GangWindowRankLevelsComponent } from './components/gang-window/gang-window-rank-levels/gang-window-rank-levels.component';
@@ -92,117 +87,116 @@ import { UserpanelSettingsScoreboardComponent } from './components/userpanel/use
 import { UserpanelSettingsVoiceComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-voice/userpanel-settings-voice.component';
 import { UserpanelSettingsThemeComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-theme/userpanel-settings-theme.component';
 import { UserpanelSettingsHudComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-hud/userpanel-settings-hud.component';
+import { TDSWindowModule } from './modules/tdswindow/tds-window.module';
 import { VoiceInfoComponent } from './components/hud/voice-info/voice-info.component';
+import { RegisterLoginModule } from './modules/register-login/register-login.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MapVotingComponent,
-    TeamOrdersComponent,
-    MapCreatorComponent,
-    FreeroamComponent,
-    CustomLobbyMenuComponent,
-    MapVotingNavPipe,
-    UserpanelCommandNavPipe,
-    UserpanelRulesNavPipe,
-    LoadMapDialog,
-    AreYouSureDialog,
-    CustomLobbyPasswordDialog,
-    ApplicationInviteDialog,
-    LobbyChoiceComponent,
-    TeamChoiceComponent,
-    UserpanelComponent,
-    UserpanelCommandsComponent,
-    UserpanelRulesComponent,
-    UserpanelFAQsComponent,
-    UserpanelSettingsNormalComponent,
-    UserpanelStatsGeneralComponent,
-    UserpanelApplicationComponent,
-    UserpanelSettingsChatComponent,
-    UserpanelSettingsCooldownsAndDurationsComponent,
-    UserpanelSettingsFightEffectComponent,
-    UserpanelSettingsGeneralComponent,
-    UserpanelSettingsInfoComponent,
-    UserpanelSettingsIngameColorsComponent,
-    UserpanelSettingsKillInfoComponent,
-    UserpanelSettingsScoreboardComponent,
-    UserpanelSettingsThemeComponent,
-    UserpanelSettingsVoiceComponent,
+    declarations: [
+        AppComponent,
+        MapVotingComponent,
+        TeamOrdersComponent,
+        MapCreatorComponent,
+        FreeroamComponent,
+        CustomLobbyMenuComponent,
+        MapVotingNavPipe,
+        UserpanelCommandNavPipe,
+        UserpanelRulesNavPipe,
+        LoadMapDialog,
+        AreYouSureDialog,
+        CustomLobbyPasswordDialog,
+        ApplicationInviteDialog,
+        LobbyChoiceComponent,
+        TeamChoiceComponent,
+        UserpanelComponent,
+        UserpanelCommandsComponent,
+        UserpanelRulesComponent,
+        UserpanelFAQsComponent,
+        UserpanelSettingsNormalComponent,
+        UserpanelStatsGeneralComponent,
+        UserpanelApplicationComponent,
+        UserpanelSettingsChatComponent,
+        UserpanelSettingsCooldownsAndDurationsComponent,
+        UserpanelSettingsFightEffectComponent,
+        UserpanelSettingsGeneralComponent,
+        UserpanelSettingsInfoComponent,
+        UserpanelSettingsIngameColorsComponent,
+        UserpanelSettingsKillInfoComponent,
+        UserpanelSettingsScoreboardComponent,
+        UserpanelSettingsThemeComponent,
+        UserpanelSettingsVoiceComponent,
 
-    InputTypeDirective,
-    TextareaTypeDirective,
-    ToolbarDirective,
-    MentionDirective,
-    MentionListComponent,
-    RankingComponent,
-    CustomLobbyTeamsMenuComponent,
-    UserpanelApplicationsComponent,
-    UserpanelAdminQuestionsComponent,
-    UserpanelSupportUserComponent,
-    UserpanelSupportAdminComponent,
-    UserpanelSupportViewComponent,
-    UserpanelOfflineMessagesComponent,
-    InvitationComponent,
-    UserpanelSettingsSpecialComponent,
-    RoundStatsComponent,
-    HudComponent,
-    CustomLobbyMapsMenuComponent,
-    ChatComponent,
-    CustomLobbyWeaponsMenuComponent,
-    CustomLobbyArmsRaceWeaponsMenuComponent,
-    CharCreatorComponent,
-    CharCreatorMainmenuComponent,
-    CharCreatorHeritageComponent,
-    CharCreatorFeaturesComponent,
-    CharCreatorAppearanceComponent,
-    CharCreatorHairandcolorsComponent,
-    UserpanelSettingsCommandsComponent,
-    InfosHandlerComponent,
-    InfoComponent,
-    UserpanelStatsWeaponComponent,
-    TDSWindowComponent,
-    GangWindowComponent,
-    GangWindowMembersComponent,
-    GangWindowRankLevelsComponent,
-    GangWindowCreateComponent,
-    GangWindowGangInfoComponent,
-    GangWindowVehiclesComponent,
-    GangWindowAllGangsComponent,
-    GangWindowRankPermissionsComponent,
-    GangWindowMainmenuComponent,
-    MainMenuComponent,
-    DamageTestMenuComponent,
-    KillMessagesComponent,
-    UserpanelSettingsHudComponent,
-    VoiceInfoComponent
-  ],
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    DragDropModule,
-    ColorPickerModule,
-    ClipboardModule,
-    OverlayModule,
-    CommonModule,
-    HttpClientModule,
-    MaterialModule,
-    SettingsModule,
-    SharedModule,
+        InputTypeDirective,
+        TextareaTypeDirective,
+        MentionDirective,
+        MentionListComponent,
+        RankingComponent,
+        CustomLobbyTeamsMenuComponent,
+        UserpanelApplicationsComponent,
+        UserpanelAdminQuestionsComponent,
+        UserpanelSupportUserComponent,
+        UserpanelSupportAdminComponent,
+        UserpanelSupportViewComponent,
+        UserpanelOfflineMessagesComponent,
+        InvitationComponent,
+        UserpanelSettingsSpecialComponent,
+        RoundStatsComponent,
+        HudComponent,
+        CustomLobbyMapsMenuComponent,
+        ChatComponent,
+        CustomLobbyWeaponsMenuComponent,
+        CustomLobbyArmsRaceWeaponsMenuComponent,
+        CharCreatorComponent,
+        CharCreatorMainmenuComponent,
+        CharCreatorHeritageComponent,
+        CharCreatorFeaturesComponent,
+        CharCreatorAppearanceComponent,
+        CharCreatorHairandcolorsComponent,
+        UserpanelSettingsCommandsComponent,
+        InfosHandlerComponent,
+        InfoComponent,
+        UserpanelStatsWeaponComponent,
+        GangWindowComponent,
+        GangWindowMembersComponent,
+        GangWindowRankLevelsComponent,
+        GangWindowCreateComponent,
+        GangWindowGangInfoComponent,
+        GangWindowVehiclesComponent,
+        GangWindowAllGangsComponent,
+        GangWindowRankPermissionsComponent,
+        GangWindowMainmenuComponent,
+        MainMenuComponent,
+        DamageTestMenuComponent,
+        KillMessagesComponent,
+        UserpanelSettingsHudComponent,
+        VoiceInfoComponent,
+    ],
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        ColorPickerModule,
+        ClipboardModule,
+        OverlayModule,
+        CommonModule,
+        HttpClientModule,
+        MaterialModule,
+        SettingsModule,
+        SharedModule,
+        TDSWindowModule,
+        RegisterLoginModule,
 
-    MaterialCssVarsModule.forRoot({
-        isAutoContrast: true,
-        isDarkTheme: true,
-        primary: "rgba(0,0,77,1)",
-        accent: "rgb(255,152,0)",
-        warn: "rgba(244,67,54,1)"
-    })
-  ],
-  providers: [
-    MaterialCssVarsService
-  ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        MaterialCssVarsModule.forRoot({
+            isAutoContrast: true,
+            isDarkTheme: true,
+            primary: 'rgba(0,0,77,1)',
+            accent: 'rgb(255,152,0)',
+            warn: 'rgba(244,67,54,1)',
+        }),
+    ],
+    providers: [MaterialCssVarsService],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {}

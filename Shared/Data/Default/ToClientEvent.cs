@@ -81,7 +81,6 @@
         public const string SpectatorReattachCam = "s59";
         public const string StartCharCreator = "s20";
         public const string StartRankingShowAfterRound = "s60";
-        public const string StartRegisterLogin = "s61";
         public const string StopBombPlantDefuse = "s62";
         public const string SyncFakePickupLightData = "s92";
         public const string SyncFakePickups = "s94";

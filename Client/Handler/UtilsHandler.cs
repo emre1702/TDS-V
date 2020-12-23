@@ -8,10 +8,7 @@ using TDS.Client.Data.Enums;
 using TDS.Client.Data.Models;
 using TDS.Client.Handler.Entities;
 using TDS.Client.Handler.Events;
-using TDS.Client.Handler.Sync;
 using TDS.Shared.Core;
-using TDS.Shared.Data.Default;
-using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Utility;
 using static RAGE.Events;
 
@@ -19,13 +16,11 @@ namespace TDS.Client.Handler
 {
     public class UtilsHandler : ServiceBase
     {
-        private readonly DataSyncHandler _dataSyncHandler;
         private readonly SettingsHandler _settingsHandler;
 
-        public UtilsHandler(LoggingHandler loggingHandler, DataSyncHandler dataSyncHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler)
+        public UtilsHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler, SettingsHandler settingsHandler)
             : base(loggingHandler)
         {
-            _dataSyncHandler = dataSyncHandler;
             _settingsHandler = settingsHandler;
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;

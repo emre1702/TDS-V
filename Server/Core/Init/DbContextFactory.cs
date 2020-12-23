@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Diagnostics;
 using TDS.Server.Core.Init.Services.Creators;
 using TDS.Server.Database.Entity;
 using TDS.Server.Handler.Server;
@@ -11,6 +12,7 @@ namespace TDS.Server.Core.Init
 
         public TDSDbContext CreateDbContext(string[] args)
         {
+            Debugger.Launch();
             var appConfigHandler = new AppConfigHandler();
 
             var optionsBuilder = new DbContextOptionsBuilder<TDSDbContext>();

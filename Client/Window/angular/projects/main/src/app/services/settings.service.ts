@@ -20,14 +20,15 @@ import { InitialDatas } from '../initial-datas';
 import { SyncedSettings } from '../interfaces/synced-settings';
 import { SettingsThemeIndex } from '../components/userpanel/userpanel-settings-normal/enums/settings-theme-index.enum';
 import { Constants } from '../constants';
+import { Announcement } from '../components/lobbychoice/main-menu/models/announcement';
+import { ChangelogsGroup } from '../interfaces/changelogs/changelogs-group';
 
 // tslint:disable: member-ordering
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class SettingsService {
-
     //////////////////// AdminLevel ////////////////////
     public AdminLevel = InitialDatas.getAdminLevel();
     public AdminLevelForApplicationInvites = 2;
@@ -129,14 +130,16 @@ export class SettingsService {
     KillInfoSettingsChanged = new EventEmitter();
 
     public InputFocused = false;
+    announcements: Announcement[];
+    changelogs: ChangelogsGroup[];
 
     public DamageTestWeaponDatas: DamageTestWeapon[] = InitialDatas.getDamageTestWeaponDatas();
 
     public AdminLevels = [
-        { Level: 0, Name: "User", Color: "rgb(220,220,220)" },
-        { Level: 1, Name: "Supporter", Color: "rgb(113,202,113)" },
-        { Level: 2, Name: "Administrator", Color: "rgb(253,132,85)" },
-        { Level: 3, Name: "Projectleader", Color: "rgb(222,50,50)" }
+        { Level: 0, Name: 'User', Color: 'rgb(220,220,220)' },
+        { Level: 1, Name: 'Supporter', Color: 'rgb(113,202,113)' },
+        { Level: 2, Name: 'Administrator', Color: 'rgb(253,132,85)' },
+        { Level: 3, Name: 'Projectleader', Color: 'rgb(222,50,50)' },
     ];
 
     public toggleInTeamOrderModus(bool: boolean) {
@@ -164,7 +167,7 @@ export class SettingsService {
     }
 
     private onChallengeCurrentAmountChange(frequency: ChallengeFrequency, type: ChallengeType, currentAmount: number) {
-        this.ChallengeGroups.find(g => g[0] == frequency)[1].find(c => c[0] == type)[2] = currentAmount;
+        this.ChallengeGroups.find((g) => g[0] == frequency)[1].find((c) => c[0] == type)[2] = currentAmount;
         this.ChallengesLoaded.emit(null);
     }
 
@@ -214,9 +217,13 @@ export class SettingsService {
 
     private getChallengeInfo(challenge: Challenge) {
         return this.sanitizer.bypassSecurityTrustHtml(
-            this.langPipe.transform('Challenge_' + ChallengeType[challenge[0]], this.Lang, this.getColorText(challenge[1], "orange"))
-            + " (" + this.langPipe.transform("Current:", this.Lang)
-            + " " + this.getColorText(challenge[2] != undefined ? challenge[2] : 0, "yellow") + ")");
+            this.langPipe.transform('Challenge_' + ChallengeType[challenge[0]], this.Lang, this.getColorText(challenge[1], 'orange')) +
+                ' (' +
+                this.langPipe.transform('Current:', this.Lang) +
+                ' ' +
+                this.getColorText(challenge[2] != undefined ? challenge[2] : 0, 'yellow') +
+                ')'
+        );
     }
 
     private syncCommandsData(dataJson: string) {
@@ -224,8 +231,8 @@ export class SettingsService {
         this.CommandsDataLoaded.emit(null);
     }
 
-    private getColorText(text: string|number, color: string) {
-        return "<span style='color: " + color + "'>" + text + "</span>";
+    private getColorText(text: string | number, color: string) {
+        return "<span style='color: " + color + "'>" + text + '</span>';
     }
     ////////////////////////////////////////////////////
 
@@ -243,9 +250,8 @@ export class SettingsService {
 
     ////////////////////////////////////////////////////
 
-
     constructor(private rageConnector: RageConnectorService, private sanitizer: DomSanitizer) {
-        console.log("Settings listener started.");
+        console.log('Settings listener started.');
         rageConnector.listen(DFromClientEvent.LoadLanguage, this.loadLanguage.bind(this));
         rageConnector.listen(DFromServerEvent.LoadMapFavourites, this.loadFavoriteMapIds.bind(this));
         rageConnector.listen(DFromClientEvent.ToggleInFightLobby, this.toggleInFightLobby.bind(this));

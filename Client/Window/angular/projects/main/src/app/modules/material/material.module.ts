@@ -33,6 +33,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatAppBackgroundDirective } from './directives/mat-app-background.directive';
 import { CustomMatSnackBarComponent } from './components/custom-mat-snack-bar.component';
 import { ApplyBackgroundService } from './services/apply-background.service';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
     declarations: [MatAppBackgroundDirective, CustomMatSnackBarComponent],
@@ -67,6 +69,8 @@ import { ApplyBackgroundService } from './services/apply-background.service';
         MatProgressSpinnerModule,
         MatCardModule,
         MatRadioModule,
+        DragDropModule,
+        MatTabsModule,
     ],
     exports: [
         ReactiveFormsModule,
@@ -99,6 +103,8 @@ import { ApplyBackgroundService } from './services/apply-background.service';
         MatProgressSpinnerModule,
         MatCardModule,
         MatRadioModule,
+        DragDropModule,
+        MatTabsModule,
 
         MatAppBackgroundDirective,
     ],

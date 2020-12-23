@@ -61,7 +61,8 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddSingleton<BansHandler>()
                .AddSingleton<LoginHandler>()
                .AddSingleton<RegisterHandler>()
-               .AddSingleton<ResetPasswordHandler>();
+               .AddSingleton<ResetPasswordHandler>()
+               .AddSingleton<RegisterLoginHandler>();
         }
 
         private static IServiceCollection WithBrowser(this IServiceCollection serviceCollection)
@@ -185,7 +186,7 @@ namespace TDS.Server.Core.Init.Services.Creators
         {
             return serviceCollection
                .AddSingleton<AdminsHandler>()
-               .AddSingleton<IAnnouncementsHandler, AnnouncementsHandler>()
+               .AddSingleton<AnnouncementsHandler>()
                .AddSingleton<AppConfigHandler>()
                .AddSingleton<ChatHandler>()
                .AddSingleton<ClothesHandler>()
@@ -206,7 +207,7 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddTransient<IDatabaseHandler, DatabaseHandler>()
                .AddSingleton<WorkaroundsHandler>()
                .AddSingleton<FreeroamDataHandler>()
-               .AddSingleton<IChangelogsHandler, ChangelogsHandler>();
+               .AddSingleton<ChangelogsHandler>();
         }
     }
 }

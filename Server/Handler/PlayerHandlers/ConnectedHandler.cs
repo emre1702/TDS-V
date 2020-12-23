@@ -55,11 +55,7 @@ namespace TDS.Server.Handler.PlayerHandlers
                 if (playerIdName is null)
                     return;
 
-                if (await CheckIsAccountBanned(player, playerIdName))
-                    return;
-
-                NAPI.Task.RunSafe(()
-                    => player.TriggerEvent(ToClientEvent.StartRegisterLogin, playerIdName.Name, true));
+                await CheckIsAccountBanned(player, playerIdName).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -94,12 +90,6 @@ namespace TDS.Server.Handler.PlayerHandlers
         private async Task<DatabasePlayerIdName?> GetRegisteredPlayerIdAndName(ITDSPlayer player)
         {
             var playerIdName = await _databasePlayerHelper.GetPlayerIdName(player).ConfigureAwait(false);
-            if (playerIdName is null)
-            {
-                NAPI.Task.RunSafe(()
-                    => player.TriggerEvent(ToClientEvent.StartRegisterLogin, player.SocialClubName, false));
-                return null;
-            }
             return playerIdName;
         }
 

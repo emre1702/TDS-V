@@ -32,6 +32,7 @@ namespace TDS.Client.Handler
         private readonly BrowserHandler _browserHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
         private readonly EventsHandler _eventsHandler;
+        private readonly BindsHandler _bindsHandler;
 
         public ChatHandler(LoggingHandler loggingHandler, BrowserHandler browserHandler, BindsHandler bindsHandler,
             RemoteEventsSender remoteEventsSender, EventsHandler eventsHandler)
@@ -40,16 +41,14 @@ namespace TDS.Client.Handler
             _browserHandler = browserHandler;
             _remoteEventsSender = remoteEventsSender;
             _eventsHandler = eventsHandler;
+            _bindsHandler = bindsHandler;
 
             RAGE.Chat.Show(false);
 
-            bindsHandler.Add(Control.MpTextChatAll, OpenLobbyChatInput);
-            bindsHandler.Add(Control.MpTextChatTeam, OpenTeamChatInput);
+            eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
-            bindsHandler.Add(Key.Escape, (_) => CloseChatInput());
-
-            RAGE.Events.Add(FromBrowserEvent.CloseChat, _ => CloseChatInput());
-            RAGE.Events.Add(FromBrowserEvent.ChatUsed, OnChatUsedMethod);
+            Add(FromBrowserEvent.CloseChat, _ => CloseChatInput());
+            Add(FromBrowserEvent.ChatUsed, OnChatUsedMethod);
         }
 
         public void CloseChatInput(bool force = false)
@@ -112,6 +111,13 @@ namespace TDS.Client.Handler
             string msg = (string)args[0];
             int chatTypeNumber = (int)(args[1]);
             _remoteEventsSender.Send(ToServerEvent.LobbyChatMessage, msg, chatTypeNumber);
+        }
+
+        private void EventsHandler_LoggedIn()
+        {
+            _bindsHandler.Add(Control.MpTextChatAll, OpenLobbyChatInput);
+            _bindsHandler.Add(Control.MpTextChatTeam, OpenTeamChatInput);
+            _bindsHandler.Add(Key.Escape, (_) => CloseChatInput());
         }
     }
 }

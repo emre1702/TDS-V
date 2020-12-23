@@ -1,37 +1,36 @@
-<tdswindow [hideToolbar]="true">
-  <table mat-table [dataSource]="dataSource" matSort>
+<tds-window [hideToolbar]="true">
+    <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="Place">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Place' | language: settings.Lang }}</th>
+            <td mat-cell *matCellDef="let ranking">{{ ranking[0] }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="Place">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Place' | language: settings.Lang }}</th>
-      <td mat-cell *matCellDef="let ranking">{{ ranking[0] }}</td>
-    </ng-container>
+        <ng-container matColumnDef="Name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</th>
+            <td mat-cell *matCellDef="let ranking">{{ ranking[1] }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="Name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</th>
-      <td mat-cell *matCellDef="let ranking">{{ ranking[1] }}</td>
-    </ng-container>
+        <ng-container matColumnDef="Points">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Points' | language: settings.Lang }}</th>
+            <td mat-cell *matCellDef="let ranking">{{ ranking[2] }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="Points">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Points' | language: settings.Lang }}</th>
-      <td mat-cell *matCellDef="let ranking">{{ ranking[2] }}</td>
-    </ng-container>
+        <ng-container matColumnDef="Kills">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Kills' | language: settings.Lang }}</th>
+            <td mat-cell *matCellDef="let ranking">{{ ranking[3] }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="Kills">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Kills' | language: settings.Lang }}</th>
-      <td mat-cell *matCellDef="let ranking">{{ ranking[3] }}</td>
-    </ng-container>
+        <ng-container matColumnDef="Assists">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Assists' | language: settings.Lang }}</th>
+            <td mat-cell *matCellDef="let ranking">{{ ranking[4] }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="Assists">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Assists' | language: settings.Lang }}</th>
-      <td mat-cell *matCellDef="let ranking">{{ ranking[4] }}</td>
-    </ng-container>
+        <ng-container matColumnDef="Damage">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Damage' | language: settings.Lang }}</th>
+            <td mat-cell *matCellDef="let ranking">{{ ranking[5] }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="Damage">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Damage' | language: settings.Lang }}</th>
-      <td mat-cell *matCellDef="let ranking">{{ ranking[5] }}</td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</tdswindow>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+</tds-window>

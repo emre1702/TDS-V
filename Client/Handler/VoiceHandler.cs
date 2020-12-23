@@ -12,18 +12,15 @@ namespace TDS.Client.Handler
     {
         private readonly BindsHandler _bindsHandler;
         private readonly BrowserHandler _browserHandler;
-        private readonly UtilsHandler _utilsHandler;
         private SyncedClientPlayerSettings _syncedClientPlayerSettings;
 
-        public VoiceHandler(LoggingHandler loggingHandler, BindsHandler bindsHandler, BrowserHandler browserHandler,
-            UtilsHandler utilsHandler, EventsHandler eventsHandler)
+        public VoiceHandler(LoggingHandler loggingHandler, BindsHandler bindsHandler, BrowserHandler browserHandler, EventsHandler eventsHandler)
             : base(loggingHandler)
         {
             if (!RAGE.Voice.Allowed)
                 return;
 
             _browserHandler = browserHandler;
-            _utilsHandler = utilsHandler;
             _bindsHandler = bindsHandler;
 
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
@@ -69,13 +66,14 @@ namespace TDS.Client.Handler
                 return;
 
             RAGE.Voice.Muted = false;
-            _browserHandler.PlainMain.StartPlayerTalking(_utilsHandler.GetDisplayName(RAGE.Elements.Player.LocalPlayer as ITDSPlayer));
+
+            _browserHandler.Angular.EventHandler_PlayerStartTalking(RAGE.Elements.Player.LocalPlayer);
         }
 
         private void Stop(Control _)
         {
             RAGE.Voice.Muted = true;
-            _browserHandler.PlainMain.StopPlayerTalking(_utilsHandler.GetDisplayName(RAGE.Elements.Player.LocalPlayer as ITDSPlayer));
+            _browserHandler.Angular.EventHandler_PlayerStopTalking(RAGE.Elements.Player.LocalPlayer);
         }
     }
 }

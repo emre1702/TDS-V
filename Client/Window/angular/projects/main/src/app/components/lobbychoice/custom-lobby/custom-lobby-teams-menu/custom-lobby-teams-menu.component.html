@@ -1,7 +1,6 @@
-<tdswindow id="main" hideToolbar="true">
+<tds-window id="main" hideToolbar="true">
     <div class="mat-table-container">
         <table mat-table [dataSource]="teams" matSort>
-
             <ng-container matColumnDef="Index">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NumberShort' | language: settings.Lang }}</th>
                 <td mat-cell *matCellDef="let i = index">{{ i }}</td>
@@ -10,27 +9,40 @@
             <ng-container matColumnDef="Name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }}</th>
                 <td mat-cell *matCellDef="let element">
-                    <input matInput [(ngModel)]="element[0]" [readonly]="element[4]" maxLength="25" matAutosize
-                        matTextareaAutosize />
+                    <input matInput [(ngModel)]="element[0]" [readonly]="element[4]" maxLength="25" matAutosize matTextareaAutosize />
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="Color">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Color' | language: settings.Lang }}</th>
                 <td mat-cell *matCellDef="let element">
-                    <input matInput [(colorPicker)]="element[1]" [style.background]="element[1]"
-                        [cpOutputFormat]="'rgba'" [cpPosition]="'bottom-left'"
+                    <input
+                        matInput
+                        [(colorPicker)]="element[1]"
+                        [style.background]="element[1]"
+                        [cpOutputFormat]="'rgba'"
+                        [cpPosition]="'bottom-left'"
                         [cpPresetColors]="['rgb(255,255,255)', 'rgb(0,150,0)', 'rgb(150,0,0)']"
-                        [cpAlphaChannel]="'disabled'" [cpPresetLabel]="'PresetLabels' | language: settings.Lang"
-                        [cpDisabled]="element[4]" readonly class="colorInput" />
+                        [cpAlphaChannel]="'disabled'"
+                        [cpPresetLabel]="'PresetLabels' | language: settings.Lang"
+                        [cpDisabled]="element[4]"
+                        readonly
+                        class="colorInput"
+                    />
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="BlipColor">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'BlipColor' | language: settings.Lang }}</th>
                 <td mat-cell *matCellDef="let element">
-                    <input matInput readonly [disabled]="element[4]" class="colorInput"
-                        [style.background]="getBlipColorByID(element[2])" (click)="toggleBlipColorWindow(element)">
+                    <input
+                        matInput
+                        readonly
+                        [disabled]="element[4]"
+                        class="colorInput"
+                        [style.background]="getBlipColorByID(element[2])"
+                        (click)="toggleBlipColorWindow(element)"
+                    />
                 </td>
             </ng-container>
 
@@ -50,7 +62,6 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
         </table>
     </div>
 
@@ -65,11 +76,15 @@
             {{ 'Back' | language: settings.Lang }}
         </button>
     </div>
-</tdswindow>
+</tds-window>
 
-<tdswindow id="blip-color-window" *ngIf="showBlipColorWindow" hideToolbar="true">
+<tds-window id="blip-color-window" *ngIf="showBlipColorWindow" hideToolbar="true">
     <div class="blip-container">
-        <div *ngFor="let blip of constants.BLIP_COLORS" [style.background]="blip.Color"
-            [matTooltip]="blip.Info | language: settings.Lang" (click)="clickedOnBlipColor(blip)"></div>
+        <div
+            *ngFor="let blip of constants.BLIP_COLORS"
+            [style.background]="blip.Color"
+            [matTooltip]="blip.Info | language: settings.Lang"
+            (click)="clickedOnBlipColor(blip)"
+        ></div>
     </div>
-</tdswindow>
+</tds-window>

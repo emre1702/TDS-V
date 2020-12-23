@@ -1,51 +1,51 @@
-tdswindow {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  top: 52%;
-  right: 1%;
-  height: auto;
-  width: 14%;
+tds-window {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 52%;
+    right: 1%;
+    height: auto;
+    width: 14%;
 }
 
 #container-content {
-  padding: 20px;
-  height: auto;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+    padding: 20px;
+    height: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
-  #teleport-container {
-    margin-bottom: 15px;
+    #teleport-container {
+        margin-bottom: 15px;
 
-    #teleport-position-container {
-      float: left;
-      width: 100%;
+        #teleport-position-container {
+            float: left;
+            width: 100%;
 
-      .mat-form-field {
-        width: 100%;
-      }
+            .mat-form-field {
+                width: 100%;
+            }
+        }
     }
-  }
 }
 
 .two-per-row-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  overflow: hidden;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: hidden;
+    justify-content: space-between;
 
-  .two-per-row-div {
-    width: 45% !important;
-    margin-bottom: 15px;
-  }
+    .two-per-row-div {
+        width: 45% !important;
+        margin-bottom: 15px;
+    }
 
-  .two-per-row-div:last-child {
-    margin-bottom: 0px;
-  }
+    .two-per-row-div:last-child {
+        margin-bottom: 0px;
+    }
 
-  .two-per-row-div:nth-last-child(2) {
-    margin-bottom: 0px;
-  }
+    .two-per-row-div:nth-last-child(2) {
+        margin-bottom: 0px;
+    }
 }

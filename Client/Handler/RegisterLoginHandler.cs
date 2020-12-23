@@ -12,17 +12,15 @@ namespace TDS.Client.Handler
     public class RegisterLoginHandler : ServiceBase
     {
         private readonly BrowserHandler _browserHandler;
-        private readonly CursorHandler _cursorHandler;
         private readonly EventsHandler _eventsHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
 
         private readonly SettingsHandler _settingsHandler;
 
-        public RegisterLoginHandler(LoggingHandler loggingHandler, CursorHandler cursorHandler, RemoteEventsSender remoteEventsSender,
+        public RegisterLoginHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender,
             BrowserHandler browserHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
             : base(loggingHandler)
         {
-            _cursorHandler = cursorHandler;
             _remoteEventsSender = remoteEventsSender;
             _browserHandler = browserHandler;
             _settingsHandler = settingsHandler;
@@ -32,24 +30,11 @@ namespace TDS.Client.Handler
             RAGE.Events.Add(FromBrowserEvent.TryLogin, TryLogin);
             RAGE.Events.Add(FromBrowserEvent.TryRegister, TryRegister);
             RAGE.Events.Add(FromBrowserEvent.ResetPassword, ResetPassword);
-            RAGE.Events.Add(ToClientEvent.StartRegisterLogin, OnStartRegisterLoginMethod);
             RAGE.Events.Add(ToClientEvent.LoginSuccessful, OnLoginSuccessfulMethod);
-        }
-
-        public void Start(string name, bool isRegistered)
-        {
-            _browserHandler.RegisterLogin.CreateBrowser();
-
-            //_browserHandler.RegisterLogin.SetReady(); only for Angular browser
-
-            _cursorHandler.Visible = true;
-            _browserHandler.RegisterLogin.SendDataToBrowser(name, isRegistered, _settingsHandler.Language);
         }
 
         public void Stop()
         {
-            _browserHandler.RegisterLogin.Stop();
-            _cursorHandler.Visible = false;
             RAGE.Chat.Show(true);
         }
 
@@ -86,13 +71,6 @@ namespace TDS.Client.Handler
             _eventsHandler.OnLoggedIn();
 
             SendWelcomeMessage();
-        }
-
-        private void OnStartRegisterLoginMethod(object[] args)
-        {
-            var scName = (string)args[0];
-            bool isRegistered = Convert.ToBoolean(args[1]);
-            Start(scName, isRegistered);
         }
 
         private void SendWelcomeMessage()

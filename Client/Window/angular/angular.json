@@ -33,7 +33,7 @@
                         "tsConfig": "projects/main/tsconfig.app.json",
                         "aot": true,
                         "assets": ["projects/main/src/assets"],
-                        "styles": ["projects/main/src/styles.scss", "theme.scss"],
+                        "styles": ["theme.scss"],
                         "scripts": []
                     },
                     "configurations": {

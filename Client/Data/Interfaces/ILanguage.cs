@@ -27,7 +27,6 @@ namespace TDS.Client.Data.Interfaces
         string LEFT_CTRL { get; }
         string LEFT_SHIFT { get; }
         string LET_IT_FLOAT { get; }
-        ILoginRegisterTexts LOGIN_REGISTER_TEXTS { get; }
 
         string OBJECT_MODEL_INVALID { get; }
         string ON_FOOT { get; }

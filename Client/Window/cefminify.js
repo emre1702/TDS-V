@@ -15,8 +15,7 @@ let files = [
             "toggleCanVoteForMapWithNumpad", "chatAPI", "loadUserName", "loadNamesForChat", "addNameForChat", "removeNameForChat", 
             "showRoundEndReason", "hideRoundEndReason", "loadMyMapRatings", "enableChatInput", "startBombTickSound", "stopBombTickSound", 
 			"onKillstreakSoundEnded", "addPlayerTalking", "removePlayerTalking", "chatFocus"]
-    },
-    { path: "registerlogin/", html: "registerlogin.html", js: ["registerlogin.js"], css: [], reserved: ["loadLanguage", "setLoginPanelData"] },
+    }
 ];
 let standalonejsfiles = [
     {

@@ -1,27 +1,36 @@
-<tdswindow [title]="currentTitle | language: settings.Lang">
+<tds-window [title]="currentTitle | language: settings.Lang">
     <div id="teleport-container">
-      <div id="teleport-position-container">
-        <mat-form-field color="accent">
-          <input name="teleportToPosX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="teleportToPos.X"/>
-        </mat-form-field>
-        <mat-form-field color="accent">
-          <input name="teleportToPosX" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="teleportToPos.Y"/>
-        </mat-form-field>
-        <mat-form-field color="accent">
-          <input name="teleportToPosX" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="teleportToPos.Z"/>
-        </mat-form-field>
-      </div>
-
+        <div id="teleport-position-container">
+            <mat-form-field color="accent">
+                <input name="teleportToPosX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="teleportToPos.X" />
+            </mat-form-field>
+            <mat-form-field color="accent">
+                <input name="teleportToPosX" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="teleportToPos.Y" />
+            </mat-form-field>
+            <mat-form-field color="accent">
+                <input name="teleportToPosX" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="teleportToPos.Z" />
+            </mat-form-field>
+        </div>
     </div>
 
     <div class="two-per-row-container">
-      <button #tpButton mat-raised-button matRipple class="two-per-row-div" (click)="tpToPos(tpButton)">
-        {{ 'Teleport' | language: settings.Lang }}
-      </button>
-      <button #carButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Car, carButton)">{{ 'Car' | language: settings.Lang }}</button>
-      <button #heliButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Helicopter, heliButton)">{{ 'Helicopter' | language: settings.Lang }}</button>
-      <button #planeButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Plane, planeButton)">{{ 'Plane' | language: settings.Lang }}</button>
-      <button #bikeButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Bike, bikeButton)">{{ 'Bike' | language: settings.Lang }}</button>
-      <button #boatButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Boat, boatButton)">{{ 'Boat' | language: settings.Lang }}</button>
+        <button #tpButton mat-raised-button matRipple class="two-per-row-div" (click)="tpToPos(tpButton)">
+            {{ 'Teleport' | language: settings.Lang }}
+        </button>
+        <button #carButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Car, carButton)">
+            {{ 'Car' | language: settings.Lang }}
+        </button>
+        <button #heliButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Helicopter, heliButton)">
+            {{ 'Helicopter' | language: settings.Lang }}
+        </button>
+        <button #planeButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Plane, planeButton)">
+            {{ 'Plane' | language: settings.Lang }}
+        </button>
+        <button #bikeButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Bike, bikeButton)">
+            {{ 'Bike' | language: settings.Lang }}
+        </button>
+        <button #boatButton mat-raised-button matRipple class="two-per-row-div" (click)="getVehicle(VehicleEnum.Boat, boatButton)">
+            {{ 'Boat' | language: settings.Lang }}
+        </button>
     </div>
-</tdswindow>
+</tds-window>
