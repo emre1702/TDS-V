@@ -1,0 +1,40 @@
+.toolbar.design1 {
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    flex-shrink: 0;
+    min-height: 30px;
+
+    .border-container {
+        display: flex;
+        flex-direction: row;
+        min-height: inherit;
+        margin: 2px;
+        border: 1px solid white;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+
+        .glowing-button {
+            animation: glowing 1500ms infinite;
+        }
+
+        > * {
+            display: table-cell;
+            flex-shrink: 0;
+        }
+
+        #title {
+            width: 100%;
+            text-align: center;
+            flex-shrink: 1;
+            margin: auto 5px auto 5px;
+        }
+
+        #menu-navigation {
+            min-width: initial !important;
+
+            .mat-icon {
+                margin-right: 10px;
+            }
+        }
+    }
+}
