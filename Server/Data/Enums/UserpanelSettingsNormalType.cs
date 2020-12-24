@@ -8,10 +8,10 @@
         General,
         Info,
         IngameColors,
-        Hud,
         KillInfo,
         Scoreboard,
         Theme,
-        Voice
+        Voice,
+        Hud
     }
 }
