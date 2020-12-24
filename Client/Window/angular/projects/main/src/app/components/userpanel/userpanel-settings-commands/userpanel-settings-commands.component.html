@@ -1,13 +1,13 @@
 <div id="container" *ngIf="userpanelService.settingsCommandsData">
     <span class="info">{{ 'SettingsCommandsInfo' | language: settings.Lang }}</span>
     <div class="row" *ngFor="let entry of userpanelService.settingsCommandsData[1]">
-        <ng-container *ngIf="entry[1]">
+        <ng-container *ngIf="entry[2] !== undefined">
             <mat-form-field color="accent" class="left">
-                <input matInput [(ngModel)]="entry[1]" (ngModelChange)="changed(entry)" />
+                <input matInput [(ngModel)]="entry[2]" (ngModelChange)="changed(entry)" />
             </mat-form-field>
             <mat-icon color="accent" class="between"> arrow_forward </mat-icon>
             <mat-form-field color="accent" class="right">
-                <mat-select [(ngModel)]="entry[0]" (ngModelChange)="changed(entry)">
+                <mat-select [(ngModel)]="entry[1]" (ngModelChange)="changed(entry)">
                     <mat-option *ngFor="let commandData of userpanelService.settingsCommandsData[0] | orderBy: '1'" [value]="commandData[0]">
                         {{ commandData[1] }}
                     </mat-option>
