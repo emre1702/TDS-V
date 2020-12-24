@@ -8,7 +8,7 @@
     src: url(../../../../assets/font/Roboto-Thin.ttf);
 }
 
-::ng-deep #chat_container {
+#chat_container {
     float: left;
     position: absolute;
     height: auto;
@@ -101,8 +101,4 @@
             font-size: 1.2em;
         }
     }
-
-
 }
-
-

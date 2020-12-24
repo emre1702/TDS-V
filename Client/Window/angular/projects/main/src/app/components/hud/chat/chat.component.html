@@ -9,17 +9,26 @@
         </div>
         <div id="chat_choice">
             <ng-container *ngFor="let body of chatBodies; let i = index">
-                <div *ngIf="body.name != 'Dirty' || !settings.Settings[3]"
-                (click)="selectChatBody(i)"
-                [style.background-color]="selectedChatBody == i ? '#04074e' : '#A9A9A9'">
+                <div
+                    *ngIf="body.name != 'Dirty' || !settings.Settings[3]"
+                    (click)="selectChatBody(i)"
+                    [style.background-color]="selectedChatBody == i ? '#04074e' : '#A9A9A9'"
+                >
                     {{ body.name | language: settings.Lang }}
                 </div>
             </ng-container>
         </div>
     </div>
     <mat-form-field [style.display]="settings.ChatInputOpen ? 'block' : 'none'">
-        <input matInput floatLabel="never" id="main-input"
-        autofocus (blur)="removeInputFocus()"
-        [mention]="mentionConfig" (mentionShowingChanged)="onMentionShowingChanged($event)" />
+        <input
+            matInput
+            floatLabel="never"
+            id="main-input"
+            autofocus
+            (blur)="removeInputFocus()"
+            [mention]="mentionConfig"
+            (mentionShowingChanged)="onMentionShowingChanged($event)"
+        />
     </mat-form-field>
+    <app-voice-info></app-voice-info>
 </div>
