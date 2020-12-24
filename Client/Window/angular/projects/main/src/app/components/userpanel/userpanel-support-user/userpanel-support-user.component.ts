@@ -5,8 +5,8 @@ import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 
 @Component({
@@ -52,7 +52,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.userpanelService.supportRequestsLoaded.off(null, this.detectChanges.bind(this));
         this.rageConnector.remove(FromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
-        this.rageConnector.callServer(DToServerEvent.LeftSupportRequestsList);
+        this.rageConnector.callServer(ToServerEvent.LeftSupportRequestsList);
     }
 
     openCreateRequest() {
@@ -70,7 +70,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         this.inRequest = id;
         this.requestGroup.get('type').disable();
 
-        this.rageConnector.callCallbackServer(DToServerEvent.GetSupportRequestData, [id], (json: string) => {
+        this.rageConnector.callCallbackServer(ToServerEvent.GetSupportRequestData, [id], (json: string) => {
             this.currentRequest = JSON.parse(json);
             this.changeDetector.detectChanges();
         });
@@ -85,7 +85,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         this.currentRequest[2] = [{ 0: '', 1: this.requestGroup.get('message').value as string, 2: '' }];
         this.currentRequest[3] = this.requestGroup.get('type').value;
 
-        this.rageConnector.callServer(DToServerEvent.SendSupportRequest, JSON.stringify(this.currentRequest));
+        this.rageConnector.callServer(ToServerEvent.SendSupportRequest, JSON.stringify(this.currentRequest));
 
         this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
         this.changeDetector.detectChanges();

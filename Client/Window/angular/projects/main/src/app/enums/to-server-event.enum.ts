@@ -1,4 +1,4 @@
-export enum DToServerEvent {
+export enum ToServerEvent {
     AcceptInvitation = 'c1',
     AcceptTDSTeamInvitation = 'c67',
     AnswerToOfflineMessage = 'c3',
@@ -29,6 +29,7 @@ export enum DToServerEvent {
     LoadMapForMapCreator = 'c25',
     LoadPlayerWeaponStats = 'c72',
     LoadRegisterLoginInitData = 'c82',
+    LoadRegisterLoginInformation = 'c85',
     LoadUserpanelData = 'c27',
     LoadUserpanelNormalSettingsData = 'c80',
     MapCreatorSyncCurrentMapToServer = 'c17',

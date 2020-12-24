@@ -4,7 +4,7 @@ import { RageConnectorService } from 'rage-connector';
 import { FromClientEvent } from '../../enums/from-client-event.enum';
 import { SettingsService } from '../../services/settings.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { DToServerEvent } from '../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../enums/to-server-event.enum';
 
 @Component({
     selector: 'app-damage-test-menu',
@@ -39,7 +39,7 @@ export class DamageTestMenuComponent implements OnInit, OnDestroy {
         const weaponHash = this.weaponFormGroup.controls['0'].value;
         const weaponData = this.settings.DamageTestWeaponDatas.find((w) => w[0] == weaponHash);
         if (weaponData) {
-            this.rageConnector.callServer(DToServerEvent.SetDamageTestWeaponDamage, JSON.stringify(this.weaponFormGroup.value));
+            this.rageConnector.callServer(ToServerEvent.SetDamageTestWeaponDamage, JSON.stringify(this.weaponFormGroup.value));
         }
     }
 

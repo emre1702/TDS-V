@@ -3,17 +3,16 @@ import { CharCreatorMenuNav } from './enums/charCreatorMenuNav.enum';
 import { SettingsService } from '../../services/settings.service';
 import { CharCreateData } from './interfaces/charCreateData';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../enums/dtoserverevent.enum';
-import { DToClientEvent } from '../../enums/dtoclientevent.enum';
+import { ToServerEvent } from '../../enums/to-server-event.enum';
+import { ToClientEvent } from '../../enums/to-client-event.enum';
 import { CharCreatorDataKey } from './enums/charCreatorDataKey.enum';
 
 @Component({
     selector: 'app-char-creator',
     templateUrl: './char-creator.component.html',
-    styleUrls: ['./char-creator.component.scss']
+    styleUrls: ['./char-creator.component.scss'],
 })
 export class CharCreatorComponent implements OnInit, OnDestroy {
-
     @Input() data: CharCreateData;
 
     charCreatorMenuNav = CharCreatorMenuNav;
@@ -60,10 +59,12 @@ export class CharCreatorComponent implements OnInit, OnDestroy {
         [99]: 0
     };*/
 
-    constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService,
-        private rageConnector: RageConnectorService, private ngZone: NgZone) {
-
-        }
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        public settings: SettingsService,
+        private rageConnector: RageConnectorService,
+        private ngZone: NgZone
+    ) {}
 
     ngOnInit(): void {
         this.goToMain();
@@ -93,28 +94,28 @@ export class CharCreatorComponent implements OnInit, OnDestroy {
     }
 
     save() {
-        this.rageConnector.callServer(DToServerEvent.SaveCharCreateData, JSON.stringify(this.data));
+        this.rageConnector.callServer(ToServerEvent.SaveCharCreateData, JSON.stringify(this.data));
     }
 
     cancel() {
-        this.rageConnector.callServer(DToServerEvent.CancelCharCreateData);
+        this.rageConnector.callServer(ToServerEvent.CancelCharCreateData);
     }
 
     recreatePed() {
-        this.rageConnector.call(DToClientEvent.CharCreatorDataChanged, CharCreatorDataKey.IsMale, JSON.stringify(this.data));
+        this.rageConnector.call(ToClientEvent.CharCreatorDataChanged, CharCreatorDataKey.IsMale, JSON.stringify(this.data));
     }
 
     setData(list: { 99: number }[], entry: { 99: number }) {
-        const index = list.findIndex(e => e[99] == this.data[99]);
+        const index = list.findIndex((e) => e[99] == this.data[99]);
         list[index] = entry;
         this.changeDetector.detectChanges();
     }
 
     getData(list: { 99: number }[]) {
-        return list.find(entry => entry[99] == this.data[99]);
+        return list.find((entry) => entry[99] == this.data[99]);
     }
 
     private detectChanges() {
         this.changeDetector.detectChanges();
     }
- }
+}

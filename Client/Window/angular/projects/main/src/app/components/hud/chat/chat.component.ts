@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, HostListener, ElementRef } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
-import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
+import { ToClientEvent } from '../../../enums/to-client-event.enum';
 import { SettingsService } from '../../../services/settings.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FromClientEvent } from '../../../enums/from-client-event.enum';
 import { MentionConfig } from '../../../extensions/mention/mentionConfig';
 import { MentionDirective } from '../../../extensions/mention/mentionDirective';
 import { animate, style, AnimationBuilder, AnimationPlayer } from '@angular/animations';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { UserpanelCommandDataDto } from '../../userpanel/interfaces/userpanelCommandDataDto';
 import { MatInput } from '@angular/material/input';
 import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
@@ -159,7 +159,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (this.mentionShowing) return;
 
         this.toggleChatInput(false);
-        this.rageConnector.call(DToClientEvent.CloseChat);
+        this.rageConnector.call(ToClientEvent.CloseChat);
     }
 
     selectChatBody(index: number) {
@@ -497,12 +497,12 @@ export class ChatComponent implements OnInit, OnDestroy {
                 // msg = msg.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
                 if (msg.startsWith(this.commandPrefix)) {
                     msg = msg.substr(this.commandPrefix.length);
-                    this.rageConnector.call(DToClientEvent.CommandUsed, msg);
+                    this.rageConnector.call(ToClientEvent.CommandUsed, msg);
                 } else {
-                    this.rageConnector.call(DToClientEvent.ChatUsed, msg, this.selectedChatBody);
+                    this.rageConnector.call(ToClientEvent.ChatUsed, msg, this.selectedChatBody);
                 }
             } else {
-                this.rageConnector.call(DToClientEvent.CloseChat);
+                this.rageConnector.call(ToClientEvent.CloseChat);
             }
             this.mentionDirective.closeSearchList();
         } else if (event.key === ' ' && !this.settings.ChatInputOpen && (event.target as HTMLDivElement).id == 'chat_container') {

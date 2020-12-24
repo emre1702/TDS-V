@@ -3,10 +3,10 @@ import { GangMember } from '../models/gang-member';
 import { MyGangData } from '../models/my-gang-permissions';
 import { GangPermissionSettings } from '../gang-window-rank-permissions/models/gang-permission-settings';
 import { RageConnectorService } from 'rage-connector';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { GangWindowNav } from '../enums/gang-window-nav.enum';
 import { EventEmitter } from 'events';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
 import { GangData } from '../models/gang-data';
 import { SettingsService } from '../../../services/settings.service';
 import { GangRank } from '../models/gang-rank';
@@ -42,7 +42,7 @@ export class GangWindowService {
 
         this.loadingData = true;
         this.loadingDataChanged.emit(null);
-        this.rageConnector.callServer(DToServerEvent.LoadGangWindowData, type);
+        this.rageConnector.callServer(ToServerEvent.LoadGangWindowData, type);
     }
 
     clear() {
@@ -62,7 +62,7 @@ export class GangWindowService {
                 this.executeCommand(command, args, onSuccess, false);
             });
         } else {
-            this.rageConnector.callCallbackServer(DToServerEvent.GangCommand, [command, ...args], (msg: string) => {
+            this.rageConnector.callCallbackServer(ToServerEvent.GangCommand, [command, ...args], (msg: string) => {
                 if (msg && msg.length) {
                     this.notificationService.showError(msg);
                     return;

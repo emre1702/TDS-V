@@ -6,15 +6,14 @@ import { UserpanelWeaponStats } from '../enums/userpanel-weapon-stats.enum';
 import { UserpanelWeaponBodypartStats } from '../enums/userpanel-weapon-bodypart-stats.enum';
 import { PedBodyPart } from '../enums/ped-body-part.enum';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
 
 @Component({
     selector: 'app-userpanel-stats-weapon',
     templateUrl: './userpanel-stats-weapon.component.html',
-    styleUrls: ['./userpanel-stats-weapon.component.scss']
+    styleUrls: ['./userpanel-stats-weapon.component.scss'],
 })
 export class UserpanelStatsWeaponComponent implements OnInit, OnDestroy {
-
     @Input()
     set weaponsUsed(value: string[]) {
         this._weaponsUsed = value;
@@ -31,10 +30,7 @@ export class UserpanelStatsWeaponComponent implements OnInit, OnDestroy {
 
     private _weaponsUsed: string[];
 
-    constructor(
-        private changeDetector: ChangeDetectorRef,
-        public settings: SettingsService,
-        private rageConnector: RageConnectorService) { }
+    constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, private rageConnector: RageConnectorService) {}
 
     ngOnInit(): void {
         this.settings.LanguageChanged.on(null, this.changeDetector.detectChanges.bind(this));
@@ -46,7 +42,7 @@ export class UserpanelStatsWeaponComponent implements OnInit, OnDestroy {
 
     loadWeaponData(weaponName: string) {
         if (!this.weaponStatsData[weaponName]) {
-            this.rageConnector.callCallbackServer(DToServerEvent.LoadPlayerWeaponStats, [weaponName], (json: string) => {
+            this.rageConnector.callCallbackServer(ToServerEvent.LoadPlayerWeaponStats, [weaponName], (json: string) => {
                 this.weaponStatsData[weaponName] = JSON.parse(json);
                 this.changeDetector.detectChanges();
             });

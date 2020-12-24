@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
 import { EventEmitter } from 'events';
 import { UserpanelRuleDataDto } from '../interfaces/userpanelRuleDataDto';
 import { UserpanelLoadDataType } from '../enums/userpanel-load-data-type.enum';
@@ -12,7 +12,7 @@ import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuesti
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { UserpanelSettingSpecialDataDto } from '../interfaces/userpanelSettingSpecialDataDto';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { UserpanelSupportRequestListData } from '../interfaces/userpanelSupportRequestListData';
 import { UserpanelSettingCommandDataDto } from '../interfaces/settings-commands/userpanelSettingCommandDataDto';
 import { InitialDatas } from '../../../initial-datas';
@@ -138,19 +138,19 @@ export class UserpanelService {
     }
 
     loadRules() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.Rules);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.Rules);
     }
 
     loadFAQs() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.FAQs);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.FAQs);
     }
 
     loadSettingsSpecial() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsSpecial);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsSpecial);
     }
 
     loadSettingsCommands() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsCommands);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SettingsCommands);
 
         /*this.settingsCommandsData = {
             0: [
@@ -185,11 +185,11 @@ export class UserpanelService {
         }
 
         this.myStatsGeneralLoadCooldown = setTimeout(this.myStatsGeneralLoadingCooldownEnded.bind(this), 3 * 60 * 1000);
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStatsGeneral);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStatsGeneral);
     }
 
     loadMyStatsWeapon() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStatsWeapon);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.MyStatsWeapon);
 
         /*this.myStatsWeaponsUsed = [ "assaultrifle", "carbinerifle", "advancedrifle" ];
         this.myStatsWeaponsUsedLoaded.emit(null);
@@ -199,23 +199,23 @@ export class UserpanelService {
     }
 
     loadApplicationPage() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationUser);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationUser);
     }
 
     loadApplicationsPage() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationsAdmin);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.ApplicationsAdmin);
     }
 
     loadUserSupportRequests() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportUser);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportUser);
     }
 
     loadSupportRequestsForAdmin() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportAdmin);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.SupportAdmin);
     }
 
     loadOfflineMessages() {
-        this.rageConnector.call(DToServerEvent.LoadUserpanelData, UserpanelLoadDataType.OfflineMessages);
+        this.rageConnector.call(ToServerEvent.LoadUserpanelData, UserpanelLoadDataType.OfflineMessages);
     }
 
     private loadUserpanelData(type: UserpanelLoadDataType, json: string) {

@@ -2,8 +2,8 @@ import { Component, ChangeDetectorRef, OnInit, OnDestroy, Input } from '@angular
 import { RageConnectorService } from 'rage-connector';
 import { SettingsService } from '../../../services/settings.service';
 import { trigger, transition, animate, style } from '@angular/animations';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
 
 @Component({
@@ -42,7 +42,7 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
 
     joinLobby(id: number) {
         if (id === OfficialLobbyId.CustomLobby) this.showUserLobbies();
-        else this.rageConnector.callServer(DToServerEvent.JoinLobby, id);
+        else this.rageConnector.callServer(ToServerEvent.JoinLobby, id);
     }
 
     showUserLobbies() {

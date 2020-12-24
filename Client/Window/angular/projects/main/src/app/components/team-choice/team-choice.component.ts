@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { FromClientEvent } from '../../enums/from-client-event.enum';
-import { DToServerEvent } from '../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../enums/to-server-event.enum';
 import { TeamChoiceMenuTeamData } from './models/teamChoiceMenuTeamData';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { SettingsService } from '../../services/settings.service';
@@ -37,11 +37,11 @@ export class TeamChoiceComponent implements OnInit, OnDestroy {
     }
 
     chooseTeamIndex(index: number) {
-        this.rageConnector.call(DToServerEvent.ChooseTeam, index);
+        this.rageConnector.call(ToServerEvent.ChooseTeam, index);
     }
 
     leaveLobby() {
-        this.rageConnector.call(DToServerEvent.LeaveLobby);
+        this.rageConnector.call(ToServerEvent.LeaveLobby);
     }
 
     getColor(team: TeamChoiceMenuTeamData): SafeStyle {

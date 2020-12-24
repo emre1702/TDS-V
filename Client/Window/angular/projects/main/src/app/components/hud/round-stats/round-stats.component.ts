@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { ClipboardService } from 'ngx-clipboard';
 import { HudDesign } from '../enums/hud-design.enum';
 

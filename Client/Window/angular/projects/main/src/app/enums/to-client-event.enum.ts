@@ -1,4 +1,4 @@
-export enum DToClientEvent {
+export enum ToClientEvent {
     LoadMapForMapCreator = 'b1',
     CharCreatorDataChanged = 'b10',
     ChatUsed = 'b3',

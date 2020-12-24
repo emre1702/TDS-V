@@ -2,8 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { Invitation } from './models/invitation';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { trigger, transition, query, style, stagger, animate } from '@angular/animations';
 
 @Component({
@@ -49,12 +49,12 @@ export class InvitationComponent implements OnInit, OnDestroy {
     }
 
     accept(id: number) {
-        this.rageConnector.callServer(DToServerEvent.AcceptInvitation, id);
+        this.rageConnector.callServer(ToServerEvent.AcceptInvitation, id);
         this.removeInvitation(id);
     }
 
     reject(id: number) {
-        this.rageConnector.callServer(DToServerEvent.RejectInvitation, id);
+        this.rageConnector.callServer(ToServerEvent.RejectInvitation, id);
         this.removeInvitation(id);
     }
 

@@ -98,6 +98,28 @@ export class TDSWindowComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
+    private _containerHeight = '100%';
+    get containerHeight(): string {
+        return this._containerHeight;
+    }
+
+    @Input('containerHeight')
+    set containerHeight(value: string) {
+        this._containerHeight = value;
+        this.changeDetector.detectChanges();
+    }
+
+    private _containerMaxHeight = 'initial';
+    get containerMaxHeight(): string {
+        return this._containerMaxHeight;
+    }
+
+    @Input('containerMaxHeight')
+    set containerMaxHeight(value: string) {
+        this._containerMaxHeight = value;
+        this.changeDetector.detectChanges();
+    }
+
     private _contentWidth = 'auto';
     get contentWidth(): string {
         return this._contentWidth;

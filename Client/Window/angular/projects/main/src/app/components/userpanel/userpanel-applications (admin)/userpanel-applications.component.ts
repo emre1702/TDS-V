@@ -4,7 +4,7 @@ import { UserpanelService } from '../services/userpanel.service';
 import { RageConnectorService } from 'rage-connector';
 import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuestionsGroup';
 import { UserpanelStatsDataDto } from '../interfaces/userpanelStatsDataDto';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
 import { ApplicationInviteDialog } from '../../../dialog/application-invite-dialog';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,50 +12,50 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
     selector: 'app-userpanel-applications',
     templateUrl: './userpanel-applications.component.html',
-    styleUrls: ['./userpanel-applications.component.scss']
+    styleUrls: ['./userpanel-applications.component.scss'],
 })
 export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
     applicationData: {
         /** ApplicationID */
-        0: number,
+        0: number;
         /** Answers */
-        1: { [index: number]: any },
+        1: { [index: number]: any };
         /** Questions */
-        2: UserpanelAdminQuestionsGroup[],
+        2: UserpanelAdminQuestionsGroup[];
         /** Stats */
-        3: UserpanelStatsDataDto,
+        3: UserpanelStatsDataDto;
         /** AlreadyInvited */
-        4: boolean
+        4: boolean;
     };
 
     applicationStatsColumns = {
-        0: "Id",
-        1: "Name",
-        2: "SCName",
-        3: "Gang",
-        4: "AdminLvl",
-        5: "Donation",
-        6: "IsVip",
-        7: "Money",
-        8: "TotalMoney",
-        9: "PlayTime",
+        0: 'Id',
+        1: 'Name',
+        2: 'SCName',
+        3: 'Gang',
+        4: 'AdminLvl',
+        5: 'Donation',
+        6: 'IsVip',
+        7: 'Money',
+        8: 'TotalMoney',
+        9: 'PlayTime',
 
-        10: "MuteTime",
-        11: "VoiceMuteTime",
+        10: 'MuteTime',
+        11: 'VoiceMuteTime',
 
-        12: "BansInLobbies",
+        12: 'BansInLobbies',
 
-        13: "AmountMapsCreated",
-        14: "MapsRatedAverage",
-        15: "CreatedMapsAverageRating",
-        16: "AmountMapsRated",
-        17: "LastLogin",
-        18: "RegisterTimestamp",
-        20: "Logs",
-        21: "AmountLowPriorityIssues",
-        22: "AmountMediumPriorityIssues",
-        23: "AmountHighPriorityIssues",
-        24: "AmountUrgentPriorityIssues"
+        13: 'AmountMapsCreated',
+        14: 'MapsRatedAverage',
+        15: 'CreatedMapsAverageRating',
+        16: 'AmountMapsRated',
+        17: 'LastLogin',
+        18: 'RegisterTimestamp',
+        20: 'Logs',
+        21: 'AmountLowPriorityIssues',
+        22: 'AmountMediumPriorityIssues',
+        23: 'AmountHighPriorityIssues',
+        24: 'AmountUrgentPriorityIssues',
     };
 
     constructor(
@@ -63,8 +63,8 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         public userpanelService: UserpanelService,
         private rageConnector: RageConnectorService,
-        private dialog: MatDialog) {
-        }
+        private dialog: MatDialog
+    ) {}
 
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
@@ -80,7 +80,7 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
     }
 
     requestApplicationData(applicationID: number) {
-        this.rageConnector.callCallbackServer(DToServerEvent.LoadApplicationDataForAdmin, [applicationID], this.applicationDataLoadedFunc.bind(this));
+        this.rageConnector.callCallbackServer(ToServerEvent.LoadApplicationDataForAdmin, [applicationID], this.applicationDataLoadedFunc.bind(this));
         this.changeDetector.detectChanges();
     }
 
@@ -88,17 +88,17 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
         if (!this.canInvite()) {
             return;
         }
-        this.dialog.open(ApplicationInviteDialog, {panelClass: "mat-app-background"})
+        this.dialog
+            .open(ApplicationInviteDialog, { panelClass: 'mat-app-background' })
             .afterClosed()
             .subscribe((message: string | undefined) => {
                 if (message == undefined) {
                     return;
                 }
 
-                this.rageConnector.callServer(DToServerEvent.SendApplicationInvite, this.applicationData[0], message);
+                this.rageConnector.callServer(ToServerEvent.SendApplicationInvite, this.applicationData[0], message);
                 this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
-            }
-        );
+            });
     }
 
     canInvite(): boolean {
@@ -111,13 +111,13 @@ export class UserpanelApplicationsComponent implements OnInit, OnDestroy {
 
     private applicationDataLoadedFunc(json: string) {
         this.applicationData = JSON.parse(json);
-        if (typeof(this.applicationData[1]) === "string") {
+        if (typeof this.applicationData[1] === 'string') {
             this.applicationData[1] = JSON.parse(this.applicationData[1]);
         }
-        if (typeof(this.applicationData[2]) === "string") {
+        if (typeof this.applicationData[2] === 'string') {
             this.applicationData[2] = JSON.parse(this.applicationData[2]);
         }
-        if (typeof(this.applicationData[3]) === "string") {
+        if (typeof this.applicationData[3] === 'string') {
             this.applicationData[3] = JSON.parse(this.applicationData[3]);
         }
         this.changeDetector.detectChanges();

@@ -12,10 +12,10 @@ import { CustomLobbyTeamData } from '../models/custom-lobby-team-data';
 import { LobbySetting } from '../enums/lobby-setting.enum';
 import { Constants } from '../../../constants';
 import { CustomLobbyMenuType } from '../enums/custom-lobby-menu-type.enum';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
 import { DataForCustomLobbyCreation } from '../models/data-for-custom-lobby-creation';
 import { CustomLobbyWeaponData } from '../models/custom-lobby-weapon-data';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { notEnoughTeamsValidator } from './validators/notEnoughTeamsValidator';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../../modules/shared/services/error.service';
 import { CustomLobbyArmsRaceWeaponData } from '../models/custom-lobby-armsraceweapon-data';
@@ -271,7 +271,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
         this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
-        this.rageConnector.callServer(DToServerEvent.JoinedCustomLobbiesMenu);
+        this.rageConnector.callServer(ToServerEvent.JoinedCustomLobbiesMenu);
 
         // DEBUG //
         /*this.createLobbyDatas = {
@@ -295,7 +295,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
         this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
-        this.rageConnector.callServer(DToServerEvent.LeftCustomLobbiesMenu);
+        this.rageConnector.callServer(ToServerEvent.LeftCustomLobbiesMenu);
     }
 
     private addCustomLobby(customLobbyDataJson: string) {
@@ -357,7 +357,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.rageConnector.callCallbackServer(DToServerEvent.CreateCustomLobby, [JSON.stringify(data)], (error: string) => {
+        this.rageConnector.callCallbackServer(ToServerEvent.CreateCustomLobby, [JSON.stringify(data)], (error: string) => {
             if (!error || error == '') return;
             this.notificationService.showError(error);
         });
@@ -379,10 +379,10 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
                     this.notificationService.showError(new LanguagePipe().transform('PasswordIncorrect', this.settings.Lang));
                     return;
                 }
-                this.rageConnector.callServer(DToServerEvent.JoinLobbyWithPassword, clickedLobbyData[0], inputedPassword);
+                this.rageConnector.callServer(ToServerEvent.JoinLobbyWithPassword, clickedLobbyData[0], inputedPassword);
             });
         } else {
-            this.rageConnector.callServer(DToServerEvent.JoinLobby, clickedLobbyData[0]);
+            this.rageConnector.callServer(ToServerEvent.JoinLobby, clickedLobbyData[0]);
         }
     }
 
@@ -405,7 +405,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
         this.loadingData = true;
         this.changeDetector.detectChanges();
 
-        this.rageConnector.callCallbackServer(DToServerEvent.LoadDatasForCustomLobby, [], (json: string) => {
+        this.rageConnector.callCallbackServer(ToServerEvent.LoadDatasForCustomLobby, [], (json: string) => {
             this.createLobbyDatas = JSON.parse(json);
 
             this.setSelectedLobbyWeapons(this.createLobbyDatas[1]);

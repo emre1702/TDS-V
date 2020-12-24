@@ -4,8 +4,8 @@ import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { EventEmitter } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 
 @Component({
@@ -44,7 +44,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
     }
 
     ngOnDestroy() {
-        this.rageConnector.callServer(DToServerEvent.LeftSupportRequest, this.currentRequest[0]);
+        this.rageConnector.callServer(ToServerEvent.LeftSupportRequest, this.currentRequest[0]);
 
         this.rageConnector.remove(FromServerEvent.SyncNewSupportRequestMessage, this.syncNewSupportRequestMessage.bind(this));
     }
@@ -56,7 +56,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
 
     sendMessage() {
         const message = this.requestGroup.get('message').value;
-        this.rageConnector.callServer(DToServerEvent.SendSupportRequestMessage, this.currentRequest[0], message);
+        this.rageConnector.callServer(ToServerEvent.SendSupportRequestMessage, this.currentRequest[0], message);
         this.requestGroup.get('message').setValue('');
 
         this.changeDetector.detectChanges();
@@ -74,7 +74,7 @@ export class UserpanelSupportViewComponent implements OnInit, OnDestroy, AfterVi
 
         this.changeDetector.detectChanges();
 
-        this.rageConnector.callServer(DToServerEvent.SetSupportRequestClosed, this.currentRequest[0], this.currentRequest[5]);
+        this.rageConnector.callServer(ToServerEvent.SetSupportRequestClosed, this.currentRequest[0], this.currentRequest[5]);
     }
 
     goBack() {

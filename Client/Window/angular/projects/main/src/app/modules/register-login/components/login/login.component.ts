@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { validateName } from '../../validators/name.validator';
 import { ErrorService, FormControlCheck } from '../../../shared/services/error.service';
 import { RageConnectorService } from 'rage-connector';
-import { DToClientEvent } from 'projects/main/src/app/enums/dtoclientevent.enum';
+import { ToClientEvent } from 'projects/main/src/app/enums/to-client-event.enum';
 
 @Component({
     selector: 'app-login',
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
         if (!this.formGroup.valid) {
             return;
         }
-        this.rageConnector.call(DToClientEvent.TryLogin, this.formGroup.controls.name.value, this.formGroup.controls.password.value);
+        this.rageConnector.call(ToClientEvent.TryLogin, this.formGroup.controls.name.value, this.formGroup.controls.password.value);
     }
 
     private addChecks() {

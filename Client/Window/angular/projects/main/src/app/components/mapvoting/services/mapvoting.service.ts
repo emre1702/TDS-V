@@ -3,8 +3,8 @@ import { MapVoteDto } from '../models/mapVoteDto';
 import { RageConnectorService } from 'rage-connector';
 import { FromClientEvent } from '../../../enums/from-client-event.enum';
 import { EventEmitter } from 'events';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 import { InfosHandlerService } from '../../infos-handler/services/infos-handler.service';
 import { OrderByPipe } from '../../../modules/shared/pipes/orderby.pipe';
 import { InitialDatas } from '../../../initial-datas';
@@ -22,7 +22,7 @@ export class MapVotingService {
 
     public voteForMapId(id: number) {
         this.votedForMapId = id;
-        this.rageConnector.callServer(DToServerEvent.MapVote, id);
+        this.rageConnector.callServer(ToServerEvent.MapVote, id);
         this.infosHandler.setVotedMapInfo(this.mapsInVoting.find((m) => m[0] == this.votedForMapId));
     }
 

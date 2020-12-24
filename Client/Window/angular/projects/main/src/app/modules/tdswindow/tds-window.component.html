@@ -1,4 +1,4 @@
-<div class="container mat-elevation-z8 mat-app-background design1">
+<div class="container mat-elevation-z8 mat-app-background design1" [style.height]="containerHeight" [style.max-height]="containerMaxHeight">
     <div class="toolbar-wrapper" cdkDrag [cdkDragDisabled]="!isDraggable" cdkDragRootElement="tds-window">
         <ng-container *ngIf="!hideToolbar" [ngTemplateOutlet]="this['toolbar' + toolbarDesign]">
             <ng-template #toolbar1>

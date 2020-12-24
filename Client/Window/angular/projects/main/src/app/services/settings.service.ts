@@ -8,11 +8,11 @@ import { ConstantsData } from '../interfaces/constants-data';
 import { ChallengeGroup } from '../components/lobbychoice/models/challenge-group';
 import { ChallengeFrequency } from '../components/lobbychoice/enums/challenge-frequency.enum';
 import { ChallengeType } from '../components/lobbychoice/enums/challenge-type.enum';
-import { FromServerEvent } from '../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../enums/from-server-event.enum';
 import { MapDataDto } from '../components/mapvoting/models/mapDataDto';
 import { Challenge } from '../components/lobbychoice/models/challenge';
 import { DomSanitizer } from '@angular/platform-browser';
-import { DToServerEvent } from '../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../enums/to-server-event.enum';
 import { UserpanelCommandDataDto } from '../components/userpanel/interfaces/userpanelCommandDataDto';
 import { DamageTestWeapon } from '../components/damage-test-menu/interfaces/damage-test-weapon';
 import { LanguagePipe } from '../modules/shared/pipes/language.pipe';
@@ -66,10 +66,10 @@ export class SettingsService {
         const index = this.FavoriteMapIDs.indexOf(id);
         if (index >= 0) {
             this.FavoriteMapIDs[index] = undefined;
-            this.rageConnector.callServer(DToServerEvent.ToggleMapFavouriteState, id, false);
+            this.rageConnector.callServer(ToServerEvent.ToggleMapFavouriteState, id, false);
         } else {
             this.FavoriteMapIDs.push(id);
-            this.rageConnector.callServer(DToServerEvent.ToggleMapFavouriteState, id, true);
+            this.rageConnector.callServer(ToServerEvent.ToggleMapFavouriteState, id, true);
         }
     }
 

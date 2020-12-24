@@ -5,8 +5,8 @@ import { MapNav } from './enums/mapnav.enum';
 import { MapVotingService } from './services/mapvoting.service';
 import { RageConnectorService } from 'rage-connector';
 import { FromClientEvent } from '../../enums/from-client-event.enum';
-import { DToClientEvent } from '../../enums/dtoclientevent.enum';
-import { DToServerEvent } from '../../enums/dtoserverevent.enum';
+import { ToClientEvent } from '../../enums/to-client-event.enum';
+import { ToServerEvent } from '../../enums/to-server-event.enum';
 import { bottomToTopEnterAnimation } from '../../animations/bottomToUpEnter.animation';
 import { MatSidenav } from '@angular/material/sidenav';
 import { LanguagePipe } from '../../modules/shared/pipes/language.pipe';
@@ -85,7 +85,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     deactivate(sendToClient: boolean) {
         this.active = false;
         if (sendToClient) {
-            this.rageConnector.call(DToClientEvent.CloseMapVotingMenu);
+            this.rageConnector.call(ToClientEvent.CloseMapVotingMenu);
         }
         this.changeDetector.detectChanges();
     }
@@ -133,7 +133,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     }
 
     buyMap(mapId: number) {
-        this.rageConnector.callServer(DToServerEvent.BuyMap, mapId);
+        this.rageConnector.callServer(ToServerEvent.BuyMap, mapId);
     }
 
     canBuyMap(): boolean {

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { SettingsService } from '../../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from '../../../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../../../enums/to-server-event.enum';
 import { MapDataDto } from '../../../mapvoting/models/mapDataDto';
 import { MapType } from 'projects/main/src/app/enums/maptype.enum';
 import { DefaultMapIds } from '../../enums/default-map-ids.enum';
@@ -11,38 +11,36 @@ import { MatSort } from '@angular/material/sort';
 @Component({
     selector: 'app-custom-lobby-maps-menu',
     templateUrl: './custom-lobby-maps-menu.component.html',
-    styleUrls: ['./custom-lobby-maps-menu.component.scss']
+    styleUrls: ['./custom-lobby-maps-menu.component.scss'],
 })
 export class CustomLobbyMapsMenuComponent implements OnInit {
-
-    displayedColumns = ["Select", "Id", "Name", "Type", "CreatorName", "Rating"];
-    private mapDataDtoProperties = ["Id", "Name", "Type", "Description", "CreatorName", "Rating"];
+    displayedColumns = ['Select', 'Id', 'Name', 'Type', 'CreatorName', 'Rating'];
+    private mapDataDtoProperties = ['Id', 'Name', 'Type', 'Description', 'CreatorName', 'Rating'];
     private mapTypeByDefaultMapId = {
         [DefaultMapIds.AllWithoutGangwars]: MapType.Normal,
         [DefaultMapIds.Normals]: MapType.Normal,
         [DefaultMapIds.Bombs]: MapType.Bomb,
         [DefaultMapIds.Snipers]: MapType.Sniper,
         [DefaultMapIds.Gangwars]: MapType.Gangwar,
-        [DefaultMapIds.ArmsRaces]: MapType.ArmsRace
+        [DefaultMapIds.ArmsRaces]: MapType.ArmsRace,
     };
     private defaultMapIdByMapType = {
         [MapType.Normal]: DefaultMapIds.Normals,
         [MapType.Bomb]: DefaultMapIds.Bombs,
         [MapType.Sniper]: DefaultMapIds.Snipers,
         [MapType.Gangwar]: DefaultMapIds.Gangwars,
-        [MapType.ArmsRace]: DefaultMapIds.ArmsRaces
+        [MapType.ArmsRace]: DefaultMapIds.ArmsRaces,
     };
     private _selectedMapsInput: number[] = [];
 
     @Input()
     set selectedMapsInput(arg: number[]) {
         this._selectedMapsInput = arg;
-        this.selectedMaps = this.settings.AllMapsForCustomLobby
-                                    .filter(m => this._selectedMapsInput.indexOf(m[0]) >= 0);
+        this.selectedMaps = this.settings.AllMapsForCustomLobby.filter((m) => this._selectedMapsInput.indexOf(m[0]) >= 0);
         if (this.selectedMapsDataSource) {
             this.selectedMapsDataSource.data = this.selectedMaps;
         }
-        this.selectedDefaultMapIds = this.selectedMaps.filter(m => m[0] < 0).map(m => m[0]);
+        this.selectedDefaultMapIds = this.selectedMaps.filter((m) => m[0] < 0).map((m) => m[0]);
         this.changeDetector.detectChanges();
     }
     @Input() creating: boolean;
@@ -56,28 +54,23 @@ export class CustomLobbyMapsMenuComponent implements OnInit {
 
     availableMapsDataSource: MatTableDataSource<MapDataDto>;
     selectedMapsDataSource: MatTableDataSource<MapDataDto>;
-    @ViewChild("availableMapsSort", { static: true }) availableMapsSort: MatSort;
-    @ViewChild("selectedMapsSort", { static: true }) selectedMapsSort: MatSort;
+    @ViewChild('availableMapsSort', { static: true }) availableMapsSort: MatSort;
+    @ViewChild('selectedMapsSort', { static: true }) selectedMapsSort: MatSort;
 
-    constructor(
-        public settings: SettingsService,
-        private rageConnector: RageConnectorService,
-        private changeDetector: ChangeDetectorRef
-    ) { }
+    constructor(public settings: SettingsService, private rageConnector: RageConnectorService, private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.createDataSource();
         if (!this.settings.AllMapsForCustomLobby.length) {
-            this.rageConnector.callCallbackServer(DToServerEvent.LoadAllMapsForCustomLobby, [], (mapsJson: string) => {
+            this.rageConnector.callCallbackServer(ToServerEvent.LoadAllMapsForCustomLobby, [], (mapsJson: string) => {
                 this.settings.AllMapsForCustomLobby = JSON.parse(mapsJson);
                 this.addDefaultMaps();
 
                 this.availableMapsDataSource.data = this.settings.AllMapsForCustomLobby;
 
-                this.selectedMaps = this.settings.AllMapsForCustomLobby
-                                    .filter(m => this._selectedMapsInput.indexOf(m[0]) >= 0);
+                this.selectedMaps = this.settings.AllMapsForCustomLobby.filter((m) => this._selectedMapsInput.indexOf(m[0]) >= 0);
                 this.selectedMapsDataSource.data = this.selectedMaps;
-                this.selectedDefaultMapIds = this.selectedMaps.filter(m => m[0] < 0).map(m => m[0]);
+                this.selectedDefaultMapIds = this.selectedMaps.filter((m) => m[0] < 0).map((m) => m[0]);
 
                 this.changeDetector.detectChanges();
             });
@@ -89,18 +82,17 @@ export class CustomLobbyMapsMenuComponent implements OnInit {
 
         if (map[0] < 0) {
             if (map[0] == DefaultMapIds.AllWithoutGangwars) {
-                this.selectedMaps = this.selectedMaps.filter(m => m[2] == MapType.Gangwar || m == map);
+                this.selectedMaps = this.selectedMaps.filter((m) => m[2] == MapType.Gangwar || m == map);
             } else {
                 const mapType = this.mapTypeByDefaultMapId[map[0]];
-                this.selectedMaps = this.selectedMaps.filter(m => m[2] != mapType || m == map);
+                this.selectedMaps = this.selectedMaps.filter((m) => m[2] != mapType || m == map);
             }
         }
 
         this.selectedMapsDataSource.data = this.selectedMaps;
-        this.selectedDefaultMapIds = this.selectedMaps.filter(m => m[0] < 0).map(m => m[0]);
+        this.selectedDefaultMapIds = this.selectedMaps.filter((m) => m[0] < 0).map((m) => m[0]);
 
-        this.availableMapsDataSource.data = this.settings.AllMapsForCustomLobby
-                .filter(m => this.selectedMaps.indexOf(m) < 0);
+        this.availableMapsDataSource.data = this.settings.AllMapsForCustomLobby.filter((m) => this.selectedMaps.indexOf(m) < 0);
         this.changeDetector.detectChanges();
     }
 
@@ -108,10 +100,9 @@ export class CustomLobbyMapsMenuComponent implements OnInit {
         const index = this.selectedMaps.indexOf(map);
         this.selectedMaps.splice(index, 1);
         this.selectedMapsDataSource.data = this.selectedMaps;
-        this.selectedDefaultMapIds = this.selectedMaps.filter(m => m[0] < 0).map(m => m[0]);
+        this.selectedDefaultMapIds = this.selectedMaps.filter((m) => m[0] < 0).map((m) => m[0]);
 
-        this.availableMapsDataSource.data = this.settings.AllMapsForCustomLobby
-                .filter(m => this.selectedMaps.indexOf(m) < 0);
+        this.availableMapsDataSource.data = this.settings.AllMapsForCustomLobby.filter((m) => this.selectedMaps.indexOf(m) < 0);
         this.changeDetector.detectChanges();
     }
 
@@ -133,7 +124,7 @@ export class CustomLobbyMapsMenuComponent implements OnInit {
     }
 
     backButtonClicked() {
-        this.backClicked.emit(this.selectedMaps.map(m => m[0]));
+        this.backClicked.emit(this.selectedMaps.map((m) => m[0]));
     }
 
     private createDataSource() {
@@ -150,39 +141,57 @@ export class CustomLobbyMapsMenuComponent implements OnInit {
 
     private addDefaultMaps() {
         this.settings.AllMapsForCustomLobby.unshift([
-            DefaultMapIds.AllWithoutGangwars, "DefaultMapIdsAllWithoutGangwars", MapType.Normal,
-            { [7]: "Alle Karten, die nicht Gangwar-Karten sind.", [9]: "All maps not being gangwar maps." },
-            "System", 5
+            DefaultMapIds.AllWithoutGangwars,
+            'DefaultMapIdsAllWithoutGangwars',
+            MapType.Normal,
+            { [7]: 'Alle Karten, die nicht Gangwar-Karten sind.', [9]: 'All maps not being gangwar maps.' },
+            'System',
+            5,
         ]);
 
         this.settings.AllMapsForCustomLobby.unshift([
-            DefaultMapIds.Normals, "DefaultMapIdsNormals", MapType.Normal,
-            { [7]: "Alle normalen Karten.", [9]: "All normal maps." },
-            "System", 5
+            DefaultMapIds.Normals,
+            'DefaultMapIdsNormals',
+            MapType.Normal,
+            { [7]: 'Alle normalen Karten.', [9]: 'All normal maps.' },
+            'System',
+            5,
         ]);
 
         this.settings.AllMapsForCustomLobby.unshift([
-            DefaultMapIds.Bombs, "DefaultMapIdsBombs", MapType.Bomb,
-            { [7]: "Alle Bomben Karten.", [9]: "All bomb maps." },
-            "System", 5
+            DefaultMapIds.Bombs,
+            'DefaultMapIdsBombs',
+            MapType.Bomb,
+            { [7]: 'Alle Bomben Karten.', [9]: 'All bomb maps.' },
+            'System',
+            5,
         ]);
 
         this.settings.AllMapsForCustomLobby.unshift([
-            DefaultMapIds.Snipers, "DefaultMapIdsSnipers", MapType.Sniper,
-            { [7]: "Alle Sniper Karten.", [9]: "All sniper maps." },
-            "System", 5
+            DefaultMapIds.Snipers,
+            'DefaultMapIdsSnipers',
+            MapType.Sniper,
+            { [7]: 'Alle Sniper Karten.', [9]: 'All sniper maps.' },
+            'System',
+            5,
         ]);
 
         this.settings.AllMapsForCustomLobby.unshift([
-            DefaultMapIds.Gangwars, "DefaultMapIdsGangwars", MapType.Gangwar,
-            { [7]: "Alle Gangwar Karten.", [9]: "All gangwar maps." },
-            "System", 5
+            DefaultMapIds.Gangwars,
+            'DefaultMapIdsGangwars',
+            MapType.Gangwar,
+            { [7]: 'Alle Gangwar Karten.', [9]: 'All gangwar maps.' },
+            'System',
+            5,
         ]);
 
         this.settings.AllMapsForCustomLobby.unshift([
-            DefaultMapIds.ArmsRaces, "DefaultMapIdsArmsRaces", MapType.ArmsRace,
-            { [7]: "Alle Wettrüsten Karten.", [9]: "All arms race maps." },
-            "System", 5
+            DefaultMapIds.ArmsRaces,
+            'DefaultMapIdsArmsRaces',
+            MapType.ArmsRace,
+            { [7]: 'Alle Wettrüsten Karten.', [9]: 'All arms race maps.' },
+            'System',
+            5,
         ]);
     }
 

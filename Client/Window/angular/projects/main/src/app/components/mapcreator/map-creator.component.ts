@@ -5,19 +5,19 @@ import { LanguageEnum } from '../../enums/language.enum';
 import { MapType } from '../../enums/maptype.enum';
 import { MapCreateDataDto } from './models/mapCreateDataDto';
 import { Constants } from '../../constants';
-import { DToClientEvent } from '../../enums/dtoclientevent.enum';
+import { ToClientEvent } from '../../enums/to-client-event.enum';
 import { LoadMapDialog } from './dialog/load-map-dialog';
 import { MapCreateError } from './enums/mapcreateerror.enum';
 import { FormControl, Validators } from '@angular/forms';
 import { MapCreatorPositionType } from './enums/mapcreatorpositiontype.enum';
 import { LoadMapDialogGroupDto } from './models/loadMapDialogGroupDto';
-import { DToServerEvent } from '../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../enums/to-server-event.enum';
 import { AreYouSureDialog } from '../../dialog/are-you-sure-dialog';
 import { FromClientEvent } from '../../enums/from-client-event.enum';
 import { MapCreatorPosition } from './models/mapCreatorPosition';
 import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
-import { FromServerEvent } from '../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../enums/from-server-event.enum';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../modules/shared/services/error.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
@@ -202,7 +202,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 }
                 break;
         }
-        this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, -1);
+        this.rageConnector.call(ToClientEvent.MapCreatorHighlightPos, -1);
         this.changeDetector.detectChanges();
     }
 
@@ -247,33 +247,33 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
             this.editingTeamNumber = this.data[6].length - 1;
         }
 
-        this.rageConnector.call(DToClientEvent.RemoveMapCreatorTeamNumber, this.data[6].length);
+        this.rageConnector.call(ToClientEvent.RemoveMapCreatorTeamNumber, this.data[6].length);
         this.changeDetector.detectChanges();
     }
 
     startNewPosPlacing(type: MapCreatorPositionType) {
         if (isNaN(Number(this.editingTeamNumber))) return;
-        this.rageConnector.call(DToClientEvent.StartMapCreatorPosPlacing, type, Number(this.editingTeamNumber));
+        this.rageConnector.call(ToClientEvent.StartMapCreatorPosPlacing, type, Number(this.editingTeamNumber));
     }
 
     removeSelectedPos(removeFunc: () => void) {
         removeFunc.call(this);
-        this.rageConnector.call(DToClientEvent.RemoveMapCreatorPosition, this.selectedPosition[0]);
+        this.rageConnector.call(ToClientEvent.RemoveMapCreatorPosition, this.selectedPosition[0]);
         this.selectedPosition = undefined;
         this.changeDetector.detectChanges();
     }
 
     holdSelected() {
-        this.rageConnector.call(DToClientEvent.HoldMapCreatorObject, this.selectedPosition[0]);
+        this.rageConnector.call(ToClientEvent.HoldMapCreatorObject, this.selectedPosition[0]);
     }
 
     tpToSelectedPos() {
         const pos = this.selectedPosition;
-        this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, pos[3], pos[4], pos[5], pos[8]);
+        this.rageConnector.call(ToClientEvent.TeleportToPositionRotation, pos[3], pos[4], pos[5], pos[8]);
     }
 
     tpToXYZ(x: number, y: number, z: number) {
-        this.rageConnector.call(DToClientEvent.TeleportToPositionRotation, x, y, z, 0);
+        this.rageConnector.call(ToClientEvent.TeleportToPositionRotation, x, y, z, 0);
     }
 
     addPosToTeamSpawns(pos: MapCreatorPosition) {
@@ -331,7 +331,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.data[9] = pos;
         if (this.currentNav === MapCreatorNav.MapCenter) {
             this.selectedPosition = pos;
-            this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, pos[0]);
+            this.rageConnector.call(ToClientEvent.MapCreatorHighlightPos, pos[0]);
         }
     }
 
@@ -339,7 +339,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.data[10] = pos;
         if (this.currentNav === MapCreatorNav.Target) {
             this.selectedPosition = pos;
-            this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, pos[0]);
+            this.rageConnector.call(ToClientEvent.MapCreatorHighlightPos, pos[0]);
         }
     }
 
@@ -387,7 +387,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     sendDataToClient() {
         this.fixData();
         this.changeDetector.detectChanges();
-        this.rageConnector.callCallbackServer(DToServerEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
+        this.rageConnector.callCallbackServer(ToServerEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
             this.notificationService.showError(this.settings.Lang[errName]);
         });
@@ -404,8 +404,8 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 this.mapTypeControl.setValue(this.data[2]);
                 this.changeDetector.detectChanges();
 
-                this.rageConnector.call(DToServerEvent.RemoveMap, map[0]);
-                this.rageConnector.call(DToClientEvent.MapCreatorStartNew);
+                this.rageConnector.call(ToServerEvent.RemoveMap, map[0]);
+                this.rageConnector.call(ToClientEvent.MapCreatorStartNew);
             });
     }
 
@@ -419,27 +419,27 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 this.nameControl.setValue(this.data[1]);
                 this.mapTypeControl.setValue(this.data[2]);
                 this.changeDetector.detectChanges();
-                this.rageConnector.call(DToClientEvent.MapCreatorStartNew);
+                this.rageConnector.call(ToClientEvent.MapCreatorStartNew);
             });
     }
 
     saveData() {
         this.fixData();
-        this.rageConnector.callCallbackServer(DToServerEvent.SaveMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
+        this.rageConnector.callCallbackServer(ToServerEvent.SaveMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
             this.notificationService.showError(this.settings.Lang[errName]);
         });
     }
 
     loadPossibleMaps() {
-        this.rageConnector.callCallbackServer(DToServerEvent.LoadMapNamesToLoadForMapCreator, null, (possibleMapsJson: string) => {
+        this.rageConnector.callCallbackServer(ToServerEvent.LoadMapNamesToLoadForMapCreator, null, (possibleMapsJson: string) => {
             const possibleMaps = JSON.parse(possibleMapsJson) as LoadMapDialogGroupDto[];
             const dialogRef = this.dialog.open(LoadMapDialog, { data: possibleMaps, panelClass: 'mat-app-background' });
 
             dialogRef.beforeClosed().subscribe((loadMapId?: number) => {
                 if (loadMapId === undefined) return;
 
-                this.rageConnector.callServer(DToServerEvent.LoadMapForMapCreator, loadMapId);
+                this.rageConnector.callServer(ToServerEvent.LoadMapForMapCreator, loadMapId);
             });
 
             this.changeDetector.detectChanges();
@@ -457,7 +457,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     private syncCurrentMapToServer(tdsPlayerId: number, idCounter: number) {
         this.fixData();
-        this.rageConnector.callServer(DToServerEvent.MapCreatorSyncCurrentMapToServer, JSON.stringify(this.data), tdsPlayerId, idCounter);
+        this.rageConnector.callServer(ToServerEvent.MapCreatorSyncCurrentMapToServer, JSON.stringify(this.data), tdsPlayerId, idCounter);
     }
 
     private fixData() {
@@ -507,7 +507,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     onMapNameChange() {
         this.changeDetector.detectChanges();
         const value = this.nameControl.value;
-        this.rageConnector.callServer(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Name, value);
+        this.rageConnector.callServer(ToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Name, value);
         this.data[1] = value;
     }
 
@@ -517,7 +517,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         }
         this.data[2] = event.value;
         this.changeDetector.detectChanges();
-        this.rageConnector.callServer(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Type, event.value);
+        this.rageConnector.callServer(ToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Type, event.value);
     }
 
     onEditingTeamNumberChange(event: MatSelectChange) {
@@ -548,7 +548,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     onSelectedPositionChanged(row: MapCreatorPosition) {
         if (this.selectedPosition == row) this.selectedPosition = undefined;
         else this.selectedPosition = row;
-        this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.selectedPosition ? this.selectedPosition[0] : -1);
+        this.rageConnector.call(ToClientEvent.MapCreatorHighlightPos, this.selectedPosition ? this.selectedPosition[0] : -1);
         this.changeDetector.detectChanges();
     }
 
@@ -599,7 +599,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     switchToObjects() {
-        this.rageConnector.call(DToClientEvent.MapCreatorStartObjectChoice);
+        this.rageConnector.call(ToClientEvent.MapCreatorStartObjectChoice);
 
         this.currentTitle = 'Objects';
         this.currentNav = MapCreatorNav.Objects;
@@ -607,7 +607,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     switchToVehicles() {
-        this.rageConnector.call(DToClientEvent.MapCreatorStartVehicleChoice);
+        this.rageConnector.call(ToClientEvent.MapCreatorStartVehicleChoice);
 
         this.currentTitle = 'Vehicles';
         this.currentNav = MapCreatorNav.Vehicles;
@@ -620,7 +620,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.currentNav = MapCreatorNav.MapCenter;
         this.changeDetector.detectChanges();
 
-        if (this.data[9]) this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data[9][0]);
+        if (this.data[9]) this.rageConnector.call(ToClientEvent.MapCreatorHighlightPos, this.data[9][0]);
     }
 
     switchToBombPlacesEdit() {
@@ -635,7 +635,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.currentNav = MapCreatorNav.Target;
         this.changeDetector.detectChanges();
 
-        if (this.data[10]) this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, this.data[10][0]);
+        if (this.data[10]) this.rageConnector.call(ToClientEvent.MapCreatorHighlightPos, this.data[10][0]);
     }
 
     saveNav() {
@@ -644,13 +644,13 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
                 this.saveDescription();
                 break;
             case MapCreatorNav.Objects:
-                this.rageConnector.call(DToClientEvent.MapCreatorStopObjectPreview);
+                this.rageConnector.call(ToClientEvent.MapCreatorStopObjectPreview);
                 break;
             case MapCreatorNav.Vehicles:
-                this.rageConnector.call(DToClientEvent.MapCreatorStopVehiclePreview);
+                this.rageConnector.call(ToClientEvent.MapCreatorStopVehiclePreview);
                 break;
             case MapCreatorNav.MapSettings:
-                this.rageConnector.call(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Settings, JSON.stringify(this.data[3]));
+                this.rageConnector.call(ToServerEvent.MapCreatorSyncData, MapCreatorInfoType.Settings, JSON.stringify(this.data[3]));
                 break;
         }
         this.goBackNav();
@@ -659,7 +659,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     goBackNav() {
         this.currentNav = MapCreatorNav.Main;
         this.selectedPosition = undefined;
-        this.rageConnector.call(DToClientEvent.MapCreatorHighlightPos, -1);
+        this.rageConnector.call(ToClientEvent.MapCreatorHighlightPos, -1);
         this.changeDetector.detectChanges();
     }
 
@@ -668,10 +668,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.data[4][langId] = this.descriptionTextArea.nativeElement.value;
         switch (langId) {
             case LanguageEnum.English:
-                this.rageConnector.call(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.DescriptionEnglish, this.data[4][langId]);
+                this.rageConnector.call(ToServerEvent.MapCreatorSyncData, MapCreatorInfoType.DescriptionEnglish, this.data[4][langId]);
                 break;
             case LanguageEnum.German:
-                this.rageConnector.call(DToServerEvent.MapCreatorSyncData, MapCreatorInfoType.DescriptionGerman, this.data[4][langId]);
+                this.rageConnector.call(ToServerEvent.MapCreatorSyncData, MapCreatorInfoType.DescriptionGerman, this.data[4][langId]);
                 break;
         }
     }

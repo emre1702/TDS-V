@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { UserpanelSettingsNormalType } from '../enums/userpanel-settings-normal-type.enum';
 import { UserpanelService } from '../../services/userpanel.service';
 import { RageConnectorService } from 'rage-connector';
-import { DToServerEvent } from 'projects/main/src/app/enums/dtoserverevent.enum';
+import { ToServerEvent } from 'projects/main/src/app/enums/to-server-event.enum';
 import { Observable } from 'rxjs';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { NotificationService } from 'projects/main/src/app/modules/shared/services/notification.service';
@@ -28,7 +28,7 @@ export class UserpanelSettingsNormalService {
             setting = JSON.stringify(setting);
         }
         const observable = new Observable<string>((observer) => {
-            this.rageConnector.callCallbackServer(DToServerEvent.SaveUserpanelNormalSettings, [type, setting], (error: string) => {
+            this.rageConnector.callCallbackServer(ToServerEvent.SaveUserpanelNormalSettings, [type, setting], (error: string) => {
                 if (error.length) {
                     this.notificationService.showError(error);
                     observer.error(error);
@@ -60,7 +60,7 @@ export class UserpanelSettingsNormalService {
     }
 
     private loadDataFromServer(type: UserpanelSettingsNormalType) {
-        this.rageConnector.callCallbackServer(DToServerEvent.LoadUserpanelNormalSettingsData, [type], (json: string) => {
+        this.rageConnector.callCallbackServer(ToServerEvent.LoadUserpanelNormalSettingsData, [type], (json: string) => {
             this.loadedSettingsByType[type] = JSON.parse(json.escapeJson());
             this.currentType = type;
             this.userpanelService.setLoadingData(false);

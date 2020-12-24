@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { validateName } from '../../validators/name.validator';
 import { ErrorService, FormControlCheck, CustomErrorCheck } from '../../../shared/services/error.service';
 import { RageConnectorService } from 'rage-connector';
-import { DToClientEvent } from 'projects/main/src/app/enums/dtoclientevent.enum';
+import { ToClientEvent } from 'projects/main/src/app/enums/to-client-event.enum';
 
 @Component({
     selector: 'app-register',
@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
             return;
         }
         this.rageConnector.call(
-            DToClientEvent.TryRegister,
+            ToClientEvent.TryRegister,
             this.formGroup.controls.name.value,
             this.formGroup.controls.password1.value,
             this.formGroup.controls.email.value

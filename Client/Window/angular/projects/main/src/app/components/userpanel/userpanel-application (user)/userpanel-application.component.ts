@@ -3,7 +3,7 @@ import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { UserpanelService } from '../services/userpanel.service';
 import { AreYouSureDialog } from '../../../dialog/are-you-sure-dialog';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { MatVerticalStepper } from '@angular/material/stepper';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,21 +12,23 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
     selector: 'app-userpanel-application',
     templateUrl: './userpanel-application.component.html',
-    styleUrls: ['./userpanel-application.component.scss']
+    styleUrls: ['./userpanel-application.component.scss'],
 })
 export class UserpanelApplicationComponent implements OnInit, OnDestroy {
-    @ViewChild("stepper") stepper: MatVerticalStepper;
+    @ViewChild('stepper') stepper: MatVerticalStepper;
 
     private amountUnchecked = 0;
     applicationAlreadyCreated = false;
 
     answersToAdminQuestions: { [index: number]: any } = {};
 
-    constructor(public settings: SettingsService,
+    constructor(
+        public settings: SettingsService,
         public userpanelService: UserpanelService,
         private rageConnector: RageConnectorService,
         public changeDetector: ChangeDetectorRef,
-        private dialog: MatDialog) { }
+        private dialog: MatDialog
+    ) {}
 
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
@@ -39,20 +41,19 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
     }
 
     acceptInvitation(id: number) {
-        this.rageConnector.callServer(DToServerEvent.AcceptTDSTeamInvitation, id);
+        this.rageConnector.callServer(ToServerEvent.AcceptTDSTeamInvitation, id);
         this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
     }
 
     rejectInvitation(id: number) {
-        this.rageConnector.callServer(DToServerEvent.RejectTDSTeamInvitation, id);
+        this.rageConnector.callServer(ToServerEvent.RejectTDSTeamInvitation, id);
     }
 
     stepperAnimationDone() {
         const stepId = this.stepper._getStepLabelId(this.stepper.selectedIndex);
         const stepElement = document.getElementById(stepId);
 
-        if (!stepElement)
-            return;
+        if (!stepElement) return;
 
         if (!this.isStepCompleted(stepElement)) {
             this.stepper.selected.completed = false;
@@ -65,17 +66,17 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
         stepElement.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
 
         if (this.stepper.selectedIndex == this.stepper.steps.length - 1) {
-            this.dialog.open(AreYouSureDialog, { panelClass: "mat-app-background" })
+            this.dialog
+                .open(AreYouSureDialog, { panelClass: 'mat-app-background' })
                 .afterClosed()
                 .subscribe((bool: boolean) => {
-                    if (!bool)
-                        return;
+                    if (!bool) return;
                     for (const index of Object.keys(this.answersToAdminQuestions)) {
                         this.answersToAdminQuestions[index] = String(this.answersToAdminQuestions[index]);
                     }
                     const answersJson = JSON.stringify(this.answersToAdminQuestions);
 
-                    this.rageConnector.callServer(DToServerEvent.SendApplication, answersJson);
+                    this.rageConnector.callServer(ToServerEvent.SendApplication, answersJson);
                     this.userpanelService.currentNav = UserpanelNavPage[UserpanelNavPage.Main];
                 });
         }
@@ -83,10 +84,8 @@ export class UserpanelApplicationComponent implements OnInit, OnDestroy {
 
     checkboxChecked(event: MatCheckboxChange) {
         const prevAmountUnchecked = this.amountUnchecked;
-        if (event.checked)
-            this.amountUnchecked--;
-        else
-            this.amountUnchecked++;
+        if (event.checked) this.amountUnchecked--;
+        else this.amountUnchecked++;
 
         if (prevAmountUnchecked == 0 && this.amountUnchecked > 0) {
             this.stepper.selected.completed = false;

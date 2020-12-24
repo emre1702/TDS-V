@@ -5,22 +5,25 @@ import { GangWindowService } from './services/gang-window-service';
 import { GangCommand } from './enums/gang-command.enum';
 import { GangWindowOnlyOneEditorPage } from './enums/gang-window-only-one-editor-page.enum';
 import { RageConnectorService } from 'rage-connector';
-import { DToClientEvent } from '../../enums/dtoclientevent.enum';
+import { ToClientEvent } from '../../enums/to-client-event.enum';
 
 @Component({
     selector: 'app-gang-window',
     templateUrl: './gang-window.component.html',
     styleUrls: ['./gang-window.component.scss'],
-    providers: [GangWindowService]
+    providers: [GangWindowService],
 })
 export class GangWindowComponent implements OnInit, OnDestroy {
-
     currentNav: GangWindowNav;
 
     gangWindowNav = GangWindowNav;
 
-    constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef,
-        public gangWindowService: GangWindowService, private rageConnector: RageConnectorService) { }
+    constructor(
+        public settings: SettingsService,
+        private changeDetector: ChangeDetectorRef,
+        public gangWindowService: GangWindowService,
+        private rageConnector: RageConnectorService
+    ) {}
 
     ngOnInit(): void {
         this.settings.IsInGangChanged.on(null, this.detectChanges.bind(this));
@@ -43,18 +46,28 @@ export class GangWindowComponent implements OnInit, OnDestroy {
     }
 
     closeFunc() {
-        this.rageConnector.call(DToClientEvent.CloseGangWindow);
+        this.rageConnector.call(ToClientEvent.CloseGangWindow);
     }
 
     gotoNav(nav: GangWindowNav) {
         switch (nav) {
             case GangWindowNav.RanksLevels:
-                this.gangWindowService.executeCommand(GangCommand.OpenOnlyOneEditorPage, [GangWindowOnlyOneEditorPage.RanksLevels],
-                    this.gotoNavFinal.bind(this, nav), false, false);
+                this.gangWindowService.executeCommand(
+                    GangCommand.OpenOnlyOneEditorPage,
+                    [GangWindowOnlyOneEditorPage.RanksLevels],
+                    this.gotoNavFinal.bind(this, nav),
+                    false,
+                    false
+                );
                 break;
             case GangWindowNav.RanksPermissions:
-                this.gangWindowService.executeCommand(GangCommand.OpenOnlyOneEditorPage, [GangWindowOnlyOneEditorPage.RanksPermissions],
-                    this.gotoNavFinal.bind(this, nav), false, false);
+                this.gangWindowService.executeCommand(
+                    GangCommand.OpenOnlyOneEditorPage,
+                    [GangWindowOnlyOneEditorPage.RanksPermissions],
+                    this.gotoNavFinal.bind(this, nav),
+                    false,
+                    false
+                );
                 break;
             default:
                 this.gotoNavFinal(nav);
@@ -65,12 +78,16 @@ export class GangWindowComponent implements OnInit, OnDestroy {
     private checkLeavePage() {
         switch (this.currentNav) {
             case GangWindowNav.RanksLevels:
-                this.gangWindowService.executeCommand(GangCommand.CloseOnlyOneEditorPage, [GangWindowOnlyOneEditorPage.RanksLevels],
-                    () => {}, false, false);
+                this.gangWindowService.executeCommand(GangCommand.CloseOnlyOneEditorPage, [GangWindowOnlyOneEditorPage.RanksLevels], () => {}, false, false);
                 break;
             case GangWindowNav.RanksPermissions:
-                this.gangWindowService.executeCommand(GangCommand.CloseOnlyOneEditorPage, [GangWindowOnlyOneEditorPage.RanksPermissions],
-                    () => {}, false, false);
+                this.gangWindowService.executeCommand(
+                    GangCommand.CloseOnlyOneEditorPage,
+                    [GangWindowOnlyOneEditorPage.RanksPermissions],
+                    () => {},
+                    false,
+                    false
+                );
                 break;
         }
     }

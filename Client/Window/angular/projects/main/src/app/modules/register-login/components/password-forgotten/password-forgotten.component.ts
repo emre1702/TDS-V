@@ -4,7 +4,7 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { ErrorService, FormControlCheck } from '../../../shared/services/error.service';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { DToClientEvent } from 'projects/main/src/app/enums/dtoclientevent.enum';
+import { ToClientEvent } from 'projects/main/src/app/enums/to-client-event.enum';
 
 @Component({
     selector: 'app-password-forgotten',
@@ -31,7 +31,7 @@ export class PasswordForgottenComponent implements OnInit {
         if (!this.formGroup.valid) {
             return;
         }
-        this.rageConnector.call(DToClientEvent.ResetPassword, this.formGroup.controls.name.value, this.formGroup.controls.email.value);
+        this.rageConnector.call(ToClientEvent.ResetPassword, this.formGroup.controls.name.value, this.formGroup.controls.email.value);
     }
 
     private addChecks() {

@@ -5,8 +5,8 @@ import { UserpanelService } from '../services/userpanel.service';
 import { RageConnectorService } from 'rage-connector';
 import { FromClientEvent } from '../../../enums/from-client-event.enum';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { ToServerEvent } from '../../../enums/to-server-event.enum';
+import { FromServerEvent } from '../../../enums/from-server-event.enum';
 
 @Component({
     selector: 'app-userpanel-support-admin',
@@ -66,7 +66,7 @@ export class UserpanelSupportAdminComponent implements OnInit, OnDestroy {
         this.inRequest = id;
         this.requestGroup.get('type').disable();
 
-        this.rageConnector.callCallbackServer(DToServerEvent.GetSupportRequestData, [id], (json: string) => {
+        this.rageConnector.callCallbackServer(ToServerEvent.GetSupportRequestData, [id], (json: string) => {
             this.currentRequest = JSON.parse(json);
             this.changeDetector.detectChanges();
         });

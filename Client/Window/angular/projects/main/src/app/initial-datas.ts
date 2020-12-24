@@ -35,9 +35,9 @@ export class InitialDatas {
     private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
         sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
 
-    static readonly inDebug = !mp;
+    static readonly inDebug = typeof mp === 'undefined';
 
-    static readonly started = InitialDatas.inDebug;
+    static readonly started: boolean = InitialDatas.inDebug && false;
 
     static readonly opened = {
         mapCreator: InitialDatas.inDebug && false,
