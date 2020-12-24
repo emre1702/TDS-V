@@ -13,15 +13,16 @@ import { MapCreatorPositionType } from './enums/mapcreatorpositiontype.enum';
 import { LoadMapDialogGroupDto } from './models/loadMapDialogGroupDto';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { AreYouSureDialog } from '../../dialog/are-you-sure-dialog';
-import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
+import { FromClientEvent } from '../../enums/from-client-event.enum';
 import { MapCreatorPosition } from './models/mapCreatorPosition';
 import { MapCreateSettings } from './models/mapCreateSettings';
 import { MapCreatorInfoType } from './enums/mapcreatorinfotype.enum';
-import { DFromServerEvent } from '../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../enums/dfromserverevent.enum';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../modules/shared/services/error.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { NotificationService } from '../../modules/shared/services/notification.service';
+import { LanguagePipe } from '../../modules/shared/pipes/language.pipe';
 
 enum MapCreatorNav {
     Main,
@@ -82,12 +83,12 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.rageConnector.listen(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
-        this.rageConnector.listen(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.removePositionInMapCreatorBrowser.bind(this));
-        this.rageConnector.listen(DFromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
-        this.rageConnector.listen(DFromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
-        this.rageConnector.listen(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
-        this.rageConnector.listen(DFromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
+        this.rageConnector.listen(FromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
+        this.rageConnector.listen(FromClientEvent.RemovePositionInMapCreatorBrowser, this.removePositionInMapCreatorBrowser.bind(this));
+        this.rageConnector.listen(FromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
+        this.rageConnector.listen(FromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
+        this.rageConnector.listen(FromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
+        this.rageConnector.listen(FromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.isLobbyOwnerChanged.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
@@ -97,12 +98,12 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
-        this.rageConnector.remove(DFromClientEvent.RemovePositionInMapCreatorBrowser, this.removePositionInMapCreatorBrowser.bind(this));
-        this.rageConnector.remove(DFromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
-        this.rageConnector.remove(DFromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
-        this.rageConnector.remove(DFromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
-        this.rageConnector.remove(DFromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
+        this.rageConnector.remove(FromClientEvent.AddPositionToMapCreatorBrowser, this.addPositionToMapCreatorBrowser.bind(this));
+        this.rageConnector.remove(FromClientEvent.RemovePositionInMapCreatorBrowser, this.removePositionInMapCreatorBrowser.bind(this));
+        this.rageConnector.remove(FromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
+        this.rageConnector.remove(FromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
+        this.rageConnector.remove(FromClientEvent.LoadMapForMapCreator, this.onLoadMap.bind(this));
+        this.rageConnector.remove(FromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.isLobbyOwnerChanged.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
@@ -450,7 +451,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.nameControl.setValue(this.data[1]);
         this.mapTypeControl.setValue(this.data[2]);
         this.fixData();
-        this.notificationService.showSuccess(this.settings.Lang.SavedMapLoadSuccessful);
+        this.notificationService.showSuccess(new LanguagePipe().transform('SavedMapLoadSuccessful', this.settings.Lang));
         this.changeDetector.detectChanges();
     }
 

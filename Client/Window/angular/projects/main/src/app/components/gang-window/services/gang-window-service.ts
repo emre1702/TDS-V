@@ -3,7 +3,7 @@ import { GangMember } from '../models/gang-member';
 import { MyGangData } from '../models/my-gang-permissions';
 import { GangPermissionSettings } from '../gang-window-rank-permissions/models/gang-permission-settings';
 import { RageConnectorService } from 'rage-connector';
-import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { GangWindowNav } from '../enums/gang-window-nav.enum';
 import { EventEmitter } from 'events';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
@@ -14,10 +14,10 @@ import { GangCommand } from '../enums/gang-command.enum';
 import { AreYouSureDialog } from '../../../dialog/are-you-sure-dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationService } from '../../../modules/shared/services/notification.service';
+import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Injectable()
 export class GangWindowService {
-
     loadingData = false;
     loadingDataChanged = new EventEmitter();
     loadedData = new EventEmitter();
@@ -68,7 +68,7 @@ export class GangWindowService {
                     return;
                 }
                 if (showSuccess) {
-                    this.notificationService.showSuccess(this.settings.Lang.CommandExecutedSuccessfully);
+                    this.notificationService.showSuccess(new LanguagePipe().transform('CommandExecutedSuccessfully', this.settings.Lang));
                 }
                 onSuccess();
             });
@@ -87,19 +87,19 @@ export class GangWindowService {
                     this.ranks = JSON.parse(json);
                     break;
                 case GangWindowNav.RanksPermissions:
-                    const permissionsData: { 0: GangPermissionSettings, 1: GangRank[] } = JSON.parse(json);
+                    const permissionsData: { 0: GangPermissionSettings; 1: GangRank[] } = JSON.parse(json);
                     this.permissions = permissionsData[0];
                     this.ranks = permissionsData[1];
                     break;
                 case GangWindowNav.MainMenu:
-                    const data: { 0: GangData, 1: MyGangData, 2: number } = JSON.parse(json);
+                    const data: { 0: GangData; 1: MyGangData; 2: number } = JSON.parse(json);
                     this.gangData = data[0];
                     this.myGangData = data[1];
                     this.highestRank = data[2];
                     break;
             }
         } else {
-            this.notificationService.showError(this.settings.Lang.LoadingDataFailed);
+            this.notificationService.showError(new LanguagePipe().transform('LoadingDataFailed', this.settings.Lang));
         }
 
         this.loadedData.emit(GangWindowNav[type]);
@@ -108,7 +108,8 @@ export class GangWindowService {
     }
 
     private doOnConfirm(func: () => void) {
-        this.dialog.open(AreYouSureDialog, { panelClass: "mat-app-background" })
+        this.dialog
+            .open(AreYouSureDialog, { panelClass: 'mat-app-background' })
             .afterClosed()
             .subscribe((bool: boolean) => {
                 if (!bool) {
@@ -118,13 +119,12 @@ export class GangWindowService {
             });
     }
 
-
     constructor(
         private rageConnector: RageConnectorService,
         private settings: SettingsService,
         private notificationService: NotificationService,
         private dialog: MatDialog
     ) {
-        rageConnector.listen(DFromServerEvent.LoadedGangWindowData, this.loadedGangWindowData.bind(this));
+        rageConnector.listen(FromServerEvent.LoadedGangWindowData, this.loadedGangWindowData.bind(this));
     }
 }

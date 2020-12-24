@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { InfoType } from '../enums/info-type.enum';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
+import { FromClientEvent } from '../../../enums/from-client-event.enum';
 import { EventEmitter } from 'events';
 import { MapVoteDto } from '../../mapvoting/models/mapVoteDto';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class InfosHandlerService {
     showCursorInfo: boolean;
@@ -16,10 +16,8 @@ export class InfosHandlerService {
 
     infosChanged = new EventEmitter();
 
-    constructor(
-        private rageConnector: RageConnectorService,
-        public infosHandler: InfosHandlerService) {
-        this.rageConnector.listen(DFromClientEvent.ToggleInfo, this.toggleInfo.bind(this));
+    constructor(private rageConnector: RageConnectorService, public infosHandler: InfosHandlerService) {
+        this.rageConnector.listen(FromClientEvent.ToggleInfo, this.toggleInfo.bind(this));
     }
 
     addMapVotingInfo(info: MapVoteDto) {

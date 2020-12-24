@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, ViewContainerRef, HostListener } from '@angular/core';
 import { SettingsService } from './services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from './enums/dfromclientevent.enum';
+import { FromClientEvent } from './enums/from-client-event.enum';
 import { RoundPlayerRankingStat } from './components/ranking/models/roundPlayerRankingStat';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
@@ -66,65 +66,65 @@ export class AppComponent {
     ) {
         this.loadSvgIcons();
 
-        rageConnector.listen(DFromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
+        rageConnector.listen(FromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
             this.started = true;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.RefreshAdminLevel, (adminLevel: number) => {
+        rageConnector.listen(FromClientEvent.RefreshAdminLevel, (adminLevel: number) => {
             this.settings.loadAdminLevel(adminLevel);
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleMapCreator, (bool: boolean) => {
+        rageConnector.listen(FromClientEvent.ToggleMapCreator, (bool: boolean) => {
             this.showMapCreator = bool;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleFreeroam, (bool: boolean) => {
+        rageConnector.listen(FromClientEvent.ToggleFreeroam, (bool: boolean) => {
             this.showFreeroam = bool;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleLobbyChoice, (bool: boolean) => {
+        rageConnector.listen(FromClientEvent.ToggleLobbyChoice, (bool: boolean) => {
             this.showLobbyChoice = bool;
             if (bool) this.showTeamChoice = false;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleTeamChoiceMenu, (bool: boolean) => {
+        rageConnector.listen(FromClientEvent.ToggleTeamChoiceMenu, (bool: boolean) => {
             this.showTeamChoice = bool;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleUserpanel, (bool: boolean) => {
+        rageConnector.listen(FromClientEvent.ToggleUserpanel, (bool: boolean) => {
             this.settings.setUserpanelOpen(bool);
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleGangWindow, (bool: boolean) => {
+        rageConnector.listen(FromClientEvent.ToggleGangWindow, (bool: boolean) => {
             this.showGangWindow = bool;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ShowRankings, (rankings: string) => {
+        rageConnector.listen(FromClientEvent.ShowRankings, (rankings: string) => {
             this.rankings = JSON.parse(rankings) as RoundPlayerRankingStat[];
             this.showRankings = true;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleHUD, (bool: boolean) => {
+        rageConnector.listen(FromClientEvent.ToggleHUD, (bool: boolean) => {
             this.showHud = bool;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.HideRankings, () => {
+        rageConnector.listen(FromClientEvent.HideRankings, () => {
             this.rankings = undefined;
             this.showRankings = false;
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleCharCreator, (bool: boolean, dataJson: string) => {
+        rageConnector.listen(FromClientEvent.ToggleCharCreator, (bool: boolean, dataJson: string) => {
             if (dataJson.length) {
                 this.charCreateData = JSON.parse(dataJson);
             }
@@ -132,15 +132,15 @@ export class AppComponent {
             changeDetector.detectChanges();
         });
 
-        rageConnector.listen(DFromClientEvent.ShowCooldown, () => {
+        rageConnector.listen(FromClientEvent.ShowCooldown, () => {
             this.notificationService.showInfo('Cooldown');
         });
 
-        rageConnector.listen(DFromClientEvent.SyncUsernameChange, (newName: string) => {
+        rageConnector.listen(FromClientEvent.SyncUsernameChange, (newName: string) => {
             this.settings.Constants[7] = newName;
         });
 
-        rageConnector.listen(DFromClientEvent.ToggleDamageTestMenu, (toggle: boolean, json?: string, weapon?: WeaponHash) => {
+        rageConnector.listen(FromClientEvent.ToggleDamageTestMenu, (toggle: boolean, json?: string, weapon?: WeaponHash) => {
             if (json) {
                 this.settings.DamageTestWeaponDatas = JSON.parse(json);
                 this.damageTestMenuInitWeapon = weapon;

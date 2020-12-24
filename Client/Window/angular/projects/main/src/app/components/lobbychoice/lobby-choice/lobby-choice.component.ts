@@ -3,7 +3,7 @@ import { RageConnectorService } from 'rage-connector';
 import { SettingsService } from '../../../services/settings.service';
 import { trigger, transition, animate, style } from '@angular/animations';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
 
 @Component({
@@ -25,11 +25,11 @@ export class LobbyChoiceComponent implements OnInit, OnDestroy {
     constructor(private rageConnector: RageConnectorService, public settings: SettingsService, private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
-        this.rageConnector.listen(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
+        this.rageConnector.listen(FromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
+        this.rageConnector.remove(FromServerEvent.LeaveCustomLobbyMenu, this.leaveCustomLobbyMenu.bind(this));
 
         // Clear it so it doesn't use fill our RAM without a reason
         this.settings.AllMapsForCustomLobby = [];

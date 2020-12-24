@@ -8,31 +8,28 @@ import { CustomLobbyArmsRaceWeaponData } from '../../models/custom-lobby-armsrac
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'projects/main/src/app/modules/shared/services/notification.service';
+import { LanguagePipe } from 'projects/main/src/app/modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-custom-lobby-armsraceweapons-menu',
     templateUrl: './custom-lobby-armsraceweapons-menu.component.html',
-    styleUrls: ['./custom-lobby-armsraceweapons-menu.component.scss']
+    styleUrls: ['./custom-lobby-armsraceweapons-menu.component.scss'],
 })
 export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
-
     @Input() creating: boolean;
     @Input() selectedWeapons: CustomLobbyArmsRaceWeaponData[];
     @Input() allWeapons: CustomLobbyWeaponData[];
     @Output() backClicked = new EventEmitter<CustomLobbyArmsRaceWeaponData[]>();
 
-    @ViewChild("selectedWeaponsSort", { static: true }) selectedWeaponsSort: MatSort;
+    @ViewChild('selectedWeaponsSort', { static: true }) selectedWeaponsSort: MatSort;
 
     selectedWeaponsDataSource: MatTableDataSource<CustomLobbyArmsRaceWeaponData>;
     weaponHash = WeaponHash;
     weaponHashGroups: [string, [string, WeaponHash, boolean][]][] = [];
     selectedWeaponsTableColumns = ['Name', 'AtKill', 'Delete'];
+    private languagePipe = new LanguagePipe();
 
-    constructor(
-        private changeDetector: ChangeDetectorRef,
-        public settings: SettingsService,
-        private notificationService: NotificationService
-    ) { }
+    constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, private notificationService: NotificationService) {}
 
     ngOnInit() {
         for (const weaponType in WeaponHashGroupConstants.data) {
@@ -42,12 +39,12 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
                 if (!weaponHash) {
                     continue;
                 }
-                const weapon = this.allWeapons.find(w => w[0] == weaponHash);
+                const weapon = this.allWeapons.find((w) => w[0] == weaponHash);
                 if (!weapon) {
                     continue;
                 }
 
-                const selectedWeapon = this.selectedWeapons.find(w => w[0] == weaponHash);
+                const selectedWeapon = this.selectedWeapons.find((w) => w[0] == weaponHash);
                 let selected = false;
                 if (selectedWeapon) {
                     selected = true;
@@ -63,7 +60,7 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
                 arr.push([weaponName, weaponHash, selected]);
             }
             arr = arr.sort((a, b) => a[0].localeCompare(b[0]));
-            this.weaponHashGroups.push([WeaponType[weaponType as unknown as number], arr]);
+            this.weaponHashGroups.push([WeaponType[(weaponType as unknown) as number], arr]);
         }
 
         this.selectedWeaponsDataSource = new MatTableDataSource(this.selectedWeapons);
@@ -113,8 +110,8 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
         this.selectedWeaponsDataSource.data = this.selectedWeapons;
 
         try {
-            const weaponGroup = this.weaponHashGroups.find(g => g[1].find(w => w[1] == weapon[0]));
-            const weaponData = weaponGroup[1].find(w => w[1] == weapon[0]);
+            const weaponGroup = this.weaponHashGroups.find((g) => g[1].find((w) => w[1] == weapon[0]));
+            const weaponData = weaponGroup[1].find((w) => w[1] == weapon[0]);
 
             weaponData[2] = false;
         } catch {}
@@ -131,14 +128,14 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
     }
 
     private fixData(): boolean {
-        const firstWeapon = this.selectedWeapons.find(w => w[1] == 0);
+        const firstWeapon = this.selectedWeapons.find((w) => w[1] == 0);
         if (!firstWeapon) {
-            this.notificationService.showError(this.settings.Lang.ArmsRaceWeaponsFirstWeaponError);
+            this.notificationService.showError(this.languagePipe.transform('ArmsRaceWeaponsFirstWeaponError', this.settings.Lang));
             return false;
         }
 
         const seen = {};
-        const hasDuplicates = this.selectedWeapons.some(e => {
+        const hasDuplicates = this.selectedWeapons.some((e) => {
             if (seen.hasOwnProperty(e[1])) {
                 return true;
             }
@@ -147,27 +144,27 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
         });
 
         if (hasDuplicates) {
-            this.notificationService.showError(this.settings.Lang.ArmsRaceWeaponsDuplicateError);
+            this.notificationService.showError(this.languagePipe.transform('ArmsRaceWeaponsDuplicateError', this.settings.Lang));
             return false;
         }
 
         const maxSelectedAtKill = this.getMaxSelectedAtKill();
 
-        const endEntry = this.selectedWeapons.find(w => !w[0]);
+        const endEntry = this.selectedWeapons.find((w) => !w[0]);
         if (!endEntry) {
             this.selectedWeapons.push({ 0: null, 1: maxSelectedAtKill + 1 });
-            this.notificationService.showError(this.settings.Lang.ArmsRaceWeaponsWinError);
+            this.notificationService.showError(this.languagePipe.transform('ArmsRaceWeaponsWinError', this.settings.Lang));
             return false;
         }
         if (endEntry[1] != maxSelectedAtKill) {
             endEntry[1] = maxSelectedAtKill + 1;
-            this.notificationService.showError(this.settings.Lang.ArmsRaceWeaponsWinNotLastError);
+            this.notificationService.showError(this.languagePipe.transform('ArmsRaceWeaponsWinNotLastError', this.settings.Lang));
             return false;
         }
 
         if (this.selectedWeapons) {
             for (const weapon of this.selectedWeapons) {
-                weapon[1] = Math.floor(weapon[1]);  // Only allow integer for ammo
+                weapon[1] = Math.floor(weapon[1]); // Only allow integer for ammo
             }
         }
 
@@ -177,8 +174,7 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
     private getMaxSelectedAtKill() {
         let max = -1;
         for (const weapon of this.selectedWeapons) {
-            if (weapon[1] > max)
-                max = weapon[1];
+            if (weapon[1] > max) max = weapon[1];
         }
         return max;
     }

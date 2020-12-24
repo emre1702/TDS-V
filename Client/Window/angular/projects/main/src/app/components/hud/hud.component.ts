@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
+import { FromClientEvent } from '../../enums/from-client-event.enum';
 import { HUDDataType } from './enums/huddatatype.enum';
 import { FiringMode } from './enums/firingmode.enum';
 import { HudDesign } from './enums/hud-design.enum';
@@ -31,15 +31,15 @@ export class HudComponent implements OnInit, OnDestroy {
     constructor(public settings: SettingsService, private rageConnector: RageConnectorService, private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
-        this.rageConnector.listen(DFromClientEvent.ToggleRoundStats, this.toggleRoundStats.bind(this));
-        this.rageConnector.listen(DFromClientEvent.SyncHUDDataChange, this.hudDataChange.bind(this));
+        this.rageConnector.listen(FromClientEvent.ToggleRoundStats, this.toggleRoundStats.bind(this));
+        this.rageConnector.listen(FromClientEvent.SyncHUDDataChange, this.hudDataChange.bind(this));
         this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
         this.settings.HudSettingsChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromClientEvent.ToggleRoundStats, this.toggleRoundStats.bind(this));
-        this.rageConnector.remove(DFromClientEvent.SyncHUDDataChange, this.hudDataChange.bind(this));
+        this.rageConnector.remove(FromClientEvent.ToggleRoundStats, this.toggleRoundStats.bind(this));
+        this.rageConnector.remove(FromClientEvent.SyncHUDDataChange, this.hudDataChange.bind(this));
         this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
         this.settings.HudSettingsChanged.off(null, this.detectChanges.bind(this));
     }

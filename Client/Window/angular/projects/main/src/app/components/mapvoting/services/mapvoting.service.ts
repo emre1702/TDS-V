@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { MapVoteDto } from '../models/mapVoteDto';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
+import { FromClientEvent } from '../../../enums/from-client-event.enum';
 import { EventEmitter } from 'events';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { InfosHandlerService } from '../../infos-handler/services/infos-handler.service';
 import { OrderByPipe } from '../../../modules/shared/pipes/orderby.pipe';
 import { InitialDatas } from '../../../initial-datas';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class MapVotingService {
     public mapsInVoting: MapVoteDto[] = InitialDatas.getMapsInVoting();
@@ -23,19 +23,19 @@ export class MapVotingService {
     public voteForMapId(id: number) {
         this.votedForMapId = id;
         this.rageConnector.callServer(DToServerEvent.MapVote, id);
-        this.infosHandler.setVotedMapInfo(this.mapsInVoting.find(m => m[0] == this.votedForMapId));
+        this.infosHandler.setVotedMapInfo(this.mapsInVoting.find((m) => m[0] == this.votedForMapId));
     }
 
     private addMapToVoting(mapVoteJson: string) {
         const mapVote: MapVoteDto = JSON.parse(mapVoteJson);
         this.mapsInVoting.push(mapVote);
-        this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-2", "1"]);
+        this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ['-2', '1']);
         this.mapsInVotingChanged.emit(null);
         this.infosHandler.addMapVotingInfo(mapVote);
     }
 
     private loadMapVoting(mapVoteJson: string) {
-        this.mapsInVoting = this.orderByPipe.transform(JSON.parse(mapVoteJson), ["-2", "1"]);
+        this.mapsInVoting = this.orderByPipe.transform(JSON.parse(mapVoteJson), ['-2', '1']);
         this.mapsInVotingChanged.emit(null);
         this.infosHandler.loadMapVotingInfos([...this.mapsInVoting]);
     }
@@ -48,28 +48,24 @@ export class MapVotingService {
     }
 
     private setMapVotes(mapId: number, amountVotes: number) {
-        const index = this.mapsInVoting.findIndex(m => m[0] == mapId);
-        if (index < 0)
-            return;
+        const index = this.mapsInVoting.findIndex((m) => m[0] == mapId);
+        if (index < 0) return;
         if (amountVotes <= 0) {
             this.mapsInVoting.splice(index, 1);
         } else {
             this.mapsInVoting[index][2] = amountVotes;
         }
-        this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ["-2", "1"]);
+        this.mapsInVoting = this.orderByPipe.transform(this.mapsInVoting, ['-2', '1']);
         this.infosHandler.loadMapVotingInfos([...this.mapsInVoting]);
         this.mapsInVotingChanged.emit(null);
     }
 
-
-    constructor(
-        private rageConnector: RageConnectorService,
-        private infosHandler: InfosHandlerService) {
-        console.log("Map voting listener started.");
-        rageConnector.listen(DFromServerEvent.LoadMapVoting, this.loadMapVoting.bind(this));
-        rageConnector.listen(DFromClientEvent.ResetMapVoting, this.resetMapVoting.bind(this));
-        rageConnector.listen(DFromServerEvent.StopMapVoting, this.resetMapVoting.bind(this));
-        rageConnector.listen(DFromServerEvent.AddMapToVoting, this.addMapToVoting.bind(this));
-        rageConnector.listen(DFromServerEvent.SetMapVotes, this.setMapVotes.bind(this));
+    constructor(private rageConnector: RageConnectorService, private infosHandler: InfosHandlerService) {
+        console.log('Map voting listener started.');
+        rageConnector.listen(FromServerEvent.LoadMapVoting, this.loadMapVoting.bind(this));
+        rageConnector.listen(FromClientEvent.ResetMapVoting, this.resetMapVoting.bind(this));
+        rageConnector.listen(FromServerEvent.StopMapVoting, this.resetMapVoting.bind(this));
+        rageConnector.listen(FromServerEvent.AddMapToVoting, this.addMapToVoting.bind(this));
+        rageConnector.listen(FromServerEvent.SetMapVotes, this.setMapVotes.bind(this));
     }
 }

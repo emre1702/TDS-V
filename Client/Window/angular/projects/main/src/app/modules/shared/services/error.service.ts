@@ -121,6 +121,9 @@ export class ErrorService implements OnDestroy {
                     case 'Errorminlength':
                         info = this.getMinLengthInfo(data.data);
                         break;
+                    case 'Errormaxlength':
+                        info = this.getMaxLengthInfo(data.data);
+                        break;
                     default:
                         console.log(typeof data.data);
                         console.log(data);
@@ -150,6 +153,14 @@ export class ErrorService implements OnDestroy {
     }
 
     private getMinLengthInfo(data: { requiredLength: number; actualLength: number }) {
-        return `${this.settings.Lang.Min}: ${data.requiredLength} | ${this.settings.Lang.Actual}: ${data.actualLength}`;
+        return `${this.langPipe.transform('Min', this.settings.Lang)}: ${data.requiredLength} | ${this.langPipe.transform('Actual', this.settings.Lang)}: ${
+            data.actualLength
+        }`;
+    }
+
+    private getMaxLengthInfo(data: { requiredLength: number; actualLength: number }) {
+        return `${this.langPipe.transform('Max', this.settings.Lang)}: ${data.requiredLength} | ${this.langPipe.transform('Actual', this.settings.Lang)}: ${
+            data.actualLength
+        }`;
     }
 }

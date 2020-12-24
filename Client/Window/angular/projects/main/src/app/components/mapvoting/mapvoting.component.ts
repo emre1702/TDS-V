@@ -4,7 +4,7 @@ import { MapDataDto } from './models/mapDataDto';
 import { MapNav } from './enums/mapnav.enum';
 import { MapVotingService } from './services/mapvoting.service';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
+import { FromClientEvent } from '../../enums/from-client-event.enum';
 import { DToClientEvent } from '../../enums/dtoclientevent.enum';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { bottomToTopEnterAnimation } from '../../animations/bottomToUpEnter.animation';
@@ -16,7 +16,7 @@ import { InitialDatas } from '../../initial-datas';
     selector: 'app-mapvoting',
     animations: [bottomToTopEnterAnimation],
     templateUrl: './mapvoting.component.html',
-    styleUrls: ['./mapvoting.component.scss']
+    styleUrls: ['./mapvoting.component.scss'],
 })
 export class MapVotingComponent implements OnInit, OnDestroy {
     private static readonly Numpad1KeyCode = 97;
@@ -26,15 +26,19 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     data: MapDataDto[] = InitialDatas.getMapsForVoting();
     selectedNav: string;
     selectedMap: MapDataDto;
-    mapSearchFilter = "";
+    mapSearchFilter = '';
     title: string;
 
     @ViewChild('snav') snav: MatSidenav;
 
-    constructor(public settings: SettingsService, public voting: MapVotingService, private rageConnector: RageConnectorService,
-        public changeDetector: ChangeDetectorRef) {
-        this.rageConnector.listen(DFromClientEvent.OpenMapMenu, this.activate.bind(this));
-        this.rageConnector.listen(DFromClientEvent.CloseMapMenu, () => this.deactivate(false));
+    constructor(
+        public settings: SettingsService,
+        public voting: MapVotingService,
+        private rageConnector: RageConnectorService,
+        public changeDetector: ChangeDetectorRef
+    ) {
+        this.rageConnector.listen(FromClientEvent.OpenMapMenu, this.activate.bind(this));
+        this.rageConnector.listen(FromClientEvent.CloseMapMenu, () => this.deactivate(false));
         this.voting.mapsInVotingChanged.on(null, this.detectChanges.bind(this));
     }
 
@@ -49,7 +53,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
         this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
 
-        this.mapSearchFilter = "";
+        this.mapSearchFilter = '';
         this.refreshTitle();
     }
 
@@ -71,7 +75,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
 
     private activate(mapsJson: string) {
         this.data = JSON.parse(mapsJson);
-        this.selectedNav = "All";
+        this.selectedNav = 'All';
         this.selectedMap = undefined;
         this.active = true;
         this.refreshTitle();
@@ -105,7 +109,7 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     }
 
     isSelectedMapInVoting() {
-        return this.voting.mapsInVoting.some(m => m[0] == this.selectedMap[0]);
+        return this.voting.mapsInVoting.some((m) => m[0] == this.selectedMap[0]);
     }
 
     toggleSnav() {
@@ -149,21 +153,18 @@ export class MapVotingComponent implements OnInit, OnDestroy {
     private refreshTitle() {
         this.title = new LanguagePipe().transform('MapVoting', this.settings.Lang);
         if (this.selectedMap) {
-            this.title += " - " +  this.selectedMap[1];
+            this.title += ' - ' + this.selectedMap[1];
         }
     }
 
-    @HostListener("document:keyup", ["$event"])
+    @HostListener('document:keyup', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        if (!this.voting.mapsInVoting.length || this.settings.InTeamOrderModus)
-            return;
+        if (!this.voting.mapsInVoting.length || this.settings.InTeamOrderModus) return;
         // tslint:disable-next-line: deprecation
-        if (event.keyCode < MapVotingComponent.Numpad1KeyCode || event.keyCode > MapVotingComponent.Numpad9KeyCode)
-            return;
+        if (event.keyCode < MapVotingComponent.Numpad1KeyCode || event.keyCode > MapVotingComponent.Numpad9KeyCode) return;
         // tslint:disable-next-line: deprecation
         const voteIndex = event.keyCode - MapVotingComponent.Numpad1KeyCode;
-        if (this.voting.mapsInVoting.length <= voteIndex)
-            return;
+        if (this.voting.mapsInVoting.length <= voteIndex) return;
         this.voting.voteForMapId(this.voting.mapsInVoting[voteIndex][0]);
     }
 }

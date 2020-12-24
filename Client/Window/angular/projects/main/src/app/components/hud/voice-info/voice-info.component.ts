@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { VoiceInfo } from './models/voice-info';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../../enums/dfromclientevent.enum';
+import { FromClientEvent } from '../../../enums/from-client-event.enum';
 import { InitialDatas } from '../../../initial-datas';
 
 @Component({
@@ -15,13 +15,13 @@ export class VoiceInfoComponent implements OnInit, OnDestroy {
     constructor(private rageConnector: RageConnectorService, private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
-        this.rageConnector.listen(DFromClientEvent.AddUserTalking, this.addUserTalking.bind(this));
-        this.rageConnector.listen(DFromClientEvent.RemoveUserTalking, this.removeUserTalking.bind(this));
+        this.rageConnector.listen(FromClientEvent.AddUserTalking, this.addUserTalking.bind(this));
+        this.rageConnector.listen(FromClientEvent.RemoveUserTalking, this.removeUserTalking.bind(this));
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromClientEvent.AddUserTalking, this.addUserTalking.bind(this));
-        this.rageConnector.remove(DFromClientEvent.RemoveUserTalking, this.removeUserTalking.bind(this));
+        this.rageConnector.remove(FromClientEvent.AddUserTalking, this.addUserTalking.bind(this));
+        this.rageConnector.remove(FromClientEvent.RemoveUserTalking, this.removeUserTalking.bind(this));
     }
 
     private addUserTalking(remoteId: number, name: string) {

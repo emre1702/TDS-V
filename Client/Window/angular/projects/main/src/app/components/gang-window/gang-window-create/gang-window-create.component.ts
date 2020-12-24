@@ -8,40 +8,24 @@ import { ClipboardService } from 'ngx-clipboard';
 import { GangWindowService } from '../services/gang-window-service';
 import { GangCommand } from '../enums/gang-command.enum';
 import { NotificationService } from '../../../modules/shared/services/notification.service';
+import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-gang-window-create',
     templateUrl: './gang-window-create.component.html',
-    styleUrls: ['./gang-window-create.component.scss']
+    styleUrls: ['./gang-window-create.component.scss'],
 })
 export class GangWindowCreateComponent implements OnInit {
-
-    nameFormControl = new FormControl("", [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(50),
-        Validators.pattern("[a-zA-Z0-9_\\- ]*")
-    ]);
-    shortFormControl = new FormControl("", [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(10),
-        Validators.pattern("[a-zA-Z0-9_\\-]*")
-    ]);
-    colorFormControl = new FormControl("rgb(255,255,255)", [
-        Validators.required,
-        Validators.pattern("rgb\\((\\d{1,3}), ?(\\d{1,3}), ?(\\d{1,3})\\)")
-    ]);
-    blipColorFormControl = new FormControl(1, [
-        Validators.required,
-        validBlipColorValidator()
-    ]);
+    nameFormControl = new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(50), Validators.pattern('[a-zA-Z0-9_\\- ]*')]);
+    shortFormControl = new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(10), Validators.pattern('[a-zA-Z0-9_\\-]*')]);
+    colorFormControl = new FormControl('rgb(255,255,255)', [Validators.required, Validators.pattern('rgb\\((\\d{1,3}), ?(\\d{1,3}), ?(\\d{1,3})\\)')]);
+    blipColorFormControl = new FormControl(1, [Validators.required, validBlipColorValidator()]);
 
     createFormGroup = new FormGroup({
         0: this.nameFormControl,
         1: this.shortFormControl,
         2: this.colorFormControl,
-        3: this.blipColorFormControl
+        3: this.blipColorFormControl,
     });
 
     showColorPickerForColor = false;
@@ -56,27 +40,31 @@ export class GangWindowCreateComponent implements OnInit {
         public sanitizer: DomSanitizer,
         private clipboardService: ClipboardService,
         private notificationService: NotificationService,
-        private gangWindowService: GangWindowService) { }
+        private gangWindowService: GangWindowService
+    ) {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     createGang() {
-        if (this.createFormGroup.invalid)
-            return;
+        if (this.createFormGroup.invalid) return;
 
         const data = this.createFormGroup.getRawValue();
-        this.gangWindowService.executeCommand(GangCommand.Create, [JSON.stringify(data)], () => {
-            this.notificationService.showSuccess(this.settings.Lang.GangSuccessfullyCreatedInfo);
-            this.back.emit();
-        }, true, false);
+        this.gangWindowService.executeCommand(
+            GangCommand.Create,
+            [JSON.stringify(data)],
+            () => {
+                this.notificationService.showSuccess(new LanguagePipe().transform('GangSuccessfullyCreatedInfo', this.settings.Lang));
+                this.back.emit();
+            },
+            true,
+            false
+        );
     }
 
     copyBlipColor() {
         const currentBlipId = this.blipColorFormControl.value;
-        const blipColorData = Constants.BLIP_COLORS.find(b => b.ID == currentBlipId);
-        if (!blipColorData)
-            return;
+        const blipColorData = Constants.BLIP_COLORS.find((b) => b.ID == currentBlipId);
+        if (!blipColorData) return;
         this.clipboardService.copy(blipColorData.Color);
     }
 
@@ -91,9 +79,9 @@ export class GangWindowCreateComponent implements OnInit {
     }
 
     getBlipColor(id: number): SafeStyle {
-        const blip = Constants.BLIP_COLORS.find(c => c.ID == id);
+        const blip = Constants.BLIP_COLORS.find((c) => c.ID == id);
         if (!blip) {
-            return this.sanitizer.bypassSecurityTrustStyle("rgb(255,255,255");
+            return this.sanitizer.bypassSecurityTrustStyle('rgb(255,255,255');
         }
 
         return this.sanitizer.bypassSecurityTrustStyle(blip.Color);

@@ -7,31 +7,24 @@ import { GangWindowService } from '../services/gang-window-service';
 import { GangWindowNav } from '../enums/gang-window-nav.enum';
 import { GangCommand } from '../enums/gang-command.enum';
 import { NotificationService } from '../../../modules/shared/services/notification.service';
+import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-gang-window-rank-levels',
     templateUrl: './gang-window-rank-levels.component.html',
-    styleUrls: ['./gang-window-rank-levels.component.scss']
+    styleUrls: ['./gang-window-rank-levels.component.scss'],
 })
 export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
-
     currentFormGroup: number;
     showColorPickerForColor: boolean;
 
     rankLevelFormGroups: FormGroup[] = [];
 
-    nameFormControl = new FormControl("", [
-        Validators.minLength(1),
-        Validators.maxLength(25),
-        Validators.required
-    ]);
+    nameFormControl = new FormControl('', [Validators.minLength(1), Validators.maxLength(25), Validators.required]);
 
-    colorFormControl = new FormControl("rgb(255,255,255)", [
-        Validators.required,
-        Validators.pattern("rgb\\((\\d{1,3}), ?(\\d{1,3}), ?(\\d{1,3})\\)")
-    ]);
+    colorFormControl = new FormControl('rgb(255,255,255)', [Validators.required, Validators.pattern('rgb\\((\\d{1,3}), ?(\\d{1,3}), ?(\\d{1,3})\\)')]);
 
-    columns = ["Rank", "Name", "Color"];
+    columns = ['Rank', 'Name', 'Color'];
 
     @Output() back = new EventEmitter();
 
@@ -41,11 +34,11 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
         private sanitizer: DomSanitizer,
         public gangWindowService: GangWindowService,
         private notificationService: NotificationService
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.gangWindowService.loadedData.on(GangWindowNav[GangWindowNav.RanksLevels], this.loadedData.bind(this));
-        this.notificationService.showInfo(this.settings.Lang.RankLevelsModifyInfo);
+        this.notificationService.showInfo(new LanguagePipe().transform('RankLevelsModifyInfo', this.settings.Lang));
     }
 
     ngOnDestroy(): void {
@@ -55,8 +48,8 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
     addRankAfter() {
         const formGroup = new FormGroup({
             Id: new FormControl(-1),
-            Name: new FormControl("Rank " + (this.currentFormGroup + 1), this.nameFormControl.validator),
-            Color: new FormControl("rgb(255,255,255)", this.colorFormControl.validator)
+            Name: new FormControl('Rank ' + (this.currentFormGroup + 1), this.nameFormControl.validator),
+            Color: new FormControl('rgb(255,255,255)', this.colorFormControl.validator),
         });
         this.rankLevelFormGroups.splice(this.currentFormGroup + 1, 0, formGroup);
         this.rankLevelFormGroups = [...this.rankLevelFormGroups];
@@ -76,7 +69,7 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
         const ranks: GangRank[] = [];
 
         for (const formGroup of this.rankLevelFormGroups) {
-            ranks.push({ 0: formGroup.get("Name").value, 1: formGroup.get("Color").value, 2: formGroup.get("Id").value });
+            ranks.push({ 0: formGroup.get('Name').value, 1: formGroup.get('Color').value, 2: formGroup.get('Id').value });
         }
 
         this.gangWindowService.executeCommand(GangCommand.ModifyRanks, [JSON.stringify(ranks)], () => {
@@ -91,8 +84,8 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
         } else {
             this.currentFormGroup = rank;
 
-            this.nameFormControl = formGroup.get("Name") as FormControl;
-            this.colorFormControl = formGroup.get("Color") as FormControl;
+            this.nameFormControl = formGroup.get('Name') as FormControl;
+            this.colorFormControl = formGroup.get('Color') as FormControl;
         }
 
         this.changeDetector.detectChanges();
@@ -100,8 +93,7 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
 
     isValid(): boolean {
         for (const formGroup of this.rankLevelFormGroups) {
-            if (formGroup.invalid)
-                return false;
+            if (formGroup.invalid) return false;
         }
         return true;
     }
@@ -124,7 +116,7 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
             const formGroup = new FormGroup({
                 Name: new FormControl(rank[0], this.nameFormControl.validator),
                 Color: new FormControl(rank[1], this.colorFormControl.validator),
-                Id: new FormControl(rank[2])
+                Id: new FormControl(rank[2]),
             });
             this.rankLevelFormGroups.push(formGroup);
         }

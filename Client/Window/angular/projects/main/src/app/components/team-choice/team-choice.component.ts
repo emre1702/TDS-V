@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../../enums/dfromclientevent.enum';
+import { FromClientEvent } from '../../enums/from-client-event.enum';
 import { DToServerEvent } from '../../enums/dtoserverevent.enum';
 import { TeamChoiceMenuTeamData } from './models/teamChoiceMenuTeamData';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
@@ -9,19 +9,19 @@ import { SettingsService } from '../../services/settings.service';
 @Component({
     selector: 'app-team-choice',
     templateUrl: './team-choice.component.html',
-    styleUrls: ['./team-choice.component.scss']
+    styleUrls: ['./team-choice.component.scss'],
 })
 export class TeamChoiceComponent implements OnInit, OnDestroy {
-
     data: TeamChoiceMenuTeamData[];
     isRandomTeams: boolean;
 
-    constructor(private rageConnector: RageConnectorService,
+    constructor(
+        private rageConnector: RageConnectorService,
         private sanitizer: DomSanitizer,
         private changeDetector: ChangeDetectorRef,
-        public settings: SettingsService) {
-
-        this.rageConnector.listen(DFromClientEvent.SyncTeamChoiceMenuData, (teamsJson: string, isRandomTeams: boolean) => {
+        public settings: SettingsService
+    ) {
+        this.rageConnector.listen(FromClientEvent.SyncTeamChoiceMenuData, (teamsJson: string, isRandomTeams: boolean) => {
             this.isRandomTeams = isRandomTeams;
             this.data = JSON.parse(teamsJson);
             this.changeDetector.detectChanges();

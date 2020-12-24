@@ -15,12 +15,13 @@ import { CustomLobbyMenuType } from '../enums/custom-lobby-menu-type.enum';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
 import { DataForCustomLobbyCreation } from '../models/data-for-custom-lobby-creation';
 import { CustomLobbyWeaponData } from '../models/custom-lobby-weapon-data';
-import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { notEnoughTeamsValidator } from './validators/notEnoughTeamsValidator';
 import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../../modules/shared/services/error.service';
 import { CustomLobbyArmsRaceWeaponData } from '../models/custom-lobby-armsraceweapon-data';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationService } from '../../../modules/shared/services/notification.service';
+import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -264,9 +265,9 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.rageConnector.listen(DFromServerEvent.AddCustomLobby, this.addCustomLobby.bind(this));
-        this.rageConnector.listen(DFromServerEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
-        this.rageConnector.listen(DFromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
+        this.rageConnector.listen(FromServerEvent.AddCustomLobby, this.addCustomLobby.bind(this));
+        this.rageConnector.listen(FromServerEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
+        this.rageConnector.listen(FromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
         this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
@@ -288,9 +289,9 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromServerEvent.AddCustomLobby, this.addCustomLobby.bind(this));
-        this.rageConnector.remove(DFromServerEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
-        this.rageConnector.remove(DFromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
+        this.rageConnector.remove(FromServerEvent.AddCustomLobby, this.addCustomLobby.bind(this));
+        this.rageConnector.remove(FromServerEvent.RemoveCustomLobby, this.removeCustomLobby.bind(this));
+        this.rageConnector.remove(FromServerEvent.SyncAllCustomLobbies, this.syncAllCustomLobbies.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
         this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
@@ -375,7 +376,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             dialogRef.beforeClosed().subscribe((inputedPassword) => {
                 if (inputedPassword == undefined) return;
                 if (inputedPassword == false) {
-                    this.notificationService.showError(this.settings.Lang.PasswordIncorrect);
+                    this.notificationService.showError(new LanguagePipe().transform('PasswordIncorrect', this.settings.Lang));
                     return;
                 }
                 this.rageConnector.callServer(DToServerEvent.JoinLobbyWithPassword, clickedLobbyData[0], inputedPassword);

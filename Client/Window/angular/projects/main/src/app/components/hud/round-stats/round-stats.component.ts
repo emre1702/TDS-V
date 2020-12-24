@@ -1,17 +1,16 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { RageConnectorService } from 'rage-connector';
-import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { ClipboardService } from 'ngx-clipboard';
 import { HudDesign } from '../enums/hud-design.enum';
 
 @Component({
     selector: 'app-round-stats',
     templateUrl: './round-stats.component.html',
-    styleUrls: ['./round-stats.component.scss']
+    styleUrls: ['./round-stats.component.scss'],
 })
 export class RoundStatsComponent implements OnInit, OnDestroy {
-
     hudDesign = HudDesign;
 
     kills = 0;
@@ -22,23 +21,23 @@ export class RoundStatsComponent implements OnInit, OnDestroy {
         public settings: SettingsService,
         private rageConnector: RageConnectorService,
         private changeDetector: ChangeDetectorRef,
-        private clipboardService: ClipboardService) { }
+        private clipboardService: ClipboardService
+    ) {}
 
     ngOnInit() {
-        this.rageConnector.listen(DFromServerEvent.SetKillsForRoundStats, this.setKills.bind(this));
-        this.rageConnector.listen(DFromServerEvent.SetAssistsForRoundStats, this.setAssists.bind(this));
-        this.rageConnector.listen(DFromServerEvent.SetDamageForRoundStats, this.setDamage.bind(this));
+        this.rageConnector.listen(FromServerEvent.SetKillsForRoundStats, this.setKills.bind(this));
+        this.rageConnector.listen(FromServerEvent.SetAssistsForRoundStats, this.setAssists.bind(this));
+        this.rageConnector.listen(FromServerEvent.SetDamageForRoundStats, this.setDamage.bind(this));
     }
 
     ngOnDestroy() {
-        this.rageConnector.remove(DFromServerEvent.SetKillsForRoundStats, this.setKills.bind(this));
-        this.rageConnector.remove(DFromServerEvent.SetAssistsForRoundStats, this.setAssists.bind(this));
-        this.rageConnector.remove(DFromServerEvent.SetDamageForRoundStats, this.setDamage.bind(this));
+        this.rageConnector.remove(FromServerEvent.SetKillsForRoundStats, this.setKills.bind(this));
+        this.rageConnector.remove(FromServerEvent.SetAssistsForRoundStats, this.setAssists.bind(this));
+        this.rageConnector.remove(FromServerEvent.SetDamageForRoundStats, this.setDamage.bind(this));
     }
 
     copyToClipboard() {
-        const text =
-`===============
+        const text = `===============
 ==== TDS-V ====
 = Round-Stats =
 ===============

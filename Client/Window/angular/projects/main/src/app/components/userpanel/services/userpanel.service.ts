@@ -12,28 +12,28 @@ import { UserpanelAdminQuestionsGroup } from '../interfaces/userpanelAdminQuesti
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { UserpanelSupportType } from '../enums/userpanel-support-type.enum';
 import { UserpanelSettingSpecialDataDto } from '../interfaces/userpanelSettingSpecialDataDto';
-import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { UserpanelSupportRequestListData } from '../interfaces/userpanelSupportRequestListData';
 import { UserpanelSettingCommandDataDto } from '../interfaces/settings-commands/userpanelSettingCommandDataDto';
 import { InitialDatas } from '../../../initial-datas';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class UserpanelService {
     loadingData = false;
 
-    supportTypeIcons: { [type: number]: string} = {
-        [UserpanelSupportType.Question]: "help",
-        [UserpanelSupportType.Help]: "info",
-        [UserpanelSupportType.Compliment]: "thumb_up",
-        [UserpanelSupportType.Complaint]: "thumb_down"
+    supportTypeIcons: { [type: number]: string } = {
+        [UserpanelSupportType.Question]: 'help',
+        [UserpanelSupportType.Help]: 'info',
+        [UserpanelSupportType.Compliment]: 'thumb_up',
+        [UserpanelSupportType.Complaint]: 'thumb_down',
     };
-    supportTypeBorderColors: { [type: number]: string} = {
-        [UserpanelSupportType.Question]: "rgb(0,0,150)",
-        [UserpanelSupportType.Help]: "rgb(150,150,150)",
-        [UserpanelSupportType.Compliment]: "rgb(0,150,0)",
-        [UserpanelSupportType.Complaint]: "rgb(150,0,0)"
+    supportTypeBorderColors: { [type: number]: string } = {
+        [UserpanelSupportType.Question]: 'rgb(0,0,150)',
+        [UserpanelSupportType.Help]: 'rgb(150,150,150)',
+        [UserpanelSupportType.Compliment]: 'rgb(0,150,0)',
+        [UserpanelSupportType.Complaint]: 'rgb(150,0,0)',
     };
 
     private _currentNav: string = UserpanelNavPage[UserpanelNavPage.Main];
@@ -128,7 +128,7 @@ export class UserpanelService {
     private myStatsGeneralLoadCooldown: NodeJS.Timeout;
 
     constructor(private rageConnector: RageConnectorService, private settings: SettingsService) {
-        rageConnector.listen(DFromServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
+        rageConnector.listen(FromServerEvent.LoadUserpanelData, this.loadUserpanelData.bind(this));
         settings.LanguageChanged.on(null, this.languageChanged.bind(this));
     }
 
@@ -263,13 +263,13 @@ export class UserpanelService {
 
     private loadedAllRules(json: string) {
         this.allRules = JSON.parse(json);
-        this.allRules.sort((a, b) => a[0] < b[0] ? -1 : 1);
+        this.allRules.sort((a, b) => (a[0] < b[0] ? -1 : 1));
         this.rulesLoaded.emit(null);
     }
 
     private loadedAllFAQs(json: string) {
         this.allFAQs = JSON.parse(json);
-        this.allFAQs.sort((a, b) => a[0] < b[0] ? -1 : 1);
+        this.allFAQs.sort((a, b) => (a[0] < b[0] ? -1 : 1));
         this.faqsLoaded.emit(null);
     }
 
@@ -280,7 +280,7 @@ export class UserpanelService {
 
     private loadedSettingsCommandsData(json: string) {
         this.settingsCommandsData = JSON.parse(json);
-        if (typeof this.settingsCommandsData[0] === "string") {
+        if (typeof this.settingsCommandsData[0] === 'string') {
             this.settingsCommandsData[0] = JSON.parse(this.settingsCommandsData[0]);
         }
         for (const entry of this.settingsCommandsData[1]) {
@@ -292,7 +292,7 @@ export class UserpanelService {
 
     private loadedMyStatsGeneral(json: string) {
         this.myStatsGeneral = JSON.parse(json);
-        this.myStatsGeneral[20].sort((a, b) => a[1] < b[1] ? -1 : 1);
+        this.myStatsGeneral[20].sort((a, b) => (a[1] < b[1] ? -1 : 1));
         this.myStatsGeneralLoaded.emit(null);
     }
 
@@ -313,13 +313,13 @@ export class UserpanelService {
         // data.CreateTime -> Application already exists
         if (data[0]) {
             this.myApplicationCreateTime = data[0];
-            if (typeof (data[1]) === "string") {
+            if (typeof data[1] === 'string') {
                 data[1] = JSON.parse(data[1]);
             }
             this.adminApplyInvitations = data[1];
             // !data.CreateTime -> No application, user can create a new one
         } else {
-            if (typeof (data[2]) === "string") {
+            if (typeof data[2] === 'string') {
                 data[2] = JSON.parse(data[2]);
             }
             this.adminQuestions = data[2];
@@ -351,10 +351,8 @@ export class UserpanelService {
 
     private languageChanged() {
         this.allFAQs = [];
-        if (this.allSettingsNormal)
-            this.allSettingsNormal[1] = this.settings.LangValue;
+        if (this.allSettingsNormal) this.allSettingsNormal[1] = this.settings.LangValue;
     }
-
 
     myStatsGeneralLoadingCooldownEnded() {
         this.myStatsGeneralLoadCooldown = undefined;

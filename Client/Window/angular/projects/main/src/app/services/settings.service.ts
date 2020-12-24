@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { LanguageEnum } from '../enums/language.enum';
 import { Language } from '../interfaces/language.interface';
 import { RageConnectorService } from 'rage-connector';
-import { DFromClientEvent } from '../enums/dfromclientevent.enum';
+import { FromClientEvent } from '../enums/from-client-event.enum';
 import { EventEmitter } from 'events';
 import { ConstantsData } from '../interfaces/constants-data';
 import { ChallengeGroup } from '../components/lobbychoice/models/challenge-group';
 import { ChallengeFrequency } from '../components/lobbychoice/enums/challenge-frequency.enum';
 import { ChallengeType } from '../components/lobbychoice/enums/challenge-type.enum';
-import { DFromServerEvent } from '../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../enums/dfromserverevent.enum';
 import { MapDataDto } from '../components/mapvoting/models/mapDataDto';
 import { Challenge } from '../components/lobbychoice/models/challenge';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -252,19 +252,19 @@ export class SettingsService {
 
     constructor(private rageConnector: RageConnectorService, private sanitizer: DomSanitizer) {
         console.log('Settings listener started.');
-        rageConnector.listen(DFromClientEvent.LoadLanguage, this.loadLanguage.bind(this));
-        rageConnector.listen(DFromServerEvent.LoadMapFavourites, this.loadFavoriteMapIds.bind(this));
-        rageConnector.listen(DFromClientEvent.ToggleInFightLobby, this.toggleInFightLobby.bind(this));
-        rageConnector.listen(DFromClientEvent.ToggleTeamOrderModus, this.toggleInTeamOrderModus.bind(this));
-        rageConnector.listen(DFromClientEvent.ToggleChatOpened, this.setChatOpened.bind(this));
-        rageConnector.listen(DFromServerEvent.SyncChallengeCurrentAmountChange, this.onChallengeCurrentAmountChange.bind(this));
-        rageConnector.listen(DFromServerEvent.SyncChallenges, this.loadChallenges.bind(this));
-        rageConnector.listen(DFromClientEvent.SyncMapPriceData, this.syncMapPriceData.bind(this));
-        rageConnector.listen(DFromClientEvent.SyncMoney, this.onMoneySync.bind(this));
-        rageConnector.listen(DFromClientEvent.SyncIsLobbyOwner, this.onSyncIsLobbyOwner.bind(this));
-        rageConnector.listen(DFromClientEvent.LoadSettings, this.loadSettings.bind(this));
-        rageConnector.listen(DFromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
-        rageConnector.listen(DFromClientEvent.SyncGangId, this.syncGangId.bind(this));
+        rageConnector.listen(FromClientEvent.LoadLanguage, this.loadLanguage.bind(this));
+        rageConnector.listen(FromServerEvent.LoadMapFavourites, this.loadFavoriteMapIds.bind(this));
+        rageConnector.listen(FromClientEvent.ToggleInFightLobby, this.toggleInFightLobby.bind(this));
+        rageConnector.listen(FromClientEvent.ToggleTeamOrderModus, this.toggleInTeamOrderModus.bind(this));
+        rageConnector.listen(FromClientEvent.ToggleChatOpened, this.setChatOpened.bind(this));
+        rageConnector.listen(FromServerEvent.SyncChallengeCurrentAmountChange, this.onChallengeCurrentAmountChange.bind(this));
+        rageConnector.listen(FromServerEvent.SyncChallenges, this.loadChallenges.bind(this));
+        rageConnector.listen(FromClientEvent.SyncMapPriceData, this.syncMapPriceData.bind(this));
+        rageConnector.listen(FromClientEvent.SyncMoney, this.onMoneySync.bind(this));
+        rageConnector.listen(FromClientEvent.SyncIsLobbyOwner, this.onSyncIsLobbyOwner.bind(this));
+        rageConnector.listen(FromClientEvent.LoadSettings, this.loadSettings.bind(this));
+        rageConnector.listen(FromServerEvent.SyncCommandsData, this.syncCommandsData.bind(this));
+        rageConnector.listen(FromClientEvent.SyncGangId, this.syncGangId.bind(this));
 
         this.setChallengeInfosToAll();
 

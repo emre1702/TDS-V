@@ -6,13 +6,13 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserpanelNavPage } from '../enums/userpanel-nav-page.enum';
 import { RageConnectorService } from 'rage-connector';
 import { DToServerEvent } from '../../../enums/dtoserverevent.enum';
-import { DFromServerEvent } from '../../../enums/dfromserverevent.enum';
+import { FromServerEvent } from '../../../enums/dfromserverevent.enum';
 import { UserpanelSupportRequestData } from '../interfaces/userpanelSupportRequestData';
 
 @Component({
     selector: 'app-userpanel-support-user',
     templateUrl: './userpanel-support-user.component.html',
-    styleUrls: ['./userpanel-support-user.component.scss']
+    styleUrls: ['./userpanel-support-user.component.scss'],
 })
 export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     userpanelSupportType = UserpanelSupportType;
@@ -32,11 +32,12 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         public userpanelService: UserpanelService,
         public settings: SettingsService,
         private changeDetector: ChangeDetectorRef,
-        private rageConnector: RageConnectorService) { }
+        private rageConnector: RageConnectorService
+    ) {}
 
     ngOnInit() {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
-        this.rageConnector.listen(DFromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
+        this.rageConnector.listen(FromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
         this.userpanelService.supportRequestsLoaded.on(null, this.detectChanges.bind(this));
 
         this.requestGroup = new FormGroup({
@@ -50,7 +51,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         this.userpanelService.supportRequests = undefined;
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.userpanelService.supportRequestsLoaded.off(null, this.detectChanges.bind(this));
-        this.rageConnector.remove(DFromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
+        this.rageConnector.remove(FromServerEvent.SetSupportRequestClosed, this.setRequestClosed.bind(this));
         this.rageConnector.callServer(DToServerEvent.LeftSupportRequestsList);
     }
 
@@ -58,8 +59,8 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         for (const control of Object.values(this.requestGroup.controls)) {
             control.reset();
         }
-        this.currentRequest = { 0: 0, 1: "", 2: [], 3: UserpanelSupportType.Question, 4: 1, 5: false };
-        this.requestGroup.get("type").enable();
+        this.currentRequest = { 0: 0, 1: '', 2: [], 3: UserpanelSupportType.Question, 4: 1, 5: false };
+        this.requestGroup.get('type').enable();
 
         this.creatingRequest = true;
         this.changeDetector.detectChanges();
@@ -67,7 +68,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
 
     openRequest(id: number) {
         this.inRequest = id;
-        this.requestGroup.get("type").disable();
+        this.requestGroup.get('type').disable();
 
         this.rageConnector.callCallbackServer(DToServerEvent.GetSupportRequestData, [id], (json: string) => {
             this.currentRequest = JSON.parse(json);
@@ -80,9 +81,9 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
     }
 
     submitRequest() {
-        this.currentRequest[1] = this.requestGroup.get("title").value;
-        this.currentRequest[2] = [{ 0: "", 1: this.requestGroup.get("message").value as string, 2: "" }];
-        this.currentRequest[3] = this.requestGroup.get("type").value;
+        this.currentRequest[1] = this.requestGroup.get('title').value;
+        this.currentRequest[2] = [{ 0: '', 1: this.requestGroup.get('message').value as string, 2: '' }];
+        this.currentRequest[3] = this.requestGroup.get('type').value;
 
         this.rageConnector.callServer(DToServerEvent.SendSupportRequest, JSON.stringify(this.currentRequest));
 
@@ -114,7 +115,7 @@ export class UserpanelSupportUserComponent implements OnInit, OnDestroy {
         if (this.currentRequest[0] == requestId) {
             this.currentRequest[5] = closed;
         }
-        const request = this.userpanelService.supportRequests.find(r => r[0] == requestId);
+        const request = this.userpanelService.supportRequests.find((r) => r[0] == requestId);
         if (request) {
             request[5] = closed;
         }

@@ -1,4 +1,4 @@
-export enum DFromClientEvent {
+export enum FromClientEvent {
     AddKillMessage = 'cb45',
     AddNameForChat = 'cb38',
     AddPositionToMapCreatorBrowser = 'cb3',
