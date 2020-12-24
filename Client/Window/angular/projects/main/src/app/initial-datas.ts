@@ -199,7 +199,7 @@ export class InitialDatas {
             { 0: 2, 1: 'DoThis' },
             { 0: 2, 1: 'DoThat' },
         ],
-        1: [{ 0: 1, 1: 'GehHin' }],
+        1: [{ 0: 1, 1: 1, 2: 'GehHin' }],
     };
 
     static readonly syncedSettings: SyncedSettings = {

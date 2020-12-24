@@ -283,10 +283,6 @@ export class UserpanelService {
         if (typeof this.settingsCommandsData[0] === 'string') {
             this.settingsCommandsData[0] = JSON.parse(this.settingsCommandsData[0]);
         }
-        for (const entry of this.settingsCommandsData[1]) {
-            entry.changed = false;
-            entry.initial = true;
-        }
         this.settingsCommandsDataLoaded.emit(null);
     }
 
