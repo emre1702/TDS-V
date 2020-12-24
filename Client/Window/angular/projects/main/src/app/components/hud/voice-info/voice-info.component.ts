@@ -30,7 +30,7 @@ export class VoiceInfoComponent implements OnInit, OnDestroy {
     }
 
     private removeUserTalking(remoteId: number) {
-        const index = this.voiceInfos.findIndex((info) => info[0] == remoteId);
+        const index = this.voiceInfos.findIndex((info) => info.RemoteId == remoteId);
         if (index >= 0) {
             this.voiceInfos.splice(index, 1);
         }
