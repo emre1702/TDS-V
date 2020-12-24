@@ -6,7 +6,7 @@ import { ChallengeFrequency } from '../enums/challenge-frequency.enum';
 import { LobbyChoice } from '../lobby-choice/interfaces/lobby-choice';
 import { OfficialLobbyId } from '../enums/official-lobby-id.enum';
 import { DomSanitizer } from '@angular/platform-browser';
-import { DToClientEvent } from '../../../enums/dtoclientevent.enum';
+import { ToClientEvent } from '../../../enums/to-client-event.enum';
 import { RageConnectorService } from 'rage-connector';
 import { topToBottomMainMenuAnimation } from './animations/top-to-bottom-main-menu.animation';
 import { leftToRightMainMenuAnimation } from './animations/left-to-right-main-menu.animation';
@@ -78,7 +78,7 @@ export class MainMenuComponent implements OnInit, OnDestroy {
 
     setLanguage(languageId: number) {
         this.settings.loadLanguage(languageId);
-        this.rageConnector.call(DToClientEvent.LanguageChange, languageId);
+        this.rageConnector.call(ToClientEvent.LanguageChange, languageId);
     }
 
     getImageUrl(url: string) {

@@ -977,4 +977,6 @@ export interface Language {
     IngameColors: string;
     Theme: string;
     HeadShotMultiplier: string;
+
+    registerLoginInformation: string;
 }

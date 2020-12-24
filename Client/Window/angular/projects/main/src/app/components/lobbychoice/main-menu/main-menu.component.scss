@@ -11,32 +11,45 @@
     .left-window {
         flex: 1 1 30%;
 
-        .challenges-container {
-            overflow-y: auto;
-            overflow-x: hidden;
-            height: 100%;
-            width: 100%;
+        &.challenges {
+            margin-top: auto;
+            max-height: 50vh;
 
-            .challenge {
-                margin-bottom: 20px;
+            .challenges-container {
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: 100%;
+                width: 100%;
 
-                .date {
-                    margin-bottom: 5px;
-                    font-size: larger;
-                    font-weight: bolder;
+                .challenge {
+                    margin-bottom: 20px;
+
+                    .date {
+                        margin-bottom: 5px;
+                        font-size: larger;
+                        font-weight: bolder;
+                    }
+
+                    .done {
+                        text-decoration: line-through;
+                    }
+
+                    li {
+                        margin-bottom: 2px;
+                    }
+
+                    .challenge:last-of-type {
+                        margin-bottom: 0;
+                    }
                 }
+            }
+        }
 
-                .done {
-                    text-decoration: line-through;
-                }
-
-                li {
-                    margin-bottom: 2px;
-                }
-
-                .challenge:last-of-type {
-                    margin-bottom: 0;
-                }
+        &.information-container {
+            .information-text {
+                height: 100%;
+                width: 100%;
+                white-space: pre-wrap;
             }
         }
     }
@@ -110,11 +123,6 @@
         width: 5%;
         height: 20px;
         flex-shrink: 0;
-    }
-
-    .challenges {
-        margin-top: auto;
-        max-height: 50vh;
     }
 
     app-register-login {

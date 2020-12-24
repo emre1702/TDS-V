@@ -1,8 +1,8 @@
 import { Language } from '../interfaces/language.interface';
 
 export class English implements Language {
-    MapVoting = 'Map-Voting';
-    MapCreator = 'Map-Creator';
+    MapVoting = 'Map Voting';
+    MapCreator = 'Map Creator';
     All = 'All';
     Normal = 'Normal';
     Bomb = 'Bomb';
@@ -11,14 +11,14 @@ export class English implements Language {
     Vote = 'Vote';
     Creator = 'Creator';
     Name = 'Name';
-    MapSettings = 'Map-settings';
+    MapSettings = 'Map settings';
     German = 'German';
     English = 'English';
     Description = 'description';
     Type = 'Type';
     TeamSpawns = 'Team-spawns';
-    MapLimit = 'Map-limit';
-    MapCenter = 'Map-center';
+    MapLimit = 'Map limit';
+    MapCenter = 'Map center';
     Objects = 'Objects';
     BombPlaces = 'Bomb-places';
     NumberShort = 'No.';
@@ -102,7 +102,7 @@ export class English implements Language {
 
     Arena = 'Arena';
     Gang = 'Gang';
-    UserLobbies = 'User-Lobbies';
+    UserLobbies = 'User Lobbies';
 
     Userpanel = 'Userpanel';
     UserpanelInfo = `This is your user interface.
@@ -1015,4 +1015,40 @@ Here you can see all the invitations sent to you:`;
     IngameColors = 'Ingame colors';
     Theme = 'Window Theme';
     HeadShotMultiplier = 'Headshot multiplier';
+
+    registerLoginInformation = `On the server, the focus is on deathmatch between teams.
+Through the lobby system you can decide which mode you want to play.
+
+Play turn-based battles between two teams in the <b>arena</b>,
+create a lobby with your own settings or join another player's lobby in <b>User Lobbies</b>.
+or create your own map in <b>Map Creator</b>.
+
+More lobbies are being worked on.
+Priority on <b>Gang Lobby</b> will be set only when there are enough players.
+
+In the <b>Userpanel (U)</b> you will find a lot of things to manage your account, answer your questions, look for help etc.
+Also be sure to check out the numerous settings to optimize your gaming experience as much as possible.
+
+Discord is where we are most active:
+<ins>discord.gg/Kpm3CYB</ins>.
+Here you can always reach us and get the latest information.
+
+The Teamspeak IP is the same as the one from the server:
+<ins>185.101.94.212</ins>
+Here you can talk to others if you are not so into Discord.
+
+You can also contact us via email:
+<ins>admin@tds-v.com</ins>
+
+Bug tracker and platform for suggestions:
+<ins>github.com/emre1702/TDS-V-Public/issues</ins>.
+You can also follow the development here. 
+We rely a lot on the ideas and bug reports from you players, so please use the platform.
+
+The owner and scripter:
+<b>Bonus</b>.
+Administrator, biggest motivation for starting the server:
+<b>Pluz.</b>
+
+Have fun!`;
 }

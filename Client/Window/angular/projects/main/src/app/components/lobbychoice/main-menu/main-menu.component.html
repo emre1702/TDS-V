@@ -1,5 +1,27 @@
 <div class="container">
-    <tds-window class="left-window challenges" [title]="'Challenges' | language: settings.Lang" [@leftToRight]="animState" [canMinimize]="false">
+    <ng-container *ngIf="showRegisterLogin">
+        <div class="left-window information-container">
+            <tds-window
+                class="information"
+                title="TDS - Team Deathmatch Server"
+                [@leftToRight]="animState"
+                [canMinimize]="false"
+                [contentHeight]="'fit-content'"
+                [containerHeight]="'fit-content'"
+                [containerMaxHeight]="'100%'"
+            >
+                <div class="information-text" [innerHTML]="'registerLoginInformation' | language: settings.Lang"></div>
+            </tds-window>
+        </div>
+    </ng-container>
+
+    <tds-window
+        *ngIf="!showRegisterLogin"
+        class="left-window challenges"
+        [title]="'Challenges' | language: settings.Lang"
+        [@leftToRight]="animState"
+        [canMinimize]="false"
+    >
         <div class="challenges-container">
             <div *ngFor="let challengeGroup of settings.ChallengeGroups" class="challenge">
                 <div class="date" *ngIf="challengeGroup[0] == challengeFrequency.Weekly">{{ timeToNextWeeklyChallengesRestartInfo }}:</div>

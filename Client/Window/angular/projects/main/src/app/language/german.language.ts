@@ -964,4 +964,40 @@ Hier siehst du alle bisherigen Einladungen an dich:`;
     IngameColors = 'Ingame-Farben';
     Theme = 'Fenster-Theme';
     HeadShotMultiplier = 'Kopfschuss Multiplikator';
+
+    registerLoginInformation = `Auf dem Server liegt der Fokus auf Deathmatch zwischen Teams.
+Durch das Lobby-System kannst Du entscheiden, welchen Modus du spielen willst.
+
+Spiele in der <b>Arena</b> rundenbasierte Kämpfe zwischen zwei Teams,
+erstelle eine Lobby mit eigenen Einstellungen oder trete in eine Lobby eines anderen Spielers ein in <b>Benutzer-Lobbies</b>
+oder erstelle eine eigene Karte im <b>Karten-Ersteller</b>.
+
+An weiteren Lobbies wird gearbeitet.
+Priorität auf <b>Gang-Lobby</b> wird erst bei genug Spielern gesetzt.
+
+Im <b>Userpanel (U)</b> findest du sehr vieles, um dein Account zu verwalten, deine Fragen zu beantworten, Hilfe zu suchen usw.
+Gucke auch unbedingt in die zahlreichen Einstellungen rein, um dein Spielerlebnis so gut wie möglich zu optimieren.
+
+Auf Discord sind wir am aktivsten:
+<ins>discord.gg/Kpm3CYB</ins>
+Hier erreicht ihr uns immer und bekommt die neuesten Informationen mit.
+
+Die Teamspeak-IP ist die selbe wie die vom Server:
+<ins>185.101.94.212</ins>
+Hier könnt ihr bei Bedarf mit anderen reden, falls ihr nicht so auf Discord steht.
+
+Du kannst uns auch per E-Mail kontaktieren:
+<ins>admin@tds-v.com</ins>
+
+Bugtracker und Plattform für Vorschläge:
+<ins>github.com/emre1702/TDS-V-Public/issues</ins>
+Hier könnt ihr zudem die Entwicklung verfolgen. 
+Wir sind sehr auf die Ideen und Bug-Reports von euch Spielern angewiesen, also bitte nutzt die Plattform.
+
+Der Inhaber und Scripter:
+<b>Bonus</b>
+Administrator, größte Motivation für die Gründung des Servers:
+<b>Pluz.</b>
+
+Habt Spaß!`;
 }
