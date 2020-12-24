@@ -70,6 +70,8 @@ namespace TDS.Server.Handler.Maps
                     return;
                 if (creatorId <= 0)
                     return;
+                if (lobby.CurrentMap.BrowserSyncedData.CreatorName == "?")
+                    return;
 
                 var reward = GetMoneyReward(lobby);
                 if (reward == 0)
