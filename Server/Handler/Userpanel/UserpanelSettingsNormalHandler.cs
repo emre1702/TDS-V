@@ -106,6 +106,7 @@ namespace TDS.Server.Handler.Userpanel
         private async Task SaveDiscordUserId(ITDSPlayer player, ulong discordUserId)
         {
             player.Entity!.PlayerSettings.General.DiscordUserId = discordUserId;
+            player.Entity.DiscordUserId = discordUserId;
             await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
         }
 
