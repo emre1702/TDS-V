@@ -42,6 +42,7 @@ namespace TDS.Server.Handler.Userpanel
                         .Include(c => c.Command)
                         .Select(c => new UserpanelPlayerConfiguredCommandData
                         {
+                            Id = c.Id,
                             CommandId = c.CommandId,
                             CustomCommand = c.CommandText
                         })
@@ -83,7 +84,7 @@ namespace TDS.Server.Handler.Userpanel
                 foreach (var data in datas)
                 {
                     var entity = await dbContext.PlayerCommands
-                        .FirstOrDefaultAsync(c => c.PlayerId == player.Id && c.CommandId == data.CommandId)
+                        .FirstOrDefaultAsync(c => c.PlayerId == player.Id && c.Id == data.Id)
                         .ConfigureAwait(false);
                     if (data.CustomCommand.Length == 0)
                     {

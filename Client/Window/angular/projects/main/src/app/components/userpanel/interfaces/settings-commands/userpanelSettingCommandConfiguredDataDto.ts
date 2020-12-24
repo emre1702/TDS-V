@@ -1,10 +1,12 @@
 export interface UserpanelSettingCommandConfiguredDataDto {
-    /** CommandId */
+    /** Id */
     0: number;
 
+    /** CommandId */
+    1: number;
+
     /** CustomCommand */
-    1: string;
+    2: string;
 
     changed?: boolean;
-    initial?: boolean;
 }

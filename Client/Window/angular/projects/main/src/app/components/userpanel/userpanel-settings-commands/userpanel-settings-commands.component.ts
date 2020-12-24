@@ -31,7 +31,7 @@ export class UserpanelSettingsCommandsComponent implements OnInit, OnDestroy {
     }
 
     addNewRow() {
-        const entry = { 0: 0, 1: '', initial: false, changed: false };
+        const entry = { 0: 0, 1: 0, 2: '', initial: false, changed: false };
         this.userpanelService.settingsCommandsData[1].push(entry);
         this.changeDetector.detectChanges();
     }
@@ -41,8 +41,8 @@ export class UserpanelSettingsCommandsComponent implements OnInit, OnDestroy {
     }
 
     delete(entry: UserpanelSettingCommandConfiguredDataDto) {
-        if (entry.initial) {
-            entry[1] = undefined;
+        if (!!entry[0]) {
+            entry[2] = undefined;
             entry.changed = true;
         } else {
             const index = this.userpanelService.settingsCommandsData[1].indexOf(entry);
@@ -54,16 +54,15 @@ export class UserpanelSettingsCommandsComponent implements OnInit, OnDestroy {
     }
 
     save() {
-        const entries = this.userpanelService.settingsCommandsData[1].filter((d) => d.changed && d[0] != 0);
+        const entries = this.userpanelService.settingsCommandsData[1].filter((d) => d.changed && d[1] != 0);
         if (entries.length === 0) {
             return;
         }
         for (const entry of entries) {
             entry.changed = undefined;
-            entry.initial = undefined;
 
-            if (!entry[1]) entry[1] = '';
-            entry[1].replace(' ', '');
+            if (!entry[2]) entry[2] = '';
+            entry[2].replace(' ', '');
         }
 
         this.rageConnector.callServer(ToServerEvent.SavePlayerCommandsSettings, JSON.stringify(entries));

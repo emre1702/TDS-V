@@ -4,14 +4,13 @@ namespace TDS.Shared.Data.Models.PlayerCommands
 {
     public class UserpanelPlayerConfiguredCommandData
     {
-        #region Public Properties
-
         [JsonProperty("0")]
-        public int CommandId { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("1")]
-        public string CustomCommand { get; set; }
+        public int CommandId { get; set; }
 
-        #endregion Public Properties
+        [JsonProperty("2")]
+        public string CustomCommand { get; set; }
     }
 }
