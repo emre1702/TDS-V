@@ -44,11 +44,11 @@ export class CharCreatorFeaturesComponent implements OnInit, OnDestroy {
     constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef, private rageConnector: RageConnectorService) {}
 
     ngOnInit() {
-        this.settings.LanguageChanged.on(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.settings.LanguageChanged.off(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
     }
 
     onFeatureChanged(index: number, event: MatSliderChange) {
@@ -71,5 +71,9 @@ export class CharCreatorFeaturesComponent implements OnInit, OnDestroy {
 
     private getRandom() {
         return Math.round(Math.floor(Math.random() * (100 + 100 + 1)) - 100) / 100;
+    }
+
+    private detectChanges() {
+        this.changeDetector.detectChanges();
     }
 }

@@ -149,11 +149,11 @@ export class CharCreatorHairandcolorsComponent implements OnInit, OnDestroy {
     constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef, private rageConnector: RageConnectorService) {}
 
     ngOnInit() {
-        this.settings.LanguageChanged.on(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.settings.LanguageChanged.off(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
     }
 
     onHairChanged(event: MatSelectChange) {
@@ -254,5 +254,9 @@ export class CharCreatorHairandcolorsComponent implements OnInit, OnDestroy {
 
     private getRandomLipstickColor() {
         return Math.floor(Math.random() * this.lipstickColorsAmount);
+    }
+
+    private detectChanges() {
+        this.changeDetector.detectChanges();
     }
 }

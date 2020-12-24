@@ -9,10 +9,9 @@ import { MatRadioChange } from '@angular/material/radio';
     // tslint:disable-next-line: component-selector
     selector: 'char-creator-mainmenu',
     templateUrl: './char-creator-mainmenu.component.html',
-    styleUrls: ['./char-creator-mainmenu.component.scss']
+    styleUrls: ['./char-creator-mainmenu.component.scss'],
 })
 export class CharCreatorMainmenuComponent implements OnInit, OnDestroy {
-
     charCreatorMenuNav = CharCreatorMenuNav;
     private _selectedSlot: number;
 
@@ -37,17 +36,17 @@ export class CharCreatorMainmenuComponent implements OnInit, OnDestroy {
 
     @Output() selectedSlotChange = new EventEmitter();
 
-    constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) { }
+    constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
-        this.settings.LanguageChanged.on(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
     }
     ngOnDestroy(): void {
-        this.settings.LanguageChanged.off(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
     }
 
     onGenderChanged(event: MatSelectChange) {
-        this.data[this.selectedSlot][0] = event.value == "true";
+        this.data[this.selectedSlot][0] = event.value == 'true';
         this.dataChange.emit(this.data);
         this.changeDetector.detectChanges();
 
@@ -61,4 +60,7 @@ export class CharCreatorMainmenuComponent implements OnInit, OnDestroy {
         this.recreate.emit();
     }
 
+    private detectChanges() {
+        this.changeDetector.detectChanges();
+    }
 }

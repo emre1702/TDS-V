@@ -73,11 +73,11 @@ export class CharCreatorHeritageComponent implements OnInit, OnDestroy {
     constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef, private rageConnector: RageConnectorService) {}
 
     ngOnInit() {
-        this.settings.LanguageChanged.on(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.settings.LanguageChanged.off(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
     }
 
     onFatherChanged(event: MatSelectChange) {
@@ -122,5 +122,9 @@ export class CharCreatorHeritageComponent implements OnInit, OnDestroy {
 
     getPercentage(value: number) {
         return Math.round(value * 100) + '%';
+    }
+
+    private detectChanges() {
+        this.changeDetector.detectChanges();
     }
 }

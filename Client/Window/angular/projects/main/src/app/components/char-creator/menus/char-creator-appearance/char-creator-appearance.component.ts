@@ -327,11 +327,11 @@ export class CharCreatorAppearanceComponent implements OnInit, OnDestroy {
     constructor(public settings: SettingsService, private changeDetector: ChangeDetectorRef, private rageConnector: RageConnectorService) {}
 
     ngOnInit() {
-        this.settings.LanguageChanged.on(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
-        this.settings.LanguageChanged.off(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
     }
 
     onAppearanceDataChanged(overlayId: number, dataIndex: number, event: MatSelectChange) {
@@ -367,5 +367,9 @@ export class CharCreatorAppearanceComponent implements OnInit, OnDestroy {
 
     private getRandomPercentage() {
         return Math.floor(Math.random() * (100 + 1)) / 100;
+    }
+
+    private detectChanges() {
+        this.changeDetector.detectChanges();
     }
 }

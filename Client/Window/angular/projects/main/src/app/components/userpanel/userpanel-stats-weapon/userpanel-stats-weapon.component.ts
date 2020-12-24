@@ -33,11 +33,11 @@ export class UserpanelStatsWeaponComponent implements OnInit, OnDestroy {
     constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, private rageConnector: RageConnectorService) {}
 
     ngOnInit(): void {
-        this.settings.LanguageChanged.on(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy(): void {
-        this.settings.LanguageChanged.off(null, this.changeDetector.detectChanges.bind(this));
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
     }
 
     loadWeaponData(weaponName: string) {
@@ -83,5 +83,9 @@ export class UserpanelStatsWeaponComponent implements OnInit, OnDestroy {
     getWeaponBodypartStatKeys(): Array<string> {
         const keys = Object.keys(UserpanelWeaponBodypartStats);
         return keys.slice(keys.length / 2);
+    }
+
+    private detectChanges() {
+        this.changeDetector.detectChanges();
     }
 }
