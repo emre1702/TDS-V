@@ -33,8 +33,9 @@ export class UserpanelSettingsNormalService {
                     this.notificationService.showError(error);
                     observer.error(error);
                 } else {
-                    this.notificationService.showSuccess(error);
-                    observer.next(new LanguagePipe().transform('SettingSavedSuccessfully', this.settings.Lang));
+                    const msg = new LanguagePipe().transform('SettingSavedSuccessfully', this.settings.Lang);
+                    this.notificationService.showSuccess(msg);
+                    observer.next(msg);
                 }
                 observer.complete();
             });
