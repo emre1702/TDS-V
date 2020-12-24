@@ -42,7 +42,7 @@ export class UserpanelSettingsCommandsComponent implements OnInit, OnDestroy {
 
     delete(entry: UserpanelSettingCommandConfiguredDataDto) {
         if (entry.initial) {
-            entry[1] = '';
+            entry[1] = undefined;
             entry.changed = true;
         } else {
             const index = this.userpanelService.settingsCommandsData[1].indexOf(entry);
@@ -62,6 +62,7 @@ export class UserpanelSettingsCommandsComponent implements OnInit, OnDestroy {
             entry.changed = undefined;
             entry.initial = undefined;
 
+            if (!entry[1]) entry[1] = '';
             entry[1].replace(' ', '');
         }
 
