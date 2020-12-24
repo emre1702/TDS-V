@@ -21,6 +21,7 @@ export class RageConnectorService {
     private static zone: NgZone = null;
     private static events: { [key: string]: ((...args: any) => void)[] } = {};
     private static callbackEvents: { [key: string]: ((...args: any) => void)[] } = {};
+    private static callbacksWrapper = new Map<(...args: any) => void, (...args: any) => void>();
 
     constructor(zone: NgZone) {
         RageConnectorService.zone = zone;
@@ -42,6 +43,8 @@ export class RageConnectorService {
                 const callbackFunctions = RageConnectorService.callbackEvents[eventName];
                 RageConnectorService.callbackEvents[eventName] = undefined;
                 for (const func of callbackFunctions) {
+                    RageConnectorService.callbacksWrapper.delete(func);
+                    mp.events.remove(eventName, func);
                     func(...args);
                 }
             }
@@ -65,7 +68,9 @@ export class RageConnectorService {
         }
         RageConnectorService.events[eventName].push(callback);
 
-        mp.events.add(eventName, callback);
+        const wrapperCallback = (...args: any) => RageConnectorService.zone.run(() => callback(...args));
+        RageConnectorService.callbacksWrapper.set(callback, wrapperCallback);
+        mp.events.add(eventName, wrapperCallback);
     }
 
     public remove(eventName: string, callback?: (...args: any) => void) {
@@ -83,9 +88,20 @@ export class RageConnectorService {
                     RageConnectorService.events[eventName].splice(i, 1);
                 }
             }
+            const wrapper = RageConnectorService.callbacksWrapper.get(callback);
+            if (wrapper) {
+                mp.events.remove(eventName, wrapper);
+                RageConnectorService.callbacksWrapper.delete(callback);
+            }
             mp.events.remove(eventName, callback);
         } else {
-            RageConnectorService.events[eventName] = undefined;
+            if (RageConnectorService.events[eventName]) {
+                for (const func of RageConnectorService.events[eventName]) {
+                    RageConnectorService.callbacksWrapper.delete(func);
+                }
+                RageConnectorService.events[eventName] = undefined;
+            }
+
             mp.events.remove(eventName);
         }
     }
