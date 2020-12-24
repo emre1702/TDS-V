@@ -23,8 +23,8 @@ namespace BonusBotConnector.Client
             if (settings.GuildId is null)
                 return;
 
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-            var channel = GrpcChannel.ForAddress("http://localhost:5000");
+            // AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            var channel = GrpcChannel.ForAddress("https://localhost:5000");
 
             var actionHandler = new ActionHandler(ex => Error?.Invoke(ex, true));
             Helper = new Helper();

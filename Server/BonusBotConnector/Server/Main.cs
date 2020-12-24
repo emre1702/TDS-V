@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net;
+using System.Runtime.InteropServices;
 using TDS.Server.Data.Interfaces;
 namespace BonusBotConnector_Server
 {
@@ -23,12 +26,20 @@ namespace BonusBotConnector_Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                        .UseUrls("http://localhost:5001")
                         .ConfigureServices(services => services
                             .AddSingleton(loggingHandler)
                             .AddSingleton<BBCommandService>()
                             .AddSingleton<SupportRequestService>()
-                        );
+                        )
+                        .ConfigureKestrel(options =>
+                        {
+                            options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                            {
+                                listenOptions.Protocols = HttpProtocols.Http2;
+                                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                                    listenOptions.UseHttps("/home/localhost.pfx", "grpc");
+                            });
+                        }); ;
                 });
 
         public static void Main()
