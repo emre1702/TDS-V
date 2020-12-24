@@ -12,13 +12,27 @@ namespace TDS.Server.Core.Events
         [ServerEvent(Event.IncomingConnection)]
         public void IncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, GameTypes _, CancelEventArgs cancel)
         {
-            EventsHandler.Instance.OnIncomingConnection(ip, serial, socialClubName, socialClubId, cancel);
+            try 
+            { 
+                EventsHandler.Instance.OnIncomingConnection(ip, serial, socialClubName, socialClubId, cancel);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         [ServerEvent(Event.PlayerConnected)]
         public void PlayerConnected(ITDSPlayer player)
         {
-            EventsHandler.Instance.OnPlayerConnected(player);
+            try
+            { 
+                EventsHandler.Instance.OnPlayerConnected(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
 
         [ServerEvent(Event.PlayerDisconnected)]

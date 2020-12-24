@@ -111,7 +111,7 @@ namespace TDS.Server.LobbySystem.Rankings
             for (int i = 0; i < Math.Min(rankingStats.Count, 3); ++i)
             {
                 var rankingStat = rankingStats[i];
-                if (!rankingStat.Player.Exists)
+                if (!rankingStat.Player.LoggedIn)
                     continue;
                 var posData = Constants.RoundRankingPositions[i];
                 data[rankingStat.Player] = posData;

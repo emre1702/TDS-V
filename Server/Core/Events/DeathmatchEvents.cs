@@ -1,5 +1,7 @@
 ﻿using GTANetworkAPI;
+using System;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Handler;
 using TDS.Server.Handler.Events;
 
 namespace TDS.Server.Core.Events
@@ -9,7 +11,14 @@ namespace TDS.Server.Core.Events
         [ServerEvent(Event.PlayerWeaponSwitch)]
         public void OnPlayerWeaponSwitch(ITDSPlayer player, WeaponHash oldWeaponHash, WeaponHash newWeaponHash)
         {
-            EventsHandler.Instance.OnPlayerWeaponSwitch(player, oldWeaponHash, newWeaponHash);
+            try
+            {
+                EventsHandler.Instance.OnPlayerWeaponSwitch(player, oldWeaponHash, newWeaponHash);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
     }
 }

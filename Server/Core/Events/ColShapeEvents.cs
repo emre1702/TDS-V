@@ -1,5 +1,7 @@
 ﻿using GTANetworkAPI;
+using System;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Handler;
 using TDS.Server.Handler.Events;
 
 namespace TDS.Server.Core.Events
@@ -9,7 +11,14 @@ namespace TDS.Server.Core.Events
         [ServerEvent(Event.PlayerEnterColshape)]
         public void PlayerEnterColshape(ITDSColshape colShape, ITDSPlayer player)
         {
-            EventsHandler.Instance.OnPlayerEnterColshape(colShape, player);
+            try
+            {
+                EventsHandler.Instance.OnPlayerEnterColshape(colShape, player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using System;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces.PlayersSystem;
 using TDS.Server.Handler;
@@ -129,6 +130,12 @@ namespace TDS.Server.PlayersSystem
         {
             DeathSpawnTimer?.Kill();
             DeathSpawnTimer = null;
+            if (pos is null)
+            {
+                LoggingHandler.Instance?.LogError("Pos is null.", Environment.StackTrace, source: this);
+                return;
+            }
+
             NAPI.Task.RunSafe(() =>
             {
                 NAPI.Player.SpawnPlayer(this, pos, heading);

@@ -52,7 +52,7 @@ namespace TDS.Server.Handler
             _attachedEntitiesInfos[entity] = infoDto;
 
             if (lobby is null)
-                NAPI.Task.RunSafe(() => 
+                NAPI.Task.RunSafe(() =>
                     NAPI.ClientEvent.TriggerClientEventForAll(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json));
             else
             {
@@ -64,7 +64,7 @@ namespace TDS.Server.Handler
                         _attachedEntitiesPerLobby[lobby] = new List<Entity>();
                     _attachedEntitiesPerLobby[lobby].Add(entity);
                 }
-                
+
             }
         }
 
@@ -167,17 +167,20 @@ namespace TDS.Server.Handler
         {
             if (_attachedEntitiesPerLobby.ContainsKey(lobby))
             {
-                foreach (Entity entity in _attachedEntitiesPerLobby[lobby].ToArray())
+                NAPI.Task.RunSafe(() =>
                 {
-                    _attachedEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
-                    if (!_attachedEntitiesInfos.ContainsKey(entity))
+                    foreach (Entity entity in _attachedEntitiesPerLobby[lobby].ToArray())
                     {
-                        _attachedEntitiesPerLobby[lobby].Remove(entity);
-                        continue;
+                        _attachedEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
+                        if (!_attachedEntitiesInfos.ContainsKey(entity))
+                        {
+                            _attachedEntitiesPerLobby[lobby].Remove(entity);
+                            continue;
+                        }
+                        player.TriggerEvent(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
                     }
-                    NAPI.Task.RunSafe(() =>
-                        player.TriggerEvent(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json));
-                }
+                });
+
                 if (_attachedEntitiesPerLobby[lobby].Count == 0)
                     _attachedEntitiesPerLobby.Remove(lobby);
             }
@@ -190,7 +193,7 @@ namespace TDS.Server.Handler
                     foreach (Entity entity in _collisionslessEntitiesPerLobby[lobby])
                         player.TriggerEvent(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
                 });
-                
+
                 if (_collisionslessEntitiesPerLobby[lobby].Count == 0)
                     _collisionslessEntitiesPerLobby.Remove(lobby);
             }
@@ -207,7 +210,7 @@ namespace TDS.Server.Handler
 
             if (_invincibleEntityPerLobby.ContainsKey(lobby))
             {
-                
+
                 NAPI.Task.RunSafe(() =>
                 {
                     _invincibleEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
