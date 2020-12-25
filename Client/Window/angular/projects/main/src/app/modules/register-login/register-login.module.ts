@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RegisterLoginComponent } from './register-login.component';
-import { TDSWindowModule } from '../tdswindow/tds-window.module';
+import { TDSWindowModule } from '../tds-window/tds-window.module';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import { SharedModule } from '../shared/shared.module';

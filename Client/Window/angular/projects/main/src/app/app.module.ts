@@ -87,7 +87,7 @@ import { UserpanelSettingsScoreboardComponent } from './components/userpanel/use
 import { UserpanelSettingsVoiceComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-voice/userpanel-settings-voice.component';
 import { UserpanelSettingsThemeComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-theme/userpanel-settings-theme.component';
 import { UserpanelSettingsHudComponent } from './components/userpanel/userpanel-settings-normal/components/userpanel-settings-hud/userpanel-settings-hud.component';
-import { TDSWindowModule } from './modules/tdswindow/tds-window.module';
+import { TDSWindowModule } from './modules/tds-window/tds-window.module';
 import { VoiceInfoComponent } from './components/hud/voice-info/voice-info.component';
 import { RegisterLoginModule } from './modules/register-login/register-login.module';
 
