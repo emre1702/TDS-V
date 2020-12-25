@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Extensions;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.MailSystem;
@@ -27,18 +29,20 @@ namespace TDS.Server.Handler.Account
             NAPI.ClientEvent.Register<ITDSPlayer, string, string>(ToServerEvent.ResetPassword, this, ResetPassword);
         }
 
-        private async void ResetPassword(ITDSPlayer player, string username, string email)
+        public async void ResetPassword(ITDSPlayer player, string username, string email)
+        {
+            var msg = await ResetPasswordWithReturn(player, username, email);
+            NAPI.Task.RunSafe(() => player.TriggerBrowserEvent(ToBrowserEvent.ResetPassword, msg ?? ""));
+        }
+
+        private async Task<string> ResetPasswordWithReturn(ITDSPlayer player, string username, string email)
         {
             try
             {
                 var isEmailCorrect = await player.Database.ExecuteForDBAsync(async dbContext =>
                     await dbContext.Players.AnyAsync(p => p.Name == username && p.Email == email).ConfigureAwait(false)).ConfigureAwait(false);
                 if (!isEmailCorrect)
-                {
-                    NAPI.Task.RunSafe(() =>
-                        player.SendAlert(player.Language.EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID));
-                    return;
-                }
+                    return player.Language.EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID;
 
                 var newPassword = GeneratePassword();
                 var newPasswordHashed = Utils.HashPasswordServer(SharedUtils.HashPWClient(newPassword));
@@ -55,14 +59,17 @@ namespace TDS.Server.Handler.Account
 
                 var response = await _mailSender.SendPasswordResetMail(playerEntity, newPassword, player.Language).ConfigureAwait(false);
                 if (response.Worked)
-                    player.SendAlert(player.Language.PASSWORD_HAS_BEEN_RESET_EMAIL_SENT);
+                    return player.Language.PASSWORD_HAS_BEEN_RESET_EMAIL_SENT;
                 else if (response.ErrorMessage is { })
-                    player.SendAlert(response.ErrorMessage);
+                   return response.ErrorMessage;
+
+                _loggingHandler.LogError("SendPasswordResetMail Worked == false but also no ErrorMessage", Environment.StackTrace, playerEntity);
+                return player.Language.ERROR_INFO;
             }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
-                player.SendAlert(player.Language.ERROR_INFO);
+                return player.Language.ERROR_INFO;
             }
         }
 

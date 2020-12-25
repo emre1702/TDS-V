@@ -5,6 +5,8 @@ import { ErrorService, FormControlCheck } from '../../../shared/services/error.s
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { RageConnectorService } from 'rage-connector';
 import { ToClientEvent } from 'projects/main/src/app/enums/to-client-event.enum';
+import { NotificationService } from '../../../shared/services/notification.service';
+import { RegisterLoginBase } from '../register-login-base';
 
 @Component({
     selector: 'app-password-forgotten',
@@ -12,12 +14,17 @@ import { ToClientEvent } from 'projects/main/src/app/enums/to-client-event.enum'
     styleUrls: ['./password-forgotten.component.scss'],
     providers: [ErrorService],
 })
-export class PasswordForgottenComponent implements OnInit {
+export class PasswordForgottenComponent extends RegisterLoginBase implements OnInit {
     @Input() name: string;
 
-    formGroup: FormGroup;
-
-    constructor(public settings: SettingsService, public errorService: ErrorService, private rageConnector: RageConnectorService) {}
+    constructor(
+        public settings: SettingsService,
+        public errorService: ErrorService,
+        rageConnector: RageConnectorService,
+        notificationService: NotificationService
+    ) {
+        super(rageConnector, notificationService);
+    }
 
     ngOnInit(): void {
         this.formGroup = new FormGroup({
@@ -28,10 +35,7 @@ export class PasswordForgottenComponent implements OnInit {
     }
 
     resetPassword() {
-        if (!this.formGroup.valid) {
-            return;
-        }
-        this.rageConnector.call(ToClientEvent.ResetPassword, this.formGroup.controls.name.value, this.formGroup.controls.email.value);
+        this.send(ToClientEvent.ResetPassword, [this.formGroup.controls.name.value, this.formGroup.controls.email.value]);
     }
 
     private addChecks() {

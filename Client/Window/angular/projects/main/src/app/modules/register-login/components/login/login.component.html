@@ -8,7 +8,7 @@
         <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
     </mat-form-field>
     <label class="password-forgotten" matRipple (click)="openPasswordForgotten.emit()">{{ 'PasswordForgotten' | language: settings.Lang }}</label>
-    <button type="submit" class="add-button" mat-raised-button (click)="login()" [disabled]="errorService.hasError()">
+    <button type="submit" class="add-button" mat-raised-button (click)="login()" [disabled]="errorService.hasError() || isLoading">
         <span [matTooltip]="errorService.errorMessage">{{ 'Login' | language: settings.Lang }}</span>
     </button>
 </form>

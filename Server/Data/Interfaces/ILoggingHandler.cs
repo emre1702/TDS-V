@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Database.Entity.Player;
 using TDS.Shared.Data.Enums;
 
 namespace TDS.Server.Data.Interfaces
@@ -20,6 +21,7 @@ namespace TDS.Server.Data.Interfaces
         void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true);
 
         void LogError(string info, string? stackTrace = null, string? errorType = null, ITDSPlayer? source = null, bool logToBonusBot = true);
+        void LogError(string info, string stackTrace, Players source, string? errorType = null, bool logToBonusBot = true);
 
         void LogErrorFromBonusBot(Exception ex, bool logToBonusBot = true);
 

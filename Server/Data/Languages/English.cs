@@ -16,6 +16,7 @@ namespace TDS.Server.Data.Languages
         public virtual string BOMB_PLANTED => "Bomb was planted!";
 
         public virtual string CHAR_IN_NAME_IS_NOT_ALLOWED => "The character '{0}' in your name is not allowed.";
+        public virtual string COOLDOWN => "Cooldown";
         public virtual string COMMAND_DOESNT_EXIST => "The command doesn't exist.";
         public virtual string COMMAND_TOO_LESS_ARGUMENTS => "You used too few arguments for this command. Expected are {0}, but given are {1} arguments.";
         public virtual string COMMAND_TOO_MANY_ARGUMENTS => "You used too many arguments for this command. Expected are {0}, but given are {1} arguments.";
@@ -191,6 +192,7 @@ namespace TDS.Server.Data.Languages
 
         public virtual string YOU_ACCEPTED_INVITATION => "You accepted the invitation of {0}.";
         public virtual string YOU_ACCEPTED_TEAM_INVITATION => "You accepted the team-invitation. {0} is your team-leader now.";
+        public virtual string YOU_ALREADY_HAVE_ACCOUNT => "You already have an account.";
         public virtual string YOU_ALREADY_INVITED_TARGET => "You've already invited the player.";
         public virtual string YOU_ARE_ALREADY_IN_A_GANG => "You are already in a gang.";
         public virtual string YOU_ARE_NOT_IN_A_GANG => "You are not in a gang.";

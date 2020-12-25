@@ -16,6 +16,7 @@ namespace TDS.Server.Data.Languages
         public override string BOMB_PLANTED => "Bombe wurde platziert.";
 
         public override string CHAR_IN_NAME_IS_NOT_ALLOWED => "Das Zeichen '{0}' in deinem Namen ist nicht erlaubt.";
+        public override string COOLDOWN => "Cooldown";
         public override string COMMAND_DOESNT_EXIST => "Der Befehl existiert nicht.";
         public override string COMMAND_TOO_LESS_ARGUMENTS => "Du hast zu wenige Argumente für diesen Befehl angegeben. Erwartet werden {0}, aber gegeben sind {1} Argumente.";
         public override string COMMAND_TOO_MANY_ARGUMENTS => "Du hast zu viele Argumente für diesen Befehl angegeben. Erwartet werden {0}, aber gegeben sind {1} Argumente.";
@@ -192,6 +193,7 @@ namespace TDS.Server.Data.Languages
 
         public override string YOU_ACCEPTED_INVITATION => "Du hast die Einladung von {0} angenommen.";
         public override string YOU_ACCEPTED_TEAM_INVITATION => "Du hast die Team-Einladung angenommen. {0} ist nun dein Team-Leiter.";
+        public override string YOU_ALREADY_HAVE_ACCOUNT => "Du hast bereits einen Account.";
         public override string YOU_ALREADY_INVITED_TARGET => "Du hast das Ziel bereits eingeladen.";
         public override string YOU_ARE_ALREADY_IN_A_GANG => "Du bist bereits in einer Gang.";
         public override string YOU_ARE_NOT_IN_A_GANG => "Du bist nicht in einer Gang.";

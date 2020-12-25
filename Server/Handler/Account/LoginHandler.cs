@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Extensions;
 using TDS.Server.Data.Interfaces;
@@ -62,26 +63,20 @@ namespace TDS.Server.Handler.Account
             NAPI.ClientEvent.Register<ITDSPlayer, string, string>(ToServerEvent.TryLogin, this, TryLogin);
         }
 
-        public async Task LoginPlayer(ITDSPlayer player, int id, string? password)
+        public async Task<string> LoginPlayer(ITDSPlayer player, int id, string? password)
         {
-            bool worked = await player.Database.ExecuteForDBAsync(async (dbContext) =>
+            string? errMsg = await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
                 var rightPassword = await GetPlayerPassword(dbContext, id).ConfigureAwait(false);
                 if (rightPassword is null)
-                {
-                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
-                    return false;
-                }
+                    return player.Language.ACCOUNT_DOESNT_EXIST;
 
                 if (password is { } && !Utils.IsPasswordValid(password, rightPassword))
-                {
-                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.WRONG_PASSWORD));
-                    return false;
-                }
+                    return player.Language.WRONG_PASSWORD;
 
                 var entity = await LoadPlayer(dbContext, id).ConfigureAwait(false);
                 if (entity is null)
-                    return false;
+                    return player.Language.ACCOUNT_DOESNT_EXIST;
 
                 await CreateMissingTables(player, entity);
                 entity.PlayerStats.LoggedIn = true;
@@ -92,11 +87,11 @@ namespace TDS.Server.Handler.Account
 
                 player.DatabaseHandler.Entity = entity;
 
-                return true;
+                return null;
             }).ConfigureAwait(false);
 
-            if (!worked || player.Entity == null)
-                return;
+            if (errMsg is { } || player.Entity == null)
+                return errMsg ?? player.Language.ERROR_INFO + " (no entity)";
 
             player.Database.SetPlayerSource(player);
             var angularConstantsData = _angularConstantsProvider.Get(player);
@@ -121,12 +116,19 @@ namespace TDS.Server.Handler.Account
             _eventsHandler.OnPlayerLogin(player);
             _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_LOGGED_IN, player.DisplayName));
             _loggingHandler.LogRest(LogType.Login, player, true);
+            return "";
         }
 
         public async void TryLogin(ITDSPlayer player, string username, string password)
         {
+            var msg = await TryLoginWithReturn(player, username, password);
+            NAPI.Task.RunSafe(() => player.TriggerBrowserEvent(ToBrowserEvent.TryLogin, msg ?? ""));
+        }
+
+        public async Task<string?> TryLoginWithReturn(ITDSPlayer player, string username, string password)
+        {
             if (player.TryingToLoginRegister)
-                return;
+                return player.Language.COOLDOWN;
             player.TryingToLoginRegister = true;
             try
             {
@@ -135,14 +137,16 @@ namespace TDS.Server.Handler.Account
                 int id = await _databasePlayerHandler.GetPlayerIDByName(username).ConfigureAwait(false);
                 if (id != 0)
                 {
-                    await LoginPlayer(player, id, password).ConfigureAwait(false);
+                    var msg = await LoginPlayer(player, id, password).ConfigureAwait(false);
+                    return msg;
                 }
                 else
-                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.ACCOUNT_DOESNT_EXIST));
+                    return player.Language.ACCOUNT_DOESNT_EXIST;
             }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
+                return player.Language.ERROR_INFO;
             }
             finally
             {

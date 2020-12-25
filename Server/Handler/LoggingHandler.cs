@@ -14,6 +14,7 @@ using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.Log;
+using TDS.Server.Database.Entity.Player;
 using TDS.Server.Handler.Entities;
 using TDS.Server.Handler.Events;
 using TDS.Shared.Data.Enums;
@@ -201,6 +202,33 @@ namespace TDS.Server.Handler
                     Info = info,
                     StackTrace = stackTrace ?? Environment.StackTrace,
                     Source = source?.Id,
+                    Timestamp = DateTime.UtcNow
+                };
+                Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
+
+                await ExecuteForDB(dbContext =>
+                    dbContext.LogErrors.Add(log)).ConfigureAwait(false);
+
+                if (logToBonusBot)
+                    _bonusBotConnectorClient.ChannelChat?.SendError(log.ToString());
+            }
+            catch (Exception newEx)
+            {
+                Console.WriteLine($"[{DateTime.Now}] {newEx.GetType().Name} {newEx.Message}{Environment.NewLine}{newEx.StackTrace ?? Environment.StackTrace}");
+            }
+        }
+
+        public async void LogError(string info, string stackTrace, Players source, string? errorType = null, bool logToBonusBot = true)
+        {
+            try
+            {
+                var log = new LogErrors
+                {
+                    Id = ++_currentIdErrors,
+                    ExceptionType = errorType,
+                    Info = info,
+                    StackTrace = stackTrace,
+                    Source = source.Id,
                     Timestamp = DateTime.UtcNow
                 };
                 Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");

@@ -36,9 +36,9 @@ namespace TDS.Client.Handler.Browser
             eventsHandler.RoundEnded += _ => ResetMapVoting();
             eventsHandler.ChatInputToggled += ToggleChatOpened;
 
-            RAGE.Events.Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
-            RAGE.Events.Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
-            RAGE.Events.Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
+            Add(FromBrowserEvent.GetHashedPassword, OnGetHashedPassword);
+            Add(ToClientEvent.ToBrowserEvent, OnToBrowserEventMethod);
+            Add(ToClientEvent.FromBrowserEventReturn, OnFromBrowserEventReturnMethod);
 
             OnPlayerStartTalking += EventHandler_PlayerStartTalking;
             OnPlayerStopTalking += EventHandler_PlayerStopTalking;

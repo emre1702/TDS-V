@@ -5,6 +5,8 @@ import { validateName } from '../../validators/name.validator';
 import { ErrorService, FormControlCheck, CustomErrorCheck } from '../../../shared/services/error.service';
 import { RageConnectorService } from 'rage-connector';
 import { ToClientEvent } from 'projects/main/src/app/enums/to-client-event.enum';
+import { RegisterLoginBase } from '../register-login-base';
+import { NotificationService } from '../../../shared/services/notification.service';
 
 @Component({
     selector: 'app-register',
@@ -12,15 +14,20 @@ import { ToClientEvent } from 'projects/main/src/app/enums/to-client-event.enum'
     styleUrls: ['./register.component.scss'],
     providers: [ErrorService],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent extends RegisterLoginBase implements OnInit {
     @Input() name: string;
 
     hidePasswordOne = true;
     hidePasswordTwo = true;
 
-    formGroup: FormGroup;
-
-    constructor(public settings: SettingsService, public errorService: ErrorService, private rageConnector: RageConnectorService) {}
+    constructor(
+        public settings: SettingsService,
+        public errorService: ErrorService,
+        rageConnector: RageConnectorService,
+        notificationService: NotificationService
+    ) {
+        super(rageConnector, notificationService);
+    }
 
     ngOnInit(): void {
         this.formGroup = new FormGroup({
@@ -34,15 +41,11 @@ export class RegisterComponent implements OnInit {
     }
 
     register() {
-        if (!this.formGroup.valid) {
-            return;
-        }
-        this.rageConnector.call(
-            ToClientEvent.TryRegister,
+        this.send(ToClientEvent.TryRegister, [
             this.formGroup.controls.name.value,
             this.formGroup.controls.password1.value,
-            this.formGroup.controls.email.value
-        );
+            this.formGroup.controls.email.value,
+        ]);
     }
 
     private addChecks() {

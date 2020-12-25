@@ -14,6 +14,7 @@
         public const string MapCreatorSyncData = "sb14";
         public const string RemoveCustomLobby = "sb16";
         public const string RemoveInvitation = "sb2";
+        public const string ResetPassword = "b43";
         public const string SetAssistsForRoundStats = "sb3";
         public const string SetDamageForRoundStats = "sb4";
         public const string SetKillsForRoundStats = "sb5";
@@ -26,5 +27,7 @@
         public const string SyncCommandsData = "sb22";
         public const string SyncNewSupportRequestMessage = "sb9";
         public const string ToggleDamageTestMenu = "sb24";
+        public const string TryLogin = "b40";
+        public const string TryRegister = "b41";
     }
 }

@@ -16,6 +16,7 @@ namespace TDS.Server.Data.Interfaces
         string BOMB_PLANTED { get; }
 
         string CHAR_IN_NAME_IS_NOT_ALLOWED { get; }
+        string COOLDOWN { get; }
         string COMMAND_DOESNT_EXIST { get; }
         string COMMAND_TOO_LESS_ARGUMENTS { get; }
         string COMMAND_TOO_MANY_ARGUMENTS { get; }
@@ -187,6 +188,7 @@ namespace TDS.Server.Data.Interfaces
 
         string YOU_ACCEPTED_INVITATION { get; }
         string YOU_ACCEPTED_TEAM_INVITATION { get; }
+        string YOU_ALREADY_HAVE_ACCOUNT { get; }
         string YOU_ALREADY_INVITED_TARGET { get; }
         string YOU_ARE_ALREADY_IN_A_GANG { get; }
         string YOU_ARE_NOT_IN_A_GANG { get; }

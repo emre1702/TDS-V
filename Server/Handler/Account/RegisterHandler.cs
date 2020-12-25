@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Extensions;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity.Player;
@@ -83,8 +85,14 @@ namespace TDS.Server.Handler.Account
 
         public async void TryRegister(ITDSPlayer player, string username, string password, string email, int language)
         {
+            var msg = await TryRegisterWithReturn(player, username, password, email, language);
+            NAPI.Task.RunSafe(() => player.TriggerBrowserEvent(ToBrowserEvent.TryRegister, msg ?? ""));
+        }
+
+        public async Task<string> TryRegisterWithReturn(ITDSPlayer player, string username, string password, string email, int language)
+        {
             if (player.TryingToLoginRegister)
-                return;
+                return player.Language.COOLDOWN;
 
             player.TryingToLoginRegister = true;
             try
@@ -94,27 +102,24 @@ namespace TDS.Server.Handler.Account
                 await _serverStartHandler.LoadingTask.Task.ConfigureAwait(false);
 
                 if (username.Length < 3 || username.Length > 20)
-                    return;
+                    return player.Language.NOT_ALLOWED;
 
                 if (await _databasePlayerHelper.DoesPlayerWithScnameExist(player.SocialClubName).ConfigureAwait(false))
-                    return;
+                    return player.Language.YOU_ALREADY_HAVE_ACCOUNT;
                 if (await _databasePlayerHelper.DoesPlayerWithNameExist(username).ConfigureAwait(false))
-                {
-                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS));
-                    return;
-                }
+                    return player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS;
+
                 char? invalidChar = Utils.CheckNameValid(username);
                 if (invalidChar.HasValue)
-                {
-                    NAPI.Task.RunSafe(()
-                        => player.SendNotification(string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value)));
-                    return;
-                }
+                    return string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value);
+
                 RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language, player.SocialClubName, player.SocialClubId);
+                return "";
             }
             catch (Exception ex)
             {
                 LoggingHandler.Instance.LogError(ex);
+                return player.Language.ERROR_INFO;
             }
             finally
             {
