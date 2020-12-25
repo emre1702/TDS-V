@@ -115,7 +115,11 @@ namespace TDS.Server.Handler.PlayerHandlers
 
         private void OnWeaponShot(ITDSPlayer player)
         {
-            player.WeaponStats.AddWeaponShot(player.CurrentWeapon);
+            try
+            {
+                player.WeaponStats.AddWeaponShot(player.CurrentWeapon);
+            }
+            catch (Exception ex) { LoggingHandler.Instance?.LogError(ex); }
         }
 
         private void ReduceMuteTime(ITDSPlayer player)

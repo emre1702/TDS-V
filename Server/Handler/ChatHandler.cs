@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using System;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Extensions;
@@ -91,36 +92,40 @@ namespace TDS.Server.Handler
 
         public void SendLobbyMessage(ITDSPlayer player, string message, int chatTypeNumber)
         {
-            if (player.MuteHandler.IsPermamuted)
+            try
             {
-                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.STILL_PERMAMUTED));
-                return;
+                if (player.MuteHandler.IsPermamuted)
+                {
+                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.STILL_PERMAMUTED));
+                    return;
+                }
+                if (player.MuteHandler.IsMuted)
+                {
+                    NAPI.Task.RunSafe(() => player.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteHandler.MuteTime?.ToString() ?? "?")));
+                    return;
+                }
+
+                var chatType = (ChatType)chatTypeNumber;
+                switch (chatType)
+                {
+                    case ChatType.Normal:
+                        SendLobbyMessage(player, message, false);
+                        break;
+
+                    case ChatType.Dirty:
+                        SendLobbyMessage(player, message, true);
+                        break;
+
+                    case ChatType.Team:
+                        SendTeamChat(player, message);
+                        break;
+
+                    case ChatType.Global:
+                        SendGlobalMessage(player, message);
+                        break;
+                }
             }
-            if (player.MuteHandler.IsMuted)
-            {
-                NAPI.Task.RunSafe(() => player.SendNotification(player.Language.STILL_MUTED.Replace("{0}", player.MuteHandler.MuteTime?.ToString() ?? "?")));
-                return;
-            }
-
-            var chatType = (ChatType)chatTypeNumber;
-            switch (chatType)
-            {
-                case ChatType.Normal:
-                    SendLobbyMessage(player, message, false);
-                    break;
-
-                case ChatType.Dirty:
-                    SendLobbyMessage(player, message, true);
-                    break;
-
-                case ChatType.Team:
-                    SendTeamChat(player, message);
-                    break;
-
-                case ChatType.Global:
-                    SendGlobalMessage(player, message);
-                    break;
-            }
+            catch (Exception ex) { LoggingHandler.Instance?.LogError(ex); }
         }
 
         public void SendLobbyMessage(ITDSPlayer player, string message, bool isDirty)
@@ -160,6 +165,5 @@ namespace TDS.Server.Handler
             player.Team.Chat.Send(changedMessage);
             _loggingHandler.LogChat(message, player, isTeamChat: true);
         }
-
     }
 }

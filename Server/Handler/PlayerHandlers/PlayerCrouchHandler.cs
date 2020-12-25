@@ -1,4 +1,5 @@
 ﻿using GTANetworkAPI;
+using System;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Extensions;
@@ -23,11 +24,15 @@ namespace TDS.Server.Handler.PlayerHandlers
 
         public void OnToggleCrouch(ITDSPlayer player)
         {
-            if (!player.LoggedIn)
-                return;
-            player.IsCrouched = !player.IsCrouched;
-            NAPI.Task.RunSafe(() => 
-                _dataSyncHandler.SetData(player, PlayerDataKey.Crouched, DataSyncMode.Lobby, player.IsCrouched));
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                player.IsCrouched = !player.IsCrouched;
+                NAPI.Task.RunSafe(() =>
+                    _dataSyncHandler.SetData(player, PlayerDataKey.Crouched, DataSyncMode.Lobby, player.IsCrouched));
+            }
+            catch (Exception ex) { LoggingHandler.Instance?.LogError(ex); }
         }
 
     }
