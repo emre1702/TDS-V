@@ -11,24 +11,31 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
+import { MaterialCssVarsModule, MaterialCssVarsService } from 'angular-material-css-vars';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LanguagePipe,
-    InputTypeDirective
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatInputModule,
-    DragDropModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent, LanguagePipe, InputTypeDirective],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatInputModule,
+        DragDropModule,
+
+        MaterialCssVarsModule.forRoot({
+            isAutoContrast: true,
+            isDarkTheme: true,
+            darkThemeClass: 'isDarkTheme',
+            lightThemeClass: 'isLightTheme',
+            primary: 'rgba(0,0,77,1)',
+            accent: 'rgb(255,152,0)',
+            warn: 'rgba(244,67,54,1)',
+        }),
+    ],
+    providers: [MaterialCssVarsService],
+    bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

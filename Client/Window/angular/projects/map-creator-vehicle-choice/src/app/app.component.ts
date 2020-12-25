@@ -12,16 +12,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatInput } from '@angular/material/input';
+import { MaterialCssVarsService } from 'angular-material-css-vars';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.template.html',
-    styleUrls: ['./app.style.scss']
+    styleUrls: ['./app.style.scss'],
 })
 export class AppComponent implements AfterViewInit {
     private langByLangValue = {
         [LanguageEnum.German]: new German(),
-        [LanguageEnum.English]: new English()
+        [LanguageEnum.English]: new English(),
     };
 
     language: Language = this.langByLangValue[LanguageEnum.English];
@@ -31,16 +32,18 @@ export class AppComponent implements AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(
-        private changeDetector: ChangeDetectorRef,
-        private rageConnector: RageConnectorService) {
+    constructor(private changeDetector: ChangeDetectorRef, private rageConnector: RageConnectorService, materialCssVarsService: MaterialCssVarsService) {
+        materialCssVarsService.setDarkTheme(true);
+        materialCssVarsService.setPrimaryColor('rgba(0,0,77,1)');
+        materialCssVarsService.setAccentColor('rgba(255,152,0,1)');
+        materialCssVarsService.setWarnColor('rgba(244,67,54,1)');
+
         this.rageConnector.listen(DFromClientEvent.InitLoadAngular, (language: number) => {
             this.language = this.langByLangValue[language];
         });
     }
 
     ngAfterViewInit(): void {
-
         const vehicleKeys = Object.keys(VehicleEnum);
 
         this.vehiclesDataSource = new MatTableDataSource(vehicleKeys.slice(vehicleKeys.length / 2));
@@ -63,11 +66,9 @@ export class AppComponent implements AfterViewInit {
     }
 
     applyFilter(event: KeyboardEvent) {
-        if (event.key === "Enter")
-            return;
-        const filterValue = (event.target as unknown as MatInput).value;
-        if (this.filterDelay)
-            clearTimeout(this.filterDelay);
+        if (event.key === 'Enter') return;
+        const filterValue = ((event.target as unknown) as MatInput).value;
+        if (this.filterDelay) clearTimeout(this.filterDelay);
         this.filterDelay = setTimeout(this.applyFilterAfterDelay.bind(this, filterValue), 1000);
     }
 
