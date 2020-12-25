@@ -6,7 +6,7 @@ import { RoundPlayerRankingStat } from './components/ranking/models/roundPlayerR
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CharCreateData } from './components/char-creator/interfaces/charCreateData';
+import { CharCreateData } from './modules/char-creator/body/interfaces/charCreateData';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';

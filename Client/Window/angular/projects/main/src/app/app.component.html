@@ -2,6 +2,8 @@
 <app-lobby-choice *ngIf="showLobbyChoice" [showRegisterLogin]="!started"></app-lobby-choice>
 <ng-container *ngIf="started">
     <app-shared-module></app-shared-module>
+    <app-char-creator></app-char-creator>
+
     <app-mapvoting></app-mapvoting>
     <app-invitation></app-invitation>
     <app-teamorders *ngIf="settings.InTeamOrderModus && settings.InFightLobby" [@teamOrdersAnimation]="teamOrdersLength"></app-teamorders>

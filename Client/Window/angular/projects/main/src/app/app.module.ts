@@ -48,12 +48,12 @@ import { MentionDirective } from './extensions/mention/mentionDirective';
 import { MentionListComponent } from './extensions/mention/mentionListComponent';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { CharCreatorComponent } from './components/char-creator/char-creator.component';
-import { CharCreatorMainmenuComponent } from './components/char-creator/menus/char-creator-mainmenu/char-creator-mainmenu.component';
-import { CharCreatorHeritageComponent } from './components/char-creator/menus/char-creator-heritage/char-creator-heritage.component';
-import { CharCreatorFeaturesComponent } from './components/char-creator/menus/char-creator-features/char-creator-features.component';
-import { CharCreatorAppearanceComponent } from './components/char-creator/menus/char-creator-appearance/char-creator-appearance.component';
-import { CharCreatorHairandcolorsComponent } from './components/char-creator/menus/char-creator-hairandcolors/char-creator-hairandcolors.component';
+import { CharCreatorComponent } from './modules/char-creator/body/char-creator.component';
+import { CharCreatorMainmenuComponent } from './modules/char-creator/menus/char-creator-mainmenu/char-creator-mainmenu.component';
+import { CharCreatorHeritageComponent } from './modules/char-creator/menus/char-creator-heritage/char-creator-heritage.component';
+import { CharCreatorFeaturesComponent } from './modules/char-creator/menus/char-creator-features/char-creator-features.component';
+import { CharCreatorAppearanceComponent } from './modules/char-creator/menus/char-creator-appearance/char-creator-appearance.component';
+import { CharCreatorHairandcolorsComponent } from './modules/char-creator/menus/char-creator-hairandcolors/char-creator-hairandcolors.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserpanelSettingsCommandsComponent } from './components/userpanel/userpanel-settings-commands/userpanel-settings-commands.component';
 import { MaterialCssVarsModule, MaterialCssVarsService } from 'angular-material-css-vars';
@@ -90,6 +90,7 @@ import { UserpanelSettingsHudComponent } from './components/userpanel/userpanel-
 import { TDSWindowModule } from './modules/tds-window/tds-window.module';
 import { VoiceInfoComponent } from './components/hud/voice-info/voice-info.component';
 import { RegisterLoginModule } from './modules/register-login/register-login.module';
+import { CharCreatorModule } from './modules/char-creator/char-creator.module';
 
 @NgModule({
     declarations: [
@@ -146,12 +147,6 @@ import { RegisterLoginModule } from './modules/register-login/register-login.mod
         ChatComponent,
         CustomLobbyWeaponsMenuComponent,
         CustomLobbyArmsRaceWeaponsMenuComponent,
-        CharCreatorComponent,
-        CharCreatorMainmenuComponent,
-        CharCreatorHeritageComponent,
-        CharCreatorFeaturesComponent,
-        CharCreatorAppearanceComponent,
-        CharCreatorHairandcolorsComponent,
         UserpanelSettingsCommandsComponent,
         InfosHandlerComponent,
         InfoComponent,
@@ -186,6 +181,7 @@ import { RegisterLoginModule } from './modules/register-login/register-login.mod
         SharedModule,
         TDSWindowModule,
         RegisterLoginModule,
+        CharCreatorModule,
 
         MaterialCssVarsModule.forRoot({
             isAutoContrast: true,
