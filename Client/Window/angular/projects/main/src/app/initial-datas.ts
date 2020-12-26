@@ -51,7 +51,7 @@ export class InitialDatas {
         gangWindow: InitialDatas.inDebug && false,
         damageTestMenu: InitialDatas.inDebug && false,
         userpanel: InitialDatas.inDebug && false,
-        registerLogin: InitialDatas.inDebug && false,
+        registerLogin: !InitialDatas.inDebug || false,
     };
 
     static readonly adminLevel = 0;
