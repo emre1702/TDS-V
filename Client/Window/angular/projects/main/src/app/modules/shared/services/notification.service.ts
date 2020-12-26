@@ -9,21 +9,21 @@ export class NotificationService {
     showSuccess(msg: string, duration?: number) {
         this.notificationSubscription.next({
             message: msg,
-            duration: duration
+            duration: duration,
         });
     }
 
     showError(msg: string, duration?: number) {
         this.notificationSubscription.next({
             message: msg,
-            duration: duration
+            duration: duration,
         });
     }
 
     showInfo(msg: string, duration: number | undefined = 3000) {
         this.notificationSubscription.next({
             message: msg,
-            duration: duration
+            duration: duration,
         });
     }
 }
