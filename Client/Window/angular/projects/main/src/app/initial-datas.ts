@@ -43,15 +43,15 @@ export class InitialDatas {
     static readonly opened = {
         mapCreator: InitialDatas.inDebug && false,
         freeroam: InitialDatas.inDebug && false,
-        lobbyChoice: !InitialDatas.inDebug || true,
+        lobbyChoice: !InitialDatas.inDebug || false,
         teamChoice: InitialDatas.inDebug && false,
         rankings: InitialDatas.inDebug && false,
         hud: InitialDatas.inDebug && false,
-        charCreator: InitialDatas.inDebug && false,
+        charCreator: InitialDatas.inDebug && true,
         gangWindow: InitialDatas.inDebug && false,
         damageTestMenu: InitialDatas.inDebug && false,
         userpanel: InitialDatas.inDebug && false,
-        registerLogin: InitialDatas.inDebug && true,
+        registerLogin: InitialDatas.inDebug && false,
     };
 
     static readonly adminLevel = 0;

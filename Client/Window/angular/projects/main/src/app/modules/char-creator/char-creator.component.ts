@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, Injector } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
 import { FromClientEvent } from '../../enums/from-client-event.enum';
+import { ToServerEvent } from '../../enums/to-server-event.enum';
 import { InitialDatas } from '../../initial-datas';
+import { SettingsService } from '../../services/settings.service';
 import { BodyDebugService } from './body/services/body.debug.service';
 import { BodyProdService } from './body/services/body.prod.service';
 import { BodyService } from './body/services/body.service';
@@ -18,11 +20,20 @@ export class CharCreatorComponent {
     nav = CharCreatorNav.Main;
     charCreatorNav = CharCreatorNav;
 
-    constructor(rageConnector: RageConnectorService, private changeDetector: ChangeDetectorRef) {
+    constructor(private rageConnector: RageConnectorService, private changeDetector: ChangeDetectorRef, public settings: SettingsService) {
         rageConnector.listen(FromClientEvent.ToggleCharCreator, (bool: boolean) => {
             this.showCharCreator = bool;
             changeDetector.detectChanges();
         });
+    }
+
+    cancel() {
+        this.rageConnector.callServer(ToServerEvent.CancelCharCreateData);
+    }
+
+    goToNav(nav: CharCreatorNav) {
+        this.nav = nav;
+        this.changeDetector.detectChanges();
     }
 
     goToMain() {

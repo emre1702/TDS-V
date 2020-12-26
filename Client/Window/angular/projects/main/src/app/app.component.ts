@@ -46,6 +46,7 @@ export class AppComponent {
     showHud: boolean = InitialDatas.opened.hud;
     showGangWindow: boolean = InitialDatas.opened.gangWindow;
     showDamageTestMenu: boolean = InitialDatas.opened.damageTestMenu;
+    showRegisterLogin: boolean = InitialDatas.opened.registerLogin;
 
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;
@@ -66,6 +67,7 @@ export class AppComponent {
         rageConnector.listen(FromClientEvent.InitLoadAngular, (constantsDataJson: string) => {
             this.settings.Constants = JSON.parse(constantsDataJson);
             this.started = true;
+            this.showRegisterLogin = false;
             changeDetector.detectChanges();
         });
 

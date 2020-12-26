@@ -1,6 +1,6 @@
 <!-- If there is no *ngIf it's handled in the component itself -->
-<app-lobby-choice *ngIf="showLobbyChoice" [showRegisterLogin]="!started"></app-lobby-choice>
-<ng-container *ngIf="started">
+<app-lobby-choice *ngIf="showLobbyChoice" [showRegisterLogin]="showRegisterLogin"></app-lobby-choice>
+<ng-container *ngIf="!showRegisterLogin">
     <app-shared-module></app-shared-module>
     <app-char-creator></app-char-creator>
 

@@ -1,12 +1,11 @@
 <tds-window [title]="bodyMenuNav[currentNav] | language: settings.Lang" (back)="goBack()">
-    <ng-container [ngSwitch]="currentNav">
+    <ng-container [ngSwitch]="currentNav" *ngIf="data$ | async as data">
         <body-mainmenu
             *ngSwitchCase="bodyMenuNav.MainMenu"
             [(data)]="data[0]"
             [(selectedSlot)]="data[99]"
             (navChanged)="goToNav($event)"
             (saveClicked)="save()"
-            (cancelClicked)="cancel()"
         ></body-mainmenu>
         <body-heritage
             *ngSwitchCase="bodyMenuNav.Heritage"

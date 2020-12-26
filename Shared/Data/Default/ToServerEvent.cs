@@ -2,7 +2,6 @@
 {
     public static class ToServerEvent
     {
-
         public const string AcceptInvitation = "c1";
         public const string AcceptTDSTeamInvitation = "c67";
         public const string AddRatingToMap = "c2";
@@ -70,7 +69,7 @@
         public const string RequestPlayersForScoreboard = "c40";
         public const string ResetPassword = "c74";
 
-        public const string SaveCharCreateData = "c29";
+        public const string SaveBodyData = "c29";
         public const string SaveMapCreatorData = "c41";
         public const string SavePlayerCommandsSettings = "c70";
         public const string SaveUserpanelNormalSettings = "c42";
@@ -100,6 +99,5 @@
         public const string TryRegister = "c63";
 
         public const string WeaponShot = "c71";
-
     }
 }

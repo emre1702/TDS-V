@@ -16,7 +16,7 @@ export class InfosHandlerService {
 
     infosChanged = new EventEmitter();
 
-    constructor(private rageConnector: RageConnectorService, public infosHandler: InfosHandlerService) {
+    constructor(private rageConnector: RageConnectorService) {
         this.rageConnector.listen(FromClientEvent.ToggleInfo, this.toggleInfo.bind(this));
     }
 

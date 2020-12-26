@@ -39,7 +39,7 @@ export enum ToServerEvent {
     RejectTDSTeamInvitation = 'c68',
     ReloadPlayerSettings = 'c81',
     RemoveMap = 'c39',
-    SaveCharCreateData = 'c29',
+    SaveBodyData = 'c29',
     SaveMapCreatorData = 'c41',
     SavePlayerCommandsSettings = 'c70',
     SaveUserpanelNormalSettings = 'c42',

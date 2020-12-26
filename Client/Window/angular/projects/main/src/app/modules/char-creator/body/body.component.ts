@@ -1,11 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef, Input, NgZone, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { BodyMenuNav } from './enums/body-menu-nav.enum';
 import { SettingsService } from '../../../services/settings.service';
-import { BodyData } from './models/body-data';
 import { RageConnectorService } from 'rage-connector';
 import { ToServerEvent } from '../../../enums/to-server-event.enum';
 import { ToClientEvent } from '../../../enums/to-client-event.enum';
 import { BodyDataKey } from './enums/body-data-key.enum';
+import { BodyService } from './services/body.service';
+import { tap } from 'rxjs/operators';
+import { BodyData } from './models/body-data';
 
 @Component({
     selector: 'app-body',
@@ -13,14 +15,21 @@ import { BodyDataKey } from './enums/body-data-key.enum';
     styleUrls: ['./body.component.scss'],
 })
 export class BodyComponent implements OnInit, OnDestroy {
-    @Input() data: BodyData;
+    data$ = this.service.getData().pipe(tap((data) => (this._data = data)));
+    private _data: BodyData;
+
     @Output() back = new EventEmitter();
 
     bodyMenuNav = BodyMenuNav;
 
     currentNav = BodyMenuNav.MainMenu;
 
-    constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, private rageConnector: RageConnectorService) {}
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        public settings: SettingsService,
+        private rageConnector: RageConnectorService,
+        private service: BodyService
+    ) {}
 
     ngOnInit(): void {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
@@ -49,25 +58,21 @@ export class BodyComponent implements OnInit, OnDestroy {
     }
 
     save() {
-        this.rageConnector.callServer(ToServerEvent.SaveCharCreateData, JSON.stringify(this.data));
-    }
-
-    cancel() {
-        this.rageConnector.callServer(ToServerEvent.CancelCharCreateData);
+        this.rageConnector.callServer(ToServerEvent.SaveBodyData, JSON.stringify(this._data));
     }
 
     recreatePed() {
-        this.rageConnector.call(ToClientEvent.BodyDataChanged, BodyDataKey.All, JSON.stringify(this.data));
+        this.rageConnector.call(ToClientEvent.BodyDataChanged, BodyDataKey.All, JSON.stringify(this._data));
     }
 
     setData(list: { 99: number }[], entry: { 99: number }) {
-        const index = list.findIndex((e) => e[99] == this.data[99]);
+        const index = list.findIndex((e) => e[99] == this._data[99]);
         list[index] = entry;
         this.changeDetector.detectChanges();
     }
 
     getData(list: { 99: number }[]) {
-        return list.find((entry) => entry[99] == this.data[99]);
+        return list.find((entry) => entry[99] == this._data[99]);
     }
 
     private detectChanges() {

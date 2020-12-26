@@ -1,6 +1,18 @@
-<ng-container *ngIf="showCharCreator" [ngSwitch]="nav">
+<div class="container" *ngIf="showCharCreator" [ngSwitch]="nav">
     <app-body (back)="goToMain()" *ngSwitchCase="charCreatorNav.Body"></app-body>
     <ng-container [ngTemplateOutlet]="mainMenu" *ngSwitchCase="charCreatorNav.Main"></ng-container>
-</ng-container>
+</div>
 
-<ng-template #mainMenu> </ng-template>
+<ng-template #mainMenu>
+    <tds-window [title]="'CharCreator' | language: settings.Lang">
+        <mat-action-list>
+            <button mat-list-item (click)="goToNav(charCreatorNav.Body)">
+                {{ 'Body' | language: settings.Lang }}
+            </button>
+            <button mat-list-item (click)="goToNav(charCreatorNav.Clothes)" disabled>{{ 'Clothes' | language: settings.Lang }} (WIP)</button>
+            <button mat-list-item (click)="cancel()">
+                {{ 'Cancel' | language: settings.Lang }}
+            </button>
+        </mat-action-list>
+    </tds-window>
+</ng-template>

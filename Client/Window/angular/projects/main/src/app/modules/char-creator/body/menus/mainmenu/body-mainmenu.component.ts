@@ -21,7 +21,6 @@ export class BodyMainmenuComponent implements OnInit, OnDestroy {
     @Output() navChanged = new EventEmitter<BodyMenuNav>();
 
     @Output() saveClicked = new EventEmitter();
-    @Output() cancelClicked = new EventEmitter();
 
     @Input() data: BodyGeneralData[];
     @Output() dataChange = new EventEmitter<BodyGeneralData[]>();

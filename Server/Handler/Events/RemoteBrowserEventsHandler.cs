@@ -63,7 +63,7 @@ namespace TDS.Server.Handler.Events
                 [ToServerEvent.SendSupportRequest] = userpanelHandler.SupportRequestHandler.SendRequest,
                 [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendMessage,
                 [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
-                [ToServerEvent.SaveCharCreateData] = playerCharHandler.Save,
+                [ToServerEvent.SaveBodyData] = playerCharHandler.Save,
                 [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel,
                 [ToServerEvent.SavePlayerCommandsSettings] = userpanelHandler.SettingsCommandsHandler.Save,
                 [ToServerEvent.GangCommand] = gangWindowHandler.ExecuteCommand,
