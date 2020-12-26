@@ -71,7 +71,8 @@
         [style.width]="contentWidth"
         [style.height]="contentHeight"
         [style.padding]="contentPadding"
-        [style.border-radius]="hideToolbar ? '10px' : '0px'"
+        [style.border-top-left-radius]="hideToolbar ? '10px' : '0px'"
+        [style.border-top-right-radius]="hideToolbar ? '10px' : '0px'"
     >
         <ng-container *ngIf="!isLoading">
             <ng-content></ng-content>
