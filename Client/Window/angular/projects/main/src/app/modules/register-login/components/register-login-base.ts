@@ -14,7 +14,7 @@ export class RegisterLoginBase {
         }
         this.isLoading = true;
         this.rageConnector.callCallback(eventName, args, (msg) => {
-            this.isLoading;
+            this.isLoading = false;
             if (msg?.length) {
                 this.notificationService.showError(msg);
             }
