@@ -1,1 +1,6 @@
-<p>char-creator works!</p>
+<ng-container *ngIf="showCharCreator" [ngSwitch]="nav">
+    <app-body (back)="goToMain()" *ngSwitchCase="charCreatorNav.Body"></app-body>
+    <ng-container [ngTemplateOutlet]="mainMenu" *ngSwitchCase="charCreatorNav.Main"></ng-container>
+</ng-container>
+
+<ng-template #mainMenu> </ng-template>

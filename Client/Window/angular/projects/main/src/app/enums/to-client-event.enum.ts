@@ -1,6 +1,6 @@
 export enum ToClientEvent {
     LoadMapForMapCreator = 'b1',
-    CharCreatorDataChanged = 'b10',
+    BodyDataChanged = 'b10',
     ChatUsed = 'b3',
     CloseChat = 'b6',
     CloseGangWindow = 'b42',
@@ -12,6 +12,7 @@ export enum ToClientEvent {
     InputStarted = 'b14',
     InputStopped = 'b15',
     LanguageChange = 'b19',
+    LoadBodyData = 'b45',
     // RemoveMapVote = "RemoveMapVote_Browser",
     MapCreatorHighlightPos = 'b21',
     MapCreatorStartNew = 'b24',

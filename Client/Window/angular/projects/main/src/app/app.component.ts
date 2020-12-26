@@ -6,7 +6,6 @@ import { RoundPlayerRankingStat } from './components/ranking/models/roundPlayerR
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { TeamOrder } from './components/teamorders/enums/teamorder.enum';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CharCreateData } from './modules/char-creator/body/interfaces/charCreateData';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { PedBodyPart } from './components/userpanel/enums/ped-body-part.enum';
 import { WeaponHash } from './components/lobbychoice/enums/weapon-hash.enum';
@@ -45,13 +44,11 @@ export class AppComponent {
     showTeamChoice: boolean = InitialDatas.opened.teamChoice;
     showRankings: boolean = InitialDatas.opened.rankings;
     showHud: boolean = InitialDatas.opened.hud;
-    showCharCreator: boolean = InitialDatas.opened.charCreator;
     showGangWindow: boolean = InitialDatas.opened.gangWindow;
     showDamageTestMenu: boolean = InitialDatas.opened.damageTestMenu;
 
     rankings: RoundPlayerRankingStat[];
     teamOrdersLength = Object.values(TeamOrder).length;
-    charCreateData: CharCreateData;
     damageTestMenuInitWeapon: WeaponHash = InitialDatas.getDamageTestInitialWeapon();
 
     constructor(
@@ -121,14 +118,6 @@ export class AppComponent {
         rageConnector.listen(FromClientEvent.HideRankings, () => {
             this.rankings = undefined;
             this.showRankings = false;
-            changeDetector.detectChanges();
-        });
-
-        rageConnector.listen(FromClientEvent.ToggleCharCreator, (bool: boolean, dataJson: string) => {
-            if (dataJson.length) {
-                this.charCreateData = JSON.parse(dataJson);
-            }
-            this.showCharCreator = bool;
             changeDetector.detectChanges();
         });
 

@@ -4,7 +4,7 @@
     {
         #region Public Fields
 
-        public const string CharCreatorDataChanged = "b10";
+        public const string BodyDataChanged = "b10";
         public const string ChatUsed = "b3";
         public const string CloseChat = "b6";
         public const string CloseGangWindow = "b42";
@@ -25,6 +25,7 @@
         public const string JoinedCustomLobbiesMenu = "b18";
 
         public const string LanguageChange = "b19";
+        public const string LoadBodyData = "b45";
         public const string LoadMapForMapCreator = "b1";
 
         public const string MapCreatorHighlightPos = "b21";

@@ -1,0 +1,37 @@
+<tds-window [title]="bodyMenuNav[currentNav] | language: settings.Lang" (back)="goBack()">
+    <ng-container [ngSwitch]="currentNav">
+        <body-mainmenu
+            *ngSwitchCase="bodyMenuNav.MainMenu"
+            [(data)]="data[0]"
+            [(selectedSlot)]="data[99]"
+            (navChanged)="goToNav($event)"
+            (saveClicked)="save()"
+            (cancelClicked)="cancel()"
+        ></body-mainmenu>
+        <body-heritage
+            *ngSwitchCase="bodyMenuNav.Heritage"
+            [data]="getData(data[1])"
+            (dataChange)="setData(data[1], $event)"
+            (randomized)="recreatePed()"
+        ></body-heritage>
+        <body-features
+            *ngSwitchCase="bodyMenuNav.Features"
+            [data]="getData(data[2])"
+            (dataChange)="setData(data[2], $event)"
+            (randomized)="recreatePed()"
+        ></body-features>
+        <body-appearance
+            *ngSwitchCase="bodyMenuNav.Appearance"
+            [data]="getData(data[3])"
+            (dataChange)="setData(data[3], $event)"
+            (randomized)="recreatePed()"
+        ></body-appearance>
+        <body-hairandcolors
+            *ngSwitchCase="bodyMenuNav.HairAndColors"
+            [data]="getData(data[4])"
+            (dataChange)="setData(data[4], $event)"
+            (randomized)="recreatePed()"
+            [isMale]="getData(data[0])[0]"
+        ></body-hairandcolors>
+    </ng-container>
+</tds-window>

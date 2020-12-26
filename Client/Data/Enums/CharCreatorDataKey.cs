@@ -15,6 +15,9 @@
         Appearance,
 
         // Hair and colors
-        Hair, HairColor, EyeColor, FacialHairColor, EyebrowColor, BlushColor, LipstickColor, ChestHairColor
+        Hair, HairColor, EyeColor, FacialHairColor, EyebrowColor, BlushColor, LipstickColor, ChestHairColor,
+
+        // Rest
+        All, Slot
     }
 }

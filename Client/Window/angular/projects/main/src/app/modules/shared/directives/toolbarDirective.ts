@@ -1,11 +1,10 @@
-import { Directive,  HostListener, Input, ComponentRef } from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 
 @Directive({
-  // tslint:disable-next-line: directive-selector
-  selector: "[closeOnDoubleClick]"
+    // tslint:disable-next-line: directive-selector
+    selector: '[closeOnDoubleClick]',
 })
 export class ToolbarDirective {
-
     @Input() closeOnDoubleClick: any;
     private origDisplay: string;
     private touchtime = 0;
@@ -20,7 +19,7 @@ export class ToolbarDirective {
             this.touchtime = new Date().getTime();
         } else {
             // compare first click to this click and see if they occurred within double click threshold
-            if (((new Date().getTime()) - this.touchtime) < 800) {
+            if (new Date().getTime() - this.touchtime < 800) {
                 // double click occurred
                 this.doubleClicked();
                 this.touchtime = 0;
@@ -35,12 +34,11 @@ export class ToolbarDirective {
         if (!this.closeOnDoubleClick) {
             return;
         }
-        if (this.closeOnDoubleClick.style.display !== "none") {
+        if (this.closeOnDoubleClick.style.display !== 'none') {
             this.origDisplay = this.closeOnDoubleClick.style.display;
-            this.closeOnDoubleClick.style.display = "none";
+            this.closeOnDoubleClick.style.display = 'none';
         } else {
             this.closeOnDoubleClick.style.display = this.origDisplay;
         }
     }
-
 }
