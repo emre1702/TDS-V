@@ -1,10 +1,9 @@
 <div class="container">
     <ng-container *ngIf="showRegisterLogin">
-        <div class="left-window information-container">
+        <div class="left-window information-container" [@leftToRight]="animState">
             <tds-window
                 class="information"
                 title="TDS - Team Deathmatch Server"
-                [@leftToRight]="animState"
                 [canMinimize]="false"
                 [contentHeight]="'fit-content'"
                 [containerHeight]="'fit-content'"
