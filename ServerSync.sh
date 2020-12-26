@@ -19,7 +19,7 @@ SEPERATOR='==============================='
 
 dotnet publish Server/Core/Core.csproj -p:PublishProfile=LinuxDebug
 
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Build
+cd /cygdrive/c/Programming/TDS-V/Build
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}runtimes ${NOCOLOR}..."
@@ -31,7 +31,7 @@ rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bi
 
 echo -e "${SEPERATOR}"
 echo -e "Update ${LIGHTBLUE}serverside JS ${NOCOLOR}..."
-cd /cygdrive/b/Users/EmreKara/Desktop/Tools/GitHub/TDS-V/Server/Core/JavaScript
+cd /cygdrive/c/Programming/TDS-V/Server/Core/JavaScript
 rsync -hmrtvzP --chmod=Du=rwx,Dgo=rw,Fu=rw,Fog=r --timeout=60 -e "B:\cygwin64\bin\ssh.exe -p 55555 -i C:/Users/emre1/.ssh/rage_rsa" . rage@185.101.94.212:/home/rage/RAGE/packages/tds/
 
 echo -e "${SEPERATOR}"
