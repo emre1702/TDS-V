@@ -281,6 +281,8 @@ button:not([disabled]):hover {
 
 .mat-snack-bar-container {
     padding: 0px !important;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
 ::ng-deep .mat-tooltip {
