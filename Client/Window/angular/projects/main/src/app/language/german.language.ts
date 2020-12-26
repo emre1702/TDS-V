@@ -794,6 +794,13 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     KillInfoSpacing = 'Abstände (Pixel)';
     KillInfoSpacingInfo = 'Abstände in Pixel zwischen Texten und Icon.';
     TestKillInfo = 'Teste Tod-Info';
+    AccountDoesntExist = 'Account existiert nicht.';
+    WrongPassword = 'Falsches Passwort.';
+    ErrorInfo = 'Ein Fehler ist aufgetaucht. Der/die Entwickler wurde(n) benachrichtigt.';
+    AlreadyHaveAccount = 'Du hast bereits einen Account.';
+    AccountWithNameAlreadyExists = 'Ein Account mit diesem Name existiert bereits.';
+    RegisterFailedDevsInformed =
+        'Ein Fehler ist beim Registrieren aufgetreten. Die Entwickler sind informiert und werden das Problem so schnell es geht beheben. Versuche es bitte später erneut.';
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = 'Alle ohne Gangwar';

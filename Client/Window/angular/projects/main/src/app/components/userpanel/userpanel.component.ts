@@ -5,7 +5,6 @@ import { UserpanelCommandDataDto } from './interfaces/userpanelCommandDataDto';
 import { RageConnectorService } from 'rage-connector';
 import { ToClientEvent } from '../../enums/to-client-event.enum';
 import { UserpanelService } from './services/userpanel.service';
-import { LanguagePipe } from '../../modules/shared/pipes/language.pipe';
 import { InitialDatas } from '../../initial-datas';
 import { UserpanelSettingsNormalType } from './userpanel-settings-normal/enums/userpanel-settings-normal-type.enum';
 import { UserpanelSettingsNormalService } from './userpanel-settings-normal/services/userpanel-settings-normal.service';
@@ -18,7 +17,6 @@ import { ToServerEvent } from '../../enums/to-server-event.enum';
     providers: [UserpanelSettingsNormalService],
 })
 export class UserpanelComponent implements OnInit, OnDestroy {
-    langPipe = new LanguagePipe();
     userpanelNavPage = UserpanelNavPage;
     userpanelSettingsNormalType = UserpanelSettingsNormalType;
     currentCommand: UserpanelCommandDataDto;

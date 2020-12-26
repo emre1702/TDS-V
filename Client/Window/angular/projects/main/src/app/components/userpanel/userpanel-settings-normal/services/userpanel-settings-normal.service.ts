@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 import { SettingsService } from 'projects/main/src/app/services/settings.service';
 import { NotificationService } from 'projects/main/src/app/modules/shared/services/notification.service';
 import { InitialDatas } from 'projects/main/src/app/initial-datas';
-import { LanguagePipe } from 'projects/main/src/app/modules/shared/pipes/language.pipe';
 
 @Injectable()
 export class UserpanelSettingsNormalService {
@@ -33,9 +32,8 @@ export class UserpanelSettingsNormalService {
                     this.notificationService.showError(error);
                     observer.error(error);
                 } else {
-                    const msg = new LanguagePipe().transform('SettingSavedSuccessfully', this.settings.Lang);
-                    this.notificationService.showSuccess(msg);
-                    observer.next(msg);
+                    this.notificationService.showSuccess('SettingSavedSuccessfully');
+                    observer.next('SettingSavedSuccessfully');
                 }
                 observer.complete();
             });

@@ -7,7 +7,6 @@ import { GangWindowService } from '../services/gang-window-service';
 import { GangWindowNav } from '../enums/gang-window-nav.enum';
 import { GangCommand } from '../enums/gang-command.enum';
 import { NotificationService } from '../../../modules/shared/services/notification.service';
-import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-gang-window-rank-levels',
@@ -38,7 +37,7 @@ export class GangWindowRankLevelsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.gangWindowService.loadedData.on(GangWindowNav[GangWindowNav.RanksLevels], this.loadedData.bind(this));
-        this.notificationService.showInfo(new LanguagePipe().transform('RankLevelsModifyInfo', this.settings.Lang));
+        this.notificationService.showInfo('RankLevelsModifyInfo');
     }
 
     ngOnDestroy(): void {

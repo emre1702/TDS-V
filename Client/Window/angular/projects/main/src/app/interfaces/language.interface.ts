@@ -835,6 +835,12 @@ export interface Language {
     PasswordsAreDifferentError: string;
     Login: string;
     Register: string;
+    AccountDoesntExist: string;
+    WrongPassword: string;
+    ErrorInfo: string;
+    AlreadyHaveAccount: string;
+    AccountWithNameAlreadyExists: string;
+    RegisterFailedDevsInformed: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

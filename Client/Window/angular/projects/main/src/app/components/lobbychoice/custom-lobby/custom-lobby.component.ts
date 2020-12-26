@@ -21,7 +21,6 @@ import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../../modul
 import { CustomLobbyArmsRaceWeaponData } from '../models/custom-lobby-armsraceweapon-data';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationService } from '../../../modules/shared/services/notification.service';
-import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-custom-lobby',
@@ -376,7 +375,7 @@ export class CustomLobbyMenuComponent implements OnInit, OnDestroy {
             dialogRef.beforeClosed().subscribe((inputedPassword) => {
                 if (inputedPassword == undefined) return;
                 if (inputedPassword == false) {
-                    this.notificationService.showError(new LanguagePipe().transform('PasswordIncorrect', this.settings.Lang));
+                    this.notificationService.showError('PasswordIncorrect');
                     return;
                 }
                 this.rageConnector.callServer(ToServerEvent.JoinLobbyWithPassword, clickedLobbyData[0], inputedPassword);

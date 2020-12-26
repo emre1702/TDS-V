@@ -109,7 +109,7 @@ export class UserpanelSettingsSpecialComponent implements OnInit, OnDestroy {
     }
 
     private showSaveSuccess(type: UserpanelSettingsSpecialType) {
-        this.notificationService.showSuccess(this.settings.Lang[UserpanelSettingsSpecialType[type] + 'SettingSaved']);
+        this.notificationService.showSuccess(UserpanelSettingsSpecialType[type] + 'SettingSaved');
     }
 
     private loadSettings() {

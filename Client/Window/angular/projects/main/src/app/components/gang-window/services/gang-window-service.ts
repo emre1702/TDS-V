@@ -14,7 +14,6 @@ import { GangCommand } from '../enums/gang-command.enum';
 import { AreYouSureDialog } from '../../../dialog/are-you-sure-dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationService } from '../../../modules/shared/services/notification.service';
-import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Injectable()
 export class GangWindowService {
@@ -68,7 +67,7 @@ export class GangWindowService {
                     return;
                 }
                 if (showSuccess) {
-                    this.notificationService.showSuccess(new LanguagePipe().transform('CommandExecutedSuccessfully', this.settings.Lang));
+                    this.notificationService.showSuccess('CommandExecutedSuccessfully');
                 }
                 onSuccess();
             });
@@ -99,7 +98,7 @@ export class GangWindowService {
                     break;
             }
         } else {
-            this.notificationService.showError(new LanguagePipe().transform('LoadingDataFailed', this.settings.Lang));
+            this.notificationService.showError('LoadingDataFailed');
         }
 
         this.loadedData.emit(GangWindowNav[type]);

@@ -8,7 +8,6 @@ import { ClipboardService } from 'ngx-clipboard';
 import { GangWindowService } from '../services/gang-window-service';
 import { GangCommand } from '../enums/gang-command.enum';
 import { NotificationService } from '../../../modules/shared/services/notification.service';
-import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-gang-window-create',
@@ -53,7 +52,7 @@ export class GangWindowCreateComponent implements OnInit {
             GangCommand.Create,
             [JSON.stringify(data)],
             () => {
-                this.notificationService.showSuccess(new LanguagePipe().transform('GangSuccessfullyCreatedInfo', this.settings.Lang));
+                this.notificationService.showSuccess('GangSuccessfullyCreatedInfo');
                 this.back.emit();
             },
             true,

@@ -40,7 +40,7 @@
     <app-userpanel-support-admin *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.SupportAdmin] && settings.AdminLevel > 0">
     </app-userpanel-support-admin>
     <app-userpanel-offline-messages *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.OfflineMessages]"> </app-userpanel-offline-messages>
-    <div *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]" [innerHTML]="langPipe.transform('UserpanelInfo', settings.Lang)"></div>
+    <div *ngIf="userpanelService.currentNav == userpanelNavPage[userpanelNavPage.Main]" [innerHTML]="'UserpanelInfo' | language: settings.Lang"></div>
 </tds-window>
 
 <mat-menu #userpanelNav="matMenu">

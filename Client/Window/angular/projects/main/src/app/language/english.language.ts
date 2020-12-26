@@ -869,6 +869,13 @@ You need to set the target for this mode.`;
     PasswordsAreDifferentError = 'Both passwords are different.';
     Login = 'Login';
     Register = 'Register';
+    AccountDoesntExist = "Account doesn't exist.";
+    WrongPassword = 'Wrong password.';
+    ErrorInfo = 'An error occured. The Developer(s) has/have been notified.';
+    AlreadyHaveAccount = 'You already have an account.';
+    AccountWithNameAlreadyExists = 'An account with this name already exists.';
+    RegisterFailedDevsInformed =
+        'An error has occured while trying to register. The developers are informed and will fix this problem as soon as possible. Please try again later.';
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = 'All without gangwar';

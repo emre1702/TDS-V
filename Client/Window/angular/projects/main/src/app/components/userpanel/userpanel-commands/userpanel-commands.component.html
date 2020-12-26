@@ -1,7 +1,6 @@
 <div class="left-content">
     <mat-action-list>
-        <mat-list-item (click)="gotoCommand(command)" class="map-item mat-body"
-        *ngFor="let command of settings.CommandsData | userpanelCommandNav: currentNav">
+        <mat-list-item (click)="gotoCommand(command)" class="map-item mat-body" *ngFor="let command of settings.CommandsData | userpanelCommandNav: currentNav">
             {{ command[0] }}
         </mat-list-item>
     </mat-action-list>
@@ -14,32 +13,41 @@
     <div>
         <div *ngIf="currentCommand[5].length <= 1">{{ 'Usage' | language: settings.Lang }}:</div>
         <div *ngIf="currentCommand[5].length > 1">{{ 'Usages' | language: settings.Lang }}:</div>
-        <div *ngFor="let syntax of currentCommand[5]"
-        (click)="copyCommand(currentCommand); tooltip1.disabled = false; tooltip1.show();"
-        (contextmenu)="copyCommand(currentCommand); tooltip1.disabled = false; tooltip1.show();"
-        #tooltip1="matTooltip"
-        [matTooltip]="'Copied' | language: settings.Lang"
-        matTooltipHideDelay="1000"
-        (mouseenter)="tooltip1.disabled = true">
+        <div
+            *ngFor="let syntax of currentCommand[5]"
+            (click)="copyCommand(currentCommand); tooltip1.disabled = false; tooltip1.show()"
+            (contextmenu)="copyCommand(currentCommand); tooltip1.disabled = false; tooltip1.show()"
+            #tooltip1="matTooltip"
+            [matTooltip]="'Copied' | language: settings.Lang"
+            matTooltipHideDelay="1000"
+            (mouseenter)="tooltip1.disabled = true"
+        >
             /{{ currentCommand[0] }}
-            <span *ngFor="let parameter of syntax[0]"
-                [matTooltip]="langPipe.transform(parameter[1], settings.Lang)">
+            <span *ngFor="let parameter of syntax[0]" [matTooltip]="parameter[1] | language: settings.Lang">
                 [{{ parameter[0] | language: settings.Lang }}{{ parameter[2] && parameter[2].length ? ' = ' + parameter[2] : '' }}]
             </span>
         </div>
     </div>
     <div>
         <mat-divider></mat-divider>
-        Aliases:<br>{{ currentCommand[6].join(', ') }}
+        Aliases:<br />{{ currentCommand[6].join(', ') }}
         <mat-divider></mat-divider>
     </div>
     <div class="rights-row">
-        <mat-icon color="accent" [style.visibility]="(currentCommand[1] || currentCommand[2]
-        || currentCommand[3] || currentCommand[4]) ? 'hidden' : 'visible'" [matTooltip]="'User' | language: settings.Lang">
+        <mat-icon
+            color="accent"
+            [style.visibility]="currentCommand[1] || currentCommand[2] || currentCommand[3] || currentCommand[4] ? 'hidden' : 'visible'"
+            [matTooltip]="'User' | language: settings.Lang"
+        >
             group
         </mat-icon>
-        <mat-icon color="accent" [style.visibility]="currentCommand[1] ? 'visible' : 'hidden'" [matTooltip]="'TDSTeam' | language: settings.Lang"
-        [matBadge]="currentCommand[1] + ''" matBadgeColor="warn" >
+        <mat-icon
+            color="accent"
+            [style.visibility]="currentCommand[1] ? 'visible' : 'hidden'"
+            [matTooltip]="'TDSTeam' | language: settings.Lang"
+            [matBadge]="currentCommand[1] + ''"
+            matBadgeColor="warn"
+        >
             pan_tool
         </mat-icon>
         <!--<mat-icon color="accent" *ngIf="currentCommand.MinDonation" [matBadge]="currentCommand.MinDonation">monetization_on</mat-icon>-->

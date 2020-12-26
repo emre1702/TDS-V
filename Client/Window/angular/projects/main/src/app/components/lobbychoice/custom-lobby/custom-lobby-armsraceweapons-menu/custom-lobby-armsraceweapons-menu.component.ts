@@ -8,7 +8,6 @@ import { CustomLobbyArmsRaceWeaponData } from '../../models/custom-lobby-armsrac
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'projects/main/src/app/modules/shared/services/notification.service';
-import { LanguagePipe } from 'projects/main/src/app/modules/shared/pipes/language.pipe';
 
 @Component({
     selector: 'app-custom-lobby-armsraceweapons-menu',
@@ -27,7 +26,6 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
     weaponHash = WeaponHash;
     weaponHashGroups: [string, [string, WeaponHash, boolean][]][] = [];
     selectedWeaponsTableColumns = ['Name', 'AtKill', 'Delete'];
-    private languagePipe = new LanguagePipe();
 
     constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, private notificationService: NotificationService) {}
 
@@ -130,7 +128,7 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
     private fixData(): boolean {
         const firstWeapon = this.selectedWeapons.find((w) => w[1] == 0);
         if (!firstWeapon) {
-            this.notificationService.showError(this.languagePipe.transform('ArmsRaceWeaponsFirstWeaponError', this.settings.Lang));
+            this.notificationService.showError('ArmsRaceWeaponsFirstWeaponError');
             return false;
         }
 
@@ -144,7 +142,7 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
         });
 
         if (hasDuplicates) {
-            this.notificationService.showError(this.languagePipe.transform('ArmsRaceWeaponsDuplicateError', this.settings.Lang));
+            this.notificationService.showError('ArmsRaceWeaponsDuplicateError');
             return false;
         }
 
@@ -153,12 +151,12 @@ export class CustomLobbyArmsRaceWeaponsMenuComponent implements OnInit {
         const endEntry = this.selectedWeapons.find((w) => !w[0]);
         if (!endEntry) {
             this.selectedWeapons.push({ 0: null, 1: maxSelectedAtKill + 1 });
-            this.notificationService.showError(this.languagePipe.transform('ArmsRaceWeaponsWinError', this.settings.Lang));
+            this.notificationService.showError('ArmsRaceWeaponsWinError');
             return false;
         }
         if (endEntry[1] != maxSelectedAtKill) {
             endEntry[1] = maxSelectedAtKill + 1;
-            this.notificationService.showError(this.languagePipe.transform('ArmsRaceWeaponsWinNotLastError', this.settings.Lang));
+            this.notificationService.showError('ArmsRaceWeaponsWinNotLastError');
             return false;
         }
 

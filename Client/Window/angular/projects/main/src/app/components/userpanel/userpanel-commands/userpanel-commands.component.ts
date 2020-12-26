@@ -2,16 +2,14 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular
 import { UserpanelCommandDataDto } from '../interfaces/userpanelCommandDataDto';
 import { SettingsService } from '../../../services/settings.service';
 import { ClipboardService } from 'ngx-clipboard';
-import { LanguagePipe } from '../../../modules/shared/pipes/language.pipe';
 
 @Component({
-  selector: 'app-userpanel-commands',
-  templateUrl: './userpanel-commands.component.html',
-  styleUrls: ['./userpanel-commands.component.scss']
+    selector: 'app-userpanel-commands',
+    templateUrl: './userpanel-commands.component.html',
+    styleUrls: ['./userpanel-commands.component.scss'],
 })
 export class UserpanelCommandsComponent implements OnInit, OnDestroy {
-
-  /*allCommands: UserpanelCommandDataDto[] = [
+    /*allCommands: UserpanelCommandDataDto[] = [
     {Command: "Goto", Aliases: ["GotoPlayer", "PlayerGoto"], VIPCanUse: true, Description: {[LanguageEnum.German]: "Go to a player"}, LobbyOwnerCanUse: false,
       Syntaxes: [
         {Parameters: [
@@ -42,35 +40,31 @@ export class UserpanelCommandsComponent implements OnInit, OnDestroy {
     },
   ];*/
 
-  langPipe = new LanguagePipe();
+    @Input() currentCommand: UserpanelCommandDataDto;
+    @Input() currentNav: string;
 
-  @Input() currentCommand: UserpanelCommandDataDto;
-  @Input() currentNav: string;
+    constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService, private clipboardService: ClipboardService) {}
 
-  constructor(private changeDetector: ChangeDetectorRef, public settings: SettingsService,
-    private clipboardService: ClipboardService) { }
+    gotoCommand(command: UserpanelCommandDataDto) {
+        this.currentCommand = command;
+        this.changeDetector.detectChanges();
+    }
 
-  gotoCommand(command: UserpanelCommandDataDto) {
-    this.currentCommand = command;
-    this.changeDetector.detectChanges();
-  }
+    copyCommand(command: UserpanelCommandDataDto) {
+        this.clipboardService.copy('/' + command[0] + ' ');
+    }
 
-  copyCommand(command: UserpanelCommandDataDto) {
-    this.clipboardService.copy("/" + command[0] + " ");
-  }
+    ngOnInit() {
+        this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
+        this.settings.CommandsDataLoaded.on(null, this.detectChanges.bind(this));
+    }
 
-  ngOnInit() {
-    this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
-    this.settings.CommandsDataLoaded.on(null, this.detectChanges.bind(this));
-  }
+    ngOnDestroy(): void {
+        this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
+        this.settings.CommandsDataLoaded.off(null, this.detectChanges.bind(this));
+    }
 
-  ngOnDestroy(): void {
-    this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
-    this.settings.CommandsDataLoaded.off(null, this.detectChanges.bind(this));
-  }
-
-  private detectChanges() {
-    this.changeDetector.detectChanges();
-  }
-
+    private detectChanges() {
+        this.changeDetector.detectChanges();
+    }
 }

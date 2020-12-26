@@ -22,7 +22,6 @@ import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../modules/
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { NotificationService } from '../../modules/shared/services/notification.service';
-import { LanguagePipe } from '../../modules/shared/pipes/language.pipe';
 
 enum MapCreatorNav {
     Main,
@@ -389,7 +388,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
         this.rageConnector.callCallbackServer(ToServerEvent.SendMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
-            this.notificationService.showError(this.settings.Lang[errName]);
+            this.notificationService.showError(errName);
         });
     }
 
@@ -427,7 +426,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.fixData();
         this.rageConnector.callCallbackServer(ToServerEvent.SaveMapCreatorData, [JSON.stringify(this.data)], (err: number) => {
             const errName = MapCreateError[err];
-            this.notificationService.showError(this.settings.Lang[errName]);
+            this.notificationService.showError(errName);
         });
     }
 
@@ -451,7 +450,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.nameControl.setValue(this.data[1]);
         this.mapTypeControl.setValue(this.data[2]);
         this.fixData();
-        this.notificationService.showSuccess(new LanguagePipe().transform('SavedMapLoadSuccessful', this.settings.Lang));
+        this.notificationService.showSuccess('SavedMapLoadSuccessful');
         this.changeDetector.detectChanges();
     }
 

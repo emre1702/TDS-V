@@ -16,7 +16,6 @@ import { InitialDatas } from '../../../initial-datas';
 import { MainMenuDebugService } from './services/main-menu.debug.service';
 import { MainMenuProdService } from './services/main-menu.prod.service';
 import { MainMenuService } from './services/main-menu.service';
-import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main-menu',
