@@ -7,7 +7,6 @@ namespace TDS.Server.Data.Languages
     public class German : English, ILanguage
     {
         public override string A_MAP_WAS_ALREADY_BOUGHT => "Eine Karte wurde bereits gekauft/gesetzt.";
-        public override string ACCOUNT_DOESNT_EXIST => "Account existiert nicht.";
         public override string ADDED_THE_GANG_HOUSE_SUCCESSFULLY => "Das Gang-Haus wurde erfolgreich hinzugefügt.";
         public override string ALREADY_IN_PRIVATE_CHAT_WITH => "Du bist bereits in einem Privatchat mit {0}.";
 
@@ -16,7 +15,6 @@ namespace TDS.Server.Data.Languages
         public override string BOMB_PLANTED => "Bombe wurde platziert.";
 
         public override string CHAR_IN_NAME_IS_NOT_ALLOWED => "Das Zeichen '{0}' in deinem Namen ist nicht erlaubt.";
-        public override string COOLDOWN => "Cooldown";
         public override string COMMAND_DOESNT_EXIST => "Der Befehl existiert nicht.";
         public override string COMMAND_TOO_LESS_ARGUMENTS => "Du hast zu wenige Argumente für diesen Befehl angegeben. Erwartet werden {0}, aber gegeben sind {1} Argumente.";
         public override string COMMAND_TOO_MANY_ARGUMENTS => "Du hast zu viele Argumente für diesen Befehl angegeben. Erwartet werden {0}, aber gegeben sind {1} Argumente.";
@@ -114,7 +112,6 @@ namespace TDS.Server.Data.Languages
         public override string PLAYER_NOT_MUTED => "Der Spieler ist nicht gemutet!";
         public override string PLAYER_REGISTERED => "Ein neuer Spieler mit dem Namen \"{0}\" hat sich registriert!";
         public override string PLAYER_REJECTED_YOUR_INVITATION => "{0} hat deine Team-Einladung abgelehnt.";
-        public override string PLAYER_WITH_NAME_ALREADY_EXISTS => "Es existiert bereits ein Spieler mit diesem Namen.";
         public override string PLAYER_WON_INFO => "{0} hat die Runde gewonnen.";
         public override string PRIVATE_CHAT_CLOSED_PARTNER => "Dein Privatchat-Partner hat den Chat geschlossen.";
         public override string PRIVATE_CHAT_CLOSED_YOU => "Du hast den Privatchat geschlossen.";
@@ -189,11 +186,8 @@ namespace TDS.Server.Data.Languages
 
         public override string VOICE_MUTE_EXPIRED => "Dein Voice-Channel Mute ist abgelaufen. Du darfst wieder reden.";
 
-        public override string WRONG_PASSWORD => "Falsches Passwort!";
-
         public override string YOU_ACCEPTED_INVITATION => "Du hast die Einladung von {0} angenommen.";
         public override string YOU_ACCEPTED_TEAM_INVITATION => "Du hast die Team-Einladung angenommen. {0} ist nun dein Team-Leiter.";
-        public override string YOU_ALREADY_HAVE_ACCOUNT => "Du hast bereits einen Account.";
         public override string YOU_ALREADY_INVITED_TARGET => "Du hast das Ziel bereits eingeladen.";
         public override string YOU_ARE_ALREADY_IN_A_GANG => "Du bist bereits in einer Gang.";
         public override string YOU_ARE_NOT_IN_A_GANG => "Du bist nicht in einer Gang.";
@@ -217,7 +211,6 @@ namespace TDS.Server.Data.Languages
         public override string NO_EMAIL_ADDRESS_HAS_BEEN_SET => "Dieser Account hat keine E-Mail Adresse hinterlegt.";
         public override string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID => "Die für diesen Account hinterlegte E-Mail Adresse ist ungültig.";
         public override string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Dein Passwort wurde erfolgreich zurückgesetzt. Überprüfe deine E-Mails (besonders die Junk-Emails!).";
-        public override string REGISTER_FAILED_DEVS_INFORMED => "Ein Fehler ist beim Registrieren aufgetreten. Die Entwickler sind informiert und werden das Problem so schnell es geht beheben. Versuche es bitte später erneut.";
         public override string GANGWAR_TARGET_EMPTY_SECS_LEFT => "Das Ziel ist leer! Ihr habt {0} Sekunden, um es wieder zu besetzen.";
         public override string GANG_ACTION_IN_PREPARATION => "Ein Angriff wird im Gebiet {0} vorbereitet.";
         public override string GANG_ACTION_IN_PREPARATION_ATTACKER => "Deine Gang bereitet einen Angriff gegen {0} im Gebiet {1} vor.";
@@ -256,5 +249,6 @@ namespace TDS.Server.Data.Languages
         public override string TARGET_IS_NOT_ADMIN => "Der Spieler ist kein Admin.";
         public override string MAP_CREATOR_REWARD_INFO => "Der Ersteller der Karte '{0}' hat ${1} bekommen.";
         public override string YOU_GOT_MAP_CREATOR_REWARD => "Deine Karte '{0}' wurde ausgewählt -> du verdienst ${1}.";
+        public override string WRONG_PASSWORD => "Falsches Passwort.";
     }
 }

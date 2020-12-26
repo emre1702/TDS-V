@@ -7,7 +7,6 @@ namespace TDS.Server.Data.Languages
     public class English : ILanguage
     {
         public virtual string A_MAP_WAS_ALREADY_BOUGHT => "A map has already been purchased/set.";
-        public virtual string ACCOUNT_DOESNT_EXIST => "Account doesn't exist.";
         public virtual string ADDED_THE_GANG_HOUSE_SUCCESSFULLY => "The gang house was successfully added.";
         public virtual string ALREADY_IN_PRIVATE_CHAT_WITH => "You are already in a private chat with {0}.";
 
@@ -16,7 +15,6 @@ namespace TDS.Server.Data.Languages
         public virtual string BOMB_PLANTED => "Bomb was planted!";
 
         public virtual string CHAR_IN_NAME_IS_NOT_ALLOWED => "The character '{0}' in your name is not allowed.";
-        public virtual string COOLDOWN => "Cooldown";
         public virtual string COMMAND_DOESNT_EXIST => "The command doesn't exist.";
         public virtual string COMMAND_TOO_LESS_ARGUMENTS => "You used too few arguments for this command. Expected are {0}, but given are {1} arguments.";
         public virtual string COMMAND_TOO_MANY_ARGUMENTS => "You used too many arguments for this command. Expected are {0}, but given are {1} arguments.";
@@ -113,7 +111,6 @@ namespace TDS.Server.Data.Languages
         public virtual string PLAYER_NOT_MUTED => "The player is not muted!";
         public virtual string PLAYER_REGISTERED => "A new player named \"{0}\" has registered!";
         public virtual string PLAYER_REJECTED_YOUR_INVITATION => "{0} rejected your team-invitation.";
-        public virtual string PLAYER_WITH_NAME_ALREADY_EXISTS => "A player with that name already exists.";
         public virtual string PLAYER_WON_INFO => "{0} has won the round.";
         public virtual string PRIVATE_CHAT_CLOSED_PARTNER => "Your private chat partner closed the chat.";
         public virtual string PRIVATE_CHAT_CLOSED_YOU => "You closed the private chat.";
@@ -188,11 +185,8 @@ namespace TDS.Server.Data.Languages
 
         public virtual string VOICE_MUTE_EXPIRED => "Your voice channel mute has expired. You can talk again.";
 
-        public virtual string WRONG_PASSWORD => "Wrong password!";
-
         public virtual string YOU_ACCEPTED_INVITATION => "You accepted the invitation of {0}.";
         public virtual string YOU_ACCEPTED_TEAM_INVITATION => "You accepted the team-invitation. {0} is your team-leader now.";
-        public virtual string YOU_ALREADY_HAVE_ACCOUNT => "You already have an account.";
         public virtual string YOU_ALREADY_INVITED_TARGET => "You've already invited the player.";
         public virtual string YOU_ARE_ALREADY_IN_A_GANG => "You are already in a gang.";
         public virtual string YOU_ARE_NOT_IN_A_GANG => "You are not in a gang.";
@@ -218,7 +212,6 @@ namespace TDS.Server.Data.Languages
 
         public virtual string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID => "The email address for this account is invalid.";
         public virtual string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT => "Your password has been successfully reset. Check your emails (look into junk mails folder!).";
-        public virtual string REGISTER_FAILED_DEVS_INFORMED => "An error has occured while trying to register. The developers are informed and will fix this problem as soon as possible. Please try again later.";
         public virtual string GANGWAR_TARGET_EMPTY_SECS_LEFT => "The target is empty! You have {0} seconds to occupy it again.";
         public virtual string GANG_ACTION_IN_PREPARATION => "An attack is prepared in the area {0}.";
         public virtual string GANG_ACTION_IN_PREPARATION_ATTACKER => "Your gang is preparing an attack against {0} in the area {1}.";
@@ -257,5 +250,6 @@ namespace TDS.Server.Data.Languages
         public virtual string TARGET_IS_NOT_ADMIN => "The player is not an admin.";
         public virtual string MAP_CREATOR_REWARD_INFO => "The creator of this map '{0}' earned ${1}.";
         public virtual string YOU_GOT_MAP_CREATOR_REWARD => "Your map '{0}' has been selected -> you earn ${1}.";
+        public virtual string WRONG_PASSWORD => "Wrong password.";
     }
 }

@@ -34,7 +34,7 @@ namespace TDS.Server.Handler.Account
             NAPI.ClientEvent.Register<ITDSPlayer, string, string, string, int>(ToServerEvent.TryRegister, this, TryRegister);
         }
 
-        public async void RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language, string scName, ulong scId)
+        public async Task<string?> RegisterPlayer(ITDSPlayer player, string username, string password, string? email, Language language, string scName, ulong scId)
         {
             IDbContextTransaction? transaction = null;
             try
@@ -43,7 +43,7 @@ namespace TDS.Server.Handler.Account
                 if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
                     email = null;
                 if (int.TryParse(username, out int result))
-                    return;
+                    return "ErrornotOnlyNumbers";
 
                 var dbPlayer = CreatePlayerEntity(username, password, email, scName, scId);
                 dbPlayer.PlayerSettings = CreatePlayerSettingsEntity(language);
@@ -68,13 +68,14 @@ namespace TDS.Server.Handler.Account
                 _eventsHandler.OnPlayerRegistered(player, dbPlayer);
 
                 _langHelper.SendAllNotification(lang => string.Format(lang.PLAYER_REGISTERED, username));
+                return null;
             }
             catch (Exception ex)
             {
                 LoggingHandler.Instance.LogError(ex);
-                player.SendAlert(player.Language.REGISTER_FAILED_DEVS_INFORMED);
                 if (transaction is { })
                     await transaction.RollbackAsync();
+                return "RegisterFailedDevsInformed";
             }
             finally
             {
@@ -92,7 +93,7 @@ namespace TDS.Server.Handler.Account
         public async Task<string> TryRegisterWithReturn(ITDSPlayer player, string username, string password, string email, int language)
         {
             if (player.TryingToLoginRegister)
-                return player.Language.COOLDOWN;
+                return "Cooldown";
 
             player.TryingToLoginRegister = true;
             try
@@ -102,24 +103,24 @@ namespace TDS.Server.Handler.Account
                 await _serverStartHandler.LoadingTask.Task.ConfigureAwait(false);
 
                 if (username.Length < 3 || username.Length > 20)
-                    return player.Language.NOT_ALLOWED;
+                    return "Error?";
 
                 if (await _databasePlayerHelper.DoesPlayerWithScnameExist(player.SocialClubName).ConfigureAwait(false))
-                    return player.Language.YOU_ALREADY_HAVE_ACCOUNT;
+                    return "AlreadyHaveAccount";
                 if (await _databasePlayerHelper.DoesPlayerWithNameExist(username).ConfigureAwait(false))
-                    return player.Language.PLAYER_WITH_NAME_ALREADY_EXISTS;
+                    return "AccountWithNameAlreadyExists";
 
                 char? invalidChar = Utils.CheckNameValid(username);
                 if (invalidChar.HasValue)
                     return string.Format(player.Language.CHAR_IN_NAME_IS_NOT_ALLOWED, invalidChar.Value);
 
-                RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language, player.SocialClubName, player.SocialClubId);
-                return "";
+                var errMsgKey = await RegisterPlayer(player, username, password, email.Length != 0 ? email : null, (Language)language, player.SocialClubName, player.SocialClubId);
+                return errMsgKey ?? "";
             }
             catch (Exception ex)
             {
                 LoggingHandler.Instance.LogError(ex);
-                return player.Language.ERROR_INFO;
+                return "ErrorInfo";
             }
             finally
             {

@@ -65,18 +65,18 @@ namespace TDS.Server.Handler.Account
 
         public async Task<string> LoginPlayer(ITDSPlayer player, int id, string? password)
         {
-            string? errMsg = await player.Database.ExecuteForDBAsync(async (dbContext) =>
+            string? errMsgKey = await player.Database.ExecuteForDBAsync(async (dbContext) =>
             {
                 var rightPassword = await GetPlayerPassword(dbContext, id).ConfigureAwait(false);
                 if (rightPassword is null)
-                    return player.Language.ACCOUNT_DOESNT_EXIST;
+                    return "AccountDoesntExist";
 
                 if (password is { } && !Utils.IsPasswordValid(password, rightPassword))
-                    return player.Language.WRONG_PASSWORD;
+                    return "WrongPassword";
 
                 var entity = await LoadPlayer(dbContext, id).ConfigureAwait(false);
                 if (entity is null)
-                    return player.Language.ACCOUNT_DOESNT_EXIST;
+                    return "AccountDoesntExist";
 
                 await CreateMissingTables(player, entity);
                 entity.PlayerStats.LoggedIn = true;
@@ -90,8 +90,13 @@ namespace TDS.Server.Handler.Account
                 return null;
             }).ConfigureAwait(false);
 
-            if (errMsg is { } || player.Entity == null)
-                return errMsg ?? player.Language.ERROR_INFO + " (no entity)";
+            if (errMsgKey is { } || player.Entity == null)
+            {
+                if (errMsgKey is { })
+                    return errMsgKey;
+                LoggingHandler.Instance.LogError("errMsgKey is null but player entity is also null?!", Environment.StackTrace, source: player);
+                return "ErrorInfo";
+            }
 
             player.Database.SetPlayerSource(player);
             var angularConstantsData = _angularConstantsProvider.Get(player);
@@ -121,14 +126,14 @@ namespace TDS.Server.Handler.Account
 
         public async void TryLogin(ITDSPlayer player, string username, string password)
         {
-            var msg = await TryLoginWithReturn(player, username, password);
-            NAPI.Task.RunSafe(() => player.TriggerBrowserEvent(ToBrowserEvent.TryLogin, msg ?? ""));
+            var errMsgKey = await TryLoginWithReturn(player, username, password);
+            NAPI.Task.RunSafe(() => player.TriggerBrowserEvent(ToBrowserEvent.TryLogin, errMsgKey ?? ""));
         }
 
         public async Task<string?> TryLoginWithReturn(ITDSPlayer player, string username, string password)
         {
             if (player.TryingToLoginRegister)
-                return player.Language.COOLDOWN;
+                return "Cooldown";
             player.TryingToLoginRegister = true;
             try
             {
@@ -137,16 +142,16 @@ namespace TDS.Server.Handler.Account
                 int id = await _databasePlayerHandler.GetPlayerIDByName(username).ConfigureAwait(false);
                 if (id != 0)
                 {
-                    var msg = await LoginPlayer(player, id, password).ConfigureAwait(false);
-                    return msg;
+                    var errMsgKey = await LoginPlayer(player, id, password).ConfigureAwait(false);
+                    return errMsgKey;
                 }
                 else
-                    return player.Language.ACCOUNT_DOESNT_EXIST;
+                    return "AccountDoesntExist";
             }
             catch (Exception ex)
             {
                 _loggingHandler.LogError(ex);
-                return player.Language.ERROR_INFO;
+                return "ErrorInfo";
             }
             finally
             {

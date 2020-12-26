@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using TDS.Server.Database.Entity.Player;
+﻿using System.Collections.Generic;
 
 namespace TDS.Server.Data.Interfaces
 {
     public interface ILanguage
     {
         string A_MAP_WAS_ALREADY_BOUGHT { get; }
-        string ACCOUNT_DOESNT_EXIST { get; }
         string ADDED_THE_GANG_HOUSE_SUCCESSFULLY { get; }
         string ALREADY_IN_PRIVATE_CHAT_WITH { get; }
 
@@ -16,7 +13,6 @@ namespace TDS.Server.Data.Interfaces
         string BOMB_PLANTED { get; }
 
         string CHAR_IN_NAME_IS_NOT_ALLOWED { get; }
-        string COOLDOWN { get; }
         string COMMAND_DOESNT_EXIST { get; }
         string COMMAND_TOO_LESS_ARGUMENTS { get; }
         string COMMAND_TOO_MANY_ARGUMENTS { get; }
@@ -110,7 +106,6 @@ namespace TDS.Server.Data.Interfaces
         string PLAYER_NOT_MUTED { get; }
         string PLAYER_REGISTERED { get; }
         string PLAYER_REJECTED_YOUR_INVITATION { get; }
-        string PLAYER_WITH_NAME_ALREADY_EXISTS { get; }
         string PLAYER_WON_INFO { get; }
         string PRIVATE_CHAT_CLOSED_PARTNER { get; }
         string PRIVATE_CHAT_CLOSED_YOU { get; }
@@ -184,11 +179,8 @@ namespace TDS.Server.Data.Interfaces
 
         string VOICE_MUTE_EXPIRED { get; }
 
-        string WRONG_PASSWORD { get; }
-
         string YOU_ACCEPTED_INVITATION { get; }
         string YOU_ACCEPTED_TEAM_INVITATION { get; }
-        string YOU_ALREADY_HAVE_ACCOUNT { get; }
         string YOU_ALREADY_INVITED_TARGET { get; }
         string YOU_ARE_ALREADY_IN_A_GANG { get; }
         string YOU_ARE_NOT_IN_A_GANG { get; }
@@ -212,7 +204,6 @@ namespace TDS.Server.Data.Interfaces
         string NO_EMAIL_ADDRESS_HAS_BEEN_SET { get; }
         string EMAIL_ADDRESS_FOR_ACCOUNT_IS_INVALID { get; }
         string PASSWORD_HAS_BEEN_RESET_EMAIL_SENT { get; }
-        string REGISTER_FAILED_DEVS_INFORMED { get; }
         string GANGWAR_TARGET_EMPTY_SECS_LEFT { get; }
         string GANG_ACTION_IN_PREPARATION { get; }
         string GANG_ACTION_IN_PREPARATION_ATTACKER { get; }
@@ -251,5 +242,6 @@ namespace TDS.Server.Data.Interfaces
         string TARGET_IS_NOT_ADMIN { get; }
         string MAP_CREATOR_REWARD_INFO { get; }
         string YOU_GOT_MAP_CREATOR_REWARD { get; }
+        string WRONG_PASSWORD { get; }
     }
 }
