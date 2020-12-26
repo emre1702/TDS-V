@@ -5,13 +5,12 @@ namespace TDS.Client.Handler.Entities.Languages
 {
     internal class German : English
     {
-        #region Public Properties
-
         public override string AFK_KICK_INFO => "Du warst AFK und wurdest aus der Lobby geworfen.";
 
         public override string AFK_KICK_WARNING => "Du bist AFK und wirst\nin {0} Sekunden gekickt!\nÄndere deine Position oder schieße!";
 
         public override string BOMB_PLANTED => "Die Bombe wurde platziert!";
+        public override string COOLDOWN => "Cooldown";
 
         public override string COULD_NOT_LOAD_OBJECT => "Konnte Objekt nicht laden.";
 
@@ -99,7 +98,5 @@ namespace TDS.Client.Handler.Entities.Languages
         };
 
         public override string YOU_DIED => "Du bist gestorben.";
-
-        #endregion Public Properties
     }
 }

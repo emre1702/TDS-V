@@ -5,12 +5,12 @@ namespace TDS.Client.Handler.Entities.Languages
 {
     internal class English : ILanguage
     {
-
         public virtual string AFK_KICK_INFO => "You were AFK and got kicked out of the lobby.";
 
         public virtual string AFK_KICK_WARNING => "You are AFK and will\nbe kicked in {0} seconds!\nChange your position or shoot!";
 
         public virtual string BOMB_PLANTED => "The bomb got planted!";
+        public virtual string COOLDOWN => "Cooldown";
 
         public virtual string COULD_NOT_LOAD_OBJECT => "Could not load object.";
 
@@ -98,6 +98,5 @@ namespace TDS.Client.Handler.Entities.Languages
         };
 
         public virtual string YOU_DIED => "You died.";
-
     }
 }

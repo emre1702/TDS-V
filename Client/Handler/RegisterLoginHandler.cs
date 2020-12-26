@@ -42,7 +42,8 @@ namespace TDS.Client.Handler
         {
             string username = (string)args[0];
             string password = (string)args[1];
-            _remoteEventsSender.Send(ToServerEvent.TryLogin, username, SharedUtils.HashPWClient(password));
+            if (!_remoteEventsSender.Send(ToServerEvent.TryLogin, username, SharedUtils.HashPWClient(password)))
+                _browserHandler.Angular.ExecuteFast(FromBrowserEvent.TryLogin, _settingsHandler.Language.COOLDOWN);
         }
 
         public void TryRegister(object[] args)

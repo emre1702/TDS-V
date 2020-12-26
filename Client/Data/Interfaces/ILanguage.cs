@@ -4,11 +4,10 @@ namespace TDS.Client.Data.Interfaces
 {
     public interface ILanguage
     {
-        #region Public Properties
-
         string AFK_KICK_INFO { get; }
         string AFK_KICK_WARNING { get; }
         string BOMB_PLANTED { get; }
+        string COOLDOWN { get; }
         string COULD_NOT_LOAD_OBJECT { get; }
         string COUNTDOWN_STARTED_NOTIFICATION { get; }
         string DEFUSING { get; }
@@ -48,7 +47,5 @@ namespace TDS.Client.Data.Interfaces
         string UP { get; }
         string[] WELCOME_MESSAGE { get; }
         string YOU_DIED { get; }
-
-        #endregion Public Properties
     }
 }
