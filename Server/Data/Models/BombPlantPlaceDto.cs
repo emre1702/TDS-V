@@ -7,8 +7,7 @@ namespace TDS.Server.Data.Models
 
     public class BombPlantPlaceDto
     {
-
-        public ITDSBlip? Blip { get; }
+        public ITDSBlip? Blip { get; private set; }
         public ITDSObject? Obj { get; set; }
         public Vector3 Position { get; }
 
@@ -16,9 +15,12 @@ namespace TDS.Server.Data.Models
 
         public void Delete()
         {
-            Obj?.Delete();
-            Blip?.Delete();
+            if (Obj is { })
+                NAPI.Entity.DeleteEntity(Obj);
+            if (Blip is { })
+                NAPI.Entity.DeleteEntity(Blip);
+            Obj = null;
+            Blip = null;
         }
-
     }
 }

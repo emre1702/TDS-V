@@ -77,27 +77,22 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
             });
         }
 
-        private ValueTask RoundClear()
+        private async ValueTask RoundClear()
         {
-            NAPI.Task.RunSafe(() =>
+            await NAPI.Task.RunWait(() =>
             {
-                lock (BombPlantPlaces)
-                {
-                    foreach (var bombPlantPlace in BombPlantPlaces)
-                        bombPlantPlace?.Delete();
-                    BombPlantPlaces.Clear();
-                }
-                
+                foreach (var bombPlantPlace in BombPlantPlaces)
+                    bombPlantPlace.Delete();
+                BombPlantPlaces.Clear();
+
                 DeleteBombTakePickup();
             });
-
-            return default;
         }
 
         private void TakeDroppedBomb(ITDSPlayer player, CancelEventArgs cancelEventArgs)
         {
             if (player.Lifes <= 0 || player.Team != _gamemode.Teams.Terrorists)
-            { 
+            {
                 cancelEventArgs.Cancel = true;
                 return;
             }
