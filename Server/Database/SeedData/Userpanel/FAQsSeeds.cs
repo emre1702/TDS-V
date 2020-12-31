@@ -58,7 +58,7 @@ namespace TDS.Server.Database.SeedData.Userpanel
                 {
                     Id = 3,
                     Language = Language.German,
-                    Question = "Was sind die Belohnungen für erstelle Karten?",
+                    Question = "Was sind die Belohnungen für erstellte Karten?",
                     Answer = "Der Karten-Ersteller bekommt folgende Belohnungen (nur in offiziellen Lobbies):"
                             + "\n$1 - Karte wurde zufällig ausgewählt"
                             + "\n$5 - Karte wurde per Abstimmung gewählt"
