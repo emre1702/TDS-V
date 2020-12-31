@@ -28,8 +28,12 @@ namespace TDS.Client.Handler
         public void AttachEntityToEntityWorkaroundMethod(object[] args)
         {
             EntityAttachInfoDto info = Serializer.FromServer<EntityAttachInfoDto>(args[0].ToString());
-            info.EntityValue = RAGE.Elements.Entities.Objects.GetAtRemote((ushort)info.EntityValue).Handle;
-            info.TargetValue = RAGE.Elements.Entities.Players.GetAtRemote((ushort)info.TargetValue).Handle;
+            var entity = RAGE.Elements.Entities.Objects.GetAtRemote((ushort)info.EntityValue);
+            var target = RAGE.Elements.Entities.Players.GetAtRemote((ushort)info.TargetValue);
+            if (entity is null || target is null)
+                return;     // Not sure if this is good.
+            info.EntityValue = entity.Handle;
+            info.TargetValue = target.Handle;
             RAGE.Game.Entity.AttachEntityToEntity(info.EntityValue, info.TargetValue, RAGE.Game.Ped.GetPedBoneIndex(info.TargetValue, info.Bone),
                 info.PositionOffsetX, info.PositionOffsetY, info.PositionOffsetZ,
                 info.RotationOffsetX, info.RotationOffsetY, info.RotationOffsetZ,
