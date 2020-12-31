@@ -64,7 +64,6 @@ namespace TDS.Server.Handler
                         _attachedEntitiesPerLobby[lobby] = new List<Entity>();
                     _attachedEntitiesPerLobby[lobby].Add(entity);
                 }
-
             }
         }
 
@@ -165,9 +164,9 @@ namespace TDS.Server.Handler
 
         private static void PlayerJoinedLobby(ITDSPlayer player, IBaseLobby lobby)
         {
-            if (_attachedEntitiesPerLobby.ContainsKey(lobby))
+            NAPI.Task.RunSafe(() =>
             {
-                NAPI.Task.RunSafe(() =>
+                if (_attachedEntitiesPerLobby.ContainsKey(lobby))
                 {
                     foreach (Entity entity in _attachedEntitiesPerLobby[lobby].ToArray())
                     {
@@ -179,45 +178,41 @@ namespace TDS.Server.Handler
                         }
                         player.TriggerEvent(ToClientEvent.AttachEntityToEntityWorkaround, _attachedEntitiesInfos[entity].Json);
                     }
-                });
 
-                if (_attachedEntitiesPerLobby[lobby].Count == 0)
-                    _attachedEntitiesPerLobby.Remove(lobby);
-            }
+                    if (_attachedEntitiesPerLobby[lobby].Count == 0)
+                        _attachedEntitiesPerLobby.Remove(lobby);
+                }
 
-            if (_collisionslessEntitiesPerLobby.ContainsKey(lobby))
-            {
-                NAPI.Task.RunSafe(() =>
+                if (_collisionslessEntitiesPerLobby.ContainsKey(lobby))
                 {
                     _collisionslessEntitiesPerLobby[lobby].RemoveAll(e => !e.Exists);
                     foreach (Entity entity in _collisionslessEntitiesPerLobby[lobby])
                         player.TriggerEvent(ToClientEvent.SetEntityCollisionlessWorkaround, _collisionslessEntitiesInfos[entity].Json);
-                });
 
-                if (_collisionslessEntitiesPerLobby[lobby].Count == 0)
-                    _collisionslessEntitiesPerLobby.Remove(lobby);
-            }
+                    if (_collisionslessEntitiesPerLobby[lobby].Count == 0)
+                        _collisionslessEntitiesPerLobby.Remove(lobby);
+                }
 
-            if (_frozenEntityPerLobby.ContainsKey(lobby))
-            {
-                NAPI.Task.RunSafe(() =>
+                if (_frozenEntityPerLobby.ContainsKey(lobby))
                 {
                     _frozenEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
                     foreach (Entity entity in _frozenEntityPerLobby[lobby])
                         player.TriggerEvent(ToClientEvent.FreezeEntityWorkaround, entity.Handle.Value, true);
-                });
-            }
 
-            if (_invincibleEntityPerLobby.ContainsKey(lobby))
-            {
+                    if (_frozenEntityPerLobby[lobby].Count == 0)
+                        _frozenEntityPerLobby.Remove(lobby);
+                }
 
-                NAPI.Task.RunSafe(() =>
+                if (_invincibleEntityPerLobby.ContainsKey(lobby))
                 {
                     _invincibleEntityPerLobby[lobby].RemoveAll(e => !e.Exists);
                     foreach (var entity in _invincibleEntityPerLobby[lobby])
                         player.TriggerEvent(ToClientEvent.SetEntityInvincible, entity.Handle.Value, true);
-                });
-            }
+
+                    if (_invincibleEntityPerLobby[lobby].Count == 0)
+                        _invincibleEntityPerLobby.Remove(lobby);
+                }
+            });
         }
 
         private void PlayerLeftLobby(ITDSPlayer player, IBaseLobby lobby)
