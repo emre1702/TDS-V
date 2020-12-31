@@ -27,15 +27,17 @@ namespace TDS.Server.LobbySystem.Lobbies
         public new IMapCreatorLobbySync Sync => (IMapCreatorLobbySync)base.Sync;
 
         public MapCreatorLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
         }
 
         public MapCreatorLobby(ITDSPlayer player, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            LobbiesHandler lobbiesHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
+            LobbiesHandler lobbiesHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(CreateEntity(player, lobbiesHandler.MapCreateLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler,
-                  serviceProvider, teamsProvider, loggingHandler)
+                  serviceProvider, teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
         }
 

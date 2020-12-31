@@ -30,6 +30,7 @@ namespace TDS.Client.Handler.Events
             [ToServerEvent.RequestPlayersForScoreboard] = new CooldownEventDto(5000),
             [ToServerEvent.ResetPassword] = new CooldownEventDto(4000),
             [ToServerEvent.SaveBodyData] = new CooldownEventDto(10000),
+            [ToServerEvent.SaveClothesData] = new CooldownEventDto(10000),
             [ToServerEvent.SaveMapCreatorData] = new CooldownEventDto(10000),
             [ToServerEvent.SaveUserpanelNormalSettings] = new CooldownEventDto(3000),
             [ToServerEvent.SendApplication] = new CooldownEventDto(3000),
@@ -70,10 +71,20 @@ namespace TDS.Client.Handler.Events
 
         public bool SendFromBrowser(params object[] args)
         {
+            return SendFromBrowserMethod(ToServerEvent.FromBrowserEvent, args);
+        }
+
+        public bool SendFromBrowserCallback(params object[] args)
+        {
+            return SendFromBrowserMethod(ToServerEvent.FromBrowserEventCallback, args);
+        }
+
+        private bool SendFromBrowserMethod(string toServerEventName, params object[] args)
+        {
             string eventName = (string)args[0];
             if (!_cooldownEventsDict.TryGetValue(eventName, out CooldownEventDto entry))
             {
-                RAGE.Events.CallRemote(ToServerEvent.FromBrowserEvent, args);
+                RAGE.Events.CallRemote(toServerEventName, args);
                 return true;
             }
 
@@ -84,7 +95,7 @@ namespace TDS.Client.Handler.Events
             }
 
             entry.LastExecMs = currentTicks;
-            RAGE.Events.CallRemote(ToServerEvent.FromBrowserEvent, args);
+            RAGE.Events.CallRemote(toServerEventName, args);
             return true;
         }
 

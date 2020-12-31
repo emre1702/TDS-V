@@ -9,6 +9,7 @@ using TDS.Server.Data.Interfaces.LobbySystem.MapVotings;
 using TDS.Server.Data.Interfaces.LobbySystem.RoundsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Helper;
 using TDS.Server.Handler.Maps;
@@ -37,8 +38,9 @@ namespace TDS.Server.LobbySystem.Lobbies
 
         public Arena(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
         }
 

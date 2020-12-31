@@ -9,10 +9,8 @@ namespace TDS.Server.Core.Init
 {
     public class DbContextFactory : IDesignTimeDbContextFactory<TDSDbContext>
     {
-
         public TDSDbContext CreateDbContext(string[] args)
         {
-            Debugger.Launch();
             var appConfigHandler = new AppConfigHandler();
 
             var optionsBuilder = new DbContextOptionsBuilder<TDSDbContext>();
@@ -21,6 +19,5 @@ namespace TDS.Server.Core.Init
 
             return new TDSDbContext(optionsBuilder.Options);
         }
-
     }
 }

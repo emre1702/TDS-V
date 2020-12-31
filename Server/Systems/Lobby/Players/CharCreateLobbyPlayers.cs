@@ -18,13 +18,14 @@ namespace TDS.Server.LobbySystem.Players
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex = 0)
         {
-            if (player.Entity?.CharDatas is null)
+            if (player.Entity?.BodyDatas is null)
                 return false;
             var worked = await base.AddPlayer(player, teamIndex).ConfigureAwait(false);
             if (!worked)
                 return false;
 
-            var charDatasJson = Serializer.ToClient(player.Entity.CharDatas);
+            var bodyDatasJson = Serializer.ToClient(player.Entity.BodyDatas);
+            var clothesDatasJson = Serializer.ToClient(player.Entity.ClothesDatas);
 
             NAPI.Task.RunSafe(() =>
             {
@@ -33,7 +34,7 @@ namespace TDS.Server.LobbySystem.Players
                 player.Freeze(true);
                 player.SetInvisible(true);
 
-                player.TriggerEvent(ToClientEvent.StartCharCreator, charDatasJson, Lobby.MapHandler.Dimension);
+                player.TriggerEvent(ToClientEvent.StartCharCreator, bodyDatasJson, clothesDatasJson, Lobby.MapHandler.Dimension);
             });
 
             return true;

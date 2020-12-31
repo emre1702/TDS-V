@@ -29,6 +29,8 @@ import { RegisterLoginInitData } from './modules/register-login/models/register-
 import { Announcement } from './components/lobbychoice/main-menu/models/announcement';
 import { ChangelogsGroup } from './interfaces/changelogs/changelogs-group';
 import { BodyData } from './modules/char-creator/body/models/body-data';
+import { ClothesConfigs } from './modules/char-creator/clothes/models/clothes-configs';
+import { ClothesDataKey } from './modules/char-creator/clothes/enums/clothes-config-key.enum';
 
 declare const mp: {};
 
@@ -423,6 +425,66 @@ export class InitialDatas {
             },
         ],
         [99]: 0,
+    };
+
+    static readonly clothesData: ClothesConfigs = {
+        0: [
+            {
+                [ClothesDataKey.Slot as number]: 0,
+                [ClothesDataKey.Hats as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Glasses as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Masks as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Jackets as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Shirts as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Hands as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Accessories as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Bags as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Legs as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Shoes as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.BodyArmors as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Decals as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.EarAccessories as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Watches as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Bracelets as number]: { 0: -1, 1: -1 },
+            },
+            {
+                [ClothesDataKey.Slot as number]: 1,
+                [ClothesDataKey.Hats as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Glasses as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Masks as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Jackets as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Shirts as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Hands as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Accessories as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Bags as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Legs as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Shoes as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.BodyArmors as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Decals as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.EarAccessories as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Watches as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Bracelets as number]: { 0: -1, 1: -1 },
+            },
+            {
+                [ClothesDataKey.Slot as number]: 2,
+                [ClothesDataKey.Hats as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Glasses as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Masks as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Jackets as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Shirts as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Hands as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Accessories as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Bags as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Legs as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Shoes as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.BodyArmors as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Decals as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.EarAccessories as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Watches as number]: { 0: -1, 1: -1 },
+                [ClothesDataKey.Bracelets as number]: { 0: -1, 1: -1 },
+            },
+        ],
+        1: 0,
     };
 
     static getAdminLevel(): number {

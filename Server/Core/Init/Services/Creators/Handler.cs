@@ -6,6 +6,7 @@ using TDS.Server.Data.Interfaces.Entities;
 using TDS.Server.Data.Interfaces.Userpanel;
 using TDS.Server.Handler;
 using TDS.Server.Handler.Account;
+using TDS.Server.Handler.Appearance;
 using TDS.Server.Handler.Browser;
 using TDS.Server.Handler.Commands.Admin;
 using TDS.Server.Handler.Commands.System;
@@ -30,6 +31,7 @@ namespace TDS.Server.Core.Init.Services.Creators
             return serviceCollection
                 .WithBonusBotConnectors()
                 .WithAccounts()
+                .WithAppearance()
                 .WithBrowser()
                 .WithCommands()
                 .WithEvents()
@@ -64,6 +66,11 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddSingleton<ResetPasswordHandler>()
                .AddSingleton<RegisterLoginHandler>();
         }
+
+        private static IServiceCollection WithAppearance(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<PlayerBodyHandler>()
+                .AddSingleton<PlayerClothesHandler>();
 
         private static IServiceCollection WithBrowser(this IServiceCollection serviceCollection)
             => serviceCollection
@@ -149,7 +156,6 @@ namespace TDS.Server.Core.Init.Services.Creators
             return serviceCollection
                .AddSingleton<ConnectedHandler>()
                .AddSingleton<ITDSPlayerHandler, TDSPlayerHandler>()
-               .AddSingleton<PlayerCharHandler>()
                .AddSingleton<PlayerCrouchHandler>()
                .AddSingleton<PlayerFreecamHandler>()
                .AddSingleton<PlayerSettingsSyncHandler>();
@@ -189,7 +195,6 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddSingleton<AnnouncementsHandler>()
                .AddSingleton<AppConfigHandler>()
                .AddSingleton<ChatHandler>()
-               .AddSingleton<ClothesHandler>()
                .AddSingleton<InvitationsHandler>()
                .AddSingleton<LobbiesHandler>()
                .AddSingleton<ILoggingHandler, LoggingHandler>()

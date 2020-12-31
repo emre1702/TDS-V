@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 
 enum DToServerEvent {
     FromBrowserEvent = 'c64',
+    FromBrowserEventCallback = 'c86',
 }
 
 declare const mp: {
@@ -30,7 +31,7 @@ export class RageConnectorService {
 
     public rageEventHandler(eventName: string, ...args: any) {
         RageConnectorService.zone.run(() => {
-            if (eventName == DToServerEvent.FromBrowserEvent) {
+            if (eventName == DToServerEvent.FromBrowserEvent || eventName == DToServerEvent.FromBrowserEventCallback) {
                 eventName = args[0];
                 args.shift();
             }
@@ -164,8 +165,8 @@ export class RageConnectorService {
 
         this.addCallbackFunction(eventName, callback);
 
-        if (args) mp.trigger(DToServerEvent.FromBrowserEvent, eventName, ...args);
-        else mp.trigger(DToServerEvent.FromBrowserEvent, eventName);
+        if (args) mp.trigger(DToServerEvent.FromBrowserEventCallback, eventName, ...args);
+        else mp.trigger(DToServerEvent.FromBrowserEventCallback, eventName);
     }
 
     private addCallbackFunction(eventName: string, callback: (...args: any) => void) {

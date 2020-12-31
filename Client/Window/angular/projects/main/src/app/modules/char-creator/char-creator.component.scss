@@ -1,3 +1,111 @@
+@mixin char-creator-content {
+    .mat-action-list,
+    .mat-list {
+        .mat-list-item {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: 15px;
+
+            ::ng-deep .mat-list-item-content {
+                width: 100%;
+                justify-content: space-between;
+
+                .slider-in-row {
+                    white-space: nowrap;
+
+                    > :first-child {
+                        margin-right: 10px;
+                    }
+
+                    > :last-child {
+                        margin-left: 10px;
+                    }
+                }
+
+                > span {
+                    flex: 1 1 auto;
+                }
+
+                .item {
+                    .mat-form-field {
+                        width: auto;
+                    }
+
+                    button {
+                        flex: 0 0 auto;
+                    }
+                }
+            }
+
+            &.radio-group {
+                height: 100%;
+
+                .mat-radio-group {
+                    width: 100%;
+
+                    .mat-radio-button {
+                        width: 100%;
+                        margin-top: 5px;
+                    }
+
+                    .mat-radio-button:last-child {
+                        margin-bottom: 5px;
+                    }
+                }
+            }
+
+            &.button {
+                ::ng-deep .mat-list-item-content {
+                    justify-content: center !important;
+                }
+            }
+        }
+
+        /*.slider-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: 15px;
+
+            span {
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .slider-in-row {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+
+                .mat-icon {
+                    vertical-align: middle;
+                    width: 30px;
+                    height: auto;
+
+                    &:first-of-type {
+                        margin-right: 5px;
+                    }
+
+                    &:last-of-type {
+                        margin-left: 5px;
+                    }
+                }
+            }
+        }*/
+
+        .mat-button {
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+
+    .margin-fake {
+        min-width: 10px !important;
+        height: 100%;
+    }
+}
+
 .container {
     position: absolute;
     left: 1vw;
@@ -5,4 +113,6 @@
     max-height: 85vh;
     display: flex;
     flex-direction: column;
+
+    @include char-creator-content;
 }

@@ -1,5 +1,6 @@
 <div class="container" *ngIf="showCharCreator" [ngSwitch]="nav">
     <app-body (back)="goToMain()" *ngSwitchCase="charCreatorNav.Body"></app-body>
+    <app-clothes (back)="goToMain()" *ngSwitchCase="charCreatorNav.Clothes"></app-clothes>
     <ng-container [ngTemplateOutlet]="mainMenu" *ngSwitchCase="charCreatorNav.Main"></ng-container>
 </div>
 
@@ -9,10 +10,14 @@
             <button mat-list-item (click)="goToNav(charCreatorNav.Body)">
                 {{ 'Body' | language: settings.Lang }}
             </button>
-            <button mat-list-item (click)="goToNav(charCreatorNav.Clothes)" disabled>{{ 'Clothes' | language: settings.Lang }} (WIP)</button>
-            <button mat-list-item (click)="cancel()">
-                {{ 'Cancel' | language: settings.Lang }}
+            <button mat-list-item (click)="goToNav(charCreatorNav.Clothes)">
+                {{ 'Clothes' | language: settings.Lang }}
             </button>
+            <mat-list-item>
+                <button class="close-button" mat-button (click)="cancel()">
+                    {{ 'Cancel' | language: settings.Lang }}
+                </button>
+            </mat-list-item>
         </mat-action-list>
     </tds-window>
 </ng-template>

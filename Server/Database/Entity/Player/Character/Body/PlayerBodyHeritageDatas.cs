@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 using TDS.Server.Database.Interfaces;
 using TDS.Shared.Data.Models.CharCreator;
 
-namespace TDS.Server.Database.Entity.Player.Character
+namespace TDS.Server.Database.Entity.Player.Character.Body
 {
-    public class PlayerCharHeritageDatas : IPlayerDataTable
+    public class PlayerBodyHeritageDatas : IPlayerDataTable
     {
         [JsonIgnore]
         public int PlayerId { get; set; }
@@ -26,16 +26,16 @@ namespace TDS.Server.Database.Entity.Player.Character
         [JsonProperty("3")]
         public float SkinTonePercentage { get; set; }
 
-        public virtual PlayerCharDatas CharDatas { get; set; }
+        public virtual PlayerBodyDatas BodyDatas { get; set; }
     }
 
-    public class PlayerCharHeritageDatasConfiguration : IEntityTypeConfiguration<PlayerCharHeritageDatas>
+    public class PlayerBodyHeritageDatasConfiguration : IEntityTypeConfiguration<PlayerBodyHeritageDatas>
     {
-        public void Configure(EntityTypeBuilder<PlayerCharHeritageDatas> builder)
+        public void Configure(EntityTypeBuilder<PlayerBodyHeritageDatas> builder)
         {
             builder.HasKey(e => new { e.PlayerId, e.Slot });
 
-            builder.HasOne(e => e.CharDatas)
+            builder.HasOne(e => e.BodyDatas)
                 .WithMany(c => c.HeritageData)
                 .HasForeignKey(e => e.PlayerId)
                 .OnDelete(DeleteBehavior.Cascade);

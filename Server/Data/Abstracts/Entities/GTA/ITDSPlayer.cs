@@ -61,7 +61,7 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
                 ? SharedConstants.ServerTeamSuffix + (Entity is { } ? Entity.Name : Name)
                 : (Entity is { } ? Entity.Name : Name));
 
-        public PedHash FreemodeSkin => Entity?.CharDatas.GeneralData.ElementAt(Entity.CharDatas.Slot).IsMale == true
+        public PedHash FreemodeSkin => Entity?.BodyDatas.GeneralData.ElementAt(Entity.BodyDatas.Slot).IsMale == true
             ? PedHash.FreemodeMale01
             : PedHash.FreemodeFemale01;
 

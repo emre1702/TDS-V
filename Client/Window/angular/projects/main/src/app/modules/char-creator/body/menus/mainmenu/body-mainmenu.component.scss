@@ -1,4 +1,7 @@
-.mat-action-list {
+@import '../../../char-creator.component.scss';
+@include char-creator-content;
+
+/*.mat-action-list {
     * {
         width: 100%;
     }
@@ -18,4 +21,4 @@
     .save-button {
         margin-top: 10px;
     }
-}
+}*/

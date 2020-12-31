@@ -9,6 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS.Server.Database.Entity;
 using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.CharCreator;
 using TDS.Shared.Data.Enums.Userpanel;
 
 namespace TDS.Server.Database.Migrations
@@ -22,6 +23,7 @@ namespace TDS.Server.Database.Migrations
             modelBuilder
                 .HasPostgresEnum(null, "challenge_frequency", new[] { "hourly", "daily", "weekly", "monthly", "yearly", "forever" })
                 .HasPostgresEnum(null, "challenge_type", new[] { "kills", "assists", "damage", "play_time", "round_played", "bomb_defuse", "bomb_plant", "killstreak", "buy_maps", "review_maps", "read_the_rules", "read_the_faq", "change_settings", "join_discord_server", "write_helpful_issue", "creator_of_accepted_map", "be_helpful_enough" })
+                .HasPostgresEnum(null, "clothes_data_key", new[] { "main", "hats", "glasses", "masks", "jackets", "shirts", "hands", "accessories", "bags", "legs", "shoes", "body_armors", "decals", "ear_accessories", "watches", "bracelets", "slot" })
                 .HasPostgresEnum(null, "freeroam_vehicle_type", new[] { "car", "helicopter", "plane", "bike", "boat" })
                 .HasPostgresEnum(null, "hud_design", new[] { "no_hud_design", "bonus_v1" })
                 .HasPostgresEnum(null, "language", new[] { "german", "english" })
@@ -42,7 +44,7 @@ namespace TDS.Server.Database.Migrations
                 .HasPostgresExtension("tsm_system_rows")
                 .UseIdentityByDefaultColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Admin.AdminLevelNames", b =>
                 {
@@ -2768,7 +2770,7 @@ namespace TDS.Server.Database.Migrations
                     b.ToTable("LogRests");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharAppearanceDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyAppearanceDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -2856,10 +2858,10 @@ namespace TDS.Server.Database.Migrations
 
                     b.HasKey("PlayerId", "Slot");
 
-                    b.ToTable("PlayerCharAppearanceDatas");
+                    b.ToTable("PlayerBodyAppearanceDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -2869,10 +2871,10 @@ namespace TDS.Server.Database.Migrations
 
                     b.HasKey("PlayerId");
 
-                    b.ToTable("PlayerCharDatas");
+                    b.ToTable("PlayerBodyDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharFeaturesDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyFeaturesDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -2942,10 +2944,10 @@ namespace TDS.Server.Database.Migrations
 
                     b.HasKey("PlayerId", "Slot");
 
-                    b.ToTable("PlayerCharFeaturesDatas");
+                    b.ToTable("PlayerBodyFeaturesDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharGeneralDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyGeneralDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -2958,10 +2960,10 @@ namespace TDS.Server.Database.Migrations
 
                     b.HasKey("PlayerId", "Slot");
 
-                    b.ToTable("PlayerCharGeneralDatas");
+                    b.ToTable("PlayerBodyGeneralDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharHairAndColorsDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyHairAndColorsDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -2998,10 +3000,10 @@ namespace TDS.Server.Database.Migrations
 
                     b.HasKey("PlayerId", "Slot");
 
-                    b.ToTable("PlayerCharHairAndColorsDatas");
+                    b.ToTable("PlayerBodyHairAndColorsDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharHeritageDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyHeritageDatas", b =>
                 {
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
@@ -3023,7 +3025,212 @@ namespace TDS.Server.Database.Migrations
 
                     b.HasKey("PlayerId", "Slot");
 
-                    b.ToTable("PlayerCharHeritageDatas");
+                    b.ToTable("PlayerBodyHeritageDatas");
+                });
+
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("Slot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey>("Key")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int>("DrawableId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TextureId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PlayerId", "Slot", "Key");
+
+                    b.HasIndex("PlayerId", "Slot")
+                        .IsUnique();
+
+                    b.ToTable("PlayerClothesComponentOrPropData");
+                });
+
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesData", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("Slot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("AccessoryKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("AccessoryPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("AccessorySlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("BagKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("BagPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("BagSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("BodyArmorKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("BodyArmorPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("BodyArmorSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("BraceletKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("BraceletPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("BraceletSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("DecalKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("DecalPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("DecalSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("EarAccessoryKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("EarAccessoryPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("EarAccessorySlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("GlassesKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("GlassesPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("GlassesSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("HandsKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("HandsPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("HandsSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("HatKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("HatPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("HatSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("JacketKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("JacketPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("JacketSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("LegsKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("LegsPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("LegsSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("MaskKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("MaskPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("MaskSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("ShirtKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("ShirtPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("ShirtSlot")
+                        .HasColumnType("smallint");
+
+                    b.Property<ClothesDataKey?>("ShoesKey")
+                        .HasColumnType("clothes_data_key");
+
+                    b.Property<int?>("ShoesPlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte?>("ShoesSlot")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("PlayerId", "Slot");
+
+                    b.HasIndex("AccessoryPlayerId", "AccessorySlot", "AccessoryKey");
+
+                    b.HasIndex("BagPlayerId", "BagSlot", "BagKey");
+
+                    b.HasIndex("BodyArmorPlayerId", "BodyArmorSlot", "BodyArmorKey");
+
+                    b.HasIndex("BraceletPlayerId", "BraceletSlot", "BraceletKey");
+
+                    b.HasIndex("DecalPlayerId", "DecalSlot", "DecalKey");
+
+                    b.HasIndex("EarAccessoryPlayerId", "EarAccessorySlot", "EarAccessoryKey");
+
+                    b.HasIndex("GlassesPlayerId", "GlassesSlot", "GlassesKey");
+
+                    b.HasIndex("HandsPlayerId", "HandsSlot", "HandsKey");
+
+                    b.HasIndex("HatPlayerId", "HatSlot", "HatKey");
+
+                    b.HasIndex("JacketPlayerId", "JacketSlot", "JacketKey");
+
+                    b.HasIndex("LegsPlayerId", "LegsSlot", "LegsKey");
+
+                    b.HasIndex("MaskPlayerId", "MaskSlot", "MaskKey");
+
+                    b.HasIndex("ShirtPlayerId", "ShirtSlot", "ShirtKey");
+
+                    b.HasIndex("ShoesPlayerId", "ShoesSlot", "ShoesKey");
+
+                    b.ToTable("PlayerClothesData");
+                });
+
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesDatas", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("SelectedSlot")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("PlayerId");
+
+                    b.ToTable("PlayerClothesDatas");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerBans", b =>
@@ -3079,16 +3286,6 @@ namespace TDS.Server.Database.Migrations
                     b.HasIndex("Serial");
 
                     b.ToTable("PlayerBans");
-                });
-
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerClothes", b =>
-                {
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("PlayerId");
-
-                    b.ToTable("PlayerClothes");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerCommands", b =>
@@ -7171,70 +7368,185 @@ namespace TDS.Server.Database.Migrations
                     b.Navigation("LobbyNavigation");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharAppearanceDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyAppearanceDatas", b =>
                 {
-                    b.HasOne("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", "BodyDatas")
                         .WithMany("AppearanceData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CharDatas");
+                    b.Navigation("BodyDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", b =>
                 {
                     b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
-                        .WithOne("CharDatas")
-                        .HasForeignKey("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", "PlayerId")
+                        .WithOne("BodyDatas")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharFeaturesDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyFeaturesDatas", b =>
                 {
-                    b.HasOne("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", "BodyDatas")
                         .WithMany("FeaturesData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CharDatas");
+                    b.Navigation("BodyDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharGeneralDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyGeneralDatas", b =>
                 {
-                    b.HasOne("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", "BodyDatas")
                         .WithMany("GeneralData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CharDatas");
+                    b.Navigation("BodyDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharHairAndColorsDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyHairAndColorsDatas", b =>
                 {
-                    b.HasOne("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", "BodyDatas")
                         .WithMany("HairAndColorsData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CharDatas");
+                    b.Navigation("BodyDatas");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharHeritageDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyHeritageDatas", b =>
                 {
-                    b.HasOne("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", "CharDatas")
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", "BodyDatas")
                         .WithMany("HeritageData")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CharDatas");
+                    b.Navigation("BodyDatas");
+                });
+
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", b =>
+                {
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesData", null)
+                        .WithOne("Watch")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "PlayerId", "Slot")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesData", b =>
+                {
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesDatas", "ClothesDatas")
+                        .WithMany("DatasPerSlot")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Accessory")
+                        .WithMany()
+                        .HasForeignKey("AccessoryPlayerId", "AccessorySlot", "AccessoryKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Bag")
+                        .WithMany()
+                        .HasForeignKey("BagPlayerId", "BagSlot", "BagKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "BodyArmor")
+                        .WithMany()
+                        .HasForeignKey("BodyArmorPlayerId", "BodyArmorSlot", "BodyArmorKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Bracelet")
+                        .WithMany()
+                        .HasForeignKey("BraceletPlayerId", "BraceletSlot", "BraceletKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Decal")
+                        .WithMany()
+                        .HasForeignKey("DecalPlayerId", "DecalSlot", "DecalKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "EarAccessory")
+                        .WithMany()
+                        .HasForeignKey("EarAccessoryPlayerId", "EarAccessorySlot", "EarAccessoryKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Glasses")
+                        .WithMany()
+                        .HasForeignKey("GlassesPlayerId", "GlassesSlot", "GlassesKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Hands")
+                        .WithMany()
+                        .HasForeignKey("HandsPlayerId", "HandsSlot", "HandsKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Hat")
+                        .WithMany()
+                        .HasForeignKey("HatPlayerId", "HatSlot", "HatKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Jacket")
+                        .WithMany()
+                        .HasForeignKey("JacketPlayerId", "JacketSlot", "JacketKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Legs")
+                        .WithMany()
+                        .HasForeignKey("LegsPlayerId", "LegsSlot", "LegsKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Mask")
+                        .WithMany()
+                        .HasForeignKey("MaskPlayerId", "MaskSlot", "MaskKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Shirt")
+                        .WithMany()
+                        .HasForeignKey("ShirtPlayerId", "ShirtSlot", "ShirtKey");
+
+                    b.HasOne("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesComponentOrPropData", "Shoes")
+                        .WithMany()
+                        .HasForeignKey("ShoesPlayerId", "ShoesSlot", "ShoesKey");
+
+                    b.Navigation("Accessory");
+
+                    b.Navigation("Bag");
+
+                    b.Navigation("BodyArmor");
+
+                    b.Navigation("Bracelet");
+
+                    b.Navigation("ClothesDatas");
+
+                    b.Navigation("Decal");
+
+                    b.Navigation("EarAccessory");
+
+                    b.Navigation("Glasses");
+
+                    b.Navigation("Hands");
+
+                    b.Navigation("Hat");
+
+                    b.Navigation("Jacket");
+
+                    b.Navigation("Legs");
+
+                    b.Navigation("Mask");
+
+                    b.Navigation("Shirt");
+
+                    b.Navigation("Shoes");
+                });
+
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesDatas", b =>
+                {
+                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
+                        .WithOne("ClothesDatas")
+                        .HasForeignKey("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesDatas", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerBans", b =>
@@ -7259,17 +7571,6 @@ namespace TDS.Server.Database.Migrations
                     b.Navigation("Admin");
 
                     b.Navigation("Lobby");
-
-                    b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.PlayerClothes", b =>
-                {
-                    b.HasOne("TDS.Server.Database.Entity.Player.Players", "Player")
-                        .WithOne("PlayerClothes")
-                        .HasForeignKey("TDS.Server.Database.Entity.Player.PlayerClothes", "PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Player");
                 });
@@ -7782,7 +8083,7 @@ namespace TDS.Server.Database.Migrations
                     b.Navigation("Teams");
                 });
 
-            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.PlayerCharDatas", b =>
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Body.PlayerBodyDatas", b =>
                 {
                     b.Navigation("AppearanceData");
 
@@ -7795,6 +8096,16 @@ namespace TDS.Server.Database.Migrations
                     b.Navigation("HeritageData");
                 });
 
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesData", b =>
+                {
+                    b.Navigation("Watch");
+                });
+
+            modelBuilder.Entity("TDS.Server.Database.Entity.Player.Character.Clothes.PlayerClothesDatas", b =>
+                {
+                    b.Navigation("DatasPerSlot");
+                });
+
             modelBuilder.Entity("TDS.Server.Database.Entity.Player.Players", b =>
                 {
                     b.Navigation("AdminMembers");
@@ -7805,9 +8116,11 @@ namespace TDS.Server.Database.Migrations
 
                     b.Navigation("ApplicationQuestions");
 
+                    b.Navigation("BodyDatas");
+
                     b.Navigation("Challenges");
 
-                    b.Navigation("CharDatas");
+                    b.Navigation("ClothesDatas");
 
                     b.Navigation("Commands");
 
@@ -7830,8 +8143,6 @@ namespace TDS.Server.Database.Migrations
                     b.Navigation("PlayerBansAdmin");
 
                     b.Navigation("PlayerBansPlayer");
-
-                    b.Navigation("PlayerClothes");
 
                     b.Navigation("PlayerLobbyStats");
 

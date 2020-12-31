@@ -84,7 +84,8 @@ namespace TDS.Client.Handler.Appearance.CharCreator.Body
 
         internal static void UpdateHair(this PedBase ped, int id)
         {
-            ped.SetComponentVariation(2, id, 0, 2);
+            var paletteId = ped.GetPaletteVariation(2);
+            ped.SetComponentVariation(2, id, 0, paletteId);
         }
 
         internal static void UpdateHairColor(this PedBase ped, int hairColor, int hairHighlightColor)

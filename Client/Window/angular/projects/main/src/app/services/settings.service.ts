@@ -268,10 +268,10 @@ export class SettingsService {
 
         this.setChallengeInfosToAll();
 
-        this.LanguageChanged.setMaxListeners(40);
-        this.SettingsLoaded.setMaxListeners(40);
-        this.ThemeSettingChangedBefore.setMaxListeners(40);
-        this.ThemeSettingChanged.setMaxListeners(40);
-        this.ThemeSettingChangedAfter.setMaxListeners(40);
+        this.LanguageChanged.setMaxListeners(100);
+        this.SettingsLoaded.setMaxListeners(100);
+        this.ThemeSettingChangedBefore.setMaxListeners(100);
+        this.ThemeSettingChanged.setMaxListeners(100);
+        this.ThemeSettingChangedAfter.setMaxListeners(100);
     }
 }

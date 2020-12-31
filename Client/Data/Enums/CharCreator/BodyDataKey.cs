@@ -1,6 +1,6 @@
-﻿namespace TDS.Client.Data.Enums
+﻿namespace TDS.Client.Data.Enums.CharCreator
 {
-    public enum CharCreatorDataKey
+    public enum BodyDataKey
     {
         // Main
         IsMale,

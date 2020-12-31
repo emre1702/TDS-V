@@ -5,8 +5,6 @@ namespace TDS.Client.Data.Extensions
 {
     public static class ColorExtensions
     {
-        #region Public Methods
-
         public static Color GetBetween(this Color first, Color second, float percentage = 0.5f)
         {
             return Color.FromArgb(
@@ -23,7 +21,5 @@ namespace TDS.Client.Data.Extensions
 
             return l < 0.4 ? Color.White : Color.Black;
         }
-
-        #endregion Public Methods
     }
 }

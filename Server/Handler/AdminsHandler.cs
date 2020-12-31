@@ -34,7 +34,7 @@ namespace TDS.Server.Handler
             }
         }
 
-        private readonly Dictionary<short, AdminLevelDto> _adminLevels  = new Dictionary<short, AdminLevelDto>();
+        private readonly Dictionary<short, AdminLevelDto> _adminLevels = new Dictionary<short, AdminLevelDto>();
 
         public AdminsHandler(TDSDbContext dbContext, EventsHandler eventsHandler)
         {
@@ -134,7 +134,7 @@ namespace TDS.Server.Handler
             }
         }
 
-        private void OnPlayerAdminLevelChange(ITDSPlayer player, short oldAdminLevel, short newAdminLevel) 
+        private void OnPlayerAdminLevelChange(ITDSPlayer player, short oldAdminLevel, short newAdminLevel)
         {
             lock (_adminLevels)
             {

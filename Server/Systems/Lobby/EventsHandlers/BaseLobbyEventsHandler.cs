@@ -38,11 +38,19 @@ namespace TDS.Server.LobbySystem.EventsHandlers
         public bool IsRemoved { get; private set; }
 
         private readonly EventsHandler _eventsHandler;
-        private readonly IBaseLobby _lobby;
+        protected IBaseLobby Lobby { get; }
         protected ILoggingHandler LoggingHandler { get; }
 
         public BaseLobbyEventsHandler(IBaseLobby lobby, EventsHandler eventsHandler, ILoggingHandler loggingHandler)
-            => (_lobby, _eventsHandler, LoggingHandler) = (lobby, eventsHandler, loggingHandler);
+        {
+            (Lobby, _eventsHandler, LoggingHandler) = (lobby, eventsHandler, loggingHandler);
+
+            RemoveAfter += RemoveEvents;
+        }
+
+        protected virtual void RemoveEvents(IBaseLobby lobby)
+        {
+        }
 
         public async Task TriggerCreated(LobbyDb entity)
         {
@@ -52,7 +60,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                 if (task is { })
                     await task.ConfigureAwait(false);
                 CreatedAfter?.Invoke(entity);
-                _eventsHandler.OnLobbyCreated(_lobby);
+                _eventsHandler.OnLobbyCreated(Lobby);
             }
             catch (Exception ex)
             {
@@ -65,11 +73,11 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             try
             {
                 IsRemoved = true;
-                var task = Remove?.InvokeAsync(_lobby);
+                var task = Remove?.InvokeAsync(Lobby);
                 if (task is { })
                     await task.ConfigureAwait(false);
-                RemoveAfter?.Invoke(_lobby);
-                _eventsHandler.OnLobbyRemoved(_lobby);
+                RemoveAfter?.Invoke(Lobby);
+                _eventsHandler.OnLobbyRemoved(Lobby);
             }
             catch (Exception ex)
             {
@@ -87,8 +95,8 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                 task = PlayerLeftAfter?.InvokeAsync((player, hadLifes));
                 if (task.HasValue)
                     await task.Value.ConfigureAwait(false);
-                _eventsHandler.OnLobbyLeave(player, _lobby);
-                player.Events.TriggerLobbyLeft(_lobby);
+                _eventsHandler.OnLobbyLeave(player, Lobby);
+                player.Events.TriggerLobbyLeft(Lobby);
             }
             catch (Exception ex)
             {
@@ -106,8 +114,8 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                 task = PlayerJoinedAfter?.InvokeAsync((player, teamIndex));
                 if (task.HasValue)
                     await task.Value.ConfigureAwait(false);
-                _eventsHandler.OnLobbyJoin(player, _lobby);
-                player.Events.TriggerLobbyJoined(_lobby);
+                _eventsHandler.OnLobbyJoin(player, Lobby);
+                player.Events.TriggerLobbyJoined(Lobby);
             }
             catch (Exception ex)
             {
@@ -120,7 +128,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             try
             {
                 NewBan?.Invoke(ban);
-                _eventsHandler.OnNewBan(ban, _lobby.Entity.IsOfficial, targetDiscordUserId);
+                _eventsHandler.OnNewBan(ban, Lobby.Entity.IsOfficial, targetDiscordUserId);
             }
             catch (Exception ex)
             {

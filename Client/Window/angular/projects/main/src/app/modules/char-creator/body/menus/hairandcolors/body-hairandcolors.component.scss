@@ -1,4 +1,7 @@
-.mat-list {
+@import '../../../char-creator.component.scss';
+@include char-creator-content;
+
+/*.mat-list {
     * {
         width: 100%;
     }
@@ -19,4 +22,4 @@
 .margin-fake {
     min-width: 10px !important;
     height: 100%;
-}
+}*/

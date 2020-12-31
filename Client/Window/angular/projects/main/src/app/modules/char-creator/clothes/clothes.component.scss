@@ -1,0 +1,9 @@
+@import '../char-creator.component.scss';
+
+tds-window {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+
+    @include char-creator-content;
+}
