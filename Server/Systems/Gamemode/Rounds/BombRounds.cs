@@ -65,7 +65,7 @@ namespace TDS.Server.GamemodesSystem.Rounds
             {
                 var bombPosJson = Serializer.ToClient(_gamemode.Specials.Bomb!.Position);
                 var bombDetonateTimer = _gamemode.Specials.BombDetonateTimer!;
-                var startAtMs = bombDetonateTimer.ExecuteAfterMs - bombDetonateTimer.RemainingMsToExecute;
+                var startAtMs = (int)(bombDetonateTimer.ExecuteAfterMs - bombDetonateTimer.RemainingMsToExecute);
 
                 NAPI.Task.RunSafe(() =>
                    data.Player.TriggerEvent(ToClientEvent.BombPlanted, bombPosJson, false, startAtMs));

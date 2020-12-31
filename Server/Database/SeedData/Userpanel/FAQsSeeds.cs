@@ -63,7 +63,27 @@ namespace TDS.Server.Database.SeedData.Userpanel
                             + "\n$1 - Karte wurde zufällig ausgewählt"
                             + "\n$5 - Karte wurde per Abstimmung gewählt"
                             + "\n$15 - Karte wurde gekauft"
+                },
+
+                new FAQs
+                {
+                    Id = 4,
+                    Language = Language.English,
+                    Question = "Why are the shirts in e.g. Arena differently colored?",
+                    Answer = "The color of the shirts gives you these two information:"
+                            + "\n1. Color of the sleeves: Enemy (red) or friend (green)"
+                            + "\n2. Rest: Team color"
+                },
+                new FAQs
+                {
+                    Id = 4,
+                    Language = Language.German,
+                    Question = "Warum sind die Shirts in z.B. Arena verschieden farbig?",
+                    Answer = "Die Farbe der Shirts gibt dir diese zwei Informationen:"
+                            + "\n1. Farbe der Ärmel: Feind (rot) oder Freund (grün)"
+                            + "\n2. Rest: Team-Farbe"
                 }
+
             );
             return modelBuilder;
         }
