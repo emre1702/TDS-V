@@ -4,6 +4,7 @@ using System.Net;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TDS.Server.Database.Entity;
@@ -14,9 +15,10 @@ using TDS.Shared.Data.Enums.Userpanel;
 namespace TDS.Server.Database.Migrations
 {
     [DbContext(typeof(TDSDbContext))]
-    partial class TDSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201231141437_CharCreatorToBodyRename")]
+    partial class CharCreatorToBodyRename
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

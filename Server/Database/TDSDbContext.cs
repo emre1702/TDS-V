@@ -12,7 +12,7 @@ using TDS.Server.Database.Entity.GangEntities;
 using TDS.Server.Database.Entity.LobbyEntities;
 using TDS.Server.Database.Entity.Log;
 using TDS.Server.Database.Entity.Player;
-using TDS.Server.Database.Entity.Player.Character;
+using TDS.Server.Database.Entity.Player.Character.Body;
 using TDS.Server.Database.Entity.Player.Settings;
 using TDS.Server.Database.Entity.Rest;
 using TDS.Server.Database.Entity.Server;
@@ -99,12 +99,12 @@ namespace TDS.Server.Database.Entity
         public virtual DbSet<Offlinemessages> Offlinemessages { get; set; }
         public virtual DbSet<PlayerBans> PlayerBans { get; set; }
         public virtual DbSet<PlayerChallenges> PlayerChallenges { get; set; }
-        public virtual DbSet<PlayerCharAppearanceDatas> PlayerCharAppearanceDatas { get; set; }
-        public virtual DbSet<PlayerCharDatas> PlayerCharDatas { get; set; }
-        public virtual DbSet<PlayerCharFeaturesDatas> PlayerCharFeaturesDatas { get; set; }
-        public virtual DbSet<PlayerCharGeneralDatas> PlayerCharGeneralDatas { get; set; }
-        public virtual DbSet<PlayerCharHairAndColorsDatas> PlayerCharHairAndColorsDatas { get; set; }
-        public virtual DbSet<PlayerCharHeritageDatas> PlayerCharHeritageDatas { get; set; }
+        public virtual DbSet<PlayerBodyAppearanceDatas> PlayerBodyAppearanceDatas { get; set; }
+        public virtual DbSet<PlayerBodyDatas> PlayerBodyDatas { get; set; }
+        public virtual DbSet<PlayerBodyFeaturesDatas> PlayerBodyFeaturesDatas { get; set; }
+        public virtual DbSet<PlayerBodyGeneralDatas> PlayerBodyGeneralDatas { get; set; }
+        public virtual DbSet<PlayerBodyHairAndColorsDatas> PlayerBodyHairAndColorsDatas { get; set; }
+        public virtual DbSet<PlayerBodyHeritageDatas> PlayerBodyHeritageDatas { get; set; }
         public virtual DbSet<PlayerClothes> PlayerClothes { get; set; }
         public virtual DbSet<PlayerCommands> PlayerCommands { get; set; }
         public virtual DbSet<PlayerKillInfoSettings> PlayerKillInfoSettings { get; set; }
@@ -132,7 +132,6 @@ namespace TDS.Server.Database.Entity
         {
             base.OnModelCreating(modelBuilder);
 
-
             modelBuilder
                 .UseIdentityByDefaultColumns()
                 .HasPostgresExtension("tsm_system_rows")
@@ -140,7 +139,7 @@ namespace TDS.Server.Database.Entity
                 .HasEnums()
 
                 .ApplyConfigurationsFromAssembly(GetType().Assembly)
-                
+
                 .HasSeeds();
         }
     }
