@@ -7,6 +7,7 @@ using TDS.Server.Data.Interfaces.LobbySystem.Actions;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.GangSystem;
 using TDS.Server.Handler.Helper;
@@ -37,8 +38,9 @@ namespace TDS.Server.LobbySystem.Lobbies
 
         public GangLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, GangActionAreasHandler gangActionAreasHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, GangActionAreasHandler gangActionAreasHandler,
+            LobbiesHandler lobbiesHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
             _gangActionAreasHandler = gangActionAreasHandler;
         }

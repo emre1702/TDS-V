@@ -4,9 +4,9 @@
         <div class="margin-fake"></div>
         <div class="item">
             <mat-form-field color="accent">
-                <input matInput type="number" min="-1" [max]="amount - 1" [ngModel]="drawableId" (ngModelChange)="drawableIdChanged($event)" />
+                <input matInput type="number" min="0" [max]="amount" [ngModel]="drawableId" (ngModelChange)="drawableIdChanged($event)" />
             </mat-form-field>
-            <button mat-icon-button (click)="drawableId = -1">
+            <button mat-icon-button (click)="drawableId = 0">
                 <mat-icon color="accent">delete_outline</mat-icon>
             </button>
         </div>
@@ -15,7 +15,7 @@
         <span>Texture Id:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
-            <input matInput type="number" min="-1" [max]="amount - 1" [ngModel]="textureId" (ngModelChange)="textureIdChanged($event)" />
+            <input matInput type="number" min="-1" [max]="amount" [ngModel]="textureId" (ngModelChange)="textureIdChanged($event)" />
         </mat-form-field>
         <button mat-icon-button (click)="textureId = -1">
             <mat-icon color="accent">delete_outline</mat-icon>

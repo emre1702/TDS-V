@@ -82,77 +82,77 @@ namespace TDS.Server.Database.Entity.Player.Character.Clothes
 
             builder.HasOne(e => e.Accessory)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Accessories })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Bag)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Bags })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.BodyArmor)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.BodyArmors })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Bracelet)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Bracelets })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Decal)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Decals })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.EarAccessory)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.EarAccessories })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Glasses)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Glasses })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Hands)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Hands })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Hat)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Hats })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Jacket)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Jackets })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Legs)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Legs })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Mask)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Masks })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Shirt)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Shirts })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Shoes)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Shoes })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Watch)
                 .WithOne()
-                .HasForeignKey<PlayerClothesData>(e => new { e.PlayerId, e.Slot, ClothesDataKey.Watches })
+                .HasForeignKey<PlayerClothesComponentOrPropData>(e => new { e.PlayerId, e.Slot })
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

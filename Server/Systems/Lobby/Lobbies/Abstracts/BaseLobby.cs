@@ -17,6 +17,7 @@ using TDS.Server.Data.Interfaces.LobbySystem.Sounds;
 using TDS.Server.Data.Interfaces.LobbySystem.Sync;
 using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Helper;
 using TDS.Server.LobbySystem.BansHandlers;
@@ -51,6 +52,8 @@ namespace TDS.Server.LobbySystem.Lobbies.Abstracts
         public EventsHandler GlobalEventsHandler { get; }
         public LangHelper LangHelper { get; }
         protected ILoggingHandler LoggingHandler { get; }
+        protected LobbiesHandler LobbiesHandler { get; }
+        protected RemoteBrowserEventsHandler RemoteBrowserEventsHandler { get; }
         public IBaseLobbyMapHandler MapHandler { get; private set; }
         public IBaseLobbyNatives Natives { get; private set; }
         public IBaseLobbyNotifications Notifications { get; private set; }
@@ -66,7 +69,8 @@ namespace TDS.Server.LobbySystem.Lobbies.Abstracts
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         protected BaseLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler)
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         {
             Entity = entity;
@@ -76,6 +80,8 @@ namespace TDS.Server.LobbySystem.Lobbies.Abstracts
             ServiceProvider = serviceProvider;
             TeamsProvider = teamsProvider;
             LoggingHandler = loggingHandler;
+            LobbiesHandler = lobbiesHandler;
+            RemoteBrowserEventsHandler = remoteBrowserEventsHandler;
 
             InitDependencies();
 

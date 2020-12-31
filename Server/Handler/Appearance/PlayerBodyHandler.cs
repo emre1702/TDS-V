@@ -27,8 +27,8 @@ namespace TDS.Server.Handler.Appearance
             _lobbiesHandler = lobbiesHandler;
             _settingsHandler = settingsHandler;
 
-            eventsHandler.PlayerLoggedIn += LoadPlayerChar;
-            eventsHandler.PlayerRegisteredBefore += InitPlayerChar;
+            eventsHandler.PlayerLoggedIn += LoadPlayerBody;
+            eventsHandler.PlayerRegisteredBefore += InitPlayerBody;
 
             remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.SaveBodyData, Save);
         }
@@ -58,7 +58,7 @@ namespace TDS.Server.Handler.Appearance
                 }).ConfigureAwait(false);
 
                 await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
-                LoadPlayerChar(player);
+                LoadPlayerBody(player);
 
                 await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
                 return "";
@@ -79,7 +79,7 @@ namespace TDS.Server.Handler.Appearance
                 .ForEach(p => p.SetValue(newObj, p.GetValue(originalObj)));
         }
 
-        public async ValueTask InitPlayerChar((ITDSPlayer player, Players dbPlayer) args)
+        public async ValueTask InitPlayerBody((ITDSPlayer player, Players dbPlayer) args)
         {
             byte amountSlots = _settingsHandler.ServerSettings.AmountCharSlots;
 
@@ -95,7 +95,7 @@ namespace TDS.Server.Handler.Appearance
             args.dbPlayer.BodyDatas = charDatas;
 
             for (byte i = 0; i < amountSlots; ++i)
-                AddCharSlot(charDatas, i);
+                AddBodySlot(charDatas, i);
 
             await args.player.Database.ExecuteForDBAsyncUnsafe(async dbContext =>
             {
@@ -103,47 +103,47 @@ namespace TDS.Server.Handler.Appearance
             });
         }
 
-        private void AddCharSlot(PlayerBodyDatas charDatas, byte slot)
+        private void AddBodySlot(PlayerBodyDatas bodyDatas, byte slot)
         {
             var isMale = SharedUtils.GetRandom(true, false);
-            charDatas.GeneralData.Add(new PlayerBodyGeneralDatas
+            bodyDatas.GeneralData.Add(new PlayerBodyGeneralDatas
             {
                 Slot = slot,
-                BodyDatas = charDatas,
-                PlayerId = charDatas.PlayerId,
+                BodyDatas = bodyDatas,
+                PlayerId = bodyDatas.PlayerId,
                 IsMale = isMale
             });
-            charDatas.HeritageData.Add(new PlayerBodyHeritageDatas
+            bodyDatas.HeritageData.Add(new PlayerBodyHeritageDatas
             {
                 Slot = slot,
-                BodyDatas = charDatas,
-                PlayerId = charDatas.PlayerId,
+                BodyDatas = bodyDatas,
+                PlayerId = bodyDatas.PlayerId,
                 FatherIndex = 0,
                 MotherIndex = 21,
                 ResemblancePercentage = isMale ? 1 : 0,
                 SkinTonePercentage = isMale ? 1 : 0
             });
-            charDatas.FeaturesData.Add(new PlayerBodyFeaturesDatas
+            bodyDatas.FeaturesData.Add(new PlayerBodyFeaturesDatas
             {
                 Slot = slot,
-                BodyDatas = charDatas,
-                PlayerId = charDatas.PlayerId,
+                BodyDatas = bodyDatas,
+                PlayerId = bodyDatas.PlayerId,
             });
-            charDatas.AppearanceData.Add(new PlayerBodyAppearanceDatas
+            bodyDatas.AppearanceData.Add(new PlayerBodyAppearanceDatas
             {
                 Slot = slot,
-                BodyDatas = charDatas,
-                PlayerId = charDatas.PlayerId
+                BodyDatas = bodyDatas,
+                PlayerId = bodyDatas.PlayerId
             });
-            charDatas.HairAndColorsData.Add(new PlayerBodyHairAndColorsDatas
+            bodyDatas.HairAndColorsData.Add(new PlayerBodyHairAndColorsDatas
             {
                 Slot = slot,
-                BodyDatas = charDatas,
-                PlayerId = charDatas.PlayerId
+                BodyDatas = bodyDatas,
+                PlayerId = bodyDatas.PlayerId
             });
         }
 
-        private async void LoadPlayerChar(ITDSPlayer player)
+        private async void LoadPlayerBody(ITDSPlayer player)
         {
             if (player.Entity is null || player.Entity.BodyDatas is null)
                 return;
@@ -152,7 +152,7 @@ namespace TDS.Server.Handler.Appearance
             var data = player.Entity.BodyDatas;
             while (data.AppearanceData.Count < _settingsHandler.ServerSettings.AmountCharSlots)
             {
-                AddCharSlot(data, (byte)data.AppearanceData.Count);
+                AddBodySlot(data, (byte)data.AppearanceData.Count);
             }
 
             var currentHairAndColor = data.HairAndColorsData.First(d => d.Slot == data.Slot);
@@ -163,7 +163,6 @@ namespace TDS.Server.Handler.Appearance
 
             NAPI.Task.RunSafe(() =>
             {
-                player.SetClothes(11, 0, 0);
                 player.SetClothes(2, currentHairAndColor.Hair, 0);
                 player.SetCustomization(
                     gender: currentGeneralData.IsMale,

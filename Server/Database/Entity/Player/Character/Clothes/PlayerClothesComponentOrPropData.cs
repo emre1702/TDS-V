@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GTANetworkAPI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
 using System;
@@ -27,6 +28,9 @@ namespace TDS.Server.Database.Entity.Player.Character.Clothes
 
         [JsonProperty("1")]
         public int TextureId { get; set; }
+
+        public ComponentVariation ToComponentVariation()
+            => new ComponentVariation(DrawableId, TextureId);
     }
 
     public class PlayerClothesComponentOrPropDataConfiguration : IEntityTypeConfiguration<PlayerClothesComponentOrPropData>

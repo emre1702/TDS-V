@@ -195,7 +195,6 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddSingleton<AnnouncementsHandler>()
                .AddSingleton<AppConfigHandler>()
                .AddSingleton<ChatHandler>()
-               .AddSingleton<ClothesHandler>()
                .AddSingleton<InvitationsHandler>()
                .AddSingleton<LobbiesHandler>()
                .AddSingleton<ILoggingHandler, LoggingHandler>()

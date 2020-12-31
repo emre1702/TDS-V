@@ -16,6 +16,7 @@ using TDS.Shared.Core;
 using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Enums.CharCreator;
 using TDS.Shared.Data.Models;
+using TDS.Shared.Data.Models.CharCreator;
 using TDS.Shared.Data.Models.CharCreator.Body;
 using TDS.Shared.Data.Models.GTA;
 using TDS.Shared.Default;
@@ -47,7 +48,7 @@ namespace TDS.Client.Handler.Appearance
 
             _bodyDataHandler = new BodyDataHandler(browserHandler);
             _clothesDataHandler = new ClothesDataHandler(browserHandler);
-            _pedHandler = new CharCreatorPedHandler(loggingHandler, _bodyDataHandler);
+            _pedHandler = new CharCreatorPedHandler(loggingHandler, _bodyDataHandler, _clothesDataHandler);
             _bodyPedChangesHandler = new BodyPedChangesHandler(_pedHandler, _bodyDataHandler);
             _clothesPedChangesHandler = new ClothesPedChangesHandler(_pedHandler, _clothesDataHandler);
             _cameraHandler = new CharCreatorCameraHandler(loggingHandler, deathHandler, _pedHandler, camerasHandler, utilsHandler);
@@ -65,9 +66,9 @@ namespace TDS.Client.Handler.Appearance
             {
                 _eventsHandler.LobbyLeft += Stop;
 
-                string json = (string)args[0];
-                var _bodyData = Serializer.FromServer<BodyData>(json);
-                _dimension = Convert.ToUInt32(args[1]);
+                var bodyData = Serializer.FromServer<BodyData>((string)args[0]);
+                var clothesData = Serializer.FromServer<ClothesConfigs>((string)args[1]);
+                _dimension = Convert.ToUInt32(args[2]);
 
                 _browserHandler.Angular.ToggleCharCreator(true);
                 Chat.Show(false);
@@ -76,7 +77,8 @@ namespace TDS.Client.Handler.Appearance
                 RAGE.Elements.Player.LocalPlayer.SetAlpha(0, true);
                 _cursorHandler.Visible = true;
 
-                _bodyDataHandler.Start(_bodyData);
+                _bodyDataHandler.Start(bodyData);
+                _clothesDataHandler.Start(clothesData);
                 _pedHandler.Start(_dimension);
                 _cameraHandler.Start();
             }
@@ -101,6 +103,7 @@ namespace TDS.Client.Handler.Appearance
                 _pedHandler.Stop();
                 _cameraHandler.Stop();
                 _bodyDataHandler.Stop();
+                _clothesDataHandler.Stop();
             }
             catch (Exception ex)
             {

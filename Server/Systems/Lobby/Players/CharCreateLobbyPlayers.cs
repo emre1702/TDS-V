@@ -24,7 +24,8 @@ namespace TDS.Server.LobbySystem.Players
             if (!worked)
                 return false;
 
-            var charDatasJson = Serializer.ToClient(player.Entity.BodyDatas);
+            var bodyDatasJson = Serializer.ToClient(player.Entity.BodyDatas);
+            var clothesDatasJson = Serializer.ToClient(player.Entity.ClothesDatas);
 
             NAPI.Task.RunSafe(() =>
             {
@@ -33,7 +34,7 @@ namespace TDS.Server.LobbySystem.Players
                 player.Freeze(true);
                 player.SetInvisible(true);
 
-                player.TriggerEvent(ToClientEvent.StartCharCreator, charDatasJson, Lobby.MapHandler.Dimension);
+                player.TriggerEvent(ToClientEvent.StartCharCreator, bodyDatasJson, clothesDatasJson, Lobby.MapHandler.Dimension);
             });
 
             return true;

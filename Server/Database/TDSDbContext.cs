@@ -107,7 +107,6 @@ namespace TDS.Server.Database.Entity
         public virtual DbSet<PlayerBodyGeneralDatas> PlayerBodyGeneralDatas { get; set; }
         public virtual DbSet<PlayerBodyHairAndColorsDatas> PlayerBodyHairAndColorsDatas { get; set; }
         public virtual DbSet<PlayerBodyHeritageDatas> PlayerBodyHeritageDatas { get; set; }
-        public virtual DbSet<PlayerClothes> PlayerClothes { get; set; }
         public virtual DbSet<PlayerCommands> PlayerCommands { get; set; }
         public virtual DbSet<PlayerKillInfoSettings> PlayerKillInfoSettings { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }

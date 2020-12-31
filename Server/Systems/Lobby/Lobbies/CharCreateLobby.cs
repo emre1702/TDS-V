@@ -23,15 +23,16 @@ namespace TDS.Server.LobbySystem.Lobbies
     public class CharCreateLobby : BaseLobby, ICharCreateLobby
     {
         public CharCreateLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
         }
 
         public CharCreateLobby(ITDSPlayer player, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler, LobbiesHandler lobbiesHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(CreateEntity(player, lobbiesHandler.CharCreateLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler,
-                  serviceProvider, teamsProvider, loggingHandler)
+                  serviceProvider, teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
         }
 
@@ -40,7 +41,7 @@ namespace TDS.Server.LobbySystem.Lobbies
             lobbyDependencies ??= new CharCreateLobbyDependencies();
 
             lobbyDependencies.Bans ??= new CharCreateLobbyBansHandler(this, LangHelper);
-            lobbyDependencies.Events ??= new CharCreateLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            lobbyDependencies.Events ??= new CharCreateLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler, LobbiesHandler, RemoteBrowserEventsHandler);
             lobbyDependencies.Players ??= new CharCreateLobbyPlayers(this, lobbyDependencies.Events);
 
             base.InitDependencies(lobbyDependencies);

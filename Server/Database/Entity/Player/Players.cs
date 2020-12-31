@@ -71,7 +71,6 @@ namespace TDS.Server.Database.Entity.Player
         public virtual Gangs OwnedGang { get; set; }
         public virtual ICollection<PlayerBans> PlayerBansAdmin { get; set; }
         public virtual ICollection<PlayerBans> PlayerBansPlayer { get; set; }
-        public virtual PlayerClothes PlayerClothes { get; set; }
         public virtual ICollection<PlayerLobbyStats> PlayerLobbyStats { get; set; }
         public virtual ICollection<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }

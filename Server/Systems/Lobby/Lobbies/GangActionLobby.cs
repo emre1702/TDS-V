@@ -9,6 +9,7 @@ using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Data.Interfaces.LobbySystem.TeamsHandlers;
 using TDS.Server.Data.Interfaces.TeamsSystem;
+using TDS.Server.Handler;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Helper;
 using TDS.Server.Handler.Maps;
@@ -32,8 +33,9 @@ namespace TDS.Server.LobbySystem.Lobbies
         public new IGangActionLobbyTeamsHandler Teams => (IGangActionLobbyTeamsHandler)base.Teams;
 
         public GangActionLobby(LobbyDb entity, IBaseGangActionArea gangArea, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,
-            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
+            IServiceProvider serviceProvider, ITeamsProvider teamsProvider, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
             GangArea = gangArea;
         }

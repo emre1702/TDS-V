@@ -32,16 +32,16 @@ namespace TDS.Server.LobbySystem.Lobbies
 
         public DamageTestLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper,
             EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider,
-            ILoggingHandler loggingHandler)
-            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler)
+            ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+            : base(entity, databaseHandler, langHelper, eventsHandler, serviceProvider, teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
         }
 
         public DamageTestLobby(ITDSPlayer owner, IDatabaseHandler databaseHandler, LangHelper langHelper, LobbiesHandler lobbiesHandler,
-            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider, 
-            ILoggingHandler loggingHandler)
-            : base(CreateEntity(owner, lobbiesHandler.DamageTestLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler, serviceProvider, 
-                  teamsProvider, loggingHandler)
+            EventsHandler eventsHandler, IServiceProvider serviceProvider, ITeamsProvider teamsProvider,
+            ILoggingHandler loggingHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+            : base(CreateEntity(owner, lobbiesHandler.DamageTestLobbyDummy.Entity), databaseHandler, langHelper, eventsHandler, serviceProvider,
+                  teamsProvider, loggingHandler, lobbiesHandler, remoteBrowserEventsHandler)
         {
         }
 
@@ -52,7 +52,7 @@ namespace TDS.Server.LobbySystem.Lobbies
             lobbyDependencies.Bans ??= new DamageTestLobbyBansHandler(this, LangHelper);
             lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler ??= ServiceProvider.GetRequiredService<IDamageHandler>();
-            lobbyDependencies.Deathmatch ??= new DamageTestLobbyDeathmatch(this, (FightLobbyEventsHandler)lobbyDependencies.Events, 
+            lobbyDependencies.Deathmatch ??= new DamageTestLobbyDeathmatch(this, (FightLobbyEventsHandler)lobbyDependencies.Events,
                 ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler!);
             lobbyDependencies.Players ??= new DamageTestLobbyPlayers(this, (FightLobbyEventsHandler)lobbyDependencies.Events);
             lobbyDependencies.MapHandler ??= new DamageTestLobbyMapHandler(this, (FightLobbyEventsHandler)lobbyDependencies.Events);

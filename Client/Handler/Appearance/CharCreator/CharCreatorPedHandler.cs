@@ -6,9 +6,6 @@ using TDS.Client.Data.Enums;
 using TDS.Client.Handler.Appearance.CharCreator.Body;
 using TDS.Client.Handler.Appearance.CharCreator.Clothes;
 using TDS.Client.Handler.Entities.GTA;
-using TDS.Shared.Core;
-using TDS.Shared.Data.Enums.CharCreator;
-using TDS.Shared.Data.Models.CharCreator.Body;
 
 namespace TDS.Client.Handler.Appearance
 {
@@ -21,10 +18,11 @@ namespace TDS.Client.Handler.Appearance
         private readonly BodyDataHandler _bodyDataHandler;
         private readonly ClothesDataHandler _clothesDataHandler;
 
-        public CharCreatorPedHandler(LoggingHandler logging, BodyDataHandler bodyDataHandler)
+        public CharCreatorPedHandler(LoggingHandler logging, BodyDataHandler bodyDataHandler, ClothesDataHandler clothesDataHandler)
         {
             _logging = logging;
             _bodyDataHandler = bodyDataHandler;
+            _clothesDataHandler = clothesDataHandler;
         }
 
         public void Start(uint dimension)
@@ -54,17 +52,11 @@ namespace TDS.Client.Handler.Appearance
 
                 Ped.SetBodyData(bodyData);
                 Ped.SetClothesData(_clothesDataHandler.Data);
-
-                //Todo Give him player outfits
             }
             catch (Exception ex)
             {
                 _logging.LogError(ex);
             }
-        }
-
-        public void ClothesDataChanged(ClothesDataKey key, ref ArraySegment<object> args)
-        {
         }
     }
 }

@@ -49,7 +49,6 @@ namespace TDS.Server.Handler.Account
                 dbPlayer.PlayerSettings = CreatePlayerSettingsEntity(language);
                 dbPlayer.PlayerStats = CreatePlayerStatsEntity();
                 dbPlayer.PlayerTotalStats = new PlayerTotalStats();
-                dbPlayer.PlayerClothes = new PlayerClothes();
                 dbPlayer.ThemeSettings = CreatePlayerThemeSettingsEntity();
                 dbPlayer.KillInfoSettings = CreatePlayerKillInfoSettingsEntity();
 
