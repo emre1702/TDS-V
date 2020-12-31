@@ -1,0 +1,30 @@
+<tds-window [title]="clothesDataKey[currentNav] | language: settings.Lang" (back)="goBack()">
+    <ng-container *ngIf="data$ | async as configs">
+        <ng-container
+            [ngTemplateOutlet]="currentNav !== clothesDataKey.Main ? clothesContent : main"
+            [ngTemplateOutletContext]="{ configs: configs }"
+        ></ng-container>
+    </ng-container>
+</tds-window>
+
+<ng-template #clothesContent let-configs="configs">
+    <app-clothes-content [(textureId)]="getData(configs)[currentNav][0]" [(drawableId)]="getData(configs)[currentNav][1]"></app-clothes-content>
+</ng-template>
+
+<ng-template #main let-configs="configs">
+    <mat-action-list>
+        <button *ngFor="let key of contents" mat-list-item (click)="goToNav(key)">
+            {{ clothesDataKey[key] | language: settings.Lang }}
+        </button>
+        <mat-list-item disableRipple class="radio-group">
+            <mat-radio-group ngDefaultControl [ngModel]="configs[1]" (ngModelChange)="slotChanged(configs, $event)">
+                <mat-radio-button *ngFor="let entry of configs[0]; let i = index" [value]="i">
+                    {{ 'Slot' | language: settings.Lang }} {{ i + 1 }}
+                </mat-radio-button>
+            </mat-radio-group>
+        </mat-list-item>
+        <button class="save-button button" mat-list-item (click)="save(configs)">
+            {{ 'Save' | language: settings.Lang }}
+        </button>
+    </mat-action-list>
+</ng-template>

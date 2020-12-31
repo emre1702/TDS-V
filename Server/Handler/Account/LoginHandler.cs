@@ -12,11 +12,11 @@ using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.Player;
 using TDS.Server.Database.Entity.Player.Settings;
+using TDS.Server.Handler.Appearance;
 using TDS.Server.Handler.Browser;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.Helper;
-using TDS.Server.Handler.PlayerHandlers;
 using TDS.Server.Handler.Server;
 using TDS.Server.Handler.Sync;
 using TDS.Shared.Core;
@@ -35,7 +35,7 @@ namespace TDS.Server.Handler.Account
         private readonly ServerStartHandler _serverStartHandler;
         private readonly ISettingsHandler _settingsHandler;
         private readonly AngularConstantsProvider _angularConstantsProvider;
-        private readonly PlayerCharHandler _playerCharHandler;
+        private readonly PlayerBodyHandler _playerCharHandler;
 
         public LoginHandler(
             DatabasePlayerHelper databasePlayerHandler,
@@ -46,7 +46,7 @@ namespace TDS.Server.Handler.Account
             ILoggingHandler loggingHandler,
             ServerStartHandler serverStartHandler,
             AngularConstantsProvider angularConstantsProvider,
-            PlayerCharHandler playerCharHandler)
+            PlayerBodyHandler playerCharHandler)
         {
             _databasePlayerHandler = databasePlayerHandler;
             _langHelper = langHelper;
@@ -171,7 +171,7 @@ namespace TDS.Server.Handler.Account
         {
             if (entity.KillInfoSettings is null)
                 entity.KillInfoSettings = new PlayerKillInfoSettings { ShowIcon = true };
-            if (entity.CharDatas is null)
+            if (entity.BodyDatas is null)
                 await _playerCharHandler.InitPlayerChar((player, entity));
         }
 
@@ -192,18 +192,18 @@ namespace TDS.Server.Handler.Account
                     .Include(p => p.PlayerClothes)
                     .Include(p => p.ThemeSettings)
                     .Include(p => p.KillInfoSettings)
-                    .Include(p => p.CharDatas)
+                    .Include(p => p.BodyDatas)
                     .Include(p => p.PlayerLobbyStats)
 
                    .FirstOrDefaultAsync(p => p.Id == playerId);
 
         private async Task LoadCollections(TDSDbContext dbContext, Players entity)
         {
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.AppearanceData).LoadAsync().ConfigureAwait(false);
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.FeaturesData).LoadAsync().ConfigureAwait(false);
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.GeneralData).LoadAsync().ConfigureAwait(false);
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.HairAndColorsData).LoadAsync().ConfigureAwait(false);
-            await dbContext.Entry(entity.CharDatas).Collection(e => e.HeritageData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.BodyDatas).Collection(e => e.AppearanceData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.BodyDatas).Collection(e => e.FeaturesData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.BodyDatas).Collection(e => e.GeneralData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.BodyDatas).Collection(e => e.HairAndColorsData).LoadAsync().ConfigureAwait(false);
+            await dbContext.Entry(entity.BodyDatas).Collection(e => e.HeritageData).LoadAsync().ConfigureAwait(false);
 
             await dbContext.Entry(entity).Collection(e => e.OfflinemessagesTarget).LoadAsync().ConfigureAwait(false);
             await dbContext.Entry(entity).Collection(e => e.PlayerMapRatings).LoadAsync().ConfigureAwait(false);

@@ -26,11 +26,14 @@ namespace TDS.Client.Handler.Events
             Tick += OnTick;
 
             Add(ToServerEvent.FromBrowserEvent, OnFromBrowserEventMethod);
+            Add(ToServerEvent.FromBrowserEventCallback, OnFromBrowserEventCallbackMethod);
         }
 
         public delegate void BoolDelegate(bool boolean);
 
         public delegate void ColorDelegate(Color color);
+
+        public delegate void StringDelegate(string str);
 
         public delegate void DataChangedDelegate(ITDSPlayer player, PlayerDataKey key, object data);
 
@@ -61,6 +64,8 @@ namespace TDS.Client.Handler.Events
         public delegate void WeaponChangedDelegate(WeaponHash previousWeapon, WeaponHash currentHash);
 
         public event EmptyDelegate AngularCooldown;
+
+        public event StringDelegate AngularCooldownReturn;
 
         public event BoolDelegate ChatInputToggled;
 
@@ -558,6 +563,12 @@ namespace TDS.Client.Handler.Events
         {
             if (!_remoteEventsSender.SendFromBrowser(args))
                 AngularCooldown?.Invoke();
+        }
+
+        private void OnFromBrowserEventCallbackMethod(object[] args)
+        {
+            if (!_remoteEventsSender.SendFromBrowserCallback(args))
+                AngularCooldownReturn?.Invoke((string)args[0]);
         }
 
         private void OnTick(List<TickNametagData> _)

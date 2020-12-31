@@ -2,17 +2,21 @@
 {
     public static class FromBrowserEvent
     {
-        #region Public Fields
-
         public const string BodyDataChanged = "b10";
+        public const string BodyNavChanged = "b47";
         public const string ChatUsed = "b3";
+        public const string CharCreatorResetCameraTarget = "b46";
         public const string CloseChat = "b6";
         public const string CloseGangWindow = "b42";
         public const string CloseMapVotingMenu = "b7";
         public const string CloseUserpanel = "b8";
+        public const string ClothesDataChanged = "b52";
+        public const string ClothesNavChanged = "b48";
         public const string CommandUsed = "b9";
         public const string Created = "b44";
 
+        public const string GetClothesDrawableAmount = "b50";
+        public const string GetClothesTextureAmount = "b51";
         public const string GetHashedPassword = "b11";
         public const string GetVehicle = "b12";
 
@@ -26,6 +30,7 @@
 
         public const string LanguageChange = "b19";
         public const string LoadBodyData = "b45";
+        public const string LoadClothesData = "b49";
         public const string LoadMapForMapCreator = "b1";
 
         public const string MapCreatorHighlightPos = "b21";
@@ -52,8 +57,6 @@
         public const string ToggleMapFavorite = "b39";
         public const string TryLogin = "b40";
         public const string TryRegister = "b41";
-
-        #endregion Public Fields
 
         //ChooseMapCreatorToJoin
         //SyncChoicLanguageTexts

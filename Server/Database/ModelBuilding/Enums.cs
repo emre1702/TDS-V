@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.CharCreator;
 using TDS.Shared.Data.Enums.Userpanel;
 
 namespace TDS.Server.Database.EntityConfigurations
@@ -32,7 +33,8 @@ namespace TDS.Server.Database.EntityConfigurations
                 .HasPostgresEnum<ScoreboardPlayerSorting>()
                 .HasPostgresEnum<TimeSpanUnitsOfTime>()
                 .HasPostgresEnum<PedBodyPart>()
-                .HasPostgresEnum<HudDesign>();
+                .HasPostgresEnum<HudDesign>()
+                .HasPostgresEnum<ClothesDataKey>();
         }
     }
 }

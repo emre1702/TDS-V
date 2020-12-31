@@ -33,6 +33,7 @@ namespace TDS.Client.Handler.Browser
             eventsHandler.InFightStatusChanged += ToggleRoundStats;
             eventsHandler.LobbyLeft += EventsHandler_LobbyLeft;
             eventsHandler.AngularCooldown += ShowCooldown;
+            eventsHandler.AngularCooldownReturn += ShowCooldownCallback;
             eventsHandler.RoundEnded += _ => ResetMapVoting();
             eventsHandler.ChatInputToggled += ToggleChatOpened;
 
@@ -157,6 +158,13 @@ namespace TDS.Client.Handler.Browser
         public void ShowCooldown()
         {
             ExecuteFast(ToBrowserEvent.ShowCooldown);
+        }
+
+        public void ShowCooldownCallback(string eventName)
+        {
+            // Do this to stop the callback waiting
+            ExecuteFast(eventName, "Cooldown");
+            ShowCooldown();
         }
 
         public void ShowRankings(string rankingsJson)

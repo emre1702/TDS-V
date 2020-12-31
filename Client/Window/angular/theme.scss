@@ -269,12 +269,14 @@ button:not([disabled]):hover {
     color: white !important;
 }
 
-.default-button {
+.default-button,
+.close-button {
     background: rgb(80, 80, 80) !important;
     color: white !important;
 }
 
-.add-button {
+.add-button,
+.randomize-button {
     background: darkblue !important;
     color: white !important;
 }

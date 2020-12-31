@@ -29,7 +29,9 @@
             <mat-radio-button *ngFor="let entry of data; let i = index" [value]="i"> {{ 'Slot' | language: settings.Lang }} {{ i + 1 }} </mat-radio-button>
         </mat-radio-group>
     </mat-list-item>
-    <button class="save-button" mat-list-item (click)="saveClicked.emit()">
-        {{ 'Save' | language: settings.Lang }}
-    </button>
+    <mat-list-item>
+        <button class="save-button" mat-button (click)="saveClicked.emit()">
+            {{ 'Save' | language: settings.Lang }}
+        </button>
+    </mat-list-item>
 </mat-action-list>

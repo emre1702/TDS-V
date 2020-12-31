@@ -1,6 +1,6 @@
 <mat-list>
     <mat-list-item>
-        <span>{{ "Hair" | language: settings.Lang }}:</span>
+        <span>{{ 'Hair' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
             <mat-select [(ngModel)]="data[0]" (selectionChange)="onHairChanged($event)">
@@ -11,39 +11,35 @@
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <span>{{ "HairColor" | language: settings.Lang }}:</span>
+        <span>{{ 'HairColor' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
-            <input matInput type="number" min="0" [max]="hairColorsAmount"
-            (change)="onHairColorChanged($event)" [(ngModel)]="data[1]">
+            <input matInput type="number" min="0" [max]="hairColorsAmount" (change)="onHairColorChanged($event)" [(ngModel)]="data[1]" />
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <span>{{ "HairHighlightColor" | language: settings.Lang }}:</span>
+        <span>{{ 'HairHighlightColor' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
-            <input matInput type="number" min="0" [max]="hairColorsAmount"
-            (change)="onHairHighlightColorChanged($event)" [(ngModel)]="data[2]">
+            <input matInput type="number" min="0" [max]="hairColorsAmount" (change)="onHairHighlightColorChanged($event)" [(ngModel)]="data[2]" />
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <span>{{ "EyebrowColor" | language: settings.Lang }}:</span>
+        <span>{{ 'EyebrowColor' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
-            <input matInput type="number" min="0" [max]="hairColorsAmount"
-            (change)="onEyebrowColorChanged($event)" [(ngModel)]="data[3]">
+            <input matInput type="number" min="0" [max]="hairColorsAmount" (change)="onEyebrowColorChanged($event)" [(ngModel)]="data[3]" />
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <span>{{ "FacialHairColor" | language: settings.Lang }}:</span>
+        <span>{{ 'FacialHairColor' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
-            <input matInput type="number" min="0" [max]="hairColorsAmount"
-            (change)="onFacialHairColorColorChanged($event)" [(ngModel)]="data[4]">
+            <input matInput type="number" min="0" [max]="hairColorsAmount" (change)="onFacialHairColorColorChanged($event)" [(ngModel)]="data[4]" />
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <span>{{ "EyeColor" | language: settings.Lang }}:</span>
+        <span>{{ 'EyeColor' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
             <mat-select [(ngModel)]="data[5]" (selectionChange)="onEyeColorChanged($event)">
@@ -54,32 +50,29 @@
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <span>{{ "BlushColor" | language: settings.Lang }}:</span>
+        <span>{{ 'BlushColor' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
-            <input matInput type="number" min="0" [max]="blushColorsAmount"
-            (change)="onBlushColorChanged($event)" [(ngModel)]="data[6]">
+            <input matInput type="number" min="0" [max]="blushColorsAmount" (change)="onBlushColorChanged($event)" [(ngModel)]="data[6]" />
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <span>{{ "LipstickColor" | language: settings.Lang }}:</span>
+        <span>{{ 'LipstickColor' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
-            <input matInput type="number" min="0" [max]="lipstickColorsAmount"
-            (change)="onLipstickColorChanged($event)" [(ngModel)]="data[7]">
+            <input matInput type="number" min="0" [max]="lipstickColorsAmount" (change)="onLipstickColorChanged($event)" [(ngModel)]="data[7]" />
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <span>{{ "ChestHairColor" | language: settings.Lang }}:</span>
+        <span>{{ 'ChestHairColor' | language: settings.Lang }}:</span>
         <div class="margin-fake"></div>
         <mat-form-field color="accent">
-            <input matInput type="number" min="0" [max]="hairColorsAmount"
-            (change)="onChestHairColorChanged($event)" [(ngModel)]="data[8]">
+            <input matInput type="number" min="0" [max]="hairColorsAmount" (change)="onChestHairColorChanged($event)" [(ngModel)]="data[8]" />
         </mat-form-field>
     </mat-list-item>
     <mat-list-item>
-        <button mat-button (click)="randomize()">
-            {{ "Randomize" | language: settings.Lang }}
+        <button mat-button class="randomize-button" (click)="randomize()">
+            {{ 'Randomize' | language: settings.Lang }}
         </button>
     </mat-list-item>
 </mat-list>

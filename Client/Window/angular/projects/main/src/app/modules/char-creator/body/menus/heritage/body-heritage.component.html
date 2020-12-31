@@ -1,55 +1,61 @@
 <mat-list>
     <mat-list-item>
-        <div class="select-row">
-            <span>{{ "Father" | language: settings.Lang }}:</span>
-            <mat-form-field color="accent">
-                <mat-select [(ngModel)]="data[0]" (selectionChange)="onFatherChanged($event)">
-                    <mat-option *ngFor="let father of fathers" [value]="father.Id">
-                        {{ father.Name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+        <span>{{ 'Father' | language: settings.Lang }}:</span>
+        <mat-form-field color="accent">
+            <mat-select [(ngModel)]="data[0]" (selectionChange)="onFatherChanged($event)">
+                <mat-option *ngFor="let father of fathers" [value]="father.Id">
+                    {{ father.Name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-list-item>
+    <mat-list-item>
+        <span>{{ 'Mother' | language: settings.Lang }}:</span>
+        <mat-form-field color="accent">
+            <mat-select [(ngModel)]="data[1]" (selectionChange)="onMotherChanged($event)">
+                <mat-option *ngFor="let mother of mothers" [value]="mother.Id">
+                    {{ mother.Name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-list-item>
+    <mat-list-item>
+        <span>{{ 'Resemblance' | language: settings.Lang }}:</span>
+        <div class="margin-fake"></div>
+        <div class="slider-in-row">
+            <mat-icon color="accent" svgIcon="woman"></mat-icon>
+            <mat-slider
+                min="0"
+                max="1"
+                step="0.01"
+                thumbLabel
+                [(ngModel)]="data[2]"
+                (change)="onResemblanceChanged($event)"
+                [displayWith]="getPercentage"
+            ></mat-slider>
+            <mat-icon color="accent" svgIcon="man"></mat-icon>
         </div>
     </mat-list-item>
     <mat-list-item>
-        <div class="select-row">
-            <span>{{ "Mother" | language: settings.Lang }}:</span>
-            <mat-form-field color="accent">
-                <mat-select [(ngModel)]="data[1]" (selectionChange)="onMotherChanged($event)">
-                    <mat-option *ngFor="let mother of mothers" [value]="mother.Id">
-                        {{ mother.Name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+        <span>{{ 'SkinTone' | language: settings.Lang }}:</span>
+        <div class="margin-fake"></div>
+        <div class="slider-in-row">
+            <mat-icon color="accent" svgIcon="woman"></mat-icon>
+            <mat-slider
+                min="0"
+                max="1"
+                step="0.01"
+                thumbLabel
+                [(ngModel)]="data[3]"
+                (change)="onSkinToneChanged($event)"
+                [displayWith]="getPercentage"
+            ></mat-slider>
+            <mat-icon color="accent" svgIcon="man"></mat-icon>
         </div>
     </mat-list-item>
     <mat-list-item>
-        <div class="slider-row">
-            <span>{{ "Resemblance" | language: settings.Lang }}:</span>
-            <div class="margin-fake"></div>
-            <div class="slider-in-row">
-                <mat-icon color="accent" svgIcon="woman"></mat-icon>
-                <mat-slider min="0" max="1" step="0.01" thumbLabel [(ngModel)]="data[2]"
-                (change)="onResemblanceChanged($event)" [displayWith]="getPercentage"></mat-slider>
-                <mat-icon color="accent" svgIcon="man"></mat-icon>
-            </div>
-        </div>
-    </mat-list-item>
-    <mat-list-item>
-        <div class="slider-row">
-            <span>{{ "SkinTone" | language: settings.Lang }}:</span>
-            <div class="margin-fake"></div>
-            <div class="slider-in-row">
-                <mat-icon color="accent" svgIcon="woman"></mat-icon>
-                <mat-slider min="0" max="1" step="0.01" thumbLabel [(ngModel)]="data[3]"
-                (change)="onSkinToneChanged($event)" [displayWith]="getPercentage"></mat-slider>
-                <mat-icon color="accent" svgIcon="man"></mat-icon>
-            </div>
-        </div>
-    </mat-list-item>
-    <mat-list-item>
-        <button mat-button (click)="randomize()">
-            {{ "Randomize" | language: settings.Lang }}
+        <button mat-button class="randomize-button" (click)="randomize()">
+            {{ 'Randomize' | language: settings.Lang }}
         </button>
     </mat-list-item>
 </mat-list>

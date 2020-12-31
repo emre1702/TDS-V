@@ -18,13 +18,13 @@ namespace TDS.Server.LobbySystem.Players
 
         public override async Task<bool> AddPlayer(ITDSPlayer player, int teamIndex = 0)
         {
-            if (player.Entity?.CharDatas is null)
+            if (player.Entity?.BodyDatas is null)
                 return false;
             var worked = await base.AddPlayer(player, teamIndex).ConfigureAwait(false);
             if (!worked)
                 return false;
 
-            var charDatasJson = Serializer.ToClient(player.Entity.CharDatas);
+            var charDatasJson = Serializer.ToClient(player.Entity.BodyDatas);
 
             NAPI.Task.RunSafe(() =>
             {

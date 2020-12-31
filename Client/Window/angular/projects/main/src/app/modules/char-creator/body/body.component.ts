@@ -8,6 +8,7 @@ import { BodyDataKey } from './enums/body-data-key.enum';
 import { BodyService } from './services/body.service';
 import { tap } from 'rxjs/operators';
 import { BodyData } from './models/body-data';
+import { NotificationService } from '../../shared/services/notification.service';
 
 @Component({
     selector: 'app-body',
@@ -28,19 +29,18 @@ export class BodyComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         public settings: SettingsService,
         private rageConnector: RageConnectorService,
-        private service: BodyService
+        private service: BodyService,
+        private notificationService: NotificationService
     ) {}
 
     ngOnInit(): void {
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
-        this.settings.SettingsLoaded.on(null, this.detectChanges.bind(this));
     }
 
     ngOnDestroy() {
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
-        this.settings.SettingsLoaded.off(null, this.detectChanges.bind(this));
     }
 
     goBack() {
@@ -55,10 +55,18 @@ export class BodyComponent implements OnInit, OnDestroy {
     goToNav(nav: BodyMenuNav) {
         this.currentNav = nav;
         this.changeDetector.detectChanges();
+
+        this.rageConnector.call(ToClientEvent.BodyNavChanged, nav);
     }
 
     save() {
-        this.rageConnector.callServer(ToServerEvent.SaveBodyData, JSON.stringify(this._data));
+        this.rageConnector.callCallbackServer(ToServerEvent.SaveBodyData, [JSON.stringify(this._data)], (err: string) => {
+            if (err?.length) {
+                this.notificationService.showError(err);
+            } else {
+                this.notificationService.showSuccess('SettingSavedSuccessfully');
+            }
+        });
     }
 
     recreatePed() {

@@ -1,4 +1,7 @@
-.mat-list-item {
+@import '../../../char-creator.component.scss';
+@include char-creator-content;
+
+/*.mat-list-item {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -35,4 +38,4 @@
 .margin-fake {
     min-width: 10px !important;
     height: 100%;
-}
+}*/

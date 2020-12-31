@@ -40,6 +40,7 @@ export enum ToServerEvent {
     ReloadPlayerSettings = 'c81',
     RemoveMap = 'c39',
     SaveBodyData = 'c29',
+    SaveClothesData = 'c85',
     SaveMapCreatorData = 'c41',
     SavePlayerCommandsSettings = 'c70',
     SaveUserpanelNormalSettings = 'c42',

@@ -1,0 +1,27 @@
+<mat-list>
+    <mat-list-item *ngIf="drawableAmount$ | async as amount">
+        <span>Drawable Id:</span>
+        <div class="margin-fake"></div>
+        <div class="item">
+            <mat-form-field color="accent">
+                <input matInput type="number" min="-1" [max]="amount - 1" [ngModel]="drawableId" (ngModelChange)="drawableIdChanged($event)" />
+            </mat-form-field>
+            <button mat-icon-button (click)="drawableId = -1">
+                <mat-icon color="accent">delete_outline</mat-icon>
+            </button>
+        </div>
+    </mat-list-item>
+    <mat-list-item *ngIf="textureAmount$ | async as amount">
+        <span>Texture Id:</span>
+        <div class="margin-fake"></div>
+        <mat-form-field color="accent">
+            <input matInput type="number" min="-1" [max]="amount - 1" [ngModel]="textureId" (ngModelChange)="textureIdChanged($event)" />
+        </mat-form-field>
+        <button mat-icon-button (click)="textureId = -1">
+            <mat-icon color="accent">delete_outline</mat-icon>
+        </button>
+    </mat-list-item>
+    <button class="revert-button button" mat-list-item (click)="revert()">
+        {{ 'Revert' | language: settings.Lang }}
+    </button>
+</mat-list>

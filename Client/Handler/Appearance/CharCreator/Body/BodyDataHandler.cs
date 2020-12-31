@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using TDS.Client.Data.Defaults;
-using TDS.Client.Data.Enums;
+using TDS.Client.Data.Enums.CharCreator;
 using TDS.Client.Handler.Browser;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Models.CharCreator.Body;
@@ -16,6 +16,7 @@ namespace TDS.Client.Handler.Appearance.CharCreator.Body
         {
             RAGE.Events.Add(FromBrowserEvent.LoadBodyData, (_) =>
             {
+                if (Data is null) return;
                 browserHandler.Angular.ExecuteFast(FromBrowserEvent.LoadBodyData, Serializer.ToBrowser(Data));
             });
         }
@@ -30,76 +31,76 @@ namespace TDS.Client.Handler.Appearance.CharCreator.Body
             Data = null;
         }
 
-        public void DataChanged(CharCreatorDataKey key, ref ArraySegment<object> args)
+        public void DataChanged(BodyDataKey key, ref ArraySegment<object> args)
         {
             switch (key)
             {
-                case CharCreatorDataKey.All:
+                case BodyDataKey.All:
                     Data = Serializer.FromBrowser<BodyData>((string)args[0]);
                     break;
 
-                case CharCreatorDataKey.Slot:
+                case BodyDataKey.Slot:
                     Data.Slot = Convert.ToByte(args[0]);
                     break;
 
-                case CharCreatorDataKey.IsMale:
+                case BodyDataKey.IsMale:
                     var generalData = Data.GeneralDataSynced.First(d => d.Slot == Data.Slot);
                     generalData.IsMale = Convert.ToBoolean(args[0]);
                     break;
 
-                case CharCreatorDataKey.Heritage:
+                case BodyDataKey.Heritage:
                     var newHeritageData = Serializer.FromBrowser<BodyHeritageData>((string)args[0]);
                     var oldHeritageData = Data.HeritageDataSynced.First(d => d.Slot == Data.Slot);
                     UseNewHeritageData(oldHeritageData, newHeritageData);
                     break;
 
-                case CharCreatorDataKey.Feature:
+                case BodyDataKey.Feature:
                     var featureData = Data.FeaturesDataSynced.First(d => d.Slot == Data.Slot);
                     UseNewFeatureData(featureData, Convert.ToInt32(args[0]), Convert.ToSingle(args[1]));
                     break;
 
-                case CharCreatorDataKey.Appearance:
+                case BodyDataKey.Appearance:
                     var appearanceData = Data.AppearanceDataSynced.First(d => d.Slot == Data.Slot);
                     UseNewAppearanceData(appearanceData, Convert.ToInt32(args[0]), Convert.ToInt32(args[1]), Convert.ToSingle(args[2]));
                     break;
 
-                case CharCreatorDataKey.Hair:
+                case BodyDataKey.Hair:
                     var hairAndColorsData1 = Data.HairAndColorsDataSynced.First(d => d.Slot == Data.Slot);
                     hairAndColorsData1.Hair = Convert.ToInt32(args[0]);
                     break;
 
-                case CharCreatorDataKey.HairColor:
+                case BodyDataKey.HairColor:
                     var hairAndColorsData2 = Data.HairAndColorsDataSynced.First(d => d.Slot == Data.Slot);
                     hairAndColorsData2.HairColor = Convert.ToInt32(args[0]);
                     hairAndColorsData2.HairHighlightColor = Convert.ToInt32(args[1]);
                     break;
 
-                case CharCreatorDataKey.EyeColor:
+                case BodyDataKey.EyeColor:
                     var hairAndColorsData3 = Data.HairAndColorsDataSynced.First(d => d.Slot == Data.Slot);
                     hairAndColorsData3.EyeColor = Convert.ToInt32(args[0]);
                     break;
 
-                case CharCreatorDataKey.FacialHairColor:
+                case BodyDataKey.FacialHairColor:
                     var hairAndColorsData4 = Data.HairAndColorsDataSynced.First(d => d.Slot == Data.Slot);
                     hairAndColorsData4.FacialHairColor = Convert.ToInt32(args[0]);
                     break;
 
-                case CharCreatorDataKey.EyebrowColor:
+                case BodyDataKey.EyebrowColor:
                     var hairAndColorsData5 = Data.HairAndColorsDataSynced.First(d => d.Slot == Data.Slot);
                     hairAndColorsData5.EyebrowColor = Convert.ToInt32(args[0]);
                     break;
 
-                case CharCreatorDataKey.BlushColor:
+                case BodyDataKey.BlushColor:
                     var hairAndColorsData6 = Data.HairAndColorsDataSynced.First(d => d.Slot == Data.Slot);
                     hairAndColorsData6.BlushColor = Convert.ToInt32(args[0]);
                     break;
 
-                case CharCreatorDataKey.LipstickColor:
+                case BodyDataKey.LipstickColor:
                     var hairAndColorsData7 = Data.HairAndColorsDataSynced.First(d => d.Slot == Data.Slot);
                     hairAndColorsData7.LipstickColor = Convert.ToInt32(args[0]);
                     break;
 
-                case CharCreatorDataKey.ChestHairColor:
+                case BodyDataKey.ChestHairColor:
                     var hairAndColorsData8 = Data.HairAndColorsDataSynced.First(d => d.Slot == Data.Slot);
                     hairAndColorsData8.ChestHairColor = Convert.ToInt32(args[0]);
                     break;

@@ -9,11 +9,10 @@ export class ToolbarDirective {
     private origDisplay: string;
     private touchtime = 0;
 
-    constructor() {}
-
     @HostListener('click', ['$event'])
     onDoubleClick(e: MouseEvent) {
         e.preventDefault();
+        e.stopPropagation();
         if (this.touchtime == 0) {
             // set first click
             this.touchtime = new Date().getTime();

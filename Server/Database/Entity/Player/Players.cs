@@ -5,6 +5,7 @@ using TDS.Server.Database.Entity.Challenge;
 using TDS.Server.Database.Entity.GangEntities;
 using TDS.Server.Database.Entity.LobbyEntities;
 using TDS.Server.Database.Entity.Player.Character.Body;
+using TDS.Server.Database.Entity.Player.Character.Clothes;
 using TDS.Server.Database.Entity.Player.Settings;
 using TDS.Server.Database.Entity.Rest;
 using TDS.Server.Database.Entity.Userpanel;
@@ -58,6 +59,7 @@ namespace TDS.Server.Database.Entity.Player
         public virtual ICollection<ApplicationQuestions> ApplicationQuestions { get; set; }
         public virtual ICollection<PlayerChallenges> Challenges { get; set; }
         public virtual PlayerBodyDatas BodyDatas { get; set; }
+        public virtual PlayerClothesDatas ClothesDatas { get; set; }
         public virtual ICollection<PlayerCommands> Commands { get; set; }
         public virtual ICollection<GangHouses> CreatedHouses { get; set; }
         public virtual GangMembers GangMemberNavigation { get; set; }

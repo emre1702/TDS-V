@@ -40,7 +40,7 @@ namespace TDS.Server.LobbySystem.Lobbies
             lobbyDependencies ??= new CharCreateLobbyDependencies();
 
             lobbyDependencies.Bans ??= new CharCreateLobbyBansHandler(this, LangHelper);
-            lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            lobbyDependencies.Events ??= new CharCreateLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.Players ??= new CharCreateLobbyPlayers(this, lobbyDependencies.Events);
 
             base.InitDependencies(lobbyDependencies);

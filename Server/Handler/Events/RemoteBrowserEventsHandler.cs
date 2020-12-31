@@ -11,6 +11,7 @@ using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Data.Interfaces.Userpanel;
 using TDS.Server.Data.Models;
 using TDS.Server.Data.Utility;
+using TDS.Server.Handler.Appearance;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.GangSystem;
 using TDS.Server.Handler.Maps;
@@ -33,9 +34,8 @@ namespace TDS.Server.Handler.Events
 
         private readonly EventsHandler _eventsHandler;
 
-        public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler, MapsLoadingHandler mapsLoadingHandler,
-            ILoggingHandler loggingHandler, MapCreatorHandler mapCreatorHandler,
-            MapFavouritesHandler mapFavouritesHandler, PlayerCharHandler playerCharHandler,
+        public RemoteBrowserEventsHandler(IUserpanelHandler userpanelHandler, LobbiesHandler lobbiesHandler, InvitationsHandler invitationsHandler,
+            MapsLoadingHandler mapsLoadingHandler, ILoggingHandler loggingHandler, MapCreatorHandler mapCreatorHandler, MapFavouritesHandler mapFavouritesHandler,
             GangWindowHandler gangWindowHandler, EventsHandler eventsHandler, PlayerSettingsSyncHandler playerSettingsSyncHandler)
         {
             _loggingHandler = loggingHandler;
@@ -63,8 +63,6 @@ namespace TDS.Server.Handler.Events
                 [ToServerEvent.SendSupportRequest] = userpanelHandler.SupportRequestHandler.SendRequest,
                 [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendMessage,
                 [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
-                [ToServerEvent.SaveBodyData] = playerCharHandler.Save,
-                [ToServerEvent.CancelCharCreateData] = playerCharHandler.Cancel,
                 [ToServerEvent.SavePlayerCommandsSettings] = userpanelHandler.SettingsCommandsHandler.Save,
                 [ToServerEvent.GangCommand] = gangWindowHandler.ExecuteCommand,
             };
@@ -98,6 +96,7 @@ namespace TDS.Server.Handler.Events
             };
 
             NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
+            NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEventCallback, this, OnFromBrowserEventCallback);
         }
 
         public delegate Task<object?> FromBrowserAsyncMethodDelegate(ITDSPlayer player, ArraySegment<object> args);
@@ -107,6 +106,21 @@ namespace TDS.Server.Handler.Events
         public delegate object? FromBrowserMethodDelegate(ITDSPlayer player, ref ArraySegment<object> args);
 
         private async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
+        {
+            var eventName = (string)args[0];
+            var ret = await OnFromBrowserEventMethod(player, args);
+            if (ret is { })
+                NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret));
+        }
+
+        private async void OnFromBrowserEventCallback(ITDSPlayer player, params object[] args)
+        {
+            var eventName = (string)args[0];
+            var ret = await OnFromBrowserEventMethod(player, args);
+            NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret ?? ""));
+        }
+
+        private async Task<object?> OnFromBrowserEventMethod(ITDSPlayer player, params object[] args)
         {
             try
             {
@@ -123,16 +137,13 @@ namespace TDS.Server.Handler.Events
                 else if (_maybeAsyncMethods.ContainsKey(eventName))
                 {
                     ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName).ConfigureAwait(false);
-                } 
+                }
                 else if (_methods.ContainsKey(eventName))
                 {
                     ret = _methods[eventName](player, ref argsWithoutEventName);
                 }
 
-                if (ret is { })
-                {
-                    NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret));
-                }
+                return ret;
             }
             catch (Exception ex)
             {
@@ -140,6 +151,7 @@ namespace TDS.Server.Handler.Events
                 _loggingHandler.LogError(baseEx.Message + "\n"
                     + string.Join('\n', args.Select(a => Convert.ToString(a)?.Substring(0, Math.Min(Convert.ToString(a)?.Length ?? 0, 20)) ?? "-")),
                     ex.StackTrace ?? Environment.StackTrace, ex.GetType().Name + "|" + baseEx.GetType().Name, player);
+                return null;
             }
         }
 
@@ -156,6 +168,21 @@ namespace TDS.Server.Handler.Events
         public void AddMaybeAsyncEvent(string eventName, FromBrowserMaybeAsyncMethodDelegate method)
         {
             _maybeAsyncMethods[eventName] = method;
+        }
+
+        public void RemoveSyncEvent(string eventName)
+        {
+            _methods.Remove(eventName);
+        }
+
+        public void RemoveAsyncEvent(string eventName)
+        {
+            _asyncMethods.Remove(eventName);
+        }
+
+        public void RemoveMaybeAsyncEvent(string eventName)
+        {
+            _maybeAsyncMethods.Remove(eventName);
         }
 
         private object? BuyMap(ITDSPlayer player, ref ArraySegment<object> args)

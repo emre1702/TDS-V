@@ -11,16 +11,21 @@ import { BodyHeritageComponent } from './body/menus/heritage/body-heritage.compo
 import { BodyMainmenuComponent } from './body/menus/mainmenu/body-mainmenu.component';
 import { FormsModule } from '@angular/forms';
 import { TDSWindowModule } from '../tds-window/tds-window.module';
+import { ClothesComponent } from './clothes/clothes.component';
+import { ClothesContentComponent } from './clothes/components/clothes-content/clothes-content.component';
+
+const bodyComponents = [
+    BodyComponent,
+    BodyAppearanceComponent,
+    BodyFeaturesComponent,
+    BodyHairandcolorsComponent,
+    BodyHeritageComponent,
+    BodyMainmenuComponent,
+];
+const clothesComponents = [ClothesComponent, ClothesContentComponent];
+
 @NgModule({
-    declarations: [
-        CharCreatorComponent,
-        BodyComponent,
-        BodyAppearanceComponent,
-        BodyFeaturesComponent,
-        BodyHairandcolorsComponent,
-        BodyHeritageComponent,
-        BodyMainmenuComponent,
-    ],
+    declarations: [CharCreatorComponent, [...bodyComponents], [...clothesComponents]],
     imports: [CommonModule, FormsModule, MaterialModule, SharedModule, TDSWindowModule],
     exports: [CharCreatorComponent],
 })

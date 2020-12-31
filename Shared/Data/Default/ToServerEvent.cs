@@ -17,6 +17,7 @@
         public const string DeleteOfflineMessage = "c9";
 
         public const string FromBrowserEvent = "c64";
+        public const string FromBrowserEventCallback = "c86";
 
         public const string GangCommand = "c76";
         public const string GetSupportRequestData = "c10";
@@ -70,6 +71,7 @@
         public const string ResetPassword = "c74";
 
         public const string SaveBodyData = "c29";
+        public const string SaveClothesData = "c85";
         public const string SaveMapCreatorData = "c41";
         public const string SavePlayerCommandsSettings = "c70";
         public const string SaveUserpanelNormalSettings = "c42";

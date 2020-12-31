@@ -6,67 +6,68 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
-using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Database.Entity.Player;
+using TDS.Server.Database.Entity.Player.Character.Body;
 using TDS.Server.Handler.Events;
+using TDS.Server.Handler.Extensions;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Utility;
-using TDS.Server.Handler.Extensions;
-using TDS.Server.Database.Entity.Player.Character;
+using TDS.Shared.Default;
 
-namespace TDS.Server.Handler.PlayerHandlers
+namespace TDS.Server.Handler.Appearance
 {
-    public class PlayerCharHandler
+    public class PlayerBodyHandler
     {
         private readonly LobbiesHandler _lobbiesHandler;
 
         private readonly ISettingsHandler _settingsHandler;
 
-        public PlayerCharHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler)
+        public PlayerBodyHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler, ISettingsHandler settingsHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
             _lobbiesHandler = lobbiesHandler;
             _settingsHandler = settingsHandler;
 
             eventsHandler.PlayerLoggedIn += LoadPlayerChar;
             eventsHandler.PlayerRegisteredBefore += InitPlayerChar;
+
+            remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.SaveBodyData, Save);
         }
 
-        internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> _)
+        private async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)
         {
-            if (!(player.Lobby is ICharCreateLobby))
-                return null;
-
-            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
-            return null;
-        }
-
-        internal async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)
-        {
-            if (player.Entity is null)
-                return null;
-
-            var data = Serializer.FromBrowser<PlayerCharDatas>((string)args[0]);
-
-            // By doing this we can ensure that player datas don't save while editing. Because else
-            // this could result in PlayerCharDatas getting messed up for the player
-            await player.Database.ExecuteForDB(dbContext =>
+            try
             {
-                player.Entity.CharDatas.Slot = data.Slot;
-                for (int i = 0; i < player.Entity.CharDatas.FeaturesData.Count; ++i)
+                if (player.Entity is null)
+                    return "?";
+
+                var data = Serializer.FromBrowser<PlayerBodyDatas>((string)args[0]);
+
+                // By doing this we can ensure that player datas don't save while editing. Because else
+                // this could result in PlayerCharDatas getting messed up for the player
+                await player.Database.ExecuteForDB(dbContext =>
                 {
-                    CopyJsonValues(player.Entity.CharDatas.FeaturesData.ElementAt(i), data.FeaturesData.ElementAt(i));
-                    CopyJsonValues(player.Entity.CharDatas.GeneralData.ElementAt(i), data.GeneralData.ElementAt(i));
-                    CopyJsonValues(player.Entity.CharDatas.HairAndColorsData.ElementAt(i), data.HairAndColorsData.ElementAt(i));
-                    CopyJsonValues(player.Entity.CharDatas.HeritageData.ElementAt(i), data.HeritageData.ElementAt(i));
-                    CopyJsonValues(player.Entity.CharDatas.AppearanceData.ElementAt(i), data.AppearanceData.ElementAt(i));
-                }
-            }).ConfigureAwait(false);
+                    player.Entity.BodyDatas.Slot = data.Slot;
+                    for (int i = 0; i < player.Entity.BodyDatas.FeaturesData.Count; ++i)
+                    {
+                        CopyJsonValues(player.Entity.BodyDatas.FeaturesData.ElementAt(i), data.FeaturesData.ElementAt(i));
+                        CopyJsonValues(player.Entity.BodyDatas.GeneralData.ElementAt(i), data.GeneralData.ElementAt(i));
+                        CopyJsonValues(player.Entity.BodyDatas.HairAndColorsData.ElementAt(i), data.HairAndColorsData.ElementAt(i));
+                        CopyJsonValues(player.Entity.BodyDatas.HeritageData.ElementAt(i), data.HeritageData.ElementAt(i));
+                        CopyJsonValues(player.Entity.BodyDatas.AppearanceData.ElementAt(i), data.AppearanceData.ElementAt(i));
+                    }
+                }).ConfigureAwait(false);
 
-            await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
-            LoadPlayerChar(player);
+                await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
+                LoadPlayerChar(player);
 
-            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
-            return null;
+                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex, player);
+                return "ErrorInfo";
+            }
         }
 
         private void CopyJsonValues<T>(T originalObj, T newObj)
@@ -82,73 +83,73 @@ namespace TDS.Server.Handler.PlayerHandlers
         {
             byte amountSlots = _settingsHandler.ServerSettings.AmountCharSlots;
 
-            var charDatas = new PlayerCharDatas
+            var charDatas = new PlayerBodyDatas
             {
                 PlayerId = args.dbPlayer.Id,
-                GeneralData = new List<PlayerCharGeneralDatas>(amountSlots),
-                HeritageData = new List<PlayerCharHeritageDatas>(amountSlots),
-                FeaturesData = new List<PlayerCharFeaturesDatas>(amountSlots),
-                AppearanceData = new List<PlayerCharAppearanceDatas>(amountSlots),
-                HairAndColorsData = new List<PlayerCharHairAndColorsDatas>(amountSlots),
+                GeneralData = new List<PlayerBodyGeneralDatas>(amountSlots),
+                HeritageData = new List<PlayerBodyHeritageDatas>(amountSlots),
+                FeaturesData = new List<PlayerBodyFeaturesDatas>(amountSlots),
+                AppearanceData = new List<PlayerBodyAppearanceDatas>(amountSlots),
+                HairAndColorsData = new List<PlayerBodyHairAndColorsDatas>(amountSlots),
             };
-            args.dbPlayer.CharDatas = charDatas;
+            args.dbPlayer.BodyDatas = charDatas;
 
             for (byte i = 0; i < amountSlots; ++i)
                 AddCharSlot(charDatas, i);
 
-            await args.player.Database.ExecuteForDBAsyncUnsafe(async dbContext => 
+            await args.player.Database.ExecuteForDBAsyncUnsafe(async dbContext =>
             {
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             });
         }
 
-        private void AddCharSlot(PlayerCharDatas charDatas, byte slot)
+        private void AddCharSlot(PlayerBodyDatas charDatas, byte slot)
         {
             var isMale = SharedUtils.GetRandom(true, false);
-            charDatas.GeneralData.Add(new PlayerCharGeneralDatas 
-            { 
-                Slot = slot, 
-                CharDatas = charDatas, 
+            charDatas.GeneralData.Add(new PlayerBodyGeneralDatas
+            {
+                Slot = slot,
+                BodyDatas = charDatas,
                 PlayerId = charDatas.PlayerId,
                 IsMale = isMale
             });
-            charDatas.HeritageData.Add(new PlayerCharHeritageDatas
+            charDatas.HeritageData.Add(new PlayerBodyHeritageDatas
             {
                 Slot = slot,
-                CharDatas = charDatas,
+                BodyDatas = charDatas,
                 PlayerId = charDatas.PlayerId,
                 FatherIndex = 0,
                 MotherIndex = 21,
                 ResemblancePercentage = isMale ? 1 : 0,
                 SkinTonePercentage = isMale ? 1 : 0
             });
-            charDatas.FeaturesData.Add(new PlayerCharFeaturesDatas 
+            charDatas.FeaturesData.Add(new PlayerBodyFeaturesDatas
             {
-                Slot = slot, 
-                CharDatas = charDatas, 
-                PlayerId = charDatas.PlayerId, 
+                Slot = slot,
+                BodyDatas = charDatas,
+                PlayerId = charDatas.PlayerId,
             });
-            charDatas.AppearanceData.Add(new PlayerCharAppearanceDatas 
-            { 
-                Slot = slot, 
-                CharDatas = charDatas, 
+            charDatas.AppearanceData.Add(new PlayerBodyAppearanceDatas
+            {
+                Slot = slot,
+                BodyDatas = charDatas,
                 PlayerId = charDatas.PlayerId
             });
-            charDatas.HairAndColorsData.Add(new PlayerCharHairAndColorsDatas 
-            { 
-                Slot = slot, 
-                CharDatas = charDatas, 
+            charDatas.HairAndColorsData.Add(new PlayerBodyHairAndColorsDatas
+            {
+                Slot = slot,
+                BodyDatas = charDatas,
                 PlayerId = charDatas.PlayerId
             });
         }
 
         private async void LoadPlayerChar(ITDSPlayer player)
         {
-            if (player.Entity is null || player.Entity.CharDatas is null)
+            if (player.Entity is null || player.Entity.BodyDatas is null)
                 return;
 
             await Task.Yield();
-            var data = player.Entity.CharDatas;
+            var data = player.Entity.BodyDatas;
             while (data.AppearanceData.Count < _settingsHandler.ServerSettings.AmountCharSlots)
             {
                 AddCharSlot(data, (byte)data.AppearanceData.Count);

@@ -25,6 +25,7 @@ using TDS.Server.Database.ModelBuilding.Command;
 using TDS.Server.Database.SeedData;
 using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Enums.Challenge;
+using TDS.Shared.Data.Enums.CharCreator;
 using TDS.Shared.Data.Enums.Userpanel;
 
 namespace TDS.Server.Database.Entity
@@ -52,6 +53,7 @@ namespace TDS.Server.Database.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TimeSpanUnitsOfTime>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<PedBodyPart>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<HudDesign>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<ClothesDataKey>();
         }
 
         public TDSDbContext(DbContextOptions<TDSDbContext> options)
