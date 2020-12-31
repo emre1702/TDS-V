@@ -157,6 +157,12 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
             Serial = base.Serial;
         }
 
+        public void SetName(string name)
+        {
+            Name = name;
+            base.Name = Name;
+        }
+
         public override int GetHashCode()
         {
             return Id.GetHashCode();

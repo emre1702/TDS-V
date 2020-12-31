@@ -104,8 +104,11 @@ namespace TDS.Server.Handler.Account
             var syncedSettingsJson = Serializer.ToClient(_settingsHandler.SyncedSettings);
             var angularContentsJson = Serializer.ToBrowser(angularConstantsData, true);
 
-            await NAPI.Task.RunWait(player.Init);
-            player.Name = player.Entity.Name;
+            await NAPI.Task.RunWait(() =>
+            {
+                player.Init();
+                player.SetName(player.Entity.Name);
+            });
 
             NAPI.Task.RunSafe(() =>
             {
