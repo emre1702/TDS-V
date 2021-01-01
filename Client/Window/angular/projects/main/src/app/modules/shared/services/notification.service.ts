@@ -6,7 +6,7 @@ import { NotificationData } from '../interfaces/notification-data';
 export class NotificationService {
     notificationSubscription = new Subject<NotificationData>();
 
-    showSuccess(msg: string, duration?: number) {
+    showSuccess(msg: string, duration: number | undefined = 5000) {
         this.notificationSubscription.next({
             message: msg,
             duration: duration,
