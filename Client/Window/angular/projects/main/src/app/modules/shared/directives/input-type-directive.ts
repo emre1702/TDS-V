@@ -1,7 +1,7 @@
-import { Directive, OnInit, HostListener } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 import { RageConnectorService } from 'rage-connector';
-import { ToClientEvent } from '../enums/to-client-event.enum';
-import { SettingsService } from '../services/settings.service';
+import { ToClientEvent } from '../../../enums/to-client-event.enum';
+import { SettingsService } from '../../../services/settings.service';
 
 @Directive({
     // tslint:disable-next-line: directive-selector

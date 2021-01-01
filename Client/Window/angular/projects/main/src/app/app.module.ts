@@ -23,8 +23,6 @@ import { UserpanelRulesNavPipe } from './components/userpanel/pipes/userpanelRul
 import { UserpanelFAQsComponent } from './components/userpanel/userpanel-faqs/userpanel-faqs.component';
 import { UserpanelSettingsNormalComponent } from './components/userpanel/userpanel-settings-normal/userpanel-settings-normal.component';
 import { UserpanelStatsGeneralComponent } from './components/userpanel/userpanel-stats-general/userpanel-stats-general.component';
-import { InputTypeDirective } from './extensions/inputTypeDirective';
-import { TextareaTypeDirective } from './extensions/textareaTypeDirective';
 import { RankingComponent } from './components/ranking/ranking.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CustomLobbyTeamsMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby-teams-menu/custom-lobby-teams-menu.component';
@@ -121,8 +119,6 @@ import { TDSWindowModule } from './modules/tds-window/tds-window.module';
         UserpanelSettingsThemeComponent,
         UserpanelSettingsVoiceComponent,
 
-        InputTypeDirective,
-        TextareaTypeDirective,
         MentionDirective,
         MentionListComponent,
         RankingComponent,

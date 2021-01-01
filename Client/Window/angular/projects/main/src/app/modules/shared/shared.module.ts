@@ -7,8 +7,10 @@ import { SharedModuleComponent } from './shared-module.component';
 import { NotificationService } from './services/notification.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ToolbarDirective } from './directives/toolbarDirective';
+import { InputTypeDirective } from './directives/input-type-directive';
+import { TextareaTypeDirective } from './directives/textarea-type-directive';
 
-const declarations = [SharedModuleComponent, FilterPipe, LanguagePipe, OrderByPipe, ReversePipe, ToolbarDirective];
+const declarations = [SharedModuleComponent, FilterPipe, LanguagePipe, OrderByPipe, ReversePipe, ToolbarDirective, InputTypeDirective, TextareaTypeDirective];
 
 @NgModule({
     declarations: [...declarations],
