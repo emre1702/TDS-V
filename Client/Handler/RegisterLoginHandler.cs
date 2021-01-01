@@ -16,16 +16,20 @@ namespace TDS.Client.Handler
         private readonly RemoteEventsSender _remoteEventsSender;
 
         private readonly SettingsHandler _settingsHandler;
+        private readonly CursorHandler _cursorHandler;
 
         public RegisterLoginHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender,
-            BrowserHandler browserHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler)
+            BrowserHandler browserHandler, SettingsHandler settingsHandler, EventsHandler eventsHandler, CursorHandler cursorHandler)
             : base(loggingHandler)
         {
             _remoteEventsSender = remoteEventsSender;
             _browserHandler = browserHandler;
             _settingsHandler = settingsHandler;
+            _cursorHandler = cursorHandler;
 
             _eventsHandler = eventsHandler;
+
+            eventsHandler.AngularBrowserCreated += Started;
 
             RAGE.Events.Add(FromBrowserEvent.TryLogin, TryLogin);
             RAGE.Events.Add(FromBrowserEvent.TryRegister, TryRegister);
@@ -33,9 +37,16 @@ namespace TDS.Client.Handler
             RAGE.Events.Add(ToClientEvent.LoginSuccessful, OnLoginSuccessfulMethod);
         }
 
-        public void Stop()
+        public void Started()
+        {
+            RAGE.Chat.Show(false);
+            _cursorHandler.Visible = true;
+        }
+
+        public void Stopped()
         {
             RAGE.Chat.Show(true);
+            _cursorHandler.Visible = false;
         }
 
         public void TryLogin(object[] args)
@@ -63,7 +74,7 @@ namespace TDS.Client.Handler
 
         private void OnLoginSuccessfulMethod(object[] args)
         {
-            Stop();
+            Stopped();
             _settingsHandler.LoadSyncedSettings(Serializer.FromServer<SyncedServerSettingsDto>(args[0].ToString()));
             _settingsHandler.LoggedIn = true;
 

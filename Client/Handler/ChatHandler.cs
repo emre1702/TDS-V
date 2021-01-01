@@ -43,8 +43,6 @@ namespace TDS.Client.Handler
             _eventsHandler = eventsHandler;
             _bindsHandler = bindsHandler;
 
-            RAGE.Chat.Show(false);
-
             eventsHandler.LoggedIn += EventsHandler_LoggedIn;
 
             Add(FromBrowserEvent.CloseChat, _ => CloseChatInput());

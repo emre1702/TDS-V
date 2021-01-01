@@ -8,12 +8,14 @@ namespace TDS.Client.Handler.Browser
 {
     public class BrowserHandler : ServiceBase
     {
+        private readonly EventsHandler _eventsHandler;
         private TDSTimer _browserCreatedCheckTimer;
 
         public BrowserHandler(LoggingHandler loggingHandler, EventsHandler eventsHandler,
             RemoteEventsSender remoteEventsSender)
             : base(loggingHandler)
         {
+            _eventsHandler = eventsHandler;
             Angular = new AngularBrowserHandler(loggingHandler, eventsHandler);
             MapCreatorObjectChoice = new MapCreatorObjectChoiceBrowserHandler(loggingHandler);
             MapCreatorVehicleChoice = new MapCreatorVehicleChoiceBrowserHandler(loggingHandler);
@@ -80,8 +82,8 @@ namespace TDS.Client.Handler.Browser
                     Angular.CreatedSuccessfully = true;
                     RAGE.Ui.Console.LogLine(RAGE.Ui.ConsoleVerbosity.Info, "Angular browser has been created successfully.", true);
                     Angular.Browser.MarkAsChat();
-                    RAGE.Chat.Show(true);
                     Angular.ProcessExecuteList();
+                    _eventsHandler.OnAngularBrowserCreated();
                     break;
 
                 case "PlainMain":

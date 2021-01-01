@@ -129,6 +129,8 @@ namespace TDS.Client.Handler.Events
 
         public event WeaponChangedDelegate WeaponChanged;
 
+        public event EmptyDelegate AngularBrowserCreated;
+
         public void OnLobbyJoined(SyncedLobbySettings newSettings)
         {
             try
@@ -542,6 +544,20 @@ namespace TDS.Client.Handler.Events
                 Logging.LogInfo("", "EventsHandler.OnTeamChanged");
                 TeamChanged?.Invoke(currentTeamName);
                 Logging.LogInfo("", "EventsHandler.OnTeamChanged", true);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+        }
+
+        internal void OnAngularBrowserCreated()
+        {
+            try
+            {
+                Logging.LogInfo("", "EventsHandler.OnAngularBrowserCreated");
+                AngularBrowserCreated?.Invoke();
+                Logging.LogInfo("", "EventsHandler.OnAngularBrowserCreated", true);
             }
             catch (Exception ex)
             {
