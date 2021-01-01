@@ -26,6 +26,7 @@ namespace TDS.Server.Database.Entity.Player.Character.Body
         [JsonProperty("3")]
         public float SkinTonePercentage { get; set; }
 
+        [JsonIgnore]
         public virtual PlayerBodyDatas BodyDatas { get; set; }
     }
 

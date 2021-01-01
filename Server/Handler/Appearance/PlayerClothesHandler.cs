@@ -1,5 +1,4 @@
 ﻿using GTANetworkAPI;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +13,8 @@ using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Enums.CharCreator;
+using TDS.Shared.Data.Models.CharCreator;
+using TDS.Shared.Data.Models.CharCreator.Clothes;
 using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Appearance
@@ -40,7 +41,7 @@ namespace TDS.Server.Handler.Appearance
             {
                 if (player.Entity is null)
                     return "ErrorInfo";
-                var newConfig = Serializer.FromBrowser<PlayerClothesDatas>((string)args[0]);
+                var newConfig = Serializer.FromBrowser<ClothesConfigs>((string)args[0]);
 
                 var msg = await player.Database.ExecuteForDBAsyncUnsafe(async dbContext =>
                 {
@@ -50,9 +51,7 @@ namespace TDS.Server.Handler.Appearance
                         return "ErrorInfo";
                     }
 
-                    dbContext.Entry(oldConfig).State = EntityState.Detached;
-                    TakeIds(newConfig, oldConfig!);
-                    player.Entity.ClothesDatas = newConfig;
+                    TakeValues(oldConfig!, newConfig, player.Id);
                     await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                     return null;
@@ -70,7 +69,7 @@ namespace TDS.Server.Handler.Appearance
             }
         }
 
-        public async ValueTask InitPlayerClothes((ITDSPlayer player, Players dbPlayer) args)
+        public ValueTask InitPlayerClothes((ITDSPlayer player, Players dbPlayer) args)
         {
             var amountSlots = _settingsHandler.ServerSettings.AmountCharSlots;
             var clothesDatas = new PlayerClothesDatas { PlayerId = args.dbPlayer.Id, SelectedSlot = 0, DatasPerSlot = new List<PlayerClothesData>() };
@@ -80,11 +79,7 @@ namespace TDS.Server.Handler.Appearance
             {
                 AddClothesSlot(clothesDatas, i);
             }
-
-            await args.player.Database.ExecuteForDBAsyncUnsafe(async dbContext =>
-            {
-                await dbContext.SaveChangesAsync().ConfigureAwait(false);
-            }).ConfigureAwait(false);
+            return default;
         }
 
         private async void LoadPlayerClothes(ITDSPlayer player, IBaseLobby lobby)
@@ -116,11 +111,11 @@ namespace TDS.Server.Handler.Appearance
                 }
 
                 player.SetClothes(clothes);
-                SetAccessory(player, 0, currentData.Hat);
-                SetAccessory(player, 1, currentData.Glasses);
-                SetAccessory(player, 2, currentData.EarAccessory);
-                SetAccessory(player, 6, currentData.Watch);
-                SetAccessory(player, 7, currentData.Bracelet);
+                SetAccessory(player, 0, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Hats));
+                SetAccessory(player, 1, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Glasses));
+                SetAccessory(player, 2, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.EarAccessories));
+                SetAccessory(player, 6, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Watches));
+                SetAccessory(player, 7, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Bracelets));
             });
         }
 
@@ -136,21 +131,25 @@ namespace TDS.Server.Handler.Appearance
         {
             var data = new PlayerClothesData
             {
-                Accessory = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Accessories, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Bag = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Bags, Slot = slot, DrawableId = 0, TextureId = -1 },
-                BodyArmor = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.BodyArmors, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Bracelet = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Bracelets, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Decal = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Decals, Slot = slot, DrawableId = 0, TextureId = -1 },
-                EarAccessory = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.EarAccessories, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Glasses = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Glasses, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Hands = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Hands, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Hat = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Hats, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Jacket = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Jackets, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Legs = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Legs, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Mask = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Masks, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Shirt = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Shirts, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Shoes = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Shoes, Slot = slot, DrawableId = 0, TextureId = -1 },
-                Watch = new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Watches, Slot = slot, DrawableId = 0, TextureId = -1 },
+                PlayerId = datas.PlayerId,
+                Slot = slot,
+                ComponentOrPropDatas = new List<PlayerClothesComponentOrPropData> {
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Accessories, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Bags, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.BodyArmors, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Bracelets, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Decals, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.EarAccessories, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Glasses, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Hands, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Hats, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Jackets, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Legs, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Masks, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Shirts, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Shoes, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Watches, Slot = slot, DrawableId = 0, TextureId = -1 }
+                }
             };
             datas.DatasPerSlot.Add(data);
         }
@@ -159,89 +158,54 @@ namespace TDS.Server.Handler.Appearance
         {
             return new Dictionary<int, ComponentVariation>
             {
-                [1] = currentData.Mask.ToComponentVariation(),
-                [3] = currentData.Hands.ToComponentVariation(),
-                [4] = currentData.Legs.ToComponentVariation(),
-                [5] = currentData.Bag.ToComponentVariation(),
-                [6] = currentData.Shoes.ToComponentVariation(),
-                [7] = currentData.Accessory.ToComponentVariation(),
-                [8] = currentData.Shirt.ToComponentVariation(),
-                [9] = currentData.BodyArmor.ToComponentVariation(),
-                [10] = currentData.Decal.ToComponentVariation(),
-                [11] = currentData.Jacket.ToComponentVariation(),
+                [1] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Masks).ToComponentVariation(),
+                [3] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Hands).ToComponentVariation(),
+                [4] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Legs).ToComponentVariation(),
+                [5] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Bags).ToComponentVariation(),
+                [6] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Shoes).ToComponentVariation(),
+                [7] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Accessories).ToComponentVariation(),
+                [8] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Shirts).ToComponentVariation(),
+                [9] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.BodyArmors).ToComponentVariation(),
+                [10] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Decals).ToComponentVariation(),
+                [11] = currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Jackets).ToComponentVariation(),
             };
         }
 
-        private void TakeIds(PlayerClothesDatas to, PlayerClothesDatas from)
+        private void TakeValues(PlayerClothesDatas to, ClothesConfigs from, int playerId)
         {
-            to.PlayerId = from.PlayerId;
-            foreach (var data in to.DatasPerSlot)
+            to.SelectedSlot = from.SelectedSlot;
+
+            foreach (var fromData in from.DatasPerSlot)
             {
-                var slot = data.Slot;
-                var dataFrom = from.DatasPerSlot.First(d => d.Slot == slot);
-                data.PlayerId = dataFrom.PlayerId;
-                data.Slot = slot;
-
-                data.Accessory.Slot = slot;
-                data.Accessory.PlayerId = dataFrom.PlayerId;
-                data.Accessory.Key = ClothesDataKey.Accessories;
-
-                data.Bag.Slot = slot;
-                data.Bag.PlayerId = dataFrom.PlayerId;
-                data.Bag.Key = ClothesDataKey.Bags;
-
-                data.BodyArmor.Slot = slot;
-                data.BodyArmor.PlayerId = dataFrom.PlayerId;
-                data.BodyArmor.Key = ClothesDataKey.BodyArmors;
-
-                data.Bracelet.Slot = slot;
-                data.Bracelet.PlayerId = dataFrom.PlayerId;
-                data.Bracelet.Key = ClothesDataKey.Bracelets;
-
-                data.Decal.Slot = slot;
-                data.Decal.PlayerId = dataFrom.PlayerId;
-                data.Decal.Key = ClothesDataKey.Decals;
-
-                data.EarAccessory.Slot = slot;
-                data.EarAccessory.PlayerId = dataFrom.PlayerId;
-                data.EarAccessory.Key = ClothesDataKey.EarAccessories;
-
-                data.Glasses.Slot = slot;
-                data.Glasses.PlayerId = dataFrom.PlayerId;
-                data.Glasses.Key = ClothesDataKey.Glasses;
-
-                data.Hands.Slot = slot;
-                data.Hands.PlayerId = dataFrom.PlayerId;
-                data.Hands.Key = ClothesDataKey.Hands;
-
-                data.Hat.Slot = slot;
-                data.Hat.PlayerId = dataFrom.PlayerId;
-                data.Hat.Key = ClothesDataKey.Hats;
-
-                data.Jacket.Slot = slot;
-                data.Jacket.PlayerId = dataFrom.PlayerId;
-                data.Jacket.Key = ClothesDataKey.Jackets;
-
-                data.Legs.Slot = slot;
-                data.Legs.PlayerId = dataFrom.PlayerId;
-                data.Legs.Key = ClothesDataKey.Legs;
-
-                data.Mask.Slot = slot;
-                data.Mask.PlayerId = dataFrom.PlayerId;
-                data.Mask.Key = ClothesDataKey.Masks;
-
-                data.Shirt.Slot = slot;
-                data.Shirt.PlayerId = dataFrom.PlayerId;
-                data.Shirt.Key = ClothesDataKey.Shirts;
-
-                data.Shoes.Slot = slot;
-                data.Shoes.PlayerId = dataFrom.PlayerId;
-                data.Shoes.Key = ClothesDataKey.Shoes;
-
-                data.Watch.Slot = slot;
-                data.Watch.PlayerId = dataFrom.PlayerId;
-                data.Watch.Key = ClothesDataKey.Watches;
+                var toData = to.DatasPerSlot.First(d => d.Slot == fromData.Slot);
+                TakeValues(toData, fromData);
             }
+        }
+
+        private void TakeValues(PlayerClothesData toData, ClothesData fromData)
+        {
+            TakeValues(toData, fromData.Accessory, ClothesDataKey.Accessories);
+            TakeValues(toData, fromData.Bag, ClothesDataKey.Bags);
+            TakeValues(toData, fromData.BodyArmor, ClothesDataKey.BodyArmors);
+            TakeValues(toData, fromData.Bracelet, ClothesDataKey.Bracelets);
+            TakeValues(toData, fromData.Decal, ClothesDataKey.Decals);
+            TakeValues(toData, fromData.EarAccessory, ClothesDataKey.EarAccessories);
+            TakeValues(toData, fromData.Glasses, ClothesDataKey.Glasses);
+            TakeValues(toData, fromData.Hands, ClothesDataKey.Hands);
+            TakeValues(toData, fromData.Hat, ClothesDataKey.Hats);
+            TakeValues(toData, fromData.Jacket, ClothesDataKey.Jackets);
+            TakeValues(toData, fromData.Legs, ClothesDataKey.Legs);
+            TakeValues(toData, fromData.Mask, ClothesDataKey.Masks);
+            TakeValues(toData, fromData.Shirt, ClothesDataKey.Shirts);
+            TakeValues(toData, fromData.Shoes, ClothesDataKey.Shoes);
+            TakeValues(toData, fromData.Watch, ClothesDataKey.Watches);
+        }
+
+        private void TakeValues(PlayerClothesData toData, ClothesComponentOrPropData from, ClothesDataKey key)
+        {
+            var data = toData.ComponentOrPropDatas.First(d => d.Key == key);
+            data.DrawableId = from.DrawableId;
+            data.TextureId = from.TextureId;
         }
     }
 }

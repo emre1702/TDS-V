@@ -29,6 +29,9 @@ namespace TDS.Server.Database.Entity.Player.Character.Clothes
         [JsonProperty("1")]
         public int TextureId { get; set; }
 
+        [JsonIgnore]
+        public virtual PlayerClothesData Data { get; set; }
+
         public ComponentVariation ToComponentVariation()
             => new ComponentVariation(DrawableId, TextureId);
     }
@@ -38,6 +41,11 @@ namespace TDS.Server.Database.Entity.Player.Character.Clothes
         public void Configure(EntityTypeBuilder<PlayerClothesComponentOrPropData> builder)
         {
             builder.HasKey(e => new { e.PlayerId, e.Slot, e.Key });
+
+            builder.HasOne(e => e.Data)
+                .WithMany(e => e.ComponentOrPropDatas)
+                .HasForeignKey(e => new { e.PlayerId, e.Slot })
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

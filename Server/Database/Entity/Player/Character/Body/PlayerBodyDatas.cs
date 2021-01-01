@@ -18,19 +18,19 @@ namespace TDS.Server.Database.Entity.Player.Character.Body
         [JsonIgnore]
         public virtual Players Player { get; set; }
 
-        [JsonProperty("0")]
+        [JsonProperty("3")]
         public virtual ICollection<PlayerBodyAppearanceDatas> AppearanceData { get; set; }
 
-        [JsonProperty("1")]
+        [JsonProperty("2")]
         public virtual ICollection<PlayerBodyFeaturesDatas> FeaturesData { get; set; }
 
-        [JsonProperty("2")]
+        [JsonProperty("0")]
         public virtual ICollection<PlayerBodyGeneralDatas> GeneralData { get; set; }
 
-        [JsonProperty("3")]
+        [JsonProperty("4")]
         public virtual ICollection<PlayerBodyHairAndColorsDatas> HairAndColorsData { get; set; }
 
-        [JsonProperty("4")]
+        [JsonProperty("1")]
         public virtual ICollection<PlayerBodyHeritageDatas> HeritageData { get; set; }
     }
 

@@ -79,7 +79,7 @@ namespace TDS.Server.Handler.Appearance
                 .ForEach(p => p.SetValue(newObj, p.GetValue(originalObj)));
         }
 
-        public async ValueTask InitPlayerBody((ITDSPlayer player, Players dbPlayer) args)
+        public ValueTask InitPlayerBody((ITDSPlayer player, Players dbPlayer) args)
         {
             byte amountSlots = _settingsHandler.ServerSettings.AmountCharSlots;
 
@@ -97,10 +97,7 @@ namespace TDS.Server.Handler.Appearance
             for (byte i = 0; i < amountSlots; ++i)
                 AddBodySlot(charDatas, i);
 
-            await args.player.Database.ExecuteForDBAsyncUnsafe(async dbContext =>
-            {
-                await dbContext.SaveChangesAsync().ConfigureAwait(false);
-            });
+            return default;
         }
 
         private void AddBodySlot(PlayerBodyDatas bodyDatas, byte slot)

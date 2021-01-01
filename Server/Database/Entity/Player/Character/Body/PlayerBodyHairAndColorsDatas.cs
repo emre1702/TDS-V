@@ -41,6 +41,7 @@ namespace TDS.Server.Database.Entity.Player.Character.Body
         [JsonProperty("8")]
         public int ChestHairColor { get; set; }
 
+        [JsonIgnore]
         public virtual PlayerBodyDatas BodyDatas { get; set; }
     }
 
