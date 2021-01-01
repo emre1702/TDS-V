@@ -60,7 +60,6 @@ namespace TDS.Server.Handler.Appearance
                 await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
                 LoadPlayerBody(player);
 
-                await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
                 return "";
             }
             catch (Exception ex)
@@ -70,7 +69,7 @@ namespace TDS.Server.Handler.Appearance
             }
         }
 
-        private void CopyJsonValues<T>(T originalObj, T newObj)
+        private void CopyJsonValues<T>(T newObj, T originalObj)
         {
             originalObj!
                 .GetType()

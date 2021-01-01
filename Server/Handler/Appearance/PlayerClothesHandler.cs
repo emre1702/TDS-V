@@ -30,9 +30,7 @@ namespace TDS.Server.Handler.Appearance
             _settingsHandler = settingsHandler;
 
             eventsHandler.PlayerRegisteredBefore += InitPlayerClothes;
-            eventsHandler.PlayerSpawned += LoadPlayerClothes;
-
-            remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.SaveBodyData, Save);
+            eventsHandler.PlayerSpawned += LoadPlayerClothes;            
         }
 
         private async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)

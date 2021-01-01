@@ -36,6 +36,7 @@ namespace TDS.Client.Handler.Appearance
         {
             if (!(Ped is null))
                 Ped.Destroy();
+            Ped = null;
         }
 
         public void CreatePed()
@@ -50,13 +51,12 @@ namespace TDS.Client.Handler.Appearance
                 var pos = new Vector3(-425.48f, 1123.55f, 325.85f);
 
                 Ped = new TDSPed((uint)skin, pos, 345, _dimension);
+                var clothesData = _clothesDataHandler.Data;
 
                 new TDSTimer(() =>
                 {
-                    if (_clothesDataHandler.Data is null)
-                        return;
                     Ped?.SetBodyData(bodyData);
-                    Ped?.SetClothesData(_clothesDataHandler.Data);
+                    Ped?.SetClothesData(clothesData);
                 }, 1000);
                
             }
