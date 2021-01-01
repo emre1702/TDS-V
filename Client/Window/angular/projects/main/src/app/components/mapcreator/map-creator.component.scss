@@ -1,12 +1,8 @@
 tds-window {
     position: absolute;
-    display: flex;
-    flex-direction: column;
-    top: 1%;
-    right: 1%;
-    height: auto;
+    top: 15px;
+    right: 15px;
     max-height: 100vh;
-    width: 20%;
 }
 
 textarea {
@@ -27,11 +23,7 @@ textarea {
     }
 
     .mat-table-container {
-        align-content: flex-start;
-        display: flex;
-        flex-direction: column;
         overflow: auto;
-        height: auto !important;
         max-height: 70vh;
     }
 

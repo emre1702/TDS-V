@@ -4,6 +4,8 @@
     [showSave]="isSaveableNav()"
     (back)="currentTitle = 'MapCreator'; goBackNav()"
     [showBack]="isBackableNav()"
+    contentWidth="20vw"
+    containerMaxHeight="99vh"
 >
     <div id="main-content" *ngIf="currentNav == mapCreatorNav.Main">
         <mat-form-field
