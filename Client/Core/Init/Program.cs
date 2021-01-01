@@ -21,7 +21,7 @@ namespace TDS.Client.Core.Init
             Audio.SetAudioFlag("LoadMPData", true);
             Player.SetPlayerHealthRechargeMultiplier(0);
             RAGE.Elements.Player.LocalPlayer.SetCanRagdoll(false);
-            RAGE.Elements.Player.LocalPlayer.SetAlpha(255, true);
+            RAGE.Elements.Player.LocalPlayer.SetAlpha(255, false);
             RAGE.Elements.Player.LocalPlayer.SetVisible(true, true);
 
             // CLEAR_GPS_CUSTOM_ROUTE

@@ -18,16 +18,10 @@ namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly CamerasHandler _camerasHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public MapCreatorHandler(LoggingHandler loggingHandler, BindsHandler bindsHandler, InstructionalButtonHandler instructionalButtonHandler,
             SettingsHandler settingsHandler, UtilsHandler utilsHandler, CamerasHandler camerasHandler, CursorHandler cursorHandler, BrowserHandler browserHandler,
@@ -67,10 +61,6 @@ namespace TDS.Client.Handler.MapCreator
             RAGE.Events.Add(FromBrowserEvent.TeleportToPositionRotation, OnTeleportToPositionRotationMethod);
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public MapCreatorBindsHandler Binds { get; }
         public MapCreatorDrawHandler Draw { get; }
         public MapCreatorFootHandler Foot { get; }
@@ -82,10 +72,6 @@ namespace TDS.Client.Handler.MapCreator
         public MapCreatorObjectsPreviewHandler ObjectsPreview { get; }
         public MapCreatorSyncHandler Sync { get; }
         public MapCreatorVehiclesPreviewHandler VehiclePreview { get; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void Start()
         {
@@ -116,10 +102,6 @@ namespace TDS.Client.Handler.MapCreator
             ObjectsPreview.Stop();
             VehiclePreview.Stop();
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)
         {
@@ -172,7 +154,5 @@ namespace TDS.Client.Handler.MapCreator
             RAGE.Game.Misc.GetGroundZFor3dCoord(x, y, 9000, ref z, false);
             RAGE.Elements.Player.LocalPlayer.Position = new Vector3(x, y, z + 0.3f);
         }
-
-        #endregion Private Methods
     }
 }

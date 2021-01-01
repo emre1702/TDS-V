@@ -33,7 +33,7 @@ namespace TDS.Client.Handler.MapCreator
             }
             player.FreezePosition(false);
             player.SetVisible(true, true);
-            player.SetAlpha(255, true);
+            player.SetAlpha(255, false);
             player.SetCollision(true, true);
             _deathHandler.PlayerSpawn();
 

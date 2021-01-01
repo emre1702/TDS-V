@@ -8,7 +8,6 @@ using TDS.Client.Handler.Browser;
 using TDS.Client.Handler.Draw;
 using TDS.Client.Handler.Entities;
 using TDS.Client.Handler.Events;
-using TDS.Shared.Data.Models.GTA;
 using TDS.Shared.Default;
 using static RAGE.Events;
 
@@ -16,7 +15,7 @@ namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorFreecamHandler : ServiceBase
     {
-        public bool IsActive;
+        public bool IsActive = true;
 
         private readonly BrowserHandler _browserHandler;
         private readonly CamerasHandler _camerasHandler;

@@ -327,14 +327,14 @@ namespace TDS.Client.Handler.MapCreator
             if (obj == null)
                 return;
             obj.LoadEntityData();
-            obj.Entity.SetAlpha(180, true);
+            obj.Entity.SetAlpha(180, false);
         }
 
         private void RemoveHightlightObject(MapCreatorObject obj)
         {
             if (obj == null)
                 return;
-            obj.Entity.SetAlpha(255, true);
+            obj.Entity.SetAlpha(255, false);
         }
 
         private MapCreatorObject GetHighlightingObject()
