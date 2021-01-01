@@ -105,7 +105,7 @@ namespace TDS.Client.Handler.Entities
         public void LookAt(PedBase ped, PedBone bone, float posOffsetX, float posOffsetY, float posOffsetZ,
             float lookAtOffsetX, float lookAtOffsetZ)
         {
-            var pos = ped.GetBoneCoords((int)bone, posOffsetZ, posOffsetY, posOffsetX);
+            var pos = ped.GetBoneCoords((int)bone, posOffsetX, posOffsetY, posOffsetZ);
             Cam.SetCamCoord(_handle, pos.X, pos.Y, pos.Z);
             var pointAt = ped.GetBoneCoords((int)bone, lookAtOffsetX, 0, lookAtOffsetZ);
             Cam.PointCamAtCoord(_handle, pointAt.X, pointAt.Y, pointAt.Z);

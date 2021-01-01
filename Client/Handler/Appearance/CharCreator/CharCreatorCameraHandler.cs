@@ -88,7 +88,7 @@ namespace TDS.Client.Handler.Appearance.CharCreator
                     return;
                 }
 
-                var cursorPos = new Position2D(_utilsHandler.GetCursorX(), _utilsHandler.GetCursorY());
+                var cursorPos = _utilsHandler.GetCursorPos();
                 if (_initMovePedCursorPos is null)
                 {
                     _initMovePedCursorPos = cursorPos;
@@ -99,18 +99,18 @@ namespace TDS.Client.Handler.Appearance.CharCreator
 
                 float differenceX = cursorPos.X - _initMovePedCursorPos.X;
                 float addToAngle = differenceX * 2 * 360;
-                var newAngle = _initMovingAngle + addToAngle;
-                while (newAngle < 0)
-                    newAngle += 360;
-                while (newAngle > 360)
-                    newAngle -= 360;
+                _currentCamAngle = _initMovingAngle + addToAngle;
+                while (_currentCamAngle < 0)
+                    _currentCamAngle += 360;
+                while (_currentCamAngle > 360)
+                    _currentCamAngle -= 360;
 
-                ApplyAngle(_currentCamOffsetPos, 0.15f, newAngle);
+                ApplyAngle(_currentCamOffsetPos, 2f, _currentCamAngle);
 
                 float differenceY = cursorPos.Y - _initMovePedCursorPos.Y;
                 // 0,5 -> 1 => 3
-                float addToHeadingY = differenceY * 2 * 3;
-                _currentCamOffsetPos.Z = _initMovingOffsetZ + addToHeadingY;
+                //float addToHeadingY = differenceY * 2 * 3;
+                //_currentCamOffsetPos.Z = _initMovingOffsetZ + addToHeadingY;
 
                 LookAtTarget();
                 if (!_isCameraSwitchingTarget)
@@ -152,17 +152,18 @@ namespace TDS.Client.Handler.Appearance.CharCreator
 
         private void ApplyAngle(Position3D pos, float distance, float angle)
         {
-            pos.X = (float)Math.Cos(angle * Math.PI / 180) * distance;
-            pos.Y = (float)Math.Sin(angle * Math.PI / 180) * distance;
+            var radiansAngle = (Math.PI / 180) * angle;
+            pos.X = (float)Math.Cos(radiansAngle) * distance;
+            pos.Y = (float)Math.Sin(radiansAngle) * distance;
         }
 
         private void LookAtTarget()
         {
             if (_currentCamOffsetPos is null)
             {
-                _currentCamOffsetPos = new Position3D(0, 0, 0.2);
+                _currentCamOffsetPos = new Position3D(0, 0, 0.15);
                 _currentCamAngle = 90;
-                ApplyAngle(_currentCamOffsetPos, 0.4f, _currentCamAngle);
+                ApplyAngle(_currentCamOffsetPos, 2f, _currentCamAngle);
             }
 
             switch (_currentTarget)
@@ -180,43 +181,43 @@ namespace TDS.Client.Handler.Appearance.CharCreator
         private void LookAtAll()
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_ROOT,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.4f);
+                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
         }
 
         private void LookAtHead()
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_Head,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
+                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
         }
 
         private void LookAtTorso()
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_ROOT,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.2f);
+                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
         }
 
         private void LookAtArms()
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.RB_R_ArmRoll,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
+                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
         }
 
         private void LookAtHands()
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_R_Hand,
-               _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
+               _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
         }
 
         private void LookAtLegs()
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_R_Calf,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
+                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
         }
 
         private void LookAtFoot()
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_R_Foot,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0.15f);
+                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
         }
     }
 }

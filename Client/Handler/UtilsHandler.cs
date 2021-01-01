@@ -9,6 +9,7 @@ using TDS.Client.Data.Models;
 using TDS.Client.Handler.Entities;
 using TDS.Client.Handler.Events;
 using TDS.Shared.Core;
+using TDS.Shared.Data.Models.GTA;
 using TDS.Shared.Data.Utility;
 using static RAGE.Events;
 
@@ -155,6 +156,11 @@ namespace TDS.Client.Handler
         public float GetCursorY()
         {
             return Pad.GetDisabledControlNormal((int)InputGroup.MOVE, (int)Control.CursorY);
+        }
+
+        public Position2D GetCursorPos()
+        {
+            return new Position2D(GetCursorX(), GetCursorY());
         }
 
         public Vector3 GetDirectionByRotation(Vector3 rotation)
