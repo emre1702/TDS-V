@@ -94,7 +94,7 @@ namespace TDS.Server.Handler
             var origType = prefix[1..^1];
             return origType.ToLower() switch
             {
-                "neu" => "NEU",
+                "neu" => "NEW",
                 "änderung" => "CHANGE",
                 "fix" => "BUG",
 
@@ -135,8 +135,8 @@ namespace TDS.Server.Handler
 
                 return xPrefix switch
                 {
-                    "new" => yPrefix == "neu" ? x.ToLower().CompareTo(y.ToLower()) : -1,
-                    "change" => yPrefix == "neu" ? 1 : (yPrefix == "change" ? x.ToLower().CompareTo(y.ToLower()) : -1),
+                    "new" => yPrefix == "new" ? x.ToLower().CompareTo(y.ToLower()) : -1,
+                    "change" => yPrefix == "new" ? 1 : (yPrefix == "change" ? x.ToLower().CompareTo(y.ToLower()) : -1),
                     "bug" => yPrefix == "bug" ? x.ToLower().CompareTo(y.ToLower()) : 1,
 
                     _ => x.ToLower().CompareTo(y.ToLower())
