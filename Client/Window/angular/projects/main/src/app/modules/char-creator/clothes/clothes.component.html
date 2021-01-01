@@ -1,4 +1,4 @@
-<tds-window [title]="clothesDataKey[currentNav] | language: settings.Lang" (back)="goBack()">
+<tds-window [title]="'Clothes' + clothesDataKey[currentNav] | language: settings.Lang" (back)="goBack()">
     <ng-container *ngIf="data$ | async as configs">
         <ng-container
             [ngTemplateOutlet]="currentNav !== clothesDataKey.Main ? clothesContent : main"
@@ -8,13 +8,17 @@
 </tds-window>
 
 <ng-template #clothesContent let-configs="configs">
-    <app-clothes-content [(textureId)]="getData(configs)[currentNav][0]" [(drawableId)]="getData(configs)[currentNav][1]"></app-clothes-content>
+    <app-clothes-content
+        [key]="currentNav"
+        [(drawableId)]="getData(configs)[currentNav][0]"
+        [(textureId)]="getData(configs)[currentNav][1]"
+    ></app-clothes-content>
 </ng-template>
 
 <ng-template #main let-configs="configs">
     <mat-action-list>
         <button *ngFor="let key of contents" mat-list-item (click)="goToNav(key)">
-            {{ clothesDataKey[key] | language: settings.Lang }}
+            {{ 'Clothes' + clothesDataKey[key] | language: settings.Lang }}
         </button>
         <mat-list-item disableRipple class="radio-group">
             <mat-radio-group ngDefaultControl [ngModel]="configs[1]" (ngModelChange)="slotChanged(configs, $event)">

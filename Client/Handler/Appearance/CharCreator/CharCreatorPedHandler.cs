@@ -6,6 +6,7 @@ using TDS.Client.Data.Enums;
 using TDS.Client.Handler.Appearance.CharCreator.Body;
 using TDS.Client.Handler.Appearance.CharCreator.Clothes;
 using TDS.Client.Handler.Entities.GTA;
+using TDS.Shared.Core;
 
 namespace TDS.Client.Handler.Appearance
 {
@@ -50,8 +51,14 @@ namespace TDS.Client.Handler.Appearance
 
                 Ped = new TDSPed((uint)skin, pos, 345, _dimension);
 
-                Ped.SetBodyData(bodyData);
-                Ped.SetClothesData(_clothesDataHandler.Data);
+                new TDSTimer(() =>
+                {
+                    if (_clothesDataHandler.Data is null)
+                        return;
+                    Ped?.SetBodyData(bodyData);
+                    Ped?.SetClothesData(_clothesDataHandler.Data);
+                }, 1000);
+               
             }
             catch (Exception ex)
             {

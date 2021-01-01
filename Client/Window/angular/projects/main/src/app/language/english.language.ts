@@ -876,6 +876,24 @@ You need to set the target for this mode.`;
     AccountWithNameAlreadyExists = 'An account with this name already exists.';
     RegisterFailedDevsInformed =
         'An error has occured while trying to register. The developers are informed and will fix this problem as soon as possible. Please try again later.';
+    ClothesMain = 'Main menu';
+    ClothesHats = 'Hats';
+    ClothesGlasses = 'Glasses';
+    ClothesMasks = 'Masks';
+    ClothesJackets = 'Tops';
+    ClothesShirts = 'Undershirts';
+    ClothesHands = 'Torsos';
+    ClothesAccessories = 'Accessories';
+    ClothesBags = 'Bags';
+    ClothesLegs = 'Legs';
+    ClothesShoes = 'Shoes';
+    ClothesBodyArmors = 'Body Armors';
+    ClothesDecals = 'Decals';
+    ClothesEarAccessories = 'Ear Accessories';
+    ClothesWatches = 'Watches';
+    ClothesBracelets = 'Bracelets';
+    ClothesAll = 'All';
+    ClothesSlot = 'Slot';
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = 'All without gangwar';

@@ -33,7 +33,7 @@ namespace TDS.Server.Database.Entity.Player.Character.Clothes
         public virtual PlayerClothesData Data { get; set; }
 
         public ComponentVariation ToComponentVariation()
-            => new ComponentVariation(DrawableId, TextureId);
+            => new ComponentVariation(DrawableId, TextureId, 2);
     }
 
     public class PlayerClothesComponentOrPropDataConfiguration : IEntityTypeConfiguration<PlayerClothesComponentOrPropData>

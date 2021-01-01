@@ -46,6 +46,10 @@ namespace TDS.Client.Handler.Appearance.CharCreator.Clothes
             var currentData = Data.DatasPerSlot.First(d => d.Slot == Data.SelectedSlot);
             switch (key)
             {
+                case ClothesDataKey.Slot:
+                    Data.SelectedSlot = (byte)drawableId;
+                    break;
+
                 case ClothesDataKey.Accessories:
                     currentData.Accessory.DrawableId = drawableId;
                     currentData.Accessory.TextureId = textureId;

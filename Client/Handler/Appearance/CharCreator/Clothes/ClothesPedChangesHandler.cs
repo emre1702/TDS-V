@@ -21,17 +21,9 @@ namespace TDS.Client.Handler.Appearance.CharCreator.Clothes
             }
 
             if (key.TryGetComponentId(out int componentId))
-            {
-                var paletteId = _pedHandler.Ped.GetPaletteVariation(componentId);
-                _pedHandler.Ped.SetComponentVariation(componentId, drawableId, textureId, paletteId);
-            }
+                _pedHandler.Ped.SetComponent(componentId, drawableId, textureId);
             else if (key.TryGetPropId(out int propId))
-            {
-                if (drawableId != -1)
-                    _pedHandler.Ped.SetPropIndex(propId, drawableId, textureId, true);
-                else
-                    _pedHandler.Ped.ClearProp(propId);
-            }
+                _pedHandler.Ped.SetProp(propId, drawableId, textureId);
         }
     }
 }

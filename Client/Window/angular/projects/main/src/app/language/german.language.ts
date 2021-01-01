@@ -801,6 +801,24 @@ Du brauchst mindestens ein Ziel für diesen Mode.`;
     AccountWithNameAlreadyExists = 'Ein Account mit diesem Name existiert bereits.';
     RegisterFailedDevsInformed =
         'Ein Fehler ist beim Registrieren aufgetreten. Die Entwickler sind informiert und werden das Problem so schnell es geht beheben. Versuche es bitte später erneut.';
+    ClothesMain = 'Hauptmenü';
+    ClothesHats = 'Hüte';
+    ClothesGlasses = 'Brillen';
+    ClothesMasks = 'Masken';
+    ClothesJackets = 'Oberteile';
+    ClothesShirts = 'Unterhemden';
+    ClothesHands = 'Torsos';
+    ClothesAccessories = 'Accessoires';
+    ClothesBags = 'Taschen';
+    ClothesLegs = 'Beine';
+    ClothesShoes = 'Schuhe';
+    ClothesBodyArmors = 'Westen';
+    ClothesDecals = 'Sticker';
+    ClothesEarAccessories = 'Ohr Accessoires';
+    ClothesWatches = 'Armbanduhren';
+    ClothesBracelets = 'Armbänder';
+    ClothesAll = 'Alle';
+    ClothesSlot = 'Slot';
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars = 'Alle ohne Gangwar';

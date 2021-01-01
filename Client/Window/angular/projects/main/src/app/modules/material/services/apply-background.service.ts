@@ -1,4 +1,4 @@
-import { Injectable, ElementRef } from "@angular/core";
+import { Injectable, ElementRef } from '@angular/core';
 import { SettingsService } from '../../../services/settings.service';
 import { SettingsThemeIndex } from '../../../components/userpanel/userpanel-settings-normal/enums/settings-theme-index.enum';
 import { EventEmitter } from 'events';
@@ -12,15 +12,15 @@ export class ApplyBackgroundService {
     private lastDarkBackgroundColor: string;
     private lastLightBackgroundColor: string;
 
-    constructor(
-        private settings: SettingsService
-    ) {
+    constructor(private settings: SettingsService) {
         this.settings.ThemeSettingChanged.on(null, this.revertAllBackgroundColorStyles.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.themeChanged.bind(this));
         this.settings.SettingsLoaded.on(null, this.themeSettingsLoaded.bind(this));
         this.themeSettingsLoaded();
-     }
-    
+
+        this.changed.setMaxListeners(50);
+    }
+
     add(element: any) {
         this.elements.push(element);
         this.applyThemeOnElement(element);
@@ -34,14 +34,14 @@ export class ApplyBackgroundService {
     }
 
     private applyThemeOnElement(element: any) {
-        element.style.backgroundColor = "";
+        element.style.backgroundColor = '';
         const colorStr = this.lastUseDarkTheme ? this.lastDarkBackgroundColor : this.lastLightBackgroundColor;
         element.style.background = colorStr;
     }
 
     private revertAllBackgroundColorStyles() {
         for (const element of this.elements) {
-            element.style.backgroundColor = "";
+            element.style.backgroundColor = '';
         }
         this.changed.emit(null);
     }
@@ -65,7 +65,7 @@ export class ApplyBackgroundService {
         for (const element of this.elements) {
             element.style.background = colorStr;
         }
-        
+
         this.changed.emit(null);
     }
 

@@ -841,6 +841,24 @@ export interface Language {
     AlreadyHaveAccount: string;
     AccountWithNameAlreadyExists: string;
     RegisterFailedDevsInformed: string;
+    ClothesMain: string;
+    ClothesHats: string;
+    ClothesGlasses: string;
+    ClothesMasks: string;
+    ClothesJackets: string;
+    ClothesShirts: string;
+    ClothesHands: string;
+    ClothesAccessories: string;
+    ClothesBags: string;
+    ClothesLegs: string;
+    ClothesShoes: string;
+    ClothesBodyArmors: string;
+    ClothesDecals: string;
+    ClothesEarAccessories: string;
+    ClothesWatches: string;
+    ClothesBracelets: string;
+    ClothesAll: string;
+    ClothesSlot: string;
 
     /////////// Default map names ///////////
     DefaultMapIdsAllWithoutGangwars: string;

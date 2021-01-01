@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS.Shared.Data.Enums.CharCreator;
 using TDS.Shared.Data.Models.CharCreator;
+using TDS.Shared.Data.Models.CharCreator.Clothes;
 
 namespace TDS.Client.Handler.Appearance.CharCreator.Clothes
 {
@@ -37,22 +38,22 @@ namespace TDS.Client.Handler.Appearance.CharCreator.Clothes
         {
             var data = configs.DatasPerSlot.First(d => d.Slot == configs.SelectedSlot);
 
-            ped.SetComponentVariation(1, data.Mask.DrawableId, data.Mask.TextureId, ped.GetPaletteVariation(1));
-            ped.SetComponentVariation(3, data.Hands.DrawableId, data.Hands.TextureId, ped.GetPaletteVariation(3));
-            ped.SetComponentVariation(4, data.Legs.DrawableId, data.Legs.TextureId, ped.GetPaletteVariation(4));
-            ped.SetComponentVariation(5, data.Bag.DrawableId, data.Bag.TextureId, ped.GetPaletteVariation(5));
-            ped.SetComponentVariation(6, data.Shoes.DrawableId, data.Shoes.TextureId, ped.GetPaletteVariation(6));
-            ped.SetComponentVariation(7, data.Accessory.DrawableId, data.Accessory.TextureId, ped.GetPaletteVariation(7));
-            ped.SetComponentVariation(8, data.Shirt.DrawableId, data.Shirt.TextureId, ped.GetPaletteVariation(8));
-            ped.SetComponentVariation(9, data.BodyArmor.DrawableId, data.BodyArmor.TextureId, ped.GetPaletteVariation(9));
-            ped.SetComponentVariation(10, data.Decal.DrawableId, data.Decal.TextureId, ped.GetPaletteVariation(10));
-            ped.SetComponentVariation(11, data.Jacket.DrawableId, data.Jacket.TextureId, ped.GetPaletteVariation(11));
+            ped.SetComponent(1, data.Mask);
+            ped.SetComponent(3, data.Hands);
+            ped.SetComponent(4, data.Legs);
+            ped.SetComponent(5, data.Bag);
+            ped.SetComponent(6, data.Shoes);
+            ped.SetComponent(7, data.Accessory);
+            ped.SetComponent(8, data.Shirt);
+            ped.SetComponent(9, data.BodyArmor);
+            ped.SetComponent(10, data.Decal);
+            ped.SetComponent(11, data.Jacket);
 
-            ped.SetPropIndex(0, data.Hat.DrawableId, data.Hat.TextureId, true);
-            ped.SetPropIndex(1, data.Glasses.DrawableId, data.Glasses.TextureId, true);
-            ped.SetPropIndex(2, data.EarAccessory.DrawableId, data.EarAccessory.TextureId, true);
-            ped.SetPropIndex(6, data.Watch.DrawableId, data.Watch.TextureId, true);
-            ped.SetPropIndex(7, data.Bracelet.DrawableId, data.Bracelet.TextureId, true);
+            ped.SetProp(0, data.Hat);
+            ped.SetProp(1, data.Glasses);
+            ped.SetProp(2, data.EarAccessory);
+            ped.SetProp(6, data.Watch);
+            ped.SetProp(7, data.Bracelet);
         }
 
         internal static bool TryGetComponentId(this ClothesDataKey key, out int componentId)
@@ -60,5 +61,32 @@ namespace TDS.Client.Handler.Appearance.CharCreator.Clothes
 
         internal static bool TryGetPropId(this ClothesDataKey key, out int propId)
             => _propIdByDataKey.TryGetValue(key, out propId);
+
+        internal static void SetComponent(this PedBase ped, int componentId, int drawableId, int textureId)
+        {
+            var paletteId = ped.GetPaletteVariation(componentId);
+            if (textureId != -1)
+                ped.SetComponentVariation(componentId, drawableId, textureId, paletteId);
+            else
+                ped.SetComponentVariation(componentId, 0, -1, paletteId);
+        }
+
+        internal static void SetComponent(this PedBase ped, int componentId, ClothesComponentOrPropData data)
+        {
+            SetComponent(ped, componentId, data.DrawableId, data.TextureId);
+        }
+
+        internal static void SetProp(this PedBase ped, int propId, int drawableId, int textureId)
+        {
+            if (textureId != -1)
+                ped.SetPropIndex(propId, drawableId, textureId, true);
+            else
+                ped.ClearProp(propId);
+        }
+
+        internal static void SetProp(this PedBase ped, int propId, ClothesComponentOrPropData data)
+        {
+            SetProp(ped, propId, data.DrawableId, data.TextureId);
+        }
     }
 }

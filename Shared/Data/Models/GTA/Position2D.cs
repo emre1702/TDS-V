@@ -10,7 +10,9 @@ namespace TDS.Shared.Data.Models.GTA
         [JsonProperty("1")]
         public float Y { get; set; }
 
-        public Position2D() { }
+        public Position2D()
+        {
+        }
 
         public Position2D(float x, float y)
             => (X, Y) = (x, y);
@@ -21,5 +23,7 @@ namespace TDS.Shared.Data.Models.GTA
         public Position2D(int x, int y)
            => (X, Y) = (x, y);
 
+        public override string ToString()
+            => $"X: {X} | Y: {Y}";
     }
 }

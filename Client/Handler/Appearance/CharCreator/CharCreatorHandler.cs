@@ -74,7 +74,7 @@ namespace TDS.Client.Handler.Appearance
                 Chat.Show(false);
                 RAGE.Game.Ui.DisplayRadar(false);
 
-                RAGE.Elements.Player.LocalPlayer.SetAlpha(0, true);
+                RAGE.Elements.Player.LocalPlayer.SetAlpha(0, false);
                 _cursorHandler.Visible = true;
 
                 _bodyDataHandler.Start(bodyData);
@@ -94,7 +94,7 @@ namespace TDS.Client.Handler.Appearance
             {
                 _eventsHandler.LobbyLeft -= Stop;
 
-                RAGE.Elements.Player.LocalPlayer.SetAlpha(255, true);
+                RAGE.Elements.Player.LocalPlayer.SetAlpha(255, false);
                 _browserHandler.Angular.ToggleCharCreator(false);
                 Chat.Show(true);
                 RAGE.Game.Ui.DisplayRadar(true);
@@ -141,6 +141,15 @@ namespace TDS.Client.Handler.Appearance
 
                 var key = (ClothesDataKey)Convert.ToInt32(keyAndArgs[0]);
                 var drawableId = Convert.ToInt32(keyAndArgs[1]);
+                if (key == ClothesDataKey.Slot)
+                {
+                    var slot = drawableId;
+                    _clothesDataHandler.DataChanged(key, slot, 0);
+                    _clothesPedChangesHandler.DataChanged(key, slot, 0);
+                    return;
+                }
+
+                
                 var textureId = Convert.ToInt32(keyAndArgs[2]);
                 _clothesDataHandler.DataChanged(key, drawableId, textureId);
                 _clothesPedChangesHandler.DataChanged(key, drawableId, textureId);

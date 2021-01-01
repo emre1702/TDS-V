@@ -18,6 +18,7 @@
         public const string EarAccessories = "12";
         public const string Watches = "13";
         public const string Bracelets = "14";
-        public const string Slot = "15";
+        public const string All = "15";
+        public const string Slot = "16";
     }
 }

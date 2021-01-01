@@ -21,6 +21,7 @@
         Bracelets,
 
         // Rest
+        All,
         Slot
     }
 }

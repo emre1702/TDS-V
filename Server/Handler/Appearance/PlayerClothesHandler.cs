@@ -30,7 +30,7 @@ namespace TDS.Server.Handler.Appearance
             _settingsHandler = settingsHandler;
 
             eventsHandler.PlayerRegisteredBefore += InitPlayerClothes;
-            eventsHandler.PlayerJoinedLobby += LoadPlayerClothes;
+            eventsHandler.PlayerSpawned += LoadPlayerClothes;
 
             remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.SaveBodyData, Save);
         }
@@ -82,7 +82,7 @@ namespace TDS.Server.Handler.Appearance
             return default;
         }
 
-        private async void LoadPlayerClothes(ITDSPlayer player, IBaseLobby lobby)
+        private async void LoadPlayerClothes(ITDSPlayer player)
         {
             if (player.Entity?.ClothesDatas is null)
                 return;
@@ -104,18 +104,19 @@ namespace TDS.Server.Handler.Appearance
 
             NAPI.Task.RunSafe(() =>
             {
-                if (lobby is IArena || lobby is IGangActionLobby)
+                foreach (var compOrPropData in currentData.ComponentOrPropDatas)
                 {
-                    player.SetClothes(11, 0, 0);
-                    clothes.Remove(11);
+                    var (compOrPropId, isComp) = GetCompOrPropIdAndIsComp(compOrPropData.Key);
+                    if (isComp)
+                    {
+                        if (compOrPropId == 11 && player.Lobby is IRoundFightLobby)
+                            player.SetClothes(compOrPropId, 0, 0);
+                        else
+                            player.SetClothes(compOrPropId, compOrPropData.DrawableId, compOrPropData.TextureId);
+                    }
+                    else
+                        SetAccessory(player, compOrPropId, compOrPropData);
                 }
-
-                player.SetClothes(clothes);
-                SetAccessory(player, 0, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Hats));
-                SetAccessory(player, 1, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Glasses));
-                SetAccessory(player, 2, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.EarAccessories));
-                SetAccessory(player, 6, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Watches));
-                SetAccessory(player, 7, currentData.ComponentOrPropDatas.First(c => c.Key == ClothesDataKey.Bracelets));
             });
         }
 
@@ -141,13 +142,13 @@ namespace TDS.Server.Handler.Appearance
                     new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Decals, Slot = slot, DrawableId = 0, TextureId = -1 },
                     new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.EarAccessories, Slot = slot, DrawableId = 0, TextureId = -1 },
                     new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Glasses, Slot = slot, DrawableId = 0, TextureId = -1 },
-                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Hands, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Hands, Slot = slot, DrawableId = 0, TextureId = 0 },
                     new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Hats, Slot = slot, DrawableId = 0, TextureId = -1 },
-                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Jackets, Slot = slot, DrawableId = 0, TextureId = -1 },
-                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Legs, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Jackets, Slot = slot, DrawableId = 0, TextureId = 0 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Legs, Slot = slot, DrawableId = 0, TextureId = 0 },
                     new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Masks, Slot = slot, DrawableId = 0, TextureId = -1 },
                     new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Shirts, Slot = slot, DrawableId = 0, TextureId = -1 },
-                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Shoes, Slot = slot, DrawableId = 0, TextureId = -1 },
+                    new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Shoes, Slot = slot, DrawableId = 0, TextureId = 0 },
                     new PlayerClothesComponentOrPropData { PlayerId = datas.PlayerId, Key = ClothesDataKey.Watches, Slot = slot, DrawableId = 0, TextureId = -1 }
                 }
             };
@@ -207,5 +208,28 @@ namespace TDS.Server.Handler.Appearance
             data.DrawableId = from.DrawableId;
             data.TextureId = from.TextureId;
         }
+
+        private (int, bool) GetCompOrPropIdAndIsComp(ClothesDataKey key)
+            => key switch
+            {
+                ClothesDataKey.Masks => (1, true),
+                ClothesDataKey.Hands => (3, true),
+                ClothesDataKey.Legs => (4, true),
+                ClothesDataKey.Bags => (5, true),
+                ClothesDataKey.Shoes => (6, true),
+                ClothesDataKey.Accessories => (7, true),
+                ClothesDataKey.Shirts => (8, true),
+                ClothesDataKey.BodyArmors => (9, true),
+                ClothesDataKey.Decals => (10, true),
+                ClothesDataKey.Jackets => (11, true),
+
+                ClothesDataKey.Hats => (0, false),
+                ClothesDataKey.Glasses => (1, false),
+                ClothesDataKey.EarAccessories => (2, false),
+                ClothesDataKey.Watches => (6, false),
+                ClothesDataKey.Bracelets => (7, false),
+
+                _ => (-1, true)
+            };
     }
 }
