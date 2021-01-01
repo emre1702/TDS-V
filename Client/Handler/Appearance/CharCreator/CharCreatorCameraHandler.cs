@@ -1,6 +1,7 @@
 ﻿using RAGE;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using TDS.Client.Data.Defaults;
 using TDS.Client.Data.Enums;
 using TDS.Client.Data.Enums.CharCreator;
@@ -9,13 +10,13 @@ using TDS.Shared.Core;
 using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Models.GTA;
 using static RAGE.Events;
+using static RAGE.Ui.Cursor;
 
 namespace TDS.Client.Handler.Appearance.CharCreator
 {
     internal class CharCreatorCameraHandler
     {
         private float _currentCamAngle;
-        private Position3D _currentCamOffsetPos;
         private Position2D _initMovePedCursorPos;
         private float _initMovingAngle;
         private float _initMovingOffsetZ;
@@ -23,6 +24,7 @@ namespace TDS.Client.Handler.Appearance.CharCreator
         private CharCreatorCameraTarget _currentTarget;
         private bool _isCameraSwitchingTarget;
         private TDSTimer _isCameraSwitchingTargetTimer;
+
         private readonly LoggingHandler _logging;
         private readonly DeathHandler _deathHandler;
         private readonly CharCreatorPedHandler _pedHandler;
@@ -39,13 +41,13 @@ namespace TDS.Client.Handler.Appearance.CharCreator
             _utilsHandler = utilsHandler;
 
             //Todo: Call this in main menu OnInit
-            RAGE.Events.Add(FromBrowserEvent.CharCreatorResetCameraTarget, (_) => SetCameraTarget(CharCreatorCameraTarget.All));
+            RAGE.Events.Add(FromBrowserEvent.CharCreatorResetCameraTarget, (_) => SetCameraTarget(CharCreatorCameraTarget.Head));
         }
 
         public void Start()
         {
-            _currentTarget = CharCreatorCameraTarget.All;
-            PrepareCameraDelayed(2000);
+            _currentTarget = CharCreatorCameraTarget.Head;
+            PrepareCameraDelayed(1000);
             Tick += MovePed;
         }
 
@@ -54,7 +56,6 @@ namespace TDS.Client.Handler.Appearance.CharCreator
             _prepareCameraTimer?.Kill();
             _prepareCameraTimer = null;
             Tick -= MovePed;
-            _currentCamOffsetPos = null;
             _camerasHandler.BetweenRoundsCam.Deactivate(true);
         }
 
@@ -63,6 +64,8 @@ namespace TDS.Client.Handler.Appearance.CharCreator
             if (_currentTarget == target)
                 return;
             _currentTarget = target;
+
+            _initMovePedCursorPos = null;
             _isCameraSwitchingTargetTimer?.Kill();
             _isCameraSwitchingTarget = true;
             _isCameraSwitchingTargetTimer = new TDSTimer(() =>
@@ -70,6 +73,9 @@ namespace TDS.Client.Handler.Appearance.CharCreator
                 _isCameraSwitchingTarget = false;
                 _isCameraSwitchingTargetTimer = null;
             }, 1000);
+
+            var offsetPos = GetOffsetPos(2f, 90);
+            LookAtTarget(offsetPos);
             _camerasHandler.BetweenRoundsCam.Render(true, 1000);
         }
 
@@ -78,8 +84,6 @@ namespace TDS.Client.Handler.Appearance.CharCreator
             try
             {
                 if (_pedHandler.Ped is null)
-                    return;
-                if (_currentCamOffsetPos is null)
                     return;
 
                 if (!Input.IsDown((int)Key.RightButton))
@@ -92,7 +96,7 @@ namespace TDS.Client.Handler.Appearance.CharCreator
                 if (_initMovePedCursorPos is null)
                 {
                     _initMovePedCursorPos = cursorPos;
-                    _initMovingOffsetZ = _currentCamOffsetPos.Z;
+                    _initMovingOffsetZ = 0;
                     _initMovingAngle = _currentCamAngle;
                     return;
                 }
@@ -105,14 +109,14 @@ namespace TDS.Client.Handler.Appearance.CharCreator
                 while (_currentCamAngle > 360)
                     _currentCamAngle -= 360;
 
-                ApplyAngle(_currentCamOffsetPos, 2f, _currentCamAngle);
+                var offsetPos = GetOffsetPos(2f, _currentCamAngle);
 
                 float differenceY = cursorPos.Y - _initMovePedCursorPos.Y;
                 // 0,5 -> 1 => 3
-                //float addToHeadingY = differenceY * 2 * 3;
-                //_currentCamOffsetPos.Z = _initMovingOffsetZ + addToHeadingY;
+                float addToHeadingY = differenceY * 2 * 3;
+                offsetPos.Z = _initMovingOffsetZ + addToHeadingY;
 
-                LookAtTarget();
+                LookAtTarget(offsetPos);
                 if (!_isCameraSwitchingTarget)
                     _camerasHandler.BetweenRoundsCam.Render(false, 0);
             }
@@ -136,7 +140,8 @@ namespace TDS.Client.Handler.Appearance.CharCreator
                 _initMovePedCursorPos = null;
                 RAGE.Game.Cam.DoScreenFadeIn(200);
 
-                LookAtTarget();
+                var offsetPos = GetOffsetPos(2f, 90);
+                LookAtTarget(offsetPos);
                 var cam = _camerasHandler.BetweenRoundsCam;
                 cam.Activate();
                 cam.Render(true, 1000);
@@ -150,74 +155,68 @@ namespace TDS.Client.Handler.Appearance.CharCreator
             }
         }
 
-        private void ApplyAngle(Position3D pos, float distance, float angle)
+        private Position3D GetOffsetPos(float distance, float angle)
         {
             var radiansAngle = (Math.PI / 180) * angle;
-            pos.X = (float)Math.Cos(radiansAngle) * distance;
-            pos.Y = (float)Math.Sin(radiansAngle) * distance;
+            var offsetX = (float)Math.Cos(radiansAngle) * distance;
+            var offsetY = (float)Math.Sin(radiansAngle) * distance;
+            return new Position3D(offsetX, offsetY, 0);
         }
 
-        private void LookAtTarget()
+        private void LookAtTarget(Position3D offsetPos)
         {
-            if (_currentCamOffsetPos is null)
-            {
-                _currentCamOffsetPos = new Position3D(0, 0, 0.15);
-                _currentCamAngle = 90;
-                ApplyAngle(_currentCamOffsetPos, 2f, _currentCamAngle);
-            }
-
             switch (_currentTarget)
             {
-                case CharCreatorCameraTarget.All: LookAtAll(); break;
-                case CharCreatorCameraTarget.Head: LookAtHead(); break;
-                case CharCreatorCameraTarget.Torso: LookAtTorso(); break;
-                case CharCreatorCameraTarget.Arms: LookAtArms(); break;
-                case CharCreatorCameraTarget.Hands: LookAtHands(); break;
-                case CharCreatorCameraTarget.Legs: LookAtLegs(); break;
-                case CharCreatorCameraTarget.Foot: LookAtFoot(); break;
+                case CharCreatorCameraTarget.All: LookAtAll(offsetPos); break;
+                case CharCreatorCameraTarget.Head: LookAtHead(offsetPos); break;
+                case CharCreatorCameraTarget.Torso: LookAtTorso(offsetPos); break;
+                case CharCreatorCameraTarget.Arms: LookAtArms(offsetPos); break;
+                case CharCreatorCameraTarget.Hands: LookAtHands(offsetPos); break;
+                case CharCreatorCameraTarget.Legs: LookAtLegs(offsetPos); break;
+                case CharCreatorCameraTarget.Foot: LookAtFoot(offsetPos); break;
             }
         }
 
-        private void LookAtAll()
+        private void LookAtAll(Position3D offsetPos)
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_ROOT,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
+                offsetPos.X, offsetPos.Y, offsetPos.Z);
         }
 
-        private void LookAtHead()
+        private void LookAtHead(Position3D offsetPos)
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_Head,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
+                offsetPos.X, offsetPos.Y, offsetPos.Z);
         }
 
-        private void LookAtTorso()
+        private void LookAtTorso(Position3D offsetPos)
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_ROOT,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
+                offsetPos.X, offsetPos.Y, offsetPos.Z);
         }
 
-        private void LookAtArms()
+        private void LookAtArms(Position3D offsetPos)
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.RB_R_ArmRoll,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
+                offsetPos.X, offsetPos.Y, offsetPos.Z);
         }
 
-        private void LookAtHands()
+        private void LookAtHands(Position3D offsetPos)
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_R_Hand,
-               _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
+               offsetPos.X, offsetPos.Y, offsetPos.Z);
         }
 
-        private void LookAtLegs()
+        private void LookAtLegs(Position3D offsetPos)
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_R_Calf,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
+                offsetPos.X, offsetPos.Y, offsetPos.Z);
         }
 
-        private void LookAtFoot()
+        private void LookAtFoot(Position3D offsetPos)
         {
             _camerasHandler.BetweenRoundsCam.LookAt(_pedHandler.Ped, PedBone.SKEL_R_Foot,
-                _currentCamOffsetPos.X, _currentCamOffsetPos.Y, _currentCamOffsetPos.Z, 0, 0);
+                offsetPos.X, offsetPos.Y, offsetPos.Z);
         }
     }
 }

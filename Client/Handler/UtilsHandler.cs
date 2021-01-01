@@ -12,6 +12,7 @@ using TDS.Shared.Core;
 using TDS.Shared.Data.Models.GTA;
 using TDS.Shared.Data.Utility;
 using static RAGE.Events;
+using static RAGE.Ui.Cursor;
 
 namespace TDS.Client.Handler
 {
@@ -161,6 +162,11 @@ namespace TDS.Client.Handler
         public Position2D GetCursorPos()
         {
             return new Position2D(GetCursorX(), GetCursorY());
+        }
+
+        public Vector2 GetCursorPosAbsolute()
+        {
+            return Position;
         }
 
         public Vector3 GetDirectionByRotation(Vector3 rotation)
@@ -403,11 +409,11 @@ namespace TDS.Client.Handler
 
         public Vector3 RotateZ(Vector3 point, float angle)
         {
-            Vector3 f7 = new Vector3(MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)), 0);
-            Vector3 f8 = new Vector3(MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)), 0);
-            Vector3 f9 = new Vector3(0, 0, 1);
+            var f7 = new Vector3(MathF.Cos(DegreesToRad(angle)), -MathF.Sin(DegreesToRad(angle)), 0);
+            var f8 = new Vector3(MathF.Sin(DegreesToRad(angle)), MathF.Cos(DegreesToRad(angle)), 0);
+            var f9 = new Vector3(0, 0, 1);
 
-            Vector3 final = new Vector3
+            var final = new Vector3
             {
                 X = (f7.X * point.X + f7.Y * point.Y + f7.Z * point.Z),
                 Y = (f8.X * point.X + f8.Y * point.Y + f8.Z * point.Z),
