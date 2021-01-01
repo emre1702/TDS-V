@@ -22,6 +22,7 @@ import { ErrorService, CustomErrorCheck, FormControlCheck } from '../../modules/
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { NotificationService } from '../../modules/shared/services/notification.service';
+import { InitialDatas } from '../../initial-datas';
 
 enum MapCreatorNav {
     Main,
@@ -42,7 +43,7 @@ enum MapCreatorNav {
     styleUrls: ['./map-creator.component.scss'],
 })
 export class MapCreatorComponent implements OnInit, OnDestroy {
-    data = new MapCreateDataDto();
+    data = InitialDatas.getMapCreatorData();
     mapCreatorNav = MapCreatorNav;
     mapCreatorPositionType = MapCreatorPositionType;
     mapType = MapType;

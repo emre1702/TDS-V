@@ -169,22 +169,26 @@ textarea {
 }
 
 #map-center-div {
-    height: 27vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    .info {
-        float: left;
-        margin-right: 2.5%;
-        width: 42.5%;
-    }
+    .top {
+        .info {
+            float: left;
+            margin-right: 2.5%;
+            width: 42.5%;
+        }
 
-    .positions-container {
-        height: 100%;
-        float: right;
-        margin-left: 2.5%;
-        width: 42.5%;
+        .positions-container {
+            height: 100%;
+            float: right;
+            margin-left: 2.5%;
+            width: 42.5%;
 
-        .mat-form-field {
-            width: 100%;
+            .mat-form-field {
+                width: 100%;
+            }
         }
     }
 }

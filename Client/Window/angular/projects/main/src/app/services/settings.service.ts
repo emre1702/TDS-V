@@ -105,7 +105,7 @@ export class SettingsService {
     public Money = 0;
     public MoneyChanged = new EventEmitter();
 
-    public IsLobbyOwner = false;
+    public IsLobbyOwner = InitialDatas.isLobbyOwner;
     public IsLobbyOwnerChanged = new EventEmitter();
 
     public Settings: SyncedSettings = InitialDatas.syncedSettings;

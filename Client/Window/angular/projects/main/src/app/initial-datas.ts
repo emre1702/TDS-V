@@ -31,6 +31,10 @@ import { ChangelogsGroup } from './interfaces/changelogs/changelogs-group';
 import { BodyData } from './modules/char-creator/body/models/body-data';
 import { ClothesConfigs } from './modules/char-creator/clothes/models/clothes-configs';
 import { ClothesDataKey } from './modules/char-creator/clothes/enums/clothes-config-key.enum';
+import { MapCreateDataDto } from './components/mapcreator/models/mapCreateDataDto';
+import { MapCreatorPosition } from './components/mapcreator/models/mapCreatorPosition';
+import { MapCreatorPositionType } from './components/mapcreator/enums/mapcreatorpositiontype.enum';
+import { MapCreateSettings } from './components/mapcreator/models/mapCreateSettings';
 
 declare const mp: {};
 
@@ -43,13 +47,13 @@ export class InitialDatas {
     static readonly started: boolean = InitialDatas.inDebug && false;
 
     static readonly opened = {
-        mapCreator: InitialDatas.inDebug && false,
+        mapCreator: InitialDatas.inDebug && true,
         freeroam: InitialDatas.inDebug && false,
         lobbyChoice: !InitialDatas.inDebug || false,
         teamChoice: InitialDatas.inDebug && false,
         rankings: InitialDatas.inDebug && false,
         hud: InitialDatas.inDebug && false,
-        charCreator: InitialDatas.inDebug && true,
+        charCreator: InitialDatas.inDebug && false,
         gangWindow: InitialDatas.inDebug && false,
         damageTestMenu: InitialDatas.inDebug && false,
         userpanel: InitialDatas.inDebug && false,
@@ -59,6 +63,7 @@ export class InitialDatas {
     static readonly adminLevel = 0;
     static readonly isMapVotingActive = false;
     static readonly language: LanguageEnum = LanguageEnum.English;
+    static readonly isLobbyOwner: boolean = InitialDatas.inDebug && true;
 
     static readonly settingsByType: { [key: number]: {} } = {
         [UserpanelSettingsNormalType.Chat]: { 0: 30, 1: 35, 2: 1.4, 3: false, 4: true, 5: false, 6: 1, 7: 15000 } as UserpanelSettingsChat,
@@ -203,6 +208,21 @@ export class InitialDatas {
             { 0: 2, 1: 'DoThat' },
         ],
         1: [{ 0: 1, 1: 1, 2: 'GehHin' }],
+    };
+
+    private static readonly mapCreateData: MapCreateDataDto = {
+        0: 1,
+        1: 'MapCenter',
+        2: 0,
+        3: { 0: 0, 1: 999 },
+        4: { 7: 'English', 9: 'Deutsch' },
+        5: [],
+        6: [],
+        7: [],
+        8: [],
+        9: new MapCreatorPosition(99, MapCreatorPositionType.MapCenter, 1213, 134, -31, 31, 555.51, 3, 0),
+        10: new MapCreatorPosition(99, MapCreatorPositionType.Target, 1, 2, -3, 4, 5.51, 6, 0),
+        11: [],
     };
 
     static readonly syncedSettings: SyncedSettings = {
@@ -521,5 +541,9 @@ export class InitialDatas {
 
     static getVoiceInfos(): VoiceInfo[] {
         return this.inDebug ? this.voiceInfos : [];
+    }
+
+    static getMapCreatorData(): MapCreateDataDto {
+        return this.inDebug ? this.mapCreateData : new MapCreateDataDto();
     }
 }

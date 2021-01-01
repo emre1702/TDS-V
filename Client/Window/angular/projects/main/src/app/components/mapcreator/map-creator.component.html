@@ -269,30 +269,34 @@
     </div>
 
     <div id="map-center-div" *ngIf="currentNav == mapCreatorNav.MapCenter">
-        <div class="info">
-            {{ 'MapCenterInfo' | language: settings.Lang }}
+        <div class="top">
+            <div class="info">
+                {{ 'MapCenterInfo' | language: settings.Lang }}
+            </div>
+            <div class="positions-container" *ngIf="data[9]">
+                <mat-form-field color="accent">
+                    <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][3]" />
+                </mat-form-field>
+                <mat-form-field color="accent">
+                    <input name="mapCenterY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][4]" />
+                </mat-form-field>
+                <mat-form-field color="accent">
+                    <input name="mapCenterZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][5]" />
+                </mat-form-field>
+            </div>
         </div>
-        <div class="positions-container" *ngIf="data[9]">
-            <mat-form-field color="accent">
-                <input name="mapCenterX" matInput placeholder="X-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][3]" />
-            </mat-form-field>
-            <mat-form-field color="accent">
-                <input name="mapCenterY" matInput placeholder="Y-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][4]" />
-            </mat-form-field>
-            <mat-form-field color="accent">
-                <input name="mapCenterZ" matInput placeholder="Z-{{ 'Position' | language: settings.Lang }}" type="number" [(ngModel)]="data[9][5]" />
-            </mat-form-field>
-        </div>
-        <div class="positions-bottom-row">
-            <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)" [disabled]="!settings.IsLobbyOwner">
-                {{ (data[9] ? 'ChangePos' : 'AddPos') | language: settings.Lang }}
-            </button>
-            <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)" [disabled]="!settings.IsLobbyOwner">
-                {{ 'Remove' | language: settings.Lang }}
-            </button>
-            <button mat-raised-button type="button" (click)="tpToSelectedPos()">
-                {{ 'Teleport' | language: settings.Lang }}
-            </button>
+        <div class="bottom">
+            <div class="positions-bottom-row">
+                <button mat-raised-button type="button" (click)="startNewPosPlacing(mapCreatorPositionType.MapCenter)" [disabled]="!settings.IsLobbyOwner">
+                    {{ (data[9] ? 'ChangePos' : 'AddPos') | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="removeSelectedPos(removeMapCenter)" [disabled]="!settings.IsLobbyOwner">
+                    {{ 'Remove' | language: settings.Lang }}
+                </button>
+                <button mat-raised-button type="button" (click)="tpToSelectedPos()">
+                    {{ 'Teleport' | language: settings.Lang }}
+                </button>
+            </div>
         </div>
     </div>
 
