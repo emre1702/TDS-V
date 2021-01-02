@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TDS.Server.Data.Interfaces
 {
@@ -243,5 +244,6 @@ namespace TDS.Server.Data.Interfaces
         string MAP_CREATOR_REWARD_INFO { get; }
         string YOU_GOT_MAP_CREATOR_REWARD { get; }
         string WRONG_PASSWORD { get; }
+        string MAP_CREATOR_REWARD_OFFLINE_INFO { get; }
     }
 }

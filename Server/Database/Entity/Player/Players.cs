@@ -23,6 +23,7 @@ namespace TDS.Server.Database.Entity.Player
             Commands = new List<PlayerCommands>();
             CreatedHouses = new List<GangHouses>();
             Lobbies = new List<Lobbies>();
+            MapCreatorRewardsWhileOffline = new List<PlayerMapCreatorRewardsWhileOffline>();
             Maps = new List<Maps>();
             OfflinemessagesSource = new List<Offlinemessages>();
             OfflinemessagesTarget = new List<Offlinemessages>();
@@ -65,6 +66,7 @@ namespace TDS.Server.Database.Entity.Player
         public virtual GangMembers GangMemberNavigation { get; set; }
         public virtual PlayerKillInfoSettings KillInfoSettings { get; set; }
         public virtual ICollection<Lobbies> Lobbies { get; set; }
+        public virtual ICollection<PlayerMapCreatorRewardsWhileOffline> MapCreatorRewardsWhileOffline { get; set; }
         public virtual ICollection<Maps> Maps { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesSource { get; set; }
         public virtual ICollection<Offlinemessages> OfflinemessagesTarget { get; set; }

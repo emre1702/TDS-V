@@ -16,6 +16,7 @@ using TDS.Server.Handler.FakePickups;
 using TDS.Server.Handler.GangSystem;
 using TDS.Server.Handler.Helper;
 using TDS.Server.Handler.Maps;
+using TDS.Server.Handler.Maps.MapCreatorRewards;
 using TDS.Server.Handler.PlayerHandlers;
 using TDS.Server.Handler.Server;
 using TDS.Server.Handler.Sync;
@@ -148,7 +149,8 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddSingleton<MapFavouritesHandler>()
                .AddSingleton<MapsLoadingHandler>()
                .AddSingleton<MapsRatingsHandler>()
-               .AddSingleton<MapCreatorRewardsHandler>();
+               .AddSingleton<MapCreatorRewardsHandler>()
+               .AddSingleton<MapCreatorRewardsOfflineNotificationHandler>();
         }
 
         private static IServiceCollection WithPlayers(this IServiceCollection serviceCollection)

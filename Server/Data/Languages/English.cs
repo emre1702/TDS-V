@@ -251,5 +251,6 @@ namespace TDS.Server.Data.Languages
         public virtual string MAP_CREATOR_REWARD_INFO => "The creator of this map '{0}' earned ${1}.";
         public virtual string YOU_GOT_MAP_CREATOR_REWARD => "Your map '{0}' has been selected -> you earn ${1}.";
         public virtual string WRONG_PASSWORD => "Wrong password.";
+        public virtual string MAP_CREATOR_REWARD_OFFLINE_INFO => "Your map {0} earned you ${1}: {2}x random, {3}x voted, {4}x bought.";
     }
 }

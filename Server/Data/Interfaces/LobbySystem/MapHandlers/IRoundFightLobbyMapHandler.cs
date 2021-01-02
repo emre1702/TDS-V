@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TDS.Server.Data.Abstracts.Entities.GTA;
-using TDS.Server.Data.Enums;
 using TDS.Server.Data.Models.Map;
+using TDS.Shared.Data.Enums;
 
 namespace TDS.Server.Data.Interfaces.LobbySystem.MapHandlers
 {

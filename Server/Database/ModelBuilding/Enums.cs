@@ -34,7 +34,8 @@ namespace TDS.Server.Database.EntityConfigurations
                 .HasPostgresEnum<TimeSpanUnitsOfTime>()
                 .HasPostgresEnum<PedBodyPart>()
                 .HasPostgresEnum<HudDesign>()
-                .HasPostgresEnum<ClothesDataKey>();
+                .HasPostgresEnum<ClothesDataKey>()
+                .HasPostgresEnum<MapRetrieveType>();
         }
     }
 }

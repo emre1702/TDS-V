@@ -14,10 +14,10 @@ namespace TDS.Server.Database.Entity.Rest
         public DateTime CreateTimestamp { get; set; }
 
         public virtual Players Creator { get; set; }
+        public virtual ICollection<PlayerMapCreatorRewardsWhileOffline> CreatorRewardsWhileOffline { get; set; }
         public virtual GangActionAreas GangwarArea { get; set; }
         public virtual ICollection<LobbyMaps> LobbyMaps { get; set; }
         public virtual ICollection<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual ICollection<PlayerMapRatings> PlayerMapRatings { get; set; }
-
     }
 }

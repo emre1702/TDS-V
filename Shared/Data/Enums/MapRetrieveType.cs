@@ -1,4 +1,4 @@
-﻿namespace TDS.Server.Data.Enums
+﻿namespace TDS.Shared.Data.Enums
 {
     public enum MapRetrieveType
     {

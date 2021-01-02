@@ -250,5 +250,6 @@ namespace TDS.Server.Data.Languages
         public override string MAP_CREATOR_REWARD_INFO => "Der Ersteller der Karte '{0}' hat ${1} bekommen.";
         public override string YOU_GOT_MAP_CREATOR_REWARD => "Deine Karte '{0}' wurde ausgewählt -> du verdienst ${1}.";
         public override string WRONG_PASSWORD => "Falsches Passwort.";
+        public override string MAP_CREATOR_REWARD_OFFLINE_INFO => "Deine Karte {0} hat dir ${1} eingebracht: {2}x zufällig, {3}x gevotet, {4}x gekauft. ";
     }
 }

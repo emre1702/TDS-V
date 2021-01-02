@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
-using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
@@ -14,6 +13,7 @@ using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.Maps;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Default;
+using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Utility;
 
 namespace TDS.Server.LobbySystem.MapHandlers

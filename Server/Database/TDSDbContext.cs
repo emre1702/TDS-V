@@ -54,6 +54,7 @@ namespace TDS.Server.Database.Entity
             NpgsqlConnection.GlobalTypeMapper.MapEnum<PedBodyPart>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<HudDesign>();
             NpgsqlConnection.GlobalTypeMapper.MapEnum<ClothesDataKey>();
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<MapRetrieveType>();
         }
 
         public TDSDbContext(DbContextOptions<TDSDbContext> options)
@@ -110,6 +111,7 @@ namespace TDS.Server.Database.Entity
         public virtual DbSet<PlayerCommands> PlayerCommands { get; set; }
         public virtual DbSet<PlayerKillInfoSettings> PlayerKillInfoSettings { get; set; }
         public virtual DbSet<PlayerLobbyStats> PlayerLobbyStats { get; set; }
+        public virtual DbSet<PlayerMapCreatorRewardsWhileOffline> PlayerMapCreatorRewardsWhileOffline { get; set; }
         public virtual DbSet<PlayerMapFavourites> PlayerMapFavourites { get; set; }
         public virtual DbSet<PlayerMapRatings> PlayerMapRatings { get; set; }
         public virtual DbSet<PlayerRelations> PlayerRelations { get; set; }

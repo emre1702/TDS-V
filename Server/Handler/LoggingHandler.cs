@@ -162,7 +162,12 @@ namespace TDS.Server.Handler
 
         #region Error
 
-        public async void LogError(Exception ex, ITDSPlayer? source = null, bool logToBonusBot = true)
+        public void LogError(Exception ex, ITDSPlayer? source, bool logToBonusBot = true)
+        {
+            LogError(ex, source?.Id, logToBonusBot);
+        }
+
+        public async void LogError(Exception ex, int? source = null, bool logToBonusBot = true)
         {
             try
             {
@@ -173,7 +178,7 @@ namespace TDS.Server.Handler
                     ExceptionType = ex.GetType().Name,
                     Info = ex.Message,
                     StackTrace = ex.StackTrace ?? Environment.StackTrace,
-                    Source = source?.Id,
+                    Source = source,
                     Timestamp = DateTime.UtcNow
                 };
                 Console.WriteLine($"[{DateTime.Now}] {log.ExceptionType} {log.Info}{Environment.NewLine}{log.StackTrace}");
@@ -299,6 +304,7 @@ namespace TDS.Server.Handler
                 LogError(newEx);
             }
         }
+
         #endregion Error
 
         #region Chat
