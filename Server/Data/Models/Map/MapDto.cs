@@ -40,10 +40,10 @@ namespace TDS.Server.Data.Models.Map
             };
 
             data.TeamSpawns.RemoveAll(l => l.Count == 0);
-            TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new List<MapTeamSpawnsDto>(data.TeamSpawns.Count) };
+            TeamSpawnsList = new MapTeamSpawnsListDto { TeamSpawns = new(data.TeamSpawns.Count) };
             for (int i = 0; i < data.TeamSpawns.Count; ++i)
             {
-                TeamSpawnsList.TeamSpawns[i] = new MapTeamSpawnsDto { TeamID = (uint)i, Spawns = data.TeamSpawns[i].Select(pos => new Position4DDto(pos)).ToList() };
+                TeamSpawnsList.TeamSpawns.Add(new MapTeamSpawnsDto { TeamID = (uint)i, Spawns = data.TeamSpawns[i].Select(pos => new Position4DDto(pos)).ToList() });
             }
 
             LimitInfo = new MapLimitInfoDto
