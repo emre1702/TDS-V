@@ -14,18 +14,12 @@ namespace TDS.Client.Handler
 {
     public class ForceStayAtPosHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly DxHandler _dxHandler;
         private readonly RemoteEventsSender _remoteEventsSender;
 
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
         private MapLimit _mapLimit;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public ForceStayAtPosHandler(LoggingHandler loggingHandler, RemoteEventsSender remoteEventsSender, SettingsHandler settingsHandler, DxHandler dxHandler, TimerHandler timerHandler)
             : base(loggingHandler)
@@ -38,10 +32,6 @@ namespace TDS.Client.Handler
             RAGE.Events.Add(ToClientEvent.SetForceStayAtPosition, OnSetForceStayAtPositionMethod);
             RAGE.Events.Add(ToClientEvent.RemoveForceStayAtPosition, OnRemoveForceStayAtPositionMethod);
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Start(Position3D pos, float radius, MapLimitType type, int allowedTimeOut = 0)
         {
@@ -68,10 +58,6 @@ namespace TDS.Client.Handler
             _mapLimit = null;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void OnRemoveForceStayAtPositionMethod(object[] args)
         {
             Stop();
@@ -86,7 +72,5 @@ namespace TDS.Client.Handler
 
             Start(pos, radius, type, allowedTimeOut);
         }
-
-        #endregion Private Methods
     }
 }

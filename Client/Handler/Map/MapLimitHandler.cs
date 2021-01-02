@@ -1,9 +1,11 @@
 ﻿using RAGE;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TDS.Client.Handler.Draw.Dx;
 using TDS.Client.Handler.Entities;
 using TDS.Client.Handler.Events;
+using TDS.Shared.Data.Models;
 using TDS.Shared.Data.Models.GTA;
 
 namespace TDS.Client.Handler.Map
@@ -27,12 +29,12 @@ namespace TDS.Client.Handler.Map
 
             eventsHander.InFightStatusChanged += EventsHander_InFightStatusChanged;
             eventsHander.MapBorderColorChanged += EventsHander_MapBorderColorChanged;
-            eventsHander.LobbyLeft += _ => Stop();
             eventsHander.LocalPlayerDied += Stop;
             eventsHander.MapCleared += Stop;
             eventsHander.Respawned += EventsHander_Respawned;
             eventsHander.RoundEnded += _ => Stop();
             eventsHander.RoundStarted += Start;
+            eventsHander.LobbyLeft += Clear;
         }
 
         public void Load(List<Vector3> edges)
@@ -70,6 +72,12 @@ namespace TDS.Client.Handler.Map
         private void EventsHander_Respawned(bool inFightAgain)
         {
             Start(!inFightAgain);
+        }
+
+        private void Clear(SyncedLobbySettings settings)
+        {
+            Stop();
+            _currentMapLimit = null;
         }
     }
 }
