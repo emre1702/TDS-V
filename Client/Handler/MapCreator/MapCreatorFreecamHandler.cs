@@ -134,6 +134,8 @@ namespace TDS.Client.Handler.MapCreator
         private void MoveCam()
         {
             var cam = _camerasHandler.FreeCam;
+            if (cam is null)
+                return;
 
             var pos = cam.Position;
             var dir = cam.Direction;
