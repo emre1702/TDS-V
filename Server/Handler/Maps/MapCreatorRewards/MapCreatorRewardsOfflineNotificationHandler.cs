@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces.Entities;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Database.Entity.Player;
 using TDS.Server.Handler.Events;
@@ -11,9 +12,9 @@ namespace TDS.Server.Handler.Maps.MapCreatorRewards
 {
     public class MapCreatorRewardsOfflineNotificationHandler
     {
-        private readonly DatabaseHandler _databaseHandler;
+        private readonly IDatabaseHandler _databaseHandler;
 
-        public MapCreatorRewardsOfflineNotificationHandler(EventsHandler eventsHandler, DatabaseHandler databaseHandler)
+        public MapCreatorRewardsOfflineNotificationHandler(EventsHandler eventsHandler, IDatabaseHandler databaseHandler)
         {
             _databaseHandler = databaseHandler;
 
