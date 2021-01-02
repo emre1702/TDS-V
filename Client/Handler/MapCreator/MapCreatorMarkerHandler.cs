@@ -9,14 +9,11 @@ using TDS.Client.Data.Extensions;
 using TDS.Client.Handler.Browser;
 using TDS.Client.Handler.Draw.Dx;
 using TDS.Shared.Data.Enums;
-using TDS.Shared.Data.Models.GTA;
 
 namespace TDS.Client.Handler.MapCreator
 {
     public class MapCreatorMarkerHandler : ServiceBase
     {
-        #region Private Fields
-
         private readonly BrowserHandler _browserHandler;
         private readonly CamerasHandler _camerasHandler;
         private readonly ClickedMarkerStorer _clickedMarkerStorer;
@@ -27,10 +24,6 @@ namespace TDS.Client.Handler.MapCreator
         private readonly UtilsHandler _utilsHandler;
         private AxisMarker _highlightedMarker;
         private AxisMarker[] _rotateMarker;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public MapCreatorMarkerHandler(LoggingHandler loggingHandler, UtilsHandler utilsHandler, DxHandler dxHandler,
             CamerasHandler camerasHandler, BrowserHandler browserHandler,
@@ -47,10 +40,6 @@ namespace TDS.Client.Handler.MapCreator
             _mapCreatorSyncHandler = mapCreatorSyncHandler;
             _clickedMarkerStorer = clickedMarkerStorer;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void OnTick()
         {
@@ -189,7 +178,5 @@ namespace TDS.Client.Handler.MapCreator
             _rotateMarker = null;
             _clickedMarkerStorer.ClickedMarker = null;
         }
-
-        #endregion Public Methods
     }
 }
