@@ -34,20 +34,22 @@ import { ClothesDataKey } from './modules/char-creator/clothes/enums/clothes-con
 import { MapCreateDataDto } from './components/mapcreator/models/mapCreateDataDto';
 import { MapCreatorPosition } from './components/mapcreator/models/mapCreatorPosition';
 import { MapCreatorPositionType } from './components/mapcreator/enums/mapcreatorpositiontype.enum';
-import { MapCreateSettings } from './components/mapcreator/models/mapCreateSettings';
+import { UserpanelRuleDataDto } from './components/userpanel/interfaces/userpanelRuleDataDto';
+import { UserpanelFAQDataDto } from './components/userpanel/interfaces/userpanelFAQDataDto';
 
 declare const mp: {};
 
 export class InitialDatas {
-    private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf iojsadhfui sadhoufi sadholiuf
-        sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
+    private static readonly longText = `asdjaois isodfaj oisdaji ofsadjio fjsadoi jfioasdjf 
+        iojsadhfui 
+        sadhoufisadholiuf sadhoiu fhjsaodiuhfoiausdhofiusadh ioufsadhoiu shadoi fhasioudh foiasdh foiuasdhf iuosadhiu fhsadiuof dsaf`;
 
     static readonly inDebug = typeof mp === 'undefined';
 
     static readonly started: boolean = InitialDatas.inDebug && false;
 
     static readonly opened = {
-        mapCreator: InitialDatas.inDebug && true,
+        mapCreator: InitialDatas.inDebug && false,
         freeroam: InitialDatas.inDebug && false,
         lobbyChoice: !InitialDatas.inDebug || false,
         teamChoice: InitialDatas.inDebug && false,
@@ -56,7 +58,7 @@ export class InitialDatas {
         charCreator: InitialDatas.inDebug && false,
         gangWindow: InitialDatas.inDebug && false,
         damageTestMenu: InitialDatas.inDebug && false,
-        userpanel: InitialDatas.inDebug && false,
+        userpanel: InitialDatas.inDebug && true,
         registerLogin: !InitialDatas.inDebug || false,
     };
 
@@ -254,6 +256,29 @@ export class InitialDatas {
         10: new MapCreatorPosition(99, MapCreatorPositionType.Target, 1, 2, -3, 4, 5.51, 6, 0),
         11: [],
     };
+
+    private static readonly allRules: UserpanelRuleDataDto[] = [
+        { 0: 1, 1: { 7: InitialDatas.longText, 9: InitialDatas.longText }, 2: 1, 3: 1 },
+        { 0: 2, 1: { 7: InitialDatas.longText + InitialDatas.longText, 9: InitialDatas.longText + InitialDatas.longText }, 2: 1, 3: 1 },
+        {
+            0: 3,
+            1: {
+                7: InitialDatas.longText + InitialDatas.longText + InitialDatas.longText,
+                9: InitialDatas.longText + InitialDatas.longText + InitialDatas.longText,
+            },
+            2: 1,
+            3: 1,
+        },
+    ];
+
+    private static readonly allFAQs: UserpanelFAQDataDto[] = [
+        { 0: 'Test 123', 1: 'Test 123' },
+        { 0: InitialDatas.longText, 1: InitialDatas.longText },
+        {
+            0: InitialDatas.longText + InitialDatas.longText + InitialDatas.longText,
+            1: InitialDatas.longText + InitialDatas.longText + InitialDatas.longText,
+        },
+    ];
 
     static readonly syncedSettings: SyncedSettings = {
         0: 30,
@@ -575,5 +600,13 @@ export class InitialDatas {
 
     static getMapCreatorData(): MapCreateDataDto {
         return this.inDebug ? this.mapCreateData : new MapCreateDataDto();
+    }
+
+    static getAllRules(): UserpanelRuleDataDto[] {
+        return this.inDebug ? this.allRules : [];
+    }
+
+    static getAllFAQs(): UserpanelFAQDataDto[] {
+        return this.inDebug ? this.allFAQs : [];
     }
 }

@@ -1,12 +1,7 @@
-#container {
-    height: 100%;
-
-    overflow-y: auto;
-}
-
 .rule-entry {
-    white-space: pre-wrap;
+    white-space: pre-line;
     margin-bottom: 15px;
+    list-style: decimal;
 }
 
 .mat-divider {

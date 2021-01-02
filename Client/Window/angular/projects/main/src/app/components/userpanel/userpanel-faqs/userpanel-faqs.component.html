@@ -1,7 +1,7 @@
-<div id="container">
-    <div *ngFor="let faq of userpanelService.allFAQs" class="faq-entry">
-        <h4>{{ faq[0] }}. {{ faq[1] }}</h4>
-        <span>{{ faq[2] }}</span>
+<ul>
+    <li *ngFor="let faq of userpanelService.allFAQs" class="faq-entry">
+        <h4>{{ faq[0] }}</h4>
+        <span>{{ faq[1] }}</span>
         <mat-divider></mat-divider>
-    </div>
-</div>
+    </li>
+</ul>

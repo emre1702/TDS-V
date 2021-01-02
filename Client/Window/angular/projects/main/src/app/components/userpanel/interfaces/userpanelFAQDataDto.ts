@@ -1,8 +1,6 @@
 export interface UserpanelFAQDataDto {
-    /** Id */
-    [0]: number;
     /** Question */
-    [1]: string;
+    [0]: string;
     /** Answer */
-    [2]: string;
+    [1]: string;
 }

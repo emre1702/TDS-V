@@ -46,8 +46,8 @@ export class UserpanelService {
         this.currentNavChanged.emit(null);
     }
 
-    allRules: UserpanelRuleDataDto[] = [];
-    allFAQs: UserpanelFAQDataDto[] = [];
+    allRules: UserpanelRuleDataDto[] = InitialDatas.getAllRules();
+    allFAQs: UserpanelFAQDataDto[] = InitialDatas.getAllFAQs();
     allSettingsSpecial: UserpanelSettingSpecialDataDto;
     allSettingsNormal: UserpanelSettingNormalDataDto;
     settingsCommandsData: UserpanelSettingCommandDataDto = InitialDatas.getSettingsCommandData();

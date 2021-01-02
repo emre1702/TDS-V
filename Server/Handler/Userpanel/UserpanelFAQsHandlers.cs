@@ -13,7 +13,6 @@ namespace TDS.Server.Handler.Userpanel
 {
     internal class UserpanelFAQsHandlers
     {
-
         private readonly Dictionary<Language, string> _faqsJsonByLanguage = new Dictionary<Language, string>()
         {
             [Language.English] = string.Empty,
@@ -40,13 +39,11 @@ namespace TDS.Server.Handler.Userpanel
                     .Where(f => f.Language == entry.Key)
                     .Select(f => new FaqData
                     {
-                        Id = f.Id,
                         Question = regex.Replace(f.Question, ""),
                         Answer = regex.Replace(f.Answer, "")
                     });
                 _faqsJsonByLanguage[entry.Key] = Serializer.ToBrowser(faqs);
             }
         }
-
     }
 }

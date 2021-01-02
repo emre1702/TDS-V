@@ -1,9 +1,6 @@
-#container {
-    height: 100%;
-}
-
 .faq-entry {
-    white-space: pre-wrap;
+    list-style: decimal;
+    white-space: pre-line;
     margin-bottom: 15px;
 }
 
