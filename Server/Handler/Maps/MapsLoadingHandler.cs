@@ -250,7 +250,7 @@ namespace TDS.Server.Handler.Maps
             foreach (var map in maps)
             {
                 map.BrowserSyncedData.CreatorName = "?";
-                map.BrowserSyncedData.Id = --100000;
+                map.BrowserSyncedData.Id = --counterForSaveMaps;
                 map.Ratings = new List<DB.Player.PlayerMapRatings>();
                 map.RatingAverage = 5;
             }

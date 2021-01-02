@@ -79,7 +79,7 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
 
         private ValueTask RoundClear()
         {
-            NAPI.Task.RunWait(() =>
+            NAPI.Task.RunSafe(() =>
             {
                 foreach (var bombPlantPlace in BombPlantPlaces)
                     bombPlantPlace.Delete();
