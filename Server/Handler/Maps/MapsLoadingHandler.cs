@@ -69,7 +69,7 @@ namespace TDS.Server.Handler.Maps
         {
             lock (_savedMaps)
             {
-                return _savedMaps.Min(m => m.BrowserSyncedData.Id) - 1;
+                return _savedMaps.Count > 0 ? _savedMaps.Min(m => m.BrowserSyncedData.Id) - 1 : 100000;
             }
         }
 
@@ -246,11 +246,11 @@ namespace TDS.Server.Handler.Maps
 
         private static void LoadSavedMapsFakeDBInfos(List<MapDto> maps)
         {
-            int negativeIdCounterForSaveMaps = 0;
+            int counterForSaveMaps = 100000;
             foreach (var map in maps)
             {
                 map.BrowserSyncedData.CreatorName = "?";
-                map.BrowserSyncedData.Id = --negativeIdCounterForSaveMaps;
+                map.BrowserSyncedData.Id = --100000;
                 map.Ratings = new List<DB.Player.PlayerMapRatings>();
                 map.RatingAverage = 5;
             }
