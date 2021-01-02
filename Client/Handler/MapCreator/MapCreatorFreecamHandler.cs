@@ -107,6 +107,7 @@ namespace TDS.Client.Handler.MapCreator
             Tick -= OnTick;
 
             _camerasHandler.FreeCam?.Deactivate();
+            _camerasHandler.FreeCam?.Destroy();
             _camerasHandler.FreeCam = null;
 
             RAGE.Events.CallRemote(ToServerEvent.SetInFreecam, false);
