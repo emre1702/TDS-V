@@ -370,11 +370,11 @@ namespace TDS.Server.Handler
                         break;
 
                     default:
-                        var map = _mapsHandler.GetMapByName(mapAssignment.Map.Name);
+                        var map = _mapsHandler.GetMapById(mapAssignment.MapId);
                         if (map is null)
-                            map = _mapsHandler.GetNewCreatedMap(mapAssignment.Map.Name);
+                            map = _mapsHandler.GetNewCreatedMap(mapAssignment.MapId);
                         if (map is null)
-                            map = _mapsHandler.GetNeedCheckMap(mapAssignment.Map.Name);
+                            map = _mapsHandler.GetNeedCheckMap(mapAssignment.MapId);
                         if (map is { })
                             lobbyMapsList.Add(map);
                         break;

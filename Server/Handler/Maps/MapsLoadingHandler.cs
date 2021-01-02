@@ -74,9 +74,9 @@ namespace TDS.Server.Handler.Maps
         }
 
         public MapDto? GetGangActionAreaMap(int mapId)
-        { 
-            lock (_defaultMaps) 
-            { 
+        {
+            lock (_defaultMaps)
+            {
                 return _defaultMaps.FirstOrDefault(m => m.Info.IsGangActionArea && m.BrowserSyncedData.Id == mapId);
             }
         }
@@ -94,7 +94,7 @@ namespace TDS.Server.Handler.Maps
             lock (_savedMaps)
             {
                 _savedMaps.Add(map);
-            }      
+            }
         }
 
         public MapDto? GetMapById(int id)
