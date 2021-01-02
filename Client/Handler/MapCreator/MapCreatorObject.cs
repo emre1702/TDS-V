@@ -69,7 +69,7 @@ namespace TDS.Client.Handler.MapCreator
             set
             {
                 _movingPosition = value;
-                Entity.Position = value;
+                EntityPosition = value;
                 Blip.Position = value;
             }
         }
@@ -82,6 +82,16 @@ namespace TDS.Client.Handler.MapCreator
                 _movingRotation = value;
                 Entity.SetRotation(value.X, value.Y, value.Z, 2, true);
                 Blip.SetRotation((int)value.Z);
+            }
+        }
+
+        public Vector3 EntityPosition 
+        {
+            get => RAGE.Game.Entity.GetEntityCoords(Entity.Handle, true);
+            set
+            {
+                Entity.Position = value;
+                RAGE.Game.Entity.SetEntityCoordsNoOffset(Entity.Handle, value.X, value.Y, value.Z, false, false, false);
             }
         }
 
@@ -151,7 +161,7 @@ namespace TDS.Client.Handler.MapCreator
 
         public void LoadEntityData()
         {
-            Position = Entity.Position;
+            Position = EntityPosition;
             _movingPosition = new Vector3(Position.X, Position.Y, Position.Z);
             Rotation = Entity.GetRotation(2);
             _movingRotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z);
@@ -177,7 +187,7 @@ namespace TDS.Client.Handler.MapCreator
 
         public void ResetObjectPosition()
         {
-            Entity.Position = Position;
+            EntityPosition = Position;
             Entity.SetRotation(Rotation.X, Rotation.Y, Rotation.Z, 2, true);
             LoadEntityData();
 

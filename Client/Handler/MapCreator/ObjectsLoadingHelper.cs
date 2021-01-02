@@ -2,14 +2,8 @@
 {
     public class ObjectsLoadingHelper : ServiceBase
     {
-        #region Private Fields
-
         private readonly SettingsHandler _settingsHandler;
         private readonly UtilsHandler _utilsHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public ObjectsLoadingHelper(LoggingHandler loggingHandler, UtilsHandler utilsHandler, SettingsHandler settingsHandler)
             : base(loggingHandler)
@@ -17,10 +11,6 @@
             _utilsHandler = utilsHandler;
             _settingsHandler = settingsHandler;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public bool LoadObjectHash(uint hash)
         {
@@ -36,10 +26,6 @@
             }
             return true;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private bool LoadObjectModel(uint hash)
         {
@@ -63,7 +49,5 @@
             }*/
             return true;
         }
-
-        #endregion Private Methods
     }
 }

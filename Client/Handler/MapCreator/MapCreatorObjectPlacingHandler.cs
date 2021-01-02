@@ -206,11 +206,13 @@ namespace TDS.Client.Handler.MapCreator
 
         private void ReleaseObject()
         {
-            HoldingObject.Position = HoldingObject.MovingPosition.Copy();
-            HoldingObject.Rotation = HoldingObject.MovingRotation.Copy();
             var obj = HoldingObject;
             HoldingObject = null;
             object info = null;
+
+            obj.MovingPosition = obj.EntityPosition;
+            obj.Position = obj.MovingPosition.Copy();
+            obj.Rotation = obj.MovingRotation.Copy();
 
             switch (obj.Type)
             {
@@ -408,12 +410,12 @@ namespace TDS.Client.Handler.MapCreator
 
                 case EntityType.Vehicle:
                     RAGE.Game.Vehicle.SetVehicleOnGroundProperly(obj.Entity.Handle, 5);
-                    obj.MovingPosition = obj.Entity.Position;
+                    obj.MovingPosition = obj.EntityPosition;
                     break;
 
                 case EntityType.Ped:
-                    float heightAboveGround = RAGE.Game.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
-                    obj.MovingPosition = new Vector3(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + 1f);
+                    var heightAboveGround = RAGE.Game.Entity.GetEntityHeightAboveGround(obj.Entity.Handle);
+                    obj.MovingPosition = new Vector3(obj.MovingPosition.X, obj.MovingPosition.Y, obj.MovingPosition.Z - heightAboveGround + obj.Size.Z / 2);
                     break;
             }
         }
