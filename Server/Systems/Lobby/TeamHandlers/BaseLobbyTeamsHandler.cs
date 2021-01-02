@@ -101,7 +101,7 @@ namespace TDS.Server.LobbySystem.TeamHandlers
             => _teamsSemaphore.Do(() => GetTeamWithFewestPlayer(_teams));
 
         public ITeam GetTeamWithFewestPlayer(ITeam[] teams)
-            => teams.Skip(1).MinBy(t => t.Players.Amount).Shuffle().First();
+            => teams.Skip(1).MinBy(t => t.Players.Amount).Shuffle(SharedUtils.Rnd).First();
 
 
         public void Dispose()
