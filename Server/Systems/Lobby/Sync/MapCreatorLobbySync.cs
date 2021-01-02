@@ -93,7 +93,7 @@ namespace TDS.Server.LobbySystem.Sync
                 if (dto.Target is { })
                     dict[dto.Target.Id] = dto.Target;
 
-                _lastId = dict.Keys.Max();
+                _lastId = dict.Keys.Count > 0 ? dict.Keys.Max() : 0;
             }).ConfigureAwait(false);
 
             string json = Serializer.ToBrowser(dto);
@@ -233,7 +233,6 @@ namespace TDS.Server.LobbySystem.Sync
                     GetListInCurrentMapForMapType(data.Type, data.Info)?.Remove(data);
                     _posById.Remove(objId);
                 }).ConfigureAwait(false);
-                
             }
             catch (Exception ex)
             {
@@ -248,7 +247,6 @@ namespace TDS.Server.LobbySystem.Sync
                 var players = (await Lobby.Players.GetExcept(player).ConfigureAwait(false)).ToArray();
                 NAPI.Task.RunSafe(() =>
                     NAPI.ClientEvent.TriggerClientEventToPlayers(players, ToClientEvent.MapCreatorSyncTeamObjectsRemove, teamNumber));
-
 
                 await _posDictSemaphore.Do(() =>
                 {
