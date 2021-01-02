@@ -165,7 +165,7 @@ namespace TDS.Server.Data.Languages
         public override string TARGET_REJECTED_INVITATION => "{0} hat deine Einladung abgelehnt.";
         public override string TARGET_REMOVED_FRIEND_ADDED_BLOCK => "Der Spieler {0} ist nicht mehr dein Freund und wurde nun geblockt.";
         public override string TEAM_ALREADY_FULL_INFO => "Dein Team ist bereits voll. Warte darauf, dass ein Gegner beitritt, und versuche es dann erneut.";
-        public override string TESTING_MAP_NOTIFICATION => "Das ist eine neu erstellste Karte, die Runden-Statistiken werden nicht gespeichert werden.";
+        public override string TESTING_MAP_NOTIFICATION => "Das ist eine neu erstellte Karte - die Runden-Statistiken werden nicht gespeichert.";
         public override string TEXT_TOO_LONG => "Der Text ist zu lang.";
         public override string TEXT_TOO_SHORT => "Der Text ist zu kurz.";
         public override string THE_RANK_IS_INVALID_REFRESH_WINDOW => "Der Rang ist ungültig. Bitte aktualisiere das Fenster.";
