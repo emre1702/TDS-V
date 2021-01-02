@@ -77,9 +77,9 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
             });
         }
 
-        private async ValueTask RoundClear()
+        private ValueTask RoundClear()
         {
-            await NAPI.Task.RunWait(() =>
+            NAPI.Task.RunWait(() =>
             {
                 foreach (var bombPlantPlace in BombPlantPlaces)
                     bombPlantPlace.Delete();
@@ -87,6 +87,7 @@ namespace TDS.Server.GamemodesSystem.MapHandlers
 
                 DeleteBombTakePickup();
             });
+            return default;
         }
 
         private void TakeDroppedBomb(ITDSPlayer player, CancelEventArgs cancelEventArgs)

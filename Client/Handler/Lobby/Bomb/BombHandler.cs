@@ -54,23 +54,33 @@ namespace TDS.Client.Handler.Lobby
 
         private void BombPlanted(object[] args)
         {
-            _bombPlanted = true;
-
-            var startAtMs = args.Length > 2 ? (int?)args[2] : null;
-            SetRoundTimeLeftForBombPlanted(startAtMs);
-
-            var canDefuse = Convert.ToBoolean(args[1]);
-            if (canDefuse)
+            try
             {
-                var pos = Serializer.FromServer<Position3D>((string)args[0]);
-                _bombDefuseHandler.SetCanDefuse(pos);
-            }
+                _bombPlanted = true;
 
-            _utilsHandler.Notify(_settingsHandler.Language.BOMB_PLANTED);
+                var startAtMs = args.Length > 2 ? (int?)args[2] : null;
+                SetRoundTimeLeftForBombPlanted(startAtMs);
+
+                var canDefuse = Convert.ToBoolean(args[1]);
+                if (canDefuse)
+                {
+                    var pos = Serializer.FromServer<Position3D>((string)args[0]);
+                    _bombDefuseHandler.SetCanDefuse(pos);
+                }
+
+                _utilsHandler.Notify(_settingsHandler.Language.BOMB_PLANTED);
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
         }
 
-        private void SetRoundTimeLeftForBombPlanted(int? startAtMs = 0)
+        private void SetRoundTimeLeftForBombPlanted(int? startAtMs)
         {
+            if (!startAtMs.HasValue)
+                startAtMs = 0;
+
             // 100 because trigger etc. propably took some time
             int time = _settingsHandler.BombDetonateTimeMs - 100;
 
