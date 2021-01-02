@@ -2,8 +2,14 @@
     <div class="toolbar-wrapper" cdkDrag [cdkDragDisabled]="!isDraggable" cdkDragRootElement="tds-window">
         <ng-container *ngIf="!hideToolbar" [ngTemplateOutlet]="this['toolbar' + toolbarDesign]">
             <ng-template #toolbar1>
-                <div class="toolbar design1" cdkDragHandle color="primary" [closeOnDoubleClick]="canMinimize ? content : undefined">
-                    <div class="border-container">
+                <div
+                    class="toolbar design1"
+                    cdkDragHandle
+                    color="primary"
+                    [closeOnDoubleClick]="canMinimize ? content : undefined"
+                    [ngClass]="{ 'window-minimized': content.style.display == 'none' }"
+                >
+                    <div class="border-container" [ngClass]="{ 'window-minimized': content.style.display == 'none' }">
                         <button *ngIf="back.observers.length && showBack" mat-button (click)="back.emit()">
                             <mat-icon color="accent">arrow_back</mat-icon>
                         </button>
