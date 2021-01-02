@@ -91,6 +91,7 @@ namespace TDS.Server.GamemodesSystem.Gamemodes
             Lobby.Events.RoundClear += RoundClear;
 
             _deathmatch.AddEvents(Lobby.Events);
+            _mapHandler.AddEvents(Lobby.Events);
             _players.AddEvents(Lobby.Events);
             _rounds.AddEvents(Lobby.Events);
             _specials.AddEvents(Lobby.Events);
@@ -103,6 +104,7 @@ namespace TDS.Server.GamemodesSystem.Gamemodes
                 Lobby.Events.RoundClear -= RoundClear;
 
             _deathmatch.RemoveEvents(Lobby.Events);
+            _mapHandler.RemoveEvents(Lobby.Events);
             _players.RemoveEvents(Lobby.Events);
             _rounds.RemoveEvents(Lobby.Events);
             _specials.RemoveEvents(Lobby.Events);
