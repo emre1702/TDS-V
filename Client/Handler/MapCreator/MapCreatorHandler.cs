@@ -39,14 +39,13 @@ namespace TDS.Client.Handler.MapCreator
 
             var clickedMarkerStorer = new ClickedMarkerStorer();
 
-            Objects = new MapCreatorObjectsHandler(loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler);
+            Objects = new MapCreatorObjectsHandler(loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler, settingsHandler, remoteEventsSender, dxHandler, timerHandler);
             Sync = new MapCreatorSyncHandler(Objects, remoteEventsSender, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
             ObjectsLoading = new ObjectsLoadingHelper(loggingHandler, utilsHandler, settingsHandler);
             ObjectsPreview = new MapCreatorObjectsPreviewHandler(ObjectsLoading, camerasHandler, utilsHandler, browserHandler);
             VehiclePreview = new MapCreatorVehiclesPreviewHandler(camerasHandler, utilsHandler, browserHandler);
             ObjectPlacing = new MapCreatorObjectPlacingHandler(loggingHandler, Draw, Objects, cursorHandler, browserHandler, lobbyHandler, settingsHandler,
-                remoteEventsSender, camerasHandler,
-                instructionalButtonHandler, utilsHandler, ObjectsPreview, VehiclePreview, Sync, eventsHandler, dxHandler, timerHandler, clickedMarkerStorer);
+                camerasHandler, instructionalButtonHandler, utilsHandler, ObjectsPreview, VehiclePreview, Sync, eventsHandler, clickedMarkerStorer);
             Marker = new MapCreatorMarkerHandler(loggingHandler, utilsHandler, dxHandler, camerasHandler, browserHandler, Draw, ObjectPlacing, Sync, clickedMarkerStorer);
             Freecam = new MapCreatorFreecamHandler(loggingHandler, camerasHandler, utilsHandler, instructionalButtonHandler, cursorHandler, browserHandler,
                 Foot, Marker, ObjectPlacing, eventsHandler);

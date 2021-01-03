@@ -47,22 +47,19 @@ namespace TDS.Client.Handler.MapCreator
         private readonly BrowserHandler _browserHandler;
         private readonly LobbyHandler _lobbyHandler;
         private readonly SettingsHandler _settingsHandler;
-        private readonly RemoteEventsSender _remoteEventsSender;
         private readonly CamerasHandler _camerasHandler;
         private readonly InstructionalButtonHandler _instructionalButtonHandler;
         private readonly UtilsHandler _utilsHandler;
         private readonly MapCreatorObjectsPreviewHandler _mapCreatorObjectsPreviewHandler;
         private readonly MapCreatorVehiclesPreviewHandler _mapCreatorVehiclesPreviewHandler;
         private readonly MapCreatorSyncHandler _mapCreatorSyncHandler;
-        private readonly DxHandler _dxHandler;
-        private readonly TimerHandler _timerHandler;
         private readonly ClickedMarkerStorer _clickedMarkerStorer;
 
         public MapCreatorObjectPlacingHandler(LoggingHandler loggingHandler, MapCreatorDrawHandler mapCreatorDrawHandler,
             MapCreatorObjectsHandler mapCreatorObjectsHandler, CursorHandler cursorHandler, BrowserHandler browserHandler, LobbyHandler lobbyHandler,
-            SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender, CamerasHandler camerasHandler, InstructionalButtonHandler instructionalButtonHandler,
+            SettingsHandler settingsHandler, CamerasHandler camerasHandler, InstructionalButtonHandler instructionalButtonHandler,
             UtilsHandler utilsHandler, MapCreatorObjectsPreviewHandler mapCreatorObjectsPreviewHandler, MapCreatorVehiclesPreviewHandler mapCreatorVehiclesPreviewHandler,
-            MapCreatorSyncHandler mapCreatorSyncHandler, EventsHandler eventsHandler, DxHandler dxHandler, TimerHandler timerHandler, ClickedMarkerStorer clickedMarkerStorer)
+            MapCreatorSyncHandler mapCreatorSyncHandler, EventsHandler eventsHandler, ClickedMarkerStorer clickedMarkerStorer)
             : base(loggingHandler)
         {
             _mapCreatorDrawHandler = mapCreatorDrawHandler;
@@ -71,15 +68,12 @@ namespace TDS.Client.Handler.MapCreator
             _browserHandler = browserHandler;
             _lobbyHandler = lobbyHandler;
             _settingsHandler = settingsHandler;
-            _remoteEventsSender = remoteEventsSender;
             _camerasHandler = camerasHandler;
             _instructionalButtonHandler = instructionalButtonHandler;
             _utilsHandler = utilsHandler;
             _mapCreatorObjectsPreviewHandler = mapCreatorObjectsPreviewHandler;
             _mapCreatorVehiclesPreviewHandler = mapCreatorVehiclesPreviewHandler;
             _mapCreatorSyncHandler = mapCreatorSyncHandler;
-            _dxHandler = dxHandler;
-            _timerHandler = timerHandler;
             _clickedMarkerStorer = clickedMarkerStorer;
 
             eventsHandler.MapCreatorObjectDeleted += CheckObjectDeleted;
@@ -233,13 +227,7 @@ namespace TDS.Client.Handler.MapCreator
 
             if (obj.Type == MapCreatorPositionType.MapLimit)
             {
-                if (_mapCreatorObjectsHandler.MapLimitDisplay == null)
-                {
-                    _mapCreatorObjectsHandler.MapLimitDisplay = new MapLimit(new List<Vector3>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor,
-                        _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
-                    _mapCreatorObjectsHandler.MapLimitDisplay.Start();
-                }
-                _mapCreatorObjectsHandler.RefreshMapLimitDisplay();
+                _mapCreatorObjectsHandler.RefreshMapLimit();
             }
 
             if (!obj.IsSynced)

@@ -10,6 +10,7 @@ using TDS.Client.Data.Enums;
 using TDS.Client.Data.Extensions;
 using TDS.Client.Data.Models;
 using TDS.Client.Handler.Browser;
+using TDS.Client.Handler.Draw.Dx;
 using TDS.Client.Handler.Entities;
 using TDS.Client.Handler.Entities.GTA;
 using TDS.Client.Handler.Events;
@@ -28,6 +29,10 @@ namespace TDS.Client.Handler.MapCreator
         public MapLimit MapLimitDisplay;
 
         private readonly BrowserHandler _browserHandler;
+        private readonly SettingsHandler _settingsHandler;
+        private readonly RemoteEventsSender _remoteEventsSender;
+        private readonly DxHandler _dxHandler;
+        private readonly TimerHandler _timerHandler;
         private readonly Dictionary<GameEntityBase, MapCreatorObject> _cacheMapEditorObjects = new Dictionary<GameEntityBase, MapCreatorObject>();
         private readonly CamerasHandler _camerasHandler;
         private readonly EventsHandler _eventsHandler;
@@ -36,13 +41,18 @@ namespace TDS.Client.Handler.MapCreator
         private readonly LobbyHandler _lobbyHandler;
 
         public MapCreatorObjectsHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, LobbyHandler lobbyHandler,
-            EventsHandler eventsHandler, BrowserHandler browserHandler)
+            EventsHandler eventsHandler, BrowserHandler browserHandler, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender,
+            DxHandler dxHandler, TimerHandler timerHandler)
             : base(loggingHandler)
         {
             _camerasHandler = camerasHandler;
             _lobbyHandler = lobbyHandler;
             _eventsHandler = eventsHandler;
             _browserHandler = browserHandler;
+            _settingsHandler = settingsHandler;
+            _remoteEventsSender = remoteEventsSender;
+            _dxHandler = dxHandler;
+            _timerHandler = timerHandler;
 
             //_entityStreamOutEventMethod = new EventMethodData<EntityStreamOutDelegate>(OnEntityStreamOut);
 
@@ -329,6 +339,7 @@ namespace TDS.Client.Handler.MapCreator
                 {
                     GetMapLimit(mapEdge.OwnerRemoteId, new Vector3().GetPosFrom(mapEdge), new Vector3().GetRotFrom(mapEdge), mapEdge.Id);
                 }
+                RefreshMapLimit();
             }
 
             if (map.Objects != null)
@@ -406,6 +417,17 @@ namespace TDS.Client.Handler.MapCreator
 
             MapLimitDisplay?.Stop();
             MapLimitDisplay = null;
+        }
+
+        public void RefreshMapLimit()
+        {
+            if (MapLimitDisplay == null)
+            {
+                MapLimitDisplay = new MapLimit(new List<Vector3>(), MapLimitType.Display, 0, _settingsHandler.MapBorderColor,
+                    _remoteEventsSender, _settingsHandler, _dxHandler, _timerHandler);
+                MapLimitDisplay.Start();
+            }
+            RefreshMapLimitDisplay();
         }
 
         private void EventsHandler_MapBorderColorChanged(Color color)
