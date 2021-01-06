@@ -195,11 +195,10 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         switch (type) {
             case MapCreatorPositionType.TeamSpawn:
                 const teamPositions = this.formGroup.controls[type].value as MapCreatorPosition[][];
-                const teamNumber = Number(info);
-                while (teamNumber >= teamPositions.length) {
+                while (info >= teamPositions.length) {
                     teamPositions.push([]);
                 }
-                const positionsT = teamPositions[teamNumber] as MapCreatorPosition[];
+                const positionsT = teamPositions[info] as MapCreatorPosition[];
                 this.updateOrAddPos(pos, positionsT);
                 this.formGroup.controls[type].patchValue([...teamPositions], { emitEvent: true });
                 break;
