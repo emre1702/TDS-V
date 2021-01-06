@@ -58,7 +58,7 @@ namespace TDS.Server.Handler.Maps
             DisableNewMap(map);
         }
 
-        public async Task<object?> Create(ITDSPlayer creator, ArraySegment<object> args)
+        public async Task<object?> Save(ITDSPlayer creator, ArraySegment<object> args)
         {
             try
             {
@@ -72,9 +72,8 @@ namespace TDS.Server.Handler.Maps
                     result.Item1.BrowserSyncedData.Id = _mapsLoadingHandler.GetNextNewCreatedMapId();
                     result.Item1.RatingAverage = 5;
                     _mapsLoadingHandler.AddSavedMap(result.Item1);
-                    _mapsLoadingHandler.AddNewCreatedMap(result.Item1);
                 }
-                
+
                 return MapCreateError.MapCreatedSuccessfully;
             }
             catch (Exception ex)
@@ -133,7 +132,7 @@ namespace TDS.Server.Handler.Maps
             }
         }
 
-        public async Task<object?> Save(ITDSPlayer creator, ArraySegment<object> args)
+        public async Task<object?> Create(ITDSPlayer creator, ArraySegment<object> args)
         {
             try
             {
@@ -145,14 +144,14 @@ namespace TDS.Server.Handler.Maps
 
                 await ExecuteForDBAsync(async dbContext =>
                 {
-                    await dbContext.Maps.AddAsync(dbMap).ConfigureAwait(false);
+                    dbContext.Maps.Add(dbMap);
                     await dbContext.SaveChangesAsync().ConfigureAwait(false);
                 }).ConfigureAwait(false);
 
                 result.Item1.BrowserSyncedData.Id = dbMap.Id;
                 result.Item1.RatingAverage = 5;
 
-                _mapsLoadingHandler.AddSavedMap(result.Item1);
+                _mapsLoadingHandler.AddNewCreatedMap(result.Item1);
                 return MapCreateError.MapSavedSuccessfully;
             }
             catch (Exception ex)
