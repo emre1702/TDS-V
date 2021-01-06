@@ -7,12 +7,14 @@ namespace TDS.Shared.Core
     {
         private static Action<string> _infoLogger;
         private static Action<Exception> _errorLogger;
+
         private static readonly JsonSerializerSettings _settingsIgnoreDefaultValues = new JsonSerializerSettings
         {
             Formatting = Formatting.None,
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore
         };
+
         private static readonly JsonSerializerSettings _settingsUseDefaultValues = new JsonSerializerSettings
         {
             Formatting = Formatting.None,
@@ -80,11 +82,12 @@ namespace TDS.Shared.Core
             }
         }
 
-        public static T FromClient<T>(string json)
+        public static T FromClient<T>(string json, bool ignoreDefaultValues = true)
         {
             try
             {
                 _infoLogger?.Invoke("Start FromClient Serializer");
+                var settings = ignoreDefaultValues ? _settingsIgnoreDefaultValues : _settingsUseDefaultValues;
                 var obj = JsonConvert.DeserializeObject<T>(json);
                 _infoLogger?.Invoke("End FromClient Serializer");
 
@@ -97,11 +100,12 @@ namespace TDS.Shared.Core
             }
         }
 
-        public static T FromServer<T>(string json)
+        public static T FromServer<T>(string json, bool ignoreDefaultValues = true)
         {
             try
             {
                 _infoLogger?.Invoke("Start FromServer Serializer");
+                var settings = ignoreDefaultValues ? _settingsIgnoreDefaultValues : _settingsUseDefaultValues;
                 var obj = JsonConvert.DeserializeObject<T>(json);
                 _infoLogger?.Invoke("End FromServer Serializer");
 
@@ -114,12 +118,13 @@ namespace TDS.Shared.Core
             }
         }
 
-        public static T FromBrowser<T>(string json)
+        public static T FromBrowser<T>(string json, bool ignoreDefaultValues = true)
         {
             try
             {
                 _infoLogger?.Invoke("Start FromBrowser Serializer");
-                var obj = JsonConvert.DeserializeObject<T>(json);
+                var settings = ignoreDefaultValues ? _settingsIgnoreDefaultValues : _settingsUseDefaultValues;
+                var obj = JsonConvert.DeserializeObject<T>(json, settings);
                 _infoLogger?.Invoke("End FromBrowser Serializer");
 
                 return obj;
@@ -131,12 +136,13 @@ namespace TDS.Shared.Core
             }
         }
 
-        public static object FromBrowser(Type type, string json)
+        public static object FromBrowser(Type type, string json, bool ignoreDefaultValues = true)
         {
             try
             {
                 _infoLogger?.Invoke("Start FromBrowser Serializer");
-                var obj = JsonConvert.DeserializeObject(json, type);
+                var settings = ignoreDefaultValues ? _settingsIgnoreDefaultValues : _settingsUseDefaultValues;
+                var obj = JsonConvert.DeserializeObject(json, type, settings);
                 _infoLogger?.Invoke("End FromBrowser Serializer");
 
                 return obj;
