@@ -22,6 +22,7 @@ namespace TDS.Server.Data.Interfaces
         string CONNECTING { get; }
         string CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR { get; }
         string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR { get; }
+        string CUSTOM_LOBBY_CREATOR_NO_MAP_FOUND { get; }
         string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR { get; }
 
         string DEATH_DIED_INFO { get; }

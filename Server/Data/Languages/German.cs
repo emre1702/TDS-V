@@ -23,6 +23,7 @@ namespace TDS.Server.Data.Languages
         public override string CONNECTING => "Verbindet ...";
         public override string CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR => "Dieser Name ist bereits in Benutzung.";
         public override string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR => "Dieser Name ist nicht erlaubt für Lobbies.";
+        public override string CUSTOM_LOBBY_CREATOR_NO_MAP_FOUND => "Es wurde keine Karte für eine Lobby mit diesen Einstellungen gefunden.";
         public override string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR => "Unbekannter Fehler beim Erstellen der Lobby.";
 
         public override string DEATH_DIED_INFO => "{0} ist gestorben";

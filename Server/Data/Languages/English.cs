@@ -23,6 +23,7 @@ namespace TDS.Server.Data.Languages
         public virtual string CONNECTING => "connecting ...";
         public virtual string CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR => "This name is already taken.";
         public virtual string CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR => "This name is not allowed for lobbies.";
+        public virtual string CUSTOM_LOBBY_CREATOR_NO_MAP_FOUND => "No map was found for a lobby with these settings.";
         public virtual string CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR => "Unknown error when creating the lobby.";
 
         public virtual string DEATH_DIED_INFO => "{0} died";

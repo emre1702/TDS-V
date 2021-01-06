@@ -99,6 +99,13 @@ namespace TDS.Server.Handler
                     return player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;
                 }
 
+                var lobbyMaps = data.Maps.Select(m => new LobbyMaps { MapId = m }).ToHashSet();
+                var maps = GetMapsForArena(lobbyMaps.Select(m => m.MapId));
+                if (maps.Count == 0)
+                {
+                    return player.Language.CUSTOM_LOBBY_CREATOR_NO_MAP_FOUND;
+                }
+
                 var entity = new Lobbies
                 {
                     Name = data.Name,
@@ -127,7 +134,7 @@ namespace TDS.Server.Handler
                         MapLimitTime = data.MapLimitTime,
                         MapLimitType = data.MapLimitType
                     },
-                    LobbyMaps = data.Maps.Select(m => new LobbyMaps { MapId = m }).ToHashSet(),
+                    LobbyMaps = lobbyMaps,
                     LobbyWeapons = data.Weapons is { } ? data.Weapons.Select(w => new LobbyWeapons
                     {
                         Hash = w.WeaponHash,
@@ -168,7 +175,7 @@ namespace TDS.Server.Handler
 
                 var arena = _lobbiesProvider.Create<IArena>(entity);
 
-                AddMapsToArena(arena, entity);
+                arena.MapHandler.SetMapList(maps);
 
                 await arena.Players.AddPlayer(player, 0).ConfigureAwait(false);
                 return null;
@@ -342,8 +349,50 @@ namespace TDS.Server.Handler
             }
         }
 
+        private List<MapDto> GetMapsForArena(IEnumerable<int> mapIds)
+        {
+            List<MapDto> lobbyMapsList = new List<MapDto>();
+            foreach (var mapId in mapIds)
+            {
+                switch (mapId)
+                {
+                    case (int)DefaultMapIds.AllWithoutGangwars:
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type != MapType.Gangwar));
+                        break;
+
+                    case (int)DefaultMapIds.Normals:
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type == MapType.Normal));
+                        break;
+
+                    case (int)DefaultMapIds.Bombs:
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type == MapType.Bomb));
+                        break;
+
+                    case (int)DefaultMapIds.Snipers:
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type == MapType.Sniper));
+                        break;
+
+                    case (int)DefaultMapIds.Gangwars:
+                        lobbyMapsList.AddRange(_mapsHandler.GetDefaultMaps().Where(m => m.Info.Type == MapType.Gangwar));
+                        break;
+
+                    default:
+                        var map = _mapsHandler.GetMapById(mapId);
+                        if (map is null)
+                            map = _mapsHandler.GetNewCreatedMap(mapId);
+                        if (map is null)
+                            map = _mapsHandler.GetNeedCheckMap(mapId);
+                        if (map is { })
+                            lobbyMapsList.Add(map);
+                        break;
+                }
+            }
+            return lobbyMapsList;
+        }
+
         private void AddMapsToArena(IArena arena, Lobbies lobbySetting)
         {
+            var mapsList = GetMapsForArena(lobbySetting.LobbyMaps.Select(m => m.MapId);
             List<MapDto> lobbyMapsList = new List<MapDto>();
             foreach (var mapAssignment in lobbySetting.LobbyMaps)
             {
