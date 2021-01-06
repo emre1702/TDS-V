@@ -31,11 +31,10 @@ import { ChangelogsGroup } from './interfaces/changelogs/changelogs-group';
 import { BodyData } from './modules/char-creator/body/models/body-data';
 import { ClothesConfigs } from './modules/char-creator/clothes/models/clothes-configs';
 import { ClothesDataKey } from './modules/char-creator/clothes/enums/clothes-config-key.enum';
-import { MapCreateDataDto } from './components/mapcreator/models/mapCreateDataDto';
-import { MapCreatorPosition } from './components/mapcreator/models/mapCreatorPosition';
-import { MapCreatorPositionType } from './components/mapcreator/enums/mapcreatorpositiontype.enum';
 import { UserpanelRuleDataDto } from './components/userpanel/interfaces/userpanelRuleDataDto';
 import { UserpanelFAQDataDto } from './components/userpanel/interfaces/userpanelFAQDataDto';
+import { MapCreateData } from './modules/map-creator/models/map-create-data';
+import { MapCreatorPositionType } from './modules/map-creator/enums/map-creator-position-type';
 
 declare const mp: {};
 
@@ -46,10 +45,10 @@ export class InitialDatas {
 
     static readonly inDebug = typeof mp === 'undefined';
 
-    static readonly started: boolean = InitialDatas.inDebug && false;
+    static readonly started: boolean = InitialDatas.inDebug && true;
 
     static readonly opened = {
-        mapCreator: InitialDatas.inDebug && false,
+        mapCreator: InitialDatas.inDebug && true,
         freeroam: InitialDatas.inDebug && false,
         lobbyChoice: !InitialDatas.inDebug || false,
         teamChoice: InitialDatas.inDebug && false,
@@ -58,7 +57,7 @@ export class InitialDatas {
         charCreator: InitialDatas.inDebug && false,
         gangWindow: InitialDatas.inDebug && false,
         damageTestMenu: InitialDatas.inDebug && false,
-        userpanel: InitialDatas.inDebug && true,
+        userpanel: InitialDatas.inDebug && false,
         registerLogin: !InitialDatas.inDebug || false,
     };
 
@@ -212,48 +211,37 @@ export class InitialDatas {
         1: [{ 0: 1, 1: 1, 2: 'GehHin' }],
     };
 
-    private static readonly mapCreateData: MapCreateDataDto = {
+    static readonly mapCreateData: MapCreateData = {
         0: 1,
-        1: 'MapCenter',
+        1: 'Name',
         2: 0,
-        3: { 0: 0, 1: 999 },
-        4: { 7: 'English', 9: 'Deutsch' },
+        3: { 0: 2, 1: 999 },
+        4: { [LanguageEnum.English]: 'English', [LanguageEnum.German]: 'Deutsch' },
         5: [],
         6: [
             [
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
-                new MapCreatorPosition(99, MapCreatorPositionType.TeamSpawn, 1213, 134, -31, 31, 555.51, 3, 0),
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+                { 0: 99, 1: MapCreatorPositionType.TeamSpawn, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
             ],
         ],
         7: [],
         8: [],
-        9: new MapCreatorPosition(99, MapCreatorPositionType.MapCenter, 1213, 134, -31, 31, 555.51, 3, 0),
-        10: new MapCreatorPosition(99, MapCreatorPositionType.Target, 1, 2, -3, 4, 5.51, 6, 0),
+        9: { 0: 99, 1: MapCreatorPositionType.MapCenter, 3: 1213, 4: 134, 5: -31, 6: 31, 7: 555.51, 8: 3, 9: 0 },
+        10: { 0: 99, 1: MapCreatorPositionType.Target, 3: 1, 4: 2, 5: -3, 6: 4, 7: 5.51, 8: 6, 9: 0 },
         11: [],
     };
 
@@ -596,10 +584,6 @@ export class InitialDatas {
 
     static getVoiceInfos(): VoiceInfo[] {
         return this.inDebug ? this.voiceInfos : [];
-    }
-
-    static getMapCreatorData(): MapCreateDataDto {
-        return this.inDebug ? this.mapCreateData : new MapCreateDataDto();
     }
 
     static getAllRules(): UserpanelRuleDataDto[] {

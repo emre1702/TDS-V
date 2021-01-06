@@ -17,8 +17,6 @@ namespace TDS.Client.Handler.Browser
         {
             _eventsHandler = eventsHandler;
             Angular = new AngularBrowserHandler(loggingHandler, eventsHandler);
-            MapCreatorObjectChoice = new MapCreatorObjectChoiceBrowserHandler(loggingHandler);
-            MapCreatorVehicleChoice = new MapCreatorVehicleChoiceBrowserHandler(loggingHandler);
             PlainMain = new PlainMainBrowserHandler(loggingHandler, remoteEventsSender, eventsHandler);
 
             eventsHandler.LanguageChanged += EventsHandler_LanguageChanged;
@@ -33,8 +31,6 @@ namespace TDS.Client.Handler.Browser
 
         public AngularBrowserHandler Angular { get; }
         public bool InInput { get; private set; }
-        public MapCreatorObjectChoiceBrowserHandler MapCreatorObjectChoice { get; }
-        public MapCreatorVehicleChoiceBrowserHandler MapCreatorVehicleChoice { get; }
         public PlainMainBrowserHandler PlainMain { get; }
 
         private void EventsHandler_LanguageChanged(ILanguage lang, bool beforeLogin)

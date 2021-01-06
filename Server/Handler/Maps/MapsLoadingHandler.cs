@@ -239,7 +239,7 @@ namespace TDS.Server.Handler.Maps
 
                 map.BrowserSyncedData.CreatorName = dbMap.Creator?.Name ?? "?";
                 map.BrowserSyncedData.Id = dbMap.Id;
-                map.Ratings = dbMap.PlayerMapRatings.ToList();
+                map.Ratings = dbMap.PlayerMapRatings?.ToList() ?? new();
                 map.RatingAverage = map.Ratings.Count > 0 ? map.Ratings.Average(r => r.Rating) : 5;
             }
         }

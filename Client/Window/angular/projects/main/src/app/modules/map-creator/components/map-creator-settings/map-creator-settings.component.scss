@@ -1,0 +1,24 @@
+.two-per-row-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: hidden;
+    justify-content: space-between;
+
+    .mat-form-field {
+        width: 100%;
+    }
+
+    .two-per-row-div {
+        width: 45% !important;
+        margin-bottom: 15px;
+    }
+
+    .two-per-row-div:last-child {
+        margin-bottom: 0px;
+    }
+
+    .two-per-row-div:nth-last-child(2) {
+        margin-bottom: 0px;
+    }
+}

@@ -101,7 +101,7 @@ namespace TDS.Client.Handler.Browser
 
         public void LoadMapForMapCreator(string json)
         {
-            ExecuteFast(ToBrowserEvent.LoadMapForMapCreator, json);
+            ExecuteFast(ToServerEvent.LoadMapForMapCreator, json);
         }
 
         internal void AddKillMessage(string killInfoJson)

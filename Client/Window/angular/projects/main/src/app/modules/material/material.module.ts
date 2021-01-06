@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ChangeDetectorRef, NgModule } from '@angular/core';
 import { MatOptionModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -28,17 +28,20 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CustomMatPaginatorIntl } from '../../extensions/customMatPaginatorIntl';
+import { CustomMatPaginatorIntl } from './components/custom-mat-paginator-intl.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAppBackgroundDirective } from './directives/mat-app-background.directive';
 import { CustomMatSnackBarComponent } from './components/custom-mat-snack-bar.component';
 import { ApplyBackgroundService } from './services/apply-background.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
+import { CommonModule } from '@angular/common';
+import { SettingsService } from '../../services/settings.service';
 
 @NgModule({
     declarations: [MatAppBackgroundDirective, CustomMatSnackBarComponent],
     imports: [
+        CommonModule,
         ReactiveFormsModule,
         MatButtonModule,
         MatToolbarModule,
@@ -108,6 +111,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 
         MatAppBackgroundDirective,
     ],
-    providers: [ApplyBackgroundService, { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }],
+    providers: [ApplyBackgroundService, { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl, deps: [SettingsService] }],
 })
 export class MaterialModule {}

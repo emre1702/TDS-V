@@ -1,0 +1,12 @@
+<div id="container" [formGroup]="formGroup">
+    <mat-form-field color="accent" *ngFor="let lang of getLanguages()">
+        <mat-label>{{ lang | language: settings.Lang }}</mat-label>
+        <textarea
+            matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            [placeholder]="(lang | language: settings.Lang) + '-' + ('Description' | language: settings.Lang)"
+            [formControlName]="languageEnum[lang]"
+        ></textarea>
+    </mat-form-field>
+</div>

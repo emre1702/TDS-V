@@ -4,13 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4200 --host 127.0.0.1 --project=main",
-    "build": "ng build --baseHref='' --prod --commonChunk=false --optimization --sourceMap=false --project=main",
-    "startobject": "ng serve --port 4200 --host 127.0.0.1 --project=map-creator-object-choice",
-    "buildobject": "ng build --baseHref='' --prod --commonChunk=false --optimization --sourceMap=false --project=map-creator-object-choice",
-    "startvehicle": "ng serve --port 4200 --host 127.0.0.1 --project=map-creator-vehicle-choice",
-    "buildvehicle": "ng build --baseHref='' --prod --commonChunk=false --optimization --sourceMap=false --project=map-creator-vehicle-choice",
-    "buildrageconnector": "ng build rage-connector",
-    "buildall": "npm run-script buildrageconnector && npm run-script buildobject && npm run-script buildvehicle && npm run-script build"
+    "build": "ng build --baseHref='' --prod --commonChunk=false --optimization --sourceMap=false --project=main"
   },
   "private": true,
   "dependencies": {

@@ -1,0 +1,8 @@
+<div class="two-per-row-container" [formGroup]="formGroup">
+    <mat-form-field class="two-per-row-div" color="accent">
+        <input matInput [placeholder]="'MinPlayers' | language: settings.Lang" type="number" step="1" formControlName="0" />
+    </mat-form-field>
+    <mat-form-field class="two-per-row-div" color="accent">
+        <input matInput [placeholder]="'MaxPlayers' | language: settings.Lang" type="number" step="1" formControlName="1" />
+    </mat-form-field>
+</div>

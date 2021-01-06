@@ -121,12 +121,7 @@ namespace TDS.Client.Handler.MapCreator
         private void OnRemoveMapMethod(object[] args)
         {
             int mapId = Convert.ToInt32(args[0]);
-            if (mapId == 0 || _remoteEventsSender.Send(ToServerEvent.RemoveMap, mapId))
-            {
-                Objects.Stop();
-                Objects.Start();
-            }
-            else
+            if (!_remoteEventsSender.Send(ToServerEvent.RemoveMap, mapId))
                 _browserHandler.Angular.ShowCooldown();
         }
 

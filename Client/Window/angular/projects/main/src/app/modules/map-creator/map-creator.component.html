@@ -1,0 +1,64 @@
+<tds-window
+    [title]="mapCreatorNav[currentNav] | language: settings.Lang"
+    (save)="goBackNav()"
+    [showSave]="currentNav != mapCreatorNav.Main"
+    contentWidth="25vw"
+    containerMaxHeight="99vh"
+>
+    <ng-container [ngSwitch]="currentNav" *ngIf="formGroup">
+        <app-map-creator-main
+            *ngSwitchCase="mapCreatorNav.Main"
+            [formGroup]="formGroup"
+            (navChanged)="goToNav($event)"
+            (newMap)="startNewMap()"
+            (loadMap)="loadMap($event)"
+        ></app-map-creator-main>
+        <app-map-creator-settings
+            *ngSwitchCase="mapCreatorNav.MapSettings"
+            [formGroup]="formGroup.controls[mapCreatorNav.MapSettings]"
+        ></app-map-creator-settings>
+        <app-map-creator-description
+            *ngSwitchCase="mapCreatorNav.Description"
+            [formGroup]="formGroup.controls[mapCreatorNav.Description]"
+        ></app-map-creator-description>
+        <app-map-creator-team-spawns
+            *ngSwitchCase="mapCreatorNav.TeamSpawn"
+            [fC]="formGroup.controls[mapCreatorNav.TeamSpawn]"
+            (positionSelected)="service.positionSelected($event)"
+            (positionPlacingStarted)="service.startNewPosPlacing(currentNav, $event)"
+            (positionRemoved)="service.positionRemoved($event)"
+            (positionHold)="service.positionHold($event)"
+            (positionTeleported)="service.tpToPosition($event)"
+        ></app-map-creator-team-spawns>
+
+        <ng-container *ngFor="let positionData of positionDatas">
+            <app-map-creator-position-base
+                *ngSwitchCase="positionData.type"
+                [fC]="formGroup.controls[positionData.type]"
+                [info]="positionData.info"
+                (positionSelected)="service.positionSelected($event)"
+                (positionPlacingStarted)="service.startNewPosPlacing(currentNav, $event)"
+                (positionRemoved)="service.positionRemoved($event)"
+                (positionHold)="service.positionHold($event)"
+                (positionTeleported)="service.tpToPosition($event)"
+            ></app-map-creator-position-base>
+        </ng-container>
+
+        <ng-container *ngFor="let positionsData of positionsArrayDatas">
+            <app-map-creator-positions-array-base
+                *ngSwitchCase="positionsData.type"
+                [fC]="formGroup.controls[positionsData.type]"
+                [displayedColumns]="positionsData.columns"
+                [canAdd]="positionsData.canAdd"
+                (positionSelected)="service.positionSelected($event)"
+                (positionPlacingStarted)="service.startNewPosPlacing(currentNav, $event)"
+                (positionRemoved)="service.positionRemoved($event)"
+                (positionHold)="service.positionHold($event)"
+                (positionTeleported)="service.tpToPosition($event)"
+            ></app-map-creator-positions-array-base>
+        </ng-container>
+    </ng-container>
+</tds-window>
+
+<app-map-creator-object-choice *ngIf="currentNav === mapCreatorNav.Object"></app-map-creator-object-choice>
+<app-map-creator-vehicle-choice *ngIf="currentNav === mapCreatorNav.Vehicle"></app-map-creator-vehicle-choice>

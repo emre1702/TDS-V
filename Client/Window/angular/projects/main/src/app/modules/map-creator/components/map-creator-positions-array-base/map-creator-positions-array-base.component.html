@@ -1,0 +1,74 @@
+<div id="container">
+    <div class="mat-table-container mat-elevation-z8">
+        <mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    {{ 'NumberShort' | language: settings.Lang }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let i = index">{{ i + 1 }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'Name' | language: settings.Lang }} </mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element[2] }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="x">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>X</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element[3] }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="y">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Y</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element[4] }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="z">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Z</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element[5] }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="rot">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Rotation</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element[8] }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="rotX">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>RotX</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element[6] }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="rotY">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>RotY</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element[7] }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="rotZ">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>RotZ</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element[8] }}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row
+                *matRowDef="let row; columns: displayedColumns"
+                (click)="selectPos(row)"
+                [ngClass]="{ 'background-color-accent': selectedPosition == row }"
+            ></mat-row>
+        </mat-table>
+    </div>
+
+    <div class="bottom-row">
+        <button mat-raised-button type="button" *ngIf="canAdd" (click)="addPos()">
+            {{ 'AddPos' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="removeSelectedPos()" [disabled]="!canModifyPos(selectedPosition)">
+            {{ 'Remove' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="holdSelectedPos()" [disabled]="!canModifyPos(selectedPosition)">
+            {{ 'Hold' | language: settings.Lang }}
+        </button>
+        <button mat-raised-button type="button" (click)="tpToSelectedPos()" [disabled]="!selectedPosition">
+            {{ 'Teleport' | language: settings.Lang }}
+        </button>
+    </div>
+</div>

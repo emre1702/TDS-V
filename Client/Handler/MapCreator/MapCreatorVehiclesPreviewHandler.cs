@@ -55,7 +55,6 @@ namespace TDS.Client.Handler.MapCreator
                 _vehicleRotation = null;
                 Tick -= RenderVehicleInFrontOfCam;
             }
-            _browserHandler.MapCreatorVehicleChoice.Stop();
         }
 
         private void RenderVehicleInFrontOfCam(List<TickNametagData> _)
@@ -88,8 +87,6 @@ namespace TDS.Client.Handler.MapCreator
 
         private void Start(object[] args)
         {
-            _browserHandler.MapCreatorVehicleChoice.CreateBrowser();
-            _browserHandler.MapCreatorVehicleChoice.SetReady();
         }
     }
 }

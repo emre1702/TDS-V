@@ -6,9 +6,7 @@ import { AppComponent } from './app.component';
 import { MapVotingComponent } from './components/mapvoting/mapvoting.component';
 import { MapVotingNavPipe } from './components/mapvoting/pipes/mapvotingNav.pipe';
 import { TeamOrdersComponent } from './components/teamorders/teamorders.component';
-import { MapCreatorComponent } from './components/mapcreator/map-creator.component';
 import { FreeroamComponent } from './components/freeroam/freeroam.component';
-import { LoadMapDialog } from './components/mapcreator/dialog/load-map-dialog';
 import { AreYouSureDialog } from './dialog/are-you-sure-dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomLobbyMenuComponent } from './components/lobbychoice/custom-lobby/custom-lobby.component';
@@ -83,19 +81,18 @@ import { VoiceInfoComponent } from './components/hud/voice-info/voice-info.compo
 import { RegisterLoginModule } from './modules/register-login/register-login.module';
 import { CharCreatorModule } from './modules/char-creator/char-creator.module';
 import { TDSWindowModule } from './modules/tds-window/tds-window.module';
+import { MapCreatorModule } from './modules/map-creator/map-creator.module';
 
 @NgModule({
     declarations: [
         AppComponent,
         MapVotingComponent,
         TeamOrdersComponent,
-        MapCreatorComponent,
         FreeroamComponent,
         CustomLobbyMenuComponent,
         MapVotingNavPipe,
         UserpanelCommandNavPipe,
         UserpanelRulesNavPipe,
-        LoadMapDialog,
         AreYouSureDialog,
         CustomLobbyPasswordDialog,
         ApplicationInviteDialog,
@@ -172,6 +169,7 @@ import { TDSWindowModule } from './modules/tds-window/tds-window.module';
         RegisterLoginModule,
         CharCreatorModule,
         TDSWindowModule,
+        MapCreatorModule,
 
         MaterialCssVarsModule.forRoot({
             isAutoContrast: true,

@@ -121,8 +121,22 @@ export class ErrorService implements OnDestroy {
                     case 'Errorminlength':
                         info = this.getMinLengthInfo(data.data);
                         break;
+                    case 'Errormin':
+                        info = this.getMinInfo(data.data);
+                        break;
                     case 'Errormaxlength':
                         info = this.getMaxLengthInfo(data.data);
+                        break;
+                    case 'Errormax':
+                        info = this.getMaxInfo(data.data);
+                        break;
+                    case 'ErrornotEnoughTeams':
+                    case 'ErrorvalueLessThanOrEqual':
+                    case 'ErrorvalueMoreThanOrEqual':
+                        info = this.getExpectedActualInfo(data.data);
+                        break;
+                    case 'ErrornotEnoughSpawns':
+                        info = this.getNotEnoughSpawnsInfo(data.data);
                         break;
                     default:
                         console.log(typeof data.data);
@@ -152,15 +166,35 @@ export class ErrorService implements OnDestroy {
         return msg;
     }
 
+    private getMinInfo(data: { min: number; actual: number }) {
+        return `${this.langPipe.transform('Min', this.settings.Lang)}: ${data.min} | ${this.langPipe.transform('Actual', this.settings.Lang)}: ${data.actual}`;
+    }
+
     private getMinLengthInfo(data: { requiredLength: number; actualLength: number }) {
         return `${this.langPipe.transform('Min', this.settings.Lang)}: ${data.requiredLength} | ${this.langPipe.transform('Actual', this.settings.Lang)}: ${
             data.actualLength
         }`;
     }
 
+    private getMaxInfo(data: { max: number; actual: number }) {
+        return `${this.langPipe.transform('Max', this.settings.Lang)}: ${data.max} | ${this.langPipe.transform('Actual', this.settings.Lang)}: ${data.actual}`;
+    }
+
     private getMaxLengthInfo(data: { requiredLength: number; actualLength: number }) {
         return `${this.langPipe.transform('Max', this.settings.Lang)}: ${data.requiredLength} | ${this.langPipe.transform('Actual', this.settings.Lang)}: ${
             data.actualLength
         }`;
+    }
+
+    private getExpectedActualInfo(data: { expected: number; actual: number }) {
+        return `${this.langPipe.transform('Expected', this.settings.Lang)}: ${data.expected} | ${this.langPipe.transform('Actual', this.settings.Lang)}: ${
+            data.actual
+        }`;
+    }
+
+    private getNotEnoughSpawnsInfo(data: { team: number; minAmount: number; currentAmount: number }) {
+        return `${this.langPipe.transform('Team', this.settings.Lang)}: ${data.team} | ${this.langPipe.transform('Min', this.settings.Lang)}: ${
+            data.minAmount
+        } | ${this.langPipe.transform('Actual', this.settings.Lang)}: ${data.currentAmount}`;
     }
 }

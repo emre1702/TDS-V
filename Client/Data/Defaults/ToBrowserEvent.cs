@@ -2,7 +2,6 @@
 {
     public static class ToBrowserEvent
     {
-
         public const string AddKillMessage = "cb45";
         public const string AddNameForChat = "cb38";
         public const string AddPositionToMapCreatorBrowser = "cb3";
@@ -12,7 +11,6 @@
         public const string InitLoadAngular = "cb6";
         public const string LoadSettings = "cb1";
         public const string LoadLanguage = "cb9";
-        public const string LoadMapForMapCreator = "cb43";
         public const string LoadNamesForChat = "cb39";
         public const string MapCreatorSyncCurrentMapToServer = "cb50";
         public const string OpenMapMenu = "cb12";
@@ -47,6 +45,5 @@
         public const string ToggleTeamChoiceMenu = "cb37";
         public const string ToggleTeamOrderModus = "cb32";
         public const string ToggleUserpanel = "cb33";
-
     }
 }

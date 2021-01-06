@@ -21,8 +21,6 @@ namespace TDS.Client.Data.Defaults
          };
 
         public static string AngularMainBrowserPath => "package://Window/angular/main/index.html";
-        public static string AngularMapCreatorObjectChoiceBrowserPath => "package://Window/angular/map-creator-object-choice/index.html";
-        public static string AngularMapCreatorVehicleChoiceBrowserPath => "package://Window/angular/map-creator-vehicle-choice/index.html";
         public static string BombPlantPlaceHashName => "prop_mp_placement_med";
         public static int DefaultSpectatePlayerChangeEaseTime => 1500;
         public static string LobbyChoiceBrowserPath => "package://Window/choice/index.html";

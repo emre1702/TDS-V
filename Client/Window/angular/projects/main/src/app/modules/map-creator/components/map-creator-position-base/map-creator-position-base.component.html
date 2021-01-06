@@ -1,0 +1,31 @@
+<div id="container">
+    <div class="top">
+        <div class="info">
+            {{ info | language: settings.Lang }}
+        </div>
+        <div class="positions-container" *ngIf="fC.value as data">
+            <mat-form-field color="accent">
+                <input matInput [placeholder]="'X-' + ('Position' | language: settings.Lang)" type="number" [(ngModel)]="data[3]" />
+            </mat-form-field>
+            <mat-form-field color="accent">
+                <input matInput [placeholder]="'Y-' + ('Position' | language: settings.Lang)" type="number" [(ngModel)]="data[4]" />
+            </mat-form-field>
+            <mat-form-field color="accent">
+                <input matInput [placeholder]="'Z-' + ('Position' | language: settings.Lang)" type="number" [(ngModel)]="data[5]" />
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="row">
+            <button mat-raised-button type="button" (click)="addOrChangePos()" [disabled]="!settings.IsLobbyOwner">
+                {{ (fC.value ? 'ChangePos' : 'AddPos') | language: settings.Lang }}
+            </button>
+            <button mat-raised-button type="button" (click)="removePos()" [disabled]="!settings.IsLobbyOwner || !hasPos()">
+                {{ 'Remove' | language: settings.Lang }}
+            </button>
+            <button mat-raised-button type="button" (click)="tpToPos()" [disabled]="!hasPos()">
+                {{ 'Teleport' | language: settings.Lang }}
+            </button>
+        </div>
+    </div>
+</div>

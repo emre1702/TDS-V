@@ -1,0 +1,39 @@
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .top {
+        .info {
+            float: left;
+            margin-right: 2.5%;
+            width: 42.5%;
+        }
+
+        .positions-container {
+            height: 100%;
+            float: right;
+            margin-left: 2.5%;
+            width: 42.5%;
+
+            .mat-form-field {
+                width: 100%;
+            }
+        }
+    }
+
+    .bottom {
+        .row {
+            margin-top: 20px;
+            display: flex;
+
+            button {
+                flex-grow: 1;
+
+                &:not(:first-child) {
+                    margin-left: 5%;
+                }
+            }
+        }
+    }
+}

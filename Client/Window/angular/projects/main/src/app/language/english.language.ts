@@ -14,13 +14,13 @@ export class English implements Language {
     MapSettings = 'Map settings';
     German = 'German';
     English = 'English';
-    Description = 'description';
+    Description = 'Description';
     Type = 'Type';
-    TeamSpawns = 'Team-spawns';
+    TeamSpawns = 'Team spawns';
     MapLimit = 'Map limit';
     MapCenter = 'Map center';
     Objects = 'Objects';
-    BombPlaces = 'Bomb-places';
+    BombPlaces = 'Bomb places';
     NumberShort = 'No.';
     Remove = 'Remove';
     AddPos = 'Add position';
@@ -34,7 +34,7 @@ export class English implements Language {
     NameAlreadyExists = 'The name already exists.';
     Unknown = 'Unknown error.';
     Cooldown = 'Please wait a bit before sending again.';
-    MapCreatedSuccessfully = 'The map was successfully created and saved.';
+    MapCreatedSuccessfully = 'The map was successfully created and/or saved.';
     MapSavedSuccessfully = 'The map was successfully saved.';
     SavedMapLoadSuccessful = 'Loading map was successful.';
     Cancel = 'Cancel';
@@ -1076,4 +1076,13 @@ Administrator, biggest motivation for starting the server:
 <b>Pluz.</b>
 
 Have fun!`;
+
+    ErrorvalueMoreThanOrEqual = 'Value has to be more or equal.';
+    ErrorvalueLessThanOrEqual = 'Value has to be less or equal.';
+    ErrornotEnoughTeams = 'Not enough teams.';
+    ErrornotEnoughSpawns = 'Not enough spawns.';
+    ErrortargetRequired = 'A target is required for this mode.';
+    ErrormapLimitRequired = 'Map limits are required for this mode.';
+    ErrormapLimitInvalid = 'Map limits are invalid.';
+    ErrorbombPlaceRequired = 'A bomb place is required for this mode.';
 }

@@ -22,6 +22,8 @@ export enum ToClientEvent {
     LoadClothesData = 'b49',
     // RemoveMapVote = "RemoveMapVote_Browser",
     MapCreatorHighlightPos = 'b21',
+    MapCreatorShowObject = 'b22',
+    MapCreatorShowVehicle = 'b23',
     MapCreatorStartNew = 'b24',
     MapCreatorStartObjectChoice = 'b25',
     MapCreatorStopObjectPreview = 'b26',

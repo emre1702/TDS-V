@@ -1003,4 +1003,12 @@ export interface Language {
     HeadShotMultiplier: string;
 
     registerLoginInformation: string;
+    ErrorvalueMoreThanOrEqual: string;
+    ErrorvalueLessThanOrEqual: string;
+    ErrornotEnoughTeams: string;
+    ErrornotEnoughSpawns: string;
+    ErrortargetRequired: string;
+    ErrormapLimitRequired: string;
+    ErrormapLimitInvalid: string;
+    ErrorbombPlaceRequired: string;
 }

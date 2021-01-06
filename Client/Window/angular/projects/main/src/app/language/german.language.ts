@@ -29,7 +29,7 @@ export class German extends English {
     NameAlreadyExists = 'Der Name existiert bereits.';
     Unknown = 'Unbekannter Fehler.';
     Cooldown = 'Bitte warte etwas vor dem nächsten Absenden.';
-    MapCreatedSuccessfully = 'Die Karte wurde erfolgreich erstellt und gespeichert.';
+    MapCreatedSuccessfully = 'Die Karte wurde erfolgreich erstellt und/oder gespeichert.';
     MapSavedSuccessfully = 'Die Karte wurde erfolgreich gespeichert.';
     SavedMapLoadSuccessful = 'Die Karte konnte erfolgreich geladen werden.';
     Cancel = 'Abbrechen';
@@ -1025,4 +1025,13 @@ Administrator, größte Motivation für die Gründung des Servers:
 <b>Pluz.</b>
 
 Habt Spaß!`;
+
+    ErrorvalueMoreThanOrEqual = 'Dert Wert muss mehr oder gleich sein.';
+    ErrorvalueLessThanOrEqual = 'Der Wert muss weniger oder gleich sein.';
+    ErrornotEnoughTeams = 'Nicht genügend Teams.';
+    ErrornotEnoughSpawns = 'Nicht genügend Spawns.';
+    ErrortargetRequired = 'Ein Ziel wird benötigt für diesen Modus.';
+    ErrormapLimitRequired = 'Map-Begrenzung wird benötigt für diesen Modus.';
+    ErrormapLimitInvalid = 'Map-Begrenzung ist ungültig.';
+    ErrorbombPlaceRequired = 'Ein Bomben-Platz wird benötigt für diesen Modus.';
 }

@@ -1,0 +1,49 @@
+#container {
+    width: 100%;
+    height: auto;
+
+    .mat-form-field {
+        width: 100%;
+
+        &.with-hint {
+            margin-bottom: 20px;
+        }
+    }
+
+    .two-per-row-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow: hidden;
+        justify-content: space-between;
+
+        .two-per-row-div {
+            width: 45% !important;
+            margin-bottom: 15px;
+        }
+
+        .two-per-row-div:last-child,
+        .two-per-row-div:nth-last-child(2) {
+            margin-bottom: 0px;
+        }
+    }
+
+    .bottom-buttons {
+        margin-top: 5vh;
+
+        .row {
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+
+            button {
+                flex-grow: 1;
+
+                &:not(:first-child) {
+                    margin-left: 5%;
+                }
+            }
+        }
+    }
+}

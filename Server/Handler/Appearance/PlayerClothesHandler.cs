@@ -30,7 +30,7 @@ namespace TDS.Server.Handler.Appearance
             _settingsHandler = settingsHandler;
 
             eventsHandler.PlayerRegisteredBefore += InitPlayerClothes;
-            eventsHandler.PlayerSpawned += LoadPlayerClothes;            
+            eventsHandler.PlayerSpawned += LoadPlayerClothes;
         }
 
         private async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)
@@ -49,7 +49,7 @@ namespace TDS.Server.Handler.Appearance
                         return "ErrorInfo";
                     }
 
-                    TakeValues(oldConfig!, newConfig, player.Id);
+                    TakeValues(oldConfig!, newConfig);
                     await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                     return null;
@@ -170,7 +170,7 @@ namespace TDS.Server.Handler.Appearance
             };
         }
 
-        private void TakeValues(PlayerClothesDatas to, ClothesConfigs from, int playerId)
+        private void TakeValues(PlayerClothesDatas to, ClothesConfigs from)
         {
             to.SelectedSlot = from.SelectedSlot;
 

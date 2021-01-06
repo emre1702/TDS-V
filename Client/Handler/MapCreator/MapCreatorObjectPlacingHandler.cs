@@ -417,7 +417,7 @@ namespace TDS.Client.Handler.MapCreator
         private void OnStartMapCreatorPosPlacingMethod(object[] args)
         {
             MapCreatorPositionType type = (MapCreatorPositionType)(int)args[0];
-            object editingTeamIndexOrObjectName = args[1];
+            object editingTeamIndexOrObjectName = args.Length > 1 ? args[1] : null;
             StartNewPlacing(type, editingTeamIndexOrObjectName);
         }
     }

@@ -1,0 +1,43 @@
+@use '../../styles/table-style.scss';
+
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .top {
+        width: 100%;
+        height: auto;
+
+        .top-row {
+            width: 100%;
+            overflow: hidden;
+
+            .mat-form-field {
+                width: 60%;
+                float: left;
+            }
+
+            .mat-raised-button {
+                float: right;
+            }
+
+            button {
+                float: right;
+            }
+        }
+    }
+
+    .bottom-row {
+        margin-top: 20px;
+        display: flex;
+
+        button {
+            flex-grow: 1;
+
+            &:not(:first-child) {
+                margin-left: 5%;
+            }
+        }
+    }
+}

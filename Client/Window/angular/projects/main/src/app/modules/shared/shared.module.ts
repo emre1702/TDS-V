@@ -5,17 +5,30 @@ import { OrderByPipe } from './pipes/orderby.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { SharedModuleComponent } from './shared-module.component';
 import { NotificationService } from './services/notification.service';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ToolbarDirective } from './directives/toolbarDirective';
 import { InputTypeDirective } from './directives/input-type-directive';
 import { TextareaTypeDirective } from './directives/textarea-type-directive';
+import { SelectGroupDialogComponent } from './dialogs/select-group-dialog/select-group-dialog.component';
+import { MaterialModule } from '../material/material.module';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
-const declarations = [SharedModuleComponent, FilterPipe, LanguagePipe, OrderByPipe, ReversePipe, ToolbarDirective, InputTypeDirective, TextareaTypeDirective];
+const declarations = [
+    SharedModuleComponent,
+    SelectGroupDialogComponent,
+    FilterPipe,
+    LanguagePipe,
+    OrderByPipe,
+    ReversePipe,
+    ToolbarDirective,
+    InputTypeDirective,
+    TextareaTypeDirective,
+];
 
 @NgModule({
     declarations: [...declarations],
     exports: [...declarations],
-    imports: [MatSnackBarModule],
+    imports: [MaterialModule, FormsModule, CommonModule],
     providers: [NotificationService],
 })
 export class SharedModule {}

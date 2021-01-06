@@ -8,7 +8,6 @@ export enum FromClientEvent {
     InitLoadAngular = 'cb6',
     LoadSettings = 'cb1',
     LoadLanguage = 'cb9',
-    LoadMapForMapCreator = 'cb43',
     LoadNamesForChat = 'cb39',
     MapCreatorSyncCurrentMapToServer = 'cb50',
     OpenMapMenu = 'cb12',

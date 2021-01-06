@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>{{ data.title | language: settings.Lang }}</h1>
+<div mat-dialog-content>
+    <mat-form-field color="accent">
+        <mat-label>{{ data.selectLabel | language: settings.Lang }}</mat-label>
+        <mat-select [(ngModel)]="selectedValue">
+            <mat-optgroup *ngFor="let groupData of data.groups" [label]="groupData[0] | language: settings.Lang">
+                <mat-option *ngFor="let data of groupData[1]" [value]="data[0]">{{ data[1] }}</mat-option>
+            </mat-optgroup>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button [mat-dialog-close]="undefined">{{ 'Cancel' | language: settings.Lang }}</button>
+    <button mat-raised-button [mat-dialog-close]="selectedValue" cdkFocusInitial>{{ 'Choose' | language: settings.Lang }}</button>
+</div>

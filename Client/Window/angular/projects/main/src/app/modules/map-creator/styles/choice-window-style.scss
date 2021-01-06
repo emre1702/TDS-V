@@ -1,0 +1,18 @@
+@use 'table-style.scss';
+
+tds-window {
+    position: absolute;
+    top: 1vw;
+    left: 1vw;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        #filter {
+            margin: 10px;
+            width: calc(100% - 20px);
+        }
+    }
+}

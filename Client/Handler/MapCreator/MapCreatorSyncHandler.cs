@@ -149,6 +149,8 @@ namespace TDS.Client.Handler.MapCreator
         public void SyncStartNewMap(params object[] args)
         {
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorStartNewMap);
+            _mapCreatorObjectsHandler.Stop();
+            _mapCreatorObjectsHandler.Start();
         }
 
         public void SyncTeamObjectsRemoveFromLobby(int teamNumber)
