@@ -23,7 +23,6 @@ mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/cs_packages/TDS.Client
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window
 mkdir -p /cygdrive/c/RAGEMP/server-files/dotnet/resources/tds/net5.0
 mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
-mkdir -p /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-object-choice
 mkdir -p /cygdrive/c/RAGEMP/server-files/packages/tds
 
 cd /cygdrive/c/Programming/TDS-V/Server/Core/bin/Debug/net5.0
@@ -55,7 +54,5 @@ cd C:/Programming/TDS-V/Client/Window && rsync -hmrtvzP --delete --exclude=".vsc
 echo -e "${SEPERATOR}"
 echo -e "Update clientside ${LIGHTBLUE}Angular ${NOCOLOR}CEF ..."
 cd C:/Programming/TDS-V/Client/Window/angular/dist/main && rsync -hmrtvzP --delete . /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/main
-cd C:/Programming/TDS-V/Client/Window/angular/dist/map-creator-object-choice && rsync -hmrtvzP --delete . /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-object-choice
-cd C:/Programming/TDS-V/Client/Window/angular/dist/map-creator-vehicle-choice && rsync -hmrtvzP --delete . /cygdrive/c/RAGEMP/server-files/client_packages/Window/angular/map-creator-vehicle-choice
 
 cmd /k
