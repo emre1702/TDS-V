@@ -392,7 +392,7 @@ namespace TDS.Server.Handler
 
         private void AddMapsToArena(IArena arena, Lobbies lobbySetting)
         {
-            var mapsList = GetMapsForArena(lobbySetting.LobbyMaps.Select(m => m.MapId);
+            var mapsList = GetMapsForArena(lobbySetting.LobbyMaps.Select(m => m.MapId));
             List<MapDto> lobbyMapsList = new List<MapDto>();
             foreach (var mapAssignment in lobbySetting.LobbyMaps)
             {
