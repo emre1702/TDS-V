@@ -27,7 +27,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
 
             lock (_addedCancelEventCountLock)
             {
-                if (++_addedCancelEventCount == 0)
+                if (++_addedCancelEventCount == 1)
                     _remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.CancelCharCreateData, Cancel);
             }
         }
