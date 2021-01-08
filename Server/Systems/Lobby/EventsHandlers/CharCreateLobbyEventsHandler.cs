@@ -15,6 +15,9 @@ namespace TDS.Server.LobbySystem.EventsHandlers
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly RemoteBrowserEventsHandler _remoteBrowserEventsHandler;
 
+        private static int _addedCancelEventCount = 0;
+        private static object _addedCancelEventCountLock = new object();
+
         public CharCreateLobbyEventsHandler(ICharCreateLobby lobby, EventsHandler eventsHandler, ILoggingHandler loggingHandler, LobbiesHandler lobbiesHandler,
             RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(lobby, eventsHandler, loggingHandler)
@@ -22,14 +25,22 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             _lobbiesHandler = lobbiesHandler;
             _remoteBrowserEventsHandler = remoteBrowserEventsHandler;
 
-            _remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.CancelCharCreateData, Cancel);
+            lock (_addedCancelEventCountLock)
+            {
+                if (++_addedCancelEventCount == 0)
+                    _remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.CancelCharCreateData, Cancel);
+            }
         }
 
         protected override void RemoveEvents(IBaseLobby lobby)
         {
             base.RemoveEvents(lobby);
 
-            _remoteBrowserEventsHandler.RemoveAsyncEvent(ToServerEvent.CancelCharCreateData);
+            lock (_addedCancelEventCountLock)
+            {
+                if (--_addedCancelEventCount == 0)
+                    _remoteBrowserEventsHandler.RemoveAsyncEvent(ToServerEvent.CancelCharCreateData);
+            }
         }
 
         internal async Task<object?> Cancel(ITDSPlayer player, ArraySegment<object> _)
