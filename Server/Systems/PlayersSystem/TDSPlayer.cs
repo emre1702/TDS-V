@@ -141,8 +141,7 @@ namespace TDS.Server.PlayersSystem
                 NAPI.Player.SpawnPlayer(this, pos, heading);
                 if (Lobby is { })
                     Dimension = Lobby.MapHandler.Dimension;
-            });  
-                
+            });
         }
 
         public override void SetEntityInvincible(ITDSVehicle vehicle, bool invincible)

@@ -12,8 +12,8 @@ namespace TDS.Server.Core.Events
         [ServerEvent(Event.IncomingConnection)]
         public void IncomingConnection(string ip, string serial, string socialClubName, ulong socialClubId, GameTypes _, CancelEventArgs cancel)
         {
-            try 
-            { 
+            try
+            {
                 EventsHandler.Instance.OnIncomingConnection(ip, serial, socialClubName, socialClubId, cancel);
             }
             catch (Exception ex)
@@ -23,10 +23,16 @@ namespace TDS.Server.Core.Events
         }
 
         [ServerEvent(Event.PlayerConnected)]
-        public void PlayerConnected(ITDSPlayer player)
+        public void PlayerConnected(Player modPlayer)
         {
             try
-            { 
+            {
+                if (modPlayer is not ITDSPlayer player)
+                {
+                    modPlayer.KickSilent("Connected too early.");
+                    return;
+                }
+
                 EventsHandler.Instance.OnPlayerConnected(player);
             }
             catch (Exception ex)
@@ -40,6 +46,8 @@ namespace TDS.Server.Core.Events
         {
             try
             {
+                if (player is null)
+                    return;
                 if (player.LoggedIn)
                     await EventsHandler.Instance.OnPlayerLoggedOut(player).ConfigureAwait(false);
 

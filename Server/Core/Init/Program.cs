@@ -38,6 +38,7 @@ namespace TDS.Server.Core.Init
         {
             try
             {
+                new NapiInit().Init();
                 Handler.Extensions.TaskExtensions.IsMainThread = true;
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
@@ -85,7 +86,11 @@ namespace TDS.Server.Core.Init
                 Task.Run(ReadInput);
 
                 var eventsHandler = _serviceProvider.GetRequiredService<EventsHandler>();
-                InitRAGE(eventsHandler);
+                eventsHandler.Minute += (_) =>
+                {
+                    var date = DateTime.UtcNow;
+                    NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
+                };
             }
             catch (Exception ex)
             {
@@ -99,21 +104,6 @@ namespace TDS.Server.Core.Init
                 Console.ReadKey();
 #endif
             }
-        }
-
-        private static void InitRAGE(EventsHandler eventsHandler)
-        {
-            NAPI.Server.SetAutoRespawnAfterDeath(false);
-            NAPI.Server.SetGlobalServerChat(false);
-
-            var date = DateTime.UtcNow;
-            NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
-
-            eventsHandler.Minute += (_) =>
-            {
-                date = DateTime.UtcNow;
-                NAPI.World.SetTime(date.Hour, date.Minute, date.Second);
-            };
         }
 
         public void HandleProgramException(Exception ex, string msgBefore = "")
