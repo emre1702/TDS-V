@@ -11,7 +11,6 @@ using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Data.Interfaces.Userpanel;
 using TDS.Server.Data.Models;
 using TDS.Server.Data.Utility;
-using TDS.Server.Handler.Appearance;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.GangSystem;
 using TDS.Server.Handler.Maps;
@@ -24,13 +23,13 @@ namespace TDS.Server.Handler.Events
 {
     public class RemoteBrowserEventsHandler
     {
-        private readonly Dictionary<string, FromBrowserAsyncMethodDelegate> _asyncMethods;
+        private readonly Dictionary<string, List<FromBrowserAsyncMethodDelegate>> _asyncMethods;
 
         private readonly ILoggingHandler _loggingHandler;
 
-        private readonly Dictionary<string, FromBrowserMaybeAsyncMethodDelegate> _maybeAsyncMethods;
+        private readonly Dictionary<string, List<FromBrowserMaybeAsyncMethodDelegate>> _maybeAsyncMethods;
 
-        private readonly Dictionary<string, FromBrowserMethodDelegate> _methods;
+        private readonly Dictionary<string, List<FromBrowserMethodDelegate>> _methods;
 
         private readonly EventsHandler _eventsHandler;
 
@@ -41,58 +40,58 @@ namespace TDS.Server.Handler.Events
             _loggingHandler = loggingHandler;
             _eventsHandler = eventsHandler;
 
-            _asyncMethods = new Dictionary<string, FromBrowserAsyncMethodDelegate>
+            _asyncMethods = new()
             {
-                [ToServerEvent.SendApplicationInvite] = userpanelHandler.ApplicationsAdminHandler.SendInvitation,
-                [ToServerEvent.AnswerToOfflineMessage] = userpanelHandler.OfflineMessagesHandler.Answer,
-                [ToServerEvent.SendOfflineMessage] = userpanelHandler.OfflineMessagesHandler.Send,
-                [ToServerEvent.DeleteOfflineMessage] = userpanelHandler.OfflineMessagesHandler.Delete,
-                [ToServerEvent.SaveSpecialSettingsChange] = userpanelHandler.SettingsSpecialHandler.SetData,
-                [ToServerEvent.AcceptTDSTeamInvitation] = userpanelHandler.ApplicationUserHandler.AcceptInvitation,
-                [ToServerEvent.RejectTDSTeamInvitation] = userpanelHandler.ApplicationUserHandler.RejectInvitation,
-                [ToServerEvent.CreateCustomLobby] = lobbiesHandler.CreateCustomLobby,
-                [ToServerEvent.GetSupportRequestData] = userpanelHandler.SupportRequestHandler.GetSupportRequestData,
-                [ToServerEvent.JoinLobby] = lobbiesHandler.OnJoinLobby,
-                [ToServerEvent.JoinLobbyWithPassword] = lobbiesHandler.OnJoinLobbyWithPassword,
-                [ToServerEvent.LoadApplicationDataForAdmin] = userpanelHandler.ApplicationsAdminHandler.SendApplicationData,
-                [ToServerEvent.SaveMapCreatorData] = mapCreatorHandler.Save,
-                [ToServerEvent.SendMapCreatorData] = mapCreatorHandler.Create,
-                [ToServerEvent.SaveUserpanelNormalSettings] = userpanelHandler.SettingsNormalHandler.SaveSettings,
-                [ToServerEvent.SendApplication] = userpanelHandler.ApplicationUserHandler.CreateApplication,
-                [ToServerEvent.SetSupportRequestClosed] = userpanelHandler.SupportRequestHandler.SetSupportRequestClosed,
-                [ToServerEvent.SendSupportRequest] = userpanelHandler.SupportRequestHandler.SendRequest,
-                [ToServerEvent.SendSupportRequestMessage] = userpanelHandler.SupportRequestHandler.SendMessage,
-                [ToServerEvent.ToggleMapFavouriteState] = mapFavouritesHandler.ToggleMapFavouriteState,
-                [ToServerEvent.SavePlayerCommandsSettings] = userpanelHandler.SettingsCommandsHandler.Save,
-                [ToServerEvent.GangCommand] = gangWindowHandler.ExecuteCommand,
+                [ToServerEvent.SendApplicationInvite] = new() { userpanelHandler.ApplicationsAdminHandler.SendInvitation },
+                [ToServerEvent.AnswerToOfflineMessage] = new() { userpanelHandler.OfflineMessagesHandler.Answer },
+                [ToServerEvent.SendOfflineMessage] = new() { userpanelHandler.OfflineMessagesHandler.Send },
+                [ToServerEvent.DeleteOfflineMessage] = new() { userpanelHandler.OfflineMessagesHandler.Delete },
+                [ToServerEvent.SaveSpecialSettingsChange] = new() { userpanelHandler.SettingsSpecialHandler.SetData },
+                [ToServerEvent.AcceptTDSTeamInvitation] = new() { userpanelHandler.ApplicationUserHandler.AcceptInvitation },
+                [ToServerEvent.RejectTDSTeamInvitation] = new() { userpanelHandler.ApplicationUserHandler.RejectInvitation },
+                [ToServerEvent.CreateCustomLobby] = new() { lobbiesHandler.CreateCustomLobby },
+                [ToServerEvent.GetSupportRequestData] = new() { userpanelHandler.SupportRequestHandler.GetSupportRequestData },
+                [ToServerEvent.JoinLobby] = new() { lobbiesHandler.OnJoinLobby },
+                [ToServerEvent.JoinLobbyWithPassword] = new() { lobbiesHandler.OnJoinLobbyWithPassword },
+                [ToServerEvent.LoadApplicationDataForAdmin] = new() { userpanelHandler.ApplicationsAdminHandler.SendApplicationData },
+                [ToServerEvent.SaveMapCreatorData] = new() { mapCreatorHandler.Save },
+                [ToServerEvent.SendMapCreatorData] = new() { mapCreatorHandler.Create },
+                [ToServerEvent.SaveUserpanelNormalSettings] = new() { userpanelHandler.SettingsNormalHandler.SaveSettings },
+                [ToServerEvent.SendApplication] = new() { userpanelHandler.ApplicationUserHandler.CreateApplication },
+                [ToServerEvent.SetSupportRequestClosed] = new() { userpanelHandler.SupportRequestHandler.SetSupportRequestClosed },
+                [ToServerEvent.SendSupportRequest] = new() { userpanelHandler.SupportRequestHandler.SendRequest },
+                [ToServerEvent.SendSupportRequestMessage] = new() { userpanelHandler.SupportRequestHandler.SendMessage },
+                [ToServerEvent.ToggleMapFavouriteState] = new() { mapFavouritesHandler.ToggleMapFavouriteState },
+                [ToServerEvent.SavePlayerCommandsSettings] = new() { userpanelHandler.SettingsCommandsHandler.Save },
+                [ToServerEvent.GangCommand] = new() { gangWindowHandler.ExecuteCommand },
             };
 
-            _maybeAsyncMethods = new Dictionary<string, FromBrowserMaybeAsyncMethodDelegate>
+            _maybeAsyncMethods = new()
             {
-                [ToServerEvent.LoadDatasForCustomLobby] = lobbiesHandler.LoadDatas
+                [ToServerEvent.LoadDatasForCustomLobby] = new() { lobbiesHandler.LoadDatas }
             };
 
-            _methods = new Dictionary<string, FromBrowserMethodDelegate>
+            _methods = new()
             {
-                [ToServerEvent.BuyMap] = BuyMap,
-                [ToServerEvent.MapCreatorSyncData] = MapCreatorSyncData,
-                [ToServerEvent.AcceptInvitation] = invitationsHandler.AcceptInvitation,
-                [ToServerEvent.RejectInvitation] = invitationsHandler.RejectInvitation,
-                [ToServerEvent.LoadAllMapsForCustomLobby] = mapsLoadingHandler.GetAllMapsForCustomLobby,
-                [ToServerEvent.MapVote] = MapVote,
-                [ToServerEvent.GetVehicle] = GiveVehicle,
-                [ToServerEvent.JoinedCustomLobbiesMenu] = JoinedCustomLobbiesMenu,
-                [ToServerEvent.LeftCustomLobbiesMenu] = LeftCustomLobbiesMenu,
-                [ToServerEvent.LeftSupportRequest] = userpanelHandler.SupportRequestHandler.LeftSupportRequest,
-                [ToServerEvent.LeftSupportRequestsList] = userpanelHandler.SupportRequestHandler.LeftSupportRequestsList,
-                [ToServerEvent.LoadMapNamesToLoadForMapCreator] = mapCreatorHandler.SendPlayerMapNamesForMapCreator,
-                [ToServerEvent.LoadMapForMapCreator] = mapCreatorHandler.SendPlayerMapForMapCreator,
-                [ToServerEvent.MapCreatorSyncCurrentMapToServer] = mapCreatorHandler.SyncCurrentMapToClient,
-                [ToServerEvent.LoadPlayerWeaponStats] = userpanelHandler.PlayerWeaponStatsHandler.GetPlayerWeaponStats,
-                [ToServerEvent.LoadGangWindowData] = gangWindowHandler.OnLoadGangWindowData,
-                [ToServerEvent.SetDamageTestWeaponDamage] = SetDamageTestWeaponDamage,
-                [ToServerEvent.LoadUserpanelNormalSettingsData] = userpanelHandler.SettingsNormalHandler.LoadSettings,
-                [ToServerEvent.ReloadPlayerSettings] = playerSettingsSyncHandler.RequestSyncPlayerSettingsFromUserpanel,
+                [ToServerEvent.BuyMap] = new() { BuyMap },
+                [ToServerEvent.MapCreatorSyncData] = new() { MapCreatorSyncData },
+                [ToServerEvent.AcceptInvitation] = new() { invitationsHandler.AcceptInvitation },
+                [ToServerEvent.RejectInvitation] = new() { invitationsHandler.RejectInvitation },
+                [ToServerEvent.LoadAllMapsForCustomLobby] = new() { mapsLoadingHandler.GetAllMapsForCustomLobby },
+                [ToServerEvent.MapVote] = new() { MapVote },
+                [ToServerEvent.GetVehicle] = new() { GiveVehicle },
+                [ToServerEvent.JoinedCustomLobbiesMenu] = new() { JoinedCustomLobbiesMenu },
+                [ToServerEvent.LeftCustomLobbiesMenu] = new() { LeftCustomLobbiesMenu },
+                [ToServerEvent.LeftSupportRequest] = new() { userpanelHandler.SupportRequestHandler.LeftSupportRequest },
+                [ToServerEvent.LeftSupportRequestsList] = new() { userpanelHandler.SupportRequestHandler.LeftSupportRequestsList },
+                [ToServerEvent.LoadMapNamesToLoadForMapCreator] = new() { mapCreatorHandler.SendPlayerMapNamesForMapCreator },
+                [ToServerEvent.LoadMapForMapCreator] = new() { mapCreatorHandler.SendPlayerMapForMapCreator },
+                [ToServerEvent.MapCreatorSyncCurrentMapToServer] = new() { mapCreatorHandler.SyncCurrentMapToClient },
+                [ToServerEvent.LoadPlayerWeaponStats] = new() { userpanelHandler.PlayerWeaponStatsHandler.GetPlayerWeaponStats },
+                [ToServerEvent.LoadGangWindowData] = new() { gangWindowHandler.OnLoadGangWindowData },
+                [ToServerEvent.SetDamageTestWeaponDamage] = new() { SetDamageTestWeaponDamage },
+                [ToServerEvent.LoadUserpanelNormalSettingsData] = new() { userpanelHandler.SettingsNormalHandler.LoadSettings },
+                [ToServerEvent.ReloadPlayerSettings] = new() { playerSettingsSyncHandler.RequestSyncPlayerSettingsFromUserpanel },
             };
 
             NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
@@ -107,6 +106,8 @@ namespace TDS.Server.Handler.Events
 
         private async void OnFromBrowserEvent(ITDSPlayer player, params object[] args)
         {
+            if (player is null)
+                return;
             var eventName = (string)args[0];
             var ret = await OnFromBrowserEventMethod(player, args);
             if (ret is { })
@@ -115,6 +116,8 @@ namespace TDS.Server.Handler.Events
 
         private async void OnFromBrowserEventCallback(ITDSPlayer player, params object[] args)
         {
+            if (player is null)
+                return;
             var eventName = (string)args[0];
             var ret = await OnFromBrowserEventMethod(player, args);
             NAPI.Task.RunSafe(() => player.TriggerEvent(ToClientEvent.FromBrowserEventReturn, eventName, ret ?? ""));
@@ -132,15 +135,18 @@ namespace TDS.Server.Handler.Events
 
                 if (_asyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _asyncMethods[eventName](player, argsWithoutEventName).ConfigureAwait(false);
+                    foreach (var e in _asyncMethods[eventName])
+                        ret ??= await e(player, argsWithoutEventName).ConfigureAwait(false);
                 }
-                else if (_maybeAsyncMethods.ContainsKey(eventName))
+                if (_maybeAsyncMethods.ContainsKey(eventName))
                 {
-                    ret = await _maybeAsyncMethods[eventName](player, argsWithoutEventName).ConfigureAwait(false);
+                    foreach (var e in _maybeAsyncMethods[eventName])
+                        ret ??= await e(player, argsWithoutEventName).ConfigureAwait(false);
                 }
-                else if (_methods.ContainsKey(eventName))
+                if (_methods.ContainsKey(eventName))
                 {
-                    ret = _methods[eventName](player, ref argsWithoutEventName);
+                    foreach (var e in _methods[eventName])
+                        ret ??= e(player, ref argsWithoutEventName);
                 }
 
                 return ret;
@@ -157,32 +163,80 @@ namespace TDS.Server.Handler.Events
 
         public void AddSyncEvent(string eventName, FromBrowserMethodDelegate method)
         {
-            _methods[eventName] = method;
+            lock (_methods)
+            {
+                if (!_methods.TryGetValue(eventName, out var list))
+                {
+                    list = new();
+                    _methods[eventName] = list;
+                }
+
+                list.Add(method);
+            }
         }
 
         public void AddAsyncEvent(string eventName, FromBrowserAsyncMethodDelegate method)
         {
-            _asyncMethods[eventName] = method;
+            lock (_asyncMethods)
+            {
+                if (!_asyncMethods.TryGetValue(eventName, out var list))
+                {
+                    list = new();
+                    _asyncMethods[eventName] = list;
+                }
+
+                list.Add(method);
+            }
         }
 
         public void AddMaybeAsyncEvent(string eventName, FromBrowserMaybeAsyncMethodDelegate method)
         {
-            _maybeAsyncMethods[eventName] = method;
+            lock (_maybeAsyncMethods)
+            {
+                if (!_maybeAsyncMethods.TryGetValue(eventName, out var list))
+                {
+                    list = new();
+                    _maybeAsyncMethods[eventName] = list;
+                }
+
+                list.Add(method);
+            }
         }
 
-        public void RemoveSyncEvent(string eventName)
+        public void RemoveSyncEvent(string eventName, FromBrowserMethodDelegate method)
         {
-            _methods.Remove(eventName);
+            lock (_methods)
+            {
+                if (!_methods.TryGetValue(eventName, out var list))
+                    return;
+                list.Remove(method);
+                if (list.Count == 0)
+                    _methods.Remove(eventName);
+            }
         }
 
-        public void RemoveAsyncEvent(string eventName)
+        public void RemoveAsyncEvent(string eventName, FromBrowserAsyncMethodDelegate method)
         {
-            _asyncMethods.Remove(eventName);
+            lock (_asyncMethods)
+            {
+                if (!_asyncMethods.TryGetValue(eventName, out var list))
+                    return;
+                list.Remove(method);
+                if (list.Count == 0)
+                    _asyncMethods.Remove(eventName);
+            }
         }
 
-        public void RemoveMaybeAsyncEvent(string eventName)
+        public void RemoveMaybeAsyncEvent(string eventName, FromBrowserMaybeAsyncMethodDelegate method)
         {
-            _maybeAsyncMethods.Remove(eventName);
+            lock (_maybeAsyncMethods)
+            {
+                if (!_maybeAsyncMethods.TryGetValue(eventName, out var list))
+                    return;
+                list.Remove(method);
+                if (list.Count == 0)
+                    _maybeAsyncMethods.Remove(eventName);
+            }
         }
 
         private object? BuyMap(ITDSPlayer player, ref ArraySegment<object> args)
