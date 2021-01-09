@@ -12,12 +12,12 @@ namespace TDS.Server.Database.SeedData.Lobby
         public static ModelBuilder HasLobbyWeapons(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LobbyWeapons>().HasData(
+                new LobbyWeapons { Hash = WeaponHash.Pistol, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Pistol50, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Revolver, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Smg, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Combatpdw, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Musket, Lobby = -1, Ammo = 9999 },
-                new LobbyWeapons { Hash = WeaponHash.Sawnoffshotgun, Lobby = -1, Ammo = 9999 },
                 new LobbyWeapons { Hash = WeaponHash.Assaultrifle, Lobby = -1, Ammo = 9999 }
             );
             return modelBuilder;
