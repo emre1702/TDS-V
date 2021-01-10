@@ -20,29 +20,31 @@ namespace TDS.Server.Handler.Commands.User
 
             var animName = "PILL";
             var animTime = 0.536f;
-            switch (player.CurrentWeapon)
+            NAPI.Task.RunSafe(() =>
             {
-                // Pistols //
-                case WeaponHash.Pistol:
-                case WeaponHash.Combatpistol:
-                case WeaponHash.Appistol:
-                case WeaponHash.Pistol50:
-                case WeaponHash.Revolver:
-                case WeaponHash.Snspistol:
-                case WeaponHash.Heavypistol:
-                case WeaponHash.Doubleaction:
-                case WeaponHash.Revolver_mk2:
-                case WeaponHash.Snspistol_mk2:
-                case WeaponHash.Pistol_mk2:
-                case WeaponHash.Vintagepistol:
-                case WeaponHash.Marksmanpistol:
-                    animName = "PISTOL";
-                    animTime = 0.365f;
-                    break;
-            }
+                switch (player.CurrentWeapon)
+                {
+                    // Pistols //
+                    case WeaponHash.Pistol:
+                    case WeaponHash.Combatpistol:
+                    case WeaponHash.Appistol:
+                    case WeaponHash.Pistol50:
+                    case WeaponHash.Revolver:
+                    case WeaponHash.Snspistol:
+                    case WeaponHash.Heavypistol:
+                    case WeaponHash.Doubleaction:
+                    case WeaponHash.Revolver_mk2:
+                    case WeaponHash.Snspistol_mk2:
+                    case WeaponHash.Pistol_mk2:
+                    case WeaponHash.Vintagepistol:
+                    case WeaponHash.Marksmanpistol:
+                        animName = "PISTOL";
+                        animTime = 0.365f;
+                        break;
+                }
 
-            NAPI.Task.RunSafe(() => fightLobby.Sync.TriggerEvent(ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime));
+                fightLobby.Sync.TriggerEvent(ToClientEvent.ApplySuicideAnimation, player.RemoteId, animName, animTime);
+            });
         }
-
     }
 }
