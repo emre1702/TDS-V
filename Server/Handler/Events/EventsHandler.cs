@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces.GangsSystem;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity.GangEntities;
 using TDS.Server.Database.Entity.Player;
 using TDS.Server.Handler.Entities.GangSystem;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Events
 {
@@ -23,10 +25,13 @@ namespace TDS.Server.Handler.Events
 
         private readonly BonusBotConnectorClient _bonusBotConnectorClient;
 
-        public EventsHandler(BonusBotConnectorClient bonusBotConnectorClient)
+        public EventsHandler(BonusBotConnectorClient bonusBotConnectorClient, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
             Instance = this;
             _bonusBotConnectorClient = bonusBotConnectorClient;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.JoinedCustomLobbiesMenu, OnCustomLobbyMenuJoin);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LeftCustomLobbiesMenu, OnCustomLobbyMenuLeave);
         }
 
         public delegate void ColshapePlayerDelegate(ITDSColshape colshape, ITDSPlayer player);
@@ -265,7 +270,6 @@ namespace TDS.Server.Handler.Events
             {
                 LoggingHandler.Instance?.LogError(ex);
             }
-            
         }
 
         public void OnPlayerSpawn(ITDSPlayer player)
@@ -355,7 +359,6 @@ namespace TDS.Server.Handler.Events
             }
             catch
             {
-
             }
         }
 
@@ -383,28 +386,30 @@ namespace TDS.Server.Handler.Events
             }
         }
 
-        internal void OnCustomLobbyMenuJoin(ITDSPlayer player)
+        private object? OnCustomLobbyMenuJoin(RemoteBrowserEventArgs args)
         {
             try
             {
-                PlayerJoinedCustomMenuLobby?.Invoke(player);
+                PlayerJoinedCustomMenuLobby?.Invoke(args.Player);
             }
             catch (Exception ex)
             {
                 LoggingHandler.Instance?.LogError(ex);
             }
+            return null;
         }
 
-        internal void OnCustomLobbyMenuLeave(ITDSPlayer player)
+        private object? OnCustomLobbyMenuLeave(RemoteBrowserEventArgs args)
         {
             try
             {
-                PlayerLeftCustomMenuLobby?.Invoke(player);
+                PlayerLeftCustomMenuLobby?.Invoke(args.Player);
             }
             catch (Exception ex)
             {
                 LoggingHandler.Instance?.LogError(ex);
             }
+            return null;
         }
 
         internal async Task OnGangJoin(ITDSPlayer player, IGang gang, GangRanks rank)

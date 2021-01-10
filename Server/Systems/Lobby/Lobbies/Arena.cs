@@ -54,7 +54,8 @@ namespace TDS.Server.LobbySystem.Lobbies
 
             lobbyDependencies.Events ??= new RoundFightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             lobbyDependencies.MapHandler ??= new ArenaMapHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, settingsHandler, mapsLoadingHandler);
-            ((ArenaDependencies)lobbyDependencies).MapVoting ??= new ArenaMapVoting(this, mapsLoadingHandler, settingsHandler);
+            ((ArenaDependencies)lobbyDependencies).MapVoting ??= new ArenaMapVoting(this, mapsLoadingHandler, settingsHandler, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events,
+                RemoteBrowserEventsHandler);
             lobbyDependencies.Players ??= new ArenaPlayers(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);
             ((ArenaDependencies)lobbyDependencies).Rounds ??= new ArenaRoundsHandler(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events, gamemodesProvider);
             ((ArenaDependencies)lobbyDependencies).Statistics ??= new ArenaStatistics(this, (IRoundFightLobbyEventsHandler)lobbyDependencies.Events);

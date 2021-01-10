@@ -7,11 +7,17 @@ using System.Linq;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Data.Interfaces.LobbySystem.MapVotings;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Map;
+using TDS.Server.Data.Utility;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.Maps;
+using TDS.Server.LobbySystem.EventsHandlers;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Models.Map;
 using TDS.Shared.Default;
@@ -27,9 +33,25 @@ namespace TDS.Server.LobbySystem.MapVotings
         protected IArena Lobby { get; }
         private readonly MapsLoadingHandler _mapsLoadingHandler;
         private readonly ISettingsHandler _settingsHandler;
+        private readonly IRoundFightLobbyEventsHandler _eventsHandler;
+        private readonly RemoteBrowserEventsHandler _remoteBrowserEventsHandler;
 
-        public ArenaMapVoting(IArena lobby, MapsLoadingHandler mapsLoadingHandler, ISettingsHandler settingsHandler)
-            => (Lobby, _mapsLoadingHandler, _settingsHandler) = (lobby, mapsLoadingHandler, settingsHandler);
+        public ArenaMapVoting(IArena lobby, MapsLoadingHandler mapsLoadingHandler, ISettingsHandler settingsHandler, IRoundFightLobbyEventsHandler eventsHandler,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+        {
+            (Lobby, _mapsLoadingHandler, _settingsHandler, _eventsHandler, _remoteBrowserEventsHandler) = (lobby, mapsLoadingHandler, settingsHandler, eventsHandler, remoteBrowserEventsHandler);
+
+            eventsHandler.RemoveAfter += EventsHandler_RemoveAfter;
+            remoteBrowserEventsHandler.Add(ToServerEvent.BuyMap, BuyMap, player => player.Lobby == Lobby);
+            remoteBrowserEventsHandler.Add(ToServerEvent.MapVote, MapVote, player => player.Lobby == Lobby);
+        }
+
+        private void EventsHandler_RemoveAfter(IBaseLobby lobby)
+        {
+            _eventsHandler.RemoveAfter -= EventsHandler_RemoveAfter;
+            _remoteBrowserEventsHandler.Remove(ToServerEvent.BuyMap, BuyMap);
+            _remoteBrowserEventsHandler.Remove(ToServerEvent.MapVote, MapVote);
+        }
 
         public void BuyMap(ITDSPlayer player, int mapId)
         {
@@ -49,6 +71,16 @@ namespace TDS.Server.LobbySystem.MapVotings
             Lobby.Notifications.Send(lang => string.Format(lang.MAP_BUY_INFO, player.DisplayName, map.BrowserSyncedData.Name));
             NAPI.Task.RunSafe(() =>
                 Lobby.Sync.TriggerEvent(ToClientEvent.ToBrowserEvent, ToBrowserEvent.StopMapVoting));
+        }
+
+        private object? BuyMap(RemoteBrowserEventArgs args)
+        {
+            int? mapId;
+            if ((mapId = Utils.GetInt(args.Args[0])) == null)
+                return null;
+
+            BuyMap(args.Player, mapId.Value);
+            return null;
         }
 
         public void VoteForMap(ITDSPlayer player, int mapId)
@@ -77,6 +109,19 @@ namespace TDS.Server.LobbySystem.MapVotings
                 return;
             RemovePlayerVote(player);
             SetVoteToMap(player, map);
+        }
+
+        private object? MapVote(RemoteBrowserEventArgs args)
+        {
+            if (args.Args.Count == 0)
+                return null;
+
+            int? mapId;
+            if ((mapId = Utils.GetInt(args.Args[0])) == null)
+                return null;
+
+            VoteForMap(args.Player, mapId.Value);
+            return null;
         }
 
         public string? GetJson()

@@ -4,6 +4,7 @@ using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models;
 using TDS.Server.Handler;
 using TDS.Server.Handler.Events;
 using TDS.Shared.Default;
@@ -22,22 +23,19 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             _lobbiesHandler = lobbiesHandler;
             _remoteBrowserEventsHandler = remoteBrowserEventsHandler;
 
-            _remoteBrowserEventsHandler.AddMaybeAsyncEvent(ToServerEvent.CancelCharCreateData, Cancel);
+            _remoteBrowserEventsHandler.Add(ToServerEvent.CancelCharCreateData, Cancel, player => player.Lobby == lobby);
         }
 
         protected override void RemoveEvents(IBaseLobby lobby)
         {
             base.RemoveEvents(lobby);
 
-            _remoteBrowserEventsHandler.RemoveMaybeAsyncEvent(ToServerEvent.CancelCharCreateData, Cancel);
+            _remoteBrowserEventsHandler.Remove(ToServerEvent.CancelCharCreateData, Cancel);
         }
 
-        internal async ValueTask<object?> Cancel(ITDSPlayer player, ArraySegment<object> _)
+        internal async ValueTask<object?> Cancel(RemoteBrowserEventArgs args)
         {
-            if (player.Lobby != this)
-                return null;
-
-            await _lobbiesHandler.MainMenu.Players.AddPlayer(player, 0).ConfigureAwait(false);
+            await _lobbiesHandler.MainMenu.Players.AddPlayer(args.Player, 0).ConfigureAwait(false);
             return null;
         }
     }

@@ -10,7 +10,5 @@ namespace TDS.Server.Data.Interfaces.Userpanel
     public interface IUserpanelPlayerCommandsHandler
     {
         Task<UserpanelPlayerCommandData?> GetData(ITDSPlayer player);
-
-        Task<object?> Save(ITDSPlayer player, ArraySegment<object> args);
     }
 }

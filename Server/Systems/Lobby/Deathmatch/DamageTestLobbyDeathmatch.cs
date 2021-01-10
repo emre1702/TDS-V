@@ -7,21 +7,36 @@ using TDS.Server.Data.Interfaces.DamageSystem;
 using TDS.Server.Data.Interfaces.LobbySystem.Deathmatch;
 using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Data.Models;
 using TDS.Server.Database.Entity.LobbyEntities;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.Helper;
 using TDS.Server.LobbySystem.Weapons;
+using TDS.Shared.Core;
 using TDS.Shared.Default;
 
 namespace TDS.Server.LobbySystem.Deathmatch
 {
     public class DamageTestLobbyDeathmatch : FightLobbyDeathmatch, IDamageTestLobbyDeathmatch
     {
-        public DamageTestLobbyDeathmatch(IDamageTestLobby lobby, IFightLobbyEventsHandler events, IDamageHandler damageHandler)
+        private readonly RemoteBrowserEventsHandler _remoteBrowserEventsHandler;
+
+        public DamageTestLobbyDeathmatch(IDamageTestLobby lobby, IFightLobbyEventsHandler events, IDamageHandler damageHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(lobby, events, damageHandler)
         {
             AmountLifes = short.MaxValue;
+            _remoteBrowserEventsHandler = remoteBrowserEventsHandler;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.SetDamageTestWeaponDamage, SetDamageTestWeaponDamage, player => player.Lobby == Lobby && player.IsLobbyOwner);
+        }
+
+        protected override void RemoveEvents(IBaseLobby lobby)
+        {
+            base.RemoveEvents(lobby);
+
+            _remoteBrowserEventsHandler.Remove(ToServerEvent.SetDamageTestWeaponDamage, SetDamageTestWeaponDamage);
         }
 
         public override async Task OnPlayerDeath(ITDSPlayer player, ITDSPlayer killer, uint weapon)
@@ -42,6 +57,14 @@ namespace TDS.Server.LobbySystem.Deathmatch
         public void SetWeaponDamage(DamageTestWeapon weaponDamageData)
         {
             Damage.DamageProvider.SetDamage(weaponDamageData.Weapon, new DamageDto(weaponDamageData));
+        }
+
+        private object? SetDamageTestWeaponDamage(RemoteBrowserEventArgs args)
+        {
+            var weaponDamageData = Serializer.FromBrowser<DamageTestWeapon>((string)args.Args[0]);
+            SetWeaponDamage(weaponDamageData);
+
+            return null;
         }
 
         public IEnumerable<DamageTestWeapon> GetWeaponDamages()

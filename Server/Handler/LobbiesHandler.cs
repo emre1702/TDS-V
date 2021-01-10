@@ -11,6 +11,7 @@ using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.CustomLobby;
 using TDS.Server.Data.Models.Map;
 using TDS.Server.Database.Entity;
@@ -23,6 +24,7 @@ using TDS.Server.Handler.Maps;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Utility;
+using TDS.Shared.Default;
 using MapType = TDS.Server.Data.Enums.MapType;
 
 namespace TDS.Server.Handler
@@ -46,7 +48,8 @@ namespace TDS.Server.Handler
             TDSDbContext dbContext,
             MapsLoadingHandler mapsHandler,
             EventsHandler eventsHandler,
-            ILobbiesProvider lobbiesProvider) : base(dbContext)
+            ILobbiesProvider lobbiesProvider,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler) : base(dbContext)
         {
             _mapsHandler = mapsHandler;
             _lobbiesProvider = lobbiesProvider;
@@ -54,6 +57,11 @@ namespace TDS.Server.Handler
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
             eventsHandler.LobbyCreated += AddLobby;
             eventsHandler.LobbyRemoved += RemoveLobby;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.CreateCustomLobby, CreateCustomLobby);
+            remoteBrowserEventsHandler.Add(ToServerEvent.JoinLobby, OnJoinLobby);
+            remoteBrowserEventsHandler.Add(ToServerEvent.JoinLobbyWithPassword, OnJoinLobbyWithPassword);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadDatasForCustomLobby, LoadDatas);
         }
 
         public ICharCreateLobby CharCreateLobbyDummy => _charCreateLobby ??=
@@ -82,34 +90,34 @@ namespace TDS.Server.Handler
             LobbiesByIndex[lobby.Entity.Id] = lobby;
         }
 
-        public async Task<object?> CreateCustomLobby(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> CreateCustomLobby(RemoteBrowserEventArgs args)
         {
             try
             {
                 await Task.Yield();
-                string dataJson = (string)args[0];
+                string dataJson = (string)args.Args[0];
                 var data = Serializer.FromBrowser<CustomLobbyData>(dataJson);
                 if (!IsCustomLobbyNameAllowed(data.Name))
                 {
-                    return player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR;
+                    return args.Player.Language.CUSTOM_LOBBY_CREATOR_NAME_NOT_ALLOWED_ERROR;
                 }
                 bool nameAlreadyInUse = Lobbies.Any(lobby => lobby.Entity.Name.Equals(data.Name, StringComparison.OrdinalIgnoreCase));
                 if (nameAlreadyInUse)
                 {
-                    return player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;
+                    return args.Player.Language.CUSTOM_LOBBY_CREATOR_NAME_ALREADY_TAKEN_ERROR;
                 }
 
                 var lobbyMaps = data.Maps.Select(m => new LobbyMaps { MapId = m }).ToHashSet();
                 var maps = GetMapsForArena(lobbyMaps.Select(m => m.MapId));
                 if (maps.Count == 0)
                 {
-                    return player.Language.CUSTOM_LOBBY_CREATOR_NO_MAP_FOUND;
+                    return args.Player.Language.CUSTOM_LOBBY_CREATOR_NO_MAP_FOUND;
                 }
 
                 var entity = new Lobbies
                 {
                     Name = data.Name,
-                    OwnerId = player.Entity?.Id ?? 0,
+                    OwnerId = args.Player.Entity?.Id ?? 0,
                     IsOfficial = false,
                     IsTemporary = true,
                     FightSettings = new LobbyFightSettings
@@ -177,12 +185,12 @@ namespace TDS.Server.Handler
 
                 arena.MapHandler.SetMapList(maps);
 
-                await arena.Players.AddPlayer(player, 0).ConfigureAwait(false);
+                await arena.Players.AddPlayer(args.Player, 0).ConfigureAwait(false);
                 return null;
             }
             catch
             {
-                return player.Language.CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR;
+                return args.Player.Language.CUSTOM_LOBBY_CREATOR_UNKNOWN_ERROR;
             }
         }
 
@@ -192,10 +200,7 @@ namespace TDS.Server.Handler
             return lobby;
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
-
-        public async ValueTask<object?> LoadDatas(ITDSPlayer player, ArraySegment<object> _)
-#pragma warning restore IDE0060 // Remove unused parameter
+        private async ValueTask<object?> LoadDatas(RemoteBrowserEventArgs _)
         {
             if (_customLobbyDatas is null)
             {
@@ -267,62 +272,62 @@ namespace TDS.Server.Handler
             }
         }
 
-        public async Task<object?> OnJoinLobby(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> OnJoinLobby(RemoteBrowserEventArgs args)
         {
-            int index = (int)args[0];
+            int index = (int)args.Args[0];
 
             if (LobbiesByIndex.ContainsKey(index))
             {
                 IBaseLobby lobby = LobbiesByIndex[index];
                 if (lobby is IMapCreatorLobby)
                 {
-                    if (await lobby.Bans.CheckIsBanned(player).ConfigureAwait(false))
+                    if (await lobby.Bans.CheckIsBanned(args.Player).ConfigureAwait(false))
                         return null;
 
-                    lobby = _lobbiesProvider.Create<IMapCreatorLobby>(player);
+                    lobby = _lobbiesProvider.Create<IMapCreatorLobby>(args.Player);
                 }
                 else if (lobby is ICharCreateLobby)
                 {
-                    if (await lobby.Bans.CheckIsBanned(player).ConfigureAwait(false))
+                    if (await lobby.Bans.CheckIsBanned(args.Player).ConfigureAwait(false))
                         return null;
 
-                    lobby = _lobbiesProvider.Create<ICharCreateLobby>(player);
+                    lobby = _lobbiesProvider.Create<ICharCreateLobby>(args.Player);
                 }
                 else if (lobby is IDamageTestLobby)
                 {
-                    lobby = _lobbiesProvider.Create<IDamageTestLobby>(player);
+                    lobby = _lobbiesProvider.Create<IDamageTestLobby>(args.Player);
                 }
-                await lobby.Players.AddPlayer(player, 0).ConfigureAwait(false);
+                await lobby.Players.AddPlayer(args.Player, 0).ConfigureAwait(false);
                 return null;
             }
             else
             {
-                NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.LOBBY_DOESNT_EXIST));
+                NAPI.Task.RunSafe(() => args.Player.SendChatMessage(args.Player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }
         }
 
-        public async Task<object?> OnJoinLobbyWithPassword(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> OnJoinLobbyWithPassword(RemoteBrowserEventArgs args)
         {
-            int index = (int)args[0];
-            string? password = args.Count > 1 ? (string)args[1] : null;
+            int index = (int)args.Args[0];
+            string? password = args.Args.Count > 1 ? (string)args.Args[1] : null;
 
             if (LobbiesByIndex.ContainsKey(index))
             {
                 IBaseLobby lobby = LobbiesByIndex[index];
                 if (password != null && lobby.Entity.Password != password)
                 {
-                    NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.WRONG_PASSWORD));
+                    NAPI.Task.RunSafe(() => args.Player.SendChatMessage(args.Player.Language.WRONG_PASSWORD));
                     return null;
                 }
 
-                await lobby.Players.AddPlayer(player, 0).ConfigureAwait(false);
+                await lobby.Players.AddPlayer(args.Player, 0).ConfigureAwait(false);
                 return null;
             }
             else
             {
-                NAPI.Task.RunSafe(() => player.SendChatMessage(player.Language.LOBBY_DOESNT_EXIST));
+                NAPI.Task.RunSafe(() => args.Player.SendChatMessage(args.Player.Language.LOBBY_DOESNT_EXIST));
                 //todo Remove lobby at client view and check, why he saw this lobby
                 return null;
             }

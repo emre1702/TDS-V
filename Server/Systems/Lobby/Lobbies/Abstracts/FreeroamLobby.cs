@@ -9,6 +9,7 @@ using TDS.Server.Handler;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Helper;
 using TDS.Server.LobbySystem.DependenciesModels;
+using TDS.Server.LobbySystem.EventsHandlers;
 using TDS.Server.LobbySystem.Freeroam;
 using LobbyDb = TDS.Server.Database.Entity.LobbyEntities.Lobbies;
 
@@ -33,10 +34,12 @@ namespace TDS.Server.LobbySystem.Lobbies.Abstracts
             var freeroamDataHandler = ServiceProvider.GetRequiredService<FreeroamDataHandler>();
 
             lobbyDependencies ??= new FreeroamLobbyDependencies();
+            var d = (FreeroamLobbyDependencies)lobbyDependencies;
 
-            ((FreeroamLobbyDependencies)lobbyDependencies).Freeroam ??= new FreeroamLobbyFreeroam(this, freeroamDataHandler);
+            d.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
+            d.Freeroam ??= new FreeroamLobbyFreeroam(this, freeroamDataHandler, d.Events, RemoteBrowserEventsHandler);
 
-            Freeroam = ((FreeroamLobbyDependencies)lobbyDependencies).Freeroam!;
+            Freeroam = d.Freeroam!;
 
             base.InitDependencies(lobbyDependencies);
         }

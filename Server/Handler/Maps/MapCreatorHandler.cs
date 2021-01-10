@@ -14,6 +14,7 @@ using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Extensions;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Map;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
@@ -36,12 +37,17 @@ namespace TDS.Server.Handler.Maps
         private readonly XmlHelper _xmlHelper;
 
         public MapCreatorHandler(MapsLoadingHandler mapsLoadingHandler, XmlHelper xmlHelper, ISettingsHandler settingsHandler,
-            TDSDbContext dbContext)
+            TDSDbContext dbContext, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(dbContext)
         {
             (_mapsLoadingHandler, _xmlHelper, _settingsHandler) = (mapsLoadingHandler, xmlHelper, settingsHandler);
 
             NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.RemoveMap, this, RemoveMap);
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.SaveMapCreatorData, Save);
+            remoteBrowserEventsHandler.Add(ToServerEvent.SendMapCreatorData, Create);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadMapNamesToLoadForMapCreator, SendPlayerMapNamesForMapCreator);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadMapForMapCreator, SendPlayerMapForMapCreator, player => player.Entity is not null);
         }
 
         public void AddedMapRating(MapDto map)
@@ -58,11 +64,11 @@ namespace TDS.Server.Handler.Maps
             DisableNewMap(map);
         }
 
-        public async Task<object?> Save(ITDSPlayer creator, ArraySegment<object> args)
+        private async Task<object?> Save(RemoteBrowserEventArgs args)
         {
             try
             {
-                var result = await SaveOrCreate(creator, (string)args[0], Constants.NewMapsPath).ConfigureAwait(false);
+                var result = await SaveOrCreate(args.Player, (string)args.Args[0], Constants.NewMapsPath).ConfigureAwait(false);
                 if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
                     return result;
 
@@ -78,7 +84,7 @@ namespace TDS.Server.Handler.Maps
             }
             catch (Exception ex)
             {
-                LoggingHandler.Instance.LogError(ex, creator);
+                LoggingHandler.Instance.LogError(ex, args.Player);
                 return MapCreateError.Unknown;
             }
         }
@@ -132,15 +138,15 @@ namespace TDS.Server.Handler.Maps
             }
         }
 
-        public async Task<object?> Create(ITDSPlayer creator, ArraySegment<object> args)
+        private async Task<object?> Create(RemoteBrowserEventArgs args)
         {
             try
             {
-                var result = await SaveOrCreate(creator, (string)args[0], Constants.SavedMapsPath).ConfigureAwait(false);
+                var result = await SaveOrCreate(args.Player, (string)args.Args[0], Constants.SavedMapsPath).ConfigureAwait(false);
                 if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
                     return result;
 
-                var dbMap = new DB.Rest.Maps { CreatorId = creator.Entity!.Id, Name = result.Item1.Info.Name };
+                var dbMap = new DB.Rest.Maps { CreatorId = args.Player.Entity!.Id, Name = result.Item1.Info.Name };
 
                 await ExecuteForDBAsync(async dbContext =>
                 {
@@ -156,17 +162,14 @@ namespace TDS.Server.Handler.Maps
             }
             catch (Exception ex)
             {
-                LoggingHandler.Instance.LogError(ex, creator);
+                LoggingHandler.Instance.LogError(ex, args.Player);
                 return MapCreateError.Unknown;
             }
         }
 
-        public object? SendPlayerMapForMapCreator(ITDSPlayer player, ref ArraySegment<object> args)
+        private object? SendPlayerMapForMapCreator(RemoteBrowserEventArgs args)
         {
-            if (player.Entity is null)
-                return null;
-
-            int mapId = (int)args[0];
+            int mapId = (int)args.Args[0];
 
             MapDto? map = _mapsLoadingHandler.GetMapById(mapId);
 
@@ -206,23 +209,23 @@ namespace TDS.Server.Handler.Maps
                 }
             };
 
-            ((IMapCreatorLobby)player.Lobby!).Sync.SetMap(mapCreatorData);
+            ((IMapCreatorLobby)args.Player.Lobby!).Sync.SetMap(mapCreatorData);
             return null;
         }
 
-        public object? SendPlayerMapNamesForMapCreator(ITDSPlayer player, ref ArraySegment<object> _)
+        private object? SendPlayerMapNamesForMapCreator(RemoteBrowserEventArgs args)
         {
-            if (player.Entity is null)
+            if (args.Player.Entity is null)
                 return null;
 
-            bool canLoadMapsFromOthers = _settingsHandler.CanLoadMapsFromOthers(player);
+            bool canLoadMapsFromOthers = _settingsHandler.CanLoadMapsFromOthers(args.Player);
             var data = new List<LoadMapDialogGroupDto>
             {
                 new LoadMapDialogGroupDto
                 {
                     GroupName = "Saved",
                     Maps = _mapsLoadingHandler.GetSavedMaps()
-                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Where(m => m.Info.CreatorId == args.Player.Entity.Id)
                         .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                 },
 
@@ -230,7 +233,7 @@ namespace TDS.Server.Handler.Maps
                 {
                     GroupName = "Created",
                     Maps = _mapsLoadingHandler.GetNewCreatedMaps()
-                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Where(m => m.Info.CreatorId == args.Player.Entity.Id)
                         .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                 },
 
@@ -238,7 +241,7 @@ namespace TDS.Server.Handler.Maps
                 {
                     GroupName = "Added",
                     Maps = _mapsLoadingHandler.GetDefaultMaps()
-                        .Where(m => m.Info.CreatorId == player.Entity.Id)
+                        .Where(m => m.Info.CreatorId == args.Player.Entity.Id)
                         .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                 }
             };
@@ -249,7 +252,7 @@ namespace TDS.Server.Handler.Maps
                 {
                     GroupName = "OthersCreated",
                     Maps = _mapsLoadingHandler.GetNewCreatedMaps()
-                        .Where(m => m.Info.CreatorId != player.Entity.Id)
+                        .Where(m => m.Info.CreatorId != args.Player.Entity.Id)
                         .Select(m => new LoadMapDialogMapDto { Id = m.BrowserSyncedData.Id, Name = m.Info.Name })
                 });
 
@@ -262,19 +265,6 @@ namespace TDS.Server.Handler.Maps
             }
 
             return Serializer.ToBrowser(data.Where(d => d.Maps.Any()));
-        }
-
-        public object? SyncCurrentMapToClient(ITDSPlayer player, ref ArraySegment<object> args)
-        {
-            if (player.Lobby is not IMapCreatorLobby lobby)
-                return null;
-
-            string json = (string)args[0];
-            int tdsPlayerId = Convert.ToInt32(args[1]);
-            int idCounter = Convert.ToInt32(args[2]);
-
-            lobby.Sync.SetSyncedMapAndSyncToPlayer(json, tdsPlayerId, idCounter);
-            return null;
         }
 
         private void DisableNewMap(MapDto map)

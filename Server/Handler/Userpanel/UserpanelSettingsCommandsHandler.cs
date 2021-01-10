@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.Player;
 using TDS.Server.Handler.Entities;
@@ -23,12 +24,14 @@ namespace TDS.Server.Handler.Userpanel
         private readonly UserpanelCommandsHandler _userpanelCommandsHandler;
 
         public UserpanelSettingsCommandsHandler(TDSDbContext dbContext, UserpanelCommandsHandler userpanelCommandsHandler,
-            EventsHandler eventsHandler)
+            EventsHandler eventsHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(dbContext)
         {
             _userpanelCommandsHandler = userpanelCommandsHandler;
 
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.SavePlayerCommandsSettings, Save);
         }
 
         public async Task<UserpanelPlayerCommandData?> GetData(ITDSPlayer player)
@@ -71,9 +74,9 @@ namespace TDS.Server.Handler.Userpanel
             }
         }
 
-        public async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> Save(RemoteBrowserEventArgs args)
         {
-            string datasJson = (string)args[0];
+            string datasJson = (string)args.Args[0];
 
             var datas = Serializer.FromBrowser<List<UserpanelPlayerConfiguredCommandData>>(datasJson);
             if (datas.Count == 0)
@@ -84,7 +87,7 @@ namespace TDS.Server.Handler.Userpanel
                 foreach (var data in datas)
                 {
                     var entity = await dbContext.PlayerCommands
-                        .FirstOrDefaultAsync(c => c.PlayerId == player.Id && c.Id == data.Id)
+                        .FirstOrDefaultAsync(c => c.PlayerId == args.Player.Id && c.Id == data.Id)
                         .ConfigureAwait(false);
                     if (data.CustomCommand.Length == 0)
                     {
@@ -98,7 +101,7 @@ namespace TDS.Server.Handler.Userpanel
                         {
                             entity = new PlayerCommands
                             {
-                                PlayerId = player.Id,
+                                PlayerId = args.Player.Id,
                                 CommandId = (short)data.CommandId,
                                 CommandText = data.CustomCommand
                             };
@@ -115,9 +118,9 @@ namespace TDS.Server.Handler.Userpanel
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
 
-            var newData = await GetData(player).ConfigureAwait(false);
-            NAPI.Task.RunSafe(() => 
-                player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, Serializer.ToClient(newData)));
+            var newData = await GetData(args.Player).ConfigureAwait(false);
+            NAPI.Task.RunSafe(() =>
+                args.Player.TriggerEvent(ToClientEvent.SyncPlayerCommandsSettings, Serializer.ToClient(newData)));
 
             return null;
         }

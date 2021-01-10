@@ -53,7 +53,7 @@ namespace TDS.Server.LobbySystem.Lobbies
             lobbyDependencies.Events ??= new FightLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
             ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler ??= ServiceProvider.GetRequiredService<IDamageHandler>();
             lobbyDependencies.Deathmatch ??= new DamageTestLobbyDeathmatch(this, (FightLobbyEventsHandler)lobbyDependencies.Events,
-                ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler!);
+                ((DamageTestLobbyDependencies)lobbyDependencies).DamageHandler!, RemoteBrowserEventsHandler);
             lobbyDependencies.Players ??= new DamageTestLobbyPlayers(this, (FightLobbyEventsHandler)lobbyDependencies.Events);
             lobbyDependencies.MapHandler ??= new DamageTestLobbyMapHandler(this, (FightLobbyEventsHandler)lobbyDependencies.Events);
             ((DamageTestLobbyDependencies)lobbyDependencies).Weapons ??= new DamageTestLobbyWeapons(this, (FightLobbyEventsHandler)lobbyDependencies.Events, ServiceProvider);

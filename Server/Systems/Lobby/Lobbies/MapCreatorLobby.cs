@@ -46,7 +46,7 @@ namespace TDS.Server.LobbySystem.Lobbies
             lobbyDependencies ??= new MapCreatorLobbyDependencies();
 
             lobbyDependencies.Events ??= new BaseLobbyEventsHandler(this, GlobalEventsHandler, LoggingHandler);
-            lobbyDependencies.Sync ??= new MapCreatorLobbySync(this, lobbyDependencies.Events);
+            lobbyDependencies.Sync ??= new MapCreatorLobbySync(this, lobbyDependencies.Events, RemoteBrowserEventsHandler);
             lobbyDependencies.Bans ??= new MapCreatorLobbyBansHandler(this, LangHelper);
             lobbyDependencies.MapHandler ??= new MapCreatorLobbyMapHandler(this, lobbyDependencies.Events);
             lobbyDependencies.Players ??= new MapCreatorLobbyPlayers(this, lobbyDependencies.Events);

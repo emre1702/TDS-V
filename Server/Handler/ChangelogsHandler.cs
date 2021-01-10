@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Models.Changelogs;
 using TDS.Server.Handler.Events;
@@ -21,7 +20,7 @@ namespace TDS.Server.Handler
 
         public ChangelogsHandler(AppConfigHandler appConfigHandler, ISettingsHandler settingsHandler, ServerStartHandler serverStartHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
-            remoteBrowserEventsHandler.AddSyncEvent(ToServerEvent.LoadChangelogs, (ITDSPlayer player, ref ArraySegment<object> _) => _json);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadChangelogs, (_) => _json);
 
             LoadChangelogs(appConfigHandler, settingsHandler, serverStartHandler);
         }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
 using TDS.Server.Database.Entity.Player;
 using TDS.Server.Database.Entity.Player.Character.Body;
 using TDS.Server.Handler.Events;
@@ -30,41 +31,41 @@ namespace TDS.Server.Handler.Appearance
             eventsHandler.PlayerLoggedIn += LoadPlayerBody;
             eventsHandler.PlayerRegisteredBefore += InitPlayerBody;
 
-            remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.SaveBodyData, Save);
+            remoteBrowserEventsHandler.Add(ToServerEvent.SaveBodyData, Save);
         }
 
-        private async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> Save(RemoteBrowserEventArgs args)
         {
             try
             {
-                if (player.Entity is null)
-                    return "?";
+                if (args.Player.Entity is null)
+                    return string.Empty;
 
-                var data = Serializer.FromBrowser<PlayerBodyDatas>((string)args[0]);
+                var data = Serializer.FromBrowser<PlayerBodyDatas>((string)args.Args[0]);
 
                 // By doing this we can ensure that player datas don't save while editing. Because else
                 // this could result in PlayerCharDatas getting messed up for the player
-                await player.Database.ExecuteForDB(dbContext =>
+                await args.Player.Database.ExecuteForDB(dbContext =>
                 {
-                    player.Entity.BodyDatas.Slot = data.Slot;
-                    for (int i = 0; i < player.Entity.BodyDatas.FeaturesData.Count; ++i)
+                    args.Player.Entity.BodyDatas.Slot = data.Slot;
+                    for (int i = 0; i < args.Player.Entity.BodyDatas.FeaturesData.Count; ++i)
                     {
-                        CopyJsonValues(player.Entity.BodyDatas.FeaturesData.ElementAt(i), data.FeaturesData.ElementAt(i));
-                        CopyJsonValues(player.Entity.BodyDatas.GeneralData.ElementAt(i), data.GeneralData.ElementAt(i));
-                        CopyJsonValues(player.Entity.BodyDatas.HairAndColorsData.ElementAt(i), data.HairAndColorsData.ElementAt(i));
-                        CopyJsonValues(player.Entity.BodyDatas.HeritageData.ElementAt(i), data.HeritageData.ElementAt(i));
-                        CopyJsonValues(player.Entity.BodyDatas.AppearanceData.ElementAt(i), data.AppearanceData.ElementAt(i));
+                        CopyJsonValues(args.Player.Entity.BodyDatas.FeaturesData.ElementAt(i), data.FeaturesData.ElementAt(i));
+                        CopyJsonValues(args.Player.Entity.BodyDatas.GeneralData.ElementAt(i), data.GeneralData.ElementAt(i));
+                        CopyJsonValues(args.Player.Entity.BodyDatas.HairAndColorsData.ElementAt(i), data.HairAndColorsData.ElementAt(i));
+                        CopyJsonValues(args.Player.Entity.BodyDatas.HeritageData.ElementAt(i), data.HeritageData.ElementAt(i));
+                        CopyJsonValues(args.Player.Entity.BodyDatas.AppearanceData.ElementAt(i), data.AppearanceData.ElementAt(i));
                     }
                 }).ConfigureAwait(false);
 
-                await player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
-                LoadPlayerBody(player);
+                await args.Player.DatabaseHandler.SaveData(true).ConfigureAwait(false);
+                LoadPlayerBody(args.Player);
 
                 return "";
             }
             catch (Exception ex)
             {
-                LoggingHandler.Instance.LogError(ex, player);
+                LoggingHandler.Instance.LogError(ex, args.Player);
                 return "ErrorInfo";
             }
         }

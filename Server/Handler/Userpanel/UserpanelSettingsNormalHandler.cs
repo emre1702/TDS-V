@@ -8,12 +8,15 @@ using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.Player.Settings;
 using TDS.Server.Database.Interfaces;
 using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Shared.Core;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Userpanel
 {
@@ -24,10 +27,14 @@ namespace TDS.Server.Handler.Userpanel
         private readonly Dictionary<ulong, int> _playerIdWaitingForDiscordUserIdConfirm = new Dictionary<ulong, int>();
 
         public UserpanelSettingsNormalHandler(BonusBotConnectorClient bonusBotConnectorClient, TDSDbContext dbContext,
-            ITDSPlayerHandler tdsPlayerHandler)
+            ITDSPlayerHandler tdsPlayerHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(dbContext)
-            => (_bonusBotConnectorClient, _tdsPlayerHandler)
-            = (bonusBotConnectorClient, tdsPlayerHandler);
+        {
+            (_bonusBotConnectorClient, _tdsPlayerHandler) = (bonusBotConnectorClient, tdsPlayerHandler);
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.SaveUserpanelNormalSettings, SaveSettings);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadUserpanelNormalSettingsData, LoadSettings);
+        }
 
         public async Task<string> ConfirmDiscordUserId(ulong discordUserId)
         {
@@ -50,10 +57,11 @@ namespace TDS.Server.Handler.Userpanel
             }
         }
 
-        public async Task<object?> SaveSettings(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> SaveSettings(RemoteBrowserEventArgs args)
         {
-            var type = (UserpanelSettingsNormalType)Convert.ToInt32(args[0]);
-            var json = (string)args[1];
+            var player = args.Player;
+            var type = (UserpanelSettingsNormalType)Convert.ToInt32(args.Args[0]);
+            var json = (string)args.Args[1];
             var setting = GetSetting(player, type);
             if (setting is null)
                 return null;
@@ -96,7 +104,8 @@ namespace TDS.Server.Handler.Userpanel
             await ExecuteForDBAsync(async dbContext
                 => await dbContext
                     .SaveChangesAsync()
-                    .ConfigureAwait(false), dbContext => {
+                    .ConfigureAwait(false), dbContext =>
+                    {
                         dbContext.Entry(player).State = EntityState.Detached;
                         dbContext.Entry(settings).State = EntityState.Detached;
                     })
@@ -132,10 +141,10 @@ namespace TDS.Server.Handler.Userpanel
             });
         }
 
-        public object? LoadSettings(ITDSPlayer player, ref ArraySegment<object> args)
+        public object? LoadSettings(RemoteBrowserEventArgs args)
         {
-            var type = (UserpanelSettingsNormalType)Convert.ToInt32(args[0]);
-            var setting = GetSetting(player, type);
+            var type = (UserpanelSettingsNormalType)Convert.ToInt32(args.Args[0]);
+            var setting = GetSetting(args.Player, type);
             if (setting is null)
                 return null;
 

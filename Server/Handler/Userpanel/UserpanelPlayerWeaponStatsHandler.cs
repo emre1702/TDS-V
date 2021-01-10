@@ -5,10 +5,12 @@ using System.Linq;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Userpanel.Stats;
 using TDS.Server.Database.Entity.Player;
+using TDS.Server.Handler.Events;
 using TDS.Shared.Core;
-using TDS.Shared.Data.Enums;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Userpanel
 {
@@ -16,8 +18,12 @@ namespace TDS.Server.Handler.Userpanel
     {
         private readonly ILoggingHandler _loggingHandler;
 
-        public UserpanelPlayerWeaponStatsHandler(ILoggingHandler loggingHandler)
-            => (_loggingHandler) = (loggingHandler);
+        public UserpanelPlayerWeaponStatsHandler(ILoggingHandler loggingHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+        {
+            _loggingHandler = loggingHandler;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadPlayerWeaponStats, GetPlayerWeaponStats);
+        }
 
         public string? GetData(ITDSPlayer player)
         {
@@ -37,17 +43,17 @@ namespace TDS.Server.Handler.Userpanel
             }
         }
 
-        public object? GetPlayerWeaponStats(ITDSPlayer player, ref ArraySegment<object> args)
+        private object? GetPlayerWeaponStats(RemoteBrowserEventArgs args)
         {
-            if (player.WeaponStats is null)
+            if (args.Player.WeaponStats is null)
                 return null;
-            var weaponName = args[0].ToString();
+            var weaponName = args.Args[0].ToString();
             if (weaponName is null)
                 return null;
             if (!Enum.TryParse(weaponName, out WeaponHash weaponHash))
                 return null;
 
-            var weaponStats = player.WeaponStats.GetWeaponStats(weaponHash) ?? new PlayerWeaponStats();
+            var weaponStats = args.Player.WeaponStats.GetWeaponStats(weaponHash) ?? new PlayerWeaponStats();
 
             var data = new UserpanelPlayerWeaponStatsData
             {
@@ -65,7 +71,7 @@ namespace TDS.Server.Handler.Userpanel
                 DealtOfficialDamage = weaponStats.DealtOfficialDamage
             };
 
-            player.WeaponStats.DoForBodyPartStats(weaponHash, bodyStats =>
+            args.Player.WeaponStats.DoForBodyPartStats(weaponHash, bodyStats =>
             {
                 foreach (var entry in bodyStats.OrderBy(b => (int)b.Key))
                 {

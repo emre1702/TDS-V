@@ -6,13 +6,16 @@ using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Userpanel;
 using TDS.Server.Data.Utility;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.Sync;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Enums;
 using TDS.Shared.Data.Enums.Userpanel;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Userpanel
 {
@@ -24,9 +27,12 @@ namespace TDS.Server.Handler.Userpanel
         private readonly ISettingsHandler _settingsHandler;
 
         public UserpanelSettingsSpecialHandler(ISettingsHandler settingsHandler, ILoggingHandler loggingHandler,
-            DataSyncHandler dataSyncHandler)
-            => (_settingsHandler, _loggingHandler, _dataSyncHandler)
-            = (settingsHandler, loggingHandler, dataSyncHandler);
+            DataSyncHandler dataSyncHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+        {
+            (_settingsHandler, _loggingHandler, _dataSyncHandler) = (settingsHandler, loggingHandler, dataSyncHandler);
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.SaveSpecialSettingsChange, SetData);
+        }
 
         public string? GetData(ITDSPlayer player)
         {
@@ -43,14 +49,15 @@ namespace TDS.Server.Handler.Userpanel
             return Serializer.ToBrowser(data);
         }
 
-        public async Task<object?> SetData(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> SetData(RemoteBrowserEventArgs args)
         {
+            var player = args.Player;
             if (player.Entity is null)
                 return "Unknown error";
 
-            var type = (UserpanelSettingsSpecialType)Convert.ToInt32(args[0]);
-            string value = Convert.ToString(args[1])!;
-            string password = Convert.ToString(args[2])!;
+            var type = (UserpanelSettingsSpecialType)Convert.ToInt32(args.Args[0]);
+            string value = Convert.ToString(args.Args[1])!;
+            string password = Convert.ToString(args.Args[2])!;
 
             if (!Utils.IsPasswordValid(password, player.Entity.Password))
             {

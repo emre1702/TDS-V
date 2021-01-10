@@ -7,6 +7,7 @@ using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models;
 using TDS.Server.Database.Entity.Player;
 using TDS.Server.Database.Entity.Player.Character.Clothes;
 using TDS.Server.Handler.Events;
@@ -25,7 +26,7 @@ namespace TDS.Server.Handler.Appearance
 
         public PlayerClothesHandler(RemoteBrowserEventsHandler remoteBrowserEventsHandler, EventsHandler eventsHandler, ISettingsHandler settingsHandler)
         {
-            remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.SaveClothesData, Save);
+            remoteBrowserEventsHandler.Add(ToServerEvent.SaveClothesData, Save);
 
             _settingsHandler = settingsHandler;
 
@@ -33,19 +34,19 @@ namespace TDS.Server.Handler.Appearance
             eventsHandler.PlayerSpawned += LoadPlayerClothes;
         }
 
-        private async Task<object?> Save(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> Save(RemoteBrowserEventArgs args)
         {
             try
             {
-                if (player.Entity is null)
+                if (args.Player.Entity is null)
                     return "ErrorInfo";
-                var newConfig = Serializer.FromBrowser<ClothesConfigs>((string)args[0]);
+                var newConfig = Serializer.FromBrowser<ClothesConfigs>((string)args.Args[0]);
 
-                var msg = await player.Database.ExecuteForDBAsyncUnsafe(async dbContext =>
+                var msg = await args.Player.Database.ExecuteForDBAsyncUnsafe(async dbContext =>
                 {
-                    if (player.Entity.ClothesDatas is not { } oldConfig)
+                    if (args.Player.Entity.ClothesDatas is not { } oldConfig)
                     {
-                        LoggingHandler.Instance.LogError("ClothesData should not be null! Is it maybe not loaded? Or is it really null?!", Environment.StackTrace, source: player);
+                        LoggingHandler.Instance.LogError("ClothesData should not be null! Is it maybe not loaded? Or is it really null?!", Environment.StackTrace, source: args.Player);
                         return "ErrorInfo";
                     }
 
@@ -62,7 +63,7 @@ namespace TDS.Server.Handler.Appearance
             }
             catch (Exception ex)
             {
-                LoggingHandler.Instance.LogError(ex, player);
+                LoggingHandler.Instance.LogError(ex, args.Player);
                 return "ErrorInfo";
             }
         }

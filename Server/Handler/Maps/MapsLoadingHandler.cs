@@ -7,15 +7,16 @@ using System.Xml;
 using System.Xml.Serialization;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Defaults;
-using TDS.Server.Data.Enums;
 using TDS.Server.Data.Extensions;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Map;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.GangEntities;
 using TDS.Server.Handler.Events;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Utility;
+using TDS.Shared.Default;
 
 using DB = TDS.Server.Database.Entity;
 
@@ -24,7 +25,6 @@ namespace TDS.Server.Handler.Maps
     public class MapsLoadingHandler
     {
         private List<MapDto> _defaultMaps = new List<MapDto>();
-
         private List<MapDto> _needCheckMaps = new List<MapDto>();
         private List<MapDto> _newCreatedMaps = new List<MapDto>();
         private List<MapDto> _savedMaps = new List<MapDto>();
@@ -35,8 +35,13 @@ namespace TDS.Server.Handler.Maps
         private readonly ISettingsHandler _settingsHandler;
         private readonly XmlSerializer _xmlSerializer = new XmlSerializer(typeof(MapDto));
 
-        public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler)
-            => (_dbContext, _eventsHandler, _loggingHandler, _settingsHandler) = (dbContext, eventsHandler, loggingHandler, settingsHandler);
+        public MapsLoadingHandler(TDSDbContext dbContext, EventsHandler eventsHandler, ILoggingHandler loggingHandler, ISettingsHandler settingsHandler,
+            RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+        {
+            (_dbContext, _eventsHandler, _loggingHandler, _settingsHandler) = (dbContext, eventsHandler, loggingHandler, settingsHandler);
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadAllMapsForCustomLobby, GetAllMapsForCustomLobby);
+        }
 
         public IEnumerable<MapDto> GetAllMapsInCreating()
         {
@@ -49,7 +54,7 @@ namespace TDS.Server.Handler.Maps
             }
         }
 
-        public object? GetAllMapsForCustomLobby(ITDSPlayer _, ref ArraySegment<object> _2)
+        private object? GetAllMapsForCustomLobby(RemoteBrowserEventArgs _)
         {
             lock (_defaultMaps)
             {

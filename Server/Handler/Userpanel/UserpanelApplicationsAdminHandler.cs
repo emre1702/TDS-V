@@ -7,30 +7,36 @@ using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Userpanel.Application;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.Userpanel;
 using TDS.Server.Handler.Entities;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Shared.Core;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Userpanel
 {
-
     public class UserpanelApplicationsAdminHandler : DatabaseEntityWrapper, IUserpanelApplicationsAdminHandler
     {
-
         private readonly ISettingsHandler _settingsHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
         private readonly UserpanelApplicationUserHandler _userpanelApplicationUserHandler;
         private readonly UserpanelPlayerGeneralStatsHandler _userpanelPlayerStatsHandler;
 
         public UserpanelApplicationsAdminHandler(UserpanelPlayerGeneralStatsHandler userpanelPlayerStatsHandler, UserpanelApplicationUserHandler userpanelApplicationUserHandler,
-            TDSDbContext dbContext, ISettingsHandler settingsHandler, ITDSPlayerHandler tdsPlayerHandler)
+            TDSDbContext dbContext, ISettingsHandler settingsHandler, ITDSPlayerHandler tdsPlayerHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(dbContext)
-            => (_userpanelPlayerStatsHandler, _settingsHandler, _tdsPlayerHandler, _userpanelApplicationUserHandler)
-            = (userpanelPlayerStatsHandler, settingsHandler, tdsPlayerHandler, userpanelApplicationUserHandler);
+        {
+            (_userpanelPlayerStatsHandler, _settingsHandler, _tdsPlayerHandler, _userpanelApplicationUserHandler)
+              = (userpanelPlayerStatsHandler, settingsHandler, tdsPlayerHandler, userpanelApplicationUserHandler);
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.SendApplicationInvite, SendInvitation, player => player.Admin.Level.Level == (short)AdminLevel.Administrator);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadApplicationDataForAdmin, SendApplicationData, player => player.Admin.Level.Level != (short)AdminLevel.User);
+        }
 
         public async Task<string?> GetData(ITDSPlayer player)
         {
@@ -69,12 +75,9 @@ namespace TDS.Server.Handler.Userpanel
             }
         }
 
-        public async Task<object?> SendApplicationData(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> SendApplicationData(RemoteBrowserEventArgs args)
         {
-            int applicationId = (int)args[0];
-
-            if (player.Admin.Level.Level == (short)AdminLevel.User)
-                return null;
+            int applicationId = (int)args.Args[0];
 
             int creatorId = await ExecuteForDBAsync(async dbContext
                 => await dbContext.Applications
@@ -95,11 +98,11 @@ namespace TDS.Server.Handler.Userpanel
                 .ConfigureAwait(false);
             var questionsJson = _userpanelApplicationUserHandler.AdminQuestions;
 
-            var stats = await _userpanelPlayerStatsHandler.GetPlayerGeneralStats(creatorId, false, player).ConfigureAwait(false);
+            var stats = await _userpanelPlayerStatsHandler.GetPlayerGeneralStats(creatorId, false, args.Player).ConfigureAwait(false);
 
             bool alreadyInvited = await ExecuteForDBAsync(async dbContext
                 => await dbContext.ApplicationInvitations
-                    .AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == player.Entity!.Id)
+                    .AnyAsync(i => i.ApplicationId == applicationId && i.AdminId == args.Player.Entity!.Id)
                     .ConfigureAwait(false))
                 .ConfigureAwait(false);
 
@@ -115,22 +118,19 @@ namespace TDS.Server.Handler.Userpanel
             return json;
         }
 
-        public async Task<object?> SendInvitation(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> SendInvitation(RemoteBrowserEventArgs args)
         {
-            if (player.Admin.Level.Level != (short)AdminLevel.Administrator)
-                return null;
-
-            if (args.Count < 2)
+            if (args.Args.Count < 2)
                 return null;
             int? applicationId;
-            if ((applicationId = Utils.GetInt(args[0])) == null)
+            if ((applicationId = Utils.GetInt(args.Args[0])) == null)
                 return null;
-            if (args[1] is not string message)
+            if (args.Args[1] is not string message)
                 return null;
 
             var invitation = new ApplicationInvitations
             {
-                AdminId = player.Entity!.Id,
+                AdminId = args.Player.Entity!.Id,
                 ApplicationId = applicationId.Value,
                 Message = message
             };
@@ -153,17 +153,16 @@ namespace TDS.Server.Handler.Userpanel
                 var target = _tdsPlayerHandler.GetPlayer(playerId);
                 if (target is { })
                 {
-                    target.SendChatMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, player.DisplayName));
-                    player.SendChatMessage(string.Format(player.Language.SENT_APPLICATION_TO, target.DisplayName));
+                    target.SendChatMessage(string.Format(target.Language.YOU_GOT_INVITATION_BY, args.Player.DisplayName));
+                    args.Player.SendChatMessage(string.Format(args.Player.Language.SENT_APPLICATION_TO, target.DisplayName));
                 }
                 else
                 {
-                    player.SendChatMessage(player.Language.SENT_APPLICATION);
+                    args.Player.SendChatMessage(args.Player.Language.SENT_APPLICATION);
                 }
             });
 
             return null;
         }
-
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Userpanel.Application;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
@@ -16,10 +17,10 @@ using TDS.Server.Handler.Entities;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Shared.Core;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Userpanel
 {
-
     public class UserpanelApplicationUserHandler : DatabaseEntityWrapper, IUserpanelApplicationUserHandler
     {
         private readonly BonusBotConnectorClient _bonusbotConnectorClient;
@@ -30,13 +31,17 @@ namespace TDS.Server.Handler.Userpanel
 
         public UserpanelApplicationUserHandler(TDSDbContext dbContext,
             ISettingsHandler settingsHandler, BonusBotConnectorClient bonusbotConnectorClient, ITDSPlayerHandler tdsPlayerHandler,
-            OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler) : base(dbContext)
+            OfflineMessagesHandler offlineMessagesHandler, EventsHandler eventsHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler) : base(dbContext)
         {
             _settingsHandler = settingsHandler;
             _bonusbotConnectorClient = bonusbotConnectorClient;
             _tdsPlayerHandler = tdsPlayerHandler;
             _offlineMessagesHandler = offlineMessagesHandler;
             _eventsHandler = eventsHandler;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.AcceptTDSTeamInvitation, AcceptInvitation);
+            remoteBrowserEventsHandler.Add(ToServerEvent.RejectTDSTeamInvitation, RejectInvitation);
+            remoteBrowserEventsHandler.Add(ToServerEvent.SendApplication, CreateApplication);
 
             LoadAdminQuestions();
 
@@ -45,15 +50,16 @@ namespace TDS.Server.Handler.Userpanel
 
         public string AdminQuestions { get; set; } = string.Empty;
 
-        public async Task<object?> AcceptInvitation(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> AcceptInvitation(RemoteBrowserEventArgs args)
         {
-            if (args.Count == 0)
+            if (args.Args.Count == 0)
                 return null;
 
             int? invitationId;
-            if ((invitationId = Utils.GetInt(args[0])) == null)
+            if ((invitationId = Utils.GetInt(args.Args[0])) == null)
                 return null;
 
+            var player = args.Player;
             var invitation = await ExecuteForDBAsync(async dbContext
                 => await dbContext.ApplicationInvitations
                     .Include(i => i.Admin)
@@ -113,14 +119,14 @@ namespace TDS.Server.Handler.Userpanel
             return null;
         }
 
-        public async Task<object?> CreateApplication(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> CreateApplication(RemoteBrowserEventArgs args)
         {
-            string answersJson = (string)args[0];
+            string answersJson = (string)args.Args[0];
             var answers = Serializer.FromBrowser<Dictionary<int, string>>(answersJson);
 
             var application = new Applications
             {
-                PlayerId = player.Entity!.Id,
+                PlayerId = args.Player.Entity!.Id,
                 Closed = false
             };
 
@@ -145,7 +151,7 @@ namespace TDS.Server.Handler.Userpanel
                 await dbContext.Entry(application).Reference(a => a.Player).LoadAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
 
-            _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application, player);
+            _bonusbotConnectorClient.ChannelChat?.SendAdminApplication(application, args.Player);
             return null;
         }
 
@@ -220,15 +226,16 @@ namespace TDS.Server.Handler.Userpanel
             return Serializer.ToBrowser(new ApplicationUserData { CreateTime = player.Timezone.GetLocalDateTimeString(applicationData.CreateDateTime), Invitations = applicationData.Invitations });
         }
 
-        public async Task<object?> RejectInvitation(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> RejectInvitation(RemoteBrowserEventArgs args)
         {
-            if (args.Count == 0)
+            if (args.Args.Count == 0)
                 return null;
 
             int? invitationId;
-            if ((invitationId = Utils.GetInt(args[0])) == null)
+            if ((invitationId = Utils.GetInt(args.Args[0])) == null)
                 return null;
 
+            var player = args.Player;
             var invitation = await ExecuteForDBAsync(async dbContext =>
                 await dbContext.ApplicationInvitations
                     .Include(i => i.Admin)

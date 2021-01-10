@@ -11,6 +11,7 @@ using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Userpanel.Support;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
@@ -33,7 +34,7 @@ namespace TDS.Server.Handler.Userpanel
         private readonly ISettingsHandler _settingsHandler;
 
         public UserpanelSupportRequestHandler(EventsHandler eventsHandler, TDSDbContext dbContext,
-            ISettingsHandler settingsHandler, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer)
+            ISettingsHandler settingsHandler, BonusBotConnectorClient bonusBotConnectorClient, BonusBotConnectorServer bonusBotConnectorServer, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(dbContext)
         {
             _settingsHandler = settingsHandler;
@@ -51,7 +52,7 @@ namespace TDS.Server.Handler.Userpanel
                 {
                     _inSupportRequestsList.Remove(player);
                 }
-                
+
                 int leftRequestId = -1;
                 foreach (var entry in _inSupportRequest)
                 {
@@ -66,6 +67,13 @@ namespace TDS.Server.Handler.Userpanel
                     _inSupportRequest.Remove(leftRequestId);
                 }
             };
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.GetSupportRequestData, GetSupportRequestData);
+            remoteBrowserEventsHandler.Add(ToServerEvent.SetSupportRequestClosed, SetSupportRequestClosed);
+            remoteBrowserEventsHandler.Add(ToServerEvent.SendSupportRequest, SendRequest);
+            remoteBrowserEventsHandler.Add(ToServerEvent.SendSupportRequestMessage, SendMessage);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LeftSupportRequest, LeftSupportRequest);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LeftSupportRequestsList, LeftSupportRequestsList);
         }
 
         public async Task<string?> AnswerRequestFromDiscord(ulong discordUserId, int requestId, string text)
@@ -198,14 +206,15 @@ namespace TDS.Server.Handler.Userpanel
             }
         }
 
-        public async Task<object?> GetSupportRequestData(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> GetSupportRequestData(RemoteBrowserEventArgs args)
         {
+            var player = args.Player;
             try
             {
-                if (args.Count == 0)
+                if (args.Args.Count == 0)
                     return null;
                 int? requestId;
-                if ((requestId = Utils.GetInt(args[0])) == null)
+                if ((requestId = Utils.GetInt(args.Args[0])) == null)
                     return null;
 
                 var data = await ExecuteForDBAsync(async dbContext
@@ -287,34 +296,35 @@ namespace TDS.Server.Handler.Userpanel
             return Serializer.ToBrowser(data);
         }
 
-        public object? LeftSupportRequest(ITDSPlayer player, ref ArraySegment<object> args)
+        private object? LeftSupportRequest(RemoteBrowserEventArgs args)
         {
-            int requestId = (int)args[0];
+            int requestId = (int)args.Args[0];
 
             if (!_inSupportRequest.ContainsKey(requestId))
                 return null;
 
-            if (_inSupportRequest[requestId].Remove(player) && _inSupportRequest[requestId].Count == 0)
+            if (_inSupportRequest[requestId].Remove(args.Player) && _inSupportRequest[requestId].Count == 0)
             {
                 _inSupportRequest.Remove(requestId);
             }
             return null;
         }
 
-        public object? LeftSupportRequestsList(ITDSPlayer player, ref ArraySegment<object> _)
+        private object? LeftSupportRequestsList(RemoteBrowserEventArgs args)
         {
             lock (_inSupportRequestsList)
-                _inSupportRequestsList.Remove(player);
+                _inSupportRequestsList.Remove(args.Player);
             return null;
         }
 
-        public async Task<object?> SendMessage(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> SendMessage(RemoteBrowserEventArgs args)
         {
-            int? requestId = Utils.GetInt(args[0]);
+            int? requestId = Utils.GetInt(args.Args[0]);
             if (requestId is null)
                 return null;
 
-            string message = (string)args[1];
+            var player = args.Player;
+            string message = (string)args.Args[1];
 
             var request = await ExecuteForDBAsync(async dbContext
                 => await dbContext.SupportRequests
@@ -370,9 +380,10 @@ namespace TDS.Server.Handler.Userpanel
             return null;
         }
 
-        public async Task<object?> SendRequest(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> SendRequest(RemoteBrowserEventArgs args)
         {
-            string json = (string)args[0];
+            var player = args.Player;
+            string json = (string)args.Args[0];
 
             var request = Serializer.FromBrowser<SupportRequestData>(json);
             if (request is null)
@@ -408,12 +419,12 @@ namespace TDS.Server.Handler.Userpanel
             return null;
         }
 
-        public async Task<object?> SetSupportRequestClosed(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> SetSupportRequestClosed(RemoteBrowserEventArgs args)
         {
-            int? requestId = Utils.GetInt(args[0]);
+            int? requestId = Utils.GetInt(args.Args[0]);
             if (requestId == null)
                 return null;
-            bool closed = (bool)args[1];
+            bool closed = (bool)args.Args[1];
 
             var request = await ExecuteForDBAsync(async dbContext
                 => await dbContext.SupportRequests
@@ -422,7 +433,7 @@ namespace TDS.Server.Handler.Userpanel
                 .ConfigureAwait(false);
             if (request is null)
                 return null;
-            if (request.AuthorId != player.Entity!.Id && player.Admin.Level.Level == 0)
+            if (request.AuthorId != args.Player.Entity!.Id && args.Player.Admin.Level.Level == 0)
                 return null;
             if (request.CloseTime is { } && closed || request.CloseTime is null && !closed)
                 return null;
@@ -443,7 +454,7 @@ namespace TDS.Server.Handler.Userpanel
                 }
             });
 
-            _bonusBotConnectorClient.Support?.ToggleClosed(player, request.Id, closed);
+            _bonusBotConnectorClient.Support?.ToggleClosed(args.Player, request.Id, closed);
             return null;
         }
 
@@ -464,7 +475,7 @@ namespace TDS.Server.Handler.Userpanel
             else
                 request.CloseTime = null;
 
-            await ExecuteForDBAsync(async dbContext 
+            await ExecuteForDBAsync(async dbContext
                 => await dbContext
                     .SaveChangesAsync()
                     .ConfigureAwait(false))

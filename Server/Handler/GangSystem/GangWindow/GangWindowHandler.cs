@@ -7,9 +7,12 @@ using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Enums;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Models;
 using TDS.Server.Database.Entity.GangEntities;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.GangSystem.GangWindow;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.GangSystem
 {
@@ -24,7 +27,7 @@ namespace TDS.Server.Handler.GangSystem
         private readonly GangWindowRanksPermissionsHandler _ranksPermissions;
         private readonly GangWindowSpecialPageHandler _specialPage;
 
-        public GangWindowHandler(ILoggingHandler loggingHandler, IServiceProvider serviceProvider)
+        public GangWindowHandler(ILoggingHandler loggingHandler, IServiceProvider serviceProvider, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
             _loggingHandler = loggingHandler;
 
@@ -34,20 +37,23 @@ namespace TDS.Server.Handler.GangSystem
             _ranksLevels = ActivatorUtilities.CreateInstance<GangWindowRanksLevelsHandler>(serviceProvider);
             _ranksPermissions = ActivatorUtilities.CreateInstance<GangWindowRanksPermissionsHandler>(serviceProvider);
             _specialPage = ActivatorUtilities.CreateInstance<GangWindowSpecialPageHandler>(serviceProvider);
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.GangCommand, ExecuteCommand);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadGangWindowData, OnLoadGangWindowData);
         }
 
-        public object? OnLoadGangWindowData(ITDSPlayer player, ref ArraySegment<object> args)
+        private object? OnLoadGangWindowData(RemoteBrowserEventArgs args)
         {
             try
             {
-                var type = (GangWindowLoadDataType)(int)args[0];
+                var type = (GangWindowLoadDataType)(int)args.Args[0];
 
                 string? json = null;
 
                 switch (type)
                 {
                     case GangWindowLoadDataType.MainMenu:
-                        json = _mainMenu.GetMainData(player);
+                        json = _mainMenu.GetMainData(args.Player);
                         break;
 
                     case GangWindowLoadDataType.AllGangs:
@@ -57,15 +63,15 @@ namespace TDS.Server.Handler.GangSystem
                         break;
 
                     case GangWindowLoadDataType.Members:
-                        json = _member.GetMembers(player);
+                        json = _member.GetMembers(args.Player);
                         break;
 
                     case GangWindowLoadDataType.RanksLevels:
-                        json = _ranksLevels.GetRanksJson(player);
+                        json = _ranksLevels.GetRanksJson(args.Player);
                         break;
 
                     case GangWindowLoadDataType.RanksPermissions:
-                        json = _ranksPermissions.GetPermissions(player, _ranksLevels);
+                        json = _ranksPermissions.GetPermissions(args.Player, _ranksLevels);
                         break;
 
                     case GangWindowLoadDataType.Vehicles:
@@ -73,44 +79,45 @@ namespace TDS.Server.Handler.GangSystem
                 }
 
                 if (json is { })
-                    NAPI.Task.RunSafe(() => 
-                        player.TriggerBrowserEvent(ToBrowserEvent.LoadedGangWindowData, type, json));
+                    NAPI.Task.RunSafe(() =>
+                        args.Player.TriggerBrowserEvent(ToBrowserEvent.LoadedGangWindowData, type, json));
             }
             catch (Exception ex)
             {
-                _loggingHandler.LogError(ex, player);
+                _loggingHandler.LogError(ex, args.Player);
             }
 
             return null;
         }
 
-        public async Task<object?> ExecuteCommand(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> ExecuteCommand(RemoteBrowserEventArgs args)
         {
-            var type = (GangCommand)args[0];
+            var player = args.Player;
+            var type = (GangCommand)args.Args[0];
 
-            var errorMsg = CheckRequirementsForCommand(player, type, args, out GangMembers? target);
+            var errorMsg = CheckRequirementsForCommand(player, type, ref args.Args, out GangMembers? target);
             if (errorMsg is { })
                 return errorMsg;
 
             var ret = type switch
             {
-                GangCommand.Create => await _create.CreateGang(player, args[1].ToString()!).ConfigureAwait(false),
-                GangCommand.Invite => _member.Invite(player, args[1].ToString()!),
+                GangCommand.Create => await _create.CreateGang(player, args.Args[1].ToString()!).ConfigureAwait(false),
+                GangCommand.Invite => _member.Invite(player, args.Args[1].ToString()!),
                 GangCommand.Kick => await _member.Kick(player, target!).ConfigureAwait(false),
                 GangCommand.Leave => await _member.LeaveGang(player).ConfigureAwait(false),
-                GangCommand.ModifyPermissions => await _ranksPermissions.Modify(player, args[1].ToString()!).ConfigureAwait(false),
-                GangCommand.ModifyRanks => await _ranksLevels.Modify(player, args[1].ToString()!).ConfigureAwait(false),
+                GangCommand.ModifyPermissions => await _ranksPermissions.Modify(player, args.Args[1].ToString()!).ConfigureAwait(false),
+                GangCommand.ModifyRanks => await _ranksLevels.Modify(player, args.Args[1].ToString()!).ConfigureAwait(false),
                 GangCommand.RankDown => await _member.RankDown(player, target!).ConfigureAwait(false),
                 GangCommand.RankUp => await _member.RankUp(player, target!).ConfigureAwait(false),
-                GangCommand.OpenOnlyOneEditorPage => _specialPage.OpenOnlyOneEditorPage(player, (GangWindowOnlyOneEditorPage)(int)args[1]),
-                GangCommand.CloseOnlyOneEditorPage => _specialPage.CloseOnlyOneEditorPage(player, (GangWindowOnlyOneEditorPage)(int)args[1]),
+                GangCommand.OpenOnlyOneEditorPage => _specialPage.OpenOnlyOneEditorPage(player, (GangWindowOnlyOneEditorPage)(int)args.Args[1]),
+                GangCommand.CloseOnlyOneEditorPage => _specialPage.CloseOnlyOneEditorPage(player, (GangWindowOnlyOneEditorPage)(int)args.Args[1]),
                 _ => null
             };
 
             return ret ?? "";
         }
 
-        private string? CheckRequirementsForCommand(ITDSPlayer player, GangCommand type, ArraySegment<object> args, out GangMembers? target)
+        private string? CheckRequirementsForCommand(ITDSPlayer player, GangCommand type, ref ArraySegment<object> args, out GangMembers? target)
         {
             target = null;
 

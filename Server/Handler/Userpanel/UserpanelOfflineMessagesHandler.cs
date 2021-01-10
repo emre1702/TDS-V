@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Userpanel;
+using TDS.Server.Data.Models;
 using TDS.Server.Data.Models.Userpanel.OfflineMessage;
 using TDS.Server.Data.Utility;
 using TDS.Server.Database.Entity;
 using TDS.Server.Handler.Entities;
 using TDS.Server.Handler.Events;
 using TDS.Shared.Core;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Userpanel
 {
@@ -21,20 +22,24 @@ namespace TDS.Server.Handler.Userpanel
         private readonly ISettingsHandler _settingsHandler;
 
         public UserpanelOfflineMessagesHandler(TDSDbContext dbContext, ISettingsHandler settingsHandler, OfflineMessagesHandler offlineMessagesHandler,
-            EventsHandler eventsHandler)
+            EventsHandler eventsHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(dbContext)
         {
             (_settingsHandler, _offlineMessagesHandler) = (settingsHandler, offlineMessagesHandler);
 
             eventsHandler.Hour += DeleteOldMessages;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.AnswerToOfflineMessage, Answer);
+            remoteBrowserEventsHandler.Add(ToServerEvent.SendOfflineMessage, Send);
+            remoteBrowserEventsHandler.Add(ToServerEvent.DeleteOfflineMessage, Delete);
         }
 
-        public async Task<object?> Answer(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> Answer(RemoteBrowserEventArgs args)
         {
             int? offlineMessageID;
-            if ((offlineMessageID = Utils.GetInt(args[0])) is null)
+            if ((offlineMessageID = Utils.GetInt(args.Args[0])) is null)
                 return null;
-            string? message = Convert.ToString(args[1]);
+            string? message = Convert.ToString(args.Args[1]);
             if (message is null)
                 return null;
 
@@ -49,15 +54,15 @@ namespace TDS.Server.Handler.Userpanel
             if (offlineMessage is null)
                 return null;
 
-            _offlineMessagesHandler.Add(offlineMessage.Source, player.Entity!, message);
+            _offlineMessagesHandler.Add(offlineMessage.Source, args.Player.Entity!, message);
 
             return null;
         }
 
-        public async Task<object?> Delete(ITDSPlayer _, ArraySegment<object> args)
+        private async Task<object?> Delete(RemoteBrowserEventArgs args)
         {
             int? offlineMessageId;
-            if ((offlineMessageId = Utils.GetInt(args[0])) is null)
+            if ((offlineMessageId = Utils.GetInt(args.Args[0])) is null)
                 return null;
 
             await ExecuteForDBAsync(async dbContext =>
@@ -131,13 +136,13 @@ namespace TDS.Server.Handler.Userpanel
             return json;
         }
 
-        public async Task<object?> Send(ITDSPlayer player, ArraySegment<object> args)
+        private async Task<object?> Send(RemoteBrowserEventArgs args)
         {
-            string? playerName = Convert.ToString(args[0]);
+            string? playerName = Convert.ToString(args.Args[0]);
             if (playerName is null)
                 return false;
             int? targetId;
-            if (!(targetId = Utils.GetInt(args[0])).HasValue)
+            if (!(targetId = Utils.GetInt(args.Args[0])).HasValue)
             {
                 targetId = await ExecuteForDBAsync(async dbContext
                     => await dbContext.Players
@@ -148,12 +153,12 @@ namespace TDS.Server.Handler.Userpanel
                     .ConfigureAwait(false);
                 if (targetId is null || targetId == 0)
                 {
-                    player.SendNotification(player.Language.PLAYER_DOESNT_EXIST, true);
+                    args.Player.SendNotification(args.Player.Language.PLAYER_DOESNT_EXIST, true);
                     return false;
                 }
             }
 
-            string? message = Convert.ToString(args[1]);
+            string? message = Convert.ToString(args.Args[1]);
             if (message is null)
                 return false;
 
@@ -164,7 +169,7 @@ namespace TDS.Server.Handler.Userpanel
                     .FirstOrDefaultAsync()
                     .ConfigureAwait(false))
                 .ConfigureAwait(false);
-            _offlineMessagesHandler.Add(targetId.Value, discordUserId, player.Entity!, message);
+            _offlineMessagesHandler.Add(targetId.Value, discordUserId, args.Player.Entity!, message);
 
             return true;
         }

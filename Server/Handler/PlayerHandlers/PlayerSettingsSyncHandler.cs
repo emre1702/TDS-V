@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Web;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Models;
 using TDS.Server.Handler.Events;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Models;
@@ -13,9 +14,11 @@ namespace TDS.Server.Handler.PlayerHandlers
 {
     public class PlayerSettingsSyncHandler
     {
-        public PlayerSettingsSyncHandler(EventsHandler eventsHandler)
+        public PlayerSettingsSyncHandler(EventsHandler eventsHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
             eventsHandler.PlayerLoggedIn += EventsHandler_PlayerLoggedIn;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.ReloadPlayerSettings, RequestSyncPlayerSettingsFromUserpanel);
         }
 
         private void EventsHandler_PlayerLoggedIn(ITDSPlayer player)
@@ -23,9 +26,9 @@ namespace TDS.Server.Handler.PlayerHandlers
             SyncPlayerSettings(player);
         }
 
-        public object? RequestSyncPlayerSettingsFromUserpanel(ITDSPlayer player, ref ArraySegment<object> _)
+        private object? RequestSyncPlayerSettingsFromUserpanel(RemoteBrowserEventArgs args)
         {
-            SyncPlayerSettings(player);
+            SyncPlayerSettings(args.Player);
             return null;
         }
 
@@ -37,7 +40,7 @@ namespace TDS.Server.Handler.PlayerHandlers
                 AngularJson = Serializer.ToBrowser(GetForAngular(player))
             };
             var json = Serializer.ToClient(model);
-            NAPI.Task.Run(() => 
+            NAPI.Task.Run(() =>
                 player.TriggerEvent(ToClientEvent.SyncSettings, json));
         }
 

@@ -18,15 +18,15 @@ namespace TDS.Server.Handler.Account
         {
             _databasePlayerHelper = databasePlayerHelper;
 
-            remoteBrowserEventsHandler.AddAsyncEvent(ToServerEvent.LoadRegisterLoginInitData, LoadRegisterLoginInitData);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadRegisterLoginInitData, LoadRegisterLoginInitData);
         }
 
-        private async Task<object?> LoadRegisterLoginInitData(ITDSPlayer player, ArraySegment<object> _)
+        private async Task<object?> LoadRegisterLoginInitData(RemoteBrowserEventArgs args)
         {
-            var idName = await _databasePlayerHelper.GetPlayerIdName(player);
+            var idName = await _databasePlayerHelper.GetPlayerIdName(args.Player);
 
             if (idName is null)
-                return Serializer.ToBrowser(new RegisterLoginInitData { IsRegistered = false, Name = player.Name });
+                return Serializer.ToBrowser(new RegisterLoginInitData { IsRegistered = false, Name = args.Player.Name });
             return Serializer.ToBrowser(new RegisterLoginInitData { IsRegistered = true, Name = idName.Name });
         }
     }

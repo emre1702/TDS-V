@@ -28,7 +28,7 @@ namespace TDS.Server.Handler
 
             _json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(data));
 
-            remoteBrowserEventsHandler.AddSyncEvent(ToServerEvent.LoadAnnouncements, (ITDSPlayer player, ref ArraySegment<object> arg) => _json);
+            remoteBrowserEventsHandler.Add(ToServerEvent.LoadAnnouncements, (_) => _json);
         }
     }
 }

@@ -10,7 +10,9 @@ using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Data.Interfaces.LobbySystem.Sync;
+using TDS.Server.Data.Models;
 using TDS.Server.Handler;
+using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Enums;
@@ -25,13 +27,19 @@ namespace TDS.Server.LobbySystem.Sync
         private MapCreateDataDto _currentMap = new MapCreateDataDto();
         private Dictionary<int, MapCreatorPosition> _posById = new Dictionary<int, MapCreatorPosition>();
         private readonly SemaphoreSlim _posDictSemaphore = new SemaphoreSlim(1, 1);
+        private readonly RemoteBrowserEventsHandler _remoteBrowserEventsHandler;
 
         protected new IMapCreatorLobby Lobby => (IMapCreatorLobby)base.Lobby;
 
-        public MapCreatorLobbySync(IMapCreatorLobby lobby, IBaseLobbyEventsHandler events)
+        public MapCreatorLobbySync(IMapCreatorLobby lobby, IBaseLobbyEventsHandler events, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
             : base(lobby, events)
         {
+            _remoteBrowserEventsHandler = remoteBrowserEventsHandler;
+
             events.PlayerJoined += Events_PlayerJoined;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.MapCreatorSyncData, MapCreatorSyncData, player => player.Lobby == Lobby);
+            remoteBrowserEventsHandler.Add(ToServerEvent.MapCreatorSyncCurrentMapToServer, SyncCurrentMapToClient, player => player.Lobby == Lobby);
         }
 
         protected override void RemoveEvents(IBaseLobby lobby)
@@ -40,6 +48,8 @@ namespace TDS.Server.LobbySystem.Sync
 
             if (Events.PlayerJoined is { })
                 Events.PlayerJoined -= Events_PlayerJoined;
+            _remoteBrowserEventsHandler.Remove(ToServerEvent.MapCreatorSyncData, MapCreatorSyncData);
+            _remoteBrowserEventsHandler.Remove(ToServerEvent.MapCreatorSyncCurrentMapToServer, SyncCurrentMapToClient);
         }
 
         public async void StartNewMap()
@@ -115,6 +125,16 @@ namespace TDS.Server.LobbySystem.Sync
                 player.TriggerEvent(ToClientEvent.MapCreatorSyncAllObjects, json, lastId));
         }
 
+        private async Task<object?> SyncCurrentMapToClient(RemoteBrowserEventArgs args)
+        {
+            string json = (string)args.Args[0];
+            int tdsPlayerId = Convert.ToInt32(args.Args[1]);
+            int idCounter = Convert.ToInt32(args.Args[2]);
+
+            await SetSyncedMapAndSyncToPlayer(json, tdsPlayerId, idCounter);
+            return null;
+        }
+
         public void SyncLastId(ITDSPlayer player, int lastId)
         {
             if (_lastId >= lastId)
@@ -155,6 +175,15 @@ namespace TDS.Server.LobbySystem.Sync
                     _currentMap.Settings = Serializer.FromBrowser<MapCreateSettings>(Convert.ToString(data));
                     break;
             }
+        }
+
+        private object? MapCreatorSyncData(RemoteBrowserEventArgs args)
+        {
+            var infoType = (MapCreatorInfoType)Convert.ToInt32(args.Args[0]);
+            var data = args.Args[1];
+
+            SyncMapInfoChange(infoType, data);
+            return null;
         }
 
         public async void SyncNewObject(ITDSPlayer player, string json)

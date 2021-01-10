@@ -29,11 +29,26 @@ namespace TDS.Server.Core.Events
             {
                 if (modPlayer is not ITDSPlayer player)
                 {
-                    modPlayer.KickSilent("Connected too early.");
+                    Console.WriteLine($"Player in PlayerConnected is {(modPlayer is null ? "null" : "not null")} but is not ITDSPlayer");
+                    modPlayer?.KickSilent("Connected too early.");
                     return;
                 }
 
                 EventsHandler.Instance.OnPlayerConnected(player);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance?.LogError(ex);
+            }
+        }
+
+        [ServerEvent(Event.PlayerConnected)]
+        public void PlayerConnected(ITDSPlayer player)
+        {
+            try
+            {
+                if (player is null)
+                    Console.WriteLine("ITDSPlayer in PlayerConnected is null");
             }
             catch (Exception ex)
             {

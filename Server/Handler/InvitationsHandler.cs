@@ -4,37 +4,40 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
-using TDS.Server.Data.Interfaces.GangsSystem;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
+using TDS.Server.Data.Models;
 using TDS.Server.Handler.Entities.Utility;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
+using TDS.Shared.Default;
 
 namespace TDS.Server.Handler
 {
     public class InvitationsHandler
     {
-
         private readonly Dictionary<ulong, Invitation> _invitationById = new Dictionary<ulong, Invitation>();
 
-        public InvitationsHandler(EventsHandler eventsHandler)
+        public InvitationsHandler(EventsHandler eventsHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
             eventsHandler.PlayerLeftLobby += RemoveSendersLobbyInvitations;
             eventsHandler.PlayerLeftGang += (player, _) => RemoveSendersGangInvitations(player);
             eventsHandler.PlayerLeftGang += (player, _) => RemoveTargetsGangActionInvitations(player);
             eventsHandler.PlayerLoggedOut += RemoveSendersGangInvitations;
+
+            remoteBrowserEventsHandler.Add(ToServerEvent.AcceptInvitation, AcceptInvitation);
+            remoteBrowserEventsHandler.Add(ToServerEvent.RejectInvitation, RejectInvitation);
         }
 
-        public object? AcceptInvitation(ITDSPlayer player, ref ArraySegment<object> args)
+        public object? AcceptInvitation(RemoteBrowserEventArgs args)
         {
-            if (!ulong.TryParse(Convert.ToString(args[0]), out ulong id))
+            if (!ulong.TryParse(Convert.ToString(args.Args[0]), out ulong id))
                 return null;
 
             Invitation? invitation = GetById(id);
             if (invitation is null)
             {
-                NAPI.Task.RunSafe(() => 
-                    player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                NAPI.Task.RunSafe(() =>
+                    args.Player.SendNotification(args.Player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -49,16 +52,16 @@ namespace TDS.Server.Handler
                 _invitationById[invitation.Dto.Id] = invitation;
         }
 
-        public object? RejectInvitation(ITDSPlayer player, ref ArraySegment<object> args)
+        public object? RejectInvitation(RemoteBrowserEventArgs args)
         {
-            if (!ulong.TryParse(Convert.ToString(args[0]), out ulong id))
+            if (!ulong.TryParse(Convert.ToString(args.Args[0]), out ulong id))
                 return null;
 
             Invitation? invitation = GetById(id);
             if (invitation is null)
             {
                 NAPI.Task.RunSafe(() =>
-                    player.SendNotification(player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
+                    args.Player.SendNotification(args.Player.Language.INVITATION_WAS_WITHDRAWN_OR_REMOVED));
                 return null;
             }
 
@@ -85,9 +88,9 @@ namespace TDS.Server.Handler
         {
             lock (_invitationById)
             {
-                 if (!_invitationById.TryGetValue(id, out Invitation? invitation))
+                if (!_invitationById.TryGetValue(id, out Invitation? invitation))
                     return null;
-                 return invitation;
+                return invitation;
             }
         }
 
