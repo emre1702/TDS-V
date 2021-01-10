@@ -42,8 +42,7 @@ namespace TDS.Server.Handler.Commands.System
             else
                 EmitBoxIfNeeded(ilGenerator, methodInfo.ReturnType);
             ilGenerator.Emit(OpCodes.Ret);
-            var invoder = (FastInvokeHandler)dynamicMethod.CreateDelegate(typeof(FastInvokeHandler));
-            return invoder;
+            return (FastInvokeHandler)dynamicMethod.CreateDelegate(typeof(FastInvokeHandler));
         }
 
         private void EmitCastToReference(ILGenerator il, Type type)
