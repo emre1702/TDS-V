@@ -16,12 +16,8 @@ namespace TDS.Server.Handler.Events
     {
         private readonly Dictionary<string, List<RemoteBrowserEventData>> _eventHandlers = new();
 
-        private readonly ILoggingHandler _loggingHandler;
-
-        public RemoteBrowserEventsHandler(ILoggingHandler loggingHandler)
+        public RemoteBrowserEventsHandler()
         {
-            _loggingHandler = loggingHandler;
-
             NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEvent, this, OnFromBrowserEvent);
             NAPI.ClientEvent.Register<ITDSPlayer, object[]>(ToServerEvent.FromBrowserEventCallback, this, OnFromBrowserEventCallback);
         }
@@ -74,7 +70,7 @@ namespace TDS.Server.Handler.Events
             catch (Exception ex)
             {
                 var baseEx = ex.GetBaseException();
-                _loggingHandler.LogError(baseEx.Message + "\n"
+                LoggingHandler.Instance?.LogError(baseEx.Message + "\n"
                     + string.Join('\n', args.Select(a => Convert.ToString(a)?.Substring(0, Math.Min(Convert.ToString(a)?.Length ?? 0, 20)) ?? "-")),
                     ex.StackTrace ?? Environment.StackTrace, ex.GetType().Name + "|" + baseEx.GetType().Name, player);
                 return null;
