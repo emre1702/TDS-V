@@ -46,15 +46,8 @@ namespace TDS.Server.Handler.Commands.System
         }
 
         private void EmitCastToReference(ILGenerator il, Type type)
-        { 
-            if (type.IsValueType)
-            {
-                il.Emit(OpCodes.Unbox_Any, type);
-            }
-            else
-            {
-                il.Emit(OpCodes.Castclass, type);
-            }
+        {
+            il.Emit(type.IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass, type);
         }
 
         private void EmitBoxIfNeeded(ILGenerator il, Type type)
