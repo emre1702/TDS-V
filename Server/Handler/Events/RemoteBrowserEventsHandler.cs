@@ -62,7 +62,7 @@ namespace TDS.Server.Handler.Events
                 var eventArgs = new RemoteBrowserEventArgs(player, args);
 
                 object? ret = null;
-                foreach (var eventHandler in methods)
+                foreach (var eventHandler in methods.ToList())
                     ret ??= await eventHandler.TryExecute(eventArgs);
 
                 return ret;
