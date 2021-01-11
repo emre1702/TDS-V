@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -14,19 +15,20 @@ namespace TDS.Server.Handler.Commands.System
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             // Get the types of each parameter
-            var paramTypes = methodInfo.GetParameters().Select(p => p.ParameterType).ToArray();
+            var paramTypes = methodInfo.GetParameters().Select(p => p.ParameterType);
 
             // Load the object
             ilGenerator.Emit(OpCodes.Ldarg_0);
 
             // Load all arguments onto the stack.
-            for (int i = 0; i < paramTypes.Length; i++)
+            int i = 0;
+            foreach (var paramType in paramTypes)
             {
-                // Load the argument from the array. 
+                // Load the argument from the array.
                 ilGenerator.Emit(OpCodes.Ldarg_1);
-                EmitInt(i, ilGenerator);
+                EmitInt(i++, ilGenerator);
                 ilGenerator.Emit(OpCodes.Ldelem_Ref);
-                EmitCast(paramTypes[i], ilGenerator);
+                EmitCast(paramType, ilGenerator);
             }
 
             // Call the method
@@ -40,12 +42,12 @@ namespace TDS.Server.Handler.Commands.System
             return (FastInvokeHandler)dynamicMethod.CreateDelegate(typeof(FastInvokeHandler));
         }
 
-        static void EmitCast(Type toType, ILGenerator gen)
+        private static void EmitCast(Type toType, ILGenerator gen)
         {
             gen.Emit(toType.IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass, toType);
         }
 
-        static void EmitInt(int i, ILGenerator gen)
+        private static void EmitInt(int i, ILGenerator gen)
         {
             if (i > 8)
             {

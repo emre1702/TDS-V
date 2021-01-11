@@ -93,7 +93,7 @@ namespace TDS.Server.Handler.Commands.System
         private IEnumerable<(MethodInfo Method, object Instance)> GetAllCommandMethodsFromSingletons()
         {
             var allTypes = _serviceProvider.GetAllSingletonTypes();
-            return allTypes.SelectMany(type => 
+            return allTypes.SelectMany(type =>
                 type.GetMethods()
                     .Where(m => m.GetCustomAttributes(typeof(TDSCommandAttribute), false).Length > 0)
                     .Select(m => (m, _serviceProvider.GetRequiredService(type))));
@@ -146,7 +146,6 @@ namespace TDS.Server.Handler.Commands.System
             var argLength = parameter.ParameterType.GetCustomAttribute<TDSCommandArgLength>();
             if (argLength is { })
                 methodData.MultipleArgsToOneInfos.Add(new CommandMultipleArgsToOneInfo { Index = index, Length = argLength.ArgLength });
-
             else if (parameter.ParameterType == typeof(Vector3))
                 methodData.MultipleArgsToOneInfos.Add(new CommandMultipleArgsToOneInfo { Index = index, Length = 3 });
         }

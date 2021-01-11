@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TDS.Server.Data.Abstracts.Entities.GTA;
+﻿using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.CustomAttribute;
 using TDS.Server.Data.Defaults;
 

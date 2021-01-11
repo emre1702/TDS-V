@@ -1,5 +1,4 @@
 ﻿using GTANetworkAPI;
-using System;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.CustomAttribute;
 using TDS.Server.Data.Defaults;

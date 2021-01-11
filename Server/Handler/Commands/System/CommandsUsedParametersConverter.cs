@@ -14,7 +14,7 @@ namespace TDS.Server.Handler.Commands.System
     {
         private readonly MappingHandler _mappingHandler;
 
-        internal CommandsUsedParametersConverter(MappingHandler mappingHandler) 
+        internal CommandsUsedParametersConverter(MappingHandler mappingHandler)
             => _mappingHandler = mappingHandler;
 
         internal async Task<CommandsHandleArgumentsResult> HandleArgumentsTypeConvertings(ITDSPlayer player, CommandMethodDataDto methoddata, int methodindex,
@@ -35,7 +35,6 @@ namespace TDS.Server.Handler.Commands.System
 
                     if (arg is null)
                     {
-
                         if (parameterInfo.ParameterType == typeof(ITDSPlayer)
                             || parameterInfo.ParameterType == typeof(Players))
                         {
@@ -48,7 +47,6 @@ namespace TDS.Server.Handler.Commands.System
                             }
                             return new CommandsHandleArgumentsResult(IsWrongMethod: true);
                         }
-
                     }
 
                     object theArg = arg ?? string.Empty;

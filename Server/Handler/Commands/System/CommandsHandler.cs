@@ -1,5 +1,7 @@
 ﻿using GTANetworkAPI;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Enums;
@@ -13,7 +15,7 @@ namespace TDS.Server.Handler.Commands.System
 {
     public class CommandsHandler
     {
-        // private delegate void CommandDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos, object[] args); 
+        // private delegate void CommandDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos, object[] args);
         // private delegate void CommandEmptyDefaultMethod(TDSPlayer player, TDSCommandInfos commandinfos);
 
         // private const int AmountDefaultParams = 2;
@@ -21,7 +23,7 @@ namespace TDS.Server.Handler.Commands.System
         // With implicit types it's much slower than direct call (Test: 8ms in 10000) - but then you
         // can use Methods with implicit types (e.g. AdminSay([defaultParams], string text, int
         // number)) Without implicit types it's much faster but you can only use Methods with
-        // signature Method([defaultParams]) or Method([defaultParams], object[] args) 
+        // signature Method([defaultParams]) or Method([defaultParams], object[] args)
         // private const bool UseImplicitTypes = true;
 
         private readonly ISettingsHandler _settingsHandler;
@@ -91,7 +93,7 @@ namespace TDS.Server.Handler.Commands.System
                 return;
 
             var finalInvokeArgs = _commandsUsedParametersConverter.GetFinalInvokeArgs(correctMethodAndArgs.Method, player, cmdInfos, correctMethodAndArgs.Args);
-            //var ret = correctMethodAndArgs.Value.Method.MethodDefault.Invoke(correctMethodAndArgs.Value.Method.Instance, finalInvokeArgs.ToArray());   
+            //var ret = correctMethodAndArgs.Value.Method.MethodDefault.Invoke(correctMethodAndArgs.Value.Method.Instance, finalInvokeArgs.ToArray());
             var ret = correctMethodAndArgs.Method.FastMethodInvoker.Invoke(correctMethodAndArgs.Method.Instance, finalInvokeArgs.ToArray());
 
             if (ret is Task task)
