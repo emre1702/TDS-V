@@ -1,5 +1,5 @@
-export class Position3D {
-  public X = 0;
-  public Y = 0;
-  public Z = 0;
+export interface Position3D {
+    x: number;
+    y: number;
+    z: number;
 }
