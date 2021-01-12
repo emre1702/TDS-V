@@ -40,7 +40,7 @@ export class MapCreatorTeamSpawnsComponent implements OnInit, OnDestroy {
             this.dataSource = [...this.fC.value[this.selectedTeamNumber]];
             this.changeDetector.detectChanges();
         });
-        this.dataSource = this.fC.value[0];
+        this.dataSource = this.fC.value[this.selectedTeamNumber];
     }
 
     ngOnDestroy() {
