@@ -11,7 +11,6 @@ namespace TDS.Server.Data.Extensions
                 Name = location.Name,
                 Ipls = location.Ipls,
                 IplsToUnload = location.IplsToUnload,
-                Hash = location.Hash
             };
     }
 }

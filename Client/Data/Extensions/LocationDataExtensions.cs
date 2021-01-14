@@ -1,4 +1,7 @@
 ﻿using RAGE.Game;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TDS.Shared.Data.Interfaces.Map.Creator;
 
 namespace TDS.Client.Data.Extensions
@@ -9,16 +12,14 @@ namespace TDS.Client.Data.Extensions
         {
             location.Ipls?.ForEach(ipl => LoadIpl(ipl));
             location.IplsToUnload?.ForEach(ipl => UnloadIpl(ipl));
-            if (location.Hash.HasValue)
-                Invoker.Invoke(location.Hash.Value, true);
+            CallHashDatas(location.Name, true);
         }
 
         public static void UnloadLocation(this IMapLocationData location)
         {
             location.Ipls?.ForEach(ipl => UnloadIpl(ipl));
             location.IplsToUnload?.ForEach(ipl => LoadIpl(ipl));
-            if (location.Hash.HasValue)
-                Invoker.Invoke(location.Hash.Value, false);
+            CallHashDatas(location.Name, false);
         }
 
         private static void LoadIpl(string iplName)
@@ -31,6 +32,17 @@ namespace TDS.Client.Data.Extensions
         {
             if (Streaming.IsIplActive(iplName))
                 Streaming.RemoveIpl(iplName);
+        }
+
+        private static void CallHashDatas(string locationName, bool toggle)
+        {
+            switch (locationName.ToLower())
+            {
+                case "cayo pericio heist island":
+                    Invoker.Invoke(0x9A9D1BA639675CF1, "HeistIsland", toggle ? 1 : 0);
+                    Invoker.Invoke(0x5E1460624D194A38, toggle ? 1 : 0);
+                    break;
+            }
         }
     }
 }

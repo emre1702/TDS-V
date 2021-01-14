@@ -26,7 +26,6 @@ export function createNewMap(): MapCreateData {
 export function convertLocationDataToShared(locationData: LocationData): MapSharedLocation {
     return {
         name: locationData.name,
-        hash: locationData.hash,
         ipls: locationData.ipls,
         iplsToUnload: locationData.iplsToUnload,
     };

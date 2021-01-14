@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using TDS.Shared.Data.Interfaces.Map.Creator;
 using TDS.Shared.Data.Models.Map.Creator;
 
 namespace TDS.Server.Data.Models.Map
 {
-    public class MapSharedLocationXml : IMapLocationData
+    public class MapSharedLocationXml
     {
         [JsonProperty("name")]
         [XmlElement("name")]
@@ -22,16 +23,15 @@ namespace TDS.Server.Data.Models.Map
         [XmlArrayItem("iplToUnload", IsNullable = true)]
         public List<string> IplsToUnload { get; set; }
 
-        [JsonProperty("hash")]
-        [XmlElement("hash", IsNullable = true)]
-        public ulong? Hash { get; set; }
+        public MapSharedLocationXml()
+        {
+        }
 
         public MapSharedLocationXml(MapSharedLocation location)
         {
             Name = location.Name;
             Ipls = location.Ipls;
             IplsToUnload = location.IplsToUnload;
-            Hash = location.Hash;
         }
     }
 }

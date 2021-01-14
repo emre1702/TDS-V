@@ -74,7 +74,7 @@ export class German extends English {
     KillAfterTime = 'Tod nach Zeit';
     TeleportBackAfterTime = 'Teleport nach Zeit';
     Block = 'Block';
-    None = 'Keine';
+    None = 'Nichts';
     MapLimitType = 'Map-Grenze Typ';
     MapLimitTime = 'Map-Grenze Zeit (sec)';
     AreYouSure = 'Bist du dir sicher?';

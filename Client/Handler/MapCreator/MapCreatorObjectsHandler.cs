@@ -8,7 +8,6 @@ using TDS.Client.Data.Abstracts.Entities.GTA;
 using TDS.Client.Data.Defaults;
 using TDS.Client.Data.Enums;
 using TDS.Client.Data.Extensions;
-using TDS.Client.Data.Models;
 using TDS.Client.Handler.Browser;
 using TDS.Client.Handler.Draw.Dx;
 using TDS.Client.Handler.Entities;
@@ -17,7 +16,6 @@ using TDS.Client.Handler.Events;
 using TDS.Client.Handler.Lobby;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Enums;
-using TDS.Shared.Data.Models.GTA;
 using TDS.Shared.Data.Models.Map.Creator;
 using TDS.Shared.Default;
 
@@ -73,64 +71,79 @@ namespace TDS.Client.Handler.MapCreator
         public MapCreatorObject CreateMapCreatorObject(MapCreatorPositionType type, object info, ushort ownerRemoteId,
             Vector3 pos, Vector3 rot)
         {
-            switch (type)
+            try
             {
-                case MapCreatorPositionType.TeamSpawn:
-                    return GetTeamSpawn(Convert.ToInt32(info), ownerRemoteId, pos, rot);
+                switch (type)
+                {
+                    case MapCreatorPositionType.TeamSpawn:
+                        return GetTeamSpawn(Convert.ToInt32(info), ownerRemoteId, pos, rot);
 
-                case MapCreatorPositionType.MapCenter:
-                    return GetMapCenter(ownerRemoteId, pos, rot);
+                    case MapCreatorPositionType.MapCenter:
+                        return GetMapCenter(ownerRemoteId, pos, rot);
 
-                case MapCreatorPositionType.BombPlantPlace:
-                    return GetBombPlantPlace(ownerRemoteId, pos, rot);
+                    case MapCreatorPositionType.BombPlantPlace:
+                        return GetBombPlantPlace(ownerRemoteId, pos, rot);
 
-                case MapCreatorPositionType.MapLimit:
-                    return GetMapLimit(ownerRemoteId, pos, rot);
+                    case MapCreatorPositionType.MapLimit:
+                        return GetMapLimit(ownerRemoteId, pos, rot);
 
-                case MapCreatorPositionType.Target:
-                    return GetTarget(ownerRemoteId, pos, rot);
+                    case MapCreatorPositionType.Target:
+                        return GetTarget(ownerRemoteId, pos, rot);
 
-                case MapCreatorPositionType.Object:
-                    string objName = (string)info;
-                    return GetObject(objName, MapCreatorPositionType.Object, ownerRemoteId, pos, rot, objName);
+                    case MapCreatorPositionType.Object:
+                        string objName = (string)info;
+                        return GetObject(objName, MapCreatorPositionType.Object, ownerRemoteId, pos, rot, objName);
 
-                case MapCreatorPositionType.Vehicle:
-                    string vehName = (string)info;
-                    return GetVehicle(vehName, ownerRemoteId, vehName: vehName, pos: pos, rot: rot);
+                    case MapCreatorPositionType.Vehicle:
+                        string vehName = (string)info;
+                        return GetVehicle(vehName, ownerRemoteId, vehName: vehName, pos: pos, rot: rot);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
             }
             return null;
         }
 
         public MapCreatorObject CreateMapCreatorObject(MapCreatorPosition data)
         {
-            switch (data.Type)
+            try
             {
-                case MapCreatorPositionType.TeamSpawn:
-                    return GetTeamSpawn(Convert.ToInt32(data.Info), data.OwnerRemoteId,
-                        new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
+                switch (data.Type)
+                {
+                    case MapCreatorPositionType.TeamSpawn:
+                        return GetTeamSpawn(Convert.ToInt32(data.Info), data.OwnerRemoteId,
+                            new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
 
-                case MapCreatorPositionType.MapCenter:
-                    return GetMapCenter(data.OwnerRemoteId, new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
+                    case MapCreatorPositionType.MapCenter:
+                        return GetMapCenter(data.OwnerRemoteId, new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
 
-                case MapCreatorPositionType.BombPlantPlace:
-                    return GetBombPlantPlace(data.OwnerRemoteId, new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
+                    case MapCreatorPositionType.BombPlantPlace:
+                        return GetBombPlantPlace(data.OwnerRemoteId, new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
 
-                case MapCreatorPositionType.MapLimit:
-                    return GetMapLimit(data.OwnerRemoteId, new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
+                    case MapCreatorPositionType.MapLimit:
+                        return GetMapLimit(data.OwnerRemoteId, new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
 
-                case MapCreatorPositionType.Target:
-                    return GetTarget(data.OwnerRemoteId, new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
+                    case MapCreatorPositionType.Target:
+                        return GetTarget(data.OwnerRemoteId, new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), id: data.Id);
 
-                case MapCreatorPositionType.Object:
-                    string objName = (string)data.Info;
-                    return GetObject(objName, MapCreatorPositionType.Object, data.OwnerRemoteId,
-                        new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), objName, id: data.Id);
+                    case MapCreatorPositionType.Object:
+                        string objName = (string)data.Info;
+                        return GetObject(objName, MapCreatorPositionType.Object, data.OwnerRemoteId,
+                            new Vector3().GetPosFrom(data), new Vector3().GetRotFrom(data), objName, id: data.Id);
 
-                case MapCreatorPositionType.Vehicle:
-                    string vehName = (string)data.Info;
-                    return GetVehicle(vehName, data.OwnerRemoteId, vehName: vehName, id: data.Id,
-                        pos: new Vector3().GetPosFrom(data), rot: new Vector3().GetRotFrom(data));
+                    case MapCreatorPositionType.Vehicle:
+                        string vehName = (string)data.Info;
+                        return GetVehicle(vehName, data.OwnerRemoteId, vehName: vehName, id: data.Id,
+                            pos: new Vector3().GetPosFrom(data), rot: new Vector3().GetRotFrom(data));
+                }
             }
+            catch (Exception ex)
+            {
+                Logging.LogError(ex);
+            }
+
             return null;
         }
 
@@ -481,10 +494,6 @@ namespace TDS.Client.Handler.MapCreator
         {
             int teamNumber = Convert.ToInt32(args[0]);
             DeleteTeamObjects(teamNumber);
-        }
-
-        private void LoadMapLocation(MapSharedLocation location)
-        {
         }
     }
 }

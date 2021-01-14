@@ -39,7 +39,7 @@ namespace TDS.Client.Handler.MapCreator
 
             var clickedMarkerStorer = new ClickedMarkerStorer();
 
-            Location = new MapCreatorLocationHandler(remoteEventsSender);
+            Location = new MapCreatorLocationHandler(remoteEventsSender, loggingHandler);
             Objects = new MapCreatorObjectsHandler(loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler, settingsHandler, remoteEventsSender, dxHandler, timerHandler, Location);
             Sync = new MapCreatorSyncHandler(Objects, remoteEventsSender, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
             ObjectsLoading = new ObjectsLoadingHelper(loggingHandler, utilsHandler, settingsHandler);
@@ -102,6 +102,7 @@ namespace TDS.Client.Handler.MapCreator
             Sync.Stop();
             ObjectsPreview.Stop();
             VehiclePreview.Stop();
+            Location.Stop();
         }
 
         private void EventsHandler_LobbyJoined(SyncedLobbySettings settings)

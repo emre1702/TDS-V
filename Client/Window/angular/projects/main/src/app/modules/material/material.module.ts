@@ -38,9 +38,10 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { SettingsService } from '../../services/settings.service';
+import { MatSelectFocusRemoverDirective } from './directives/mat-select-focus-remover.directive';
 
 @NgModule({
-    declarations: [MatAppBackgroundDirective, CustomMatSnackBarComponent],
+    declarations: [MatAppBackgroundDirective, MatSelectFocusRemoverDirective, CustomMatSnackBarComponent],
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -113,6 +114,7 @@ import { SettingsService } from '../../services/settings.service';
         ScrollingModule,
 
         MatAppBackgroundDirective,
+        MatSelectFocusRemoverDirective,
     ],
     providers: [ApplyBackgroundService, { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl, deps: [SettingsService] }],
 })

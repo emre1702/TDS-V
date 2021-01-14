@@ -19,6 +19,7 @@ import { MapCreateError } from '../../enums/map-create-error';
 import { MapCreatorNav } from '../../enums/map-creator-nav';
 import { getLocationDataByName, locations } from '../../location-data';
 import { convertLocationDataToShared } from '../../map-creator.helper';
+import { MapSharedLocation } from '../../models/map-shared-location';
 import { MapCreatorMainDebugService } from './services/map-creator-main.debug.service';
 import { MapCreatorMainProdService } from './services/map-creator-main.prod.service';
 import { MapCreatorMainService } from './services/map-creator-main.service';
@@ -62,6 +63,7 @@ export class MapCreatorMainComponent implements OnInit {
     ngOnInit() {
         this.addValidationsForSend();
         this.addValidationsForSave();
+        this.currentLocation = (this.formGroup.controls[MapCreateDataKey.Location].value as MapSharedLocation)?.name;
     }
 
     getMapTypes(): string[] {

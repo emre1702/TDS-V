@@ -14,8 +14,5 @@ namespace TDS.Shared.Data.Models.Map.Creator
 
         [JsonProperty("iplsToUnload")]
         public List<string> IplsToUnload { get; set; }
-
-        [JsonProperty("hash")]
-        public ulong? Hash { get; set; }
     }
 }

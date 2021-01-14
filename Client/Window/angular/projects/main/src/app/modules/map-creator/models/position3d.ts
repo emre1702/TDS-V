@@ -1,5 +1,5 @@
 export interface Position3D {
-    x: number;
-    y: number;
-    z: number;
+    0: number;
+    1: number;
+    2: number;
 }
