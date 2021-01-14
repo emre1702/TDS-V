@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import { Constants } from 'projects/main/src/app/constants';
 import { AreYouSureDialog } from 'projects/main/src/app/dialog/are-you-sure-dialog';
 import { MapType } from 'projects/main/src/app/enums/maptype.enum';
@@ -16,6 +17,8 @@ import { NotificationService } from '../../../shared/services/notification.servi
 import { MapCreateDataKey } from '../../enums/map-create-data-key';
 import { MapCreateError } from '../../enums/map-create-error';
 import { MapCreatorNav } from '../../enums/map-creator-nav';
+import { getLocationDataByName, locations } from '../../location-data';
+import { convertLocationDataToShared } from '../../map-creator.helper';
 import { MapCreatorMainDebugService } from './services/map-creator-main.debug.service';
 import { MapCreatorMainProdService } from './services/map-creator-main.prod.service';
 import { MapCreatorMainService } from './services/map-creator-main.service';
@@ -39,12 +42,15 @@ export class MapCreatorMainComponent implements OnInit {
     targetErrorService: ErrorService;
     bombPlacesErrorService: ErrorService;
     mapSettingsErrorService: ErrorService;
+    currentLocation: string;
+    activeLocationGroups: string[] = [];
 
     mapType = MapType;
     mapCreateDataKey = MapCreateDataKey;
     mapCreatorNav = MapCreatorNav;
     minNameLength = Constants.MIN_MAP_CREATE_NAME_LENGTH;
     maxNameLength = Constants.MAX_MAP_CREATE_NAME_LENGTH;
+    locationGroups = locations;
 
     constructor(
         public settings: SettingsService,
@@ -69,6 +75,31 @@ export class MapCreatorMainComponent implements OnInit {
 
     saveData() {
         this.service.sendData(this.formGroup).subscribe((result) => this.sendOrSaveDataCallback(result));
+    }
+
+    selectLocation(event: MatSelectChange) {
+        if (!event.value) {
+            this.unselectLocation();
+            return;
+        }
+        const locationData = getLocationDataByName(event.value);
+        if (!locationData) return;
+        this.currentLocation = event.value;
+        this.formGroup.controls[MapCreateDataKey.Location].setValue(convertLocationDataToShared(locationData));
+
+        this.service.changeLocation(locationData);
+    }
+
+    private unselectLocation() {
+        this.currentLocation = undefined;
+        this.formGroup.controls[MapCreateDataKey.Location].patchValue(undefined);
+        this.service.changeLocation(undefined);
+    }
+
+    toggleActiveLocationGroup(groupName: string) {
+        const index = this.activeLocationGroups.indexOf(groupName);
+        if (index >= 0) this.activeLocationGroups.splice(index, 1);
+        else this.activeLocationGroups.push(groupName);
     }
 
     private sendOrSaveDataCallback(result: MapCreateError) {

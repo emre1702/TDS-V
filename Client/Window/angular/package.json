@@ -1,45 +1,45 @@
 {
-  "name": "angular",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve --port 4200 --host 127.0.0.1 --project=main",
-    "build": "ng build --baseHref='' --prod --commonChunk=false --optimization --sourceMap=false --project=main"
-  },
-  "private": true,
-  "dependencies": {
-    "@angular/animations": "^11.0.5",
-    "@angular/cdk": "^11.0.3",
-    "@angular/cli": "^11.0.5",
-    "@angular/common": "^11.0.5",
-    "@angular/compiler": "^11.0.5",
-    "@angular/core": "^11.0.5",
-    "@angular/forms": "^11.0.5",
-    "@angular/material": "^11.0.3",
-    "@angular/platform-browser": "^11.0.5",
-    "@angular/platform-browser-dynamic": "^11.0.5",
-    "angular-material-css-vars": "^1.1.2",
-    "ngx-clipboard": "^14.0.1",
-    "ngx-color-picker": "^10.1.0",
-    "prettier": "^2.2.1",
-    "rxjs": "^6.6.3",
-    "tslib": "^2.0.0",
-    "zone.js": "~0.10.3"
-  },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1100.5",
-    "@angular/compiler-cli": "^11.0.5",
-    "@types/node": "^14.14.16",
-    "@typescript-eslint/eslint-plugin": "^4.11.0",
-    "@typescript-eslint/parser": "^4.11.0",
-    "eslint": "^7.16.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "ng-packagr": "^11.0.3",
-    "protractor": "^7.0.0",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.0.5"
-  }
+    "name": "angular",
+    "version": "0.0.0",
+    "scripts": {
+        "ng": "ng",
+        "start": "ng serve --port 4200 --host 127.0.0.1 --project=main",
+        "build": "ng build --baseHref='' --prod --commonChunk=false --optimization --sourceMap=false --project=main"
+    },
+    "private": true,
+    "dependencies": {
+        "@angular/animations": "^11.0.5",
+        "@angular/cdk": "^11.0.3",
+        "@angular/cli": "^11.0.5",
+        "@angular/common": "^11.0.5",
+        "@angular/compiler": "^11.0.5",
+        "@angular/core": "^11.0.5",
+        "@angular/forms": "^11.0.5",
+        "@angular/material": "^11.0.3",
+        "@angular/platform-browser": "^11.0.5",
+        "@angular/platform-browser-dynamic": "^11.0.5",
+        "angular-material-css-vars": "^1.1.2",
+        "ngx-clipboard": "^14.0.1",
+        "ngx-color-picker": "^10.1.0",
+        "prettier": "^2.2.1",
+        "rxjs": "^6.6.3",
+        "tslib": "^2.0.0",
+        "zone.js": "~0.10.3"
+    },
+    "devDependencies": {
+        "@angular-devkit/build-angular": "^0.1100.5",
+        "@angular/compiler-cli": "^11.0.5",
+        "@types/node": "^14.14.16",
+        "@typescript-eslint/eslint-plugin": "^4.11.0",
+        "@typescript-eslint/parser": "^4.11.0",
+        "eslint": "^7.16.0",
+        "eslint-config-standard": "^16.0.2",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "ng-packagr": "^11.0.3",
+        "protractor": "^7.0.0",
+        "ts-node": "^9.1.1",
+        "typescript": "^4.0.5"
+    }
 }

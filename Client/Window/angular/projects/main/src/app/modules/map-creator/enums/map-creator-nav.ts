@@ -8,6 +8,7 @@ export enum MapCreatorNav {
     MapCenter = 9,
     Target = 10,
     Vehicle = 11,
+    Location = 12,
 
     Main,
 }

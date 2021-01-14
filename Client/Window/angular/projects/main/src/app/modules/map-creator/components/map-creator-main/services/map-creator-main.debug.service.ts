@@ -4,6 +4,7 @@ import { MapType } from 'projects/main/src/app/enums/maptype.enum';
 import { Observable, of } from 'rxjs';
 import { MapCreateError } from '../../../enums/map-create-error';
 import { LoadMapDialogGroup } from '../../../models/load-map-dialog-group';
+import { LocationData } from '../../../models/location-data';
 import { MapCreatorMainService } from './map-creator-main.service';
 
 @Injectable()
@@ -57,5 +58,10 @@ export class MapCreatorMainDebugService extends MapCreatorMainService {
 
     loadPossibleMapNames(): Observable<LoadMapDialogGroup[]> {
         return of(this.possibleMapNames);
+    }
+
+    changeLocation(locationData?: LocationData) {
+        console.log('Changing location to: ');
+        console.log(locationData);
     }
 }

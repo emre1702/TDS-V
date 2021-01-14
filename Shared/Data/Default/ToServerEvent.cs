@@ -50,6 +50,7 @@
         public const string LobbyChatMessage = "c23";
         public const string LogMessageToServer = "c77";
         public const string LogExceptionToServer = "c78";
+        public const string MapCreatorSyncLocation = "c87";
         public const string MapCreatorStartNewMap = "c28";
         public const string MapCreatorSyncCurrentMapToServer = "c17";
         public const string MapCreatorSyncData = "c30";

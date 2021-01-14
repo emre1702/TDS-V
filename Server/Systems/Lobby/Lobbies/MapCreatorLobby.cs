@@ -24,6 +24,7 @@ namespace TDS.Server.LobbySystem.Lobbies
 {
     public class MapCreatorLobby : FreeroamLobby, IMapCreatorLobby
     {
+        public new IMapCreatorMapHandler MapHandler => (IMapCreatorMapHandler)base.MapHandler;
         public new IMapCreatorLobbySync Sync => (IMapCreatorLobbySync)base.Sync;
 
         public MapCreatorLobby(LobbyDb entity, IDatabaseHandler databaseHandler, LangHelper langHelper, EventsHandler eventsHandler,

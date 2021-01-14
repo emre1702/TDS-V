@@ -3,6 +3,7 @@ import { MapCreatorPosition } from './map-creator-position';
 import { MapCreateSettings } from './map-create-settings';
 import { MapType } from '../../../enums/maptype.enum';
 import { MapCreateDataKey } from '../enums/map-create-data-key';
+import { MapSharedLocation } from './map-shared-location';
 
 export interface MapCreateData {
     [MapCreateDataKey.Id]: number;
@@ -19,4 +20,5 @@ export interface MapCreateData {
     [MapCreateDataKey.MapCenter]: MapCreatorPosition;
     [MapCreateDataKey.Target]: MapCreatorPosition;
     [MapCreateDataKey.Vehicles]: MapCreatorPosition[];
+    [MapCreateDataKey.Location]?: MapSharedLocation;
 }

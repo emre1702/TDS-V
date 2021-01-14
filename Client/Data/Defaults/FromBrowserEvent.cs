@@ -33,6 +33,7 @@
         public const string LoadClothesData = "b49";
         public const string LoadMapForMapCreator = "b1";
 
+        public const string MapCreatorChangeLocation = "b4";
         public const string MapCreatorHighlightPos = "b21";
         public const string MapCreatorShowObject = "b22";
         public const string MapCreatorShowVehicle = "b23";

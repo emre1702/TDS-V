@@ -16,6 +16,7 @@ export interface Language {
     MapSettings: string;
     Description: string;
     Type: string;
+    Location: string;
     TeamSpawns: string;
     MapLimit: string;
     MapCenter: string;

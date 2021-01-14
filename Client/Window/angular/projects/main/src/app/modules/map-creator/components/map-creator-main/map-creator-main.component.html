@@ -1,35 +1,57 @@
 <form id="container" [formGroup]="formGroup" *ngIf="sendErrorService && saveErrorService">
     <mat-form-field color="accent" [hintLabel]="minNameLength + '-' + maxNameLength + ' ' + ('Chars' | language: settings.Lang)" class="with-hint">
-        <input #nameInput matInput [placeholder]="'Name' | language: settings.Lang" [formControlName]="mapCreateDataKey.Name" />
+        <mat-label>{{ 'Name' | language: settings.Lang }}</mat-label>
+        <input #nameInput matInput [formControlName]="mapCreateDataKey.Name" />
         <mat-error *ngIf="formGroup.controls[mapCreateDataKey.Name].invalid"
             >{{ minNameLength }}-{{ maxNameLength }} {{ 'Chars' | language: settings.Lang }}</mat-error
         >
         <mat-hint [align]="'end'">{{ nameInput.value?.length || 0 }}/{{ maxNameLength }}</mat-hint>
     </mat-form-field>
     <div class="two-per-row-container">
-        <mat-select class="two-per-row-div mat-select-without-field mat-raised-button" [formControlName]="mapCreateDataKey.Type">
-            <mat-option *ngFor="let type of getMapTypes()" [value]="mapType[type]">
-                {{ type | language: settings.Lang }}
-            </mat-option>
-        </mat-select>
+        <mat-form-field class="two-per-row-div" color="accent">
+            <mat-label>{{ 'Type' | language: settings.Lang }}</mat-label>
+            <mat-select [formControlName]="mapCreateDataKey.Type">
+                <mat-option *ngFor="let type of getMapTypes()" [value]="mapType[type]">
+                    {{ type | language: settings.Lang }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="two-per-row-div" color="accent">
+            <mat-label>{{ 'Location' | language: settings.Lang }}</mat-label>
+            <mat-select [value]="currentLocation" [disabled]="!settings.IsLobbyOwner" (selectionChange)="selectLocation($event)">
+                <mat-option>{{ 'None' | language: settings.Lang }}</mat-option>
+                <mat-optgroup *ngFor="let locationGroup of locationGroups | orderBy: 'groupName'">
+                    <mat-label class="clickable" matRipple (click)="toggleActiveLocationGroup(locationGroup.groupName)">{{
+                        locationGroup.groupName | language: settings.Lang
+                    }}</mat-label>
+                    <ng-container *ngIf="activeLocationGroups.indexOf(locationGroup.groupName) >= 0">
+                        <mat-option *ngFor="let location of locationGroup.locations | orderBy: 'name'" [value]="location.name">
+                            {{ location.name | language: settings.Lang }}
+                        </mat-option>
+                    </ng-container>
+                </mat-optgroup>
+            </mat-select>
+        </mat-form-field>
 
         <button
             class="two-per-row-div"
             mat-raised-button
             (click)="navChanged.emit(mapCreatorNav.MapSettings)"
             [disabled]="!settings.IsLobbyOwner"
-            [color]="mapSettingsErrorService.hasError() ? 'warn' : 'primary'"
+            [color]="mapSettingsErrorService.hasError() ? 'warn' : ''"
             [matTooltip]="mapSettingsErrorService.errorMessage"
         >
             {{ 'MapSettings' | language: settings.Lang }}
         </button>
+
         <button class="two-per-row-div" mat-raised-button (click)="navChanged.emit(mapCreatorNav.Description)" [disabled]="!settings.IsLobbyOwner">
             {{ 'Description' | language: settings.Lang }}
         </button>
         <button
             class="two-per-row-div"
             mat-raised-button
-            [color]="teamSpawnsErrorService.hasError() ? 'warn' : 'primary'"
+            [color]="teamSpawnsErrorService.hasError() ? 'warn' : ''"
             (click)="navChanged.emit(mapCreatorNav.TeamSpawn)"
             [matTooltip]="teamSpawnsErrorService.errorMessage"
         >
@@ -38,7 +60,7 @@
         <button
             class="two-per-row-div"
             mat-raised-button
-            [color]="mapLimitErrorService.hasError() ? 'warn' : 'primary'"
+            [color]="mapLimitErrorService.hasError() ? 'warn' : ''"
             (click)="navChanged.emit(mapCreatorNav.MapLimit)"
             [matTooltip]="mapLimitErrorService.errorMessage"
         >
@@ -63,7 +85,7 @@
             class="two-per-row-div"
             mat-raised-button
             *ngIf="formGroup.controls[mapCreateDataKey.Type].value == mapType.Bomb"
-            [color]="bombPlacesErrorService.hasError() ? 'warn' : 'primary'"
+            [color]="bombPlacesErrorService.hasError() ? 'warn' : ''"
             (click)="navChanged.emit(mapCreatorNav.BombPlantPlace)"
             [matTooltip]="bombPlacesErrorService.errorMessage"
         >
@@ -74,7 +96,7 @@
             mat-raised-button
             *ngIf="formGroup.controls[mapCreateDataKey.Type].value == mapType.Gangwar"
             [disabled]="!settings.IsLobbyOwner"
-            [color]="targetErrorService.hasError() ? 'warn' : 'primary'"
+            [color]="targetErrorService.hasError() ? 'warn' : ''"
             (click)="navChanged.emit(mapCreatorNav.Target)"
             [matTooltip]="targetErrorService.errorMessage"
         >
@@ -84,22 +106,22 @@
 
     <div class="bottom-buttons">
         <div class="row">
-            <button mat-raised-button type="button" (click)="sendData()" [disabled]="sendErrorService.hasError()">
+            <button mat-raised-button class="save-button" (click)="sendData()" [disabled]="sendErrorService.hasError()">
                 <span [matTooltip]="sendErrorService.errorMessage">{{ 'Send' | language: settings.Lang }}</span>
             </button>
-            <button mat-raised-button [disabled]="!settings.IsLobbyOwner" type="button" (click)="removeTheMap()">
+            <button mat-raised-button class="delete-button" [disabled]="!settings.IsLobbyOwner" (click)="removeTheMap()">
                 {{ 'Remove' | language: settings.Lang }}
             </button>
         </div>
 
         <div class="row">
-            <button mat-raised-button type="button" (click)="startNew()" [disabled]="!settings.IsLobbyOwner">
+            <button mat-raised-button class="delete-button" (click)="startNew()" [disabled]="!settings.IsLobbyOwner">
                 {{ 'New' | language: settings.Lang }}
             </button>
-            <button mat-raised-button type="button" (click)="saveData()" [disabled]="saveErrorService.hasError()">
+            <button mat-raised-button class="save-button" (click)="saveData()" [disabled]="saveErrorService.hasError()">
                 <span [matTooltip]="saveErrorService.errorMessage">{{ 'Save' | language: settings.Lang }}</span>
             </button>
-            <button mat-raised-button type="button" (click)="showPossibleMaps()" [disabled]="!settings.IsLobbyOwner">
+            <button mat-raised-button class="add-button" (click)="showPossibleMaps()" [disabled]="!settings.IsLobbyOwner">
                 {{ 'Load' | language: settings.Lang }}
             </button>
         </div>

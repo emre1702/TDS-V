@@ -34,6 +34,7 @@ import { MatAppBackgroundDirective } from './directives/mat-app-background.direc
 import { CustomMatSnackBarComponent } from './components/custom-mat-snack-bar.component';
 import { ApplyBackgroundService } from './services/apply-background.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { SettingsService } from '../../services/settings.service';
@@ -74,6 +75,7 @@ import { SettingsService } from '../../services/settings.service';
         MatRadioModule,
         DragDropModule,
         MatTabsModule,
+        ScrollingModule,
     ],
     exports: [
         ReactiveFormsModule,
@@ -108,6 +110,7 @@ import { SettingsService } from '../../services/settings.service';
         MatRadioModule,
         DragDropModule,
         MatTabsModule,
+        ScrollingModule,
 
         MatAppBackgroundDirective,
     ],

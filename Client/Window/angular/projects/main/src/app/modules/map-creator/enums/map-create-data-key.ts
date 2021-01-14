@@ -11,4 +11,5 @@ export enum MapCreateDataKey {
     MapCenter = 9,
     Target = 10,
     Vehicles = 11,
+    Location = 12,
 }

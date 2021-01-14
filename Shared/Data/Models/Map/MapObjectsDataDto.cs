@@ -27,5 +27,8 @@ namespace TDS.Shared.Data.Models.Map
 
         [JsonProperty("6")]
         public List<Position3D> MapEdges { get; set; }
+
+        [JsonProperty("7")]
+        public MapSharedLocation Location { get; set; }
     }
 }

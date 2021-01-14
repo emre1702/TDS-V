@@ -12,6 +12,7 @@ export class German extends English {
     English = 'Englisch';
     Description = 'Beschreibung';
     Type = 'Typ';
+    Location = 'Standort';
     TeamSpawns = 'Team-Spawns';
     MapLimit = 'Karten-Limit';
     MapCenter = 'Karten-Zentrum';

@@ -46,6 +46,7 @@ namespace TDS.Server.LobbySystem.EventsHandlers
             NAPI.ClientEvent.Register<ITDSPlayer, string>(ToServerEvent.MapCreatorSyncNewObject, this, OnMapCreatorSyncNewObject);
             NAPI.ClientEvent.Register<ITDSPlayer, string>(ToServerEvent.MapCreatorSyncObjectPosition, this, OnMapCreatorSyncObjectPosition);
             NAPI.ClientEvent.Register<ITDSPlayer, int>(ToServerEvent.SendTeamOrder, this, OnSendTeamOrder);
+            NAPI.ClientEvent.Register<ITDSPlayer, string>(ToServerEvent.MapCreatorSyncLocation, this, SyncLocation);
         }
 
         public async void OnChooseTeam(ITDSPlayer player, int index)
@@ -306,7 +307,6 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                     return;
 
                 worked = true;
-                    
             }
             catch (Exception ex)
             {
@@ -410,8 +410,25 @@ namespace TDS.Server.LobbySystem.EventsHandlers
                 if (player.Lobby is not IFightLobby fightLobby)
                     return;
 
-                NAPI.Task.RunSafe(() => 
+                NAPI.Task.RunSafe(() =>
                     fightLobby.Natives.Send(NativeHash.SET_PED_SHOOTS_AT_COORD, player.RemoteId, 0f, 0f, 0f, false));
+            }
+            catch (Exception ex)
+            {
+                _loggingHandler.LogError(ex);
+            }
+        }
+
+        private void SyncLocation(ITDSPlayer player, string json)
+        {
+            try
+            {
+                if (!player.LoggedIn)
+                    return;
+                if (player.Lobby is not IMapCreatorLobby mapCreatorLobby)
+                    return;
+
+                mapCreatorLobby.MapHandler.SyncLocation(player, json);
             }
             catch (Exception ex)
             {

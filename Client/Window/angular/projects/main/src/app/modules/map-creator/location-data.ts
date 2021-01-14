@@ -269,7 +269,7 @@ const specialLocations: LocationData[] = [
     },
     {
         name: 'Cayo pericio heist island',
-        hash: '0x9A9D1BA639675CF1',
+        hash: 0x9a9d1ba639675cf1,
         position: { x: 4840.571, y: -5174.425, z: 2.0 },
     },
     {
@@ -420,3 +420,12 @@ export const locations: LocationGroup[] = [
     { groupName: 'Misc', locations: misc },
     { groupName: 'Diamond Casino & Resort', locations: diamondCasinoAndResort },
 ];
+
+export function getLocationDataByName(locationName: string): LocationData {
+    for (const locationGroup of locations) {
+        for (const locationData of locationGroup.locations) {
+            if (locationData.name === locationName) return locationData;
+        }
+    }
+    return undefined;
+}

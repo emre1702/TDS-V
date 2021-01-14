@@ -2,7 +2,6 @@
 {
     public static class ToClientEvent
     {
-
         public const string AmountInFightSync = "s2";
         public const string ApplySuicideAnimation = "s3";
 
@@ -43,6 +42,7 @@
         public const string LoginSuccessful = "s46";
         public const string MapChange = "s25";
         public const string MapClear = "s26";
+        public const string MapCreatorChangeLocation = "s95";
         public const string MapCreatorRequestAllObjectsForPlayer = "s27";
         public const string MapCreatorStartNewMap = "s28";
         public const string MapCreatorSyncAllObjects = "s29";
@@ -99,6 +99,5 @@
 
         public const string ToggleDamageTestMenu = "s90";
         public const string ToggleTeamChoiceMenu = "s74";
-
     }
 }

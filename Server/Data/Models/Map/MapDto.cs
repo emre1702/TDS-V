@@ -74,6 +74,8 @@ namespace TDS.Server.Data.Models.Map
                 BombInfo.PlantPositionsJson = Serializer.ToClient(BombInfo.PlantPositions);
             }
 
+            Location = data.Location != null ? new MapSharedLocationXml(data.Location) : null;
+
             LoadMapObjectsDataDto();
         }
 
@@ -119,6 +121,9 @@ namespace TDS.Server.Data.Models.Map
         [XmlElement("vehicles")]
         public MapVehiclesListDto Vehicles { get; set; }
 
+        [XmlElement("location")]
+        public MapSharedLocationXml Location { get; set; }
+
         public static bool operator !=(MapDto thisMap, MapDto otherMap)
         {
             if (thisMap is null || otherMap is null)
@@ -150,7 +155,7 @@ namespace TDS.Server.Data.Models.Map
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return BrowserSyncedData.Id.GetHashCode();
         }
 
         public void LoadMapObjectsDataDto()
@@ -163,7 +168,8 @@ namespace TDS.Server.Data.Models.Map
                 Objects = Objects?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Object)).ToList(),
                 Target = Target?.SwitchNamespace(),
                 Vehicles = Vehicles?.Entries?.Select(e => e.ToMapCreatorPosition(0, MapCreatorPositionType.Vehicle)).ToList(),
-                Center = Target is null ? LimitInfo?.Center?.SwitchNamespace() : null
+                Center = Target is null ? LimitInfo?.Center?.SwitchNamespace() : null,
+                Location = Location?.SwitchNamespace()
             };
             ClientSyncedDataJson = Serializer.ToClient(clientSyncedDataDto);
         }

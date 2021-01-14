@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
-using TDS.Server.Data.Interfaces.GangsSystem;
 using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;

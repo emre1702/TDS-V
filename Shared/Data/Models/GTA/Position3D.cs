@@ -10,8 +10,6 @@ namespace TDS.Shared.Data.Models.GTA
     [TDSCommandArgLength(3)]
     public class Position3D
     {
-        #region Public Constructors
-
         public Position3D()
         {
         }
@@ -30,10 +28,6 @@ namespace TDS.Shared.Data.Models.GTA
 
         public Position3D(int x, int y, int z)
            => (X, Y, Z) = (x, y, z);
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         [JsonIgnore]
         public Position3D Normalized
@@ -54,10 +48,6 @@ namespace TDS.Shared.Data.Models.GTA
 
         [JsonProperty("2")]
         public float Z { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public static float Distance(Position3D a, Position3D b)
         {
@@ -269,7 +259,5 @@ namespace TDS.Shared.Data.Models.GTA
         {
             return string.Format("X: {0} Y: {1} Z: {2}", X, Y, Z);
         }
-
-        #endregion Public Methods
     }
 }

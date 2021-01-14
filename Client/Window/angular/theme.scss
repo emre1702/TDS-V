@@ -290,3 +290,7 @@ button:not([disabled]):hover {
 ::ng-deep .mat-tooltip {
     white-space: pre-line;
 }
+
+.clickable {
+    cursor: pointer;
+}

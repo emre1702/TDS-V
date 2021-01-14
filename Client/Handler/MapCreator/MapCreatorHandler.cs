@@ -39,7 +39,8 @@ namespace TDS.Client.Handler.MapCreator
 
             var clickedMarkerStorer = new ClickedMarkerStorer();
 
-            Objects = new MapCreatorObjectsHandler(loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler, settingsHandler, remoteEventsSender, dxHandler, timerHandler);
+            Location = new MapCreatorLocationHandler(remoteEventsSender);
+            Objects = new MapCreatorObjectsHandler(loggingHandler, camerasHandler, lobbyHandler, eventsHandler, browserHandler, settingsHandler, remoteEventsSender, dxHandler, timerHandler, Location);
             Sync = new MapCreatorSyncHandler(Objects, remoteEventsSender, eventsHandler, browserHandler, lobbyHandler, dataSyncHandler);
             ObjectsLoading = new ObjectsLoadingHelper(loggingHandler, utilsHandler, settingsHandler);
             ObjectsPreview = new MapCreatorObjectsPreviewHandler(ObjectsLoading, camerasHandler, utilsHandler, browserHandler);
@@ -64,6 +65,7 @@ namespace TDS.Client.Handler.MapCreator
         public MapCreatorDrawHandler Draw { get; }
         public MapCreatorFootHandler Foot { get; }
         public MapCreatorFreecamHandler Freecam { get; }
+        public MapCreatorLocationHandler Location { get; }
         public MapCreatorMarkerHandler Marker { get; }
         public MapCreatorObjectPlacingHandler ObjectPlacing { get; }
         public MapCreatorObjectsHandler Objects { get; }

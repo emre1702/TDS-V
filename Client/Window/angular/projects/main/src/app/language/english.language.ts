@@ -16,6 +16,7 @@ export class English implements Language {
     English = 'English';
     Description = 'Description';
     Type = 'Type';
+    Location = 'Location';
     TeamSpawns = 'Team spawns';
     MapLimit = 'Map limit';
     MapCenter = 'Map center';

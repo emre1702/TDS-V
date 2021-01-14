@@ -176,6 +176,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
             [MapCreateDataKey.MapCenter]: new FormControl(undefined),
             [MapCreateDataKey.Target]: new FormControl(undefined, [bombPlaceValidator(() => typeFormControl.value)]),
             [MapCreateDataKey.Vehicles]: new FormControl(undefined),
+            [MapCreateDataKey.Location]: new FormControl(undefined),
         });
     }
 

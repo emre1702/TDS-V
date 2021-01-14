@@ -1,7 +1,9 @@
 import { LanguageEnum } from '../../enums/language.enum';
 import { MapType } from '../../enums/maptype.enum';
 import { MapCreateDataKey } from './enums/map-create-data-key';
+import { LocationData } from './models/location-data';
 import { MapCreateData } from './models/map-create-data';
+import { MapSharedLocation } from './models/map-shared-location';
 
 export function createNewMap(): MapCreateData {
     const data: MapCreateData = {
@@ -19,4 +21,13 @@ export function createNewMap(): MapCreateData {
         [MapCreateDataKey.Vehicles]: [],
     };
     return data;
+}
+
+export function convertLocationDataToShared(locationData: LocationData): MapSharedLocation {
+    return {
+        name: locationData.name,
+        hash: locationData.hash,
+        ipls: locationData.ipls,
+        iplsToUnload: locationData.iplsToUnload,
+    };
 }

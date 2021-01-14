@@ -36,13 +36,14 @@ namespace TDS.Client.Handler.MapCreator
         private readonly Dictionary<GameEntityBase, MapCreatorObject> _cacheMapEditorObjects = new Dictionary<GameEntityBase, MapCreatorObject>();
         private readonly CamerasHandler _camerasHandler;
         private readonly EventsHandler _eventsHandler;
+        private readonly MapCreatorLocationHandler _locationHandler;
 
         //private readonly EventMethodData<EntityStreamOutDelegate> _entityStreamOutEventMethod;
         private readonly LobbyHandler _lobbyHandler;
 
         public MapCreatorObjectsHandler(LoggingHandler loggingHandler, CamerasHandler camerasHandler, LobbyHandler lobbyHandler,
             EventsHandler eventsHandler, BrowserHandler browserHandler, SettingsHandler settingsHandler, RemoteEventsSender remoteEventsSender,
-            DxHandler dxHandler, TimerHandler timerHandler)
+            DxHandler dxHandler, TimerHandler timerHandler, MapCreatorLocationHandler locationHandler)
             : base(loggingHandler)
         {
             _camerasHandler = camerasHandler;
@@ -53,6 +54,7 @@ namespace TDS.Client.Handler.MapCreator
             _remoteEventsSender = remoteEventsSender;
             _dxHandler = dxHandler;
             _timerHandler = timerHandler;
+            _locationHandler = locationHandler;
 
             //_entityStreamOutEventMethod = new EventMethodData<EntityStreamOutDelegate>(OnEntityStreamOut);
 
@@ -373,6 +375,9 @@ namespace TDS.Client.Handler.MapCreator
                 }
             }
 
+            if (map.Location != null)
+                _locationHandler.ChangeLocation(map.Location);
+
             foreach (var obj in GetAll())
             {
                 obj.IsSynced = true;
@@ -476,6 +481,10 @@ namespace TDS.Client.Handler.MapCreator
         {
             int teamNumber = Convert.ToInt32(args[0]);
             DeleteTeamObjects(teamNumber);
+        }
+
+        private void LoadMapLocation(MapSharedLocation location)
+        {
         }
     }
 }

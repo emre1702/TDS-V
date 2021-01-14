@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ToClientEvent } from 'projects/main/src/app/enums/to-client-event.enum';
 import { ToServerEvent } from 'projects/main/src/app/enums/to-server-event.enum';
 import { RageConnectorService } from 'rage-connector';
 import { Observable } from 'rxjs';
 import { MapCreateDataKey } from '../../../enums/map-create-data-key';
 import { MapCreateError } from '../../../enums/map-create-error';
 import { LoadMapDialogGroup } from '../../../models/load-map-dialog-group';
+import { LocationData } from '../../../models/location-data';
 import { MapCreatorMainService } from './map-creator-main.service';
 
 @Injectable()
@@ -48,5 +50,9 @@ export class MapCreatorMainProdService extends MapCreatorMainService {
             });
         });
         return observable;
+    }
+
+    changeLocation(locationData?: LocationData) {
+        this.rageConnector.call(ToClientEvent.MapCreatorChangeLocation, locationData ? JSON.stringify(locationData) : undefined);
     }
 }

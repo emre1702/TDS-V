@@ -22,6 +22,11 @@
             margin-bottom: 15px;
         }
 
+        .one-per-row-div {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
         .two-per-row-div:last-child,
         .two-per-row-div:nth-last-child(2) {
             margin-bottom: 0px;
@@ -45,5 +50,9 @@
                 }
             }
         }
+    }
+
+    .hidden-location-option {
+        display: none;
     }
 }

@@ -13,7 +13,6 @@ using TDS.Client.Handler.Events;
 using TDS.Client.Handler.Map;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Models;
-using TDS.Shared.Data.Models.GTA;
 using TDS.Shared.Data.Models.Map;
 using TDS.Shared.Data.Models.Map.Creator;
 using TDS.Shared.Default;
@@ -28,6 +27,7 @@ namespace TDS.Client.Handler.Lobby
         private readonly LobbyCamHandler _lobbyCamHandler;
         private readonly MapLimitHandler _mapLimitHandler;
         private readonly List<GameEntityBase> _objects = new List<GameEntityBase>();
+        private MapSharedLocation _currentLocation;
 
         private readonly SettingsHandler _settingsHandler;
         private readonly TimerHandler _timerHandler;
@@ -157,6 +157,12 @@ namespace TDS.Client.Handler.Lobby
                         _objects.Add(veh);
                     }
                 }
+
+                if (map.Location != null)
+                {
+                    _currentLocation = map.Location;
+                    _currentLocation?.LoadLocation();
+                }
             }
             catch (Exception ex)
             {
@@ -195,6 +201,8 @@ namespace TDS.Client.Handler.Lobby
                     obj.Destroy();
                 }
                 _objects.Clear();
+                _currentLocation?.UnloadLocation();
+                _currentLocation = null;
 
                 _eventsHandler.OnMapCleared();
             }
