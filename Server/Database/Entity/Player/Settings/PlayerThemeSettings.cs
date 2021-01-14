@@ -38,7 +38,7 @@ namespace TDS.Server.Database.Entity.Player.Settings
         [JsonIgnore]
         public virtual Players Player { get; set; }
     }
-     
+
     public class PlayerThemeSettingsConfiguration : IEntityTypeConfiguration<PlayerThemeSettings>
     {
         public void Configure(EntityTypeBuilder<PlayerThemeSettings> builder)
@@ -48,9 +48,9 @@ namespace TDS.Server.Database.Entity.Player.Settings
             builder.Property(e => e.PlayerId)
                 .ValueGeneratedNever();
 
-            builder.Property(e => e.ThemeMainColor).HasDefaultValue("rgba(0,0,77,1)");
-            builder.Property(e => e.ThemeSecondaryColor).HasDefaultValue("rgba(255,152,0,1)");
-            builder.Property(e => e.ThemeWarnColor).HasDefaultValue("rgba(244,67,54,1)");
+            builder.Property(e => e.ThemeMainColor).HasDefaultValue("rgb(0,0,77)");
+            builder.Property(e => e.ThemeSecondaryColor).HasDefaultValue("rgb(255,152,0)");
+            builder.Property(e => e.ThemeWarnColor).HasDefaultValue("rgb(150,0,0)");
             builder.Property(e => e.ThemeBackgroundDarkColor).HasDefaultValue("linear-gradient(0deg, rgba(2,0,36,0.87) 0%, rgba(23,52,111,0.87) 100%)");
             builder.Property(e => e.ThemeBackgroundLightColor).HasDefaultValue("rgba(250, 250, 250, 0.87)");
             builder.Property(e => e.ToolbarDesign).HasDefaultValue(1);

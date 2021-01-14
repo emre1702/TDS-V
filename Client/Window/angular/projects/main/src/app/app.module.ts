@@ -174,9 +174,9 @@ import { MapCreatorModule } from './modules/map-creator/map-creator.module';
         MaterialCssVarsModule.forRoot({
             isAutoContrast: true,
             isDarkTheme: true,
-            primary: 'rgba(0,0,77,1)',
+            primary: 'rgb(0,0,77)',
             accent: 'rgb(255,152,0)',
-            warn: 'rgba(244,67,54,1)',
+            warn: 'rgb(150,0,0)',
         }),
     ],
     providers: [MaterialCssVarsService],
