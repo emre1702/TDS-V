@@ -13,6 +13,7 @@
     position: absolute;
     height: auto;
     outline: none;
+    z-index: -999;
 
     #chat_info {
         &.marquee {
