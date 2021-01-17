@@ -25,11 +25,11 @@ namespace TDS.Client.Handler
         public void LogError(System.Exception ex, string title = null)
         {
             if (title != null)
-                Console.Log(ConsoleVerbosity.Error, title + "\n", true, false);
+                Console.LogLine(ConsoleVerbosity.Error, title, true, false);
             else
-                Console.Log(ConsoleVerbosity.Error, "Exception occured" + "\n");
-            Console.Log(ConsoleVerbosity.Error, ex.GetBaseException().Message + "\n", true, false);
-            Console.Log(ConsoleVerbosity.Error, ex.StackTrace + "\n", true, false);
+                Console.LogLine(ConsoleVerbosity.Error, "Exception occured");
+            Console.LogLine(ConsoleVerbosity.Error, ex.GetBaseException().Message, true, false);
+            Console.LogLine(ConsoleVerbosity.Error, ex.StackTrace, true, false);
         }
 
         public void LogInfo(string msg, string source = "", bool isEnd = false)
@@ -43,7 +43,7 @@ namespace TDS.Client.Handler
                 source += "[END] ";
             else
                 source += " ";
-            Console.Log(ConsoleVerbosity.Info, "[I] " + source + msg + "\n", true, false);
+            Console.LogLine(ConsoleVerbosity.Info, "[I] " + source + msg, true, false);
         }
 
         public void LogWarning(string msg, string source = "")
@@ -52,7 +52,7 @@ namespace TDS.Client.Handler
                 source = "[" + source + "] ";
             else
                 source += " ";
-            Console.Log(ConsoleVerbosity.Warning, "[W]" + source + msg + "\n", true, false);
+            Console.LogLine(ConsoleVerbosity.Warning, "[W]" + source + msg, true, false);
         }
     }
 }

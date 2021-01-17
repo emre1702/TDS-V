@@ -76,7 +76,7 @@ namespace TDS.Client.Handler.Browser
             {
                 case "Angular":
                     Angular.CreatedSuccessfully = true;
-                    RAGE.Ui.Console.LogLine(RAGE.Ui.ConsoleVerbosity.Info, "Angular browser has been created successfully.", true);
+                    Logging.LogInfo("Angular browser has been created successfully.", "BrowserHandler");
                     Angular.Browser.MarkAsChat();
                     Angular.ProcessExecuteList();
                     _eventsHandler.OnAngularBrowserCreated();
