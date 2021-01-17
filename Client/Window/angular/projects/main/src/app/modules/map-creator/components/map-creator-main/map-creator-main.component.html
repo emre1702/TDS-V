@@ -35,6 +35,7 @@
         </mat-form-field>
 
         <button
+            type="button"
             class="two-per-row-div"
             mat-raised-button
             (click)="navChanged.emit(mapCreatorNav.MapSettings)"
@@ -45,10 +46,17 @@
             {{ 'MapSettings' | language: settings.Lang }}
         </button>
 
-        <button class="two-per-row-div" mat-raised-button (click)="navChanged.emit(mapCreatorNav.Description)" [disabled]="!settings.IsLobbyOwner">
+        <button
+            class="two-per-row-div"
+            type="button"
+            mat-raised-button
+            (click)="navChanged.emit(mapCreatorNav.Description)"
+            [disabled]="!settings.IsLobbyOwner"
+        >
             {{ 'Description' | language: settings.Lang }}
         </button>
         <button
+            type="button"
             class="two-per-row-div"
             mat-raised-button
             [color]="teamSpawnsErrorService.hasError() ? 'warn' : ''"
@@ -58,6 +66,7 @@
             {{ 'TeamSpawns' | language: settings.Lang }}
         </button>
         <button
+            type="button"
             class="two-per-row-div"
             mat-raised-button
             [color]="mapLimitErrorService.hasError() ? 'warn' : ''"
@@ -67,6 +76,7 @@
             {{ 'MapLimit' | language: settings.Lang }}
         </button>
         <button
+            type="button"
             class="two-per-row-div"
             mat-raised-button
             *ngIf="formGroup.controls[mapCreateDataKey.Type].value != mapType.Gangwar"
@@ -75,13 +85,14 @@
         >
             {{ 'MapCenter' | language: settings.Lang }}
         </button>
-        <button class="two-per-row-div" mat-raised-button (click)="navChanged.emit(mapCreatorNav.Object)">
+        <button type="button" class="two-per-row-div" mat-raised-button (click)="navChanged.emit(mapCreatorNav.Object)">
             {{ 'Objects' | language: settings.Lang }}
         </button>
-        <button class="two-per-row-div" mat-raised-button (click)="navChanged.emit(mapCreatorNav.Vehicle)">
+        <button type="button" class="two-per-row-div" mat-raised-button (click)="navChanged.emit(mapCreatorNav.Vehicle)">
             {{ 'Vehicles' | language: settings.Lang }}
         </button>
         <button
+            type="button"
             class="two-per-row-div"
             mat-raised-button
             *ngIf="formGroup.controls[mapCreateDataKey.Type].value == mapType.Bomb"
@@ -92,6 +103,7 @@
             {{ 'BombPlaces' | language: settings.Lang }}
         </button>
         <button
+            type="button"
             class="two-per-row-div"
             mat-raised-button
             *ngIf="formGroup.controls[mapCreateDataKey.Type].value == mapType.Gangwar"
@@ -106,22 +118,22 @@
 
     <div class="bottom-buttons">
         <div class="row">
-            <button mat-raised-button class="save-button" (click)="sendData()" [disabled]="sendErrorService.hasError()">
+            <button type="button" mat-raised-button class="save-button" (click)="sendData()" [disabled]="sendErrorService.hasError()">
                 <span [matTooltip]="sendErrorService.errorMessage">{{ 'Send' | language: settings.Lang }}</span>
             </button>
-            <button mat-raised-button class="delete-button" [disabled]="!settings.IsLobbyOwner" (click)="removeTheMap()">
+            <button type="button" mat-raised-button class="delete-button" [disabled]="!settings.IsLobbyOwner" (click)="removeTheMap()">
                 {{ 'Remove' | language: settings.Lang }}
             </button>
         </div>
 
         <div class="row">
-            <button mat-raised-button class="delete-button" (click)="startNew()" [disabled]="!settings.IsLobbyOwner">
+            <button type="button" mat-raised-button class="delete-button" (click)="startNew()" [disabled]="!settings.IsLobbyOwner">
                 {{ 'New' | language: settings.Lang }}
             </button>
-            <button mat-raised-button class="save-button" (click)="saveData()" [disabled]="saveErrorService.hasError()">
+            <button type="button" mat-raised-button class="save-button" (click)="saveData()" [disabled]="saveErrorService.hasError()">
                 <span [matTooltip]="saveErrorService.errorMessage">{{ 'Save' | language: settings.Lang }}</span>
             </button>
-            <button mat-raised-button class="add-button" (click)="showPossibleMaps()" [disabled]="!settings.IsLobbyOwner">
+            <button type="button" mat-raised-button class="add-button" (click)="showPossibleMaps()" [disabled]="!settings.IsLobbyOwner">
                 {{ 'Load' | language: settings.Lang }}
             </button>
         </div>
