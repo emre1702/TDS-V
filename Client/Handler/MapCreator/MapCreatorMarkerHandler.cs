@@ -141,6 +141,8 @@ namespace TDS.Client.Handler.MapCreator
 
         public void Start()
         {
+            float mapMoveZGetter(MapCreatorObject obj) => obj.Type == MapCreatorPositionType.TeamSpawn ? obj.Size.Z / 2 + 0.2f : obj.Size.Z + 0.2f;
+
             _rotateMarker = new AxisMarker[]
             {
                 new AxisMarker(_utilsHandler, _dxHandler, _camerasHandler, MarkerType.HorizontalSplitArrowCircle, Color.FromArgb(255, 0, 0), AxisMarker.AxisEnum.X,
@@ -156,17 +158,17 @@ namespace TDS.Client.Handler.MapCreator
                     objectRotationGetter: (obj, angle) => new Vector3(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z - angle)),     // Marker_Z_Rotate
 
                 new AxisMarker(_utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(255, 0, 0), AxisMarker.AxisEnum.X,
-                    positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(obj.Size.X / 2f + (obj.Size.X / 4f), 0f, 0f),
+                    positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(obj.Size.X / 2f + 0.2f, 0f, 0f),
                     objectPositionFromGetter: obj => obj.Entity.GetOffsetInWorldCoords(-1000f, 0f, 0f),
                     objectPositionToGetter: obj => obj.Entity.GetOffsetInWorldCoords(1000f, 0f, 0f)),    // Marker_X_Move
 
                 new AxisMarker(_utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(0, 255, 0), AxisMarker.AxisEnum.Y,
-                    positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, obj.Size.Y / 2f + (obj.Size.Y / 4f), 0f),
+                    positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, obj.Size.Y / 2f + 0.2f, 0f),
                     objectPositionFromGetter: obj => obj.Entity.GetOffsetInWorldCoords(0, -1000f, 0f),
                     objectPositionToGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 1000f, 0f)),    // Marker_Y_Move
 
                 new AxisMarker(_utilsHandler, _dxHandler, _camerasHandler, MarkerType.DebugSphere, Color.FromArgb(0, 0, 255), AxisMarker.AxisEnum.Z,
-                    positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 0f, obj.Size.Z + (obj.Size.Z / 4f)),
+                    positionGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 0f, mapMoveZGetter(obj)),
                     objectPositionFromGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 0f, -1000f),
                     objectPositionToGetter: obj => obj.Entity.GetOffsetInWorldCoords(0f, 0f, 1000f)),    // Marker_Z_Move
             };
