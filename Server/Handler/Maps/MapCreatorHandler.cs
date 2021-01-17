@@ -68,7 +68,7 @@ namespace TDS.Server.Handler.Maps
         {
             try
             {
-                var result = await SaveOrCreate(args.Player, (string)args.Args[0], Constants.NewMapsPath).ConfigureAwait(false);
+                var result = await SaveOrCreate(args.Player, (string)args.Args[0], Constants.SavedMapsPath).ConfigureAwait(false);
                 if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
                     return result;
 
@@ -142,7 +142,7 @@ namespace TDS.Server.Handler.Maps
         {
             try
             {
-                var result = await SaveOrCreate(args.Player, (string)args.Args[0], Constants.SavedMapsPath).ConfigureAwait(false);
+                var result = await SaveOrCreate(args.Player, (string)args.Args[0], Constants.NewMapsPath).ConfigureAwait(false);
                 if (result.Item2 != MapCreateError.MapCreatedSuccessfully || result.Item1 is null)
                     return result;
 

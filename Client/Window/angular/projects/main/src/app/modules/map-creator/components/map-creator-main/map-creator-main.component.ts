@@ -76,7 +76,7 @@ export class MapCreatorMainComponent implements OnInit {
     }
 
     saveData() {
-        this.service.sendData(this.formGroup).subscribe((result) => this.sendOrSaveDataCallback(result));
+        this.service.saveData(this.formGroup).subscribe((result) => this.sendOrSaveDataCallback(result));
     }
 
     selectLocation(event: MatSelectChange) {
