@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using TDS.Server.Data.Models.AppConfig;
-using TDS.Shared.Data.Models.AppConfig;
 
 namespace TDS.Server.Handler.Server
 {

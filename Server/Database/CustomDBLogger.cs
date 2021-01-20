@@ -6,7 +6,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using TDS.Shared.Data.Models.AppConfig;
 
 namespace TDS.Server.Database
 {
@@ -14,20 +13,24 @@ namespace TDS.Server.Database
     {
         private static readonly Dictionary<LogLevel, List<string>> _pathsByLogLevel = new();
 
-        public CustomDBLogger(List<AppConfigLoggingSetting> loggingSettings)
+        public CustomDBLogger(IEnumerable<(string Level, string Path)> loggingSettings)
         {
             foreach (var loggingSetting in loggingSettings)
             {
                 if (!Enum.TryParse<LogLevel>(loggingSetting.Level, true, out var logLevel))
+
                 {
                     Console.WriteLine($"LogLevel {loggingSetting.Level} is used in TDS.Server.config but is not defined in 'LogLevel' enum!");
+
                     continue;
                 }
+
                 if (!_pathsByLogLevel.TryGetValue(logLevel, out var list))
                 {
                     list = new();
                     _pathsByLogLevel[logLevel] = list;
                 }
+
                 list.Add(loggingSetting.Path);
             }
         }

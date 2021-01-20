@@ -23,4 +23,8 @@
             <HintPath>C:\RAGEMP\dotnet\xxHash.dll</HintPath>
         </Reference>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models\AppConfig\" />
+    </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace TDS.Shared.Data.Models.AppConfig
+namespace TDS.Server.Data.Models.AppConfig
 {
     public class AppConfigLoggingSetting
     {
