@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace TDS.Server.Data.Models
+namespace TDS.Server.Data.Models.AppConfig
 {
 #nullable disable
 

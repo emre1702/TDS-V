@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
-using TDS.Server.Data.Models;
+using TDS.Server.Data.Models.AppConfig;
+using TDS.Shared.Data.Models.AppConfig;
 
 namespace TDS.Server.Handler.Server
 {
@@ -11,6 +13,7 @@ namespace TDS.Server.Handler.Server
     {
         public string ConnectionString => _localSettings.ConnectionString.Value;
         public string GitHubToken => _localSettings.GitHubToken.Value;
+        public List<AppConfigLoggingSetting> Logging => _localSettings.Logging;
 
         private readonly AppConfigDto _localSettings;
 

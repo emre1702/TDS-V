@@ -4,19 +4,33 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using TDS.Shared.Data.Models.AppConfig;
 
 namespace TDS.Server.Database
 {
     public class CustomDBLogger : ILoggerProvider
     {
+        private static readonly Dictionary<LogLevel, List<string>> _pathsByLogLevel = new();
 
-        private readonly static object _locker = new object();
-        private static string _path;
-        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
-        private bool _disposed = false;
-
-        public CustomDBLogger(string path)
-            => _path = path;
+        public CustomDBLogger(List<AppConfigLoggingSetting> loggingSettings)
+        {
+            foreach (var loggingSetting in loggingSettings)
+            {
+                if (!Enum.TryParse<LogLevel>(loggingSetting.Level, true, out var logLevel))
+                {
+                    Console.WriteLine($"LogLevel {loggingSetting.Level} is used in TDS.Server.config but is not defined in 'LogLevel' enum!");
+                    continue;
+                }
+                if (!_pathsByLogLevel.TryGetValue(logLevel, out var list))
+                {
+                    list = new();
+                    _pathsByLogLevel[logLevel] = list;
+                }
+                list.Add(loggingSetting.Path);
+            }
+        }
 
         public ILogger CreateLogger(string categoryName)
         {
@@ -31,21 +45,12 @@ namespace TDS.Server.Database
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-                return;
-
-            if (disposing)
-            {
-                _handle.Dispose();
-            }
-
-            _disposed = true;
         }
 
         private class CustomLogger : ILogger
         {
-
             private readonly Queue<string> _logQuery = new Queue<string>();
+            private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
             public IDisposable BeginScope<TState>(TState state)
             {
@@ -54,38 +59,49 @@ namespace TDS.Server.Database
 
             public bool IsEnabled(LogLevel logLevel)
             {
-                return true;
+                lock (_pathsByLogLevel)
+                {
+                    return _pathsByLogLevel.ContainsKey(logLevel);
+                }
             }
 
-            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+            public async void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
             {
-                if (!System.Diagnostics.Debugger.IsAttached)
-                    return;
+                var msg = Environment.NewLine + "[" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "] " + formatter(state, exception) + Environment.NewLine;
 
-                string msg = Environment.NewLine + "[" + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss") + "] " + formatter(state, exception) + Environment.NewLine;
+                await _semaphore.WaitAsync();
                 try
                 {
-                    lock (_locker)
+                    List<string> paths;
+                    lock (_pathsByLogLevel)
                     {
-                        if (_logQuery.Count > 0)
-                        {
-                            foreach (var str in _logQuery)
-                            {
-                                File.AppendAllText(_path, str);
-                            }
-                            _logQuery.Clear();
-                        }
-
-                        File.AppendAllText(_path, msg);
+                        if (!_pathsByLogLevel.TryGetValue(logLevel, out paths) || paths.Count == 0)
+                            return;
                     }
+
+                    if (_logQuery.Count > 0)
+                    {
+                        foreach (var str in _logQuery)
+                            await WriteText(str, paths);
+                        _logQuery.Clear();
+                    }
+                    await WriteText(msg, paths);
                 }
                 catch
                 {
                     _logQuery.Enqueue(msg);
                 }
+                finally
+                {
+                    _semaphore.Release();
+                }
             }
 
+            private async Task WriteText(string text, List<string> filePaths)
+            {
+                foreach (var path in filePaths)
+                    await File.AppendAllTextAsync(path, text);
+            }
         }
-
     }
 }

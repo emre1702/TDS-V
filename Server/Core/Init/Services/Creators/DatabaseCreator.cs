@@ -28,7 +28,7 @@ namespace TDS.Server.Core.Init.Services.Creators
 #pragma warning disable IDE0067 // Dispose objects before losing scope
             var loggerFactory = LoggerFactory.Create(builder =>
                    builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
-                       .AddProvider(new CustomDBLogger(@"D:\DBLogs\FromCsharp\log.txt"))
+                       .AddProvider(new CustomDBLogger(appConfigHandler.Logging))
                );
 #pragma warning restore IDE0067 // Dispose objects before losing scope
 #pragma warning restore CA2000 // Dispose objects before losing scope
