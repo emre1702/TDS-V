@@ -58,8 +58,10 @@ namespace TDS.Server.PlayersSystem
                 if (lobby == Current)
                     return;
                 if (LobbyStats is { })
-                    await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(LobbyStats).State = EntityState.Detached)
-                        .ConfigureAwait(false);
+                {
+                    var lobbyStats = LobbyStats;
+                    await _player.DatabaseHandler.Database.ExecuteForDB(dbContext => dbContext.Entry(lobbyStats).State = EntityState.Detached).ConfigureAwait(false);
+                }
 
                 if (Current is { })
                     Previous = Current;
