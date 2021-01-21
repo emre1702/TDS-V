@@ -33,7 +33,7 @@ jobs:
       run: dotnet restore
 
     - name: Build C#
-      run: dotnet build Server/Core/Core.csproj -c Debug --no-restore --nologo
+      run: dotnet build -c Debug --no-restore --nologo
 
     - name: Test C#
       run: dotnet test --no-build --verbosity normal
