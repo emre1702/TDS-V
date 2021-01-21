@@ -41,6 +41,8 @@ jobs:
   versioning: 
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: Versioning
         uses: paulhatch/semantic-version@v3.2
         with:
