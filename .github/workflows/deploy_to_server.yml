@@ -46,7 +46,7 @@ jobs:
           fetch-depth: 0
 
       - name: Delete too old tags
-        uses: dev-drprasad/delete-older-releases@latest
+        uses: dev-drprasad/delete-older-releases@v0.1.0
         with:
           repo: <owner>/<repoName> # defaults to current repo
           keep_latest: 10
