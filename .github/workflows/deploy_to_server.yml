@@ -59,21 +59,14 @@ jobs:
           # Same as above except indicating a minor change
           minor_pattern: ^\[((CHANGE)|(BUG))\]
           # A string to determine the format of the version output
-          format: "${major}.${minor}.${patch}"
+          format: "${major}.${minor}.${patch}.${increment}"
           # Indicate whether short tags like 'v1' should be supported. If false only full
           # tags like 'v1.0.0' will be recognized.
           short_tags: true
           # If this is set to true, *every* commit will be treated as a new version.
           bump_each_commit: false   
           
-      - name: Output
-        run: |
-          echo "${{ steps.versioning.changed }}"
-          echo "${{ steps.versioning.version }}"
-          echo "${{ steps.versioning.output }}"
-          echo "${{ toJSON(steps.versioning) }}"
-          
-      - name: Update tag
+      - name: Create tag
         uses: EndBug/latest-tag@latest
         with:
           # You can change the name of the tag with this input.
