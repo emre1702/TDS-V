@@ -1,30 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
-        <AssemblyName>TDS.Shared.Data</AssemblyName>
-        <RootNamespace>TDS.Shared.Data</RootNamespace>
-      <CheckEolTargetFramework>false</CheckEolTargetFramework>
-      <PlatformTarget>x64</PlatformTarget>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>TDS.Shared.Data</AssemblyName>
+    <RootNamespace>TDS.Shared.Data</RootNamespace>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Core\Core.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <Reference Include="NeoSmart.Hashing">
-            <HintPath>C:\RAGEMP\dotnet\NeoSmart.Hashing.dll</HintPath>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-            <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
-        </Reference>
-        <Reference Include="xxHash">
-            <HintPath>C:\RAGEMP\dotnet\xxHash.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Models\AppConfig\" />
-    </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NeoSmart.Hashing">
+      <HintPath>..\..\RAGEBinaries\NeoSmart.Hashing.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\RAGEBinaries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="xxHash">
+      <HintPath>..\..\RAGEBinaries\xxHash.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
