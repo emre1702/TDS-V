@@ -13,12 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Systems\Gamemode\GamemodesSystem.csproj" />
+    <PackageReference Include="RAGEMP-Bootstrapper" Version="1.1.3" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Bootstrapper">
-      <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

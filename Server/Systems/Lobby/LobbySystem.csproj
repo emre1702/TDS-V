@@ -1,23 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <AssemblyName>TDS.Server.LobbySystem</AssemblyName>
-        <RootNamespace>TDS.Server.LobbySystem</RootNamespace>
-        <Nullable>enable</Nullable>
-        <PlatformTarget>x64</PlatformTarget>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>TDS.Server.LobbySystem</AssemblyName>
+    <RootNamespace>TDS.Server.LobbySystem</RootNamespace>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\Database\Database.csproj" />
-      <ProjectReference Include="..\..\Data\Data.csproj" />
-      <ProjectReference Include="..\Gamemode\GamemodesSystem.csproj" />
-      <ProjectReference Include="..\..\Handler\Handler.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Bootstrapper">
-        <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Database\Database.csproj" />
+    <ProjectReference Include="..\..\Data\Data.csproj" />
+    <ProjectReference Include="..\Gamemode\GamemodesSystem.csproj" />
+    <ProjectReference Include="..\..\Handler\Handler.csproj" />
+    <PackageReference Include="RAGEMP-Bootstrapper" Version="1.1.3" />
+  </ItemGroup>
 </Project>

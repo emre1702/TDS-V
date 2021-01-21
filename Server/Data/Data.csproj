@@ -1,41 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <PlatformTarget>x64</PlatformTarget>
-        <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-        <AssemblyName>TDS.Server.Data</AssemblyName>
-        <RootNamespace>TDS.Server.Data</RootNamespace>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AssemblyName>TDS.Server.Data</AssemblyName>
+    <RootNamespace>TDS.Server.Data</RootNamespace>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile></DocumentationFile>
-        <OutputPath></OutputPath>
-        <NoWarn>1701;1702;CA2227</NoWarn>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+    <OutputPath></OutputPath>
+    <NoWarn>1701;1702;CA2227</NoWarn>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <Compile Remove="Models\MainMenu\**" />
-        <EmbeddedResource Remove="Models\MainMenu\**" />
-        <None Remove="Models\MainMenu\**" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\MainMenu\**" />
+    <EmbeddedResource Remove="Models\MainMenu\**" />
+    <None Remove="Models\MainMenu\**" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="10.1.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="RAGEMP-Bootstrapper" Version="1.1.3" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\RAGEBinaries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\Shared\Core\Core.csproj" />
-        <ProjectReference Include="..\Database\Database.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="Bootstrapper">
-            <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Bootstrapper.dll</HintPath>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-            <HintPath>C:\RAGEMP\server-files\dotnet\runtime\Newtonsoft.Json.dll</HintPath>
-        </Reference>
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Core\Core.csproj" />
+    <ProjectReference Include="..\Database\Database.csproj" />
+  </ItemGroup>
 </Project>

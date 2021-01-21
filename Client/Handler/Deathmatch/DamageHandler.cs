@@ -1,8 +1,6 @@
 ﻿using RAGE.Elements;
 using RAGE.Ui;
 using TDS.Client.Data.Abstracts.Entities.GTA;
-using TDS.Client.Data.Enums;
-using TDS.Client.Data.Models;
 using TDS.Client.Handler.Browser;
 using TDS.Client.Handler.Events;
 using TDS.Client.Handler.Lobby;
@@ -47,7 +45,7 @@ namespace TDS.Client.Handler.Deathmatch
                 {
                     _browserHandler.PlainMain.ShowBloodscreen();
                     _lastBloodscreenUpdateTick = _timerHandler.ElapsedMs;
-                }   
+                }
             }
             else
             {
@@ -57,7 +55,7 @@ namespace TDS.Client.Handler.Deathmatch
                 {
                     _browserHandler.PlainMain.ShowBloodscreen();
                     _lastBloodscreenUpdateTick = _timerHandler.ElapsedMs;
-                }     
+                }
             }
         }
 
@@ -95,8 +93,8 @@ namespace TDS.Client.Handler.Deathmatch
             }
         }
 
-        private bool ShouldShowBloodscreen() 
-            => _settingsHandler.PlayerSettings.Bloodscreen 
+        private bool ShouldShowBloodscreen()
+            => _settingsHandler.PlayerSettings.Bloodscreen
             && _timerHandler.ElapsedMs - _lastBloodscreenUpdateTick >= _settingsHandler.PlayerSettings.BloodscreenCooldownMs;
     }
 }
