@@ -71,5 +71,5 @@ jobs:
           echo "${{ steps.versioning.changed }}"
           echo "${{ steps.versioning.version }}"
           echo "${{ steps.versioning.output }}"
-          echo "${{ steps.versioning }}"
+          echo "${{ toJSON(steps.versioning) }}"
    
