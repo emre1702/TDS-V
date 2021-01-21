@@ -45,6 +45,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Delete too old tags
+        uses: dev-drprasad/delete-older-releases@latest
+        with:
+          repo: <owner>/<repoName> # defaults to current repo
+          keep_latest: 10
+          delete_tags: true  
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Get next version
         id: versioning
         uses: paulhatch/semantic-version@v3.2
