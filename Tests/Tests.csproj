@@ -10,9 +10,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Core\**" />
+    <Compile Remove="Database\**" />
     <Compile Remove="FakesAssemblies\**" />
+    <Compile Remove="Handler\**" />
+    <Compile Remove="Systems\**" />
+    <EmbeddedResource Remove="Core\**" />
+    <EmbeddedResource Remove="Database\**" />
     <EmbeddedResource Remove="FakesAssemblies\**" />
+    <EmbeddedResource Remove="Handler\**" />
+    <EmbeddedResource Remove="Systems\**" />
+    <None Remove="Core\**" />
+    <None Remove="Database\**" />
     <None Remove="FakesAssemblies\**" />
+    <None Remove="Handler\**" />
+    <None Remove="Systems\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,21 +38,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Core\" />
-    <Folder Include="Database\" />
-    <Folder Include="Handler\" />
-    <Folder Include="Systems\" />
+    <ProjectReference Include="..\Client\Core\Core.csproj" />
+    <ProjectReference Include="..\Server\Core\Core.csproj" />
+    <ProjectReference Include="..\Server\Database\Database.csproj" />
+    <ProjectReference Include="..\Server\Data\Data.csproj" />
+    <ProjectReference Include="..\Server\Handler\Handler.csproj" />
+    <ProjectReference Include="..\Server\Systems\Lobby\LobbySystem.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\Database\Database.csproj" />
-    <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\Handler\Handler.csproj" />
-    <ProjectReference Include="..\Systems\Lobby\LobbySystem.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalDesignTimeBuildInput Remove="FakesAssemblies\**" />
+    <Folder Include="Client\" />
   </ItemGroup>
 </Project>
