@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build_csharp:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -32,27 +32,30 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build C#
+    - name: Build
       run: dotnet build -c Debug --no-restore --nologo
 
-    - name: Test C#
+    - name: Test
       run: dotnet test --no-build --verbosity normal
-      
-    - name: Versioning
-      uses: paulhatch/semantic-version@v3.2
-      with:
-        # The prefix to use to identify tags
-        branch: "master"
-        # A string which, if present in a git commit, indicates that a change represents a
-        # major (breaking) change
-        major_pattern: ^\[((NEW)|(NEU))\]
-        # Same as above except indicating a minor change
-        minor_pattern: ^\[((CHANGE)|(BUG))\]
-        # A string to determine the format of the version output
-        format: "${major}.${minor}.${increment}"
-        # Indicate whether short tags like 'v1' should be supported. If false only full
-        # tags like 'v1.0.0' will be recognized.
-        short_tags: true
-        # If this is set to true, *every* commit will be treated as a new version.
-        bump_each_commit: false
+
+  versioning: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Versioning
+        uses: paulhatch/semantic-version@v3.2
+        with:
+          # The prefix to use to identify tags
+          branch: "master"
+          # A string which, if present in a git commit, indicates that a change represents a
+          # major (breaking) change
+          major_pattern: ^\[((NEW)|(NEU))\]
+          # Same as above except indicating a minor change
+          minor_pattern: ^\[((CHANGE)|(BUG))\]
+          # A string to determine the format of the version output
+          format: "${major}.${minor}.${increment}"
+          # Indicate whether short tags like 'v1' should be supported. If false only full
+          # tags like 'v1.0.0' will be recognized.
+          short_tags: true
+          # If this is set to true, *every* commit will be treated as a new version.
+          bump_each_commit: false   
    
