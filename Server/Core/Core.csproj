@@ -46,7 +46,7 @@
     <PackageReference Include="RAGEMP-Bootstrapper" Version="1.1.3" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
-    <Exec Command="B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\LocalServerSync.sh&#xD;&#xA;B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\ServerSync.sh&#xD;&#xA;B:\cygwin64\bin\bash.exe 'C:\Programming\TDS-V\LocalServerSync.sh'" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="test -f B:\cygwin64\bin\dos2unix.exe&#xD;&#xA; B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\LocalServerSync.sh&#xD;&#xA;B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\ServerSync.sh&#xD;&#xA;B:\cygwin64\bin\bash.exe 'C:\Programming\TDS-V\LocalServerSync.sh'" />
   </Target>
 </Project>
