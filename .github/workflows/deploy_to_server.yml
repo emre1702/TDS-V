@@ -68,7 +68,8 @@ jobs:
           
       - name: Output
         run: |
-          echo ${{ steps.versioning.changed }}
-          echo ${{ steps.versioning.version }}
-          echo ${{ steps.versioning.output }}
+          echo "${{ steps.versioning.changed }}"
+          echo "${{ steps.versioning.version }}"
+          echo "${{ steps.versioning.output }}"
+          echo "${{ steps.versioning }}"
    
