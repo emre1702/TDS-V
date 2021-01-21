@@ -46,6 +46,7 @@ jobs:
           fetch-depth: 0
 
       - name: Versioning
+        id: versioning
         uses: paulhatch/semantic-version@v3.2
         with:
           # The prefix to use to identify tags
@@ -58,10 +59,16 @@ jobs:
           # Same as above except indicating a minor change
           minor_pattern: ^\[((CHANGE)|(BUG))\]
           # A string to determine the format of the version output
-          format: "${major}.${minor}.${increment}"
+          format: "${major}.${minor}.${patch}"
           # Indicate whether short tags like 'v1' should be supported. If false only full
           # tags like 'v1.0.0' will be recognized.
           short_tags: true
           # If this is set to true, *every* commit will be treated as a new version.
           bump_each_commit: false   
+          
+      - name: Output
+        run: |
+          echo ${{ versioning.changed }}
+          echo ${{ versioning.version }}
+          echo ${{ versioning.output }}
    
