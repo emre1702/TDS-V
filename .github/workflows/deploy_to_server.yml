@@ -45,7 +45,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Versioning
+      - name: Get next version
         id: versioning
         uses: paulhatch/semantic-version@v3.2
         with:
