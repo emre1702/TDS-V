@@ -72,4 +72,11 @@ jobs:
           echo "${{ steps.versioning.version }}"
           echo "${{ steps.versioning.output }}"
           echo "${{ toJSON(steps.versioning) }}"
+          
+      - name: Update tag
+        uses: EndBug/latest-tag@latest
+        with:
+          # You can change the name of the tag with this input.
+          # Default: 'latest'
+          tag-name: ${{ steps.versioning.outputs.version_tag }}
    
