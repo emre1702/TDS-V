@@ -47,6 +47,6 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="test -f B:\cygwin64\bin\dos2unix.exe&#xD;&#xA; B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\LocalServerSync.sh&#xD;&#xA;B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\ServerSync.sh&#xD;&#xA;B:\cygwin64\bin\bash.exe 'C:\Programming\TDS-V\LocalServerSync.sh'" />
+    <Exec Command="if EXIST B:\cygwin64\bin\dos2unix.exe ( &#xD;&#xA;    B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\LocalServerSync.sh&#xD;&#xA;    B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\ServerSync.sh&#xD;&#xA;    B:\cygwin64\bin\bash.exe 'C:\Programming\TDS-V\LocalServerSync.sh' &#xD;&#xA;)" />
   </Target>
 </Project>
