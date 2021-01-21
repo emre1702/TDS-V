@@ -19,7 +19,7 @@ namespace TDS.Server.Tests.Server.Data.Extensions
         }
 
         [Test, RequiresThread]
-        [Ignore("Doesn't work", Until = "RAGE Shim")]
+        [Ignore("Doesn't work without RAGE Shim")]
         public async Task MainThreadCheckForTaskRunWorks()
         {
             // act
@@ -39,7 +39,7 @@ namespace TDS.Server.Tests.Server.Data.Extensions
         }
 
         [Test]
-        [Ignore("Doesn't work", Until = "RAGE Shim")]
+        [Ignore("Doesn't work without RAGE Shim")]
         public async Task TaskRunWait_WaitsForActionEnd()
         {
             // arrange
