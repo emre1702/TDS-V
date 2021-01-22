@@ -19,7 +19,7 @@ namespace TDS.Server.Core.Init.Services.Creators
 
             options.UseNpgsql(appConfigHandler.ConnectionString, options =>
                     options
-                        // .EnableRetryOnFailure()  DOES NOT WORK WITH TRANSACTIONS => EXCEPTION!
+                        // .EnableRetryOnFailure()  DOES NOT WORK WITH TRANSACTIONS => EXCEPTION
                         .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                 )
                 .EnableSensitiveDataLogging()
