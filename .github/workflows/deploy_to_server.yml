@@ -55,9 +55,11 @@ jobs:
           tag_prefix: "v" 
           # A string which, if present in a git commit, indicates that a change represents a
           # major (breaking) change
-          major_pattern: ^\[((NEW)|(NEU))\]
+          # ^\[((NEW)|(NEU))\]
+          major_pattern: "[NEW]"
           # Same as above except indicating a minor change
-          minor_pattern: ^\[((CHANGE)|(BUG))\]
+          # ^\[((CHANGE)|(BUG))\]  
+          minor_pattern: "[CHANGE]"
           # A string to determine the format of the version output
           format: "${major}.${minor}.${patch}.${increment}"
           # Indicate whether short tags like 'v1' should be supported. If false only full
