@@ -1,0 +1,5 @@
+﻿<meta>
+  <info name="TDS-V" author="Bonus" type="gamemode" shadowcopy="true"/>  
+  
+  <script src="TDS.Server.Core.dll"/>
+</meta>

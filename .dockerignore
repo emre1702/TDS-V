@@ -1,0 +1,9 @@
+**/node_modules
+**/bin
+**/obj
+**/dist
+**/.vscode
+**/.git
+**/.github
+Tests
+Build

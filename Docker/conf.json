@@ -1,0 +1,19 @@
+{
+	"maxplayers" : 100,
+	"name" : "TDS-V 1.1 Beta [team deathmatch][1.1]", 
+	"gamemode" : "tdm", 
+	"stream-distance" : 500.0,
+	"announce" : true,
+	"csharp": true,
+	"port": 22005,
+	"url": "tds-rage.com",
+	"sync-rate": 60,
+	"min-fps": 10,
+	"max-packet-loss": 300,
+	"allow-cef-debugging": true,
+	"enable-nodejs": false,
+	"voice-chat": true,
+	"voice-chat-sample-rate": 24000,
+	"server-side-weapons-only-mode": true,
+	"api-threading-debugging": true
+}

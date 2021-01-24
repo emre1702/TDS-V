@@ -13,3 +13,4 @@ node_modules
 *scaffoldCommand.txt
 debug.log
 build/
+*.env

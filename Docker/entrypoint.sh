@@ -1,0 +1,1 @@
+exec ./ragemp-server
