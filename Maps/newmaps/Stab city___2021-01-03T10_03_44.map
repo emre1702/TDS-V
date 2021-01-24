@@ -1,0 +1,32 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <bomb />
+  <description>
+    <english>Biker city map</english>
+    <german />
+  </description>
+  <map maxplayers="999" minplayers="0" name="Stab city" type="normal">
+    <creatorid>45</creatorid>
+  </map>
+  <limit>
+    <pos x="-21.237356" y="3595.8071" z="42.708076" />
+    <pos x="141.65016" y="3585.6458" z="36.92071" />
+    <pos x="117.42409" y="3776.6672" z="33.849457" />
+    <pos x="-55.62803" y="3758.673" z="29.157755" />
+  </limit>
+  <objects />
+  <teamspawns>
+    <team>
+      <spawn rot="0" x="2.5382965" y="3732.413" z="39.79653" />
+      <spawn rot="-123.87153" x="-1.1482595" y="3728.5703" z="39.789577" />
+      <spawn rot="-151.35083" x="41.613976" y="3750.2573" z="39.739185" />
+      <spawn rot="178.9644" x="97.245636" y="3760.183" z="39.5572" />
+    </team>
+    <team>
+      <spawn rot="0" x="93.553185" y="3649.4875" z="39.834248" />
+      <spawn rot="-0.9584422" x="55.36348" y="3628.3967" z="39.59925" />
+      <spawn rot="9.829515" x="15.711154" y="3650.9707" z="40.269527" />
+      <spawn rot="33.308" x="74.909744" y="3646.078" z="39.63075" />
+    </team>
+  </teamspawns>
+  <vehicles />
+</TDSMap>

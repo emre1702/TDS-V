@@ -1,0 +1,37 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <bomb />
+  <description>
+    <english>Online apartment "Aqua 3 Apartment"</english>
+    <german>Online-Appartment "Aqua 3 Apartment"</german>
+  </description>
+  <map maxplayers="8" minplayers="0" name="Aqua 3 Apartment" type="normal">
+    <creatorid>1</creatorid>
+  </map>
+  <limit>
+    <center x="-790.4332" y="331.77615" z="216.03845" />
+  </limit>
+  <objects />
+  <teamspawns>
+    <team>
+      <spawn rot="-70.75321" x="-785.6028" y="316.2112" z="217.68106" />
+      <spawn rot="-78.75186" x="-785.9192" y="315.10162" z="217.66968" />
+      <spawn rot="-44.474136" x="-784.0469" y="316.38144" z="217.61298" />
+      <spawn rot="-85.3277" x="-783.79126" y="315.09705" z="217.7177" />
+    </team>
+    <team>
+      <spawn rot="0" x="-796.7268" y="338.17505" z="220.52763" />
+      <spawn rot="-163.75647" x="-798.1701" y="338.0056" z="220.52763" />
+      <spawn rot="-182.81421" x="-796.72644" y="338.86093" z="220.52763" />
+      <spawn rot="-180.58765" x="-798.00867" y="338.83176" z="220.52763" />
+    </team>
+  </teamspawns>
+  <vehicles />
+  <location>
+    <name>Aqua 1 Apartment</name>
+    <ipls>
+      <ipl>apa_v_mp_h_08_a</ipl>
+    </ipls>
+    <iplsToUnload xsi:nil="true" />
+    <hash xsi:nil="true" />
+  </location>
+</TDSMap>

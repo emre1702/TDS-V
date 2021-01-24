@@ -1,0 +1,33 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <bomb />
+  <description>
+    <english>Simple small map</english>
+    <german />
+  </description>
+  <map maxplayers="999" minplayers="0" name="Ocean Lab v2test" type="normal">
+    <creatorid>45</creatorid>
+  </map>
+  <limit>
+    <center x="3796.8333" y="4459.163" z="9.335699" />
+    <pos x="3753.1753" y="4500.378" z="10.605359" />
+    <pos x="3773.5579" y="4418.4473" z="32.360874" />
+    <pos x="3853.952" y="4420.4785" z="0.72964257" />
+    <pos x="3834.0735" y="4504.4023" z="1.4170963" />
+  </limit>
+  <objects />
+  <teamspawns>
+    <team>
+      <spawn rot="92.56787" x="3819.5002" y="4438.656" z="8.18903" />
+      <spawn rot="-4.7586346" x="3804.9128" y="4435.0415" z="5.847055" />
+      <spawn rot="-4.7586346" x="3800.9045" y="4435.8193" z="4.636222" />
+      <spawn rot="17.29067" x="3832.6711" y="4444.7837" z="2.4587147" />
+    </team>
+    <team>
+      <spawn rot="170.49577" x="3798.0728" y="4485.317" z="5.9926825" />
+      <spawn rot="-161.14229" x="3817.5903" y="4496.9507" z="4.417147" />
+      <spawn rot="166.9311" x="3823.0002" y="4479.4873" z="3.2722178" />
+      <spawn rot="-171.68826" x="3813.6602" y="4492.144" z="5.9925456" />
+    </team>
+  </teamspawns>
+  <vehicles />
+</TDSMap>

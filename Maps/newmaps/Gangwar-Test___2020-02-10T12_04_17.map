@@ -1,0 +1,43 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <map name="Gangwar-Test" type="gangwar" minplayers="0" maxplayers="999">
+    <creatorid>1</creatorid>
+  </map>
+  <description>
+    <english>The (first) test map for gangwar.</english>
+    <german>Die erste (Test) Karte für Gangwar.</german>
+  </description>
+  <teamspawns>
+    <team>
+      <spawn x="-519.14" y="-135.18" z="38.85" rot="1.79" />
+      <spawn x="-518.16" y="-134.66" z="38.87" rot="0" />
+      <spawn x="-517.25" y="-133.99" z="38.88" rot="0" />
+      <spawn x="-516.23" y="-133.26" z="38.9" rot="0" />
+      <spawn x="-517" y="-135.09" z="38.87" rot="0" />
+      <spawn x="-516.15" y="-134.48" z="38.88" rot="0" />
+    </team>
+    <team>
+      <spawn x="-618.85" y="-124.6" z="39.6" rot="0" />
+      <spawn x="-618.32" y="-123.45" z="39.6" rot="0" />
+      <spawn x="-617.84" y="-122.46" z="39.6" rot="0" />
+      <spawn x="-617.42" y="-121.56" z="39.6" rot="0" />
+      <spawn x="-617.99" y="-125.03" z="39.6" rot="0" />
+      <spawn x="-617.49" y="-123.87" z="39.6" rot="0" />
+    </team>
+  </teamspawns>
+  <limit>
+    <pos x="-494.34" y="-152.4" z="37.49" />
+    <pos x="-549.6" y="-73.6" z="40.88" />
+    <pos x="-624.13" y="-48.03" z="40.78" />
+    <pos x="-705.59" y="-68.99" z="36.65" />
+    <pos x="-611.85" y="-217.54" z="35.93" />
+  </limit>
+  <objects />
+  <vehicles>
+    <vehicle name="burrito3" x="-606.18" y="-125.71" z="38.57" rotX="0" rotY="0" rotZ="-117.15" />
+    <vehicle name="burrito3" x="-609.44" y="-128.17" z="38.55" rotX="0" rotY="0" rotZ="-27.07" />
+    <vehicle name="burrito3" x="-606.97" y="-131.44" z="38.53" rotX="0" rotY="0" rotZ="62.97" />
+    <vehicle name="burrito3" x="-603.63" y="-128.99" z="38.53" rotX="0" rotY="0" rotZ="152.96" />
+  </vehicles>
+  <bomb />
+  <target x="-606.49" y="-127.21" z="39.12" />
+</TDSMap>

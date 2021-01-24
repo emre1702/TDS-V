@@ -1,0 +1,37 @@
+<TDSMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <bomb />
+  <description>
+    <english />
+    <german />
+  </description>
+  <map maxplayers="999" minplayers="0" name="Braddock farm" type="normal">
+    <creatorid>45</creatorid>
+  </map>
+  <limit>
+    <center x="2251.1526" y="5582.629" z="162.84178" />
+    <pos x="2173.569" y="5662.838" z="94.38571" />
+    <pos x="2152.2644" y="5493.6978" z="86.43479" />
+    <pos x="2433.0793" y="5466.4414" z="49.09366" />
+    <pos x="2329.4004" y="5639.2285" z="84.80572" />
+  </limit>
+  <objects />
+  <teamspawns>
+    <team>
+      <spawn rot="104.129715" x="2221.785" y="5614.64" z="54.90166" />
+      <spawn rot="96.20841" x="2223.072" y="5604.6504" z="54.739967" />
+      <spawn rot="-12.094297" x="2195.9966" y="5605.8057" z="53.518753" />
+      <spawn rot="-92.1084" x="2188.0564" y="5582.4546" z="53.844105" />
+    </team>
+    <team>
+      <spawn rot="0" x="2406.1309" y="5474.5312" z="51.17863" />
+      <spawn rot="10.66537" x="2408.2324" y="5479.9453" z="50.67722" />
+      <spawn rot="83.22364" x="2401.2769" y="5491.15" z="50.948116" />
+      <spawn rot="73.395134" x="2401.4482" y="5495.0146" z="50.535114" />
+    </team>
+  </teamspawns>
+  <vehicles>
+    <vehicle name="hakuchou2" rotX="3.7814972" rotY="-7.6485925" rotZ="51.28001" x="2393.9375" y="5477.995" z="51.353786" />
+    <vehicle name="hakuchou2" rotX="1.0289925" rotY="-10.849999" rotZ="46.298077" x="2393.518" y="5480.182" z="51.44256" />
+    <vehicle name="komoda" rotX="0" rotY="0" rotZ="45.14731" x="2395.708" y="5481.227" z="50.94143" />
+  </vehicles>
+</TDSMap>
