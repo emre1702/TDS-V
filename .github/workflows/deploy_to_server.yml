@@ -47,7 +47,7 @@ jobs:
 
       - name: Get next version
         id: versioning
-        uses: paulhatch/semantic-version@v3.2.1
+        uses: paulhatch/semantic-version@v3.3
         with:
           # The prefix to use to identify tags
           branch: "master"
@@ -55,11 +55,9 @@ jobs:
           tag_prefix: "v" 
           # A string which, if present in a git commit, indicates that a change represents a
           # major (breaking) change
-          # ^\[((NEW)|(NEU))\]
-          major_pattern: "[NEW]"
+          major_pattern: \[((NEW)|(NEU))\]
           # Same as above except indicating a minor change
-          # ^\[((CHANGE)|(BUG))\]  
-          minor_pattern: "[CHANGE]"
+          minor_pattern: \[((CHANGE)|(BUG))\] 
           # A string to determine the format of the version output
           format: "${major}.${minor}.${patch}.${increment}"
           # Indicate whether short tags like 'v1' should be supported. If false only full
