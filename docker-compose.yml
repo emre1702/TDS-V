@@ -1,0 +1,58 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    #ports:
+    #  - "5432:5432/tcp"
+    env_file: ./Docker/Environment/postgres.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    environment:
+      PGDATA: /var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    env_file: ./Docker/Environment/pgadmin.env
+    depends_on:
+      - postgres
+    ports:
+      - 5555:80
+    restart: unless-stopped
+    links:
+      - "postgres:database"
+
+  rage:
+    container_name: ragemp-server
+    build:
+      context: .
+      target: release
+    ports:
+      - "22005:22005/udp"
+      - "22006:22006"
+    depends_on:
+      - postgres
+    env_file: ./Docker/Environment/ragemp-server.env
+    logging:
+      driver: "local"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    volumes:
+      - ragemp-server-data:/ragemp-server-data
+      - shared-data:/shared-data
+    stop_grace_period: 1m
+    restart: always
+    environment:
+      WAIT_HOSTS: postgres:5432
+    links:
+      - "postgres:database"
+
+volumes:
+  pgdata:
+    name: pgdata
+  ragemp-server-data:
+    name: ragemp-server-data
+  shared-data:
+    name: shared-data
