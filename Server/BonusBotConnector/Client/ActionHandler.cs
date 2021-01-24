@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace BonusBotConnector.Client
@@ -11,7 +12,7 @@ namespace BonusBotConnector.Client
         private readonly Queue<Func<Task>> _actionQueue = new Queue<Func<Task>>();
         private int _failCount = 0;
         private readonly Dictionary<Func<Task>, int> _actionFailedAmount = new Dictionary<Func<Task>, int>();
-        private const int _maxFailsPerAction = 10;
+        private const int _maxFailsPerAction = 5;
         private DateTime? _cooldownUntil;
         private readonly Action<Exception> _errorLogger;
 
@@ -20,22 +21,27 @@ namespace BonusBotConnector.Client
             _errorLogger = errorLogger;
         }
 
-        public async void DoAction(Func<Task> action)
+        public async void DoAction(Func<Task> action, bool useErrorLogger = true)
         {
             try
             {
                 if (!CheckInCooldown())
                     await ExecuteAction(action);
-                else 
+                else
                     _actionQueue.Enqueue(action);
             }
             catch (RpcException rpcException) when (rpcException.StatusCode == StatusCode.DeadlineExceeded || rpcException.StatusCode == StatusCode.Internal)
             {
-                HandleRpcException(action);
-            } 
+                HandleRpcOrHttpException(action);
+            }
+            catch (HttpRequestException)
+            {
+                HandleRpcOrHttpException(action);
+            }
             catch (Exception ex)
             {
-                _errorLogger.Invoke(ex);
+                if (useErrorLogger)
+                    _errorLogger.Invoke(ex);
             }
             finally
             {
@@ -56,9 +62,8 @@ namespace BonusBotConnector.Client
                 _actionFailedAmount.Remove(action);
         }
 
-        private void HandleRpcException(Func<Task> action)
+        private void HandleRpcOrHttpException(Func<Task> action)
         {
-            
             ++_failCount;
             if (!_actionFailedAmount.TryGetValue(action, out int amountFailed))
                 _actionFailedAmount[action] = 0;

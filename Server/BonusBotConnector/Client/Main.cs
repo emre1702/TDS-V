@@ -24,7 +24,7 @@ namespace BonusBotConnector.Client
                 return;
 
             // AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-            var channel = GrpcChannel.ForAddress("https://localhost:5000");
+            var channel = GrpcChannel.ForAddress("http://discord:5000");
 
             var actionHandler = new ActionHandler(ex => Error?.Invoke(ex, true));
             Helper = new Helper();
