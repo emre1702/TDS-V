@@ -27,4 +27,3 @@ namespace TDS.Server.Data.Interfaces
         void SendNotification(Func<ILanguage, string> propertygetter, byte minadminlvl = 1);
     }
 }
-}
