@@ -10,7 +10,7 @@ using TDS.Server.Handler.Events;
 
 namespace TDS.Server.Handler
 {
-    public class AdminsHandler
+    public class AdminsHandler : IAdminsHandler
     {
         public AdminLevelDto LowestLevel
         {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Helper;
 using TDS.Server.Data.Interfaces.PlayersSystem;
 using TDS.Server.Database.Entity.Challenge;
 using TDS.Server.Handler.Extensions;
@@ -17,14 +18,14 @@ namespace TDS.Server.PlayersSystem
         private Dictionary<ChallengeType, List<PlayerChallenges>> _challengesDict = new Dictionary<ChallengeType, List<PlayerChallenges>>();
 
         private readonly ILoggingHandler _logging;
-        private readonly ChallengesHelper _challengesHelper;
+        private readonly IChallengesHelper _challengesHelper;
 
 #nullable disable
         private ITDSPlayer _player;
         private IPlayerEvents _events;
 #nullable enable
 
-        public ChallengesHandler(ILoggingHandler logging, ChallengesHelper challengesHelper)
+        public ChallengesHandler(ILoggingHandler logging, IChallengesHelper challengesHelper)
         {
             _logging = logging;
             _challengesHelper = challengesHelper;

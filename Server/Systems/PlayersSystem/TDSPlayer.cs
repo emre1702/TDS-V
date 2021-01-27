@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.PlayersSystem;
 using TDS.Server.Handler;
 using TDS.Server.Handler.Extensions;
@@ -32,12 +33,12 @@ namespace TDS.Server.PlayersSystem
         public override IPlayerVoice Voice { get; }
         public override IPlayerWeaponStats WeaponStats { get; }
 
-        private readonly WorkaroundsHandler _workaroundsHandler;
+        private readonly IWorkaroundsHandler _workaroundsHandler;
 
         public TDSPlayer(
             NetHandle netHandle,
 
-            WorkaroundsHandler workaroundsHandler,
+            IWorkaroundsHandler workaroundsHandler,
 
             IPlayerAdmin admin,
             IPlayerChallengesHandler challengesHandler,

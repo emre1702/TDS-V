@@ -12,12 +12,12 @@ namespace TDS.Server.Handler
 {
     public class ChatHandler
     {
-        private readonly AdminsHandler _adminsHandler;
+        private readonly IAdminsHandler _adminsHandler;
         private readonly LangHelper _langHelper;
         private readonly ILoggingHandler _loggingHandler;
         private readonly ITDSPlayerHandler _tdsPlayerHandler;
 
-        public ChatHandler(ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler, AdminsHandler adminsHandler, LangHelper langHelper)
+        public ChatHandler(ILoggingHandler loggingHandler, ITDSPlayerHandler tdsPlayerHandler, IAdminsHandler adminsHandler, LangHelper langHelper)
         {
             (_loggingHandler, _tdsPlayerHandler, _adminsHandler, _langHelper) = (loggingHandler, tdsPlayerHandler, adminsHandler, langHelper);
 

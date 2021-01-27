@@ -1,5 +1,6 @@
 ﻿using MoreLinq;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.PlayersSystem;
 using TDS.Server.Data.Models;
 using TDS.Server.Handler;
@@ -20,17 +21,17 @@ namespace TDS.Server.PlayersSystem
             }
         }
 
-        public string LevelName 
+        public string LevelName
         {
             get { lock (Level.Names) return Level.Names[_player.LanguageHandler.EnumValue]; }
         }
 
-        private readonly AdminsHandler _adminsHandler;
+        private readonly IAdminsHandler _adminsHandler;
 #nullable disable
         private ITDSPlayer _player;
 #nullable enable
 
-        public Admin(AdminsHandler adminsHandler)
+        public Admin(IAdminsHandler adminsHandler)
         {
             _adminsHandler = adminsHandler;
         }

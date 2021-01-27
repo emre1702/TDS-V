@@ -3,6 +3,7 @@ using BonusBotConnector_Server;
 using Microsoft.Extensions.DependencyInjection;
 using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.Entities;
+using TDS.Server.Data.Interfaces.Helper;
 using TDS.Server.Data.Interfaces.Userpanel;
 using TDS.Server.Handler;
 using TDS.Server.Handler.Account;
@@ -135,7 +136,7 @@ namespace TDS.Server.Core.Init.Services.Creators
         private static IServiceCollection WithHelper(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-               .AddSingleton<ChallengesHelper>()
+               .AddSingleton<IChallengesHelper, ChallengesHelper>()
                .AddSingleton<DatabasePlayerHelper>()
                .AddSingleton<LangHelper>()
                .AddSingleton<NameCheckHelper>()
@@ -193,7 +194,7 @@ namespace TDS.Server.Core.Init.Services.Creators
         private static IServiceCollection WithMisc(this IServiceCollection serviceCollection)
         {
             return serviceCollection
-               .AddSingleton<AdminsHandler>()
+               .AddSingleton<IAdminsHandler, AdminsHandler>()
                .AddSingleton<AnnouncementsHandler>()
                .AddSingleton<AppConfigHandler>()
                .AddSingleton<ChatHandler>()
@@ -212,7 +213,7 @@ namespace TDS.Server.Core.Init.Services.Creators
                .AddSingleton<ChatInfosHandler>()
                .AddSingleton<WeaponLevelHandler>()
                .AddTransient<IDatabaseHandler, DatabaseHandler>()
-               .AddSingleton<WorkaroundsHandler>()
+               .AddSingleton<IWorkaroundsHandler, WorkaroundsHandler>()
                .AddSingleton<FreeroamDataHandler>()
                .AddSingleton<ChangelogsHandler>();
         }

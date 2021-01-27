@@ -2,15 +2,16 @@
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.CustomAttribute;
 using TDS.Server.Data.Defaults;
+using TDS.Server.Data.Interfaces;
 using TDS.Server.Handler.Extensions;
 
 namespace TDS.Server.Handler.Commands.User
 {
     public class UserInfoCommands
     {
-        private readonly AdminsHandler _adminsHandler;
+        private readonly IAdminsHandler _adminsHandler;
 
-        public UserInfoCommands(AdminsHandler adminsHandler) 
+        public UserInfoCommands(IAdminsHandler adminsHandler)
             => _adminsHandler = adminsHandler;
 
         [TDSCommand(UserCommand.Admins)]

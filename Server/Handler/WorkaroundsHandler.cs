@@ -1,6 +1,7 @@
 ﻿using GTANetworkAPI;
 using System.Collections.Generic;
 using TDS.Server.Data.Abstracts.Entities.GTA;
+using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
@@ -11,7 +12,7 @@ using TDS.Shared.Default;
 
 namespace TDS.Server.Handler
 {
-    public class WorkaroundsHandler
+    public class WorkaroundsHandler : IWorkaroundsHandler
     {
         private static readonly Dictionary<Entity, EntityAttachInfoDto> _attachedEntitiesInfos = new Dictionary<Entity, EntityAttachInfoDto>();
         private static readonly Dictionary<IBaseLobby, List<Entity>> _attachedEntitiesPerLobby = new Dictionary<IBaseLobby, List<Entity>>();

@@ -34,7 +34,7 @@ namespace TDS.Server.Handler.Commands.System
         private readonly CommandsValidation _commandsValidation;
 
         public CommandsHandler(MappingHandler mappingHandler, CommandsLoader commandsLoader,
-            ISettingsHandler settingsHandler, ChatHandler chatHandler, AdminsHandler adminsHandler)
+            ISettingsHandler settingsHandler, ChatHandler chatHandler, IAdminsHandler adminsHandler)
         {
             _settingsHandler = settingsHandler;
             _chatHandler = chatHandler;

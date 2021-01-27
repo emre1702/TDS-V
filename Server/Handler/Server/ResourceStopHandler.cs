@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Helper;
 using TDS.Server.Handler.Events;
 using TDS.Server.Handler.Extensions;
 using TDS.Server.Handler.Helper;
@@ -14,8 +14,7 @@ namespace TDS.Server.Handler.Server
 {
     public class ResourceStopHandler
     {
-
-        private readonly ChallengesHelper _challengesHelper;
+        private readonly IChallengesHelper _challengesHelper;
         private readonly LangHelper _langHelper;
         private readonly LobbiesHandler _lobbiesHandler;
         private readonly ILoggingHandler _loggingHandler;
@@ -24,7 +23,7 @@ namespace TDS.Server.Handler.Server
         private bool _isFirstResourceStopCheck = true;
         private bool _resourceStopped = false;
 
-        public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, ChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
+        public ResourceStopHandler(EventsHandler eventsHandler, LangHelper langHelper, ILoggingHandler loggingHandler, IChallengesHelper challengesHelper, ServerStatsHandler serverStatsHandler,
             LobbiesHandler lobbiesHandler, ITDSPlayerHandler tdsPlayerHandler)
         {
             _langHelper = langHelper;
@@ -172,6 +171,5 @@ namespace TDS.Server.Handler.Server
                 _loggingHandler.LogError(ex);
             }
         }
-
     }
 }

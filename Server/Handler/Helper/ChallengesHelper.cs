@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Defaults;
 using TDS.Server.Data.Interfaces;
+using TDS.Server.Data.Interfaces.Helper;
 using TDS.Server.Data.Models.Challenge;
 using TDS.Server.Database.Entity;
 using TDS.Server.Database.Entity.Challenge;
@@ -21,7 +22,7 @@ using TDS.Shared.Default;
 
 namespace TDS.Server.Handler.Helper
 {
-    public class ChallengesHelper : DatabaseEntityWrapper
+    public class ChallengesHelper : DatabaseEntityWrapper, IChallengesHelper
     {
         private readonly ISettingsHandler _settingsHandler;
         private string _challengeSettingsFrequencyColumnName = string.Empty;
@@ -132,7 +133,7 @@ namespace TDS.Server.Handler.Helper
 
         public void SyncCurrentAmount(ITDSPlayer player, PlayerChallenges challenge)
         {
-            NAPI.Task.RunSafe(() => 
+            NAPI.Task.RunSafe(() =>
                 player.TriggerEvent(ToClientEvent.ToBrowserEvent,
                     ToBrowserEvent.SyncChallengeCurrentAmountChange,
                     (int)challenge.Frequency,

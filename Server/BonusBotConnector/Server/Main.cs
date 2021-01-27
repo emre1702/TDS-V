@@ -5,11 +5,11 @@ using Microsoft.Extensions.Hosting;
 using System.Net;
 using System.Runtime.InteropServices;
 using TDS.Server.Data.Interfaces;
+
 namespace BonusBotConnector_Server
 {
     public class BonusBotConnectorServer
     {
-
         public BonusBotConnectorServer(ILoggingHandler loggingHandler)
         {
             var host = CreateHostBuilder(loggingHandler).Build();
@@ -35,7 +35,6 @@ namespace BonusBotConnector_Server
                         {
                             options.Listen(IPAddress.Loopback, 5001, listenOptions =>
                             {
-                                listenOptions.Protocols = HttpProtocols.Http2;
                                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                     listenOptions.UseHttps("/home/localhost.pfx", "grpc");
                             });
@@ -45,6 +44,5 @@ namespace BonusBotConnector_Server
         public static void Main()
         {
         }
-
     }
 }

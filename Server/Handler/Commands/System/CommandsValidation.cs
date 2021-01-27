@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.CustomAttribute;
+using TDS.Server.Data.Interfaces;
 using TDS.Server.Data.Models;
 using TDS.Server.Handler.Extensions;
 
@@ -11,9 +12,9 @@ namespace TDS.Server.Handler.Commands.System
 {
     internal class CommandsValidation
     {
-        private readonly AdminsHandler _adminsHandler;
+        private readonly IAdminsHandler _adminsHandler;
 
-        internal CommandsValidation(AdminsHandler adminsHandler)
+        internal CommandsValidation(IAdminsHandler adminsHandler)
             => _adminsHandler = adminsHandler;
 
         internal bool CheckIsValid(ITDSPlayer player, CommandMethodAndArgs commandMethodAndArgs)
@@ -76,7 +77,6 @@ namespace TDS.Server.Handler.Commands.System
                     player.SendNotification(string.Format(player.Language.ADMIN_LEVEL_MAX_NUMBER, highestLevel));
                     return false;
                 }
-
             }
             return true;
         }
@@ -110,7 +110,6 @@ namespace TDS.Server.Handler.Commands.System
                     player.SendNotification(string.Format(player.Language.MAX_NUMBER, attribute.MaxValue));
                     return false;
                 }
-
             }
             return true;
         }
