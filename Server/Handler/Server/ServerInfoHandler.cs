@@ -26,7 +26,7 @@ namespace TDS.Server.Handler.Server
         {
             _dateTime = DateTime.UtcNow;
 
-            _bonusBotSettings = dbContext.BonusbotSettings.FirstOrDefault();
+            _bonusBotSettings = dbContext.BonusbotSettings.OrderBy(s => s.Id).FirstOrDefault();
 
             _lobbiesHandler = lobbiesHandler;
             _tdsPlayerHandler = tdsPlayerHandler;

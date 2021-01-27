@@ -16,7 +16,7 @@ namespace BonusBotConnector.Client
             if (System.Diagnostics.Debugger.IsAttached)
                 return;
 
-            var settings = dbContext.BonusbotSettings.FirstOrDefault();
+            var settings = dbContext.BonusbotSettings.OrderBy(s => s.Id).FirstOrDefault();
 
             if (settings is null)
                 return;

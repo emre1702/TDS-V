@@ -44,7 +44,7 @@ namespace TDS.Server.Handler.Server
                     dbContext.SaveChanges();
                 }
                 DailyStats = dailyStats;
-                TotalStats = dbContext.ServerTotalStats.First();
+                TotalStats = dbContext.ServerTotalStats.OrderBy(s => s.Id).First();
             }).Wait();
 
             _eventsHandler.Minute += Save;
