@@ -61,69 +61,76 @@ namespace TDS.Server.PlayersSystem
             IPlayerVoice voice,
             IPlayerWeaponStats weaponStats) : base(netHandle)
         {
-            _workaroundsHandler = workaroundsHandler;
+            try
+            {
+                _workaroundsHandler = workaroundsHandler;
 
-            Events = events;
-            events.Init(this);
+                Events = events;
+                events.Init(this);
 
-            Admin = admin;
-            admin.Init(this);
+                Admin = admin;
+                admin.Init(this);
 
-            Challenges = challengesHandler;
-            challengesHandler.Init(this, events);
+                Challenges = challengesHandler;
+                challengesHandler.Init(this, events);
 
-            Chat = chat;
-            chat.Init(this);
+                Chat = chat;
+                chat.Init(this);
 
-            DatabaseHandler = databaseHandler;
-            databaseHandler.Init(this);
+                DatabaseHandler = databaseHandler;
+                databaseHandler.Init(this);
 
-            Deathmatch = deathmatch;
-            deathmatch.Init(this, events);
+                Deathmatch = deathmatch;
+                deathmatch.Init(this, events);
 
-            GangHandler = gangHandler;
+                GangHandler = gangHandler;
 
-            HealthAndArmor = healthAndArmor;
-            healthAndArmor.Init(this);
+                HealthAndArmor = healthAndArmor;
+                healthAndArmor.Init(this);
 
-            LanguageHandler = languageHandler;
-            languageHandler.Init(this, events);
+                LanguageHandler = languageHandler;
+                languageHandler.Init(this, events);
 
-            LobbyHandler = lobbyHandler;
-            lobbyHandler.Init(this);
+                LobbyHandler = lobbyHandler;
+                lobbyHandler.Init(this);
 
-            MapsVoting = mapsVoting;
-            mapsVoting.Init(this);
+                MapsVoting = mapsVoting;
+                mapsVoting.Init(this);
 
-            MoneyHandler = moneyHandler;
-            moneyHandler.Init(this);
+                MoneyHandler = moneyHandler;
+                moneyHandler.Init(this);
 
-            MuteHandler = muteHandler;
-            muteHandler.Init(this);
+                MuteHandler = muteHandler;
+                muteHandler.Init(this);
 
-            PlayTime = playTime;
-            playTime.Init(this);
+                PlayTime = playTime;
+                playTime.Init(this);
 
-            Relations = relations;
-            relations.Init(this, events);
+                Relations = relations;
+                relations.Init(this, events);
 
-            SpectateHandler = spectateHandler;
-            spectateHandler.Init(this);
+                SpectateHandler = spectateHandler;
+                spectateHandler.Init(this);
 
-            Sync = sync;
-            sync.Init(this, events);
+                Sync = sync;
+                sync.Init(this, events);
 
-            TeamHandler = teamHandler;
-            teamHandler.Init(this);
+                TeamHandler = teamHandler;
+                teamHandler.Init(this);
 
-            Timezone = timezone;
-            timezone.Init(this, events);
+                Timezone = timezone;
+                timezone.Init(this, events);
 
-            Voice = voice;
-            voice.Init(this);
+                Voice = voice;
+                voice.Init(this);
 
-            WeaponStats = weaponStats;
-            weaponStats.Init(this, events);
+                WeaponStats = weaponStats;
+                weaponStats.Init(this, events);
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+            }
         }
 
         public override void Spawn(Vector3 pos, float heading = 0)

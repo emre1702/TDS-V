@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces.PlayersSystem;
+using TDS.Server.Handler;
 
 namespace TDS.Server.PlayersSystem
 {
@@ -14,6 +15,20 @@ namespace TDS.Server.PlayersSystem
             => _serviceProvider = serviceProvider;
 
         public ITDSPlayer Create(NetHandle netHandle)
-            => ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider, netHandle);
+        {
+            try
+            {
+                Console.WriteLine($"Creating ITDSPlayer for: {netHandle.Value}");
+                var player = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider, netHandle);
+                if (player is null)
+                    Console.WriteLine("player could not be created!! ERROOORR!!");
+                return player!;
+            }
+            catch (Exception ex)
+            {
+                LoggingHandler.Instance.LogError(ex);
+                return null!;
+            }
+        }
     }
 }
