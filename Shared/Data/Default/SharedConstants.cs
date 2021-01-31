@@ -2,8 +2,6 @@
 {
     public static class SharedConstants
     {
-        #region Public Fields
-
         public const int BombPlantPlaceBlipSprite = 433;
         public const string DateTimeOffsetFormat = "dddd, MMM dd yyyy HH:mm:ss zzz";
         public const int MapCenterBlipSprite = 629;
@@ -16,7 +14,5 @@
         public const int TeamSpawnBlipSprite = 491;
         public const int VehicleBlipSprite = 523;
         public static uint GangHouseOccupiedBlipModel = 492;
-
-        #endregion Public Fields
     }
 }

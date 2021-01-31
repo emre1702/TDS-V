@@ -33,13 +33,14 @@ namespace BonusBotConnector_Server
                         )
                         .ConfigureKestrel(options =>
                         {
-                            options.Listen(IPAddress.Any, 5001, listenOptions =>
+                            options.ListenAnyIP(5001, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+                            /*options.Listen(IPAddress.Any, 5001, listenOptions =>
                             {
-                                //listenOptions.Protocols = HttpProtocols.Http2;
+                                listenOptions.Protocols = HttpProtocols.Http2;
                                 //if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                                //    listenOptions.UseHttps("/shared-data/localhost.pfx", "grpc");
-                            });
-                        }); ;
+                                listenOptions.UseHttps("/ragemp-server-data/BonusBotConnector.Server.pfx", "tdsv");
+                            });*/
+                        });
                 });
 
         public static void Main()

@@ -3,7 +3,9 @@
 **/obj
 **/dist
 **/.vscode
+**/.vs
 **/.git
 **/.github
+package-lock.json
 Tests
 Build
