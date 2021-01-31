@@ -3,17 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BonusBotConnector.Client
 {
-    public class ActionHandler
+    public class ActionHandler : IDisposable
     {
+        private const int _maxFailsPerAction = 5;
+
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private readonly Queue<Func<Task>> _actionQueue = new Queue<Func<Task>>();
         private int _failCount = 0;
-        private readonly Dictionary<Func<Task>, int> _actionFailedAmount = new Dictionary<Func<Task>, int>();
-        private const int _maxFailsPerAction = 5;
         private DateTime? _cooldownUntil;
+
         private readonly Action<Exception> _errorLogger;
 
         public ActionHandler(Action<Exception> errorLogger)
@@ -25,18 +28,20 @@ namespace BonusBotConnector.Client
         {
             try
             {
-                if (!CheckInCooldown())
-                    await ExecuteAction(action);
-                else
-                    _actionQueue.Enqueue(action);
+                await _semaphore.WaitAsync();
+                _actionQueue.Enqueue(action);
+
+                if (CheckInCooldown()) return;
+                while (_actionQueue.Count > 0)
+                    await ExecuteFirstInQueue();
             }
             catch (RpcException rpcException) when (rpcException.StatusCode == StatusCode.DeadlineExceeded || rpcException.StatusCode == StatusCode.Internal)
             {
-                HandleRpcOrHttpException(action);
+                HandleRpcOrHttpException();
             }
             catch (HttpRequestException)
             {
-                HandleRpcOrHttpException(action);
+                HandleRpcOrHttpException();
             }
             catch (Exception ex)
             {
@@ -45,49 +50,29 @@ namespace BonusBotConnector.Client
             }
             finally
             {
-                HandleDoActionFinally();
+                _semaphore.Release();
             }
         }
 
-        private async ValueTask ExecuteAction(Func<Task> action)
+        private async Task ExecuteFirstInQueue()
         {
-            if (_actionQueue.Count > 0)
-            {
-                _actionQueue.Enqueue(action);
-                return;
-            }
-            await action();
+            var actionInQueue = _actionQueue.Peek();
+            await actionInQueue();
+            _actionQueue.Dequeue();
             _failCount = 0;
-            if (_actionFailedAmount.ContainsKey(action))
-                _actionFailedAmount.Remove(action);
         }
 
-        private void HandleRpcOrHttpException(Func<Task> action)
+        private void HandleRpcOrHttpException()
         {
-            ++_failCount;
-            if (!_actionFailedAmount.TryGetValue(action, out int amountFailed))
-                _actionFailedAmount[action] = 0;
-            ++_actionFailedAmount[action];
-
-            if (_actionFailedAmount[action] < _maxFailsPerAction)
-                _actionQueue.Enqueue(action);
-        }
-
-        private void HandleDoActionFinally()
-        {
-            if (_failCount == 0 && _actionQueue.Count > 0)
-                ExecuteAllInQueue();
-
-            if (_failCount > 0 && !_cooldownUntil.HasValue)
-                _cooldownUntil = DateTime.Now.AddMinutes(_failCount * _failCount);
-        }
-
-        private void ExecuteAllInQueue()
-        {
-            var queue = _actionQueue.ToList();
-            _actionQueue.Clear();
-            foreach (var action in queue)
-                DoAction(action);
+            if (++_failCount > _maxFailsPerAction)
+            {
+                _actionQueue.Dequeue();
+                _failCount = 0;
+            }
+            else
+            {
+                _cooldownUntil = DateTime.Now.AddSeconds(_failCount * _failCount * _failCount);
+            }
         }
 
         private bool CheckInCooldown()
@@ -102,6 +87,12 @@ namespace BonusBotConnector.Client
             }
 
             return true;
+        }
+
+        public void Dispose()
+        {
+            _actionQueue.Clear();
+            _semaphore.Dispose();
         }
     }
 }
