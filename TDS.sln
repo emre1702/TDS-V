@@ -15,9 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database", "Server\Database
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FBF85CE-00FC-45A3-BB26-4D2120F025CE}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		Server\conf.json = Server\conf.json
+		dockerfile = dockerfile
 		LocalServerSync.sh = LocalServerSync.sh
 		Server\meta.xml = Server\meta.xml
 		notes.txt = notes.txt

@@ -97,11 +97,11 @@ namespace TDS.Server.Core.Init
                 if (_loggingHandler is { })
                     _loggingHandler.LogError(ex);
                 else
-                    Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
+                    Console.WriteLine("[ERROR] " + ex.ToString() + Environment.NewLine + ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
 #if RELEASE
                 Environment.Exit(1);
 #else
-                Console.ReadKey();
+                Console.ReadLine();
 #endif
             }
         }
@@ -141,7 +141,7 @@ namespace TDS.Server.Core.Init
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
+                    Console.WriteLine("[ERROR] " + ex.ToString() + Environment.NewLine + ex.GetBaseException().Message + Environment.NewLine + ex.StackTrace);
                 }
             }
         }

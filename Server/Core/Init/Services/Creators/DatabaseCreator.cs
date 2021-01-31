@@ -17,10 +17,9 @@ namespace TDS.Server.Core.Init.Services.Creators
             if (loggerFactory is { })
                 options.UseLoggerFactory(loggerFactory);
 
-            options.UseNpgsql(appConfigHandler.ConnectionString, options =>
+            options.UseNpgsql(appConfigHandler.ConnectionString/*, options =>
                     options
-                        // .EnableRetryOnFailure()  DOES NOT WORK WITH TRANSACTIONS => EXCEPTION
-                        .UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                        // .EnableRetryOnFailure()  DOES NOT WORK WITH TRANSACTIONS => EXCEPTION*/
                 )
                 .EnableSensitiveDataLogging()
                 ;
@@ -32,8 +31,7 @@ namespace TDS.Server.Core.Init.Services.Creators
 #pragma warning disable CA2000 // Dispose objects before losing scope
 #pragma warning disable IDE0067 // Dispose objects before losing scope
             var loggerFactory = LoggerFactory.Create(builder =>
-                   builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Debug)
-                       .AddProvider(new CustomDBLogger(appConfigHandler.Logging.Select(s => (s.Level, s.Path))))
+                   builder.AddProvider(new CustomDBLogger(appConfigHandler.Logging.Select(s => (s.Level, s.Path))))
                );
 #pragma warning restore IDE0067 // Dispose objects before losing scope
 #pragma warning restore CA2000 // Dispose objects before losing scope

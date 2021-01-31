@@ -27,6 +27,7 @@ namespace BonusBotConnector.Client.Requests
         }
 
         public event ErrorLogDelegate? Error;
+
         public event ErrorStringLogDelegate? ErrorString;
 
         public void SendActionStartInfo(IBaseGangActionArea area)
@@ -101,7 +102,7 @@ namespace BonusBotConnector.Client.Requests
 
         public void SendError(string msg)
         {
-            SendRequest(msg, _settings.ErrorLogsChannelId);
+            SendRequest(msg, _settings.ErrorLogsChannelId, false);
         }
 
         public void SendSupportRequest(string info)
@@ -116,21 +117,21 @@ namespace BonusBotConnector.Client.Requests
             ErrorString?.Invoke(result.ErrorMessage, result.ErrorStackTrace, result.ErrorType, true);
         }
 
-        private void SendRequest(string text, ulong? channelId)
+        private void SendRequest(string text, ulong? channelId, bool useErrorLogging = true)
         {
             if (channelId is null)
                 return;
 
-            _actionHandler.DoAction(async () => 
-            { 
-                var result = await _client.SendAsync(new MessageToChannelRequest 
-                { 
-                    GuildId = _settings.GuildId!.Value, 
-                    ChannelId = channelId.Value, 
-                    Text = text 
+            _actionHandler.DoAction(async () =>
+            {
+                var result = await _client.SendAsync(new MessageToChannelRequest
+                {
+                    GuildId = _settings.GuildId!.Value,
+                    ChannelId = channelId.Value,
+                    Text = text
                 }, deadline: _settings.GrpcDeadline);
                 HandleResult(result);
-            });  
+            }, useErrorLogging);
         }
 
         private void SendRequest(EmbedToChannelRequest request, ulong? channelId)
