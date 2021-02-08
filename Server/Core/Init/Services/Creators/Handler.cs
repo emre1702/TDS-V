@@ -196,7 +196,7 @@ namespace TDS.Server.Core.Init.Services.Creators
             return serviceCollection
                .AddSingleton<IAdminsHandler, AdminsHandler>()
                .AddSingleton<AnnouncementsHandler>()
-               .AddSingleton<AppConfigHandler>()
+               .AddSingleton<EnvironmentConfigHandler>()
                .AddSingleton<ChatHandler>()
                .AddSingleton<InvitationsHandler>()
                .AddSingleton<LobbiesHandler>()

@@ -13,14 +13,14 @@ namespace TDS.Server.Database
     {
         private static readonly Dictionary<LogLevel, List<string>> _pathsByLogLevel = new();
 
-        public CustomDBLogger(IEnumerable<(string Level, string Path)> loggingSettings)
+        public CustomDBLogger(List<(string Level, string Path)> loggingSettings)
         {
             foreach (var loggingSetting in loggingSettings)
             {
                 if (!Enum.TryParse<LogLevel>(loggingSetting.Level, true, out var logLevel))
 
                 {
-                    Console.WriteLine($"LogLevel {loggingSetting.Level} is used in TDS.Server.config but is not defined in 'LogLevel' enum!");
+                    Console.WriteLine($"LogLevel {loggingSetting.Level} is used in environment but is not defined in 'LogLevel' enum!");
 
                     continue;
                 }

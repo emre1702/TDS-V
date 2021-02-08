@@ -60,13 +60,11 @@ RUN mkdir -p ./client_packages/cs_packages/TDS.Client \
        
 COPY --from=build-env /tds-source /tds-source
 COPY --from=build-env /tds-source/meta.xml ./dotnet/resources/tds/
-COPY --from=build-env /tds-source/TDS.Server.config ./dotnet/runtime/ 
 
 # Init Maps folder in volume if not exists
 # RUN [ ! -d /ragemp-server-data ] && mkdir -p /ragemp-server-data/; exit 0
 RUN [ ! -d /ragemp-server-data/Maps/maps ] && mkdir -p /ragemp-server-data/Maps/ && cp -a /tds-source/Maps/. /ragemp-server-data/Maps/; exit 0
 RUN [ ! -d /ragemp-server-data/Maps/needcheckmaps ] && mkdir -p /ragemp-server-data/Maps/needcheckmaps/ && cp -a /tds-source/Maps/needcheckmaps/. /ragemp-server-data/Maps/needcheckmaps/; exit 0
-RUN [ ! -d /ragemp-server-data/TDS.Server.config ] && cp /tds-source/TDS.Server.config /ragemp-server-data; exit 0
 
 RUN rm -rf ./dotnet/runtime/* \
     # Set TDS runtimes 
@@ -82,9 +80,7 @@ RUN rm -rf ./dotnet/runtime/* \
     # Set clientside plain HTML CEF 
     && rsync -hmrtvzP --delete --exclude=".vscode" --exclude="angular" --exclude="node_modules" --exclude="*.json" --exclude="*cefminify*" --include="*/" --include='*index.*' --include='*.min.*' --include='*.ttf' --include="*.png" --include='*.jpg' --include='*.mp3' --include='*.wav' --include='*.ogg' --exclude='*' /tds-source/Client/Window/ ./client_packages/Window \
     # Set clientside Angular CEF 
-    && rsync -hmrtvzP --delete /tds-source/Client/Window/angular/dist/main/ ./client_packages/Window/angular/main \
-    # Add TDS.Server.Config from volume
-    && cp /ragemp-server-data/TDS.Server.config ./dotnet/runtime/
+    && rsync -hmrtvzP --delete /tds-source/Client/Window/angular/dist/main/ ./client_packages/Window/angular/main
 	
 RUN cp /usr/share/dotnet/shared/Microsoft.NETCore.App/$DOTNET_VER_RUNTIME/* ./dotnet/runtime/
     

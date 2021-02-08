@@ -10,7 +10,7 @@ namespace TDS.Server.Core.Init
     {
         public TDSDbContext CreateDbContext(string[] args)
         {
-            var appConfigHandler = new AppConfigHandler();
+            var appConfigHandler = new EnvironmentConfigHandler();
 
             var optionsBuilder = new DbContextOptionsBuilder<TDSDbContext>();
 

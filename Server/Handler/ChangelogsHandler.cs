@@ -18,30 +18,30 @@ namespace TDS.Server.Handler
     {
         private string _json = string.Empty;
 
-        public ChangelogsHandler(AppConfigHandler appConfigHandler, ISettingsHandler settingsHandler, ServerStartHandler serverStartHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
+        public ChangelogsHandler(EnvironmentConfigHandler environmentConfigHandler, ISettingsHandler settingsHandler, ServerStartHandler serverStartHandler, RemoteBrowserEventsHandler remoteBrowserEventsHandler)
         {
             remoteBrowserEventsHandler.Add(ToServerEvent.LoadChangelogs, (_) => _json);
 
-            LoadChangelogs(appConfigHandler, settingsHandler, serverStartHandler);
+            LoadChangelogs(environmentConfigHandler, settingsHandler, serverStartHandler);
         }
 
-        private async void LoadChangelogs(AppConfigHandler appConfigHandler, ISettingsHandler settingsHandler, ServerStartHandler serverStartHandler)
+        private async void LoadChangelogs(EnvironmentConfigHandler environmentConfigHandler, ISettingsHandler settingsHandler, ServerStartHandler serverStartHandler)
         {
-            if (string.IsNullOrWhiteSpace(appConfigHandler.GitHubToken))
+            if (string.IsNullOrWhiteSpace(environmentConfigHandler.GitHubToken))
                 return;
             if (string.IsNullOrWhiteSpace(settingsHandler.ServerSettings.GitHubRepoOwnerName))
                 return;
             if (string.IsNullOrWhiteSpace(settingsHandler.ServerSettings.GitHubRepoRepoName))
                 return;
 
-            var client = CreateGitHubClient(appConfigHandler);
+            var client = CreateGitHubClient(environmentConfigHandler);
             var commits = await GetCommits(client, settingsHandler).ConfigureAwait(false);
             var commitsToSync = Map(commits);
             _json = HttpUtility.JavaScriptStringEncode(Serializer.ToBrowser(commitsToSync));
             serverStartHandler.LoadedChangelogs = true;
         }
 
-        private GitHubClient CreateGitHubClient(AppConfigHandler appConfigHandler)
+        private GitHubClient CreateGitHubClient(EnvironmentConfigHandler appConfigHandler)
             => new GitHubClient(new ProductHeaderValue("TDS-V_Commits_Getter"))
             {
                 Credentials = new Credentials(appConfigHandler.GitHubToken)
