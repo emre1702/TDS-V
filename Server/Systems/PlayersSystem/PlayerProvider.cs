@@ -22,6 +22,8 @@ namespace TDS.Server.PlayersSystem
                 var player = ActivatorUtilities.CreateInstance<TDSPlayer>(_serviceProvider, netHandle);
                 if (player is null)
                     Console.WriteLine("player could not be created!! ERROOORR!!");
+                else
+                    Console.WriteLine($"Created ITDSPlayer for: {netHandle.Value}");
                 return player!;
             }
             catch (Exception ex)

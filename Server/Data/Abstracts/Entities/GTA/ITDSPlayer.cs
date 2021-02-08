@@ -18,7 +18,7 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
 {
 #nullable enable
 
-    public abstract class ITDSPlayer : Player, IEquatable<ITDSPlayer>
+    public abstract class ITDSPlayer : Player
     {
         public abstract IPlayerAdmin Admin { get; }
         public abstract IPlayerChallengesHandler Challenges { get; }
@@ -135,16 +135,6 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
 
         public abstract void SetInvincible(bool toggle);
 
-        public bool Equals(ITDSPlayer? other)
-        {
-            return Id == other?.Id;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ITDSPlayer);
-        }
-
         public void Init()
         {
             if (Name.Length > 0)
@@ -161,11 +151,6 @@ namespace TDS.Server.Data.Abstracts.Entities.GTA
         {
             Name = name;
             base.Name = Name;
-        }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
         }
     }
 }
