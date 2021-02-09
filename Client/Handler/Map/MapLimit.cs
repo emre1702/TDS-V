@@ -60,14 +60,14 @@ namespace TDS.Client.Handler.Entities
             _mapLimitTypeMethod[MapLimitType.Block] = IsOutsideBlock;
         }
 
-        private bool SavePosition => _edges != null && (_type == MapLimitType.Block || _type == MapLimitType.TeleportBackAfterTime);
+        private bool SavePosition => !(_edges is null) && (_type == MapLimitType.Block || _type == MapLimitType.TeleportBackAfterTime);
 
         public void CheckFaster()
         {
             if (!_typeToCheckFaster.Contains(_type))
                 return;
 
-            if (_edges == null || IsWithin())
+            if (_edges is null || IsWithin())
             {
                 Reset();
                 return;
@@ -79,19 +79,24 @@ namespace TDS.Client.Handler.Entities
 
         public void SetEdges(List<Vector3> edges)
         {
-            if (_type != MapLimitType.Display)
+            if (!(edges is null) && edges.Count == 0)
+                edges = null;
+            if (!(edges is null))
             {
-                _minX = edges.Count > 0 ? edges.Min(v => v.X) : 0;
-                _minY = edges.Count > 0 ? edges.Min(v => v.Y) : 0;
-                _maxX = edges.Count > 0 ? edges.Max(v => v.X) : 0;
-                _maxY = edges.Count > 0 ? edges.Max(v => v.Y) : 0;
-            }
+                if (_type != MapLimitType.Display)
+                {
+                    _minX = edges.Count > 0 ? edges.Min(v => v.X) : 0;
+                    _minY = edges.Count > 0 ? edges.Min(v => v.Y) : 0;
+                    _maxX = edges.Count > 0 ? edges.Max(v => v.X) : 0;
+                    _maxY = edges.Count > 0 ? edges.Max(v => v.Y) : 0;
+                }
 
-            foreach (var edge in edges)
-            {
-                float edgeZ = 0;
-                if (RAGE.Game.Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ, false))
-                    edge.Z = edgeZ;
+                foreach (var edge in edges)
+                {
+                    float edgeZ = 0;
+                    if (RAGE.Game.Misc.GetGroundZFor3dCoord(edge.X, edge.Y, edge.Z + 1, ref edgeZ, false))
+                        edge.Z = edgeZ;
+                }
             }
 
             _edges = edges;
@@ -113,7 +118,7 @@ namespace TDS.Client.Handler.Entities
             _checkTimer?.Kill();
             _checkTimer = null;
 
-            if (_type != MapLimitType.Display)
+            if (_type != MapLimitType.Display && !(_edges is null))
             {
                 _minX = _edges.Count > 0 ? _edges.Min(v => v.X) : 0;
                 _minY = _edges.Count > 0 ? _edges.Min(v => v.Y) : 0;
@@ -159,7 +164,7 @@ namespace TDS.Client.Handler.Entities
             if (_typeToCheckFaster.Contains(_type))
                 return;
 
-            if (_edges == null || IsWithin())
+            if (_edges is null || IsWithin())
             {
                 Reset();
                 return;
@@ -183,6 +188,8 @@ namespace TDS.Client.Handler.Entities
         private void Draw(List<TickNametagData> _)
         {
             float totalMaxTop = -1;
+            if (_edges is null)
+                return;
             for (int i = 0; i < _edges.Count; ++i)
             {
                 var edgeStart = _edges[i];
@@ -219,7 +226,7 @@ namespace TDS.Client.Handler.Entities
         {
             if (_createdGpsRoutes)
                 return;
-            if (_edges.Count == 0)
+            if (_edges is null)
                 return;
 
             // Doesn't work
@@ -270,6 +277,8 @@ namespace TDS.Client.Handler.Entities
 
         private bool IsWithin(Vector3 point)
         {
+            if (_edges is null)
+                return false;
             if (point.X < _minX || point.Y < _minY || point.X > _maxX || point.Y > _maxY)
                 return false;
 

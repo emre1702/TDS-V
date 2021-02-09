@@ -30,7 +30,7 @@ namespace TDS.Client.Handler.Map
             eventsHander.InFightStatusChanged += EventsHander_InFightStatusChanged;
             eventsHander.MapBorderColorChanged += EventsHander_MapBorderColorChanged;
             eventsHander.LocalPlayerDied += Stop;
-            eventsHander.MapCleared += Stop;
+            eventsHander.MapCleared += Clear;
             eventsHander.Respawned += EventsHander_Respawned;
             eventsHander.RoundEnded += _ => Stop();
             eventsHander.RoundStarted += Start;
@@ -53,6 +53,12 @@ namespace TDS.Client.Handler.Map
         public void Stop()
         {
             _currentMapLimit?.Stop();
+        }
+
+        public void Clear()
+        {
+            Stop();
+            _currentMapLimit?.SetEdges(null);
         }
 
         private void EventsHander_InFightStatusChanged(bool inFight)

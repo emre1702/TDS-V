@@ -78,8 +78,7 @@ namespace TDS.Client.Handler.Lobby
                 else if (mapData.Center != null)
                     _lobbyCamHandler.SetToMapCenter(mapData.Center.ToVector3());
 
-                if (mapData.MapEdges != null && mapData.MapEdges.Count > 0)
-                    _mapLimitHandler.Load(mapData.MapEdges.Select(e => e.ToVector3()).ToList());
+                _mapLimitHandler.Load(mapData.MapEdges?.Select(e => e.ToVector3()).ToList());
                 Logging.LogInfo("", "LobbyMapDatasHandler.SetMapData", true);
             }
             catch (Exception ex)
