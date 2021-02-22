@@ -1,6 +1,6 @@
-ARG DOTNET_VER_RUNTIME=5.0.2
-ARG DOTNET_VER_SDK=5.0.102-focal
-ARG DOTNET_VER_ASPNET=$DOTNET_VER_RUNTIME-focal
+ARG DOTNET_VER=5.0.3
+ARG DOTNET_VER_SDK=5.0.103-focal
+ARG DOTNET_VER_RUNTIME=${DOTNET_VER}-focal
 ARG NODE_VER=15.6.0
 ARG SERVER_URL=https://cdn.rage.mp/updater/prerelease/server-files/linux_x64.tar.gz
 ARG CERTIFICATE_PASSWORD="tdsv"
@@ -27,9 +27,9 @@ WORKDIR /tds-source/Client/Window/angular
 RUN npm install --no-audit && npm run build
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VER_ASPNET} AS release
+FROM mcr.microsoft.com/dotnet/runtime:${DOTNET_VER_RUNTIME} AS release
 ARG SERVER_URL
-ARG DOTNET_VER_RUNTIME
+ARG DOTNET_VER
 ENV DEBIAN_FRONTEND="noninteractive"
 
 # Install dependencies
@@ -82,7 +82,7 @@ RUN rm -rf ./dotnet/runtime/* \
     # Set clientside Angular CEF 
     && rsync -hmrtvzP --delete /tds-source/Client/Window/angular/dist/main/ ./client_packages/Window/angular/main
 	
-RUN cp /usr/share/dotnet/shared/Microsoft.NETCore.App/$DOTNET_VER_RUNTIME/* ./dotnet/runtime/
+RUN cp /usr/share/dotnet/shared/Microsoft.NETCore.App/${DOTNET_VER}/* ./dotnet/runtime/
     
 # Expose Ports and start the Server
 ADD ./entrypoint.sh ./entrypoint.sh
@@ -102,7 +102,7 @@ RUN chown -R rage:rage . \
 	
 RUN rm -rf /tds-source
 
-ENV DOTNET_VER ${DOTNET_VER_RUNTIME}
+ENV DOTNET_VER ${DOTNET_VER}
 
 USER rage
 CMD /wait && ./entrypoint.sh
