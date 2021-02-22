@@ -103,11 +103,11 @@ namespace TDS.Server.LobbySystem.RoundsHandlers
                 var spawndata = Lobby.MapHandler.GetMapRandomSpawnData(player.Team);
                 if (spawndata is null)
                     return;
-                NAPI.Task.RunSafe(() => player.Spawn(spawndata.ToVector3(), spawndata.Rotation));
+                player.Spawn(spawndata.ToVector3(), spawndata.Rotation);
             }
             else
             {
-                NAPI.Task.RunSafe(() => player.Spawn(Lobby.Spectator.CurrentMapSpectatorPosition));
+                player.Spawn(Lobby.Spectator.CurrentMapSpectatorPosition);
             }
 
             base.SetPlayerReadyForRound(player, freeze);

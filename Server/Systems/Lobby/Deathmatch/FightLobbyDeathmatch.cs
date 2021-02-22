@@ -66,10 +66,7 @@ namespace TDS.Server.LobbySystem.Deathmatch
 
         protected virtual void SetPlayerDeadCompletely(ITDSPlayer player)
         {
-            var deathSpawnTimer = new TDSTimer(() =>
-            {
-                Lobby.Spectator.SetPlayerInSpectateMode(player);
-            }, (uint)Lobby.Entity.FightSettings.SpawnAgainAfterDeathMs);
+            Lobby.Spectator.SetPlayerInSpectateMode(player);
         }
 
         public void Kill(ITDSPlayer player, string reason)

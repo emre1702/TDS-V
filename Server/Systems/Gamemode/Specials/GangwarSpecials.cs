@@ -51,27 +51,24 @@ namespace TDS.Server.GamemodesSystem.Specials
                 events.RoundClear -= RoundClear;
         }
 
-        private void PlayerDied(ITDSPlayer player, ITDSPlayer killer, uint weapon, int hadLifes)
+        private async void PlayerDied(ITDSPlayer player, ITDSPlayer killer, uint weapon, int hadLifes)
         {
-            ReplaceTargetManIfIsPlayer(player);
+            await ReplaceTargetManIfIsPlayer(player);
         }
 
         private ValueTask PlayerLeftAfter((ITDSPlayer Player, int HadLifes) data)
         {
-            ReplaceTargetManIfIsPlayer(data.Player);
-            return default;
+            return ReplaceTargetManIfIsPlayer(data.Player);
         }
 
-        public virtual ValueTask InRound()
+        public virtual async ValueTask InRound()
         {
             if (Gamemode.MapHandler.TargetObject is null)
-                return default;
+                return;
 
-            ReplaceTargetMan();
+            await ReplaceTargetMan();
             if (_playerForcedAtTarget is { })
                 _playerForcedAtTarget.Position = Gamemode.MapHandler.TargetObject.Position;
-
-            return default;
         }
 
         public virtual ValueTask RoundClear()
@@ -80,19 +77,19 @@ namespace TDS.Server.GamemodesSystem.Specials
             return default;
         }
 
-        private void ReplaceTargetManIfIsPlayer(ITDSPlayer player)
+        private async ValueTask ReplaceTargetManIfIsPlayer(ITDSPlayer player)
         {
             if (player == _playerForcedAtTarget)
-                ReplaceTargetMan();
+                await ReplaceTargetMan();
         }
 
-        private void ReplaceTargetMan()
+        private async Task ReplaceTargetMan()
         {
-            var nextTargetMan = GetNextTargetMan();
+            var nextTargetMan = await GetNextTargetMan();
             SetTargetMan(nextTargetMan);
         }
 
-        private ITDSPlayer? GetNextTargetMan()
+        private async ValueTask<ITDSPlayer?> GetNextTargetMan()
         {
             if (Lobby.Rounds.RoundStates.CurrentState is IInRoundState)
                 return Gamemode.Teams.Attacker.Players.GetRandom();
@@ -100,7 +97,11 @@ namespace TDS.Server.GamemodesSystem.Specials
             if (Gamemode.MapHandler.TargetObject is null)
                 return null;
 
-            return Gamemode.Teams.Attacker.Players.GetNearestPlayer(Gamemode.MapHandler.TargetObject.Position);
+            var player = await NAPI.Task.RunWait(() =>
+            {
+                return Gamemode.Teams.Attacker.Players.GetNearestPlayer(Gamemode.MapHandler.TargetObject.Position);
+            });
+            return player;
         }
 
         private void SetTargetMan(ITDSPlayer? player)

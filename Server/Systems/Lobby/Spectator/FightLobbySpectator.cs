@@ -1,11 +1,9 @@
 ﻿using GTANetworkAPI;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
 using TDS.Server.Data.Interfaces.LobbySystem.Spectator;
 using TDS.Server.Handler.Extensions;
-using TDS.Server.LobbySystem.TeamHandlers;
 using TDS.Shared.Core;
 using TDS.Shared.Default;
 
