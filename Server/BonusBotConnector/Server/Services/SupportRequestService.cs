@@ -3,27 +3,16 @@ using Grpc.Core;
 using System;
 using System.Threading.Tasks;
 using TDS.Server.Data.Interfaces;
-using TDS.Server.Data.Interfaces.Userpanel;
 using TDS.Shared.Data.Enums.Userpanel;
 
 namespace BonusBotConnector_Server
 {
     public class SupportRequestService : SupportRequest.SupportRequestBase
     {
-        #region Private Fields
-
         private readonly ILoggingHandler _loggingHandler;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public SupportRequestService(ILoggingHandler loggingHandler)
             => (_loggingHandler) = (loggingHandler);
-
-        #endregion Public Constructors
-
-        #region Public Delegates
 
         public delegate Task<string?> AnswerRequestFromDiscordDelegate(ulong discordUserId, int requestId, string text);
 
@@ -31,19 +20,11 @@ namespace BonusBotConnector_Server
 
         public delegate Task<string?> ToggleClosedRequestFromDiscordDelegate(ulong discordUserId, int requestId, bool closed);
 
-        #endregion Public Delegates
-
-        #region Public Events
-
         public event AnswerRequestFromDiscordDelegate? AnswerRequestFromDiscord;
 
         public event CreateRequestFromDiscordDelegate? CreateRequestFromDiscord;
 
         public event ToggleClosedRequestFromDiscordDelegate? ToggleClosedRequestFromDiscord;
-
-        #endregion Public Events
-
-        #region Public Methods
 
         public override async Task<Reply> Answer(AnswerRequest request, ServerCallContext context)
         {
@@ -99,7 +80,5 @@ namespace BonusBotConnector_Server
                 return new Reply { Message = $"[{ex.GetType().Name}|{baseEx.GetType().Name}] + Error:" + Environment.NewLine + baseEx.Message };
             }
         }
-
-        #endregion Public Methods
     }
 }

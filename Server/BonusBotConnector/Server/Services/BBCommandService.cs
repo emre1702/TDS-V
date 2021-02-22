@@ -10,7 +10,6 @@ namespace BonusBotConnector_Server
 {
     public class BBCommandService : BBCommand.BBCommandBase
     {
-
         public AsyncValueTaskEvent<(ulong userId, string command, IList<string> args, BBUsedCommandReply reply)>? OnUsedCommand { get; set; }
 
         private readonly ILoggingHandler _loggingHandler;
@@ -34,13 +33,10 @@ namespace BonusBotConnector_Server
                 return new UsedCommandReply { Message = ex.GetType().Name + " error:" + Environment.NewLine + ex.GetBaseException().Message };
             }
         }
-
     }
 
     public class BBUsedCommandReply
     {
-
         public string? Message { get; set; }
-
     }
 }
