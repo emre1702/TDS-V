@@ -36,9 +36,11 @@ ENV DEBIAN_FRONTEND="noninteractive"
 RUN apt-get update && apt-get install -y \
 	libc6-dev \
 	libunwind8 \
+    libssl1.1 \
     rsync \
     curl \
     tzdata \
+    locales \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Add rage user
