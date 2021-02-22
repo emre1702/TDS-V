@@ -70,7 +70,7 @@ RUN [ ! -d /ragemp-server-data/Maps/needcheckmaps ] && mkdir -p /ragemp-server-d
 
 RUN rm -rf ./dotnet/runtime/* \
     # Set TDS runtimes 
-    && rsync -hmrtvzP --exclude='TDS.Server.Core.*' --include="*.dll" --include='*.pdb' --exclude='*' /tds-source/Build/ ./dotnet/runtime \
+    && rsync -hmrtvzP --exclude='TDS.Server.Core.*' --include="*" /tds-source/Build/ ./dotnet/runtime \
     # Set TDS.Server.Core
     && rsync -hmrtvzP /tds-source/Build/TDS.Server.Core.dll /tds-source/Build/TDS.Server.Core.pdb ./dotnet/resources/tds \
     # Set serverside JS 
