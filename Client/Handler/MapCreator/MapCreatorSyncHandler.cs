@@ -32,7 +32,7 @@ namespace TDS.Client.Handler.MapCreator
             _lobbyHandler = lobbyHandler;
             _dataSyncHandler = dataSyncHandler;
 
-            eventsHandler.MapCreatorSyncLatestObjectID += SyncLatestIdToServer;
+            eventsHandler.MapCreatorSyncLatestObjectId += SyncLatestIdToServer;
             eventsHandler.MapCreatorSyncObjectDeleted += SyncObjectRemoveToLobby;
             eventsHandler.MapCreatorSyncTeamObjectsDeleted += SyncTeamObjectsRemoveToLobby;
 
@@ -77,7 +77,7 @@ namespace TDS.Client.Handler.MapCreator
             var obj = _mapCreatorObjectsHandler.GetByID(oldId);
             if (obj != null)
             {
-                obj.ID = newId;
+                obj.Id = newId;
             }
             _mapCreatorObjectsHandler.IdCounter = Math.Max(_mapCreatorObjectsHandler.IdCounter, newId);
         }
@@ -85,6 +85,8 @@ namespace TDS.Client.Handler.MapCreator
         public void SyncLatestIdToServer()
         {
             int lastUsedId = _mapCreatorObjectsHandler.IdCounter;
+            _browserHandler.Angular.SetAddedMapCreatorObjectId(lastUsedId);
+
             _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncLastId, lastUsedId);
         }
 
@@ -98,7 +100,7 @@ namespace TDS.Client.Handler.MapCreator
                 _mapCreatorObjectsHandler.RefreshMapLimitDisplay();
             }
 
-            _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
+            _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.Id, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
                 obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, dto.Info, obj.OwnerRemoteId);
         }
 
@@ -135,7 +137,7 @@ namespace TDS.Client.Handler.MapCreator
             if (obj is null)
                 return;
 
-            _browserHandler.Angular.RemovePositionInMapCreatorBrowser(obj.ID, obj.Type);
+            _browserHandler.Angular.RemovePositionInMapCreatorBrowser(obj.Id, obj.Type);
             _mapCreatorObjectsHandler.Delete(obj, false);
         }
 
@@ -143,7 +145,7 @@ namespace TDS.Client.Handler.MapCreator
         {
             if (!HasToSync)
                 return;
-            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveObject, obj.ID);
+            _remoteEventsSender.SendIgnoreCooldown(ToServerEvent.MapCreatorSyncRemoveObject, obj.Id);
         }
 
         public void SyncStartNewMap(params object[] args)

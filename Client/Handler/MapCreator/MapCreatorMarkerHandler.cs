@@ -60,7 +60,7 @@ namespace TDS.Client.Handler.MapCreator
                     _clickedMarkerStorer.ClickedMarker = null;
                     obj.Position = obj.MovingPosition.Copy();
                     obj.Rotation = obj.MovingRotation.Copy();
-                    _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
+                    _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.Id, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
                         obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, obj.TeamNumber.HasValue ? obj.TeamNumber.Value : (object)obj.ObjOrVehName, obj.OwnerRemoteId);
                     _mapCreatorSyncHandler.SyncObjectPositionToLobby(obj);
                 }

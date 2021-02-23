@@ -149,7 +149,7 @@ namespace TDS.Client.Handler.MapCreator
 
         public void Delete(int posId)
         {
-            var obj = _cacheMapEditorObjects.FirstOrDefault(entry => entry.Value.ID == posId).Value;
+            var obj = _cacheMapEditorObjects.FirstOrDefault(entry => entry.Value.Id == posId).Value;
             if (obj == null)
                 return;
             Delete(obj);
@@ -204,7 +204,7 @@ namespace TDS.Client.Handler.MapCreator
 
         public MapCreatorObject GetByID(int id)
         {
-            return _cacheMapEditorObjects.FirstOrDefault(g => g.Value.ID == id).Value;
+            return _cacheMapEditorObjects.FirstOrDefault(g => g.Value.Id == id).Value;
         }
 
         public MapCreatorObject GetMapCenter(ushort playerRemoteId, Vector3 pos, Vector3 rot, int id = -1)

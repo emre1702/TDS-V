@@ -101,7 +101,7 @@ namespace TDS.Client.Handler.Events
 
         public event EmptyDelegate MapCreatorObjectDeleted;
 
-        public event EmptyDelegate MapCreatorSyncLatestObjectID;
+        public event EmptyDelegate MapCreatorSyncLatestObjectId;
 
         public event MapCreatorObjectDelegate MapCreatorSyncObjectDeleted;
 
@@ -374,7 +374,7 @@ namespace TDS.Client.Handler.Events
             try
             {
                 Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncLatestObjectID");
-                MapCreatorSyncLatestObjectID?.Invoke();
+                MapCreatorSyncLatestObjectId?.Invoke();
                 Logging.LogInfo("", "EventsHandler.OnMapCreatorSyncLatestObjectID", true);
             }
             catch (Exception ex)

@@ -71,6 +71,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.rageConnector.listen(FromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
         this.rageConnector.listen(FromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
         this.rageConnector.listen(FromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
+        this.rageConnector.listen(FromClientEvent.MapCreatorSetAddedMapCreatorObjectId, this.setAddedMapCreatorObjectId.bind(this));
         this.settings.LanguageChanged.on(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.on(null, this.isLobbyOwnerChanged.bind(this));
         this.settings.ThemeSettingChangedAfter.on(null, this.detectChanges.bind(this));
@@ -88,6 +89,7 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
         this.rageConnector.remove(FromClientEvent.RemoveTeamPositionsInMapCreatorBrowser, this.removeTeamPositionsInMapCreatorBrowser.bind(this));
         this.rageConnector.remove(FromServerEvent.MapCreatorSyncData, this.onSyncData.bind(this));
         this.rageConnector.remove(FromClientEvent.MapCreatorSyncCurrentMapToServer, this.syncCurrentMapToServer.bind(this));
+        this.rageConnector.remove(FromClientEvent.MapCreatorSetAddedMapCreatorObjectId, this.setAddedMapCreatorObjectId.bind(this));
         this.settings.LanguageChanged.off(null, this.detectChanges.bind(this));
         this.settings.IsLobbyOwnerChanged.off(null, this.isLobbyOwnerChanged.bind(this));
         this.settings.ThemeSettingChangedAfter.off(null, this.detectChanges.bind(this));
@@ -300,6 +302,40 @@ export class MapCreatorComponent implements OnInit, OnDestroy {
 
     private syncCurrentMapToServer(tdsPlayerId: number, idCounter: number) {
         this.rageConnector.callServer(ToServerEvent.MapCreatorSyncCurrentMapToServer, JSON.stringify(this.formGroup), tdsPlayerId, idCounter);
+    }
+
+    private setAddedMapCreatorObjectId(id: number, type: MapCreatorPositionType) {
+        let pos: MapCreatorPosition;
+        switch (type) {
+            case MapCreatorPositionType.TeamSpawn:
+                const teamPositions = this.formGroup.controls[type].value as MapCreatorPosition[][];
+                for (const positionsT of teamPositions) {
+                    const possiblePos = positionsT.find((p) => p[0] === -1);
+                    if (possiblePos) {
+                        pos = possiblePos;
+                        break;
+                    }
+                }
+                break;
+
+            case MapCreatorPositionType.BombPlantPlace:
+            case MapCreatorPositionType.MapLimit:
+            case MapCreatorPositionType.Object:
+            case MapCreatorPositionType.Vehicle:
+                const positions = this.formGroup.controls[type].value as MapCreatorPosition[];
+                pos = positions.find((p) => p[0] === -1);
+                break;
+
+            case MapCreatorPositionType.MapCenter:
+            case MapCreatorPositionType.Target:
+                pos = this.formGroup.controls[type].value;
+                break;
+        }
+
+        if (pos) {
+            pos[0] = id;
+            this.changeDetector.detectChanges();
+        }
     }
 
     private onSyncData(infoType: MapCreatorInfoType, data: any) {

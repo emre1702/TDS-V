@@ -42,13 +42,13 @@ namespace TDS.Client.Handler.MapCreator
 
             if (id == -1)
             {
-                ID = ++mapCreatorObjectsHandler.IdCounter;
+                Id = ++mapCreatorObjectsHandler.IdCounter;
                 _eventsHandler.OnMapCreatorSyncLatestObjectID();
             }
             else
             {
                 mapCreatorObjectsHandler.IdCounter = Math.Max(mapCreatorObjectsHandler.IdCounter, id);
-                ID = id;
+                Id = id;
             }
             _eventsHandler.OnMapCreatorSyncLatestObjectID();
 
@@ -60,7 +60,7 @@ namespace TDS.Client.Handler.MapCreator
         public ITDSBlip Blip { get; }
         public bool Deleted { get; private set; }
         public GameEntityBase Entity { get; }
-        public int ID { get; set; }
+        public int Id { get; set; }
         public bool IsSynced { get; set; }
 
         public Vector3 MovingPosition
@@ -85,7 +85,7 @@ namespace TDS.Client.Handler.MapCreator
             }
         }
 
-        public Vector3 EntityPosition 
+        public Vector3 EntityPosition
         {
             get => RAGE.Game.Entity.GetEntityCoords(Entity.Handle, true);
             set
@@ -127,7 +127,7 @@ namespace TDS.Client.Handler.MapCreator
         {
             return new MapCreatorPosition
             {
-                Id = ID,
+                Id = Id,
                 Info = (object)TeamNumber ?? ObjOrVehName,
                 OwnerRemoteId = OwnerRemoteId,
                 PosX = Position.X,
@@ -144,7 +144,7 @@ namespace TDS.Client.Handler.MapCreator
         {
             return new MapCreatorPosData
             {
-                Id = ID,
+                Id = Id,
 
                 PosX = Position.X,
                 PosY = Position.Y,
@@ -206,25 +206,25 @@ namespace TDS.Client.Handler.MapCreator
             switch (Type)
             {
                 case MapCreatorPositionType.TeamSpawn:
-                    return new TDSBlip(SharedConstants.TeamSpawnBlipSprite, Position, name: ID.ToString(), dimension: dimension);
+                    return new TDSBlip(SharedConstants.TeamSpawnBlipSprite, Position, name: Id.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.MapLimit:
-                    return new TDSBlip(SharedConstants.MapLimitBlipSprite, Position, name: ID.ToString(), dimension: dimension);
+                    return new TDSBlip(SharedConstants.MapLimitBlipSprite, Position, name: Id.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.BombPlantPlace:
-                    return new TDSBlip(SharedConstants.BombPlantPlaceBlipSprite, Position, name: ID.ToString(), dimension: dimension);
+                    return new TDSBlip(SharedConstants.BombPlantPlaceBlipSprite, Position, name: Id.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.MapCenter:
-                    return new TDSBlip(SharedConstants.MapCenterBlipSprite, Position, name: ID.ToString(), dimension: dimension);
+                    return new TDSBlip(SharedConstants.MapCenterBlipSprite, Position, name: Id.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.Target:
-                    return new TDSBlip(SharedConstants.TargetBlipSprite, Position, name: ID.ToString(), dimension: dimension);
+                    return new TDSBlip(SharedConstants.TargetBlipSprite, Position, name: Id.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.Object:
-                    return new TDSBlip(SharedConstants.ObjectBlipSprite, Position, name: ID.ToString(), dimension: dimension);
+                    return new TDSBlip(SharedConstants.ObjectBlipSprite, Position, name: Id.ToString(), dimension: dimension);
 
                 case MapCreatorPositionType.Vehicle:
-                    return new TDSBlip(SharedConstants.VehicleBlipSprite, Position, name: ID.ToString(), dimension: dimension);
+                    return new TDSBlip(SharedConstants.VehicleBlipSprite, Position, name: Id.ToString(), dimension: dimension);
             }
 
             return null;

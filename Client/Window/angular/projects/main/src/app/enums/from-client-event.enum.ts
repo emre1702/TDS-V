@@ -9,6 +9,7 @@ export enum FromClientEvent {
     LoadSettings = 'cb1',
     LoadLanguage = 'cb9',
     LoadNamesForChat = 'cb39',
+    MapCreatorSetAddedMapCreatorObjectId = 'cb55',
     MapCreatorSyncCurrentMapToServer = 'cb50',
     OpenMapMenu = 'cb12',
     RefreshAdminLevel = 'cb13',

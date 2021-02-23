@@ -134,7 +134,7 @@ namespace TDS.Client.Handler.MapCreator
             }
         }
 
-        public void HoldObjectWithID(int id)
+        public void HoldObjectWithId(int id)
         {
             var obj = _mapCreatorObjectsHandler.GetByID(id);
             if (obj == null || obj.Entity.IsNull)
@@ -165,7 +165,7 @@ namespace TDS.Client.Handler.MapCreator
         {
             if (HoldingObject == null)
                 return;
-            _browserHandler.Angular.RemovePositionInMapCreatorBrowser(HoldingObject.ID, HoldingObject.Type);
+            _browserHandler.Angular.RemovePositionInMapCreatorBrowser(HoldingObject.Id, HoldingObject.Type);
             var objType = HoldingObject.Type;
             HoldingObject.Delete(true);
             if (HighlightedObject == HoldingObject)
@@ -219,7 +219,7 @@ namespace TDS.Client.Handler.MapCreator
                     info = obj.ObjOrVehName;
                     break;
             }
-            _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.ID, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
+            _browserHandler.Angular.AddPositionToMapCreatorBrowser(obj.Id, obj.Type, obj.Position.X, obj.Position.Y, obj.Position.Z,
                 obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z, info, obj.OwnerRemoteId);
 
             _mapCreatorDrawHandler.HighlightColor_Edge = Color.FromArgb(35, 255, 255, 255);
@@ -411,7 +411,7 @@ namespace TDS.Client.Handler.MapCreator
         private void OnHoldMapCreatorObjectMethod(object[] args)
         {
             int objID = (int)args[0];
-            HoldObjectWithID(objID);
+            HoldObjectWithId(objID);
         }
 
         private void OnStartMapCreatorPosPlacingMethod(object[] args)
