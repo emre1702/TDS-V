@@ -32,7 +32,7 @@ namespace TDS.Client.Handler.MapCreator
             _lobbyHandler = lobbyHandler;
             _dataSyncHandler = dataSyncHandler;
 
-            eventsHandler.MapCreatorSyncLatestObjectId += SyncLatestIdToServer;
+            eventsHandler.MapCreatorSyncLatestObjectId += SyncLatestId;
             eventsHandler.MapCreatorSyncObjectDeleted += SyncObjectRemoveToLobby;
             eventsHandler.MapCreatorSyncTeamObjectsDeleted += SyncTeamObjectsRemoveToLobby;
 
@@ -82,7 +82,7 @@ namespace TDS.Client.Handler.MapCreator
             _mapCreatorObjectsHandler.IdCounter = Math.Max(_mapCreatorObjectsHandler.IdCounter, newId);
         }
 
-        public void SyncLatestIdToServer()
+        public void SyncLatestId()
         {
             int lastUsedId = _mapCreatorObjectsHandler.IdCounter;
             _browserHandler.Angular.SetAddedMapCreatorObjectId(lastUsedId);
