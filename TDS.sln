@@ -71,9 +71,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DamageSystem", "Server\Syst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GangsSystem", "Server\Systems\GangSystem\GangsSystem.csproj", "{02E79F57-EE78-402F-86ED-56F1496B2D2F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GangGamemodesSystem", "Server\System\GangGamemodesSystem\GangGamemodesSystem.csproj", "{E4D3A483-5034-49E6-9148-722C2E867C10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GangGamemodesSystem", "Server\Systems\GangGamemodesSystem\GangGamemodesSystem.csproj", "{E4D3A483-5034-49E6-9148-722C2E867C10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GangActionAreaSystem", "Server\GangActionAreaSystem\GangActionAreaSystem.csproj", "{31ADE605-DAD3-4D31-9084-3F4FE27756C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GangActionAreaSystem", "Server\Systems\GangActionAreaSystem\GangActionAreaSystem.csproj", "{31ADE605-DAD3-4D31-9084-3F4FE27756C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
