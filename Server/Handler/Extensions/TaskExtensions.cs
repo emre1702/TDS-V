@@ -9,6 +9,7 @@ namespace TDS.Server.Handler.Extensions
         [ThreadStatic]
 #pragma warning disable CA2211 // Non-constant fields should not be visible
         public static bool IsMainThread = false;
+
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 
         public static void RunSafe(this GTANetworkMethods.Task task, Action action, int delayTime = 0)
@@ -18,10 +19,10 @@ namespace TDS.Server.Handler.Extensions
                 if (IsMainThread)
                     if (delayTime == 0)
                         action();
-                    else 
+                    else
                         _ = new TDSTimer(action, (uint)delayTime);
                 else
-                    task.Run(() => 
+                    task.Run(() =>
                     {
                         try
                         {
@@ -52,7 +53,7 @@ namespace TDS.Server.Handler.Extensions
 
         public static Task<T> RunWait<T>(this GTANetworkMethods.Task task, Func<T> action)
         {
-            var taskCompletionSource = new TaskCompletionSource<T>();
+            var taskCompletionSource = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
             RunSafe(task, () =>
             {
                 var result = action();
