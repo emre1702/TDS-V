@@ -47,8 +47,4 @@
   <ItemGroup>
     <PackageReference Include="RAGEMP-Bootstrapper" Version="1.1.3" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
-    <Exec Command="if EXIST B:\cygwin64\bin\dos2unix.exe ( &#xD;&#xA;    B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\LocalServerSync.sh&#xD;&#xA;    B:\cygwin64\bin\dos2unix.exe C:\Programming\TDS-V\ServerSync.sh&#xD;&#xA;    B:\cygwin64\bin\bash.exe 'C:\Programming\TDS-V\LocalServerSync.sh' &#xD;&#xA;)" />
-  </Target>
 </Project>
