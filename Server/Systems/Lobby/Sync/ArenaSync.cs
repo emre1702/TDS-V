@@ -7,6 +7,8 @@ namespace TDS.Server.LobbySystem.Sync
 {
     public class ArenaSync : RoundFightLobbySync
     {
+        public override bool IsLobbyToSync => true;
+
         public ArenaSync(IArena lobby, IRoundFightLobbyEventsHandler events)
             : base(lobby, events)
         {

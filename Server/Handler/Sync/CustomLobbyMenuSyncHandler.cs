@@ -17,7 +17,7 @@ namespace TDS.Server.Handler.Sync
     public class CustomLobbyMenuSyncHandler
     {
         private readonly LobbiesHandler _lobbiesHandler;
-        private readonly List<ITDSPlayer> _playersInCustomLobbyMenu = new List<ITDSPlayer>();
+        private readonly List<ITDSPlayer> _playersInCustomLobbyMenu = new();
 
         public CustomLobbyMenuSyncHandler(EventsHandler eventsHandler, LobbiesHandler lobbiesHandler)
         {
@@ -33,7 +33,7 @@ namespace TDS.Server.Handler.Sync
         public void AddPlayer(ITDSPlayer player)
         {
             _playersInCustomLobbyMenu.Add(player);
-            var lobbyDatas = _lobbiesHandler.Lobbies.Where(l => !l.IsOfficial && l.Entity.Type != LobbyType.MapCreateLobby)
+            var lobbyDatas = _lobbiesHandler.Lobbies.Where(IsLobbyToSync)
                                                         .Select(l => GetCustomLobbyData(l))
                                                         .ToList();
             var lobbyDatasJson = Serializer.ToBrowser(lobbyDatas);
@@ -137,10 +137,7 @@ namespace TDS.Server.Handler.Sync
         }
 
         private bool IsLobbyToSync(IBaseLobby lobby)
-            => !(lobby.IsOfficial
-                || lobby.Entity.Type == LobbyType.MapCreateLobby
-                || lobby.Entity.Type == LobbyType.CharCreateLobby
-                || lobby.Entity.Type == LobbyType.GangActionLobby
-                || lobby.Entity.Type == LobbyType.DamageTestLobby);
+            => !lobby.IsOfficial
+                && lobby.Sync.IsLobbyToSync;
     }
 }

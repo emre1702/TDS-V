@@ -24,9 +24,9 @@ namespace TDS.Server.LobbySystem.Sync
     public class MapCreatorLobbySync : BaseLobbySync, IMapCreatorLobbySync, IDisposable
     {
         private int _lastId;
-        private MapCreateDataDto _currentMap = new MapCreateDataDto();
-        private Dictionary<int, MapCreatorPosition> _posById = new Dictionary<int, MapCreatorPosition>();
-        private readonly SemaphoreSlim _posDictSemaphore = new SemaphoreSlim(1, 1);
+        private MapCreateDataDto _currentMap = new();
+        private Dictionary<int, MapCreatorPosition> _posById = new();
+        private readonly SemaphoreSlim _posDictSemaphore = new(1, 1);
         private readonly RemoteBrowserEventsHandler _remoteBrowserEventsHandler;
 
         protected new IMapCreatorLobby Lobby => (IMapCreatorLobby)base.Lobby;

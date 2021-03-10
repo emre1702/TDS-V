@@ -1,14 +1,11 @@
-﻿using System;
+﻿using GTANetworkAPI;
 using System.Linq;
 using System.Threading.Tasks;
-using GTANetworkAPI;
 using TDS.Server.Data.Abstracts.Entities.GTA;
 using TDS.Server.Data.Interfaces.LobbySystem.EventsHandlers;
 using TDS.Server.Data.Interfaces.LobbySystem.Lobbies.Abstracts;
-using TDS.Server.Data.Interfaces.LobbySystem.Players;
 using TDS.Server.Data.Interfaces.LobbySystem.Sync;
 using TDS.Server.Handler.Extensions;
-using TDS.Server.LobbySystem.TeamHandlers;
 using TDS.Shared.Core;
 using TDS.Shared.Data.Models;
 using TDS.Shared.Default;
@@ -18,6 +15,7 @@ namespace TDS.Server.LobbySystem.Sync
 {
     public class BaseLobbySync : IBaseLobbySync
     {
+        public virtual bool IsLobbyToSync => false;
         protected IBaseLobby Lobby { get; }
 
 #nullable disable
